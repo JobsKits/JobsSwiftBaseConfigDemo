@@ -1,0 +1,54 @@
+//
+//  JobsConfig.xcconfig
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Mac on 11/1/25.
+//
+//  Configuration settings file format documentation can be found at:
+//  https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+//
+
+// MARK: App名称相关
+// 产物名：会影响生成的 .app / .ipa 里的可执行文件名（通常也会体现在 CFBundleName 的默认值）
+// 注意：改它不一定等于改桌面显示名；桌面显示名优先看 CFBundleDisplayName
+PRODUCT_NAME = SwiftDemo
+// 自定义一个“想展示的 App 名字”变量，方便统一维护（可以在不同配置里改成不同名字）
+APP_DISPLAY_NAME = SwiftDemo
+// 写入 Info.plist 的 CFBundleDisplayName：真正影响“桌面图标下面显示的名字”
+// 常用于：Debug 加后缀、不同渠道/环境显示不同名字
+INFOPLIST_KEY_CFBundleDisplayName = $(APP_DISPLAY_NAME)
+// 写入 Info.plist 的 CFBundleName：Bundle 名称（系统内部/某些场景显示用）
+// 通常不建议频繁改动；一般让它跟 PRODUCT_NAME 保持一致即可
+INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
+// ================= Flutter (FVM) =================
+FLUTTER_ROOT = $(SRCROOT)/my_flutter/.fvm/flutter_sdk
+FLUTTER_APPLICATION_PATH = $(SRCROOT)
+// MARK: 多语言支持
+//  此文件仅仅针对单一语言环境下的一些配置。
+//  在多语言环境下，此文件的某些配置项，将会用各语言的 InfoPlist.strings 进行覆盖
+// MARK: Flutter@避免App图标资源因为Flutter侧命名冲突导致图标资源被覆盖
+// iOS原生侧的图标资源目录AppIcon和Flutter侧重名，需要更改（这里将原生侧文件夹重命名为AppIcon@Host）
+// 且在 TARGETS ➤ Building Settings ➤ Primary App Icon Set Name 下修改为AppIcon@Host
+// MARK: Unity
+// ================================== Unity iOS 真机专用：模拟器禁用 ==================================
+// ObjC/C 宏：#if JOBS_UNITY_ENABLED ...
+JOBS_UNITY_ENABLED[sdk=iphoneos*]        = 1
+JOBS_UNITY_ENABLED[sdk=iphonesimulator*] = 0
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) JOBS_UNITY_ENABLED=$(JOBS_UNITY_ENABLED)
+// Swift 条件：#if JOBS_UNITY_ENABLED ...
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited)
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphoneos*]        = $(inherited) JOBS_UNITY_ENABLED
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphonesimulator*] = $(inherited)
+// ================================== Unity：只给真机的搜索路径 + 链接参数 ==================================
+// 让 linker 在真机时能从 Run Script A 拷贝进来的 BUILT_PRODUCTS_DIR 找到 UnityFramework.framework
+JOBS_UNITY_FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]        = $(inherited) $(BUILT_PRODUCTS_DIR) $(SRCROOT)/Unity
+JOBS_UNITY_FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*] =
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(JOBS_UNITY_FRAMEWORK_SEARCH_PATHS)
+// 真机链接 UnityFramework，模拟器清空（不再去找 framework）
+JOBS_UNITY_OTHER_LDFLAGS[sdk=iphoneos*]        = -framework UnityFramework
+JOBS_UNITY_OTHER_LDFLAGS[sdk=iphonesimulator*] =
+OTHER_LDFLAGS = $(inherited) $(JOBS_UNITY_OTHER_LDFLAGS)
+// ================================== 其他：保持 inherited ==================================
+// bridging header 已经做了条件 import，一般不需要额外 Header Search Paths / CFlags
+HEADER_SEARCH_PATHS    = $(inherited)
+OTHER_CFLAGS           = $(inherited)

@@ -1,0 +1,82 @@
+# pod install --repo-update
+# ============================== 几乎每个 App 都会用到 ==============================
+def swiftAppCommon
+  # --- OC/C++/C ---
+  pod 'SDWebImage'                         # https://github.com/SDWebImage/SDWebImage          ❤️
+  pod 'MJRefresh'                          # https://github.com/CoderMJLee/MJRefresh           ❤️
+  pod 'HTMLReader'                         # https://github.com/nolanw/HTMLReader              ❤️
+  pod 'GKPhotoBrowser'                     # https://github.com/QuintGao/GKPhotoBrowser        ❤️ 图片浏览器（仿微信、今日头条）
+  pod 'GKNavigationBarSwift'               # https://github.com/QuintGao/GKNavigationBarSwift  ❤️
+  pod 'YTKNetwork'                         # https://github.com/kanyun-inc/YTKNetwork          ❤️ 猿题库出品的网络请求框架@Objc
+  pod 'WCDB'                               # https://github.com/Tencent/wcdb                   ❤️ 腾讯出品的数据库。FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
+#  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
+#  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS            ❤️ 直播礼物动画播放器
+  # --- Swift ---
+  pod 'Alamofire', '~> 5.9'                # https://github.com/Alamofire/Alamofire            ❤️
+  pod 'SwiftMessages'                      # https://github.com/SwiftKickMobile/SwiftMessages  ❤️ 非常灵活的 UIKit 和 SwiftUI 视图和视图控制器展示库
+  pod 'SwiftProtobuf'                      # https://github.com/apple/swift-protobuf           ❤️ 多端统一协议（iOS + Android + 后端一个 .proto）。数据量比较大、性能敏感（IM、实时流、离线缓存等）。
+  pod 'ScreenProtectorKit'                 # https://github.com/prongbang/ScreenProtectorKit   ❤️ 防止屏幕截图并保护后台应用程序快照
+  pod 'PhoneNumberKit'                     # https://github.com/marmelroy/PhoneNumberKit       ❤️ 电话号码工具包：用于解析、格式化和验证国际电话号码。灵感来源:Google.libphonenumber
+  pod 'Moya', :modular_headers => true     # https://github.com/Moya/Moya                      ❤️
+  pod 'Kingfisher'                         # https://github.com/onevcat/Kingfisher             ❤️ Swift 平台上的 SDWebImage 平替
+  pod 'ReactiveSwift'                      # https://github.com/ReactiveCocoa/ReactiveSwift    ❤️ 新版本支持 arm64 模拟器
+  pod 'lottie-ios'                         # https://github.com/airbnb/lottie-ios              ❤️ lottie 动画
+  pod 'SnapKit'                            # https://github.com/SnapKit/SnapKit                ❤️ Swift 平台上的 Masonry 平替（arm64 模拟器 OK）
+  pod 'JXSegmentedView'                    # https://github.com/pujiaxin33/JXSegmentedView     ❤️ 子控制器切换
+  pod 'JXBanner'                           # https://github.com/Coder-TanJX/JXBanner           ❤️ 轮播图
+  pod 'KakaJSON'                           # https://github.com/kakaopensource/KakaJSON        ❤️
+  pod 'RxSwift'                            # https://github.com/ReactiveX/RxSwift              ❤️ 核心
+  pod 'RxCocoa'                            # https://github.com/ReactiveX/RxSwift              ❤️ UI 绑定扩展
+  pod 'RxRelay'                            # https://cocoapods.org/pods/RxRelay                ❤️ 替代 Variable
+  pod 'NSObject+Rx'                        # https://github.com/RxSwiftCommunity/NSObject-Rx   ❤️
+  pod 'ESPullToRefresh'                    # https://github.com/eggswift/pull-to-refresh       ❤️ Swift 平台 MJRefresh 平替
+  pod 'BMPlayer'                           # https://github.com/BrikerMan/BMPlayer             ❤️ 播放器（参照 ZFPlayer）
+  pod 'LiveChat'                           # https://github.com/livechat/chat-window-ios       ❤️ 第三方的聊天工具 https://www.livechat.com/
+  pod 'LunarSwift'                         # https://github.com/6tail/lunar-swift              ❤️ 无第三方依赖的日历工具
+  pod 'CoreXLSX'                           # https://github.com/3973770/SwiftXLSX              ❤️ Excel
+  pod 'SwiftEntryKit'                      # https://github.com/huri000/SwiftEntryKit          ❤️ 用 Swift 编写的简单而功能强大的内容展示器
+  pod 'FSPopoverView'                      # https://github.com/lifution/FSPopoverView         ❤️ 下拉三角小菜单
+  pod 'AMPopTip'                           # https://github.com/andreamazz/AMPopTip            ❤️ 动画弹出框@轻松自定义：弹出弹出方向以及指向其原点的箭头、颜色、边框半径和字体
+  pod 'SkeletonView'                       # https://github.com/Juanpe/SkeletonView            ❤️ 骨架屏/闪动占位
+  pod 'swift-collections'                  # https://github.com/apple/swift-collections#       ❤️ 有序字典
+  pod 'IQKeyboardManagerSwift'             # https://github.com/hackiftekhar/IQKeyboardManager ❤️
+  pod 'HaishinKit'                         # https://github.com/HaishinKit/HaishinKit.swift    ❤️ 音视频采集编码
+  pod 'TextureSwiftSupport'                # https://github.com/FluidGroup/TextureSwiftSupport ❤️ 由第三方/社区维护的 ➤ Facebook出品的一款UI框架
+#  pod 'ComponentKit'                       # https://github.com/facebook/componentkit          ❤️ Facebook出品的一款UI框架
+#  pod 'Texture'                            # https://github.com/texturegroup/texture           ❤️ Facebook出品的一款UI框架
+#  pod 'SwiftySVGAPlayer'                   # https://github.com/janlionly/SwiftySVGAPlayer     ❤️ SVGAPlayer的社区封装@framework
+
+end
+
+# ============================== 调试框架（仅 Debug） ==============================
+def debugPods
+  # pod 'Bugly'
+  # pod 'DoraemonKit'
+  # pod 'CocoaDebug'
+  # pod 'FLEX'
+  # pod 'JJException'
+  # pod 'FBRetainCycleDetector'
+  pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
+end
+# ============================== ByJobs ==============================
+def byJobs
+  pod 'JobsSwiftBaseTools'                 # https://github.com/JobsKits/JobsSwiftBaseTools
+  pod 'JobsSwiftBlock'                     # https://github.com/JobsKits/JobsSwiftBlock
+  pod 'JobsSwiftBaseDefines'               # https://github.com/JobsKits/JobsSwiftBaseDefines
+  pod 'JobsSwiftFoundation@Extensions'     # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+  pod 'JobsSwiftMetalKit@Extensions'       # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+end
+# ============================== 目标工程（新工程记得改名） ==============================
+# ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字
+target 'JobsSwiftBaseConfigDemo' do
+  use_frameworks! :linkage => :static
+
+  flutter_application_path = File.join(__dir__, 'my_flutter')
+  load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+  install_all_flutter_pods(flutter_application_path)
+
+  debugPods
+  swiftAppCommon
+#  byJobs
+  #cocoPodsConfig
+end
