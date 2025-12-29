@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-#import "UnityAppController.h"
+#import <UnityFramework/UnityAppController.h>
 
 // this is coming from mach-o/ldsyms.h
 // we were including this header header here directly

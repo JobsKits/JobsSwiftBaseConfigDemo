@@ -1,9 +1,0 @@
-{
-  "Messages": [
-    {
-      "Type": 1,
-      "Text": "Unity.IL2CPP.Building.BuilderFailedException: Build failed with 0 successful nodes and 0 failed ones\nError: Internal build system error. Backend exited with code 2.\nbee_backend: error: Failed to open file \u0022/Users/mac/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Intermediates/Unity-iPhone.build/Release-iphoneos/artifacts/arm64/buildstate/tundra.log.json\u0022 for structured logging\n\n   at il2cpp.Program.DoRun(TinyProfiler2 tinyProfiler, String[] args, RuntimePlatform platform, Il2CppCommandLineArguments il2CppCommandLineArguments, BuildingOptions buildingOptions, Boolean throwExceptions) in /Users/bokken/build/output/unity/il2cpp/il2cpp/Program.cs:line 319"
-    }
-  ],
-  "CommandLine": "--compile-cpp --platform=iOS --baselib-directory=/Users/admin/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Libraries --additional-defines=IL2CPP_DEBUG=0 --incremental-g-c-time-slice=3 --dotnetprofile=unityaot-macos --profiler-report --print-command-line --external-lib-il2-cpp=/Users/admin/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Libraries/libil2cpp.a --generatedcppdir=Il2CppOutputProject/Source/il2cppOutput --architecture=arm64 --outputpath=/Users/admin/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Products/Release-iphoneos/libGameAssembly.a --cachedirectory=/Users/admin/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Intermediates/Unity-iPhone.build/Release-iphoneos/artifacts/arm64 --configuration=Release"
-}
