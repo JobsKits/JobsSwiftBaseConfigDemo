@@ -172,6 +172,16 @@ inhibit_all_warnings!
 # 说明：pod install 需要依赖 Flutter 生成的 .ios/Flutter/podhelper.rb。
 # 有些工程在首次 checkout 或清缓存后会缺这个文件，需要先进入 Flutter module 执行 flutter pub get。
 FLUTTER_APPLICATION_PATH = File.expand_path('./my_flutter', __dir__)
+
+# 每次 pod install 都先确保 Flutter 环境（Homebrew + FVM + Flutter SDK + flutter pub get）
+jobs_run_external_script(
+  'ScriptsByPods/配置Flutter环境.sh',
+  desc: 'Prepare Flutter environment (brew + fvm + flutter pub get)',
+  base_dir: __dir__,
+  log_path: '/tmp/配置Flutter环境.log',
+  required: false
+)
+
 flutter_podhelper = File.join(FLUTTER_APPLICATION_PATH, '.ios', 'Flutter', 'podhelper.rb')
 
 unless File.exist?(flutter_podhelper)

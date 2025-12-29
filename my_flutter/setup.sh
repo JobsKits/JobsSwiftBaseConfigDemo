@@ -8,3 +8,6 @@ flutter doctor -v
 
 
 fvm install stable
+
+
+flutter pub get
