@@ -28,4 +28,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             ))
             .byMakeKeyAndVisible()
     }
+    // ================================== CrashLog: Safe Exit Marker ==================================
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        // 回到前台，标记“正在运行中”
+        CrashLogCenter.shared.markAppLaunched()
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        // 进入后台算安全点
+        CrashLogCenter.shared.markSafeExitPoint()
+    }
 }

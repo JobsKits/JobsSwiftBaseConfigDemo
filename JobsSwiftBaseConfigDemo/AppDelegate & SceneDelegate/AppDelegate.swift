@@ -42,6 +42,24 @@ class AppDelegate: FlutterAppDelegate{
         SA()
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    // ================================== CrashLog: Safe Exit Marker ==================================
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        super.applicationDidBecomeActive(application)
+        // 回到前台，重新标记“正在运行中”
+        CrashLogCenter.shared.markAppLaunched()
+    }
+
+    override func applicationDidEnterBackground(_ application: UIApplication) {
+        super.applicationDidEnterBackground(application)
+        // 进入后台算到达安全点（避免误判“上次崩溃”）
+        CrashLogCenter.shared.markSafeExitPoint()
+    }
+
+    override func applicationWillTerminate(_ application: UIApplication) {
+        // terminate 不是每次都会走到，但能走到就写安全点
+        CrashLogCenter.shared.markSafeExitPoint()
+        super.applicationWillTerminate(application)
+    }
     // MARK: UISceneSession Lifecycle
     override func application(
         _ application: UIApplication,
@@ -71,12 +89,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
+    // ================================== CrashLog: Safe Exit Marker ==================================
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        super.applicationDidBecomeActive(application)
+        // 回到前台，重新标记“正在运行中”
+        CrashLogCenter.shared.markAppLaunched()
+    }
+
+    override func applicationDidEnterBackground(_ application: UIApplication) {
+        super.applicationDidEnterBackground(application)
+        // 进入后台算到达安全点（避免误判“上次崩溃”）
+        CrashLogCenter.shared.markSafeExitPoint()
+    }
+
+    override func applicationWillTerminate(_ application: UIApplication) {
+        // terminate 不是每次都会走到，但能走到就写安全点
+        CrashLogCenter.shared.markSafeExitPoint()
+        super.applicationWillTerminate(application)
+    }
 }
 
 #endif
 // MARK: - Local Notifications
 extension AppDelegate {
-
     func setupLocalNotificationsIfNeeded() {
         let center = UNUserNotificationCenter.current()
 
@@ -104,7 +139,6 @@ extension AppDelegate {
 #if canImport(Flutter)
 // FlutterAppDelegate 已经遵循 UNUserNotificationCenterDelegate，所以这里只 override
 extension AppDelegate {
-
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -118,7 +152,6 @@ extension AppDelegate {
         }
         #endif
     }
-
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
