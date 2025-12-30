@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 UNITY_ROOT="${ROOT_DIR}/Unity"
-TARGET_REL="xcode_effectTest/Libraries/【MacOS】🧩子卷➤合而为一源文件"
+TARGET_REL="xcode_effectTest/Libraries/【MacOS】🧩子卷➤合而为一源文件.command"
 TARGET_PATH="${UNITY_ROOT}/${TARGET_REL}"
 
 log()  { printf "%s\n" "$*"; }
