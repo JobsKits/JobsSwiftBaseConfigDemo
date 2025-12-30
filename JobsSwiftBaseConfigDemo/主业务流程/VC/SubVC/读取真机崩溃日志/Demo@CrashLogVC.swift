@@ -17,10 +17,8 @@ final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 14
     /// 使用 tail 读取，防止日志过大卡 UI（单位 KB）
     private let tailKB: Int = 256
-    // ================================== Log ==================================
-    private var crashLogURL: URL {
-        CrashLogCenter.shared.crashLogURL
-    }
+    /// 后台读取队列（避免 Data(contentsOf:) 卡 UI）
+    private let readQueue = DispatchQueue(label: "com.jobs.crashlog.viewer.read", qos: .userInitiated)
     // ================================== UI: 关键词过滤输入框 ==================================
     private lazy var textField: UITextField = { [unowned self] in
         UITextField()
@@ -58,6 +56,7 @@ final class CrashLogDemoVC: BaseVC {
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(12)
             }
     }()
+
     // ================================== UI: 刷新按钮 ==================================
     private lazy var refreshButton: UIButton = { [unowned self] in
         UIButton.sys()
@@ -80,53 +79,75 @@ final class CrashLogDemoVC: BaseVC {
         jobsSetupGKNav(
             title: "Crash Log Viewer",
             rightButtons: [
-                // 复制
+                // 复制：复制当前展示的文本（含 header）
                 UIButton.sys()
                     .byImage("doc.on.doc.fill".sysImg, for: .normal)
                     .onTap { [unowned self] _ in
                         UIPasteboard.general.string = self.tv.text
                         "复制日志成功✅".tr.toast
                     },
-                // 清理
+                // 清理：删除并重建空文件
                 UIButton.sys()
                     .byImage("trash.fill".sysImg, for: .normal)
                     .onTap { [unowned self] _ in
-                        self.clearLog()
+                        let (ok, msg) = CrashLogCenter.shared.clear()
+                        tv.text = msg
+                        (ok ? "日志清理成功✅" : "日志清理失败❌").tr.toast
                     }
             ]
         )
-
         textField.byVisible(YES)
         refreshButton.byVisible(YES)
         tv.byVisible(YES)
-        refresh()
+        refresh()// 进入页面立即读一次（真正去读 Documents/jobs_crash.log）
     }
     // ================================== Logic ==================================
+    /// 刷新 UI：后台读取文件 -> 主线程更新文本
     private func refresh() {
         let keyword = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        // 读取最后 tailKB
-        let raw = CrashLogCenter.shared.readTail(kilobytes: tailKB)
-        let content: String
-        if keyword.isEmpty {
-            content = raw
-        } else {
-            content = raw
-                .components(separatedBy: "\n")
-                .filter { $0.localizedCaseInsensitiveContains(keyword) }
-                .joined(separator: "\n")
+        readQueue.async { [weak self] in
+            guard let self else { return }
+            // 1) 读取文件最后 tailKB（真的去读 jobs_crash.log）
+            let raw = CrashLogCenter.shared.readTail(kilobytes: self.tailKB)
+            // 2) 过滤（可选）
+            let body: String
+            if keyword.isEmpty {
+                body = raw
+            } else {
+                body = raw
+                    .components(separatedBy: "\n")
+                    .filter { $0.localizedCaseInsensitiveContains(keyword) }
+                    .joined(separator: "\n")
+            }
+            // 3) Header：路径 + exists/size/mtime + filter
+            let header = self.headerText(keyword: keyword)
+            // 4) 空文件提示：别让你误以为“没读”
+            let finalText: String
+            if body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                finalText = header + "（日志为空）\n"
+            } else {
+                finalText = header + body
+            }
+
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.tv.byText(finalText)
+                self.tv.scrollRangeToVisible(NSRange(location: 0, length: 0))
+            }
         }
-        tv.byText(headerText(keyword: keyword) + content)
-        tv.scrollRangeToVisible(NSRange(location: 0, length: 0))
     }
-
-    private func clearLog() {
-        let (ok, msg) = CrashLogCenter.shared.clear()
-        tv.text = msg
-        (ok ? "日志清理成功✅" : "日志清理失败❌").tr.toast
-    }
-
+    /// 组装 header：把你关心的 “log: /var/mobile/.../Documents/jobs_crash.log” 放在最顶上
     private func headerText(keyword: String) -> String {
-        var header = "log: \(CrashLogCenter.shared.logPathHint())\n"
+        let info = CrashLogCenter.shared.fileInfo()
+
+        var header = "log: \(info.path)\n"
+        header += "exists: \(info.exists ? "YES" : "NO")\n"
+        header += "size: \(info.sizeBytes) bytes\n"
+
+        if let m = info.mtime {
+            header += "mtime: \(m)\n"
+        }
+
         if !keyword.isEmpty {
             header += "filter: \(keyword)\n"
         }
