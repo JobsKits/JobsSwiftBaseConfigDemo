@@ -41,9 +41,12 @@ extension UIViewController{
     @discardableResult
     func goBack(_ result: Any?, animated: Bool = true) -> Self {
         if let r = result { sendResult(r) }
-        if let nav = navigationController { nav.popViewController(animated: animated) }
-        else { dismiss(animated: animated) }
-        return self
+        if let nav = navigationController,
+           nav.viewControllers.first != self {
+            nav.popViewController(animated: animated)
+        } else {
+            dismiss(animated: animated)
+        };return self
     }
     // ✅ 出现完成（push/present 结束）的一次性回调
     @discardableResult

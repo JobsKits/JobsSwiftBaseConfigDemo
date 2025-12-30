@@ -18,6 +18,39 @@ public enum JobsPushDirection: Int {
     case fromTop
     case fromBottom
 }
+// MARK: - 内部：CATransition 的方向映射（含上下互换修正）
+public extension JobsPushDirection {
+    var _caSubtype: CATransitionSubtype {
+        switch self {
+        case .system, .fromRight:
+            return .fromRight            // 系统默认右进
+        case .fromLeft:
+            return .fromLeft
+        case .fromTop:
+            return .fromBottom           // ✅ 修正：互换上下（视觉为“自上而下”进入）
+        case .fromBottom:
+            return .fromTop              // ✅ 修正：互换上下（视觉为“自下而上”进入）
+        }
+    }
+    // 反向用于 pop：与上面的 subtype 取互逆
+    var _reverseCASubtype: CATransitionSubtype {
+        switch self {
+        case .system, .fromRight: return .fromLeft
+        case .fromLeft:           return .fromRight
+        case .fromTop:            return .fromTop     // push 用了 .fromBottom，pop 用 .fromTop
+        case .fromBottom:         return .fromBottom  // push 用了 .fromTop，pop 用 .fromBottom
+        }
+    }
+    var _debugKey: String {
+        switch self {
+        case .system:     return "system"
+        case .fromLeft:   return "fromLeft"
+        case .fromRight:  return "fromRight"
+        case .fromTop:    return "fromTop"
+        case .fromBottom: return "fromBottom"
+        }
+    }
+}
 public var _jobsPushDirKey: UInt8 = 0
 // ========= 新增：记录“进入方向/时长/节奏”，用于自动匹配 pop 反向动画 =========
 public var _jobsEntryDirKey: UInt8 = 0
@@ -69,6 +102,23 @@ public extension UIViewController {
             return d
         };return .system
     }
+}
+// MARK: - byPush
+public extension UIViewController {
+
+    @discardableResult
+    func byPush(_ from: UIResponder?, animated: Bool = true) -> Self {
+        // 忽略旧的 animated 参数，统一交给新实现处理（含自定义方向 & 系统默认路径）
+        return self.byPush(from, duration: 0.32, timing: .easeInEaseOut)
+    }
+
+    @discardableResult
+    func byPush(_ from: UIResponder?,
+                direction: JobsPushDirection,
+                duration: CFTimeInterval = 0.32,
+                CAMediaTimingFunctionName timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self {
+        return self.byDirection(direction).byPush(from, duration: duration, timing: timing)
+    }
     // ============================== 使用存储方向的 byPush ==============================
     /// 现用入口：`.byDirection(...).byPush(self)`；不设方向 → 系统默认
     /// - Note: 自定义方向使用 CATransition + 无动画 push；默认方向走系统动画。
@@ -82,7 +132,46 @@ public extension UIViewController {
             return self
         }
         let useCustom = (dir != .system)
-        // 1) 优先使用宿主导航栈
+        /// 1、抽屉体系优先 mainNav（满屏 push）
+        if let mainNav = host.jobs_findMainNavFromAncestors() {
+            // 轻量防连点（沿用你现有策略）
+            if mainNav._jobs_isPushingLocked { return self }
+            mainNav._jobs_lockPushing(for: 0.2)
+
+            if useCustom {
+                let tr = CATransition()
+                tr.type = .push
+                tr.subtype = dir._caSubtype
+                tr.duration = duration
+                tr.timingFunction = CAMediaTimingFunction(name: timing)
+                mainNav.view.layer.add(tr, forKey: "jobs.push.main.\(dir._debugKey)")
+
+                self._jobs_entryDirection = dir
+                self._jobs_entryDuration = duration
+                self._jobs_entryTiming = timing
+                UINavigationController._jobs_installPopSwizzlesIfNeeded()
+
+                mainNav.pushViewController(self, animated: false)
+                DispatchQueue.main.async { [weak self] in
+                    self?.jobs_fireAppearCompletionIfNeeded(reason: "pushCATransition(mainNav)")
+                }
+                return self
+            } else {
+                self._jobs_entryDirection = nil
+                mainNav.pushViewController(self, animated: true)
+
+                if let tc = mainNav.transitionCoordinator {
+                    tc.animate(alongsideTransition: nil) { [weak self] _ in
+                        self?.jobs_fireAppearCompletionIfNeeded(reason: "pushTransitionCoordinator(mainNav)")
+                    }
+                } else {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.jobs_fireAppearCompletionIfNeeded(reason: "pushAsyncFallback(mainNav)")
+                    }
+                };return self
+            }
+        }
+        /// 2、优先使用宿主导航栈
         if let nav = (host as? UINavigationController) ?? host.navigationController {
             // 轻量防连点
             if nav._jobs_isPushingLocked { return self }
@@ -122,7 +211,7 @@ public extension UIViewController {
                 };return self
             }
         }
-        // 2) 没有导航栈：包一层 Nav 再 present（保持原有语义）
+        /// 3、没有导航栈：包一层 Nav 再 present（保持原有语义）
         let wrapped = self.jobsNavContainer
             .byNavigationBarHidden(true)
             .byModalPresentationStyle(.fullScreen)
@@ -136,12 +225,10 @@ public extension UIViewController {
                     CAMediaTimingFunction(name: timing)
                 )
             layer.add(tr, forKey: "jobs.present.push.\(dir._debugKey)")
-
             // 记录进入参数（仅供需要时外部自定义 dismiss 使用；系统 dismiss 默认方向不改）
             self._jobs_entryDirection = dir
             self._jobs_entryDuration = duration
             self._jobs_entryTiming = timing
-
             host.present(wrapped, animated: false) { [weak self] in
                 self?.jobs_fireAppearCompletionIfNeeded(reason: "presentWrappedForPushCATransition")
             }
@@ -152,46 +239,45 @@ public extension UIViewController {
             }
         };return self
     }
-    // ======================= 兼容旧签名（可留可删，不影响现在用法） =======================
-    /// 旧签名：允许显式传方向；内部转为“临时设置方向再调用 byPush”
-    @discardableResult
-    func byPush(_ from: UIResponder?,
-                direction: JobsPushDirection,
-                duration: CFTimeInterval = 0.32,
-                CAMediaTimingFunctionName timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self {
-        return self.byDirection(direction).byPush(from, duration: duration, timing: timing)
-    }
 }
-// MARK: - 内部：CATransition 的方向映射（含上下互换修正）
-public extension JobsPushDirection {
-    var _caSubtype: CATransitionSubtype {
-        switch self {
-        case .system, .fromRight:
-            return .fromRight            // 系统默认右进
-        case .fromLeft:
-            return .fromLeft
-        case .fromTop:
-            return .fromBottom           // ✅ 修正：互换上下（视觉为“自上而下”进入）
-        case .fromBottom:
-            return .fromTop              // ✅ 修正：互换上下（视觉为“自下而上”进入）
+// MARK: - byPresent
+public extension UIViewController {
+    @discardableResult
+    func byPresent(_ from: UIResponder?,
+                   animated: Bool = true,
+                   policy: JobsPresentPolicy = .ignoreIfBusy,
+                   jobsByVoidBlock: (jobsByVoidBlock)? = nil) -> Self {
+        assert(Thread.isMainThread, "byPresent must be called on main thread")
+        // 目标不能已挂载 / 正在展示
+        guard self.parent == nil, self.presentingViewController == nil else {
+            assertionFailure("❌ Trying to present a VC already mounted/presented: \(self)")
+            return self
         }
-    }
-    // 反向用于 pop：与上面的 subtype 取互逆
-    var _reverseCASubtype: CATransitionSubtype {
-        switch self {
-        case .system, .fromRight: return .fromLeft
-        case .fromLeft:           return .fromRight
-        case .fromTop:            return .fromTop     // push 用了 .fromBottom，pop 用 .fromTop
-        case .fromBottom:         return .fromBottom  // push 用了 .fromTop，pop 用 .fromBottom
+        // 宿主选择
+        guard var host = from?.jobsNearestVC() ?? UIWindow.wd.rootViewController else {
+            assertionFailure("❌ byPresent: no host VC"); return self
         }
-    }
-    var _debugKey: String {
-        switch self {
-        case .system:     return "system"
-        case .fromLeft:   return "fromLeft"
-        case .fromRight:  return "fromRight"
-        case .fromTop:    return "fromTop"
-        case .fromBottom: return "fromBottom"
+        if let top = UIApplication.jobsTopMostVC(from: host, ignoreAlert: true) { host = top }
+        guard host.viewIfLoaded?.window != nil, host.isBeingDismissed == false else { return self }
+        // 策略
+        switch policy {
+        case .ignoreIfBusy:
+            if let presented = host.presentedViewController, presented.isBeingDismissed == false {
+                if jobs_isSameDestination(as: presented) { return self }
+                return self
+            }
+        case .presentOnTopMost:
+            while let top = UIApplication.jobsTopMostVC(from: host, ignoreAlert: true),
+                  top.isBeingDismissed == false, top !== host { host = top }
         }
+        // 防自己 present 自己
+        guard host !== self else {
+            assertionFailure("❌ Don't present self on self"); return self
+        }
+        // 系统 present；完成时触发一次（与 viewDidAppear 幂等）
+        host.present(self, animated: animated) { [weak self] in
+            jobsByVoidBlock?()
+            self?.jobs_fireAppearCompletionIfNeeded(reason: "presentJobsVoidBlock")
+        };return self
     }
 }

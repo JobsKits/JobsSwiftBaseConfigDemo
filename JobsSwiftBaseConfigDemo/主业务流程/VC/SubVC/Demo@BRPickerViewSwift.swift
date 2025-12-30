@@ -417,13 +417,17 @@ final class BRPickerDemoVC: BaseVC {
             .byHeight(44)
     }()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        jobsSetupGKNav(title: "Demo@BRPickerViewSwift")
-        view.backgroundColor = .systemGroupedBackground
+    override func loadView() {
+        super.loadView()
         _ = [scrollView, stack, resultCard,
              secText, btnSingle, btnMulti, btnCascade,
              secSys, btnSysDate, btnSysDateTime, btnSysTime, btnSysCount,
              secCustom, btnYMD, btnYM, btnY, btnMD, btnHM]
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemGroupedBackground
+        jobsSetupGKNav(title: "Demo@BRPickerViewSwift")
     }
 }

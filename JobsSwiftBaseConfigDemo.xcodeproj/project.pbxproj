@@ -361,6 +361,9 @@
 		04B5B4952EC5CCCC00ED4505 /* BaseTableViewCellByDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B5B4942EC5CCC700ED4505 /* BaseTableViewCellByDefault.swift */; };
 		04B5B4972EC5CCF300ED4505 /* BaseTableViewCellBySubtitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B5B4962EC5CCF200ED4505 /* BaseTableViewCellBySubtitle.swift */; };
 		04B5B4A02EC5DB0F00ED4505 /* PhotoPermissionAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B5B49F2EC5DACB00ED4505 /* PhotoPermissionAlertView.swift */; };
+		04B6DF832F037E1400EE41E8 /* Demo@CrashLogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6DF822F037E1200EE41E8 /* Demo@CrashLogVC.swift */; };
+		04B6DF852F037F8E00EE41E8 /* CrashLogCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6DF842F037F8D00EE41E8 /* CrashLogCenter.swift */; };
+		04B6DF872F03A5EF00EE41E8 /* UIViewController+侧滑抽屉容器.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B6DF862F03A5DF00EE41E8 /* UIViewController+侧滑抽屉容器.swift */; };
 		04BA33D92EC72CB100B9C8D7 /* LGOEditNicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA33D82EC72CAF00B9C8D7 /* LGOEditNicknameVC.swift */; };
 		04BA92FE2EDD999A00EB2B12 /* BaseDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA92FD2EDD999600EB2B12 /* BaseDebug.swift */; };
 		04BA930E2EDDAA7700EB2B12 /* JobsStructTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA930D2EDDAA6C00EB2B12 /* JobsStructTools.swift */; };
@@ -3572,6 +3575,9 @@
 		04B5B49A2EC5D8B600ED4505 /* 提示开启权限.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "提示开启权限.png"; sourceTree = "<group>"; };
 		04B5B49B2EC5D8E000ED4505 /* 改名许可.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "改名许可.png"; sourceTree = "<group>"; };
 		04B5B49F2EC5DACB00ED4505 /* PhotoPermissionAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPermissionAlertView.swift; sourceTree = "<group>"; };
+		04B6DF822F037E1200EE41E8 /* Demo@CrashLogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Demo@CrashLogVC.swift"; sourceTree = "<group>"; };
+		04B6DF842F037F8D00EE41E8 /* CrashLogCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashLogCenter.swift; sourceTree = "<group>"; };
+		04B6DF862F03A5DF00EE41E8 /* UIViewController+侧滑抽屉容器.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+侧滑抽屉容器.swift"; sourceTree = "<group>"; };
 		04BA33D82EC72CAF00B9C8D7 /* LGOEditNicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGOEditNicknameVC.swift; sourceTree = "<group>"; };
 		04BA92FD2EDD999600EB2B12 /* BaseDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseDebug.swift; sourceTree = "<group>"; };
 		04BA930D2EDDAA6C00EB2B12 /* JobsStructTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobsStructTools.swift; sourceTree = "<group>"; };
@@ -3880,6 +3886,7 @@
 			isa = PBXGroup;
 			children = (
 				0411F2292EDFEA9200F1552C /* UIViewController.swift */,
+				04B6DF862F03A5DF00EE41E8 /* UIViewController+侧滑抽屉容器.swift */,
 				0411F1942EDEF44000F1552C /* UIViewController+传值回调.swift */,
 				0411F1962EDEF44000F1552C /* UIViewController+系统导航栏设置.swift */,
 				0411F1972EDEF44000F1552C /* UIViewController+自定义进入方向.swift */,
@@ -4268,6 +4275,7 @@
 				049EAE552EF6395000E8131F /* 仪表盘.swift */,
 				04C68D2B2ED94C3300A11F53 /* 钟.swift */,
 				04CF03182E8A80CA0083ACF0 /* AppTools.swift */,
+				04B6DF842F037F8D00EE41E8 /* CrashLogCenter.swift */,
 				04712BEA2EF0FF2800120C85 /* FlutterBridge.swift */,
 				C564FC2D2E0958E80079B5C1 /* HUDHelper.swift */,
 				04F312932EF6A93700FED9D8 /* JobsImageCacheCleaner.swift */,
@@ -8704,7 +8712,7 @@
 		046EE32A2EEAC9B9001B7334 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				046EE3332EEAC9B9001B7334 /* effectTest.app */,
+				046EE3332EEAC9B9001B7334 /* Unity-Target-New.app */,
 				046EE3352EEAC9B9001B7334 /* Unity-iPhone Tests.xctest */,
 				046EE3372EEAC9B9001B7334 /* UnityFramework.framework */,
 				046EE3392EEAC9B9001B7334 /* libGameAssembly.a */,
@@ -9173,8 +9181,9 @@
 		04A8C54F2E8AA9FF00381701 /* SubVC */ = {
 			isa = PBXGroup;
 			children = (
-				04768A8B2EFA8FA600AF7D1C /* Demo@按钮完全盖在Cell上 */,
 				04712C0A2EF13EEF00120C85 /* 临时项目页面 */,
+				04B6DF792F037DF500EE41E8 /* 读取真机崩溃日志 */,
+				04768A8B2EFA8FA600AF7D1C /* Demo@按钮完全盖在Cell上 */,
 				04F312A82EFA7B9500FED9D8 /* Demo@推出页面 */,
 				04F312A52EFA6EED00FED9D8 /* Demo@XLSX */,
 				04F3129C2EFA38BC00FED9D8 /* Demo@图片加载 */,
@@ -9298,6 +9307,14 @@
 			path = "改名许可";
 			sourceTree = "<group>";
 		};
+		04B6DF792F037DF500EE41E8 /* 读取真机崩溃日志 */ = {
+			isa = PBXGroup;
+			children = (
+				04B6DF822F037E1200EE41E8 /* Demo@CrashLogVC.swift */,
+			);
+			path = "读取真机崩溃日志";
+			sourceTree = "<group>";
+		};
 		04C4420F2EB86BAE008E0F09 /* PDF */ = {
 			isa = PBXGroup;
 			children = (
@@ -9360,8 +9377,8 @@
 		04D0C9802E8D19FC00580020 /* iOS.SDK */ = {
 			isa = PBXGroup;
 			children = (
-				04F312A12EFA6A2800FED9D8 /* UIDocumentPickerViewController */,
 				049EAE532EF6356E00E8131F /* Others@SDK */,
+				04F312A12EFA6A2800FED9D8 /* UIDocumentPickerViewController */,
 				0411F2352EDFEC0E00F1552C /* DateFormatter */,
 				04E821D02EDFEFD100570A4C /* NSObject */,
 				04544E7D2EE820B500E7C02B /* NumberFormatter */,
@@ -9682,7 +9699,7 @@
 		04FD79E22EEC293000317EC4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04FD79E92EEC293000317EC4 /* effectTest.app */,
+				04FD79E92EEC293000317EC4 /* Unity-Target-New.app */,
 				04FD79EB2EEC293000317EC4 /* Unity-iPhone Tests.xctest */,
 				04FD79ED2EEC293000317EC4 /* UnityFramework.framework */,
 				04FD79EF2EEC293000317EC4 /* libGameAssembly.a */,
@@ -9933,8 +9950,8 @@
 			);
 			mainGroup = C564FBD22E09580A0079B5C1;
 			packageReferences = (
-				040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "swift-syntax" */,
-				040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "MyMacrosClean" */,
+				040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "../../swift-syntax" */,
+				040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "../../MyMacrosClean" */,
 			);
 			productRefGroup = C564FBDC2E09580B0079B5C1 /* Products */;
 			projectDirPath = "";
@@ -9962,10 +9979,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		046EE3332EEAC9B9001B7334 /* effectTest.app */ = {
+		046EE3332EEAC9B9001B7334 /* Unity-Target-New.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = effectTest.app;
+			name = "Unity-Target-New.app";
+			path = Test.app;
 			remoteRef = 046EE3322EEAC9B9001B7334 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -9990,10 +10008,11 @@
 			remoteRef = 046EE3382EEAC9B9001B7334 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		04FD79E92EEC293000317EC4 /* effectTest.app */ = {
+		04FD79E92EEC293000317EC4 /* Unity-Target-New.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = effectTest.app;
+			name = "Unity-Target-New.app";
+			path = Test.app;
 			remoteRef = 04FD79E82EEC293000317EC4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -10145,8 +10164,12 @@
 			);
 			inputFileListPaths = (
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -10158,7 +10181,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputPaths = (
+			);
 			name = "[CP-User] Run Flutter Build my_flutter Script";
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
@@ -10168,7 +10195,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputPaths = (
+			);
 			name = "[CP-User] Embed Flutter Build my_flutter Script";
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
@@ -10203,6 +10234,7 @@
 				0411F1FD2EDFDB4200F1552C /* UIButton+声音.swift in Sources */,
 				04712C502EF2A5A300120C85 /* LocalNotificationDemoVC.swift in Sources */,
 				04124F332EB0625300462BE2 /* Plugins.swift in Sources */,
+				04B6DF872F03A5EF00EE41E8 /* UIViewController+侧滑抽屉容器.swift in Sources */,
 				045920FC2E854FA9008C8D6A /* UInt.swift in Sources */,
 				043283632EC4535B0031CDD6 /* CashbackCardCell.swift in Sources */,
 				0402F0AE2EC2D7400054A151 /* UIListContentConfiguration.swift in Sources */,
@@ -10225,6 +10257,7 @@
 				0411F1AB2EDEF91E00F1552C /* UIScrollView+空态数据占位按钮.swift in Sources */,
 				C564FC8D2E0959640079B5C1 /* UIBarButtonItem.swift in Sources */,
 				0482A5FA2EA63440004176A4 /* WKWebViewConfiguration.swift in Sources */,
+				04B6DF852F037F8E00EE41E8 /* CrashLogCenter.swift in Sources */,
 				C564FC2E2E0958E80079B5C1 /* HUDHelper.swift in Sources */,
 				045920F22E854F79008C8D6A /* Int.swift in Sources */,
 				046786EB2EB4CF0A003FE82D /* UIScrollView+Proxy.swift in Sources */,
@@ -10388,6 +10421,7 @@
 				04712BF72EF10EDF00120C85 /* GestureUnlockConfiguration.swift in Sources */,
 				049A656D2EA0CB7F0006B185 /* Demo@解码.swift in Sources */,
 				C564FC8F2E0959640079B5C1 /* UIProgressView.swift in Sources */,
+				04B6DF832F037E1400EE41E8 /* Demo@CrashLogVC.swift in Sources */,
 				048C73462EE7F894003C0844 /* NSObject+屏幕常亮.swift in Sources */,
 				04F7AF6D2EC327FE00ACB509 /* LiveMsg.swift in Sources */,
 				04768ABD2EFBA80D00AF7D1C /* JobsSwift3rdPodsBlock.swift in Sources */,
@@ -11263,11 +11297,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "swift-syntax" */ = {
+		040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "../../swift-syntax" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../swift-syntax";
 		};
-		040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "MyMacrosClean" */ = {
+		040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "../../MyMacrosClean" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../MyMacrosClean;
 		};

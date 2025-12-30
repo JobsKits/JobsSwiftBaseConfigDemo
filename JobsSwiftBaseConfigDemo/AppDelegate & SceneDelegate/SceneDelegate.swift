@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LiveChat.windowScene = windowScene
         self.window = UIWindow(windowScene: windowScene)
             .byRootViewController(JobsSideDrawerVC(
-                menuVC: JobsMeCenterVC(),
+                menuVC: JobsMeCenterVC().jobsNav.jobsNavContainer,
                 mainVC: RootListVC().jobsNav.jobsNavContainer,
                 menuWidth: JobsSideDrawerVC.defaultMenuWidth // 右移距离
             ))

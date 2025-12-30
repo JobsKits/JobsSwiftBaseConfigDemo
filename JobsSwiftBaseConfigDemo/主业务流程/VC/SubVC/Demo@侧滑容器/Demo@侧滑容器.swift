@@ -120,7 +120,6 @@ final class JobsSideDrawerVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-
         // 1) Menu
         addChild(menuVC)
         _ = menuContainerView
@@ -129,7 +128,6 @@ final class JobsSideDrawerVC: BaseVC {
             make.edges.equalToSuperview()
         }
         menuVC.didMove(toParent: self)
-
         // 2) Main
         addChild(mainVC)
         _ = contentContainerView
@@ -138,7 +136,6 @@ final class JobsSideDrawerVC: BaseVC {
             make.edges.equalToSuperview()
         }
         mainVC.didMove(toParent: self)
-
         // 3) Dim overlay（拦截点击关闭）
         contentContainerView.addSubview(dimView)
         dimView.snp.makeConstraints { make in
@@ -191,13 +188,12 @@ final class JobsSideDrawerVC: BaseVC {
         setDrawer(open: false, animated: animated)
     }
 }
-// MARK: - 让任何 VC 都能拿到抽屉容器
-extension UIViewController {
-    var jobsSideDrawer: JobsSideDrawerVC? {
-        var p: UIViewController? = self
-        while let parent = p?.parent {
-            if let drawer = parent as? JobsSideDrawerVC { return drawer }
-            p = parent
-        };return nil
+
+extension JobsSideDrawerVC: JobsMainPushProviding {
+    var jobs_mainNavForPush: UINavigationController? {
+        // mainVC 传进来的就是 jobsNavContainer（大概率是 UINavigationController）
+        if let nav = mainVC as? UINavigationController { return nav }
+        if let nav = mainVC.navigationController { return nav }
+        return (mainVC as UIViewController).jobs_findNavController
     }
 }

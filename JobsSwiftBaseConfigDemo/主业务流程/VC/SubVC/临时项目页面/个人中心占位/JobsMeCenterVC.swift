@@ -23,7 +23,7 @@ final class JobsMeCenterVC: BaseVC {
 
         var title: String {
             switch self {
-            case .profile:   return "资料".tr
+            case .profile:   return "崩溃日志".tr
             case .favorites: return "收藏".tr
             case .settings:  return "设置".tr
             case .about:     return "关于".tr
@@ -68,8 +68,7 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
 
         switch Row(rawValue: indexPath.row)! {
         case .profile:
-            "资料".toast
-            // ProfileEditVC().byPush(self)
+            CrashLogDemoVC().byPush(self)
         case .favorites:
             "收藏".toast
             // FavoritesVC().byPush(self)

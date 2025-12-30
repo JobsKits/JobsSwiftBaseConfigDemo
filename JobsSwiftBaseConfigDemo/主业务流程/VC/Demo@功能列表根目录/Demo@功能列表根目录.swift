@@ -420,6 +420,7 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
                        expanded: expanded) { [weak self] itemIndex in
             guard let self else { return }
             let vcType = self.demo2D[row].items[itemIndex].vcType
+            /// 这里推入控制器
             vcType.init().byPush(self)
         };return cell
     }
