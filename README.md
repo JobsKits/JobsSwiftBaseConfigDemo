@@ -9566,7 +9566,7 @@ func resizableImage(edge: UIEdgeInsets = UIEdgeInsets(top: 10.h,
     }
     ```
 
-* [**和类的区别**](#Actor🆚Clas)
+* [**和类的区别**](#Actor🆚Class)
 
 * 使用场景
 
