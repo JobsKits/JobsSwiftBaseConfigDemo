@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/mac/fvm/versions/stable
-FLUTTER_APPLICATION_PATH=/Users/mac/Documents/Gits/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/my_flutter
+FLUTTER_ROOT=/Users/jobs/fvm/versions/stable
+FLUTTER_APPLICATION_PATH=/Volumes/Doc/GitHub.Jobs/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/my_flutter
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build

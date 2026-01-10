@@ -9950,8 +9950,8 @@
 			);
 			mainGroup = C564FBD22E09580A0079B5C1;
 			packageReferences = (
-				040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "../../swift-syntax" */,
-				040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "../../MyMacrosClean" */,
+				040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "swift-syntax" */,
+				040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "MyMacrosClean" */,
 			);
 			productRefGroup = C564FBDC2E09580B0079B5C1 /* Products */;
 			projectDirPath = "";
@@ -10164,12 +10164,8 @@
 			);
 			inputFileListPaths = (
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -10181,11 +10177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
 			name = "[CP-User] Run Flutter Build my_flutter Script";
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
@@ -10195,11 +10187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
 			name = "[CP-User] Embed Flutter Build my_flutter Script";
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
@@ -11297,11 +11285,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "../../swift-syntax" */ = {
+		040E68E92EC704AD00598A5B /* XCLocalSwiftPackageReference "swift-syntax" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../swift-syntax";
 		};
-		040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "../../MyMacrosClean" */ = {
+		040E68F42EC704C400598A5B /* XCLocalSwiftPackageReference "MyMacrosClean" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../MyMacrosClean;
 		};
