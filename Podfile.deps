@@ -47,7 +47,10 @@ def swiftAppCommon
 #  pod 'SwiftySVGAPlayer'                   # https://github.com/janlionly/SwiftySVGAPlayer     ❤️ SVGAPlayer的社区封装@framework
 
 end
-
+# ============================== 测试一些第三方CocoaPods ==============================
+def testPods
+  pod 'Plan'                             # https://github.com/KyoheiG3/Plan                   ❤️ 用于改善 iOS 应用架构清晰度的框架
+end
 # ============================== 调试框架（仅 Debug） ==============================
 def debugPods
   # pod 'Bugly'
@@ -58,13 +61,18 @@ def debugPods
   # pod 'FBRetainCycleDetector'
   pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
 end
-# ============================== ByJobs ==============================
+# ============================== PodByJobs ==============================
 def byJobs
-  pod 'JobsSwiftBaseTools'                 # https://github.com/JobsKits/JobsSwiftBaseTools
-  pod 'JobsSwiftBlock'                     # https://github.com/JobsKits/JobsSwiftBlock
-  pod 'JobsSwiftBaseDefines'               # https://github.com/JobsKits/JobsSwiftBaseDefines
-  pod 'JobsSwiftFoundation@Extensions'     # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-  pod 'JobsSwiftMetalKit@Extensions'       # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+  pod 'JobsBy3rdTools', :path => 'JobsByPods/JobsBy3rdTools@Pods'
+  pod 'JobsByUIKit',    :path => 'JobsByPods/JobsByUIKit@Pods'
+  pod 'Inheritance',    :path => 'JobsByPods/Inheritance@Pods'
+  pod 'SwiftStandardLibrary.extension',    :path => 'JobsByPods/SwiftStandardLibrary.extension@Pods'
+    
+  pod 'JobsSwiftFoundation@Extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+  pod 'JobsSwiftMetalKit@Extensions',   :path => 'JobsByPods/MetalKit@Pods'           # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+  pod 'JobsSwiftBlock',                 :path => 'JobsByPods/JobsSwiftBlock@Pods'     # https://github.com/JobsKits/JobsSwiftBlock
+  pod 'JobsSwiftBaseDefines',           :path => 'JobsByPods/SwiftDefines@Pods'       # https://github.com/JobsKits/JobsSwiftBaseDefines
+  pod 'JobsSwiftBaseTools',             :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools
 end
 # ============================== 目标工程（新工程记得改名） ==============================
 # ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字
@@ -76,7 +84,8 @@ target 'JobsSwiftBaseConfigDemo' do
   install_all_flutter_pods(flutter_application_path)
 
   debugPods
+  testPods
   swiftAppCommon
-#  byJobs
+  byJobs
   #cocoPodsConfig
 end
