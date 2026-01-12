@@ -88,7 +88,18 @@
 
 * [**配置`info.plist`文件**](https://github.com/JobsKits/JobsOCBaseConfigDemo/blob/main/JobsOCBaseConfigDemo/配置info.plist/配置info.plist.md)
 
-* [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
+* iOS模拟器
+
+  * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
+
+  * iOS模拟器下载@终端
+
+    ```shell
+    rm -rf ~/Library/Caches/com.apple.dt.Xcode
+    rm -rf ~/Library/Developer/CoreSimulator/Caches
+    
+    xcodebuild -downloadPlatform iOS --verbose
+    ```
 
 * [**Xcode资料下载**](https://developer.apple.com/download/more/)
 
