@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftBaseDefines.git',
                      :tag => s.version.to_s }
-  s.source_files = '**/*.swift'
+  s.source_files = '**/*.{swift,h,m,mm}'
   s.frameworks   = 'UIKit'
 
 end
