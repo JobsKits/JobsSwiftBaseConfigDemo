@@ -356,15 +356,41 @@
   </table>
 
 
-* 这个版本是「Xcode 当前自带 [**Swift**](https://developer.apple.com/swift/) 工具链」的版本，不一定与项目 **Build Settings** 中使用的版本完全一致（项目可选择旧版编译）。
+* [**Swift**](https://developer.apple.com/swift/) SDK 工具链
 
-  ```shell
-  ➜  ~ xcrun swift --version
-  swift-driver version: 1.127.14.1 Apple Swift version 6.2 (swiftlang-6.2.0.19.9 clang-1700.3.19.1)
-  Target: arm64-apple-macosx26.0
-  ```
+  * 用 `xcrun` 从「当前选中的 Xcode/CLT 工具链」里找到  [**Swift**](https://developer.apple.com/swift/)，然后打印它的版本。不一定与项目 **Build Settings** 中使用的版本完全一致（项目可选择旧版编译）
 
-* 找到`Swift Language Version`
+    ```shell
+    ➜  ~ xcrun swift --version
+    swift-driver version: 1.127.14.1 Apple Swift version 6.2 (swiftlang-6.2.0.19.9 clang-1700.3.19.1)
+    Target: arm64-apple-macosx26.0
+    ```
+
+  * 列出当前这套 Xcode 工具链能用的 SDK 列表
+
+    ```shell
+    xcodebuild -showsdks
+    ```
+
+  * 直接运行 PATH 里那个 `swift`，并打印版本
+
+    ```shell
+    swift --version
+    ```
+
+  * 当前 shell 里 swift 的路径（决定 `swift --version` 用谁）
+
+    ```shell
+    which swift
+    ```
+
+  * 当前选中的开发者目录（决定 `xcrun`、`xcodebuild` 用谁）
+
+    ```shell
+    xcode-select -p
+    ```
+
+* 找到 `Swift Language Version`
 
   ![image-20250929113942861](./assets/image-20250929113942861.png)
 

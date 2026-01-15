@@ -13,6 +13,7 @@ def swiftAppCommon
 #  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS            ❤️ 直播礼物动画播放器
   # --- Swift ---
+  pod 'Cache', :git => 'https://github.com/hyperoslo/Cache.git' # ,:tag => '2.3.4' # pod没更新只能指向源码
   pod 'DeviceKit'                          # https://github.com/devicekit/DeviceKit            ❤️ 设备信息/设备系列/模拟器设备识别/电池状态/低功耗模式状态/当前是否为引导式访问会话/调整屏幕亮度/可用磁盘空间
   pod 'Alamofire', '~> 5.9'                # https://github.com/Alamofire/Alamofire            ❤️
   pod 'SwiftMessages'                      # https://github.com/SwiftKickMobile/SwiftMessages  ❤️ 非常灵活的 UIKit 和 SwiftUI 视图和视图控制器展示库
