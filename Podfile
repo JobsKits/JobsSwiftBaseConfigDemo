@@ -61,6 +61,29 @@ def jobs_clean_unity_build_artifacts!(ios_dir)
   end
 end
 
+# === [ADD] pod install 挂载脚本统一确认（只问一次） ==========================
+$jobs_confirm_pod_install_scripts = nil
+
+def jobs_confirm_pod_install_scripts?
+  return $jobs_confirm_pod_install_scripts unless $jobs_confirm_pod_install_scripts.nil?
+
+  # 非交互环境（CI）保持默认行为：执行（避免阻塞）
+  unless STDIN.tty?
+    $jobs_confirm_pod_install_scripts = true
+    return true
+  end
+
+  puts
+  puts "🧩 [Podfile] pod install 检测到挂载脚本："
+  puts "    - 直接回车：执行（默认）"
+  puts "    - 输入任意字符后回车：跳过"
+  print "👉 请选择："
+  input = STDIN.gets
+
+  $jobs_confirm_pod_install_scripts = (input.nil? || input.strip.empty?)
+end
+# ============================================================================
+
 
 # 统一运行外置脚本（chmod +x / 统一输出 / 统一失败提示）
 #
@@ -73,6 +96,13 @@ end
 #   condition: -> { true }
 # )
 def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil)
+  # === [MOD] 在脚本真正执行前统一拦截：回车执行 / 任意字符跳过 ==========
+  unless jobs_confirm_pod_install_scripts?
+    puts "⏭️  [Podfile] Skip script: #{desc}"
+    return false
+  end
+  # ========================================================================
+
   script = File.expand_path(rel_path, base_dir)
 
   unless File.exist?(script)
