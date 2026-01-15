@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 final class JobsRefresherDemoVC: BaseVC {

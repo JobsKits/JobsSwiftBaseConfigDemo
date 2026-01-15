@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import JobsByUIKit
 
 final class LGOEditNicknameVC: BaseVC {
     /// 昵称输入框

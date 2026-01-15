@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
+
 // MARK: - Demo@安全Present
 final class SafetyPresentDemoVC: BaseVC {
     /// 半屏高度（可按需改）

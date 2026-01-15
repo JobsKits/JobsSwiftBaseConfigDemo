@@ -169,5 +169,3 @@ extension BRTextPickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         if style.isAutoSelect { emitResult() }
     }
 }
-
-

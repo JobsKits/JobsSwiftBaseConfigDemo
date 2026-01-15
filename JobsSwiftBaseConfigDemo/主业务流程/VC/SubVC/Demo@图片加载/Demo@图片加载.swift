@@ -11,8 +11,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-
 #if canImport(Kingfisher)
 import Kingfisher
 #endif
@@ -20,6 +18,9 @@ import Kingfisher
 #if canImport(SDWebImage)
 import SDWebImage
 #endif
+
+import SnapKit
+import JobsByUIKit
 /// UIImageView、UIButton网络图@请求时呼吸占位只有请求失败或者解析失败才执行兜底图
 final class PicLoadDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {

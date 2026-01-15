@@ -12,7 +12,8 @@ import UIKit
 #endif
 import Foundation
 import SnapKit
-// MARK: - Demo VC
+import JobsByUIKit
+
 final class SafeCodableDemoVC: BaseVC {
     // MARK: - Reporter：把宽松转换/默认值上报到 UI
     private final class UIReporter: SafeCodableReporting {

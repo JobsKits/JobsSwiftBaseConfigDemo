@@ -12,6 +12,7 @@ import UIKit
 #endif
 import AVFoundation
 import SnapKit
+import JobsByUIKit
 
 protocol PlayerControlsDelegate: AnyObject {
     func didTapPlayPause()

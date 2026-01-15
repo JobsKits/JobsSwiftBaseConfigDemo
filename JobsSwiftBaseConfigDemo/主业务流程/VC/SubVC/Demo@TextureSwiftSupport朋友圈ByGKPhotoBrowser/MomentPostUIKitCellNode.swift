@@ -12,7 +12,7 @@ import UIKit
 
 import AsyncDisplayKit
 import TextureSwiftSupport
-
+import JobsByUIKit
 // MARK: - ASCellNode: Wrap existing MomentPostCell (UIKit) into a Texture cell node
 final class MomentPostUIKitCellNode: ASCellNode {
 

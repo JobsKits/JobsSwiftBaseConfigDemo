@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
-
+import JobsByUIKit
 final class SnowflakeDemoVC: BaseVC {
     private let general = SnowflakeSwift(IDCID: 4, machineID: 30)
     // 结果展示

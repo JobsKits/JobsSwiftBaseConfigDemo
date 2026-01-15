@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 /// 如果项目有 BaseVC，则可改为继承 BaseVC
 final class JobsTextDemoVC: BaseVC {
     // MARK: - 模型

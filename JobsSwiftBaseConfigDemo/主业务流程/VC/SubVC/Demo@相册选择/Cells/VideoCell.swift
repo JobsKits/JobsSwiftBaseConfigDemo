@@ -10,6 +10,7 @@ import AppKit
 import UIKit
 #endif
 import AVFoundation
+import JobsByUIKit
 /// 单个视频：自动播放，结束后出现「播放按钮」可重播
 public final class VideoCell: UICollectionViewCell {
     private var playerLayer: AVPlayerLayer?

@@ -5,9 +5,14 @@
 //  Created by Jobs on 2025/11/11.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
 import SwiftEntryKit
+import JobsByUIKit
 // MARK: - 内置消息工厂（颜色用 EKColor 包装）
 private func makeMessageView(title: String, desc: String, systemImage: String) -> UIView {
     let titleLabel = EKProperty.LabelContent(

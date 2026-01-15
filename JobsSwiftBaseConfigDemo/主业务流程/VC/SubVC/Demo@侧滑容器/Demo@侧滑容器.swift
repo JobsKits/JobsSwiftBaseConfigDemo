@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 /// 左侧抽屉（个人中心）+ 右侧主内容（的 jobsNavContainer）
 /// 主内容整体右移（导航栏也一起移动）
 final class JobsSideDrawerVC: BaseVC {

@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 
 final class GestureUnlockDemoVC: BaseVC {
 

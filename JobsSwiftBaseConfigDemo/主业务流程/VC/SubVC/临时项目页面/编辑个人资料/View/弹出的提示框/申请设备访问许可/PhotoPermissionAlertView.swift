@@ -6,6 +6,7 @@
 
 import UIKit
 import SnapKit
+import JobsByUIKit
 
 final class PhotoPermissionAlertView: UIView {
     // MARK: - Callbacks Storage

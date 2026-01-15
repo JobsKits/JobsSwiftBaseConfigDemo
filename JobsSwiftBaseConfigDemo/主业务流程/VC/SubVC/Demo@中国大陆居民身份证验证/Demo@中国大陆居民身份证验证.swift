@@ -5,8 +5,13 @@
 //  Created by Mac on 2025/10/2.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
+import JobsByUIKit
 
 final class CNIDDemoVC: BaseVC {
 

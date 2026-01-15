@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+import JobsByUIKit
 
 @MainActor
 public protocol JobsAnimatable: AnyObject {
@@ -40,19 +41,21 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         switch state {
         case .idle:
             indicator.stopAnimating()
-            label.text = "下拉可以刷新"
+            label.text = "下拉可以刷新".tr
         case .pulling(let p):
             indicator.stopAnimating()
-            label.text = p >= 1 ? "松开立即刷新" : String(format: "继续下拉 %.0f%%", min(1, p)*100)
+            label.text = p >= 1
+                ? "松开立即刷新".tr
+                : String(format: "%@ %.0f%%", "继续下拉".tr, min(1, p) * 100)
         case .ready:
             indicator.stopAnimating()
-            label.text = "松开立即刷新"
+            label.text = "松开立即刷新".tr
         case .refreshing:
             indicator.startAnimating()
-            label.text = "刷新中..."
+            label.text = "刷新中...".tr
         case .noMore:
             indicator.stopAnimating()
-            label.text = "没有更多了"
+            label.text = "没有更多了".tr
         case .removed:
             indicator.stopAnimating()
             label.text = nil

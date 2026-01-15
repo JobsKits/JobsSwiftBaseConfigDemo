@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import GKNavigationBarSwift
+import JobsByUIKit
 
 final class RootListVC: BaseVC {
     deinit {

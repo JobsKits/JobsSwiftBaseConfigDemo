@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import SwiftEntryKit
+import JobsByUIKit
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
     case avatar

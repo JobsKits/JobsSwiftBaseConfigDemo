@@ -12,10 +12,11 @@ import UIKit
 #endif
 import SnapKit
 import JXSegmentedView
+import JobsByUIKit
 
 final class CashbackRootVC: BaseVC {
     // MARK: - Data
-    private let segments = ["活动", "任务", "VIP", "利息宝", "返水"]
+    private let segments = ["活动".tr, "任务".tr, "VIP".tr, "利息宝".tr, "返水".tr]
     // MARK: - Segment DataSource（懒加载 + 链式）
     private lazy var segmentedDataSource: JXSegmentedTitleDataSource = {
         JXSegmentedTitleDataSource()

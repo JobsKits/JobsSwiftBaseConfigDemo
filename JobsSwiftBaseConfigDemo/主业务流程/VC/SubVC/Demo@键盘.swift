@@ -14,13 +14,14 @@ import RxSwift
 import RxCocoa
 import SnapKit
 import NSObject_Rx
+import JobsByUIKit
 
 final class KeyboardDemoVC: BaseVC {
     private let bag = DisposeBag()
     // 输入框
     private lazy var textField: UITextField = {
         UITextField()
-            .byPlaceholder("请输入文字，弹出键盘试试")
+            .byPlaceholder("请输入文字，弹出键盘试试".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(80.h)
@@ -41,7 +42,7 @@ final class KeyboardDemoVC: BaseVC {
 
     private lazy var label: UILabel = {
         UILabel()
-            .byText("我是底部栏，会跟随键盘上移")
+            .byText("我是底部栏，会跟随键盘上移".tr)
             .byTextColor(.darkGray)
             .byTextAlignment(.center)
             .byAddTo(bottomBar) { make in

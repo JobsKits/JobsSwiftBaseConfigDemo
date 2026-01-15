@@ -10,6 +10,7 @@ import AppKit
 import UIKit
 #endif
 import AVFoundation
+import JobsByUIKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）
 public final class VideoThumbCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {

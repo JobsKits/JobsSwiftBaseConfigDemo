@@ -5,8 +5,13 @@
 //  Created by Jobs on 11/28/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
+import JobsByUIKit
 
 final class LuckyWheelDemoVC: BaseVC {
     private lazy var wheelView: LuckyWheelView = {

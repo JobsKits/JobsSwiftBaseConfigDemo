@@ -9,6 +9,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+import JobsByUIKit
 // MARK: - RowCell（SnapKit 布局）
 final class RowCell: UITableViewCell {
     // MARK: - UI

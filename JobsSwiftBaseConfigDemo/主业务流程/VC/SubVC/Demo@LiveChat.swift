@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import LiveChat
+import JobsByUIKit
 
 final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 

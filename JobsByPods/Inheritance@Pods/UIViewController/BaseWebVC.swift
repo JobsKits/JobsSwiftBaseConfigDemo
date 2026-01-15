@@ -5,9 +5,14 @@
 //  Created by Mac on 10/23/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
 import WebKit
+import JobsByUIKit
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")

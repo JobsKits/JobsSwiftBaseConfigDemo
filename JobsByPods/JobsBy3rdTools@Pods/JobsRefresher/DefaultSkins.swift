@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+import JobsByUIKit
 
 @MainActor
 public final class JobsDefaultHeader: JobsDefaultIndicatorView {
@@ -40,11 +41,11 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
     }()
     public var heightOrWidth: CGFloat = 60
     /// 外部可自定义文案（不含状态词），内部会自动竖排化。
-    public var idleText: String = "继续侧拉"
-    public var readyText: String = "松手刷新"
-    public var refreshingText: String = "刷新中"
-    public var doneText: String = "完成"
-    public var noMoreText: String = "没有更多"
+    public var idleText: String = "继续侧拉".tr
+    public var readyText: String = "松手刷新".tr
+    public var refreshingText: String = "刷新中".tr
+    public var doneText: String = "完成".tr
+    public var noMoreText: String = "没有更多".tr
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,9 +114,9 @@ public final class JobsDefaultLeft: JobsSideIndicatorView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
-        idleText = "继续左拉"
-        readyText = "松手刷新"
-        refreshingText = "刷新中"
+        idleText = "继续左拉".tr
+        readyText = "松手刷新".tr
+        refreshingText = "刷新中".tr
     }
     required init?(coder: NSCoder) { fatalError() }
 }
@@ -124,9 +125,9 @@ public final class JobsDefaultRight: JobsSideIndicatorView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
-        idleText = "继续右拉"
-        readyText = "松手刷新"
-        refreshingText = "刷新中"
+        idleText = "继续右拉".tr
+        readyText = "松手刷新".tr
+        refreshingText = "刷新中".tr
     }
     required init?(coder: NSCoder) { fatalError() }
 }

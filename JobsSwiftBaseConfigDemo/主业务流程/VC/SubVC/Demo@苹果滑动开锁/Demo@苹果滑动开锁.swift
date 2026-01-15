@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 
 final class SlideToUnlockDemoVC: BaseVC {
     private lazy var slideView: SlideToUnlockView = {

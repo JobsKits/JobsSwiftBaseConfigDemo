@@ -4,8 +4,11 @@
 //
 //  Created by Jobs on 12/1/25.
 //
-import Foundation
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 // MARK: - 私有：蓝色占位图（1x1）
 // 统一的纯色占位（1×1）；需要更大就改 size
 public func jobsSolidBlue(

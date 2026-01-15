@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 /// Demo@系统进度条+倒计时JobsTimer+进度（方向）模式
 final class JobsSysProgressDemoVC: BaseVC {
     let horizontalInset: CGFloat = 40

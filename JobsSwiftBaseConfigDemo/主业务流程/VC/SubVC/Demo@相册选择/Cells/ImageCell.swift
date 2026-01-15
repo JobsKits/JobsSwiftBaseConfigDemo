@@ -9,6 +9,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+import JobsByUIKit
 
 public final class ImageCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {

@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 #if canImport(FMDB) && !canImport(WCDB)
 import FMDB
 final class FMDBDemoVC: BaseVC {

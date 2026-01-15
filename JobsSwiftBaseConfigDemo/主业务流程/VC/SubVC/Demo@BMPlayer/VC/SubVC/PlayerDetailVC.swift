@@ -13,6 +13,7 @@ import UIKit
 
 import BMPlayer
 import SnapKit
+import JobsByUIKit
 
 final class PlayerDetailVC: BaseVC {
     private let item: FeedItem

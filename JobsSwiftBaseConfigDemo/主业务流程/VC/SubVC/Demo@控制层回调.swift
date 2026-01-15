@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 
 final class JobsControlEventsDemoVC: BaseVC {
     // 统一用一个垂直栈承载所有 Demo

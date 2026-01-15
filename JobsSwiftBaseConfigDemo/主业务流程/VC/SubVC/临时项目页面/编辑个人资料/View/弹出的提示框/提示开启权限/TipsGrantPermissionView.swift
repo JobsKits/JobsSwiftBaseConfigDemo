@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import JobsByUIKit
 
 final class TipsGrantPermissionView: UIView {
     /// 白色卡片

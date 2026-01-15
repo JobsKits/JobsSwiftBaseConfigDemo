@@ -12,15 +12,17 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
+import JobsBy3rdTools
 
 final class BRPickerDemoVC: BaseVC {
     /// 文本：单列（学历）
     private lazy var textSinglePicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
             .brMode(.single)
-            .brTitle("学历")
+            .brTitle("学历".tr)
             .brStyle { $0.isAutoSelect = false }
-            .brDataSource(["大专以下", "大专", "本科", "硕士", "博士", "博士后"])
+            .brDataSource(["大专以下".tr, "大专".tr, "本科".tr, "硕士".tr, "博士".tr, "博士后".tr])
             .brSelectIndex(2)
             .brOnSingle { m, idx in
                 ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
@@ -30,10 +32,10 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var textMultiPicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
             .brMode(.multi)
-            .brTitle("尺码/颜色")
+            .brTitle("尺码/颜色".tr)
             .brMultiDataSource([
-                ["S", "M", "L", "XL"],
-                ["黑", "白", "蓝", "粉"]
+                ["S".tr, "M".tr, "L".tr, "XL"],
+                ["黑".tr, "白".tr, "蓝".tr, "粉".tr]
             ])
             .brSelectIndexs([1, 2])
             .brStyle { $0.isAutoSelect = false }
@@ -45,23 +47,23 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var textCascadePicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
             .brMode(.cascade)
-            .brTitle("选择地区")
+            .brTitle("选择地区".tr)
             .brCascadeData([
-                RegionNode(text: "浙江省", children: [
-                    RegionNode(text: "杭州市", children: [
-                        RegionNode(text: "西湖区"),
-                        RegionNode(text: "滨江区"),
-                        RegionNode(text: "拱墅区")
+                RegionNode(text: "浙江省".tr, children: [
+                    RegionNode(text: "杭州市".tr, children: [
+                        RegionNode(text: "西湖区".tr),
+                        RegionNode(text: "滨江区".tr),
+                        RegionNode(text: "拱墅区".tr)
                     ]),
-                    RegionNode(text: "宁波市", children: [
-                        RegionNode(text: "鄞州区"),
-                        RegionNode(text: "海曙区")
+                    RegionNode(text: "宁波市".tr, children: [
+                        RegionNode(text: "鄞州区".tr),
+                        RegionNode(text: "海曙区".tr)
                     ])
                 ]),
-                RegionNode(text: "江苏省", children: [
-                    RegionNode(text: "南京市", children: [
-                        RegionNode(text: "玄武区"),
-                        RegionNode(text: "鼓楼区")
+                RegionNode(text: "江苏省".tr, children: [
+                    RegionNode(text: "南京市".tr, children: [
+                        RegionNode(text: "玄武区".tr),
+                        RegionNode(text: "鼓楼区".tr)
                     ])
                 ])
             ])
@@ -75,7 +77,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateSysDatePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.date)
-            .brTitle("出生日")
+            .brTitle("出生日".tr)
             .brSelectDate(Date())
             .brMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
             .brMaxDate(Date())
@@ -89,7 +91,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateSysDateTimePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.dateAndTime)
-            .brTitle("开会时间")
+            .brTitle("开会时间".tr)
             .brSelectDate(Date())
             .brStyle { $0.minuteInterval = 5 }
             .brOnResult { [weak self] dt in
@@ -101,7 +103,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateSysTimePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.time)
-            .brTitle("提醒时间")
+            .brTitle("提醒时间".tr)
             .brSelectDate(Date())
             .brStyle {
                 $0.use12HourClock = true
@@ -116,7 +118,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateSysCountPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.countDownTimer)
-            .brTitle("倒计时")
+            .brTitle("倒计时".tr)
             .brSelectDate(Date())
             .brOnResult { [weak self] dt in
                 guard let self else { return }
@@ -127,7 +129,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateYMDPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.ymd)
-            .brTitle("生日（YMD）")
+            .brTitle("生日（YMD）".tr)
             .brSelectDate(Date())
             .brOnResult { [weak self] dt in
                 guard let self else { return }
@@ -138,7 +140,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateYMPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.ym)
-            .brTitle("账期（月度）")
+            .brTitle("账期（月度）".tr)
             .brSelectDate(Date())
             .brOnResult { [weak self] dt in
                 guard let self else { return }
@@ -149,7 +151,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateYPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.y)
-            .brTitle("年份")
+            .brTitle("年份".tr)
             .brSelectDate(Date())
             .brOnResult { [weak self] dt in
                 guard let self else { return }
@@ -160,7 +162,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateMDPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.md)
-            .brTitle("纪念日（月/日）")
+            .brTitle("纪念日（月/日）".tr)
             .brSelectDate(Date())
             .brOnResult { [weak self] dt in
                 guard let self else { return }
@@ -171,7 +173,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateHMPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
             .brMode(.hm)
-            .brTitle("提醒（时:分）")
+            .brTitle("提醒（时:分）".tr)
             .brSelectDate(Date())
             .brStyle { $0.minuteInterval = 5 }
             .brOnResult { [weak self] dt in
@@ -215,7 +217,7 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var secText: UILabel = {
         UILabel()
-            .byText("文本选择器（BRTextPickerView）")
+            .byText("文本选择器（BRTextPickerView）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
             .byAddArranged(to: stack)
@@ -223,7 +225,7 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var secSys: UILabel = {
         UILabel()
-            .byText("日期选择器（系统样式）")
+            .byText("日期选择器（系统样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
             .byAddArranged(to: stack)
@@ -231,7 +233,7 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var secCustom: UILabel = {
         UILabel()
-            .byText("日期选择器（自定义样式）")
+            .byText("日期选择器（自定义样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
             .byAddArranged(to: stack)
@@ -240,7 +242,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSingle: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemBlue)
-            .byTitle("单列（学历）", for: .normal)
+            .byTitle("单列（学历）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -255,7 +257,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnMulti: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemBlue)
-            .byTitle("多列（尺码/颜色）", for: .normal)
+            .byTitle("多列（尺码/颜色）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -270,7 +272,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnCascade: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemBlue)
-            .byTitle("三级联动（省/市/区）", for: .normal)
+            .byTitle("三级联动（省/市/区）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -285,7 +287,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysDate: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemIndigo)
-            .byTitle("系统：Date（年月日）", for: .normal)
+            .byTitle("系统：Date（年月日）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -300,7 +302,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysDateTime: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemIndigo)
-            .byTitle("系统：Date & Time", for: .normal)
+            .byTitle("系统：Date & Time".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -315,7 +317,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysTime: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemIndigo)
-            .byTitle("系统：Time（12h）", for: .normal)
+            .byTitle("系统：Time（12h）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -330,7 +332,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysCount: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemIndigo)
-            .byTitle("系统：CountDownTimer", for: .normal)
+            .byTitle("系统：CountDownTimer".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -345,7 +347,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnYMD: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemTeal)
-            .byTitle("自定义：YMD（年月日）", for: .normal)
+            .byTitle("自定义：YMD（年月日）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -360,7 +362,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnYM: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemTeal)
-            .byTitle("自定义：YM（年月）", for: .normal)
+            .byTitle("自定义：YM（年月）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -375,7 +377,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnY: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemTeal)
-            .byTitle("自定义：Y（年）", for: .normal)
+            .byTitle("自定义：Y（年）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -390,7 +392,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnMD: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemTeal)
-            .byTitle("自定义：MD（月日）", for: .normal)
+            .byTitle("自定义：MD（月日）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
@@ -405,7 +407,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnHM: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemTeal)
-            .byTitle("自定义：HM（时:分，步进=5）", for: .normal)
+            .byTitle("自定义：HM（时:分，步进=5）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))

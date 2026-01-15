@@ -12,6 +12,7 @@ import SnapKit
 import AVFoundation
 import Photos
 import PhotosUI   // 视频选择（PHPicker）
+import JobsByUIKit
 @MainActor
 final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private enum SourceMode { case none, cameraPhoto, albumImages, cameraVideo, albumVideos }

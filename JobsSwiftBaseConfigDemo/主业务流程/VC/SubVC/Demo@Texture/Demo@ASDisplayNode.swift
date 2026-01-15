@@ -12,6 +12,7 @@ import UIKit
 #endif
 import AsyncDisplayKit
 import SnapKit
+import JobsByUIKit
 // MARK: - 卡片节点（等价 CK 的“一张卡”）
 final class CardNode: ASDisplayNode {
     // 头部

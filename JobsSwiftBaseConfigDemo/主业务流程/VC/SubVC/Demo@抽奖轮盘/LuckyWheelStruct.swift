@@ -5,7 +5,11 @@
 //  Created by Jobs on 11/28/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 /// 模拟 UIScrollView 的减速曲线
 /// velocity：当前速度（可以是角速度 rad/s）
 /// decelerationRate：UIScrollView.DecelerationRate.normal.rawValue 之类

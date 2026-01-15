@@ -11,12 +11,13 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 
 final class JobsOpenDemoVC: BaseVC {
     // ================================== UI ==================================
     private lazy var btnOpenWeb: UIButton = {
         UIButton(type: .system)
-            .byTitle("🌐 打开百度", for: .normal)
+            .byTitle("🌐 打开百度".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemBlue)
@@ -28,7 +29,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnOpenChineseURL: UIButton = {
         UIButton(type: .system)
-            .byTitle("🔍 打开含中文参数URL", for: .normal)
+            .byTitle("🔍 打开含中文参数URL".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemGreen)
@@ -40,7 +41,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnOpenScheme: UIButton = {
         UIButton(type: .system)
-            .byTitle("💬 打开微信 Scheme", for: .normal)
+            .byTitle("💬 打开微信 Scheme".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemTeal)
@@ -52,7 +53,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnCall: UIButton = {
         UIButton(type: .system)
-            .byTitle("📞 拨打电话（tel://）", for: .normal)
+            .byTitle("📞 拨打电话（tel://）".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemOrange)
@@ -64,7 +65,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnCallPrompt: UIButton = {
         UIButton(type: .system)
-            .byTitle("☎️ 拨打电话（telprompt://）", for: .normal)
+            .byTitle("☎️ 拨打电话（telprompt://）".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemRed)
@@ -77,7 +78,7 @@ final class JobsOpenDemoVC: BaseVC {
     // ========================== ✉️ 邮件相关 demo ==========================
     private lazy var btnMailSimple: UIButton = {
         UIButton(type: .system)
-            .byTitle("✉️ 发邮件（最简单）", for: .normal)
+            .byTitle("✉️ 发邮件（最简单）".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemIndigo)
@@ -89,7 +90,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnMailText: UIButton = {
         UIButton(type: .system)
-            .byTitle("✉️ 发邮件（主题+正文）", for: .normal)
+            .byTitle("✉️ 发邮件（主题+正文）".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemPurple)
@@ -104,7 +105,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnMailHTML: UIButton = {
         UIButton(type: .system)
-            .byTitle("✉️ 群发/抄送（HTML）", for: .normal)
+            .byTitle("✉️ 群发/抄送（HTML）".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemBrown)

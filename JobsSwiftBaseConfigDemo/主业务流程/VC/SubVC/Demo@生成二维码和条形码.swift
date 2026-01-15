@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 
 final class QRCodeDemoVC: BaseVC {
     // 编码的内容（可自行替换）

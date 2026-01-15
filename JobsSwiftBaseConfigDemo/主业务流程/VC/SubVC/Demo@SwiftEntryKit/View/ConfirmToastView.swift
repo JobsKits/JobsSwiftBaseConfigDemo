@@ -5,6 +5,12 @@
 //  Created by Mac on 11/12/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+import JobsByUIKit
 // ============================== 自定义“需确认”中心 Toast 视图 ==============================
 final class ConfirmToastView: UIView {
 

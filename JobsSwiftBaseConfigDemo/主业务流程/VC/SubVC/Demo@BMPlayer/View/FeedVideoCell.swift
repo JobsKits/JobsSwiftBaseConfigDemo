@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import JobsByUIKit
 
 final class FeedVideoCell: UITableViewCell {
     // MARK: - UI（懒加载）

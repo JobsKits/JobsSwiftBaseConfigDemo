@@ -4,9 +4,11 @@
 //
 //  Created by Jobs on 2025/6/16.
 //
-
-import Foundation
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 // MARK: - 启动检查的枚举
 public enum LaunchKind {
     case firstInstallLaunch      // 安装后第一次

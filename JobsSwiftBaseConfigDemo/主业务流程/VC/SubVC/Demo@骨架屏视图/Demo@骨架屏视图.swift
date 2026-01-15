@@ -5,10 +5,14 @@
 //  Created by Mac on 11/12/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
 import SkeletonView
-
+import JobsByUIKit
 // MARK: - 数据模型
 struct User {
     let name: String

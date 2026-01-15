@@ -10,6 +10,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
 typealias DemoItem = (title: String, vcType: UIViewController.Type)
 final class RootFoldTableCell: UITableViewCell {

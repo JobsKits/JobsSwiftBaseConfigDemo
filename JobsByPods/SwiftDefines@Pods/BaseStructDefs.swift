@@ -4,9 +4,11 @@
 //
 //  Created by Mac on 10/2/25.
 //
-
-import Foundation
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 // MARK: - ShadowDirection
 struct ShadowDirection: OptionSet {
     let rawValue: UInt

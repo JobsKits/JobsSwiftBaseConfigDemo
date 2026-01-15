@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 
 class JobsEmptyView: UIView {
     var onTapRetry: jobsByVoidBlock?

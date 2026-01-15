@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
+import JobsByUIKit
 
 final class JobsMeCenterVC: BaseVC {
     enum Row: Int, CaseIterable {

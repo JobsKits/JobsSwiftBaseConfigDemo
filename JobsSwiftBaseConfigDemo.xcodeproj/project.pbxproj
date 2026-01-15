@@ -200,6 +200,7 @@
 		04FC77892EB0BE1E00B810BA /* FeedListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC77882EB0BE1D00B810BA /* FeedListVC.swift */; };
 		04FC778B2EB0BE2F00B810BA /* PlayerDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC778A2EB0BE2F00B810BA /* PlayerDetailVC.swift */; };
 		1396DBCA0598D19C4056F6DB /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 024C0ED617938A43C648E9FB /* Pods_JobsSwiftBaseConfigDemo.framework */; };
+		C52EA7BB2F18FDCF00594A25 /* Demo@RxDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52EA7BA2F18FDCF00594A25 /* Demo@RxDataSources.swift */; };
 		C564FBE62E09580B0079B5C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C564FBE42E09580B0079B5C1 /* Main.storyboard */; };
 		C564FBE92E09580B0079B5C1 /* JobsSwiftBaseConfigDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C564FBE72E09580B0079B5C1 /* JobsSwiftBaseConfigDemo.xcdatamodeld */; };
 		C564FBEE2E09580D0079B5C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C564FBEC2E09580D0079B5C1 /* LaunchScreen.storyboard */; };
@@ -3127,6 +3128,7 @@
 		04FC778A2EB0BE2F00B810BA /* PlayerDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailVC.swift; sourceTree = "<group>"; };
 		04FD2AAA2EB5B9AB00CDB5D5 /* JobsConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = JobsConfig.xcconfig; sourceTree = "<group>"; };
 		0855557614A0D32E1FC3E93D /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		C52EA7BA2F18FDCF00594A25 /* Demo@RxDataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Demo@RxDataSources.swift"; sourceTree = "<group>"; };
 		C564FBDB2E09580B0079B5C1 /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C564FBE52E09580B0079B5C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C564FBE82E09580B0079B5C1 /* JobsSwiftBaseConfigDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JobsSwiftBaseConfigDemo.xcdatamodel; sourceTree = "<group>"; };
@@ -8079,6 +8081,7 @@
 		04A8C54F2E8AA9FF00381701 /* SubVC */ = {
 			isa = PBXGroup;
 			children = (
+				C52EA7B62F18FD9C00594A25 /* Demo@RxDataSources */,
 				04712C0A2EF13EEF00120C85 /* 临时项目页面 */,
 				04B6DF792F037DF500EE41E8 /* 读取真机崩溃日志 */,
 				04768A8B2EFA8FA600AF7D1C /* Demo@按钮完全盖在Cell上 */,
@@ -8387,6 +8390,38 @@
 				EE8FE80C62B96A25519BD1B7 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		C52EA7B62F18FD9C00594A25 /* Demo@RxDataSources */ = {
+			isa = PBXGroup;
+			children = (
+				C52EA7B92F18FDB400594A25 /* Model */,
+				C52EA7B82F18FDAF00594A25 /* View */,
+				C52EA7B72F18FDA800594A25 /* VC */,
+			);
+			path = "Demo@RxDataSources";
+			sourceTree = "<group>";
+		};
+		C52EA7B72F18FDA800594A25 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				C52EA7BA2F18FDCF00594A25 /* Demo@RxDataSources.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		C52EA7B82F18FDAF00594A25 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C52EA7B92F18FDB400594A25 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		C564FBD22E09580A0079B5C1 = {
@@ -8884,6 +8919,7 @@
 				04712C142EF141AD00120C85 /* JobsMeCenterVC.swift in Sources */,
 				04CF03172E8A76500083ACF0 /* Demo@富文本.swift in Sources */,
 				040D06B42EF3E86800AE2233 /* HalfSheetPresentationController.swift in Sources */,
+				C52EA7BB2F18FDCF00594A25 /* Demo@RxDataSources.swift in Sources */,
 				049EAE672EF6864100E8131F /* MomentMediaCell.swift in Sources */,
 				040D06A52EF3AEBA00AE2233 /* Demo@时时彩.swift in Sources */,
 				049A656F2EA0D51C0006B185 /* Demo@测试UITraitChange.swift in Sources */,

@@ -5,8 +5,13 @@
 //  Created by Mac on 11/12/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SnapKit
+import JobsByUIKit
 
 final class LeftMenuCell: UITableViewCell {
 

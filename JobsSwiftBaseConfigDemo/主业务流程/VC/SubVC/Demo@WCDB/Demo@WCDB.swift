@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 #if !canImport(FMDB) && canImport(WCDB)
 final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16

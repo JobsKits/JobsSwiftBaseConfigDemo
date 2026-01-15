@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 /// Demo Timer ID
 private enum JobsTimerManagerDemoID: String, JobsTimerIdentifiable {
     case A_pauseResume

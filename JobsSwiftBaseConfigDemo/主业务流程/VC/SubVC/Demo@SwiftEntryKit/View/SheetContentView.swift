@@ -4,8 +4,14 @@
 //
 //  Created by Mac on 11/12/25.
 //
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import SwiftEntryKit
+import JobsByUIKit
 // MARK: - 自定义底部表单（键盘联动）
 final class SheetContentView: UIView, UITextFieldDelegate {
     private lazy var titleLabel: UILabel = {

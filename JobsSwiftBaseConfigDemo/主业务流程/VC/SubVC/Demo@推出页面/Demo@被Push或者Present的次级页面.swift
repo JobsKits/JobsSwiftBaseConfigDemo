@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 /// 示例模型，用于演示传参
 struct DemoModel {
     let id: Int

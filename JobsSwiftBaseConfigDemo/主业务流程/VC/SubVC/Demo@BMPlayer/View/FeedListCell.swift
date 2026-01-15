@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import JobsByUIKit
 
 final class FeedListCell: UITableViewCell {
     private var task: URLSessionDataTask?

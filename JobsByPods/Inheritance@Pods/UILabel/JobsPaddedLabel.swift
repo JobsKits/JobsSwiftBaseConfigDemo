@@ -5,7 +5,11 @@
 //  Created by Mac on 9/25/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 // MARK: 是实现 UILabel 的左右内边距，让文字和边框之间留点空隙，解决系统 UILabel 没有 padding 的问题
 final class JobsPaddedLabel: UILabel {
     @IBInspectable var horizontalPadding: CGFloat = 0

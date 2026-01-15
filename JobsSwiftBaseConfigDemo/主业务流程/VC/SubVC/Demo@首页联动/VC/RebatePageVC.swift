@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JXSegmentedView
+import JobsByUIKit
 
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
 

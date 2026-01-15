@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 
 final class MomentMediaCell: UICollectionViewCell {
     private var task: URLSessionDataTask?

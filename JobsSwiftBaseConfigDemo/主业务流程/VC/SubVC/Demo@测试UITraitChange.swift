@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import QuartzCore
+import JobsByUIKit
 // MARK: - Demo VC（iOS 17+ 使用 UITraitChangeObservable + 内置调试按钮）
 final class TraitChangeDemoVC: BaseVC {
     // MARK: UI（全部懒加载，byAddTo + SnapKit）

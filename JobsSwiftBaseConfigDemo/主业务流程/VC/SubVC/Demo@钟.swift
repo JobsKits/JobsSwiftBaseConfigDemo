@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsByUIKit
 
 final class ClockDemoVC: BaseVC {
     private lazy var clockView: JobsClockView = {

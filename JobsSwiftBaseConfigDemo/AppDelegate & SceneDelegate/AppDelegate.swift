@@ -15,6 +15,7 @@ import GKNavigationBarSwift
 import LiveChat
 import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
+import CocoaLumberjackSwift
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections
@@ -197,7 +198,7 @@ extension AppDelegate {
             ///  日期打印
             print(Date().formatted(date: .numeric, time: .standard))
         }.start()
-
+        setupLogging()
         udSave()
         udRead()
         udSaveAge()
@@ -233,6 +234,21 @@ extension AppDelegate {
         let id: Int
         let name: String
         let isVIP: Bool
+    }
+    /// 日志框架接入
+    func setupLogging() {
+        dynamicLogLevel = .verbose   // Debug 包：全开
+        // dynamicLogLevel = .warning // Release 包：只保留 warn/error
+    
+        /// iOS 10+ 推荐
+        DDLog.add(DDOSLogger.sharedInstance)
+        /// Xcode Console
+        DDLog.add(DDTTYLogger.sharedInstance)
+        /// 写入文件日志（线上排查神器）
+//        let fileLogger = DDFileLogger()                 // 文件 logger
+//        fileLogger.rollingFrequency = 60 * 60 * 24      // 每 24h 滚动一个新文件
+//        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+//        DDLog.add(fileLogger)
     }
     /// 存对象
     func udSave(){

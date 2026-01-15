@@ -10,6 +10,7 @@ import AppKit
 import UIKit
 #endif
 import SnapKit
+import JobsByUIKit
 // MARK: - Cell
 public final class HCell: UICollectionViewCell {
     private lazy var label: UILabel = {

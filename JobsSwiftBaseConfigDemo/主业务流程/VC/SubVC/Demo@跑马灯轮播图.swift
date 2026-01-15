@@ -11,8 +11,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-
 #if canImport(Kingfisher)
 import Kingfisher
 #endif
@@ -20,6 +18,9 @@ import Kingfisher
 #if canImport(SDWebImage)
 import SDWebImage
 #endif
+
+import SnapKit
+import JobsByUIKit
 /// Demo：13 组 JobsMarqueeView
 /// 1. 向上连续滚动
 /// 2. 向下连续滚动

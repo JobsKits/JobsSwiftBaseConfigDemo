@@ -13,6 +13,7 @@ import UIKit
 import Moya
 import Combine
 import SnapKit
+import JobsByUIKit
 #if canImport(CombineMoya)
 import CombineMoya
 #endif

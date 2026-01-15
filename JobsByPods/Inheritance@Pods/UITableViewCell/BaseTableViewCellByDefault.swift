@@ -5,8 +5,12 @@
 //  Created by Jobs on 11/13/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
-/// 左侧一张图 + 左侧一个主标题 
+#endif
+/// 左侧一张图 + 左侧一个主标题
 class BaseTableViewCellByDefault: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)

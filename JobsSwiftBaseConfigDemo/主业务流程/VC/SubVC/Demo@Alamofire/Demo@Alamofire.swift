@@ -9,11 +9,16 @@
 //  依赖：Alamofire、Combine(可选)、SnapKit、GKNavigationBarSwift
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 import Alamofire
 import Combine
 import SnapKit
 import GKNavigationBarSwift
+import JobsByUIKit
 
 final class AFDemoVC: UIViewController {
     // live 或 stubbed；live 演示真实请求

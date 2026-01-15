@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import JobsSwiftBlock
 
 @inlinable
 public func jobs_weakify<Owner: AnyObject>(

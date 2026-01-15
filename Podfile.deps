@@ -2,6 +2,7 @@
 # ============================== 几乎每个 App 都会用到 ==============================
 def swiftAppCommon
   # --- OC/C++/C ---
+  pod 'CocoaLumberjack'                    # https://github.com/CocoaLumberjack/CocoaLumberjack❤️ 日志框架
   pod 'SDWebImage'                         # https://github.com/SDWebImage/SDWebImage          ❤️
   pod 'SDWebImageWebPCoder'                # https://github.com/SDWebImage/SDWebImageWebPCoder ❤️
   pod 'MJRefresh'                          # https://github.com/CoderMJLee/MJRefresh           ❤️
@@ -13,6 +14,12 @@ def swiftAppCommon
 #  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS            ❤️ 直播礼物动画播放器
   # --- Swift ---
+  pod 'RxSwift'                            # https://github.com/ReactiveX/RxSwift              ❤️ 核心
+  pod 'RxCocoa'                            # https://github.com/ReactiveX/RxSwift              ❤️ UI 绑定扩展
+  pod 'RxRelay'                            # https://cocoapods.org/pods/RxRelay                ❤️ 替代 Variable
+  pod 'RxDataSources'                      # https://github.com/RxSwiftCommunity/RxDataSources
+  pod 'NSObject+Rx'                        # https://github.com/RxSwiftCommunity/NSObject-Rx   ❤️
+  pod 'PromiseKit'                         # https://github.com/mxcl/PromiseKit                ❤️
   pod 'Cache', :git => 'https://github.com/hyperoslo/Cache.git' # ,:tag => '2.3.4' # pod没更新只能指向源码
   pod 'DeviceKit'                          # https://github.com/devicekit/DeviceKit            ❤️ 设备信息/设备系列/模拟器设备识别/电池状态/低功耗模式状态/当前是否为引导式访问会话/调整屏幕亮度/可用磁盘空间
   pod 'Alamofire', '~> 5.9'                # https://github.com/Alamofire/Alamofire            ❤️
@@ -28,10 +35,6 @@ def swiftAppCommon
   pod 'JXSegmentedView'                    # https://github.com/pujiaxin33/JXSegmentedView     ❤️ 子控制器切换
   pod 'JXBanner'                           # https://github.com/Coder-TanJX/JXBanner           ❤️ 轮播图
   pod 'KakaJSON'                           # https://github.com/kakaopensource/KakaJSON        ❤️
-  pod 'RxSwift'                            # https://github.com/ReactiveX/RxSwift              ❤️ 核心
-  pod 'RxCocoa'                            # https://github.com/ReactiveX/RxSwift              ❤️ UI 绑定扩展
-  pod 'RxRelay'                            # https://cocoapods.org/pods/RxRelay                ❤️ 替代 Variable
-  pod 'NSObject+Rx'                        # https://github.com/RxSwiftCommunity/NSObject-Rx   ❤️
   pod 'ESPullToRefresh'                    # https://github.com/eggswift/pull-to-refresh       ❤️ Swift 平台 MJRefresh 平替
   pod 'BMPlayer'                           # https://github.com/BrikerMan/BMPlayer             ❤️ 播放器（参照 ZFPlayer）
   pod 'LiveChat'                           # https://github.com/livechat/chat-window-ios       ❤️ 第三方的聊天工具 https://www.livechat.com/

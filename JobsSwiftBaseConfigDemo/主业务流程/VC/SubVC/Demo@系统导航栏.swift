@@ -12,6 +12,7 @@ import UIKit
 #endif
 import RxSwift
 import RxCocoa
+import JobsByUIKit
 
 final class JobsNavigationDemoVC: BaseVC {
     deinit {
