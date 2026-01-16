@@ -72,9 +72,14 @@ Pod::Spec.new do |s|
     ss.resources = '多语言化/**/*.strings'
   end
 
-  # ====================== 🛜网络流量监控（中文目录） ======================
+  # ====================== 🛜 网络流量监控（中文目录） ======================
   s.subspec '🛜网络流量监控' do |ss|
     # 目录：🛜网络流量监控/JobsNetWorkTools.swift
     ss.source_files = '🛜网络流量监控/**/*.swift'
+  end
+  
+  # ====================== ⏰ JobsTimer ======================
+  s.subspec 'JobsTimer' do |ss|
+    ss.source_files = 'JobsTimer/**/*.swift'
   end
 end

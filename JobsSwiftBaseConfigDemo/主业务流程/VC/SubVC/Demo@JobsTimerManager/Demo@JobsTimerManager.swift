@@ -15,6 +15,7 @@ import SnapKit
 import JobsByUIKit
 import JobsBy3rdTools
 import Inheritance
+import JobsSwiftBaseTools
 /// Demo Timer ID
 private enum JobsTimerManagerDemoID: String, JobsTimerIdentifiable {
     case A_pauseResume
