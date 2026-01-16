@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// Demo@任意UIView
 final class JobsCountdownLayerDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 40

@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class QRCodeDemoVC: BaseVC {
     // 编码的内容（可自行替换）

@@ -16,6 +16,8 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import JobsByUIKit
+import JobsBy3rdTools
+import Inheritance
 
 final class RxDataSourcesDemoVC: BaseVC {
 
@@ -47,8 +49,8 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byContentInsetTop(8)
             .jobs_emptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in

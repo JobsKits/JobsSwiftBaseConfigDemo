@@ -13,8 +13,10 @@ import AVFoundation
 import Photos
 import PhotosUI   // 视频选择（PHPicker）
 import JobsByUIKit
+import Inheritance
+
 @MainActor
-final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+final class PhotoAlbumDemoVC: BaseVC {
     private enum SourceMode { case none, cameraPhoto, albumImages, cameraVideo, albumVideos }
     private var mode: SourceMode = .none
     private var images: [UIImage] = []
@@ -95,24 +97,24 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
 
     private lazy var recordBtn: UIButton = { [unowned self] in
         UIButton(type: .system)
-           .byTitle("录制视频", for: .normal)
-           .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-           .byTitleColor(.white, for: .normal)
-           .byImage("video.fill".sysImg, for: .normal)
-           .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-           .byCornerRadius(12)
-           .byBgColor(.systemPink)
-           .onTap { [weak self] _ in
-               guard let self else { return }
-               #if targetEnvironment(simulator)
-               "模拟器无法录制视频".toast; return
-               #else
-               MediaPickerService.recordVideo(from: self, maxDuration: 30, quality: .typeHigh) { [weak self] url in
-                   guard let self else { return }
-                   "已录制 1 段视频".toast
-                   self.showCameraVideo(url)
-               }
-               #endif
+            .byTitle("录制视频".tr, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(.white, for: .normal)
+            .byImage("video.fill".sysImg, for: .normal)
+            .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
+            .byCornerRadius(12)
+            .byBgColor(.systemPink)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                #if targetEnvironment(simulator)
+                    "模拟器无法录制视频".toast; return
+                #else
+                MediaPickerService.recordVideo(from: self, maxDuration: 30, quality: .typeHigh) { [weak self] url in
+                    guard let self else { return }
+                    "已录制 1 段视频".tr.toast
+                    self.showCameraVideo(url)
+                }
+                #endif
            }
            .byAddTo(view) { [unowned self] make in
                make.top.equalTo(self.albumBtn.snp.bottom).offset(16)
@@ -122,7 +124,7 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
     // 相册单选视频
     private lazy var pickOneVideoBtn: UIButton = { [unowned self] in
         UIButton(type: .system)
-            .byTitle("选择一个视频", for: .normal)
+            .byTitle("选择一个视频".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.white, for: .normal)
             .byImage("film".sysImg, for: .normal)
@@ -133,7 +135,7 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
                 guard let self else { return }
                 pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
                     guard let self, let u = urls.first else { return }
-                    "已选择 1 个视频".toast
+                    "已选择 1 个视频".tr.toast
                     self.showCameraVideo(u)
                 }
             }
@@ -245,7 +247,9 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
         }
         collectionView.alwaysBounceVertical = collectionView.isScrollEnabled
     }
-    // MARK: - UICollectionViewDataSource
+}
+// MARK: - UICollectionViewDataSource
+extension PhotoAlbumDemoVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch mode {
         case .cameraPhoto: return images.isEmpty ? 0 : 1
@@ -280,7 +284,10 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
                 .byData("暂无内容@黑底蓝字".img)
         }
     }
-    // MARK: - UICollectionViewDelegateFlowLayout
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension PhotoAlbumDemoVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -315,6 +322,7 @@ final class PhotoAlbumDemoVC: BaseVC, UICollectionViewDataSource, UICollectionVi
         }
     }
 }
+
 // MARK: - 相册选择视频（单/多）
 // 放在 VC 内，复用 PermissionCenter；也可抽到 MediaPickerService
 private extension PhotoAlbumDemoVC {
@@ -387,6 +395,7 @@ private final class PHPickerVideoProxy: NSObject, PHPickerViewControllerDelegate
         group.notify(queue: .main) { [jobsByVoidBlock] in jobsByVoidBlock(urls) }
     }
 }
+
 private final class LegacyVideoLibraryProxy: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let jobsByVoidBlock: (URL?) -> Void
     init(jobsByVoidBlock: @escaping (URL?) -> Void) { self.jobsByVoidBlock = jobsByVoidBlock }

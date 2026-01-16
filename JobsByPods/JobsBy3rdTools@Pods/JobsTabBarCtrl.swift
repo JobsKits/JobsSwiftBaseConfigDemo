@@ -10,7 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import Inheritance
 // MARK: - 自定义滚动 TabBar（继承 BaseVC）
 final class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     // MARK: - 可配置项

@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import BMPlayer
 import JobsByUIKit
+import Inheritance
 /**
 
  Info.plist

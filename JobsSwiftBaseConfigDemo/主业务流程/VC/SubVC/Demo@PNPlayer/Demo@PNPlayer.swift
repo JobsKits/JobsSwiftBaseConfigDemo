@@ -6,11 +6,17 @@
 //
 //  https://github.com/linghugoogle/PNPlayer
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
 import MetalKit
 import AVFoundation
 import JobsByUIKit
+import Inheritance
 
 class PNPlayerDemoVC: BaseVC {
     private lazy var renderer: MetalRenderer = {

@@ -21,6 +21,7 @@ import SDWebImage
 
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// UIImageView、UIButton网络图@请求时呼吸占位只有请求失败或者解析失败才执行兜底图
 final class PicLoadDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {

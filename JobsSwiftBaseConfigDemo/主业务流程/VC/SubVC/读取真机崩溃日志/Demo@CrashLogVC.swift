@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 12

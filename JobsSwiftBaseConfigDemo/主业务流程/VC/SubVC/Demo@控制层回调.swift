@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class JobsControlEventsDemoVC: BaseVC {
     // 统一用一个垂直栈承载所有 Demo

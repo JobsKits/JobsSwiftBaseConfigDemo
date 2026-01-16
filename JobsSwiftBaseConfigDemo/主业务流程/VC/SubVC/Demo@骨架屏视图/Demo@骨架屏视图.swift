@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import SkeletonView
 import JobsByUIKit
+import Inheritance
 // MARK: - 数据模型
 struct User {
     let name: String

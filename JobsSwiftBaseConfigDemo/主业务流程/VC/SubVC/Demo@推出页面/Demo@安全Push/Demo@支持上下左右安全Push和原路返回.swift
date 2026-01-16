@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class SafetyPushDemoVC: BaseVC {
     // MARK: - Buttons（逐个老老实实创建，链式 + 就地约束）

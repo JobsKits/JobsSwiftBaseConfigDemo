@@ -12,6 +12,8 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import JobsBy3rdTools
+import Inheritance
 /// UITableView是不支持在Section内部直接定义Cell之间的距离的
 final class BtnFullOnTBVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []

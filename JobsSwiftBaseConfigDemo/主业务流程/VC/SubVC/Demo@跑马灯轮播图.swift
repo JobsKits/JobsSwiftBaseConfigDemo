@@ -21,6 +21,7 @@ import SDWebImage
 
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// Demo：13 组 JobsMarqueeView
 /// 1. 向上连续滚动
 /// 2. 向下连续滚动

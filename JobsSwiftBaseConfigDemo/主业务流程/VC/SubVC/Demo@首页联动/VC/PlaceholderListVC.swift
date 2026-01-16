@@ -13,6 +13,7 @@ import UIKit
 import SnapKit
 import JXSegmentedView
 import JobsByUIKit
+import Inheritance
 
 final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     private let titleText: String

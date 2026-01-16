@@ -15,6 +15,7 @@ import AVFoundation
 import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
 import JobsByUIKit
+import Inheritance
 
 final class HKLiveVC: BaseVC {
     deinit {

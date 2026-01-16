@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import IQKeyboardManagerSwift
 import JobsByUIKit
+import Inheritance
 
 final class LiveCommentDemoVC: BaseVC {
     // Data

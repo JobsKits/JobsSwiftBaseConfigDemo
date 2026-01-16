@@ -10,11 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import RxSwift
 import RxCocoa
 import SnapKit
 import NSObject_Rx
 import JobsByUIKit
+import Inheritance
 
 final class KeyboardDemoVC: BaseVC {
     private let bag = DisposeBag()

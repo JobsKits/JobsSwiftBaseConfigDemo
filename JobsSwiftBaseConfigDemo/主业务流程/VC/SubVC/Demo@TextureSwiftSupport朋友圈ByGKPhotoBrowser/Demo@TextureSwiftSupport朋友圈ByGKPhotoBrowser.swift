@@ -17,6 +17,8 @@ import TextureSwiftSupport
 import GKPhotoBrowser
 import SnapKit
 import JobsByUIKit
+import JobsBy3rdTools
+import Inheritance
 
 final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
     // ✅ Fix：既然 node 通过 heightFormula 手算高度，就别开 estimated（避免滚动抖动/跳）

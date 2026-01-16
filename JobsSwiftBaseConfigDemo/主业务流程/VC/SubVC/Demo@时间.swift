@@ -22,6 +22,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class TimerDemoVC: BaseVC {
     // MARK: - Layout 常量

@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import RxSwift
 import RxCocoa
@@ -17,6 +18,7 @@ import RxRelay
 import NSObject_Rx
 import ObjectiveC
 import JobsByUIKit
+import Inheritance
 
 final class UITextFieldDemoVC: BaseVC,HasDisposeBag {
     // MARK: - UI

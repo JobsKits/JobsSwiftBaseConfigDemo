@@ -13,6 +13,7 @@ import UIKit
 import AsyncDisplayKit
 import SnapKit
 import JobsByUIKit
+import Inheritance
 // MARK: - 数据模型（等价 CKDemoItem）
 enum DemoKind {
     case text,

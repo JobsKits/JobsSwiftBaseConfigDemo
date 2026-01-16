@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsByUIKit
 import JobsBy3rdTools
+import Inheritance
 
 final class BRPickerDemoVC: BaseVC {
     /// 文本：单列（学历）

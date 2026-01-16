@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class RedPacketRainDemoVC: BaseVC {
     private var isRaining = false

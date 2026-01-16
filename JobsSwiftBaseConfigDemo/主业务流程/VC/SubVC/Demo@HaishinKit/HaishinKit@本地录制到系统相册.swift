@@ -5,12 +5,18 @@
 //  Created by Jobs on 12/8/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import AVFoundation
 import Photos
 import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
 import JobsByUIKit
+import Inheritance
 
 final class HKLocalRecordVC: BaseVC {
     // MARK: - HaishinKit 管线（2.x 写法）

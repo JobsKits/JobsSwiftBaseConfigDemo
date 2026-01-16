@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import RxSwift
 import RxCocoa
 import JobsByUIKit
+import Inheritance
 
 final class JobsNavigationDemoVC: BaseVC {
     deinit {

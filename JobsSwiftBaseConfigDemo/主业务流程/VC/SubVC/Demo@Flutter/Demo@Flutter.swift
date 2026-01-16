@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class FlutterDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {

@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import Lottie
 import JobsByUIKit
+import Inheritance
 
 final class LottieDemoVC: BaseVC {
     // MARK: - Config

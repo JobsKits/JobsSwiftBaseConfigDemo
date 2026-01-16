@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class LuckyWheelDemoVC: BaseVC {
     private lazy var wheelView: LuckyWheelView = {

@@ -8,11 +8,17 @@
 //  - 登录 / 注册 面板切换：轻透视 + 位移/缩放 + keyframe
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
 import BMPlayer
 import AVFoundation
 import JobsByUIKit
+import Inheritance
 // MARK: - 小工具
 private extension CATransform3D {
     static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }

@@ -10,13 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+#if canImport(CombineMoya)
+import CombineMoya
+#endif
+
 import Moya
 import Combine
 import SnapKit
 import JobsByUIKit
-#if canImport(CombineMoya)
-import CombineMoya
-#endif
+import Inheritance
 
 final class MoyaDemoVC: BaseVC {
     // ✅ 改为 lazy，并把 Moya 日志重定向到 UI

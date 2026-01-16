@@ -16,12 +16,13 @@ import UniformTypeIdentifiers // iOS 14+
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 // MARK: - XLSX Demo（文件导入 + 本地数据注入）
 final class XLSXDemoVC: BaseVC {
     // MARK: UI（链式 DSL）
     private lazy var openButton: UIButton = {
         UIButton.sys()
-            .byTitle("打开 .xlsx", for: .normal)
+            .byTitle("打开 .xlsx".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.systemBlue, for: .normal)
             .byImage("doc.badge.plus".sysImg, for: .normal)
@@ -43,7 +44,7 @@ final class XLSXDemoVC: BaseVC {
 
     private lazy var localButton: UIButton = {
         UIButton.sys()
-            .byTitle("加载本地", for: .normal)
+            .byTitle("加载本地".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(.systemBlue, for: .normal)
             .byImage("internaldrive".sysImg, for: .normal)

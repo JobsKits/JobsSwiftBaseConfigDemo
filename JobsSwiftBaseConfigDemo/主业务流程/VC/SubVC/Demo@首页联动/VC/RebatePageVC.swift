@@ -13,6 +13,8 @@ import UIKit
 import SnapKit
 import JXSegmentedView
 import JobsByUIKit
+import JobsBy3rdTools
+import Inheritance
 
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
 

@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 // MARK: - Demo：多按钮（>5）以便直观看 ScrollView 横向滑动
 final class TabBarDemoVC: BaseVC {
     // MARK: JobsTabBarCtrl（链式点语法 + 中间按钮凸起 + 横竖屏自适应）

@@ -5,9 +5,15 @@
 //  Created by Mac on 10/28/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class BMPlayerDemoVC: BaseVC {
 

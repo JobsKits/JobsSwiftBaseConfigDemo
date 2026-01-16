@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
 final class IrregularButtonDemoVC: BaseVC {
     private enum Layout {

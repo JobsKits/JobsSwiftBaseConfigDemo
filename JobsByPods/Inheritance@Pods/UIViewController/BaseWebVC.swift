@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import WebKit
 import JobsByUIKit
+import Inheritance
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")

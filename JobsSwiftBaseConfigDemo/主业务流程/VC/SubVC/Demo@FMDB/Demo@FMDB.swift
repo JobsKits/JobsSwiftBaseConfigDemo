@@ -10,10 +10,14 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
+
 #if canImport(FMDB) && !canImport(WCDB)
 import FMDB
+
 final class FMDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
     private var data: [Man] = []

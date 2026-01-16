@@ -13,6 +13,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class FTDashboadDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 20

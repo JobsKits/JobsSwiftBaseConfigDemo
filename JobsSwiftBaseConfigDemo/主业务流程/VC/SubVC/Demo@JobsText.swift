@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// 如果项目有 BaseVC，则可改为继承 BaseVC
 final class JobsTextDemoVC: BaseVC {
     // MARK: - 模型

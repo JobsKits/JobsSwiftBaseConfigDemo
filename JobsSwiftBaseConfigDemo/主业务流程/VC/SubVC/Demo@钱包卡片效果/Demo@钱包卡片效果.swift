@@ -12,6 +12,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 // MARK: - 数据模型
 struct WalletCard {
     let bankName: String

@@ -16,6 +16,7 @@ import RxCocoa
 import RxRelay
 import NSObject_Rx
 import JobsByUIKit
+import Inheritance
 
 final class UITextViewDemoVC: BaseVC, HasDisposeBag {
     // ====== UI 容器 ======

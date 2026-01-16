@@ -10,8 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
+
 #if !canImport(FMDB) && canImport(WCDB)
 final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16

@@ -14,6 +14,7 @@ import UIKit
 import BMPlayer
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class PlayerLocalVC: BaseVC {
     // MARK: - 懒加载：播放器

@@ -13,8 +13,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class EmptyTableViewDemoVC: BaseVC {
     // ================================== 数据源 & 状态 ==================================

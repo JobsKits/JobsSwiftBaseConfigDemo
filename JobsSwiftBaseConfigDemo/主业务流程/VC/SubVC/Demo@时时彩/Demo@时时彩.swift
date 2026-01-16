@@ -15,6 +15,7 @@ import UIKit
 import Foundation
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class JobsMultiTimerTableDemoVC: BaseVC {
     deinit {

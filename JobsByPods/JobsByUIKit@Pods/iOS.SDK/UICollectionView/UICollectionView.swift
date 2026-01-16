@@ -12,7 +12,9 @@ import UIKit
 #endif
 import ObjectiveC
 /**
-
+ import JobsBy3rdTools
+ import JobsByUIKit
+ 
  private lazy var flowLayout: UICollectionViewFlowLayout = {
      UICollectionViewFlowLayout()
          .byScrollDirection(.vertical)

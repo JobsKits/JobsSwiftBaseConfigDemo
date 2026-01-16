@@ -10,8 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import Inheritance
+
 final class SnowflakeDemoVC: BaseVC {
     private let general = SnowflakeSwift(IDCID: 4, machineID: 30)
     // 结果展示

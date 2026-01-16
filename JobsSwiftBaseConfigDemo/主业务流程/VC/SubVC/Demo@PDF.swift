@@ -13,6 +13,7 @@ import UIKit
 import PDFKit
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class PDFDemoVC: BaseVC {
     // MARK: - Config

@@ -11,6 +11,7 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
+import Inheritance
 /// 要看这个功能演示，必须执行 ./Unity/xcode_effectTest/Libraries 下的合并脚本
 final class UnityDemoVC: BaseVC {
     // ===== 配置 =====

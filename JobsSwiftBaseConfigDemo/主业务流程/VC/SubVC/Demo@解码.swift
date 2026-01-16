@@ -13,6 +13,7 @@ import UIKit
 import Foundation
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class SafeCodableDemoVC: BaseVC {
     // MARK: - Reporter：把宽松转换/默认值上报到 UI

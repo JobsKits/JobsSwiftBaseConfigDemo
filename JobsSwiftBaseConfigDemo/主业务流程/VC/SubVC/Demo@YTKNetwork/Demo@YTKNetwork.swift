@@ -14,6 +14,7 @@ import UIKit
 import YTKNetwork
 import SnapKit
 import JobsByUIKit
+import Inheritance
 
 final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
     private var currentChainRequest: YTKChainRequest?

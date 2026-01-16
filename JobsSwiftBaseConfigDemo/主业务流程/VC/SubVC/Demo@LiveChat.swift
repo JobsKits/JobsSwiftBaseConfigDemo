@@ -10,15 +10,17 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import LiveChat
 import JobsByUIKit
+import Inheritance
 
 final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("默认展示（presentChat）", for: .normal)
+            .byTitle("默认展示（presentChat）".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
@@ -35,7 +37,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 
     private lazy var btnCustom: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("自定义展示（半屏）", for: .normal)
+            .byTitle("自定义展示（半屏）".tr, for: .normal)
             .byTitleColor(.label, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
