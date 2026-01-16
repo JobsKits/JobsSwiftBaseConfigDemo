@@ -12,7 +12,6 @@ import UIKit
 #endif
 import SnapKit
 import JobsByUIKit
-
 // MARK: - Demo@安全Present
 final class SafetyPresentDemoVC: BaseVC {
     /// 半屏高度（可按需改）
@@ -25,7 +24,7 @@ final class SafetyPresentDemoVC: BaseVC {
             .byAddArrangedSubviews(
                 [
                     UIButton(type: .system)
-                        .byTitle("系统 present (连点不会重复)")
+                        .byTitle("系统 present (连点不会重复)".tr)
                         .onTap { [weak self] sender in
                             guard let self else { return }
                             // present(DemoDetailVC(), animated: true, byCompletion: nil)
@@ -40,7 +39,7 @@ final class SafetyPresentDemoVC: BaseVC {
                                 }
                         },
                     UILabel()
-                        .byText("👆 点击绿色区域也会触发 presentSafely")
+                        .byText("👆 点击绿色区域也会触发 presentSafely".tr)
                         .byTextAlignment(.center)
                         .byTextColor(.secondaryLabel)
                         .byFont(.systemFont(ofSize: 14)),
@@ -53,7 +52,7 @@ final class SafetyPresentDemoVC: BaseVC {
                             HalfSheetDemoVC()
                                 .byModalPresentationStyle(.custom)
                                 .byTransitioningDelegate(self)
-                                .byData(["大树","小草","太阳"])
+                                .byData(["大树".tr,"小草".tr,"太阳".tr])
                                 .onResult { id in
                                     print("回来了 \(String(describing: id))")
                                 }
