@@ -378,7 +378,7 @@
     swift --version
     ```
 
-  * 当前 shell 里 swift 的路径（决定 `swift --version` 用谁）
+  * 当前 shell 里 [**Swift**](https://developer.apple.com/swift/)  的路径（决定 `swift --version` 用谁）
 
     ```shell
     which swift

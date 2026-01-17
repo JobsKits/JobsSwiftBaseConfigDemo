@@ -2,7 +2,9 @@
 
 [toc]
 
-## 一、生成`SSH`密钥（尚未在本地计算机上生成`SSH`密钥对）
+## 一、生成`SSH`密钥🔑
+
+> 尚未在本地计算机上生成`SSH`密钥🔑对
 
 ```shell
 ssh-keygen -t rsa -b 4096 -C "lg295060456@gmail.com"
@@ -33,7 +35,56 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-## 二、添加`SSH`密钥 ➤ `SSH`代理
+## 二、确认 `id_rsa` 真的存在 & 权限正确
+
+```shell
+ls -la ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub
+```
+
+## 三、把 `github.com` 的 key 明确写进 `~/.ssh/config`
+
+* 建立`~/.ssh/config`并赋权
+
+  ```
+  mkdir -p ~/.ssh
+  touch ~/.ssh/config
+  chmod 600 ~/.ssh/config
+  ```
+
+* 打开 `open ~/.ssh/config` 
+
+  ```
+  open ~/.ssh/config
+  ```
+
+* 编辑 `~/.ssh/config` 
+
+  > `IdentitiesOnly yes` 很关键：强制只用你指定的 key，避免 Sourcetree/ssh 乱试其它 identity 导致失败或卡住。
+
+  ```
+  Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa
+    IdentitiesOnly yes
+    AddKeysToAgent yes
+    UseKeychain yes
+  ```
+
+## 四、`id_rsa` ➤ macOS Keychain + agent
+
+> 让 GUI 程序也能用
+
+```shell
+ssh-add --apple-use-keychain ~/.ssh/id_rsa
+ssh-add -l
+```
+
+
+
+## 二、添加`SSH`密钥🔑 ➤ `SSH`代理
 
 * 运行以下命令来将生成的SSH密钥添加到SSH代理，以便您可以在不重复输入密码的情况下使用它：
 
@@ -49,7 +100,7 @@ Agent pid 9880
 Identity added: /Users/jobs/.ssh/id_rsa (lg295060456@gmail.com)
 ```
 
-## 三、添加公钥 ➤ [Github](https://github.com)
+## 三、添加公钥🔑 ➤ [Github](https://github.com)
 
 * 打开`~/.ssh/id_rsa.pub`文件并复制其中的内容
 
