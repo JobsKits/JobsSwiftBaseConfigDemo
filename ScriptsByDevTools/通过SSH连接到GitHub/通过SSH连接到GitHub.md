@@ -82,9 +82,7 @@ ssh-add --apple-use-keychain ~/.ssh/id_rsa
 ssh-add -l
 ```
 
-
-
-## 二、添加`SSH`密钥🔑 ➤ `SSH`代理
+## 五、添加`SSH`密钥🔑 ➤ `SSH`代理
 
 * 运行以下命令来将生成的SSH密钥添加到SSH代理，以便您可以在不重复输入密码的情况下使用它：
 
@@ -100,7 +98,7 @@ Agent pid 9880
 Identity added: /Users/jobs/.ssh/id_rsa (lg295060456@gmail.com)
 ```
 
-## 三、添加公钥🔑 ➤ [Github](https://github.com)
+## 六、添加公钥🔑 ➤ [Github](https://github.com)
 
 * 打开`~/.ssh/id_rsa.pub`文件并复制其中的内容
 
@@ -135,7 +133,7 @@ Identity added: /Users/jobs/.ssh/id_rsa (lg295060456@gmail.com)
 
   ![image-20231007055536132](./assets/image-20231007055536132.png)
 
-## 四、命令测试`SSH`连接是否正常
+## 七、命令测试`SSH`连接是否正常
 
 ```bash
 ssh -T git@github.com
