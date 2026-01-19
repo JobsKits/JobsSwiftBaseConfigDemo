@@ -6,6 +6,7 @@
 //
 
 import QuartzCore
+import JobsSwiftBlock
 
 public extension CATransition {
     /// 统一入口：CATransition.make { $0.byType(...).bySubtype(...) }

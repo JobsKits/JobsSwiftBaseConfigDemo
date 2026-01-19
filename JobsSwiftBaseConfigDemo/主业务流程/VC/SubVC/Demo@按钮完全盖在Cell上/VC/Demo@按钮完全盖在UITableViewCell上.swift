@@ -10,10 +10,14 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import Inheritance
+import GKNavigationBarSwift
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsTextTools
+import JobsToast
 /// UITableView是不支持在Section内部直接定义Cell之间的距离的
 final class BtnFullOnTBVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []

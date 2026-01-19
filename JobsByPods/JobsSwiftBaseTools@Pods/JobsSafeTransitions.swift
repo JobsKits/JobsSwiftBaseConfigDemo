@@ -5,8 +5,14 @@
 //  Created by You on 2025/09/30.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import ObjectiveC
+import JobsSwiftBlock
 // MARK: - Push 防重（UINavigationController）
 private struct NavAssoc {
     static var pushingKey: UInt8 = 0

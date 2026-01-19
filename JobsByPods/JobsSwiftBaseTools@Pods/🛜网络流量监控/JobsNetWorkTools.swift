@@ -13,13 +13,13 @@ import JobsSwiftBlock
 import JobsByUIKit
 /// 🛜 网络流量监控
 // MARK: - 数据源类型（当前网络来源）
-enum JobsNetworkSource {
+public enum JobsNetworkSource {
     case wifi
     case cellular
     case other
     case none
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .wifi:     return "Wi-Fi".tr
         case .cellular: return "蜂窝".tr
@@ -112,8 +112,8 @@ func currentNetworkBytes() -> NetworkBytes {
 /// 统一的网络流量监控：
 /// - 每 interval 秒回调一次当前网络来源 + 上/下行速度（Bytes/s）
 /// - 内部用 NWPathMonitor + getifaddrs 统计总字节差值
-final class JobsNetworkTrafficMonitor {
-    static let shared = JobsNetworkTrafficMonitor()
+public final class JobsNetworkTrafficMonitor {
+    public static let shared = JobsNetworkTrafficMonitor()
     /// 回调：当前来源 + 上/下行速度（Bytes/s）
     /// - source: 当前网络来源（Wi-Fi / 蜂窝 / 其他 / 无）
     /// - up: 上行速度（Bytes/s）
@@ -190,7 +190,7 @@ final class JobsNetworkTrafficMonitor {
     }
 }
 // MARK: - DSL 风格链式封装
-extension JobsNetworkTrafficMonitor {
+public extension JobsNetworkTrafficMonitor {
     @discardableResult
     func byOnUpdate(_ block: @escaping (JobsNetworkSource, Double, Double) -> Void) -> Self {
         self.onUpdate = block
@@ -208,7 +208,7 @@ extension JobsNetworkTrafficMonitor {
     }
 }
 // MARK: - 单位格式化（B/s -> KB/s / MB/s）
-func jobs_formatSpeed(_ bytesPerSec: Double) -> String {
+public func jobs_formatSpeed(_ bytesPerSec: Double) -> String {
     if bytesPerSec < 1024 {
         return String(format: "%.0f B/s", bytesPerSec)
     } else if bytesPerSec < 1024 * 1024 {
@@ -413,11 +413,11 @@ final class JobsNetworkDataReadyMonitor {
     }
 }
 /// 取消当前这一次网络数据就绪的等待
-func JobsCancelWaitNetworkDataReady() {
+public func JobsCancelWaitNetworkDataReady() {
     JobsNetworkDataReadyMonitor.shared.cancel()
 }
 /// 停止网络实时监听
-func JobsNetworkTrafficMonitorStop() {
+public func JobsNetworkTrafficMonitorStop() {
     JobsNetworkTrafficMonitor.shared.stop()
 }
 // MARK: - DSL 风格封装（链式）
@@ -458,7 +458,7 @@ extension JobsNetworkDataReadyMonitor {
 ///     }
 /// )
 /// ```
-func jobsWaitNetworkDataReady(
+public func jobsWaitNetworkDataReady(
     onWiFiReady: (jobsByVoidBlock)? = nil,
     onCellularReady: (jobsByVoidBlock)? = nil,
     onTimeout: (jobsByVoidBlock)? = nil

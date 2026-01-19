@@ -13,8 +13,12 @@ import UIKit
 
 import SnapKit
 import SwiftEntryKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsScale
+import JobsTextTools
 // MARK: - 内置消息工厂（颜色用 EKColor 包装）
 private func makeMessageView(title: String, desc: String, systemImage: String) -> UIView {
     let titleLabel = EKProperty.LabelContent(
@@ -68,7 +72,9 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byWindow(level: .normal)
                     .byEntrance(anim.entrance)
                     .byExit(anim.exit)
-                SwiftEntryKit.display(entry: makeMessageView(title: "已完成", desc: "数据保存成功", systemImage: "checkmark.circle.fill"),
+                SwiftEntryKit.display(entry: makeMessageView(title: "已完成",
+                                                             desc: "数据保存成功",
+                                                             systemImage: "checkmark.circle.fill"),
                                       using: attr)
             }
     }()
@@ -91,7 +97,9 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byStatusBar(.inferred)
                     .byEntrance(anim.entrance)
                     .byExit(anim.exit)
-                SwiftEntryKit.display(entry: makeMessageView(title: "提示", desc: "中心 Toast", systemImage: "bolt.fill"),
+                SwiftEntryKit.display(entry: makeMessageView(title: "提示",
+                                                             desc: "中心 Toast",
+                                                             systemImage: "bolt.fill"),
                                       using: attr)
             }
     }()

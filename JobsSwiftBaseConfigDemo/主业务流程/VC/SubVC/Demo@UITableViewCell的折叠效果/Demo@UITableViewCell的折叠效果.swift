@@ -12,8 +12,11 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class FoldTableDemoVC: BaseVC {
     private struct Row {

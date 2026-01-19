@@ -10,7 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+import SnapKit
+import JobsSwiftBaseDefines
 // MARK: - 普通银行卡 Cell（懒加载 + byAddTo）
 final class WalletCardCell: UICollectionViewCell {
     private let horizontalInset: CGFloat = 16

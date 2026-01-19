@@ -10,12 +10,21 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import UserNotifications
 import GKNavigationBarSwift
 import LiveChat
 import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
-import CocoaLumberjackSwift
+import CocoaLumberjack
+import JobsBy3rdTools
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsTimer
+import JobsSwiftFoundation_extensions
+import JobsScale
+import JobsSwiftBaseTools
+import Jobsl10n
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections
@@ -243,7 +252,7 @@ extension AppDelegate {
         /// iOS 10+ 推荐
         DDLog.add(DDOSLogger.sharedInstance)
         /// Xcode Console
-        DDLog.add(DDTTYLogger.sharedInstance)
+        DDLog.add(DDTTYLogger.sharedInstance!)
         /// 写入文件日志（线上排查神器）
 //        let fileLogger = DDFileLogger()                 // 文件 logger
 //        fileLogger.rollingFrequency = 60 * 60 * 24      // 每 24h 滚动一个新文件
@@ -515,7 +524,7 @@ extension AppDelegate {
     }
 
     func 全局比例尺(){
-        JXScale.setup(designWidth: 375, designHeight: 812, useSafeArea: false)
+        JobsScale.setup(designWidth: 375, designHeight: 812, useSafeArea: false)
     }
 
     func 安全Push和Present(){

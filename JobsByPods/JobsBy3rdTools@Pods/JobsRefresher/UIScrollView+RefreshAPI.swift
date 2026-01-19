@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 @MainActor
 public struct JobsSideFactory {
     public static func left() -> JobsDefaultIndicatorView { JobsDefaultIndicatorView() }

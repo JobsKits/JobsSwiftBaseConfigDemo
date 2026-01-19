@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsByUIKit
+
 struct MomentMedia {
     var coverURL: String
     var isVideo: Bool

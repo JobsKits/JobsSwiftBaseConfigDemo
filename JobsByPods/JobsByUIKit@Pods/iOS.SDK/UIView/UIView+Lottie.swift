@@ -4,16 +4,17 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 
+import JobsSwiftBlock
 #if canImport(SnapKit) && canImport(Lottie)
 import SnapKit
 import Lottie
-
 public extension UIView {
     // 关联存储：挂载在任意 UIView 上的唯一 LottieAnimationView（够用了；要多实例你可以自行扩展一个池）
     private struct _JobsLottieAssoc {
@@ -38,7 +39,7 @@ public extension UIView {
     ///   - configure: 最后补充配置（可选）
     /// - Returns: 新建并已挂载的 LottieAnimationView（链式继续 .play() 等）
     @discardableResult
-    func byLottieAnimation(
+    public func byLottieAnimation(
         _ name: String,
         bundle: Bundle = .main,
         loop: LottieLoopMode = .loop,
@@ -74,7 +75,7 @@ public extension UIView {
     // MARK: 入口（重载）：直接传 LottieAnimation
     /// 你也可以先用 `LottieAnimation.named(...)` 自行解析，再走这个重载
     @discardableResult
-    func byLottieAnimation(
+    public func byLottieAnimation(
         _ animation: LottieAnimation,
         loop: LottieLoopMode = .loop,
         speed: CGFloat = 1.0,
@@ -103,32 +104,32 @@ public extension UIView {
     }
     // MARK: - UIView 层便捷控制（保持语义链式）
     @discardableResult
-    func lottiePlay(completion: (jobsByBoolBlock)? = nil) -> Self {
+    public func lottiePlay(completion: (jobsByBoolBlock)? = nil) -> Self {
         jobs_lottieView?.play(completion: completion)
         return self
     }
 
     @discardableResult
-    func lottiePause() -> Self {
+    public func lottiePause() -> Self {
         jobs_lottieView?.pause()
         return self
     }
     /// 停止并可选重置到起点
     @discardableResult
-    func lottieStop(resetToBeginning: Bool = false) -> Self {
+    public func lottieStop(resetToBeginning: Bool = false) -> Self {
         jobs_lottieView?.stop()
         if resetToBeginning { jobs_lottieView?.currentProgress = 0 }
         return self
     }
     /// 设置进度（0~1）
     @discardableResult
-    func lottieProgress(_ progress: CGFloat) -> Self {
+    public func lottieProgress(_ progress: CGFloat) -> Self {
         jobs_lottieView?.currentProgress = min(max(progress, 0), 1)
         return self
     }
     /// 替换动画资源（保留其他播放参数）
     @discardableResult
-    func lottieReplace(name: String, bundle: Bundle = .main, autoPlay: Bool = false) -> Self {
+    public func lottieReplace(name: String, bundle: Bundle = .main, autoPlay: Bool = false) -> Self {
         guard let v = jobs_lottieView else { return self }
         v.animation = LottieAnimation.named(name, bundle: bundle)
         if autoPlay { v.play() }
@@ -136,7 +137,7 @@ public extension UIView {
     }
     /// 卸载当前挂载的 Lottie 视图
     @discardableResult
-    func lottieRemove() -> Self {
+    public func lottieRemove() -> Self {
         jobs_lottieView?.removeFromSuperview()
         jobs_lottieView = nil
         return self

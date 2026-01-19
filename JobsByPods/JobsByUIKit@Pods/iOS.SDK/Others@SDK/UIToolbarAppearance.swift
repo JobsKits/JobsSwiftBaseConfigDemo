@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 @available(iOS 13.0, *)
 public extension UIToolbarAppearance {
     // MARK: - Configure presets

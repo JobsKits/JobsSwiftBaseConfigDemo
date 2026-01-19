@@ -25,31 +25,6 @@ public extension UIWindow {
     }
     /// 实例访问也保持一致
     var wd: UIWindow { Self.wd }
-    /// 当前前台激活 scene 中的 keyWindow（尽量精确）
-    static func jobsKeyWindow() -> UIWindow? {
-        if #available(iOS 13.0, *) {
-            let scenes = UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-            // 前台激活优先
-            let ordered = scenes.sorted { lhs, rhs in
-                func rank(_ s: UIScene.ActivationState) -> Int {
-                    switch s {
-                    case .foregroundActive:   return 0
-                    case .foregroundInactive: return 1
-                    case .background:         return 2
-                    default:                  return 3
-                    }
-                };return rank(lhs.activationState) < rank(rhs.activationState)
-            }
-            for s in ordered {
-                if let w = s.windows.first(where: \.isKeyWindow) { return w }
-                if let w = s.windows.first { return w } // 次优
-            };return nil
-        } else {
-            // 仅给老系统兜底（新项目通常不走这里）
-            return legacyKeyWindowPreiOS13()
-        }
-    }
     /// 新建并附着到“最合适”的前台 scene（iOS 26+ 不要再用 init(frame:)）
     @discardableResult
     static func jobsMake(scene: UIWindowScene? = nil,

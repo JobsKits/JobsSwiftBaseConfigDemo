@@ -10,7 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import ObjectiveC.runtime
+import JobsSwiftBaseDefines
+import JobsSwiftBlock
 
 private enum JobsViewResultKey {
     static var callback: UInt8 = 0

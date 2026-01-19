@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
 @MainActor
 public extension UIViewController {
     // ================================== 标题 / 背景 ==================================

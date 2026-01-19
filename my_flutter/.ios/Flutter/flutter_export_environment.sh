@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/jobs/fvm/versions/stable"
-export "FLUTTER_APPLICATION_PATH=/Volumes/Doc/GitHub.Jobs/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/my_flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/my_flutter"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"

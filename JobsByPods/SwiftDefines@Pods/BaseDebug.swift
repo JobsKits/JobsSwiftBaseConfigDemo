@@ -9,6 +9,15 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBlock
+// MARK: - DEBUG 模式下才允许做的事
+@inline(__always)
+public func debugOnly(_ work: @escaping JobsByMAVoidBlock) {
+    #if DEBUG
+    Task { @MainActor in work() }
+    #endif
+}
 // MARK: - 私有：蓝色占位图（1x1）
 // 统一的纯色占位（1×1）；需要更大就改 size
 public func jobsSolidBlue(

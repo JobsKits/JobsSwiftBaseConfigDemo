@@ -4,6 +4,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 @MainActor
 final class JobsProxy: NSObject {
     weak var scrollView: UIScrollView?

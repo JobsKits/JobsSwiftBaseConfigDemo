@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 public extension UINavigationBarAppearance {
     // ================================== 标题（inline title） ==================================
     /// 设置普通标题字体

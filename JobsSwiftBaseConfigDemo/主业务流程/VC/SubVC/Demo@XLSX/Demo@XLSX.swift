@@ -10,13 +10,18 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-import CoreXLSX
+
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers // iOS 14+
 #endif
+
 import SnapKit
-import JobsByUIKit
+import CoreXLSX
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 // MARK: - XLSX Demo（文件导入 + 本地数据注入）
 final class XLSXDemoVC: BaseVC {
     // MARK: UI（链式 DSL）

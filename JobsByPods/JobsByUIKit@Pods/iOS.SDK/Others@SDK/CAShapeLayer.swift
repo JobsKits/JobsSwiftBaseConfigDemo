@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-extension CAShapeLayer {
+public extension CAShapeLayer {
     // MARK: - 基础属性
     @discardableResult
     func byPath(_ path: CGPath?) -> Self {

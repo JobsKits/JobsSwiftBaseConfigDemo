@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
-final class IrregularButton: UIButton {
+public class IrregularButton: UIButton {
 
     var points: [CGPoint] = [] { didSet { setNeedsLayout() } }
     var designSize: CGSize? { didSet { setNeedsLayout() } }
@@ -46,7 +46,7 @@ final class IrregularButton: UIButton {
 //        showsTouchWhenHighlighted = false
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         let path = buildPath().cgPath
@@ -57,6 +57,11 @@ final class IrregularButton: UIButton {
 
         strokeLayer.frame = bounds
         strokeLayer.path = path
+    }
+    // ✅ 点击区域也按不规则形状来
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        guard let path = cachedPath else { return super.point(inside: point, with: event) }
+        return path.contains(point)
     }
 
     private func buildPath() -> UIBezierPath {
@@ -76,22 +81,17 @@ final class IrregularButton: UIButton {
         let sy = bounds.height / ds.height
         return pts.map { CGPoint(x: $0.x * sx, y: $0.y * sy) }
     }
-    // ✅ 点击区域也按不规则形状来
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard let path = cachedPath else { return super.point(inside: point, with: event) }
-        return path.contains(point)
-    }
 }
 // MARK: - Chain
 extension IrregularButton {
     @discardableResult
-    func byPoints(_ pts: [CGPoint], designSize: CGSize? = nil) -> Self {
+    public func byPoints(_ pts: [CGPoint], designSize: CGSize? = nil) -> Self {
         points = pts
         self.designSize = designSize
         return self
     }
     @discardableResult
-    func byStroke(_ c: UIColor, _ w: CGFloat) -> Self {
+    public func byStroke(_ c: UIColor, _ w: CGFloat) -> Self {
         strokeLayer.strokeColor = c.cgColor
         strokeLayer.lineWidth = w
         return self

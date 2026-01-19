@@ -9,6 +9,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBlock
 /// 选择、编辑、焦点@UICollectionView
 extension UICollectionView {
     @discardableResult
@@ -95,7 +97,7 @@ extension UICollectionView {
     }
     // MARK: - 数据源 dataSource
     @discardableResult
-    func byDataSource(_ dataSource: UICollectionViewDataSource?) -> Self {
+    public func byDataSource(_ dataSource: UICollectionViewDataSource?) -> Self {
         self.dataSource = dataSource
         return self
     }

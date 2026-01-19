@@ -11,7 +11,9 @@ import AppKit
 import UIKit
 #endif
 
-extension UIScrollView {
+import JobsSwiftBlock
+
+public extension UIScrollView {
     // MARK:  Basics
     @discardableResult
     func byContentSize(_ size: CGSize) -> Self {

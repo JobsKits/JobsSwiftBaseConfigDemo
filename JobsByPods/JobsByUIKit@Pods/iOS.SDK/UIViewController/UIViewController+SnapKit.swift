@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
 #if canImport(SnapKit)
 import SnapKit
 /// 利用SnapKit 给 UIViewController 加背景图（UIImageView）

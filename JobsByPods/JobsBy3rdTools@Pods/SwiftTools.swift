@@ -14,6 +14,7 @@ import UIKit
 #endif
 
 import CoreText
+import JobsSwiftBaseDefines
 // MARK: - 扩展 Int 与 JXAuthCode 的比较
 public func ==(lhs: Int?, rhs: JXAuthCode) -> Bool {
     guard let lhs = lhs else { return false }
@@ -49,9 +50,9 @@ public func !=(lhs: JXAuthCode, rhs: Int) -> Bool {
     !(lhs == rhs)
 }
 // MARK: - 工具：常用格式化 & 校验
-enum JobsFormatters {
+public enum JobsFormatters {
     /// 仅保留数字与一个小数点，并限制到 scale 位小数（默认 2 位）
-    static func decimal(scale: Int = 2) -> (String) -> String {
+    public static func decimal(scale: Int = 2) -> (String) -> String {
         return { s in
             let chars = Array(s)
             var out: [Character] = []
@@ -86,7 +87,7 @@ enum JobsFormatters {
         }
     }
     /// 中国大陆手机号 3-4-4 分组（仅清洗与分组，不做合法号段校验）
-    static func phoneCN() -> (String) -> String {
+    public static func phoneCN() -> (String) -> String {
         return { s in
             let digits = s.filter(\.isNumber)
             var parts: [String] = []
@@ -430,28 +431,6 @@ public func log(_ items: Any?...,
                 separator: separator, terminator: terminator,
                 file: file, line: line, function: function)
 }
-// MARK: - DEBUG 模式下才允许做的事
-@inline(__always)
-func debugOnly(_ work: @escaping JobsByMAVoidBlock) {
-    #if DEBUG
-    Task { @MainActor in work() }
-    #endif
-}
-// MARK: - 主线程
-@inline(__always)
-func onMain(_ block: @escaping JobsByMAVoidBlock) {
-    Task { @MainActor in
-        block()
-    }
-}
-// MARK: - 同步拿返回值
-@discardableResult
-func onMainSync<T>(_ work: JobsRetTByVoidBlock<T>) -> T {
-    if Thread.isMainThread { return work() }
-    var result: T!
-    DispatchQueue.main.sync { result = work() }
-    return result
-}
 // MARK: - NSTextAlignment 映射到 CATextLayerAlignmentMode
 extension CATextLayerAlignmentMode {
     static func fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
@@ -465,9 +444,9 @@ extension CATextLayerAlignmentMode {
         }
     }
 }
-
+// MARK: -
 @inline(__always)
-func jobsCTTextWidth(_ text: String, font: UIFont) -> CGFloat {
+public func jobsCTTextWidth(_ text: String, font: UIFont) -> CGFloat {
     let attr = [NSAttributedString.Key.font: font]
     let asr  = NSAttributedString(string: text, attributes: attr)
     let line = CTLineCreateWithAttributedString(asr)

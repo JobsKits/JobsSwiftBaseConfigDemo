@@ -18,6 +18,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsImageTools
 // MARK: - 兜底图模式
 public enum JobsShimmerFallbackMode {
     /// 没兜底图：失败时继续 shimmer
@@ -53,7 +54,7 @@ private extension UIImageView {
 }
 
 public extension UIImageView {
-    // MARK: - SimpleImageLoader 内部状态
+    // MARK: - JobsSimpleImageLoader 内部状态
     private var jobs_loadingURL: URL? {
         get { objc_getAssociatedObject(self, &JobsImageLoadingKeys.urlKey) as? URL }
         set { objc_setAssociatedObject(self, &JobsImageLoadingKeys.urlKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -76,7 +77,7 @@ public extension UIImageView {
     func jobs_endShimmerLoading() {
         byShimmering(false)
     }
-    /// 取消当前 SimpleImageLoader 任务（仅 SimpleImageLoader 用）
+    /// 取消当前 JobsSimpleImageLoader 任务（仅 JobsSimpleImageLoader 用）
     func jobs_cancelSimpleImageTask() {
         jobs_loadingTask?.cancel()
         jobs_loadingTask = nil
@@ -100,9 +101,9 @@ public extension UIImageView {
         }
     }
 }
-// MARK: - SimpleImageLoader
+// MARK: - JobsSimpleImageLoader
 public extension UIImageView {
-    /// SimpleImageLoader：请求中 shimmer；成功停 shimmer；失败按 mode 决定：兜底图 or 持续 shimmer
+    /// JobsSimpleImageLoader：请求中 shimmer；成功停 shimmer；失败按 mode 决定：兜底图 or 持续 shimmer
     @discardableResult
     func jobs_setImageSimple(
         _ src: String?,
@@ -124,7 +125,7 @@ public extension UIImageView {
         jobs_loadingURL = url
         jobs_remoteURL = url
         // 命中缓存：直接显示 + 关呼吸
-        if let cached = SimpleImageLoader.shared.cachedImage(for: url) {
+        if let cached = JobsSimpleImageLoader.shared.cachedImage(for: url) {
             image = cached
             jobs_endShimmerLoading()
             return self
@@ -134,7 +135,7 @@ public extension UIImageView {
         jobs_beginShimmerLoading(config: shimmerConfig)
         // 取消旧任务，发起新任务
         jobs_loadingTask?.cancel()
-        jobs_loadingTask = SimpleImageLoader.shared.load(url) { [weak self] img in
+        jobs_loadingTask = JobsSimpleImageLoader.shared.load(url) { [weak self] img in
             guard let self else { return }
             guard self.jobs_loadingURL == url else { return }
 

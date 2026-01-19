@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Darwin
+import Darwin // Darwin 层的 C 标准库 + POSIX + 系统底层 API
 // ================================== CrashLogCenter ==================================
 /// 负责写入/读取/清理 app sandbox Documents 下的 jobs_crash.log
 /// 目标：
@@ -18,8 +18,8 @@ import Darwin
 /// 本文件做的是“工程可用、尽量稳”的折中：
 /// - signal/terminate 里只做一次“同步追加写入 + fsync”
 /// - 不在 handler 里拿堆栈/创建大对象/做网络请求
-final class CrashLogCenter {
-    static let shared = CrashLogCenter()
+public final class CrashLogCenter {
+    public static let shared = CrashLogCenter()
     // ================================== Config ==================================
     /// 你要的文件名：jobs_crash.log
     private let fileName = "jobs_crash.log"
@@ -43,7 +43,7 @@ final class CrashLogCenter {
     /// 建议放在：
     /// - SceneDelegate.sceneDidBecomeActive
     /// - AppDelegate.applicationDidBecomeActive
-    func markAppLaunched() {
+    public func markAppLaunched() {
         UserDefaults.standard.set(false, forKey: safeExitKey)
         UserDefaults.standard.synchronize()
     }
@@ -51,26 +51,26 @@ final class CrashLogCenter {
     /// 你问的：CrashLogCenter.shared.markSafeExitPoint() 写在哪里？
     /// ✅ SceneDelegate.sceneDidEnterBackground
     /// ✅ AppDelegate.applicationDidEnterBackground / applicationWillTerminate
-    func markSafeExitPoint() {
+    public func markSafeExitPoint() {
         UserDefaults.standard.set(true, forKey: safeExitKey)
         UserDefaults.standard.synchronize()
     }
     /// 上次是否疑似崩溃（或被系统杀掉/强退）
     /// - 规则：上次没有写到安全退出点 => 认为“异常退出”
-    func didCrashLastRun() -> Bool {
+    public func didCrashLastRun() -> Bool {
         // 如果从未写过 key（第一次安装），认为没有崩溃
         if UserDefaults.standard.object(forKey: safeExitKey) == nil { return false }
         return UserDefaults.standard.bool(forKey: safeExitKey) == false
     }
     // ================================== File Info ==================================
-    struct FileInfo {
-        let path: String
-        let exists: Bool
-        let sizeBytes: Int64
-        let mtime: Date?
+    public struct FileInfo {
+        public let path: String
+        public let exists: Bool
+        public let sizeBytes: Int64
+        public let mtime: Date?
     }
     /// UI 用：文件信息（路径/是否存在/大小/修改时间）
-    func fileInfo() -> FileInfo {
+    public func fileInfo() -> FileInfo {
         let url = crashLogURL
         let path = url.path
         guard FileManager.default.fileExists(atPath: path) else {
@@ -88,7 +88,7 @@ final class CrashLogCenter {
     // ================================== Ensure File ==================================
     /// 确保文件存在（不存在就创建空文件）
     @discardableResult
-    func ensureFileExists() -> Bool {
+    public func ensureFileExists() -> Bool {
         let url = crashLogURL
         if FileManager.default.fileExists(atPath: url.path) { return true }
         do {
@@ -100,7 +100,7 @@ final class CrashLogCenter {
     }
     // ================================== Write (Async) ==================================
     /// 追加写入（业务日志推荐：异步写，顺序稳定）
-    func append(_ text: String) {
+    public func append(_ text: String) {
         guard !text.isEmpty else { return }
         ioQueue.async { [weak self] in
             guard let self else { return }
@@ -110,7 +110,7 @@ final class CrashLogCenter {
     }
     /// 给 crash handler 用：同步写入（落盘 + fsync）
     /// - 发生崩溃时，优先用这个（避免异步来不及写）
-    func writeCrashSync(_ text: String) {
+    public func writeCrashSync(_ text: String) {
         guard !text.isEmpty else { return }
         _ = ensureFileExists()
         writeSync(text)
@@ -135,7 +135,7 @@ final class CrashLogCenter {
     }
     // ================================== Read ==================================
     /// 读取整个文件（UI 展示用）
-    func readAll() -> String {
+    public func readAll() -> String {
         let url = crashLogURL
         guard FileManager.default.fileExists(atPath: url.path) else { return "" }
         do {
@@ -146,7 +146,7 @@ final class CrashLogCenter {
         }
     }
     /// 读取最后 N KB（日志很大时更稳）
-    func readTail(kilobytes: Int = 256) -> String {
+    public func readTail(kilobytes: Int = 256) -> String {
         let url = crashLogURL
         guard FileManager.default.fileExists(atPath: url.path) else { return "" }
         do {
@@ -174,7 +174,7 @@ final class CrashLogCenter {
     }
     // ================================== Clear ==================================
     @discardableResult
-    func clear() -> (Bool, String) {
+    public func clear() -> (Bool, String) {
         let url = crashLogURL
         guard FileManager.default.fileExists(atPath: url.path) else {
             return (true, "✅ 空文件（不存在）：\(url.path)")
@@ -188,7 +188,7 @@ final class CrashLogCenter {
     }
     // ================================== Debug Helper ==================================
     /// 给 CrashCatcher.installOnce() 打印用
-    func installedBanner() -> String {
+    public func installedBanner() -> String {
         """
         log: \(logPathHint())
 
@@ -307,7 +307,6 @@ private func jobs_signalName(_ signo: Int32) -> String {
     default:      return "SIG(\(signo))"
     }
 }
-
 // ================================== Terminate Hook Helpers ==================================
 #if os(macOS)
 /// 这两个函数是 Swift runtime 的 terminate hook（为了让 terminate handler 可用）

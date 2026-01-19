@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 public enum JobsPushDirection: Int {
     case system = 0
     case fromLeft

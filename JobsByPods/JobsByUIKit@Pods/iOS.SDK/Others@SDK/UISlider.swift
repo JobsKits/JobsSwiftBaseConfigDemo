@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-extension UISlider {
+public extension UISlider {
     @discardableResult
     func byValueByAnimated(_ value: Float) -> Self {
         self.setValue(value, animated: true)

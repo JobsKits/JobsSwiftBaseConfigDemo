@@ -10,7 +10,6 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-import ObjectiveC
 // MARK: —— Cocoapods
 /// Cocoapods@Kingfisher
 #if canImport(Kingfisher)
@@ -26,7 +25,6 @@ import SnapKit
 /// SnapKit 语法糖🍬
 // 存的就是这个类型
 public typealias jobsByConstraintMakerBlock = (_ make: ConstraintMaker) -> Void
-public typealias BackButtonLayout = (JobsNavBar, UIButton, ConstraintMaker) -> Void
 #endif
 /// Cocoapods@YTKNetwork
 #if canImport(YTKNetwork)

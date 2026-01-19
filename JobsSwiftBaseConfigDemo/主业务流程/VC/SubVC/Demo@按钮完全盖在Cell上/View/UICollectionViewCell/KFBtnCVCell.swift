@@ -10,10 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import JobsSwiftBaseDefines
 
 #if canImport(Kingfisher)
 import Kingfisher
+import JobsByUIKit
 final class KFBtnCVCell: UICollectionViewCell {
     private lazy var coverButton: UIButton = {
         UIButton.custom()

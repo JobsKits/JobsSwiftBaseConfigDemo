@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 public extension UIStackView {
     @discardableResult
     func byAxis(_ axis: NSLayoutConstraint.Axis) -> Self {

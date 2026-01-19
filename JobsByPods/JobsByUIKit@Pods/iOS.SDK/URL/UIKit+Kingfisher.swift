@@ -9,6 +9,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 public extension URL {

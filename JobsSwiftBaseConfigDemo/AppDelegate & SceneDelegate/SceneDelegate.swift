@@ -12,6 +12,8 @@ import UIKit
 #endif
 
 import LiveChat
+import JobsByUIKit
+import JobsBy3rdTools
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?

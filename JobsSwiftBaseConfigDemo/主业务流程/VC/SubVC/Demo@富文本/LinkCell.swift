@@ -10,9 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import RxSwift
 import NSObject_Rx          // 自动提供 disposeBag
 import JobsByUIKit
+import JobsTextTools
+import JobsBy3rdTools
 // MARK: - 单一 Cell（支持 Delegate / RAC / RightAligned）
 final class LinkCell: UITableViewCell, HasDisposeBag {
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned

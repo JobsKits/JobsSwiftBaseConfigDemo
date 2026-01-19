@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBlock
 // MARK: - UIControl 统一事件 DSL
 public extension UIControl {
     // 用一个 key 挂一整张表：[eventRawValue : wrapper]

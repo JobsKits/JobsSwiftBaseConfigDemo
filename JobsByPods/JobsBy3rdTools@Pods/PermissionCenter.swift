@@ -8,11 +8,14 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import Photos
 import AVFoundation
 import AVFAudio
 import CoreLocation
 import CoreBluetooth
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
 // ================================== 权限中心：声明 ==================================
 public enum SystemPermission {
     case camera
@@ -31,12 +34,7 @@ public enum PermissionState {
 }
 // ================================== 权限中心：实现 ==================================
 public final class PermissionCenter: NSObject {
-    // 私有：主线程保障
-    @inline(__always)
-    private static func onMain(_ block: @escaping jobsByVoidBlock) {
-        if Thread.isMainThread { block() } else { DispatchQueue.main.async { block() } }
-    }
-    // 统一对外入口
+    /// 统一对外入口
     public static func ensure(_ permission: SystemPermission,
                               from presenter: UIViewController?,
                               onAuthorized: @escaping jobsByVoidBlock) {

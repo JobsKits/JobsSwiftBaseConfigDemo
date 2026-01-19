@@ -15,12 +15,13 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import GKNavigationBarSwift
+import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsTextTools
 
 final class RxDataSourcesDemoVC: BaseVC {
-
     // MARK: - Data
     private typealias TVSection = SectionModel<String, String>
     private typealias CVSection = SectionModel<String, String>
@@ -28,9 +29,7 @@ final class RxDataSourcesDemoVC: BaseVC {
     private let bag = DisposeBag()
     private let tableRelay = BehaviorRelay<[TVSection]>(value: [])
     private let collectionRelay = BehaviorRelay<[CVSection]>(value: [])
-
     private var rows: Int = 0
-
     // MARK: - UI
     private lazy var seg: UISegmentedControl = {
         UISegmentedControl(items: ["Table".tr, "Collection".tr])
@@ -42,7 +41,7 @@ final class RxDataSourcesDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
             .byDelegate(self)
-            .registerCell(HCell.self)
+            .registerCell(BaseTableViewCellByDefault.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -171,7 +170,7 @@ final class RxDataSourcesDemoVC: BaseVC {
     private lazy var tableDataSource: RxTableViewSectionedReloadDataSource<TVSection> = {
         .init(
             configureCell: { _, tv, indexPath, item in
-                tv.dequeueCell(HCell.self, for: indexPath)
+                tv.py_dequeueReusableCell(withType: BaseTableViewCellByDefault.self,for: indexPath)
                     .byData(item)
                     .onResult { _ in }
             },
@@ -190,13 +189,11 @@ final class RxDataSourcesDemoVC: BaseVC {
             }
         )
     }()
-
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "RxDataSources Demo")
         view.backgroundColor = .systemBackground
-
         seg.byAddTo(view) { [unowned self] make in
             if view.jobs_hasVisibleTopBar() {
                 make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -214,7 +211,6 @@ final class RxDataSourcesDemoVC: BaseVC {
         bindUI()
         bindData()
     }
-
     // MARK: - Bindings
     private func bindUI() {
         // ✅ delegate 用 Rx 方式接管（避免你链式封装内部 setDelegate 时机不确定）

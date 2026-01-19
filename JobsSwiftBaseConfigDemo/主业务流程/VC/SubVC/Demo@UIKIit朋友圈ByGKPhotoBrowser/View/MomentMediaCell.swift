@@ -13,6 +13,8 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsImageTools
 
 final class MomentMediaCell: UICollectionViewCell {
     private var task: URLSessionDataTask?
@@ -62,12 +64,12 @@ final class MomentMediaCell: UICollectionViewCell {
         playBadge.byVisible(m.isVideo)
         guard let url = URL(string: m.coverURL) else { return self }
         currentURL = url
-        if let cached = SimpleImageLoader.shared.cachedImage(for: url) {
+        if let cached = JobsSimpleImageLoader.shared.cachedImage(for: url) {
             imageViewRef.image = cached
             return self
         }
         task?.cancel()
-        task = SimpleImageLoader.shared.load(url) { [weak self] img in
+        task = JobsSimpleImageLoader.shared.load(url) { [weak self] img in
             guard let self else { return }
             guard self.currentURL == url else { return }
             self.imageViewRef.image = img

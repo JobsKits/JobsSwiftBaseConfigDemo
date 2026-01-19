@@ -10,6 +10,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 @MainActor
 public extension ViewDataProtocol where Self: UITableViewCell {
     @discardableResult

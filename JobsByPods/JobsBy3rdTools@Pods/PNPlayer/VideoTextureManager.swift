@@ -9,7 +9,7 @@ import AVFoundation
 import Metal
 import CoreVideo
 
-protocol VideoTextureManagerDelegate: AnyObject {
+public protocol VideoTextureManagerDelegate: AnyObject {
     func videoDidUpdateTime(currentTime: TimeInterval, duration: TimeInterval)
     func videoPlaybackStateChanged(isPlaying: Bool)
 }

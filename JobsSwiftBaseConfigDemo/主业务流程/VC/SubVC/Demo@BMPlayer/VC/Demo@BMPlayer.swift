@@ -12,11 +12,14 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
+import JobsBy3rdTools
 
 final class BMPlayerDemoVC: BaseVC {
-
     private enum Row: Int, CaseIterable {
         case local, remote, feed, float
         var title: String {

@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class MessageCell: UITableViewCell {
 

@@ -11,10 +11,14 @@ import AppKit
 import UIKit
 #endif
 
+import AVFoundation
+import GKNavigationBarSwift
 import BMPlayer
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import JobsTextTools
+import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class PlayerDetailVC: BaseVC {
     private let item: FeedItem

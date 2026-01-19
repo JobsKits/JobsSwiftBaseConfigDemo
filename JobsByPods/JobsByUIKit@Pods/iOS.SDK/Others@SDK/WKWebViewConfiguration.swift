@@ -11,6 +11,7 @@ import UIKit
 #endif
 
 import WebKit
+import JobsSwiftBlock
 // 统一在主线程（WKWebViewConfiguration 本身就是 @MainActor）
 @MainActor
 public extension WKWebViewConfiguration {

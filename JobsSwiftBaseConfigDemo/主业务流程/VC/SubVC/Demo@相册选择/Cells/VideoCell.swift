@@ -4,12 +4,15 @@
 //
 //  Created by Jobs on 12/18/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import AVFoundation
+import SnapKit
 import JobsByUIKit
 /// 单个视频：自动播放，结束后出现「播放按钮」可重播
 public final class VideoCell: UICollectionViewCell {

@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 @MainActor
 public extension ViewDataProtocol where Self: UICollectionViewCell {
     @discardableResult

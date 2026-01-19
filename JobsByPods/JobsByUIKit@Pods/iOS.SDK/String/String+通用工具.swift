@@ -10,9 +10,7 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(JobsSwiftBaseTools)
-import JobsSwiftBaseTools
-#endif
+import Jobsl10n
 
 public extension String {
     /// 复制当前字符串到系统剪切板

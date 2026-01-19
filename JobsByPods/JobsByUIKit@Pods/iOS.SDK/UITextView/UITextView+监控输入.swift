@@ -14,6 +14,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxRelay
+import JobsSwiftBlock
 /// 🎯 重点：UITextView.onChange（RAC 版本，挂在 UITextView 上）
 public extension UITextView {
     /// 监听文本变化（Rx 方案）

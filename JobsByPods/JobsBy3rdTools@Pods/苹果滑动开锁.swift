@@ -10,11 +10,15 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-import SnapKit
 
-final class SlideToUnlockView: UIView {
+import SnapKit
+import JobsByUIKit
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
+
+public class SlideToUnlockView: UIView {
     // MARK: - 方向
-    enum Direction {
+    public enum Direction {
         case leftToRight   // 默认：从左往右
         case rightToLeft   // 可选：从右往左
     }
@@ -178,7 +182,7 @@ final class SlideToUnlockView: UIView {
         updateSkeletonState()
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         updateLayoutForProgress(animated: false)
         updateShimmerMask()
@@ -295,19 +299,19 @@ final class SlideToUnlockView: UIView {
 extension SlideToUnlockView {
 
     @discardableResult
-    func byOnUnlock(_ handler: @escaping jobsByVoidBlock) -> Self {
+    public func byOnUnlock(_ handler: @escaping jobsByVoidBlock) -> Self {
         self.onUnlock = handler
         return self
     }
 
     @discardableResult
-    func byDirection(_ direction: Direction) -> Self {
+    public func byDirection(_ direction: Direction) -> Self {
         self.direction = direction
         return self
     }
 
     @discardableResult
-    func bySkeletonEnabled(_ enabled: Bool) -> Self {
+    public func bySkeletonEnabled(_ enabled: Bool) -> Self {
         self.isSkeletonEnabled = enabled
         return self
     }

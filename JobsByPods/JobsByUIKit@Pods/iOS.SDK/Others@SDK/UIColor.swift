@@ -114,20 +114,20 @@ extension UIColor {
         return hexAlpha(hex, alpha: 1.0)
     }
     /// 16 进制颜色 + 透明度
-    class func hexAlpha(_ hex: UInt, alpha: Float) -> UIColor {
+    public class func hexAlpha(_ hex: UInt, alpha: Float) -> UIColor {
         return UIColor(red: CGFloat((hex & 0xFF0000) >> 16) / 255.0,
                        green: CGFloat((hex & 0x00FF00) >> 8) / 255.0,
                        blue: CGFloat(hex & 0x0000FF) / 255.0,
                        alpha: CGFloat(alpha))
     }
     /// 生成随机颜色
-    static func randomColor(alpha: CGFloat = 1.0) -> UIColor {
+    public static func randomColor(alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(red: CGFloat.random(in: 0...1),
                        green: CGFloat.random(in: 0...1),
                        blue: CGFloat.random(in: 0...1),
                        alpha: alpha)
     }
-    static var randomColor: UIColor {
+    public static var randomColor: UIColor {
         randomColor()
     }
 }

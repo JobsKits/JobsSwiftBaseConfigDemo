@@ -10,7 +10,7 @@ import Foundation
 
 public typealias SnowflakeID = UInt64
 //The data structure: symbol(1)-time(41)-IDC(5)machine(5)-seq(12)
-private struct SnowflakeConfig {
+public struct SnowflakeConfig {
     //占位
     static let symbolBits: UInt32 = 1
     //时间长度
@@ -31,7 +31,7 @@ public final class SnowflakeSwift {
     private var lastGeneralMillisecond: UInt64     //单位毫秒
     
     //WARN: publishMillisecond推荐使用固定值，如果使用Date().timeIntervalSince1970 * 1000 自动获取，会导致时间差重复
-    init(publishMillisecond: UInt64 = 1662278876498, IDCID: UInt32, machineID: UInt32) {
+    public init(publishMillisecond: UInt64 = 1662278876498, IDCID: UInt32, machineID: UInt32) {
         assert(publishMillisecond <= (1 << SnowflakeConfig.timeBits), "time is too big")
         assert(IDCID <= (1 << SnowflakeConfig.IDCBits), "idc id is too big")
         assert(machineID <= (1 << SnowflakeConfig.machineBits), "machine id is too big")

@@ -5,14 +5,19 @@
 //  Created by linghugoogle on 2025/10/11.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import Metal
 import MetalKit
 import simd
+import JobsSwiftMetalKit_extensions
 
 struct Uniforms { var modelViewProjectionMatrix: float4x4 }
-
-class MetalRenderer: NSObject {
+public class MetalRenderer: NSObject {
     private let device: MTLDevice
     private let commandQueue: MTLCommandQueue
     private var pipelineState: MTLRenderPipelineState?
@@ -25,7 +30,7 @@ class MetalRenderer: NSObject {
     // 可选：持有 view，用于像素格式/采样同步
     private weak var boundView: MTKView?
 
-    init(device: MTLDevice) {
+    public init(device: MTLDevice) {
         self.device = device
         self.commandQueue = device.makeCommandQueue()!
         self.sphere = SphereGeometry(device: device, radius: 1.0, segments: 128)
@@ -102,30 +107,30 @@ class MetalRenderer: NSObject {
         uniformBuffer = device.makeBuffer(length: MemoryLayout<Uniforms>.stride, options: [])
     }
     // MARK: - Video
-    func loadVideo(url: URL) { videoTextureManager.loadVideo(url: url) }
-    func playVideo() { videoTextureManager.play() }
-    func pauseVideo() { videoTextureManager.pause() }
-    func togglePlayPause() { videoTextureManager.togglePlayPause() }
+    public func loadVideo(url: URL) { videoTextureManager.loadVideo(url: url) }
+    public func playVideo() { videoTextureManager.play() }
+    public func pauseVideo() { videoTextureManager.pause() }
+    public func togglePlayPause() { videoTextureManager.togglePlayPause() }
 
     @discardableResult
-    func bySeekToTime(_ time: TimeInterval) -> Self { videoTextureManager.seek(to: time); return self }
+    public func bySeekToTime(_ time: TimeInterval) -> Self { videoTextureManager.seek(to: time); return self }
 
     @discardableResult
-    func byVideoTextureManagerDelegate(_ delegate: VideoTextureManagerDelegate) -> Self {
+    public func byVideoTextureManagerDelegate(_ delegate: VideoTextureManagerDelegate) -> Self {
         videoTextureManager.delegate = delegate; return self
     }
     // MARK: - Interaction
-    func handlePan(_ gesture: UIPanGestureRecognizer, in view: UIView) {
+    public func handlePan(_ gesture: UIPanGestureRecognizer, in view: UIView) {
         cameraController.handlePan(gesture, in: view)
     }
 }
 // MARK: - MTKViewDelegate
 extension MetalRenderer: MTKViewDelegate {
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         // 如需根据分辨率重建投影，可写在这里
     }
 
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         guard let drawable = view.currentDrawable,
               let rpd = view.currentRenderPassDescriptor,
               let pso = pipelineState,

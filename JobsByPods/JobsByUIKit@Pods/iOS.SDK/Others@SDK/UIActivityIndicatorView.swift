@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-extension UIActivityIndicatorView {
+public extension UIActivityIndicatorView {
     @discardableResult
     func byStyle(_ style: UIActivityIndicatorView.Style) -> Self {
         self.style = style

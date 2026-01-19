@@ -10,8 +10,12 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import ObjectiveC
 import QuartzCore
+import JobsSwiftBaseDefines
+import JobsTimer
+//import JobsSwiftBaseTools
 
 public typealias JobsPressFuseTick = (_ btn: UIButton, _ elapsed: TimeInterval, _ progress: CGFloat) -> Void
 public typealias JobsPressFuseEnd  = (_ btn: UIButton, _ elapsed: TimeInterval, _ progress: CGFloat) -> Void

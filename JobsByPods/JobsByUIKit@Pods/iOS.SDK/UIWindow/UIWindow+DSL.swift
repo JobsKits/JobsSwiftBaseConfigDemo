@@ -9,6 +9,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBlock
+
 public extension UIWindow {
     // MARK: - 构造 / 附着
     /// 绑定到指定 WindowScene（不会 makeKeyAndVisible）

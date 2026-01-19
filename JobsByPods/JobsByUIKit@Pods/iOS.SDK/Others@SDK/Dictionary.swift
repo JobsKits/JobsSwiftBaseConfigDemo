@@ -11,14 +11,14 @@ import AppKit
 import UIKit
 #endif
 
-extension Dictionary {
+public extension Dictionary {
     /// 语义化安全读：其实就是 self[key]
     subscript(safe key: Key) -> Value? {
         self[key]      // 这里会调用标准库原来的 subscript(key:)
     }
 }
 
-extension Dictionary where Key == String {
+public extension Dictionary where Key == String {
     func stringValue(for key: String, default def: String? = nil) -> String? {
         guard let v = self[key] else { return def }
         if let s = v as? String { return s }

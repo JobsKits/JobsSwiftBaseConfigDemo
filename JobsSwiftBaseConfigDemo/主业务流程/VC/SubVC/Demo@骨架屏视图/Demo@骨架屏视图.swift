@@ -13,8 +13,11 @@ import UIKit
 
 import SnapKit
 import SkeletonView
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 // MARK: - 数据模型
 struct User {
     let name: String
@@ -43,12 +46,10 @@ final class SkeletonViewDemoVC: BaseVC {
                 }
             }
     }()
-
     // 状态
     private var data: [User] = []
     private var isLoading = true
     private var useGradient = true
-
     // Skeleton 配置
     private let gradient = SkeletonGradient(baseColor: .systemGray5)
     private let solid     = SkeletonGradient(baseColor: .systemGray5) // 纯色也用 gradient 类型，动画不同

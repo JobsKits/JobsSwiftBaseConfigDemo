@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import SkeletonView
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class SkeletonUserCell: UITableViewCell {
     // MARK: - UI（lazy）

@@ -8,6 +8,7 @@
 import Foundation
 import Moya
 import Alamofire
+import JobsSwiftBlock
 
 public final class APIService {
     public let provider: MoyaProvider<DemoAPI>

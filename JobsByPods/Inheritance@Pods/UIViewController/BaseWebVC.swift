@@ -26,7 +26,7 @@ import Inheritance
              print("❤️结束❤️")
          }
  */
-final class BaseWebVC: BaseVC {
+open class BaseWebVC: BaseVC {
     // MARK: - 懒加载 Web（全通用，无业务常量）
     private lazy var web: BaseWebView = { [unowned self] in
         return BaseWebView()
@@ -118,12 +118,12 @@ final class BaseWebVC: BaseVC {
     // MARK: - 生命周期
     // ✅ 缓存任意类型的入参
     private var input: Any?
-    override func loadView() {
+    open override func loadView() {
         super.loadView()
         if let any = input { print("收到任意数据:", any) }
     }
 
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         if let s = input as? String, !s.isEmpty {
             web.loadBy(s)

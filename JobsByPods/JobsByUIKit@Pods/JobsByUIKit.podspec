@@ -16,9 +16,40 @@ Pod::Spec.new do |s|
   # 你的源码从 Git 仓库下载
   s.source       = { :git => 'https://github.com/JobsKits/JobsByUIKit.git',
                      :tag => s.version.to_s }
-
-
+                     
+  # 全局排除脚本 / 图标
+  s.exclude_files = [
+    '【MacOS】🫘JobsPublishPods.command',
+    'icon.png',
+    'LICENSE',
+  ]
+  
+  s.ios.frameworks = 'UIKit',
+                     'WebKit'
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
+  s.dependency 'NSObject+Rx'
+  s.dependency 'SDWebImage'
+  s.dependency 'Kingfisher'
+  s.dependency 'GKNavigationBarSwift'
+  s.dependency 'SnapKit'
+  s.dependency 'RxSwift'
+  s.dependency 'RxCocoa'
+  s.dependency 'RxRelay'
+  s.dependency 'BMPlayer'
+  s.dependency 'SwiftEntryKit'
+  s.dependency 'MJRefresh'
+  s.dependency 'JXSegmentedView'
+  s.dependency 'SkeletonView'
+  s.dependency 'lottie-ios'
+  s.dependency 'JobsSwiftBlock'
+  s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'Jobsl10n'
+  s.dependency 'JobsTimer'
+  s.dependency 'JobsNavBar'
+  s.dependency 'JobsTextTools'
+  s.dependency 'JobsImageTools'
+  s.dependency 'Jobsl10n'
+  s.dependency 'JobsScale'
 
 end

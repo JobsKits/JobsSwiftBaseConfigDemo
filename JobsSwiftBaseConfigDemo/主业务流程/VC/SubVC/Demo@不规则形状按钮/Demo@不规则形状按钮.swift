@@ -10,9 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import GKNavigationBarSwift
+import JobsByUIKit
+import JobsBy3rdTools
+import JobsTextTools
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
 final class IrregularButtonDemoVC: BaseVC {
     private enum Layout {
@@ -24,7 +28,7 @@ final class IrregularButtonDemoVC: BaseVC {
         // 右斜边梯形：0,0 -> 120,0 -> 90,50 -> 0,120
         return IrregularButton(type: .custom)
             .byBackgroundColor(.orange, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 0),
                 .init(x: 120, y: 0),
@@ -50,7 +54,7 @@ final class IrregularButtonDemoVC: BaseVC {
         // 平行四边形：0,50 -> 30,0 -> 120,0 -> 90,50
         return IrregularButton(type: .custom)
             .byBackgroundColor(.green, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 50),
                 .init(x: 120/4, y: 0),
@@ -75,7 +79,7 @@ final class IrregularButtonDemoVC: BaseVC {
         // 左斜边梯形：30,50 -> 120,0 -> 120,50 -> 0,50
         return IrregularButton(type: .custom)
             .byBackgroundColor(.cyan, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 120/4, y: 50),
                 .init(x: 120, y: 0),
@@ -102,7 +106,7 @@ final class IrregularButtonDemoVC: BaseVC {
         let a = sin(.pi / 180 * 60) * (w/2)  // 0.866 * 75
         return IrregularButton(type: .custom)
             .byBackgroundColor(.purple, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: a, y: w/4),
                 .init(x: w/2, y: 0),
@@ -154,7 +158,7 @@ final class IrregularButtonDemoVC: BaseVC {
         // 箭头：基于 330x150
         return IrregularButton(type: .custom)
             .byBackgroundColor(.magenta, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 150),
                 .init(x: 330 * 2/3, y: 150/3),

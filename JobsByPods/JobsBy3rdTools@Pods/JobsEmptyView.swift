@@ -13,6 +13,8 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 class JobsEmptyView: UIView {
     var onTapRetry: jobsByVoidBlock?

@@ -11,9 +11,14 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import GKNavigationBarSwift
+import JobsByUIKit
+import JobsBy3rdTools
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class FTDashboadDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 20
@@ -72,5 +77,4 @@ final class FTDashboadDemoVC: BaseVC {
         didInitProgress = true
         dashboardView.setProgress(CGFloat(slider.value), animated: false)
     }
-
 }

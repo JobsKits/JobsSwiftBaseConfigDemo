@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -13,7 +14,7 @@ import UIKit
 extension UIImageView {
     /// 点语法：给 UIImageView 加点击事件，返回自己
     @discardableResult
-    func onTap(
+    public func onTap(
         taps: Int = 1,
         touches: Int = 1,
         cancelsTouchesInView: Bool = true,
@@ -37,7 +38,7 @@ extension UIImageView {
     }
     /// 长按手势：返回 self，支持链式调用
     @discardableResult
-    func onLongPress(
+    public func onLongPress(
         minDuration: TimeInterval = 0.8,     // 最小按压时长
         movement: CGFloat = 12,              // 允许移动距离
         touches: Int = 1,                    // 手指数量
@@ -46,9 +47,7 @@ extension UIImageView {
         name: String? = nil,
         _ handler: @escaping (UIImageView, UILongPressGestureRecognizer) -> Void
     ) -> Self {
-
         isUserInteractionEnabled = true
-
         let lp = UILongPressGestureRecognizer
             .byConfig { [weak self] gr in
                 guard let self = self,

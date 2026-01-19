@@ -5,9 +5,16 @@
 //  Created by Jobs on 11/14/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsBy3rdTools
 
 final class TipsGrantPermissionView: UIView {
     /// 白色卡片
@@ -97,7 +104,6 @@ final class TipsGrantPermissionView: UIView {
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
         // byBgColor(.black.withAlphaComponent(0.35))
-
         // 触发懒加载，顺带确保整个层级建好
         cardView.byVisible(YES)
         confirmButton.byVisible(YES)

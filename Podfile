@@ -1,3 +1,4 @@
+# pod install --repo-update
 # ================================== Podfile ==================================
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 require 'fileutils'
@@ -6,7 +7,6 @@ require 'fileutils'
 platform :ios, '15.6'
 
 source 'https://github.com/CocoaPods/Specs.git'
-# pod install --repo-update
 
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
@@ -83,7 +83,6 @@ def jobs_confirm_pod_install_scripts?
   $jobs_confirm_pod_install_scripts = (input.nil? || input.strip.empty?)
 end
 # ============================================================================
-
 
 # 统一运行外置脚本（chmod +x / 统一输出 / 统一失败提示）
 #

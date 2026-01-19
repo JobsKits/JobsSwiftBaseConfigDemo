@@ -10,9 +10,12 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class SafetyPushDemoVC: BaseVC {
     // MARK: - Buttons（逐个老老实实创建，链式 + 就地约束）
@@ -167,7 +170,6 @@ final class SafetyPushDemoVC: BaseVC {
             }
             .byAlpha(0)
     }()
-
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

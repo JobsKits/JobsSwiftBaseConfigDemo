@@ -14,6 +14,15 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftBaseDefines.git',
                      :tag => s.version.to_s }
   s.source_files = '**/*.{swift,h,m,mm}'
-  s.frameworks   = 'UIKit'
+  s.ios.frameworks = 'UIKit'
+  
+  s.dependency 'JobsSwiftBlock'
+  
+  # 全局排除脚本 / 图标
+  s.exclude_files = [
+    '【MacOS】🫘JobsPublishPods.command',
+    'icon.png',
+    'LICENSE',
+  ]
 
 end

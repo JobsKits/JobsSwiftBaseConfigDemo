@@ -10,7 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+import SnapKit
+import JobsSwiftBaseDefines
 
 final class WalletSectionHeaderView: UICollectionReusableView {
     private let horizontalInset: CGFloat = 20

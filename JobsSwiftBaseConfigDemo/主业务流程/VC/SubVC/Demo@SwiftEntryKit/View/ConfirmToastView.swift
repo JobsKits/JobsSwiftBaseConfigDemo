@@ -10,13 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // ============================== 自定义“需确认”中心 Toast 视图 ==============================
 final class ConfirmToastView: UIView {
 
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byText("需要确认")
+            .byText("需要确认".tr)
             .byFont(.boldSystemFont(ofSize: 18))
             .byTextColor(.label)
             .byTextAlignment(.center)
@@ -28,7 +31,7 @@ final class ConfirmToastView: UIView {
 
     private lazy var descLabel: UILabel = {
         UILabel()
-            .byText("这是一个中心弹出的自定义 View。只有点击下方“我知道了”后才会关闭。")
+            .byText("这是一个中心弹出的自定义 View。只有点击下方“我知道了”后才会关闭。".tr)
             .byFont(.systemFont(ofSize: 14))
             .byTextColor(.secondaryLabel)
             .byNumberOfLines(0)
@@ -41,7 +44,7 @@ final class ConfirmToastView: UIView {
 
     private lazy var confirmBtn: UIButton = {
         UIButton.sys()
-            .byTitle("我知道了")
+            .byTitle("我知道了".tr)
             .onTap { [weak self] (_: UIButton) in
                 self?.confirmHandler?()   // ✅ 仅按钮触发关闭
             }

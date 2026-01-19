@@ -10,10 +10,17 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import SwiftEntryKit
-import JobsByUIKit
 import Inheritance
+import GKNavigationBarSwift
+import JobsByUIKit
+import JobsTextTools
+import JobsBy3rdTools
+import JobsToast
+import JobsSwiftBaseDefines
+import JobsScale
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
     case avatar
@@ -80,6 +87,7 @@ final class LGOEditProfileVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .register()
+            .registerCell(AvatarCell.self)
             .byScrollEnabled(NO)
             .byNoContentInsetAdjustment()
             .byNoSectionHeaderTopPadding()
@@ -283,7 +291,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
     }
 }
 // MARK: - 头像 cell
-final class AvatarCell: UITableViewCell {
+public final class AvatarCell: UITableViewCell {
     private lazy var avatarView: UIImageView = {
         UIImageView()
             .byContentMode(.scaleAspectFill)

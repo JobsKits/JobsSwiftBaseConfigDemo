@@ -10,14 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import GKNavigationBarSwift
+import Inheritance
 import JXSegmentedView
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsSwiftBaseDefines
 
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
-
     // 左侧菜单数据（与截图一致顺序，默认选中“棋牌.5”）
     private let menuItems: [LeftMenuItem] = [
         .init(icon: "star", title: "日常.5"),
@@ -31,7 +33,6 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     ]
 
     var items: [String] = (1...5).map { "返水 - 棋牌.5 活动 \($0)" }
-
     // 左侧菜单（灰底、右侧细分隔线）
     private lazy var menuView: LeftMenuView = {
         LeftMenuView(items: menuItems, defaultIndex: 4)

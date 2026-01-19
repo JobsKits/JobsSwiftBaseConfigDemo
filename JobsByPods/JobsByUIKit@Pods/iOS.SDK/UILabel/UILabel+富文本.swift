@@ -9,16 +9,20 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsTextTools
 extension UILabel {
     // MARK: 设置富文本
     @discardableResult
-    func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil)->Self {
+    public func richTextBy(_ runs: [JobsRichRun],
+                           paragraphStyle: NSMutableParagraphStyle? = nil)->Self {
         self.attributedText = JobsRichText.make(runs, paragraphStyle: paragraphStyle)
         self.isUserInteractionEnabled = false
         return self;
     }
     // MARK: - 检测点击位置是否在指定富文本范围内
-    func didTapAttributedText(in range: NSRange, at: UITapGestureRecognizer) -> Bool {
+    public func didTapAttributedText(in range: NSRange,
+                                     at: UITapGestureRecognizer) -> Bool {
         guard let attributedText = attributedText else { return false }
         // 1️⃣ 创建 NSTextStorage 管理文本
         let textStorage = NSTextStorage(attributedString: attributedText)
@@ -48,7 +52,7 @@ extension UILabel {
         return NSLocationInRange(index, range)
     }
     // MARK: 给 UILabel 里的文字加 下划线，并且可以指定下划线的颜色。
-    func underline(color: UIColor) {
+    public func underline(color: UIColor) {
         if let textString = self.text {
             let attributedString = NSMutableAttributedString(string: textString)
             attributedString.addAttribute(NSAttributedString.Key.underlineStyle,

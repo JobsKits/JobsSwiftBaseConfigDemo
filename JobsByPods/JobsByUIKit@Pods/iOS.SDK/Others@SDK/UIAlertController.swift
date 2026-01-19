@@ -13,15 +13,22 @@ import UIKit
 
 import NSObject_Rx
 import SnapKit
+import SDWebImage
+import Kingfisher
 
 #if canImport(RxSwift) && canImport(RxCocoa)
 import RxSwift
 import RxCocoa
 #endif
 
+#if canImport(JobsSwiftBlock)
+import JobsSwiftBlock
+#endif
+
 #if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
 #endif
+
 // ================================== 构建 & 配置 ==================================
 public extension UIAlertController {
     // MARK: 工厂
@@ -375,6 +382,8 @@ public extension UIAlertController {
         _installLocalBGIfPending()
         return self
     }
+
+#if canImport(SDWebImage)
     /// SD：URL 为空则只装本地图；有 URL 时转场后淡入网络图
     @discardableResult
     func bySDBgImageView(
@@ -401,6 +410,9 @@ public extension UIAlertController {
             }
         };return self
     }
+#endif
+
+#if canImport(Kingfisher)
     /// KF：URL 为空则只装本地图；有 URL 时转场后淡入网络图
     @discardableResult
     func byKFBgImageView(
@@ -425,9 +437,9 @@ public extension UIAlertController {
                     iv.layer.cornerRadius = card.layer.cornerRadius
                 }
             }
-        }
-        return self
+        };return self
     }
+#endif
     /// 给 Alert 卡片加描边（外层容器，不是输入框）
     @discardableResult
     func byCardBorder(width: CGFloat,
@@ -443,8 +455,7 @@ public extension UIAlertController {
                     if #available(iOS 13.0, *) { card.layer.cornerCurve = .continuous }
                 }
             }
-        }
-        return self
+        };return self
     }
     /// 给指定 index 的输入框「外层灰色容器」描边（不是 UITextField 自身）
     @discardableResult

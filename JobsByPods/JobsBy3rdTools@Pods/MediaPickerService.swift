@@ -8,13 +8,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers // iOS 14+
 #endif
+
 import Photos
 import PhotosUI
 import AVFoundation
 import ObjectiveC.runtime
+import JobsSwiftBaseDefines
 
 public final class MediaPickerService: NSObject {
     // ---------- 一键：相机 ----------

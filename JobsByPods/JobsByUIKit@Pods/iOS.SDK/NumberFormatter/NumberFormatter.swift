@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import JobsSwiftBlock
 
 public extension NumberFormatter {
     /// 统一入口：NumberFormatter.make { $0.byNumberStyle(...).byLocale(...) }

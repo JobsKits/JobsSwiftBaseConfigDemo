@@ -2,7 +2,6 @@
 # ============================== 几乎每个 App 都会用到 ==============================
 def swiftAppCommon
   # --- OC/C++/C ---
-  pod 'CocoaLumberjack'                    # https://github.com/CocoaLumberjack/CocoaLumberjack ❤️ 日志框架
   pod 'SDWebImage'                         # https://github.com/SDWebImage/SDWebImage           ❤️
   pod 'SDWebImageWebPCoder'                # https://github.com/SDWebImage/SDWebImageWebPCoder  ❤️
   pod 'MJRefresh'                          # https://github.com/CoderMJLee/MJRefresh            ❤️
@@ -14,6 +13,7 @@ def swiftAppCommon
 #  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS             ❤️ 直播礼物动画播放器
   # --- Swift ---
+  pod 'CocoaLumberjack/Swift'              # https://github.com/CocoaLumberjack/CocoaLumberjack  ❤️ 日志框架
   pod 'KeychainAccess'                     # https://github.com/kishikawakatsumi/KeychainAccess  ❤️ 钥匙串友好API
   pod 'FingerprintJS'                      # https://github.com/fingerprintjs/fingerprintjs ❤️ 浏览器指纹识别库：通过收集浏览器和设备的一些特征（浏览器类型、操作系统、屏幕分辨率、字体、Canvas/音频特征等），生成一个唯一的标识符（fingerprint/visitorId）。这个标识符可以在没有 cookie 或本地存储的情况下识别同一个访客/设备。
   pod 'RxSwift'                            # https://github.com/ReactiveX/RxSwift                ❤️ 核心
@@ -59,7 +59,7 @@ def swiftAppCommon
 end
 # ============================== 测试一些第三方CocoaPods ==============================
 def testPods
-  pod 'Plan'                             # https://github.com/KyoheiG3/Plan                      ❤️ 用于改善 iOS 应用架构清晰度的框架
+  pod 'Plan'                                # https://github.com/KyoheiG3/Plan                      ❤️ 用于改善 iOS 应用架构清晰度的框架
 end
 # ============================== 调试框架（仅 Debug） ==============================
 def debugPods
@@ -76,10 +76,18 @@ def byJobs
   pod 'JobsBy3rdTools',                 :path => 'JobsByPods/JobsBy3rdTools@Pods'
   pod 'JobsByUIKit',                    :path => 'JobsByPods/JobsByUIKit@Pods'
   pod 'Inheritance',                    :path => 'JobsByPods/Inheritance@Pods'
-  pod 'SwiftStandardLibrary.extension', :path => 'JobsByPods/SwiftStandardLibrary.extension@Pods'
-    
-  pod 'JobsSwiftFoundation@Extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-  pod 'JobsSwiftMetalKit@Extensions',   :path => 'JobsByPods/MetalKit@Pods'           # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+  pod 'Jobsl10n',                       :path => 'JobsByPods/Jobsl10n@Pods'
+  pod 'JobsTimer',                      :path => 'JobsByPods/JobsTimer@Pods'
+  pod 'JobsNavBar',                     :path => 'JobsByPods/JobsNavBar@Pods'
+  pod 'JobsToast',                      :path => 'JobsByPods/JobsToast@Pods'
+  pod 'JobsTextTools',                  :path => 'JobsByPods/JobsTextTools@Pods'
+  pod 'JobsImageTools',                 :path => 'JobsByPods/JobsImageTools@Pods'
+  pod 'JobsScale',                      :path => 'JobsByPods/JobsScale@Pods'
+  pod 'JobsGetWindow',                  :path => 'JobsByPods/JobsGetWindow@Pods'
+  pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
+  
+  pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+  pod 'JobsSwiftMetalKit_extensions',   :path => 'JobsByPods/MetalKit@Pods'           # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
   pod 'JobsSwiftBlock',                 :path => 'JobsByPods/JobsSwiftBlock@Pods'     # https://github.com/JobsKits/JobsSwiftBlock
   pod 'JobsSwiftBaseDefines',           :path => 'JobsByPods/SwiftDefines@Pods'       # https://github.com/JobsKits/JobsSwiftBaseDefines
   pod 'JobsSwiftBaseTools',             :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools

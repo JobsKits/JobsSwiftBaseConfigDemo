@@ -12,8 +12,13 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsBy3rdTools
+import JobsSwiftBaseTools
+import JobsScale
+import JobsTextTools
 
 final class CNIDDemoVC: BaseVC {
 
@@ -90,8 +95,6 @@ final class CNIDDemoVC: BaseVC {
         bgImageView().byImage("唐老鸭".img)
         Task { @MainActor in
             bgImageView().byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
-        }
-        Task { @MainActor in
             bgImageView().byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
         }
         printDemo()// 打印示例

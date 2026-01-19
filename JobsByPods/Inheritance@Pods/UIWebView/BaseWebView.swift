@@ -10,12 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers // iOS 14+
 #endif
+
 import WebKit
 import SafariServices
 import SnapKit
+import JobsNavBar
+import JobsSwiftBlock
 /**
  在 Info.plist 添加👇（更通用的 ATS 配置，避免为某域名单独开洞）
      <key>NSAppTransportSecurity</key>
@@ -64,7 +68,7 @@ private final class WeakScriptMessageHandlerWithReply: NSObject, WKScriptMessage
 /// 用 keyPath 显式取系统的 name，规避工程里可能的同名扩展
 private typealias WKSM = WebKit.WKScriptMessage
 private extension WKSM { var jobsChannel: String { self[keyPath: \WKSM.name] } }
-public final class BaseWebView: UIView {
+public class BaseWebView: UIView {
     // ===== 基础配置项（完全通用，无业务常量） =====
     public var allowedHosts: Set<String> = []                         // 空 = 不限制
     public var externalSchemes: Set<String> = [
@@ -460,7 +464,7 @@ public extension BaseWebView {
     }
 }
 // ===== WK Script Bridge =====
-extension BaseWebView {
+public extension BaseWebView {
     private static func makeBridgeUserScript() -> WKUserScript {
         let js = """
         (function() {
@@ -553,7 +557,7 @@ extension BaseWebView {
     }
 }
 // ===== 工具 =====
-extension BaseWebView {
+public extension BaseWebView {
     static func quote(_ s: String) -> String {
         let escaped = s
             .replacingOccurrences(of: "\\", with: "\\\\")
@@ -661,7 +665,7 @@ extension BaseWebView: WKScriptMessageHandlerWithReply {
     }
 }
 // ===== 统一消息处理 =====
-private extension BaseWebView {
+public extension BaseWebView {
     @MainActor
     func handleScriptMessage(channel: String,
                              body: Any,

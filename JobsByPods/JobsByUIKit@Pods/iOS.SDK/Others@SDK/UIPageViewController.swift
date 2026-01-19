@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 extension UIPageViewController {
     @discardableResult
     func byViewControllers(_ viewControllers: [UIViewController],

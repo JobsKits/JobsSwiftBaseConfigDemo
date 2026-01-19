@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-extension CALayer {
+public extension CALayer {
     // MARK: - 几何 & 变换
     @discardableResult
     func byBounds(_ bounds: CGRect) -> Self {

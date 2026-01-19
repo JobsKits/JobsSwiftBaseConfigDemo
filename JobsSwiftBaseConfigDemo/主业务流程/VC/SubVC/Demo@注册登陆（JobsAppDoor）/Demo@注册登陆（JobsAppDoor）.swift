@@ -14,11 +14,12 @@ import AppKit
 import UIKit
 #endif
 
+import AVFoundation
 import SnapKit
 import BMPlayer
-import AVFoundation
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 小工具
 private extension CATransform3D {
     static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }

@@ -840,7 +840,7 @@ public enum ImageSource {
     case local(String)
 }
 /// 全覆盖 JSON”模型
-enum JSONValue: Equatable, Codable {
+public enum JSONValue: Equatable, Codable {
     case int(Int)
     case double(Double)
     case string(String)
@@ -849,7 +849,7 @@ enum JSONValue: Equatable, Codable {
     case object([String: JSONValue])
     case null
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
@@ -874,7 +874,7 @@ enum JSONValue: Equatable, Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
 
         switch self {

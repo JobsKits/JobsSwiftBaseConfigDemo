@@ -10,10 +10,15 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import GKNavigationBarSwift
 import SnapKit
+import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsTextTools
+import JobsToast
+import JobsSwiftBaseDefines
 
 final class BtnFullOnCVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []

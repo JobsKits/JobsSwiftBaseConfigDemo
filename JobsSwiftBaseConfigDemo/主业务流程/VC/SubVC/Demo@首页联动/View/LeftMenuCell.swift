@@ -10,8 +10,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class LeftMenuCell: UITableViewCell {
 
@@ -27,7 +29,7 @@ final class LeftMenuCell: UITableViewCell {
     }()
 
     private lazy var iconView: UIImageView = {
-        UIImageView(image: UIImage(systemName: "star"))
+        UIImageView(image:"star".sysImg)
             .byTintColor(.systemGray)
             .byContentMode(.scaleAspectFit)
             .byAddTo(contentView) { make in

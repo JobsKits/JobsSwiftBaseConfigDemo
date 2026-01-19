@@ -14,16 +14,16 @@ import AVFoundation
 import SnapKit
 import JobsByUIKit
 
-protocol PlayerControlsDelegate: AnyObject {
+public protocol PlayerControlsDelegate: AnyObject {
     func didTapPlayPause()
     func didSeekToTime(_ time: TimeInterval)
 }
 
-final class PlayerControlsView: UIView {
+open class PlayerControlsView: UIView {
     // MARK: - Public
     weak var delegate: PlayerControlsDelegate?
     @discardableResult
-    func byDelegate(_ d: PlayerControlsDelegate?) -> Self {
+    public func byDelegate(_ d: PlayerControlsDelegate?) -> Self {
         delegate = d
         return self
     }
@@ -117,7 +117,7 @@ final class PlayerControlsView: UIView {
         setupLayout()
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
         setupLayout()
@@ -152,13 +152,13 @@ final class PlayerControlsView: UIView {
     }
 
     // MARK: - Public API（对外协议不变）
-    func updatePlayPauseButton(isPlaying: Bool) {
+    public func updatePlayPauseButton(isPlaying: Bool) {
         self.isPlaying = isPlaying
         let imageName = isPlaying ? "pause.fill" : "play.fill"
         _ = playPauseButton.byImage(UIImage(systemName: imageName), for: .normal)
     }
 
-    func updateProgress(currentTime: TimeInterval, duration: TimeInterval) {
+    public func updateProgress(currentTime: TimeInterval, duration: TimeInterval) {
         guard currentTime.isFinite, !currentTime.isNaN, currentTime >= 0,
               duration.isFinite, !duration.isNaN, duration > 0 else { return }
 
@@ -175,7 +175,7 @@ final class PlayerControlsView: UIView {
         updateDurationLabel()
     }
 
-    func show(animated: Bool = true) {
+    public func show(animated: Bool = true) {
         if animated {
             UIView.animate(withDuration: 0.3) { self.alpha = 1.0 }
         } else {
@@ -183,7 +183,7 @@ final class PlayerControlsView: UIView {
         }
     }
 
-    func hide(animated: Bool = true) {
+    public func hide(animated: Bool = true) {
         if animated {
             UIView.animate(withDuration: 0.3) { self.alpha = 0.0 }
         } else {

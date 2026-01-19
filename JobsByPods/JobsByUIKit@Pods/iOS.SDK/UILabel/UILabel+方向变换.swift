@@ -9,6 +9,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
+
 extension UILabel {
     // MARK: 方向变换（使用 CATextLayer，避免富文本/对齐丢失）
     @discardableResult

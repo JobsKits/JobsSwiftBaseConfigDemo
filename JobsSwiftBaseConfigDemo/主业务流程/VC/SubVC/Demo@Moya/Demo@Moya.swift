@@ -11,15 +11,14 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(CombineMoya)
-import CombineMoya
-#endif
-
 import Moya
 import Combine
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class MoyaDemoVC: BaseVC {
     // ✅ 改为 lazy，并把 Moya 日志重定向到 UI
@@ -30,7 +29,6 @@ final class MoyaDemoVC: BaseVC {
     }()
 
     private var bag = Set<AnyCancellable>()
-
     // =============== 回显区（懒加载 + 的 byAddTo 就地约束） ===============
     private lazy var resultView: UITextView = {
         UITextView()

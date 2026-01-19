@@ -10,7 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+import JobsSwiftBaseTools
 
 final class HUDHelper {
     static let shared = HUDHelper()

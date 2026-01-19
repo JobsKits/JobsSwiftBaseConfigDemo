@@ -10,6 +10,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBlock
 // ================================== 示例 ==================================
 // cell.byListConfig {
 //     $0.byText("主标题")

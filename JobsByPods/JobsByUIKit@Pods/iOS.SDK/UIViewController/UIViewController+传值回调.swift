@@ -12,6 +12,8 @@ import UIKit
 #endif
 
 import ObjectiveC.runtime
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 private enum JobsAssocKey {
     static var callback: UInt8 = 0
@@ -37,9 +39,9 @@ public extension ViewDataProtocol where Self: UIViewController {
     }
 }
 
-extension UIViewController{
+public extension UIViewController{
     @discardableResult
-    func goBack(_ result: Any?, animated: Bool = true) -> Self {
+    public func goBack(_ result: Any?, animated: Bool = true) -> Self {
         if let r = result { sendResult(r) }
         if let nav = navigationController,
            nav.viewControllers.first != self {
@@ -50,7 +52,7 @@ extension UIViewController{
     }
     // ✅ 出现完成（push/present 结束）的一次性回调
     @discardableResult
-    func byCompletion(_ block: @escaping jobsByVoidBlock) -> Self {
+    public func byCompletion(_ block: @escaping jobsByVoidBlock) -> Self {
         UIViewController._JobsAppearSwizzler.installIfNeeded()
         var arr = (objc_getAssociatedObject(self, &JobsAssocKey.onAppearCompletions) as? [jobsByVoidBlock]) ?? []
         arr.append(block)
@@ -61,7 +63,7 @@ extension UIViewController{
         };return self
     }
 
-    func jobs_fireAppearCompletionIfNeeded(reason: String) {
+    public func jobs_fireAppearCompletionIfNeeded(reason: String) {
         let fired = (objc_getAssociatedObject(self, &JobsAssocKey.appearCompletionFired) as? Bool) ?? false
         guard !fired else { return }
         guard let blocks = objc_getAssociatedObject(self, &JobsAssocKey.onAppearCompletions) as? [jobsByVoidBlock],

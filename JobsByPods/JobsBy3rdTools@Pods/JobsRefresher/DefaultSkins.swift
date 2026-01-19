@@ -10,7 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 @MainActor
 public final class JobsDefaultHeader: JobsDefaultIndicatorView {

@@ -15,7 +15,7 @@ public var _jobsTitleFontDictKey: UInt8 = 0
 public var _jobsTitleFontHandlerInstalledKey: UInt8 = 0
 public extension UIButton {
     @discardableResult
-    func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
+    public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
         self.setTitle(title, for: state)
         if #available(iOS 15.0, *), var cfg = self.configuration {
             if state == .normal { cfg.title = title }
@@ -25,13 +25,13 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byAttributedTitle(_ text: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
+    public func byAttributedTitle(_ text: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
         self.setAttributedTitle(text, for: state)
         return self
     }
 
     @discardableResult
-    func byTitleFont(_ font: UIFont?) -> Self {
+    public func byTitleFont(_ font: UIFont?) -> Self {
         self.titleLabel?.font = font
         if #available(iOS 15.0, *), self.configuration != nil {
             var cfg = self.configuration ?? .filled()
@@ -46,7 +46,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
         // legacy：至少 normal 立刻生效
         if state == .normal { self.titleLabel?.font = font }
         if #available(iOS 15.0, *), self.configuration != nil {
@@ -69,7 +69,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         self.setTitleColor(color, for: state)
         if #available(iOS 15.0, *), var cfg = self.configuration {
             if state == .normal {
@@ -81,27 +81,27 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byTitleShadowColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleShadowColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         self.setTitleShadowColor(color, for: state)
         return self
     }
 
     @discardableResult
-    func byImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+    public func byImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
         self.setImage(image, for: state)
         return self
     }
 
     @available(iOS 13.0, *)
     @discardableResult
-    func byPreferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?,
+    public func byPreferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?,
                                        forImageIn state: UIControl.State = .normal) -> Self {
         self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
         return self
     }
 
     @discardableResult
-    func byBackgroundImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+    public func byBackgroundImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
         #if DEBUG
         if image == nil { print("❗️byBackgroundImage: image is nil for state=\(state)") }
         #endif
@@ -121,7 +121,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byBackgroundImageContentMode(_ mode: UIView.ContentMode) -> Self {
+    public func byBackgroundImageContentMode(_ mode: UIView.ContentMode) -> Self {
         if #available(iOS 15.0, *), var cfg = self.configuration {
             var bg = cfg.background
             bg.imageContentMode = mode         // .scaleAspectFill / .scaleAspectFit
@@ -131,14 +131,14 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byTintColor(_ color: UIColor) -> Self {
+    public func byTintColor(_ color: UIColor) -> Self {
         self.tintColor = color
         return self
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func byUpdateConfig() -> Self {
+    public func byUpdateConfig() -> Self {
         self.setNeedsUpdateConfiguration()
         self.updateConfiguration()
         self.automaticallyUpdatesConfiguration = true
@@ -154,7 +154,7 @@ private extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    func _ensureTitleFontHandlerInstalled() {
+    public func _ensureTitleFontHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
@@ -198,24 +198,24 @@ public extension UIButton {
         }
 
         @discardableResult
-        func title(_ text: String?) -> UIButton { button.setTitle(text, for: state); return button }
+        public func title(_ text: String?) -> UIButton { button.setTitle(text, for: state); return button }
         @discardableResult
-        func attributedTitle(_ text: NSAttributedString?) -> UIButton { button.setAttributedTitle(text, for: state); return button }
+        public func attributedTitle(_ text: NSAttributedString?) -> UIButton { button.setAttributedTitle(text, for: state); return button }
         @discardableResult
-        func titleColor(_ color: UIColor?) -> UIButton { button.setTitleColor(color, for: state); return button }
+        public func titleColor(_ color: UIColor?) -> UIButton { button.setTitleColor(color, for: state); return button }
         @discardableResult
-        func titleShadowColor(_ color: UIColor?) -> UIButton { button.setTitleShadowColor(color, for: state); return button }
+        public func titleShadowColor(_ color: UIColor?) -> UIButton { button.setTitleShadowColor(color, for: state); return button }
         @discardableResult
-        func image(_ image: UIImage?) -> UIButton { button.setImage(image, for: state); return button }
+        public func image(_ image: UIImage?) -> UIButton { button.setImage(image, for: state); return button }
 
         @available(iOS 13.0, *)
         @discardableResult
-        func preferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?) -> UIButton {
+        public func preferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?) -> UIButton {
             button.setPreferredSymbolConfiguration(configuration, forImageIn: state); return button
         }
 
         @discardableResult
-        func backgroundColor(_ color: UIColor) -> UIButton {
+        public func backgroundColor(_ color: UIColor) -> UIButton {
             if #available(iOS 15.0, *), state == .normal {
                 var cfg = button.configuration ?? .filled()
                 cfg.baseBackgroundColor = color
@@ -230,14 +230,14 @@ public extension UIButton {
         }
 
         @discardableResult
-        func backgroundImage(_ image: UIImage?) -> UIButton { button.setBackgroundImage(image, for: state); return button }
+        public func backgroundImage(_ image: UIImage?) -> UIButton { button.setBackgroundImage(image, for: state); return button }
 
         @discardableResult
-        func subTitle(_ text: String?) -> UIButton { button.bySubTitle(text, for: state) }
+        public func subTitle(_ text: String?) -> UIButton { button.bySubTitle(text, for: state) }
         @discardableResult
-        func subTitleFont(_ font: UIFont) -> UIButton { button.bySubTitleFont(font, for: state) }
+        public func subTitleFont(_ font: UIFont) -> UIButton { button.bySubTitleFont(font, for: state) }
         @discardableResult
-        func subTitleColor(_ color: UIColor) -> UIButton { button.bySubTitleColor(color, for: state) }
+        public func subTitleColor(_ color: UIColor) -> UIButton { button.bySubTitleColor(color, for: state) }
     }
 
     func `for`(_ state: UIControl.State) -> StateProxy { StateProxy(button: self, state: state) }
@@ -245,7 +245,7 @@ public extension UIButton {
 // MARK: - 布局 / 外观
 public extension UIButton {
     @discardableResult
-    func byBackgroundColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    public func byBackgroundColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *), state == .normal {
             var cfg = self.configuration ?? .filled()
             cfg.baseBackgroundColor = color
@@ -262,19 +262,19 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byNormalBgColor(_ color: UIColor) -> Self { byBackgroundColor(color, for: .normal) }
+    public func byNormalBgColor(_ color: UIColor) -> Self { byBackgroundColor(color, for: .normal) }
 
     @discardableResult
-    func byNumberOfLines(_ lines: Int) -> Self { titleLabel?.numberOfLines = lines; return self }
+    public func byNumberOfLines(_ lines: Int) -> Self { titleLabel?.numberOfLines = lines; return self }
 
     @discardableResult
-    func byLineBreakMode(_ mode: NSLineBreakMode) -> Self { titleLabel?.lineBreakMode = mode; return self }
+    public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self { titleLabel?.lineBreakMode = mode; return self }
 
     @discardableResult
-    func byTitleAlignment(_ alignment: NSTextAlignment) -> Self { titleLabel?.textAlignment = alignment; return self }
+    public func byTitleAlignment(_ alignment: NSTextAlignment) -> Self { titleLabel?.textAlignment = alignment; return self }
 
     @discardableResult
-    func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
+    public func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = configuration ?? .filled()
             cfg.contentInsets = insets
@@ -289,7 +289,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
+    public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
         let inset = insets ?? (UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
         if #available(iOS 15.0, *) {
             var cfg = configuration ?? .filled()
@@ -305,7 +305,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byImageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byImageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = configuration ?? .filled()
             cfg.imagePadding = (insets.left + insets.right) / 2
@@ -317,7 +317,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = configuration ?? .filled()
             cfg.contentInsets = NSDirectionalEdgeInsets(top: insets.top,
@@ -332,20 +332,20 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byBorder(color: UIColor, width: CGFloat) -> Self {
+    public func byBorder(color: UIColor, width: CGFloat) -> Self {
         layer.borderColor = color.cgColor
         layer.borderWidth = width
         return self
     }
     // MARK: - 阴影
     @discardableResult
-    func byMasksToBounds(radius: Bool) -> Self {
+    public func byMasksToBounds(radius: Bool) -> Self {
         layer.masksToBounds = radius
         return self
     }
 
     @discardableResult
-    func byShadow(color: UIColor = .black,
+    public func byShadow(color: UIColor = .black,
                   opacity: Float = 0.15,
                   radius: CGFloat = 6,
                   offset: CGSize = .init(width: 0, height: 2)) -> Self {
@@ -358,7 +358,7 @@ public extension UIButton {
     }
     /// 图文位置关系
     @discardableResult
-    func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
+    public func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
         let p = placement ?? .top
         let pad = padding ?? 8.0
         if #available(iOS 15.0, *) {
@@ -383,13 +383,13 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
+    public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
         byImagePlacement(placement, padding: 8.0)
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func byConfiguration(_ build: (UIButton.Configuration) -> UIButton.Configuration) -> Self {
+    public func byConfiguration(_ build: (UIButton.Configuration) -> UIButton.Configuration) -> Self {
         let current = self.configuration ?? .filled()
         self.configuration = build(current)
         byUpdateConfig()
@@ -400,55 +400,55 @@ public extension UIButton {
 public extension UIButton {
     @available(iOS 14.0, *)
     @discardableResult
-    func byMenu(_ menu: UIMenu?) -> Self {
+    public func byMenu(_ menu: UIMenu?) -> Self {
         self.menu = menu;
         return self
     }
 
     @available(iOS 13.4, *)
     @discardableResult
-    func byPointerInteractionEnabled(_ on: Bool) -> Self {
+    public func byPointerInteractionEnabled(_ on: Bool) -> Self {
         self.isPointerInteractionEnabled = on;
         return self
     }
 
     @available(iOS 14.0, *)
     @discardableResult
-    func byRole(_ role: UIButton.Role) -> Self {
+    public func byRole(_ role: UIButton.Role) -> Self {
         self.role = role;
         return self
     }
 
     @available(iOS 16.0, *)
     @discardableResult
-    func byPreferredMenuElementOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
+    public func byPreferredMenuElementOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
         self.preferredMenuElementOrder = order; return self
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func byChangesSelectionAsPrimaryAction(_ on: Bool) -> Self {
+    public func byChangesSelectionAsPrimaryAction(_ on: Bool) -> Self {
         self.changesSelectionAsPrimaryAction = on;
         return self
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func byAutomaticallyUpdatesConfiguration(_ on: Bool) -> Self {
+    public func byAutomaticallyUpdatesConfiguration(_ on: Bool) -> Self {
         self.automaticallyUpdatesConfiguration = on;
         return self
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func byConfigurationUpdateHandler(_ handler: @escaping UIButton.ConfigurationUpdateHandler) -> Self {
+    public func byConfigurationUpdateHandler(_ handler: @escaping UIButton.ConfigurationUpdateHandler) -> Self {
         self.configurationUpdateHandler = handler;
         return self
     }
 
     @available(iOS 15.0, *)
     @discardableResult
-    func bySetNeedsUpdateConfiguration() -> Self {
+    public func bySetNeedsUpdateConfiguration() -> Self {
         self.setNeedsUpdateConfiguration();
         return self
     }

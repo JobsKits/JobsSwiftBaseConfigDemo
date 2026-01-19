@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 public final class _JobsClosureWrapper: NSObject {
     private let closure: jobsByVoidBlock
 

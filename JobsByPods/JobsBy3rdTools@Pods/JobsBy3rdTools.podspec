@@ -17,8 +17,28 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/JobsKits/JobsBy3rdTools.git',
                      :tag => s.version.to_s }
 
+  # 全局排除脚本 / 图标
+  s.exclude_files = [
+    '【MacOS】🫘JobsPublishPods.command',
+    'icon.png',
+    'LICENSE',
+  ]
 
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
-
+  
+  s.dependency 'SwiftEntryKit'
+  s.dependency 'SnapKit'
+  s.dependency 'BMPlayer'
+  s.dependency 'Flutter'
+  s.dependency 'FlutterPluginRegistrant'
+  s.dependency 'Inheritance'
+  s.dependency 'JobsTextTools'
+  s.dependency 'JobsSwiftBaseTools'
+  s.dependency 'JobsByUIKit'
+  s.dependency 'JobsScale'
+  s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'SwiftStandardLibrary_extension'
+  s.dependency 'JobsSwiftMetalKit_extensions'
+  
 end

@@ -20,24 +20,12 @@ Pod::Spec.new do |s|
 
   # 全局排除脚本 / 图标
   s.exclude_files = [
-    'MacOS/🫘JobsPublishPods.command',
+    '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
+    'LICENSE',
   ]
 
-  # ====================== 根层基础工具（根目录 Swift） ======================
-  s.source_files = [
-    'Inlines.swift',
-    'JobsRichText.swift',
-    'JobsSafeTransitions.swift',
-    'JobsText.swift',
-    'JobsStructTools.swift',
-    'JobsTimer.swift',
-    'KeyboardObserver.swift',
-    'SafeCodable.swift',
-    'SnowflakeSwift.swift',
-    'TextInputStrategies.swift',
-    'weak.swift'
-  ]
+  s.source_files = '**/*.{swift,h,m,mm}'
 
   # ====================== 系统库依赖：所有代码共享 ======================
   s.ios.frameworks = 'UIKit',
@@ -59,18 +47,7 @@ Pod::Spec.new do |s|
   s.dependency 'Alamofire'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
-
-  # ====================== 多语言化（中文目录 + Localizable.strings） ======================
-  s.subspec '多语言化' do |ss|
-    # 多语言化文件夹下的 Swift：LanguageManager / TRAutoRefresh / TRLang 等
-    ss.source_files = '多语言化/**/*.swift'
-
-    # 多语言化下的所有 Localizable.strings
-    # 例如：
-    #   多语言化/en.lproj/Localizable.strings
-    #   多语言化/zh-Hans.lproj/Localizable.strings
-    ss.resources = '多语言化/**/*.strings'
-  end
+  s.dependency 'JobsByUIKit'
 
   # ====================== 🛜 网络流量监控（中文目录） ======================
   s.subspec '🛜网络流量监控' do |ss|

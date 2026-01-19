@@ -12,10 +12,13 @@ import UIKit
 #endif
 
 import GKPhotoBrowser
+import GKNavigationBarSwift
 import SnapKit
+import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
     private let layoutMode: TimelineLayoutMode = .estimated_autoDimension
@@ -33,8 +36,8 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .jobs_emptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in

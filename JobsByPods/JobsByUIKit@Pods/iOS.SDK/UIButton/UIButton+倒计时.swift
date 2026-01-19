@@ -10,22 +10,9 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(JobsSwiftBaseTools)
-import JobsSwiftBaseTools
-#endif
+import JobsSwiftBlock
+import JobsTimer
 // MARK: 统一计时器
-public enum TimerState { case idle, running, paused, stopped }
-private enum _TimerMode {
-    case countUp(elapsed: Int)
-    case countdown(remain: Int, total: Int)
-}
-
-private extension _TimerMode {
-    var isCountdown: Bool {
-        if case .countdown = self { return true }
-        return false
-    }
-}
 private var _timerTickAnyKey: UInt8   = 0
 private var _timerFinishAnyKey: UInt8 = 0
 private var _legacyCountdownTickKey:   UInt8 = 0

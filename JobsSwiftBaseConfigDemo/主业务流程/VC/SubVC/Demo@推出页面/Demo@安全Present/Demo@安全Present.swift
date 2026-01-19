@@ -10,9 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsTextTools
+import JobsScale
 // MARK: - Demo@安全Present
 final class SafetyPresentDemoVC: BaseVC {
     /// 半屏高度（可按需改）

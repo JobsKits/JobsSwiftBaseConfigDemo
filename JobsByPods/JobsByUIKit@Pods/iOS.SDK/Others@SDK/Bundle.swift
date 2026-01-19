@@ -11,9 +11,8 @@ import AppKit
 import UIKit
 #endif
 import ObjectiveC.runtime
-#if canImport(JobsSwiftBaseTools)
-import JobsSwiftBaseTools
-#endif
+import Jobsl10n
+
 private var _jobs_swizzled: Bool = false
 extension Bundle {
     static func jobs_enableLanguageHook() {
@@ -24,11 +23,17 @@ extension Bundle {
         _jobs_swizzled = true
     }
 
-    @objc private func jobs_localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
+    @objc private func jobs_localizedString(forKey key: String,
+                                            value: String?,
+                                            table tableName: String?) -> String {
         // 只改 main.bundle，避免递归和第三方 bundle 受影响
         if self == .main {
             let b = LanguageManager.shared.localizedBundle
-            return b.jobs_localizedString(forKey: key, value: value, table: tableName)
-        };return self.jobs_localizedString(forKey: key, value: value, table: tableName)
+            return b.jobs_localizedString(forKey: key,
+                                          value: value,
+                                          table: tableName)
+        };return self.jobs_localizedString(forKey: key,
+                                           value: value,
+                                           table: tableName)
     }
 }

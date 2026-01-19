@@ -88,6 +88,8 @@
 
 * [**配置`info.plist`文件**](https://github.com/JobsKits/JobsOCBaseConfigDemo/blob/main/JobsOCBaseConfigDemo/配置info.plist/配置info.plist.md)
 
+* [**热键配置**](https://github.com/JobsKits/JobsConfigHotKeyByHammerspoon)
+
 * iOS模拟器
 
   * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)

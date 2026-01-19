@@ -9,12 +9,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-// MARK: - 回调协议：任何宿主视图（含 BaseWebView）都可感知 NavBar 显隐变化并自行调整内部布局
-@MainActor
-public protocol JobsNavBarHost: AnyObject {
-    /// enabled: true=已安装；false=已移除
-    func jobsNavBarDidToggle(enabled: Bool, navBar: JobsNavBar)
-}
+
+import JobsNavBar
+import JobsSwiftBlock
 // MARK: - 关联对象 Key（用 UInt8 的地址唯一标识）
 private enum _JobsNavBarAO {
     static var bar:  UInt8 = 0

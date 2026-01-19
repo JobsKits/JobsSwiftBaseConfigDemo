@@ -16,9 +16,20 @@ Pod::Spec.new do |s|
   # 你的源码从 Git 仓库下载
   s.source       = { :git => 'https://github.com/JobsKits/Inheritance.git',
                      :tag => s.version.to_s }
-
+                     
+  # 全局排除脚本 / 图标
+  s.exclude_files = [
+    '【MacOS】🫘JobsPublishPods.command',
+    'icon.png',
+    'LICENSE',
+  ]
 
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
-
+  s.dependency 'SnapKit'
+  s.dependency 'JobsByUIKit'
+  s.dependency 'JobsNavBar'
+  s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'JobsToast'
+  
 end

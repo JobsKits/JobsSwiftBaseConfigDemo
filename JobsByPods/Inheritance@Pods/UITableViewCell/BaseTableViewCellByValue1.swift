@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 /// 左侧一张图 + 左侧一个主标题 + 右侧一个副标题
-class BaseTableViewCellByValue1: UITableViewCell {
+public class BaseTableViewCellByValue1: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
     }

@@ -4,13 +4,16 @@
 //
 //  Created by Jobs on 12/16/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
 typealias DemoItem = (title: String, vcType: UIViewController.Type)
 final class RootFoldTableCell: UITableViewCell {

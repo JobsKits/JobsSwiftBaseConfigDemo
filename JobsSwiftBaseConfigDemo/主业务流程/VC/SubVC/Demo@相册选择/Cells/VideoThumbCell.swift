@@ -4,13 +4,17 @@
 //
 //  Created by Jobs on 12/18/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import AVFoundation
 import JobsByUIKit
+import JobsSwiftBaseDefines
+import SnapKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）
 public final class VideoThumbCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {
@@ -38,23 +42,19 @@ public final class VideoThumbCell: UICollectionViewCell {
         currentURL = nil
         iv.image = nil
     }
-
     // MARK: - byData
     @discardableResult
     func byData(_ payload: Any?) -> Self {
-
         // 1) URL
         if let url = payload as? URL {
             render(url)
             return self
         }
-
         // 2) URL?
         if let url = (payload as? URL?) ?? nil {
             render(url)
             return self
         }
-
         // 3) [Any?]
         if let items = payload as? [Any?] {
             let first = items.first ?? nil

@@ -10,10 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import AsyncDisplayKit
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
 // MARK: - 数据模型（等价 CKDemoItem）
 enum DemoKind {
     case text,

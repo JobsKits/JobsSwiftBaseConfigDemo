@@ -16,6 +16,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsImageTools
 #if canImport(Kingfisher)
 import Kingfisher
 public extension UIImageView {

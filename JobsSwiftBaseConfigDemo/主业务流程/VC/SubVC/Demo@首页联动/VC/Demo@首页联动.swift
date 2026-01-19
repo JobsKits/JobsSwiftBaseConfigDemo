@@ -10,10 +10,15 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JXSegmentedView
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JXSegmentedView
+import JobsBy3rdTools
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class CashbackRootVC: BaseVC {
     // MARK: - Data

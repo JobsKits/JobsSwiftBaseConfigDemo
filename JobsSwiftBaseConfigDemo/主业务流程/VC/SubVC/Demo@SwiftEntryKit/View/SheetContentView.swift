@@ -10,8 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import SnapKit
 import SwiftEntryKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 自定义底部表单（键盘联动）
 final class SheetContentView: UIView, UITextFieldDelegate {
     private lazy var titleLabel: UILabel = {

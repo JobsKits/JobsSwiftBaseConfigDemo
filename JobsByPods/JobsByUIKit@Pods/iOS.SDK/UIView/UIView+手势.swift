@@ -9,6 +9,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBlock
 /**
  // MARK: - 点击 Tap
  UIView().addGestureRecognizer(

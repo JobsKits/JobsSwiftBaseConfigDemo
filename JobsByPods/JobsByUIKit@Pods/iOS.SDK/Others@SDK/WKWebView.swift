@@ -11,6 +11,7 @@ import UIKit
 #endif
 
 import WebKit
+import JobsSwiftBlock
 
 extension WKWebView {
     @discardableResult

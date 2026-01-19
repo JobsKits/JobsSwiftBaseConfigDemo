@@ -13,6 +13,8 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsImageTools
 
 final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // callbacks (✅ 回调把 cell 自己带出去)
@@ -418,12 +420,12 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // ============================== Avatar ==============================
     private func setAvatar(_ url: URL) {
         currentAvatarURL = url
-        if let cached = SimpleImageLoader.shared.cachedImage(for: url) {
+        if let cached = JobsSimpleImageLoader.shared.cachedImage(for: url) {
             avatar.image = cached
             return
         }
         avatarTask?.cancel()
-        avatarTask = SimpleImageLoader.shared.load(url) { [weak self] img in
+        avatarTask = JobsSimpleImageLoader.shared.load(url) { [weak self] img in
             guard let self else { return }
             guard self.currentAvatarURL == url else { return }
             self.avatar.image = img

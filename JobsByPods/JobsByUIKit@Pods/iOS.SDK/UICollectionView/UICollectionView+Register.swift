@@ -27,7 +27,7 @@ extension UICollectionView {
     /// - Parameter cellClass: `UICollectionViewCell` 子类
     /// - Returns: self
     @discardableResult
-    func registerCell<T: UICollectionViewCell>(_ cellClass: T.Type) -> Self {
+    public func registerCell<T: UICollectionViewCell>(_ cellClass: T.Type) -> Self {
         register(cellClass, forCellWithReuseIdentifier: String(describing: cellClass))
         return self
     }

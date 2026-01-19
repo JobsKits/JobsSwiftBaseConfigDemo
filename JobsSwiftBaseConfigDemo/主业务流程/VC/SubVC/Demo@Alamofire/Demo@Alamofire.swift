@@ -14,11 +14,14 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import Alamofire
 import Combine
 import SnapKit
 import GKNavigationBarSwift
 import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class AFDemoVC: UIViewController {
     // live 或 stubbed；live 演示真实请求

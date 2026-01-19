@@ -4,17 +4,16 @@
 //
 //  Created by Jobs on 12/1/25.
 //
-#if canImport(JobsSwiftBaseDefines)
+
 import JobsSwiftBaseDefines
-#endif
 /// 一些用结构体定义的小工具
 public struct JobsValidators {
     // MARK: - 非空验证
-    static func nonEmpty(_ s: String) -> Bool {
+    public static func nonEmpty(_ s: String) -> Bool {
         !s.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     // MARK: - 数值范围验证器
-    static func decimal(min: Double? = nil, max: Double? = nil) -> (String) -> Bool {
+    public  static func decimal(min: Double? = nil, max: Double? = nil) -> (String) -> Bool {
         return { s in
             guard let v = Double(s) else { return false }
             if let min = min, v < min { return false }
@@ -23,7 +22,7 @@ public struct JobsValidators {
         }
     }
     // MARK: - 手机号验证（中国大陆）
-    static func phoneCN() -> (String) -> Bool {
+    public static func phoneCN() -> (String) -> Bool {
         return { s in
             // 去空格后的纯数字长度 11
             let digits = s.filter(\.isNumber)
@@ -54,7 +53,7 @@ public struct CNID {
     static func isValid(_ raw: String) -> Bool { (try? validate(raw)) != nil }
     /// 严格校验：非法抛错。总是返回“归一化后的18位证号”
     @discardableResult
-    static func validate(_ raw: String, centuryHintFor15: Int = 19) throws -> String {
+    public static func validate(_ raw: String, centuryHintFor15: Int = 19) throws -> String {
         let s = raw.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         if match(re18, s) { try validate18(s); return s }
         if match(re15, s) {
@@ -64,7 +63,7 @@ public struct CNID {
         };throw CNIDError.format
     }
     /// 将 15 位转换为 18 位（默认世纪 “19”）
-    static func convert15to18(_ id15: String, centuryHint: Int = 19) throws -> String {
+    public static func convert15to18(_ id15: String, centuryHint: Int = 19) throws -> String {
         guard match(re15, id15) else { throw CNIDError.format }
         let area = String(id15.prefix(6))
         let yymmdd = String(id15[id15.index(id15.startIndex, offsetBy:6)..<id15.index(id15.startIndex, offsetBy:12)])
@@ -81,7 +80,7 @@ public struct CNID {
         re.firstMatch(in: s, range: NSRange(s.startIndex..., in: s)) != nil
     }
 
-    private static func validate18(_ id: String) throws {
+    public static func validate18(_ id: String) throws {
         guard match(re18, id) else { throw CNIDError.format }
         // 出生日期
         let y = Int(id[Range(NSRange(location: 6, length: 4), in: id)!])!
@@ -127,22 +126,5 @@ struct FibonacciSequence: Sequence {
                 i += 1
             };return a
         }
-    }
-}
-// MARK: - 通用于 UITableViewCell 和 UICollectionViewCell 的模型组件
-public struct JobsCellConfig {
-    public let title: JobsText?
-    public let detail: JobsText?
-    public let image: UIImage?
-    public let data: Any?
-
-    public init(title: JobsText? = nil,
-                detail: JobsText? = nil,
-                image: UIImage? = nil,
-                data: Any? = nil) {
-        self.title = title
-        self.detail = detail
-        self.image = image
-        self.data = data
     }
 }

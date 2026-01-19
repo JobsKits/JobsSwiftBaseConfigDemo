@@ -10,14 +10,19 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+#if canImport(Flutter)
 import Flutter
 import FlutterPluginRegistrant
+#endif
+
+import JobsByUIKit
 /// https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/Swift ➤ Flutter.md/Swift ➤ Flutter.md
 /// 需要安装Flutter环境
 /// 必须进入Flutter目录中执行flutter pub get  生成中间产物podhelper.rb 才能跑通 pod install
-final class FlutterBridge {
+public final class FlutterBridge {
 
-    static let shared = FlutterBridge()
+    public static let shared = FlutterBridge()
     private init() {}
     // MARK: - Config
     private let channelName = "com.jobs/native_flutter"
@@ -25,9 +30,9 @@ final class FlutterBridge {
     private var engine: FlutterEngine?
     private var channel: FlutterMethodChannel?
 
-    typealias Payload = [String: Any]
-    typealias Completion = (Payload) -> Void
-    typealias Configure = (FlutterViewController) -> Void
+    public typealias Payload = [String: Any]
+    public typealias Completion = (Payload) -> Void
+    public typealias Configure = (FlutterViewController) -> Void
 
     private var callbacks: [String: Completion] = [:]
     private var vcBoxes: [String: WeakBox<FlutterViewController>] = [:]
@@ -36,16 +41,15 @@ final class FlutterBridge {
     private var startedEngines = Set<ObjectIdentifier>()
     private var registeredEngines = Set<ObjectIdentifier>()
     // MARK: - Setup（推荐在 App 启动时调用一次；但忘了也没关系，内部会兜底）
-    func setup(engine: FlutterEngine) {
+    public func setup(engine: FlutterEngine) {
         self.engine = engine
         _ = runEngineIfNeeded(engine)
         registerPluginsIfNeeded(engine)
         installChannelIfNeeded(engine)
     }
-
     // MARK: - Present
     @discardableResult
-    func presentFlutter(
+    public func presentFlutter(
         from host: UIResponder?,
         route: String = "/page",
         arguments: Payload = [:],
@@ -74,7 +78,6 @@ final class FlutterBridge {
         }
         return requestId
     }
-
     // MARK: - Push
     @discardableResult
     func pushFlutter(
@@ -134,9 +137,7 @@ final class FlutterBridge {
             guard let self else { return }
             guard let openArgs = self.pendingOpenArgs.removeValue(forKey: requestId) else { return }
             channel.invokeMethod("open", arguments: openArgs)
-        }
-
-        return vc
+        };return vc
     }
 
     private func ensureEngineReady() -> FlutterEngine {

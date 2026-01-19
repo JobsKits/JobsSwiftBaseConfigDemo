@@ -11,6 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+import JobsTextTools
+import JobsSwiftBaseDefines
+import JobsScale
+
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 public extension UIViewController {

@@ -14,6 +14,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxRelay
+import JobsSwiftBlock
 // MARK: ⚙️ deleteBackward 广播（UITextView）
 public extension UITextView {
     private static let _swizzleOnce: Void = {

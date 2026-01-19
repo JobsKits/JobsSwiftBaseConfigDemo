@@ -63,7 +63,7 @@ public extension UIButton {
     func jobsResetBtnImage(_ image: UIImage?, for state: UIControl.State) {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()  // ✅ 没有也创建；前景建议用 .plain()
-            cfg.image = image                          // ✅ 前景图写到 configuration.image
+            cfg.image = image                         // ✅ 前景图写到 configuration.image
             self.configuration = cfg
             byUpdateConfig()
         } else {

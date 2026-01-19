@@ -12,8 +12,10 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsTextTools
 
 final class TransparentRegionVC: BaseVC {
     private let horizontalInset: CGFloat = 16

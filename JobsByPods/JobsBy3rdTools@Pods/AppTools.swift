@@ -14,6 +14,12 @@ import UIKit
 import SwiftEntryKit
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
+import Inheritance
+import JobsTextTools
+import JobsSwiftBaseTools
+import JobsScale
 // MARK: 🔔 通用弹窗提示
 public func presentAlert(for urlString: String, on textView: UITextView) {
     // 💡 iOS17+：delegate 不一定是当前 VC，用原来的兜底逻辑
@@ -201,37 +207,22 @@ public func isHttpURL(_ raw: String?) -> Bool {
     let p = s.lowercased()
     return p.hasPrefix("http://") || p.hasPrefix("https://")
 }
-// MARK: - Tips
-func toastBy(_ string: String) {
-    /// 允许任意线程调用这个方法
-    Task { @MainActor in
-        JobsToast.show(
-            text: string,
-            config: JobsToast.Config()
-                .byBgColor(.systemGreen.withAlphaComponent(0.9))
-                .byCornerRadius(12)
-        )
-    }
-}
 /// 全局通用注册@UITableViewCell及其子类
 extension UITableView {
     @discardableResult
-    func register() -> Self{
-        self.registerCell(AvatarCell.self)
+    public func register() -> Self{
         self.registerCell(UITableViewCell.self)
-
         self.registerCell(BaseTableViewCellByDefault.self)
         self.registerCell(BaseTableViewCellByValue1.self)
         self.registerCell(BaseTableViewCellByValue2.self)
         self.registerCell(BaseTableViewCellBySubtitle.self)
-
         return self;
     }
 }
 /// 全局通用注册@UICollectionViewCell及其子类
 extension UICollectionView {
     @discardableResult
-    func register() -> Self{
+    public func register() -> Self{
         self.registerCell(UICollectionViewCell.self)
         return self;
     }
@@ -264,7 +255,7 @@ public func fmt(_ date: Date, _ f: String) -> String {
 extension UIView {
     /// 在指定 view 下方添加一条分割线，添加到当前 view（self）上
     @discardableResult
-    func makeBelowSeparatorBy(below anchor:UIView ,offset t:CGFloat = 0.0) -> UIView {
+    public func makeBelowSeparatorBy(below anchor:UIView ,offset t:CGFloat = 0.0) -> UIView {
         UIView()
             .byBgColor("#3C3C431F".cor)
             .byAddTo(self) { make in
@@ -275,7 +266,7 @@ extension UIView {
     }
     /// 在当前 UILayoutGuide 下方添加一条分割线，添加到它的 owningView 上
     @discardableResult
-    func makeBelowSeparatorBy(below anchor:UILayoutGuide ,offset t: CGFloat = 0.0) -> UIView? {
+    public func makeBelowSeparatorBy(below anchor:UILayoutGuide ,offset t: CGFloat = 0.0) -> UIView? {
         // 1️⃣ owningView 是可选，要先解包，而且函数要返回 UIView
         guard let hostView = anchor.owningView else {
             assertionFailure("UILayoutGuide 没有 owningView，无法添加分割线")
@@ -334,7 +325,7 @@ public extension UIView {
     }
 }
 
-func networkNormalListenerBy(_ view:UIView){
+public func networkNormalListenerBy(_ view:UIView){
     JobsNetworkTrafficMonitor.shared
         .byOnUpdate {source, up, down in
 
@@ -351,7 +342,7 @@ func networkNormalListenerBy(_ view:UIView){
         .byStart(interval: 1.0)
 }
 
-func networkRichListenerBy(_ view:UIView){
+public func networkRichListenerBy(_ view:UIView){
     JobsNetworkTrafficMonitor.shared
         .byOnUpdate {source, up, down in
             let upStr   = jobs_formatSpeed(up)

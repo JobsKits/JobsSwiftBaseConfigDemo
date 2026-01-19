@@ -4,9 +4,18 @@
 //
 // 「要允许“AC”访问此设备的照片和视频吗？」弹框 View
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBlock
+import JobsScale
+import JobsBy3rdTools
+import JobsSwiftBaseDefines
 
 final class PhotoPermissionAlertView: UIView {
     // MARK: - Callbacks Storage
@@ -35,7 +44,7 @@ final class PhotoPermissionAlertView: UIView {
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byText("要允许“AC”访问此设备的照片和视频吗?")
+            .byText("要允许“AC”访问此设备的照片和视频吗?".tr)
             .byTextColor(.init(r: 0.039, g: 0.063, b: 0.059))
             .byFont(.init(regular: 16)!)
             .byNumberOfLines(0)

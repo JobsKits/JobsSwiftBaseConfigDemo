@@ -4,6 +4,7 @@
 //
 //  Created by Mac on 11/11/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -12,6 +13,8 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsScale
+import JobsSwiftBaseDefines
 // ============================== InputBar（inputAccessoryView） ==============================
 final class LiveInputBar: UIView {
     /// 对外回调：点击发送按钮或在键盘上按“发送/回车”时触发
@@ -24,7 +27,7 @@ final class LiveInputBar: UIView {
     lazy var tf: UITextField = {
         UITextField()
             .byBorderStyle(.roundedRect)
-            .byPlaceholder("说点什么…")
+            .byPlaceholder("说点什么…".tr)
             .byReturnKeyType(.send)
             .byEnablesReturnKeyAutomatically(true)          // 空文本禁用“发送”
             .onReturn { [weak self] _ in                    // ⌨️ 键盘“发送”

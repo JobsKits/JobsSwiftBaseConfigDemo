@@ -10,10 +10,12 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
+import Inheritance
 import JXSegmentedView
 import JobsByUIKit
-import Inheritance
+import JobsSwiftBaseDefines
 
 final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     private let titleText: String

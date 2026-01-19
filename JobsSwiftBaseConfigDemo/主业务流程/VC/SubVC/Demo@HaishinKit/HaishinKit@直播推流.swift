@@ -14,8 +14,11 @@ import UIKit
 import AVFoundation
 import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsBy3rdTools
+import JobsSwiftBaseDefines
+import JobsSwiftBaseTools
 
 final class HKLiveVC: BaseVC {
     deinit {

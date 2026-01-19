@@ -10,13 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class CashbackCardCell: UITableViewCell {
-
     private let corner: CGFloat = 22
-
     private lazy var cardView: UIView = {
         var cardView =  UIView()
             .byCornerRadius(corner)
@@ -67,7 +67,7 @@ final class CashbackCardCell: UITableViewCell {
 
     private lazy var subLabel: UILabel = {
         UILabel()
-            .byText("神秘彩金等你来拿")
+            .byText("神秘彩金等你来拿".tr)
             .byFont(.systemFont(ofSize: 16))
             .byTextColor(.secondaryLabel)
             .byAddTo(cardView) { [unowned self] make in

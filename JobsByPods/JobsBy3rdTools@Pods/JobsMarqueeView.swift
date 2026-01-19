@@ -10,6 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsTimer
+import JobsByUIKit
 /// 统一「跑马灯」&「轮播图」的视图组件
 /// 数据源：`[UIButton]`
 /// 滚动载体：内部 `UIScrollView` + 若干个按钮副本
@@ -611,25 +614,25 @@ public final class JobsMarqueeView: UIView {
 
 extension JobsMarqueeView {
     @discardableResult
-    func byDirection(_ direction: Direction) -> Self {
+    public func byDirection(_ direction: Direction) -> Self {
         self.direction = direction
         return self
     }
 
     @discardableResult
-    func byScrollMode(_ mode: ScrollMode) -> Self {
+    public func byScrollMode(_ mode: ScrollMode) -> Self {
         self.scrollMode = mode
         return self
     }
 
     @discardableResult
-    func byItemSizeMode(_ mode: ItemSizeMode) -> Self {
+    public func byItemSizeMode(_ mode: ItemSizeMode) -> Self {
         self.itemSizeMode = mode
         return self
     }
 
     @discardableResult
-    func byDataSourceButtons(_ buttons: [UIButton]) -> Self {
+    public func byDataSourceButtons(_ buttons: [UIButton]) -> Self {
         self.dataSourceButtons = buttons
         return self
     }

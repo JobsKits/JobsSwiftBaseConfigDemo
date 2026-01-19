@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBlock
 // MARK: - 私有存储
 private var _barItemActionKey: UInt8 = 0
 // MARK: - Block 事件 + 工厂 + 链式

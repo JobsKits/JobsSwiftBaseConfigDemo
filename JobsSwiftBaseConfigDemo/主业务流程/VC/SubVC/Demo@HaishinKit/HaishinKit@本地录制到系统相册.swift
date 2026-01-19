@@ -15,8 +15,9 @@ import AVFoundation
 import Photos
 import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class HKLocalRecordVC: BaseVC {
     // MARK: - HaishinKit 管线（2.x 写法）

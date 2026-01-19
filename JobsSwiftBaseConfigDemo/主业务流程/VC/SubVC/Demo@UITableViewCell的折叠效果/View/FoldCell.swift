@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class FoldCell: UITableViewCell {
     // VC 里算高度时用这两个常量就行（确保和约束一致）

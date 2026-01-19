@@ -10,6 +10,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 private struct JobsConfirmKeys {
     static var confirm: UInt8 = 0
     static var cancel:  UInt8 = 0

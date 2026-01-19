@@ -10,6 +10,7 @@ import AppKit
 import UIKit
 #endif
 import ObjectiveC.runtime
+import JobsSwiftBlock
 // MARK: - Kingfisher
 #if canImport(Kingfisher)
 import Kingfisher

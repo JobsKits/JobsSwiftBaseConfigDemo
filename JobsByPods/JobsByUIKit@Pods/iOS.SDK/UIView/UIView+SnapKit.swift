@@ -9,6 +9,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+import JobsSwiftBlock
 // MARK: - SnapKit
 #if canImport(SnapKit)
 import SnapKit

@@ -9,6 +9,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
+
 extension UILabel {
     /// 一次性设置文本样式 + 开启 Dynamic Type
     @available(iOS 10.0, *)

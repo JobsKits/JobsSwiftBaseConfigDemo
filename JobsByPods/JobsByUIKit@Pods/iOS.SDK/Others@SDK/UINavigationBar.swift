@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 public extension UINavigationBar {
     // ================================== 基础属性 ==================================
     /// barStyle（.default / .black 等）

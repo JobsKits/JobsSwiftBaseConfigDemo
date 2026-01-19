@@ -10,12 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import RxSwift
 import RxCocoa
 import NSObject_Rx          // 自动提供 disposeBag
-import SnapKit      
-import JobsByUIKit
+import SnapKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsScale
 /// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
 public extension NSAttributedString.Key {
     static let jobsAction = NSAttributedString.Key("jobsAction")

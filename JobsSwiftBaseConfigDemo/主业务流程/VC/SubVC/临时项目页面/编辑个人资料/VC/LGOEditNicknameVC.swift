@@ -5,17 +5,25 @@
 //  Created by Jobs on 11/14/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
+import JobsSwiftBaseDefines
 
 final class LGOEditNicknameVC: BaseVC {
     /// 昵称输入框
     private lazy var nicknameField: UITextField = {
         UITextField()
             // 基础视觉
-            .byPlaceholder("请输入昵称 长度12个字符")
+            .byPlaceholder("请输入昵称 长度12个字符".tr)
             .byTextColor(.label)
             .byFont(.systemFont(ofSize: 16))
             .byTextAlignment(.natural)

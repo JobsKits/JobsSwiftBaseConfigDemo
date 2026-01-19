@@ -10,6 +10,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+
 private enum JobsUIButtonAssociatedKeys {
     static var tapBlocks: UInt8 = 0
     static var tapSleeve: UInt8 = 0
@@ -172,7 +174,7 @@ public extension UIButton {
     }
 }
 // MARK: - 点按事件统一入口
-var kJobsUIButtonLongPressSleeveKey: UInt8 = 0
+public var kJobsUIButtonLongPressSleeveKey: UInt8 = 0
 public extension UIButton {
     /// 点击方法@代码触发
     func performTap() {

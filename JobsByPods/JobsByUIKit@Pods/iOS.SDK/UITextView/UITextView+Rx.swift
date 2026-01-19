@@ -20,7 +20,7 @@ public struct TextInputStream: ObservableConvertibleType {
     let source: Observable<String>
     let validator: (String) -> Bool
     public func asObservable() -> Observable<String> { source }
-    var isValid: Observable<Bool> { source.map(validator) }
+    public var isValid: Observable<Bool> { source.map(validator) }
 }
 // MARK: - 语义扩展：tv.linkTap（省略 .rx）
 public extension UITextView {

@@ -9,6 +9,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsTextTools
 // MARK: - 设置富文本（UITextField）
 public extension UITextField {
     func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {

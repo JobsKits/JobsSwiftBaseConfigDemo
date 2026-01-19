@@ -12,8 +12,13 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsByUIKit
+import GKNavigationBarSwift
 import Inheritance
+import JobsByUIKit
+import JobsTimer
+import JobsScale
+import JobsSwiftBaseDefines
+import JobsTextTools
 /// Demo@自定义进度条（进度值+前进方向）
 final class JobsProgressDemoVC: BaseVC {
     deinit {
@@ -87,7 +92,6 @@ final class JobsProgressDemoVC: BaseVC {
                     newMode = .countUp
                     newTitle = "模式：0→100"
                 }
-
                 // 切换数值模式
                 self.progressView.byValueMode(newMode)
                 sender.byTitle(newTitle, for: .normal)

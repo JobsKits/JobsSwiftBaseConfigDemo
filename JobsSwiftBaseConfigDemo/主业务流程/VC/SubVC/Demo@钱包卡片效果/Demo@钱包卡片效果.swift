@@ -10,9 +10,13 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
 import JobsByUIKit
 import Inheritance
+import JobsSwiftBaseDefines
+import GKNavigationBarSwift
+import JobsTextTools
 // MARK: - 数据模型
 struct WalletCard {
     let bankName: String

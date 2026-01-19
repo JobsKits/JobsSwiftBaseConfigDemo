@@ -10,9 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import SnapKit
-import JobsByUIKit
 import Inheritance
+import JobsByUIKit
+import JobsTextTools
 /// 示例模型，用于演示传参
 struct DemoModel {
     let id: Int
@@ -24,7 +26,6 @@ class DemoDetailVC: BaseVC {
     private var input: Any?
     override func loadView() {
         super.loadView()
-        OCCls().string("q", image: "".img)
         // ✅ 需要的再按类型拆
         if let id = input as? Int { print("收到 Int:", id) }
         if let info = input as? [String: Any] { print("收到 Dictionary:", info) }

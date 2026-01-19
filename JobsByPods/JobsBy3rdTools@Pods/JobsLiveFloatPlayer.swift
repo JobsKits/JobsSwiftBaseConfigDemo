@@ -10,17 +10,18 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import BMPlayer
 import JobsByUIKit
 /// 全局悬浮直播播放器：不进新 VC，直接在当前界面/窗口浮出一个小窗直播
 @MainActor
-final class JobsLiveFloatPlayer : NSObject {
-    static let shared = JobsLiveFloatPlayer()
+open class JobsLiveFloatPlayer : NSObject {
+    public static let shared = JobsLiveFloatPlayer()
     private override init() {}
     private var player: BMPlayer?
     // MARK: - 对外方法
     /// 显示悬浮直播窗口（默认的本地 HaishinKit 推流地址）
-    func showRemoteLive(
+    open func showRemoteLive(
         url: URL = "http://192.168.65.91:8000/live/jobs_test/index.m3u8".url!,
         name: String = "网络单播",
         in container: UIView? = nil
@@ -66,16 +67,16 @@ final class JobsLiveFloatPlayer : NSObject {
         keepScreenOn()
     }
     /// 隐藏并销毁悬浮直播窗口
-    func hide() {
+    open func hide() {
         player?.unsuspend()    // 来自 UIView+悬浮.swift
         player = nil
     }
     /// 只暂停，不销毁
-    func pause() {
+    open func pause() {
         player?.byPause()
     }
     /// 重新播放当前流
-    func resume() {
+    open func resume() {
         player?.byVisible(true)
     }
 }

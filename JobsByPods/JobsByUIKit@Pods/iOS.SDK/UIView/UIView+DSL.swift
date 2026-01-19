@@ -10,7 +10,7 @@ import AppKit
 import UIKit
 #endif
 // MARK: 语法糖🍬
-extension UIView {
+public extension UIView {
     // MARK: 设置UI
     /// 统一在一个回调里配置 layer
     @discardableResult

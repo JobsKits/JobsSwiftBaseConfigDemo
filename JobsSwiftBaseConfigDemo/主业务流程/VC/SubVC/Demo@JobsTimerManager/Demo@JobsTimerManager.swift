@@ -12,10 +12,13 @@ import UIKit
 #endif
 
 import SnapKit
+import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
 import JobsSwiftBaseTools
+import JobsTimer
+import JobsTextTools
+import JobsSwiftBaseDefines
 /// Demo Timer ID
 private enum JobsTimerManagerDemoID: String, JobsTimerIdentifiable {
     case A_pauseResume
@@ -198,13 +201,17 @@ final class JobsTimerManagerDemoVC: BaseVC {
                             policy: .pauseAndResume,
                             startImmediately: true
                         ) { [uiBridge] in
-                            uiBridge.log("A initial handler tick")
+                            Task { @MainActor [weak self] in
+                                uiBridge.log("A initial handler tick")
+                            }
                         }
 
                         _ = await JobsTimerManager.shared.onTick(
                             identifier: JobsTimerManagerDemoID.A_pauseResume.timerIdentifier
                         ) { [uiBridge] in
-                            uiBridge.incA()
+                            Task { @MainActor [weak self] in
+                                uiBridge.incA()
+                            }
                         }
 
                         uiBridge.log("Created A ✅  policy=pauseAndResume  kind=\(kindA.jobs_displayName)")
@@ -224,13 +231,17 @@ final class JobsTimerManagerDemoVC: BaseVC {
                             policy: .cancel,
                             startImmediately: true
                         ) { [uiBridge] in
-                            uiBridge.log("B initial handler tick")
+                            Task { @MainActor [weak self] in
+                                uiBridge.log("B initial handler tick")
+                            }
                         }
 
                         _ = await JobsTimerManager.shared.onTick(
                             identifier: JobsTimerManagerDemoID.B_cancelInBackground.timerIdentifier
                         ) { [uiBridge] in
-                            uiBridge.incB()
+                            Task { @MainActor [weak self] in
+                                uiBridge.incB()
+                            }
                         }
 
                         uiBridge.log("Created B ✅  policy=cancel（后台 stop+remove） kind=GCD")
@@ -284,11 +295,15 @@ final class JobsTimerManagerDemoVC: BaseVC {
                         policy: .pauseAndResume,
                         startImmediately: true
                     ) { [uiBridge] in
-                        uiBridge.log("A replaced initial handler tick")
+                        Task { @MainActor [weak self] in
+                            uiBridge.log("A replaced initial handler tick")
+                        }
                     }
 
                     _ = await JobsTimerManager.shared.onTick(identifier: id) { [uiBridge] in
-                        uiBridge.incA()
+                        Task { @MainActor [weak self] in
+                            uiBridge.incA()
+                        }
                     }
 
                     uiBridge.log("Replace A ✅  same identifier / new core = \(newKind.jobs_displayName)")
@@ -374,14 +389,18 @@ final class JobsTimerManagerDemoVC: BaseVC {
                         policy: .ignore,
                         startImmediately: true
                     ) { [uiBridge] in
-                        uiBridge.log("OneShot tick (repeats=false)")
+                        Task { @MainActor [weak self] in
+                            uiBridge.log("OneShot tick (repeats=false)")
+                        }
                     }
 
                     _ = await JobsTimerManager.shared.onFinish(identifier: id) { [uiBridge] in
-                        uiBridge.log("OneShot onFinish ✅ -> stop+remove")
-                        Task { [uiBridge, id] in
-                            _ = await JobsTimerManager.shared.stopAndRemove(identifier: id)
-                            uiBridge.setOneShot("OneShot: finished + removed")
+                        Task { @MainActor [weak self] in
+                            uiBridge.log("OneShot onFinish ✅ -> stop+remove")
+                            Task { [uiBridge, id] in
+                                _ = await JobsTimerManager.shared.stopAndRemove(identifier: id)
+                                uiBridge.setOneShot("OneShot: finished + removed")
+                            }
                         }
                     }
 

@@ -13,6 +13,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import NSObject_Rx
+import JobsSwiftBlock
 // MARK: - 🔔 Block 监听（挂在 UITextField）
 private extension UITextField {
     var _jobs_onChangeBlock: UITextFieldOnChange? {

@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 import ObjectiveC
+import JobsSwiftBlock
 
 public extension UICollectionViewCell {
     // MARK: - state@selected / highlighted

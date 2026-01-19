@@ -8,13 +8,18 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-import SnapKit
+
 import AVFoundation
 import Photos
 import PhotosUI   // 视频选择（PHPicker）
-import JobsByUIKit
+import SnapKit
+import GKNavigationBarSwift
 import Inheritance
-
+import JobsByUIKit
+import JobsToast
+import JobsSwiftBaseDefines
+import JobsBy3rdTools
+import JobsTextTools
 @MainActor
 final class PhotoAlbumDemoVC: BaseVC {
     private enum SourceMode { case none, cameraPhoto, albumImages, cameraVideo, albumVideos }
@@ -322,7 +327,6 @@ extension PhotoAlbumDemoVC: UICollectionViewDelegateFlowLayout {
         }
     }
 }
-
 // MARK: - 相册选择视频（单/多）
 // 放在 VC 内，复用 PermissionCenter；也可抽到 MediaPickerService
 private extension PhotoAlbumDemoVC {

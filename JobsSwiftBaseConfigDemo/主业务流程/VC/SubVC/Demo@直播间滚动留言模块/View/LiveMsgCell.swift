@@ -12,6 +12,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 final class LiveMsgCell: UITableViewCell {
     private lazy var bubble: UIView = {

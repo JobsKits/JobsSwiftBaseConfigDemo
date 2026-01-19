@@ -10,7 +10,8 @@ import AppKit
 import UIKit
 #endif
 
-extension UILabel {
+import JobsTextTools
+public extension UILabel {
     @discardableResult
     func byJobsAttributedText(_ text: JobsText?) -> Self {
         guard let text else { return self }
