@@ -20,6 +20,7 @@ import Inheritance
 import JobsTextTools
 import JobsSwiftBaseTools
 import JobsScale
+import JobsSwiftTools
 // MARK: 🔔 通用弹窗提示
 public func presentAlert(for urlString: String, on textView: UITextView) {
     // 💡 iOS17+：delegate 不一定是当前 VC，用原来的兜底逻辑

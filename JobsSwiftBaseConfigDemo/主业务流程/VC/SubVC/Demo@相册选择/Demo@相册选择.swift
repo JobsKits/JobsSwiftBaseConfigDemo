@@ -20,6 +20,7 @@ import JobsToast
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
 import JobsTextTools
+import JobsSwiftTools
 @MainActor
 final class PhotoAlbumDemoVC: BaseVC {
     private enum SourceMode { case none, cameraPhoto, albumImages, cameraVideo, albumVideos }

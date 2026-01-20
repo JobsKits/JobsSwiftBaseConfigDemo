@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import JobsSwiftTools
 
 public final class JobsMakeLocalNotification: NSObject {
     public func triggerLocalNotification(_ model: JobsLocalNotificationModel) {

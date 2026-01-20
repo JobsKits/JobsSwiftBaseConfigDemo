@@ -26,6 +26,7 @@ import JobsSwiftFoundation_extensions
 import JobsScale
 import JobsSwiftBaseTools
 import Jobsl10n
+import JobsSwiftTools
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections

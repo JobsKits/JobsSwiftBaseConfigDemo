@@ -18,6 +18,7 @@ import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsScale
+import JobsSwiftTools
 
 final class FlutterDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {

@@ -19,6 +19,7 @@ import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsToast
+import JobsSwiftTools
 
 final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 12

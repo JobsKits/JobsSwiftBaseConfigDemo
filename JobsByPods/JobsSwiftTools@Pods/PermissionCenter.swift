@@ -16,6 +16,7 @@ import CoreLocation
 import CoreBluetooth
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
+import JobsToast
 // ================================== 权限中心：声明 ==================================
 public enum SystemPermission {
     case camera

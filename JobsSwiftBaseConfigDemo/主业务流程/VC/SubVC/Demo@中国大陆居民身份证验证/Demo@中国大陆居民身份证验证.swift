@@ -19,6 +19,7 @@ import JobsBy3rdTools
 import JobsSwiftBaseTools
 import JobsScale
 import JobsTextTools
+import JobsSwiftTools
 
 final class CNIDDemoVC: BaseVC {
 
