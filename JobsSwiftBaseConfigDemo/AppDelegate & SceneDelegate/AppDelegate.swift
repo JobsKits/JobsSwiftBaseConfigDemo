@@ -53,6 +53,8 @@ class AppDelegate: FlutterAppDelegate{
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         SA()
+        print("INFO PLIST PATH =", Bundle.main.path(forResource: "Info", ofType: "plist") ?? "nil")
+        print("SceneManifest? =", Bundle.main.object(forInfoDictionaryKey: "UIApplicationSceneManifest") != nil)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
@@ -79,7 +81,12 @@ class AppDelegate: FlutterAppDelegate{
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+      let config = UISceneConfiguration(
+        name: "Default Configuration",
+        sessionRole: connectingSceneSession.role
+      )
+      config.delegateClass = SceneDelegate.self
+      return config
     }
 }
 
