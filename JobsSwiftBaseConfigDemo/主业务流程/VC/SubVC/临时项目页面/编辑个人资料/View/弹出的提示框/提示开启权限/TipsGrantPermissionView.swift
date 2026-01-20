@@ -15,6 +15,7 @@ import SnapKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
+import JobsSwiftAppTools
 
 final class TipsGrantPermissionView: UIView {
     /// 白色卡片
@@ -36,7 +37,7 @@ final class TipsGrantPermissionView: UIView {
     /// 标题：温馨提示
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byText("温馨提示")
+            .byText("温馨提示".tr)
             .byTextColor(.label)
             .byFont(.systemFont(ofSize: 17, weight: .semibold))
             .byTextAlignment(.center)
@@ -48,7 +49,7 @@ final class TipsGrantPermissionView: UIView {
     /// 主文案
     private lazy var messageLabel: UILabel = {
         UILabel()
-            .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传")
+            .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
             .byTextColor(.label)
             .byFont(.systemFont(ofSize: 14))
             .byNumberOfLines(0)
@@ -61,7 +62,7 @@ final class TipsGrantPermissionView: UIView {
     /// 灰色小字
     private lazy var hintLabel: UILabel = {
         UILabel()
-            .byText("设置-隐私安全-照片和视频")
+            .byText("设置-隐私安全-照片和视频".tr)
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 12))
             .byNumberOfLines(0)
@@ -75,7 +76,7 @@ final class TipsGrantPermissionView: UIView {
     private lazy var confirmButton: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.init(r: 0/255, g: 199/255, b: 140/25, a: 1))
-            .byTitle("去开启", for: .normal)
+            .byTitle("去开启".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
             .onTap { [weak self] _ in

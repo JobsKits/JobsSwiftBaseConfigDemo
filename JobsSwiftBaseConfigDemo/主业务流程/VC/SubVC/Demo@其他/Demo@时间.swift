@@ -28,6 +28,7 @@ import JobsByUIKit
 import JobsTimer
 import JobsBy3rdTools
 import JobsTextTools
+import JobsSwiftAppTools
 
 final class TimerDemoVC: BaseVC {
     // MARK: - Layout 常量
@@ -37,7 +38,7 @@ final class TimerDemoVC: BaseVC {
     private var currentKind: JobsTimerKind = .gcd
     private var intervalSec: TimeInterval = 1.0   // 步长（秒），由输入框维护
     // MARK: - Segmented（选择计时器内核）
-    private lazy var kindSelector = UISegmentedControl(items: ["NSTimer", "GCD", "DisplayLink", "RunLoop"])
+    private lazy var kindSelector = UISegmentedControl(items: ["NSTimer".tr, "GCD".tr, "DisplayLink".tr, "RunLoop".tr])
         .bySelectedSegmentIndex(1) // 默认 GCD
         .onJobsChange { [weak self] (seg: UISegmentedControl) in
             guard let self else { return }

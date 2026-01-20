@@ -16,12 +16,13 @@ import SwiftEntryKit
 import Inheritance
 import GKNavigationBarSwift
 import BRPickerViewSwift
+import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsToast
+import JobsScale
+import JobsSwiftAppTools
 import JobsTextTools
 import JobsBy3rdTools
-import JobsToast
-import JobsSwiftBaseDefines
-import JobsScale
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
     case avatar

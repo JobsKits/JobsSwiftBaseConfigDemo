@@ -18,15 +18,16 @@ import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
 import CocoaLumberjack
 import BRPickerViewSwift
-import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsTimer
 import JobsSwiftFoundation_extensions
 import JobsScale
-import JobsSwiftBaseTools
 import Jobsl10n
+import JobsSwiftBaseTools
 import JobsSwiftTools
+import JobsSwiftAppTools
+import JobsBy3rdTools
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections

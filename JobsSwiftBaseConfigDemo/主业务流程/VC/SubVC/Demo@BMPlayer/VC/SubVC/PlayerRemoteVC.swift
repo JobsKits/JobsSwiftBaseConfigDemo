@@ -17,10 +17,11 @@ import BMPlayer
 import Inheritance
 import GKNavigationBarSwift
 import JobsByUIKit
-import JobsSwiftBaseTools
-import JobsTextTools
 import JobsSwiftBaseDefines
+import JobsTextTools
 import JobsBy3rdTools
+import JobsSwiftBaseTools
+import JobsSwiftAppTools
 /**
 
  Info.plist

@@ -13,10 +13,10 @@ import UIKit
 
 import SwiftEntryKit
 import SnapKit
+import Inheritance
 import JobsByUIKit
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
-import Inheritance
 import JobsTextTools
 import JobsSwiftBaseTools
 import JobsScale

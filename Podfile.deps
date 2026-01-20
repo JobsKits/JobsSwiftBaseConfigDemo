@@ -88,6 +88,9 @@ def byJobs
   pod 'JobsRefresher',                  :path => 'JobsByPods/JobsRefresher@Pods'
   pod 'JobsSwiftTools',                 :path => 'JobsByPods/JobsSwiftTools@Pods'
   pod 'JobsCountdownButton',            :path => 'JobsByPods/JobsCountdownButton@Pods'
+  pod 'JobsMarqueeView',                :path => 'JobsByPods/JobsMarqueeView@Pods'
+  pod 'JobsEmptyView',                  :path => 'JobsByPods/JobsEmptyView@Pods'
+  pod 'JobsSwiftAppTools',              :path => 'JobsByPods/JobsSwiftAppTools@Pods'
   pod 'JobsLuckyEnvelopeRain',          :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
   pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
   

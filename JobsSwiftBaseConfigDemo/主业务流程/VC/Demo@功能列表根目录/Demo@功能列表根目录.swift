@@ -20,9 +20,10 @@ import Jobsl10n
 import JobsScale
 import JobsTimer
 import JobsToast
-import JobsTextTools
 import JobsSwiftBaseDefines
+import JobsTextTools
 import JobsBy3rdTools
+import JobsSwiftAppTools
 
 final class RootListVC: BaseVC {
     deinit {

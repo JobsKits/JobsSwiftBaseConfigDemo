@@ -20,14 +20,15 @@ import SDWebImage
 #endif
 
 import SnapKit
-import Inheritance
 import GKNavigationBarSwift
+import Inheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
 import JobsToast
 import JobsScale
 import JobsTextTools
+import JobsMarqueeView
 import JobsSwiftFoundation_extensions
 /// Demo：13 组 JobsMarqueeView
 /// 1. 向上连续滚动

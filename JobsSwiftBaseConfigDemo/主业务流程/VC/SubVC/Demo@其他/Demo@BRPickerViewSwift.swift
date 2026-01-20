@@ -15,11 +15,12 @@ import SnapKit
 import GKNavigationBarSwift
 import BRPickerViewSwift
 import Inheritance
-import JobsByUIKit
-import JobsBy3rdTools
-import JobsToast
 import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsToast
 import JobsTextTools
+import JobsSwiftAppTools
+import JobsBy3rdTools
 
 final class BRPickerDemoVC: BaseVC {
     /// 文本：单列（学历）
