@@ -348,6 +348,12 @@
 
 * Apple电脑的芯片分为**`intel芯片`**和**`M系列自研芯片`**。底层区别在于指令集的不同。但是Apple停止了对**`intel芯片`**机型的支持，无法更新MacOS到最新，间接的导致无法更新到最新版本的Xcode。软件开发相关的SDK其实也对MacOS的系统环境以及Xcode版本有关联影响。即：即便是都是使用统一版本的[**Swift**](https://developer.apple.com/swift/)也可能导致某些API报错（找不到）
 
+* 安装 Rosetta
+
+  ```shell
+  softwareupdate --install-rosetta --agree-to-license
+  ```
+  
 * 如果Apple开发者账号，新加入了设备，需要在本地的xcode里面更新**开发描述文件**。否则打出的`*.ipa`包，没有办法在新加入的设备里面安装
 
   <table style="width:100%; table-layout:fixed;">
@@ -1876,12 +1882,19 @@ tableView.es.addInfiniteScrolling {
 
 #### 7.1、新建配置文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-<table style="width:100%; table-layout:fixed;">
-  <tr>
-    <td><img src="./assets/image-20251101105448424.png" alt="image-20251101105448424" style="width:100%; height:auto;"></td>
-    <td><img src="./assets/image-20251101105508441.png" alt="image-20251101105508441" style="width:100%; height:auto;"></td>
-  </tr>
-</table>
+* 正常的生成方式：右键菜单 ➤ **New File from Template** ➤ iOS选项卡 ➤ 输入 config
+
+  <table style="width:100%; table-layout:fixed;">
+    <tr>
+      <td><img src="./assets/image-20251101105448424.png" alt="image-20251101105448424" style="width:100%; height:auto;"></td>
+      <td><img src="./assets/image-20251101105508441.png" alt="image-20251101105508441" style="width:100%; height:auto;"></td>
+    </tr>
+  </table>
+
+* 通用的生成方式：New Empty File ➤ 改名为`*.xcconfig` ⚠️ Xcode可能不会识别（影响范围：挂载此配置文件到Xcode工程项目的时候，无法被选中）
+
+  * 解决方案 ➤ 拖到别处、删除Xcode对于此`*.xcconfig`的引用、再拖回来
+
 
 #### 7.2、自动识别关联 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

@@ -8,6 +8,11 @@
 //  https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 //
 
+// MARK: 生成 `*.xcconfig` 方式
+// 正常的生成方式：右键菜单 ➤ New File from Template ➤ iOS选项卡 ➤ 输入 config
+// 通用的生成方式：New Empty File ➤ 改名为`*.xcconfig` ⚠️ Xcode可能不会识别（影响范围：挂载此配置文件到Xcode工程项目的时候，无法被选中）
+// 🔨 解决方案 ➤ 拖到别处、删除Xcode对于此`*.xcconfig`的引用、再拖回来
+
 // MARK: App名称相关
 // 产物名：会影响生成的 .app / .ipa 里的可执行文件名（通常也会体现在 CFBundleName 的默认值）
 // 注意：改它不一定等于改桌面显示名；桌面显示名优先看 CFBundleDisplayName
