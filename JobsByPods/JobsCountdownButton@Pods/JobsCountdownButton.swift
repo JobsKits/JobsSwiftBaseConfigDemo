@@ -72,7 +72,9 @@ final class JobsCountdownBtnCtrl {
         // 只是初始化，不自动开跑
         if config.renderOnInit {
             current = initialValue()
-            applyRender(sec: current)
+            Task { @MainActor [weak self] in
+                applyRender(sec: current)
+            }
         }
     }
 
@@ -80,6 +82,7 @@ final class JobsCountdownBtnCtrl {
         timer?.stop()
         timer = nil
     }
+
     // MARK: - 对外控制
     func start() {
         guard let btn = button else { return }
@@ -88,7 +91,9 @@ final class JobsCountdownBtnCtrl {
 
         current = initialValue()
         if config.renderOnInit {
-            applyRender(sec: current)
+            Task { @MainActor [weak self] in
+                applyRender(sec: current)
+            }
         }
 
         // 不允许点击就直接禁用按钮
@@ -100,17 +105,22 @@ final class JobsCountdownBtnCtrl {
             interval: config.interval,
             repeats: true,
             tolerance: config.tolerance,
-            queue: .main
+            queue: .main,
+            runLoop: .main,
+            runLoopMode: .common,
+            pauseInBackground: true,
+            autoManageAppState: true
         )
-        // 基于 JobsTimerFactory 统一出定时器内核
-        timer = JobsTimerFactory.make(
-            kind: config.timerKind,
-            config: tConfig,
-            handler: { [weak self] in
-                self?.onTick()
+        // ✅ 新版 JobsTimer：直接 new（不再用 JobsTimerFactory.make）
+        let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
+            // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
+            Task { @MainActor in
+                self?.onTickMainActor()
             }
-        )
-        timer?.start()
+        }
+
+        timer = t
+        t.start()
         isRunning = true
     }
 
@@ -132,8 +142,9 @@ final class JobsCountdownBtnCtrl {
         case .up:             return 0
         }
     }
-
-    private func onTick() {
+    /// ✅ 所有 UI 更新统一在 MainActor
+    @MainActor
+    private func onTickMainActor() {
         guard let btn = button else {
             stop(resetUI: false)
             return
@@ -147,7 +158,7 @@ final class JobsCountdownBtnCtrl {
             config.onTick?(btn, config, sec)
 
             if sec <= 0 {
-                finish()
+                finishMainActor()
             }
 
         case .up(let to):
@@ -157,11 +168,12 @@ final class JobsCountdownBtnCtrl {
             config.onTick?(btn, config, sec)
 
             if sec >= to {
-                finish()
+                finishMainActor()
             }
         }
     }
 
+    @MainActor
     private func applyRender(sec: Int) {
         guard let btn = button else { return }
         var cfg = btn.configuration ?? baseConfiguration
@@ -171,7 +183,8 @@ final class JobsCountdownBtnCtrl {
         btn.configuration = cfg
     }
 
-    private func finish() {
+    @MainActor
+    private func finishMainActor() {
         guard let btn = button else {
             stop(resetUI: false)
             return

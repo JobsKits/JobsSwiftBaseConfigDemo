@@ -12,7 +12,6 @@ import UIKit
 
 import MessageUI
 import CoreImage
-import JobsSwiftBlock
 import JobsSwiftBaseDefines
 import JobsSwiftBlock
 import JobsTimer

@@ -72,7 +72,7 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var modeToggleButton: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemOrange, for: .normal)
-            .byTitle("模式：100→0", for: .normal)   // 初始和 progressView.byValueMode(.countDown) 对齐
+            .byTitle("模式：100→0".tr, for: .normal)   // 初始和 progressView.byValueMode(.countDown) 对齐
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(16)
@@ -128,7 +128,7 @@ final class JobsProgressDemoVC: BaseVC {
         UITextField()
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
-            .byPlaceholder("输入 0~100")
+            .byPlaceholder("输入 0~100".tr)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(progressView.snp.bottom).offset(16)
@@ -140,7 +140,7 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var applyButton: UIButton = {
         UIButton.sys()
             .byBackgroundColor(.systemBlue, for: .normal)
-            .byTitle("设置进度", for: .normal)
+            .byTitle("设置进度".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(8)
@@ -184,7 +184,7 @@ final class JobsProgressDemoVC: BaseVC {
             /// 背景色
             .byBackgroundColor(.systemGreen, for: .normal)
             /// 普通字符串@设置主标题
-            .byTitle("开始动画", for: .normal)
+            .byTitle("开始动画".tr, for: .normal)
             .byTitleColor(.systemBlue, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             /// 普通@点按事件触发
@@ -192,34 +192,33 @@ final class JobsProgressDemoVC: BaseVC {
                 guard let self else { return }
                 sender.isSelected.toggle()
                 // 重置进度 & 停掉旧定时器
-                timer?.stop()
-                currentProgress = 0
-                progressView.setProgress(0, animated: false)
+                self.timer?.stop()
+                self.currentProgress = 0
+                self.progressView.setProgress(0, animated: false)
 
                 let step: CGFloat = 0.01
                 let interval: TimeInterval = 0.03
-
-                // 用 JobsTimerConfig + JobsTimerFactory 创建定时器
+                // ✅ 用新版 JobsTimerConfig + JobsTimer 直接创建（不再用 JobsTimerFactory）
                 let config = JobsTimerConfig(
                     interval: interval,
                     repeats: true,
                     tolerance: 0,          // 精准一点，进度更平滑
-                    queue: .main           // UI 更新必须在主线程
+                    queue: .main
                 )
 
-                // 这里用 GCD 版，也可以换成 .foundation / .displayLink / .runLoopCore
-                let t = JobsTimerFactory.make(
-                    kind: .gcd,
-                    config: config
-                ) { [weak self] in
-                    guard let self else { return }
+                let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
+                    // ✅ Swift 6 / Sendable “同等待遇”：
+                    // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
+                    // 2) 再显式切回 MainActor，安全触碰 UIKit
+                    guard let strongSelf = self else { return }
+                    Task { @MainActor in
+                        strongSelf.currentProgress += step
+                        strongSelf.progressView.setProgress(strongSelf.currentProgress, animated: true)
 
-                    self.currentProgress += step
-                    self.progressView.setProgress(self.currentProgress, animated: true)
-
-                    if self.currentProgress >= 1 {
-                        self.currentProgress = 1
-                        self.timer?.stop()
+                        if strongSelf.currentProgress >= 1 {
+                            strongSelf.currentProgress = 1
+                            strongSelf.timer?.stop()
+                        }
                     }
                 }
 

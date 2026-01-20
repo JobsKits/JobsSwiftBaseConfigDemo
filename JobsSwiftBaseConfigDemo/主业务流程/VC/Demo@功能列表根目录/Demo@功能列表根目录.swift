@@ -26,16 +26,35 @@ import JobsBy3rdTools
 import JobsSwiftAppTools
 
 final class RootListVC: BaseVC {
+    // ================================== JobsTimer（新版）统一管理 ==================================
+    private let timerMgr = JobsTimerManager.shared
+    private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
+    private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
+
+    private var suspendBtnTimer: JobsTimerProtocol?
+    private var suspendSpinBtnTimer: JobsTimerProtocol?
+
+    /// 旧版 onTimerTick 给 elapsed；新版不再给，自己计数即可
+    private var spinSeconds: Int = 0
+
     deinit {
-        suspendBtn.stopTimer()
-        suspendSpinBtn.stopTimer()
+        suspendBtnTimer?.stop()
+        suspendSpinBtnTimer?.stop()
+        try? timerMgr.remove(identifier: suspendBtnTimerID)
+        try? timerMgr.remove(identifier: suspendSpinBtnTimerID)
+
+        if let langToken {
+            NotificationCenter.default.removeObserver(langToken)
+        }
     }
+
     private var langToken: NSObjectProtocol?
     /// 展开状态（一级目录展开行）
     private var expandedGroups = Set<Int>()
     /// 防抖标记（原逻辑不动）
     private var isPullRefreshing = false
     private var isLoadingMore    = false
+
     // ================================== 数据源（唯一） ==================================
     private typealias DemoItem  = (title: String, vcType: UIViewController.Type)
     private typealias DemoGroup = (title: String, items: [DemoItem])
@@ -65,6 +84,7 @@ final class RootListVC: BaseVC {
         #endif
         return temp
     }()
+
     private lazy var g1 : [DemoItem] = {
         var temp: [DemoItem] = [
             ("🐦 Swift ➤ Flutter", FlutterDemoVC.self),
@@ -160,25 +180,8 @@ final class RootListVC: BaseVC {
             ])
         ]
     }()
+
     // ================================== 悬浮控件（原逻辑不动） ==================================
-//    private lazy var suspendLab: UILabel = {
-//        UILabel()
-//            .byText("VIP")
-//            .byTextColor(.yellow)
-//            .byFont(.boldSystemFont(ofSize: 14))
-//            .byTextAlignment(.center)
-//            .byBgCor(.systemRed)
-//            .byCornerRadius(12)
-//            .byMasksToBounds(true)
-//            .byUserInteractionEnabled(true)
-//            .suspend(
-//                .default
-//                    .byContainer(view)
-//                    .byFallbackSize(CGSize(width: 88, height: 44))
-//                    .byStart(.point(CGPoint(x: 100, y: 200)))
-//                    .byHapticOnDock(true)
-//            )
-//    }()
     private lazy var suspendBtn: UIButton = {
         UIButton(type: .system)
             .byTitle("当前时间".tr, for: .normal)
@@ -187,13 +190,6 @@ final class RootListVC: BaseVC {
             .byBackgroundColor(.systemBlue, for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            .startTimer(total: nil, interval: 1.0, kind: .gcd)
-            .onTimerTick { [weak self] btn, _, _, _ in
-                guard let self else { return }
-                if btn.title(for: .normal) != "当前时间" { btn.byTitle("当前时间", for: .normal) }
-                btn.bySubTitle(nowClock(), for: .normal)
-                btn.bySetNeedsUpdateConfiguration()
-            }
             .onLongPress(minimumPressDuration: 0.8) { _, _ in
                 "长按了悬浮按钮".toast
             }
@@ -210,6 +206,7 @@ final class RootListVC: BaseVC {
                     .byHapticOnDock(true)
             }
     }()
+
     private lazy var suspendSpinBtn: UIButton = {
         UIButton(type: .system)
             .byTitle("0", for: .normal)
@@ -218,26 +215,18 @@ final class RootListVC: BaseVC {
             .byBackgroundColor(.systemOrange, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
-            .startTimer(total: nil, interval: 1.0, kind: .gcd)
-            .onTimerTick { [weak self] btn, elapsed, _, _ in
-                let sec = Int(elapsed)
-                if btn.title(for: .normal) != "\(sec)" {
-                    btn.byTitle("\(sec)", for: .normal)
-                        .bySetNeedsUpdateConfiguration()
-                }
-            }
             .onLongPress(minimumPressDuration: 0.8) { _, _ in
                 "长按了悬浮按钮".toast
             }
             .onTap { [weak self] btn in
-                guard let _ = self else { return }
+                guard let self else { return }
                 if btn.jobs_isSpinning {
                     btn.bySpinPause()
-                    btn.timer?.pause()
+                    self.suspendSpinBtnTimer?.pause()
                     "已暂停旋转 & 计时".toast
                 } else {
                     btn.bySpinStart()
-                    btn.timer?.resume()
+                    self.suspendSpinBtnTimer?.resume()
                     "继续旋转 & 计时".toast
                 }
                 btn.playTapBounce(haptic: .light)
@@ -250,6 +239,7 @@ final class RootListVC: BaseVC {
                     .byHapticOnDock(true)
             }
     }()
+
     private lazy var suspendFuseBtn: UIButton = {
         UIButton(type: .system)
             .byTitle("按", for: .normal)
@@ -392,17 +382,73 @@ final class RootListVC: BaseVC {
         )
         tableView.byVisible(YES)
         updateFooterAvailability()
+
         suspendSpinBtn.bySpinStart()
         suspendBtn.byVisible(YES)
         suspendFuseBtn.byVisible(YES)
+
+        setupJobsTimers()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         tableView.beginUpdates()
         tableView.endUpdates()
-        suspendBtn.resumeTimer()
-        suspendSpinBtn.resumeTimer()
+
+        suspendBtnTimer?.resume()
+        suspendSpinBtnTimer?.resume()
+    }
+    // ================================== JobsTimer（新版）创建与绑定 UI ==================================
+    private func setupJobsTimers() {
+        // 1) suspendBtn：每秒刷新当前时间
+        do {
+            let cfg = JobsTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            suspendBtnTimer = try timerMgr.create(
+                kind: .gcd,
+                identifier: suspendBtnTimerID,
+                config: cfg,
+                dedupPolicy: .replace
+            ) { [weak self] in
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    let btn = self.suspendBtn
+                    if btn.title(for: .normal) != "当前时间" {
+                        btn.byTitle("当前时间", for: .normal)
+                    }
+                    btn.bySubTitle(nowClock(), for: .normal)
+                    btn.bySetNeedsUpdateConfiguration()
+                }
+            }
+            suspendBtnTimer?.start()
+        } catch {
+            print("❌ create suspendBtnTimer failed: \(error)")
+        }
+
+        // 2) suspendSpinBtn：每秒 +1 显示秒数（替代旧 elapsed）
+        do {
+            spinSeconds = 0
+            let cfg = JobsTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            suspendSpinBtnTimer = try timerMgr.create(
+                kind: .gcd,
+                identifier: suspendSpinBtnTimerID,
+                config: cfg,
+                dedupPolicy: .replace
+            ) { [weak self] in
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    self.spinSeconds += 1
+                    let btn = self.suspendSpinBtn
+                    let sec = self.spinSeconds
+                    if btn.title(for: .normal) != "\(sec)" {
+                        btn.byTitle("\(sec)", for: .normal)
+                            .bySetNeedsUpdateConfiguration()
+                    }
+                }
+            }
+            suspendSpinBtnTimer?.start()
+        } catch {
+            print("❌ create suspendSpinBtnTimer failed: \(error)")
+        }
     }
     // MARK: - Footer 自动显隐逻辑（原逻辑不动）
     private func updateFooterAvailability() {
@@ -467,4 +513,3 @@ extension RootListVC: UIScrollViewDelegate {
         updateFooterAvailability()
     }
 }
-

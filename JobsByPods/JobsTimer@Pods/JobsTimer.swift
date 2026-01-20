@@ -5,187 +5,79 @@
 //  Created by Mac on 10/4/25.
 //
 
-import Foundation
-import QuartzCore // CADisplayLink
-
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 
-import JobsSwiftBlock
-/**
- JobsTimer
- 统一的 Swift 定时器封装：NSTimer / DispatchSourceTimer / CADisplayLink / CFRunLoopTimer（CoreFoundation）
-
- - 统一协议：start / pause / resume / stop / fireOnce + onTick / onFinish（链式注册）
- - 统一配置：interval、repeats、tolerance、queue、runLoop、runLoopMode
- - 线程安全：回调支持跨线程注册；触发前快照回调，避免遍历时修改导致崩溃
- - 可选（iOS）：自动监听前后台；进入后台自动 pause，回到前台自动 resume
- - 工厂：JobsTimerFactory.make(kind:config:handler:)
- */
-public enum TimerState { case idle, running, paused, stopped }
-public enum _TimerMode {
-    case countUp(elapsed: Int)
-    case countdown(remain: Int, total: Int)
-}
-
-public extension _TimerMode {
-    var isCountdown: Bool {
-        if case .countdown = self { return true }
-        return false
-    }
-}
-// MARK: - 线程安全工具
-fileprivate extension NSLock {
-    @inline(__always) func jobs_withLock<T>(_ work: () -> T) -> T {
-        lock()
-        defer { unlock() }
-        return work()
-    }
-}
-/// 回调容器（线程安全）
-/// - 说明：onTick/onFinish 允许跨线程注册；触发时对回调做快照，避免遍历过程中被修改导致 crash
-fileprivate final class JobsTimerCallbackBag {
-    private let lock = NSLock()
-    private var tickBlocks: [jobsByVoidBlock] = []
-    private var finishBlocks: [jobsByVoidBlock] = []
-
-    init(initialTick: jobsByVoidBlock? = nil) {
-        if let b = initialTick { tickBlocks.append(b) }
-    }
+import QuartzCore // CADisplayLink
+import os.lock
+/// JobsTimer 专用回调类型：可跨并发域安全传递
+public typealias JobsTimerCallback = @Sendable () -> Void
+// MARK: - 统一协议
+public protocol JobsTimerProtocol: AnyObject {
+    var isRunning: Bool { get }
+    func start()
+    func pause()
+    func resume()
+    func stop()
 
     @discardableResult
-    func addTick(_ block: @escaping jobsByVoidBlock) -> Self {
-        lock.jobs_withLock { tickBlocks.append(block) }
-        return self
-    }
+    func onTick(_ block: @escaping JobsTimerCallback) -> Self
 
     @discardableResult
-    func addFinish(_ block: @escaping jobsByVoidBlock) -> Self {
-        lock.jobs_withLock { finishBlocks.append(block) }
-        return self
-    }
+    func onFinish(_ block: @escaping JobsTimerCallback) -> Self
+}
+// MARK: - 标识协议（建议用于 Manager ID 管理）
+public protocol JobsTimerIdentifiable {
+    var identifier: String? { get }
+}
+// MARK: - Timer Kind
+public enum JobsTimerKind: Sendable {
+    case gcd
+    case foundation
+    case displayLink
+    case runLoop
+}
 
-    func snapshotTickBlocks() -> [jobsByVoidBlock] {
-        lock.jobs_withLock { tickBlocks }
-    }
-
-    func snapshotFinishBlocks() -> [jobsByVoidBlock] {
-        lock.jobs_withLock { finishBlocks }
+public extension JobsTimerKind {
+    var displayName: String {
+        switch self {
+        case .foundation:   return "NSTimer"
+        case .gcd:          return "GCD"
+        case .displayLink:  return "DisplayLink"
+        case .runLoop:      return "RunLoop"
+        @unknown default:   return "Unknown"
+        }
     }
 }
-/// App 前后台状态监听（可选）
-/// - 目标：JobsTimer 内核不再依赖外部 manager，也能自动 pause/resume
-fileprivate final class JobsTimerAppStateMonitor {
-    private let enabled: Bool
-    private let pauseInBackground: Bool
-
-    private let pause: () -> Void
-    private let resume: () -> Void
-    private let isRunning: () -> Bool
-
-    private var autoPaused = false
-
-    #if canImport(UIKit)
-    private var tokens: [NSObjectProtocol] = []
-    #endif
-
-    init(config: JobsTimerConfig,
-         pause: @escaping () -> Void,
-         resume: @escaping () -> Void,
-         isRunning: @escaping () -> Bool) {
-
-        self.enabled = config.autoManageAppState
-        self.pauseInBackground = config.pauseInBackground
-        self.pause = pause
-        self.resume = resume
-        self.isRunning = isRunning
-
-        #if canImport(UIKit)
-        if enabled && pauseInBackground {
-            let nc = NotificationCenter.default
-
-            let t1 = nc.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.onDidEnterBackground()
-            }
-            let t2 = nc.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.onWillEnterForeground()
-            }
-            tokens = [t1, t2]
-        }
-        #endif
-    }
-
-    deinit {
-        #if canImport(UIKit)
-        tokens.forEach { NotificationCenter.default.removeObserver($0) }
-        tokens.removeAll()
-        #endif
-    }
-
-    /// 在 start() 后调用：如果当前已经在后台，立刻执行一次同步
-    func syncWithCurrentAppStateIfNeeded() {
-        #if canImport(UIKit)
-        guard enabled && pauseInBackground else { return }
-        if !Thread.isMainThread {
-            DispatchQueue.main.async { [weak self] in
-                self?.syncWithCurrentAppStateIfNeeded()
-            };return
-        }
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            onDidEnterBackground()
-        }
-        #endif
-    }
-
-    private func onDidEnterBackground() {
-        guard enabled && pauseInBackground else { return }
-        guard isRunning() else { return } // 手动暂停的不动
-        autoPaused = true
-        pause()
-    }
-
-    private func onWillEnterForeground() {
-        guard enabled && pauseInBackground else { return }
-        guard autoPaused else { return }  // 只恢复“被自动暂停”的
-        autoPaused = false
-        resume()
-    }
-}
-// MARK: - 配置体
+// MARK: - 配置
 public struct JobsTimerConfig {
-    /// 🔁 每次触发的时间间隔（秒）
     public var interval: TimeInterval
-    /// ♻️ 是否重复执行。若为 `false`，触发一次后即自动销毁
     public var repeats: Bool
-    /// ⚙️ 允许系统在此范围内微调触发时间，以提升能效与系统同步性
     public var tolerance: TimeInterval
-    /// 🧵 执行回调的目标队列（UI 更新一般用 .main）
+
     public var queue: DispatchQueue
-    /// ⏱️（仅 Foundation.Timer / CADisplayLink 使用）绑定到哪个 RunLoop
     public var runLoop: RunLoop
-    /// ⏱️（仅 Foundation.Timer / CADisplayLink 使用）RunLoop Mode（默认 .common）
     public var runLoopMode: RunLoop.Mode
-    /// 🌗 是否在进入后台时自动暂停（默认 true）
-    /// - 说明：仅在 canImport(UIKit) 的平台生效；非 iOS 平台会被忽略
+
     public var pauseInBackground: Bool
-    /// 👁 是否自动监听前后台通知（默认 true）
     public var autoManageAppState: Bool
 
-    public init(interval: TimeInterval = 1.0,
-                repeats: Bool = true,
-                tolerance: TimeInterval = 0.01,
-                queue: DispatchQueue = .main,
-                runLoop: RunLoop = .main,
-                runLoopMode: RunLoop.Mode = .common,
-                pauseInBackground: Bool = true,
-                autoManageAppState: Bool = true) {
-        self.interval = interval
+    public init(
+        interval: TimeInterval = 1.0,
+        repeats: Bool = true,
+        tolerance: TimeInterval = 0,
+        queue: DispatchQueue = .main,
+        runLoop: RunLoop = .main,
+        runLoopMode: RunLoop.Mode = .common,
+        pauseInBackground: Bool = true,
+        autoManageAppState: Bool = true
+    ) {
+        self.interval = max(0.000_001, interval)
         self.repeats = repeats
-        self.tolerance = tolerance
+        self.tolerance = max(0, tolerance)
         self.queue = queue
         self.runLoop = runLoop
         self.runLoopMode = runLoopMode
@@ -193,486 +85,487 @@ public struct JobsTimerConfig {
         self.autoManageAppState = autoManageAppState
     }
 }
-// MARK: - 统一协议
-public protocol JobsTimerProtocol: AnyObject {
-    /// 当前是否运行中
-    var isRunning: Bool { get }
-    /// 启动计时器
-    func start()
-    /// 暂停计时器
-    func pause()
-    /// 恢复计时器
-    func resume()
-    /// 停止计时器（销毁@有回调）
-    func fireOnce()
-    /// 停止计时器（销毁@无回调）
-    func stop()
-    /// 注册回调（每 tick 执行一次）
-    @discardableResult
-    func onTick(_ block: @escaping jobsByVoidBlock) -> Self
-    /// 注册完成回调（用于一次性定时器或倒计时）
-    @discardableResult
-    func onFinish(_ block: @escaping jobsByVoidBlock) -> Self
+// MARK: - JobsUnfairLock
+final class JobsUnfairLock {
+    private var lock = os_unfair_lock_s()
+
+    @inline(__always)
+    func jobs_withLock<T>(_ block: () throws -> T) rethrows -> T {
+        os_unfair_lock_lock(&lock)
+        defer { os_unfair_lock_unlock(&lock) }
+        return try block()
+    }
 }
-// MARK: - 定时器内核枚举
-public enum JobsTimerKind: String, CaseIterable {
-    case foundation     // Foundation.Timer
-    case gcd            // DispatchSourceTimer
-    case displayLink    // CADisplayLink
-    case runLoopCore    // CFRunLoopTimer:NSTimer 背后的 C 语言/CoreFoundation层 原始定时器
-}
-// 显示名
-public extension JobsTimerKind {
-    var jobs_displayName: String {
-        switch self {
-        case .foundation:   return "NSTimer"
-        case .gcd:          return "GCD"
-        case .displayLink:  return "DisplayLink"
-        case .runLoopCore:  return "RunLoop"
+// MARK: - JobsTimer
+///
+/// ✅ 更“狠”的规则（最终版）
+/// - 非 GCD 内核（foundation/runLoop/displayLink）强制：只能主线程 + RunLoop.main
+/// - RunLoop/DisplayLink 生命周期操作必须主线程
+/// - 回调类型统一为 @Sendable
+/// - stop 后 late event：generation token 防穿透
+/// - ✅ 修复：GCD suspend/cancel 平衡（不会炸）
+/// - ✅ 修复：one-shot 在非 main queue 上 stop 的主线程路由（不会炸）
+public final class JobsTimer: JobsTimerProtocol {
+    // MARK: - State
+    private enum State: Equatable {
+        case idle
+        case running
+        case paused
+        case stopped
+    }
+    // MARK: - Public
+    public var isRunning: Bool {
+        stateLock.jobs_withLock { state == .running }
+    }
+    // MARK: - Private
+    private let kind: JobsTimerKind
+    private let config: JobsTimerConfig
+
+    private let stateLock = JobsUnfairLock()
+    private var state: State = .idle
+    /// generation token：状态变更递增，用于防止残留回调穿透
+    private var generation: UInt64 = 0
+
+    private var tickBlock: JobsTimerCallback
+    private var finishBlock: JobsTimerCallback?
+    // Underlying engines
+    private var gcdTimer: DispatchSourceTimer?
+    private var gcdIsSuspended: Bool = false
+
+    private var foundationTimer: Timer?
+    private var displayLink: CADisplayLink?
+    private var rlTimer: CFRunLoopTimer?
+
+    #if canImport(UIKit)
+    private var appState: JobsAppStateManager?
+    #endif
+    // MARK: - Thread constraints
+    @inline(__always)
+    private func requireMainThreadForRunLoopAPI(_ reason: String) {
+        precondition(
+            Thread.isMainThread,
+            "JobsTimer: \(reason) must be called on main thread (RunLoop/DisplayLink are thread-affine)."
+        )
+    }
+
+    @inline(__always)
+    private func requireMainRunLoopForNonGCD() {
+        precondition(
+            config.runLoop == .main,
+            "JobsTimer: kind=\(kind) currently only supports RunLoop.main (RunLoop APIs are thread-affine)."
+        )
+    }
+    // MARK: - Init
+    public init(
+        kind: JobsTimerKind,
+        config: JobsTimerConfig,
+        handler: @escaping JobsTimerCallback
+    ) {
+        self.kind = kind
+        self.config = config
+        self.tickBlock = handler
+
+        if kind != .gcd {
+            requireMainRunLoopForNonGCD()
+            precondition(Thread.isMainThread, "JobsTimer: init(kind=\(kind)) must be called on main thread.")
+        }
+
+        setupAppStateIfNeeded()
+    }
+
+    deinit {
+        stop()
+        teardownAppState()
+    }
+    // MARK: - JobsTimerProtocol
+    public func start() {
+        if kind != .gcd { requireMainThreadForRunLoopAPI("start") }
+
+        let token = stateLock.jobs_withLock { () -> UInt64? in
+            switch state {
+            case .running:
+                return nil
+            case .paused, .idle:
+                generation &+= 1
+                state = .running
+                return generation
+            case .stopped:
+                return nil
+            }
+        }
+        guard let token else { return }
+
+        switch kind {
+        case .gcd:
+            startGCD(token: token)
+        case .foundation:
+            startFoundationTimer(token: token)
+        case .displayLink:
+            startDisplayLink(token: token)
+        case .runLoop:
+            startRunLoopTimer(token: token)
         }
     }
-}
-// MARK: - NSTimer 实现（升级：只 add 一次 RunLoop；回调线程安全；可选前后台感知）
-final class JobsFoundationTimer: JobsTimerProtocol {
-    private let config: JobsTimerConfig
-    private let stateLock = NSLock()
-    private var _isRunning = false
-    private var timer: Timer?
-    private let callbacks: JobsTimerCallbackBag
-    private lazy var appState: JobsTimerAppStateMonitor = {
-        JobsTimerAppStateMonitor(
-            config: config,
-            pause: { [weak self] in self?.pause() },
-            resume: { [weak self] in self?.resume() },
-            isRunning: { [weak self] in self?.isRunning ?? false }
-        )
-    }()
 
-    var isRunning: Bool { stateLock.jobs_withLock { _isRunning } }
+    public func pause() {
+        if kind != .gcd { requireMainThreadForRunLoopAPI("pause") }
 
-    init(config: JobsTimerConfig, handler: @escaping jobsByVoidBlock) {
-        self.config = config
-        self.callbacks = JobsTimerCallbackBag(initialTick: handler)
+        let shouldPause = stateLock.jobs_withLock { () -> Bool in
+            guard state == .running else { return false }
+            state = .paused
+            generation &+= 1
+            return true
+        }
+        guard shouldPause else { return }
+
+        switch kind {
+        case .gcd:
+            pauseGCD()
+        case .foundation:
+            foundationTimer?.invalidate()
+            foundationTimer = nil
+        case .displayLink:
+            displayLink?.invalidate()
+            displayLink = nil
+        case .runLoop:
+            if let t = rlTimer {
+                CFRunLoopTimerInvalidate(t)
+                rlTimer = nil
+            }
+        }
     }
 
-    func start() {
-        stop()
-        stateLock.jobs_withLock { _isRunning = true }
+    public func resume() {
+        if kind != .gcd { requireMainThreadForRunLoopAPI("resume") }
 
-        let iv = max(0.0001, config.interval)
+        let token = stateLock.jobs_withLock { () -> UInt64? in
+            guard state == .paused else { return nil }
+            state = .running
+            generation &+= 1
+            return generation
+        }
+        guard let token else { return }
 
-        // ✅ 改成 Timer(timeInterval:)：不自动加入 RunLoop，避免 “scheduledTimer + 再 add” 的语义重复
-        let t = Timer(timeInterval: iv, repeats: config.repeats) { [weak self] _ in
-            guard let self else { return }
-            let ticks = self.callbacks.snapshotTickBlocks()
-            let finishes = self.callbacks.snapshotFinishBlocks()
-            self.config.queue.async {
-                ticks.forEach { $0() }
-                if !self.config.repeats {
-                    finishes.forEach { $0() }
-                    self.stop()
+        switch kind {
+        case .gcd:
+            resumeGCD()
+        case .foundation:
+            startFoundationTimer(token: token)
+        case .displayLink:
+            startDisplayLink(token: token)
+        case .runLoop:
+            startRunLoopTimer(token: token)
+        }
+    }
+
+    public func stop() {
+        if kind != .gcd {
+            // 外部 stop 强制主线程；内部（比如 one-shot）会走 routeStopIfNeeded
+            requireMainThreadForRunLoopAPI("stop")
+        }
+
+        let shouldStop = stateLock.jobs_withLock { () -> Bool in
+            guard state != .stopped else { return false }
+            state = .stopped
+            generation &+= 1
+            return true
+        }
+        guard shouldStop else { return }
+
+        stopInternal()
+    }
+
+    @discardableResult
+    public func onTick(_ block: @escaping JobsTimerCallback) -> Self {
+        stateLock.jobs_withLock { tickBlock = block }
+        return self
+    }
+
+    @discardableResult
+    public func onFinish(_ block: @escaping JobsTimerCallback) -> Self {
+        stateLock.jobs_withLock { finishBlock = block }
+        return self
+    }
+    // MARK: - Stop internals
+    private func stopInternal() {
+        switch kind {
+        case .gcd:
+            stopGCDSafely()
+        case .foundation:
+            foundationTimer?.invalidate()
+            foundationTimer = nil
+        case .displayLink:
+            displayLink?.invalidate()
+            displayLink = nil
+        case .runLoop:
+            if let t = rlTimer {
+                CFRunLoopTimerInvalidate(t)
+                rlTimer = nil
+            }
+        }
+    }
+
+    private func routeStopIfNeededFromCallback() {
+        if kind == .gcd {
+            // GCD：不要求主线程
+            stateLock.jobs_withLock {
+                if state != .stopped {
+                    state = .stopped
+                    generation &+= 1
                 }
             }
-        }
-        t.tolerance = max(0, config.tolerance)
-
-        // ⚠️ 这里采用 config.runLoop + config.runLoopMode；默认就是 main/common
-        config.runLoop.add(t, forMode: config.runLoopMode)
-
-        stateLock.jobs_withLock { timer = t }
-
-        // 若 start 时已在后台，立刻同步一次
-        appState.syncWithCurrentAppStateIfNeeded()
-    }
-
-    func pause() {
-        stateLock.jobs_withLock {
-            guard let t = timer else { return }
-            t.fireDate = .distantFuture
-            _isRunning = false
-        }
-    }
-
-    func resume() {
-        let iv = max(0.0001, config.interval)
-        stateLock.jobs_withLock {
-            guard let t = timer else { return }
-            t.fireDate = Date().addingTimeInterval(iv)
-            _isRunning = true
-        }
-    }
-
-    func fireOnce() {
-        let ticks = callbacks.snapshotTickBlocks()
-        let finishes = callbacks.snapshotFinishBlocks()
-        config.queue.async {
-            ticks.forEach { $0() }
-            finishes.forEach { $0() }
-        }
-        stop()
-    }
-
-    func stop() {
-        let t: Timer? = stateLock.jobs_withLock {
-            _isRunning = false
-            let old = timer
-            timer = nil
-            return old
-        }
-        t?.invalidate()
-    }
-
-    @discardableResult
-    func onTick(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addTick(block); return self }
-
-    @discardableResult
-    func onFinish(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addFinish(block); return self }
-}
-// MARK: - GCD 实现（升级：回调线程安全；可选前后台感知）
-final class JobsGCDTimer: JobsTimerProtocol {
-    private let config: JobsTimerConfig
-
-    private let stateLock = NSLock()
-    private var _isRunning = false
-    private var source: DispatchSourceTimer?
-    private var suspended = false
-
-    private let callbacks: JobsTimerCallbackBag
-    private lazy var appState: JobsTimerAppStateMonitor = {
-        JobsTimerAppStateMonitor(
-            config: config,
-            pause: { [weak self] in self?.pause() },
-            resume: { [weak self] in self?.resume() },
-            isRunning: { [weak self] in self?.isRunning ?? false }
-        )
-    }()
-
-    var isRunning: Bool { stateLock.jobs_withLock { _isRunning } }
-
-    init(config: JobsTimerConfig, handler: @escaping jobsByVoidBlock) {
-        self.config = config
-        self.callbacks = JobsTimerCallbackBag(initialTick: handler)
-    }
-
-    func start() {
-        stop()
-        stateLock.jobs_withLock { _isRunning = true }
-
-        let s = DispatchSource.makeTimerSource(queue: config.queue)
-        let ivNs = UInt64(max(0.0001, config.interval) * 1_000_000_000)
-        let leewayNs = UInt64(max(0, config.tolerance) * 1_000_000_000)
-
-        s.schedule(deadline: .now() + .nanoseconds(Int(ivNs)),
-                   repeating: .nanoseconds(Int(ivNs)),
-                   leeway: .nanoseconds(Int(leewayNs)))
-
-        s.setEventHandler { [weak self] in
-            guard let self else { return }
-            guard self.isRunning else { return }
-
-            let ticks = self.callbacks.snapshotTickBlocks()
-            let finishes = self.callbacks.snapshotFinishBlocks()
-
-            ticks.forEach { $0() }
-            if !self.config.repeats {
-                finishes.forEach { $0() }
-                self.stop()
-            }
-        }
-
-        stateLock.jobs_withLock {
-            source = s
-            suspended = false
-        }
-        s.resume()
-
-        appState.syncWithCurrentAppStateIfNeeded()
-    }
-
-    func pause() {
-        stateLock.jobs_withLock {
-            guard let s = source, !suspended else { return }
-            s.suspend()
-            suspended = true
-            _isRunning = false
-        }
-    }
-
-    func resume() {
-        stateLock.jobs_withLock {
-            guard let s = source, suspended else { return }
-            s.resume()
-            suspended = false
-            _isRunning = true
-        }
-    }
-
-    func fireOnce() {
-        let ticks = callbacks.snapshotTickBlocks()
-        let finishes = callbacks.snapshotFinishBlocks()
-        config.queue.async {
-            ticks.forEach { $0() }
-            finishes.forEach { $0() }
-        }
-        stop()
-    }
-
-    func stop() {
-        let (s, wasSuspended): (DispatchSourceTimer?, Bool) = stateLock.jobs_withLock {
-            _isRunning = false
-            let old = source
-            let sus = suspended
-            source = nil
-            suspended = false
-            return (old, sus)
-        }
-        guard let s else { return }
-        if wasSuspended { s.resume() } // cancel 前必须 resumed
-        s.cancel()
-    }
-
-    @discardableResult
-    func onTick(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addTick(block); return self }
-
-    @discardableResult
-    func onFinish(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addFinish(block); return self }
-}
-// MARK: - CADisplayLink 实现（升级：回调线程安全；可选前后台感知；RunLoop 可配置）
-final class JobsDisplayLinkTimer: JobsTimerProtocol {
-    private let config: JobsTimerConfig
-    private let stateLock = NSLock()
-    private var _isRunning = false
-    private var link: CADisplayLink?
-    private var lastTs: CFTimeInterval = 0
-    private var acc: CFTimeInterval = 0
-    private let callbacks: JobsTimerCallbackBag
-    private lazy var appState: JobsTimerAppStateMonitor = {
-        JobsTimerAppStateMonitor(
-            config: config,
-            pause: { [weak self] in self?.pause() },
-            resume: { [weak self] in self?.resume() },
-            isRunning: { [weak self] in self?.isRunning ?? false }
-        )
-    }()
-
-    var isRunning: Bool { stateLock.jobs_withLock { _isRunning } }
-
-    init(config: JobsTimerConfig, handler: @escaping jobsByVoidBlock) {
-        self.config = config
-        self.callbacks = JobsTimerCallbackBag(initialTick: handler)
-    }
-
-    func start() {
-        stop()
-        stateLock.jobs_withLock {
-            _isRunning = true
-            acc = 0
-            lastTs = 0
-        }
-
-        let l = CADisplayLink(target: self, selector: #selector(tick(_:)))
-        if #available(iOS 15.0, *), config.interval > 0 {
-            let fps = max(1, min(120, Int(round(1.0 / config.interval))))
-            l.preferredFrameRateRange = CAFrameRateRange(minimum: 1, maximum: 120, preferred: Float(fps))
-        } else if l.responds(to: #selector(getter: CADisplayLink.preferredFramesPerSecond)), config.interval > 0 {
-            l.preferredFramesPerSecond = max(1, min(120, Int(round(1.0 / config.interval))))
-        }
-        // ✅ 使用 config.runLoop + config.runLoopMode（默认 main/common）
-        l.add(to: config.runLoop, forMode: config.runLoopMode)
-        stateLock.jobs_withLock { link = l }
-        appState.syncWithCurrentAppStateIfNeeded()
-    }
-
-    func pause() {
-        stateLock.jobs_withLock {
-            link?.isPaused = true
-            _isRunning = false
-        }
-    }
-
-    func resume() {
-        stateLock.jobs_withLock {
-            link?.isPaused = false
-            _isRunning = true
-            lastTs = 0
-            acc = 0
-        }
-    }
-
-    func fireOnce() {
-        let ticks = callbacks.snapshotTickBlocks()
-        let finishes = callbacks.snapshotFinishBlocks()
-        config.queue.async {
-            ticks.forEach { $0() }
-            finishes.forEach { $0() }
-        }
-        stop()
-    }
-
-    func stop() {
-        let l: CADisplayLink? = stateLock.jobs_withLock {
-            _isRunning = false
-            let old = link
-            link = nil
-            lastTs = 0
-            acc = 0
-            return old
-        }
-        l?.invalidate()
-    }
-
-    @discardableResult
-    func onTick(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addTick(block); return self }
-
-    @discardableResult
-    func onFinish(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addFinish(block); return self }
-
-    @objc private func tick(_ l: CADisplayLink) {
-        guard isRunning else { return }
-
-        // 这里在 displaylink 回调线程（通常 main runloop）里计算节拍
-        if stateLock.jobs_withLock({ lastTs == 0 }) {
-            stateLock.jobs_withLock { lastTs = l.timestamp }
+            stopInternal()
             return
         }
 
-        let dt = l.timestamp - stateLock.jobs_withLock({ lastTs })
-        stateLock.jobs_withLock { lastTs = l.timestamp; acc += dt }
-
-        let iv = max(0.0001, config.interval)
-        let shouldFire = stateLock.jobs_withLock { acc + max(0, config.tolerance) >= iv }
-        guard shouldFire else { return }
-
-        let ticks = callbacks.snapshotTickBlocks()
-        let finishes = callbacks.snapshotFinishBlocks()
-
-        stateLock.jobs_withLock {
-            acc = config.repeats ? (acc - iv) : 0
-        }
-
-        config.queue.async { [weak self] in
-            ticks.forEach { $0() }
-            if let self, !self.config.repeats {
-                finishes.forEach { $0() }
-                self.stop()
+        // 非 GCD：必须主线程 stop
+        if Thread.isMainThread {
+            stop()
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.stop()
             }
         }
     }
-}
-// MARK: - CFRunLoopTimer 实现（升级：回调线程安全；可选前后台感知）
-final class JobsRunLoopTimer: JobsTimerProtocol {
-    private let config: JobsTimerConfig
-    private let stateLock = NSLock()
-    private var _isRunning = false
-    private var rlTimer: CFRunLoopTimer?
-    private let callbacks: JobsTimerCallbackBag
-    private lazy var appState: JobsTimerAppStateMonitor = {
-        JobsTimerAppStateMonitor(
-            config: config,
-            pause: { [weak self] in self?.pause() },
-            resume: { [weak self] in self?.resume() },
-            isRunning: { [weak self] in self?.isRunning ?? false }
+    // MARK: - Dispatch
+    private func fireTickIfValid(token: UInt64) {
+        let snapshot = stateLock.jobs_withLock { () -> (shouldFire: Bool, tick: JobsTimerCallback, finish: JobsTimerCallback?, repeats: Bool) in
+            guard state == .running, token == generation else {
+                return (false, {}, nil, config.repeats)
+            }
+            return (true, tickBlock, finishBlock, config.repeats)
+        }
+
+        guard snapshot.shouldFire else { return }
+
+        // tick 在 config.queue 执行
+        config.queue.async {
+            snapshot.tick()
+        }
+
+        if !snapshot.repeats {
+            // one-shot：触发一次后结束（注意：非 GCD stop 必须回主线程）
+            routeStopIfNeededFromCallback()
+
+            if let finish = snapshot.finish {
+                config.queue.async { finish() }
+            }
+        }
+    }
+    // MARK: - GCD Timer
+    private func startGCD(token: UInt64) {
+        // 重建更干净：避免 resume/suspend 计数错乱
+        stopGCDSafely()
+
+        let t = DispatchSource.makeTimerSource(queue: config.queue)
+        t.schedule(
+            deadline: .now() + config.interval,
+            repeating: config.interval,
+            leeway: .milliseconds(Int(config.tolerance * 1000.0))
         )
-    }()
-
-    var isRunning: Bool { stateLock.jobs_withLock { _isRunning } }
-
-    init(config: JobsTimerConfig, handler: @escaping jobsByVoidBlock) {
-        self.config = config
-        self.callbacks = JobsTimerCallbackBag(initialTick: handler)
+        t.setEventHandler { [weak self] in
+            self?.fireTickIfValid(token: token)
+        }
+        gcdTimer = t
+        gcdIsSuspended = false
+        t.resume()
     }
 
-    func start() {
-        stop()
-        stateLock.jobs_withLock { _isRunning = true }
+    private func pauseGCD() {
+        guard let t = gcdTimer else { return }
+        // 防重复 suspend
+        if !gcdIsSuspended {
+            gcdIsSuspended = true
+            t.suspend()
+        }
+    }
 
-        let iv = max(0.0001, config.interval)
+    private func resumeGCD() {
+        guard let t = gcdTimer else { return }
+        if gcdIsSuspended {
+            gcdIsSuspended = false
+            t.resume()
+        }
+    }
 
-        let timer = CFRunLoopTimerCreateWithHandler(
-            kCFAllocatorDefault,
-            CFAbsoluteTimeGetCurrent() + iv,
-            config.repeats ? iv : 0,
-            0, 0
-        ) { [weak self] _ in
-            guard let self else { return }
+    private func stopGCDSafely() {
+        guard let t = gcdTimer else { return }
 
-            let ticks = self.callbacks.snapshotTickBlocks()
-            let finishes = self.callbacks.snapshotFinishBlocks()
-
-            self.config.queue.async { [weak self] in
-                ticks.forEach { $0() }
-                guard let self else { return }
-                if !self.config.repeats {
-                    finishes.forEach { $0() }
-                    self.stop()
-                }
-            }
+        // ✅ 关键：cancel 前必须平衡 suspend
+        if gcdIsSuspended {
+            gcdIsSuspended = false
+            t.resume()
         }
 
-        CFRunLoopTimerSetTolerance(timer, max(0, config.tolerance))
-        // 仍然默认挂在 Main + commonModes（CFRunLoop 不方便直接桥接到 RunLoop 实例）
+        t.setEventHandler {}
+        t.cancel()
+
+        gcdTimer = nil
+    }
+    // MARK: - Foundation Timer（依赖 RunLoop）
+    private func startFoundationTimer(token: UInt64) {
+        requireMainThreadForRunLoopAPI("startFoundationTimer")
+        requireMainRunLoopForNonGCD()
+
+        let t = Timer(timeInterval: config.interval, repeats: config.repeats) { [weak self] _ in
+            self?.fireTickIfValid(token: token)
+        }
+        t.tolerance = config.tolerance
+        config.runLoop.add(t, forMode: config.runLoopMode)
+        foundationTimer = t
+    }
+    // MARK: - CADisplayLink（主线程）
+    private func startDisplayLink(token: UInt64) {
+        requireMainThreadForRunLoopAPI("startDisplayLink")
+        requireMainRunLoopForNonGCD()
+
+        let proxy = DisplayLinkProxy { [weak self] in
+            self?.fireTickIfValid(token: token)
+        }
+
+        let link = CADisplayLink(target: proxy, selector: #selector(DisplayLinkProxy.tick))
+        link.add(to: config.runLoop, forMode: config.runLoopMode)
+        displayLink = link
+    }
+
+    private final class DisplayLinkProxy: NSObject {
+        private let onTick: JobsTimerCallback
+        init(onTick: @escaping JobsTimerCallback) {
+            self.onTick = onTick
+        }
+        @objc func tick() { onTick() }
+    }
+    // MARK: - CFRunLoopTimer（依赖 RunLoop）
+    private func startRunLoopTimer(token: UInt64) {
+        requireMainThreadForRunLoopAPI("startRunLoopTimer")
+        requireMainRunLoopForNonGCD()
+
+        let context = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
+        var ctx = CFRunLoopTimerContext(
+            version: 0,
+            info: context,
+            retain: nil,
+            release: nil,
+            copyDescription: nil
+        )
+
+        let nextFire = CFAbsoluteTimeGetCurrent() + config.interval
+        let interval = config.repeats ? config.interval : 0
+
+        let timer = CFRunLoopTimerCreate(
+            kCFAllocatorDefault,
+            nextFire,
+            interval,
+            0,
+            0,
+            { (_, info) in
+                guard let info else { return }
+                let timerObj = Unmanaged<JobsTimer>.fromOpaque(info).takeUnretainedValue()
+                let token = timerObj.stateLock.jobs_withLock { timerObj.generation }
+                timerObj.fireTickIfValid(token: token)
+            },
+            &ctx
+        )
+
         let cfRunLoop = config.runLoop.getCFRunLoop()
         let cfMode: CFRunLoopMode = (config.runLoopMode == .common)
-        ? .commonModes
-        : CFRunLoopMode(config.runLoopMode.rawValue as CFString)
+            ? .commonModes
+            : CFRunLoopMode(config.runLoopMode.rawValue as CFString)
+
         CFRunLoopAddTimer(cfRunLoop, timer, cfMode)
+
         stateLock.jobs_withLock { rlTimer = timer }
-        appState.syncWithCurrentAppStateIfNeeded()
+
+        #if canImport(UIKit)
+        appState?.syncWithCurrentAppStateIfNeeded()
+        #endif
+
+        _ = context
+    }
+    // MARK: - App State (UIKit)
+    private func setupAppStateIfNeeded() {
+        #if canImport(UIKit)
+        guard config.autoManageAppState else { return }
+
+        appState = JobsAppStateManager(
+            pauseInBackground: config.pauseInBackground,
+            action: { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .pause: self.pause()
+                case .resume: self.resume()
+                case .stop: self.stop()
+                }
+            }
+        )
+        #endif
     }
 
-    func pause() {
-        stateLock.jobs_withLock {
-            guard let t = rlTimer else { return }
-            _isRunning = false
-            CFRunLoopTimerSetNextFireDate(t, .infinity)
-        }
+    private func teardownAppState() {
+        #if canImport(UIKit)
+        appState = nil
+        #endif
     }
-
-    func resume() {
-        let iv = max(0.0001, config.interval)
-        stateLock.jobs_withLock {
-            guard let t = rlTimer else { return }
-            _isRunning = true
-            CFRunLoopTimerSetNextFireDate(t, CFAbsoluteTimeGetCurrent() + iv)
-        }
-    }
-
-    func fireOnce() {
-        let ticks = callbacks.snapshotTickBlocks()
-        let finishes = callbacks.snapshotFinishBlocks()
-        config.queue.async {
-            ticks.forEach { $0() }
-            finishes.forEach { $0() }
-        }
-        stop()
-    }
-
-    func stop() {
-        let t: CFRunLoopTimer? = stateLock.jobs_withLock {
-            _isRunning = false
-            let old = rlTimer
-            rlTimer = nil
-            return old
-        }
-        if let t { CFRunLoopTimerInvalidate(t) }
-    }
-
-    @discardableResult
-    func onTick(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addTick(block); return self }
-
-    @discardableResult
-    func onFinish(_ block: @escaping jobsByVoidBlock) -> Self { callbacks.addFinish(block); return self }
 }
-// MARK: - 工厂
-public enum JobsTimerFactory {
-    public static func make(kind: JobsTimerKind,
-                            config: JobsTimerConfig,
-                            handler: @escaping jobsByVoidBlock) -> JobsTimerProtocol {
-        switch kind {
-        case .foundation:   return JobsFoundationTimer(config: config, handler: handler)
-        case .gcd:          return JobsGCDTimer(config: config, handler: handler)
-        case .displayLink:  return JobsDisplayLinkTimer(config: config, handler: handler)
-        case .runLoopCore:  return JobsRunLoopTimer(config: config, handler: handler)
+
+private enum JobsAppStateAction {
+    case pause
+    case resume
+    case stop
+}
+
+private final class JobsAppStateManager {
+    private let pauseInBackground: Bool
+    private let action: @Sendable (JobsAppStateAction) -> Void
+
+    init(
+        pauseInBackground: Bool,
+        action: @escaping @Sendable (JobsAppStateAction) -> Void
+    ) {
+        self.pauseInBackground = pauseInBackground
+        self.action = action
+        register()
+    }
+
+    deinit { unregister() }
+
+    func syncWithCurrentAppStateIfNeeded() {
+        #if canImport(UIKit)
+        let state = UIApplication.shared.applicationState
+        if state == .background || state == .inactive {
+            if pauseInBackground { action(.pause) }
         }
+        #endif
+    }
+
+    private func register() {
+        #if canImport(UIKit)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+        #endif
+    }
+
+    private func unregister() {
+        #if canImport(UIKit)
+        NotificationCenter.default.removeObserver(self)
+        #endif
+    }
+
+    @objc private func onDidEnterBackground() {
+        if pauseInBackground { action(.pause) }
+    }
+
+    @objc private func onWillEnterForeground() {
+        if pauseInBackground { action(.resume) }
     }
 }

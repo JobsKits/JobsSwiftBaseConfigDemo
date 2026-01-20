@@ -12,8 +12,8 @@ public struct JobsCountdownItem: Hashable, Sendable {
     public let title: String
     public let endAt: Date
     public let tickInterval: TimeInterval
+    /// 每条数据一个唯一 timer id（同屏多 timer 并行不会串）
     public var timerIdentifier: String { "com.jobs.demo.countdown.\(id)" }
-
     public init(id: String,
                 title: String,
                 endAt: Date,

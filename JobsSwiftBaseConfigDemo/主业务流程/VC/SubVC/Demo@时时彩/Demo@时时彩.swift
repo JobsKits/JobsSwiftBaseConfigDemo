@@ -5,6 +5,8 @@
 //  Created by Jobs on 12/18/25.
 //
 //  TableView 每个 Cell 一个独立倒计时（多 Timer 同屏管理 + Cell 复用）
+//  ✅ Swift 6 + 新版 JobsTimer 适配版
+//
 
 #if os(OSX)
 import AppKit
@@ -31,16 +33,17 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
             }
         }
     }
-    private let horizontalInset: CGFloat = 16
+
     private let rowHeight: CGFloat = 56
     private var data: [JobsCountdownItem] = []
+
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .bySeparatorStyle(.singleLine)
             .byRowHeight(rowHeight)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .registerCell(JobsCountdownCell.self) // ✅ 修正：注册真正使用的 cell
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
@@ -55,29 +58,34 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "时时彩")
         tableView.byVisible(YES)
+
         data = (0..<60).map { i in
-            let remain = Int.random(in: 8...300)         // 每行剩余时间不同（timer 不一样）
-            let tick = [0.5, 1.0, 1.0, 2.0].randomElement()! // 也可以让 tick 间隔不同
+            let remain = Int.random(in: 8...300)                 // 每行剩余时间不同
+            let tick = [0.5, 1.0, 1.0, 2.0].randomElement()!     // tick 间隔不同
             return JobsCountdownItem(
                 id: UUID().uuidString,
                 title: "Row #\(i)  (tick:\(tick)s, remain:\(remain)s)",
                 endAt: Date().addingTimeInterval(TimeInterval(remain)),
                 tickInterval: tick
             )
-        };
+        }
+
         tableView.reloadData()
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
 extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate {
+
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         data.count
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
             .py_dequeueReusableCell(withType: JobsCountdownCell.self, for: indexPath)
             .byData(data[indexPath.row])
     }
+
     public func tableView(_ tableView: UITableView,
                           didEndDisplaying cell: UITableViewCell,
                           forRowAt indexPath: IndexPath) {
@@ -85,5 +93,3 @@ extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate 
         (cell as? JobsCountdownCell)?.stopTimerIfNeeded()
     }
 }
-
-

@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/10/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -121,14 +122,21 @@ public class RedPacketRainView: UIView {
                 interval: max(0.05, config.spawnInterval),
                 repeats: true,
                 tolerance: 0.01,
-                queue: .main
+                queue: .main,
+                runLoop: .main,
+                runLoopMode: .common,
+                pauseInBackground: true,
+                autoManageAppState: true
             )
-
-            spawnTimer = JobsTimerFactory.make(
+            // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+            spawnTimer = JobsTimer(
                 kind: timerKind,
                 config: cfg
             ) { [weak self] in
-                self?.spawnPacketIfNeeded()
+                // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
+                Task { @MainActor in
+                    self?.spawnPacketIfNeeded()
+                }
             }
         }
 
@@ -137,18 +145,26 @@ public class RedPacketRainView: UIView {
                 interval: 1.0 / 60.0,
                 repeats: true,
                 tolerance: 0.0,
-                queue: .main
+                queue: .main,
+                runLoop: .main,
+                runLoopMode: .common,
+                pauseInBackground: true,
+                autoManageAppState: true
             )
-
-            fallTimer = JobsTimerFactory.make(
+            // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+            fallTimer = JobsTimer(
                 kind: timerKind,
                 config: fallCfg
             ) { [weak self] in
-                self?.updatePackets()
+                // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
+                Task { @MainActor in
+                    self?.updatePackets()
+                }
             }
         }
     }
     // MARK: - 红包生成逻辑（UIButton 版本）
+    @MainActor
     private func spawnPacketIfNeeded() {
         guard isRunning else { return }
         guard bounds.width > 0, bounds.height > 0 else { return }
@@ -234,6 +250,7 @@ public class RedPacketRainView: UIView {
         packetMotions[ObjectIdentifier(packet)] = motion
     }
     // MARK: - 下落刷新逻辑
+    @MainActor
     private func updatePackets() {
         guard !activePackets.isEmpty else {
             if !isRunning {
@@ -293,7 +310,7 @@ public class RedPacketRainView: UIView {
         packet.removeFromSuperview()
     }
 }
-// MARK: - DS
+// MARK: - DSL
 public extension RedPacketRainView {
     /// 类似 UIButton.sys()：默认 config + 默认 timerKind
     static func dsl(

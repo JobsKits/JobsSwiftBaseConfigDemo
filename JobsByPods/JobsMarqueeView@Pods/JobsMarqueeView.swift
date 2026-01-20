@@ -78,11 +78,11 @@ public final class JobsMarqueeView: UIView {
     }
     /// 按频率滚动时使用的定时器内核（默认 GCD）
     public var timerKindForFrequency: JobsTimerKind = .gcd {
-        didSet { timer = nil }
+        didSet { resetTimerIfNeeded() }
     }
     /// 连续滚动时使用的定时器内核（默认 CADisplayLink）
     public var timerKindForContinuous: JobsTimerKind = .displayLink {
-        didSet { timer = nil }
+        didSet { resetTimerIfNeeded() }
     }
     public var isRunning: Bool { timer?.isRunning ?? false }
 
@@ -181,7 +181,6 @@ public final class JobsMarqueeView: UIView {
         }
 
         internalButtons = buildButtons(from: source, targetCount: targetCount)
-
         // 布局
         var contentWidth: CGFloat = 0
         var contentHeight: CGFloat = 0
@@ -229,7 +228,6 @@ public final class JobsMarqueeView: UIView {
         }
 
         scrollView.contentSize = CGSize(width: contentWidth, height: contentHeight)
-
         // 更新 stepLength
         if itemSizeMode == .fillBounds {
             stepLength = isHorizontal ? bounds.width : bounds.height
@@ -261,6 +259,12 @@ public final class JobsMarqueeView: UIView {
         timer = nil
     }
     // MARK: - Timer 内部实现
+    private func resetTimerIfNeeded() {
+        // ✅ 你原来是 `timer = nil`，但不 stop 会残留运行；这里彻底清理
+        timer?.stop()
+        timer = nil
+    }
+
     private func handleScrollModeChanged() {
         switch scrollMode {
         case .frequency(let interval):
@@ -268,8 +272,7 @@ public final class JobsMarqueeView: UIView {
         case .continuous(let speed):
             continuousSpeed = max(0, speed)
         }
-        timer?.stop()
-        timer = nil
+        resetTimerIfNeeded()
     }
 
     private func createTimer() {
@@ -279,13 +282,18 @@ public final class JobsMarqueeView: UIView {
                 interval: frequencyInterval,
                 repeats: true,
                 tolerance: 0.0,
-                queue: .main
+                queue: .main,
+                runLoop: .main,
+                runLoopMode: .common,
+                pauseInBackground: true,
+                autoManageAppState: true
             )
-            timer = JobsTimerFactory.make(
-                kind: timerKindForFrequency,
-                config: config
-            ) { [weak self] in
-                self?.tickFrequency()
+            // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+            timer = JobsTimer(kind: timerKindForFrequency, config: config) { [weak self] in
+                // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
+                Task { @MainActor in
+                    self?.tickFrequency()
+                }
             }
 
         case .continuous:
@@ -293,17 +301,23 @@ public final class JobsMarqueeView: UIView {
                 interval: continuousInterval,
                 repeats: true,
                 tolerance: 0.0,
-                queue: .main
+                queue: .main,
+                runLoop: .main,
+                runLoopMode: .common,
+                pauseInBackground: true,
+                autoManageAppState: true
             )
-            timer = JobsTimerFactory.make(
-                kind: timerKindForContinuous,
-                config: config
-            ) { [weak self] in
-                self?.tickContinuous()
+            // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+            timer = JobsTimer(kind: timerKindForContinuous, config: config) { [weak self] in
+                // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
+                Task { @MainActor in
+                    self?.tickContinuous()
+                }
             }
         }
     }
     /// 按频率滚动（间隔滚动）
+    @MainActor
     private func tickFrequency() {
         guard !internalButtons.isEmpty, stepLength > 0 else { return }
         let current = scrollView.contentOffset
@@ -316,25 +330,18 @@ public final class JobsMarqueeView: UIView {
         case .left:
             guard maxOffsetX > 0 else { return }
             let next = current.x + stepLength
-
             if itemSizeMode == .fillBounds {
                 // 轮播图模式：最后一页是“首个的副本”
                 if next >= maxOffsetX {
-                    // 动画到副本那一页
-                    target.x = maxOffsetX
-                    // 动画结束后瞬移到真实第一页
-                    resetOffset.x = 0
+                    target.x = maxOffsetX      // 动画到副本那一页
+                    resetOffset.x = 0          // 动画结束后瞬移到真实第一页
                     needResetAfterAnimation = true
                 } else {
                     target.x = next
                 }
             } else {
                 // 跑马灯模式：用原来的逻辑
-                if next > maxOffsetX {
-                    target.x = 0
-                } else {
-                    target.x = next
-                }
+                target.x = (next > maxOffsetX) ? 0 : next
             }
         case .right:
             guard maxOffsetX > 0 else { return }
@@ -342,20 +349,14 @@ public final class JobsMarqueeView: UIView {
 
             if itemSizeMode == .fillBounds {
                 if next <= 0 {
-                    // 动画到真实第一页
                     target.x = 0
-                    // 动画结束后瞬移到“最后一页的副本”
                     resetOffset.x = maxOffsetX
                     needResetAfterAnimation = true
                 } else {
                     target.x = next
                 }
             } else {
-                if next < 0 {
-                    target.x = maxOffsetX
-                } else {
-                    target.x = next
-                }
+                target.x = (next < 0) ? maxOffsetX : next
             }
         case .up:
             guard maxOffsetY > 0 else { return }
@@ -370,11 +371,7 @@ public final class JobsMarqueeView: UIView {
                     target.y = next
                 }
             } else {
-                if next > maxOffsetY {
-                    target.y = 0
-                } else {
-                    target.y = next
-                }
+                target.y = (next > maxOffsetY) ? 0 : next
             }
         case .down:
             guard maxOffsetY > 0 else { return }
@@ -389,11 +386,7 @@ public final class JobsMarqueeView: UIView {
                     target.y = next
                 }
             } else {
-                if next < 0 {
-                    target.y = maxOffsetY
-                } else {
-                    target.y = next
-                }
+                target.y = (next < 0) ? maxOffsetY : next
             }
         }
 
@@ -401,12 +394,12 @@ public final class JobsMarqueeView: UIView {
             self.scrollView.contentOffset = target
         }, completion: { finished in
             guard finished, needResetAfterAnimation else { return }
-            // ⚠️ 这里的瞬移是“无感”的：
-            // 1,2,3,1 里 maxOffsetX 对应的那页 和 offset=0 的第一页内容一样
+            // 这里的瞬移是“无感”的：1,2,3,1 里 maxOffsetX 对应的那页 和 offset=0 的第一页内容一样
             self.scrollView.contentOffset = resetOffset
         })
     }
     /// 连续滚动
+    @MainActor
     private func tickContinuous() {
         guard !internalButtons.isEmpty else { return }
 
@@ -435,7 +428,6 @@ public final class JobsMarqueeView: UIView {
             offset.y -= distance
             if offset.y < 0 { offset.y += maxOffsetY }
         }
-
         scrollView.contentOffset = offset
     }
     /// 计算 S1/S2：系统默认按钮字体下，一个英文字符的宽高
@@ -488,12 +480,10 @@ public final class JobsMarqueeView: UIView {
                 button.byBackgroundImage(bgImage, for: state)
             }
         }
-
         // 3. 字体
         if let font = source.titleLabel?.font {
             button.byTitleFont(font)
         }
-
         // 4. 内边距 / configuration（避免 iOS 15 之后的 deprecated 警告）
         if #available(iOS 15.0, *), let cfg = source.configuration {
             // 按钮已经在用 UIButton.Configuration：直接克隆配置
@@ -505,47 +495,32 @@ public final class JobsMarqueeView: UIView {
                 .byTitleEdgeInsets(source.titleEdgeInsets)
                 .byImageEdgeInsets(source.imageEdgeInsets)
         }
-
         // 5. 背景色
         if let bgColor = source.backgroundColor {
             button.byBackgroundColor(bgColor, for: .normal)
         }
-
         // 6. 对齐方式
         button.contentHorizontalAlignment = source.contentHorizontalAlignment
         button.contentVerticalAlignment   = source.contentVerticalAlignment
-
         // 7. layer 样式
         button.layer.cornerRadius  = source.layer.cornerRadius
         button.layer.masksToBounds = source.layer.masksToBounds
         button.layer.borderWidth   = source.layer.borderWidth
         button.layer.borderColor   = source.layer.borderColor
-
         // 8. 远程图片：SDWebImage / Kingfisher 配置克隆
-        //    - 如果该按钮没用 SD / KF，则对应 url 为 nil，下面这些调用都直接 return，不会有副作用
-        //    - 如果已经加载过，会优先命中缓存；没缓存才按需触网
-
         #if canImport(SDWebImage)
-        // SDWebImage@前景图
-//        source.sd_cloneImage(to: button, for: .normal)
-        // SDWebImage@背景图
         source.sd_cloneBackground(to: button,
                                   for: .normal,
                                   allowNetworkIfMissing: true)
         #endif
 
         #if canImport(Kingfisher)
-        // Kingfisher@前景图
-//        source.kf_cloneImage(to: button, for: .normal)
-        // Kingfishe@背景图
         source.kf_cloneBackground(to: button,
                                   for: .normal,
                                   allowNetworkIfMissing: true)
         #endif
-
         // 9. 复制 target-action（兼容老式 addTarget，包括 jobs_addTapClosure 那一套）
         var hasTapTarget = false
-
         for target in source.allTargets {
             for event in [
                 UIControl.Event.touchUpInside,
@@ -565,19 +540,15 @@ public final class JobsMarqueeView: UIView {
                 }
             }
         }
-
         // 10. 兼容 onTap / byTapSound：它们在 iOS 14+ 用的是 UIAction，看不到 target-action
-        //     如果没有任何 .touchUpInside 的 target，就加一个“转发器”：
         if #available(iOS 14.0, *), !hasTapTarget {
             button.addAction(
                 UIAction { [weak source] _ in
-                    // 让原按钮自己触发所有点击逻辑（onTap + byTapSound 全跑）
                     source?.sendActions(for: .touchUpInside)
                 },
                 for: .touchUpInside
             )
         }
-
         // 11. 复制长按手势（onLongPress）
         if let recognizers = source.gestureRecognizers {
             for recognizer in recognizers {
@@ -596,7 +567,6 @@ public final class JobsMarqueeView: UIView {
 
                 // ✅ 从原手势上把 sleeve 拿出来，挂到 cloneGR 上
                 if let sleeve = objc_getAssociatedObject(lp, &kJobsUIButtonLongPressSleeveKey) {
-                    // _GRSleeve.invoke(_:) 暴露到 ObjC 后就是 "invoke:"
                     cloneGR.addTarget(sleeve, action: NSSelectorFromString("invoke:"))
                     objc_setAssociatedObject(
                         cloneGR,

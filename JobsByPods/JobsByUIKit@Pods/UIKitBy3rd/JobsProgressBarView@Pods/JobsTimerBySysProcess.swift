@@ -110,7 +110,7 @@ public final class JobsCountdownProcess {
     // MARK: - 控制
     /// 开始倒计时（从 0 开始走一次）
     @discardableResult
-    public func start() -> JobsCountdownProcess{
+    public func start() -> JobsCountdownProcess {
         if state == .running { return self }
         /// 如果想重复使用同一个实例，可以每次 start 前重置
         resetInternal()
@@ -131,24 +131,24 @@ public final class JobsCountdownProcess {
             tolerance: tolerance,
             queue: queue
         )
-
-        let t = JobsTimerFactory.make(kind: kind, config: config) { [weak self] in
+        // ✅ 新版 JobsTimer：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+        let t = JobsTimer(kind: kind, config: config) { [weak self] in
             guard let self else { return }
-            guard state == .running else { return }
-            guard let start = startDate else { return }
+            guard self.state == .running else { return }
+            guard let start = self.startDate else { return }
 
             let elapsed = Date().timeIntervalSince(start)
-            let clampedElapsed = min(elapsed, snapshot.total)
+            let clampedElapsed = min(elapsed, self.snapshot.total)
 
-            snapshot = Snapshot(total: snapshot.total, elapsed: clampedElapsed)
+            self.snapshot = Snapshot(total: self.snapshot.total, elapsed: clampedElapsed)
             // 进度回调
-            onProgress?(snapshot)
+            self.onProgress?(self.snapshot)
             // 到点了
-            if clampedElapsed >= snapshot.total {
-                timer?.stop()
-                timer = nil
-                state = .finished
-                onFinished?(snapshot)
+            if clampedElapsed >= self.snapshot.total {
+                self.timer?.stop()
+                self.timer = nil
+                self.state = .finished
+                self.onFinished?(self.snapshot)
             }
         }
 

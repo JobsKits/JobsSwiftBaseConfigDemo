@@ -15,8 +15,11 @@ import QuartzCore
 import JobsByUIKit
 import JobsTimer
 import JobsSwiftBaseDefines
-// 如果 JobsTimer.swift 是在同一个 module 里，这里不用再 import；否则按工程结构 import
-/// 带时分秒针 + 刻度数字 1～12 的模拟时钟，定时器用 JobsTimer
+/// 带时分秒针 + 刻度数字 1～12 的模拟时钟，定时器用 JobsTimer（新版）
+///
+/// Swift 6 注意点：JobsTimer 的 handler 是 @Sendable
+/// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
+/// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI
 open class JobsClockView: UIView {
     // MARK: - 表盘 & 刻度
     /// 外圈表盘
@@ -74,8 +77,8 @@ open class JobsClockView: UIView {
             .byCornerRadius(1)
             .byAddTo(layer)
     }()
-
     private var timer: JobsTimerProtocol?
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -87,7 +90,9 @@ open class JobsClockView: UIView {
     }
 
     deinit {
-        stop()
+        Task { @MainActor [weak self] in
+            stop()
+        }
     }
 
     private func commonInit() {
@@ -120,6 +125,7 @@ open class JobsClockView: UIView {
         )
         let circlePath = UIBezierPath(ovalIn: circleRect)
         dialLayer.path = circlePath.cgPath
+
         // 12 个整点刻度
         let tickPath = UIBezierPath()
         let tickLen: CGFloat = 8
@@ -189,35 +195,46 @@ open class JobsClockView: UIView {
     }
     // MARK: - 对外 API：启动 / 停止
     /// 开始走表（默认用 GCD 内核）
+    ///
+    /// JobsTimer 的非 GCD 内核（foundation/runLoop/displayLink）要求主线程 init/start
+    /// 这里用 @MainActor 强制在主线程调用，避免触发 JobsTimer 内部 precondition
+    @MainActor
     public func start(kind: JobsTimerKind = .gcd) {
         stop()
         // 先对齐一次当前时间
         updateHands(animated: false)
-
         let config = JobsTimerConfig(
             interval: 1.0,          // 每秒 tick 一次
             repeats: true,
             tolerance: 0.01,
-            queue: .main            // UI 更新一定要在主队列
+            queue: .main,
+            runLoop: .main,
+            runLoopMode: .common,
+            pauseInBackground: true,
+            autoManageAppState: true
         )
-
-        let t = JobsTimerFactory.make(kind: kind, config: config) { [weak self] in
-            self?.updateHands(animated: true)
+        // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+        let t = JobsTimer(kind: kind, config: config) { [weak self] in
+            // ✅ Swift 6 / Sendable 同等待遇：回主线程再动 UI
+            Task { @MainActor in
+                self?.updateHands(animated: true)
+            }
         }
         timer = t
         t.start()
     }
     /// 停止走表
+    @MainActor
     public func stop() {
         timer?.stop()
         timer = nil
     }
     // MARK: - 内部：根据当前时间更新指针角度
+    @MainActor
     private func updateHands(animated: Bool) {
         let date = Date()
         let cal = Calendar.current
         let comps = cal.dateComponents([.hour, .minute, .second], from: date)
-
         let hour   = CGFloat(comps.hour ?? 0)   // 0...23
         let minute = CGFloat(comps.minute ?? 0) // 0...59
         let second = CGFloat(comps.second ?? 0) // 0...59

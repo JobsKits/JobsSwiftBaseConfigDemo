@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import ObjectiveC
+
 import SnapKit
 import GKNavigationBarSwift
 import Inheritance
@@ -18,8 +20,122 @@ import JobsByUIKit
 import JobsTextTools
 import JobsTimer
 import JobsToast
+// MARK: - ✅ 新版 JobsTimer：给任意 UIButton 挂一个倒计时驱动（替代旧 startTimer/onCountdownTick/onCountdownFinish）
+private final class JobsCountdownBinder {
+
+    private weak var button: UIButton?
+    private var timer: JobsTimerProtocol?
+
+    private var total: Int = 0
+    private var remain: Int = 0
+    private var interval: TimeInterval = 1.0
+    private var kind: JobsTimerKind = .gcd
+
+    deinit {
+        timer?.stop()
+        timer = nil
+    }
+
+    @MainActor
+    func start(on button: UIButton,
+               total: Int,
+               interval: TimeInterval,
+               kind: JobsTimerKind) {
+
+        stop()
+
+        self.button = button
+        self.total = max(1, total)
+        self.remain = self.total
+        self.interval = max(0.000_001, interval)
+        self.kind = kind
+
+        // 先把 UI 初始化成 “还剩 xxxs”
+        applyUI(remain: self.remain, total: self.total, kind: kind)
+
+        let cfg = JobsTimerConfig(
+            interval: self.interval,
+            repeats: true,
+            tolerance: 0,
+            queue: .main,
+            runLoop: .main,
+            runLoopMode: .common,
+            pauseInBackground: true,
+            autoManageAppState: true
+        )
+
+        let t = JobsTimer(kind: kind, config: cfg) { [weak self] in
+            // ✅ Swift 6 / Sendable 同等待遇：先冻结 self，再切 MainActor
+            guard let strongSelf = self else { return }
+            Task { @MainActor in
+                guard let btn = strongSelf.button else {
+                    strongSelf.stop()
+                    return
+                }
+
+                strongSelf.remain -= 1
+                let remain = max(0, strongSelf.remain)
+
+                print("⏱️ [\(strongSelf.kind.displayName)] \(remain)/\(strongSelf.total)")
+
+                if remain <= 0 {
+                    print("✅ [\(strongSelf.kind.displayName)] 倒计时完成")
+                    strongSelf.stop()
+
+                    // 完成态 UI
+                    btn.byTitle("活动".tr, for: .normal)
+                        .byTitle("活动".tr, for: .selected)
+                        .bySubTitle("倒计时".tr, for: .normal)
+                        .bySubTitle("倒计时".tr, for: .selected)
+                        .bySetNeedsUpdateConfiguration()
+                    return
+                }
+
+                strongSelf.applyUI(remain: remain, total: strongSelf.total, kind: strongSelf.kind)
+            }
+        }
+
+        timer = t
+        t.start()
+    }
+
+    @MainActor
+    func stop() {
+        timer?.stop()
+        timer = nil
+    }
+
+    @MainActor
+    private func applyUI(remain: Int, total: Int, kind: JobsTimerKind) {
+        guard let btn = button else { return }
+        // 你原逻辑：主标题固定“还剩”，副标题显示剩余秒数
+        btn.byTitle("还剩".tr, for: .normal)
+            .byTitle("还剩".tr, for: .selected)
+            .bySubTitle("\(remain)s", for: .normal)
+            .bySubTitle("\(remain)s", for: .selected)
+            .bySetNeedsUpdateConfiguration()
+    }
+}
+
+// MARK: - 通过 AssociatedObject 挂到 UIButton 上（一个按钮一个 binder）
+private enum JobsCountdownBinderKey {
+    static var key: UInt8 = 0
+}
+
+private extension UIButton {
+    var jobs_countdownBinder: JobsCountdownBinder {
+        if let obj = objc_getAssociatedObject(self, &JobsCountdownBinderKey.key) as? JobsCountdownBinder {
+            return obj
+        }
+        let obj = JobsCountdownBinder()
+        objc_setAssociatedObject(self, &JobsCountdownBinderKey.key, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return obj
+    }
+}
+
 // MARK: - Demo：多按钮（>5）以便直观看 ScrollView 横向滑动
 final class TabBarDemoVC: BaseVC {
+
     // MARK: JobsTabBarCtrl（链式点语法 + 中间按钮凸起 + 横竖屏自适应）
     private lazy var tabCtrl: JobsTabBarCtrl = {
         JobsTabBarCtrl()
@@ -49,7 +165,7 @@ final class TabBarDemoVC: BaseVC {
                     /// 普通按钮@（无副标题、不配置事件、无富文本）
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
-                        .byTitle("首页", for: .normal)
+                        .byTitle("首页".tr, for: .normal)
                         .byTitleColor(.label, for: .normal)
                         .byTitleColor(.systemRed, for: .selected)
                         .byTitleFont(.systemFont(ofSize: 12, weight: .semibold))
@@ -58,7 +174,7 @@ final class TabBarDemoVC: BaseVC {
                         .byImagePlacement(.top)
                         .byTapSound("Sound.wav")
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
-                        .byCornerBadgeText("NEW") { cfg in
+                        .byCornerBadgeText("NEW".tr) { cfg in
                             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
                                 .byBgColor(.systemRed)
@@ -68,10 +184,11 @@ final class TabBarDemoVC: BaseVC {
                                           opacity: 0.6,
                                           offset: .init(width: 0, height: 1))
                         },
+
                     /// 普通按钮@（配置事件）
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
-                        .byTitle("优惠", for: .normal)
+                        .byTitle("优惠".tr, for: .normal)
                         .byTitleColor(.label, for: .normal)
                         .byTitleColor(.systemRed, for: .selected)
                         .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
@@ -103,21 +220,23 @@ final class TabBarDemoVC: BaseVC {
                                  print("长按结束")
                              }
                          },
+
                     /// 普通按钮@（富文本）
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
                         .byRichTitle(JobsRichText.make([
                             JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 10, weight: .semibold)).color(.systemRed),
                             JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.green)
-                        ]))         // ✅ 主标题富文本：一个入参
+                        ]))
                         .byRichSubTitle(JobsRichText.make([
                             JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 10)).color(.blue.withAlphaComponent(0.8)),
                             JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
-                        ]))        // ✅ 副标题富文本：一个入参
+                        ]))
                         .byImage("creditcard".sysImg, for: .normal)
                         .byImage("creditcard.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
+
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
                         .byTitle("好友", for: .normal)
@@ -128,7 +247,8 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("person.2.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
-                    /// 倒计时按钮@（点击触发）
+
+                    /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
                     UIButton(type: .system)
                         .byTitle("活动", for: .normal)
                         .byTitleColor(.label, for: .normal)
@@ -142,33 +262,20 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("sparkles".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
-                        .onCountdownTick { [weak self] btn, remain, total, kind in
-                            guard let self else { return }
-                            print("⏱️ [\(kind.jobs_displayName)] \(remain)/\(total)")
-                            btn.byTitle("还剩", for: .normal)
-                                .byTitle("还剩", for: .selected)
-                                .bySubTitle("\(remain)s", for: .normal)
-                                .bySubTitle("\(remain)s", for: .selected)
-                        }
-                        .onCountdownFinish { _, kind in
-                            print("✅ [\(kind.jobs_displayName)] 倒计时完成")
-                        }
                         .onTap { [weak self] btn in
                             guard let self else { return }
-                            /// 点击以后倒计时
-                            btn.startTimer(
-                                total: 300, // ❤️ 传 total => 倒计时
-                                interval: 1.0,
-                                kind: .gcd
-                            )
-                            // 关键：等 startTimer 把 "10s" 设好后再加前缀，避免被覆盖
-                            DispatchQueue.main.async {
-                                btn.byTitle("还剩", for: .normal)
-                                    .byTitle("还剩", for: .selected)
-                                    .bySubTitle("\(300)s", for: .normal)
-                                    .bySubTitle("\(300)s", for: .selected)
+                            // 点击以后倒计时：300s
+                            // 你原来写死 kind:.gcd，这里保持一致
+                            Task { @MainActor in
+                                btn.jobs_countdownBinder.start(
+                                    on: btn,
+                                    total: 300,
+                                    interval: 1.0,
+                                    kind: .gcd
+                                )
                             }
                         },
+
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
                         .byTitle("客服", for: .normal)
@@ -179,6 +286,7 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("message.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
+
                     /// 普通按钮@（展示副标题）
                     UIButton(type: .system)
                         .byNormalBgColor(.clear)
@@ -193,7 +301,8 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("person.crop.circle".sysImg, for: .normal)
                         .byImage("person.crop.circle.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
-                        .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))],
+                        .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
+                ],
                 controllers: [
                     HomeVC(),
                     DiscountVC(),
@@ -204,6 +313,7 @@ final class TabBarDemoVC: BaseVC {
                 ]
             )
     }()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -216,6 +326,7 @@ final class TabBarDemoVC: BaseVC {
         tabCtrl.didMove(toParent: self)
     }
 }
+
 // MARK: - 示例子页（简化）
 final class HomeVC: BaseVC {
     override func viewDidLoad() {
@@ -244,13 +355,11 @@ final class WalletVC: BaseVC {
 final class FriendsVC: BaseVC {
     private lazy var exampleButton: UIButton = {
         UIButton(type: .system)
-            /// 普通字符串@设置主标题
             .byTitle("显示", for: .normal)
             .byTitle("隐藏", for: .selected)
             .byTitleColor(.systemBlue, for: .normal)
             .byTitleColor(.systemRed, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            /// 事件触发@点按
             .onTap { [weak self] sender in
                 guard let self else { return }
                 DemoDetailVC()
@@ -258,7 +367,7 @@ final class FriendsVC: BaseVC {
                     .onResult { id in
                         print("回来了 id=\(String(describing: id))")
                     }
-                    .byPush(self)           // 自带防重入，连点不重复
+                    .byPush(self)
                     .byCompletion{
                         print("❤️结束❤️")
                     }

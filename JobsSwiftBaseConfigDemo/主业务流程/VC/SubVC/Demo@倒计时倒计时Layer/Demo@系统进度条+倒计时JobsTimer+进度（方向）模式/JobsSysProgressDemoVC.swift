@@ -43,8 +43,8 @@ final class JobsSysProgressDemoVC: BaseVC {
         }
         // fallback：默认用数组中的第二个（10 秒）
         return durationOptions.count > 1
-            ? TimeInterval(durationOptions[1])
-            : TimeInterval(durationOptions.first ?? 10)
+        ? TimeInterval(durationOptions[1])
+        : TimeInterval(durationOptions.first ?? 10)
     }
     // MARK: - UI
     /// 显示剩余时间
@@ -71,7 +71,6 @@ final class JobsSysProgressDemoVC: BaseVC {
                 make.top.equalTo(self.timeLabel.snp.bottom).offset(20)
                 make.left.equalToSuperview().offset(horizontalInset)
                 make.right.equalToSuperview().inset(horizontalInset)
-                // 高度 UIProgressView 自己决定，一般不用约束
             }
     }()
     /// 模式切换按钮：0%→100% / 100%→0%
@@ -145,14 +144,14 @@ final class JobsSysProgressDemoVC: BaseVC {
                 // 根据进度模式设置起点
                 let initialRatio: Float = {
                     switch self.progressMode {
-                    case .countUp:   return 0.0   // 0 → 100，从 0 开始
-                    case .countDown: return 1.0   // 100 → 0，从满格开始
+                    case .countUp:   return 0.0
+                    case .countDown: return 1.0
                     }
                 }()
 
                 self.progressView.setProgress(initialRatio, animated: false)
                 self.timeLabel.byText(String(format: "剩余：%.1f 秒", duration))
-                self.setStartButton(false) // 倒计时进行中，禁用“开始倒计时”按钮
+                self.setStartButton(false)
 
                 self.countdownProcess = JobsCountdownProcess(
                     duration: duration,
@@ -161,29 +160,33 @@ final class JobsSysProgressDemoVC: BaseVC {
                     tolerance: 0,
                     queue: .main
                 )
+                // ✅ Swift 6 / Sendable “同等待遇”：
+                // 1) 先把 weak self 冻结成 strongSelf，避免 “captured var self” 警告
+                // 2) 再显式切回 MainActor，安全触碰 UIKit
                 .byProgress { [weak self] snap in
-                    guard let self else { return }
-                    // 按模式取进度：0→1 或 1→0
-                    let ratio = Float(snap.progress(for: self.progressMode))
-                    print("mode=\(self.progressMode) elapsed=\(snap.elapsedRatio) remaining=\(snap.remainingRatio) ratio=\(ratio)")
-                    self.progressView.setProgress(ratio, animated: true)
-                    self.timeLabel.byText(String(format: "剩余：%.1f 秒", snap.remaining))
+                    guard let strongSelf = self else { return }
+                    Task { @MainActor in
+                        let ratio = Float(snap.progress(for: strongSelf.progressMode))
+                        print("mode=\(strongSelf.progressMode) elapsed=\(snap.elapsedRatio) remaining=\(snap.remainingRatio) ratio=\(ratio)")
+                        strongSelf.progressView.setProgress(ratio, animated: true)
+                        strongSelf.timeLabel.byText(String(format: "剩余：%.1f 秒", snap.remaining))
+                    }
                 }
                 .byFinished { [weak self] snap in
-                    guard let self else { return }
+                    guard let strongSelf = self else { return }
+                    Task { @MainActor in
+                        let finalRatio: Float = {
+                            switch strongSelf.progressMode {
+                            case .countUp:   return 1.0
+                            case .countDown: return 0.0
+                            }
+                        }()
 
-                    // 根据模式给一个最终值
-                    let finalRatio: Float = {
-                        switch self.progressMode {
-                        case .countUp:   return 1.0    // 结束时满格
-                        case .countDown: return 0.0    // 结束时清空
-                        }
-                    }()
-
-                    self.progressView.setProgress(finalRatio, animated: true)
-                    self.timeLabel.byText("倒计时完成 ✅（总 \(Int(snap.total)) 秒）")
-                    self.countdownProcess = nil
-                    self.setStartButton(true)
+                        strongSelf.progressView.setProgress(finalRatio, animated: true)
+                        strongSelf.timeLabel.byText("倒计时完成 ✅（总 \(Int(snap.total)) 秒）")
+                        strongSelf.countdownProcess = nil
+                        strongSelf.setStartButton(true)
+                    }
                 }
                 .byStartRunning()
             }

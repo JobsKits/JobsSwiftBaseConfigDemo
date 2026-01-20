@@ -15,10 +15,13 @@ import ObjectiveC
 import QuartzCore
 import JobsSwiftBaseDefines
 import JobsTimer
-//import JobsSwiftBaseTools
 
-public typealias JobsPressFuseTick = (_ btn: UIButton, _ elapsed: TimeInterval, _ progress: CGFloat) -> Void
-public typealias JobsPressFuseEnd  = (_ btn: UIButton, _ elapsed: TimeInterval, _ progress: CGFloat) -> Void
+public typealias JobsPressFuseTick = (_ btn: UIButton,
+                                      _ elapsed: TimeInterval,
+                                      _ progress: CGFloat) -> Void
+public typealias JobsPressFuseEnd  = (_ btn: UIButton,
+                                      _ elapsed: TimeInterval,
+                                      _ progress: CGFloat) -> Void
 
 private final class JobsPressFuseDriver: NSObject {
     weak var btn: UIButton?
@@ -41,18 +44,22 @@ private final class JobsPressFuseDriver: NSObject {
     private var startTS: CFTimeInterval = 0
     private var lastProgress: CGFloat = 0
 
+    @MainActor
     func begin() {
         guard let btn else { return }
-
         // 准备外圈（progress=0）
         btn.jobs_prepareFuseProgress(config: config)
         lastProgress = 0
         startTS = CACurrentMediaTime()
 
-        // DisplayLink 更适合这种“持续增长”的视觉（你 JobsTimer 里就有）:contentReference[oaicite:9]{index=9}
+        // DisplayLink 更适合这种“持续增长”的视觉
         timer?.stop()
+        timer = nil
+
+        let interval = max(0.000_001, tickInterval)
+
         let cfg = JobsTimerConfig(
-            interval: 1.0 / 60.0,
+            interval: interval,
             repeats: true,
             tolerance: 0,
             queue: .main,
@@ -60,15 +67,20 @@ private final class JobsPressFuseDriver: NSObject {
             runLoopMode: .common,
             pauseInBackground: true,
             autoManageAppState: true
-        ) // JobsTimerConfig 字段定义见这里 :contentReference[oaicite:10]{index=10}
+        )
+        // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+        let t = JobsTimer(kind: .displayLink, config: cfg) { [weak self] in
+            // ✅ Swift 6：timer handler 是 @Sendable；UI/Layer 更新必须回 MainActor
+            Task { @MainActor in
+                self?.tickOnce()
+            }
+        }
 
-        timer = JobsTimerFactory.make(kind: .displayLink, config: cfg) { [weak self] in
-            self?.tickOnce()
-        } // 工厂方法在这里 :contentReference[oaicite:11]{index=11}
-
-        timer?.start()
+        timer = t
+        t.start()
     }
 
+    @MainActor
     func endPress() {
         guard let btn else { return }
 
@@ -86,6 +98,7 @@ private final class JobsPressFuseDriver: NSObject {
         onEnd?(btn, elapsed, progress)
     }
 
+    @MainActor
     private func tickOnce() {
         guard let btn else { return }
         guard startTS > 0 else { return }
@@ -158,11 +171,17 @@ public extension UIButton {
             g.cancelsTouchesInView = false
             addGestureRecognizer(g)
             objc_setAssociatedObject(self, &JobsPressFuseKeys.gestureKey, g, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        };return self
+        }
+        return self
     }
 
     func jobs_disablePressFuseCountUp() {
-        jobs_pressFuseDriver?.endPress()
+        // ✅ 同等待遇：确保 endPress 在主线程执行
+        if let d = jobs_pressFuseDriver {
+            Task { @MainActor in
+                d.endPress()
+            }
+        }
         jobs_pressFuseDriver = nil
 
         if let g = objc_getAssociatedObject(self, &JobsPressFuseKeys.gestureKey) as? UILongPressGestureRecognizer {
@@ -175,9 +194,13 @@ public extension UIButton {
         guard let d = jobs_pressFuseDriver else { return }
         switch g.state {
         case .began:
-            d.begin()
+            Task { @MainActor in
+                d.begin()
+            }
         case .ended, .cancelled, .failed:
-            d.endPress()
+            Task { @MainActor in
+                d.endPress()
+            }
         default:
             break
         }

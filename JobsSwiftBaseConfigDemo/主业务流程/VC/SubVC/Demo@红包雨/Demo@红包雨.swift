@@ -27,29 +27,34 @@ final class RedPacketRainDemoVC: BaseVC {
     // MARK: - UI
     /// 红包雨视图
     private lazy var rainView: RedPacketRainView = {
-          RedPacketRainView
-              .dsl(
-                  config: RedPacketRainConfig(
-                      // 可以改成 .default，或者继续用这套 Demo 配置
-                      spawnInterval: 0.2,
-                      minFallDuration: 5.5,
-                      maxFallDuration: 8.0,
-                      packetSize: CGSize(width: 44, height: 54),
-                      maxConcurrentCount: 80,
-                      spawnInsets: .init(top: 0, left: 10, bottom: 0, right: 10),
-                      tapEnabled: true,
-                      packetImage: nil
-                  ),
-                  timerKind: .gcd
-              )
-              .onPacketTap { [weak self] _, count in
-                  guard let self else { return }
-                  self.countLabel.byText("已抢到：\(count) 个")
-              }
-              .byAddTo(view) { [unowned self] make in
-                  make.edges.equalToSuperview()
-              }
-      }()
+        RedPacketRainView
+            .dsl(
+                config: RedPacketRainConfig(
+                    // 可以改成 .default，或者继续用这套 Demo 配置
+                    spawnInterval: 0.2,
+                    minFallDuration: 5.5,
+                    maxFallDuration: 8.0,
+                    packetSize: CGSize(width: 44, height: 54),
+                    maxConcurrentCount: 80,
+                    spawnInsets: .init(top: 0, left: 10, bottom: 0, right: 10),
+                    tapEnabled: true,
+                    packetImage: nil
+                ),
+                timerKind: .gcd
+            )
+            .onPacketTap { [weak self] _, count in
+                // ✅ Swift 6 / Sendable “同等待遇”：
+                // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
+                // 2) 再显式切回 MainActor，安全触碰 UIKit
+                guard let strongSelf = self else { return }
+                Task { @MainActor in
+                    strongSelf.countLabel.byText("已抢到：\(count) 个")
+                }
+            }
+            .byAddTo(view) { [unowned self] make in
+                make.edges.equalToSuperview()
+            }
+    }()
     /// 显示累计点击次数
     private lazy var countLabel: UILabel = {
         UILabel()
@@ -68,7 +73,7 @@ final class RedPacketRainDemoVC: BaseVC {
                 make.centerX.equalToSuperview()
                 make.height.equalTo(36)
                 make.width.greaterThanOrEqualTo(180)
-        }
+            }
     }()
     /// 开始 / 停止 红包雨
     private lazy var toggleButton: UIButton = {

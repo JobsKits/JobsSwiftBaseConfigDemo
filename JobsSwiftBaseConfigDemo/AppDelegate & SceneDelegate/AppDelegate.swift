@@ -39,7 +39,10 @@ import OrderedCollections   // ✅ SPM 只接 OrderedCollections product 的情�
 import Flutter
 import FlutterPluginRegistrant
 @main
-class AppDelegate: FlutterAppDelegate{
+class AppDelegate: FlutterAppDelegate {
+    /// ✅ 持有 timer，避免被释放
+    private var appTickerTimer: JobsTimerProtocol?
+
     lazy var flutterEngine: FlutterEngine = {
         let e = FlutterEngine(name: "jobs_flutter_engine")
         e.run()
@@ -81,19 +84,23 @@ class AppDelegate: FlutterAppDelegate{
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
-      let config = UISceneConfiguration(
-        name: "Default Configuration",
-        sessionRole: connectingSceneSession.role
-      )
-      config.delegateClass = SceneDelegate.self
-      return config
+        let config = UISceneConfiguration(
+            name: "Default Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+        config.delegateClass = SceneDelegate.self
+        return config
     }
 }
 
 #else
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    /// ✅ 持有 timer，避免被释放
+    private var appTickerTimer: JobsTimerProtocol?
+
     lazy var flutterEngine = FlutterEngine(name: "my flutter engine")
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -128,7 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         super.applicationWillTerminate(application)
     }
 }
-
 #endif
 // MARK: - Local Notifications
 extension AppDelegate {
@@ -172,6 +178,7 @@ extension AppDelegate {
         }
         #endif
     }
+
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -204,7 +211,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 }
 #endif
 extension AppDelegate {
-    func SA(){
+    func SA() {
         setupLocalNotificationsIfNeeded()
         _ = flutterEngine
 
@@ -212,11 +219,28 @@ extension AppDelegate {
             print(minV, maxV)   // 1 9
         }
 
-        JobsTimerFactory.make(kind: .displayLink,
-                              config: JobsTimerConfig(interval: 1, repeats: true, tolerance: 0.002, queue: .main)) {
-            ///  日期打印
-            print(Date().formatted(date: .numeric, time: .standard))
-        }.start()
+        // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+        do {
+            let cfg = JobsTimerConfig(
+                interval: 1,
+                repeats: true,
+                tolerance: 0.002,
+                queue: .main,
+                runLoop: .main,
+                runLoopMode: .common,
+                pauseInBackground: true,
+                autoManageAppState: true
+            )
+
+            let t = JobsTimer(kind: .displayLink, config: cfg) {
+                /// 日期打印（这里只是打印，不触碰 UI，不需要 MainActor）
+                print(Date().formatted(date: .numeric, time: .standard))
+            }
+
+            appTickerTimer = t
+            t.start()
+        }
+
         setupLogging()
         udSave()
         udRead()
@@ -258,7 +282,7 @@ extension AppDelegate {
     func setupLogging() {
         dynamicLogLevel = .verbose   // Debug 包：全开
         // dynamicLogLevel = .warning // Release 包：只保留 warn/error
-    
+
         /// iOS 10+ 推荐
         DDLog.add(DDOSLogger.sharedInstance)
         /// Xcode Console
@@ -270,11 +294,11 @@ extension AppDelegate {
 //        DDLog.add(fileLogger)
     }
     /// 存对象
-    func udSave(){
+    func udSave() {
         UD.save(UserInfoModel(id: 1001, name: "Jobs", isVIP: true), forKey: "kUserInfo")
     }
     /// 取对象
-    func udRead(){
+    func udRead() {
         // 读取时指定类型
         if let loadedUser = UD.load(UserInfoModel.self, forKey: "kUserInfo") {
             print(loadedUser.id)     // 1001
@@ -301,22 +325,22 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    func Subscript_Character(){
+    func Subscript_Character() {
         let s = "Jobs"
         print(s[1] as Any)   // Optional("o")
         print(s[10] as Any)  // nil
     }
 
-    func Subscript_Array(){
+    func Subscript_Array() {
         let arr = [10, 20, 30]
 
-        let a = arr[safe:1]              // Optional(20)
-        let b = arr[safe:99]             // nil
+        let a = arr[safe: 1]              // Optional(20)
+        let b = arr[safe: 99]             // nil
         print(a as Any)   // Optional(20)
         print(b as Any)  // nil
     }
 
-    func Subscript_Dictionary(){
+    func Subscript_Dictionary() {
         let dict = ["a": 1, "b": 2]
 
         let x = dict[safe: "a"]                 // Optional(1)
@@ -329,7 +353,7 @@ extension AppDelegate {
 
 extension AppDelegate {
     /// JSONDecoder解析字段@用CodingKeys处理Json字段名和模型名不一致以及忽略字段（age）
-    func JSONDecoder_CodingKeys(){
+    func JSONDecoder_CodingKeys() {
 
         let json = """
         {
@@ -359,7 +383,7 @@ extension AppDelegate {
         }
     }
     /// JSONDecoder解析字段@用keyDecodingStrategy处理Json字段名和模型名不一致
-    func JSONDecoder_keyDecodingStrategy(){
+    func JSONDecoder_keyDecodingStrategy() {
 
         let json = """
         {
@@ -383,7 +407,7 @@ extension AppDelegate {
         }
     }
 
-    func JSONDecoder解析字段处理时间(){
+    func JSONDecoder解析字段处理时间() {
 
         let json = """
         {
@@ -401,8 +425,8 @@ extension AppDelegate {
             .bykeyDecodingStrategy(.convertFromSnakeCase)
             .byDateDecodingStrategy(
                 .formatted(DateFormatter()
-                .byDateFormat("yyyy-MM-dd HH:mm:ss")
-                .byLocale(Locale(identifier: "en_US_POSIX"))))
+                    .byDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .byLocale(Locale(identifier: "en_US_POSIX"))))
         do {
             let post = try decoder.decode(Post.self, from: json)
             print(post.createdAt)
@@ -411,7 +435,7 @@ extension AppDelegate {
         }
     }
 
-    func JSONDecoder嵌套JSON数组解析(){
+    func JSONDecoder嵌套JSON数组解析() {
 
         let json = """
         [
@@ -433,7 +457,7 @@ extension AppDelegate {
         }
     }
 
-    func JSONDecoder嵌套对象(){
+    func JSONDecoder嵌套对象() {
 
         let json = """
         {
@@ -466,7 +490,7 @@ extension AppDelegate {
         }
     }
 
-    func OrderedDictionary测试(){
+    func OrderedDictionary测试() {
         let d1: [String: JSONValue] = [
             "sd": .int(1),
             "fg": .string("2"),
@@ -480,12 +504,12 @@ extension AppDelegate {
             "nothing": .null
         ]
 
-        let d2 = [1,2,3,4]
+        let d2 = [1, 2, 3, 4]
         let d3 = [
-            "sd":"1",
-            "ff":"2",
-            "fff":"3",
-            "fdf":"4"
+            "sd": "1",
+            "ff": "2",
+            "fff": "3",
+            "fdf": "4"
         ]
         let d4: OrderedDictionary<String, String> = [
             "hi":  "1",
@@ -504,7 +528,7 @@ extension AppDelegate {
         log(d3)
 
         for key in d3.keys.sorted() {
-            print(key,d3[key] as Any);
+            print(key, d3[key] as Any)
         }
 
         print(type(of: d3))
@@ -517,7 +541,7 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    func GK配置(){
+    func GK配置() {
         GKNavigationBarConfigure
             .bySetupDefault()
             .byAwake()
@@ -526,23 +550,23 @@ extension AppDelegate {
             .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
     }
 
-    func 删除键监听(){
+    func 删除键监听() {
         // ✅ 启用 UITextField 的 deleteBackward 广播（与 UITextView 互不影响）
         UITextField.enableDeleteBackwardBroadcast()
         // ✅ 启用 UITextView 的 deleteBackward 广播（与 UITextField 互不影响）
         UITextView.enableDeleteBackwardBroadcast()
     }
 
-    func 全局比例尺(){
+    func 全局比例尺() {
         JobsScale.setup(designWidth: 375, designHeight: 812, useSafeArea: false)
     }
 
-    func 安全Push和Present(){
+    func 安全Push和Present() {
         JobsSafePushSwizzler.enable()      // 只拦 push
         JobsSafePresentSwizzler.enable()   // 只拦 present
     }
 
-    func 启动检测(){
+    func 启动检测() {
         AppLaunchManager.handleLaunch(
             firstInstall: {
                 log("🚀 新用户引导 / 初始化配置")
@@ -556,7 +580,7 @@ extension AppDelegate {
         )
     }
 
-    func 日志打印(){
+    func 日志打印() {
         #if DEBUG
         JobsLog.enabled = true
         #else
@@ -565,7 +589,7 @@ extension AppDelegate {
         JobsLog.showThread = true
     }
 
-    func LiveChat配置(){
+    func LiveChat配置() {
         // LiveChat 许可证 ID（到 LiveChat 后台可查看）
         LiveChat.licenseId = AppKeys.liveChatKey      // 必填
         // 可选：减少预聊天表单输入
@@ -580,12 +604,12 @@ extension AppDelegate {
     func 智能键盘配置() {
         IQKeyboardManager.shared.isEnabled = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
-        IQKeyboardManager.shared.keyboardDistance = 0                 
+        IQKeyboardManager.shared.keyboardDistance = 0
 
         IQKeyboardToolbarManager.shared.isEnabled = false
     }
 
-    func 多语言化(){
+    func 多语言化() {
         TRLang.bundleProvider = { LanguageManager.shared.localizedBundle }
         TRLang.localeCodeProvider = { LanguageManager.shared.currentLanguageCode }
     }
