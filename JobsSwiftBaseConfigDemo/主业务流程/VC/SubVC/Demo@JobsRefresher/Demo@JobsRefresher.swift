@@ -16,6 +16,7 @@ import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
+import JobsRefresher
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 final class JobsRefresherDemoVC: BaseVC {

@@ -19,6 +19,7 @@ import JobsBy3rdTools
 import JobsTextTools
 import JobsToast
 import JobsSwiftBaseDefines
+import JobsRefresher
 
 final class BtnFullOnCVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []

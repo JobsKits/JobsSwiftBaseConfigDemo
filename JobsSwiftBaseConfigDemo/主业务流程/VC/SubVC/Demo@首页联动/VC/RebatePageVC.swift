@@ -18,6 +18,7 @@ import JXSegmentedView
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
+import JobsRefresher
 
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     // 左侧菜单数据（与截图一致顺序，默认选中“棋牌.5”）

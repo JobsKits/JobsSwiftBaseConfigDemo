@@ -19,6 +19,7 @@ import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools
 import JobsSwiftBaseDefines
+import JobsRefresher
 
 final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
     private let layoutMode: TimelineLayoutMode = .estimated_autoDimension

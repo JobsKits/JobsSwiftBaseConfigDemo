@@ -73,6 +73,7 @@ def debugPods
 end
 # ============================== PodByJobs ==============================
 def byJobs
+  pod 'BRPickerViewSwift',              :path => 'JobsByPods/BRPickerViewSwift@Pods'
   pod 'JobsBy3rdTools',                 :path => 'JobsByPods/JobsBy3rdTools@Pods'
   pod 'JobsByUIKit',                    :path => 'JobsByPods/JobsByUIKit@Pods'
   pod 'Inheritance',                    :path => 'JobsByPods/Inheritance@Pods'
@@ -84,7 +85,7 @@ def byJobs
   pod 'JobsImageTools',                 :path => 'JobsByPods/JobsImageTools@Pods'
   pod 'JobsScale',                      :path => 'JobsByPods/JobsScale@Pods'
   pod 'JobsGetWindow',                  :path => 'JobsByPods/JobsGetWindow@Pods'
-  pod 'BRPickerViewSwift',               :path => 'JobsByPods/BRPickerViewSwift@Pods'
+  pod 'JobsRefresher',                  :path => 'JobsByPods/JobsRefresher@Pods'
   pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
   
   pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
