@@ -16,6 +16,7 @@ import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools
+import JobsLocalNotification
 
 final class LocalNotificationDemoVC: BaseVC {
     private lazy var btn: UIButton = {
@@ -23,11 +24,11 @@ final class LocalNotificationDemoVC: BaseVC {
             /// 背景色
             .byBackgroundColor(.systemGreen, for: .normal)
             /// 普通字符串@设置主标题
-            .byTitle("点我", for: .normal)
+            .byTitle("点我".tr, for: .normal)
             .byTitleColor(.systemBlue, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             /// 普通字符串@设置副标题
-            .bySubTitle("推送本地通知", for: .normal)
+            .bySubTitle("推送本地通知".tr, for: .normal)
             .bySubTitleColor(.systemPink, for: .normal)
             .bySubTitleFont(.systemFont(ofSize: 14, weight: .medium))
             /// 普通@点按事件触发

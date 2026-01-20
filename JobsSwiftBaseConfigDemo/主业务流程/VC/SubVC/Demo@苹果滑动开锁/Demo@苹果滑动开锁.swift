@@ -16,6 +16,7 @@ import JobsByUIKit
 import Inheritance
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
+import JobsGestureUnlock
 
 final class SlideToUnlockDemoVC: BaseVC {
     private lazy var slideView: SlideToUnlockView = {

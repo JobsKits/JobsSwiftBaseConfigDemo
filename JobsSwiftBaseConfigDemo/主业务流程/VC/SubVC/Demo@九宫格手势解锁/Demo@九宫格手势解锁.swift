@@ -20,6 +20,7 @@ import JobsSwiftBaseDefines
 import JobsToast
 import JobsTextTools
 import JobsScale
+import JobsGestureUnlock
 
 final class GestureUnlockDemoVC: BaseVC {
 
@@ -34,7 +35,7 @@ final class GestureUnlockDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 20
 
     private lazy var modeControl: UISegmentedControl = {
-        UISegmentedControl(items: ["设置/重置", "验证"])
+        UISegmentedControl(items: ["设置/重置".tr, "验证".tr])
             .bySelectedSegmentIndex(1)
             .onJobsChange { [weak self] (seg: UISegmentedControl) in
                 guard let self else { return }
@@ -43,17 +44,17 @@ final class GestureUnlockDemoVC: BaseVC {
 
                 if seg.selectedSegmentIndex == 0 {
                     flowState = .createFirst
-                    hintLabel.text = "绘制新手势（至少 4 个点）"
+                    hintLabel.text = "绘制新手势（至少 4 个点）".tr
                     unlockView.byVisible(YES)
                     unlockView.isInputEnabled = true
                 } else {
                     flowState = .verify
                     if store.hasPattern {
-                        hintLabel.text = "请输入手势解锁"
+                        hintLabel.text = "请输入手势解锁".tr
                         unlockView.byVisible(YES)
                         unlockView.isInputEnabled = true
                     } else {
-                        hintLabel.text = "还没设置手势，先去“设置/重置”"
+                        hintLabel.text = "还没设置手势，先去“设置/重置”".tr
                         unlockView.byVisible(NO)
                         unlockView.isInputEnabled = false
                     }
@@ -148,7 +149,7 @@ final class GestureUnlockDemoVC: BaseVC {
     private func refreshStateFromStorage() {
         if store.hasPattern {
             flowState = .verify
-            hintLabel.text = "请输入手势解锁"
+            hintLabel.text = "请输入手势解锁".tr
             modeControl.selectedSegmentIndex = 1
             unlockView.byVisible(YES)
             unlockView.isInputEnabled = true
@@ -158,7 +159,7 @@ final class GestureUnlockDemoVC: BaseVC {
             modeControl.selectedSegmentIndex = 0
             unlockView.byVisible(YES)
             unlockView.isInputEnabled = true
-            showInfoHintAndClear("请先设置手势（至少 4 个点）") // ✅ 提示后清痕
+            showInfoHintAndClear("请先设置手势（至少 4 个点）".tr) // ✅ 提示后清痕
         }
     }
     // MARK: - Trace Helpers
@@ -198,13 +199,13 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
         case .createFirst:
             flowState = .confirmFirst(temp: pattern)
             view.showSelected()
-            hintLabel.text = "请再绘制一次进行确认"
+            hintLabel.text = "请再绘制一次进行确认".tr
             delayedReset()
         case .confirmFirst(let temp):
             if temp == pattern {
                 store.save(pattern: pattern)
                 view.showSelected()
-                hintLabel.text = "设置成功 ✅ 现在可以用它解锁了"
+                hintLabel.text = "设置成功 ✅ 现在可以用它解锁了".tr
                 flowState = .verify
                 modeControl.selectedSegmentIndex = 1
                 delayedReset()
@@ -221,7 +222,7 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
             }
             if store.verify(pattern: pattern) {
                 view.showSelected()
-                hintLabel.text = "解锁成功 ✅"
+                hintLabel.text = "解锁成功 ✅".tr
                 delayedReset()
             } else {
                 // ✅ 手势错误：提示完成后清除之前手势痕迹
