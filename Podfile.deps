@@ -84,6 +84,7 @@ def byJobs
   pod 'JobsImageTools',                 :path => 'JobsByPods/JobsImageTools@Pods'
   pod 'JobsScale',                      :path => 'JobsByPods/JobsScale@Pods'
   pod 'JobsGetWindow',                  :path => 'JobsByPods/JobsGetWindow@Pods'
+  pod 'BRPickerViewSwift',               :path => 'JobsByPods/BRPickerViewSwift@Pods'
   pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
   
   pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions

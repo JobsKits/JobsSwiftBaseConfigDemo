@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
+import BRPickerViewSwift
 import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
