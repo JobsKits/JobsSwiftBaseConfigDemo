@@ -19,6 +19,7 @@ import JobsBy3rdTools
 import JobsTimer
 import JobsSwiftBaseDefines
 import JobsTextTools
+import JobsLuckyEnvelopeRain
 
 final class RedPacketRainDemoVC: BaseVC {
     private var isRaining = false

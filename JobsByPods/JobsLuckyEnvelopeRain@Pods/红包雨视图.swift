@@ -12,8 +12,9 @@ import UIKit
 
 import SnapKit
 import JobsTimer
+import JobsByUIKit
 // MARK: —— 红包雨视图
-public final class RedPacketRainView: UIView {
+public class RedPacketRainView: UIView {
     deinit {
         spawnTimer?.stop()
         fallTimer?.stop()

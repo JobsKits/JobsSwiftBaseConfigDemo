@@ -86,6 +86,7 @@ def byJobs
   pod 'JobsScale',                      :path => 'JobsByPods/JobsScale@Pods'
   pod 'JobsGetWindow',                  :path => 'JobsByPods/JobsGetWindow@Pods'
   pod 'JobsRefresher',                  :path => 'JobsByPods/JobsRefresher@Pods'
+  pod 'JobsLuckyEnvelopeRain',          :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
   pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
   
   pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
