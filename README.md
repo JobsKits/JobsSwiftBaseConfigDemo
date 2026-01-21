@@ -6,14 +6,14 @@
   <a><img src="https://img.shields.io/badge/Xcode-15.4-blue" alt="Xcode"/></a>
   <a><img src="https://img.shields.io/badge/iOS-17.5+-critical" alt="iOS"/></a>
   <a><img src="https://img.shields.io/badge/pod-1.15.2-brightgreen" alt="CocoaPods"/></a>
-  <a><img src="https://img.shields.io/github/actions/workflow/status/295060456/JobsSwiftBaseConfigDemo/ci.yml?branch=main" alt="Build Status"/></a>
-  <a href="https://github.com/295060456/JobsSwiftBaseConfigDemo"><img src="https://img.shields.io/github/license/295060456/JobsSwiftBaseConfigDemo?style=flat&color=success" alt="License"/></a>
-  <a><img src="https://img.shields.io/github/languages/top/295060456/JobsSwiftBaseConfigDemo?color=blueviolet" alt="Top Language"/></a>
-  <a href="https://github.com/295060456/JobsSwiftBaseConfigDemo/stargazers"><img src="https://img.shields.io/github/stars/295060456/JobsSwiftBaseConfigDemo?style=flat-square&color=yellow" alt="Stars"/></a>
-  <a href="https://github.com/295060456/JobsSwiftBaseConfigDemo/network"><img src="https://img.shields.io/github/forks/295060456/JobsSwiftBaseConfigDemo?style=flat-square&color=blue" alt="Forks"/></a>
-  <a><img src="https://img.shields.io/github/issues/295060456/JobsSwiftBaseConfigDemo?color=important" alt="Issues"/></a>
-  <a><img src="https://img.shields.io/github/last-commit/295060456/JobsSwiftBaseConfigDemo?color=ff69b4" alt="Last Commit"/></a>
-  <a><img src="https://img.shields.io/github/languages/code-size/295060456/JobsSwiftBaseConfigDemo" alt="Code Size"/></a>
+  <a><img src="https://img.shields.io/github/actions/workflow/status/JobsKits/JobsSwiftBaseConfigDemo/ci.yml?branch=main" alt="Build Status"/></a>
+  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo"><img src="https://img.shields.io/github/license/JobsKits/JobsSwiftBaseConfigDemo?style=flat&color=success" alt="License"/></a>
+  <a><img src="https://img.shields.io/github/languages/top/JobsKits/JobsSwiftBaseConfigDemo?color=blueviolet" alt="Top Language"/></a>
+  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/stargazers"><img src="https://img.shields.io/github/stars/JobsKits/JobsSwiftBaseConfigDemo?style=flat-square&color=yellow" alt="Stars"/></a>
+  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/network"><img src="https://img.shields.io/github/forks/JobsKits/JobsSwiftBaseConfigDemo?style=flat-square&color=blue" alt="Forks"/></a>
+  <a><img src="https://img.shields.io/github/issues/JobsKits/JobsSwiftBaseConfigDemo?color=important" alt="Issues"/></a>
+  <a><img src="https://img.shields.io/github/last-commit/JobsKits/JobsSwiftBaseConfigDemo?color=ff69b4" alt="Last Commit"/></a>
+  <a><img src="https://img.shields.io/github/languages/code-size/JobsKits/JobsSwiftBaseConfigDemo" alt="Code Size"/></a>
 </p>
 
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
@@ -56,7 +56,7 @@
 * [**JobsDocs**](https://github.com/JobsKits/JobsDocs)
 
   * [**中国公民身份证校验规则**](https://github.com/JobsKits/JobsDocs/blob/main/中国大陆公民身份证校验规则.md/中国大陆公民身份证校验规则.md)
-  * [**iOS项目多环境配置**](https://github.com/295060456/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS项目多环境配置.md/iOS项目多环境配置.md)
+  * [**iOS项目多环境配置**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS项目多环境配置.md/iOS项目多环境配置.md)
   * [**制作(发布)Pods组件**](https://github.com/JobsKits/JobsDocs/blob/main/制作(发布)Pods组件.md/制作(发布)Pods组件.md)
   * [**MacOS配置个人热点🛜**](https://github.com/JobsKits/JobsDocs/blob/main/MacOS配置个人热点🛜.md/MacOS配置个人热点🛜.md)
   * [**SwiftPackageDependence使用指南🧭**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md)
@@ -111,7 +111,7 @@
 
 * [**在线演示**](https://appetize.io) ➤ 上传（支持**iOS**/**Android**）模拟器包，就能在线运行、演示、调试、自动化测试，还能嵌到网页或内部系统里给客服/销售/培训/QA 用
 
-* [**代码块**](https://github.com/295060456/JobsCodeSnippets)
+* [**代码块**](https://github.com/JobsKits/JobsCodeSnippets)
 
 * [**图片占位符**](https://picsum.photos/)
 
