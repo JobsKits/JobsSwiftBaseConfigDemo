@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import WebKit
 import JobsByUIKit
-import Inheritance
+import JobsInheritance
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")

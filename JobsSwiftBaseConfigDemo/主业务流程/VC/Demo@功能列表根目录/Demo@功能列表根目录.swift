@@ -347,7 +347,7 @@ final class RootListVC: BaseVC {
                 },
             rightButtons: [
                 UIButton.sys()
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
+                    .byImage("bell".svg(size: CGSize(width: 38, height: 38))?.filled(by: UIColor.red), for: .normal)
                     .byImage("moon.circle.fill".sysImg, for: .selected)
                     .onTap { sender in
                         sender.isSelected.toggle()
