@@ -69,7 +69,7 @@ def debugPods
   # pod 'FLEX'
   # pod 'JJException'
   # pod 'FBRetainCycleDetector'
-  pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
+  pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug'] # https://lookin.work/get/
 end
 # ============================== PodByJobs ==============================
 def byJobs
