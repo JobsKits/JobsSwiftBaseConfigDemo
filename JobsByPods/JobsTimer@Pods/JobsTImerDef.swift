@@ -1,20 +1,13 @@
 //
-//  JobsTimerBlock.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsTImerDef.swift
+//  Pods
 //
-//  Created by Jobs on 12/24/25.
+//  Created by Jobs on 21/1/26.
 //
 
-#if os(OSX)
-import AppKit
-#elseif os(iOS) || os(tvOS)
-import UIKit
-#endif
-
-import ObjectiveC
-import JobsSwiftBlock
 import JobsSwiftBaseDefines
-
+/// JobsTimer 专用回调类型：可跨并发域安全传递
+public typealias JobsTimerCallback = @Sendable () -> Void
 public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void
 public typealias TimerStateChangeHandler = (_ button: UIButton,
                                             _ old: TimerState,
@@ -72,4 +65,23 @@ public enum JobsTimerDedupPolicy: Sendable {
     case replace
     /// 报错：拒绝创建
     case error
+}
+// MARK: - Timer Kind
+public enum JobsTimerKind: Sendable {
+    case gcd          // 不依赖 RunLoop，不强制主线程、回调在 `config.queue` 上执行、适合后台任务、非 UI、精准调度
+    case foundation
+    case displayLink
+    case runLoop
+}
+
+public extension JobsTimerKind {
+    var displayName: String {
+        switch self {
+        case .gcd:          return "GCD"
+        case .foundation:   return "NSTimer"
+        case .displayLink:  return "DisplayLink"
+        case .runLoop:      return "RunLoop"
+        @unknown default:   return "Unknown"
+        }
+    }
 }
