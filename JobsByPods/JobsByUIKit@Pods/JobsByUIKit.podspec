@@ -45,7 +45,7 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'Jobsl10n'
-  s.dependency 'JobsTimer'
+  s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsNavBar'
   s.dependency 'JobsTextTools'
   s.dependency 'JobsImageTools'

@@ -22,7 +22,7 @@ import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsSwiftBaseTools
-import JobsTimer
+import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
 // MARK: - Demo Timer ID

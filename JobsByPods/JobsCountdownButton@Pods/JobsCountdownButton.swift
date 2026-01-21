@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
-import JobsTimer
+import JobsSwiftTimer
 // MARK: - 公共配置体
 @available(iOS 15.0, *)
 public struct JobsCountdownButtonConfig {

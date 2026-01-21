@@ -17,7 +17,7 @@ import Inheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsScale
-import JobsTimer
+import JobsSwiftTimer
 import JobsTextTools
 /// Demo@系统进度条+倒计时JobsTimer+进度（方向）模式
 final class JobsSysProgressDemoVC: BaseVC {

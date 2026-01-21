@@ -18,7 +18,7 @@ import Inheritance
 import JobsByUIKit
 import Jobsl10n
 import JobsScale
-import JobsTimer
+import JobsSwiftTimer
 import JobsToast
 import JobsSwiftBaseDefines
 import JobsTextTools

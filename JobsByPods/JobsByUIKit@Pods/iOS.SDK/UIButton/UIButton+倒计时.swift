@@ -14,7 +14,7 @@ import UIKit
 import Foundation
 import ObjectiveC
 import JobsSwiftBlock
-import JobsTimer
+import JobsSwiftTimer
 import JobsTextTools
 // MARK: - Associated Keys
 private var _timerTickAnyKey: UInt8 = 0

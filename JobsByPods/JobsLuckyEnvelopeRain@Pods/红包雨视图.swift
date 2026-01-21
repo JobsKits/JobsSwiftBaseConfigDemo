@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsTimer
+import JobsSwiftTimer
 import JobsByUIKit
 // MARK: —— 红包雨视图
 public class RedPacketRainView: UIView {

@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import JobsTimer
+import JobsSwiftTimer
 import JobsSwiftBaseDefines
 
 public final class JobsCountdownCell: UITableViewCell {

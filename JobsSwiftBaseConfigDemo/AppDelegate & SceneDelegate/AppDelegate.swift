@@ -20,7 +20,7 @@ import CocoaLumberjack
 import BRPickerViewSwift
 import JobsSwiftBaseDefines
 import JobsByUIKit
-import JobsTimer
+import JobsSwiftTimer
 import JobsSwiftFoundation_extensions
 import JobsScale
 import Jobsl10n

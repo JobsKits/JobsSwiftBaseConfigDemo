@@ -18,7 +18,7 @@ import GKNavigationBarSwift
 import Inheritance
 import JobsByUIKit
 import JobsTextTools
-import JobsTimer
+import JobsSwiftTimer
 import JobsToast
 // MARK: - ✅ 新版 JobsTimer：给任意 UIButton 挂一个倒计时驱动（替代旧 startTimer/onCountdownTick/onCountdownFinish）
 private final class JobsCountdownBinder {

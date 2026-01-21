@@ -16,7 +16,7 @@ import GKNavigationBarSwift
 import Inheritance
 import JobsByUIKit
 import JobsBy3rdTools
-import JobsTimer
+import JobsSwiftTimer
 import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsLuckyEnvelopeRain

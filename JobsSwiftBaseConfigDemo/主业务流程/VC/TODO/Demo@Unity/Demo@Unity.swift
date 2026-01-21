@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import Inheritance
 import JobsByUIKit
-import JobsTimer
+import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
 /// 要看这个功能演示，必须执行 ./Unity/xcode_effectTest/Libraries 下的合并脚本

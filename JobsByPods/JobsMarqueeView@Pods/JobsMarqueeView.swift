@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import JobsTimer
+import JobsSwiftTimer
 import JobsByUIKit
 /// 统一「跑马灯」&「轮播图」的视图组件
 /// 数据源：`[UIButton]`

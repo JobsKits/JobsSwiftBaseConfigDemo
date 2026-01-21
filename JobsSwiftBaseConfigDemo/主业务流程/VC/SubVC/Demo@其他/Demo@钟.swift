@@ -15,7 +15,7 @@ import SnapKit
 import Inheritance
 import JobsByUIKit
 import JobsTextTools
-import JobsTimer
+import JobsSwiftTimer
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
 

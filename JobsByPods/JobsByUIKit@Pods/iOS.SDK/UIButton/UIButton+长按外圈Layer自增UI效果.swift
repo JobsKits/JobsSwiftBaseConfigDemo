@@ -14,7 +14,7 @@ import UIKit
 import ObjectiveC
 import QuartzCore
 import JobsSwiftBaseDefines
-import JobsTimer
+import JobsSwiftTimer
 
 public typealias JobsPressFuseTick = (_ btn: UIButton,
                                       _ elapsed: TimeInterval,

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import JobsTimer
+import JobsSwiftTimer
 /// JobsTimer@系统倒计时进度条
 public final class JobsCountdownProcess {
     deinit {

@@ -78,7 +78,7 @@ def byJobs
   pod 'JobsByUIKit',                    :path => 'JobsByPods/JobsByUIKit@Pods'
   pod 'Inheritance',                    :path => 'JobsByPods/Inheritance@Pods'
   pod 'Jobsl10n',                       :path => 'JobsByPods/Jobsl10n@Pods'
-  pod 'JobsTimer',                      :path => 'JobsByPods/JobsTimer@Pods'
+  pod 'JobsSwiftTimer',                 :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
   pod 'JobsNavBar',                     :path => 'JobsByPods/JobsNavBar@Pods'
   pod 'JobsToast',                      :path => 'JobsByPods/JobsToast@Pods'
   pod 'JobsTextTools',                  :path => 'JobsByPods/JobsTextTools@Pods'
@@ -96,11 +96,11 @@ def byJobs
   pod 'JobsLuckyEnvelopeRain',          :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
   pod 'SwiftStandardLibrary_extension', :path => 'JobsByPods/SwiftStandardLibrary_extension@Pods'
   
-  pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'         # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-  pod 'JobsSwiftMetalKit_extensions',   :path => 'JobsByPods/MetalKit@Pods'           # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
-  pod 'JobsSwiftBlock',                 :path => 'JobsByPods/JobsSwiftBlock@Pods'     # https://github.com/JobsKits/JobsSwiftBlock
-  pod 'JobsSwiftBaseDefines',           :path => 'JobsByPods/SwiftDefines@Pods'       # https://github.com/JobsKits/JobsSwiftBaseDefines
-  pod 'JobsSwiftBaseTools',             :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools
+  pod 'JobsSwiftFoundation_extensions', :path => 'JobsByPods/Foundation@Pods'                     # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+  pod 'JobsSwiftMetalKit_extensions',   :path => 'JobsByPods/MetalKit@Pods'                       # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+  pod 'JobsSwiftBlock',                 :path => 'JobsByPods/JobsSwiftBlock@Pods'                 # https://github.com/JobsKits/JobsSwiftBlock
+  pod 'JobsSwiftBaseDefines',           :path => 'JobsByPods/SwiftDefines@Pods'                   # https://github.com/JobsKits/JobsSwiftBaseDefines
+  pod 'JobsSwiftBaseTools',             :path => 'JobsByPods/JobsSwiftBaseTools@Pods'             # https://github.com/JobsKits/JobsSwiftBaseTools
 end
 # ============================== 目标工程（新工程记得改名） ==============================
 # ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字

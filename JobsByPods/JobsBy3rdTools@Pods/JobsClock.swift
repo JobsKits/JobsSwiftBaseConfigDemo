@@ -13,7 +13,7 @@ import UIKit
 
 import QuartzCore
 import JobsByUIKit
-import JobsTimer
+import JobsSwiftTimer
 import JobsSwiftBaseDefines
 /// 带时分秒针 + 刻度数字 1～12 的模拟时钟，定时器用 JobsTimer（新版）
 ///
