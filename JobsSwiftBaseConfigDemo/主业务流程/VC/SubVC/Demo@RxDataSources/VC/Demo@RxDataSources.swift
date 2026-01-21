@@ -16,7 +16,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools

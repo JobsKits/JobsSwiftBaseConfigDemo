@@ -17,7 +17,7 @@ import UIKit
 import AVFoundation
 import SnapKit
 import BMPlayer
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 // MARK: - 小工具

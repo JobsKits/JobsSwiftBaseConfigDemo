@@ -18,7 +18,7 @@ import UniformTypeIdentifiers // iOS 14+
 import SnapKit
 import CoreXLSX
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftBaseDefines

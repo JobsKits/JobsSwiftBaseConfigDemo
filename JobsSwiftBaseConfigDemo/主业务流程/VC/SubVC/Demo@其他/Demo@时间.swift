@@ -24,7 +24,7 @@ import UIKit
 #endif
 
 import SnapKit
-import Inheritance
+import JobsInheritance
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftTimer

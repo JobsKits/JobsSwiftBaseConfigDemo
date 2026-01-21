@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import Lottie
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 

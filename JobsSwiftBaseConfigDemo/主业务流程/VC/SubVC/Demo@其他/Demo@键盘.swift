@@ -16,7 +16,7 @@ import RxCocoa
 import SnapKit
 import NSObject_Rx
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsScale
 import JobsTextTools

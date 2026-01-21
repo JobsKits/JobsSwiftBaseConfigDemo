@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import GKNavigationBarSwift
 import BRPickerViewSwift
-import Inheritance
+import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsToast

@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import Inheritance
+import JobsInheritance
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsGestureUnlock

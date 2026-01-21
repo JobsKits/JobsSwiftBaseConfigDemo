@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import FSPopoverView
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsToast
 import JobsSwiftBaseDefines

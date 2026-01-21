@@ -16,7 +16,7 @@ import RxCocoa
 import NSObject_Rx          // 自动提供 disposeBag
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsScale

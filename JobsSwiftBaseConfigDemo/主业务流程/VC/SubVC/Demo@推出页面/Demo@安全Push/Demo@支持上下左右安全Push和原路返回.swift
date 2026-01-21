@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftBaseDefines

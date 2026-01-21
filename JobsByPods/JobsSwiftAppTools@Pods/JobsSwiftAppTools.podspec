@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.{swift,h,m,mm}'
   s.dependency 'SwiftEntryKit'
   s.dependency 'SnapKit'
-  s.dependency 'Inheritance'
+  s.dependency 'JobsInheritance'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'

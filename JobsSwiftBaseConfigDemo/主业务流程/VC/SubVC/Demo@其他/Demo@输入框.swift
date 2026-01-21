@@ -17,7 +17,7 @@ import RxCocoa
 import RxRelay
 import NSObject_Rx
 import ObjectiveC
-import Inheritance
+import JobsInheritance
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsTextTools

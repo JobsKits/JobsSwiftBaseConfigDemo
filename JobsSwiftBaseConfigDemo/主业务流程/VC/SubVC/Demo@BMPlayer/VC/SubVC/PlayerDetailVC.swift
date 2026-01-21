@@ -15,7 +15,7 @@ import AVFoundation
 import GKNavigationBarSwift
 import BMPlayer
 import SnapKit
-import Inheritance
+import JobsInheritance
 import JobsTextTools
 import JobsByUIKit
 import JobsSwiftBaseDefines

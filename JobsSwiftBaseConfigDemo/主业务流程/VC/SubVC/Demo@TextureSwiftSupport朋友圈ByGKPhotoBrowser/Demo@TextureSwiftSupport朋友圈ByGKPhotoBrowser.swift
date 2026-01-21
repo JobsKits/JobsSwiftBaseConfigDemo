@@ -16,7 +16,7 @@ import AsyncDisplayKit
 import TextureSwiftSupport
 import GKPhotoBrowser
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import SnapKit
 import JobsByUIKit
 import JobsBy3rdTools

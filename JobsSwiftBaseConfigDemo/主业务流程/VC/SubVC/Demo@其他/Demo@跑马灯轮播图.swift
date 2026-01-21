@@ -21,7 +21,7 @@ import SDWebImage
 
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsBy3rdTools

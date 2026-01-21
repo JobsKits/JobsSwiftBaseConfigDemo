@@ -18,7 +18,7 @@ import GKNavigationBar
 import LunarSwift
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools

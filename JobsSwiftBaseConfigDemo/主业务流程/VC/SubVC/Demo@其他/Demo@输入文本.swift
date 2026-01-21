@@ -16,7 +16,7 @@ import RxSwift
 import RxCocoa
 import RxRelay
 import NSObject_Rx
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools

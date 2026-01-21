@@ -15,7 +15,7 @@ import UIKit
 import SnapKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
-import SwiftStandardLibrary_extension
+import JobsSwiftStandardLibrary_extension
 
 public final class FTDashboardView: UIView {
     /// 0.0 ~ 1.0

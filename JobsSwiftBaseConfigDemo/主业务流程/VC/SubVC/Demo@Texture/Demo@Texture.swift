@@ -14,7 +14,7 @@ import UIKit
 import AsyncDisplayKit
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 // MARK: - 数据模型（等价 CKDemoItem）

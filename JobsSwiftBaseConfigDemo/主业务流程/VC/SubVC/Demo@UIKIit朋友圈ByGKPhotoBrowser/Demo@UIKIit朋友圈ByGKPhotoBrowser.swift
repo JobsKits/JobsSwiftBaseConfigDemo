@@ -14,7 +14,7 @@ import UIKit
 import GKPhotoBrowser
 import GKNavigationBarSwift
 import SnapKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools

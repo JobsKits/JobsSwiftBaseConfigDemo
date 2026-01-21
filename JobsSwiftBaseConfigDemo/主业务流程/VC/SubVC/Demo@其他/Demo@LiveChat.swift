@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import LiveChat
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftBaseDefines

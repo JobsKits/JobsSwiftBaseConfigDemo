@@ -15,7 +15,7 @@ import AVFoundation
 import Photos
 import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 

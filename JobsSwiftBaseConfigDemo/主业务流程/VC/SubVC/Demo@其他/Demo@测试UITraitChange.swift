@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import QuartzCore
-import Inheritance
+import JobsInheritance
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsTextTools

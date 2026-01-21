@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import SwiftEntryKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsScale

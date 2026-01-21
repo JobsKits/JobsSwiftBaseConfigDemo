@@ -13,7 +13,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsToast
 import JobsSwiftBaseDefines

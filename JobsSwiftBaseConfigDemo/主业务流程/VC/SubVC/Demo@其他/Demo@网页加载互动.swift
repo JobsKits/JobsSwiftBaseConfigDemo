@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import WebKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsToast
 import JobsNavBar

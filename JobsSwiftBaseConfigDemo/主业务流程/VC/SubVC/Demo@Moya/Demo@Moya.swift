@@ -15,7 +15,7 @@ import Moya
 import Combine
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftBaseDefines

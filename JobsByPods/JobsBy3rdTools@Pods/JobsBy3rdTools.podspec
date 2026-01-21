@@ -30,14 +30,14 @@ Pod::Spec.new do |s|
   s.dependency 'SwiftEntryKit'
   s.dependency 'SnapKit'
   s.dependency 'BMPlayer'
-  s.dependency 'Inheritance'
+  s.dependency 'JobsInheritance'
   s.dependency 'JobsTextTools'
   s.dependency 'JobsSwiftBaseTools'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsScale'
   s.dependency 'JobsSwiftTools'
   s.dependency 'JobsSwiftBaseDefines'
-  s.dependency 'SwiftStandardLibrary_extension'
+  s.dependency 'JobsSwiftStandardLibrary_extension'
   s.dependency 'JobsSwiftMetalKit_extensions'
   
 end

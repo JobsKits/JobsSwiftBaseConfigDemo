@@ -17,7 +17,7 @@ import UIKit
 import Foundation
 import SnapKit
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftTimer
 import JobsTextTools

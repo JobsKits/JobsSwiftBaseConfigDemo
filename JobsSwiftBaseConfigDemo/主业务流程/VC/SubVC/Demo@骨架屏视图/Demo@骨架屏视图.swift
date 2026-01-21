@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 import SkeletonView
 import GKNavigationBarSwift
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftBaseDefines

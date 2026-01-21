@@ -13,7 +13,7 @@ import UIKit
 
 import SnapKit
 import SwiftEntryKit
-import Inheritance
+import JobsInheritance
 import GKNavigationBarSwift
 import BRPickerViewSwift
 import JobsSwiftBaseDefines

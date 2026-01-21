@@ -13,7 +13,7 @@ import UIKit
 
 import YTKNetwork
 import SnapKit
-import Inheritance
+import JobsInheritance
 import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsByUIKit

@@ -14,7 +14,7 @@ import SnapKit
 import MyMacros   // ⬅️ 导入本地包导出的宏（模块名即导出层 target）
 import JobsByUIKit
 import JobsBy3rdTools
-import Inheritance
+import JobsInheritance
 @EquatableBy("id")
 private struct UserInfo {
     let id: Int

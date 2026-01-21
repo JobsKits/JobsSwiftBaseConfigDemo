@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 /// 示例模型，用于演示传参

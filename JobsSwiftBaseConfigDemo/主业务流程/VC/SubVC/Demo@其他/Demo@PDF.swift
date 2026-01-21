@@ -13,7 +13,7 @@ import UIKit
 
 import PDFKit
 import SnapKit
-import Inheritance
+import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsToast
