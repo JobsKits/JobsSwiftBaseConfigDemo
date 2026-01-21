@@ -4,6 +4,7 @@
 
 #import <TargetConditionals.h>
 #import "OCCls.h"
+#import <CommonCrypto/CommonCrypto.h>
 
 #if !TARGET_OS_SIMULATOR && __has_include(<UnityFramework/UnityFramework.h>)
 /// 只有真机（iPhone / iPad）才加入 Unity

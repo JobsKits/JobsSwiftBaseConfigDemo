@@ -91,6 +91,7 @@ def byJobs
   pod 'JobsMarqueeView',                :path => 'JobsByPods/JobsMarqueeView@Pods'
   pod 'JobsEmptyView',                  :path => 'JobsByPods/JobsEmptyView@Pods'
   pod 'JobsGestureUnlock',              :path => 'JobsByPods/JobsGestureUnlock@Pods'
+  pod 'JobsCryptoKit',                  :path => 'JobsByPods/JobsCryptoKit@Pods'
   pod 'JobsLocalNotification',          :path => 'JobsByPods/JobsLocalNotification@Pods'
   pod 'JobsSwiftAppTools',              :path => 'JobsByPods/JobsSwiftAppTools@Pods'
   pod 'JobsLuckyEnvelopeRain',          :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
