@@ -70,13 +70,36 @@ private final class JobsPressFuseDriver: NSObject {
         )
         // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: .displayLink, config: cfg) { [weak self] in
-            // ✅ Swift 6：timer handler 是 @Sendable；UI/Layer 更新必须回 MainActor
-            Task { @MainActor in
-                self?.tickOnce()
+            guard let self else { return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                // 1) btn 如果是非 Optional：直接用
+                let btn = self.btn
+                // 如果 btn 是 Optional：用这一行替换上面那行
+                // guard let btn = self.btn else { return }
+                guard self.startTS > 0 else { return }
+
+                let elapsed = max(0, CACurrentMediaTime() - self.startTS)
+                let raw = elapsed / max(0.0001, self.durationToFull)
+
+                let p: CGFloat
+                if self.loopWhenFull {
+                    p = CGFloat(raw.truncatingRemainder(dividingBy: 1.0))
+                } else {
+                    p = min(1, CGFloat(raw))
+                }
+
+                self.lastProgress = p
+                btn!.jobs_updateFuseProgress(p, animated: false)
+                self.onTick?(btn!, elapsed, p)
+
+                if !self.loopWhenFull, p >= 1 {
+                    self.timer?.stop()
+                    self.timer = nil
+                }
             }
         }
-
-        timer = t
+        self.timer = t
         t.start()
     }
 
@@ -96,32 +119,6 @@ private final class JobsPressFuseDriver: NSObject {
 
         startTS = 0
         onEnd?(btn, elapsed, progress)
-    }
-
-    @MainActor
-    private func tickOnce() {
-        guard let btn else { return }
-        guard startTS > 0 else { return }
-
-        let elapsed = max(0, CACurrentMediaTime() - startTS)
-        let raw = elapsed / max(0.0001, durationToFull)
-
-        let p: CGFloat
-        if loopWhenFull {
-            p = CGFloat(raw.truncatingRemainder(dividingBy: 1.0))
-        } else {
-            p = min(1, CGFloat(raw))
-        }
-
-        lastProgress = p
-        btn.jobs_updateFuseProgress(p, animated: false)
-        onTick?(btn, elapsed, p)
-
-        // 不循环：满了就停（外圈保持 100%）
-        if !loopWhenFull, p >= 1 {
-            timer?.stop()
-            timer = nil
-        }
     }
 }
 

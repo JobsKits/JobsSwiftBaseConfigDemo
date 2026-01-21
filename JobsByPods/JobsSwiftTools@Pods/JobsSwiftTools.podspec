@@ -22,6 +22,7 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
+    'UnityManager.swift'
   ]
   
   # 递归匹配当前目录下所有子目录里的 .swift 文件

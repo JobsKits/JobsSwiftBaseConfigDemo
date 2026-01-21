@@ -1,5 +1,5 @@
 //
-//  String+校验.swift
+//  String+取色.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/3/25.

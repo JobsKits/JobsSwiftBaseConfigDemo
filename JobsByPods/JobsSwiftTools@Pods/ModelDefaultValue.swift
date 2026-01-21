@@ -49,10 +49,10 @@ extension DecodableDefault {
     typealias EmptyList<T: List> = Wrapper<Sources.EmptyList<T>>
     typealias EmptyMap<T: Map> = Wrapper<Sources.EmptyMap<T>>
 
-    typealias DefaultLiveStreamStatus = Wrapper<Sources.DefaultLiveStreamStatus>
-    typealias DefaultEmojiType = Wrapper<Sources.DefaultEmojiType>
-    typealias DefaultLiveStreamShowType = Wrapper<Sources.DefaultLiveStreamShowType>
-    typealias DefaultOrderStatus = Wrapper<Sources.DefaultOrderStatus>
+//    typealias DefaultLiveStreamStatus = Wrapper<Sources.DefaultLiveStreamStatus>
+//    typealias DefaultEmojiType = Wrapper<Sources.DefaultEmojiType>
+//    typealias DefaultLiveStreamShowType = Wrapper<Sources.DefaultLiveStreamShowType>
+//    typealias DefaultOrderStatus = Wrapper<Sources.DefaultOrderStatus>
 }
 
 extension DecodableDefault {
@@ -101,20 +101,20 @@ extension DecodableDefault {
             static var defaultValue: Float { 0 }
         }
 
-        enum DefaultLiveStreamStatus: Source {
-            static var defaultValue: LiveStreamStatus { .UnStream }
-        }
-
-        enum DefaultLiveStreamShowType: Source {
-            static var defaultValue: LiveStreamShowType { .Sport }
-        }
-
-        enum DefaultEmojiType: Source {
-            static var defaultValue: STEmojiType { .normal }
-        }
-
-        enum DefaultOrderStatus: Source {
-            static var defaultValue: OrderShareStatus { .others }
-        }
+//        enum DefaultLiveStreamStatus: Source {
+//            static var defaultValue: LiveStreamStatus { .UnStream }
+//        }
+//
+//        enum DefaultLiveStreamShowType: Source {
+//            static var defaultValue: LiveStreamShowType { .Sport }
+//        }
+//
+//        enum DefaultEmojiType: Source {
+//            static var defaultValue: STEmojiType { .normal }
+//        }
+//
+//        enum DefaultOrderStatus: Source {
+//            static var defaultValue: OrderShareStatus { .others }
+//        }
     }
 }
