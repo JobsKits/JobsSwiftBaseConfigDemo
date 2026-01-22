@@ -348,7 +348,7 @@ private extension PhotoAlbumDemoVC {
             } else {
                 // iOS 13 及以下仅支持单选
                 if maxSelection != 1 {
-                    Task { @MainActor in "多选视频仅支持 iOS 14 及以上".toast }
+                    jobsRunOnMain(self) { vc in "多选视频仅支持 iOS 14 及以上".toast }
                 }
                 guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
                 let proxy = LegacyVideoLibraryProxy { [weak self] url in

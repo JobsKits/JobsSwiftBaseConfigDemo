@@ -212,7 +212,7 @@ final class JobsProgressDemoVC: BaseVC {
                     // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
                     // 2) 再显式切回 MainActor，安全触碰 UIKit
                     guard let strongSelf = self else { return }
-                    Task { @MainActor in
+                    jobsRunOnMain(self) { vc in
                         strongSelf.currentProgress += step
                         strongSelf.progressView.setProgress(strongSelf.currentProgress, animated: true)
 

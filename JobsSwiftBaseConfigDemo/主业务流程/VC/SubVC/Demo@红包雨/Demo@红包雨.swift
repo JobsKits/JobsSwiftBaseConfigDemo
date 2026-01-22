@@ -47,7 +47,7 @@ final class RedPacketRainDemoVC: BaseVC {
                 // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
                 // 2) 再显式切回 MainActor，安全触碰 UIKit
                 guard let strongSelf = self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     strongSelf.countLabel.byText("已抢到：\(count) 个")
                 }
             }

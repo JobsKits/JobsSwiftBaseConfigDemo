@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsByUIKit
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 // ================================== Toast ==================================
 @MainActor
 public final class JobsToast: UIView {
@@ -186,7 +187,7 @@ private extension JobsToast {
 // MARK: - Tips
 public func toastBy(_ string: String) {
     /// 允许任意线程调用这个方法
-    Task { @MainActor in
+    jobsRunOnMain {
         JobsToast.show(
             text: string,
             config: JobsToast.Config()

@@ -57,14 +57,18 @@ public typealias jobsByBarBtnItemBlock = (UIBarButtonItem) -> Void
 public typealias jobsByGestureRecognizerBlock = (UIGestureRecognizer?) -> Void
 public typealias jobsByGRBlock = (UIGestureRecognizer) -> Void
 public typealias jobsByNumberFormatterBlock = (NumberFormatter) -> Void
+@available(iOS 13.0, *)
 public typealias jobsByNavigationBarAppearanceBlock = (UINavigationBarAppearance) -> Void
+@available(iOS 13.0, *)
 public typealias jobsByBarButtonItemAppearanceBlock = (UIBarButtonItemAppearance) -> Void
 public typealias jobsByNavigationPolicyBlock = (WKNavigationActionPolicy) -> Void
 public typealias jobsByCATransitionBlock = (CATransition) -> Void
 public typealias jobsByCAAnimationBlock = (CAAnimation) -> Void
 public typealias jobsByUIViewBlock = (UIView?) -> Void
 public typealias jobsByViewBlock = (UIView) -> Void
+@available(iOS 13.0, *)
 public typealias jobsByUIContextMenuInteractionBlock = (UIContextMenuInteraction?) -> Void
+@available(iOS 13.0, *)
 public typealias jobsByContextMenuInteractionBlock = (UIContextMenuInteraction) -> Void
 public typealias JobsYTKProgress = (_ progress: Progress) -> Void
 
@@ -76,7 +80,9 @@ public typealias JobsRetStringByCGFloatBlock = (CGFloat) -> String
 /// 全局@泛型
 public typealias JobsRetTByVoidBlock<T> = () -> T
 /// 全局@inout
+@available(iOS 14.0, *)
 public typealias jobsByInoutListContentConfigBlock = (inout UIListContentConfiguration) -> Void
+@available(iOS 14.0, *)
 public typealias jobsByInoutBackgroundConfigurationBlock = (inout UIBackgroundConfiguration) -> Void
 public typealias jobsByInoutWKWebConfigBlock = (inout WKWebViewConfiguration) -> Void
 /// 全局@MainActor
@@ -103,6 +109,7 @@ public typealias JobsButtonLongPressBlock = (UIButton, UILongPressGestureRecogni
 /// UI@富文本
 public typealias JobsRetAttributedString = () -> NSAttributedString?    // 返回 nil 隐藏
 /// UI@其他
+@available(iOS 14.0, *)
 public typealias JobsRetByListContentConfigBlock = (UIListContentConfiguration) -> UIListContentConfiguration
 public typealias JobsRetViewsByVoidBlock = () -> [UIView]
 /// Data@网络请求

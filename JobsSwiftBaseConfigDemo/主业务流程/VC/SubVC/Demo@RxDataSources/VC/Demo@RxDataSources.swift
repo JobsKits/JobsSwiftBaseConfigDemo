@@ -16,6 +16,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import GKNavigationBarSwift
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
@@ -68,7 +69,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
                     self.fillTableDemoData(count: self.rows)
@@ -80,7 +81,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
                         self.rows += 20
@@ -137,7 +138,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
                     self.fillCollectionDemoData(count: self.rows)
@@ -149,7 +150,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
                         self.rows += 20

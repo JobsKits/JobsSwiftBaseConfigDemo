@@ -175,7 +175,7 @@ public extension UIButton {
     func jobs_disablePressFuseCountUp() {
         // ✅ 同等待遇：确保 endPress 在主线程执行
         if let d = jobs_pressFuseDriver {
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 d.endPress()
             }
         }
@@ -191,11 +191,11 @@ public extension UIButton {
         guard let d = jobs_pressFuseDriver else { return }
         switch g.state {
         case .began:
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 d.begin()
             }
         case .ended, .cancelled, .failed:
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 d.endPress()
             }
         default:

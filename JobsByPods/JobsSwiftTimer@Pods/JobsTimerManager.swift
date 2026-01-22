@@ -116,12 +116,18 @@ public final class JobsTimerManager {
         }
     }
     
-    public func stopAndRemove(identifier: String) async {
+    // iOS 12 及以下：同步
+    public func stopAndRemove(identifier: String) {
         do {
             _ = try act(.cancel, identifier: identifier)
         } catch {
-            // Demo：静默即可（id 可能已被 remove / cell 已复用）
+            /// TODO
         }
+    }
+    // iOS 13+：保留 async 入口（其实内部仍是同步逻辑）
+    @available(iOS 13.0, *)
+    public func stopAndRemove(identifier: String) async {
+        await stopAndRemove(identifier: identifier)
     }
     // MARK: - Private
     private func register(

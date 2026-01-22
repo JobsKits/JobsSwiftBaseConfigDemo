@@ -398,7 +398,7 @@ public extension UIAlertController {
         guard !trimmed.isEmpty else { return self }
 
         _enqueueBGTask(preTransition: false) { alert in
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
@@ -427,7 +427,7 @@ public extension UIAlertController {
         guard !trimmed.isEmpty else { return self }
 
         _enqueueBGTask(preTransition: false) { alert in
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
@@ -446,7 +446,7 @@ public extension UIAlertController {
                       color: UIColor,
                       cornerRadius: CGFloat? = nil) -> Self {
         _enqueueBGTask(preTransition: true) { alert in
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 alert._withAlertCard { card in
                     card.layer.borderWidth = width
                     card.layer.borderColor = color.cgColor
@@ -465,7 +465,7 @@ public extension UIAlertController {
                                 cornerRadius: CGFloat? = nil,
                                 insets: UIEdgeInsets = .zero) -> Self {
         _enqueueBGTask(preTransition: true) { alert in
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 alert._withAlertCard { _ in
                     guard let tf = alert.textField(at: index) else { return }
                     guard let box = alert._findTextFieldBox(for: tf) else { return }
@@ -612,13 +612,13 @@ public extension UIAlertController {
     @MainActor
     fileprivate func _withAlertCard(_ body: @escaping (_ card: UIView) async -> Void) {
         if let card = _findAlertCardView() {
-            Task { @MainActor in await body(card) }
+            jobsRunOnMain(self) { vc in await body(card) }
             return
         }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             let card: UIView = self._findAlertCardView() ?? self.view
-            Task { @MainActor in await body(card) }
+            jobsRunOnMain(self) { vc in await body(card) }
         }
     }
     /// 隐掉毛玻璃，并清掉容器底色（供本地/网络背景生效时使用）

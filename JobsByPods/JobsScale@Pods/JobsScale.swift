@@ -70,10 +70,15 @@ public extension BinaryFloatingPoint {
 }
 // MARK: - 屏幕宽高（兼容设备横竖屏）
 public enum Screen {
-    /// 当前界面方向（iOS 13+；拿不到时为 .unknown）
+    /// 当前界面方向（兼容 iOS 12-）
     private static var orientation: UIInterfaceOrientation {
-        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
-            .interfaceOrientation ?? .unknown
+        if #available(iOS 13.0, *) {
+            return (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
+                .interfaceOrientation ?? .unknown
+        } else {
+            // iOS 12-：虽然 deprecated，但用于兼容是最稳的兜底
+            return UIApplication.shared.statusBarOrientation
+        }
     }
     /// 屏幕尺寸（以点为单位，已按当前横竖屏纠正宽高）
     public static var size: CGSize {
@@ -85,11 +90,10 @@ public enum Screen {
         case .portrait, .portraitUpsideDown:
             return CGSize(width: min(w, h), height: max(w, h))
         default:
-            // 拿不到方向时，兜底返回系统给的
             return s
         }
     }
-    /// 便捷：当前屏幕宽 / 高（按横竖屏纠正）
+
     public static var width: CGFloat  { size.width }
     public static var height: CGFloat { size.height }
 }

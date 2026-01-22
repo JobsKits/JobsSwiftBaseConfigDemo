@@ -81,7 +81,7 @@ final class LuckyWheelView: UIView {
             /// 点按事件：走统一的旋转逻辑
             .onTap { [weak self] btn in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self.startSpinWithScrollLikeDeceleration()
                 }
                 btn.playTapBounce(haptic: .light)
@@ -440,7 +440,7 @@ final class LuckyWheelView: UIView {
             let v = angularVelocityFromPan
             angularVelocityFromPan = 0
             if abs(v) > 0.1 {
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self.startSpinWithScrollLikeDeceleration(initialVelocity: v)
                 }
             }
@@ -484,7 +484,7 @@ final class LuckyWheelView: UIView {
         let t = JobsTimer(kind: .displayLink, config: config) { [weak self] in
             // ✅ tick 回调是 @Sendable：显式切回 MainActor，才能触碰 UIKit / self
             guard let self else { return }
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 self.tickTimer()
             }
         }

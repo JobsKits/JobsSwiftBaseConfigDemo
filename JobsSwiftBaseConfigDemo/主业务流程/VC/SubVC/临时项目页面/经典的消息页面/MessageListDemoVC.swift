@@ -151,7 +151,7 @@ final class MessageListDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self.rows = 20
                     self.items = self.makeDemoItems(self.rows)
                     self.selectedIDs.removeAll()
@@ -164,7 +164,7 @@ final class MessageListDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     if self.rows < 60 {
                         self.rows += 20
                         self.items = self.makeDemoItems(self.rows)

@@ -14,6 +14,7 @@ import UIKit
  
  import JobsBy3rdTools
  import JobsByUIKit
+ import JobsSwiftBaseDefines
  
  private lazy var tableView: UITableView = {
      UITableView(frame: .zero, style: .insetGrouped)
@@ -56,7 +57,7 @@ import UIKit
                               container: self,
                               trigger: 66) { [weak self] in
              guard let self else { return }
-             Task { @MainActor in
+             jobsRunOnMain(self) { vc in
                  try? await Task.sleep(nanoseconds: 1_000_000_000)
                  self.rows = 20
                  self.tableView.byReloadData()
@@ -69,7 +70,7 @@ import UIKit
                                        container: self,
                                        trigger: 66) { [weak self] in
              guard let self else { return }
-             Task { @MainActor in
+             jobsRunOnMain(self) { vc in
                  try? await Task.sleep(nanoseconds: 1_000_000_000)
                  if self.rows < 60 {
                      self.rows += 20

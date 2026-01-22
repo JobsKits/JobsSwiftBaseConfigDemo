@@ -28,67 +28,91 @@ public extension UIApplication {
     /// ① 获取“最合理”的 Key Window（多 Scene / 外接屏 / 可见性 / windowLevel 兼容）
     /// - Parameter scene: 指定 UIScene；nil 则自动从所有 connectedScenes 中择优
     /// - Parameter preferMainScreen: 是否优先主屏幕（避免拿到外接屏/CarPlay 的 window）
-    static func jobsKeyWindow(in scene: UIScene? = nil,
-                              preferMainScreen: Bool = true) -> UIWindow? {
+    /// 通用版本：iOS 12 及以下也能编译
+    static func jobsKeyWindow(preferMainScreen: Bool = true) -> UIWindow? {
         if #available(iOS 13.0, *) {
-            // 选择最合适的 windowScene
-            let ws = (scene as? UIWindowScene) ?? bestWindowScene()
-            guard let ws else { return nil }
+            guard let ws = bestWindowScene() else { return nil }
             return bestWindow(in: ws, preferMainScreen: preferMainScreen)
         } else {
-            // < iOS13：没有 Scene 的年代，仅用 keyWindow 兜底（避免触碰 .windows）
             return UIApplication.shared.keyWindow
         }
+    }
+    /// iOS 13+ 才暴露 UIScene 参数
+    @available(iOS 13.0, *)
+    static func jobsKeyWindow(in scene: UIScene?,
+                              preferMainScreen: Bool = true) -> UIWindow? {
+        let ws = (scene as? UIWindowScene) ?? bestWindowScene()
+        guard let ws else { return nil }
+        return bestWindow(in: ws, preferMainScreen: preferMainScreen)
     }
     /// ② 顶层“可见 VC”（支持 Nav/Tab/Split/Page/Presented；可选忽略 Alert）
     /// - Parameters:
     ///   - root: 指定起点 VC；默认自动取 rootVC
     ///   - scene: 指定场景；默认自动选择前台/最合理的
     ///   - ignoreAlert: 是否忽略 UIAlertController（比如做 present 宿主时可忽略）
+    /// iOS 12 也能编译：不暴露 UIScene
     static func jobsTopMostVC(
         from root: UIViewController? = nil,
-        in scene: UIScene? = nil,
         ignoreAlert: Bool = false
     ) -> UIViewController? {
-        // 1) 确定起点 rootVC
         let rootVC: UIViewController? = {
             if let root { return root }
             if #available(iOS 13.0, *) {
-                if let ws = (scene as? UIWindowScene) ?? bestWindowScene(),
-                   let r = bestRootViewController(in: ws) { return r }
-                return nil
+                guard let ws = bestWindowScene(),
+                      let r = bestRootViewController(in: ws) else { return nil }
+                return r
             } else {
                 return UIApplication.shared.keyWindow?.rootViewController
             }
-        }()
-        // 2) 递归下钻
-        func visibleVC(from vc: UIViewController?) -> UIViewController? {
-            guard let vc else { return nil }
+        }();return _jobsVisibleVC(from: rootVC, ignoreAlert: ignoreAlert)
+    }
+    /// iOS 13+ 才提供 scene 版本
+    @available(iOS 13.0, *)
+    static func jobsTopMostVC(
+        from root: UIViewController? = nil,
+        in scene: UIScene?,
+        ignoreAlert: Bool = false
+    ) -> UIViewController? {
+        let rootVC: UIViewController? = {
+            if let root { return root }
+            let ws = (scene as? UIWindowScene) ?? bestWindowScene()
+            guard let ws,
+                  let r = bestRootViewController(in: ws) else { return nil }
+            return r
+        }();return _jobsVisibleVC(from: rootVC, ignoreAlert: ignoreAlert)
+    }
+    /// 递归下钻逻辑提取成私有方法，两个重载共用
+    private static func _jobsVisibleVC(
+        from vc: UIViewController?,
+        ignoreAlert: Bool
+    ) -> UIViewController? {
+        guard let vc else { return nil }
+        if let nav = vc as? UINavigationController {
+            return _jobsVisibleVC(from: nav.visibleViewController ?? nav.topViewController ?? nav,
+                                  ignoreAlert: ignoreAlert)
+        }
 
-            // UINavigationController
-            if let nav = vc as? UINavigationController {
-                return visibleVC(from: nav.visibleViewController ?? nav.topViewController ?? nav)
+        if let tab = vc as? UITabBarController {
+            return _jobsVisibleVC(from: tab.selectedViewController ?? tab,
+                                  ignoreAlert: ignoreAlert)
+        }
+
+        if let split = vc as? UISplitViewController {
+            return _jobsVisibleVC(from: split.viewControllers.last ?? split,
+                                  ignoreAlert: ignoreAlert)
+        }
+
+        if let page = vc as? UIPageViewController, let cur = page.viewControllers?.first {
+            return _jobsVisibleVC(from: cur, ignoreAlert: ignoreAlert)
+        }
+
+        if let presented = vc.presentedViewController {
+            if !(ignoreAlert && presented is UIAlertController) {
+                return _jobsVisibleVC(from: presented, ignoreAlert: ignoreAlert)
             }
-            // UITabBarController
-            if let tab = vc as? UITabBarController {
-                return visibleVC(from: tab.selectedViewController ?? tab)
-            }
-            // UISplitViewController（一般取最后一个作为 detail）
-            if let split = vc as? UISplitViewController {
-                return visibleVC(from: split.viewControllers.last ?? split)
-            }
-            // UIPageViewController（当前页）
-            if let page = vc as? UIPageViewController,
-               let cur = page.viewControllers?.first {
-                return visibleVC(from: cur)
-            }
-            // 被 present 出来的控制器（可选忽略 Alert）
-            if let presented = vc.presentedViewController {
-                if !(ignoreAlert && presented is UIAlertController) {
-                    return visibleVC(from: presented)
-                }
-            };return vc
-        };return visibleVC(from: rootVC)
+        }
+
+        return vc
     }
     /// ③ 全局安全区 Insets（不依赖当前 VC）
     static var jobsSafeAreaInsets: UIEdgeInsets {

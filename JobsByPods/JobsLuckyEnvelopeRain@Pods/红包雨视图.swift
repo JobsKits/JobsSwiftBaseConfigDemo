@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsSwiftTimer
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: —— 红包雨视图
 public class RedPacketRainView: UIView {
     deinit {
@@ -134,7 +135,7 @@ public class RedPacketRainView: UIView {
                 config: cfg
             ) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self?.spawnPacketIfNeeded()
                 }
             }
@@ -157,7 +158,7 @@ public class RedPacketRainView: UIView {
                 config: fallCfg
             ) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self?.updatePackets()
                 }
             }

@@ -63,7 +63,7 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self.items = self.makeMockItems(count: 12)
                     self.collectionView.byReloadData()
                     self.collectionView.switchRefreshHeader(to: .normal)
@@ -75,7 +75,7 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     if self.items.count < 60 {
                         self.items.append(contentsOf: self.makeMockItems(count: 12, startAt: self.items.count + 1))
                         self.collectionView.byReloadData()

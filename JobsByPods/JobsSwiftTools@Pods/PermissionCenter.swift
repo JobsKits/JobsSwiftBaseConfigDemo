@@ -176,7 +176,7 @@ public final class PermissionCenter: NSObject {
     }
     // MARK: Toast
     private static func showNoPermissionToast(in presenter: UIViewController?) {
-        Task { @MainActor in
+        jobsRunOnMain {
             "请获取相关权限".toast
         }
     }

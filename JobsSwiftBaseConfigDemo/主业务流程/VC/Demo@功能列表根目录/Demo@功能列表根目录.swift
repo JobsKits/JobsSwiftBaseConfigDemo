@@ -409,9 +409,8 @@ final class RootListVC: BaseVC {
                 config: cfg,
                 dedupPolicy: .replace
             ) { [weak self] in
-                Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    let btn = self.suspendBtn
+                jobsRunOnMain(self) { vc in
+                    let btn = vc.suspendBtn
                     if btn.title(for: .normal) != "当前时间" {
                         btn.byTitle("当前时间", for: .normal)
                     }
@@ -434,11 +433,10 @@ final class RootListVC: BaseVC {
                 config: cfg,
                 dedupPolicy: .replace
             ) { [weak self] in
-                Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    self.spinSeconds += 1
-                    let btn = self.suspendSpinBtn
-                    let sec = self.spinSeconds
+                jobsRunOnMain(self) { vc in
+                    vc.spinSeconds += 1
+                    let btn = vc.suspendSpinBtn
+                    let sec = vc.spinSeconds
                     if btn.title(for: .normal) != "\(sec)" {
                         btn.byTitle("\(sec)", for: .normal)
                             .bySetNeedsUpdateConfiguration()

@@ -20,19 +20,15 @@ import JobsSwiftBaseDefines
 import JobsTextTools
 /// Demo@任意UIView
 final class JobsCountdownLayerDemoVC: BaseVC {
-
     private let horizontalInset: CGFloat = 40
     private let defaultTotalSeconds: Int = 10
-
     // MARK: - State
-
     private enum TimerState {
         case idle
         case running
         case paused
         case stopped
     }
-
     /// 当前计时器状态（不再依赖 UIButton.timerState）
     private var timerState: TimerState = .idle
     /// 记录当前剩余秒数（用于暂停提示）
@@ -43,9 +39,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     private var currentKind: JobsTimerKind = .gcd
     /// timer 持有（不挂在 UIButton 上）
     private var countdownTimer: JobsTimerProtocol?
-
     // MARK: - UI
-
     /// 提示文案
     private lazy var hintLabel: UILabel = {
         UILabel()
@@ -64,7 +58,6 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 make.right.equalToSuperview().inset(horizontalInset)
             }
     }()
-
     /// 倒计时演示按钮（用 VC 自己的 timer 驱动）
     private lazy var countdownButton: UIButton = {
         UIButton.sys()
@@ -99,9 +92,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 make.height.equalTo(50)
             }
     }()
-
     // MARK: - Life Cycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBgColor(.systemBackground)
@@ -115,9 +106,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
         stopCountdown()
         countdownButton.jobs_cancelFuseCountdown()
     }
-
     // MARK: - Timer Core (新版 JobsTimer)
-
     /// 统一创建 timer（新版 JobsTimer：JobsTimer(kind:config:handler:)）
     @MainActor
     private func makeTimer(kind: JobsTimerKind,
@@ -135,28 +124,25 @@ final class JobsCountdownLayerDemoVC: BaseVC {
         )
         return JobsTimer(kind: kind, config: cfg, handler: handler)
     }
-
     /// 开始 / 重新开始
     private func startCountdown(on btn: UIButton, total: Int) {
-        Task { @MainActor in
+        jobsRunOnMain(self) { vc in
             // 先停旧
-            stopCountdown()
+            self.stopCountdown()
 
             self.totalSeconds = max(1, total)
             self.remainingSeconds = self.totalSeconds
             self.timerState = .running
             self.hintLabel.byText("倒计时进行中，点击可以暂停".tr)
-
             // 先更新一次 UI
             btn.byTitle("\(self.remainingSeconds)s", for: .normal)
-
             // 1）倒计时：用新版 JobsTimer 驱动
             let kind = self.currentKind
             let t = self.makeTimer(kind: kind, interval: 1.0) { [weak self, weak btn] in
                 // ✅ JobsTimer 的 handler 是 @Sendable：这里不要直接碰 UIKit / self 的可变状态
                 guard let self else { return }
                 guard let btn else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     guard self.timerState == .running else { return }
 
                     self.remainingSeconds -= 1
@@ -177,10 +163,8 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                     }
                 }
             }
-
             self.countdownTimer = t
             t.start()
-
             // 2）导火索：一整圈总时长 = total
             // 注意：导火索动画本身不跟随 pause/resume（除非你给 fuse 扩展加 pause/resume）
             DispatchQueue.main.async {
@@ -197,38 +181,35 @@ final class JobsCountdownLayerDemoVC: BaseVC {
             }
         }
     }
-
     /// 暂停
     private func pauseCountdown() {
-        Task { @MainActor in
-            guard timerState == .running else { return }
-            countdownTimer?.pause()
-            timerState = .paused
+        jobsRunOnMain(self) { vc in
+            guard self.timerState == .running else { return }
+            self.countdownTimer?.pause()
+            self.timerState = .paused
         }
     }
-
     /// 继续
     private func resumeCountdown() {
-        Task { @MainActor in
-            guard timerState == .paused else { return }
-            countdownTimer?.resume()
-            timerState = .running
+        jobsRunOnMain(self) { vc in
+            guard self.timerState == .paused else { return }
+            self.countdownTimer?.resume()
+            self.timerState = .running
         }
     }
-
     /// 停止（不触发完成逻辑）
     private func stopCountdown() {
-        Task { @MainActor in
-            countdownTimer?.stop()
-            countdownTimer = nil
+        jobsRunOnMain(self) { vc in
+            self.countdownTimer?.stop()
+            self.countdownTimer = nil
 
             // 状态收口：如果没跑完，停下来算 stopped
-            if timerState == .running || timerState == .paused {
-                timerState = .stopped
-            } else if timerState == .idle {
-                timerState = .idle
+            if self.timerState == .running || self.timerState == .paused {
+                self.timerState = .stopped
+            } else if self.timerState == .idle {
+                self.timerState = .idle
             } else {
-                timerState = .stopped
+                self.timerState = .stopped
             }
         }
     }

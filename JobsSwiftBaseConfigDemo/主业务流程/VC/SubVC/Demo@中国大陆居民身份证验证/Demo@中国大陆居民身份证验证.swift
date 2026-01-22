@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
@@ -25,7 +26,7 @@ final class CNIDDemoVC: BaseVC {
 
     private lazy var textField: UITextField = {
         UITextField()
-            .byPlaceholder("请输入身份证号码")
+            .byPlaceholder("请输入身份证号码".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
             .byAddTo(view) { [unowned self] make in
@@ -37,7 +38,7 @@ final class CNIDDemoVC: BaseVC {
 
     private lazy var exampleButton: UIButton = {
         UIButton(type: .system)
-            .byTitle("自动填入示例")
+            .byTitle("自动填入示例".tr)
             .byTitleFont(.systemFont(ofSize: 15))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -52,7 +53,7 @@ final class CNIDDemoVC: BaseVC {
 
     private lazy var checkButton: UIButton = {
         UIButton(type: .system)
-            .byTitle("开始校验")
+            .byTitle("开始校验".tr)
             .byTitleFont(.boldSystemFont(ofSize: 16))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -94,9 +95,9 @@ final class CNIDDemoVC: BaseVC {
             title: "身份证校验 Demo"
         )
         bgImageView().byImage("唐老鸭".img)
-        Task { @MainActor in
-            bgImageView().byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
-            bgImageView().byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
+        jobsRunOnMain(self) { vc in
+            self.bgImageView().byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
+            self.bgImageView().byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
         }
         printDemo()// 打印示例
         textField.byAlpha(1) // 输入框

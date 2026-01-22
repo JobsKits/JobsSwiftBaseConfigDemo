@@ -10,6 +10,7 @@
 //  - 请求中：不展示 placeholder（如果要 loading 占位，请用 byShimmeringAsyncImageKF）
 //  ============================================================================
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -17,6 +18,7 @@ import UIKit
 #endif
 
 import JobsImageTools
+import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 public extension UIImageView {
@@ -100,9 +102,9 @@ public extension UIImageView {
     ) -> Self {
         // 统一记录 URL，便于 JobsImageCacheCleaner 遍历重下
         if case .remote(let url)? = src.imageSource { jobs_remoteURL = url } else { jobs_remoteURL = nil }
-        Task { @MainActor in
+        jobsRunOnMain {
             let img = await src.kfLoadImage(fallbackImage: fallback())
-            image = img
+            self.image = img
         };return self
     }
 }

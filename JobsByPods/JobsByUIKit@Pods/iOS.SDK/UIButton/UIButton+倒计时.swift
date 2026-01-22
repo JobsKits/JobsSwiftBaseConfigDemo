@@ -16,6 +16,7 @@ import ObjectiveC
 import JobsSwiftBlock
 import JobsSwiftTimer
 import JobsTextTools
+import JobsSwiftBaseDefines
 // MARK: - Associated Keys
 private var _timerTickAnyKey: UInt8 = 0
 private var _timerFinishAnyKey: UInt8 = 0
@@ -128,7 +129,7 @@ public extension UIButton {
         let core = JobsTimer(kind: kind, config: cfg) { [weak self] in
             guard let self else { return }
             // ✅ Swift 6：handler 是 @Sendable，触 UI 统一回 MainActor
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 guard var mode = objc_getAssociatedObject(self, &_timerModeKey) as? _TimerMode else { return }
                 let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? kind
 
@@ -206,7 +207,7 @@ public extension UIButton {
             return self
         }
         let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? .gcd
-        Task { @MainActor in
+        jobsRunOnMain(self) { vc in
             var mode = mode0
 
             switch mode {

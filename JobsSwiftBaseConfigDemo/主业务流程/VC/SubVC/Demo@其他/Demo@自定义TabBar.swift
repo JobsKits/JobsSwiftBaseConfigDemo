@@ -15,6 +15,7 @@ import ObjectiveC
 
 import SnapKit
 import GKNavigationBarSwift
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
@@ -67,7 +68,7 @@ private final class JobsCountdownBinder {
         let t = JobsTimer(kind: kind, config: cfg) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：先冻结 self，再切 MainActor
             guard let strongSelf = self else { return }
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 guard let btn = strongSelf.button else {
                     strongSelf.stop()
                     return
@@ -266,7 +267,7 @@ final class TabBarDemoVC: BaseVC {
                             guard let self else { return }
                             // 点击以后倒计时：300s
                             // 你原来写死 kind:.gcd，这里保持一致
-                            Task { @MainActor in
+                            jobsRunOnMain(self) { vc in
                                 btn.jobs_countdownBinder.start(
                                     on: btn,
                                     total: 300,

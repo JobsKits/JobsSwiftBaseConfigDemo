@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftTimer
+import JobsSwiftBaseDefines
 // MARK: - 公共配置体
 @available(iOS 15.0, *)
 public struct JobsCountdownButtonConfig {
@@ -114,7 +115,7 @@ final class JobsCountdownBtnCtrl {
         // ✅ 新版 JobsTimer：直接 new（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
             // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 self?.onTickMainActor()
             }
         }

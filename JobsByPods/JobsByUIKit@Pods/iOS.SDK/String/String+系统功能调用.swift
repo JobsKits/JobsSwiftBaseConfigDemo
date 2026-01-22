@@ -70,7 +70,7 @@ public extension String {
         #if targetEnvironment(simulator)
         // ================== 模拟器环境直接拦截 ==================
         print("📵 模拟器不支持拨号功能")
-        Task { @MainActor in
+        jobsRunOnMain {
             print("📵 模拟器不支持拨号功能")
         }
         jobsByVoidBlock?(.cannotOpen)

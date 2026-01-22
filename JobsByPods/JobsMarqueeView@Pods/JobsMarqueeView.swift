@@ -13,6 +13,7 @@ import UIKit
 
 import JobsSwiftTimer
 import JobsByUIKit
+import JobsSwiftBaseDefines
 /// 统一「跑马灯」&「轮播图」的视图组件
 /// 数据源：`[UIButton]`
 /// 滚动载体：内部 `UIScrollView` + 若干个按钮副本
@@ -291,7 +292,7 @@ public final class JobsMarqueeView: UIView {
             // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
             timer = JobsTimer(kind: timerKindForFrequency, config: config) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self?.tickFrequency()
                 }
             }
@@ -310,7 +311,7 @@ public final class JobsMarqueeView: UIView {
             // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
             timer = JobsTimer(kind: timerKindForContinuous, config: config) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self?.tickContinuous()
                 }
             }

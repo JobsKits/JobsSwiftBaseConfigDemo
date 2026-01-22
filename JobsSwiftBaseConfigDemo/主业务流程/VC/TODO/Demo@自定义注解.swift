@@ -65,7 +65,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                 trigger: 66
             ) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.rows = 20
                     self.users = (1...self.rows).map { UserInfo(id: $0, name: "UserInfo \($0)") }
@@ -80,7 +80,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                 trigger: 66
             ) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     if self.rows < 60 {
                         let start = self.rows + 1

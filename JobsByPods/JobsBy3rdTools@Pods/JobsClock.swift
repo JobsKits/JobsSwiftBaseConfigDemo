@@ -19,7 +19,7 @@ import JobsSwiftBaseDefines
 ///
 /// Swift 6 注意点：JobsTimer 的 handler 是 @Sendable
 /// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
-/// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI
+/// - 统一用 jobsRunOnMain(self) { vc in ... } 回到主线程更新 UI
 open class JobsClockView: UIView {
     // MARK: - 表盘 & 刻度
     /// 外圈表盘
@@ -216,7 +216,7 @@ open class JobsClockView: UIView {
         // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: kind, config: config) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：回主线程再动 UI
-            Task { @MainActor in
+            jobsRunOnMain(self) { vc in
                 self?.updateHands(animated: true)
             }
         }

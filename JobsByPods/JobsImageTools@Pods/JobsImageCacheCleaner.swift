@@ -8,6 +8,7 @@
 import Foundation
 import ObjectiveC
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 #if canImport(Kingfisher)
 import Kingfisher
@@ -139,7 +140,7 @@ public enum JobsImageCacheCleaner {
                             placeholder: placeholder,
                             options: opts,
                             completionHandler:  { result in
-                Task { @MainActor in
+                jobsRunOnMain {
                     switch result {
                     case .success(let r): btn.jobsResetBtnImage(r.image, for: state)
                     case .failure:        btn.jobsResetBtnImage(placeholder, for: state)
@@ -162,7 +163,7 @@ public enum JobsImageCacheCleaner {
                                       placeholder: placeholder,
                                       options: opts,
                                       completionHandler:  { result in
-                Task { @MainActor in
+                jobsRunOnMain {
                     switch result {
                     case .success(let r): btn.jobsResetBtnBgImage(r.image, for: state)
                     case .failure:        btn.jobsResetBtnBgImage(placeholder, for: state)
@@ -207,7 +208,7 @@ public enum JobsImageCacheCleaner {
                             options: opts,
                             context: ctx,
                             progress: nil) { img, err, _, _ in
-                Task { @MainActor in
+                jobsRunOnMain {
                     btn.jobsResetBtnImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }
@@ -229,7 +230,7 @@ public enum JobsImageCacheCleaner {
                                       options: opts,
                                       context: ctx,
                                       progress: nil) { img, err, _, _ in
-                Task { @MainActor in
+                jobsRunOnMain {
                     btn.jobsResetBtnBgImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }

@@ -10,12 +10,14 @@
 //  - 请求中：不展示 placeholder（如果你要 loading 占位，请用 byShimmeringAsyncImageSD）
 //  ============================================================================
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 #if canImport(SDWebImage)
 import SDWebImage
 public extension UIImageView {
@@ -100,9 +102,9 @@ public extension UIImageView {
         _ src: String,
         fallback: @autoclosure @escaping @Sendable () -> UIImage
     ) -> Self {
-        Task { @MainActor in
+        jobsRunOnMain {
             let img = await src.sdLoadImage(fallbackImage: fallback())
-            image = img
+            self.image = img
         };return self
     }
 }

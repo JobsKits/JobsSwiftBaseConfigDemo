@@ -176,7 +176,7 @@ public class JobsNavBar: UIView {
 
         kvoTitle?.invalidate()
         kvoTitle = webView.observe(\.title, options: [.new]) { [weak self] _, _ in
-            Task { @MainActor in self?.refreshTitle() }
+            jobsRunOnMain(self) { vc in self?.refreshTitle() }
         }
         refreshTitle()
     }

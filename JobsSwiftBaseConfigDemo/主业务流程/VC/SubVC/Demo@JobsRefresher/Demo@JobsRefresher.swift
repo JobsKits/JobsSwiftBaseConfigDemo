@@ -52,7 +52,7 @@ final class JobsRefresherDemoVC: BaseVC {
                               at: .left,
                               trigger: 70) { [weak self] in
                guard let self else { return }
-               Task { @MainActor in
+               jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)
                    // 模拟“刷新完成”：减少一个 item 并刷新
                    self.hItems = max(8, self.hItems - 1)
@@ -66,7 +66,7 @@ final class JobsRefresherDemoVC: BaseVC {
                                            at: .right,
                                            trigger: 70) { [weak self] in
                guard let self else { return }
-               Task { @MainActor in
+               jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)
                    self.hItems += 3
                    self.topCollection.byReloadData()
@@ -90,7 +90,7 @@ final class JobsRefresherDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.rows = 20
                     self.tableView.byReloadData()
@@ -103,7 +103,7 @@ final class JobsRefresherDemoVC: BaseVC {
                                           container: self,
                                           trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     if self.rows < 60 {
                         self.rows += 20

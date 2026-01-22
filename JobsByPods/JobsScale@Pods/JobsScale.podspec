@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
-  s.platform      = :ios, '15.0'
+  s.platform      = :ios, '12.0'
   s.swift_version = '5.0'
   
   # 全局排除脚本 / 图标

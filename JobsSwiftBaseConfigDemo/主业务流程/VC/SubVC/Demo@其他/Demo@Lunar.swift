@@ -18,6 +18,7 @@ import GKNavigationBar
 import LunarSwift
 import SnapKit
 import GKNavigationBarSwift
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
@@ -87,7 +88,7 @@ final class LunarDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.buildTodayRows()
                     self.buildInteractiveRows(for: self.datePicker.date)
@@ -101,7 +102,7 @@ final class LunarDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     let base = self.items.count
                     self.items += (1...5).map { "Row \(base + $0)" }

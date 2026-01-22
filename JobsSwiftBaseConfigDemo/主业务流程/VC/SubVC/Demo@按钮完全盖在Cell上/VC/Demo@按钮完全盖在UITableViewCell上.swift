@@ -19,6 +19,7 @@ import JobsBy3rdTools
 import JobsTextTools
 import JobsToast
 import JobsRefresher
+import JobsSwiftBaseDefines
 /// UITableView是不支持在Section内部直接定义Cell之间的距离的
 final class BtnFullOnTBVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []
@@ -57,7 +58,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     self.items = self.makeMockItems(count: 20)
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshHeader(to: .normal)
@@ -69,7 +70,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
                                  container: self,
                                  trigger: 66) { [weak self] in
                 guard let self else { return }
-                Task { @MainActor in
+                jobsRunOnMain(self) { vc in
                     if self.items.count < 80 {
                         self.items.append(contentsOf: self.makeMockItems(count: 20, startAt: self.items.count + 1))
                         self.tableView.byReloadData()
