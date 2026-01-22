@@ -28,6 +28,11 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.{swift,h,m,mm}'
   
   s.dependency 'SwiftEntryKit'
+  s.dependency 'YTKNetwork'
+  s.dependency 'MJRefresh'
+  s.dependency 'JXSegmentedView'
+  s.dependency 'SDWebImage'
+  s.dependency 'GKNavigationBarSwift'
   s.dependency 'SnapKit'
   s.dependency 'BMPlayer'
   s.dependency 'JobsInheritance'

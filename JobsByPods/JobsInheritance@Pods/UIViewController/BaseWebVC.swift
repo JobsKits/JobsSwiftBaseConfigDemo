@@ -11,8 +11,9 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import WebKit
+import SnapKit
+import GKNavigationBarSwift
 import JobsByUIKit
 import JobsInheritance
 /**

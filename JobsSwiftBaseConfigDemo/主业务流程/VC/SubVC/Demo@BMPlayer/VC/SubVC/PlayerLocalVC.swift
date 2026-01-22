@@ -16,9 +16,10 @@ import BMPlayer
 import SnapKit
 import JobsInheritance
 import GKNavigationBarSwift
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsTextTools
-import JobsSwiftBaseDefines
+import JobsBy3rdTools
 
 final class PlayerLocalVC: BaseVC {
     // MARK: - 懒加载：播放器

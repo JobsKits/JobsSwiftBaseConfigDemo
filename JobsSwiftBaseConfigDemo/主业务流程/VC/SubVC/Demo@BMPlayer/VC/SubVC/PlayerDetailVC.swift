@@ -16,9 +16,10 @@ import GKNavigationBarSwift
 import BMPlayer
 import SnapKit
 import JobsInheritance
-import JobsTextTools
 import JobsByUIKit
 import JobsSwiftBaseDefines
+import JobsBy3rdTools
+import JobsTextTools
 
 final class PlayerDetailVC: BaseVC {
     private let item: FeedItem

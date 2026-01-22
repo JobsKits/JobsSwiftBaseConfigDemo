@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'UIKit'
   
   s.dependency 'JobsSwiftBlock'
+  s.dependency 'JobsTextTools'
   
   # 全局排除脚本 / 图标
   s.exclude_files = [

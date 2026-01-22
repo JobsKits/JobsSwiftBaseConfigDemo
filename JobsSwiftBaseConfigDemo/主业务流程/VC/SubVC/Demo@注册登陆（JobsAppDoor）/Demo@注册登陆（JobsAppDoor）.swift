@@ -20,6 +20,7 @@ import BMPlayer
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
+import JobsBy3rdTools
 // MARK: - 小工具
 private extension CATransform3D {
     static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }

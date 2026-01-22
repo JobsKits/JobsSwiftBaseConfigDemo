@@ -13,7 +13,7 @@ import Foundation
     import UIKit
 #endif
 
-#if canImport(SDWebImage)
+#if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 public extension GKNavigationBarConfigure {
     // MARK: - 顶层 DSL 入口（全局一次性配置 & 后续增量更新）

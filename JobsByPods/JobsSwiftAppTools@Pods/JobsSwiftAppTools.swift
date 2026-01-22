@@ -14,13 +14,14 @@ import UIKit
 import SwiftEntryKit
 import SnapKit
 import JobsInheritance
+import JobsScale
 import JobsByUIKit
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
-import JobsTextTools
-import JobsSwiftBaseTools
-import JobsScale
 import JobsSwiftTools
+import JobsSwiftBaseTools
+import JobsTextTools
+import JobsBy3rdTools
 // MARK: 🔔 通用弹窗提示
 public func presentAlert(for urlString: String, on textView: UITextView) {
     // 💡 iOS17+：delegate 不一定是当前 VC，用原来的兜底逻辑
