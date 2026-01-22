@@ -16,7 +16,7 @@ import WebKit
 import SwiftMessages
 import JobsSwiftBlock
 
-public extension UILabel {
+extension UILabel {
     @discardableResult
     func byAttributedString(_ attributed: NSAttributedString?) -> Self {
         self.attributedText = attributed
@@ -34,7 +34,7 @@ public extension UILabel {
     }
 }
 
-public extension UIView {
+extension UIView {
     @discardableResult
     func byAddTo(_ superView: UIView,
                  _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
@@ -71,7 +71,7 @@ public extension UIView {
     }
 }
 private var actionKey: Void?
-public extension UIButton {
+extension UIButton {
     @discardableResult
     private func _bindTapClosure(_ action: @escaping jobsByBtnBlock,
                                  for events: UIControl.Event = .touchUpInside) -> Self {
@@ -101,29 +101,5 @@ public extension UIButton {
         } else {
             self.jobs_addTapClosure(handler)
         };return self
-    }
-}
-
-public enum JobsSwiftMessageToast {
-    @MainActor public static func show(
-        _ text: String,
-        duration: TimeInterval = 1.0
-    ) {
-        let view = MessageView.viewFromNib(layout: .messageView)
-        view.configureTheme(.info)
-        view.configureDropShadow()
-        view.button?.isHidden = true
-
-        // 标题可留空，只用 body
-        view.configureContent(title: "", body: text)
-
-        var config = SwiftMessages.Config()
-        config.presentationStyle = .top // 或 .bottom
-        config.presentationContext = .window(windowLevel: .statusBar)
-        config.duration = .seconds(seconds: duration)
-        config.interactiveHide = false
-        config.dimMode = .none
-
-        SwiftMessages.show(config: config, view: view)
     }
 }

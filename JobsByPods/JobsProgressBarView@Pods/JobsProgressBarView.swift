@@ -10,8 +10,6 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
-import JobsSwiftBaseDefines
 /// 自定义进度条@进度值和前进方向
 open class JobsProgressView: UIView {
     /// 几何方向：决定填充从哪边往哪边走
@@ -50,14 +48,14 @@ open class JobsProgressView: UIView {
     private lazy var trackView: UIView = {
         UIView()
             .byBgColor(.systemGray5)
-            .byMasksToBounds(YES)
+            .byMasksToBounds(true)
             .byAddTo(self)
     }()
     /// 填充（前景）
     private lazy var fillView: UIView = {
         UIView()
             .byBgColor(.systemBlue)
-            .byMasksToBounds(YES)
+            .byMasksToBounds(true)
             .byAddTo(trackView)
     }()
     /// 显示百分比的标签（跟随移动）
@@ -88,9 +86,9 @@ open class JobsProgressView: UIView {
     private func commonInit() {
         backgroundColor = .clear
         // 使用时触发懒加载
-        trackView.byVisible(YES)
-        fillView.byVisible(YES)
-        progressLabel.byVisible(YES)
+        trackView.byVisible(true)
+        fillView.byVisible(true)
+        progressLabel.byVisible(true)
     }
 
     open override var intrinsicContentSize: CGSize {

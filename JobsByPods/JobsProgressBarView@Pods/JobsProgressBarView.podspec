@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   # ====================== 系统库依赖：所有代码共享 ======================
   s.ios.frameworks = 'UIKit'
 
-  s.dependency 'JobsTimer'
-  s.dependency 'JobsSwiftBaseDefines'
-  
+  s.dependency 'SnapKit'
+  s.dependency 'JobsSwiftTimer'
+
 end

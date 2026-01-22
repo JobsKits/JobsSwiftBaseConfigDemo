@@ -19,6 +19,7 @@ import JobsSwiftTimer
 import JobsScale
 import JobsSwiftBaseDefines
 import JobsTextTools
+import JobsProgressBarView
 /// Demo@自定义进度条（进度值+前进方向）
 final class JobsProgressDemoVC: BaseVC {
     deinit {

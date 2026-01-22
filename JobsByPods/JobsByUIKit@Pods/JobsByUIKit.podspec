@@ -53,5 +53,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsImageTools'
   s.dependency 'Jobsl10n'
   s.dependency 'JobsScale'
+  s.dependency 'JobsProgressBarView'
 
 end

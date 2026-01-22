@@ -72,7 +72,6 @@ public enum JobsTimerKind: Sendable {
     case displayLink
     case runLoop
 }
-
 /// JobsTimer 专用回调类型：可跨并发域安全传递
 public typealias JobsTimerCallback = @Sendable () -> Void
 public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void
