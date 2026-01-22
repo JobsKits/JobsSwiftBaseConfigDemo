@@ -1,5 +1,5 @@
 //
-//  BaseProtocolDefs.swift
+//  JobsBaseProtocolDefs.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/3/25.

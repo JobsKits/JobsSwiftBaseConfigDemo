@@ -10,6 +10,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 /// 自定义进度条@进度值和前进方向
 open class JobsProgressView: UIView {
     /// 几何方向：决定填充从哪边往哪边走
@@ -47,7 +49,7 @@ open class JobsProgressView: UIView {
     /// 轨道（背景）
     private lazy var trackView: UIView = {
         UIView()
-            .byBgColor(.systemGray5)
+            .byBgColor(JobsCor.systemGray5)
             .byMasksToBounds(true)
             .byAddTo(self)
     }()
@@ -62,10 +64,10 @@ open class JobsProgressView: UIView {
     private lazy var progressLabel: UILabel = {
         UILabel()
             .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
-            .byTextColor(.label)
+            .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byText("0%")
-            .byBgCor(.secondarySystemBackground)
+            .byBgCor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byAddTo(self)
     }()
