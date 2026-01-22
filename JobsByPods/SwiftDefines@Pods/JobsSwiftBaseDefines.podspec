@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
-  s.platform     = :ios, '15.0'
+  s.platform     = :ios, '12.0'
   s.swift_version = '5.0'
   s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftBaseDefines.git',
                      :tag => s.version.to_s }
