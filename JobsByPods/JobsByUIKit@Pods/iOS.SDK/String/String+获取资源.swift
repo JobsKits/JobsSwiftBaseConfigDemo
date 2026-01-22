@@ -18,9 +18,8 @@ import Kingfisher
 import SDWebImage
 #endif
 
-#if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
-#endif
+import JobsSwiftBlock
 // MARK: 字符串转换成资源
 public extension String {
     // MARK: - 字符串@Bundle
@@ -86,33 +85,80 @@ public extension String {
             return UIImage(named: name) ?? UIImage()
         }
     }
-
+    
     var sysImg: UIImage {
-        UIImage(systemName: self) ?? jobsSolidBlue()
+        if #available(iOS 13.0, *) {
+            return UIImage(systemName: self) ?? jobsSolidBlue()
+        } else {
+            return UIImage(named: self) ?? jobsSolidBlue()
+        }
     }
 
+    @available(iOS 13.0, *)
     func sysImg(_ config: UIImage.SymbolConfiguration) -> UIImage {
         UIImage(systemName: self, withConfiguration: config) ?? jobsSolidBlue()
     }
 #if canImport(Kingfisher)
     /// 远程：通过 KF 异步下载后返回；本地：直接返回
+    // ================================== Async 版本（仅在能用并发时编译） ==================================
+    #if swift(>=5.5) && canImport(_Concurrency)
+    @available(iOS 13.0, *)
     func kfLoadImage() async throws -> UIImage {
         guard let source = imageSource else { throw KFError.badURL }
         switch source {
         case .remote(let url):
-            let result = try await KingfisherManager.shared.retrieveImage(with: url)
-            return result.image
+            // 关键：这里不要直接写 try await retrieveImage(...)，
+            // 因为你当前 KF 版本可能没有 async overload。
+            // 用 continuation 把 completion 版桥接成 async，兼容所有 KF 版本。
+            return try await withCheckedThrowingContinuation { cont in
+                KingfisherManager.shared.retrieveImage(with: url) { result in
+                    switch result {
+                    case .success(let value):
+                        cont.resume(returning: value.image)   // value 是 RetrieveImageResult
+                    case .failure(let err):
+                        cont.resume(throwing: err)            // err 是 KingfisherError
+                    }
+                }
+            }
         case .local(let name):
             if let img = UIImage(named: name) { return img }
             throw KFError.notFound
         }
     }
+    #endif
+    // ================================== Completion 版本（全版本可用） ==================================
+    func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
+        guard let source = imageSource else {
+            completion(.failure(KFError.badURL))
+            return
+        }
+        switch source {
+        case .remote(let url):
+            KingfisherManager.shared.retrieveImage(with: url) { result in
+                switch result {
+                case .success(let value):
+                    completion(.success(value.image))
+                case .failure(let err):
+                    completion(.failure(err))
+                }
+            }
+
+        case .local(let name):
+            if let img = UIImage(named: name) {
+                completion(.success(img))
+            } else {
+                completion(.failure(KFError.notFound))
+            }
+        }
+    }
     /// A) 允许传 nil：nil -> 蓝色兜底
-    func kfLoadImage(fallbackImage: @autoclosure () -> UIImage?) async -> UIImage {
+    @available(iOS 13.0, *)
+    func kfLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
         do { return try await self.kfLoadImage() }         // 你已有的 throws 版本
         catch { return fallbackImage() ?? jobsSolidBlue() }
     }
     /// B) 非可选便捷版
+    @available(iOS 13.0, *)
     func kfLoadImage(fallback: UIImage) async -> UIImage {
         await kfLoadImage(fallbackImage: fallback)
     }
@@ -120,6 +166,9 @@ public extension String {
 
 #if canImport(SDWebImage)
     /// 远程：通过 SDWebImage 异步下载后返回；本地：直接返回
+    // ================================== Async throws 版本（仅在能用并发时编译） ==================================
+    #if swift(>=5.5) && canImport(_Concurrency)
+    @available(iOS 13.0, *)
     func sdLoadImage() async throws -> UIImage {
         guard let source = imageSource else {
             throw NSError(domain: "SDWebImage",
@@ -129,11 +178,15 @@ public extension String {
         switch source {
         case .remote(let url):
             return try await withCheckedThrowingContinuation { cont in
+                var didResume = false
                 SDWebImageManager.shared.loadImage(
                     with: url,
                     options: [],
                     progress: nil
-                ) { image, _, error, _, _, _ in
+                ) { image, _, error, _, finished, _ in
+                    // 避免渐进式/重复回调：只在最终 finished 时续体一次
+                    guard finished, !didResume else { return }
+                    didResume = true
                     if let error = error {
                         cont.resume(throwing: error)
                     } else if let image = image {
@@ -147,7 +200,6 @@ public extension String {
                     }
                 }
             }
-
         case .local(let name):
             if let img = UIImage(named: name) {
                 return img
@@ -158,11 +210,41 @@ public extension String {
         }
     }
     /// 不抛错：加载失败则返回 fallbackImage()；若其为 nil，则返回蓝色占位图
-    func sdLoadImage(fallbackImage: @autoclosure () -> UIImage?) async -> UIImage {
+    @available(iOS 13.0, *)
+    func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
         do {
             return try await self.sdLoadImage()   // 你已有的 throws 版本
         } catch {
             return fallbackImage() ?? jobsSolidBlue()
+        }
+    }
+    #endif
+    // ================================== Completion 版本（全版本可用） ==================================
+    /// 不抛错：加载失败则返回 fallbackImage()；若其为 nil，则返回蓝色占位图
+    func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock,
+                     completion: @escaping jobsByImgBlock) {
+        let placeholder = fallbackImage() ?? jobsSolidBlue()
+        guard let source = imageSource else {
+            completion(placeholder)
+            return
+        }
+
+        switch source {
+        case .remote(let url):
+            var didFinish = false
+
+            SDWebImageManager.shared.loadImage(
+                with: url,
+                options: [],
+                progress: nil
+            ) { image, _, _, _, finished, _ in
+                guard finished, !didFinish else { return }
+                didFinish = true
+                completion(image ?? placeholder)
+            }
+
+        case .local(let name):
+            completion(UIImage(named: name) ?? placeholder)
         }
     }
 #endif

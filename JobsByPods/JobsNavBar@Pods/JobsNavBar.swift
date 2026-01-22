@@ -55,7 +55,7 @@ public class JobsNavBar: UIView {
         }
     }
 
-    public var backButtonProvider: BackButtonProvider? {
+    public var backButtonProvider: JobsRetButtonBlock? {
         didSet {
             rebuildBackButton() // provider 变化 -> 可能换按钮；交给 rebuild 处理
         }

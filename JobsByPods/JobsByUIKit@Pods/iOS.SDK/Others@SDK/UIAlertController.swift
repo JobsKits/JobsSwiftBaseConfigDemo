@@ -402,10 +402,23 @@ public extension UIAlertController {
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
-                    let img = await trimmed.sdLoadImage(fallbackImage: placeholder)
-                    if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
-                    else { iv.image = img }
-                    iv.layer.cornerRadius = card.layer.cornerRadius
+
+                    if #available(iOS 13.0, *) {
+                        Task { @MainActor in
+                            let img = await trimmed.sdLoadImage(fallbackImage: placeholder)
+                            if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
+                            else { iv.image = img }
+                            iv.layer.cornerRadius = card.layer.cornerRadius
+                        }
+                    } else {
+                        trimmed.sdLoadImage(fallbackImage: placeholder) { img in
+                            jobsRunOnMain(self) { _ in
+                                if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
+                                else { iv.image = img }
+                                iv.layer.cornerRadius = card.layer.cornerRadius
+                            }
+                        }
+                    }
                 }
             }
         };return self
@@ -431,10 +444,30 @@ public extension UIAlertController {
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
-                    let img = await trimmed.kfLoadImage(fallbackImage: placeholder)
-                    if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
-                    else { iv.image = img }
-                    iv.layer.cornerRadius = card.layer.cornerRadius
+
+                    if #available(iOS 13.0, *) {
+                        Task { @MainActor in
+                            let img = await trimmed.kfLoadImage(fallbackImage: placeholder)
+                            if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
+                            else { iv.image = img }
+                            iv.layer.cornerRadius = card.layer.cornerRadius
+                        }
+                    } else {
+                        trimmed.kfLoadImage { result in
+                            jobsRunOnMain(self) { _ in
+                                let img: UIImage
+                                switch result {
+                                case .success(let value):
+                                    img = value
+                                case .failure:
+                                    img = placeholder
+                                }
+                                if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
+                                else { iv.image = img }
+                                iv.layer.cornerRadius = card.layer.cornerRadius
+                            }
+                        }
+                    }
                 }
             }
         };return self
@@ -609,17 +642,31 @@ private extension UIAlertController {
 // ================================== Shim & 工具 ==================================
 public extension UIAlertController {
     /// 在“整张 Alert 卡片”就绪后执行（找不到卡片则下一轮 RunLoop 再试一次，最后用根 view 兜底）
+    @available(iOS 13.0, tvOS 13.0, *)
     @MainActor
     fileprivate func _withAlertCard(_ body: @escaping (_ card: UIView) async -> Void) {
-        if let card = _findAlertCardView() {
-            jobsRunOnMain(self) { vc in await body(card) }
-            return
+        guard let card = _findAlertCardView() else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                let card: UIView = self._findAlertCardView() ?? self.view
+                Task { @MainActor in
+                    await body(card)
+                }
+            };return
         }
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            let card: UIView = self._findAlertCardView() ?? self.view
-            jobsRunOnMain(self) { vc in await body(card) }
+        Task { @MainActor in
+            await body(card)
         }
+    }
+    @MainActor
+    fileprivate func _withAlertCard(_ body: @escaping (_ card: UIView) -> Void) {
+        guard let card = _findAlertCardView() else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                let card: UIView = self._findAlertCardView() ?? self.view
+                body(card)
+            };return
+        };body(card)
     }
     /// 隐掉毛玻璃，并清掉容器底色（供本地/网络背景生效时使用）
     @MainActor

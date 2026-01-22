@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 #if canImport(SkeletonView)
 import SkeletonView
 // MARK: - UIView · 基础属性与显隐
@@ -56,7 +57,7 @@ public extension UIView {
     /// 纯色“脉冲”骨架（可传自定义动画，不传则用内置 pulse）
     @discardableResult
     public func byShowSolidSkeleton(
-        baseColor: UIColor = .systemGray5,
+        baseColor: UIColor = JobsCor.systemGray5,
         transition: TimeInterval = 0.2,
         customAnimation: SkeletonLayerAnimation? = nil
     ) -> Self {
@@ -69,7 +70,7 @@ public extension UIView {
     /// 渐变骨架（sliding）
     @discardableResult
     public func byShowGradientSkeleton(
-        baseColor: UIColor = .systemGray5,
+        baseColor: UIColor = JobsCor.systemGray5,
         direction: GradientDirection = .leftRight,
         transition: TimeInterval = 0.2
     ) -> Self {

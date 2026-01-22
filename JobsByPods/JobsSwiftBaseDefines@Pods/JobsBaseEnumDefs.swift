@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 2025/6/16.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -312,19 +313,23 @@ public enum MKRightBtnViewBtnType: Int {
          comment,/// 评论
          share   /// 分享
 }
-// MARK: - Push/pop 控制器的方向
-public enum JobsTransitionDirection: UInt {
-    case top,   /// 从上面进出
-         bottom,/// 从下面进出
-         left,  /// 从左边进出
-         right  /// 从右边进出
+// MARK: - 方向
+public enum JobsDirection: UInt {
+    case top,   /// 上面
+         bottom,/// 下面
+         left,  /// 左边
+         right  /// 右边
 }
-// MARK: - 滑动方向
-public enum MoveDirection: Int {
-    case verticalUp = 0,/// 垂直方向(向上)滑动
-         verticalDown,  /// 垂直方向(向下)滑动
-         horizontLeft,  /// 水平方向(向左)滑动
-         horizontRight  /// 水平方向(向右)滑动
+@available(iOS 13.0, *)
+public extension JobsDirection {
+    var toDirectionalEdge: NSDirectionalRectEdge {
+        switch self {
+        case .top:    return .top
+        case .left:   return .leading
+        case .bottom: return .bottom
+        case .right:  return .trailing
+        }
+    }
 }
 // MARK: - 滚动方向
 public enum ScrollDirection: Int {

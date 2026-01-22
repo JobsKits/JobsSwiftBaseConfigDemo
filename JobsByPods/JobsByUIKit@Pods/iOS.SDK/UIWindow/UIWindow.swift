@@ -25,32 +25,47 @@ public extension UIWindow {
     }
     /// 实例访问也保持一致
     var wd: UIWindow { Self.wd }
+    // ================================== 跨版本入口：iOS 12+ 可编译 ==================================
+    @discardableResult
+    static func jobsMake(root: UIViewController? = nil,
+                         level: UIWindow.Level = .normal,
+                         makeKeyVisible: Bool = true) -> UIWindow {
+
+        // iOS 13+ 走 scene 路径；iOS 12- 走 frame 路径
+        if #available(iOS 13.0, *) {
+            return jobsMake(scene: nil,
+                            root: root,
+                            level: level,
+                            makeKeyVisible: makeKeyVisible)
+        } else {
+            let win = UIWindow(frame: UIScreen.main.bounds)
+            return win
+                .byRootViewController(root)
+                .byWindowLevel(level)
+                ._makeIfNeeded(makeKeyVisible)
+        }
+    }
     /// 新建并附着到“最合适”的前台 scene（iOS 26+ 不要再用 init(frame:)）
+    @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
     static func jobsMake(scene: UIWindowScene? = nil,
                          root: UIViewController? = nil,
                          level: UIWindow.Level = .normal,
                          makeKeyVisible: Bool = true) -> UIWindow {
         let targetScene: UIWindowScene? = {
-            if #available(iOS 13.0, *) {
-                if let scene { return scene }
-                return UIApplication.shared.connectedScenes
-                    .compactMap { $0 as? UIWindowScene }
-                    .first { $0.activationState == .foregroundActive }
-                    ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
-            } else {
-                return nil
-            }
+            if let scene { return scene }
+            return UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .first { $0.activationState == .foregroundActive }
+                ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
         }()
-
         let win: UIWindow
-        if #available(iOS 13.0, *), let s = targetScene {
+        if let s = targetScene {
             win = UIWindow(windowScene: s)
         } else {
-            // 仅老系统路径；iOS 26 起这条是 deprecated，不在新系统上使用
+            // 极端兜底：没拿到 scene 时也能创建（理论上很少见）
             win = UIWindow(frame: UIScreen.main.bounds)
-        }
-        return win
+        };return win
             .byRootViewController(root)
             .byWindowLevel(level)
             ._makeIfNeeded(makeKeyVisible)

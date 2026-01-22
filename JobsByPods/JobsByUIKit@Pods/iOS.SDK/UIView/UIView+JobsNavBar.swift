@@ -25,7 +25,7 @@ public extension UIView {
         public var enabled: Bool = false
         public var style: JobsNavBar.Style = .init()
         public var titleProvider: JobsRetAttributedString? = nil          // nil -> 隐藏标题；不设=由宿主决定
-        public var backButtonProvider: BackButtonProvider? = nil// nil -> 隐藏返回键
+        public var backButtonProvider: JobsRetButtonBlock? = nil// nil -> 隐藏返回键
         public var onBack: jobsByVoidBlock? = nil                   // 未设置则由宿主兜底
         public var layout: ((JobsNavBar, ConstraintMaker, UIView) -> Void)? = nil // 自定义布局
         public var backButtonLayout: ((JobsNavBar, UIButton, ConstraintMaker) -> Void)? = nil
@@ -129,7 +129,7 @@ public extension UIView {
     }
     /// 自定义返回键（返回 nil -> 隐藏）
     @discardableResult
-    func byNavBarBackButtonProvider(_ p: @escaping BackButtonProvider) -> Self {
+    func byNavBarBackButtonProvider(_ p: @escaping JobsRetButtonBlock) -> Self {
         var c = _jobsNavBarConfig
         c.backButtonProvider = p
         _jobsNavBarConfig = c

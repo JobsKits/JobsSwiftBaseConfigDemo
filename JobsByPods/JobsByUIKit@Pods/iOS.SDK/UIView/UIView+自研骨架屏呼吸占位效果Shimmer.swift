@@ -23,14 +23,13 @@
 //
 //  ⚠️ 列表复用建议：cell.prepareForReuse() 里调用 jobs_stopShimmer()，避免残留 layer/动画。
 //  ========================================================================
-
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-import ObjectiveC
 
+import ObjectiveC
 // MARK: - 自动跟随布局更新（无需子类化）
 // 说明：很多时候 startShimmer 发生在 AutoLayout 真正出 frame 之前（bounds=0），
 // 如果外部又无法在 layoutSubviews / viewDidLayoutSubviews 里手动调用 update，
@@ -47,8 +46,7 @@ private enum JobsShimmerSwizzle {
         guard let original = class_getInstanceMethod(cls, originalSel),
               let swizzled = class_getInstanceMethod(cls, swizzledSel) else {
             return
-        }
-        method_exchangeImplementations(original, swizzled)
+        };method_exchangeImplementations(original, swizzled)
     }()
 }
 
@@ -225,8 +223,8 @@ private extension UIView {
         let cfg = jobs_shimmerConfig
 
         // 动态色支持：resolvedColor(with:) 可跟随暗黑模式变化
-        let base = cfg.baseColor.resolvedColor(with: traitCollection)
-        let highlight = cfg.highlightColor.resolvedColor(with: traitCollection)
+        let base = cfg.baseColor.jobsResolvedColor(with: traitCollection)
+        let highlight = cfg.highlightColor.jobsResolvedColor(with: traitCollection)
         let c1 = base.cgColor
         let c2 = highlight.cgColor
 

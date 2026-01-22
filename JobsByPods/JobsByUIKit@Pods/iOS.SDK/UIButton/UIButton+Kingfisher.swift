@@ -226,20 +226,20 @@ public extension UIButton {
             options: opts,
             progressBlock: { r, t in cfg.progress?(Int64(r), Int64(t)) }
         ) { [weak self] result in
-            guard let self else { return }
-            Task { @MainActor [weak self] in
-                self?._jobs_runOnMain { btn in
+            jobsRunOnMain(self) { strongSelf in
+                strongSelf._jobs_runOnMain { btn in
                     switch result {
                     case .success(let s):
                         btn._jobs_stopBackgroundShimmer()
                         btn._jobs_forceSetBackgroundImage(s.image, for: state)
+
                     case .failure:
-                        // ✅ Failure：有兜底图才落兜底；否则继续 shimmer
                         if let fb = cfg.placeholder {
                             btn._jobs_stopBackgroundShimmer()
                             btn._jobs_forceSetBackgroundImage(fb, for: state)
                         }
                     }
+
                     cfg.completed?(result)
                 }
             }

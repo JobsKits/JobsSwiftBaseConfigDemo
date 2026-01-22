@@ -22,6 +22,13 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
+#    '**/UIView+Lottie.swift',       # 低版本的 Lottie 没有 LottieAnimationView
+#    '**/UIView+keyboard.swift',     # 低版本的Rx不兼容
+#    '**/UIView+Rx.swift',           # 低版本的Rx不兼容
+#    '**/UITextField+Rx.swift',      # 低版本的Rx不兼容
+#    '**/UITextView+监控删除键.swift', # 低版本的Rx不兼容
+#    '**/UITextField+监控输入.swift',  # 低版本的Rx不兼容
+#    '**/UITextView+监控输入.swift',   # 低版本的Rx不兼容
   ]
   
   s.ios.frameworks = 'UIKit',

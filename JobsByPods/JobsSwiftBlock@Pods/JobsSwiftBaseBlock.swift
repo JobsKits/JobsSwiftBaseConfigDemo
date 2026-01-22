@@ -52,6 +52,9 @@ public typealias jobsByStringBlock = (String?) -> Void
 public typealias jobsByStrBlock = (String) -> Void
 public typealias jobsByButtonBlock = (UIButton?) -> Void
 public typealias jobsByBtnBlock = (UIButton) -> Void
+public typealias jobsByImageBlock = (UIImage?) -> Void
+public typealias jobsByImgBlock = (UIImage) -> Void
+public typealias jobsByTextFieldBlock = (UITextField) -> Void
 public typealias jobsByBarButtonItemBlock = (UIBarButtonItem?) -> Void
 public typealias jobsByBarBtnItemBlock = (UIBarButtonItem) -> Void
 public typealias jobsByGestureRecognizerBlock = (UIGestureRecognizer?) -> Void
@@ -71,7 +74,6 @@ public typealias jobsByUIContextMenuInteractionBlock = (UIContextMenuInteraction
 @available(iOS 13.0, *)
 public typealias jobsByContextMenuInteractionBlock = (UIContextMenuInteraction) -> Void
 public typealias JobsYTKProgress = (_ progress: Progress) -> Void
-
 public typealias jobsByAnyStringBlock = (Any?, String?) -> Void
 public typealias MobileActionBlock = (_ body: [String: Any], _ reply: jobsByAnyBlock) -> Void
 public typealias NativeBlock = (_ payload: Any?, _ reply: @escaping jobsByAnyBlock) -> Void
@@ -104,13 +106,21 @@ public typealias TVOnChange = (_ tv: UITextView,
                                _ old: String,
                                _ isDeleting: Bool) -> Void
 /// UI@UIButton
-public typealias BackButtonProvider = () -> UIButton?         // 返回 nil 隐藏
+public typealias JobsRetButtonBlock = () -> UIButton?         // 返回 nil 隐藏
 public typealias JobsButtonLongPressBlock = (UIButton, UILongPressGestureRecognizer) -> Void
+public typealias JobsPressFuseTick = (_ btn: UIButton,
+                                      _ elapsed: TimeInterval,
+                                      _ progress: CGFloat) -> Void
+public typealias JobsPressFuseEnd  = (_ btn: UIButton,
+                                      _ elapsed: TimeInterval,
+                                      _ progress: CGFloat) -> Void
+/// UI@图片
+public typealias JobsRetUIImageBlock = () -> UIImage?
 /// UI@富文本
 public typealias JobsRetAttributedString = () -> NSAttributedString?    // 返回 nil 隐藏
+/// Data@网络请求
+public typealias JobsRetStringByURLRequestBlock = (URLRequest) -> String?
 /// UI@其他
 @available(iOS 14.0, *)
 public typealias JobsRetByListContentConfigBlock = (UIListContentConfiguration) -> UIListContentConfiguration
 public typealias JobsRetViewsByVoidBlock = () -> [UIView]
-/// Data@网络请求
-public typealias JobsRetStringByURLRequestBlock = (URLRequest) -> String?

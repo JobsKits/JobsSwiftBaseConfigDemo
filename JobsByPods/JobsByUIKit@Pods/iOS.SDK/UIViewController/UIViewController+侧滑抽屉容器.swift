@@ -109,7 +109,7 @@ public class JobsSideDrawerVC: UIViewController {
     }()
     private lazy var menuContainerView: UIView = {
         UIView()
-            .byBgColor(.systemBackground)
+            .byBgColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.bottom.left.equalToSuperview()
                 make.width.equalTo(self.menuWidth)

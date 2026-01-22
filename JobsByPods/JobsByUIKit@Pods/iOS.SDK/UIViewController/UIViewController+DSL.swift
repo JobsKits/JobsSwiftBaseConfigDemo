@@ -138,6 +138,7 @@ public extension UIViewController {
         return self
     }
     // ================================== 状态栏 / 外观 ==================================
+    @available(iOS 13.0, *)
     @discardableResult
     func byOverrideUserInterfaceStyle(_ style: UIUserInterfaceStyle) -> Self {
         self.overrideUserInterfaceStyle = style

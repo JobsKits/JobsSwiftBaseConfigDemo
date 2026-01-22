@@ -14,21 +14,54 @@ import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 public extension URL {
-    /// 异步获取图片：远程用 Kingfisher 下载；文件/Bundle 直接读取
+    // ================================== iOS 13+ async/await 入口 ==================================
+    #if swift(>=5.5) && canImport(_Concurrency)
+    @available(iOS 13.0, tvOS 13.0, *)
     func kfLoadImage() async throws -> UIImage {
+        // 远程：用 KF completion 桥接成 async（兼容所有 KF 版本）
         if isHTTPRemote {
-            // Kingfisher 的并发 API
-            let result = try await KingfisherManager.shared.retrieveImage(with: self)
-            return result.image
+            return try await withCheckedThrowingContinuation { cont in
+                KingfisherManager.shared.retrieveImage(with: self) { result in
+                    switch result {
+                    case .success(let value):
+                        cont.resume(returning: value.image)
+                    case .failure(let err):
+                        cont.resume(throwing: err)
+                    }
+                }
+            }
         }
+        // 本地文件
         if isFileURL {
             if let img = UIImage(contentsOfFile: path) { return img }
             throw KFError.notFound
         }
-        // 兜底：当作 Bundle 资源名（取最后路径段去扩展名）
-        let name = self.deletingPathExtension().lastPathComponent
+        // Bundle 资源兜底：取最后路径名（无扩展）
+        let name = deletingPathExtension().lastPathComponent
         if let img = UIImage(named: name) { return img }
         throw KFError.notFound
+    }
+    #endif
+    // ================================== iOS 12- completion 入口 ==================================
+    func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
+        if isHTTPRemote {
+            KingfisherManager.shared.retrieveImage(with: self) { result in
+                switch result {
+                case .success(let value):
+                    completion(.success(value.image))
+                case .failure(let err):
+                    completion(.failure(err))
+                }
+            };return
+        }
+        if isFileURL {
+            if let img = UIImage(contentsOfFile: path) { completion(.success(img)) }
+            else { completion(.failure(KFError.notFound)) }
+            return
+        }
+        let name = deletingPathExtension().lastPathComponent
+        if let img = UIImage(named: name) { completion(.success(img)) }
+        else { completion(.failure(KFError.notFound)) }
     }
 }
 #endif

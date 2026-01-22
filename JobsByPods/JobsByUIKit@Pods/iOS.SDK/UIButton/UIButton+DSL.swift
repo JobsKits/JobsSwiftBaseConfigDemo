@@ -10,6 +10,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 // MARK: - 基础链式
 public var _jobsTitleFontDictKey: UInt8 = 0
 public var _jobsTitleFontHandlerInstalledKey: UInt8 = 0
@@ -217,12 +219,12 @@ public extension UIButton {
         @discardableResult
         public func backgroundColor(_ color: UIColor) -> UIButton {
             if #available(iOS 15.0, *), state == .normal {
-                var cfg = button.configuration ?? .filled()
+                // ✅ 只写 baseBackgroundColor，避免触发 UIBackgroundConfiguration 的 dynamicMember
+                var cfg = button.configuration ?? .plain()
                 cfg.baseBackgroundColor = color
-                var bg = cfg.background
-                bg.backgroundColor = color
-                cfg.background = bg
                 button.configuration = cfg
+                // 保险：某些 style 下 baseBackgroundColor 不会立刻体现在 layer 上
+                button.backgroundColor = color
                 button.byUpdateConfig()
             } else {
                 button.setBackgroundColor(color, forState: state)
@@ -244,23 +246,27 @@ public extension UIButton {
 }
 // MARK: - 布局 / 外观
 public extension UIButton {
+
     @discardableResult
-    public func byBackgroundColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    func byBackgroundColor(_ color: UIColor?,
+                           for state: UIControl.State = .normal) -> Self {
+        let c = color ?? .clear   // ✅ 统一 nil 语义：当作清空背景
         if #available(iOS 15.0, *), state == .normal {
-            var cfg = self.configuration ?? .filled()
-            cfg.baseBackgroundColor = color
-            var bg = cfg.background
-            bg.backgroundColor = color
-            cfg.background = bg
+            var cfg = self.configuration ?? .plain()
+            // ✅ 不碰 cfg.background.xxx，只用 baseBackgroundColor
+            cfg.baseBackgroundColor = c
             if cfg.title == nil, let t = self.title(for: .normal), !t.isEmpty { cfg.title = t }
             if cfg.baseForegroundColor == nil, let tc = self.titleColor(for: .normal) { cfg.baseForegroundColor = tc }
             self.configuration = cfg
+            // ✅ 保险：某些配置下 baseBackgroundColor 不会立刻体现在 layer 上
+            // 这里是 UIButton 自身属性，不涉及 iOS15-only API
+            self.backgroundColor = c
             byUpdateConfig()
         } else {
-            self.setBgCor(color ?? .white, forState: state)
+            self.setBgCor(c, forState: state)
         };return self
     }
-
+    
     @discardableResult
     public func byNormalBgColor(_ color: UIColor) -> Self { byBackgroundColor(color, for: .normal) }
 
@@ -357,6 +363,7 @@ public extension UIButton {
         return self
     }
     /// 图文位置关系
+    @available(iOS 13.0, *)
     @discardableResult
     public func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
         let p = placement ?? .top
@@ -381,7 +388,44 @@ public extension UIButton {
             }
         };return self
     }
+    
+    @discardableResult
+    func byImagePlacement(_ placement: JobsDirection,
+                          padding: CGFloat = 8.0) -> Self {
+        if #available(iOS 13.0, *) {
+            return byImagePlacement(placement.toDirectionalEdge, padding: padding)
+        } else {
+            return byImagePlacementLegacy(placement, padding: padding)
+        }
+    }
 
+    @discardableResult
+    func byImagePlacementLegacy(_ placement: JobsDirection,
+                                padding: CGFloat) -> Self {
+        // 这里写你自己的 iOS12 布局策略（可简版）
+        // 常见做法：根据 imageView/titleLabel 的 size 调整 edgeInsets
+        // 你如果只想“能用”，做 top/left/right/bottom 四种就够
+        // 示例：只处理左右（最常用），上下你按需补
+        switch placement {
+        case .left:
+            // 默认就是左图右文，padding 可通过 contentEdgeInsets 兜底
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding/2, bottom: 0, right: padding/2)
+        case .right:
+            // 右图左文：交换 inset（需要依赖当前 intrinsic size，建议 layoutIfNeeded）
+            layoutIfNeeded()
+            let imageW = imageView?.bounds.width ?? 0
+            let titleW = titleLabel?.bounds.width ?? 0
+            imageEdgeInsets = UIEdgeInsets(top: 0, left: titleW + padding/2, bottom: 0, right: -(titleW + padding/2))
+            titleEdgeInsets = UIEdgeInsets(top: 0, left: -(imageW + padding/2), bottom: 0, right: imageW + padding/2)
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding/2, bottom: 0, right: padding/2)
+        case .top, .bottom:
+            // 上下布局在 iOS12 用 insets 也能做，但要算高度
+            // 你要的话我给你补一个稳定版本
+            break
+        };return self
+    }
+    
+    @available(iOS 13.0, *)
     @discardableResult
     public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
         byImagePlacement(placement, padding: 8.0)

@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -15,10 +16,20 @@ import JobsSwiftBlock
 public extension UIWindow {
     // MARK: - 构造 / 附着
     /// 绑定到指定 WindowScene（不会 makeKeyAndVisible）
+    /// - 兼容：iOS 12 也能编译。iOS 13+ 可进一步用 byAttach(toScene:)
     @discardableResult
-    func byAttach(to scene: UIWindowScene?) -> Self {
+    func byAttach(to scene: Any?) -> Self {
+        if #available(iOS 13.0, *) {
+            return byAttach(toScene: scene as? UIWindowScene)
+        };return self
+    }
+    /// 绑定到指定 WindowScene（不会 makeKeyAndVisible）
+    /// - iOS 13+ 专用（真正做事）
+    @available(iOS 13.0, tvOS 13.0, *)
+    @discardableResult
+    func byAttach(toScene scene: UIWindowScene?) -> Self {
         // iOS 13+，且外界可传 nil（nil 时不动）
-        if #available(iOS 13.0, *), let scene {
+        if let scene {
             // 注意：不要强行覆盖另一个 scene 的 window
             if self.windowScene !== scene {
                 self.windowScene = scene

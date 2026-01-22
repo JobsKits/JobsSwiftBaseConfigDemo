@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 public extension UITextView {
     // MARK:  文本基础属性
     @discardableResult
@@ -202,7 +204,7 @@ public extension UITextView {
     // MARK: 统一的圆角边框样式（跨 iOS 版本）
     @discardableResult
     func byRoundedBorder(
-        color: UIColor = .systemGray4,
+        color: UIColor = JobsCor.systemGray4,
         width: CGFloat = 1,
         radius: CGFloat = 8,
         background: UIColor? = nil
@@ -219,11 +221,11 @@ public extension UITextView {
     func byBezelLike(
         radius: CGFloat = 8
     ) -> Self {
-        layer.byBorderColor(.separator)
+        layer.byBorderColor(JobsCor.separator)
             .byBorderWidth(1)
             .byCornerRadius(radius)
             .byMasksToBounds(true)
-        byBgColor(.secondarySystemBackground)
+        byBgColor(JobsCor.secondarySystemBackground)
         return self
     }
 }

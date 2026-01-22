@@ -131,6 +131,47 @@ extension UIColor {
         randomColor()
     }
 }
+// MARK: - UIColor：兼容封装（iOS 12- / iOS 13+ / iOS 18+）
+extension UIColor {
+    // MARK: - iOS 13+ dynamicProvider / resolvedColor
+    /// iOS13+ 才有的 dynamicProvider：低版本直接返回 provider(UITraitCollection())
+    /// - 外部不需要写 fallback
+    public static func jobsDynamic(_ provider: @escaping (UITraitCollection) -> UIColor) -> UIColor {
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            return UIColor(dynamicProvider: provider)
+        } else {
+            return provider(UITraitCollection())
+        }
+    }
+    /// iOS13+ 才有的 resolvedColor：低版本直接返回自身
+    public func jobsResolvedColor(with traitCollection: UITraitCollection) -> UIColor {
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            return self.resolvedColor(with: traitCollection)
+        } else {
+            return self
+        }
+    }
+    // MARK: - iOS 18+ Prominence（安全封装：低版本无感降级）
+    /// iOS18+：withProminence；低版本：原样返回
+    /// - 参数用 Any：避免低版本工程被 UIColor.Prominence 类型卡住（外界可传 prominence 或 nil）
+    public func jobsWithProminence(_ prominence: Any?) -> UIColor {
+        if #available(iOS 18.0, tvOS 18.0, *),
+           let p = prominence as? UIColor.Prominence {
+            return self.withProminence(p)
+        } else {
+            return self
+        }
+    }
+    /// iOS18+：prominence；低版本：nil
+    /// - 返回 Any?：避免低版本工程直接引用 UIColor.Prominence
+    public var jobsProminence: Any? {
+        if #available(iOS 18.0, tvOS 18.0, *) {
+            return self.prominence
+        } else {
+            return nil
+        }
+    }
+}
 /* 设置多颜色样式 会用到
  //透明度；alpha 取值对照
  100% — FF

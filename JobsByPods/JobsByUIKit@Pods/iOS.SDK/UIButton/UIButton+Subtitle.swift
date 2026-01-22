@@ -43,10 +43,13 @@ public extension UIButton {
 
     func _setSubPack_noAttr(_ p: _JobsSubPackNoAttr, for state: UIControl.State) {
         var d = _subDict_noAttr; d[state.raw] = p; _subDict_noAttr = d
-        _ensureSubtitleHandler_noAttrInstalled()
-        if #available(iOS 15.0, *) { setNeedsUpdateConfiguration() }
+        if #available(iOS 15.0, *) {
+            _ensureSubtitleHandler_noAttrInstalled()
+            setNeedsUpdateConfiguration()
+        }
     }
 
+    @available(iOS 15.0, *)
     func _ensureSubtitleHandler_noAttrInstalled() {
         // 已安装就不重复装
         if (objc_getAssociatedObject(self, &_jobsSubtitleHandlerInstalledKey) as? Bool) == true { return }

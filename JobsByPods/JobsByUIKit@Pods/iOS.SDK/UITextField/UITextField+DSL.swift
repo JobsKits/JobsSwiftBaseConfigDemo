@@ -10,6 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import ObjectiveC.runtime
+import JobsSwiftBlock
 // MARK: ✏️ UITextField 链式配置
 public extension UITextField {
     // MARK: 🌸 基础文本属性
@@ -276,13 +279,43 @@ public extension UITextField {
         return self
     }
     /// 链式监听“发送/回车”键
+    // ================================== Return 键回调（兼容 iOS 12+） ==================================
     @discardableResult
-    func onReturn(_ handler: @escaping (UITextField) -> Void) -> Self {
-        let wrapper = UIAction { [weak self] _ in
-            guard let self = self else { return }; handler(self)
-        }
-        addAction(wrapper, for: .editingDidEndOnExit)
-        return self
+    func onReturn(_ handler: @escaping jobsByTextFieldBlock) -> Self {
+        // 先存起来（低版本 target-action 需要）
+        _jobs_onReturnHandler = handler
+
+        if #available(iOS 14.0, *) {
+            // iOS14+: UIAction
+            let action = UIAction(
+                title: "",
+                image: nil,
+                identifier: nil,
+                discoverabilityTitle: nil,
+                attributes: [],
+                state: .off
+            ) { [weak self] _ in
+                guard let self else { return }
+                handler(self)
+            }
+            addAction(action, for: .editingDidEndOnExit)
+        } else {
+            // iOS13-: target-action
+            addTarget(self, action: #selector(_jobs_handleReturn), for: .editingDidEndOnExit)
+        };return self
+    }
+}
+
+private extension UITextField {
+    struct _JobsAssoc {
+        static var onReturnKey: UInt8 = 0
+    }
+    var _jobs_onReturnHandler: (jobsByTextFieldBlock)? {
+        get { objc_getAssociatedObject(self, &_JobsAssoc.onReturnKey) as? (jobsByTextFieldBlock) }
+        set { objc_setAssociatedObject(self, &_JobsAssoc.onReturnKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC) }
+    }
+    @objc func _jobs_handleReturn() {
+        _jobs_onReturnHandler?(self)
     }
 }
 // MARK: - 左侧图标 & 纯留白
