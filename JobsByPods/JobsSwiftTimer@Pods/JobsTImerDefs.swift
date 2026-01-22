@@ -5,13 +5,12 @@
 //  Created by Jobs on 21/1/26.
 //
 
-import JobsSwiftBaseDefines
-/// JobsTimer 专用回调类型：可跨并发域安全传递
-public typealias JobsTimerCallback = @Sendable () -> Void
-public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void
-public typealias TimerStateChangeHandler = (_ button: UIButton,
-                                            _ old: TimerState,
-                                            _ new: TimerState) -> Void
+/// 统一结果态：用它来做日志和灰度
+public enum JobsOpenResult {
+    case opened                 // 成功触发了系统打开
+    case cannotOpen             // 系统认为不能打开（未安装/被限制）
+    case invalidInput           // 入参不是一个有效的 URL/电话
+}
 
 public enum TimerState: Int, Sendable {
     case idle
@@ -73,6 +72,13 @@ public enum JobsTimerKind: Sendable {
     case displayLink
     case runLoop
 }
+
+/// JobsTimer 专用回调类型：可跨并发域安全传递
+public typealias JobsTimerCallback = @Sendable () -> Void
+public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void
+public typealias TimerStateChangeHandler = (_ button: UIButton,
+                                            _ old: TimerState,
+                                            _ new: TimerState) -> Void
 
 public extension JobsTimerKind {
     var displayName: String {

@@ -40,7 +40,7 @@ public extension String {
     /// 返回结果仅表示“是否成功调起系统打开”，并不保证目标 App 内部行为成功
     @discardableResult
     func open(options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
-              jobsByVoidBlock: jobsByOpenResultBlock? = nil) -> JobsOpenResult {
+              jobsByVoidBlock: jobsByOpenResultBlock? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
         // 1) 预处理：去空白 + 尝试补 scheme + 百分号编码
         guard let url = Self.makeURL(from: self) else {
             jobsByVoidBlock?(.invalidInput)
@@ -66,7 +66,7 @@ public extension String {
     /// - 模拟器不支持拨号；真机的家长控制/MDM 也可能拦截。
     @discardableResult
     func call(usePrompt: Bool = false,
-              jobsByVoidBlock: (jobsByOpenResultBlock)? = nil) -> JobsOpenResult {
+              jobsByVoidBlock: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
         #if targetEnvironment(simulator)
         // ================== 模拟器环境直接拦截 ==================
         print("📵 模拟器不支持拨号功能")
@@ -118,7 +118,7 @@ public extension String {
               cc: [String] = [],
               bcc: [String] = [],
               presentFrom: UIViewController? = nil,
-              completion: (jobsByOpenResultBlock)? = nil) -> JobsOpenResult {
+              completion: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
 
         let tos = Self._parseEmails(self)
         guard !tos.isEmpty else {

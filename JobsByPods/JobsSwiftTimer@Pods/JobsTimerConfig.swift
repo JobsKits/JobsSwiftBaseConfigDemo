@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 import ObjectiveC
-import JobsSwiftBlock
 // MARK: - 配置
 public struct JobsTimerConfig {
     public var interval: TimeInterval    // 时间间隔（最小会被 clamp 到 0.000001）
