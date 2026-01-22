@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
-
+@available(iOS 15.0, *)
 public extension UINavigationBarAppearance {
     // ================================== 标题（inline title） ==================================
     /// 设置普通标题字体
@@ -133,7 +133,6 @@ public extension UINavigationBarAppearance {
     }
     /// 配置 done 按钮外观（13.0~25.x）
     @discardableResult
-    @available(iOS, introduced: 13.0, deprecated: 26.0)
     func byDoneButtonAppearance(_ builder: jobsByBarButtonItemAppearanceBlock) -> Self {
         builder(doneButtonAppearance)
         return self

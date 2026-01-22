@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 // MARK: - 🍬语法糖@数据源和代理
 extension UITableView {
     @discardableResult
@@ -93,7 +94,7 @@ extension UITableView {
     }
     // MARK: - 设置整个区圆角
     public func sectionConner(cell: UITableViewCell,
-                       bgColor: UIColor = UIColor.systemBackground,
+                       bgColor: UIColor = JobsCor.systemBackground,
                        indexPath: IndexPath,
                        cornerRadius: CGFloat = 10.0) {
         let bounds = CGRect(x: self.separatorInset.left, y: 0,

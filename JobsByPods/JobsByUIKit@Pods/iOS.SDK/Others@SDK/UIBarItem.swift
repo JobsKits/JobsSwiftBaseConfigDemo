@@ -32,6 +32,7 @@ public extension UIBarItem {
         return self
     }
     /// 支持 SF Symbols
+    @available(iOS 13.0, *)
     @discardableResult
     func byImage(systemName: String, configuration: UIImage.Configuration? = nil) -> Self {
         if let cfg = configuration {

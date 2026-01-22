@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 // MARK: - UIScrollView层：统一的占位能力@按钮
 #if canImport(SnapKit)
 import SnapKit
@@ -24,8 +25,8 @@ public enum JobsEmptyAuto {
                 .bySubTitle("下拉刷新或点我试试".tr, for: .normal)
                 .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
                 .bySubTitleFont(.systemFont(ofSize: 13))
-                .byTitleColor(.label, for: .normal)
-                .bySubTitleColor(.secondaryLabel, for: .normal)
+                .byTitleColor(JobsCor.label, for: .normal)
+                .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
                 .byImage("tray".sysImg, for: .normal)
                 .byImagePlacement(.top)
         }

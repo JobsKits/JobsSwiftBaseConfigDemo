@@ -97,15 +97,38 @@ public extension UIImageView {
         byShimmeringAsyncImageSD(src, fallback: placeholder(), shimmerConfig: .default, fade: 0.25)
     }
     /// 保持你原来的 async 版本（不带 shimmer）
+    #if compiler(>=5.5)
     @discardableResult
     func byAsyncImageSD(
         _ src: String,
         fallback: @autoclosure @escaping @Sendable () -> UIImage
     ) -> Self {
-        jobsRunOnMain {
-            let img = await src.sdLoadImage(fallbackImage: fallback())
-            self.image = img
+        if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+            // iOS13+：保留你原来的 async/await 路径（内部仍用 jobsRunOnMain）
+            jobsRunOnMain { @MainActor in
+                let img = await src.sdLoadImage(fallbackImage: fallback())
+                self.image = img
+            }
+        } else {
+            // iOS12-：走 SDWebImage 回调路径（能做事）
+            guard let url = URL(string: src) else {
+                jobsRunOnMain { @MainActor in
+                    self.image = fallback()
+                };return self
+            }
+
+            SDWebImageManager.shared.loadImage(
+                with: url,
+                options: [],
+                progress: nil
+            ) { [weak self] image, _, _, _, _, _ in
+                guard let self else { return }
+                jobsRunOnMain { @MainActor in
+                    self.image = image ?? fallback()
+                }
+            }
         };return self
     }
+    #endif
 }
 #endif

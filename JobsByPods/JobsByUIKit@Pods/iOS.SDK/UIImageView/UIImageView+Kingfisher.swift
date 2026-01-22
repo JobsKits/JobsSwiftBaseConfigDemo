@@ -95,6 +95,7 @@ public extension UIImageView {
         byShimmeringAsyncImageKF(src, fallback: placeholder(), shimmerConfig: .default, fade: 0.25)
     }
     /// 保持原来的 async 版本（不带 shimmer）
+    #if compiler(>=5.5)
     @discardableResult
     func byAsyncImageKF(
         _ src: String,
@@ -102,10 +103,38 @@ public extension UIImageView {
     ) -> Self {
         // 统一记录 URL，便于 JobsImageCacheCleaner 遍历重下
         if case .remote(let url)? = src.imageSource { jobs_remoteURL = url } else { jobs_remoteURL = nil }
-        jobsRunOnMain {
-            let img = await src.kfLoadImage(fallbackImage: fallback())
-            self.image = img
+        if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+            // iOS13+：保留 async/await 路径（内部仍用 jobsRunOnMain）
+            jobsRunOnMain { @MainActor in
+                let img = await src.kfLoadImage(fallbackImage: fallback())
+                self.image = img
+            }
+        } else {
+            // iOS12-：走 Kingfisher 回调路径（能做事）
+            guard let url = (src.imageSource.flatMap { source -> URL? in
+                if case .remote(let u) = source { return u }
+                return nil
+            }) else {
+                jobsRunOnMain { @MainActor in
+                    self.image = fallback()
+                };return self
+            }
+            // 这里用 KingfisherManager 直接下载
+            KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
+                guard let self else { return }
+                let img: UIImage
+                switch result {
+                case .success(let value):
+                    img = value.image
+                case .failure:
+                    img = fallback()
+                }
+                jobsRunOnMain { @MainActor in
+                    self.image = img
+                }
+            }
         };return self
     }
+    #endif
 }
 #endif

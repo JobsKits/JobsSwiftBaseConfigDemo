@@ -21,8 +21,8 @@ public class JobsNavBar: UIView {
     public struct Style {
         public var usesSafeAreaTopInset: Bool = true
         public var contentHeight: CGFloat = 44
-        public var backgroundColor: UIColor = .secondarySystemBackground
-        public var hairlineColor: UIColor = UIColor.separator.withAlphaComponent(0.6)
+        public var backgroundColor: UIColor = JobsCor.secondarySystemBackground
+        public var hairlineColor: UIColor = JobsCor.separator.withAlphaComponent(0.6)
         public var hairlineHidden: Bool = false
         public var titleAlignmentCenter: Bool = true
         public init() {}
@@ -146,7 +146,7 @@ public class JobsNavBar: UIView {
             string: text,
             attributes: [
                 .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
-                .foregroundColor: UIColor.label
+                .foregroundColor: JobsCor.label
             ]
         )
     }

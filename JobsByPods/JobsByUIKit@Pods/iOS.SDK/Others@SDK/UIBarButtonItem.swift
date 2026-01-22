@@ -104,6 +104,7 @@ public extension UIBarButtonItem {
         return self
     }
     /// iOS14+ 直接挂菜单
+    @available(iOS 13.0, *)
     @discardableResult
     func byMenu(_ menu: UIMenu?) -> Self {
         if #available(iOS 14.0, *) { self.menu = menu }

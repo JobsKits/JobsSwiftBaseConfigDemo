@@ -47,6 +47,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 请求的行为风格（iOS16+）
+    @available(iOS 15.0, *)
     @discardableResult
     func byPreferredBehavioralStyle(_ style: UIBehavioralStyle) -> Self {
         if #available(iOS 16.0, *) {
@@ -149,6 +150,7 @@ public extension UINavigationBar {
     }
     // ================================== Appearance（iOS13+） ==================================
     /// 配置 standardAppearance@闭包版
+    @available(iOS 13.0, *)
     @discardableResult
     func byStandardAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
@@ -158,6 +160,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 直接设置 standardAppearance
+    @available(iOS 13.0, *)
     @discardableResult
     func byStandardAppearance(_ appearance: UINavigationBarAppearance) -> Self {
         if #available(iOS 13.0, *) {
@@ -165,6 +168,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 配置 compactAppearance@闭包版（紧凑高度）
+    @available(iOS 13.0, *)
     @discardableResult
     func byCompactAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
@@ -174,6 +178,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 直接设置 compactAppearance（可为 nil）
+    @available(iOS 13.0, *)
     @discardableResult
     func byCompactAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 13.0, *) {
@@ -181,6 +186,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 配置 scrollEdgeAppearance@闭包版（滚动到边缘时）
+    @available(iOS 13.0, *)
     @discardableResult
     func byScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
@@ -190,6 +196,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 直接设置 scrollEdgeAppearance（可为 nil）
+    @available(iOS 13.0, *)
     @discardableResult
     func byScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 13.0, *) {
@@ -197,6 +204,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 配置 compactScrollEdgeAppearance@闭包版（紧凑 + 滚动到边缘）
+    @available(iOS 13.0, *)
     @discardableResult
     func byCompactScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 15.0, *) {
@@ -209,6 +217,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 直接设置 compactScrollEdgeAppearance（可为 nil）
+    @available(iOS 13.0, *)
     @discardableResult
     func byCompactScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
@@ -216,6 +225,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 一次把同一个appearance套到所有状态@闭包版（常用）
+    @available(iOS 13.0, *)
     @discardableResult
     func byUnifiedAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
@@ -230,6 +240,7 @@ public extension UINavigationBar {
         };return self
     }
     /// 用同一个 appearance 套到所有状态
+    @available(iOS 13.0, *)
     @discardableResult
     func byUnifiedAppearance(_ appearance: UINavigationBarAppearance) -> Self {
         if #available(iOS 13.0, *) {

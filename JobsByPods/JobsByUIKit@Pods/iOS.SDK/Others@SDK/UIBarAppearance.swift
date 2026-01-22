@@ -10,7 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
+@available(iOS 13.0, *)
 public extension UIBarAppearance {
     // MARK: - 1. 背景预设 configureXXX
     /// 系统默认背景（跟随主题）
