@@ -18,12 +18,20 @@ extension String {
     /// "会员卡".svg  -> UIImage?
     /// 支持自动补 .svg；默认从 main bundle 取资源
     public var svg: UIImage? {
-        return Self.svgImage(named: self, in: .main, size: nil, scale: UIScreen.main.scale)
+        return Self.svgImage(named: self,
+                             in: .main,
+                             size: nil,
+                             scale: UIScreen.main.scale)
     }
 
     /// 可选：指定输出尺寸
-    public func svg(size: CGSize?, in bundle: Bundle = .main, scale: CGFloat = UIScreen.main.scale) -> UIImage? {
-        return Self.svgImage(named: self, in: bundle, size: size, scale: scale)
+    public func svg(size: CGSize?,
+                    in bundle: Bundle = .main,
+                    scale: CGFloat = UIScreen.main.scale) -> UIImage? {
+        return Self.svgImage(named: self,
+                             in:bundle,
+                             size: size,
+                             scale: scale)
     }
 
     private static func svgImage(named name: String,
