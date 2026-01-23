@@ -14,11 +14,11 @@ import UIKit
 import UniformTypeIdentifiers // iOS 14+
 #endif
 
-public extension UIDocumentPickerViewController {
+extension UIDocumentPickerViewController {
     // MARK: Factory (Open / Import)
     /// iOS14+：打开/导入文件（推荐）
     @available(iOS 14.0, *)
-    static func jobs_opening(
+    public static func jobs_opening(
         _ contentTypes: [UTType],
         asCopy: Bool = true,
         allowsMultipleSelection: Bool = false,
@@ -31,7 +31,7 @@ public extension UIDocumentPickerViewController {
     }
     /// 只选 .xlsx（推荐，最精准）
     @available(iOS 14.0, *)
-    static func jobs_openXLSX(
+    public static func jobs_openXLSX(
         asCopy: Bool = true,
         allowsMultipleSelection: Bool = false,
         shouldShowFileExtensions: Bool = true
@@ -43,7 +43,7 @@ public extension UIDocumentPickerViewController {
     }
     /// 常规“表格类”（Numbers/Excel 等更泛）
     @available(iOS 14.0, *)
-    static func jobs_openSpreadsheet(
+    public static func jobs_openSpreadsheet(
         asCopy: Bool = true,
         allowsMultipleSelection: Bool = false,
         shouldShowFileExtensions: Bool = true
@@ -55,7 +55,7 @@ public extension UIDocumentPickerViewController {
     // MARK: Factory (Export)
     /// iOS14+：导出/移动文件
     @available(iOS 14.0, *)
-    static func jobs_exporting(
+    public static func jobs_exporting(
         _ urls: [URL],
         asCopy: Bool = false,
         shouldShowFileExtensions: Bool = true
@@ -66,31 +66,33 @@ public extension UIDocumentPickerViewController {
     }
     // MARK: Chain Config
     @discardableResult
-    func byDelegate(_ v: UIDocumentPickerDelegate?) -> Self {
+    public func byDelegate(_ v: UIDocumentPickerDelegate?) -> Self {
         self.delegate = v
         return self
     }
 
     @discardableResult
-    func byAllowsMultipleSelection(_ v: Bool) -> Self {
+    public func byAllowsMultipleSelection(_ v: Bool) -> Self {
         self.allowsMultipleSelection = v
         return self
     }
 
+    @available(iOS 13.0, *)
     @discardableResult
-    func byShouldShowFileExtensions(_ v: Bool) -> Self {
+    public func byShouldShowFileExtensions(_ v: Bool) -> Self {
         self.shouldShowFileExtensions = v
         return self
     }
 
+    @available(iOS 13.0, *)
     @discardableResult
-    func byDirectoryURL(_ url: URL?) -> Self {
+    public func byDirectoryURL(_ url: URL?) -> Self {
         self.directoryURL = url
         return self
     }
 
     @discardableResult
-    func byAdd(_ block: (UIDocumentPickerViewController) -> Void) -> Self {
+    public func byAdd(_ block: (UIDocumentPickerViewController) -> Void) -> Self {
         block(self)
         return self
     }

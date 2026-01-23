@@ -140,28 +140,10 @@ final class JobsProgressDemoVC: BaseVC {
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 guard let self else { return }
-                // 读取输入值
-                let text = self.percentTextField.text?
-                    .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                guard let value = Double(text) else {
-                    // 非数字就直接忽略，也可以在这里加个 toast
-                    return
+                // ✅ 外界一句话：内部负责 trim / parse / clamp / valueMode 换算 / 自动停 timer
+                if let clamped = self.progressView.setDisplayPercent(text: self.percentTextField.text, animated: true) {
+                    self.percentTextField.text = String(format: "%.0f", clamped)
                 }
-                // clamp 到 0~100
-                let clamped = max(0, min(value, 100))
-                self.percentTextField.text = String(format: "%.0f", clamped)
-                let ratio = CGFloat(clamped / 100.0)
-                // 根据当前数值模式反推出“标准进度（raw）”
-                let raw: CGFloat
-                switch self.progressView.valueMode {
-                case .countUp:
-                    raw = ratio          // 显示 = raw
-                case .countDown:
-                    raw = 1 - ratio      // 显示 = 1 - raw
-                }
-                // 停掉动画，直接跳到目标百分比
-                self.progressView.stopAutoProgress()
-                self.progressView.setProgress(raw, animated: true)
             }
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(percentTextField.snp.right).offset(12)

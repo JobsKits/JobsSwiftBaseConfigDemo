@@ -337,22 +337,33 @@ open class JobsProgressBar: UIView {
             setNeedsLayout()
         }
     }
-    /// 按“显示百分比”设置进度 [0, 100]
+
+    // MARK: - Public: One-shot API (你要的“外界一句话设置进度”)
+    /// 以“显示百分比（0~100）”设置进度（自动根据 valueMode 反推内部 raw）
     ///
-    /// - parameter percent: 期望显示的百分比（会自动 clamp 到 0~100）
+    /// - Returns: clamp 后的 percent（0~100），解析失败则返回 nil
+    @discardableResult
+    public func setDisplayPercent(text: String?,
+                                  animated: Bool = true,
+                                  duration: TimeInterval = 0.25) -> CGFloat? {
+        let t = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let v = Double(t) else { return nil }
+        return setDisplayPercent(CGFloat(v), animated: animated, duration: duration)
+    }
+
+    /// 以“显示百分比（0~100）”设置进度（自动根据 valueMode 反推内部 raw）
     ///
-    /// - 注意：
-    ///   - 在 `.countUp` 模式下：0 → 100 = 0 → 1
-    ///   - 在 `.countDown` 模式下：100 → 0 = 0 → 1
-    ///   - 所以这里是“显示值”，会根据 `valueMode` 反推内部标准进度。
-    func setPercent(_ percent: CGFloat,
-                    animated: Bool = true,
-                    duration: TimeInterval = 0.25) {
+    /// - Returns: clamp 后的 percent（0~100）
+    @discardableResult
+    public func setDisplayPercent(_ percent: CGFloat,
+                                  animated: Bool = true,
+                                  duration: TimeInterval = 0.25) -> CGFloat {
         autoStopIfNeeded()
 
         let clampedPercent = max(0, min(percent, 100))
         let displayRatio = clampedPercent / 100.0
 
+        // raw 始终代表“标准进度 0~1”
         let raw: CGFloat
         switch valueMode {
         case .countUp:
@@ -361,6 +372,14 @@ open class JobsProgressBar: UIView {
             raw = 1 - displayRatio      // 显示 = 1 - raw
         }
         setProgress(raw, animated: animated, duration: duration)
+        return clampedPercent
+    }
+
+    /// 兼容你之前的内部实现：保留但改为私有，避免外部乱用
+    private func setPercent(_ percent: CGFloat,
+                            animated: Bool = true,
+                            duration: TimeInterval = 0.25) {
+        _ = setDisplayPercent(percent, animated: animated, duration: duration)
     }
 }
 // MARK: - DSL
@@ -427,12 +446,14 @@ extension JobsProgressBar {
         self.progressLabel.layer.masksToBounds = true
         return self
     }
-    /// 配置当前显示百分比 [0, 100]
+
+    // MARK: - Display Percent DSL（外界一句话）
+    /// 直接用“显示百分比（0~100）”设置进度：内部自动换算 raw
     @discardableResult
-    public func byPercent(_ percent: CGFloat,
-                          animated: Bool = false,
-                          duration: TimeInterval = 0.25) -> Self {
-        self.setPercent(percent, animated: animated, duration: duration)
+    public func byDisplayPercent(_ percent: CGFloat,
+                                 animated: Bool = false,
+                                 duration: TimeInterval = 0.25) -> Self {
+        _ = setDisplayPercent(percent, animated: animated, duration: duration)
         return self
     }
 }
