@@ -296,7 +296,7 @@ final class TimerDemoVC: BaseVC {
             pauseInBackground: true,
             autoManageAppState: true
         )
-        return JobsSwiftTimer(kind: kind, config: cfg, handler: handler)
+        return JobsTimer(kind: kind, config: cfg, handler: handler)
     }
 
     // MARK: - 正计时：Start

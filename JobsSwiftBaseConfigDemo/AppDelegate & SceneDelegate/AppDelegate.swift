@@ -232,7 +232,7 @@ extension AppDelegate {
                 autoManageAppState: true
             )
 
-            let t = JobsSwiftTimer(kind: .displayLink, config: cfg) {
+            let t = JobsTimer(kind: .displayLink, config: cfg) {
                 /// 日期打印（这里只是打印，不触碰 UI，不需要 MainActor）
                 print(Date().formatted(date: .numeric, time: .standard))
             }
