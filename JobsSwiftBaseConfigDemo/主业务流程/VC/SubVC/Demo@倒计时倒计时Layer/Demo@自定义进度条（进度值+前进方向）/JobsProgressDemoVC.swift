@@ -15,7 +15,6 @@ import SnapKit
 import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
-import JobsSwiftTimer
 import JobsScale
 import JobsSwiftBaseDefines
 import JobsTextTools
@@ -23,13 +22,9 @@ import JobsProgressBar
 /// Demo@自定义进度条（进度值+前进方向）
 final class JobsProgressDemoVC: BaseVC {
     deinit {
-        timer?.stop()
+        progressView.stopAutoProgress()
     }
     // MARK: - 状态
-    /// 使用 JobsSwiftTimerProtocol 替代原生 Timer
-    private var timer: JobsSwiftTimerProtocol?
-    /// 当前标准进度 [0, 1]
-    private var currentProgress: CGFloat = 0
     // MARK: - UI 懒加载
     /// 方向切换 SegmentedControl
     ///
@@ -55,9 +50,8 @@ final class JobsProgressDemoVC: BaseVC {
                 default:
                     break
                 }
-                // 换方向时：停掉当前 JobsSwiftTimer & 进度归零
-                timer?.stop()
-                currentProgress = 0
+                // 换方向时：停掉当前自动动画 & 进度归零
+                progressView.stopAutoProgress()
                 progressView.setProgress(0, animated: false)
             }
             .byAddTo(view) { [unowned self] make in
@@ -98,8 +92,7 @@ final class JobsProgressDemoVC: BaseVC {
                 sender.byTitle(newTitle, for: .normal)
 
                 // 切模式时：停掉定时器 & 进度归零
-                self.timer?.stop()
-                self.currentProgress = 0
+                self.progressView.stopAutoProgress()
                 self.progressView.setProgress(0, animated: false)
             }
             .byAddTo(view) { [unowned self] make in
@@ -167,8 +160,7 @@ final class JobsProgressDemoVC: BaseVC {
                     raw = 1 - ratio      // 显示 = 1 - raw
                 }
                 // 停掉动画，直接跳到目标百分比
-                self.timer?.stop()
-                self.currentProgress = raw
+                self.progressView.stopAutoProgress()
                 self.progressView.setProgress(raw, animated: true)
             }
             .byAddTo(view) { [unowned self] make in
@@ -193,38 +185,16 @@ final class JobsProgressDemoVC: BaseVC {
                 guard let self else { return }
                 sender.isSelected.toggle()
                 // 重置进度 & 停掉旧定时器
-                self.timer?.stop()
-                self.currentProgress = 0
+                self.progressView.stopAutoProgress()
                 self.progressView.setProgress(0, animated: false)
 
-                let step: CGFloat = 0.01
-                let interval: TimeInterval = 0.03
-                // ✅ 用新版 JobsSwiftTimerConfig + JobsSwiftTimer 直接创建（不再用 JobsTimerFactory）
-                let config = JobsSwiftTimerConfig(
-                    interval: interval,
-                    repeats: true,
-                    tolerance: 0,          // 精准一点，进度更平滑
-                    queue: .main
+                // ✅ 进度条内部自带定时能力：外部只管调用
+                self.progressView.startAutoProgress(
+                    fromZero: true,
+                    step: 0.01,
+                    interval: 0.03,
+                    animated: true
                 )
-
-                let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
-                    // ✅ Swift 6 / Sendable “同等待遇”：
-                    // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
-                    // 2) 再显式切回 MainActor，安全触碰 UIKit
-                    guard let strongSelf = self else { return }
-                    jobsRunOnMain(self) { vc in
-                        strongSelf.currentProgress += step
-                        strongSelf.progressView.setProgress(strongSelf.currentProgress, animated: true)
-
-                        if strongSelf.currentProgress >= 1 {
-                            strongSelf.currentProgress = 1
-                            strongSelf.timer?.stop()
-                        }
-                    }
-                }
-
-                self.timer = t
-                t.start()
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(percentTextField.snp.bottom).offset(24)

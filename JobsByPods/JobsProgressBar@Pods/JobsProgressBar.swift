@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsSwiftBaseDefines
+import JobsSwiftTimer
 /// 自定义进度条@进度值和前进方向
 open class JobsProgressBar: UIView {
     /// 几何方向：决定填充从哪边往哪边走
@@ -31,12 +32,22 @@ open class JobsProgressBar: UIView {
     // MARK: - Public API
     /// 进度方向（几何）
     public var direction: Direction = .leftToRight {
-        didSet { setNeedsLayout() }
+        didSet {
+            if autoStopOnExternalChange { stopAutoProgress() }
+            setNeedsLayout()
+        }
     }
     /// 数值模式（0→100 / 100→0）
     public var valueMode: ValueMode = .countUp {
-        didSet { setNeedsLayout() }
+        didSet {
+            if autoStopOnExternalChange { stopAutoProgress() }
+            setNeedsLayout()
+        }
     }
+    /// 外部对进度条做「方向 / 模式 / 进度」等变更时，是否自动停止内置 JobsSwiftTimer
+    /// 默认 true：更符合直觉，也能避免外层忘记 stop 导致的“抢进度”问题。
+    public var autoStopOnExternalChange: Bool = true
+
     /// 当前进度 [0, 1] —— 始终是“标准进度”：0 = 起点，1 = 终点
     ///
     /// 显示时会根据 `valueMode` 做一次映射：
@@ -74,6 +85,16 @@ open class JobsProgressBar: UIView {
     // MARK: - Private
     /// 标准进度（0~1），不带模式
     private var _progress: CGFloat = 0
+    /// 内置自动动画计时器（JobsSwiftTimer）
+    private var autoTimer: JobsSwiftTimerProtocol?
+    /// 自动动画步进
+    private var autoStep: CGFloat = 0.01
+    /// 内部自动 tick 标记：用于避免 setProgress 时把自己的 timer 停掉
+    private var _isAutoTick: Bool = false
+
+    deinit {
+        stopAutoProgress()
+    }
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -237,11 +258,74 @@ open class JobsProgressBar: UIView {
             )
         }
     }
+
+    // MARK: - Auto Stop Helper
+    private func autoStopIfNeeded() {
+        guard autoStopOnExternalChange else { return }
+        guard autoTimer != nil else { return }
+        guard _isAutoTick == false else { return }
+        stopAutoProgress()
+    }
+
+    // MARK: - Auto Progress (JobsSwiftTimer)
+    /// 内置自动动画：标准进度从当前值开始向 1.0 递增，直到结束
+    ///
+    /// - Parameters:
+    ///   - fromZero: 是否从 0 开始（默认 true）
+    ///   - step: 每次 tick 增量（默认 0.01）
+    ///   - interval: tick 间隔（默认 0.03）
+    ///   - animated: 每次 setProgress 是否带动画（默认 true）
+    public func startAutoProgress(fromZero: Bool = true,
+                                  step: CGFloat = 0.01,
+                                  interval: TimeInterval = 0.03,
+                                  animated: Bool = true) {
+        stopAutoProgress()
+
+        autoStep = step
+
+        if fromZero {
+            _progress = 0
+            setProgress(0, animated: false)
+        }
+
+        let config = JobsSwiftTimerConfig(
+            interval: interval,
+            repeats: true,
+            tolerance: 0,
+            queue: .main
+        )
+
+        // ✅ 不对外暴露 JobsTimerKind：内部固定用 .gcd
+        let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
+            guard let self else { return }
+            let next = min(1, max(0, self._progress + self.autoStep))
+            self._progress = next
+            self._isAutoTick = true
+            self.setProgress(next, animated: animated, duration: interval)
+            self._isAutoTick = false
+
+            if next >= 1 {
+                self.stopAutoProgress()
+            }
+        }
+
+        autoTimer = t
+        t.start()
+    }
+
+    /// 停止内置自动动画
+    public func stopAutoProgress() {
+        autoTimer?.stop()
+        autoTimer = nil
+    }
+
     // MARK: - Progress API
     /// 设置标准进度 [0, 1]，内部会结合 valueMode 显示为 0→100 或 100→0
     public func setProgress(_ progress: CGFloat,
                             animated: Bool = true,
                             duration: TimeInterval = 0.25) {
+        autoStopIfNeeded()
+
         let clamped = max(0, min(progress, 1))
         _progress = clamped
         if animated {
@@ -264,6 +348,8 @@ open class JobsProgressBar: UIView {
     func setPercent(_ percent: CGFloat,
                     animated: Bool = true,
                     duration: TimeInterval = 0.25) {
+        autoStopIfNeeded()
+
         let clampedPercent = max(0, min(percent, 100))
         let displayRatio = clampedPercent / 100.0
 
