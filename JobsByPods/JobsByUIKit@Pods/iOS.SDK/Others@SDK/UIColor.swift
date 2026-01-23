@@ -1,5 +1,5 @@
 //
-//  UIColorExtensions.swift
+//  UIColor.swift
 //  PlayYes
 //
 //  Created by yihui on 2023/6/22.
@@ -35,8 +35,8 @@ extension UIColor {
     /// "#RRGGBB" / "RRGGBB" / "0xRRGGBB"
     /// "#RGB"   / "RGB"
     /// "#AARRGGBB" / "AARRGGBB"
-    convenience init?(hexString: String,
-                      alpha: CGFloat = 1) {
+    public convenience init?(hexString: String,
+                             alpha: CGFloat = 1) {
         var hex = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
                            .lowercased()
         // 去掉前缀
@@ -82,31 +82,176 @@ extension UIColor {
                   blue: gray/255,
                   alpha: alpha)
     }
+    /// 使用十六进制字符串初始化 UIColor
+    ///
+    /// 支持格式（不区分大小写）：
+    /// - "FF0000" / "#FF0000" / "0xFF0000" / "##FF0000"
+    ///
+    /// 说明：
+    /// - 仅支持 6 位 RGB（不支持 3 位简写、也不支持 8 位 ARGB/RGBA）
+    /// - alpha 参数为透明度（0~1），默认 1.0（完全不透明）
+    /// - 当输入长度不足 6 或解析失败时返回 nil
+    ///
+    /// - Parameters:
+    ///   - hex: 十六进制颜色字符串
+    ///   - alpha: 透明度（0~1）
+    /// - Returns: 可选 UIColor，解析失败返回 nil
+    public convenience init?(hex: String, alpha: CGFloat = 1.0) {
+        // 例：0xff0000 / #FF0000 / FF0000
+        // 1）长度校验：至少需要 6 位（RGB）
+        guard hex.count >= 6 else { return nil }
+        // 2）统一转大写，便于后续解析
+        var tempHex = hex.uppercased()
+        // 3）去掉前缀：支持 "0x" / "##" / "#"
+        if tempHex.hasPrefix("0x") || tempHex.hasPrefix("##") {
+            tempHex = (tempHex as NSString).substring(from: 2)
+        }
+        if tempHex.hasPrefix("#") {
+            tempHex = (tempHex as NSString).substring(from: 1)
+        }
+        // 4）按 2 位一组截取 R/G/B（例如 "FF" -> 255）
+        var range = NSRange(location: 0, length: 2)
+        let rHex = (tempHex as NSString).substring(with: range)
+
+        range.location = 2
+        let gHex = (tempHex as NSString).substring(with: range)
+
+        range.location = 4
+        let bHex = (tempHex as NSString).substring(with: range)
+        // 5）将十六进制字符串转换为数值
+        var r: UInt32 = 0, g: UInt32 = 0, b: UInt32 = 0
+        Scanner(string: rHex).scanHexInt32(&r)
+        Scanner(string: gHex).scanHexInt32(&g)
+        Scanner(string: bHex).scanHexInt32(&b)
+        // 6）使用 RGB 数值初始化颜色（alpha 参数如需生效，应在 init 内部或此处带入）
+        self.init(r: CGFloat(r), g: CGFloat(g), b: CGFloat(b))
+    }
+    
+    public convenience init(hex: UInt32) {
+        let red = CGFloat((hex & 0xFF0000) >> 16) / 255.0
+        let green = CGFloat((hex & 0x00FF00) >> 8) / 255.0
+        let blue = CGFloat(hex & 0x0000FF) / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+
+    public convenience init(hexInt: Int) {
+        let components = (
+            R: CGFloat((hexInt >> 16) & 0xff) / 255,
+            G: CGFloat((hexInt >> 08) & 0xff) / 255,
+            B: CGFloat((hexInt >> 00) & 0xff) / 255
+        )
+        self.init(red: components.R, green: components.G, blue: components.B, alpha: 1)
+    }
+    /// 使用 6 位十六进制字符串初始化 UIColor（便捷构造）
+    ///
+    /// 支持格式：
+    /// - "RRGGBB"
+    /// - "#RRGGBB"（会自动去掉 `#`）
+    ///
+    /// 说明：
+    /// - 会自动去掉首尾空白与换行
+    /// - 仅支持 6 位 RGB，不支持 3 位简写（如 #FFF）或 8 位带透明度（如 #AARRGGBB / #RRGGBBAA）
+    /// - 解析失败（长度不为 6）返回 nil
+    ///
+    /// - Parameter hex: 十六进制颜色字符串
+    public convenience init?(_ hex: String) {
+        // 1）去掉首尾空白与换行
+        var cString: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+
+        // 2）如果以 # 开头，则去掉 #
+        if cString.hasPrefix("#") {
+            let index = cString.index(after: cString.startIndex)
+            cString = String(cString[index..<cString.endIndex])
+        }
+
+        // 3）仅接受 6 位 RGB（RRGGBB）
+        if cString.count != 6 {
+            return nil
+        }
+
+        // 4）按两位一组切割出 R/G/B 字符串
+        var startIndex = cString.startIndex
+        var endIndex = cString.index(after: startIndex)
+        let rString = String(cString[startIndex...endIndex])
+
+        startIndex = cString.index(after: endIndex)
+        endIndex = cString.index(after: startIndex)
+        let gString = String(cString[startIndex...endIndex])
+
+        startIndex = cString.index(after: endIndex)
+        endIndex = cString.index(after: startIndex)
+        let bString = String(cString[startIndex...endIndex])
+
+        // 5）十六进制转数值（00~FF -> 0~255）
+        var r: CUnsignedInt = 0, g: CUnsignedInt = 0, b: CUnsignedInt = 0
+        Scanner(string: rString).scanHexInt32(&r)
+        Scanner(string: gString).scanHexInt32(&g)
+        Scanner(string: bString).scanHexInt32(&b)
+
+        // 6）归一化到 0~1 并初始化 UIColor（默认 alpha = 1）
+        self.init(
+            red: CGFloat(r) / 255.0,
+            green: CGFloat(g) / 255.0,
+            blue: CGFloat(b) / 255.0,
+            alpha: 1.0
+        )
+    }
 }
 
 extension UIColor {
-    /// Red component of UIColor (get-only)
+    /// UIColor 的红色分量（只读）
+    ///
+    /// 说明：
+    /// - 仅对「可被分解为 RGB」的颜色有效（例如 sRGB / Display P3 等）
+    /// - 对于 `patternColor`、部分 `UIColor` 动态色、或不在 RGB 色彩空间的颜色，`getRed` 可能失败
+    /// - 失败时返回 0
+    ///
+    /// - Returns: 0 ~ 255 的整数值
     public var redComponent: Int {
         var r: CGFloat = 0
-        getRed(&r, green: nil, blue: nil, alpha: nil)
+        guard getRed(&r, green: nil, blue: nil, alpha: nil) else { return 0 }
         return Int(r * 255)
     }
-    /// Green component of UIColor (get-only)
+
+    /// UIColor 的绿色分量（只读）
+    ///
+    /// 说明：
+    /// - 仅对「可被分解为 RGB」的颜色有效（例如 sRGB / Display P3 等）
+    /// - 对于 `patternColor`、部分 `UIColor` 动态色、或不在 RGB 色彩空间的颜色，`getRed` 可能失败
+    /// - 失败时返回 0
+    ///
+    /// - Returns: 0 ~ 255 的整数值
     public var greenComponent: Int {
         var g: CGFloat = 0
-        getRed(nil, green: &g, blue: nil, alpha: nil)
+        guard getRed(nil, green: &g, blue: nil, alpha: nil) else { return 0 }
         return Int(g * 255)
     }
-    /// blue component of UIColor (get-only)
+
+    /// UIColor 的蓝色分量（只读）
+    ///
+    /// 说明：
+    /// - 仅对「可被分解为 RGB」的颜色有效（例如 sRGB / Display P3 等）
+    /// - 对于 `patternColor`、部分 `UIColor` 动态色、或不在 RGB 色彩空间的颜色，`getRed` 可能失败
+    /// - 失败时返回 0
+    ///
+    /// - Returns: 0 ~ 255 的整数值
     public var blueComponent: Int {
         var b: CGFloat = 0
-        getRed(nil, green: nil, blue: &b, alpha: nil)
+        guard getRed(nil, green: nil, blue: &b, alpha: nil) else { return 0 }
         return Int(b * 255)
     }
-    /// Alpha of UIColor (get-only)
+
+    /// UIColor 的透明度 Alpha（只读）
+    ///
+    /// 说明：
+    /// - 仅对「可被分解为 RGB」的颜色有效（例如 sRGB / Display P3 等）
+    /// - 对于 `patternColor`、部分 `UIColor` 动态色、或不在 RGB 色彩空间的颜色，`getRed` 可能失败
+    /// - 失败时返回 1（按完全不透明兜底）
+    ///
+    /// - Returns: 0 ~ 1 的浮点值
     public var alpha: CGFloat {
         var a: CGFloat = 0
-        getRed(nil, green: nil, blue: nil, alpha: &a)
+        guard getRed(nil, green: nil, blue: nil, alpha: &a) else { return 1.0 }
         return a
     }
     /// 16 进制颜色
@@ -120,8 +265,52 @@ extension UIColor {
                        blue: CGFloat(hex & 0x0000FF) / 255.0,
                        alpha: CGFloat(alpha))
     }
-    /// 生成随机颜色
-    public static func randomColor(alpha: CGFloat = 1.0) -> UIColor {
+    /// 获取RGB值
+    public func getRGB() -> (CGFloat, CGFloat, CGFloat) {
+        guard let cmps = cgColor.components else {
+            fatalError("保证普通颜色是RGB方式传入")
+        };return (cmps[0] * 255, cmps[1] * 255, cmps[2] * 255)
+    }
+    /// 计算两个 UIColor 在 RGB 三个通道上的差值（Delta）
+    ///
+    /// 返回值含义：
+    /// - rDelta = firstColor.red   - secondColor.red
+    /// - gDelta = firstColor.green - secondColor.green
+    /// - bDelta = firstColor.blue  - secondColor.blue
+    ///
+    /// 常见用途：
+    /// - 颜色渐变 / 过渡动画（根据差值逐步插值）
+    /// - 判断两个颜色是否接近（对比 RGB 偏移量）
+    /// - 动态主题、颜色校正计算
+    ///
+    /// - Parameters:
+    ///   - firstColor: 基准颜色
+    ///   - seccondColor: 对比颜色
+    /// - Returns: (rDelta, gDelta, bDelta)，每个值可正可负
+    public func getRGBDelta(_ firstColor: UIColor,
+                            _ seccondColor: UIColor) -> (CGFloat, CGFloat, CGFloat) {
+        let firstRGB = firstColor.getRGB()
+        let secondRGB = seccondColor.getRGB()
+        return (firstRGB.0 - secondRGB.0,
+                firstRGB.1 - secondRGB.1,
+                firstRGB.2 - secondRGB.2)
+    }
+    /// 用数值初始化颜色，便于生成设计图上标明的十六进制颜色
+    public class func colorWith(hex: String, _ alpha: CGFloat = 1.0) -> UIColor {
+        var s = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if s.hasPrefix("#") { s.removeFirst() }
+        guard s.count == 6 else { return .red }
+        var rgb: UInt64 = 0
+        Scanner(string: s).scanHexInt64(&rgb)
+        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+        let g = CGFloat((rgb & 0x00FF00) >> 8)  / 255.0
+        let b = CGFloat(rgb & 0x0000FF) / 255.0
+        return UIColor(red: r, green: g, blue: b, alpha: alpha)
+    }
+}
+// MARK: - 生成随机颜色
+extension UIColor {
+    public static func randomColor(_ alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(red: CGFloat.random(in: 0...1),
                        green: CGFloat.random(in: 0...1),
                        blue: CGFloat.random(in: 0...1),

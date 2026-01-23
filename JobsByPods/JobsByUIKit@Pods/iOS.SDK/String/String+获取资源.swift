@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -21,16 +22,16 @@ import SDWebImage
 import JobsSwiftBaseDefines
 import JobsSwiftBlock
 // MARK: 字符串转换成资源
-public extension String {
+extension String {
     // MARK: - 字符串@Bundle
     /// 在指定 Bundle 查找媒体资源 URL（支持 "name.ext" 或 "name"）。
     /// - Parameter bundle: 默认 .main
     /// - Returns: URL?（找不到返回 nil）
-    var bundleMediaURL: URL? {
+    public var bundleMediaURL: URL? {
         return bundleMediaURL(in: .main)
     }
 
-    func bundleMediaURL(in bundle: Bundle) -> URL? {
+    public func bundleMediaURL(in bundle: Bundle) -> URL? {
         let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         // 既支持 "name.ext" 也支持 "name"
@@ -40,14 +41,14 @@ public extension String {
         return bundle.url(forResource: name, withExtension: ext)
     }
     /// 必得版（开发期断言失败直接崩，等价你以前的 `!`）
-    var bundleMediaURLRequire: URL {
+    public var bundleMediaURLRequire: URL {
         if let u = self.bundleMediaURL { return u }
         assertionFailure("❌ Bundle media not found: \(self) (check Target Membership)")
         fatalError("Bundle media not found: \(self)")
     }
     // MARK: - 字符串@URL
     /// "https://..." → URL?  （仅放行 http/https；自动做轻度编码）
-    var url: URL? {
+    public var url: URL? {
         let raw = self.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !raw.isEmpty else { return nil }
         let s = raw.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? raw
@@ -58,14 +59,14 @@ public extension String {
         };return nil
     }
     /// "https://..." → URL  （开发期断言必得；等价你原来的 `!` 用法）
-    var urlRequire: URL {
+    public var urlRequire: URL {
         if let u = self.url { return u }
         assertionFailure("❌ Invalid URL string: \(self)")
         fatalError("Invalid URL: \(self)")
     }
     // MARK: - 字符串@图片
     /// 统一解析：字符串 → 图片来源
-    var imageSource: ImageSource? {
+    public var imageSource: ImageSource? {
         // 优先判断 http/https
         if let url = URL(string: self),
            let scheme = url.scheme?.lowercased(),
@@ -74,7 +75,7 @@ public extension String {
         };return .local(self)// 其余视为本地资源名（包括空 scheme、非 http(s)）
     }
     /// 本地同步图（仅当来源是 .local 时有意义）
-    var img: UIImage {
+    public var img: UIImage {
         guard let source = imageSource else { return UIImage() }
         switch source {
         case .remote:
@@ -86,7 +87,7 @@ public extension String {
         }
     }
     
-    var sysImg: UIImage {
+    public var sysImg: UIImage {
         if #available(iOS 13.0, *) {
             return UIImage(systemName: self) ?? jobsSolidBlue()
         } else {
@@ -95,7 +96,7 @@ public extension String {
     }
 
     @available(iOS 13.0, *)
-    func sysImg(_ config: UIImage.SymbolConfiguration) -> UIImage {
+    public func sysImg(_ config: UIImage.SymbolConfiguration) -> UIImage {
         UIImage(systemName: self, withConfiguration: config) ?? jobsSolidBlue()
     }
 #if canImport(Kingfisher)
@@ -103,7 +104,7 @@ public extension String {
     // ================================== Async 版本（仅在能用并发时编译） ==================================
     #if swift(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, *)
-    func kfLoadImage() async throws -> UIImage {
+    public func kfLoadImage() async throws -> UIImage {
         guard let source = imageSource else { throw KFError.badURL }
         switch source {
         case .remote(let url):
@@ -127,7 +128,7 @@ public extension String {
     }
     #endif
     // ================================== Completion 版本（全版本可用） ==================================
-    func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
+    public func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
         guard let source = imageSource else {
             completion(.failure(KFError.badURL))
             return
@@ -153,13 +154,13 @@ public extension String {
     }
     /// A) 允许传 nil：nil -> 蓝色兜底
     @available(iOS 13.0, *)
-    func kfLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
+    public func kfLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
         do { return try await self.kfLoadImage() }         // 你已有的 throws 版本
         catch { return fallbackImage() ?? jobsSolidBlue() }
     }
     /// B) 非可选便捷版
     @available(iOS 13.0, *)
-    func kfLoadImage(fallback: UIImage) async -> UIImage {
+    public func kfLoadImage(fallback: UIImage) async -> UIImage {
         await kfLoadImage(fallbackImage: fallback)
     }
 #endif
@@ -169,7 +170,7 @@ public extension String {
     // ================================== Async throws 版本（仅在能用并发时编译） ==================================
     #if swift(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, *)
-    func sdLoadImage() async throws -> UIImage {
+    public func sdLoadImage() async throws -> UIImage {
         guard let source = imageSource else {
             throw NSError(domain: "SDWebImage",
                           code: -1000,
@@ -211,7 +212,7 @@ public extension String {
     }
     /// 不抛错：加载失败则返回 fallbackImage()；若其为 nil，则返回蓝色占位图
     @available(iOS 13.0, *)
-    func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
+    public func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock) async -> UIImage {
         do {
             return try await self.sdLoadImage()   // 你已有的 throws 版本
         } catch {
@@ -221,7 +222,7 @@ public extension String {
     #endif
     // ================================== Completion 版本（全版本可用） ==================================
     /// 不抛错：加载失败则返回 fallbackImage()；若其为 nil，则返回蓝色占位图
-    func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock,
+    public func sdLoadImage(fallbackImage: @autoclosure JobsRetUIImageBlock,
                      completion: @escaping jobsByImgBlock) {
         let placeholder = fallbackImage() ?? jobsSolidBlue()
         guard let source = imageSource else {

@@ -331,6 +331,52 @@ public extension JobsDirection {
         }
     }
 }
+// MARK: - 颜色的渐变方向
+public enum JobsGradientDirection {
+    /// ← →
+    case leftToRight
+    /// → ←
+    case rightToLeft
+    /// ↑ ↓
+    case topToBottom
+    /// ↓ ↑
+    case bottomToTop
+    /// ↖︎ ↘︎
+    case topLeftToBottomRight
+    /// ↘︎ ↖︎
+    case bottomRightToTopLeft
+    /// ↗︎ ↙︎
+    case topRightToBottomLeft
+    /// ↙︎ ↗︎
+    case bottomLeftToTopRight
+    /// 自定义（0~1）
+    case custom(start: CGPoint, end: CGPoint)
+}
+
+public extension JobsGradientDirection {
+    var points: (start: CGPoint, end: CGPoint) {
+        switch self {
+        case .leftToRight:
+            return (.init(x: 0, y: 0.5), .init(x: 1, y: 0.5))
+        case .rightToLeft:
+            return (.init(x: 1, y: 0.5), .init(x: 0, y: 0.5))
+        case .topToBottom:
+            return (.init(x: 0.5, y: 0), .init(x: 0.5, y: 1))
+        case .bottomToTop:
+            return (.init(x: 0.5, y: 1), .init(x: 0.5, y: 0))
+        case .topLeftToBottomRight:
+            return (.init(x: 0, y: 0), .init(x: 1, y: 1))
+        case .bottomRightToTopLeft:
+            return (.init(x: 1, y: 1), .init(x: 0, y: 0))
+        case .topRightToBottomLeft:
+            return (.init(x: 1, y: 0), .init(x: 0, y: 1))
+        case .bottomLeftToTopRight:
+            return (.init(x: 0, y: 1), .init(x: 1, y: 0))
+        case let .custom(start, end):
+            return (start, end)
+        }
+    }
+}
 // MARK: - 滚动方向
 public enum ScrollDirection: Int {
     case none = 0,
