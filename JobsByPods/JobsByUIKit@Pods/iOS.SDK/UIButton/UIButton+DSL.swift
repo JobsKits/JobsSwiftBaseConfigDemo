@@ -15,7 +15,7 @@ import JobsSwiftBaseDefines
 // MARK: - 基础链式
 public var _jobsTitleFontDictKey: UInt8 = 0
 public var _jobsTitleFontHandlerInstalledKey: UInt8 = 0
-public extension UIButton {
+extension UIButton {
     @discardableResult
     public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
         self.setTitle(title, for: state)
@@ -97,7 +97,7 @@ public extension UIButton {
     @available(iOS 13.0, *)
     @discardableResult
     public func byPreferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?,
-                                       forImageIn state: UIControl.State = .normal) -> Self {
+                                               forImageIn state: UIControl.State = .normal) -> Self {
         self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
         return self
     }
@@ -156,7 +156,7 @@ private extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    public func _ensureTitleFontHandlerInstalled() {
+    func _ensureTitleFontHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
@@ -245,10 +245,9 @@ public extension UIButton {
     func `for`(_ state: UIControl.State) -> StateProxy { StateProxy(button: self, state: state) }
 }
 // MARK: - 布局 / 外观
-public extension UIButton {
-
+extension UIButton {
     @discardableResult
-    func byBackgroundColor(_ color: UIColor?,
+    public func byBackgroundColor(_ color: UIColor?,
                            for state: UIControl.State = .normal) -> Self {
         let c = color ?? .clear   // ✅ 统一 nil 语义：当作清空背景
         if #available(iOS 15.0, *), state == .normal {
@@ -390,7 +389,7 @@ public extension UIButton {
     }
     
     @discardableResult
-    func byImagePlacement(_ placement: JobsDirection,
+    public func byImagePlacement(_ placement: JobsDirection,
                           padding: CGFloat = 8.0) -> Self {
         if #available(iOS 13.0, *) {
             return byImagePlacement(placement.toDirectionalEdge, padding: padding)
@@ -400,31 +399,86 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byImagePlacementLegacy(_ placement: JobsDirection,
-                                padding: CGFloat) -> Self {
-        // 这里写你自己的 iOS12 布局策略（可简版）
-        // 常见做法：根据 imageView/titleLabel 的 size 调整 edgeInsets
-        // 你如果只想“能用”，做 top/left/right/bottom 四种就够
-        // 示例：只处理左右（最常用），上下你按需补
+    public func byImagePlacementLegacy(_ placement: JobsDirection,
+                                       padding: CGFloat) -> Self {
+        // iOS12: 用 edgeInsets 模拟 imagePlacement
+        // 依赖 imageView/titleLabel 的尺寸，所以先 layout 一次
+        layoutIfNeeded()
+        let imageW = imageView?.bounds.width ?? 0
+        let imageH = imageView?.bounds.height ?? 0
+        let titleW = titleLabel?.bounds.width ?? 0
+        let titleH = titleLabel?.bounds.height ?? 0
+        // 兜底：避免 0 尺寸导致算不出（尤其是刚 setTitle/setImage 但还没 layout）
+        // 这里不强行 sizeToFit，尽量不破坏外部约束体系
+        func safeImageSize() -> (w: CGFloat, h: CGFloat) {
+            if imageW > 0, imageH > 0 { return (imageW, imageH) }
+            let s = imageView?.intrinsicContentSize ?? .zero
+            return (max(0, s.width), max(0, s.height))
+        }
+        func safeTitleSize() -> (w: CGFloat, h: CGFloat) {
+            if titleW > 0, titleH > 0 { return (titleW, titleH) }
+            let s = titleLabel?.intrinsicContentSize ?? .zero
+            return (max(0, s.width), max(0, s.height))
+        }
+        let img = safeImageSize()
+        let ttl = safeTitleSize()
         switch placement {
         case .left:
-            // 默认就是左图右文，padding 可通过 contentEdgeInsets 兜底
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding/2, bottom: 0, right: padding/2)
+            // 默认就是左图右文：只做间距 + 轻量内边距
+            imageEdgeInsets = .zero
+            titleEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: -padding)
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
         case .right:
-            // 右图左文：交换 inset（需要依赖当前 intrinsic size，建议 layoutIfNeeded）
-            layoutIfNeeded()
-            let imageW = imageView?.bounds.width ?? 0
-            let titleW = titleLabel?.bounds.width ?? 0
-            imageEdgeInsets = UIEdgeInsets(top: 0, left: titleW + padding/2, bottom: 0, right: -(titleW + padding/2))
-            titleEdgeInsets = UIEdgeInsets(top: 0, left: -(imageW + padding/2), bottom: 0, right: imageW + padding/2)
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding/2, bottom: 0, right: padding/2)
-        case .top, .bottom:
-            // 上下布局在 iOS12 用 insets 也能做，但要算高度
-            // 你要的话我给你补一个稳定版本
-            break
+            // 右图左文：互换位置（靠 insets 平移）
+            imageEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: ttl.w + padding / 2,
+                                           bottom: 0,
+                                           right: -(ttl.w + padding / 2))
+            titleEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: -(img.w + padding / 2),
+                                           bottom: 0,
+                                           right: img.w + padding / 2)
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
+        case .top:
+            // 上图下文：
+            // 目标：image 向上移 (titleH/2 + padding/2)，title 向下移 (imageH/2 + padding/2)
+            // 同时水平对齐：image 向右移 titleW/2，title 向左移 imageW/2
+            imageEdgeInsets = UIEdgeInsets(top: -(ttl.h + padding) / 2,
+                                           left: (ttl.w) / 2,
+                                           bottom: (ttl.h + padding) / 2,
+                                           right: -(ttl.w) / 2)
+            titleEdgeInsets = UIEdgeInsets(top: (img.h + padding) / 2,
+                                           left: -(img.w) / 2,
+                                           bottom: -(img.h + padding) / 2,
+                                           right: (img.w) / 2)
+            // content 需要把整体上下扩出来，否则容易被按钮 bounds 裁掉/看似溢出
+            let vPad = (img.h + ttl.h + padding) / 2
+            let hPad = max(img.w, ttl.w) / 2
+            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
+                                             left: hPad / 2,
+                                             bottom: vPad / 2,
+                                             right: hPad / 2)
+        case .bottom:
+            // 下图上文：
+            // 与 top 相反：image 向下移，title 向上移
+            imageEdgeInsets = UIEdgeInsets(top: (ttl.h + padding) / 2,
+                                           left: (ttl.w) / 2,
+                                           bottom: -(ttl.h + padding) / 2,
+                                           right: -(ttl.w) / 2)
+
+            titleEdgeInsets = UIEdgeInsets(top: -(img.h + padding) / 2,
+                                           left: -(img.w) / 2,
+                                           bottom: (img.h + padding) / 2,
+                                           right: (img.w) / 2)
+            let vPad = (img.h + ttl.h + padding) / 2
+            let hPad = max(img.w, ttl.w) / 2
+            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
+                                             left: hPad / 2,
+                                             bottom: vPad / 2,
+                                             right: hPad / 2)
         };return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
@@ -441,7 +495,7 @@ public extension UIButton {
     }
 }
 // MARK: - 交互 / 菜单 / 角色 / Pointer / Config 生命周期
-public extension UIButton {
+extension UIButton {
     @available(iOS 14.0, *)
     @discardableResult
     public func byMenu(_ menu: UIMenu?) -> Self {
