@@ -2,25 +2,18 @@
 # ================================== Podfile ==================================
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 require 'fileutils'
-
 # ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
 platform :ios, '15.6'
-
 source 'https://github.com/CocoaPods/Specs.git'
-
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
   :deterministic_uuids => false,
   :disable_input_output_paths => true
-# 如需的话，也可以加上（可选）:
-# , :generate_multiple_pod_projects => false
-
+#  ,:generate_multiple_pod_projects => true # Flutter 和它不兼容，但是又是全局性的，必须注释
 # ================================== Jobs Pods Script Runner ==================================
-
 # 统一的构建设置（一次改全工程 & Pods）
 JOBS_DEPLOYMENT_TARGET = '15.0'
 JOBS_DISABLE_SCRIPT_SANDBOXING = 'NO'
-
 # 判断当前 iOS 工程是否集成了 Unity（或存在 Unity 导出的工程痕迹）
 #
 # 命中任一条件即可认为“有 Unity”：
