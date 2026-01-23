@@ -74,7 +74,7 @@ final class JobsProgressDemoVC: BaseVC {
             .onTap { [weak self] sender in
                 guard let self else { return }
 
-                let newMode: JobsProgressBar.ValueMode
+                let newMode: JobsValueMode
                 let newTitle: String
 
                 switch self.progressView.valueMode {
@@ -106,15 +106,20 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var progressView: JobsProgressBar = {
         JobsProgressBar()
             .byDirection(.leftToRight)
-            .byValueMode(.countDown)   // 初始：显示为 100→0
-            .byTrackColor(.systemGray5)
+            .byValueMode(.countDown)           // 初始：显示为 100→0
+            .byTrackColor(.systemGray5)        // 你外层灰条在父视图，这里清空即可
+            .byTrackHorizontalInset(0)         // ✅ 不要内部留边
+            .byTrackVerticalInset(0)           // ✅ 不要内部留边
+            .byTrackThickness(nil)             // ✅ 厚度 = JobsProgressBar.height（也就是父视图高度）
+            .byAutoHideLabel(true)             // ✅ 小高度自动隐藏 label（12 高会隐藏）
+            .byLabelMinVisibleHeight(18)
             .byLabelBackgroundColor(.secondarySystemBackground)
             .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
                 make.left.equalToSuperview().offset(40.w)
                 make.right.equalToSuperview().inset(40.w)
-                make.height.equalTo(80.h) /// 给点高度让上方 label 有空间移动
+                make.height.equalTo(20.h) 
             }
     }()
     /// 输入百分比的文本框（0~100）

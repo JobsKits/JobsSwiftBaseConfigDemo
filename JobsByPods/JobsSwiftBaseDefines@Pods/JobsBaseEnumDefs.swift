@@ -331,7 +331,21 @@ public extension JobsDirection {
         }
     }
 }
-// MARK: - 颜色的渐变方向
+// MARK: - 前进方向@一维
+public enum JobsValueMode {
+    /// 0 → 1 显示为 0% → 100%
+    case countUp
+    /// 0 → 1 显示为 100% → 0%
+    case countDown
+}
+// MARK: - 前进方向@二维
+public enum JobsAxisDirection {
+    case leftToRight
+    case rightToLeft
+    case topToBottom
+    case bottomToTop
+}
+// MARK: - 前进方向@三维
 public enum JobsGradientDirection {
     /// ← →
     case leftToRight

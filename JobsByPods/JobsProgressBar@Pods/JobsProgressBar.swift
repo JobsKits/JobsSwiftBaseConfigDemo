@@ -15,30 +15,19 @@ import JobsSwiftBaseDefines
 import JobsSwiftTimer
 /// 自定义进度条@进度值和前进方向
 open class JobsProgressBar: UIView {
-    /// 几何方向：决定填充从哪边往哪边走
-    public enum Direction {
-        case leftToRight
-        case rightToLeft
-        case bottomToTop
-        case topToBottom
-    }
-    /// 数值模式：决定“0~1”是显示为 0→100 还是 100→0
-    public enum ValueMode {
-        /// 0 → 1 显示为 0% → 100%
-        case countUp
-        /// 0 → 1 显示为 100% → 0%
-        case countDown
-    }
     // MARK: - Public API
     /// 进度方向（几何）
-    public var direction: Direction = .leftToRight {
+    public var direction: JobsAxisDirection = .leftToRight {
         didSet {
             if autoStopOnExternalChange { stopAutoProgress() }
             setNeedsLayout()
         }
     }
-    /// 数值模式（0→100 / 100→0）
-    public var valueMode: ValueMode = .countUp {
+    /**
+     countUp 0 → 1 显示为 0% → 100%
+     countDown 0 → 1 显示为 100% → 0%
+     */
+    public var valueMode: JobsValueMode = .countUp {
         didSet {
             if autoStopOnExternalChange { stopAutoProgress() }
             setNeedsLayout()
@@ -47,7 +36,6 @@ open class JobsProgressBar: UIView {
     /// 外部对进度条做「方向 / 模式 / 进度」等变更时，是否自动停止内置 JobsSwiftTimer
     /// 默认 true：更符合直觉，也能避免外层忘记 stop 导致的“抢进度”问题。
     public var autoStopOnExternalChange: Bool = true
-
     /// 当前进度 [0, 1] —— 始终是“标准进度”：0 = 起点，1 = 终点
     ///
     /// 显示时会根据 `valueMode` 做一次映射：
@@ -56,6 +44,32 @@ open class JobsProgressBar: UIView {
     public var progress: CGFloat {
         get { _progress }
         set { setProgress(newValue, animated: false) }
+    }
+    // MARK: - Track Layout Config (外部可控，避免内部写死)
+    /// 轨道/蓝条厚度（横向=高度，纵向=宽度）
+    /// - nil：自动（默认 = 控件高度，确保“蓝条高度 = JobsProgressBar 高度”）
+    public var trackThickness: CGFloat? {
+        didSet { setNeedsLayout() }
+    }
+    /// 轨道水平 inset（左右/横向）
+    /// - nil：自动（默认 0）
+    public var trackHorizontalInset: CGFloat? {
+        didSet { setNeedsLayout() }
+    }
+    /// 轨道垂直 inset（上下/纵向）
+    /// - nil：自动（默认 0）
+    public var trackVerticalInset: CGFloat? {
+        didSet { setNeedsLayout() }
+    }
+    // MARK: - Label Visibility Config (小高度自动隐藏 label)
+    /// 是否启用“自动隐藏 label”（默认 true）
+    public var autoHideLabel: Bool = true {
+        didSet { setNeedsLayout() }
+    }
+    /// 触发自动隐藏的最小高度阈值（默认 18）
+    /// JobsProgressBar.height < 18 时隐藏 label（比如 12 高的条就自动隐藏）
+    public var labelMinVisibleHeight: CGFloat = 18 {
+        didSet { setNeedsLayout() }
     }
     /// 轨道（背景）
     private lazy var trackView: UIView = {
@@ -108,14 +122,12 @@ open class JobsProgressBar: UIView {
 
     private func commonInit() {
         backgroundColor = .clear
-        // 使用时触发懒加载
         trackView.byVisible(true)
         fillView.byVisible(true)
         progressLabel.byVisible(true)
     }
 
     open override var intrinsicContentSize: CGSize {
-        // 默认高度给个 40，方便直接用 Auto Layout
         return CGSize(width: UIView.noIntrinsicMetric, height: 40)
     }
     // MARK: - Layout
@@ -125,12 +137,15 @@ open class JobsProgressBar: UIView {
     }
 
     private func layoutForCurrentState() {
+        // ✅ 小高度时自动隐藏 label（避免挡 UI）
+        if autoHideLabel, bounds.height < labelMinVisibleHeight {
+            progressLabel.isHidden = true
+        } else {
+            progressLabel.isHidden = false
+        }
         // 标准进度 0~1
         let raw = max(0, min(_progress, 1))
-
         // 根据数值模式得到“显示用进度”
-        // .countUp   : 0 → 1
-        // .countDown : 1 → 0
         let p: CGFloat
         switch valueMode {
         case .countUp:
@@ -138,127 +153,101 @@ open class JobsProgressBar: UIView {
         case .countDown:
             p = 1 - raw
         }
-
-        // 先根据 p 更新文案（很关键，要在 sizeToFit 之前）
+        // 更新文案
         let percent = Int(round(p * 100))
         progressLabel.text = "\(percent)%"
-
-        let horizontalInset: CGFloat = 8
-        let verticalInset: CGFloat = 8
-        let trackThickness: CGFloat = 6
+        // ✅ 不再写死：默认厚度 = 自身高度，默认 inset = 0
+        let hInset: CGFloat = max(0, trackHorizontalInset ?? 0)
+        let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
+        // 厚度：横向=高度，纵向=宽度
+        let preferredThickness: CGFloat = trackThickness ?? bounds.height
+        // Label 偏移（保持原逻辑）
         let labelOffset: CGFloat = 4
-
         switch direction {
         case .leftToRight, .rightToLeft:
-            // 水平进度条：放在底部
-            let trackWidth = max(0, bounds.width - 2 * horizontalInset)
-            let trackHeight = trackThickness
-            let trackY = bounds.height - trackHeight - verticalInset
-            let trackFrame = CGRect(x: horizontalInset,
-                                    y: trackY,
-                                    width: trackWidth,
-                                    height: trackHeight)
+            let trackWidth = max(0, bounds.width - 2 * hInset)
+            let availableHeight = max(0, bounds.height - 2 * vInset)
+            let trackHeight = min(max(0, preferredThickness), availableHeight)
+            // y：默认贴顶(vInset)，不再写死“放底部再减 8”
+            let trackY = vInset
+            let trackFrame = CGRect(
+                x: hInset,
+                y: trackY,
+                width: trackWidth,
+                height: trackHeight
+            )
             trackView.frame = trackFrame
             trackView.layer.cornerRadius = trackHeight / 2
             fillView.layer.cornerRadius = trackHeight / 2
-
             let fillWidth = trackWidth * p
-
             if direction == .leftToRight {
-                fillView.frame = CGRect(x: 0,
-                                        y: 0,
-                                        width: fillWidth,
-                                        height: trackHeight)
+                fillView.frame = CGRect(x: 0, y: 0, width: fillWidth, height: trackHeight)
             } else {
-                fillView.frame = CGRect(x: trackWidth - fillWidth,
-                                        y: 0,
-                                        width: fillWidth,
-                                        height: trackHeight)
+                fillView.frame = CGRect(x: trackWidth - fillWidth, y: 0, width: fillWidth, height: trackHeight)
             }
-
-            // 更新 Label 尺寸（这时候 text 已经是“xx%”）
+            // label 隐藏时，不再做 label 布局
+            guard progressLabel.isHidden == false else { return }
             progressLabel.sizeToFit()
-            let labelSize = CGSize(width: progressLabel.bounds.width + 8,
-                                   height: progressLabel.bounds.height + 4)
+            let labelSize = CGSize(
+                width: progressLabel.bounds.width + 8,
+                height: progressLabel.bounds.height + 4
+            )
             progressLabel.bounds.size = labelSize
-
-            // 端点 x（在 self 坐标系里）
-            let endpointX: CGFloat
-            if direction == .leftToRight {
-                endpointX = trackFrame.minX + fillWidth
-            } else {
-                endpointX = trackFrame.maxX - fillWidth
-            }
-
-            // clamp，防止越界
+            let endpointX: CGFloat = (direction == .leftToRight)
+            ? (trackFrame.minX + fillWidth)
+            : (trackFrame.maxX - fillWidth)
             var centerX = endpointX
             let minX = trackFrame.minX + labelSize.width / 2
             let maxX = trackFrame.maxX - labelSize.width / 2
             centerX = min(max(centerX, minX), maxX)
-
             let centerY = trackFrame.minY - labelOffset - labelSize.height / 2
             let finalCenterY = max(labelSize.height / 2, centerY)
-
             progressLabel.center = CGPoint(x: centerX, y: finalCenterY)
-
         case .bottomToTop, .topToBottom:
-            // 垂直进度条：放在左侧
-            let trackWidth = trackThickness
-            let trackHeight = max(0, bounds.height - 2 * verticalInset)
-            let trackX = horizontalInset
-            let trackFrame = CGRect(x: trackX,
-                                    y: verticalInset,
-                                    width: trackWidth,
-                                    height: trackHeight)
+            let availableWidth = max(0, bounds.width - 2 * hInset)
+            let trackWidth = min(max(0, preferredThickness), availableWidth)
+            let trackHeight = max(0, bounds.height - 2 * vInset)
+            let trackX = hInset
+            let trackFrame = CGRect(
+                x: trackX,
+                y: vInset,
+                width: trackWidth,
+                height: trackHeight
+            )
             trackView.frame = trackFrame
             trackView.layer.cornerRadius = trackWidth / 2
             fillView.layer.cornerRadius = trackWidth / 2
-
             let fillHeight = trackHeight * p
-
             if direction == .bottomToTop {
                 let y = trackHeight - fillHeight
-                fillView.frame = CGRect(x: 0,
-                                        y: y,
-                                        width: trackWidth,
-                                        height: fillHeight)
+                fillView.frame = CGRect(x: 0, y: y, width: trackWidth, height: fillHeight)
             } else {
-                fillView.frame = CGRect(x: 0,
-                                        y: 0,
-                                        width: trackWidth,
-                                        height: fillHeight)
+                fillView.frame = CGRect(x: 0, y: 0, width: trackWidth, height: fillHeight)
             }
-
-            // 更新 Label 尺寸（同样在 text 更新之后）
+            // label 隐藏时，不再做 label 布局
+            guard progressLabel.isHidden == false else { return }
             progressLabel.sizeToFit()
-            let labelSize = CGSize(width: progressLabel.bounds.width + 8,
-                                   height: progressLabel.bounds.height + 4)
+            let labelSize = CGSize(
+                width: progressLabel.bounds.width + 8,
+                height: progressLabel.bounds.height + 4
+            )
             progressLabel.bounds.size = labelSize
-
-            // 端点 y（在 self 坐标系里）
-            let endpointY: CGFloat
-            if direction == .bottomToTop {
-                endpointY = trackFrame.minY + (trackHeight - fillHeight)
-            } else {
-                endpointY = trackFrame.minY + fillHeight
-            }
-
+            let endpointY: CGFloat = (direction == .bottomToTop)
+            ? (trackFrame.minY + (trackHeight - fillHeight))
+            : (trackFrame.minY + fillHeight)
             var centerY = endpointY
             let minY = trackFrame.minY + labelSize.height / 2
             let maxY = trackFrame.maxY - labelSize.height / 2
             centerY = min(max(centerY, minY), maxY)
-
             let centerX = trackFrame.maxX + labelOffset + labelSize.width / 2
             let minCenterX = labelSize.width / 2
             let maxCenterX = bounds.width - labelSize.width / 2
-
             progressLabel.center = CGPoint(
                 x: min(max(centerX, minCenterX), maxCenterX),
                 y: centerY
             )
         }
     }
-
     // MARK: - Auto Stop Helper
     private func autoStopIfNeeded() {
         guard autoStopOnExternalChange else { return }
@@ -266,82 +255,59 @@ open class JobsProgressBar: UIView {
         guard _isAutoTick == false else { return }
         stopAutoProgress()
     }
-
     // MARK: - Auto Progress (JobsSwiftTimer)
-    /// 内置自动动画：标准进度从当前值开始向 1.0 递增，直到结束
-    ///
-    /// - Parameters:
-    ///   - fromZero: 是否从 0 开始（默认 true）
-    ///   - step: 每次 tick 增量（默认 0.01）
-    ///   - interval: tick 间隔（默认 0.03）
-    ///   - animated: 每次 setProgress 是否带动画（默认 true）
     public func startAutoProgress(fromZero: Bool = true,
                                   step: CGFloat = 0.01,
                                   interval: TimeInterval = 0.03,
                                   animated: Bool = true) {
         stopAutoProgress()
-
         autoStep = step
-
         if fromZero {
             _progress = 0
             setProgress(0, animated: false)
         }
-
         let config = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
             tolerance: 0,
             queue: .main
         )
-
-        // ✅ 不对外暴露 JobsTimerKind：内部固定用 .gcd
         let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
-            guard let self else { return }
-            let next = min(1, max(0, self._progress + self.autoStep))
-            self._progress = next
-            self._isAutoTick = true
-            self.setProgress(next, animated: animated, duration: interval)
-            self._isAutoTick = false
-
-            if next >= 1 {
-                self.stopAutoProgress()
+            jobsRunOnMain(self) { bar in
+                let next = min(1, max(0, bar._progress + bar.autoStep))
+                bar._progress = next
+                bar._isAutoTick = true
+                bar.setProgress(next, animated: animated, duration: interval)
+                bar._isAutoTick = false
+                if next >= 1 {
+                    bar.stopAutoProgress()
+                }
             }
         }
-
         autoTimer = t
         t.start()
     }
-
-    /// 停止内置自动动画
+    
     public func stopAutoProgress() {
         autoTimer?.stop()
         autoTimer = nil
     }
-
     // MARK: - Progress API
-    /// 设置标准进度 [0, 1]，内部会结合 valueMode 显示为 0→100 或 100→0
     public func setProgress(_ progress: CGFloat,
                             animated: Bool = true,
                             duration: TimeInterval = 0.25) {
         autoStopIfNeeded()
-
         let clamped = max(0, min(progress, 1))
         _progress = clamped
-        if animated {
-            setNeedsLayout()
-            UIView.animate(withDuration: duration) {
-                self.layoutIfNeeded()
-            }
-        } else {
-            setNeedsLayout()
+
+        setNeedsLayout()
+        guard animated else { return }
+
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.layoutIfNeeded()
         }
     }
-
-    // MARK: - Public: One-shot API (你要的“外界一句话设置进度”)
-    /// 以“显示百分比（0~100）”设置进度（自动根据 valueMode 反推内部 raw）
-    ///
-    /// - Returns: clamp 后的 percent（0~100），解析失败则返回 nil
+    // MARK: - Display Percent API
     @discardableResult
     public func setDisplayPercent(text: String?,
                                   animated: Bool = true,
@@ -351,55 +317,38 @@ open class JobsProgressBar: UIView {
         return setDisplayPercent(CGFloat(v), animated: animated, duration: duration)
     }
 
-    /// 以“显示百分比（0~100）”设置进度（自动根据 valueMode 反推内部 raw）
-    ///
-    /// - Returns: clamp 后的 percent（0~100）
     @discardableResult
     public func setDisplayPercent(_ percent: CGFloat,
                                   animated: Bool = true,
                                   duration: TimeInterval = 0.25) -> CGFloat {
         autoStopIfNeeded()
-
         let clampedPercent = max(0, min(percent, 100))
         let displayRatio = clampedPercent / 100.0
-
-        // raw 始终代表“标准进度 0~1”
         let raw: CGFloat
         switch valueMode {
         case .countUp:
-            raw = displayRatio          // 显示 = raw
+            raw = displayRatio
         case .countDown:
-            raw = 1 - displayRatio      // 显示 = 1 - raw
+            raw = 1 - displayRatio
         }
         setProgress(raw, animated: animated, duration: duration)
         return clampedPercent
     }
-
-    /// 兼容你之前的内部实现：保留但改为私有，避免外部乱用
-    private func setPercent(_ percent: CGFloat,
-                            animated: Bool = true,
-                            duration: TimeInterval = 0.25) {
-        _ = setDisplayPercent(percent, animated: animated, duration: duration)
-    }
 }
 // MARK: - DSL
 extension JobsProgressBar {
-    // MARK: - Direction
-    /// 配置进度方向（几何）
     @discardableResult
-    public func byDirection(_ direction: Direction) -> Self {
+    public func byDirection(_ direction: JobsAxisDirection) -> Self {
         self.direction = direction
         return self
     }
-    // MARK: - ValueMode
-    /// 配置数值模式：0→100 / 100→0
+
     @discardableResult
-    public func byValueMode(_ mode: ValueMode) -> Self {
+    public func byValueMode(_ mode: JobsValueMode) -> Self {
         self.valueMode = mode
         return self
     }
-    // MARK: - Progress
-    /// 配置当前标准进度 [0, 1]
+
     @discardableResult
     public func byProgress(_ value: CGFloat,
                            animated: Bool = false,
@@ -407,39 +356,67 @@ extension JobsProgressBar {
         self.setProgress(value, animated: animated, duration: duration)
         return self
     }
-    // MARK: - Track
-    /// 配置轨道背景色
+
     @discardableResult
     public func byTrackColor(_ color: UIColor) -> Self {
         self.trackView.backgroundColor = color
         return self
     }
-    /// 配置轨道圆角（不配的话默认按高度一半）
+
     @discardableResult
     public func byTrackCornerRadius(_ radius: CGFloat) -> Self {
         self.trackView.layer.cornerRadius = radius
         return self
     }
-    // MARK: - Label
-    /// 配置标签字体
+    // ✅ Track layout config
+    @discardableResult
+    public func byTrackThickness(_ v: CGFloat?) -> Self {
+        self.trackThickness = v
+        return self
+    }
+
+    @discardableResult
+    public func byTrackHorizontalInset(_ v: CGFloat?) -> Self {
+        self.trackHorizontalInset = v
+        return self
+    }
+
+    @discardableResult
+    public func byTrackVerticalInset(_ v: CGFloat?) -> Self {
+        self.trackVerticalInset = v
+        return self
+    }
+    // ✅ Label auto-hide config
+    @discardableResult
+    public func byAutoHideLabel(_ v: Bool) -> Self {
+        self.autoHideLabel = v
+        return self
+    }
+
+    @discardableResult
+    public func byLabelMinVisibleHeight(_ v: CGFloat) -> Self {
+        self.labelMinVisibleHeight = v
+        return self
+    }
+
     @discardableResult
     public func byLabelFont(_ font: UIFont) -> Self {
         self.progressLabel.font = font
         return self
     }
-    /// 配置标签文字颜色
+
     @discardableResult
     public func byLabelTextColor(_ color: UIColor) -> Self {
         self.progressLabel.textColor = color
         return self
     }
-    /// 配置标签背景色
+
     @discardableResult
     public func byLabelBackgroundColor(_ color: UIColor) -> Self {
         self.progressLabel.backgroundColor = color
         return self
     }
-    /// 配置标签圆角
+
     @discardableResult
     public func byLabelCornerRadius(_ radius: CGFloat) -> Self {
         self.progressLabel.layer.cornerRadius = radius
@@ -447,8 +424,6 @@ extension JobsProgressBar {
         return self
     }
 
-    // MARK: - Display Percent DSL（外界一句话）
-    /// 直接用“显示百分比（0~100）”设置进度：内部自动换算 raw
     @discardableResult
     public func byDisplayPercent(_ percent: CGFloat,
                                  animated: Bool = false,
