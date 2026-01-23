@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
-import JobsProgressBarView
+import JobsSwiftTimer
 /// 导火索式倒计时：在任意 UIView 最外层画一圈可消耗的边框，随着时间递减
 /// 导火索倒计时配置（按需可以继续扩）
 /// 这里先做最小配置：线宽、颜色、内边距、结束后是否移除
@@ -52,9 +52,9 @@ public extension UIView {
         static var completionKey: UInt8 = 0
     }
     /// 旧的倒计时 Process（现在基本不用了，只是为了兼容）
-    private var jobs_fuseProcess: JobsCountdownProcess? {
+    private var jobs_fuseProcess: JobsSwiftTimerCountdown? {
         get {
-            objc_getAssociatedObject(self, &JobsFuseKeys.processKey) as? JobsCountdownProcess
+            objc_getAssociatedObject(self, &JobsFuseKeys.processKey) as? JobsSwiftTimerCountdown
         }
         set {
             objc_setAssociatedObject(self,
@@ -119,7 +119,7 @@ public extension UIView {
     @discardableResult
     func jobs_startFuseCountdown(duration: TimeInterval,
                                  config: JobsFuseConfig = JobsFuseConfig(),
-                                 finished: (() -> Void)? = nil) -> JobsCountdownProcess? {
+                                 finished: (() -> Void)? = nil) -> JobsSwiftTimerCountdown? {
         layoutIfNeeded()
         guard bounds.width > 0, bounds.height > 0, duration > 0 else {
             // 没尺寸或者 duration <= 0，直接清掉
@@ -204,7 +204,7 @@ public extension UIView {
         fuseLayer.add(anim, forKey: animKey)
         CATransaction.commit()
 
-        // 现在不再依赖 JobsCountdownProcess，直接返回 nil 即可
+        // 现在不再依赖 JobsSwiftTimerCountdown，直接返回 nil 即可
         jobs_fuseProcess = nil
         return nil
     }

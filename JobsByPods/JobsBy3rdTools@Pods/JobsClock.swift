@@ -15,9 +15,9 @@ import QuartzCore
 import JobsByUIKit
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
-/// 带时分秒针 + 刻度数字 1～12 的模拟时钟，定时器用 JobsTimer（新版）
+/// 带时分秒针 + 刻度数字 1～12 的模拟时钟，定时器用 JobsSwiftTimer（新版）
 ///
-/// Swift 6 注意点：JobsTimer 的 handler 是 @Sendable
+/// Swift 6 注意点：JobsSwiftTimer 的 handler 是 @Sendable
 /// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
 /// - 统一用 jobsRunOnMain(self) { vc in ... } 回到主线程更新 UI
 open class JobsClockView: UIView {
@@ -77,7 +77,7 @@ open class JobsClockView: UIView {
             .byCornerRadius(1)
             .byAddTo(layer)
     }()
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -196,14 +196,14 @@ open class JobsClockView: UIView {
     // MARK: - 对外 API：启动 / 停止
     /// 开始走表（默认用 GCD 内核）
     ///
-    /// JobsTimer 的非 GCD 内核（foundation/runLoop/displayLink）要求主线程 init/start
-    /// 这里用 @MainActor 强制在主线程调用，避免触发 JobsTimer 内部 precondition
+    /// JobsSwiftTimer 的非 GCD 内核（foundation/runLoop/displayLink）要求主线程 init/start
+    /// 这里用 @MainActor 强制在主线程调用，避免触发 JobsSwiftTimer 内部 precondition
     @MainActor
     public func start(kind: JobsTimerKind = .gcd) {
         stop()
         // 先对齐一次当前时间
         updateHands(animated: false)
-        let config = JobsTimerConfig(
+        let config = JobsSwiftTimerConfig(
             interval: 1.0,          // 每秒 tick 一次
             repeats: true,
             tolerance: 0.01,

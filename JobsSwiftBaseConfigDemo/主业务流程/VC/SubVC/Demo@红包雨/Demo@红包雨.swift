@@ -110,7 +110,7 @@ final class RedPacketRainDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "JobsTimer@红包雨 Demo")
+        jobsSetupGKNav(title: "JobsSwiftTimer@红包雨 Demo")
         rainView.byVisible(YES)
         countLabel.byVisible(YES)
         toggleButton.byVisible(YES)

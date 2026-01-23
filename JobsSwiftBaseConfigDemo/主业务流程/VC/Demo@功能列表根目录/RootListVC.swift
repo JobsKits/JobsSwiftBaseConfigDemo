@@ -31,7 +31,7 @@ final class RootListVC: BaseVC {
             ("🔒 手势解锁", GestureUnlockDemoVC.self),
             ("🌛 朋友圈@GKPhotoBrowser", GKPhotoBrowserDemoVC.self),
             ("🗜️ UITableViewCell的折叠效果", FoldTableDemoVC.self),
-            ("🛠️ JobsTimerManager", JobsTimerManagerDemoVC.self),
+            ("🛠️ JobsSwiftTimerManager", JobsTimerManagerDemoVC.self),
             ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
             ("🎲 时时彩", JobsMultiTimerTableDemoVC.self),
             ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
@@ -235,7 +235,7 @@ final class RootListVC: BaseVC {
             .byBackgroundColor(.systemPurple, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
-            // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsTimer
+            // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsSwiftTimer
             .jobs_enablePressFuseCountUp(
                 tickInterval: 1.0 / 60.0,
                 durationToFull: 2.0,          // 2s 走满一圈（想更快/更慢就改这里）

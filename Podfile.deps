@@ -80,7 +80,7 @@ def byJobs
   pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
   pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
   pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
-  pod 'JobsProgressBarView',                :path => 'JobsByPods/JobsProgressBarView@Pods'
+  pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
   pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
   pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
   pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'

@@ -55,8 +55,8 @@ Pod::Spec.new do |s|
     ss.source_files = '🛜网络流量监控/**/*.swift'
   end
   
-  # ====================== ⏰ JobsTimer ======================
-  s.subspec 'JobsTimer' do |ss|
-    ss.source_files = 'JobsTimer/**/*.swift'
+  # ====================== ⏰ JobsSwiftTimer ======================
+  s.subspec 'JobsSwiftTimer' do |ss|
+    ss.source_files = 'JobsSwiftTimer/**/*.swift'
   end
 end

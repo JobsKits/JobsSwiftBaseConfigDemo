@@ -1,5 +1,5 @@
 //
-//  JobsTImerDef.swift
+//  JobsSwiftTimerDefs.swift
 //  Pods
 //
 //  Created by Jobs on 21/1/26.
@@ -29,9 +29,9 @@ public enum _TimerMode: Sendable {
     }
 }
 // MARK: - 统一错误
-public enum JobsTimerManagerError: Error,
-                                   LocalizedError,
-                                   Sendable {
+public enum JobsSwiftTimerManagerError: Error,
+                                        LocalizedError,
+                                        Sendable {
     case identifierRequired
     case duplicatedIdentifier(String)
     case notFound(String)
@@ -48,7 +48,7 @@ public enum JobsTimerManagerError: Error,
     }
 }
 // MARK: - 统一动作
-public enum JobsTimerManagerAction: Sendable {
+public enum JobsSwiftTimerManagerAction: Sendable {
     case start
     case pause
     case resume

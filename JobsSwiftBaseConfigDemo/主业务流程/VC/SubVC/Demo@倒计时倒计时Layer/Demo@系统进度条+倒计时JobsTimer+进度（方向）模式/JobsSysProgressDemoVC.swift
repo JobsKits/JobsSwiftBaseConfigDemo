@@ -19,17 +19,17 @@ import JobsSwiftBaseDefines
 import JobsScale
 import JobsSwiftTimer
 import JobsTextTools
-import JobsProgressBarView
-/// Demo@系统进度条+倒计时JobsTimer+进度（方向）模式
+import JobsProgressBar
+/// Demo@系统进度条+倒计时JobsSwiftTimer+进度（方向）模式
 final class JobsSysProgressDemoVC: BaseVC {
     let horizontalInset: CGFloat = 40
     /// 当前正在运行的倒计时过程
-    private var countdownProcess: JobsCountdownProcess?
+    private var countdownProcess: JobsSwiftTimerCountdown?
     /// 进度展示模式：0 → 100 / 100 → 0
     /// - `.countUp`   : 进度条从 0% 涨到 100%（已完成比例）
     /// - `.countDown` : 进度条从 100% 掉到 0%（剩余比例）
     /// 默认用“累积”语义：0 → 100
-    private var progressMode: JobsCountdownProcess.ProgressMode = .countUp
+    private var progressMode: JobsSwiftTimerCountdown.ProgressMode = .countUp
     /// 可选时长（秒）—— 唯一真相源
     private lazy var durationOptions: [Int] = [5, 10, 20]
     /// SegmentedControl 展示文案
@@ -154,7 +154,7 @@ final class JobsSysProgressDemoVC: BaseVC {
                 self.timeLabel.byText(String(format: "剩余：%.1f 秒", duration))
                 self.setStartButton(false)
 
-                self.countdownProcess = JobsCountdownProcess(
+                self.countdownProcess = JobsSwiftTimerCountdown(
                     duration: duration,
                     kind: .displayLink,          // CADisplayLink 内核，更顺滑
                     tickInterval: 1.0 / 60.0,    // 60fps
@@ -226,7 +226,7 @@ final class JobsSysProgressDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBgColor(.systemBackground)
         jobsSetupGKNav(
-            title: "JobsTimer 倒计时 Demo"
+            title: "JobsSwiftTimer 倒计时 Demo"
         )
         timeLabel.byVisible(YES)
         progressView.byVisible(YES)

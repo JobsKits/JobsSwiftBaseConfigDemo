@@ -19,15 +19,15 @@ import JobsSwiftTimer
 import JobsScale
 import JobsSwiftBaseDefines
 import JobsTextTools
-import JobsProgressBarView
+import JobsProgressBar
 /// Demo@自定义进度条（进度值+前进方向）
 final class JobsProgressDemoVC: BaseVC {
     deinit {
         timer?.stop()
     }
     // MARK: - 状态
-    /// 使用 JobsTimerProtocol 替代原生 Timer
-    private var timer: JobsTimerProtocol?
+    /// 使用 JobsSwiftTimerProtocol 替代原生 Timer
+    private var timer: JobsSwiftTimerProtocol?
     /// 当前标准进度 [0, 1]
     private var currentProgress: CGFloat = 0
     // MARK: - UI 懒加载
@@ -55,7 +55,7 @@ final class JobsProgressDemoVC: BaseVC {
                 default:
                     break
                 }
-                // 换方向时：停掉当前 JobsTimer & 进度归零
+                // 换方向时：停掉当前 JobsSwiftTimer & 进度归零
                 timer?.stop()
                 currentProgress = 0
                 progressView.setProgress(0, animated: false)
@@ -80,7 +80,7 @@ final class JobsProgressDemoVC: BaseVC {
             .onTap { [weak self] sender in
                 guard let self else { return }
 
-                let newMode: JobsProgressView.ValueMode
+                let newMode: JobsProgressBar.ValueMode
                 let newTitle: String
 
                 switch self.progressView.valueMode {
@@ -110,8 +110,8 @@ final class JobsProgressDemoVC: BaseVC {
             }
     }()
     /// 自定义进度条
-    private lazy var progressView: JobsProgressView = {
-        JobsProgressView()
+    private lazy var progressView: JobsProgressBar = {
+        JobsProgressBar()
             .byDirection(.leftToRight)
             .byValueMode(.countDown)   // 初始：显示为 100→0
             .byTrackColor(.systemGray5)
@@ -199,8 +199,8 @@ final class JobsProgressDemoVC: BaseVC {
 
                 let step: CGFloat = 0.01
                 let interval: TimeInterval = 0.03
-                // ✅ 用新版 JobsTimerConfig + JobsTimer 直接创建（不再用 JobsTimerFactory）
-                let config = JobsTimerConfig(
+                // ✅ 用新版 JobsSwiftTimerConfig + JobsSwiftTimer 直接创建（不再用 JobsTimerFactory）
+                let config = JobsSwiftTimerConfig(
                     interval: interval,
                     repeats: true,
                     tolerance: 0,          // 精准一点，进度更平滑

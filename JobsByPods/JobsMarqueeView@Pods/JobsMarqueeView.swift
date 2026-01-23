@@ -93,7 +93,7 @@ public final class JobsMarqueeView: UIView {
         v.showsVerticalScrollIndicator = false
         v.bounces = false
         v.isPagingEnabled = false
-        v.isScrollEnabled = false   // 全程由 JobsTimer 驱动
+        v.isScrollEnabled = false   // 全程由 JobsSwiftTimer 驱动
         v.scrollsToTop = false
         return v
     }()
@@ -111,8 +111,8 @@ public final class JobsMarqueeView: UIView {
     private var continuousInterval: TimeInterval = Metrics.continuousInterval
     /// 按频率滚动的触发间隔
     private var frequencyInterval: TimeInterval = Metrics.defaultFrequency
-    /// JobsTimer
-    private var timer: JobsTimerProtocol?
+    /// JobsSwiftTimer
+    private var timer: JobsSwiftTimerProtocol?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -279,7 +279,7 @@ public final class JobsMarqueeView: UIView {
     private func createTimer() {
         switch scrollMode {
         case .frequency:
-            let config = JobsTimerConfig(
+            let config = JobsSwiftTimerConfig(
                 interval: frequencyInterval,
                 repeats: true,
                 tolerance: 0.0,
@@ -289,7 +289,7 @@ public final class JobsMarqueeView: UIView {
                 pauseInBackground: true,
                 autoManageAppState: true
             )
-            // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+            // ✅ 新版 JobsSwiftTimer：不再用 JobsTimerFactory.make
             timer = JobsTimer(kind: timerKindForFrequency, config: config) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
                 jobsRunOnMain(self) { vc in
@@ -298,7 +298,7 @@ public final class JobsMarqueeView: UIView {
             }
 
         case .continuous:
-            let config = JobsTimerConfig(
+            let config = JobsSwiftTimerConfig(
                 interval: continuousInterval,
                 repeats: true,
                 tolerance: 0.0,
@@ -308,7 +308,7 @@ public final class JobsMarqueeView: UIView {
                 pauseInBackground: true,
                 autoManageAppState: true
             )
-            // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+            // ✅ 新版 JobsSwiftTimer：不再用 JobsTimerFactory.make
             timer = JobsTimer(kind: timerKindForContinuous, config: config) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，UI 更新回 MainActor
                 jobsRunOnMain(self) { vc in

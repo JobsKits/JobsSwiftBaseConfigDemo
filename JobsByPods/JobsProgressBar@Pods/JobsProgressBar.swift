@@ -1,5 +1,5 @@
 //
-//  JobsProgressView.swift
+//  JobsProgressBar.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/10/25.
@@ -13,7 +13,7 @@ import UIKit
 
 import JobsSwiftBaseDefines
 /// 自定义进度条@进度值和前进方向
-open class JobsProgressView: UIView {
+open class JobsProgressBar: UIView {
     /// 几何方向：决定填充从哪边往哪边走
     public enum Direction {
         case leftToRight
@@ -278,7 +278,7 @@ open class JobsProgressView: UIView {
     }
 }
 // MARK: - DSL
-extension JobsProgressView {
+extension JobsProgressBar {
     // MARK: - Direction
     /// 配置进度方向（几何）
     @discardableResult

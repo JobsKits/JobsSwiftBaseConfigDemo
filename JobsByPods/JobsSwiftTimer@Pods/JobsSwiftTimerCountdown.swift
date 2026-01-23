@@ -1,14 +1,13 @@
 //
-//  JobsTimerBySysProcess.swift
+//  JobsSwiftTimerCountdown.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/10/25.
 //
 
 import Foundation
-import JobsSwiftTimer
 /// JobsTimer@系统倒计时进度条
-public final class JobsCountdownProcess {
+public final class JobsSwiftTimerCountdown {
     deinit {
         cancel()
     }
@@ -86,7 +85,7 @@ public final class JobsCountdownProcess {
     /// 回调所在队列（更新 UI 就 .main）
     public let queue: DispatchQueue
     // MARK: - Private
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     private var startDate: Date?
     // MARK: - Init
     /// - Parameters:
@@ -110,7 +109,7 @@ public final class JobsCountdownProcess {
     // MARK: - 控制
     /// 开始倒计时（从 0 开始走一次）
     @discardableResult
-    public func start() -> JobsCountdownProcess {
+    public func start() -> JobsSwiftTimerCountdown {
         if state == .running { return self }
         /// 如果想重复使用同一个实例，可以每次 start 前重置
         resetInternal()
@@ -125,7 +124,7 @@ public final class JobsCountdownProcess {
         startDate = Date()
         state = .running
 
-        let config = JobsTimerConfig(
+        let config = JobsSwiftTimerConfig(
             interval: tickInterval,
             repeats: true,
             tolerance: tolerance,
@@ -180,7 +179,7 @@ public final class JobsCountdownProcess {
     }
 }
 // MARK: - DSL
-public extension JobsCountdownProcess {
+public extension JobsSwiftTimerCountdown {
     /// 链式设置进度回调
     @discardableResult
     func byProgress(_ handler: @escaping (Snapshot) -> Void) -> Self {
@@ -214,8 +213,8 @@ public extension JobsCountdownProcess {
                         tolerance: TimeInterval = 0,
                         queue: DispatchQueue = .main,
                         onProgress: ((Snapshot) -> Void)? = nil,
-                        onFinished: ((Snapshot) -> Void)? = nil) -> JobsCountdownProcess {
-        let process = JobsCountdownProcess(
+                        onFinished: ((Snapshot) -> Void)? = nil) -> JobsSwiftTimerCountdown {
+        let process = JobsSwiftTimerCountdown(
             duration: duration,
             kind: kind,
             tickInterval: tickInterval,

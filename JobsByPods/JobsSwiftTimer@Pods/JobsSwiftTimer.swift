@@ -1,5 +1,5 @@
 //
-//  JobsTimer.swift
+//  JobsSwiftTimer.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/4/25.
@@ -24,7 +24,7 @@ final class JobsUnfairLock {
         return try block()
     }
 }
-// MARK: - JobsTimer
+// MARK: - JobsSwiftTimer
 ///
 /// ✅ 更“狠”的规则（最终版）
 /// - 非 GCD 内核（foundation/runLoop/displayLink）强制：只能主线程 + RunLoop.main
@@ -33,7 +33,7 @@ final class JobsUnfairLock {
 /// - stop 后 late event：generation token 防穿透
 /// - ✅ 修复：GCD suspend/cancel 平衡（不会炸）
 /// - ✅ 修复：one-shot 在非 main queue 上 stop 的主线程路由（不会炸）
-public final class JobsTimer: JobsTimerProtocol {
+public final class JobsTimer: JobsSwiftTimerProtocol { 
     // MARK: - State
     private enum State: Equatable {
         case idle
@@ -47,7 +47,7 @@ public final class JobsTimer: JobsTimerProtocol {
     }
     // MARK: - Private
     private let kind: JobsTimerKind
-    private let config: JobsTimerConfig
+    private let config: JobsSwiftTimerConfig
 
     private let stateLock = JobsUnfairLock()
     private var state: State = .idle
@@ -86,7 +86,7 @@ public final class JobsTimer: JobsTimerProtocol {
     // MARK: - Init
     public init(
         kind: JobsTimerKind,
-        config: JobsTimerConfig,
+        config: JobsSwiftTimerConfig,
         handler: @escaping JobsTimerCallback
     ) {
         self.kind = kind
@@ -105,7 +105,7 @@ public final class JobsTimer: JobsTimerProtocol {
         stop()
         teardownAppState()
     }
-    // MARK: - JobsTimerProtocol
+    // MARK: - JobsSwiftTimerProtocol
     public func start() {
         if kind != .gcd { requireMainThreadForRunLoopAPI("start") }
 

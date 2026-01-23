@@ -27,9 +27,9 @@ public struct JobsCountdownButtonConfig {
     public var mode: Mode = .down(from: 60)
     /// 定时器间隔（秒），默认 1s
     public var interval: TimeInterval = 1.0
-    /// 使用哪种 JobsTimer 内核，默认 GCD
+    /// 使用哪种 JobsSwiftTimer 内核，默认 GCD
     public var timerKind: JobsTimerKind = .gcd
-    /// 容忍误差，直接透传给 JobsTimerConfig
+    /// 容忍误差，直接透传给 JobsSwiftTimerConfig
     public var tolerance: TimeInterval = 0.01
     /// 是否在 `start()` 时先渲染一次初始值（例如：立刻显示 “60s”）
     public var renderOnInit: Bool = true
@@ -59,7 +59,7 @@ final class JobsCountdownBtnCtrl {
     weak var button: UIButton?
     var config: JobsCountdownButtonConfig
 
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     private(set) var isRunning: Bool = false
 
     private var current: Int = 0       // up 模式下：已走步数；down 模式下：剩余秒数
@@ -102,7 +102,7 @@ final class JobsCountdownBtnCtrl {
             btn.isEnabled = false
         }
 
-        let tConfig = JobsTimerConfig(
+        let tConfig = JobsSwiftTimerConfig(
             interval: config.interval,
             repeats: true,
             tolerance: config.tolerance,
@@ -112,7 +112,7 @@ final class JobsCountdownBtnCtrl {
             pauseInBackground: true,
             autoManageAppState: true
         )
-        // ✅ 新版 JobsTimer：直接 new（不再用 JobsTimerFactory.make）
+        // ✅ 新版 JobsSwiftTimer：直接 new（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
             // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
             jobsRunOnMain(self) { vc in

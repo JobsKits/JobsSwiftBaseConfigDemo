@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
-  s.name         = 'JobsProgressBarView'          # Pod 名
+  s.name         = 'JobsProgressBar'          # Pod 名
   s.version      = '0.1.14'
   s.summary      = 'Swift@基础工具集'
   s.description  = <<-DESC
                       关于Swift语言下的基础工具集
                    DESC
 
-  s.homepage     = 'https://github.com/JobsKits/JobsProgressBarView'
+  s.homepage     = 'https://github.com/JobsKits/JobsProgressBar'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.source = {
-    :git => 'https://github.com/JobsKits/JobsProgressBarView.git',
+    :git => 'https://github.com/JobsKits/JobsProgressBar.git',
     :tag => s.version.to_s
   }
 

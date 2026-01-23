@@ -26,13 +26,13 @@ import JobsBy3rdTools
 import JobsSwiftAppTools
 
 final class RootListVC: BaseVC {
-    // ================================== JobsTimer（新版）统一管理 ==================================
-    private let timerMgr = JobsTimerManager.shared
+    // ================================== JobsSwiftTimer（新版）统一管理 ==================================
+    private let timerMgr = JobsSwiftTimerManager.shared
     private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
     private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
 
-    private var suspendBtnTimer: JobsTimerProtocol?
-    private var suspendSpinBtnTimer: JobsTimerProtocol?
+    private var suspendBtnTimer: JobsSwiftTimerProtocol?
+    private var suspendSpinBtnTimer: JobsSwiftTimerProtocol?
 
     /// 旧版 onTimerTick 给 elapsed；新版不再给，自己计数即可
     private var spinSeconds: Int = 0
@@ -97,8 +97,8 @@ final class RootListVC: BaseVC {
     /// ✅ 懒加载，数组配置写在这里
     private lazy var demo2D: [DemoGroup] = {
         return [
-            (title: "JobsTimer系列衍生产品", items: [
-                ("⏰ JobsTimer", TimerDemoVC.self),
+            (title: "JobsSwiftTimer系列衍生产品", items: [
+                ("⏰ JobsSwiftTimer", TimerDemoVC.self),
                 ("🛠️ Jobs时间管理大师", JobsTimerManagerDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
                 ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
@@ -248,7 +248,7 @@ final class RootListVC: BaseVC {
             .byBackgroundColor(.systemPurple, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
-            // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsTimer
+            // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsSwiftTimer
             .jobs_enablePressFuseCountUp(
                 tickInterval: 1.0 / 60.0,
                 durationToFull: 2.0,          // 2s 走满一圈（想更快/更慢就改这里）
@@ -398,11 +398,11 @@ final class RootListVC: BaseVC {
         suspendBtnTimer?.resume()
         suspendSpinBtnTimer?.resume()
     }
-    // ================================== JobsTimer（新版）创建与绑定 UI ==================================
+    // ================================== JobsSwiftTimer（新版）创建与绑定 UI ==================================
     private func setupJobsTimers() {
         // 1) suspendBtn：每秒刷新当前时间
         do {
-            let cfg = JobsTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            let cfg = JobsSwiftTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
             suspendBtnTimer = try timerMgr.create(
                 kind: .gcd,
                 identifier: suspendBtnTimerID,
@@ -426,7 +426,7 @@ final class RootListVC: BaseVC {
         // 2) suspendSpinBtn：每秒 +1 显示秒数（替代旧 elapsed）
         do {
             spinSeconds = 0
-            let cfg = JobsTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            let cfg = JobsSwiftTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
             suspendSpinBtnTimer = try timerMgr.create(
                 kind: .gcd,
                 identifier: suspendSpinBtnTimerID,

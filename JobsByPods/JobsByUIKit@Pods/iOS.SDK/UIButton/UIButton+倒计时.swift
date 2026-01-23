@@ -29,8 +29,8 @@ private var _timerStateKey: UInt8 = 0
 private var _timerStateDidChangeKey: UInt8 = 0
 // MARK: - Core
 public extension UIButton {
-    var timer: JobsTimerProtocol? {
-        get { objc_getAssociatedObject(self, &_timerCoreKey) as? JobsTimerProtocol }
+    var timer: JobsSwiftTimerProtocol? {
+        get { objc_getAssociatedObject(self, &_timerCoreKey) as? JobsSwiftTimerProtocol }
         set { objc_setAssociatedObject(self, &_timerCoreKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
@@ -119,13 +119,13 @@ public extension UIButton {
             setTitle("0", for: .normal)
         }
         objc_setAssociatedObject(self, &_timerKindKey, kind, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        let cfg = JobsTimerConfig(
+        let cfg = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
             tolerance: 0.01,
             queue: .main
         )
-        // ✅ 新版 JobsTimer：直接 new（不再用 JobsTimerFactory.make）
+        // ✅ 新版 JobsSwiftTimer：直接 new（不再用 JobsTimerFactory.make）
         let core = JobsTimer(kind: kind, config: cfg) { [weak self] in
             guard let self else { return }
             // ✅ Swift 6：handler 是 @Sendable，触 UI 统一回 MainActor

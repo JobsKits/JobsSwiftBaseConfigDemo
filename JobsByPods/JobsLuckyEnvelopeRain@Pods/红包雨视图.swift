@@ -31,12 +31,12 @@ public class RedPacketRainView: UIView {
     public private(set) var isRunning: Bool = false
     /// 累计点中红包的数量
     public private(set) var tappedCount: Int = 0
-    // 使用哪种 JobsTimer 内核
+    // 使用哪种 JobsSwiftTimer 内核
     private let timerKind: JobsTimerKind
     // 内部状态
-    private var spawnTimer: JobsTimerProtocol?
+    private var spawnTimer: JobsSwiftTimerProtocol?
     /// 负责驱动红包下落的计时器
-    private var fallTimer: JobsTimerProtocol?
+    private var fallTimer: JobsSwiftTimerProtocol?
     /// 当前屏幕上的红包按钮
     private var activePackets: [UIButton] = []
     /// 每个红包的运动参数
@@ -119,7 +119,7 @@ public class RedPacketRainView: UIView {
     // MARK: - Timer
     private func buildTimerIfNeeded() {
         if spawnTimer == nil {
-            let cfg = JobsTimerConfig(
+            let cfg = JobsSwiftTimerConfig(
                 interval: max(0.05, config.spawnInterval),
                 repeats: true,
                 tolerance: 0.01,
@@ -142,7 +142,7 @@ public class RedPacketRainView: UIView {
         }
 
         if fallTimer == nil {
-            let fallCfg = JobsTimerConfig(
+            let fallCfg = JobsSwiftTimerConfig(
                 interval: 1.0 / 60.0,
                 repeats: true,
                 tolerance: 0.0,

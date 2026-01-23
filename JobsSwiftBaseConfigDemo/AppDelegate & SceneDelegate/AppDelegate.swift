@@ -41,7 +41,7 @@ import FlutterPluginRegistrant
 @main
 class AppDelegate: FlutterAppDelegate {
     /// ✅ 持有 timer，避免被释放
-    private var appTickerTimer: JobsTimerProtocol?
+    private var appTickerTimer: JobsSwiftTimerProtocol?
 
     lazy var flutterEngine: FlutterEngine = {
         let e = FlutterEngine(name: "jobs_flutter_engine")
@@ -97,7 +97,7 @@ class AppDelegate: FlutterAppDelegate {
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     /// ✅ 持有 timer，避免被释放
-    private var appTickerTimer: JobsTimerProtocol?
+    private var appTickerTimer: JobsSwiftTimerProtocol?
 
     lazy var flutterEngine = FlutterEngine(name: "my flutter engine")
 
@@ -219,9 +219,9 @@ extension AppDelegate {
             print(minV, maxV)   // 1 9
         }
 
-        // ✅ 新版 JobsTimer：不再用 JobsTimerFactory.make
+        // ✅ 新版 JobsSwiftTimer：不再用 JobsTimerFactory.make
         do {
-            let cfg = JobsTimerConfig(
+            let cfg = JobsSwiftTimerConfig(
                 interval: 1,
                 repeats: true,
                 tolerance: 0.002,
@@ -232,7 +232,7 @@ extension AppDelegate {
                 autoManageAppState: true
             )
 
-            let t = JobsTimer(kind: .displayLink, config: cfg) {
+            let t = JobsSwiftTimer(kind: .displayLink, config: cfg) {
                 /// 日期打印（这里只是打印，不触碰 UI，不需要 MainActor）
                 print(Date().formatted(date: .numeric, time: .standard))
             }

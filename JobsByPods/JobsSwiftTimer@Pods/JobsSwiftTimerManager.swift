@@ -1,5 +1,5 @@
 //
-//  JobsTimerManager.swift
+//  JobsSwiftTimerManager.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 2025/12/13.
@@ -10,11 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-// MARK: - JobsTimerManager
-public final class JobsTimerManager {
-    public static let shared = JobsTimerManager()
+// MARK: - JobsSwiftTimerManager
+public final class JobsSwiftTimerManager {
+    public static let shared = JobsSwiftTimerManager()
     private let lock = NSLock()
-    private var timers: [String: JobsTimerProtocol] = [:]
+    private var timers: [String: JobsSwiftTimerProtocol] = [:]
     private var defaultDedupPolicy: JobsTimerDedupPolicy = .replace
     private init() {}
     // MARK: - Config
@@ -32,19 +32,19 @@ public final class JobsTimerManager {
     public func create(
         kind: JobsTimerKind,
         identifier: String?,
-        config: JobsTimerConfig,
+        config: JobsSwiftTimerConfig,
         dedupPolicy: JobsTimerDedupPolicy? = nil,
         onTick: @escaping JobsTimerCallback
-    ) throws -> JobsTimerProtocol {
+    ) throws -> JobsSwiftTimerProtocol {
 
         guard let identifier, !identifier.isEmpty else {
-            throw JobsTimerManagerError.identifierRequired
+            throw JobsSwiftTimerManagerError.identifierRequired
         }
 
         let policy = dedupPolicy ?? defaultDedupPolicy
 
         // 先读 existing，避免锁内做 stop/remove 这种可能引发回调的重操作
-        let existing: JobsTimerProtocol? = {
+        let existing: JobsSwiftTimerProtocol? = {
             lock.lock()
             defer { lock.unlock() }
             return timers[identifier]
@@ -58,7 +58,7 @@ public final class JobsTimerManager {
                 existing.stop()
                 try remove(identifier: identifier)
             case .error:
-                throw JobsTimerManagerError.duplicatedIdentifier(identifier)
+                throw JobsSwiftTimerManagerError.duplicatedIdentifier(identifier)
             }
         }
         // 关键：Manager 统一治理前后台，避免 timer 自己又监听一遍（UIKit）
@@ -69,23 +69,23 @@ public final class JobsTimerManager {
 
         // ⚠️ 非 GCD 内核依赖 RunLoop/DisplayLink：强制主线程主 RunLoop
         if kind != .gcd {
-            precondition(c.runLoop == .main, "JobsTimerManager: kind=\(kind) currently only supports RunLoop.main.")
-            precondition(Thread.isMainThread, "JobsTimerManager: create(kind=\(kind)) must be called on main thread.")
+            precondition(c.runLoop == .main, "JobsSwiftTimerManager: kind=\(kind) currently only supports RunLoop.main.")
+            precondition(Thread.isMainThread, "JobsSwiftTimerManager: create(kind=\(kind)) must be called on main thread.")
         }
 
         let timer = JobsTimer(kind: kind, config: c, handler: onTick)
         return try register(timer, identifier: identifier, dedupPolicy: policy)
     }
     /// 获取 timer
-    public func timer(for identifier: String) -> JobsTimerProtocol? {
+    public func timer(for identifier: String) -> JobsSwiftTimerProtocol? {
         lock.lock()
         defer { lock.unlock() }
         return timers[identifier]
     }
     /// 对某个 timer 执行动作
     @discardableResult
-    public func act(_ action: JobsTimerManagerAction, identifier: String) throws -> JobsTimerProtocol {
-        guard let t = timer(for: identifier) else { throw JobsTimerManagerError.notFound(identifier) }
+    public func act(_ action: JobsSwiftTimerManagerAction, identifier: String) throws -> JobsSwiftTimerProtocol {
+        guard let t = timer(for: identifier) else { throw JobsSwiftTimerManagerError.notFound(identifier) }
         switch action {
         case .start:  t.start()
         case .pause:  t.pause()
@@ -101,7 +101,7 @@ public final class JobsTimerManager {
         lock.lock()
         defer { lock.unlock() }
         guard timers.removeValue(forKey: identifier) != nil else {
-            throw JobsTimerManagerError.notFound(identifier)
+            throw JobsSwiftTimerManagerError.notFound(identifier)
         }
     }
     /// 清空所有 timer
@@ -131,10 +131,10 @@ public final class JobsTimerManager {
     }
     // MARK: - Private
     private func register(
-        _ timer: JobsTimerProtocol,
+        _ timer: JobsSwiftTimerProtocol,
         identifier: String,
         dedupPolicy: JobsTimerDedupPolicy
-    ) throws -> JobsTimerProtocol {
+    ) throws -> JobsSwiftTimerProtocol {
         lock.lock()
         defer { lock.unlock() }
         if timers[identifier] != nil {
@@ -145,7 +145,7 @@ public final class JobsTimerManager {
                 timers[identifier]?.stop()
                 timers[identifier] = timer
             case .error:
-                throw JobsTimerManagerError.duplicatedIdentifier(identifier)
+                throw JobsSwiftTimerManagerError.duplicatedIdentifier(identifier)
             }
         } else {
             timers[identifier] = timer

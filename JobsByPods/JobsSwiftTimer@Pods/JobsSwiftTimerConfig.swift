@@ -1,5 +1,5 @@
 //
-//  JobsTimerConfig.swift
+//  JobsSwiftTimerConfig.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/24/25.
@@ -13,7 +13,7 @@ import UIKit
 
 import ObjectiveC
 // MARK: - 配置
-public struct JobsTimerConfig {
+public struct JobsSwiftTimerConfig {
     public var interval: TimeInterval    // 时间间隔（最小会被 clamp 到 0.000001）
     public var repeats: Bool             // 是否重复；false 就是 one-shot
     public var tolerance: TimeInterval   // 容忍误差（对 `Timer` 有意义；GCD 用 leeway）

@@ -1,5 +1,5 @@
 //
-//  JobsProgressBarViewByUIKit.swift
+//  JobsProgressViewByUIKit.swift
 //  Pods
 //
 //  Created by Jobs on 22/1/26.

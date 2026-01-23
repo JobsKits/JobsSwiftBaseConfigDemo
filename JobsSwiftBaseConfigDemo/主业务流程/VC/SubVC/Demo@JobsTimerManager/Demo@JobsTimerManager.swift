@@ -1,14 +1,14 @@
 //
-//  Demo@JobsTimerManager.swift
+//  Demo@JobsSwiftTimerManager.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/13/25.
 //
-//  ✅ 适配你当前 JobsTimerManager.swift：仅依赖
-//  - JobsTimerManager.shared.create(kind:identifier:config:dedupPolicy:onTick:)
-//  - JobsTimerManager.shared.act(.start/.pause/.resume/.stop/.cancel, identifier:)
-//  - JobsTimerManager.shared.timer(for:)
-//  - JobsTimerManager.shared.removeAll(stopAll:)
+//  ✅ 适配你当前 JobsSwiftTimerManager.swift：仅依赖
+//  - JobsSwiftTimerManager.shared.create(kind:identifier:config:dedupPolicy:onTick:)
+//  - JobsSwiftTimerManager.shared.act(.start/.pause/.resume/.stop/.cancel, identifier:)
+//  - JobsSwiftTimerManager.shared.timer(for:)
+//  - JobsSwiftTimerManager.shared.removeAll(stopAll:)
 //  并统一用 VC 监听 App 前后台来执行策略（因为 Manager 内部将 autoManageAppState=false）
 //
 #if os(OSX)
@@ -26,7 +26,7 @@ import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
 // MARK: - Demo Timer ID
-private enum JobsTimerManagerDemoID: String, JobsTimerIdentifiable {
+private enum JobsTimerManagerDemoID: String, JobsSwiftTimerIdentifiable {
     case A_pauseResume
     case B_cancelInBackground
     case C_oneShot
@@ -112,7 +112,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTextColor(.secondaryLabel)
             .byText(
                 """
-                特点演示（基于你当前 JobsTimerManager API 实现）：
+                特点演示（基于你当前 JobsSwiftTimerManager API 实现）：
                 1) identifier 管理 + create(dedupPolicy:.replace) 防重复（同 id 替换旧 Timer）
                 2) A: pauseAndResume（后台 autoPause；前台只恢复 autoPaused，不误恢复手动暂停）
                 3) B: cancel（进后台 stop+remove）
@@ -351,7 +351,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "在JobsTimer基础上进行的二次封装")
+        jobsSetupGKNav(title: "在JobsSwiftTimer基础上进行的二次封装")
         view.backgroundColor = .systemBackground
 
         hintLabel.byVisible(YES)
@@ -379,7 +379,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         uninstallAppStateObservers()
-        JobsTimerManager.shared.removeAll(stopAll: true)
+        JobsSwiftTimerManager.shared.removeAll(stopAll: true)
     }
 
     // MARK: - App State（统一策略落地）
@@ -422,10 +422,10 @@ final class JobsTimerManagerDemoVC: BaseVC {
 
         // A：pauseAndResume（后台 autoPause，但不覆盖“手动暂停”）
         let aID = JobsTimerManagerDemoID.A_pauseResume.identifier!
-        if JobsTimerManager.shared.timer(for: aID) != nil {
+        if JobsSwiftTimerManager.shared.timer(for: aID) != nil {
             if !aManuallyPaused {
                 do {
-                    _ = try JobsTimerManager.shared.act(.pause, identifier: aID)
+                    _ = try JobsSwiftTimerManager.shared.act(.pause, identifier: aID)
                     aAutoPausedInBackground = true
                     uiBridge.log("App->BG: A autoPaused ✅")
                 } catch {
@@ -438,9 +438,9 @@ final class JobsTimerManagerDemoVC: BaseVC {
 
         // B：cancel（后台 stop+remove）
         let bID = JobsTimerManagerDemoID.B_cancelInBackground.identifier!
-        if JobsTimerManager.shared.timer(for: bID) != nil {
+        if JobsSwiftTimerManager.shared.timer(for: bID) != nil {
             do {
-                _ = try JobsTimerManager.shared.act(.cancel, identifier: bID)
+                _ = try JobsSwiftTimerManager.shared.act(.cancel, identifier: bID)
                 uiBridge.log("App->BG: B cancel(stop+remove) ✅")
             } catch {
                 uiBridge.log("App->BG: B cancel failed ❌ \(error)")
@@ -453,10 +453,10 @@ final class JobsTimerManagerDemoVC: BaseVC {
 
         // A：只恢复“后台 autoPause”导致的暂停，不恢复手动暂停
         let aID = JobsTimerManagerDemoID.A_pauseResume.identifier!
-        if JobsTimerManager.shared.timer(for: aID) != nil {
+        if JobsSwiftTimerManager.shared.timer(for: aID) != nil {
             if aAutoPausedInBackground && !aManuallyPaused {
                 do {
-                    _ = try JobsTimerManager.shared.act(.resume, identifier: aID)
+                    _ = try JobsSwiftTimerManager.shared.act(.resume, identifier: aID)
                     aAutoPausedInBackground = false
                     uiBridge.log("App->FG: A autoResumed ✅")
                 } catch {
@@ -481,7 +481,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             let kindA = selectedKindForA()
             let intervalA: TimeInterval = (kindA == .displayLink) ? (1.0 / 30.0) : 1.0
 
-            let cfgA = JobsTimerConfig(
+            let cfgA = JobsSwiftTimerConfig(
                 interval: intervalA,
                 repeats: true,
                 tolerance: 0.01,
@@ -492,7 +492,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
                 autoManageAppState: false     // manager 会强制 false，这里显式写清楚
             )
 
-            let tA = try JobsTimerManager.shared.create(
+            let tA = try JobsSwiftTimerManager.shared.create(
                 kind: kindA,
                 identifier: JobsTimerManagerDemoID.A_pauseResume.identifier!,
                 config: cfgA,
@@ -513,7 +513,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
 
         // B：cancel（进后台 stop+remove）
         do {
-            let cfgB = JobsTimerConfig(
+            let cfgB = JobsSwiftTimerConfig(
                 interval: 0.7,
                 repeats: true,
                 tolerance: 0.01,
@@ -524,7 +524,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
                 autoManageAppState: false
             )
 
-            let tB = try JobsTimerManager.shared.create(
+            let tB = try JobsSwiftTimerManager.shared.create(
                 kind: .gcd,
                 identifier: JobsTimerManagerDemoID.B_cancelInBackground.identifier!,
                 config: cfgB,
@@ -550,7 +550,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerManagerDemoID.A_pauseResume.identifier!
 
-        guard JobsTimerManager.shared.timer(for: id) != nil else {
+        guard JobsSwiftTimerManager.shared.timer(for: id) != nil else {
             uiBridge.log("Replace A ❌ 先 Create Timers")
             return
         }
@@ -562,7 +562,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
         uiBridge.setStatus("Replacing A...")
 
         do {
-            let cfg = JobsTimerConfig(
+            let cfg = JobsSwiftTimerConfig(
                 interval: interval,
                 repeats: true,
                 tolerance: 0.01,
@@ -573,7 +573,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
                 autoManageAppState: false
             )
 
-            let t = try JobsTimerManager.shared.create(
+            let t = try JobsSwiftTimerManager.shared.create(
                 kind: newKind,
                 identifier: id,
                 config: cfg,
@@ -598,13 +598,13 @@ final class JobsTimerManagerDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerManagerDemoID.A_pauseResume.identifier!
 
-        guard JobsTimerManager.shared.timer(for: id) != nil else {
+        guard JobsSwiftTimerManager.shared.timer(for: id) != nil else {
             uiBridge.log("Pause A ❌（A 不存在）")
             return
         }
 
         do {
-            _ = try JobsTimerManager.shared.act(.pause, identifier: id)
+            _ = try JobsSwiftTimerManager.shared.act(.pause, identifier: id)
             aManuallyPaused = true
             aAutoPausedInBackground = false
             uiBridge.log("Pause A ✅（手动暂停：回前台不会自动恢复）")
@@ -619,13 +619,13 @@ final class JobsTimerManagerDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerManagerDemoID.A_pauseResume.identifier!
 
-        guard JobsTimerManager.shared.timer(for: id) != nil else {
+        guard JobsSwiftTimerManager.shared.timer(for: id) != nil else {
             uiBridge.log("Resume A ❌（A 不存在）")
             return
         }
 
         do {
-            _ = try JobsTimerManager.shared.act(.resume, identifier: id)
+            _ = try JobsSwiftTimerManager.shared.act(.resume, identifier: id)
             aManuallyPaused = false
             uiBridge.log("Resume A ✅")
             uiBridge.setStatus("A resumed.")
@@ -643,7 +643,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
         uiBridge.setStatus("Starting OneShot...")
 
         do {
-            let cfg = JobsTimerConfig(
+            let cfg = JobsSwiftTimerConfig(
                 interval: 2.0,
                 repeats: false,
                 tolerance: 0.01,
@@ -655,7 +655,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             )
 
             // repeats=false：tick 一次后内部会 stop；我们这里再 cancel 做 remove
-            let t = try JobsTimerManager.shared.create(
+            let t = try JobsSwiftTimerManager.shared.create(
                 kind: .gcd,
                 identifier: id,
                 config: cfg,
@@ -666,7 +666,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
                     uiBridge.log("OneShot tick ✅ (repeats=false) -> cancel(remove)")
                     uiBridge.setOneShot("OneShot: fired ✅")
                     do {
-                        _ = try JobsTimerManager.shared.act(.cancel, identifier: id)
+                        _ = try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
                         uiBridge.setOneShot("OneShot: finished + removed")
                     } catch {
                         uiBridge.log("OneShot cancel failed ❌ \(error)")
@@ -687,14 +687,14 @@ final class JobsTimerManagerDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerManagerDemoID.C_oneShot.identifier!
 
-        guard JobsTimerManager.shared.timer(for: id) != nil else {
+        guard JobsSwiftTimerManager.shared.timer(for: id) != nil else {
             uiBridge.log("Cancel OneShot ❌（不存在）")
             uiBridge.setOneShot("OneShot: not exists")
             return
         }
 
         do {
-            _ = try JobsTimerManager.shared.act(.cancel, identifier: id)
+            _ = try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
             uiBridge.log("Cancel+Remove OneShot ✅")
             uiBridge.setOneShot("OneShot: canceled + removed")
         } catch {
@@ -710,14 +710,14 @@ final class JobsTimerManagerDemoVC: BaseVC {
             JobsTimerManagerDemoID.B_cancelInBackground.identifier!,
             JobsTimerManagerDemoID.C_oneShot.identifier!
         ]
-        let alive = ids.filter { JobsTimerManager.shared.timer(for: $0) != nil }
+        let alive = ids.filter { JobsSwiftTimerManager.shared.timer(for: $0) != nil }
         uiBridge.log("Active IDs: \(alive)")
     }
 
     @MainActor
     private func stopAll() {
         let uiBridge = self.uiBridge
-        JobsTimerManager.shared.removeAll(stopAll: true)
+        JobsSwiftTimerManager.shared.removeAll(stopAll: true)
         aManuallyPaused = false
         aAutoPausedInBackground = false
         uiBridge.log("Stop All ✅")

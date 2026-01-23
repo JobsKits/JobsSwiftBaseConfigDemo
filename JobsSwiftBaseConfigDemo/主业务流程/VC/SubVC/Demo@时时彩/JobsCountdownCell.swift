@@ -19,7 +19,7 @@ import JobsSwiftBaseDefines
 public final class JobsCountdownCell: UITableViewCell {
     private var currentItem: JobsCountdownItem?
     private var currentTimerId: String?
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     // ============================== UI (Lazy) ==============================
     private lazy var titleLabel: UILabel = {
         UILabel()
@@ -98,7 +98,7 @@ public final class JobsCountdownCell: UITableViewCell {
         // 再 cancel manager（stop + remove）
         Task {
             do {
-                _ = try JobsTimerManager.shared.act(.cancel, identifier: id)
+                _ = try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
             } catch {
                 // Demo：忽略（可能已被 cancel）
             }
@@ -116,7 +116,7 @@ public final class JobsCountdownCell: UITableViewCell {
             return
         }
 
-        let cfg = JobsTimerConfig(
+        let cfg = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
             tolerance: 0.02,
@@ -128,7 +128,7 @@ public final class JobsCountdownCell: UITableViewCell {
         )
 
         do {
-            let t = try JobsTimerManager.shared.create(
+            let t = try JobsSwiftTimerManager.shared.create(
                 kind: .gcd,
                 identifier: id,
                 config: cfg,

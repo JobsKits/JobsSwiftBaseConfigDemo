@@ -1,11 +1,11 @@
 //
-//  JobsTimerProtocol.swift
+//  JobsSwiftTimerProtocol.swift
 //  Pods
 //
 //  Created by Jobs on 21/1/26.
 //
 // MARK: - 统一协议
-public protocol JobsTimerProtocol: AnyObject {
+public protocol JobsSwiftTimerProtocol: AnyObject {
     var isRunning: Bool { get }
     func start()
     func pause()
@@ -19,6 +19,6 @@ public protocol JobsTimerProtocol: AnyObject {
     func onFinish(_ block: @escaping JobsTimerCallback) -> Self
 }
 // MARK: - 标识协议（建议用于 Manager ID 管理）
-public protocol JobsTimerIdentifiable {
+public protocol JobsSwiftTimerIdentifiable {
     var identifier: String? { get }
 }

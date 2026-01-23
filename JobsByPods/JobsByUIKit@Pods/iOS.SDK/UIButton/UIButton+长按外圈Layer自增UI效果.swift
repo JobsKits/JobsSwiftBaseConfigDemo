@@ -34,7 +34,7 @@ private final class JobsPressFuseDriver: NSObject {
     var onTick: JobsPressFuseTick?
     var onEnd: JobsPressFuseEnd?
 
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     private var startTS: CFTimeInterval = 0
     private var lastProgress: CGFloat = 0
 
@@ -49,7 +49,7 @@ private final class JobsPressFuseDriver: NSObject {
         timer?.stop()
         timer = nil
         let interval = max(0.000_001, tickInterval)
-        let cfg = JobsTimerConfig(
+        let cfg = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
             tolerance: 0,

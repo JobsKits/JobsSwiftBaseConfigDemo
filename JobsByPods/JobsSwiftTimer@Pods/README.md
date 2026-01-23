@@ -1,4 +1,4 @@
-# ⏰`JobsTimer`
+# ⏰`JobsSwiftTimer`
 
 [toc]
 
@@ -35,10 +35,10 @@
     }
     ```
 
-  * 定时器基础配置`JobsTimerConfig` 
+  * 定时器基础配置`JobsSwiftTimerConfig` 
 
     ```swift
-    public struct JobsTimerConfig {
+    public struct JobsSwiftTimerConfig {
         public var interval: TimeInterval    // 时间间隔（最小会被 clamp 到 0.000001）
         public var repeats: Bool             // 是否重复；false 就是 one-shot
         public var tolerance: TimeInterval   // 容忍误差（对 `Timer` 有意义；GCD 用 leeway）
@@ -82,7 +82,7 @@
   * 定时器状态
 
     ```swift
-    public protocol JobsTimerProtocol: AnyObject {
+    public protocol JobsSwiftTimerProtocol: AnyObject {
         var isRunning: Bool { get }
         func start()
         func pause()
@@ -97,27 +97,27 @@
     }
     ```
 
-* 在**`JobsTimer`**之上再封装一层，用 [**JobsTimerManager**](#JobsTimerManager) 管理多个 `JobsTimer`（带 **identifier**）
+* 在**`JobsSwiftTimer`**之上再封装一层，用 [**JobsSwiftTimerManager**](#JobsSwiftTimerManager) 管理多个 `JobsSwiftTimer`（带 **identifier**）
 
   * 用 `identifier` 管理 **timer** 生命周期（列表 cell / 页面复用特别实用）
     * 有**去重策略** `JobsTimerDedupPolicy` ➤  `keepExisting` / `replace` / `error` 
   * 一行 act：`start`/`pause`/`resume`/`stop`/`cancel` 
 
-## 二、<font id=JobsTimer>`JobsTimer`的使用</font>
+## 二、<font id=JobsSwiftTimer>`JobsSwiftTimer`的使用</font>
 
 ### 1、GCD 定时器
 
 > 不吃主线程/RunLoop限制
 
 ```swift
-let config = JobsTimerConfig(
+let config = JobsSwiftTimerConfig(
     interval: 1.0,
     repeats: true,
     tolerance: 0.1,
     queue: DispatchQueue.global(qos: .userInitiated) // 回调跑这里
 )
 
-let timer = JobsTimer(kind: .gcd, config: config) {
+let timer = JobsSwiftTimer(kind: .gcd, config: config) {
     // tick：在 config.queue 上执行
     print("tick")
 }
@@ -139,7 +139,7 @@ timer.stop()
 /// .foundation / .runLoop / .displayLink：init/start/pause/resume/stop 全都必须主线程，否则 precondition 直接 crash
 
 DispatchQueue.main.async {
-    let config = JobsTimerConfig(
+    let config = JobsSwiftTimerConfig(
         interval: 1.0,
         repeats: true,
         queue: .main,               // 回调在主线程跑，适合更新 UI
@@ -147,7 +147,7 @@ DispatchQueue.main.async {
         runLoopMode: .common
     )
 
-    let timer = JobsTimer(kind: .foundation, config: config) {
+    let timer = JobsSwiftTimer(kind: .foundation, config: config) {
         // 更新 UI
     }
 
@@ -158,8 +158,8 @@ DispatchQueue.main.async {
 ### 3、只触发一次
 
 ```swift
-let config = JobsTimerConfig(interval: 0.5, repeats: false, queue: .main)
-let t = JobsTimer(kind: .gcd, config: config) {
+let config = JobsSwiftTimerConfig(interval: 0.5, repeats: false, queue: .main)
+let t = JobsSwiftTimer(kind: .gcd, config: config) {
     print("only once")
 }
 t.onFinish {
@@ -167,15 +167,15 @@ t.onFinish {
 }.start()
 ```
 
-## 三、<font id=JobsTimerManager>`JobsTimerManager` 的使用</font>
+## 三、<font id=JobsSwiftTimerManager>`JobsSwiftTimerManager` 的使用</font>
 
 ### 1、创建并注册（🌟最推荐用法🌟）
 
 ```swift
 /// 同 id 已存在时，默认策略是 .replace（Manager 内部默认）
 let id = "home.countdown"
-var config = JobsTimerConfig(interval: 1.0, repeats: true, queue: .main)
-let timer = try JobsTimerManager.shared.create(
+var config = JobsSwiftTimerConfig(interval: 1.0, repeats: true, queue: .main)
+let timer = try JobsSwiftTimerManager.shared.create(
     kind: .foundation,
     identifier: id,// 不能为空，否则抛 identifierRequired
     config: config,
@@ -189,21 +189,21 @@ timer.start()
 
 ### 2、用 act 控制
 
-> 不需要持有 **JobsTimer** 引用
+> 不需要持有 **JobsSwiftTimer** 引用
 
 ```swift
-try JobsTimerManager.shared.act(.start, identifier: id)
-try JobsTimerManager.shared.act(.pause, identifier: id)
-try JobsTimerManager.shared.act(.resume, identifier: id)
-try JobsTimerManager.shared.act(.stop, identifier: id)
+try JobsSwiftTimerManager.shared.act(.start, identifier: id)
+try JobsSwiftTimerManager.shared.act(.pause, identifier: id)
+try JobsSwiftTimerManager.shared.act(.resume, identifier: id)
+try JobsSwiftTimerManager.shared.act(.stop, identifier: id)
 ```
 
 ```swift
 /// cancel ➤ 停止并移除
 /// 最适合 cell reuse / deinit
-/// JobsTimerManager 的 .cancel 会先 stop() 再 remove()
+/// JobsSwiftTimerManager 的 .cancel 会先 stop() 再 remove()
 
-try JobsTimerManager.shared.act(.cancel, identifier: id)
+try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
 ```
 
 ### 3、停止并移除
@@ -214,7 +214,7 @@ try JobsTimerManager.shared.act(.cancel, identifier: id)
 
 ```swift
 Task {
-    await JobsTimerManager.shared.stopAndRemove(identifier: id)
+    await JobsSwiftTimerManager.shared.stopAndRemove(identifier: id)
 }
 ```
 
@@ -227,22 +227,22 @@ Task {
 /// 出队/复用时 cancel
 
 let id = "cell.\(model.id)"
-let config = JobsTimerConfig(interval: 1, repeats: true, queue: .main)
+let config = JobsSwiftTimerConfig(interval: 1, repeats: true, queue: .main)
 
-try? JobsTimerManager.shared.create(kind: .foundation, identifier: id, config: config) {
+try? JobsSwiftTimerManager.shared.create(kind: .foundation, identifier: id, config: config) {
     // 更新 label
 }.start()
 
 // 在 prepareForReuse / didEndDisplaying / deinit:
-Task { await JobsTimerManager.shared.stopAndRemove(identifier: id) }
+Task { await JobsSwiftTimerManager.shared.stopAndRemove(identifier: id) }
 ```
 
 ### 2、后台轮询 ➤ 不阻塞主线程
 
 ```swift
 /// .gcd + 后台 queue
-let config = JobsTimerConfig(interval: 2, repeats: true, queue: .global(qos: .background))
-let t = JobsTimer(kind: .gcd, config: config) { /* poll */ }
+let config = JobsSwiftTimerConfig(interval: 2, repeats: true, queue: .global(qos: .background))
+let t = JobsSwiftTimer(kind: .gcd, config: config) { /* poll */ }
 t.start()
 ```
 

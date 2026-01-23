@@ -38,7 +38,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     /// 当前内核（你也可以换成 .foundation / .displayLink / .runLoop；注意非 gcd 必须主线程创建/控制）
     private var currentKind: JobsTimerKind = .gcd
     /// timer 持有（不挂在 UIButton 上）
-    private var countdownTimer: JobsTimerProtocol?
+    private var countdownTimer: JobsSwiftTimerProtocol?
     // MARK: - UI
     /// 提示文案
     private lazy var hintLabel: UILabel = {
@@ -96,7 +96,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBgColor(.systemBackground)
-        jobsSetupGKNav(title: "JobsTimer 按钮倒计时 Demo")
+        jobsSetupGKNav(title: "JobsSwiftTimer 按钮倒计时 Demo")
         hintLabel.byVisible(YES)
         countdownButton.byVisible(YES)
     }
@@ -106,13 +106,13 @@ final class JobsCountdownLayerDemoVC: BaseVC {
         stopCountdown()
         countdownButton.jobs_cancelFuseCountdown()
     }
-    // MARK: - Timer Core (新版 JobsTimer)
-    /// 统一创建 timer（新版 JobsTimer：JobsTimer(kind:config:handler:)）
+    // MARK: - Timer Core (新版 JobsSwiftTimer)
+    /// 统一创建 timer（新版 JobsSwiftTimer：JobsSwiftTimer(kind:config:handler:)）
     @MainActor
     private func makeTimer(kind: JobsTimerKind,
                            interval: TimeInterval,
-                           handler: @escaping JobsTimerCallback) -> JobsTimerProtocol {
-        let cfg = JobsTimerConfig(
+                           handler: @escaping JobsTimerCallback) -> JobsSwiftTimerProtocol {
+        let cfg = JobsSwiftTimerConfig(
             interval: max(0.000_001, interval),
             repeats: true,
             tolerance: 0,
@@ -136,10 +136,10 @@ final class JobsCountdownLayerDemoVC: BaseVC {
             self.hintLabel.byText("倒计时进行中，点击可以暂停".tr)
             // 先更新一次 UI
             btn.byTitle("\(self.remainingSeconds)s", for: .normal)
-            // 1）倒计时：用新版 JobsTimer 驱动
+            // 1）倒计时：用新版 JobsSwiftTimer 驱动
             let kind = self.currentKind
             let t = self.makeTimer(kind: kind, interval: 1.0) { [weak self, weak btn] in
-                // ✅ JobsTimer 的 handler 是 @Sendable：这里不要直接碰 UIKit / self 的可变状态
+                // ✅ JobsSwiftTimer 的 handler 是 @Sendable：这里不要直接碰 UIKit / self 的可变状态
                 guard let self else { return }
                 guard let btn else { return }
                 jobsRunOnMain(self) { vc in

@@ -6,7 +6,7 @@
 //
 //  概要
 //  -----------------------------------------------------------------------------
-//  ✅ Swift 6 / 新版 JobsTimer 适配版（完整可编译）
+//  ✅ Swift 6 / 新版 JobsSwiftTimer 适配版（完整可编译）
 //  - 支持四种实现：Foundation.Timer / DispatchSourceTimer(GCD) / CADisplayLink / CFRunLoopTimer
 //  - 统一控制：start / pause / resume / fireOnce(手动触发一次逻辑+stop) / stop
 //  - 不再把 timer 挂在 UIButton 内部（旧扩展不再依赖）
@@ -52,8 +52,8 @@ final class TimerDemoVC: BaseVC {
     private var intervalSec: TimeInterval = 1.0   // 步长（秒），由输入框维护
 
     // MARK: - 运行状态（VC 自己管理，不再依赖 UIButton.timer 扩展）
-    private var countUpTimer: JobsTimerProtocol?
-    private var countdownTimer: JobsTimerProtocol?
+    private var countUpTimer: JobsSwiftTimerProtocol?
+    private var countdownTimer: JobsSwiftTimerProtocol?
 
     private var countUpState: TimerState = .idle
     private var countdownState: TimerState = .idle
@@ -285,8 +285,8 @@ final class TimerDemoVC: BaseVC {
     @MainActor
     private func makeTimer(kind: JobsTimerKind,
                            interval: TimeInterval,
-                           handler: @escaping JobsTimerCallback) -> JobsTimerProtocol {
-        let cfg = JobsTimerConfig(
+                           handler: @escaping JobsTimerCallback) -> JobsSwiftTimerProtocol {
+        let cfg = JobsSwiftTimerConfig(
             interval: max(0.000_001, interval),
             repeats: true,
             tolerance: 0,
@@ -296,7 +296,7 @@ final class TimerDemoVC: BaseVC {
             pauseInBackground: true,
             autoManageAppState: true
         )
-        return JobsTimer(kind: kind, config: cfg, handler: handler)
+        return JobsSwiftTimer(kind: kind, config: cfg, handler: handler)
     }
 
     // MARK: - 正计时：Start
@@ -406,7 +406,7 @@ final class TimerDemoVC: BaseVC {
         updateControlButtons(by: .running)
     }
 
-    /// Fire：手动执行一次 tick 语义 + stop（✅ 不依赖 JobsTimerProtocol.fireOnce）
+    /// Fire：手动执行一次 tick 语义 + stop（✅ 不依赖 JobsSwiftTimerProtocol.fireOnce）
     @MainActor
     private func fireOnceAll() {
         // 手动触发一次“正计时 tick”

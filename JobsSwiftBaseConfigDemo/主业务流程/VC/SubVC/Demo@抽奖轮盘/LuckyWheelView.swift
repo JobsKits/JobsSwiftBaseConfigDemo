@@ -16,7 +16,7 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsSwiftTimer
 /// 扇形圆盘 + 中央按钮（按钮用 Jobs 封装 API）
-/// 旋转动画用 JobsTimer（displayLink 内核） + ScrollDecelerator 实现 UIScrollView 式减速
+/// 旋转动画用 JobsSwiftTimer（displayLink 内核） + ScrollDecelerator 实现 UIScrollView 式减速
 /// 支持:
 /// 1. 中央按钮点击减速旋转
 /// 2. 扇形短按 / 长按
@@ -102,10 +102,10 @@ final class LuckyWheelView: UIView {
     }()
     // MARK: - 绘制相关 ==============================
     private var sliceLayers: [CAShapeLayer] = []
-    // MARK: - 旋转状态 / JobsTimer ====================
+    // MARK: - 旋转状态 / JobsSwiftTimer ====================
     private var currentAngle: CGFloat = 0              // 当前盘面角度（rad）
     private var decelerator: ScrollDecelerator?
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
     private let timerInterval: CGFloat = 1.0 / 60.0
     // MARK: - 手势状态 ================================
     /// 使用的封装创建 Pan 手势
@@ -449,7 +449,7 @@ final class LuckyWheelView: UIView {
             break
         }
     }
-    // MARK: - 旋转逻辑（JobsTimer + UIScrollView 减速） ========
+    // MARK: - 旋转逻辑（JobsSwiftTimer + UIScrollView 减速） ========
     /// 外部也可以直接调用这个方法来启动
     @MainActor
     func startSpinWithScrollLikeDeceleration(initialVelocity: CGFloat? = nil) {
@@ -471,8 +471,8 @@ final class LuckyWheelView: UIView {
             velocity: v0,
             decelerationRate: decelerationRate
         )
-        // ✅ displayLink 属于非 GCD 内核：JobsTimer 强制主线程 + RunLoop.main（默认就是 .main）:contentReference[oaicite:0]{index=0}
-        let config = JobsTimerConfig(
+        // ✅ displayLink 属于非 GCD 内核：JobsSwiftTimer 强制主线程 + RunLoop.main（默认就是 .main）:contentReference[oaicite:0]{index=0}
+        let config = JobsSwiftTimerConfig(
             interval: TimeInterval(timerInterval),
             repeats: true,
             tolerance: 0,

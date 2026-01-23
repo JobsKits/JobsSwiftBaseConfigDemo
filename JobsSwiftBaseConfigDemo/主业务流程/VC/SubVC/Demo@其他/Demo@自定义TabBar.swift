@@ -21,11 +21,11 @@ import JobsByUIKit
 import JobsTextTools
 import JobsSwiftTimer
 import JobsToast
-// MARK: - ✅ 新版 JobsTimer：给任意 UIButton 挂一个倒计时驱动（替代旧 startTimer/onCountdownTick/onCountdownFinish）
+// MARK: - ✅ 新版 JobsSwiftTimer：给任意 UIButton 挂一个倒计时驱动（替代旧 startTimer/onCountdownTick/onCountdownFinish）
 private final class JobsCountdownBinder {
 
     private weak var button: UIButton?
-    private var timer: JobsTimerProtocol?
+    private var timer: JobsSwiftTimerProtocol?
 
     private var total: Int = 0
     private var remain: Int = 0
@@ -54,7 +54,7 @@ private final class JobsCountdownBinder {
         // 先把 UI 初始化成 “还剩 xxxs”
         applyUI(remain: self.remain, total: self.total, kind: kind)
 
-        let cfg = JobsTimerConfig(
+        let cfg = JobsSwiftTimerConfig(
             interval: self.interval,
             repeats: true,
             tolerance: 0,
@@ -249,7 +249,7 @@ final class TabBarDemoVC: BaseVC {
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
 
-                    /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
+                    /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsSwiftTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
                     UIButton(type: .system)
                         .byTitle("活动", for: .normal)
                         .byTitleColor(.label, for: .normal)

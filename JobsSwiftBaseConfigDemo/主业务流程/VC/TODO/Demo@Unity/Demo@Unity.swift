@@ -22,8 +22,8 @@ final class UnityDemoVC: BaseVC {
     // ===== 配置 =====
     /// 自动关闭 Unity 的秒数，对外可改。<= 0 表示不开自动关闭
     var unityAutoCloseSeconds: TimeInterval = 3
-    /// JobsTimer 自己关 Unity 的定时器（如果想用 JobsTimer 自己关，可以用它；目前 showUnity 里也支持 autoCloseAfter）
-    private var unityAutoCloseTimer: JobsTimerProtocol?
+    /// JobsSwiftTimer 自己关 Unity 的定时器（如果想用 JobsSwiftTimer 自己关，可以用它；目前 showUnity 里也支持 autoCloseAfter）
+    private var unityAutoCloseTimer: JobsSwiftTimerProtocol?
     /// 定时器内核用哪种，外面也可以改
     private var unityTimerKind: JobsTimerKind = .gcd  // 或 .foundation / .displayLink / .runLoop
     // ===== UI =====
@@ -91,7 +91,7 @@ final class UnityDemoVC: BaseVC {
                     self.closeTimeTextField.text = "3"
                 }
 #if canImport(UnityFramework)
-                // 先清理可能存在的 JobsTimer
+                // 先清理可能存在的 JobsSwiftTimer
                 self.unityAutoCloseTimer?.stop()
                 self.unityAutoCloseTimer = nil
 
@@ -102,7 +102,7 @@ final class UnityDemoVC: BaseVC {
                     unloadOnClose: true
                 )
 
-                // 如果你想改成“完全由 JobsTimer 负责关闭”，就启用下面这句：
+                // 如果你想改成“完全由 JobsSwiftTimer 负责关闭”，就启用下面这句：
                 // self.scheduleUnityAutoClose()
 #endif
             }
@@ -131,7 +131,7 @@ final class UnityDemoVC: BaseVC {
         unityAutoCloseTimer = nil
     }
 }
-// MARK: - JobsTimer 自己关 Unity（适配新版 JobsTimer）
+// MARK: - JobsSwiftTimer 自己关 Unity（适配新版 JobsSwiftTimer）
 private extension UnityDemoVC {
     /// 安排自动关闭 Unity 的定时器（如果不用 UnityManager 自带 autoCloseAfter，就走这里）
     func scheduleUnityAutoClose() {
@@ -140,7 +140,7 @@ private extension UnityDemoVC {
 
         guard unityAutoCloseSeconds > 0 else { return }
 
-        let config = JobsTimerConfig(
+        let config = JobsSwiftTimerConfig(
             interval: unityAutoCloseSeconds,
             repeats: false,          // 一次性定时器
             tolerance: 0.1,
@@ -163,7 +163,7 @@ private extension UnityDemoVC {
         unityAutoCloseTimer = timer
         timer.start()
     }
-    /// 统一的 Unity 关闭逻辑（如果用 JobsTimer 自己关就走这里）
+    /// 统一的 Unity 关闭逻辑（如果用 JobsSwiftTimer 自己关就走这里）
     @MainActor
     func closeUnity() {
         unityAutoCloseTimer?.stop()
