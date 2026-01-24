@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import ObjectiveC.runtime
 import RxSwift
 
@@ -17,8 +18,7 @@ import RxSwift
 import JobsSwiftBaseDefines
 #endif
 
-extension NSObject: JobsAsyncable {}
-extension NSObject: Then {}
+extension NSObject: @retroactive JobsAsyncable {}
 /// ✅ 用 UInt8 就不会有警告
 /// Swift 的 &nameKey 现在是 UnsafeRawPointer 类型的地址，但 nameKey 是个简单的整数（UInt8），不会暴露复杂类型（如 String、NSObject）的内部内存结构，因此不会触发 Swift 的类型安全警告。
 /// 这是 Apple 官方推荐的方式之一。

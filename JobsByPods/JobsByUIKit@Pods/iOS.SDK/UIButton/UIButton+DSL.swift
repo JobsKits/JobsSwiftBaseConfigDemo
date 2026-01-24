@@ -15,6 +15,8 @@ import JobsSwiftBaseDefines
 // MARK: - 基础链式
 public var _jobsTitleFontDictKey: UInt8 = 0
 public var _jobsTitleFontHandlerInstalledKey: UInt8 = 0
+public var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
+public var _jobsConfigPatchListKey: UInt8 = 0
 extension UIButton {
     @discardableResult
     public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
@@ -156,6 +158,32 @@ private extension UIButton {
     }
 
     @available(iOS 15.0, *)
+    typealias _JobsCfgPatch = (UIButton.Configuration) -> UIButton.Configuration
+
+    @available(iOS 15.0, *)
+    var _jobsCfgPatches: [_JobsCfgPatch] {
+        get { (objc_getAssociatedObject(self, &_jobsConfigPatchListKey) as? [_JobsCfgPatch]) ?? [] }
+        set { objc_setAssociatedObject(self, &_jobsConfigPatchListKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+
+    @available(iOS 15.0, *)
+    func _ensureConfigPatchHandlerInstalled() {
+        if (objc_getAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey) as? Bool) == true { return }
+        objc_setAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        let existing = self.configurationUpdateHandler
+        self.automaticallyUpdatesConfiguration = true
+        self.configurationUpdateHandler = { [weak self] btn in
+            existing?(btn)
+            guard let self else { return }
+            let patches = self._jobsCfgPatches
+            guard !patches.isEmpty else { return }
+            var cfg = btn.configuration ?? .plain()
+            for p in patches { cfg = p(cfg) }
+            btn.configuration = cfg
+        }
+    }
+
+    @available(iOS 15.0, *)
     func _ensureTitleFontHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -263,6 +291,17 @@ extension UIButton {
             byUpdateConfig()
         } else {
             self.setBgCor(c, forState: state)
+        };return self
+    }
+    
+    @discardableResult
+    public func byClearConfigurationBackground() -> Self {
+        if #available(iOS 15.0, *) {
+            return byConfiguration { cfg in
+                var c = cfg
+                c.background = .clear()
+                return c
+            }
         };return self
     }
     
@@ -487,7 +526,11 @@ extension UIButton {
 
     @available(iOS 15.0, *)
     @discardableResult
-    public func byConfiguration(_ build: (UIButton.Configuration) -> UIButton.Configuration) -> Self {
+    public func byConfiguration(_ build: @escaping (UIButton.Configuration) -> UIButton.Configuration) -> Self {
+        _ensureConfigPatchHandlerInstalled()
+        var patches = _jobsCfgPatches
+        patches.append(build)
+        _jobsCfgPatches = patches
         let current = self.configuration ?? .filled()
         self.configuration = build(current)
         byUpdateConfig()

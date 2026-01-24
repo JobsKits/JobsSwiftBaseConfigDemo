@@ -10,10 +10,6 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
-#if canImport(JobsSwiftBaseDefines)
-import JobsSwiftBaseDefines
-#endif
 // MARK: - 查找当前对象所在的控制器
 public protocol ViewControllerFindable {}
 public protocol _UISafeUnwrappedBan {}     // 标记“UI 禁用默认兜底”
@@ -24,16 +20,6 @@ public protocol SafeUnwrappedInitializable { init() }
 public protocol JobsRouteComparable {
     func jobs_isSameDestination(as other: UIViewController) -> Bool
 }
-// MARK: - 少量便捷 then（可选）
-public protocol Then {}
-extension Then where Self: AnyObject {
-    @discardableResult
-    public func then(_ block: (Self) -> Void) -> Self {
-        block(self); return self
-    }
-}
-extension NSObject: Then {}
-
 public extension UIAccessibilityIdentification where Self: AnyObject {
     /// 链式设置 `accessibilityIdentifier`
     @MainActor

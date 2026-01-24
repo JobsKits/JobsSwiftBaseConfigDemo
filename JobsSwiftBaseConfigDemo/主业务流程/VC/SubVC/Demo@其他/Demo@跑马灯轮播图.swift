@@ -19,6 +19,7 @@ import Kingfisher
 import SDWebImage
 #endif
 
+import Then
 import SnapKit
 import GKNavigationBarSwift
 import JobsInheritance

@@ -13,6 +13,7 @@ def swiftAppCommon
 #  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS             ❤️ 直播礼物动画播放器
   # --- Swift ---
+  pod 'Then'                               # https://github.com/devxoul/Then                     ❤️
   pod 'SVGKit'                             # https://github.com/SVGKit/SVGKit                    ❤️ iOS原生没有解码SVG格式图片的能力，SVG可以不需要N倍图
   pod 'CocoaLumberjack/Swift'              # https://github.com/CocoaLumberjack/CocoaLumberjack  ❤️ 日志框架
   pod 'KeychainAccess'                     # https://github.com/kishikawakatsumi/KeychainAccess  ❤️ 钥匙串友好API
