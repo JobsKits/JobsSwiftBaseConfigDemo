@@ -878,6 +878,7 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byDirection(.left)
             .byScrollMode(.frequency(interval: 1.0))
             .byItemSizeMode(.fillBounds)
+            .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
             .byDataSourceButtons([
                 UIButton.sys()
                     .byImage("唐老鸭".img, for: .normal)
@@ -955,6 +956,7 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byDirection(.left)
             .byScrollMode(.frequency(interval: 1.0))
             .byItemSizeMode(.fillBounds)
+            .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
             .byDataSourceButtons([
                 UIButton.sys()
                     .byBorderColor(UIColor.systemGray3)
@@ -1059,6 +1061,7 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byDirection(.left)
             .byScrollMode(.frequency(interval: 1.0))
             .byItemSizeMode(.fillBounds)
+            .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
             .byDataSourceButtons ([
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
@@ -1203,7 +1206,6 @@ final class JobsMarqueeDemoVC: BaseVC {
 
         oneButtonMarquee.byVisible(YES)
         twoButtonsMarquee.byVisible(YES)
-
         /// JobsMarqueeView@轮播图 & 图片
         localImageButtonsMarquee.byVisible(YES)
         sdWebImageButtonsMarquee.byVisible(YES)

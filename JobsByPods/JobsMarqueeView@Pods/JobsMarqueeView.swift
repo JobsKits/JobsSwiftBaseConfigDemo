@@ -68,6 +68,7 @@ public final class JobsMarqueeView: UIView {
         didSet {
             needsRebuildContent = true
             setNeedsLayout()
+            applyManualScrollConfig()
         }
     }
     /// 数据源：按钮数组
@@ -86,6 +87,15 @@ public final class JobsMarqueeView: UIView {
         didSet { resetTimerIfNeeded() }
     }
     public var isRunning: Bool { timer?.isRunning ?? false }
+    // ================================== Manual Scroll ==================================
+    /// 是否允许手动拖拽滚动（默认 false：完全由定时器驱动）
+    /// - Note:
+    ///   - 拖拽开始 -> pause()
+    ///   - 拖拽结束/减速结束 -> resume()（仅当拖拽前正在运行）
+    ///   - 在 `itemSizeMode == .fillBounds` 下会自动开启 `isPagingEnabled`，体验更像轮播图
+    public var isManualScrollEnabled: Bool = false {
+        didSet { applyManualScrollConfig() }
+    }
     // ================================== ScrollView ==================================
     private lazy var scrollView: UIScrollView = {
         let v = UIScrollView()
@@ -93,7 +103,7 @@ public final class JobsMarqueeView: UIView {
         v.showsVerticalScrollIndicator = false
         v.bounces = false
         v.isPagingEnabled = false
-        v.isScrollEnabled = false   // 全程由 JobsSwiftTimer 驱动
+        v.isScrollEnabled = false   // 默认全程由 JobsSwiftTimer 驱动（开启 isManualScrollEnabled 后会打开）
         v.scrollsToTop = false
         return v
     }()
@@ -152,6 +162,8 @@ public final class JobsMarqueeView: UIView {
     private var frequencyInterval: TimeInterval = Metrics.defaultFrequency
     /// JobsSwiftTimer
     private var timer: JobsSwiftTimerProtocol?
+    /// 手动拖拽时：记录拖拽开始前的运行状态（用于决定是否需要 resume）
+    private var shouldResumeAfterUserInteraction: Bool = false
     // ================================== Init ==================================
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -166,6 +178,8 @@ public final class JobsMarqueeView: UIView {
     private func commonInit() {
         clipsToBounds = true
         addSubview(scrollView)
+        scrollView.delegate = self
+        applyManualScrollConfig()
     }
     // ================================== Layout ==================================
     public override func layoutSubviews() {
@@ -274,6 +288,50 @@ public final class JobsMarqueeView: UIView {
             pageControl.isHidden = false
         }
     }
+    // ================================== Manual Scroll Helpers ==================================
+    private func applyManualScrollConfig() {
+        scrollView.isScrollEnabled = isManualScrollEnabled
+        // 轮播图模式：paging 体验更自然
+        scrollView.isPagingEnabled = isManualScrollEnabled && (itemSizeMode == .fillBounds)
+    }
+    /// 手动拖拽结束后：如果是轮播图（fillBounds），对齐到最近页
+    @MainActor
+    private func snapToNearestPageIfNeeded(completion: (() -> Void)? = nil) {
+        guard isManualScrollEnabled else { completion?(); return }
+        guard itemSizeMode == .fillBounds else { completion?(); return }
+        guard realPageCount > 0, stepLength > 0 else { completion?(); return }
+
+        let isHorizontal = direction.isHorizontal
+        let rawOffset = isHorizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y
+        let maxOffset = isHorizontal
+        ? max(0, scrollView.contentSize.width - scrollView.bounds.width)
+        : max(0, scrollView.contentSize.height - scrollView.bounds.height)
+
+        // 最后一页是复制的「第 0 页」，到尾部就直接无动画跳回 0
+        if rawOffset >= maxOffset - 0.5 {
+            scrollView.contentOffset = .zero
+            if isPageControlEnabled { updatePageControlCurrentPage() }
+            completion?()
+            return
+        }
+
+        var page = Int(round(rawOffset / stepLength))
+        page = max(0, min(realPageCount - 1, page))
+
+        var target = scrollView.contentOffset
+        if isHorizontal {
+            target.x = CGFloat(page) * stepLength
+        } else {
+            target.y = CGFloat(page) * stepLength
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.scrollView.contentOffset = target
+        }, completion: { _ in
+            if self.isPageControlEnabled { self.updatePageControlCurrentPage() }
+            completion?()
+        })
+    }
     // ================================== Public Controls ==================================
     public func start() {
         guard !dataSourceButtons.isEmpty else { return }
@@ -287,6 +345,20 @@ public final class JobsMarqueeView: UIView {
 
     public func resume() {
         timer?.resume()
+    }
+    /// 确保自动滚动定时器处于运行状态（用于手动拖拽结束后恢复）
+    /// - Note:
+    ///   - 某些 timer 内核在 pause 之后，resume 可能不会重新进入 running（取决于实现）
+    ///   - 因此这里做一次兜底：能 resume 就 resume；否则直接 start
+    private func ensureAutoScrollRunning() {
+        guard !dataSourceButtons.isEmpty else { return }
+        if timer == nil { createTimer() }
+
+        if timer?.isRunning == true {
+            timer?.resume()
+        } else {
+            timer?.start()
+        }
     }
 
     public func stop() {
@@ -600,6 +672,49 @@ public final class JobsMarqueeView: UIView {
         };return button
     }
 }
+// MARK: - UIScrollViewDelegate (Manual Drag)
+extension JobsMarqueeView: UIScrollViewDelegate {
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard isManualScrollEnabled else { return }
+        // 拖拽开始：暂停定时器（仅记录“拖拽前是否在跑”）
+        shouldResumeAfterUserInteraction = isRunning
+        if shouldResumeAfterUserInteraction {
+            pause()
+        }
+    }
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard isManualScrollEnabled else { return }
+        if isPageControlEnabled {
+            updatePageControlCurrentPage()
+        }
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard isManualScrollEnabled else { return }
+        // 没有减速：直接视为结束
+        if !decelerate {
+            finishUserInteraction()
+        }
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard isManualScrollEnabled else { return }
+        finishUserInteraction()
+    }
+
+    private func finishUserInteraction() {
+        DispatchQueue.main.async {
+            self.snapToNearestPageIfNeeded {
+                if self.shouldResumeAfterUserInteraction {
+                    self.ensureAutoScrollRunning()
+                }
+                self.shouldResumeAfterUserInteraction = false
+            }
+        }
+    }
+}
 // MARK: - DSL
 extension JobsMarqueeView {
 
@@ -624,6 +739,12 @@ extension JobsMarqueeView {
     @discardableResult
     public func byDataSourceButtons(_ buttons: [UIButton]) -> Self {
         self.dataSourceButtons = buttons
+        return self
+    }
+
+    @discardableResult
+    public func byManualScrollEnabled(_ enabled: Bool) -> Self {
+        self.isManualScrollEnabled = enabled
         return self
     }
 }
