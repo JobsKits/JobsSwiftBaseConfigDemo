@@ -182,16 +182,14 @@ public extension UITextField {
     func tr_setPlaceholder(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { tf, text in
             tf.placeholder = text
-        }
-        return self
+        };return self
     }
 
     @discardableResult
     func tr_setText(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { tf, text in
             tf.text = text
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -215,8 +213,7 @@ public extension UITextView {
     func tr_setText(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { tv, text in
             tv.text = text
-        }
-        return self
+        };return self
     }
 
     @discardableResult

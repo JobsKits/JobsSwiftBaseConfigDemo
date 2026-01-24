@@ -95,7 +95,8 @@ final class RootListVC: BaseVC {
         return temp
     }()
     /// ✅ 懒加载，数组配置写在这里
-    private lazy var demo2D: [DemoGroup] = {
+    private var demo2D: [DemoGroup] = []
+    private func makeDemo2D() -> [DemoGroup] {
         return [
             (title: "JobsSwiftTimer系列衍生产品", items: [
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
@@ -179,12 +180,12 @@ final class RootListVC: BaseVC {
                 ("❄️ 雪花算法", SnowflakeDemoVC.self),
             ])
         ]
-    }()
+    }
 
     // ================================== 悬浮控件（原逻辑不动） ==================================
     private lazy var suspendBtn: UIButton = {
         UIButton(type: .system)
-            .byTitle("当前时间".tr, for: .normal)
+            .byTitle("当前时间", for: .normal)
             .byTitleFont(.systemFont(ofSize: 18, weight: .bold))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemBlue, for: .normal)
@@ -307,10 +308,12 @@ final class RootListVC: BaseVC {
     override func loadView() {
         super.loadView()
 //        OCCls().string("q", image: "".img)
+        demo2D = makeDemo2D()
         langToken = NotificationCenter.default.addObserver(
             forName: .JobsLanguageDidChange, object: nil, queue: .main
         ) { [weak self] _ in
             guard let self else { return }
+            self.demo2D = self.makeDemo2D()
             self.tableView.reloadData()
         }
     }
@@ -364,8 +367,7 @@ final class RootListVC: BaseVC {
                         guard let self else { return }
                         sender.isSelected.toggle()
                         let to = (LanguageManager.shared.currentLanguageCode == "zh-Hans") ? "en" : "zh-Hans"
-                        LanguageManager.shared.switchTo(to)
-                        self.tableView.reloadData()
+                        LanguageManager.shared.switchTo(to)// zh-Hans、en
                         print("🌐 切换语言 tapped（占位）")
                     },
                 UIButton.sys()

@@ -22,6 +22,19 @@
             </array>
         </dict>
     </dict>
+    
+    <!-- 用于指定应用程序的显示名称是否本地化 -->
+    <key>LSHasLocalizedDisplayName</key>
+    <true/>
+    <!-- 应用支持的所有语言代码，这些语言代码应该与您的本地化资源文件夹相匹配 -->
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>zh-Hans</string>
+    </array>
+    <!-- 开发区域的语言代码 -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
 
     <key>NSAppTransportSecurity</key>
     <dict>

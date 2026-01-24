@@ -4,6 +4,15 @@
 
 ## 一、使用说明
 
+* 字符映射文件（默认）➤ `Localizable.strings`
+
+* **应用层的调用方式**
+
+  ```swift
+  let to = (LanguageManager.shared.currentLanguageCode == "zh-Hans") ? "en" : "zh-Hans"
+  LanguageManager.shared.switchTo(to)// zh-Hans、en
+  ```
+
 * 【基础】拿到当前语言字符串
 
   ```swift
@@ -13,7 +22,10 @@
 
 * 自动刷新**UI** ➤ 必须满足 2 个条件（否则不会自动在当前页面刷新**UI**）
 
-## 二、✅ UI 统一规范
+  * **语言变化能触发刷新**（通知）且 **翻译来源 bundle 正确**（`TRLang.bundleProvider` 指向当前语言 bundle）
+  * **UI 文案设置时走 TRBind/tr_setXXX 形成绑定注册**（而不是直接赋值/提前缓存翻译结果）
+
+## 二、✅ UI 统一调用规范示例
 
 ### 1、`UILabel`
 
@@ -195,10 +207,6 @@ TRBind.bind(self, translated: "KEY".tr) { vc, text in
     UIViewController().title = text
 }
 ```
-
-
-
-
 
 
 

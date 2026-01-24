@@ -21,9 +21,9 @@ public final class LanguageManager {
     public init() {
         // 读持久化；默认跟随系统（可按需改）
         if let saved = UserDefaults.standard.string(forKey: userDefaultsKey) {
-            currentLanguageCode = saved
+            currentLanguageCode = saved.normalizedLanguageCode
         } else {
-            currentLanguageCode = Locale.preferredLanguages.first ?? "en"
+            currentLanguageCode = (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
         }
     }
     /// 动态 Bundle：每次按当前 code 解析路径
@@ -41,5 +41,19 @@ public final class LanguageManager {
         currentLanguageCode = code
         UserDefaults.standard.set(code, forKey: userDefaultsKey)
         NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
+    }
+}
+
+extension String {
+    /// 将系统 / 外部语言码统一归一化为 App 内部支持的语言码
+    /// - Returns: "zh-Hans" | "en"
+    var normalizedLanguageCode: String {
+        let lower = self.lowercased()
+        guard !lower.hasPrefix("zh-hans") else {
+            return "zh-Hans"
+        }
+        guard !lower.hasPrefix("en") else {
+            return "en"
+        };return "en"// 明确兜底策略：默认英文
     }
 }
