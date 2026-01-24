@@ -185,7 +185,7 @@ final class IrregularButtonDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemYellow
-        jobsSetupGKNav(title: "不规则形状按钮")
+        jobsSetupGKNav(title: "不规则形状按钮".tr)
         btn1.byVisible(true)
         btn2.byVisible(true)
         btn3.byVisible(true)

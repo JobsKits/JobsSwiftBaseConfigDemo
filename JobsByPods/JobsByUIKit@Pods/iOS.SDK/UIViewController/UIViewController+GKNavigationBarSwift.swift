@@ -14,6 +14,7 @@ import UIKit
 import JobsTextTools
 import JobsSwiftBaseDefines
 import JobsScale
+import Jobsl10n
 
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
@@ -29,13 +30,10 @@ public extension UIViewController {
         rightButtons: [UIButton]? = nil
     ) {
         gk_navTitle = title.asString
-
-        if let btn = leftButton {
-            gk_navLeftBarButtonItem = UIBarButtonItem(customView: btn)
-        } else {
-            gk_navLeftBarButtonItem = UIBarButtonItem(customView: makeDefaultBackButton())
-        }
-
+        // 避免上游用 JobsText("xxx".tr) 这种写法时 marker 串台
+        TRBind.consumeMarkerIfNeeded()
+        let btn = leftButton ?? makeDefaultBackButton()
+        gk_navLeftBarButtonItem = UIBarButtonItem(customView: btn)
         if let items = rightButtons, !items.isEmpty {
             items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
             /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
@@ -49,6 +47,38 @@ public extension UIViewController {
         } else {
             gk_navRightBarButtonItems = nil
         }
+    }
+    /// 统一配置 GKNav（支持直接传入 String，如 "标题".tr）
+    /// - Note: 如果传入的是 ".tr" 的结果，会自动注册语言切换刷新
+    func jobsSetupGKNav(
+        title: String,
+        leftButton: UIButton? = nil,
+        rightButtons: [UIButton]? = nil
+    ) {
+        // 让 GK 标题也具备自动刷新能力
+        _ = tr_setGKNavTitle(title)
+        let btn = leftButton ?? makeDefaultBackButton()
+        gk_navLeftBarButtonItem = UIBarButtonItem(customView: btn)
+        if let items = rightButtons, !items.isEmpty {
+            items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
+            /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
+            gk_navRightBarButtonItems = [UIBarButtonItem(customView: UIStackView(arrangedSubviews: items)
+                .byAxis(.horizontal)
+                .byAlignment(.center)
+                .byDistribution(.fill)
+                .bySpacing(0)
+                .byTranslatesAutoresizingMaskIntoConstraints(NO)
+                .byHeight(44.h))]
+        } else {
+            gk_navRightBarButtonItems = nil
+        }
+    }
+    /// GKNav 标题绑定：支持 ".tr" 自动刷新
+    @discardableResult
+    func tr_setGKNavTitle(_ string: String) -> Self {
+        TRBind.bind(self, translated: string) { vc, text in
+            vc.gk_navTitle = text
+        };return self
     }
     // MARK: - rightButtons 默认 size 策略
     private func jobs_prepareNavRightButtonSizeIfNeeded(_ v: UIView) {
