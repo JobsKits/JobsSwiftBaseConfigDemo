@@ -4,13 +4,12 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
-import Jobsl10n
 
 public extension String {
     /// 复制当前字符串到系统剪切板
@@ -43,17 +42,6 @@ public extension String {
     /// 处理换行：去掉字符串中的所有换行符（\n / \r / \r\n）
     var rnl: String {
         components(separatedBy: .newlines).joined()
-    }
-    // 多语言@仅此一个API：
-    var tr: String {
-        let b = TRLang.bundle()
-        print("📍 strings path =", b.path(forResource: "Localizable", ofType: "strings") ?? "nil")
-        // value: self → 当 key 未翻到时，回退 key 本身，便于你肉眼排查漏翻
-        return NSLocalizedString(self, tableName: nil, bundle: b, value: self, comment: "")
-    }
-    // 多语言@带参数版本
-    func tr(_ args: CVarArg...) -> String {
-        String(format: self.tr, arguments: args)
     }
 }
 

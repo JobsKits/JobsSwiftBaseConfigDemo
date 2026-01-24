@@ -18,6 +18,7 @@ import JobsByUIKit
 import JobsToast
 import JobsSwiftBaseDefines
 import JobsTextTools
+import Jobsl10n
 
 final class JobsNavigationDemoVC: BaseVC {
     deinit {
@@ -83,6 +84,12 @@ final class JobsNavigationDemoVC: BaseVC {
         // MARK: - 外观：背景图、底色、tintColor 等
         configureNavigationBarAppearance()
         self.title = "系统导航栏 Demo" // 普通文本的优先级低于富文本。title的优先级低于navigationItem.titleView
+        // MARK: - 多语言国际化
+//        navigationItem.tr_setTitle("KEY".tr)          /// 主标题（中间大字）
+//        navigationItem.tr_setPrompt("KEY".tr)         /// 主标题上方的一行小字
+//        navigationItem.tr_setBackButtonTitle("KEY".tr)/// 返回按钮文字
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+//        navigationItem.rightBarButtonItem?.tr_setTitle("KEY".tr)
         // MARK: - 标题：富文本（JobsRichRun）
         navigationItem.titleView = UILabel()
             .byTextAlignment(.center)

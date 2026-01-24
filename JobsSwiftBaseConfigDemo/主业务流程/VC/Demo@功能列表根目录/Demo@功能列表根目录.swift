@@ -149,7 +149,7 @@ final class RootListVC: BaseVC {
                 ("📮 经典的消息页面", MessageListDemoVC.self),
                 ("🔥 编辑个人资料", LGOEditProfileVC.self),
                 ("🏠 首页联动", CashbackRootVC.self),
-                ("🔑 注册登录（TODO）".tr, JobsAppDoorDemoVC.self),
+                ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
             (title: "实用工具集", items: [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
