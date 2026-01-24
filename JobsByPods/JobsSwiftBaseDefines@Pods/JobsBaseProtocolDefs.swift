@@ -28,10 +28,11 @@ public protocol JobsRouteComparable {
 public protocol Then {}
 extension Then where Self: AnyObject {
     @discardableResult
-    func then(_ block: (Self) -> Void) -> Self {
+    public func then(_ block: (Self) -> Void) -> Self {
         block(self); return self
     }
 }
+extension NSObject: Then {}
 
 public extension UIAccessibilityIdentification where Self: AnyObject {
     /// 链式设置 `accessibilityIdentifier`

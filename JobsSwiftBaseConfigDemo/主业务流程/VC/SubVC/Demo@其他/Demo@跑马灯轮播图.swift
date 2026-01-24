@@ -1016,6 +1016,12 @@ final class JobsMarqueeDemoVC: BaseVC {
                 make.top.equalTo(self.localImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
             }
+            .then { v in
+//                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
+//                 v.pageControlPosition = .leftBottom
+                 v.pageControlPosition = .rightBottom
+                v.isPageControlEnabled = true
+            }
     }()
     // MARK: - 13. Kingfisher@背景图
     private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned self] in
