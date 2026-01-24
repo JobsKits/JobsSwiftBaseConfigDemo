@@ -551,3 +551,42 @@ extension UIButton {
         return self
     }
 }
+// MARK: - imageView 外观链式
+extension UIButton {
+    /// imageView 内容模式
+    @discardableResult
+    public func byImageViewContentMode(_ mode: UIView.ContentMode) -> Self {
+        self.imageView?.contentMode = mode
+        return self
+    }
+    /// imageView 背景色
+    @discardableResult
+    public func byImageViewBackgroundColor(_ color: UIColor?) -> Self {
+        self.imageView?.backgroundColor = color
+        return self
+    }
+    /// imageView 圆角（可配合 masksToBounds）
+    @discardableResult
+    public func byImageViewCornerRadius(_ radius: CGFloat) -> Self {
+        self.imageView?.layer.cornerRadius = radius
+        return self
+    }
+    /// imageView 是否裁剪
+    @discardableResult
+    public func byImageViewMasksToBounds(_ on: Bool) -> Self {
+        self.imageView?.layer.masksToBounds = on
+        return self
+    }
+    /// 一步到位：图标圆底（你现在那 4 行就用这个）
+    @discardableResult
+    public func byImageCircleBackground(_ bgColor: UIColor?,
+                                        radius: CGFloat,
+                                        contentMode: UIView.ContentMode = .center,
+                                        masksToBounds: Bool = true) -> Self {
+        self.imageView?.contentMode = contentMode
+        self.imageView?.backgroundColor = bgColor
+        self.imageView?.layer.cornerRadius = radius
+        self.imageView?.layer.masksToBounds = masksToBounds
+        return self
+    }
+}

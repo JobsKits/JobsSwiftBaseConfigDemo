@@ -119,7 +119,7 @@ final class JobsProgressDemoVC: BaseVC {
                 make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
                 make.left.equalToSuperview().offset(40.w)
                 make.right.equalToSuperview().inset(40.w)
-                make.height.equalTo(20.h) 
+                make.height.equalTo(20.h)
             }
     }()
     /// 输入百分比的文本框（0~100）
