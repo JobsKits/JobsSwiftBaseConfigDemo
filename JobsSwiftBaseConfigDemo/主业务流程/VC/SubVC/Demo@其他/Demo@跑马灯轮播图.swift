@@ -1018,9 +1018,15 @@ final class JobsMarqueeDemoVC: BaseVC {
             }
             .then { v in
 //                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
-//                 v.pageControlPosition = .leftBottom
-                 v.pageControlPosition = .rightBottom
+//                v.pageControlPosition = .leftBottom
+                v.pageControlPosition = .rightBottom
                 v.isPageControlEnabled = true
+                v.pageControl.jobs_setIndicatorImageURLs(
+                    normalURL: URL(string: "https://picsum.photos/seed/dot_normal/18/18"),
+                    currentURL: URL(string: "https://picsum.photos/seed/dot_current/18/18"),
+                    fallbackNormal: "circle".sysImg,
+                    fallbackCurrent: "circle.fill".sysImg
+                )
             }
     }()
     // MARK: - 13. Kingfisher@背景图

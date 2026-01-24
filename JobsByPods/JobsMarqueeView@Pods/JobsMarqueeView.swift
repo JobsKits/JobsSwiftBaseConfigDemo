@@ -126,11 +126,9 @@ public final class JobsMarqueeView: UIView {
         didSet {
             // ✅ 关键：先确保 lazy 已完成初始化（避免后续函数里触发 getter 递归）
             let _ = pageControl
-
             pageControl.isHidden = !isPageControlEnabled
-
             if isPageControlEnabled {
-                // ✅ 约束只在启用后才下，且不会在 lazy 初始化闭包里触发
+                // ✅ 启用后再安装约束 / 同步页数 / 同步当前页
                 installDefaultPageControlConstraintsIfNeeded()
                 updatePageControlPages()
                 updatePageControlCurrentPage()
@@ -187,7 +185,6 @@ public final class JobsMarqueeView: UIView {
         clipsToBounds = true
         addSubview(scrollView)
     }
-
     // ================================== Layout ==================================
     public override func layoutSubviews() {
         super.layoutSubviews()
@@ -197,6 +194,7 @@ public final class JobsMarqueeView: UIView {
             lastBoundsSize = bounds.size
             rebuildContent()
         }
+        
         if isPageControlEnabled {
             updatePageControlCurrentPage()
         }
@@ -214,6 +212,7 @@ public final class JobsMarqueeView: UIView {
             scrollView.contentSize = bounds.size
             if isPageControlEnabled {
                 updatePageControlPages()
+                updatePageControlConstraintsIfNeeded()
                 updatePageControlCurrentPage()
                 pageControl.isHidden = false
             };return
@@ -289,7 +288,9 @@ public final class JobsMarqueeView: UIView {
         }
         scrollView.contentOffset = .zero
         if isPageControlEnabled {
+            // ✅ 顺序：pages -> constraints -> current
             updatePageControlPages()
+            updatePageControlConstraintsIfNeeded()
             updatePageControlCurrentPage()
             pageControl.isHidden = false
         }
@@ -658,53 +659,45 @@ private extension JobsMarqueeView {
 
     func updatePageControlConstraintsIfNeeded() {
         guard isPageControlEnabled else { return }
-        #if DEBUG
-        let pos: String = {
-            switch pageControlPosition {
-            case .bottomCenter:  return "bottomCenter"
-            case .leftBottom:  return "leftBottom"
-            case .rightBottom: return "rightBottom"
-            }
-        }()
-        print("🟣 [JobsMarqueeView] updatePageControlConstraintsIfNeeded() enabled=\(isPageControlEnabled) pos=\(pos) provider=\(pageControlConstraintsProvider != nil)")
-        #endif
-
         // 手动约束优先：外界自己在闭包里用 pc.snp.remakeConstraints(...)
         if let manual = pageControlConstraintsProvider {
             manual(pageControl, self)
             return
         }
-
         let paddingX: CGFloat = 0
         let paddingY: CGFloat = 0
-
+        // ✅ 关键：给一个「按页数计算的最小宽度」，避免被 AutoLayout 压缩到只剩 1 个点
+        let dotDiameter: CGFloat = 10
+        let dotSpacing: CGFloat = 6
+        let pages = max(1, pageControl.numberOfPages)
+        let minWidth = CGFloat(pages) * dotDiameter + CGFloat(max(0, pages - 1)) * dotSpacing
         pageControl.snp.remakeConstraints { make in
             make.height.greaterThanOrEqualTo(10.h).priority(.required)
+            make.width.greaterThanOrEqualTo(minWidth).priority(.required)
+            make.width.lessThanOrEqualToSuperview().priority(.required)
+
             switch pageControlPosition {
             case .leftBottom:
                 make.leading.equalToSuperview().offset(paddingX)
                 make.bottom.equalToSuperview().inset(paddingY).priority(.required)
+
             case .bottomCenter:
                 make.centerX.equalToSuperview()
                 make.bottom.equalToSuperview().inset(paddingY).priority(.required)
+
             case .rightBottom:
                 make.trailing.equalToSuperview().inset(paddingX)
                 make.bottom.equalToSuperview().inset(paddingY).priority(.required)
             }
         }
-        #if DEBUG
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.layoutIfNeeded()
-            print("🟣 [JobsMarqueeView] pageControl frame=\(self.pageControl.frame) host=\(self.bounds)")
-        }
-        #endif
     }
 
     func updatePageControlPages() {
         guard isPageControlEnabled else { return }
         pageControl.numberOfPages = max(0, realPageCount)
         pageControl.currentPage = 0
+        pageControl.setNeedsLayout()
+        pageControl.layoutIfNeeded()
         pageControl.jobs_applyIndicatorImagesIfNeeded()
     }
 
@@ -732,7 +725,6 @@ private extension JobsMarqueeView {
             // 跑马灯模式没“页”概念：如果你开了，就按 offset 映射一下
             page = max(0, min(realPageCount - 1, page))
         }
-
         pageControl.currentPage = page
         pageControl.jobs_applyIndicatorImagesIfNeeded()
     }
