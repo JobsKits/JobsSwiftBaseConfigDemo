@@ -61,7 +61,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     // MARK: - 1. 向上连续滚动
     private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
         JobsMarqueeView()
-            .byDirection(.up)
+            .byDirection(.top)
             .byScrollMode(.continuous(speed: 40))
             .byItemSizeMode(.fitContent)   // 典型公告跑马灯
             .byDataSourceButtons([
@@ -158,7 +158,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     // MARK: - 2. 向下连续滚动
     private lazy var downContinuousMarquee: JobsMarqueeView = { [unowned self] in
         JobsMarqueeView()
-            .byDirection(.down)
+            .byDirection(.bottom)
             .byScrollMode(.continuous(speed: 40))
             .byItemSizeMode(.fitContent)
             .byDataSourceButtons([
@@ -425,7 +425,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     // MARK: - 5. 向上间隔滚动（公告一条一条翻）
     private lazy var upFrequencyMarquee: JobsMarqueeView = { [unowned self] in
         JobsMarqueeView()
-            .byDirection(.up)
+            .byDirection(.top)
             .byScrollMode(.frequency(interval: 1.0))
             .byItemSizeMode(.fillBounds)   // 每页 1 行
             .byDataSourceButtons([
@@ -514,7 +514,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     // MARK: - 6. 向下间隔滚动
     private lazy var downFrequencyMarquee: JobsMarqueeView = { [unowned self] in
         JobsMarqueeView()
-            .byDirection(.down)
+            .byDirection(.bottom)
             .byScrollMode(.frequency(interval: 1.0))
             .byItemSizeMode(.fillBounds)
             .byDataSourceButtons([
@@ -936,6 +936,18 @@ final class JobsMarqueeDemoVC: BaseVC {
                 make.top.equalTo(self.twoButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
             }
+            .then { v in
+//                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
+//                v.pageControlPosition = .leftBottom
+                v.pageControlPosition = .rightBottom
+                v.isPageControlEnabled = true
+                v.pageControl.jobs_setIndicatorImageURLs(
+                    normalURL: URL(string: "https://picsum.photos/seed/dot_normal/18/18"),
+                    currentURL: URL(string: "https://picsum.photos/seed/dot_current/18/18"),
+                    fallbackNormal: "circle".sysImg,
+                    fallbackCurrent: "circle.fill".sysImg
+                )
+            }
     }()
     // MARK: - 12. SDWebImage@背景图
     private lazy var sdWebImageButtonsMarquee: JobsMarqueeView = { [unowned self] in
@@ -1015,6 +1027,18 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.localImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
+            }
+            .then { v in
+//                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
+//                v.pageControlPosition = .leftBottom
+                v.pageControlPosition = .rightBottom
+                v.isPageControlEnabled = true
+                v.pageControl.jobs_setIndicatorImageURLs(
+                    normalURL: URL(string: "https://picsum.photos/seed/dot_normal/18/18"),
+                    currentURL: URL(string: "https://picsum.photos/seed/dot_current/18/18"),
+                    fallbackNormal: "circle".sysImg,
+                    fallbackCurrent: "circle.fill".sysImg
+                )
             }
             .then { v in
 //                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
@@ -1128,6 +1152,18 @@ final class JobsMarqueeDemoVC: BaseVC {
                 } else {
                     make.bottom.equalTo(self.scrollView.snp.bottom).inset(20)
                 }
+            }
+            .then { v in
+//                v.pageControlPosition = .bottomCenter   // 默认（不写也行）
+//                v.pageControlPosition = .leftBottom
+                v.pageControlPosition = .rightBottom
+                v.isPageControlEnabled = true
+                v.pageControl.jobs_setIndicatorImageURLs(
+                    normalURL: URL(string: "https://picsum.photos/seed/dot_normal/18/18"),
+                    currentURL: URL(string: "https://picsum.photos/seed/dot_current/18/18"),
+                    fallbackNormal: "circle".sysImg,
+                    fallbackCurrent: "circle.fill".sysImg
+                )
             }
     }()
 

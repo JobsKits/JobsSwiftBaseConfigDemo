@@ -319,6 +319,19 @@ public enum JobsDirection: UInt {
          bottom,/// 下面
          left,  /// 左边
          right  /// 右边
+    public var isHorizontal: Bool {
+        switch self {
+        case .top, .bottom: return false
+        case .left, .right: return true
+        }
+    }
+    /// 是否垂直方向（与 isHorizontal 语义对称）
+    public var isVertical: Bool {
+        switch self {
+        case .top, .bottom: return true
+        case .left, .right: return false
+        }
+    }
 }
 @available(iOS 13.0, *)
 public extension JobsDirection {
