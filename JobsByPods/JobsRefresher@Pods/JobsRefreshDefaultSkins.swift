@@ -27,7 +27,7 @@ public enum JobsRefreshConfig {
     // MARK: - 上下（Vertical）
     public enum v {
         /// 下拉刷新（Header）
-        public enum header { 
+        public enum header {
             public static let idle = "下拉可以刷新".tr
             public static let goOn = "继续下拉".tr
             public static let refreshing = common.refreshing
@@ -55,15 +55,24 @@ public enum JobsRefreshConfig {
 
 @MainActor
 public final class JobsDefaultHeader: JobsDefaultIndicatorView {
-    public override init(frame: CGRect) { super.init(frame: frame); heightOrWidth = 60 }
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        heightOrWidth = 60
+        position = .header   // ✅ 关键：文案分流
+    }
     required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor
 public final class JobsDefaultFooter: JobsDefaultIndicatorView {
-    public override init(frame: CGRect) { super.init(frame: frame); heightOrWidth = 60 }
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        heightOrWidth = 60
+        position = .footer   // ✅ 关键：文案分流
+    }
     required init?(coder: NSCoder) { fatalError() }
 }
+
 /// —— 横向侧拉专用：竖排文案 ——
 /// 结构：指示器（上） + 竖排 UILabel（下），在非 refreshing 时隐藏转圈，仅显示竖排提示。
 @MainActor
@@ -153,7 +162,7 @@ public final class JobsDefaultRightRefresher: JobsSideIndicatorView {
         super.init(frame: frame)
         heightOrWidth = 60
         idleText = JobsRefreshConfig.h.footer.idle
-        readyText = JobsRefreshConfig.common.readyRefresh
+        readyText = JobsRefreshConfig.common.readyLoading      // ✅ 左拉加载
         refreshingText = JobsRefreshConfig.common.loading
     }
 }
@@ -165,8 +174,7 @@ public final class JobsDefaultLeftRefresher: JobsSideIndicatorView {
         super.init(frame: frame)
         heightOrWidth = 60
         idleText = JobsRefreshConfig.h.header.idle
-        readyText = JobsRefreshConfig.common.readyLoading
+        readyText = JobsRefreshConfig.common.readyRefresh      // ✅ 右拉刷新
         refreshingText = JobsRefreshConfig.common.refreshing
     }
 }
-

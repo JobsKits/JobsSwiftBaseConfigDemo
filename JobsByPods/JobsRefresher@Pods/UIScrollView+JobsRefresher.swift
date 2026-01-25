@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBlock
+
 // MARK: - UIScrollView + Proxy
 @MainActor
 private struct JobsAssocKeys {
@@ -31,26 +32,40 @@ extension UIScrollView {
         return p
     }
 }
+
 // MARK: - UIScrollView + API
 @MainActor
 public struct JobsSideFactory {
-    public static func left() -> JobsDefaultIndicatorView { JobsDefaultIndicatorView() }
-    public static func right() -> JobsDefaultIndicatorView { JobsDefaultIndicatorView() }
+    // 这里如果你未来真要做“横向默认样式”，建议返回 JobsSideIndicatorView 的子类
+    public static func left() -> JobsDefaultIndicatorView {
+        let v = JobsDefaultIndicatorView()
+        v.position = .left
+        return v
+    }
+    public static func right() -> JobsDefaultIndicatorView {
+        let v = JobsDefaultIndicatorView()
+        v.position = .right
+        return v
+    }
 }
 
 @MainActor
 public extension UIScrollView {
+
     // MARK: Header
+    @discardableResult
     func configRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
-                             action: @escaping jobsByVoidBlock) -> Self{
-        let c = component ?? JobsDefaultIndicatorView()
+                             action: @escaping jobsByVoidBlock) -> Self {
+        // ✅ 默认使用皮肤：position 已正确设置为 .header
+        let c = component ?? JobsDefaultHeader()
         let slot = JobsSlot(position: .header, view: c, trigger: trigger, container: container, action: action)
         mrk_proxy.header = slot
         slot.attach(to: self)
         return self
     }
+
     @discardableResult
     func switchRefreshHeader(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
@@ -65,20 +80,24 @@ public extension UIScrollView {
         case .noMoreData:
             // header 不支持 noMoreData，忽略
             break
-        };return self
+        }
+        return self
     }
+
     // MARK: Footer
     @discardableResult
     func configRefreshFooter(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
-                             action: @escaping jobsByVoidBlock) -> Self{
-        let c = component ?? JobsDefaultIndicatorView()
+                             action: @escaping jobsByVoidBlock) -> Self {
+        // ✅ 默认使用皮肤：position 已正确设置为 .footer
+        let c = component ?? JobsDefaultFooter()
         let slot = JobsSlot(position: .footer, view: c, trigger: trigger, container: container, action: action)
         mrk_proxy.footer = slot
         slot.attach(to: self)
         return self
     }
+
     @discardableResult
     func switchRefreshFooter(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
@@ -92,8 +111,10 @@ public extension UIScrollView {
             mrk_proxy.footer = nil
         case .noMoreData:
             slot.noticeNoMoreData(on: sv)
-        };return self
+        }
+        return self
     }
+
     // MARK: Side (Left/Right)
     @discardableResult
     func configSideRefresh(with component: (UIView & JobsAnimatable),
@@ -111,6 +132,7 @@ public extension UIScrollView {
         slot.attach(to: self)
         return self
     }
+
     @discardableResult
     func switchSideRefresh(_ position: JobsPosition, to state: JobsSwitch) -> Self {
         guard (position == .left || position == .right),
@@ -126,6 +148,7 @@ public extension UIScrollView {
         case .noMoreData:
             // side 不支持 noMoreData，忽略
             break
-        };return self
+        }
+        return self
     }
 }
