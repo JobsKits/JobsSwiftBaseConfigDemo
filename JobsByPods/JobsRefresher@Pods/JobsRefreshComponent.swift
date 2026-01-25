@@ -61,7 +61,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
             label.byText("松开立即加载".tr)
         case .refreshing:
             indicator.startAnimating()
-            label.byText("刷新中...".tr)
+            label.byText("加载中...".tr)
         case .noMore:
             indicator.stopAnimating()
             label.byText("没有更多了".tr)

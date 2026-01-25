@@ -1,5 +1,5 @@
 //
-//  RefreshProxy.swift
+//  JobsRefreshProxy.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/31/25.
@@ -60,17 +60,10 @@ final class JobsSlot {
     var action: (jobsByVoidBlock)?
     weak var container: AnyObject?
 
-    // —— 行为开关 —— //
-    /// 结束刷新：指示视图先退场，再让内容区回位
-    var retreatAhead: Bool = true
-    /// 先退场后再回位之间的停顿（更容易看出“先/后”的时序）
-    var retreatAheadDelay: TimeInterval = 0.06
-    /// A 段（指示视图退场）时长
-    var retreatAnimDuration: TimeInterval = 0.14
-    /// B 段（内容回位：contentInset 还原）时长
+    /// 结束刷新/加载：与内容区域同步回弹（单段动画）
     var restoreInsetDuration: TimeInterval = 0.25
 
-    /// 先退场阶段屏蔽 tick/布局，避免 KVO 干扰
+    /// 结束动画期间屏蔽 tick/布局，避免 KVO 干扰
     private var isEndingAnimation = false
 
     private(set) var state: JobsState = .idle {
@@ -101,11 +94,9 @@ final class JobsSlot {
     }
 
     // MARK: - Layout
-    /// 关键修复点：
-    /// 原来用 adjustedContentInset 来定位 view，会在 refreshing 时因为 contentInset 被加 h 导致 adjusted 也变大，
-    /// 从而把刷新视图再往外推一次 => “刷新中”跑到屏幕外。
-    ///
-    /// 解决：定位时只使用「基础 contentInset（把 refreshing 额外加的那段减掉）」来算位置。
+    /// 关键点：
+    /// layout 不能直接吃 “refreshing 后被加过的 contentInset”，否则刷新中/结束刷新时会被 inset 变化带跑。
+    /// 这里对 refreshing 状态做 baseInset（减掉我们自己加的那段 h），保证指示视图锚定稳定。
     func layout(in sv: UIScrollView) {
         let h = view.heightOrWidth
 
@@ -130,9 +121,11 @@ final class JobsSlot {
             )
 
         case .footer:
-            // footer 的锚定应该基于内容高度 + 基础 bottom inset
-            let contentH = max(sv.contentSize.height,
-                               sv.bounds.height - (sv.adjustedContentInset.top + sv.adjustedContentInset.bottom))
+            // footer 锚定：基于内容高度 + 基础 bottom inset
+            let contentH = max(
+                sv.contentSize.height,
+                sv.bounds.height - (sv.adjustedContentInset.top + sv.adjustedContentInset.bottom)
+            )
             view.frame = CGRect(
                 x: 0,
                 y: contentH + baseInset.bottom,
@@ -149,8 +142,10 @@ final class JobsSlot {
             )
 
         case .right:
-            let contentW = max(sv.contentSize.width,
-                               sv.bounds.width - (sv.adjustedContentInset.left + sv.adjustedContentInset.right))
+            let contentW = max(
+                sv.contentSize.width,
+                sv.bounds.width - (sv.adjustedContentInset.left + sv.adjustedContentInset.right)
+            )
             view.frame = CGRect(
                 x: contentW + baseInset.right,
                 y: 0,
@@ -209,9 +204,7 @@ final class JobsSlot {
     }
 
     // MARK: - Begin Refreshing
-    /// 关键修复点：
-    /// 进入 refreshing 时，除了改 contentInset，还必须同步拉 contentOffset，
-    /// 否则松手后的回弹/减速会把“刷新中”挤到屏幕外。
+    /// 进入 refreshing 时：同时改 contentInset + 同步 contentOffset（确保状态视图可见）
     func beginRefreshing(on sv: UIScrollView, axis: JobsAxis? = nil, isFooter: Bool = false) {
         guard state != .refreshing else { return }
         state = .refreshing
@@ -234,16 +227,20 @@ final class JobsSlot {
             targetOffset.y = -(oldAdjusted.top + h)
 
         case .footer:
-            let contentH = max(sv.contentSize.height,
-                               sv.bounds.height - (oldAdjusted.top + oldAdjusted.bottom))
+            let contentH = max(
+                sv.contentSize.height,
+                sv.bounds.height - (oldAdjusted.top + oldAdjusted.bottom)
+            )
             targetOffset.y = contentH + (oldAdjusted.bottom + h) - sv.bounds.height
 
         case .left:
             targetOffset.x = -(oldAdjusted.left + h)
 
         case .right:
-            let contentW = max(sv.contentSize.width,
-                               sv.bounds.width - (oldAdjusted.left + oldAdjusted.right))
+            let contentW = max(
+                sv.contentSize.width,
+                sv.bounds.width - (oldAdjusted.left + oldAdjusted.right)
+            )
             targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
         }
 
@@ -258,69 +255,28 @@ final class JobsSlot {
         if container == nil { endRefreshing(on: sv) } // 容器释放时兜底
     }
 
-    // MARK: - End Refreshing
+    // MARK: - End Refreshing (同步回弹：单段动画)
     func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
         guard case .refreshing = state else { return }
-        state = .idle
 
-        let h = view.heightOrWidth
+        // 防止外部自定义 view 在 refreshing 期间改了 transform/alpha
+        view.isHidden = false
+        view.transform = .identity
+        view.alpha = 1
+
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
 
-        // 旧行为：直接还原 inset（同步回位）
-        guard retreatAhead else {
-            UIView.animate(withDuration: restoreInsetDuration,
-                           delay: 0,
-                           options: [.allowUserInteraction, .beginFromCurrentState]) {
-                sv.contentInset = targetInset
-            } completion: { _ in
-                self.layout(in: sv)
-            }
-            return
-        }
-
-        // —— 新行为：A 先退场 → (delay) → B 内容回位 —— //
         isEndingAnimation = true
-        let oldEnabled = sv.isScrollEnabled
-        sv.isScrollEnabled = false   // 钉住内容，避免系统减速/回弹干扰 A 段
+        state = .idle
 
-        let retreatTransform: CGAffineTransform = {
-            switch position {
-            case .header: return CGAffineTransform(translationX: 0, y: -h)
-            case .footer: return CGAffineTransform(translationX: 0, y:  h)
-            case .left:   return CGAffineTransform(translationX: -h, y: 0)
-            case .right:  return CGAffineTransform(translationX:  h, y: 0)
-            }
-        }()
-
-        // A 段：指示视图先退场（不动 contentInset）
-        UIView.animate(withDuration: retreatAnimDuration,
+        UIView.animate(withDuration: restoreInsetDuration,
                        delay: 0,
-                       options: [.curveEaseOut, .beginFromCurrentState]) {
-            self.view.transform = retreatTransform
-            self.view.alpha = 0
+                       options: [.allowUserInteraction, .beginFromCurrentState]) {
+            sv.contentInset = targetInset
+            self.layout(in: sv)   // ✅ 指示视图与内容区同步回弹
         } completion: { _ in
-            // 明确隐藏，避免 B 段 inset 变化时闪一下
-            self.view.isHidden = true
-
-            // 小停顿，强化“先/后”的感知
-            let delay = self.retreatAheadDelay
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                // B 段：开始让内容回位（还原 inset）
-                UIView.animate(withDuration: self.restoreInsetDuration,
-                               delay: 0,
-                               options: [.allowUserInteraction, .beginFromCurrentState]) {
-                    sv.contentInset = targetInset
-                } completion: { _ in
-                    // 复原指示视图，准备下次使用
-                    self.view.isHidden = false
-                    self.view.transform = .identity
-                    self.view.alpha = 1
-                    self.layout(in: sv)
-
-                    sv.isScrollEnabled = oldEnabled
-                    self.isEndingAnimation = false
-                }
-            }
+            self.layout(in: sv)
+            self.isEndingAnimation = false
         }
     }
 
