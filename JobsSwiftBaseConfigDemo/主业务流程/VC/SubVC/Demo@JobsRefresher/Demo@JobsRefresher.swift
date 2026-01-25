@@ -17,6 +17,7 @@ import JobsByUIKit
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsRefresher
+import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 final class JobsRefresherDemoVC: BaseVC {
@@ -33,7 +34,7 @@ final class JobsRefresherDemoVC: BaseVC {
             .byItemSize(CGSize(width: 120, height: 156))
     }()
 
-    private lazy var topCollection: UICollectionView = {
+    private lazy var topCollectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: hLayout)
            .byDataSource(self)
            .byDelegate(self)
@@ -42,9 +43,13 @@ final class JobsRefresherDemoVC: BaseVC {
            .byShowsHorizontalScrollIndicator(false)
            .byAlwaysBounceHorizontal(true)// 即使不满一屏也允许左右拉
            .byAddTo(view) { [unowned self] make in
-               make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                make.left.right.equalToSuperview()
                make.height.equalTo(topHeight)
+               if view.jobs_hasVisibleTopBar() {
+                   make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+               } else {
+                   make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+               }
            }
            // 左侧拉：比如“上一页/回退”
            .configSideRefresh(with: JobsDefaultLeft(),
@@ -56,8 +61,8 @@ final class JobsRefresherDemoVC: BaseVC {
                    try? await Task.sleep(nanoseconds: 900_000_000)
                    // 模拟“刷新完成”：减少一个 item 并刷新
                    self.hItems = max(8, self.hItems - 1)
-                   self.topCollection.byReloadData()
-                   self.topCollection.switchSideRefresh(.left, to: .normal)
+                   self.topCollectionView.byReloadData()
+                   self.topCollectionView.switchSideRefresh(.left, to: .normal)
                }
            }
            // 右侧拉：比如“下一页/加载更多卡片”
@@ -69,8 +74,8 @@ final class JobsRefresherDemoVC: BaseVC {
                jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)
                    self.hItems += 3
-                   self.topCollection.byReloadData()
-                   self.topCollection.switchSideRefresh(.right, to: .normal)
+                   self.topCollectionView.byReloadData()
+                   self.topCollectionView.switchSideRefresh(.right, to: .normal)
                }
            }
     }()
@@ -81,7 +86,7 @@ final class JobsRefresherDemoVC: BaseVC {
             .byTableFooterView(UIView())
             .byDataSource(self)
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(topCollection.snp.bottom)
+                make.top.equalTo(topCollectionView.snp.bottom)
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
@@ -120,8 +125,9 @@ final class JobsRefresherDemoVC: BaseVC {
 extension JobsRefresherDemoVC {
     override func viewDidLoad() {
         super.viewDidLoad()
+        jobsSetupGKNav(title: "刷新控件".tr)
         view.backgroundColor = .systemBackground
-        topCollection.byVisible(YES)
+        topCollectionView.byVisible(YES)
         tableView.byVisible(YES)
     }
 }
