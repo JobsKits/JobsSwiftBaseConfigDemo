@@ -15,6 +15,45 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 
 @MainActor
+public enum JobsRefreshConfig {
+    // MARK: - 通用（可复用的状态文案）
+    public enum common {
+        public static let readyRefresh = "松开立即刷新".tr
+        public static let readyLoading = "松开立即加载".tr
+        public static let refreshing = "刷新中".tr
+        public static let loading = "加载中".tr
+        public static let noMore = "没有更多了".tr
+    }
+    // MARK: - 上下（Vertical）
+    public enum v {
+        /// 下拉刷新（Header）
+        public enum header { 
+            public static let idle = "下拉可以刷新".tr
+            public static let goOn = "继续下拉".tr
+            public static let refreshing = common.refreshing
+        }
+        /// 上拉加载（Footer）
+        public enum footer {
+            public static let idle = "上拉可以加载".tr
+            public static let goOn = "继续上拉".tr
+        }
+    }
+    // MARK: - 左右（Side / Horizontal）
+    public enum h {
+        /// 右拉刷新（Left refresher：从左侧触发）
+        public enum header {
+            public static let idle = "右拉可以刷新".tr
+            public static let goOn = "继续右拉".tr
+        }
+        /// 左拉加载（Right refresher：从右侧触发）
+        public enum footer {
+            public static let idle = "左拉可以加载".tr
+            public static let goOn = "继续左拉".tr
+        }
+    }
+}
+
+@MainActor
 public final class JobsDefaultHeader: JobsDefaultIndicatorView {
     public override init(frame: CGRect) { super.init(frame: frame); heightOrWidth = 60 }
     required init?(coder: NSCoder) { fatalError() }
@@ -49,6 +88,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
     public var doneText: String = "完成".tr
     public var noMoreText: String = "没有更多".tr
 
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -56,11 +96,8 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
         label.byVisible(YES)
     }
 
-    required init?(coder: NSCoder) { fatalError() }
-
     public func apply(state: JobsState) {
         func setVertical(_ s: String) { label.text = s.verticalized }
-
         switch state {
         case .idle:
             indicator.stopAnimating()
@@ -69,7 +106,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
             indicator.stopAnimating()
             // 进度文案也竖排（示例：继续侧拉 80%）
             let percent = Int(min(1, max(0, p)) * 100)
-            setVertical("\(idleText) \(percent)%")
+            setVertical("\(idleText)\(percent)%")
         case .ready:
             indicator.stopAnimating()
             setVertical(readyText)
@@ -82,18 +119,15 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
         case .removed:
             indicator.stopAnimating()
             label.text = nil
-        }
-        setNeedsLayout()
+        };setNeedsLayout()
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
         let availableW = bounds.width
         let availableH = bounds.height
-
         indicator.sizeToFit()
         let labelSize = label.sizeThatFits(CGSize(width: availableW, height: .greatestFiniteMagnitude))
-
         // 垂直堆叠：indicator 在上，label 在下，居中
         let spacing: CGFloat = 8
         let totalH = indicator.bounds.height + spacing + labelSize.height
@@ -111,25 +145,28 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
         )
     }
 }
+
 @MainActor
-public final class JobsDefaultRight: JobsSideIndicatorView {
+public final class JobsDefaultRightRefresher: JobsSideIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
-        idleText = "继续左拉".tr
-        readyText = "松开立即加载".tr
-        refreshingText = "加载中".tr
+        idleText = JobsRefreshConfig.h.footer.idle
+        readyText = JobsRefreshConfig.common.readyRefresh
+        refreshingText = JobsRefreshConfig.common.loading
     }
-    required init?(coder: NSCoder) { fatalError() }
 }
+
 @MainActor
-public final class JobsDefaultLeft: JobsSideIndicatorView {
+public final class JobsDefaultLeftRefresher: JobsSideIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
-        idleText = "继续右拉".tr
-        readyText = "松开立即刷新".tr
-        refreshingText = "刷新中".tr
+        idleText = JobsRefreshConfig.h.header.idle
+        readyText = JobsRefreshConfig.common.readyLoading
+        refreshingText = JobsRefreshConfig.common.refreshing
     }
-    required init?(coder: NSCoder) { fatalError() }
 }
+

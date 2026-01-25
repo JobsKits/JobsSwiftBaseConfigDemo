@@ -37,6 +37,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
             .byAddTo(self)
     }()
 
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -44,27 +45,25 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         label.byVisible(true)
     }
 
-    required init?(coder: NSCoder) { fatalError() }
-
     public func apply(state: JobsState) {
         switch state {
         case .idle:
             indicator.stopAnimating()
-            label.byText("下拉可以刷新".tr)
+            label.byText(JobsRefreshConfig.v.header.idle)
         case .pulling(let p):
             indicator.stopAnimating()
             label.byText(p >= 1
-                         ? "松开立即加载".tr
-                         : String(format: "%@ %.0f%%", "继续上拉".tr, min(1, p) * 100))
+                         ? JobsRefreshConfig.common.readyLoading
+                         : String(format: "%@ %.0f%%", JobsRefreshConfig.v.header.goOn, min(1, p) * 100))
         case .ready:
             indicator.stopAnimating()
-            label.byText("松开立即加载".tr)
+            label.byText(JobsRefreshConfig.common.readyLoading)
         case .refreshing:
             indicator.startAnimating()
-            label.byText("加载中...".tr)
+            label.byText(JobsRefreshConfig.common.loading)
         case .noMore:
             indicator.stopAnimating()
-            label.byText("没有更多了".tr)
+            label.byText(JobsRefreshConfig.common.noMore)
         case .removed:
             indicator.stopAnimating()
             label.byText(nil)

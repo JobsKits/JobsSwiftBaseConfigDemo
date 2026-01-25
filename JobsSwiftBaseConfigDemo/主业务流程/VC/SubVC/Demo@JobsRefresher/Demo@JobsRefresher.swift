@@ -53,7 +53,7 @@ final class JobsRefresherDemoVC: BaseVC {
                }
            }
            // 左侧拉：比如“上一页/回退”
-           .configSideRefresh(with: JobsDefaultLeft(),
+           .configSideRefresh(with: JobsDefaultLeftRefresher(),
                               container: self,
                               at: .left,
                               trigger: 70) { [weak self] in
@@ -67,7 +67,7 @@ final class JobsRefresherDemoVC: BaseVC {
                }
            }
            // 右侧拉：比如“下一页/加载更多卡片”
-           .configSideRefresh(with: JobsDefaultRight(),
+           .configSideRefresh(with: JobsDefaultRightRefresher(),
                                            container: self,
                                            at: .right,
                                            trigger: 70) { [weak self] in
