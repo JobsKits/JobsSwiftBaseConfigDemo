@@ -21,19 +21,27 @@ public protocol JobsAnimatable: AnyObject {
 
 @MainActor
 public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
-    private let indicator = UIActivityIndicatorView(style: .medium)
+    
     public var heightOrWidth: CGFloat = 60
-
-    private let label = UILabel()
+    
+    private lazy var indicator: UIActivityIndicatorView = {
+        UIActivityIndicatorView(style: .medium)
+            .byHidesWhenStopped(true)
+            .byAddTo(self)
+    }()
+    
+    private lazy var label: UILabel = {
+        UILabel()
+            .byFont(.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(self)
+    }()
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        addSubview(indicator)
-        addSubview(label)
-        indicator.hidesWhenStopped = true
-        label.font = .systemFont(ofSize: 13, weight: .medium)
-        label.textColor = .secondaryLabel
+        indicator.byVisible(true)
+        label.byVisible(true)
     }
 
     required init?(coder: NSCoder) { fatalError() }
@@ -42,26 +50,25 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         switch state {
         case .idle:
             indicator.stopAnimating()
-            label.text = "下拉可以刷新".tr
+            label.byText("下拉可以刷新".tr)
         case .pulling(let p):
             indicator.stopAnimating()
-            label.text = p >= 1
-                ? "松开立即刷新".tr
-                : String(format: "%@ %.0f%%", "继续下拉".tr, min(1, p) * 100)
+            label.byText(p >= 1
+                         ? "松开立即加载".tr
+                         : String(format: "%@ %.0f%%", "继续上拉".tr, min(1, p) * 100))
         case .ready:
             indicator.stopAnimating()
-            label.text = "松开立即刷新".tr
+            label.byText("松开立即刷新".tr)
         case .refreshing:
             indicator.startAnimating()
-            label.text = "刷新中...".tr
+            label.byText("刷新中...".tr)
         case .noMore:
             indicator.stopAnimating()
-            label.text = "没有更多了".tr
+            label.byText("没有更多了".tr)
         case .removed:
             indicator.stopAnimating()
-            label.text = nil
-        }
-        setNeedsLayout()
+            label.byText(nil)
+        };setNeedsLayout()
     }
 
     public override func layoutSubviews() {

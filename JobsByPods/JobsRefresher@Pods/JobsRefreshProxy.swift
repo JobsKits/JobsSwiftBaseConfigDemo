@@ -1,3 +1,10 @@
+//
+//  RefreshProxy.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Mac on 10/31/25.
+//
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -29,10 +36,10 @@ final class JobsProxy: NSObject {
     private func observe() {
         guard let sv = scrollView else { return }
         kvo = sv.observe(\.contentOffset, options: [.new]) { [weak self] _, _ in
-            jobsRunOnMain(self) { vc in self?.tick() }
+            jobsRunOnMain(self) { _ in self?.tick() }
         }
         panKvo = sv.panGestureRecognizer.observe(\.state, options: [.new]) { [weak self] _, _ in
-            jobsRunOnMain(self) { vc in self?.tick() }
+            jobsRunOnMain(self) { _ in self?.tick() }
         }
     }
 
@@ -52,6 +59,7 @@ final class JobsSlot {
     let trigger: CGFloat
     var action: (jobsByVoidBlock)?
     weak var container: AnyObject?
+
     // —— 行为开关 —— //
     /// 结束刷新：指示视图先退场，再让内容区回位
     var retreatAhead: Bool = true
@@ -92,31 +100,63 @@ final class JobsSlot {
         state = .removed
     }
 
+    // MARK: - Layout
+    /// 关键修复点：
+    /// 原来用 adjustedContentInset 来定位 view，会在 refreshing 时因为 contentInset 被加 h 导致 adjusted 也变大，
+    /// 从而把刷新视图再往外推一次 => “刷新中”跑到屏幕外。
+    ///
+    /// 解决：定位时只使用「基础 contentInset（把 refreshing 额外加的那段减掉）」来算位置。
     func layout(in sv: UIScrollView) {
-        let inset = sv.adjustedContentInset
+        let h = view.heightOrWidth
+
+        // 基础 inset：如果当前在 refreshing，把我们额外加的那段减掉（避免 layout 被 inset 变化带跑）
+        var baseInset = sv.contentInset
+        if case .refreshing = state {
+            switch position {
+            case .header: baseInset.top    = max(0, baseInset.top - h)
+            case .footer: baseInset.bottom = max(0, baseInset.bottom - h)
+            case .left:   baseInset.left   = max(0, baseInset.left - h)
+            case .right:  baseInset.right  = max(0, baseInset.right - h)
+            }
+        }
+
         switch position {
         case .header:
-            view.frame = CGRect(x: 0,
-                                y: -view.heightOrWidth - inset.top,
-                                width: sv.bounds.width,
-                                height: view.heightOrWidth)
+            view.frame = CGRect(
+                x: 0,
+                y: -h - baseInset.top,
+                width: sv.bounds.width,
+                height: h
+            )
+
         case .footer:
-            let h = max(sv.contentSize.height, sv.bounds.height - (inset.top + inset.bottom))
-            view.frame = CGRect(x: 0,
-                                y: h + inset.bottom,
-                                width: sv.bounds.width,
-                                height: view.heightOrWidth)
+            // footer 的锚定应该基于内容高度 + 基础 bottom inset
+            let contentH = max(sv.contentSize.height,
+                               sv.bounds.height - (sv.adjustedContentInset.top + sv.adjustedContentInset.bottom))
+            view.frame = CGRect(
+                x: 0,
+                y: contentH + baseInset.bottom,
+                width: sv.bounds.width,
+                height: h
+            )
+
         case .left:
-            view.frame = CGRect(x: -view.heightOrWidth - inset.left,
-                                y: 0,
-                                width: view.heightOrWidth,
-                                height: sv.bounds.height)
+            view.frame = CGRect(
+                x: -h - baseInset.left,
+                y: 0,
+                width: h,
+                height: sv.bounds.height
+            )
+
         case .right:
-            let w = max(sv.contentSize.width, sv.bounds.width - (inset.left + inset.right))
-            view.frame = CGRect(x: w + inset.right,
-                                y: 0,
-                                width: view.heightOrWidth,
-                                height: sv.bounds.height)
+            let contentW = max(sv.contentSize.width,
+                               sv.bounds.width - (sv.adjustedContentInset.left + sv.adjustedContentInset.right))
+            view.frame = CGRect(
+                x: contentW + baseInset.right,
+                y: 0,
+                width: h,
+                height: sv.bounds.height
+            )
         }
     }
 
@@ -132,13 +172,16 @@ final class JobsSlot {
         case .header:
             let distance = -(offset.y + inset.top)
             progress(distance: distance, axis: .vertical, isDragging: isDragging, sv: sv)
+
         case .footer:
             let contentH = max(sv.contentSize.height, sv.bounds.height - (inset.top + inset.bottom))
             let distance = offset.y + sv.bounds.height - contentH - inset.bottom
             progress(distance: distance, axis: .vertical, isDragging: isDragging, sv: sv, isFooter: true)
+
         case .left:
             let distance = -(offset.x + inset.left)
             progress(distance: distance, axis: .horizontal, isDragging: isDragging, sv: sv)
+
         case .right:
             let contentW = max(sv.contentSize.width, sv.bounds.width - (inset.left + inset.right))
             let distance = offset.x + sv.bounds.width - contentW - inset.right
@@ -165,13 +208,18 @@ final class JobsSlot {
         }
     }
 
+    // MARK: - Begin Refreshing
+    /// 关键修复点：
+    /// 进入 refreshing 时，除了改 contentInset，还必须同步拉 contentOffset，
+    /// 否则松手后的回弹/减速会把“刷新中”挤到屏幕外。
     func beginRefreshing(on sv: UIScrollView, axis: JobsAxis? = nil, isFooter: Bool = false) {
         guard state != .refreshing else { return }
         state = .refreshing
 
         let h = view.heightOrWidth
-        var inset = sv.contentInset
+        let oldAdjusted = sv.adjustedContentInset
 
+        var inset = sv.contentInset
         switch position {
         case .header: inset.top    += h
         case .footer: inset.bottom += h
@@ -179,16 +227,38 @@ final class JobsSlot {
         case .right:  inset.right  += h
         }
 
+        // 目标 offset：让刷新视图进入 refreshing 后一定在可视区域内
+        var targetOffset = sv.contentOffset
+        switch position {
+        case .header:
+            targetOffset.y = -(oldAdjusted.top + h)
+
+        case .footer:
+            let contentH = max(sv.contentSize.height,
+                               sv.bounds.height - (oldAdjusted.top + oldAdjusted.bottom))
+            targetOffset.y = contentH + (oldAdjusted.bottom + h) - sv.bounds.height
+
+        case .left:
+            targetOffset.x = -(oldAdjusted.left + h)
+
+        case .right:
+            let contentW = max(sv.contentSize.width,
+                               sv.bounds.width - (oldAdjusted.left + oldAdjusted.right))
+            targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
+        }
+
         UIView.animate(withDuration: 0.25,
                        delay: 0,
                        options: [.allowUserInteraction, .beginFromCurrentState]) {
             sv.contentInset = inset
+            sv.setContentOffset(targetOffset, animated: false)
         }
 
         action?()
         if container == nil { endRefreshing(on: sv) } // 容器释放时兜底
     }
 
+    // MARK: - End Refreshing
     func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
         guard case .refreshing = state else { return }
         state = .idle
@@ -221,6 +291,7 @@ final class JobsSlot {
             case .right:  return CGAffineTransform(translationX:  h, y: 0)
             }
         }()
+
         // A 段：指示视图先退场（不动 contentInset）
         UIView.animate(withDuration: retreatAnimDuration,
                        delay: 0,
@@ -234,7 +305,7 @@ final class JobsSlot {
             // 小停顿，强化“先/后”的感知
             let delay = self.retreatAheadDelay
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                // B 段：开始让内容回位（还原 inset），不做任何 offset 补偿
+                // B 段：开始让内容回位（还原 inset）
                 UIView.animate(withDuration: self.restoreInsetDuration,
                                delay: 0,
                                options: [.allowUserInteraction, .beginFromCurrentState]) {
@@ -265,6 +336,7 @@ final class JobsSlot {
         case .footer: inset.bottom -= view.heightOrWidth
         case .left:   inset.left   -= view.heightOrWidth
         case .right:  inset.right  -= view.heightOrWidth
-        };return inset
+        }
+        return inset
     }
 }

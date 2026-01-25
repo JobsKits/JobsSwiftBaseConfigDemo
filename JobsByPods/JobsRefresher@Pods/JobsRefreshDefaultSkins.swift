@@ -1,5 +1,5 @@
 //
-//  DefaultSkins.swift
+//  JobsRefreshDefaultSkins.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/31/25.
@@ -44,7 +44,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
     public var heightOrWidth: CGFloat = 60
     /// 外部可自定义文案（不含状态词），内部会自动竖排化。
     public var idleText: String = "继续侧拉".tr
-    public var readyText: String = "松手刷新".tr
+    public var readyText: String = "松开立即刷新".tr
     public var refreshingText: String = "刷新中".tr
     public var doneText: String = "完成".tr
     public var noMoreText: String = "没有更多".tr
@@ -112,23 +112,23 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
     }
 }
 @MainActor
-public final class JobsDefaultLeft: JobsSideIndicatorView {
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        heightOrWidth = 60
-        idleText = "继续左拉".tr
-        readyText = "松手刷新".tr
-        refreshingText = "刷新中".tr
-    }
-    required init?(coder: NSCoder) { fatalError() }
-}
-@MainActor
 public final class JobsDefaultRight: JobsSideIndicatorView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
+        idleText = "继续左拉".tr
+        readyText = "松开立即加载".tr
+        refreshingText = "加载中".tr
+    }
+    required init?(coder: NSCoder) { fatalError() }
+}
+@MainActor
+public final class JobsDefaultLeft: JobsSideIndicatorView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        heightOrWidth = 60
         idleText = "继续右拉".tr
-        readyText = "松手刷新".tr
+        readyText = "松开立即刷新".tr
         refreshingText = "刷新中".tr
     }
     required init?(coder: NSCoder) { fatalError() }
