@@ -58,7 +58,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
                          : String(format: "%@ %.0f%%", "继续上拉".tr, min(1, p) * 100))
         case .ready:
             indicator.stopAnimating()
-            label.byText("松开立即刷新".tr)
+            label.byText("松开立即加载".tr)
         case .refreshing:
             indicator.startAnimating()
             label.byText("刷新中...".tr)
