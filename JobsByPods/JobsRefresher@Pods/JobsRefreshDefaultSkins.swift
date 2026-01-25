@@ -23,6 +23,9 @@ public enum JobsRefreshConfig {
         public static let refreshing = "刷新中".tr
         public static let loading = "加载中".tr
         public static let noMore = "没有更多了".tr
+
+        // ✅ 新增：上次刷新前缀
+        public static let lastRefreshPrefix = "上次刷新：".tr
     }
     // MARK: - 上下（Vertical）
     public enum v {

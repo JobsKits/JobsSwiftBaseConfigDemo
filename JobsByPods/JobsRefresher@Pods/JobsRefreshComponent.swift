@@ -19,13 +19,32 @@ public protocol JobsAnimatable: AnyObject {
     var heightOrWidth: CGFloat { get }   // header/footer 用高度；left/right 用宽度
 }
 
+/// ✅ 记录“上一次刷新时间”（首次 nil 不显示）
 @MainActor
-public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
+public protocol JobsRefreshTimeTrackable: AnyObject {
+    func markRefreshed(at date: Date)
+}
+
+@MainActor
+public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrackable {
 
     // ✅ 关键：让同一个 IndicatorView 能区分自己是 Header 还是 Footer（或未来扩展 left/right）
     public var position: JobsPosition = .header
 
     public var heightOrWidth: CGFloat = 60
+
+    // ✅ 上次刷新时间（仅 header/left 使用）
+    private var lastRefreshedAt: Date?
+    // ✅ 有了刷新时间后固定两行高度，避免百分比变化时布局闪动
+    private var fixedLabelHeight: CGFloat?
+
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .current
+        f.timeZone = .current
+        f.dateFormat = "HH:mm:ss"
+        return f
+    }()
 
     private lazy var indicator: UIActivityIndicatorView = {
         UIActivityIndicatorView(style: .medium)
@@ -37,6 +56,8 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         UILabel()
             .byFont(.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(.secondaryLabel)
+            .byNumberOfLines(0)          // ✅ 允许两行
+            .byTextAlignment(.center)    // ✅ 两行居中更稳
             .byAddTo(self)
     }()
 
@@ -46,6 +67,13 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         isUserInteractionEnabled = false
         indicator.byVisible(true)
         label.byVisible(true)
+    }
+
+    // MARK: - JobsRefreshTimeTrackable
+    public func markRefreshed(at date: Date) {
+        lastRefreshedAt = date
+        fixedLabelHeight = computeFixedLabelHeightIfNeeded()
+        setNeedsLayout()
     }
 
     // MARK: - 文案分流（按 position）
@@ -99,30 +127,63 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
         return JobsRefreshConfig.common.noMore
     }
 
+    // ✅ 只对“刷新语义”（header/left）展示上次刷新时间
+    private func shouldShowLastRefreshTime() -> Bool {
+        switch position {
+        case .header, .left: return true
+        case .footer, .right: return false
+        }
+    }
+
+    // ✅ 统一拼接：任意状态都能追加上次刷新
+    private func decorate(_ main: String) -> String {
+        guard shouldShowLastRefreshTime(),
+              let d = lastRefreshedAt else { return main }
+        let t = Self.timeFormatter.string(from: d)
+        return main + "\n" + JobsRefreshConfig.common.lastRefreshPrefix + t
+    }
+
+    // ✅ 一旦有 lastRefreshedAt：固定两行高度（用“最大宽/最大长度样本”测一次）
+    private func computeFixedLabelHeightIfNeeded() -> CGFloat? {
+        guard shouldShowLastRefreshTime(), lastRefreshedAt != nil else { return nil }
+        let maxW = max(10, bounds.width - 20)
+        let sample = decorate(String(format: "%@ %.0f%%", goOnText(), 100.0))
+        let rect = (sample as NSString).boundingRect(
+            with: CGSize(width: maxW, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: label.font as Any],
+            context: nil
+        )
+        return ceil(rect.height)
+    }
+
     public func apply(state: JobsState) {
         switch state {
         case .idle:
             indicator.stopAnimating()
-            label.byText(idleText())
+            label.byText(decorate(idleText()))
 
         case .pulling(let p):
             indicator.stopAnimating()
-            label.byText(p >= 1
-                         ? readyText()
-                         : String(format: "%@ %.0f%%", goOnText(), min(1, p) * 100))
+            if p >= 1 {
+                label.byText(decorate(readyText()))
+            } else {
+                // ✅ 你要的：继续下拉/继续右拉阶段也显示上次刷新时间
+                let main = String(format: "%@ %.0f%%", goOnText(), min(1, p) * 100)
+                label.byText(decorate(main))
+            }
 
         case .ready:
             indicator.stopAnimating()
-            label.byText(readyText())
+            label.byText(decorate(readyText()))
 
         case .refreshing:
             indicator.startAnimating()
-            label.byText(refreshingText())
+            label.byText(decorate(refreshingText()))
 
         case .noMore:
             indicator.stopAnimating()
-            // ✅ noMore 主要给 footer，用其它 position 时也不崩，兜底显示 common.noMore
-            label.byText(noMoreText())
+            label.byText(decorate(noMoreText()))
 
         case .removed:
             indicator.stopAnimating()
@@ -133,13 +194,33 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+
         indicator.sizeToFit()
-        label.sizeToFit()
-        let totalW = indicator.bounds.width + 8 + label.bounds.width
-        let x = (bounds.width - totalW) * 0.5
-        let y = (bounds.height - max(indicator.bounds.height, label.bounds.height)) * 0.5
-        indicator.frame.origin = CGPoint(x: x, y: y)
-        label.frame.origin = CGPoint(x: indicator.frame.maxX + 8,
-                                     y: (bounds.height - label.bounds.height)/2)
+
+        let maxLabelW = max(10, bounds.width - 20)
+
+        // 有了 lastRefreshedAt 之后固定高度，避免闪
+        if fixedLabelHeight == nil {
+            fixedLabelHeight = computeFixedLabelHeightIfNeeded()
+        }
+
+        let labelH: CGFloat = fixedLabelHeight ?? ceil(label.sizeThatFits(
+            CGSize(width: maxLabelW, height: .greatestFiniteMagnitude)
+        ).height)
+
+        let spacing: CGFloat = 8
+        let totalH = indicator.bounds.height + spacing + labelH
+        let originY = (bounds.height - totalH) * 0.5
+
+        indicator.frame.origin = CGPoint(
+            x: (bounds.width - indicator.bounds.width) * 0.5,
+            y: originY
+        )
+        label.frame = CGRect(
+            x: (bounds.width - maxLabelW) * 0.5,
+            y: indicator.frame.maxY + spacing,
+            width: maxLabelW,
+            height: labelH
+        )
     }
 }
