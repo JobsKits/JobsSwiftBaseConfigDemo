@@ -25,13 +25,18 @@ final class JobsProxy: NSObject {
     var left:   JobsSlot?
     var right:  JobsSlot?
 
+    /// 是否显示“头部信息”（涵盖：竖向 header + 横向 left）
+    var showsHeaderInfo: Bool = true
+    /// 是否显示“尾部信息”（涵盖：竖向 footer + 横向 right）
+    var showsFooterInfo: Bool = true
+
     deinit { kvo?.invalidate(); panKvo?.invalidate() }
     init(scrollView: UIScrollView) {
         self.scrollView = scrollView
         super.init()
         observe()
     }
-    
+
     private func observe() {
         guard let sv = scrollView else { return }
         kvo = sv.observe(\.contentOffset, options: [.new]) { [weak self] _, _ in
@@ -58,6 +63,17 @@ final class JobsSlot {
     let trigger: CGFloat
     var action: (jobsByVoidBlock)?
     weak var container: AnyObject?
+
+    /// 是否显示该 Slot 的“信息视图”（仅影响 UI，可不影响触发逻辑）
+    /// - HeaderGroup: .header / .left
+    /// - FooterGroup: .footer / .right
+    var showsInfo: Bool = true {
+        didSet {
+            guard state != .removed else { return }
+            view.isHidden = !showsInfo
+        }
+    }
+
     /// 结束刷新/加载：与内容区域同步回弹（单段动画）
     var restoreInsetDuration: TimeInterval = 0.25
     /// 结束动画期间屏蔽 tick/布局，避免 KVO 干扰
@@ -80,12 +96,14 @@ final class JobsSlot {
 
     func attach(to sv: UIScrollView) {
         if view.superview !== sv { sv.addSubview(view) }
+        if state != .removed { view.isHidden = !showsInfo }
         layout(in: sv)
         if state == .removed { state = .idle }
     }
 
     func detach() {
         view.removeFromSuperview()
+        view.isHidden = true
         state = .removed
     }
 
@@ -168,6 +186,9 @@ final class JobsSlot {
     func beginRefreshing(on sv: UIScrollView, axis: JobsAxis? = nil, isFooter: Bool = false) {
         guard state != .refreshing else { return }
         state = .refreshing
+        // 即使不显示 info，也保持触发逻辑与 inset 调整；只控制 UI 是否可见
+        view.isHidden = !showsInfo
+
         let h = view.heightOrWidth
         let oldAdjusted = sv.adjustedContentInset
         var inset = sv.contentInset
@@ -190,26 +211,28 @@ final class JobsSlot {
             let contentW = max(sv.contentSize.width, sv.bounds.width - (oldAdjusted.left + oldAdjusted.right))
             targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
         }
+
         UIView.animate(withDuration: 0.25,
                        delay: 0,
                        options: [.allowUserInteraction, .beginFromCurrentState]) {
             sv.contentInset = inset
             sv.setContentOffset(targetOffset, animated: false)
         }
+
         action?()
         if container == nil { endRefreshing(on: sv) }
     }
 
-    // MARK: - End Refreshing (同步回弹：单段动画 + 记录上次刷新时间)
+    // MARK: - End Refreshing
     func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
         guard case .refreshing = state else { return }
 
-        // ✅ 先写入刷新时间（仅 header/left），确保后续 idle/pulling 能读取到
+        // 写入刷新时间（仅 header/left）
         if position == .header || position == .left {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
         }
 
-        view.isHidden = false
+        view.isHidden = !showsInfo
         view.transform = .identity
         view.alpha = 1
 

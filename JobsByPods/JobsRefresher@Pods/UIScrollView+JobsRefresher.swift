@@ -17,7 +17,6 @@ import JobsSwiftBlock
 // MARK: - UIScrollView + Proxy
 @MainActor
 private struct JobsAssocKeys {
-    // 用地址作为唯一键，避免 String 桥接 & 提高唯一性
     static var proxy: UInt8 = 0
 }
 
@@ -36,7 +35,6 @@ extension UIScrollView {
 // MARK: - UIScrollView + API
 @MainActor
 public struct JobsSideFactory {
-    // 这里如果你未来真要做“横向默认样式”，建议返回 JobsSideIndicatorView 的子类
     public static func left() -> JobsDefaultIndicatorView {
         let v = JobsDefaultIndicatorView()
         v.position = .left
@@ -52,15 +50,34 @@ public struct JobsSideFactory {
 @MainActor
 public extension UIScrollView {
 
+    // MARK: - DSL（是否显示 Header/Footer 信息）
+    /// 是否显示“头部信息”（涵盖：竖向 Header + 横向 Left）
+    @discardableResult
+    func showRefreshHeaderInfo(_ show: Bool) -> Self {
+        mrk_proxy.showsHeaderInfo = show
+        mrk_proxy.header?.showsInfo = show
+        mrk_proxy.left?.showsInfo = show
+        return self
+    }
+
+    /// 是否显示“尾部信息”（涵盖：竖向 Footer + 横向 Right）
+    @discardableResult
+    func showRefreshFooterInfo(_ show: Bool) -> Self {
+        mrk_proxy.showsFooterInfo = show
+        mrk_proxy.footer?.showsInfo = show
+        mrk_proxy.right?.showsInfo = show
+        return self
+    }
+
     // MARK: Header
     @discardableResult
     func configRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
                              action: @escaping jobsByVoidBlock) -> Self {
-        // ✅ 默认使用皮肤：position 已正确设置为 .header
         let c = component ?? JobsDefaultHeader()
         let slot = JobsSlot(position: .header, view: c, trigger: trigger, container: container, action: action)
+        slot.showsInfo = mrk_proxy.showsHeaderInfo
         mrk_proxy.header = slot
         slot.attach(to: self)
         return self
@@ -70,15 +87,12 @@ public extension UIScrollView {
     func switchRefreshHeader(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
         switch state {
-        case .refreshing:
-            slot.beginRefreshing(on: sv)
-        case .normal:
-            slot.endRefreshing(on: sv)
+        case .refreshing: slot.beginRefreshing(on: sv)
+        case .normal:     slot.endRefreshing(on: sv)
         case .removed:
             slot.detach()
             mrk_proxy.header = nil
         case .noMoreData:
-            // header 不支持 noMoreData，忽略
             break
         }
         return self
@@ -90,9 +104,9 @@ public extension UIScrollView {
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
                              action: @escaping jobsByVoidBlock) -> Self {
-        // ✅ 默认使用皮肤：position 已正确设置为 .footer
         let c = component ?? JobsDefaultFooter()
         let slot = JobsSlot(position: .footer, view: c, trigger: trigger, container: container, action: action)
+        slot.showsInfo = mrk_proxy.showsFooterInfo
         mrk_proxy.footer = slot
         slot.attach(to: self)
         return self
@@ -102,15 +116,12 @@ public extension UIScrollView {
     func switchRefreshFooter(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
         switch state {
-        case .refreshing:
-            slot.beginRefreshing(on: sv, isFooter: true)
-        case .normal:
-            slot.endRefreshing(on: sv)
+        case .refreshing: slot.beginRefreshing(on: sv, isFooter: true)
+        case .normal:     slot.endRefreshing(on: sv)
         case .removed:
             slot.detach()
             mrk_proxy.footer = nil
-        case .noMoreData:
-            slot.noticeNoMoreData(on: sv)
+        case .noMoreData: slot.noticeNoMoreData(on: sv)
         }
         return self
     }
@@ -124,11 +135,9 @@ public extension UIScrollView {
                            action: @escaping jobsByVoidBlock) -> Self {
         precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
         let slot = JobsSlot(position: position, view: component, trigger: trigger, container: container, action: action)
-        if position == .left {
-            mrk_proxy.left = slot
-        } else {
-            mrk_proxy.right = slot
-        }
+        // 左 = 头部信息；右 = 尾部信息
+        slot.showsInfo = (position == .left) ? mrk_proxy.showsHeaderInfo : mrk_proxy.showsFooterInfo
+        if position == .left { mrk_proxy.left = slot } else { mrk_proxy.right = slot }
         slot.attach(to: self)
         return self
     }
@@ -146,7 +155,6 @@ public extension UIScrollView {
             s.detach()
             if position == .left { mrk_proxy.left = nil } else { mrk_proxy.right = nil }
         case .noMoreData:
-            // side 不支持 noMoreData，忽略
             break
         }
         return self

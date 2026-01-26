@@ -36,34 +36,36 @@ final class JobsRefresherDemoVC: BaseVC {
 
     private lazy var topCollectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: hLayout)
-           .byDataSource(self)
-           .byDelegate(self)
-           .registerCell(HCell.self)
-           .byBackgroundView(nil)
-           .byShowsHorizontalScrollIndicator(false)
-           .byAlwaysBounceHorizontal(true)// 即使不满一屏也允许左右拉
-           .byAddTo(view) { [unowned self] make in
-               make.left.right.equalToSuperview()
-               make.height.equalTo(topHeight)
-               if view.jobs_hasVisibleTopBar() {
-                   make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
-               } else {
-                   make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-               }
-           }
-           // 左侧拉：比如“上一页/回退”
-           .configSideRefresh(with: JobsDefaultLeftRefresher(),
-                              container: self,
-                              at: .left,
-                              trigger: 70) { [weak self] in
-               guard let self else { return }
-               jobsRunOnMain(self) { vc in
-                   try? await Task.sleep(nanoseconds: 900_000_000)
-                   // 模拟“刷新完成”：减少一个 item 并刷新
-                   self.hItems = max(8, self.hItems - 1)
-                   self.topCollectionView.byReloadData()
-                   self.topCollectionView.switchSideRefresh(.left, to: .normal)
-               }
+            .byDataSource(self)
+            .byDelegate(self)
+            .registerCell(HCell.self)
+            .byBackgroundView(nil)
+            .byShowsHorizontalScrollIndicator(false)
+            .byAlwaysBounceHorizontal(true)// 即使不满一屏也允许左右拉
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalToSuperview()
+                make.height.equalTo(topHeight)
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
+            }
+            .showRefreshHeaderInfo(NO)   // 竖向Header + 横向Left
+            .showRefreshFooterInfo(YES)  // 竖向Footer + 横向Right
+            // 左侧拉：比如“上一页/回退”
+            .configSideRefresh(with: JobsDefaultLeftRefresher(),
+                               container: self,
+                               at: .left,
+                               trigger: 70) { [weak self] in
+                guard let self else { return }
+                jobsRunOnMain(self) { vc in
+                    try? await Task.sleep(nanoseconds: 900_000_000)
+                    // 模拟“刷新完成”：减少一个 item 并刷新
+                    self.hItems = max(8, self.hItems - 1)
+                    self.topCollectionView.byReloadData()
+                    self.topCollectionView.switchSideRefresh(.left, to: .normal)
+                }
            }
            // 右侧拉：比如“下一页/加载更多卡片”
            .configSideRefresh(with: JobsDefaultRightRefresher(),
@@ -90,6 +92,8 @@ final class JobsRefresherDemoVC: BaseVC {
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
+            .showRefreshHeaderInfo(YES)   // 竖向Header + 横向Left
+            .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
             // 下拉刷新 Header
             .configRefreshHeader(component: JobsDefaultHeader(),
                                  container: self,
