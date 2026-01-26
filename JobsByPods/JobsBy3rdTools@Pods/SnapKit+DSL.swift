@@ -1,6 +1,6 @@
 //
 //  SnapKit+DSL.swift
-//  Pods
+//  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 27/1/26.
 //
@@ -8,62 +8,75 @@
 #if os(OSX)
 import AppKit
 public typealias MASView = NSView
+public typealias MASGuide = NSLayoutGuide
 #elseif os(iOS) || os(tvOS)
 import UIKit
 public typealias MASView = UIView
+public typealias MASGuide = UILayoutGuide
 #endif
 
 import SnapKit
 // MARK: - View Masonry-style entry
-public extension MASView {
-    func mas_makeConstraints(_ closure: (ConstraintMaker) -> Void) { snp.makeConstraints(closure) }
-    func mas_updateConstraints(_ closure: (ConstraintMaker) -> Void) { snp.updateConstraints(closure) }
-    func mas_remakeConstraints(_ closure: (ConstraintMaker) -> Void) { snp.remakeConstraints(closure) }
-    func mas_removeConstraints() { snp.removeConstraints() }
+extension MASView {
+    public func mas_makeConstraints(_ closure: (ConstraintMaker) -> Void) { snp.makeConstraints(closure) }
+    public func mas_updateConstraints(_ closure: (ConstraintMaker) -> Void) { snp.updateConstraints(closure) }
+    public func mas_remakeConstraints(_ closure: (ConstraintMaker) -> Void) { snp.remakeConstraints(closure) }
+    public func mas_removeConstraints() { snp.removeConstraints() }
     @discardableResult
-    func mas_prepareConstraints(_ closure: (ConstraintMaker) -> Void) -> [Constraint] { snp.prepareConstraints(closure) }
+    public func mas_prepareConstraints(_ closure: (ConstraintMaker) -> Void) -> [Constraint] { snp.prepareConstraints(closure) }
     #if !os(OSX)
     @available(iOS 11.0, tvOS 11.0, *)
-    var mas_safeArea: ConstraintRelatableTarget { safeAreaLayoutGuide }
+    public var mas_safeArea: MASGuide { safeAreaLayoutGuide }
     #endif
 }
 // MARK: - Masonry-like aliases on SnapKit chain objects
-public extension ConstraintMakerExtendable {
-    var with: ConstraintMakerExtendable { self }
+extension ConstraintMakerExtendable {
     @discardableResult
-    func mas_equalTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { equalTo(other) }
+    public func mas_equalTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { equalTo(other) }
     @discardableResult
-    func mas_greaterThanOrEqualTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { greaterThanOrEqualTo(other) }
+    public func mas_greaterThanOrEqualTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { greaterThanOrEqualTo(other) }
     @discardableResult
-    func mas_lessThanOrEqualTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { lessThanOrEqualTo(other) }
+    public func mas_lessThanOrEqualTo(_ other: ConstraintRelatableTarget) -> ConstraintMakerEditable { lessThanOrEqualTo(other) }
     @discardableResult
-    func mas_equalToSuperview() -> ConstraintMakerEditable { equalToSuperview() }
+    public func mas_equalToSuperview() -> ConstraintMakerEditable { equalToSuperview() }
     @discardableResult
-    func mas_greaterThanOrEqualToSuperview() -> ConstraintMakerEditable { greaterThanOrEqualToSuperview() }
+    public func mas_greaterThanOrEqualToSuperview() -> ConstraintMakerEditable { greaterThanOrEqualToSuperview() }
     @discardableResult
-    func mas_lessThanOrEqualToSuperview() -> ConstraintMakerEditable { lessThanOrEqualToSuperview() }
+    public func mas_lessThanOrEqualToSuperview() -> ConstraintMakerEditable { lessThanOrEqualToSuperview() }
 }
-// MARK: - Editable chain aliases (offset/inset/priority/multiplier)
-public extension ConstraintMakerEditable {
-    var with: ConstraintMakerEditable { self }
+// MARK: - Masonry-style anchors (view.mas_left / view.mas_right ...)
+extension MASView {
+    public var mas_left: ConstraintItem { snp.left }
+    public var mas_right: ConstraintItem { snp.right }
+    public var mas_top: ConstraintItem { snp.top }
+    public var mas_bottom: ConstraintItem { snp.bottom }
+    public var mas_centerX: ConstraintItem { snp.centerX }
+    public var mas_centerY: ConstraintItem { snp.centerY }
+    public var mas_width: ConstraintItem { snp.width }
+    public var mas_height: ConstraintItem { snp.height }
+    public var mas_edges: ConstraintItem { snp.edges }
+    public var mas_size: ConstraintItem { snp.size }
+}
+// MARK: - Masonry-style anchors (guide.mas_left ...) for safeArea/layoutGuide
+extension MASGuide {
+    public var mas_left: ConstraintItem { snp.left }
+    public var mas_right: ConstraintItem { snp.right }
+    public var mas_top: ConstraintItem { snp.top }
+    public var mas_bottom: ConstraintItem { snp.bottom }
+    public var mas_centerX: ConstraintItem { snp.centerX }
+    public var mas_centerY: ConstraintItem { snp.centerY }
+    public var mas_width: ConstraintItem { snp.width }
+    public var mas_height: ConstraintItem { snp.height }
+    public var mas_edges: ConstraintItem { snp.edges }
+    public var mas_size: ConstraintItem { snp.size }
+}
+// MARK: - Tiny sugar (non-conflicting)
+extension ConstraintMakerEditable {
     @discardableResult
-    func mas_offset(_ amount: ConstraintOffsetTarget) -> ConstraintMakerEditable { offset(amount) }
-    @discardableResult
-    func mas_inset(_ amount: ConstraintInsetTarget) -> ConstraintMakerEditable { inset(amount) }
-    @discardableResult
-    func mas_insets(_ amount: ConstraintInsetTarget) -> ConstraintMakerEditable { inset(amount) }
-    @discardableResult
-    func mas_priority(_ amount: ConstraintPriorityTarget) -> ConstraintMakerFinalizable { priority(amount) }
-    @discardableResult
-    func mas_multipliedBy(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable { multipliedBy(amount) }
-    @discardableResult
-    func mas_dividedBy(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable { dividedBy(amount) }
+    public func insets(_ amount: ConstraintInsetTarget) -> ConstraintMakerEditable { inset(amount) }
 }
 
-// MARK: - Label/Key (SnapKit real API: labeled returns Finalizable)
-public extension ConstraintMakerFinalizable {
+extension ConstraintMakerFinalizable {
     @discardableResult
-    func mas_labeled(_ label: String) -> ConstraintMakerFinalizable { labeled(label) }
-    @discardableResult
-    func mas_key(_ key: String) -> ConstraintMakerFinalizable { labeled(key) }
+    public func key(_ key: String) -> ConstraintMakerFinalizable { labeled(key) }
 }

@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = 'JobsSwiftTools'          # Pod 名
+  s.name         = 'JobsSwiftTools'
   s.version      = '0.1.1'
   s.summary      = 'Swift中关于Foundation的拓展'
   s.description  = <<-DESC
@@ -10,23 +10,18 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
-  s.platform     = :ios, '12.0'
+  s.platform      = :ios, '12.0'
   s.swift_version = '5.0'
 
-  # 你的源码从 Git 仓库下载
-  s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftTools.git',
-                     :tag => s.version.to_s }
+  s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftTools.git', :tag => s.version.to_s }
 
-  # 全局排除脚本 / 图标
   s.exclude_files = [
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
     'UnityManager.swift'
   ]
-  
-  # 递归匹配当前目录下所有子目录里的 .swift 文件
-  s.source_files = '**/*.{swift,h,m,mm}'
+
   s.ios.frameworks = 'UIKit',
                      'Photos',
                      'PhotosUI',
@@ -35,12 +30,28 @@ Pod::Spec.new do |s|
                      'CoreLocation',
                      'CoreBluetooth',
                      'CoreText'
-  
-  s.dependency 'Flutter'
-  s.dependency 'FlutterPluginRegistrant'
-  s.dependency 'JobsSwiftBaseDefines'
-  s.dependency 'JobsSwiftBlock'
-  s.dependency 'JobsByUIKit'
-  s.dependency 'JobsToast'
-  
+
+  # ============================== Core（默认） ==============================
+  s.subspec 'Core' do |core|
+    core.source_files = '**/*.{swift,h,m,mm}'
+    core.dependency 'JobsSwiftBaseDefines'
+    core.dependency 'JobsSwiftBlock'
+    core.dependency 'JobsByUIKit'
+    core.dependency 'JobsToast'
+    # 如果你有 Flutter 相关源码，务必放到 Flutter 子目录里，并在 Core 排除
+    core.exclude_files = [
+      'Flutter/**/*',
+      '**/*Flutter*.*'
+    ]
+  end
+
+  # ============================== Flutter（可选） ==============================
+  s.subspec 'Flutter' do |f|
+    f.source_files = 'Flutter/**/*.{swift,h,m,mm}'
+    f.dependency 'JobsSwiftTools/Core'
+    f.dependency 'Flutter'
+    f.dependency 'FlutterPluginRegistrant'
+  end
+
+  s.default_subspecs = 'Core'
 end
