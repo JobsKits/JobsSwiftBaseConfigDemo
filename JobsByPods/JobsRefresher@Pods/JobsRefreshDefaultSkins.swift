@@ -696,25 +696,40 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
 
         // 竖排文案区域：整体垂直居中（你要求）
         // 三列：状态文案（status） + 更新前缀（updatePrefix） + 更新时间（updateValue）
-        let colSpacing: CGFloat = 10
-        let colW: CGFloat = 18
-
+        // ✅ 修复：当控件宽度较小（默认 60）且需要 3 列时，避免 totalW > w 导致 startX 为负，出现“超出视图/被裁切”
         let showUpdate = !updatePrefixLabel.isHidden && !updateValueLabel.isHidden
         let cols = showUpdate ? 3 : 1
-        let totalW = CGFloat(cols) * colW + CGFloat(cols - 1) * colSpacing
+
+        // 预留一点左右 padding，保证不会贴边被裁
+        let sidePadding: CGFloat = 6
+        let usableW = max(10, w - sidePadding * 2)
+
+        // 动态列宽/间距：优先保证 3 列都能放下
+        var spacing: CGFloat = showUpdate ? 6 : 0
+        var colW: CGFloat = floor((usableW - CGFloat(max(0, cols - 1)) * spacing) / CGFloat(cols))
+        if showUpdate && colW < 14 {
+            spacing = 4
+            colW = floor((usableW - CGFloat(cols - 1) * spacing) / CGFloat(cols))
+        }
+        colW = max(10, colW)
+
+        let totalW = CGFloat(cols) * colW + CGFloat(max(0, cols - 1)) * spacing
         let startX = (w - totalW) * 0.5
 
-        let textTop: CGFloat = 12
-        let textBottom: CGFloat = iconFrame.minY - 10
+        // 文案区域：在箭头/动画上方的可用区域内垂直居中（你要求：横向刷新 => 文案垂直居中）
+        let textTop: CGFloat = 10
+        let textBottom: CGFloat = iconFrame.minY - 8
         let textH = max(10, textBottom - textTop)
-        let textY = textTop + (textH - textH) * 0.5
+        let textY = textTop
 
         statusLabel.frame = CGRect(x: startX, y: textY, width: colW, height: textH)
+
         if showUpdate {
-            updatePrefixLabel.frame = CGRect(x: startX + (colW + colSpacing), y: textY, width: colW, height: textH)
-            updateValueLabel.frame = CGRect(x: startX + 2*(colW + colSpacing), y: textY, width: colW, height: textH)
+            updatePrefixLabel.frame = CGRect(x: startX + (colW + spacing), y: textY, width: colW, height: textH)
+            updateValueLabel.frame  = CGRect(x: startX + 2 * (colW + spacing), y: textY, width: colW, height: textH)
         }
     }
+
 
     // MARK: - Text helpers
     private func setVertical(_ label: UILabel, text: String) {
