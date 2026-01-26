@@ -682,54 +682,52 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
         let w = bounds.width
         let h = bounds.height
 
-        // 底部箭头 / 动画
-        let iconSide: CGFloat = 18
-        let bottomPadding: CGFloat = 14
-        let iconFrame = CGRect(
-            x: (w - iconSide) * 0.5,
-            y: h - bottomPadding - iconSide,
-            width: iconSide,
-            height: iconSide
-        )
-        arrow.frame = iconFrame
-        loading.frame = iconFrame
+        // ===== Layout goal =====
+        // 横向时：把「箭头/Loading(Lottie/菊花)」放在文案之上；并且整体（icon + 文案）垂直居中。
+        // 同时保证 3 列竖排文案在默认 width=60 时不会出界（动态计算列宽/间距）。
 
-        // 竖排文案区域：整体垂直居中（你要求）
-        // 三列：状态文案（status） + 更新前缀（updatePrefix） + 更新时间（updateValue）
-        // ✅ 修复：当控件宽度较小（默认 60）且需要 3 列时，避免 totalW > w 导致 startX 为负，出现“超出视图/被裁切”
+        let iconSide: CGFloat = 18
+        let stackSpacing: CGFloat = 8
+        let vPadding: CGFloat = 10
+
         let showUpdate = !updatePrefixLabel.isHidden && !updateValueLabel.isHidden
         let cols = showUpdate ? 3 : 1
 
-        // 预留一点左右 padding，保证不会贴边被裁
-        let sidePadding: CGFloat = 6
-        let usableW = max(10, w - sidePadding * 2)
+        // ---- Horizontal sizing (avoid clipping when width is small, e.g. 60) ----
+        let xPadding: CGFloat = 6
+        let minColW: CGFloat = 14
+        let maxColW: CGFloat = 22
+        let minSpacing: CGFloat = 4
+        let maxSpacing: CGFloat = 10
 
-        // 动态列宽/间距：优先保证 3 列都能放下
-        var spacing: CGFloat = showUpdate ? 6 : 0
-        var colW: CGFloat = floor((usableW - CGFloat(max(0, cols - 1)) * spacing) / CGFloat(cols))
-        if showUpdate && colW < 14 {
-            spacing = 4
-            colW = floor((usableW - CGFloat(cols - 1) * spacing) / CGFloat(cols))
+        var spacing = maxSpacing
+        var colW = (w - 2 * xPadding - spacing * CGFloat(max(0, cols - 1))) / CGFloat(cols)
+        if colW < minColW {
+            spacing = minSpacing
+            colW = (w - 2 * xPadding - spacing * CGFloat(max(0, cols - 1))) / CGFloat(cols)
         }
-        colW = max(10, colW)
-
+        colW = min(maxColW, max(minColW, colW))
         let totalW = CGFloat(cols) * colW + CGFloat(max(0, cols - 1)) * spacing
         let startX = (w - totalW) * 0.5
 
-        // 文案区域：在箭头/动画上方的可用区域内垂直居中（你要求：横向刷新 => 文案垂直居中）
-        let textTop: CGFloat = 10
-        let textBottom: CGFloat = iconFrame.minY - 8
-        let textH = max(10, textBottom - textTop)
-        let textY = textTop
+        // ---- Vertical sizing: center (icon + text) together ----
+        let availableH = max(10, h - 2 * vPadding)
+        let textH = max(10, availableH - iconSide - stackSpacing)
+        let groupH = iconSide + stackSpacing + textH
+        let groupY = (h - groupH) * 0.5
 
+        // icon on top of text
+        let iconFrame = CGRect(x: (w - iconSide) * 0.5, y: groupY, width: iconSide, height: iconSide)
+        arrow.frame = iconFrame
+        loading.frame = iconFrame
+
+        let textY = iconFrame.maxY + stackSpacing
         statusLabel.frame = CGRect(x: startX, y: textY, width: colW, height: textH)
-
         if showUpdate {
             updatePrefixLabel.frame = CGRect(x: startX + (colW + spacing), y: textY, width: colW, height: textH)
-            updateValueLabel.frame  = CGRect(x: startX + 2 * (colW + spacing), y: textY, width: colW, height: textH)
+            updateValueLabel.frame = CGRect(x: startX + 2 * (colW + spacing), y: textY, width: colW, height: textH)
         }
     }
-
 
     // MARK: - Text helpers
     private func setVertical(_ label: UILabel, text: String) {

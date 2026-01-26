@@ -37,6 +37,12 @@ final class JobsProxy: NSObject {
     var leftLottiePref: JobsLottiePreference = .inherit
     var rightLottiePref: JobsLottiePreference = .inherit
 
+    // MARK: - Human interaction feedback
+    /// Whether to perform haptic feedback when refresh/load is triggered by reaching threshold.
+    var enablesHaptics: Bool = false
+    /// Optional sound file name. Supports full name (e.g. "Sound.wav") or base name (e.g. "Sound").
+    var soundFileName: String? = nil
+
     deinit { kvo?.invalidate(); panKvo?.invalidate() }
     init(scrollView: UIScrollView) {
         self.scrollView = scrollView
@@ -183,6 +189,10 @@ final class JobsSlot {
 
     func beginRefreshing(on sv: UIScrollView, isFooter: Bool = false) {
         guard state != .refreshing else { return }
+
+        // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
+        sv.jobs_triggerRefreshFeedback(for: position)
+
         state = .refreshing
         view.isHidden = !showsInfo
 

@@ -16,6 +16,11 @@ import UIKit
 import ObjectiveC
 import JobsSwiftBlock
 
+#if os(iOS) || os(tvOS)
+import AudioToolbox
+import AVFoundation
+#endif
+
 @MainActor
 private struct JobsAssocKeys {
     static var proxy: UInt8 = 0
@@ -81,6 +86,24 @@ public extension UIScrollView {
     func setRightLottie(_ pref: JobsLottiePreference) -> Self {
         mrk_proxy.rightLottiePref = pref
         (mrk_proxy.right?.view as? JobsLottieConfigurable)?.lottiePreference = pref
+        return self
+    }
+
+    // MARK: - Human interaction feedback (haptic + sound)
+    /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
+    @discardableResult
+    func enableRefreshHaptics(_ enable: Bool) -> Self {
+        mrk_proxy.enablesHaptics = enable
+        return self
+    }
+
+    /// Configure a sound file to play when user triggers refresh/loading by reaching threshold.
+    /// - Parameter fileName: Supports full name (e.g. "Sound.wav") or base name (e.g. "Sound").
+    /// Passing nil or empty string disables sound.
+    @discardableResult
+    func setRefreshSound(_ fileName: String?) -> Self {
+        let trimmed = fileName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        mrk_proxy.soundFileName = (trimmed?.isEmpty == true) ? nil : trimmed
         return self
     }
 
@@ -185,4 +208,97 @@ public extension UIScrollView {
         }
         return self
     }
+}
+
+// MARK: - Feedback helpers (defined in this category)
+@MainActor
+extension UIScrollView {
+    /// Called by JobsSlot when a refresh/loading is actually triggered (state -> refreshing).
+    func jobs_triggerRefreshFeedback(for position: JobsPosition) {
+        let proxy = mrk_proxy
+        guard proxy.enablesHaptics || (proxy.soundFileName != nil) else { return }
+
+        // Only trigger for the positions that represent user pull actions.
+        // header/left = refresh; footer/right = load more
+        switch position {
+        case .header, .left, .footer, .right:
+            break
+        }
+
+        if proxy.enablesHaptics {
+            jobs_playHapticImpact()
+        }
+        if let sound = proxy.soundFileName {
+            jobs_playSound(named: sound)
+        }
+    }
+
+    private func jobs_playHapticImpact() {
+        #if os(iOS) || os(tvOS)
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.prepare()
+            generator.impactOccurred()
+        }
+        #endif
+    }
+
+    private func jobs_playSound(named fileName: String) {
+        #if os(iOS) || os(tvOS)
+        let trimmed = fileName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        // Supports:
+        //  - "Sound.wav" (full name)
+        //  - "Sound" (base name; default to wav)
+        let (base, ext): (String, String) = {
+            if let dot = trimmed.lastIndex(of: ".") {
+                let b = String(trimmed[..<dot])
+                let e = String(trimmed[trimmed.index(after: dot)...])
+                return (b, e.isEmpty ? "wav" : e)
+            } else {
+                return (trimmed, "wav")
+            }
+        }()
+
+        if let url = Self.jobs_resolveSoundURL(baseName: base, ext: ext, preferredFullName: trimmed) {
+            Self.jobs_playSystemSound(url: url)
+        }
+        #endif
+    }
+
+    #if os(iOS) || os(tvOS)
+    private static var jobs_soundCache: [String: SystemSoundID] = [:]
+
+    private static func jobs_resolveSoundURL(baseName: String, ext: String, preferredFullName: String) -> URL? {
+        // 1) Fast path: direct lookup by base/ext.
+        if let url = Bundle.main.url(forResource: baseName, withExtension: ext) {
+            return url
+        }
+
+        // 2) Enumerate all matching ext files (works even if the file is inside subdirectories)
+        let urls = Bundle.main.urls(forResourcesWithExtension: ext, subdirectory: nil) ?? []
+        if let exact = urls.first(where: { $0.lastPathComponent == preferredFullName }) {
+            return exact
+        }
+        if let byBase = urls.first(where: { $0.deletingPathExtension().lastPathComponent == baseName }) {
+            return byBase
+        }
+        return nil
+    }
+
+    private static func jobs_playSystemSound(url: URL) {
+        let key = url.absoluteString
+        let soundID: SystemSoundID
+        if let cached = jobs_soundCache[key] {
+            soundID = cached
+        } else {
+            var id: SystemSoundID = 0
+            AudioServicesCreateSystemSoundID(url as CFURL, &id)
+            jobs_soundCache[key] = id
+            soundID = id
+        }
+        AudioServicesPlaySystemSound(soundID)
+    }
+    #endif
 }
