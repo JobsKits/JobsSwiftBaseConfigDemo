@@ -19,6 +19,7 @@ extension Array {
         indices.contains(index) ? self[index] : nil
     }
     
+    @discardableResult
     public func add(_ element: Element) -> [Element] {
         var copy = self
         copy.append(element)

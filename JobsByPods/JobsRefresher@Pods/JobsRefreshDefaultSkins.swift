@@ -23,8 +23,6 @@ public enum JobsRefreshConfig {
         public static let refreshing = "刷新中".tr
         public static let loading = "加载中".tr
         public static let noMore = "没有更多了".tr
-
-        // ✅ 新增：上次刷新前缀
         public static let lastRefreshPrefix = "上次刷新：".tr
     }
     // MARK: - 上下（Vertical）
@@ -58,36 +56,42 @@ public enum JobsRefreshConfig {
 
 @MainActor
 public final class JobsDefaultHeader: JobsDefaultIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
         position = .header   // ✅ 关键：文案分流
     }
-    required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor
 public final class JobsDefaultFooter: JobsDefaultIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
         position = .footer   // ✅ 关键：文案分流
     }
-    required init?(coder: NSCoder) { fatalError() }
 }
-
 /// —— 横向侧拉专用：竖排文案 ——
 /// 结构：指示器（上） + 竖排 UILabel（下），在非 refreshing 时隐藏转圈，仅显示竖排提示。
 @MainActor
 public class JobsSideIndicatorView: UIView, JobsAnimatable {
     private lazy var indicator : UIActivityIndicatorView = {
-        self.byAddSubviewRetSub(UIActivityIndicatorView(style: .medium).byHidesWhenStopped(true))
+        let v: UIActivityIndicatorView
+        if #available(iOS 13.0, *) {
+            v = UIActivityIndicatorView(style: .medium)
+        } else {
+            v = UIActivityIndicatorView(style: .gray)   // iOS 12 常用替代
+        }
+        self.byAddSubviewRetSub(v.byHidesWhenStopped(true))
+        return v
     }()
     private lazy var label:UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
                 .byFont(.systemFont(ofSize: 14, weight: .medium))
-                .byTextColor(.secondaryLabel)
+                .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
         )

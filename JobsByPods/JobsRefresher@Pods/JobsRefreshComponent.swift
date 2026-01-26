@@ -1,5 +1,5 @@
 //
-//  RefreshComponent.swift
+//  JobsRefreshComponent.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/31/25.
@@ -12,13 +12,12 @@ import UIKit
 #endif
 
 import JobsByUIKit
-
+import JobsSwiftBaseDefines
 @MainActor
 public protocol JobsAnimatable: AnyObject {
     func apply(state: JobsState)
     var heightOrWidth: CGFloat { get }   // header/footer 用高度；left/right 用宽度
 }
-
 /// ✅ 记录“上一次刷新时间”（首次 nil 不显示）
 @MainActor
 public protocol JobsRefreshTimeTrackable: AnyObject {
@@ -27,17 +26,13 @@ public protocol JobsRefreshTimeTrackable: AnyObject {
 
 @MainActor
 public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrackable {
-
     // ✅ 关键：让同一个 IndicatorView 能区分自己是 Header 还是 Footer（或未来扩展 left/right）
     public var position: JobsPosition = .header
-
     public var heightOrWidth: CGFloat = 60
-
     // ✅ 上次刷新时间（仅 header/left 使用）
     private var lastRefreshedAt: Date?
     // ✅ 有了刷新时间后固定两行高度，避免百分比变化时布局闪动
     private var fixedLabelHeight: CGFloat?
-
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.locale = .current
@@ -47,15 +42,21 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     }()
 
     private lazy var indicator: UIActivityIndicatorView = {
-        UIActivityIndicatorView(style: .medium)
-            .byHidesWhenStopped(true)
+        let v: UIActivityIndicatorView
+        if #available(iOS 13.0, *) {
+            v = UIActivityIndicatorView(style: .medium)
+        } else {
+            v = UIActivityIndicatorView(style: .gray)   // iOS 12 常用替代
+        }
+        v.byHidesWhenStopped(true)
             .byAddTo(self)
+        return v
     }()
 
     private lazy var label: UILabel = {
         UILabel()
             .byFont(.systemFont(ofSize: 13, weight: .medium))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)          // ✅ 允许两行
             .byTextAlignment(.center)    // ✅ 两行居中更稳
             .byAddTo(self)
@@ -71,24 +72,18 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-
         indicator.sizeToFit()
-
         let maxLabelW = max(10, bounds.width - 20)
-
         // 有了 lastRefreshedAt 之后固定高度，避免闪
         if fixedLabelHeight == nil {
             fixedLabelHeight = computeFixedLabelHeightIfNeeded()
         }
-
         let labelH: CGFloat = fixedLabelHeight ?? ceil(label.sizeThatFits(
             CGSize(width: maxLabelW, height: .greatestFiniteMagnitude)
         ).height)
-
         let spacing: CGFloat = 8
         let totalH = indicator.bounds.height + spacing + labelH
         let originY = (bounds.height - totalH) * 0.5
-
         indicator.frame.origin = CGPoint(
             x: (bounds.width - indicator.bounds.width) * 0.5,
             y: originY
@@ -188,7 +183,6 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
         case .idle:
             indicator.stopAnimating()
             displayText(decorate(idleText()))
-
         case .pulling(let p):
             indicator.stopAnimating()
             if p >= 1 {
@@ -197,24 +191,19 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
                 let main = String(format: "%@ %.0f%%", goOnText(), min(1, p) * 100)
                 displayText(decorate(main))
             }
-
         case .ready:
             indicator.stopAnimating()
             displayText(decorate(readyText()))
-
         case .refreshing:
             indicator.startAnimating()
             displayText(decorate(refreshingText()))
-
         case .noMore:
             indicator.stopAnimating()
             displayText(decorate(noMoreText()))
-
         case .removed:
             indicator.stopAnimating()
             label.byText(nil)
-        }
-        setNeedsLayout()
+        };setNeedsLayout()
     }
 
     private func displayText(_ text: String) {

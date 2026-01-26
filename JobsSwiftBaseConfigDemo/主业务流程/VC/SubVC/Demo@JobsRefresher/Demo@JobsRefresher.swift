@@ -21,11 +21,10 @@ import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 final class JobsRefresherDemoVC: BaseVC {
-    
     private let topHeight: CGFloat = 180
     private var hItems = 18              // 顶部横向卡片数量
     private var rows = 20                // 底部纵向行数
-
+    
     private lazy var hLayout: UICollectionViewFlowLayout = {
         UICollectionViewFlowLayout()
             .byScrollDirection(.horizontal)
@@ -68,9 +67,9 @@ final class JobsRefresherDemoVC: BaseVC {
            }
            // 右侧拉：比如“下一页/加载更多卡片”
            .configSideRefresh(with: JobsDefaultRightRefresher(),
-                                           container: self,
-                                           at: .right,
-                                           trigger: 70) { [weak self] in
+                              container: self,
+                              at: .right,
+                              trigger: 70) { [weak self] in
                guard let self else { return }
                jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)
@@ -106,8 +105,8 @@ final class JobsRefresherDemoVC: BaseVC {
             }
             // 上拉加载 Footer
             .configRefreshFooter(component: JobsDefaultFooter(),
-                                          container: self,
-                                          trigger: 66) { [weak self] in
+                                 container: self,
+                                 trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)

@@ -14,7 +14,7 @@
 
 ## 二、使用方式
 
-### 1、`UITableView`
+### 1、`UITableView`（演示垂直）
 
 ```swift
 private lazy var tableView: UITableView = {
@@ -59,7 +59,7 @@ private lazy var tableView: UITableView = {
 }()
 ```
 
-### 2、`UICollectionView`
+### 2、`UICollectionView`（演示水平）
 
 ```swift
 private lazy var collectionView: UICollectionView = {

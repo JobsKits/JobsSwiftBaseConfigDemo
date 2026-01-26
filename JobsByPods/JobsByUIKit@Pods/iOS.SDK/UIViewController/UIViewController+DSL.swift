@@ -122,8 +122,7 @@ public extension UIViewController {
             assertionFailure("iOS 11+ 请使用 UIScrollView.contentInsetAdjustmentBehavior")
         } else {
             self.automaticallyAdjustsScrollViewInsets = flag
-        }
-        return self
+        };return self
     }
     // ================================== show / showDetail（安全命名） ==================================
     @discardableResult

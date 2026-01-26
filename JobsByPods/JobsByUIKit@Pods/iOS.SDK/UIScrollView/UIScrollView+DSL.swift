@@ -13,364 +13,361 @@ import UIKit
 
 import JobsSwiftBlock
 
-public extension UIScrollView {
-    // MARK:  Basics
+extension UIScrollView {
+    /// Basics
     @discardableResult
-    func byContentSize(_ size: CGSize) -> Self {
+    public func byContentSize(_ size: CGSize) -> Self {
         self.contentSize = size
         return self
     }
 
     @discardableResult
-    func byContentOffsetBy(_ offset: CGPoint) -> Self {
+    public func byContentOffsetBy(_ offset: CGPoint) -> Self {
         self.setContentOffset(offset, animated: false)
         return self
     }
 
     @discardableResult
-    func byContentOffsetByAnimated(_ offset: CGPoint) -> Self {
+    public func byContentOffsetByAnimated(_ offset: CGPoint) -> Self {
         self.setContentOffset(offset, animated: true)
         return self
     }
 
     @discardableResult
-    func byShowsVerticalScrollIndicator(_ show: Bool) -> Self {
+    public func byShowsVerticalScrollIndicator(_ show: Bool) -> Self {
         self.showsVerticalScrollIndicator = show
         return self
     }
 
     @discardableResult
-    func byShowsHorizontalScrollIndicator(_ show: Bool) -> Self {
+    public func byShowsHorizontalScrollIndicator(_ show: Bool) -> Self {
         self.showsHorizontalScrollIndicator = show
         return self
     }
 
     @discardableResult
-    func byBounces(_ bounces: Bool) -> Self {
+    public func byBounces(_ bounces: Bool) -> Self {
         self.bounces = bounces
         return self
     }
 
     @discardableResult
-    func byAlwaysBounceVertical(_ enable: Bool) -> Self {
+    public func byAlwaysBounceVertical(_ enable: Bool) -> Self {
         self.alwaysBounceVertical = enable
         return self
     }
 
     @discardableResult
-    func byAlwaysBounceHorizontal(_ enable: Bool) -> Self {
+    public func byAlwaysBounceHorizontal(_ enable: Bool) -> Self {
         self.alwaysBounceHorizontal = enable
         return self
     }
 
     @discardableResult
-    func byPagingEnabled(_ enabled: Bool) -> Self {
+    public func byPagingEnabled(_ enabled: Bool) -> Self {
         self.isPagingEnabled = enabled
         return self
     }
 
     @discardableResult
-    func byScrollEnabled(_ enabled: Bool) -> Self {
+    public func byScrollEnabled(_ enabled: Bool) -> Self {
         self.isScrollEnabled = enabled
         return self
     }
 
     @discardableResult
-    func byDirectionalLockEnabled(_ enabled: Bool) -> Self {
+    public func byDirectionalLockEnabled(_ enabled: Bool) -> Self {
         self.isDirectionalLockEnabled = enabled
         return self
     }
 
     @discardableResult
-    func byScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
         self.scrollIndicatorInsets = insets
         return self
     }
 
     @discardableResult
-    func byContentInset(_ insets: UIEdgeInsets) -> Self {
+    public func byContentInset(_ insets: UIEdgeInsets) -> Self {
         self.contentInset = insets
         return self
     }
 
     @discardableResult
-    func byIndicatorStyle(_ style: UIScrollView.IndicatorStyle) -> Self {
+    public func byIndicatorStyle(_ style: UIScrollView.IndicatorStyle) -> Self {
         self.indicatorStyle = style
         return self
     }
     /// 改为可选，便于置空
     @discardableResult
-    func byDelegate(_ delegate: UIScrollViewDelegate?) -> Self {
+    public func byDelegate(_ delegate: UIScrollViewDelegate?) -> Self {
         self.delegate = delegate
         return self
     }
 
     @discardableResult
-    func byKeyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
+    public func byKeyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
         self.keyboardDismissMode = mode
         return self
     }
 
     @discardableResult
-    func byRefreshControl(_ control: UIRefreshControl?) -> Self {
+    public func byRefreshControl(_ control: UIRefreshControl?) -> Self {
         self.refreshControl = control
         return self
     }
 
     @discardableResult
-    func byDecelerationRate(_ rate: UIScrollView.DecelerationRate) -> Self {
+    public func byDecelerationRate(_ rate: UIScrollView.DecelerationRate) -> Self {
         self.decelerationRate = rate
         return self
     }
 
     @discardableResult
-    func byScrollsToTop(_ enabled: Bool) -> Self {
+    public func byScrollsToTop(_ enabled: Bool) -> Self {
         self.scrollsToTop = enabled
         return self
     }
-    // MARK:  Insets & Adjustment
+    /// Insets & Adjustment
     /// iOS 11.0+ 内容 inset 自动调整行为
     @available(iOS 11.0, *)
     @discardableResult
-    func byContentInsetAdjustmentBehavior(_ behavior: UIScrollView.ContentInsetAdjustmentBehavior) -> Self {
+    public func byContentInsetAdjustmentBehavior(_ behavior: UIScrollView.ContentInsetAdjustmentBehavior) -> Self {
         self.contentInsetAdjustmentBehavior = behavior
         return self
     }
     /// iOS 13.0+ 自动调整滚动条 inset
     @available(iOS 13.0, *)
     @discardableResult
-    func byAutomaticallyAdjustsScrollIndicatorInsets(_ enable: Bool) -> Self {
+    public func byAutomaticallyAdjustsScrollIndicatorInsets(_ enable: Bool) -> Self {
         self.automaticallyAdjustsScrollIndicatorInsets = enable
         return self
     }
     /// iOS 11.1+ 垂直滚动条 inset
     @available(iOS 11.1, *)
     @discardableResult
-    func byVerticalScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byVerticalScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
         self.verticalScrollIndicatorInsets = insets
         return self
     }
     /// iOS 11.1+ 水平滚动条 inset
     @available(iOS 11.1, *)
     @discardableResult
-    func byHorizontalScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byHorizontalScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
         self.horizontalScrollIndicatorInsets = insets
         return self
     }
-    // MARK: Keyboard Scrolling
+    /// Keyboard Scrolling
     /// iOS 17.0+ 允许键盘方向键滚动
     @available(iOS 17.0, *)
     @discardableResult
-    func byAllowsKeyboardScrolling(_ enable: Bool) -> Self {
+    public func byAllowsKeyboardScrolling(_ enable: Bool) -> Self {
         self.allowsKeyboardScrolling = enable
         return self
     }
-    // MARK: iOS 17.4+ 属性组
+    /// iOS 17.4+ 属性组
     /// iOS 17.4+ 内容对齐点
     @available(iOS 17.4, *)
     @discardableResult
-    func byContentAlignmentPoint(_ point: CGPoint) -> Self {
+    public func byContentAlignmentPoint(_ point: CGPoint) -> Self {
         self.contentAlignmentPoint = point
         return self
     }
     /// iOS 17.4+ 水平回弹
     @available(iOS 17.4, *)
     @discardableResult
-    func byBouncesHorizontally(_ enable: Bool) -> Self {
+    public func byBouncesHorizontally(_ enable: Bool) -> Self {
         self.bouncesHorizontally = enable
         return self
     }
     /// iOS 17.4+ 垂直回弹
     @available(iOS 17.4, *)
     @discardableResult
-    func byBouncesVertically(_ enable: Bool) -> Self {
+    public func byBouncesVertically(_ enable: Bool) -> Self {
         self.bouncesVertically = enable
         return self
     }
     /// iOS 17.4+ 是否将水平滚动交给父级
     @available(iOS 17.4, *)
     @discardableResult
-    func byTransfersHorizontalScrollingToParent(_ enable: Bool) -> Self {
+    public func byTransfersHorizontalScrollingToParent(_ enable: Bool) -> Self {
         self.transfersHorizontalScrollingToParent = enable
         return self
     }
     /// iOS 17.4+ 是否将垂直滚动交给父级
     @available(iOS 17.4, *)
     @discardableResult
-    func byTransfersVerticalScrollingToParent(_ enable: Bool) -> Self {
+    public func byTransfersVerticalScrollingToParent(_ enable: Bool) -> Self {
         self.transfersVerticalScrollingToParent = enable
         return self
     }
     /// iOS 17.4+ 滚动 offset 变化时强制显示滚动条
     @available(iOS 17.4, *)
     @discardableResult
-    func byWithScrollIndicatorsShownForContentOffsetChanges(_ changes: jobsByVoidBlock) -> Self {
+    public func byWithScrollIndicatorsShownForContentOffsetChanges(_ changes: jobsByVoidBlock) -> Self {
         self.withScrollIndicatorsShown(forContentOffsetChanges: changes)
         return self
     }
     /// iOS 17.4+ 立即停止滚动与缩放动画
     @available(iOS 17.4, *)
     @discardableResult
-    func byStopScrollingAndZooming() -> Self {
+    public func byStopScrollingAndZooming() -> Self {
         self.stopScrollingAndZooming()
         return self
     }
-
-    // MARK: Touch Behavior
+    /// Touch Behavior
     @discardableResult
-    func byDelaysContentTouches(_ enable: Bool) -> Self {
+    public func byDelaysContentTouches(_ enable: Bool) -> Self {
         self.delaysContentTouches = enable
         return self
     }
 
     @discardableResult
-    func byCanCancelContentTouches(_ enable: Bool) -> Self {
+    public func byCanCancelContentTouches(_ enable: Bool) -> Self {
         self.canCancelContentTouches = enable
         return self
     }
-    // MARK: Zoom
+    /// Zoom
     @discardableResult
-    func byMinimumZoomScale(_ scale: CGFloat) -> Self {
+    public func byMinimumZoomScale(_ scale: CGFloat) -> Self {
         self.minimumZoomScale = scale
         return self
     }
 
     @discardableResult
-    func byMaximumZoomScale(_ scale: CGFloat) -> Self {
+    public func byMaximumZoomScale(_ scale: CGFloat) -> Self {
         self.maximumZoomScale = scale
         return self
     }
 
     @discardableResult
-    func byZoomScale(_ scale: CGFloat, animated: Bool = false) -> Self {
+    public func byZoomScale(_ scale: CGFloat, animated: Bool = false) -> Self {
         if animated {
             self.setZoomScale(scale, animated: true)
         } else {
             self.zoomScale = scale
-        }
-        return self
+        };return self
     }
 
     @discardableResult
-    func byBouncesZoom(_ enable: Bool) -> Self {
+    public func byBouncesZoom(_ enable: Bool) -> Self {
         self.bouncesZoom = enable
         return self
     }
 
     @discardableResult
-    func byZoom(to rect: CGRect, animated: Bool) -> Self {
+    public func byZoom(to rect: CGRect, animated: Bool) -> Self {
         self.zoom(to: rect, animated: animated)
         return self
     }
-    // MARK: Indicators
+    /// Indicators
     @discardableResult
-    func byShowsIndicators(vertical: Bool? = nil, horizontal: Bool? = nil) -> Self {
+    public func byShowsIndicators(vertical: Bool? = nil, horizontal: Bool? = nil) -> Self {
         if let v = vertical { self.showsVerticalScrollIndicator = v }
         if let h = horizontal { self.showsHorizontalScrollIndicator = h }
         return self
     }
 
     @discardableResult
-    func byFlashScrollIndicators() -> Self {
+    public func byFlashScrollIndicators() -> Self {
         self.flashScrollIndicators()
         return self
     }
-    // MARK: Visible Rect
+    /// Visible Rect
     @discardableResult
-    func byScrollRectToVisible(_ rect: CGRect, animated: Bool) -> Self {
+    public func byScrollRectToVisible(_ rect: CGRect, animated: Bool) -> Self {
         self.scrollRectToVisible(rect, animated: animated)
         return self
     }
-    // MARK: Index Display
+    /// Index Display
     @discardableResult
-    func byIndexDisplayMode(_ mode: UIScrollView.IndexDisplayMode) -> Self {
+    public func byIndexDisplayMode(_ mode: UIScrollView.IndexDisplayMode) -> Self {
         self.indexDisplayMode = mode
         return self
     }
-    // MARK: Gesture Config
+    /// Gesture Config
     @discardableResult
-    func byPanGesture(_ config: (UIPanGestureRecognizer) -> Void) -> Self {
+    public func byPanGesture(_ config: (UIPanGestureRecognizer) -> Void) -> Self {
         config(self.panGestureRecognizer)
         return self
     }
 
     @available(iOS 5.0, *)
     @discardableResult
-    func byPinchGesture(_ config: (UIPinchGestureRecognizer) -> Void) -> Self {
+    public func byPinchGesture(_ config: (UIPinchGestureRecognizer) -> Void) -> Self {
         if let pinch = self.pinchGestureRecognizer {
             config(pinch)
-        }
-        return self
+        };return self
     }
 
     @discardableResult
-    func byDirectionalPressGesture(_ config: (UIGestureRecognizer) -> Void) -> Self {
+    public func byDirectionalPressGesture(_ config: (UIGestureRecognizer) -> Void) -> Self {
         config(self.directionalPressGestureRecognizer)
         return self
     }
-    // MARK:  iOS 26.0+ Scroll Edge Effects
+    /// iOS 26.0+ Scroll Edge Effects
     @available(iOS 26.0, *)
     @discardableResult
-    func byTopEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
+    public func byTopEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
         config(self.topEdgeEffect)
         return self
     }
 
     @available(iOS 26.0, *)
     @discardableResult
-    func byLeftEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
+    public func byLeftEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
         config(self.leftEdgeEffect)
         return self
     }
 
     @available(iOS 26.0, *)
     @discardableResult
-    func byBottomEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
+    public func byBottomEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
         config(self.bottomEdgeEffect)
         return self
     }
 
     @available(iOS 26.0, *)
     @discardableResult
-    func byRightEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
+    public func byRightEdgeEffect(_ config: (UIScrollEdgeEffect) -> Void) -> Self {
         config(self.rightEdgeEffect)
         return self
     }
 }
-/// 初始位置（同步滚动条）
-public extension UIScrollView {
-    // MARK: - contentInset（内部同步滚动条insets）
+// MARK: - 初始位置（同步滚动条）
+extension UIScrollView {
+    /// contentInset（内部同步滚动条insets）
     @discardableResult
-    func byContentInsetTop(_ v: CGFloat) -> Self {
+    public func byContentInsetTop(_ v: CGFloat) -> Self {
         contentInset.top = v
         byIndicatorInsetTop(v)
         return self
     }
 
     @discardableResult
-    func byContentInsetLeft(_ v: CGFloat) -> Self {
+    public func byContentInsetLeft(_ v: CGFloat) -> Self {
         contentInset.left = v
         byIndicatorInsetLeft(v)
         return self
     }
 
     @discardableResult
-    func byContentInsetBottom(_ v: CGFloat) -> Self {
+    public func byContentInsetBottom(_ v: CGFloat) -> Self {
         contentInset.bottom = v
         byIndicatorInsetBottom(v)
         return self
     }
 
     @discardableResult
-    func byContentInsetRight(_ v: CGFloat) -> Self {
+    public func byContentInsetRight(_ v: CGFloat) -> Self {
         contentInset.right = v
         byIndicatorInsetRight(v)
         return self
     }
-    // MARK: - scrollIndicatorInsets（单独暴露：iOS13+兼容）
+    /// scrollIndicatorInsets（单独暴露：iOS13+兼容）
     /// 顶部滚动条inset（iOS13+ 用 verticalScrollIndicatorInsets，避免 scrollIndicatorInsets getter 的废弃警告）
     @discardableResult
-    func byIndicatorInsetTop(_ v: CGFloat) -> Self {
+    public func byIndicatorInsetTop(_ v: CGFloat) -> Self {
         if #available(iOS 13.0, *) {
             var inset = verticalScrollIndicatorInsets
             inset.top = v
@@ -383,7 +380,7 @@ public extension UIScrollView {
     }
     /// 左侧滚动条inset（iOS13+ 用 horizontalScrollIndicatorInsets）
     @discardableResult
-    func byIndicatorInsetLeft(_ v: CGFloat) -> Self {
+    public func byIndicatorInsetLeft(_ v: CGFloat) -> Self {
         if #available(iOS 13.0, *) {
             var inset = horizontalScrollIndicatorInsets
             inset.left = v
@@ -396,7 +393,7 @@ public extension UIScrollView {
     }
     /// 底部滚动条inset（iOS13+ 用 verticalScrollIndicatorInsets）
     @discardableResult
-    func byIndicatorInsetBottom(_ v: CGFloat) -> Self {
+    public func byIndicatorInsetBottom(_ v: CGFloat) -> Self {
         if #available(iOS 13.0, *) {
             var inset = verticalScrollIndicatorInsets
             inset.bottom = v
@@ -409,7 +406,7 @@ public extension UIScrollView {
     }
     /// 右侧滚动条inset（iOS13+ 用 horizontalScrollIndicatorInsets）
     @discardableResult
-    func byIndicatorInsetRight(_ v: CGFloat) -> Self {
+    public func byIndicatorInsetRight(_ v: CGFloat) -> Self {
         if #available(iOS 13.0, *) {
             var inset = horizontalScrollIndicatorInsets
             inset.right = v
@@ -419,5 +416,29 @@ public extension UIScrollView {
             inset.right = v
             scrollIndicatorInsets = inset
         };return self
+    }
+    /// 仅增加“垂直”可滑动距离：底部加大（常用）
+    /// - Parameter extra: 要额外增加的距离（<=0 会按 0 处理）
+    public func byExpandVerticalScrollDistance(_ extra: CGFloat) -> Self {
+        let extra = max(0, extra)
+        var inset = self.contentInset
+        inset.bottom += extra
+        self.contentInset = inset
+        var indicator = self.scrollIndicatorInsets
+        indicator.bottom += extra
+        self.scrollIndicatorInsets = indicator
+        return self
+    }
+    /// 仅增加“横向”可滑动距离：右侧加大（常用）
+    /// - Parameter extra: 要额外增加的距离（<=0 会按 0 处理）
+    public func byExpandHorizontalScrollDistance(_ extra: CGFloat) -> Self {
+        let extra = max(0, extra)
+        var inset = self.contentInset
+        inset.right += extra
+        self.contentInset = inset
+        var indicator = self.scrollIndicatorInsets
+        indicator.right += extra
+        self.scrollIndicatorInsets = indicator
+        return self
     }
 }

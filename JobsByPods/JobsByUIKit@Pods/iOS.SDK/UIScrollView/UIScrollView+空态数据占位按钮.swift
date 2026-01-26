@@ -92,11 +92,11 @@ private enum _JobsEmptySwizzle {
 private var _jobsEmptyBtnKey: UInt8       = 0
 private var _jobsEmptyProviderKey: UInt8  = 0
 private var _jobsEmptyDisabledKey: UInt8  = 0
-public extension UIScrollView {
+extension UIScrollView {
     // MARK: - 存取：全局/局部 Provider
     /// 链式：设置“本视图”的局部空态按钮提供器（会触发懒 swizzle）
     @discardableResult
-    func jobs_emptyButtonProvider(_ provider: @escaping () -> UIButton) -> Self {
+    public func jobs_emptyButtonProvider(_ provider: @escaping () -> UIButton) -> Self {
         _JobsEmptySwizzle.ensureOnce() // ← 保证只交换一次
         objc_setAssociatedObject(self, &_jobsEmptyProviderKey, provider, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 
@@ -108,7 +108,7 @@ public extension UIScrollView {
     }
     /// 链式：清除“本视图”的局部 Provider（回退到全局默认）
     @discardableResult
-    func jobs_clearEmptyButtonProvider() -> Self {
+    public func jobs_clearEmptyButtonProvider() -> Self {
         let _ = _JobsEmptyAutoBootstrap.ensure
         objc_setAssociatedObject(self, &_jobsEmptyProviderKey, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         return self
@@ -119,18 +119,18 @@ public extension UIScrollView {
     }
     // MARK: - 状态：当前按钮 & 开关
     /// 当前挂载的空态按钮（只读）
-    var jobs_emptyButton: UIButton? {
+    public var jobs_emptyButton: UIButton? {
         objc_getAssociatedObject(self, &_jobsEmptyBtnKey) as? UIButton
     }
     /// 关闭本视图的“自动空态”（默认 false）
-    var jobs_emptyAutoDisabled: Bool {
+    public var jobs_emptyAutoDisabled: Bool {
         get { (objc_getAssociatedObject(self, &_jobsEmptyDisabledKey) as? Bool) ?? false }
         set { objc_setAssociatedObject(self, &_jobsEmptyDisabledKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
     // MARK: - 显隐控制（保留原手动/自动 API）
     /// 手动显隐：业务自己判断 empty -> true/false
     @discardableResult
-    func jobs_reloadEmptyViewManual(isEmpty: Bool) -> Self {
+    public func jobs_reloadEmptyViewManual(isEmpty: Bool) -> Self {
         let _ = _JobsEmptyAutoBootstrap.ensure
         jobs_emptyButton?.isHidden = !isEmpty
         return self
@@ -138,7 +138,7 @@ public extension UIScrollView {
     /// 自动判断（支持 UITableView / UICollectionView）
     // MARK: - 自动评估空态显隐
     @discardableResult
-    func jobs_reloadEmptyViewAuto(animated: Bool = true) -> Self {
+    public func jobs_reloadEmptyViewAuto(animated: Bool = true) -> Self {
         _JobsEmptySwizzle.ensureOnce()                 // 幂等交换一次
         _jobs_ensureEmptyButtonIfNeeded()              // 懒创建并布置约束（若有 provider）
 
@@ -211,7 +211,7 @@ public extension UIScrollView {
     }
     // MARK: - 创建/挂载/评估
     /// 若无按钮则按“局部 > 全局”提供器创建并挂载；随后评估显隐
-    func _jobs_autoEnsureEmptyButtonThenEval() {
+    public func _jobs_autoEnsureEmptyButtonThenEval() {
         guard !jobs_emptyAutoDisabled else { return }
         if jobs_emptyButton == nil {
             let button = (_jobs_localProvider ?? JobsEmptyAuto.Config.defaultProvider)()

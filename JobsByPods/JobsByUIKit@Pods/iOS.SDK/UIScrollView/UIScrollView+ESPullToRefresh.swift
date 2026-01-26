@@ -15,12 +15,12 @@ import UIKit
 import ESPullToRefresh
 import SnapKit
 // MARK: - Jobs Refresh Extension
-public extension UIScrollView {
+extension UIScrollView {
     // MARK: - 下拉刷新（Pull Down）
     /// 安装下拉刷新（默认 ESRefreshHeaderAnimator）
     @discardableResult
-    func pullDown(_ action: @escaping jobsByVoidBlock,
-                  config: ((ESRefreshHeaderAnimator) -> Void)? = nil) -> Self {
+    public func pullDown(_ action: @escaping jobsByVoidBlock,
+                         config: ((ESRefreshHeaderAnimator) -> Void)? = nil) -> Self {
         if self.header == nil {
             let animator = ESRefreshHeaderAnimator()
             config?(animator)
@@ -29,13 +29,12 @@ public extension UIScrollView {
             header.frame = CGRect(x: 0, y: -headerH, width: self.bounds.width, height: headerH)
             self.addSubview(header)
             self.header = header
-        }
-        return self
+        };return self
     }
     /// 安装下拉刷新（JobsHeaderAnimator 自定义样式）
     @discardableResult
-    func pullDownWithJobsAnimator(_ action: @escaping jobsByVoidBlock,
-                                  config: ((JobsHeaderAnimator) -> Void)? = nil) -> Self {
+    public func pullDownWithJobsAnimator(_ action: @escaping jobsByVoidBlock,
+                                         config: ((JobsHeaderAnimator) -> Void)? = nil) -> Self {
         if self.header == nil {
             let animator = JobsHeaderAnimator()
             config?(animator)
@@ -44,22 +43,20 @@ public extension UIScrollView {
             header.frame = CGRect(x: 0, y: -headerH, width: self.bounds.width, height: headerH)
             self.addSubview(header)
             self.header = header
-        }
-        return self
+        };return self
     }
     /// 过期自动刷新
     @discardableResult
-    func pullDownAutoIfExpired() -> Self {
+    public func pullDownAutoIfExpired() -> Self {
         if let key = self.header?.refreshIdentifier, JobsRefreshCache.isExpired(forKey: key) {
             DispatchQueue.main.async { [weak self] in
                 self?.header?.startRefreshing(isAuto: true)
             }
-        }
-        return self
+        };return self
     }
     /// 停止下拉刷新
     @discardableResult
-    func pullDownStop(ignoreDate: Bool = false, ignoreFooter: Bool = false) -> Self {
+    public func pullDownStop(ignoreDate: Bool = false, ignoreFooter: Bool = false) -> Self {
         self.header?.stopRefreshing()
         if ignoreDate == false, let key = self.header?.refreshIdentifier {
             JobsRefreshCache.setDate(Date(), forKey: key) // ✅ 自家缓存
@@ -69,18 +66,17 @@ public extension UIScrollView {
     }
     /// 手动触发下拉刷新
     @discardableResult
-    func pullDownStart(auto: Bool = false) -> Self {
+    public func pullDownStart(auto: Bool = false) -> Self {
         DispatchQueue.main.async { [weak self] in
             if auto { self?.header?.startRefreshing(isAuto: true) }
             else { self?.header?.startRefreshing(isAuto: false) }
-        }
-        return self
+        };return self
     }
     // MARK: - 上拉加载（Pull Up）
     /// 安装上拉加载（默认 ESRefreshFooterAnimator）
     @discardableResult
-    func pullUp(_ action: @escaping jobsByVoidBlock,
-                config: ((ESRefreshFooterAnimator) -> Void)? = nil) -> Self {
+    public func pullUp(_ action: @escaping jobsByVoidBlock,
+                       config: ((ESRefreshFooterAnimator) -> Void)? = nil) -> Self {
         if self.footer == nil {
             let animator = ESRefreshFooterAnimator()
             config?(animator)
@@ -94,13 +90,12 @@ public extension UIScrollView {
             )
             self.addSubview(footer)
             self.footer = footer
-        }
-        return self
+        };return self
     }
     /// 安装上拉加载（JobsFooterAnimator 自定义样式）
     @discardableResult
-    func pullUpWithJobsAnimator(_ action: @escaping jobsByVoidBlock,
-                                config: ((JobsFooterAnimator) -> Void)? = nil) -> Self {
+    public func pullUpWithJobsAnimator(_ action: @escaping jobsByVoidBlock,
+                                       config: ((JobsFooterAnimator) -> Void)? = nil) -> Self {
         if self.footer == nil {
             let animator = JobsFooterAnimator()
             config?(animator)
@@ -114,31 +109,30 @@ public extension UIScrollView {
             )
             self.addSubview(footer)
             self.footer = footer
-        }
-        return self
+        };return self
     }
     /// 停止上拉加载
     @discardableResult
-    func pullUpStop() -> Self {
+    public func pullUpStop() -> Self {
         self.footer?.stopRefreshing()
         return self
     }
     /// 通知“没有更多数据”
     @discardableResult
-    func pullUpNoMore() -> Self {
+    public func pullUpNoMore() -> Self {
         self.footer?.stopRefreshing()
         self.footer?.noMoreData = true
         return self
     }
     /// 重置“没有更多数据”
     @discardableResult
-    func pullUpReset() -> Self {
+    public func pullUpReset() -> Self {
         self.footer?.noMoreData = false
         return self
     }
     // MARK: - 移除所有刷新控件
     @discardableResult
-    func removeRefreshers() -> Self {
+    public func removeRefreshers() -> Self {
         self.header?.stopRefreshing()
         self.header?.removeFromSuperview()
         self.header = nil
