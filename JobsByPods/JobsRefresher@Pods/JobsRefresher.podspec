@@ -32,5 +32,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
-
+  s.dependency 'lottie-ios'
+  
 end

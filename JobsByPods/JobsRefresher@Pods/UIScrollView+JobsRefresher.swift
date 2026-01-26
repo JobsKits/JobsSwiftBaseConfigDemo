@@ -2,7 +2,9 @@
 //  UIScrollView+JobsRefresher.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/31/25.
+//  DSL additions:
+//  - showRefreshHeaderInfo / showRefreshFooterInfo
+//  - per-slot Lottie preference overrides global
 //
 
 #if os(OSX)
@@ -14,7 +16,6 @@ import UIKit
 import ObjectiveC
 import JobsSwiftBlock
 
-// MARK: - UIScrollView + Proxy
 @MainActor
 private struct JobsAssocKeys {
     static var proxy: UInt8 = 0
@@ -32,26 +33,11 @@ extension UIScrollView {
     }
 }
 
-// MARK: - UIScrollView + API
-@MainActor
-public struct JobsSideFactory {
-    public static func left() -> JobsDefaultIndicatorView {
-        let v = JobsDefaultIndicatorView()
-        v.position = .left
-        return v
-    }
-    public static func right() -> JobsDefaultIndicatorView {
-        let v = JobsDefaultIndicatorView()
-        v.position = .right
-        return v
-    }
-}
-
 @MainActor
 public extension UIScrollView {
 
-    // MARK: - DSL（是否显示 Header/Footer 信息）
-    /// 是否显示“头部信息”（涵盖：竖向 Header + 横向 Left）
+    // MARK: - Info visibility (group)
+    /// 头部信息：竖向 Header + 横向 Left
     @discardableResult
     func showRefreshHeaderInfo(_ show: Bool) -> Self {
         mrk_proxy.showsHeaderInfo = show
@@ -60,7 +46,7 @@ public extension UIScrollView {
         return self
     }
 
-    /// 是否显示“尾部信息”（涵盖：竖向 Footer + 横向 Right）
+    /// 尾部信息：竖向 Footer + 横向 Right
     @discardableResult
     func showRefreshFooterInfo(_ show: Bool) -> Self {
         mrk_proxy.showsFooterInfo = show
@@ -69,13 +55,46 @@ public extension UIScrollView {
         return self
     }
 
-    // MARK: Header
+    // MARK: - Lottie per-slot (instance override > global)
+    @discardableResult
+    func setHeaderLottie(_ pref: JobsLottiePreference) -> Self {
+        mrk_proxy.headerLottiePref = pref
+        (mrk_proxy.header?.view as? JobsLottieConfigurable)?.lottiePreference = pref
+        return self
+    }
+
+    @discardableResult
+    func setFooterLottie(_ pref: JobsLottiePreference) -> Self {
+        mrk_proxy.footerLottiePref = pref
+        (mrk_proxy.footer?.view as? JobsLottieConfigurable)?.lottiePreference = pref
+        return self
+    }
+
+    @discardableResult
+    func setLeftLottie(_ pref: JobsLottiePreference) -> Self {
+        mrk_proxy.leftLottiePref = pref
+        (mrk_proxy.left?.view as? JobsLottieConfigurable)?.lottiePreference = pref
+        return self
+    }
+
+    @discardableResult
+    func setRightLottie(_ pref: JobsLottiePreference) -> Self {
+        mrk_proxy.rightLottiePref = pref
+        (mrk_proxy.right?.view as? JobsLottieConfigurable)?.lottiePreference = pref
+        return self
+    }
+
+    // MARK: - Config header/footer/side
+
     @discardableResult
     func configRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
                              action: @escaping jobsByVoidBlock) -> Self {
         let c = component ?? JobsDefaultHeader()
+        if let v = c as? JobsLottieConfigurable {
+            v.lottiePreference = mrk_proxy.headerLottiePref
+        }
         let slot = JobsSlot(position: .header, view: c, trigger: trigger, container: container, action: action)
         slot.showsInfo = mrk_proxy.showsHeaderInfo
         mrk_proxy.header = slot
@@ -98,13 +117,15 @@ public extension UIScrollView {
         return self
     }
 
-    // MARK: Footer
     @discardableResult
     func configRefreshFooter(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
                              trigger: CGFloat = 60,
                              action: @escaping jobsByVoidBlock) -> Self {
         let c = component ?? JobsDefaultFooter()
+        if let v = c as? JobsLottieConfigurable {
+            v.lottiePreference = mrk_proxy.footerLottiePref
+        }
         let slot = JobsSlot(position: .footer, view: c, trigger: trigger, container: container, action: action)
         slot.showsInfo = mrk_proxy.showsFooterInfo
         mrk_proxy.footer = slot
@@ -126,7 +147,6 @@ public extension UIScrollView {
         return self
     }
 
-    // MARK: Side (Left/Right)
     @discardableResult
     func configSideRefresh(with component: (UIView & JobsAnimatable),
                            container: AnyObject? = nil,
@@ -134,9 +154,15 @@ public extension UIScrollView {
                            trigger: CGFloat = 60,
                            action: @escaping jobsByVoidBlock) -> Self {
         precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
+
+        // apply per-slot pref
+        if let v = component as? JobsLottieConfigurable {
+            v.lottiePreference = (position == .left) ? mrk_proxy.leftLottiePref : mrk_proxy.rightLottiePref
+        }
+
         let slot = JobsSlot(position: position, view: component, trigger: trigger, container: container, action: action)
-        // 左 = 头部信息；右 = 尾部信息
         slot.showsInfo = (position == .left) ? mrk_proxy.showsHeaderInfo : mrk_proxy.showsFooterInfo
+
         if position == .left { mrk_proxy.left = slot } else { mrk_proxy.right = slot }
         slot.attach(to: self)
         return self

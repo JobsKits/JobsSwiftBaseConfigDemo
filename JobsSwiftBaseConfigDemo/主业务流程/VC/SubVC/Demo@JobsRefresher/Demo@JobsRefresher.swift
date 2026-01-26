@@ -51,8 +51,10 @@ final class JobsRefresherDemoVC: BaseVC {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
             }
-            .showRefreshHeaderInfo(NO)   // 竖向Header + 横向Left
-            .showRefreshFooterInfo(YES)  // 竖向Footer + 横向Right
+//            .showRefreshHeaderInfo(NO)   // 竖向Header + 横向Left
+//            .showRefreshFooterInfo(YES)  // 竖向Footer + 横向Right
+            .setLeftLottie(.custom(.init(animationName: "9squares_AlBoardman")))
+            .setRightLottie(.inherit)     // 继承全局（没有全局就回退菊花）
             // 左侧拉：比如“上一页/回退”
             .configSideRefresh(with: JobsDefaultLeftRefresher(),
                                container: self,
@@ -92,8 +94,10 @@ final class JobsRefresherDemoVC: BaseVC {
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
-            .showRefreshHeaderInfo(YES)   // 竖向Header + 横向Left
-            .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
+//            .showRefreshHeaderInfo(YES)   // 竖向Header + 横向Left
+//            .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
+            .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
+            .setFooterLottie(.disabled) // 强制 footer 回退菊花（即使全局配置了）
             // 下拉刷新 Header
             .configRefreshHeader(component: JobsDefaultHeader(),
                                  container: self,

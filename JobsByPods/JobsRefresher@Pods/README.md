@@ -2,15 +2,19 @@
 
 [toc]
 
-## 一、开发动机
+## 一、简介
 
-* 逐步舍弃[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)
+* 开发动机 ➤ 逐步舍弃[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)
   * 年久失修，不更新维护
   * OC代码，需要上升到纯Swift支持
   * 里面存在很多废弃代码
   * 不兼容[**Lottie**](https://github.com/airbnb/lottie-ios)动画，需要额外开支
   * 不支持水平方向的刷新和拉新
   * 不支持阿拉伯习惯（从右往左）
+* 已实现功能
+  * 横向 / 纵向的刷新和拉新
+  * 支持显示最近一次的刷新的时间
+  * 支持静默刷新和拉新  ➤ 隐藏刷新的头部和拉新的尾部
 
 ## 二、使用方式
 
@@ -111,16 +115,20 @@ private lazy var collectionView: UICollectionView = {
 
 ## 三、未尽事宜
 
-* 横向左拉要显示上次刷新的时间
 * 需要支持阿拉伯方式，即：
   * 从左到右拉 ➤ 拉新
   * 从右往左拉 ➤ 刷新
 * 需要支持[**Lottie**](https://github.com/airbnb/lottie-ios)动画
-* 需要支持静默刷新/加载 ➤ 完全隐藏刷新头和刷新尾的UI
+
+## 四、其他
+
+* 附：[⏬ **Lottie** 动画文件下载](https://lottiefiles.com/)
+* [演示**Demo**](https://github.com/JobsKits/JobsSwiftBaseConfigDemo)
 
 ## 四、特别鸣谢
 
-* [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh) ➤ 关键词：纵向刷新、Objc
-* [**XZMRefresh**](https://github.com/xiezhongmin/XZMRefresh) ➤ 关键词：横向刷新、参考[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)、Objc
-* 
+* [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh) ➤ 关键词：纵向刷新、**Objc**
+* [**XZMRefresh**](https://github.com/xiezhongmin/XZMRefresh) ➤ 关键词：横向刷新、参考[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)、**Objc**
+* [**CollectionViewSideRefresh**](https://github.com/dangercheng/CollectionViewSideRefresh) ➤ **Objc**
+* [**DGElasticPullToRefresh**](https://github.com/gontovnik/DGElasticPullToRefresh) ➤ **Swift**
 

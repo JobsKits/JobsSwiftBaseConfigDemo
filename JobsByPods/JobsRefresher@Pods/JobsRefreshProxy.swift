@@ -2,7 +2,9 @@
 //  JobsRefreshProxy.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/31/25.
+//  Added:
+//  - showHeaderInfo/showFooterInfo
+//  - per-slot Lottie preference (overrides global)
 //
 
 #if os(OSX)
@@ -25,10 +27,15 @@ final class JobsProxy: NSObject {
     var left:   JobsSlot?
     var right:  JobsSlot?
 
-    /// 是否显示“头部信息”（涵盖：竖向 header + 横向 left）
+    // Info visibility
     var showsHeaderInfo: Bool = true
-    /// 是否显示“尾部信息”（涵盖：竖向 footer + 横向 right）
     var showsFooterInfo: Bool = true
+
+    // Per-slot lottie preference (instance-level default)
+    var headerLottiePref: JobsLottiePreference = .inherit
+    var footerLottiePref: JobsLottiePreference = .inherit
+    var leftLottiePref: JobsLottiePreference = .inherit
+    var rightLottiePref: JobsLottiePreference = .inherit
 
     deinit { kvo?.invalidate(); panKvo?.invalidate() }
     init(scrollView: UIScrollView) {
@@ -64,9 +71,6 @@ final class JobsSlot {
     var action: (jobsByVoidBlock)?
     weak var container: AnyObject?
 
-    /// 是否显示该 Slot 的“信息视图”（仅影响 UI，可不影响触发逻辑）
-    /// - HeaderGroup: .header / .left
-    /// - FooterGroup: .footer / .right
     var showsInfo: Bool = true {
         didSet {
             guard state != .removed else { return }
@@ -74,9 +78,7 @@ final class JobsSlot {
         }
     }
 
-    /// 结束刷新/加载：与内容区域同步回弹（单段动画）
     var restoreInsetDuration: TimeInterval = 0.25
-    /// 结束动画期间屏蔽 tick/布局，避免 KVO 干扰
     private var isEndingAnimation = false
     private(set) var state: JobsState = .idle {
         didSet { view.apply(state: state) }
@@ -107,7 +109,6 @@ final class JobsSlot {
         state = .removed
     }
 
-    // MARK: - Layout
     func layout(in sv: UIScrollView) {
         let h = view.heightOrWidth
         var baseInset = sv.contentInset
@@ -148,45 +149,41 @@ final class JobsSlot {
         switch position {
         case .header:
             let distance = -(offset.y + inset.top)
-            progress(distance: distance, axis: .vertical, isDragging: isDragging, sv: sv)
+            progress(distance: distance, isDragging: isDragging, sv: sv)
         case .footer:
             let contentH = max(sv.contentSize.height, sv.bounds.height - (inset.top + inset.bottom))
             let distance = offset.y + sv.bounds.height - contentH - inset.bottom
-            progress(distance: distance, axis: .vertical, isDragging: isDragging, sv: sv, isFooter: true)
+            progress(distance: distance, isDragging: isDragging, sv: sv, isFooter: true)
         case .left:
             let distance = -(offset.x + inset.left)
-            progress(distance: distance, axis: .horizontal, isDragging: isDragging, sv: sv)
+            progress(distance: distance, isDragging: isDragging, sv: sv)
         case .right:
             let contentW = max(sv.contentSize.width, sv.bounds.width - (inset.left + inset.right))
             let distance = offset.x + sv.bounds.width - contentW - inset.right
-            progress(distance: distance, axis: .horizontal, isDragging: isDragging, sv: sv)
+            progress(distance: distance, isDragging: isDragging, sv: sv)
         }
     }
 
     private func progress(distance: CGFloat,
-                          axis: JobsAxis,
                           isDragging: Bool,
                           sv: UIScrollView,
                           isFooter: Bool = false) {
         guard state != .refreshing && state != .noMore else { return }
-
         let p = max(0, min(1, distance / trigger))
         if isDragging {
             state = (p >= 1) ? .ready : .pulling(progress: p)
         } else {
             if state == .ready {
-                beginRefreshing(on: sv, axis: axis, isFooter: isFooter)
+                beginRefreshing(on: sv, isFooter: isFooter)
             } else if case .pulling = state {
                 state = .idle
             }
         }
     }
 
-    // MARK: - Begin Refreshing
-    func beginRefreshing(on sv: UIScrollView, axis: JobsAxis? = nil, isFooter: Bool = false) {
+    func beginRefreshing(on sv: UIScrollView, isFooter: Bool = false) {
         guard state != .refreshing else { return }
         state = .refreshing
-        // 即使不显示 info，也保持触发逻辑与 inset 调整；只控制 UI 是否可见
         view.isHidden = !showsInfo
 
         let h = view.heightOrWidth
@@ -198,6 +195,7 @@ final class JobsSlot {
         case .left:   inset.left   += h
         case .right:  inset.right  += h
         }
+
         var targetOffset = sv.contentOffset
         switch position {
         case .header:
@@ -223,18 +221,15 @@ final class JobsSlot {
         if container == nil { endRefreshing(on: sv) }
     }
 
-    // MARK: - End Refreshing
     func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
         guard case .refreshing = state else { return }
 
-        // 写入刷新时间（仅 header/left）
+        // mark refresh time for header/left
         if position == .header || position == .left {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
         }
 
         view.isHidden = !showsInfo
-        view.transform = .identity
-        view.alpha = 1
 
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
         isEndingAnimation = true
