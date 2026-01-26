@@ -79,9 +79,4 @@ extension String {
     public func rich(_ attrs: [NSAttributedString.Key: Any]) -> NSAttributedString {
         NSAttributedString(string: self, attributes: attrs)
     }
-    /// 将字符串竖排化：每字符一行（Emoji/空格也原样拆分）
-    public var verticalized: String {
-        guard !isEmpty else { return self }
-        return self.map { String($0) }.joined(separator: "\n")
-    }
 }
