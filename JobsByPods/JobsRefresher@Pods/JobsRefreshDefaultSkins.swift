@@ -347,19 +347,63 @@ public final class JobsDefaultFooter: JobsArrowIndicatorView {
 
 /// —— 横向侧拉专用：竖排文案 ——
 /// 结构：指示器（上） + 竖排 UILabel（下），在非 refreshing 时隐藏转圈，仅显示竖排提示。
+
+
+/// —— 横向刷新专用：仿 XZMRefresh / MJRefresh 的侧拉 UI ——
+/// 目标效果（参考 XZMRefresh）：
+/// 1) 侧拉时显示：底部箭头（左右指向）+ 竖排状态文案
+/// 2) ready 时箭头旋转 180°
+/// 3) refreshing 时隐藏箭头，显示菊花
+/// 4) LeftRefresher（右拉刷新）额外显示“最后更新 …”竖排时间（与 XZMRefresh 一致）
+///
+/// 注意：文字区域要求垂直居中（整个内容块在父视图高度中垂直居中）
 @MainActor
-public class JobsSideIndicatorView: UIView, JobsAnimatable {
-    private lazy var indicator : UIActivityIndicatorView = {
+public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrackable {
+
+    public enum Style {
+        /// 从左侧触发（右拉刷新）
+        case leftHeader
+        /// 从右侧触发（左拉加载更多）
+        case rightFooter
+    }
+
+    public var heightOrWidth: CGFloat = 80
+    public var style: Style = .leftHeader {
+        didSet {
+            applyArrow(direction: idleArrowDirection(), animated: false)
+            setNeedsLayout()
+        }
+    }
+
+    private var lastRefreshedAt: Date?
+
+    private lazy var arrow: UIImageView = {
+        let iv: UIImageView
+        if #available(iOS 13.0, *) {
+            iv = UIImageView(image: UIImage(systemName: "arrow.left"))
+        } else {
+            let v = UIImageView()
+            v.backgroundColor = .clear
+            iv = v
+        }
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = JobsCor.secondaryLabel
+        return self.byAddSubviewRetSub(iv)
+    }()
+
+    private lazy var indicator: UIActivityIndicatorView = {
         let v: UIActivityIndicatorView
         if #available(iOS 13.0, *) {
             v = UIActivityIndicatorView(style: .medium)
         } else {
-            v = UIActivityIndicatorView(style: .gray)   // iOS 12 常用替代
+            v = UIActivityIndicatorView(style: .gray)
         }
-        self.byAddSubviewRetSub(v.byHidesWhenStopped(true))
-        return v
+        v.byHidesWhenStopped(true)
+        return self.byAddSubviewRetSub(v)
     }()
-    private lazy var label:UILabel = {
+
+    /// 状态文案（竖排）
+    private lazy var stateLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
                 .byFont(.systemFont(ofSize: 14, weight: .medium))
@@ -368,106 +412,274 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable {
                 .byTextAlignment(.center)
         )
     }()
-    public var heightOrWidth: CGFloat = 60
-    /// 外部可自定义文案（不含状态词），内部会自动竖排化。
-    public var idleText: String = "继续侧拉".tr
-    public var readyText: String = "松开立即刷新".tr
-    public var refreshingText: String = "刷新中".tr
-    public var doneText: String = "完成".tr
-    public var noMoreText: String = "没有更多".tr
 
-    required init?(coder: NSCoder) { fatalError() }
+    /// “最后更新 …”（竖排，仅 leftHeader 显示）
+    private lazy var timeLabel: UILabel = {
+        self.byAddSubviewRetSub(
+            UILabel()
+                .byFont(.systemFont(ofSize: 14, weight: .regular))
+                .byTextColor(JobsCor.secondaryLabel)
+                .byNumberOfLines(0)
+                .byTextAlignment(.center)
+        )
+    }()
+
+    private let rotationDuration: TimeInterval = 0.18
+    private var isArrowInReadyDirection: Bool = false
+
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .current
+        f.timeZone = .current
+        f.dateFormat = "HH:mm"
+        return f
+    }()
+    private static let dateTimeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .current
+        f.timeZone = .current
+        f.dateFormat = "yyyy-MM-dd HH:mm"
+        return f
+    }()
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        indicator.byVisible(YES)
-        label.byVisible(YES)
+        backgroundColor = .clear
+        indicator.stopAnimating()
+        applyArrow(direction: idleArrowDirection(), animated: false)
+        refreshTimeTextIfNeeded()
     }
 
+    required public init?(coder: NSCoder) { fatalError() }
+
+    // MARK: - JobsRefreshTimeTrackable
+    public func markRefreshed(at date: Date) {
+        lastRefreshedAt = date
+        refreshTimeTextIfNeeded()
+        setNeedsLayout()
+    }
+
+    // MARK: - JobsAnimatable
     public func apply(state: JobsState) {
-        func setVertical(_ s: String) { label.text = s.verticalized }
         switch state {
         case .idle:
             indicator.stopAnimating()
-            setVertical(idleText)
+            arrow.isHidden = false
+            applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
+            setStateText(idleText())
+
         case .pulling(let p):
             indicator.stopAnimating()
-            // 进度文案也竖排（示例：继续侧拉 80%）
-            let percent = Int(min(1, max(0, p)) * 100)
-            setVertical("\(idleText)\(percent)%")
+            arrow.isHidden = false
+            if p >= 1 {
+                applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
+                setStateText(readyText())
+            } else {
+                applyArrow(direction: idleArrowDirection(), animated: false)
+                let percent = Int(min(1, max(0, p)) * 100)
+                setStateText("\(goOnText()) \(percent)%")
+            }
+
         case .ready:
             indicator.stopAnimating()
-            setVertical(readyText)
+            arrow.isHidden = false
+            applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
+            setStateText(readyText())
+
         case .refreshing:
+            arrow.isHidden = true
             indicator.startAnimating()
-            setVertical(refreshingText)
+            setStateText(refreshingText())
+
         case .noMore:
             indicator.stopAnimating()
-            setVertical(noMoreText)
+            arrow.isHidden = true
+            setStateText(JobsRefreshConfig.common.noMore)
+
         case .removed:
             indicator.stopAnimating()
-            label.text = nil
-        };setNeedsLayout()
+            arrow.isHidden = true
+            stateLabel.text = nil
+            timeLabel.text = nil
+        }
+
+        refreshTimeTextIfNeeded()
+        setNeedsLayout()
     }
 
+    // MARK: - Layout (垂直居中)
     public override func layoutSubviews() {
         super.layoutSubviews()
+
         let availableW = bounds.width
         let availableH = bounds.height
 
-        indicator.sizeToFit()
-        let labelSize = label.sizeThatFits(CGSize(width: availableW, height: .greatestFiniteMagnitude))
-        let spacing: CGFloat = 8
+        let arrowSide: CGFloat = 18
+        let spacingY: CGFloat = 12      // 文案与箭头间距（类似 XZMRefresh）
+        let labelSpacingX: CGFloat = 18 // 两列竖排文字间距
 
-        // 水平刷新：保证内容在垂直方向居中
-        let showIndicator = indicator.isAnimating
-        let indicatorH: CGFloat = showIndicator ? indicator.bounds.height : 0
-        let totalH = indicatorH + (showIndicator ? spacing : 0) + labelSize.height
-        let originY = (availableH - totalH) * 0.5
+        // 竖排文字 size
+        let maxLabelH = availableH * 0.9
+        let stateSize = stateLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
+        let timeSize = timeLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
 
-        if showIndicator {
-            indicator.frame.origin = CGPoint(
-                x: (availableW - indicator.bounds.width) * 0.5,
-                y: originY
+        let showTime = (style == .leftHeader) && !(timeLabel.text ?? "").isEmpty
+        let labelsW: CGFloat = showTime ? (stateSize.width + labelSpacingX + timeSize.width) : stateSize.width
+        let labelsH: CGFloat = max(stateSize.height, showTime ? timeSize.height : 0)
+
+        // 内容块总高度：labelsH + spacing + arrowSide（indicator 与 arrow 同位）
+        let blockH = labelsH + spacingY + arrowSide
+        let originY = (availableH - blockH) * 0.5
+
+        // labels（水平居中放两列）
+        let labelsOriginX = (availableW - labelsW) * 0.5
+        let labelsY = originY
+
+        if showTime {
+            stateLabel.frame = CGRect(
+                x: labelsOriginX,
+                y: labelsY + (labelsH - stateSize.height) * 0.5,
+                width: stateSize.width,
+                height: stateSize.height
             )
-            label.frame = CGRect(
-                x: (availableW - labelSize.width) * 0.5,
-                y: indicator.frame.maxY + spacing,
-                width: labelSize.width,
-                height: labelSize.height
+            timeLabel.frame = CGRect(
+                x: stateLabel.frame.maxX + labelSpacingX,
+                y: labelsY + (labelsH - timeSize.height) * 0.5,
+                width: timeSize.width,
+                height: timeSize.height
             )
+            timeLabel.isHidden = false
         } else {
-            // 不转圈时只显示文字：直接把文字垂直居中
-            label.frame = CGRect(
-                x: (availableW - labelSize.width) * 0.5,
-                y: (availableH - labelSize.height) * 0.5,
-                width: labelSize.width,
-                height: labelSize.height
+            stateLabel.frame = CGRect(
+                x: labelsOriginX,
+                y: labelsY + (labelsH - stateSize.height) * 0.5,
+                width: stateSize.width,
+                height: stateSize.height
             )
+            timeLabel.isHidden = true
+        }
+
+        // arrow / indicator：在内容块底部居中
+        let arrowX = (availableW - arrowSide) * 0.5
+        let arrowY = originY + labelsH + spacingY
+        arrow.frame = CGRect(x: arrowX, y: arrowY, width: arrowSide, height: arrowSide)
+        indicator.frame = arrow.frame
+    }
+
+    // MARK: - Text helpers
+    private func setStateText(_ s: String) {
+        stateLabel.text = s.verticalized
+    }
+
+    private func refreshTimeTextIfNeeded() {
+        guard style == .leftHeader else {
+            timeLabel.text = nil
+            return
+        }
+        guard let d = lastRefreshedAt else {
+            timeLabel.text = nil
+            return
+        }
+        let calendar = Calendar.current
+        let t: String
+        if calendar.isDateInToday(d) {
+            t = "今天 ".tr + Self.timeFormatter.string(from: d)
+        } else {
+            t = Self.dateTimeFormatter.string(from: d)
+        }
+        timeLabel.text = (JobsRefreshConfig.common.lastRefreshPrefix + t).verticalized
+    }
+
+    private func idleText() -> String {
+        switch style {
+        case .leftHeader:  return JobsRefreshConfig.h.header.idle
+        case .rightFooter: return JobsRefreshConfig.h.footer.idle
         }
     }
-}
 
-@MainActor
-public final class JobsDefaultRightRefresher: JobsSideIndicatorView {
-    required init?(coder: NSCoder) { fatalError() }
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        heightOrWidth = 60
-        idleText = JobsRefreshConfig.h.footer.idle
-        readyText = JobsRefreshConfig.common.readyLoadingMore      // ✅ 左拉加载（这里也用“加载更多”更统一）
-        refreshingText = JobsRefreshConfig.common.loadingMore
+    private func goOnText() -> String {
+        switch style {
+        case .leftHeader:  return JobsRefreshConfig.h.header.goOn
+        case .rightFooter: return JobsRefreshConfig.h.footer.goOn
+        }
+    }
+
+    private func readyText() -> String {
+        switch style {
+        case .leftHeader:  return JobsRefreshConfig.common.readyRefresh
+        case .rightFooter: return JobsRefreshConfig.common.readyLoadingMore
+        }
+    }
+
+    private func refreshingText() -> String {
+        switch style {
+        case .leftHeader:  return JobsRefreshConfig.common.refreshing
+        case .rightFooter: return JobsRefreshConfig.common.loadingMore
+        }
+    }
+
+    // MARK: - Arrow direction / rotation
+    // 约定：用 “arrow.left” 作为基准，0 表示向左
+    private enum ArrowDirection { case left, right }
+
+    private func idleArrowDirection() -> ArrowDirection {
+        // leftHeader：idle 向右（提示继续右拉）
+        // rightFooter：idle 向左（提示继续左拉）
+        switch style {
+        case .leftHeader:  return .right
+        case .rightFooter: return .left
+        }
+    }
+
+    private func readyArrowDirection() -> ArrowDirection {
+        // ready 时反向（旋转 180°）
+        switch style {
+        case .leftHeader:  return .left
+        case .rightFooter: return .right
+        }
+    }
+
+    private func applyArrow(direction: ArrowDirection, animated: Bool) {
+        // arrow.left：默认向左；向右=旋转 π
+        let target: CGAffineTransform = {
+            switch direction {
+            case .left:  return .identity
+            case .right: return CGAffineTransform(rotationAngle: .pi)
+            }
+        }()
+
+        let willBeReadyDirection = (direction == readyArrowDirection())
+        if animated {
+            UIView.animate(withDuration: rotationDuration,
+                           delay: 0,
+                           options: [.beginFromCurrentState, .allowUserInteraction]) {
+                self.arrow.transform = target
+            }
+        } else {
+            arrow.transform = target
+        }
+        isArrowInReadyDirection = willBeReadyDirection
     }
 }
 
 @MainActor
-public final class JobsDefaultLeftRefresher: JobsSideIndicatorView {
+public final class JobsDefaultRightRefresher: JobsSideArrowIndicatorView {
     required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        heightOrWidth = 60
-        idleText = JobsRefreshConfig.h.header.idle
-        readyText = JobsRefreshConfig.common.readyRefresh          // ✅ 右拉刷新
-        refreshingText = JobsRefreshConfig.common.refreshing
+        style = .rightFooter
+        heightOrWidth = 80
     }
 }
+
+@MainActor
+public final class JobsDefaultLeftRefresher: JobsSideArrowIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        style = .leftHeader
+        heightOrWidth = 80
+    }
+}
+
