@@ -25,11 +25,11 @@ public enum JobsRefreshConfig {
         // 兼容旧命名（JobsDefaultIndicatorView 等）
         public static let readyLoading = readyLoadingMore
 
-        public static let refreshing = "正在刷新...".tr
-        public static let loadingMore = "正在加载更多的数据...".tr
+        public static let refreshing = "正在刷新".tr
+        public static let loadingMore = "正在加载更多的数据".tr
 
         public static let noMore = "没有更多了".tr
-        public static let lastRefreshPrefix = "最后更新：".tr
+        public static let lastRefreshPrefix = "最后更新于".tr
     }
 
     // MARK: - 上下（Vertical）
@@ -414,7 +414,18 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
     }()
 
     /// “最后更新 …”（竖排，仅 leftHeader 显示）
-    private lazy var timeLabel: UILabel = {
+    /// 由于横向刷新可用高度有限，将“更新：”与时间拆成两列，避免被压缩/遮挡
+    private lazy var timePrefixLabel: UILabel = {
+        self.byAddSubviewRetSub(
+            UILabel()
+                .byFont(.systemFont(ofSize: 14, weight: .regular))
+                .byTextColor(JobsCor.secondaryLabel)
+                .byNumberOfLines(0)
+                .byTextAlignment(.center)
+        )
+    }()
+
+    private lazy var timeValueLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
                 .byFont(.systemFont(ofSize: 14, weight: .regular))
@@ -501,7 +512,8 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
             indicator.stopAnimating()
             arrow.isHidden = true
             stateLabel.text = nil
-            timeLabel.text = nil
+            timePrefixLabel.text = nil
+            timeValueLabel.text = nil
         }
 
         refreshTimeTextIfNeeded()
@@ -522,11 +534,12 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
         // 竖排文字 size
         let maxLabelH = availableH * 0.9
         let stateSize = stateLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
-        let timeSize = timeLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
+        let prefixSize = timePrefixLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
+        let valueSize  = timeValueLabel.sizeThatFits(CGSize(width: availableW, height: maxLabelH))
 
-        let showTime = (style == .leftHeader) && !(timeLabel.text ?? "").isEmpty
-        let labelsW: CGFloat = showTime ? (stateSize.width + labelSpacingX + timeSize.width) : stateSize.width
-        let labelsH: CGFloat = max(stateSize.height, showTime ? timeSize.height : 0)
+        let showTime = (style == .leftHeader) && !(timeValueLabel.text ?? "").isEmpty
+        let labelsW: CGFloat = showTime ? (stateSize.width + labelSpacingX + prefixSize.width + labelSpacingX + valueSize.width) : stateSize.width
+        let labelsH: CGFloat = max(stateSize.height, showTime ? max(prefixSize.height, valueSize.height) : 0)
 
         // 内容块总高度：labelsH + spacing + arrowSide（indicator 与 arrow 同位）
         let blockH = labelsH + spacingY + arrowSide
@@ -543,13 +556,23 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
                 width: stateSize.width,
                 height: stateSize.height
             )
-            timeLabel.frame = CGRect(
+
+            timePrefixLabel.frame = CGRect(
                 x: stateLabel.frame.maxX + labelSpacingX,
-                y: labelsY + (labelsH - timeSize.height) * 0.5,
-                width: timeSize.width,
-                height: timeSize.height
+                y: labelsY + (labelsH - prefixSize.height) * 0.5,
+                width: prefixSize.width,
+                height: prefixSize.height
             )
-            timeLabel.isHidden = false
+
+            timeValueLabel.frame = CGRect(
+                x: timePrefixLabel.frame.maxX + labelSpacingX,
+                y: labelsY + (labelsH - valueSize.height) * 0.5,
+                width: valueSize.width,
+                height: valueSize.height
+            )
+
+            timePrefixLabel.isHidden = false
+            timeValueLabel.isHidden = false
         } else {
             stateLabel.frame = CGRect(
                 x: labelsOriginX,
@@ -557,7 +580,8 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
                 width: stateSize.width,
                 height: stateSize.height
             )
-            timeLabel.isHidden = true
+            timePrefixLabel.isHidden = true
+            timeValueLabel.isHidden = true
         }
 
         // arrow / indicator：在内容块底部居中
@@ -574,11 +598,13 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
 
     private func refreshTimeTextIfNeeded() {
         guard style == .leftHeader else {
-            timeLabel.text = nil
+            timePrefixLabel.text = nil
+            timeValueLabel.text = nil
             return
         }
         guard let d = lastRefreshedAt else {
-            timeLabel.text = nil
+            timePrefixLabel.text = nil
+            timeValueLabel.text = nil
             return
         }
         let calendar = Calendar.current
@@ -588,7 +614,8 @@ public class JobsSideArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTime
         } else {
             t = Self.dateTimeFormatter.string(from: d)
         }
-        timeLabel.text = (JobsRefreshConfig.common.lastRefreshPrefix + t).verticalized
+        timePrefixLabel.text = "最后更新于".tr.verticalized
+        timeValueLabel.text = t.verticalized
     }
 
     private func idleText() -> String {
