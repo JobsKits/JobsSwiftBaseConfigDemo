@@ -118,5 +118,9 @@ private lazy var collectionView: UICollectionView = {
 * 需要支持[**Lottie**](https://github.com/airbnb/lottie-ios)动画
 * 需要支持静默刷新/加载 ➤ 完全隐藏刷新头和刷新尾的UI
 
+## 四、特别鸣谢
 
+* [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh) ➤ 关键词：纵向刷新、Objc
+* [**XZMRefresh**](https://github.com/xiezhongmin/XZMRefresh) ➤ 关键词：横向刷新、参考[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)、Objc
+* 
 

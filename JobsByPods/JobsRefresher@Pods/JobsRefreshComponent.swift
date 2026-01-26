@@ -144,7 +144,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
         case .header, .left:
             return JobsRefreshConfig.common.refreshing
         case .footer, .right:
-            return JobsRefreshConfig.common.loading
+            return JobsRefreshConfig.common.readyLoading
         }
     }
 
