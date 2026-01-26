@@ -34,7 +34,7 @@ final class JobsRefresherDemoVC: BaseVC {
             .byItemSize(CGSize(width: 120, height: 156))
     }()
 
-    private lazy var topCollectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: hLayout)
             .byDataSource(self)
             .byDelegate(self)
@@ -67,8 +67,8 @@ final class JobsRefresherDemoVC: BaseVC {
                     try? await Task.sleep(nanoseconds: 900_000_000)
                     // 模拟“刷新完成”：减少一个 item 并刷新
                     self.hItems = max(8, self.hItems - 1)
-                    self.topCollectionView.byReloadData()
-                    self.topCollectionView.switchSideRefresh(.left, to: .normal)
+                    self.collectionView.byReloadData()
+                    self.collectionView.switchSideRefresh(.left, to: .normal)
                 }
            }
            // 右侧拉：比如“下一页/加载更多卡片”
@@ -80,8 +80,8 @@ final class JobsRefresherDemoVC: BaseVC {
                jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)
                    self.hItems += 3
-                   self.topCollectionView.byReloadData()
-                   self.topCollectionView.switchSideRefresh(.right, to: .normal)
+                   self.collectionView.byReloadData()
+                   self.collectionView.switchSideRefresh(.right, to: .normal)
                }
            }
     }()
@@ -92,12 +92,12 @@ final class JobsRefresherDemoVC: BaseVC {
             .byTableFooterView(UIView())
             .byDataSource(self)
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(topCollectionView.snp.bottom)
+                make.top.equalTo(collectionView.snp.bottom)
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
-//            .showRefreshHeaderInfo(YES)   // 竖向Header + 横向Left
-//            .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
+            .showRefreshHeaderInfo(YES)   // 竖向Header + 横向Left
+            .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
             .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
             .setFooterLottie(.disabled) // 强制 footer 回退菊花（即使全局配置了）
             .enableRefreshHaptics(true)
@@ -139,7 +139,7 @@ extension JobsRefresherDemoVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "刷新控件".tr)
         view.backgroundColor = .systemBackground
-        topCollectionView.byVisible(YES)
+        collectionView.byVisible(YES)
         tableView.byVisible(YES)
     }
 }

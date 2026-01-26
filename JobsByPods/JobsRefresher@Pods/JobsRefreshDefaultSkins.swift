@@ -22,7 +22,6 @@ import JobsSwiftBaseDefines
 #if canImport(Lottie)
 import Lottie
 #endif
-
 // MARK: - 文案配置
 @MainActor
 public enum JobsRefreshConfig {
@@ -62,7 +61,6 @@ public enum JobsRefreshConfig {
         }
     }
 }
-
 // MARK: - Lottie 配置（全局 + 单独优先级）
 // 你可以继续用你现有的 DSL（setHeaderLottie / setRightLottie ...）给 view 注入 per-slot 配置。
 // 这里提供一个“兜底全局配置”（可选）：没单独配才会用它。
@@ -72,7 +70,6 @@ public struct JobsRefreshLottieSetting: Equatable {
     public var bundle: Bundle
     public var loopMode: JobsRefreshLottieLoopMode
     public var speed: CGFloat
-
     public init(animationName: String,
                 bundle: Bundle = .main,
                 loopMode: JobsRefreshLottieLoopMode = .loop,
@@ -100,14 +97,11 @@ public enum JobsRefreshLottiePreference: Equatable {
     /// 自定义：该 slot 单独用这个动画（优先级最高）
     case custom(JobsRefreshLottieSetting)
 }
-
-
 // 让“外部/DSL”可以把 per-slot 配置注入到皮肤 view 上
 @MainActor
 public protocol JobsRefreshLottieConfigurable: AnyObject {
     func setLottiePreference(_ pref: JobsRefreshLottiePreference?)
 }
-
 // MARK: - Loading 指示器（Lottie 优先 / 回退菊花）
 // 重点：无论 AutoLayout 与否，都会在 layoutSubviews 里设置子视图 frame，保证显示。
 @MainActor
@@ -120,7 +114,6 @@ final class JobsLoadingIndicator: UIView {
     var lottiePreference: JobsLottiePreference? {
         didSet { rebuildIfNeeded() }
     }
-
     // subviews
     private let spinner: UIActivityIndicatorView = {
         let v: UIActivityIndicatorView
@@ -128,9 +121,7 @@ final class JobsLoadingIndicator: UIView {
             v = UIActivityIndicatorView(style: .medium)
         } else {
             v = UIActivityIndicatorView(style: .gray)
-        }
-        v.hidesWhenStopped = true
-        return v
+        };return v.byHidesWhenStopped(YES)
     }()
 
     #if canImport(Lottie)
@@ -138,7 +129,8 @@ final class JobsLoadingIndicator: UIView {
     #endif
 
     private var isRefreshing = false
-
+    
+    required init?(coder: NSCoder) { fatalError() }
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -146,9 +138,6 @@ final class JobsLoadingIndicator: UIView {
         addSubview(spinner)
         spinner.stopAnimating()
     }
-
-    required init?(coder: NSCoder) { fatalError() }
-
     // MARK: - State
     func showRefreshing() {
         isRefreshing = true
@@ -161,8 +150,7 @@ final class JobsLoadingIndicator: UIView {
             spinner.stopAnimating()
         } else {
             spinner.startAnimating()
-        }
-        isHidden = false
+        };isHidden = false
     }
 
     func hideRefreshing() {
@@ -182,7 +170,6 @@ final class JobsLoadingIndicator: UIView {
         return false
         #endif
     }
-
     // MARK: - Build
     private func rebuildIfNeeded() {
         guard isRefreshing else {
@@ -249,7 +236,6 @@ final class JobsLoadingIndicator: UIView {
         let stripped = raw
             .replacingOccurrences(of: ".json", with: "")
             .replacingOccurrences(of: ".lottie", with: "")
-
         // 先按 Lottie 的 named 加载（通常就是资源名，不带扩展）
         if let anim = LottieAnimation.named(stripped, bundle: setting.bundle) {
             return anim
@@ -257,8 +243,7 @@ final class JobsLoadingIndicator: UIView {
         // 再用 Bundle 查找 json 路径（和你的 Demo 写法一致）
         if setting.bundle.path(forResource: stripped, ofType: "json") != nil {
             return LottieAnimation.named(stripped, bundle: setting.bundle)
-        }
-        return nil
+        };return nil
     }
 
     private func mapLoopMode(_ m: JobsLottieLoopMode) -> LottieLoopMode {
@@ -282,20 +267,21 @@ final class JobsLoadingIndicator: UIView {
         #endif
     }
 }
-
 // MARK: - 竖向 Header/Footer（箭头旋转 + Lottie 刷新）
 @MainActor
-public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrackable, JobsLottieConfigurable {
-
+public class JobsArrowIndicatorView: UIView,
+                                     JobsAnimatable,
+                                     JobsRefreshTimeTrackable,
+                                     JobsLottieConfigurable {
     public enum Style { case header, footer }
-
+    private enum ArrowDirection { case up, down }
+    
     public var style: Style = .header {
         didSet { applyArrow(direction: idleArrowDirection(), animated: false); setNeedsLayout() }
     }
 
     public var heightOrWidth: CGFloat = 60
     private var lastRefreshedAt: Date?
-
     // per-slot Lottie 配置（由外部注入）；nil 表示继承全局
     public var lottiePreference: JobsLottiePreference = .inherit {
         didSet { loading.lottiePreference = lottiePreference }
@@ -307,10 +293,7 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
             iv = UIImageView(image: UIImage(systemName: "arrow.up"))
         } else {
             iv = UIImageView()
-        }
-        iv.contentMode = .scaleAspectFit
-        iv.tintColor = JobsCor.secondaryLabel
-        return self.byAddSubviewRetSub(iv)
+        };return self.byAddSubviewRetSub(iv.byContentMode(.scaleAspectFit).byTintColor(JobsCor.secondaryLabel))
     }()
 
     private lazy var loading: JobsLoadingIndicator = {
@@ -335,20 +318,19 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
     private var isArrowInReadyDirection: Bool = false
 
     private static let timeFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = .current
-        f.timeZone = .current
-        f.dateFormat = "HH:mm"
-        return f
+        DateFormatter()
+            .byLocale(.current)
+            .byTimeZone(.current)
+            .byDateFormat("HH:mm")
     }()
     private static let dateTimeFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = .current
-        f.timeZone = .current
-        f.dateFormat = "yyyy-MM-dd HH:mm"
-        return f
+        DateFormatter()
+            .byLocale(.current)
+            .byTimeZone(.current)
+            .byDateFormat("yyyy-MM-dd HH:mm")
     }()
 
+    required public init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -356,8 +338,6 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
         applyArrow(direction: idleArrowDirection(), animated: false)
         loading.hideRefreshing()
     }
-
-    required public init?(coder: NSCoder) { fatalError() }
 
     public func markRefreshed(at date: Date) { lastRefreshedAt = date }
 
@@ -368,7 +348,6 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
             arrow.isHidden = false
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             displayText(idleText())
-
         case .pulling(let p):
             loading.hideRefreshing() // 关键：pulling 一定不能显示 loading
             arrow.isHidden = false
@@ -379,30 +358,25 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
                 applyArrow(direction: idleArrowDirection(), animated: false)
                 displayText(String(format: "%@ %.0f%%", goOnText(), min(1, max(0, p)) * 100))
             }
-
         case .ready:
             loading.hideRefreshing()
             arrow.isHidden = false
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             displayText(readyText())
-
         case .refreshing:
             arrow.isHidden = true
             loading.lottiePreference = lottiePreference
             loading.showRefreshing()
             displayText(refreshingText())
-
         case .noMore:
             loading.hideRefreshing()
             arrow.isHidden = true
             displayText(JobsRefreshConfig.common.noMore)
-
         case .removed:
             loading.hideRefreshing()
             arrow.isHidden = true
             label.text = nil
-        }
-        setNeedsLayout()
+        };setNeedsLayout()
     }
 
     public override func layoutSubviews() {
@@ -440,18 +414,21 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
         case .footer: return JobsRefreshConfig.v.footer.idle
         }
     }
+    
     private func goOnText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.v.header.goOn
         case .footer: return JobsRefreshConfig.v.footer.goOn
         }
     }
+    
     private func readyText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.common.readyRefresh
         case .footer: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
+    
     private func refreshingText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.common.refreshing
@@ -464,17 +441,15 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
             let calendar = Calendar.current
             let t: String
             if calendar.isDateInToday(d) {
-                t = "今天 ".tr + Self.timeFormatter.string(from: d)
+                t = "今天".tr + Self.timeFormatter.string(from: d)
             } else {
                 t = Self.dateTimeFormatter.string(from: d)
             }
-            label.text = main + "\n" + JobsRefreshConfig.common.lastRefreshPrefix + t
+            label.byText(main + "\n" + JobsRefreshConfig.common.lastRefreshPrefix + t)
         } else {
-            label.text = main
+            label.byText(main)
         }
     }
-
-    private enum ArrowDirection { case up, down }
 
     private func idleArrowDirection() -> ArrowDirection {
         switch style {
@@ -482,6 +457,7 @@ public class JobsArrowIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrac
         case .footer: return .up
         }
     }
+    
     private func readyArrowDirection() -> ArrowDirection {
         switch style {
         case .header: return .up
@@ -516,8 +492,7 @@ public final class JobsDefaultHeader: JobsArrowIndicatorView {
         super.init(frame: frame)
         style = .header
         heightOrWidth = 60
-    }
-    required init?(coder: NSCoder) { fatalError() }
+    };required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor
@@ -526,15 +501,17 @@ public final class JobsDefaultFooter: JobsArrowIndicatorView {
         super.init(frame: frame)
         style = .footer
         heightOrWidth = 60
-    }
-    required init?(coder: NSCoder) { fatalError() }
+    };required init?(coder: NSCoder) { fatalError() }
 }
-
 // MARK: - 横向（仿 XZMRefresh / MJRefresh）：竖排文案 + 底部箭头 + Lottie 刷新
 @MainActor
-public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrackable, JobsLottieConfigurable {
+public class JobsSideIndicatorView: UIView,
+                                    JobsAnimatable,
+                                    JobsRefreshTimeTrackable,
+                                    JobsLottieConfigurable {
     public enum SideStyle { case left, right } // left=右拉刷新（头部组），right=左拉加载（尾部组）
-
+    private enum ArrowDirection { case left, right }
+    
     public var style: SideStyle = .left { didSet { setNeedsLayout() } }
     public var heightOrWidth: CGFloat = 60
 
@@ -550,17 +527,14 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
             iv = UIImageView(image: UIImage(systemName: "arrow.left"))
         } else {
             iv = UIImageView()
-        }
-        iv.contentMode = .scaleAspectFit
-        iv.tintColor = JobsCor.secondaryLabel
-        return self.byAddSubviewRetSub(iv)
+        };return self.byAddSubviewRetSub(iv.byContentMode(.scaleAspectFit).byTintColor(JobsCor.secondaryLabel))
     }()
 
     private lazy var loading: JobsLoadingIndicator = {
         let v = JobsLoadingIndicator()
         v.preferredSize = 18
-        v.isHidden = true
         v.lottiePreference = lottiePreference
+        v.isHidden = true
         return self.byAddSubviewRetSub(v)
     }()
 
@@ -573,7 +547,6 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
                 .byTextAlignment(.center)
         )
     }()
-
     // “更新：”单独一列 + “今天 22:05”一列
     private lazy var updatePrefixLabel: UILabel = {
         self.byAddSubviewRetSub(
@@ -584,6 +557,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
                 .byTextAlignment(.center)
         )
     }()
+    
     private lazy var updateValueLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
@@ -598,20 +572,19 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
     private var isArrowInReadyDirection: Bool = false
 
     private static let timeFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = .current
-        f.timeZone = .current
-        f.dateFormat = "HH:mm"
-        return f
+        DateFormatter()
+            .byLocale(.current)
+            .byTimeZone(.current)
+            .byDateFormat("HH:mm")
     }()
     private static let dateTimeFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = .current
-        f.timeZone = .current
-        f.dateFormat = "yyyy-MM-dd HH:mm"
-        return f
+        DateFormatter()
+            .byLocale(.current)
+            .byTimeZone(.current)
+            .byDateFormat("yyyy-MM-dd HH:mm")
     }()
 
+    required public init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -621,8 +594,6 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
         setUpdateInfoVisible(false)
     }
 
-    required public init?(coder: NSCoder) { fatalError() }
-
     public func apply(state: JobsState) {
         switch state {
         case .idle:
@@ -631,7 +602,6 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             setVertical(statusLabel, text: idleText())
             setUpdateInfoVisible(false)
-
         case .pulling(let p):
             loading.hideRefreshing()
             arrow.isHidden = false
@@ -642,16 +612,13 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
                 applyArrow(direction: idleArrowDirection(), animated: false)
                 let percent = Int(min(1, max(0, p)) * 100)
                 setVertical(statusLabel, text: "\(goOnText()) \(percent)%")
-            }
-            setUpdateInfoVisible(false)
-
+            };setUpdateInfoVisible(false)
         case .ready:
             loading.hideRefreshing()
             arrow.isHidden = false
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             setVertical(statusLabel, text: readyText())
             setUpdateInfoVisible(false)
-
         case .refreshing:
             arrow.isHidden = true
             loading.lottiePreference = lottiePreference
@@ -660,32 +627,26 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
             // left（头部组）才显示“更新：时间”（仿你图1）
             setUpdateInfoVisible(style == .left)
             if style == .left { updateLabelsFromDate(lastRefreshedAt) }
-
         case .noMore:
             loading.hideRefreshing()
             arrow.isHidden = true
             setVertical(statusLabel, text: JobsRefreshConfig.common.noMore)
             setUpdateInfoVisible(false)
-
         case .removed:
             loading.hideRefreshing()
             arrow.isHidden = true
             statusLabel.text = nil
             setUpdateInfoVisible(false)
-        }
-        setNeedsLayout()
+        };setNeedsLayout()
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-
         let w = bounds.width
         let h = bounds.height
-
         // ===== Layout goal =====
         // 横向时：把「箭头/Loading(Lottie/菊花)」放在文案之上；并且整体（icon + 文案）垂直居中。
         // 同时保证 3 列竖排文案在默认 width=60 时不会出界（动态计算列宽/间距）。
-
         let iconSide: CGFloat = 18
         let stackSpacing: CGFloat = 8
         let vPadding: CGFloat = 10
@@ -709,26 +670,35 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
         colW = min(maxColW, max(minColW, colW))
         let totalW = CGFloat(cols) * colW + CGFloat(max(0, cols - 1)) * spacing
         let startX = (w - totalW) * 0.5
-
         // ---- Vertical sizing: center (icon + text) together ----
         let availableH = max(10, h - 2 * vPadding)
         let textH = max(10, availableH - iconSide - stackSpacing)
         let groupH = iconSide + stackSpacing + textH
         let groupY = (h - groupH) * 0.5
-
         // icon on top of text
-        let iconFrame = CGRect(x: (w - iconSide) * 0.5, y: groupY, width: iconSide, height: iconSide)
+        let iconFrame = CGRect(x: (w - iconSide) * 0.5,
+                               y: groupY,
+                               width: iconSide,
+                               height: iconSide)
         arrow.frame = iconFrame
         loading.frame = iconFrame
 
         let textY = iconFrame.maxY + stackSpacing
-        statusLabel.frame = CGRect(x: startX, y: textY, width: colW, height: textH)
+        statusLabel.frame = CGRect(x: startX,
+                                   y: textY,
+                                   width: colW,
+                                   height: textH)
         if showUpdate {
-            updatePrefixLabel.frame = CGRect(x: startX + (colW + spacing), y: textY, width: colW, height: textH)
-            updateValueLabel.frame = CGRect(x: startX + 2 * (colW + spacing), y: textY, width: colW, height: textH)
+            updatePrefixLabel.frame = CGRect(x: startX + (colW + spacing),
+                                             y: textY,
+                                             width: colW,
+                                             height: textH)
+            updateValueLabel.frame = CGRect(x: startX + 2 * (colW + spacing),
+                                            y: textY,
+                                            width: colW,
+                                            height: textH)
         }
     }
-
     // MARK: - Text helpers
     private func setVertical(_ label: UILabel, text: String) {
         label.text = text.verticalized
@@ -750,8 +720,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
             t = "今天 ".tr + Self.timeFormatter.string(from: d)
         } else {
             t = Self.dateTimeFormatter.string(from: d)
-        }
-        setVertical(updateValueLabel, text: t)
+        };setVertical(updateValueLabel, text: t)
     }
 
     private func idleText() -> String {
@@ -760,28 +729,28 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
         case .right: return JobsRefreshConfig.h.footer.idle
         }
     }
+    
     private func goOnText() -> String {
         switch style {
         case .left:  return JobsRefreshConfig.h.header.goOn
         case .right: return JobsRefreshConfig.h.footer.goOn
         }
     }
+    
     private func readyText() -> String {
         switch style {
         case .left:  return JobsRefreshConfig.common.readyRefresh
         case .right: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
+    
     private func refreshingText() -> String {
         switch style {
         case .left:  return JobsRefreshConfig.common.refreshing
         case .right: return JobsRefreshConfig.common.loadingMore
         }
     }
-
     // MARK: - Arrow rotate
-    private enum ArrowDirection { case left, right }
-
     private func idleArrowDirection() -> ArrowDirection {
         // 左侧控件（右拉）：idle 向左（指向内容外侧）；右侧控件（左拉）：idle 向右
         switch style {
@@ -789,6 +758,7 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
         case .right: return .right
         }
     }
+    
     private func readyArrowDirection() -> ArrowDirection {
         // ready 翻转
         switch style {
@@ -815,28 +785,26 @@ public class JobsSideIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTrack
             }
         } else {
             arrow.transform = target
-        }
-        isArrowInReadyDirection = willBeReadyDirection
+        };isArrowInReadyDirection = willBeReadyDirection
     }
 }
-
 // 默认横向
 @MainActor
 public final class JobsDefaultRightRefresher: JobsSideIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
         style = .right
     }
-    required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor
 public final class JobsDefaultLeftRefresher: JobsSideIndicatorView {
+    required init?(coder: NSCoder) { fatalError() }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         heightOrWidth = 60
         style = .left
     }
-    required init?(coder: NSCoder) { fatalError() }
 }

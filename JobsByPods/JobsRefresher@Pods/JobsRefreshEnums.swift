@@ -10,9 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
 // MARK: - Core types
-
 @MainActor
 public enum JobsAxis {
     case vertical, horizontal
@@ -24,7 +22,6 @@ public enum JobsPosition {
     case footer      // bottom
     case left
     case right
-
     public var axis: JobsAxis {
         switch self {
         case .header, .footer: return .vertical
@@ -50,14 +47,12 @@ public enum JobsSwitch {
     case removed
     case noMoreData                 // 仅 footer 生效
 }
-
 // MARK: - Lottie (Global + Per-slot)
 //
 // 目标：
 // 1) JobsRefresher target 没引入 Lottie 也能编译（这里只提供配置类型，不引用 Lottie 类型）
 // 2) 单独设置（slot）优先于全局设置
 // 3) 两者都没设置时回退普通菊花
-
 @MainActor
 public enum JobsLottieLoopMode: Equatable {
     case loop
@@ -73,7 +68,6 @@ public struct JobsLottieSetting: Equatable {
     public var bundle: Bundle
     public var loopMode: JobsLottieLoopMode
     public var speed: CGFloat
-
     public init(animationName: String,
                 bundle: Bundle = .main,
                 loopMode: JobsLottieLoopMode = .loop,
@@ -93,21 +87,21 @@ public enum JobsLottiePreference: Equatable {
     case disabled
     /// 使用指定动画
     case custom(JobsLottieSetting)
-
     public static func custom(_ name: String,
                               bundle: Bundle = .main,
                               loopMode: JobsLottieLoopMode = .loop,
                               speed: CGFloat = 1) -> JobsLottiePreference {
-        .custom(.init(animationName: name, bundle: bundle, loopMode: loopMode, speed: speed))
+        .custom(.init(animationName: name,
+                      bundle: bundle,
+                      loopMode: loopMode,
+                      speed: speed))
     }
 }
-
 /// 视图可被 DSL/Proxy 注入 per-slot Lottie 配置。
 @MainActor
 public protocol JobsLottieConfigurable: AnyObject {
     var lottiePreference: JobsLottiePreference { get set }
 }
-
 /// 全局默认（可选）：单独设置优先级更高。
 @MainActor
 public enum JobsLottieConfig {

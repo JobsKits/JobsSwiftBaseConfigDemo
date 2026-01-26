@@ -21,22 +21,18 @@ final class JobsProxy: NSObject {
     weak var scrollView: UIScrollView?
     private var kvo: NSKeyValueObservation?
     private var panKvo: NSKeyValueObservation?
-
     var header: JobsSlot?
     var footer: JobsSlot?
     var left:   JobsSlot?
     var right:  JobsSlot?
-
     // Info visibility
     var showsHeaderInfo: Bool = true
     var showsFooterInfo: Bool = true
-
     // Per-slot lottie preference (instance-level default)
     var headerLottiePref: JobsLottiePreference = .inherit
     var footerLottiePref: JobsLottiePreference = .inherit
     var leftLottiePref: JobsLottiePreference = .inherit
     var rightLottiePref: JobsLottiePreference = .inherit
-
     // MARK: - Human interaction feedback
     /// Whether to perform haptic feedback when refresh/load is triggered by reaching threshold.
     var enablesHaptics: Bool = false
@@ -189,7 +185,6 @@ final class JobsSlot {
 
     func beginRefreshing(on sv: UIScrollView, isFooter: Bool = false) {
         guard state != .refreshing else { return }
-
         // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
         sv.jobs_triggerRefreshFeedback(for: position)
 
@@ -233,7 +228,6 @@ final class JobsSlot {
 
     func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
         guard case .refreshing = state else { return }
-
         // mark refresh time for header/left
         if position == .header || position == .left {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
@@ -268,7 +262,6 @@ final class JobsSlot {
         case .footer: inset.bottom -= view.heightOrWidth
         case .left:   inset.left   -= view.heightOrWidth
         case .right:  inset.right  -= view.heightOrWidth
-        }
-        return inset
+        };return inset
     }
 }

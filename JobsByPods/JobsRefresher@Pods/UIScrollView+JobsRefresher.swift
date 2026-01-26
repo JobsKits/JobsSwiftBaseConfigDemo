@@ -40,7 +40,6 @@ extension UIScrollView {
 
 @MainActor
 public extension UIScrollView {
-
     // MARK: - Info visibility (group)
     /// 头部信息：竖向 Header + 横向 Left
     @discardableResult
@@ -50,7 +49,6 @@ public extension UIScrollView {
         mrk_proxy.left?.showsInfo = show
         return self
     }
-
     /// 尾部信息：竖向 Footer + 横向 Right
     @discardableResult
     func showRefreshFooterInfo(_ show: Bool) -> Self {
@@ -59,7 +57,6 @@ public extension UIScrollView {
         mrk_proxy.right?.showsInfo = show
         return self
     }
-
     // MARK: - Lottie per-slot (instance override > global)
     @discardableResult
     func setHeaderLottie(_ pref: JobsLottiePreference) -> Self {
@@ -88,7 +85,6 @@ public extension UIScrollView {
         (mrk_proxy.right?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
     }
-
     // MARK: - Human interaction feedback (haptic + sound)
     /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
     @discardableResult
@@ -96,7 +92,6 @@ public extension UIScrollView {
         mrk_proxy.enablesHaptics = enable
         return self
     }
-
     /// Configure a sound file to play when user triggers refresh/loading by reaching threshold.
     /// - Parameter fileName: Supports full name (e.g. "Sound.wav") or base name (e.g. "Sound").
     /// Passing nil or empty string disables sound.
@@ -106,9 +101,7 @@ public extension UIScrollView {
         mrk_proxy.soundFileName = (trimmed?.isEmpty == true) ? nil : trimmed
         return self
     }
-
     // MARK: - Config header/footer/side
-
     @discardableResult
     func configRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
                              container: AnyObject? = nil,
@@ -118,7 +111,11 @@ public extension UIScrollView {
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.headerLottiePref
         }
-        let slot = JobsSlot(position: .header, view: c, trigger: trigger, container: container, action: action)
+        let slot = JobsSlot(position: .header,
+                            view: c,
+                            trigger: trigger,
+                            container: container,
+                            action: action)
         slot.showsInfo = mrk_proxy.showsHeaderInfo
         mrk_proxy.header = slot
         slot.attach(to: self)
@@ -136,8 +133,7 @@ public extension UIScrollView {
             mrk_proxy.header = nil
         case .noMoreData:
             break
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -149,7 +145,11 @@ public extension UIScrollView {
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.footerLottiePref
         }
-        let slot = JobsSlot(position: .footer, view: c, trigger: trigger, container: container, action: action)
+        let slot = JobsSlot(position: .footer,
+                            view: c,
+                            trigger: trigger,
+                            container: container,
+                            action: action)
         slot.showsInfo = mrk_proxy.showsFooterInfo
         mrk_proxy.footer = slot
         slot.attach(to: self)
@@ -166,8 +166,7 @@ public extension UIScrollView {
             slot.detach()
             mrk_proxy.footer = nil
         case .noMoreData: slot.noticeNoMoreData(on: sv)
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -177,15 +176,17 @@ public extension UIScrollView {
                            trigger: CGFloat = 60,
                            action: @escaping jobsByVoidBlock) -> Self {
         precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
-
         // apply per-slot pref
         if let v = component as? JobsLottieConfigurable {
             v.lottiePreference = (position == .left) ? mrk_proxy.leftLottiePref : mrk_proxy.rightLottiePref
         }
 
-        let slot = JobsSlot(position: position, view: component, trigger: trigger, container: container, action: action)
+        let slot = JobsSlot(position: position,
+                            view: component,
+                            trigger: trigger,
+                            container: container,
+                            action: action)
         slot.showsInfo = (position == .left) ? mrk_proxy.showsHeaderInfo : mrk_proxy.showsFooterInfo
-
         if position == .left { mrk_proxy.left = slot } else { mrk_proxy.right = slot }
         slot.attach(to: self)
         return self
@@ -205,11 +206,9 @@ public extension UIScrollView {
             if position == .left { mrk_proxy.left = nil } else { mrk_proxy.right = nil }
         case .noMoreData:
             break
-        }
-        return self
+        };return self
     }
 }
-
 // MARK: - Feedback helpers (defined in this category)
 @MainActor
 extension UIScrollView {
@@ -217,7 +216,6 @@ extension UIScrollView {
     func jobs_triggerRefreshFeedback(for position: JobsPosition) {
         let proxy = mrk_proxy
         guard proxy.enablesHaptics || (proxy.soundFileName != nil) else { return }
-
         // Only trigger for the positions that represent user pull actions.
         // header/left = refresh; footer/right = load more
         switch position {
@@ -247,7 +245,6 @@ extension UIScrollView {
         #if os(iOS) || os(tvOS)
         let trimmed = fileName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-
         // Supports:
         //  - "Sound.wav" (full name)
         //  - "Sound" (base name; default to wav)
@@ -260,8 +257,9 @@ extension UIScrollView {
                 return (trimmed, "wav")
             }
         }()
-
-        if let url = Self.jobs_resolveSoundURL(baseName: base, ext: ext, preferredFullName: trimmed) {
+        if let url = Self.jobs_resolveSoundURL(baseName: base,
+                                               ext: ext,
+                                               preferredFullName: trimmed) {
             Self.jobs_playSystemSound(url: url)
         }
         #endif
@@ -269,8 +267,9 @@ extension UIScrollView {
 
     #if os(iOS) || os(tvOS)
     private static var jobs_soundCache: [String: SystemSoundID] = [:]
-
-    private static func jobs_resolveSoundURL(baseName: String, ext: String, preferredFullName: String) -> URL? {
+    private static func jobs_resolveSoundURL(baseName: String,
+                                             ext: String,
+                                             preferredFullName: String) -> URL? {
         // 1) Fast path: direct lookup by base/ext.
         if let url = Bundle.main.url(forResource: baseName, withExtension: ext) {
             return url
@@ -283,8 +282,7 @@ extension UIScrollView {
         }
         if let byBase = urls.first(where: { $0.deletingPathExtension().lastPathComponent == baseName }) {
             return byBase
-        }
-        return nil
+        };return nil
     }
 
     private static func jobs_playSystemSound(url: URL) {

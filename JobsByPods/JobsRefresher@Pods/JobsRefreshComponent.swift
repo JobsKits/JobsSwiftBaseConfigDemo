@@ -34,11 +34,10 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     // ✅ 有了刷新时间后固定两行高度，避免百分比变化时布局闪动
     private var fixedLabelHeight: CGFloat?
     private static let timeFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = .current
-        f.timeZone = .current
-        f.dateFormat = "HH:mm:ss"
-        return f
+        DateFormatter()
+            .byLocale(.current)
+            .byTimeZone(.current)
+            .byDateFormat("HH:mm:ss")
     }()
 
     private lazy var indicator: UIActivityIndicatorView = {
@@ -47,10 +46,8 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
             v = UIActivityIndicatorView(style: .medium)
         } else {
             v = UIActivityIndicatorView(style: .gray)   // iOS 12 常用替代
-        }
-        v.byHidesWhenStopped(true)
+        };return v.byHidesWhenStopped(true)
             .byAddTo(self)
-        return v
     }()
 
     private lazy var label: UILabel = {
