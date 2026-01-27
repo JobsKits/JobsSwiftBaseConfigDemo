@@ -112,17 +112,28 @@ final class UITextViewDemoVC: BaseVC {
             .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("123.45")
-            .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(title2.snp.bottom).offset(8)
-                make.left.right.equalTo(tv1)
-                make.height.equalTo(80)
-            }
             .jobs_onInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.decimal(scale: 2)(value)
                 if text != formatted { tv.text = formatted }
                 let ok = JobsValidators.decimal(min: 0, max: 999_999)(formatted)
                 tv.byBorderColor(ok ? UIColor.systemGreen : UIColor.systemRed)
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
+            }
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title2.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
             }
     }()
 
@@ -144,11 +155,22 @@ final class UITextViewDemoVC: BaseVC {
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("13800138000")
             .jobs_onInput(limit: 13) { [unowned self] char, value, mode, isLimited, text ,tv in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.phoneCN()(value)
                 if tv.text != formatted { tv.text = formatted }
                 let ok = JobsValidators.phoneCN()(formatted)
                 tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
                 print("📱 char='\(char)' value='\(formatted)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
+            }
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title3.snp.bottom).offset(8)
@@ -187,6 +209,12 @@ final class UITextViewDemoVC: BaseVC {
             .byDataDetectorTypes([.link, .phoneNumber])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
+            }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title4.snp.bottom).offset(8)
                 make.left.right.equalTo(tv1)
@@ -217,6 +245,12 @@ final class UITextViewDemoVC: BaseVC {
             ])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
+            }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvBlue.snp.bottom).offset(12)
                 make.left.right.equalTo(tv1)
@@ -242,7 +276,18 @@ final class UITextViewDemoVC: BaseVC {
             .byText(relayValue)
             // A -> B
             .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 sync(from: tvA, to: tvB, value: value)
+            }
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title6.snp.bottom).offset(8)
@@ -258,7 +303,18 @@ final class UITextViewDemoVC: BaseVC {
             .byText(relayValue)
             // B -> A
             .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 sync(from: tvB, to: tvA, value: value)
+            }
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvA.snp.bottom).offset(12)
@@ -295,8 +351,19 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 16))
             .byText("删除我试试看 👇")
             .jobs_onInput { [unowned self] char, value, mode, isLimited, text ,tv in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 guard mode == .delete else { return }
                 "点击了删除键".tr.toast
+            }
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
+            }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title7.snp.bottom).offset(8)
