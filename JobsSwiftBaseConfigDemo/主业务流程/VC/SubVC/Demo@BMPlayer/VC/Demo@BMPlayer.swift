@@ -76,7 +76,9 @@ extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
         case .local:  PlayerLocalVC().byPush(self)
         case .remote: PlayerRemoteVC().byPush(self)
         case .feed:   FeedListVC().byPush(self)
+#if canImport(BMPlayer)
         case .float:  JobsLiveFloatPlayer.shared.showRemoteLive()
+#endif
         }
     }
 }
