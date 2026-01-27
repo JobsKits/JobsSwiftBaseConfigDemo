@@ -1,5 +1,5 @@
 //
-//  JobsCellConfig.swift
+//  JobsBaseCellConfig.swift
 //  Pods
 //
 //  Created by Jobs on 18/1/2569 BE.
@@ -13,7 +13,7 @@ import UIKit
 
 import JobsTextTools
 // MARK: - 通用于 UITableViewCell 和 UICollectionViewCell 的模型组件
-public struct JobsCellConfig {
+public struct JobsBaseCellConfig {
     public let title: JobsText?
     public let detail: JobsText?
     public let image: UIImage?

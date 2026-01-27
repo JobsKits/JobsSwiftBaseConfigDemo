@@ -10,11 +10,18 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+// MARK: - 输入模式
+public enum JobsTextInputMode: Int {
+    case space      /// 点按：空格按键
+    case delete     /// 点按：删除按键
+    case `return`   /// 点按：回车按键
+    case normal     /// 普通的点按
+}
 // MARK: - 启动检查的枚举
 public enum LaunchKind {
-    case firstInstallLaunch      // 安装后第一次
-    case firstLaunchToday        // 今天第一次
-    case normal                  // 普通启动
+    case firstInstallLaunch /// 安装后第一次
+    case firstLaunchToday   /// 今天第一次
+    case normal             /// 普通启动
 }
 // MARK: - 开发环境
 public enum JobsNetworkingEnvir: NSInteger {

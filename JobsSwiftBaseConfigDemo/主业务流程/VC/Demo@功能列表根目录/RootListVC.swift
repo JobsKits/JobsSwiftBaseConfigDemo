@@ -19,6 +19,7 @@ final class RootListVC: BaseVC {
     deinit {
         suspendBtn.stopTimer()
         suspendSpinBtn.stopTimer()
+        RxTextInput.text
     }
     private var langToken: NSObjectProtocol?
     private lazy var demos: [(title: String, vcType: UIViewController.Type)] = makeDemos()

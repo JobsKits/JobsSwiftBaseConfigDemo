@@ -16,7 +16,7 @@ import JobsSwiftBaseDefines
 public extension ViewDataProtocol where Self: UITableViewCell {
     @discardableResult
     func byData(_ any: Any?) -> Self {
-        guard let cfg = any as? JobsCellConfig else { return self }
+        guard let cfg = any as? JobsBaseCellConfig else { return self }
         if #available(iOS 14.0, *) {
             return self
                 .byJobsText(cfg.title)

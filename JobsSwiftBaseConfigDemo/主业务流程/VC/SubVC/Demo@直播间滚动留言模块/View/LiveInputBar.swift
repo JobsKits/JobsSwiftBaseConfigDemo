@@ -29,13 +29,6 @@ final class LiveInputBar: UIView {
             .byBorderStyle(.roundedRect)
             .byPlaceholder("说点什么…".tr)
             .byReturnKeyType(.send)
-            .byEnablesReturnKeyAutomatically(true)          // 空文本禁用“发送”
-            .onReturn { [weak self] _ in                    // ⌨️ 键盘“发送”
-                self?.emitSend()
-            }
-            .onChange { tf, input, old, isDeleting in
-
-            }
             .byAddTo(self) { make in
                 make.leading.equalToSuperview().offset(22.w)
                 make.trailing.equalToSuperview().offset(-22.w)

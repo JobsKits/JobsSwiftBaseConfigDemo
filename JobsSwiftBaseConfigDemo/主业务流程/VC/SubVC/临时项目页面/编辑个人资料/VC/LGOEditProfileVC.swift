@@ -169,7 +169,7 @@ extension LGOEditProfileVC: UITableViewDataSource {
             return tableView.py_dequeueReusableCell(
                 withType: AvatarCell.self,
                 for: indexPath
-            ).byData(JobsCellConfig(title: row.title))
+            ).byData(JobsBaseCellConfig(title: row.title))
         default:
             return tableView.py_dequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
                 .byTitleFont(.systemFont(ofSize: 16))
@@ -177,7 +177,7 @@ extension LGOEditProfileVC: UITableViewDataSource {
                 .bySelectionStyle(.none)
                 .byAccessoryType(.disclosureIndicator)
                 .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
-                .byData(JobsCellConfig(title: row.title,detail:row.detail))
+                .byData(JobsBaseCellConfig(title: row.title,detail:row.detail))
         }
     }
 }
@@ -324,7 +324,7 @@ public final class AvatarCell: UITableViewCell {
     @discardableResult
     /// 富文本的优先级比普通文本高。即，如果同时设置富文本和普通文本，优先展示富文本
     func byData(_ any: Any?) -> Self {
-        guard let cfg = any as? JobsCellConfig else { return self }
+        guard let cfg = any as? JobsBaseCellConfig else { return self }
         if let title = cfg.title {
             textLabel?.byJobsAttributedText(title)
         }

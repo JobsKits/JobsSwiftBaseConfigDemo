@@ -12,163 +12,164 @@ import UIKit
 #endif
 
 import SnapKit
-import RxSwift
-import RxCocoa
-import RxRelay
-import NSObject_Rx
+import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftBaseTools
 import JobsSwiftTools
+import JobsSwiftBaseDefines
+import JobsToast
 
-final class UITextViewDemoVC: BaseVC, HasDisposeBag {
-    // ====== UI 容器 ======
-    private let scroll = UIScrollView().byAlwaysBounceVertical(true)
-    private let stack  = UIStackView()
-        .byAxis(.vertical)
-        .byAlignment(.fill)
-        .bySpacing(12)
-        .byLayoutMargins(UIEdgeInsets(top: 16, left: 16, bottom: 32, right: 16))
-        .byLayoutMarginsRelativeArrangement(true)
+final class UITextViewDemoVC: BaseVC {
+    // MARK: 双向绑定（无 Rx）
+    var relayValue = "Hello Value"
+    var isSyncing = false
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        jobsSetupGKNav(
-            title: "UITextView 语法糖 Demo",
-        )
-        view.backgroundColor = .systemBackground
+    // MARK: - Scroll
+    private lazy var scrollerView: UIScrollView = {
+        UIScrollView()
+            .byShowsVerticalScrollIndicator(true)
+            .byShowsHorizontalScrollIndicator(false)
+            .byAlwaysBounceVertical(true)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.bottom.equalToSuperview()
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
+            }
+    }()
+    /// 不是“必须”加 contentView，但在 iOS 里“直接往 UIScrollView 上加子视图”是一个容易埋雷的做法。
+    /// contentView 不是“多余”，它是 为了让 Auto Layout 能 100% 正确推导 contentSize。
+    private lazy var contentView: UIView = {
+        UIView()
+            .byAddTo(scrollerView) { [unowned self] make in
+                make.edges.equalToSuperview()
+                make.width.equalToSuperview()
+            }
+    }()
 
-        setupUI()
-        setupAccessoryToolbar()
-        demo_ChainedStyling()
-        demo_RxTextInput()
-        demo_AttrAndLink()
-        demo_Find_Border_WritingTools()
-        demo_TwoWayBinding()
-        demo_DeleteBackward_Observe()
-    }
-    // MARK: - 布局初始化
-    private func setupUI() {
-        view.byAddSubviewRetSub(scroll).snp.makeConstraints { $0.edges.equalToSuperview() }
-        scroll.byAddSubviewRetSub(stack).snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
-        }
-    }
-    // MARK: - 输入栏工具（Done 收起键盘）
-    private func setupAccessoryToolbar() {
-        let bar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 0, height: 44))
-            .byItems([
-                UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-                UIBarButtonItem()
-                    .byTitle("完成")
-                    .byTitleFont(.systemFont(ofSize: 15))
-                    .byTitleColor(.systemYellow)
-                    .byStyle(.done)
-                    .onTap { [weak self] _ in
-                        guard let self = self else { return }   // ✅ 确保生命周期安全
-                        view.endEditing(true)
-                    },
-        ])
-        .bySizeToFit()
+    private lazy var title1: UILabel = {
+        UILabel()
+            .byText("1️⃣ 输入监听（jobs_onInput）".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.left.equalToSuperview().offset(16)
+                make.right.equalToSuperview().offset(-16)
+                make.top.equalToSuperview().offset(10)
+            }
+    }()
 
-        stack.arrangedSubviews.compactMap { $0 as? UITextView }.forEach {
-            $0.byInputAccessoryView(bar)
-        }
-    }
-    // MARK: - 1️⃣ 基础链式样式
-    private func demo_ChainedStyling() {
-        addSectionTitle("1️⃣ 基础链式样式示例")
-
-        let tv = UITextView()
-            .byText("这里展示基础链式调用：字体、颜色、边框、内边距等。")
+    private lazy var tv1: UITextView = {
+        UITextView()
             .byFont(.systemFont(ofSize: 16))
-            .byTextColor(.label)
-            .byTextAlignment(.left)
+            .byKeyboardType(.default)
             .byEditable(true)
             .bySelectable(true)
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .onChange { tv, input, old, isDeleting in
-                let new = tv.text ?? ""
-                print("✏️ input='\(input)' old='\(old)' new='\(new)' deleting=\(isDeleting)")
-
-                // 示例：长度 6~20 视为“有效”，边框变绿，否则红
-                let ok = (6...20).contains(new.count)
-                tv.layer.borderWidth = 1
-                tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-                tv.layer.masksToBounds = true
-                if #available(iOS 13.0, *) { tv.layer.cornerCurve = .continuous }
+            .jobs_onInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
+                print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
-            .onBackspace { tv in
-                print("👈 backspace: len=\(tv.text?.count ?? 0)")
+            .jobs_onBeginEditing { value in
+                print("✍️ begin:", value)
             }
+            .jobs_onEndEditing { value in
+                print("✅ end:", value)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title1.snp.bottom).offset(8)
+                make.left.equalToSuperview().offset(16)
+                make.right.equalToSuperview().offset(-16)
+                make.height.equalTo(100)
+            }
+    }()
 
-        stack.addArrangedSubview(tv)
-        tv.snp.makeConstraints { $0.height.equalTo(100) }
-    }
-    // MARK: - 2️⃣ 金额输入演示
-    private func demo_RxTextInput() {
-        addSectionTitle("2️⃣ 金额输入（formatter + validator + maxLength）")
+    private lazy var title2: UILabel = {
+        UILabel()
+            .byText("2️⃣ 金额输入（formatter + validator + maxLength）".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tv1.snp.bottom).offset(16)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        let tvMoney = UITextView()
+    private lazy var tvMoney: UITextView = {
+        UITextView()
             .byFont(.monospacedDigitSystemFont(ofSize: 16, weight: .regular))
             .byKeyboardType(.decimalPad)
             .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("123.45")
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title2.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
+            }
+            .jobs_onInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+                let formatted = JobsFormatters.decimal(scale: 2)(value)
+                if text != formatted { tv.text = formatted }
+                let ok = JobsValidators.decimal(min: 0, max: 999_999)(formatted)
+                tv.byBorderColor(ok ? UIColor.systemGreen : UIColor.systemRed)
+                print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
+            }
+    }()
 
-        stack.addArrangedSubview(tvMoney)
-        tvMoney.snp.makeConstraints { $0.height.equalTo(80) }
+    private lazy var title3: UILabel = {
+        UILabel()
+            .byText("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvMoney.snp.bottom).offset(16)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        tvMoney.textInput(
-            maxLength: 12,
-            formatter: JobsFormatters.decimal(scale: 2),
-            validator: JobsValidators.decimal(min: 0, max: 999_999),
-            distinct: true
-        )
-        .isValid
-        .distinctUntilChanged()
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { ok in
-            tvMoney.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-        })
-        .disposed(by: rx.disposeBag)
-    }
-    // MARK: - 3️⃣ 手机号输入演示
-    private func demo_PhoneInput() {
-        addSectionTitle("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）")
-
-        let tvPhone = UITextView()
+    private lazy var tvPhone: UITextView = {
+        UITextView()
             .byFont(.systemFont(ofSize: 16))
             .byKeyboardType(.numberPad)
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("13800138000")
+            .jobs_onInput(limit: 13) { [unowned self] char, value, mode, isLimited, text ,tv in
+                let formatted = JobsFormatters.phoneCN()(value)
+                if tv.text != formatted { tv.text = formatted }
+                let ok = JobsValidators.phoneCN()(formatted)
+                tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
+                print("📱 char='\(char)' value='\(formatted)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title3.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
+            }
+    }()
 
-        stack.addArrangedSubview(tvPhone)
-        tvPhone.snp.makeConstraints { $0.height.equalTo(80) }
+    private lazy var title4: UILabel = {
+        UILabel()
+            .byText("4️⃣ 富文本 + 链接样式 + DataDetector".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvPhone.snp.bottom).offset(16)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        tvPhone.textInput(
-            maxLength: 13,
-            formatter: JobsFormatters.phoneCN(),
-            validator: JobsValidators.phoneCN(),
-            distinct: true
-        )
-        .isValid
-        .distinctUntilChanged()
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { ok in
-            tvPhone.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
-        })
-        .disposed(by: rx.disposeBag)
-    }
-    // MARK: - 4️⃣ 富文本 + 链接样式 + DataDetector（改红色）
-    private func demo_AttrAndLink() {
-        addSectionTitle("4️⃣ 富文本 + 链接样式 + DataDetector（上：默认蓝｜下：自定义红）")
-        let tvBlue = UITextView()
-            // ===== ① 默认蓝色（不设置 linkTextAttributes）=====
+    private lazy var tvBlue: UITextView = {
+        UITextView()
             .byAttributedText(NSMutableAttributedString(
                 string: "🔗 默认蓝色链接（系统样式）：",
                 attributes: [.font: UIFont.systemFont(ofSize: 15),
@@ -183,14 +184,18 @@ final class UITextViewDemoVC: BaseVC, HasDisposeBag {
             )))
             .byEditable(false)
             .bySelectable(true)
-            .byDataDetectorTypes([.link, .phoneNumber])          // 链接/电话自动识别
+            .byDataDetectorTypes([.link, .phoneNumber])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        stack.addArrangedSubview(tvBlue)
-        tvBlue.snp.makeConstraints { $0.height.equalTo(110) }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title4.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(110)
+            }
+    }()
 
-        let tvRed = UITextView()
-        // ===== ② 自定义红色（用 linkTextAttributes 统一改红）=====
+    private lazy var tvRed: UITextView = {
+        UITextView()
             .byAttributedText(NSMutableAttributedString(
                 string: "🔴 自定义红色链接：",
                 attributes: [.font: UIFont.systemFont(ofSize: 15),
@@ -206,154 +211,129 @@ final class UITextViewDemoVC: BaseVC, HasDisposeBag {
             .byEditable(false)
             .bySelectable(true)
             .byDataDetectorTypes([.link, .phoneNumber])
-            .byLinkTextAttributes([                               // 这一段统一改红
+            .byLinkTextAttributes([
                 .foregroundColor: UIColor.systemRed,
                 .underlineStyle: NSUnderlineStyle.single.rawValue
             ])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        stack.addArrangedSubview(tvRed)
-        tvRed.snp.makeConstraints { $0.height.equalTo(110) }
-    }
-    // MARK: - 5️⃣ 查找 / 边框 / 高亮 / Writing Tools（可见即有效）
-    private func demo_Find_Border_WritingTools() {
-        addSectionTitle("5️⃣ 查找 / 高亮 / Writing Tools")
-        // 文本视图
-        let tvFind = UITextView()
-            .byText("""
-            支持 iOS16+ 的查找（⌘F / 按钮触发），以及 iOS17+ 的系统边框样式。
-            iOS18+ 支持 textHighlightAttributes（用于系统查找/写作工具等场景）。
-            下面按钮可手动打开查找面板，并演示高亮。
-            """)
-            .byFont(.systemFont(ofSize: 15))
-            .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-        tvFind.byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        // iOS16+ 开启系统查找
-        if #available(iOS 16.0, *) {
-            tvFind.byFindInteractionEnabled(true)
-        }
-        // iOS18+：配置高亮颜色（在系统“查找结果/写作工具”时由系统使用）
-        if #available(iOS 18.0, *) {
-            tvFind.byTextHighlightAttributes([
-                .backgroundColor: UIColor.systemYellow.withAlphaComponent(0.35)
-            ])
-        }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvBlue.snp.bottom).offset(12)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(110)
+            }
+    }()
 
-        stack.addArrangedSubview(tvFind)
-        tvFind.snp.makeConstraints { $0.height.equalTo(160) }
-        // ——— 工具按钮区 ———
-        stack.addArrangedSubview(UIStackView()
-            .byAxis(.horizontal)
-            .bySpacing(8)
-            .byAlignment(.fill)
-            .byDistribution(.fillEqually)
-            // 打开系统查找 UI（iOS16+）
-            .byAddArrangedSubview(UIButton(type: .system)
-                .byTitle("打开查找面板")
-                .onTap { sender in
-                    if #available(iOS 16.0, *) {
-                        tvFind.becomeFirstResponder()
-                        tvFind.findInteraction?.presentFindNavigator(showingReplace: false)
-                    } else {
-                        sender.isEnabled = false
-                        sender.setTitle("系统版本需 ≥ iOS16", for: .normal)
-                    }
-                })
-            // 模拟把“iOS”全部高亮（演示效果；与 iOS18 的 textHighlightAttributes 无冲突）
-            .byAddArrangedSubview(UIButton(type: .system)
-                .byTitle("模拟高亮“iOS”")
-                .onTap { sender in
-                    let text = tvFind.text as NSString? ?? ""
-                    let full = NSRange(location: 0, length: text.length)
-                    let regex = try? NSRegularExpression(pattern: "iOS", options: .caseInsensitive)
-                    tvFind.textStorage.beginEditing()
-                    regex?.enumerateMatches(in: text as String, options: [], range: full) { match, _, _ in
-                        if let r = match?.range {
-                            tvFind.textStorage.addAttributes(
-                                [.backgroundColor: UIColor.systemYellow.withAlphaComponent(0.35)],
-                                range: r
-                            )
-                        }
-                    }
-                    tvFind.textStorage.endEditing()
-            })
-            // 清除模拟高亮
-            .byAddArrangedSubview(UIButton(type: .system)
-                .byTitle("清除高亮”")
-                .onTap { sender in
-                    let full = NSRange(location: 0, length: (tvFind.text as NSString?)?.length ?? 0)
-                    tvFind.textStorage.beginEditing()
-                    tvFind.textStorage.removeAttribute(.backgroundColor, range: full)
-                    tvFind.textStorage.endEditing()
-                }))
-    }
-    // MARK: - 6️⃣ 双向绑定：A ⇄ B ⇄ Relay
-    private func demo_TwoWayBinding() {
-        addSectionTitle("6️⃣ 双向绑定示例：A ⇄ B ⇄ Relay")
+    private lazy var title6: UILabel = {
+        UILabel()
+            .byText("6️⃣ 双向绑定示例：A ⇄ B ⇄ Value".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvRed.snp.bottom).offset(16)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        let tvA = UITextView()
+    private lazy var tvA: UITextView = {
+        UITextView()
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byFont(.systemFont(ofSize: 16))
-            .byText("输入框 A")
+            .byText(relayValue)
+            // A -> B
+            .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+                sync(from: tvA, to: tvB, value: value)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title6.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
+            }
+    }()
 
-        let tvB = UITextView()
+    private lazy var tvB: UITextView = {
+        UITextView()
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byFont(.systemFont(ofSize: 16))
-            .byText("输入框 B")
+            .byText(relayValue)
+            // B -> A
+            .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+                sync(from: tvB, to: tvA, value: value)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvA.snp.bottom).offset(12)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
+            }
+    }()
 
-        stack.addArrangedSubview(tvA)
-        tvA.snp.makeConstraints { $0.height.equalTo(80) }
-        stack.addArrangedSubview(tvB)
-        tvB.snp.makeConstraints { $0.height.equalTo(80) }
-
-        let label = UILabel()
+    private lazy var valueLab: UILabel = {
+        UILabel()
             .byFont(.systemFont(ofSize: 13))
             .byTextColor(.secondaryLabel)
-            .byText("Relay: —")
-        stack.addArrangedSubview(label)
+            .byText("Value: \(relayValue)")
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tvB.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        let relay = BehaviorRelay<String>(value: "Hello Relay")
+    private lazy var title7: UILabel = {
+        UILabel()
+            .byText("7️⃣ 删除键监听".tr)
+            .byFont(.boldSystemFont(ofSize: 15))
+            .byTextColor(.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(valueLab.snp.bottom).offset(16)
+                make.left.right.equalTo(tv1)
+            }
+    }()
 
-        let d1 = tvA.bindTwoWay(relay, initial: .fromRelay)
-        let d2 = tvB.bindTwoWay(relay, initial: .fromRelay)
-        let d3 = relay.asDriver().drive(onNext: { v in label.text = "Relay: \(v)" })
-
-        disposeBag.insert(d1, d2, d3)
-    }
-    // MARK: - 7️⃣ 删除键监听
-    private func demo_DeleteBackward_Observe() {
-        addSectionTitle("7️⃣ 删除键监听")
-
-        let tv = UITextView()
+    private lazy var tvDelete: UITextView = {
+        UITextView()
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byFont(.systemFont(ofSize: 16))
             .byText("删除我试试看 👇")
-        stack.addArrangedSubview(tv)
-        tv.snp.makeConstraints { $0.height.equalTo(80) }
+            .jobs_onInput { [unowned self] char, value, mode, isLimited, text ,tv in
+                guard mode == .delete else { return }
+                "点击了删除键".tr.toast
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(title7.snp.bottom).offset(8)
+                make.left.right.equalTo(tv1)
+                make.height.equalTo(80)
+                make.bottom.equalToSuperview().offset(-20) // scroll 内容高度收口
+            }
+    }()
 
-        let hint = UILabel()
-            .byFont(.systemFont(ofSize: 13))
-            .byTextColor(.systemPink)
-            .byText("⌫ 删除键触发")
-        hint.isHidden = true
-        stack.addArrangedSubview(hint)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        jobsSetupGKNav(title: "UITextView 全量演示".tr)
 
-        tv.didPressDelete
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: {
-                hint.isHidden = false
-                hint.byAlpha(1)
-                UIView.animate(withDuration: 0.3, delay: 0.8, options: []) {
-                    hint.byAlpha(0)
-                } completion: { _ in hint.isHidden = true }
-            })
-            .disposed(by: rx.disposeBag)
+        title1.byVisible(YES)
+        tv1.byVisible(YES)
+        title2.byVisible(YES)
+        tvMoney.byVisible(YES)
+        title3.byVisible(YES)
+        tvPhone.byVisible(YES)
+        title4.byVisible(YES)
+        tvBlue.byVisible(YES)
+        tvRed.byVisible(YES)
+        title6.byVisible(YES)
+        tvA.byVisible(YES)
+        tvB.byVisible(YES)
+        valueLab.byVisible(YES)
+        title7.byVisible(YES)
+        tvDelete.byVisible(YES)
     }
-    // MARK: - 工具
-    private func addSectionTitle(_ text: String) {
-        stack.addArrangedSubview(UILabel()
-            .byText(text)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel))
+
+    func sync(from source: UITextView, to target: UITextView, value: String) {
+        guard !isSyncing else { return }
+        isSyncing = true
+        relayValue = value
+        valueLab.byText("Value: \(relayValue)")
+        if target.text != value { target.text = value }
+        isSyncing = false
     }
 }

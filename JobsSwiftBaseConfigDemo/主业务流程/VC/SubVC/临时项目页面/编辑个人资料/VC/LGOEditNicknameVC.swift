@@ -41,19 +41,25 @@ final class LGOEditNicknameVC: BaseVC {
             .bySmartQuotesType(.no)
             .bySmartDashesType(.no)
             .bySmartInsertDeleteType(.no)
-            // 限制输入
-            .byLimitLength(12) {[weak self] isLimited, tf in
-                guard let self else { return }
-                tipLabel.byVisible(isLimited)
-            }
             // 编辑属性
             .byAllowsEditingTextAttributes(true)
             .byDefaultTextAttributes([.kern: 0.5]) // 字距
             .byTypingAttributes([.foregroundColor: UIColor.label])
-            .onChange { [weak self] tf, input, old, isDeleting in
+            // 新 API：输入监听 + 限制长度
+            .jobs_onInput(limit: 12) { [weak self] char, value, mode, isLimited in
                 guard let self else { return }
-                let text = input.trimmingCharacters(in: .whitespacesAndNewlines)
-                btn.isEnabled = !text.isEmpty
+                // 1) 超限提示
+                tipLabel.byVisible(isLimited)
+                // 2) 去掉首尾空白（避免“只输入空格也能保存”）
+                let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+                if trimmed != value {
+                    // 这里会触发下一次 shouldChange，但一般不会形成死循环（因为 trimmed 稳定）
+                    nicknameField.text = trimmed
+                }
+                // 3) 控制按钮 enable
+                let current = nicknameField.text ?? trimmed
+                btn.isEnabled = !current.isEmpty
+                print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(current)'")
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -65,9 +71,9 @@ final class LGOEditNicknameVC: BaseVC {
     private lazy var btn: UIButton = {
         UIButton.sys()
             /// 普通字符串@设置主标题
-            .byTitle("保存", for: .normal)
+            .byTitle("保存".tr, for: .normal)
             .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
             /// 事件触发@点按
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -91,10 +97,10 @@ final class LGOEditNicknameVC: BaseVC {
         super.viewDidLoad()
         view.byBgColor(.systemGroupedBackground)
         jobsSetupGKNav(
-            title: "编辑昵称",
+            title: "编辑昵称".tr,
             rightButtons: [btn]
         )
-        btn.byEnabled(NO)
         nicknameField.byVisible(YES)
+        tipLabel.byVisible(NO)
     }
 }
