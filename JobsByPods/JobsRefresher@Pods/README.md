@@ -148,4 +148,5 @@ private lazy var collectionView: UICollectionView = {
 * [**XZMRefresh**](https://github.com/xiezhongmin/XZMRefresh) ➤ 关键词：横向刷新、参考[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)、**Objc**
 * [**CollectionViewSideRefresh**](https://github.com/dangercheng/CollectionViewSideRefresh) ➤ **Objc**
 * [**DGElasticPullToRefresh**](https://github.com/gontovnik/DGElasticPullToRefresh) ➤ **Swift**
+* [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) ➤ **Swift**
 
