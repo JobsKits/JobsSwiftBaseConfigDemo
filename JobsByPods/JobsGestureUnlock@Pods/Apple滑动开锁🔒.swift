@@ -58,7 +58,7 @@ public class SlideToUnlockView: UIView {
     /// 背景轨道（灰色圆角条）
     private lazy var trackView: UIView = {
         UIView()
-            .byBgColor(.systemGray5)
+            .byBgColor(JobsCor.systemGray5)
             .byCornerRadius(28)
             .byMasksToBounds(YES)
             .byAddTo(self) { [unowned self] make in
@@ -69,7 +69,7 @@ public class SlideToUnlockView: UIView {
     private lazy var shimmerView: UIView = { [unowned self] in
         UIView()
             .byShimmerColors(
-                base: UIColor.systemGray5,                 // 与轨道底色一致
+                base: JobsCor.systemGray5,                 // 与轨道底色一致
                 highlight: UIColor.white.withAlphaComponent(0.9)
             )
             .byAddTo(trackView) { make in
@@ -189,16 +189,21 @@ public class SlideToUnlockView: UIView {
     }
 
     private func updateDirectionUI() {
-        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
         let symbolName: String
         switch direction {
-        case .leftToRight:
-            symbolName = "chevron.right"
-        case .rightToLeft:
-            symbolName = "chevron.left"
+        case .leftToRight: symbolName = "chevron.right"
+        case .rightToLeft: symbolName = "chevron.left"
         }
-        arrow.byImage(symbolName.sysImg(config))
+
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+            arrow.byImage(symbolName.sysImg(config))
+        } else {
+            // iOS12：用同名的 asset 图（chevron.right / chevron.left），或给个兜底
+            arrow.byImage(UIImage(named: symbolName) ?? symbolName.img)
+        }
     }
+
 
     private func updateLayoutForProgress(animated: Bool) {
         guard bounds.width > 0 else { return }

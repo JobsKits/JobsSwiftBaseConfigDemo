@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
-    'UnityManager.swift'
-#    'FlutterBridge.swift' # 如果项目需要 Flutter 则需要将此注释
+    'UnityManager.swift',
+#    'FlutterBridge.swift'
   ]
   
   # 递归匹配当前目录下所有子目录里的 .swift 文件
@@ -36,12 +36,12 @@ Pod::Spec.new do |s|
                      'CoreLocation',
                      'CoreBluetooth',
                      'CoreText'
+  
+  s.dependency 'Flutter'
+  s.dependency 'FlutterPluginRegistrant'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsToast'
-  # 如果项目需要 Flutter 则需要将下列放开
-  s.dependency 'Flutter'
-  s.dependency 'FlutterPluginRegistrant'
   
 end

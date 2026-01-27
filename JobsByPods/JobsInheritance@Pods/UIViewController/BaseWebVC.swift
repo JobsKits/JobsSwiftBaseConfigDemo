@@ -15,7 +15,7 @@ import WebKit
 import SnapKit
 import GKNavigationBarSwift
 import JobsByUIKit
-import JobsInheritance
+import JobsSwiftBaseDefines
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")
@@ -58,7 +58,7 @@ open class BaseWebVC: BaseVC {
             .byNavBarEnabled(true)
             .byNavBarStyle { s in
                 s.byHairlineHidden(false)
-                 .byBackgroundColor(.systemBackground)
+                 .byBackgroundColor(JobsCor.systemBackground)
                  .byTitleAlignmentCenter(true)
             }
             /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
@@ -68,7 +68,7 @@ open class BaseWebVC: BaseVC {
                     .byImage("chevron.left".sysImg, for: .normal)
                     .byTitle("返回", for: .normal)
                     .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                    .byTitleColor(.label, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
                     .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                     .byTapSound("Sound.wav")
             }

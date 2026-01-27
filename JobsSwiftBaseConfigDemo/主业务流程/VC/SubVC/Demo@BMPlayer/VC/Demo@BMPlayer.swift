@@ -73,10 +73,10 @@ extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Row(rawValue: indexPath.row)! {
-        case .local:  PlayerLocalVC().byPush(self)
         case .remote: PlayerRemoteVC().byPush(self)
         case .feed:   FeedListVC().byPush(self)
 #if canImport(BMPlayer)
+        case .local:  PlayerLocalVC().byPush(self)
         case .float:  JobsLiveFloatPlayer.shared.showRemoteLive()
 #endif
         }

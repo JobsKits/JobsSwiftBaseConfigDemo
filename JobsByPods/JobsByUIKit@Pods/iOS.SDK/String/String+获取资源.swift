@@ -99,6 +99,15 @@ extension String {
     public func sysImg(_ config: UIImage.SymbolConfiguration) -> UIImage {
         UIImage(systemName: self, withConfiguration: config) ?? jobsSolidBlue()
     }
+    /// 全版本可用：iOS13+ 走 SF Symbol + config；iOS12- 走本地同名资源
+    public func sysImg(pointSize: CGFloat = 18, weight: JobsSymbolWeight = .regular) -> UIImage {
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: pointSize, weight: weight.toSymbolWeight())
+            return UIImage(systemName: self, withConfiguration: config) ?? jobsSolidBlue()
+        } else {
+            return UIImage(named: self) ?? jobsSolidBlue()
+        }
+    }
 #if canImport(Kingfisher)
     /// 远程：通过 KF 异步下载后返回；本地：直接返回
     // ================================== Async 版本（仅在能用并发时编译） ==================================

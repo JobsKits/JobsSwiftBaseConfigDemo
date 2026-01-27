@@ -236,7 +236,7 @@ public func makeEKAttributes() -> EKAttributes{
         .byPosition(.center)
         .byDuration(.infinity)  // 交互型：不自动消失
         // 统一交给 EK 控制外观
-        .byBackground(.color(color: EKColor(.secondarySystemBackground)))
+        .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
         .byCorner(radius: 14)
         .byShadow()
         // 外部点击无效，必须点按钮
@@ -359,7 +359,7 @@ public func networkRichListenerBy(_ view:UIView){
                 // 第 1 行：源
                 JobsRichRun(.text("源: "))
                     .font(.systemFont(ofSize: 10, weight: .medium))
-                    .color(.secondaryLabel),
+                    .color(JobsCor.secondaryLabel),
 
                 JobsRichRun(.text(source.displayName))
                     .font(.systemFont(ofSize: 11, weight: .semibold))

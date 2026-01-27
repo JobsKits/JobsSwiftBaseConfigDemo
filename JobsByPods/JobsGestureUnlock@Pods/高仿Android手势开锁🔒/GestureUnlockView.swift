@@ -200,7 +200,11 @@ public final class GestureUnlockView: UIView {
         nodes[idx].apply(state: visualState == .error ? .error : .selected)
 
         if configuration.hapticsEnabled {
-            impact.impactOccurred(intensity: 0.8)
+            if #available(iOS 13.0, *) {
+                impact.impactOccurred(intensity: 0.8)
+            } else {
+                impact.impactOccurred()
+            }
         }
 
         if visualState == .normal { setVisualState(.selected) }

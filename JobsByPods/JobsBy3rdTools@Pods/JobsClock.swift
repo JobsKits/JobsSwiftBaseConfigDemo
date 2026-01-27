@@ -26,7 +26,7 @@ open class JobsClockView: UIView {
     private lazy var dialLayer: CAShapeLayer = {
         CAShapeLayer()
             .byFillColor(.clear)
-            .byStrokeColor(.label.withAlphaComponent(0.2))
+            .byStrokeColor(JobsCor.label.withAlphaComponent(0.2))
             .byLineWidth(2)
             .byAddTo(layer)
     }()
@@ -34,14 +34,14 @@ open class JobsClockView: UIView {
     private lazy var tickLayer: CAShapeLayer = {
         CAShapeLayer()
             .byFillColor(.clear)
-            .byStrokeColor(.label)
+            .byStrokeColor(JobsCor.label)
             .byLineWidth(2)
             .byAddTo(layer)
     }()
     /// 中心小圆点
     private lazy var centerDotLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.label)
+            .byFillColor(JobsCor.label)
             .byStrokeColor(.clear)
             .byAddTo(layer)
     }()
@@ -51,7 +51,7 @@ open class JobsClockView: UIView {
             UILabel()
                 .byText("\(value)")
                 .byFont(.systemFont(ofSize: 12, weight: .medium))
-                .byTextColor(.label)
+                .byTextColor(JobsCor.label)
                 .byTextAlignment(.center)
                 .byAddTo(self)
         }
@@ -90,8 +90,8 @@ open class JobsClockView: UIView {
     }
 
     deinit {
-        Task { @MainActor [weak self] in
-            stop()
+        jobsRunOnMain { [weak self] in
+            self?.stop()
         }
     }
 

@@ -22,6 +22,7 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
+#    'BMPlayer+DSL.swift'
   ]
 
   # 递归匹配当前目录下所有子目录里的 .swift 文件
@@ -34,7 +35,6 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage'
   s.dependency 'GKNavigationBarSwift'
   s.dependency 'SnapKit'
-  s.dependency 'BMPlayer'
   s.dependency 'JobsInheritance'
   s.dependency 'JobsTextTools'
   s.dependency 'JobsSwiftBaseTools'
@@ -44,5 +44,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftStandardLibrary_extension'
   s.dependency 'JobsSwiftMetalKit_extensions'
+  s.dependency 'BMPlayer'
   
 end

@@ -5,16 +5,21 @@
 //  Created by Jobs on 12/16/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
+import JobsSwiftBaseDefines
 
 public struct GestureUnlockConfiguration {
     public var gridDimension: Int = 3
-
     /// 节点直径（实际会按布局自动取 min(该值, spacing*0.65)）
     public var nodeDiameter: CGFloat = 56
     public var nodeBorderWidth: CGFloat = 2
 
-    public var nodeNormalColor: UIColor = .systemGray3
+    public var nodeNormalColor: UIColor = JobsCor.systemGray3
     public var nodeSelectedColor: UIColor = .systemBlue
     public var nodeErrorColor: UIColor = .systemRed
 

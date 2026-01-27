@@ -13,7 +13,6 @@ import UIKit
 
 import AVFoundation
 import SnapKit
-import BMPlayer
 import JobsInheritance
 import GKNavigationBarSwift
 import JobsByUIKit
@@ -22,6 +21,8 @@ import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftBaseTools
 import JobsSwiftAppTools
+#if canImport(BMPlayer)
+import BMPlayer
 /**
 
  Info.plist
@@ -110,3 +111,4 @@ final class PlayerRemoteVC: BaseVC {
         }
     }
 }
+#endif

@@ -38,7 +38,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         didSet { view.setNeedsLayout() }
     }
 
-    public var barBackgroundColor: UIColor = .systemBackground {
+    public var barBackgroundColor: UIColor = JobsCor.systemBackground {
         didSet { TabBar.backgroundColor = barBackgroundColor }
     }
 
@@ -166,7 +166,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
     // MARK: - UI
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = JobsCor.systemBackground
         view.addSubview(contentScrollView)
         TabBar.addSubview(bgImageView)
         view.addSubview(TabBar)

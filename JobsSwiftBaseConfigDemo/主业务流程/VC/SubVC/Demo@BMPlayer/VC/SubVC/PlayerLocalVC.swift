@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 import AVFoundation
-import BMPlayer
 import SnapKit
 import JobsInheritance
 import GKNavigationBarSwift
@@ -20,7 +19,8 @@ import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
-
+#if canImport(BMPlayer)
+import BMPlayer
 final class PlayerLocalVC: BaseVC {
     // MARK: - 懒加载：播放器
     private lazy var player: BMPlayer = { [unowned self] in
@@ -53,12 +53,11 @@ final class PlayerLocalVC: BaseVC {
                 }
             }
     }()
-
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "本地单播")
+        jobsSetupGKNav(title: "本地单播".tr)
         player.byVisible(YES)
     }
 
@@ -69,3 +68,4 @@ final class PlayerLocalVC: BaseVC {
         }
     }
 }
+#endif

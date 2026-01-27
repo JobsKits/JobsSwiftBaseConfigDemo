@@ -13,14 +13,14 @@ import UIKit
 
 import AVFoundation
 import GKNavigationBarSwift
-import BMPlayer
 import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
 import JobsTextTools
-
+#if canImport(BMPlayer)
+import BMPlayer
 final class PlayerDetailVC: BaseVC {
     private let item: FeedItem
     required init?(coder: NSCoder) { fatalError() }
@@ -83,3 +83,4 @@ final class PlayerDetailVC: BaseVC {
         if isMovingFromParent { player.byPause() }   // 阻断后续 autoPlay
     }
 }
+#endif

@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 public struct BRPickerStyle {
     public init() {}
@@ -32,9 +33,9 @@ public struct BRPickerStyle {
     public var isAutoSelect: Bool = false
     // MARK: - UI
     public var maskColor: UIColor = UIColor.black.withAlphaComponent(0.35)
-    public var panelBackgroundColor: UIColor = .systemBackground
-    public var toolbarBackgroundColor: UIColor = .secondarySystemBackground
-    public var titleColor: UIColor = .label
+    public var panelBackgroundColor: UIColor = JobsCor.systemBackground
+    public var toolbarBackgroundColor: UIColor = JobsCor.secondarySystemBackground
+    public var titleColor: UIColor = JobsCor.label
     public var buttonColor: UIColor = .systemBlue
     public var cornerRadius: CGFloat = 16
     // MARK: - ✅ Bottom Layout (全局默认贴底)

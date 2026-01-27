@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsSwiftBaseDefines
 
 public final class BRTextPickerView: NSObject {
     public var pickerMode: BRTextPickerMode = .single
@@ -153,7 +154,7 @@ extension BRTextPickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         let label = (view as? UILabel) ?? UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .label
+        label.textColor = JobsCor.label
         label.text = modelAt(component: component, row: row)?.text
         return label
     }

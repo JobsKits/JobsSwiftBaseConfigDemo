@@ -16,11 +16,13 @@ import UIKit
 
 import AVFoundation
 import SnapKit
-import BMPlayer
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
+#if canImport(BMPlayer)
+import BMPlayer
+#endif
 // MARK: - 小工具
 private extension CATransform3D {
     static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }
@@ -43,6 +45,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     // 当前展示的面板
     private var current: PanelKind = .login
     // MARK: UI
+#if canImport(BMPlayer)
     private lazy var player: BMPlayer = {
         // 注意：把 "welcome_video.mp4" 放到主 bundle
         BMPlayer()
@@ -64,6 +67,7 @@ final class JobsAppDoorDemoVC: BaseVC {
                 make.edges.equalToSuperview()
             }
     }()
+#endif
     /// 居中承载面板的容器（加圆角/毛玻璃都可以放这层）
     private lazy var panelHost: UIView = {
         UIView()
@@ -115,12 +119,15 @@ final class JobsAppDoorDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        player.byVisible(YES)
+       
         panelHost.byVisible(YES)
         loginPanel.byVisible(YES)
         registerPanel.byVisible(YES)
 //        customerServiceBtn.byVisible(YES)
+#if canImport(BMPlayer)
+        player.byVisible(YES)
         setupLoopPlayback()
+#endif
         buildDemoSwitchButtons()   // Demo：顶部切换按钮（替换为真实跳转入口即可）
     }
 

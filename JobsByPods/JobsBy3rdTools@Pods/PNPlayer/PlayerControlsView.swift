@@ -36,7 +36,7 @@ open class PlayerControlsView: UIView {
     // MARK: - UI (lazy + 的 DSL，不做相互引用)
     private lazy var playPauseButton: UIButton = {
         let v = UIButton.sys()
-            .byImage(UIImage(systemName: "play.fill"), for: .normal)
+            .byImage("play.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.zero)
             .byTintColor(.white)
             .onTap { [weak self] _ in
@@ -155,7 +155,7 @@ open class PlayerControlsView: UIView {
     public func updatePlayPauseButton(isPlaying: Bool) {
         self.isPlaying = isPlaying
         let imageName = isPlaying ? "pause.fill" : "play.fill"
-        _ = playPauseButton.byImage(UIImage(systemName: imageName), for: .normal)
+        _ = playPauseButton.byImage(imageName.sysImg, for: .normal)
     }
 
     public func updateProgress(currentTime: TimeInterval, duration: TimeInterval) {

@@ -5,12 +5,16 @@
 //  Created by Mac on 10/28/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
-import BMPlayer
+#endif
+
 import SnapKit
-
 enum PlayerCenter { static let shared = PlayerCenterImpl() }
-
+#if canImport(BMPlayer)
+import BMPlayer
 final class PlayerCenterImpl {
     let player = BMPlayer()
     private var currentHost: UIView?
@@ -36,3 +40,4 @@ final class PlayerCenterImpl {
 
     func pause() { player.pause() }
 }
+#endif

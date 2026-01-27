@@ -16,10 +16,13 @@ public enum CryptoError: Error {
     case decryptionFailed
     case keyGenerationFailed
     case unsupported
+    case invalidData
 }
 
 public extension Data {
-    var hexString: String { map { String(format: "%02x", $0) }.joined() }
+    var hexString: String {
+        map { String(format: "%02hhx", $0) }.joined()
+    }
 
     init?(hex: String) {
         let hex = hex.lowercased()

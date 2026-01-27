@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
+import JobsSwiftBaseDefines
 
 public final class BRDatePickerView: NSObject {
     public var pickerMode: BRDatePickerMode = .date
@@ -233,7 +234,7 @@ extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         let lab = (v as? UILabel) ?? UILabel()
         lab.textAlignment = .center
         lab.font = .systemFont(ofSize: 17)
-        lab.textColor = .label
+        lab.textColor = JobsCor.label
 
         switch pickerMode {
         case .ymd: lab.text = c == 0 ? "\(years[r])年" : (c == 1 ? "\(months[r])月" : "\(days[r])日")

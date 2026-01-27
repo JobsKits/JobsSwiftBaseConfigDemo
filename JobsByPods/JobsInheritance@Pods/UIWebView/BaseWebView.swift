@@ -20,6 +20,7 @@ import SafariServices
 import SnapKit
 import JobsNavBar
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 /**
  在 Info.plist 添加👇（更通用的 ATS 配置，避免为某域名单独开洞）
      <key>NSAppTransportSecurity</key>
@@ -243,17 +244,17 @@ public class BaseWebView: UIView {
     private func setupKVO() {
         kvoEstimatedProgress = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, change in
             guard let p = change.newValue else { return }
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                self.progressView.isHidden = p >= 1.0
-                self.progressView.setProgress(Float(p), animated: true)
+            guard let self = self else { return }
+            jobsRunOnMain(self) { s in
+                s.progressView.isHidden = p >= 1.0
+                s.progressView.setProgress(Float(p), animated: true)
                 if p >= 1.0 {
-                    try? await Task.sleep(nanoseconds: 250_000_000)
-                    self.progressView.progress = 0
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak s] in
+                        s?.progressView.progress = 0
+                    }
                 }
             }
-        }
-        kvoTitle = webView.observe(\.title, options: [.new]) { _, _ in }
+        };kvoTitle = webView.observe(\.title, options: [.new]) { _, _ in }
     }
     @MainActor
     private func applyRuntimeToggles() {
@@ -741,14 +742,19 @@ public extension BaseWebView {
         }
         // 没有注册时，给默认行为（可选）：比如支持 config.tokenProvider
         if action == "getToken", let f = mobileConfig.tokenProvider {
-            Task { @MainActor [weak self] in
-                let token = await f() ?? ""
-                guard let self, !callback.isEmpty else { return }
-                let js = "(window[\(Self.quote(callback))]||function(){})(\(Self.toJSONLiteral(token)));"
+            if #available(iOS 13.0, *) {
+                jobsRunOnMain(self) { s in
+                    let token = await f() ?? ""
+                    guard !callback.isEmpty else { return }
+                    let js = "(window[\(Self.quote(callback))]||function(){})('\(token)')"
+                    s.webView.jobsEval(js)
+                }
+            } else {
+                guard !callback.isEmpty else { return }
+                let js = "(window[\(Self.quote(callback))]||function(){})('')"
                 self.webView.jobsEval(js)
             };return
-        }
-        mobileConfig.onUnknownAction?(action, dict)
+        };mobileConfig.onUnknownAction?(action, dict)
     }
     // === 极简 JS shim：前端没注入时兜底 ===
     @MainActor
@@ -1072,11 +1078,9 @@ private extension BaseWebView {
         var req = original
         // 固定忽略本地缓存
         req.cachePolicy = .reloadIgnoringLocalCacheData
-
         // 打标，防止在 decidePolicyFor 被我们再次拦截造成死循环
         var headers = req.allHTTPHeaderFields ?? [:]
         headers[Self.noCacheHeader] = "1"
-
         // 明确指令：不缓存、不复用
         // （服务端若强行缓存，这是我们能做的最大化提示）
         if headers["Cache-Control"] == nil {
@@ -1099,9 +1103,10 @@ private extension BaseWebView {
         } else {
             webView.reload()
         }
-        Task {
-            try? await Task.sleep(nanoseconds: 600_000_000) // 0.6s
-            refresher.endRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+            jobsRunOnMain(self) { s in
+                s.refresher.endRefreshing()
+            }
         }
     }
 }

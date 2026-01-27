@@ -114,8 +114,7 @@ public final class MediaPickerService: NSObject {
                     return nil
                 }()
                 guard let device = chooseDevice else {
-                    Task{
-                        @MainActor in
+                    onMain {
                         "未检测到可用摄像头用于录制".toast
                     };return
                 }

@@ -124,7 +124,7 @@ final class JobsLoadingIndicator: UIView {
         };return v.byHidesWhenStopped(YES)
     }()
 
-    #if canImport(Lottie)
+    #if canImport(Lottie) && JOBS_MODERN_LOTTIE
     private var lottieView: LottieAnimationView?
     #endif
 
@@ -143,7 +143,7 @@ final class JobsLoadingIndicator: UIView {
         isRefreshing = true
         rebuildIfNeeded()
         if usesLottie {
-            #if canImport(Lottie)
+            #if canImport(Lottie) && JOBS_MODERN_LOTTIE
             lottieView?.isHidden = false
             lottieView?.play()
             #endif
@@ -155,7 +155,7 @@ final class JobsLoadingIndicator: UIView {
 
     func hideRefreshing() {
         isRefreshing = false
-        #if canImport(Lottie)
+        #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         lottieView?.stop()
         lottieView?.isHidden = true
         #endif
@@ -164,7 +164,7 @@ final class JobsLoadingIndicator: UIView {
     }
 
     var usesLottie: Bool {
-        #if canImport(Lottie)
+        #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         return lottieView != nil
         #else
         return false
@@ -179,7 +179,7 @@ final class JobsLoadingIndicator: UIView {
         }
 
         let resolved = resolveSetting()
-        #if canImport(Lottie)
+        #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         if let setting = resolved, let anim = loadAnimation(setting) {
             // 需要 Lottie
             if lottieView == nil {
@@ -229,7 +229,7 @@ final class JobsLoadingIndicator: UIView {
         }
     }
 
-    #if canImport(Lottie)
+    #if canImport(Lottie) && JOBS_MODERN_LOTTIE
     private func loadAnimation(_ setting: JobsLottieSetting) -> LottieAnimation? {
         // 兼容 "xxx" / "xxx.json" / "folder/xxx.json"
         let raw = setting.animationName
@@ -262,7 +262,7 @@ final class JobsLoadingIndicator: UIView {
         let y = (bounds.height - side) * 0.5
         let r = CGRect(x: x, y: y, width: side, height: side)
         spinner.frame = r
-        #if canImport(Lottie)
+        #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         lottieView?.frame = r
         #endif
     }

@@ -973,3 +973,32 @@ public enum JSONValue: Equatable, Codable {
         }
     }
 }
+
+public enum JobsSymbolWeight {
+    case ultraLight,
+         thin,
+         light,
+         regular,
+         medium,
+         semibold,
+         bold,
+         heavy,
+         black
+}
+
+@available(iOS 13.0, *)
+extension JobsSymbolWeight {
+    public func toSymbolWeight() -> UIImage.SymbolWeight {
+        switch self {
+        case .ultraLight: return .ultraLight
+        case .thin:       return .thin
+        case .light:      return .light
+        case .regular:    return .regular
+        case .medium:     return .medium
+        case .semibold:   return .semibold
+        case .bold:       return .bold
+        case .heavy:      return .heavy
+        case .black:      return .black
+        }
+    }
+}

@@ -195,7 +195,11 @@ private final class LocationProxy: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        handle(manager.authorizationStatus)
+        if #available(iOS 14.0, *) {
+            handle(manager.authorizationStatus)
+        } else {
+            handle(CLLocationManager.authorizationStatus())
+        }
     }
 
     @available(iOS, introduced: 4.2, deprecated: 14.0)
