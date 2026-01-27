@@ -12,20 +12,18 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsSwiftBaseDefines
-import JobsToast
+import JobsSwiftDebugTools
 
-open class BaseVC: UIViewController {
+open class BaseVC: UIViewController ,JobsDebugDeinitProtocol{
     deinit {
         // 清理资源
         print("deinit")
-        debugOnly {  // 仅 Debug 执行
-            "当前控制器销毁成功".toast
-        }
     }
+//    public var debugDeinitToastText: String { "当前UIViewController销毁成功".tr }
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        enableDebugDeinitToast()
 //        jobsSetupGKNav(title: "定义当前的标题")
     }
     /// 手势返回
