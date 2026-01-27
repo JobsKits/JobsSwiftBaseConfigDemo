@@ -22,6 +22,7 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
+    'JobsDebugDeinitAutoLoad.m'
   ]
   
   s.ios.frameworks = 'UIKit'
