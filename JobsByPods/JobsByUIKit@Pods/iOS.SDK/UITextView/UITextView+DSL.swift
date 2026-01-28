@@ -225,7 +225,7 @@ public extension UITextView {
             .byBorderWidth(1)
             .byCornerRadius(radius)
             .byMasksToBounds(true)
-        byBgColor(JobsCor.secondarySystemBackground)
+        byBackgroundColor(JobsCor.secondarySystemBackground)
         return self
     }
 }

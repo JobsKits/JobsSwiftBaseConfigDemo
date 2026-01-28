@@ -19,7 +19,7 @@ final class LeftMenuCell: UITableViewCell {
 
     private lazy var indicator: UIView = {
         UIView()
-            .byBgColor(.systemOrange)
+            .byBackgroundColor(.systemOrange)
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview()
                 make.centerY.equalToSuperview()
@@ -91,7 +91,7 @@ extension LeftMenuCell {
         indicator.isHidden = !selected
         titleLabel.byTextColor(selected ? .label : .secondaryLabel)
         iconView.byTintColor(selected ? .systemOrange : .systemGray)
-        contentView.byBgColor(
+        contentView.byBackgroundColor(
             selected ? UIColor.systemOrange.withAlphaComponent(0.15) : .clear
         )
         return self

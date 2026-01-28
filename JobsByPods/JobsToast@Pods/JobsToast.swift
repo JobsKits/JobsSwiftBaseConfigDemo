@@ -66,7 +66,7 @@ public final class JobsToast: UIView {
         @discardableResult public func byCornerRadius(_ value: CGFloat) -> Self {
             var cfg = self; cfg.cornerRadius = value; return cfg
         }
-        @discardableResult public func byBgColor(_ color: UIColor) -> Self {
+        @discardableResult public func byBackgroundColor(_ color: UIColor) -> Self {
             var cfg = self; cfg.backgroundColor = color; return cfg
         }
     }
@@ -191,7 +191,7 @@ public func toastBy(_ string: String) {
         JobsToast.show(
             text: string,
             config: JobsToast.Config()
-                .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                 .byCornerRadius(12)
         )
     }

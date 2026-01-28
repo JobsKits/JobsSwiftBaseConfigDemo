@@ -40,7 +40,7 @@ public extension RTBadgeConfig {
     @discardableResult func byOffset(_ v: UIOffset = .init(horizontal: -6, vertical: 6)) -> Self { var c=self; c.offset=v; return c }
     @discardableResult func byInsets(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self { var c=self; c.insets=v; return c }
     @discardableResult func byInset(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self { var c=self; c.insets=v; return c }
-    @discardableResult func byBgColor(_ v: UIColor = .systemRed) -> Self { var c=self; c.backgroundColor=v; return c }
+    @discardableResult func byBackgroundColor(_ v: UIColor = .systemRed) -> Self { var c=self; c.backgroundColor=v; return c }
     @discardableResult func byTextColor(_ v: UIColor = .white) -> Self { var c=self; c.textColor=v; return c }
     @discardableResult func byFont(_ v: UIFont = .systemFont(ofSize: 11, weight: .bold)) -> Self { var c=self; c.font=v; return c }
     @discardableResult func byCornerRadius(_ v: CGFloat? = nil) -> Self { var c=self; c.cornerRadius=v; return c }
@@ -77,7 +77,7 @@ public extension UIView {
             .byMasksToBounds(false)
             .byBorderColor(cfg.borderColor)
             .byZPosition(cfg.zIndex)
-            .byBgColor(cfg.backgroundColor)
+            .byBackgroundColor(cfg.backgroundColor)
             .byBorderWidth(cfg.borderWidth)
 
         if let sc = cfg.shadowColor {
@@ -117,7 +117,7 @@ public extension UIView {
                      offset: UIOffset = .init(horizontal: -4, vertical: 4),
                      color: UIColor = .systemRed) -> Self {
         return byCornerBadge(.custom(UIView()
-            .byBgColor(color)
+            .byBackgroundColor(color)
             .byCornerRadius(diameter / 2)
             .byAdd({ make in
                 make.width.height.equalTo(diameter)
@@ -125,7 +125,7 @@ public extension UIView {
                 cfg.byInset(.zero)
                     .byCornerRadius(diameter / 2)
                     .byOffset(offset)
-                    .byBgColor(.clear)
+                    .byBackgroundColor(.clear)
                     .byBorder(color: nil, width: 0)
                     .byShadow(color: nil)
         }

@@ -49,7 +49,7 @@ final class LiveCommentDemoVC: BaseVC {
             .bySeparatorStyle(.none)
             .byKeyboardDismissMode(.interactive)
             .byNoContentInsetAdjustment()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -64,7 +64,7 @@ final class LiveCommentDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
         jobsSetupGKNav(
             title: "直播间留言"
         )

@@ -23,7 +23,7 @@ public final class VideoCell: UICollectionViewCell {
         let img = "播放按钮".img.withRenderingMode(.alwaysOriginal)   // 确保非模板渲染
         let b = UIButton(type: .system)
             .byImage(img, for: .normal)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byContentEdgeInsets(.zero)
             .onTap { [weak self] _ in self?.onReplay() }
             .byAddTo(self.contentView) { make in

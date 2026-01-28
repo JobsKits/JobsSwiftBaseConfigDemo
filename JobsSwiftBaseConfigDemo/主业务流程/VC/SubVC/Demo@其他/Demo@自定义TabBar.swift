@@ -178,7 +178,7 @@ final class TabBarDemoVC: BaseVC {
                         .byCornerBadgeText("NEW".tr) { cfg in
                             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                                .byBgColor(.systemRed)
+                                .byBackgroundColor(.systemRed)
                                 .byFont(.systemFont(ofSize: 11, weight: .bold))
                                 .byShadow(color: UIColor.black.withAlphaComponent(0.25),
                                           radius: 2,

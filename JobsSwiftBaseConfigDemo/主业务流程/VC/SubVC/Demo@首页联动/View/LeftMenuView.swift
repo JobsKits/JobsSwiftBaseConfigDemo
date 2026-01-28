@@ -39,7 +39,7 @@ final class LeftMenuView: UIView {
         backgroundColor = UIColor.systemGray6 // 灰底列
         // 右侧 0.5 分隔线
         UIView()
-            .byBgColor(.separator)
+            .byBackgroundColor(.separator)
             .byAddTo(self) { make in
                 make.top.bottom.trailing.equalToSuperview()
                 make.width.equalTo(0.5)

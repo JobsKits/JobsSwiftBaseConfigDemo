@@ -276,17 +276,18 @@ public extension UIButton {
 extension UIButton {
     @discardableResult
     public func byBackgroundColor(_ color: UIColor?,
-                           for state: UIControl.State = .normal) -> Self {
-        let c = color ?? .clear   // ✅ 统一 nil 语义：当作清空背景
+                                  for state: UIControl.State = .normal) -> Self {
+        let c = color ?? .clear
         if #available(iOS 15.0, *), state == .normal {
             var cfg = self.configuration ?? .plain()
-            // ✅ 不碰 cfg.background.xxx，只用 baseBackgroundColor
             cfg.baseBackgroundColor = c
-            if cfg.title == nil, let t = self.title(for: .normal), !t.isEmpty { cfg.title = t }
-            if cfg.baseForegroundColor == nil, let tc = self.titleColor(for: .normal) { cfg.baseForegroundColor = tc }
+            if cfg.title == nil,
+               let t = self.title(for: .normal),
+               !t.isEmpty { cfg.title = t }
+            if cfg.baseForegroundColor == nil,
+               let tc = self.titleColor(for: .normal) { cfg.baseForegroundColor = tc }
             self.configuration = cfg
-            // ✅ 保险：某些配置下 baseBackgroundColor 不会立刻体现在 layer 上
-            // 这里是 UIButton 自身属性，不涉及 iOS15-only API
+            // 保险：某些 configuration 情况下不立刻反映到 layer
             self.backgroundColor = c
             byUpdateConfig()
         } else {

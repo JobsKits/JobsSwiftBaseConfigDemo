@@ -28,7 +28,7 @@ final class HUDHelper {
             .byTextColor(.white)
             .byFont(.systemFont(ofSize: 15))
             .byTextAlignment(.center)
-            .byBgColor(UIColor(white: 0, alpha: 0.8))
+            .byBackgroundColor(UIColor(white: 0, alpha: 0.8))
             .byCornerRadius(10)
             .byNumberOfLines(0)
             .byAlpha(0)

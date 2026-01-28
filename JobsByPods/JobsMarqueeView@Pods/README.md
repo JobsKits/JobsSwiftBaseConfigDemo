@@ -181,7 +181,7 @@ public enum ItemSizeMode {
                           }
                       }
               ])
-              .byBgColor(.randomColor)
+              .byBackgroundColor(.randomColor)
               .byAddTo(self.scrollView) { [unowned self] make in
                   if #available(iOS 11.0, *) {
                       make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
@@ -282,7 +282,7 @@ public enum ItemSizeMode {
                           }
                       }
               ])
-              .byBgColor(.randomColor)
+              .byBackgroundColor(.randomColor)
               .byAddTo(self.scrollView) { [unowned self] make in
                   make.top.equalTo(self.rightContinuousMarquee.snp.bottom).offset(self.verticalSpacing * 2)
                   make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -354,7 +354,7 @@ public enum ItemSizeMode {
                           }
                       }
               ])
-              .byBgColor(.randomColor)
+              .byBackgroundColor(.randomColor)
               .byAddTo(self.scrollView) { [unowned self] make in
                   make.top.equalTo(self.twoButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                   make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -451,7 +451,7 @@ public enum ItemSizeMode {
                           }
                       }
               ])
-              .byBgColor(.randomColor)
+              .byBackgroundColor(.randomColor)
               .byAddTo(self.scrollView) { [unowned self] make in
                   make.top.equalTo(self.localImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                   make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -574,7 +574,7 @@ public enum ItemSizeMode {
                           }
                       },
               ])
-              .byBgColor(.randomColor)
+              .byBackgroundColor(.randomColor)
               .byAddTo(self.scrollView) { [unowned self] make in
                   make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                   make.left.right.height.equalTo(self.upContinuousMarquee)

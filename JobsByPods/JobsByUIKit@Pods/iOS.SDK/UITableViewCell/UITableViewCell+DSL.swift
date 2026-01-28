@@ -270,7 +270,7 @@ public extension UITableViewCell {
                 self.setHighlighted(self.isHighlighted, animated: false)
                 self.setSelected(self.isSelected, animated: false)
                 self.selectedBackgroundView = {
-                    return UIView().byBgColor(color)
+                    return UIView().byBackgroundColor(color)
                 }()
             } else {
                 self.selectedBackgroundView = nil

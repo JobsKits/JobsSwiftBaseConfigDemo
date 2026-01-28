@@ -110,7 +110,7 @@ final class PhotoPermissionAlertView: UIView {
 // MARK: - Private
 private extension PhotoPermissionAlertView {
     func setupUI() {
-        byBgColor(.systemBackground)
+        byBackgroundColor(.systemBackground)
             .byCornerRadius(12)
             .byClipsToBounds(true)
 

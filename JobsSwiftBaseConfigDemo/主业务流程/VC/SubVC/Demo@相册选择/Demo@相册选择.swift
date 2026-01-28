@@ -51,7 +51,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byImage("camera.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBgColor(.systemBlue)
+            .byBackgroundColor(.systemBlue)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 #if targetEnvironment(simulator)
@@ -84,7 +84,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byImage("photo.on.rectangle".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBgColor(.systemGreen)
+            .byBackgroundColor(.systemGreen)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 pickFromPhotoLibrary(maxSelection: imageMaxSelection, imagesOnly: true) { [weak self] imgs in
@@ -109,7 +109,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byImage("video.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBgColor(.systemPink)
+            .byBackgroundColor(.systemPink)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 #if targetEnvironment(simulator)
@@ -136,7 +136,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byImage("film".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBgColor(.systemIndigo)
+            .byBackgroundColor(.systemIndigo)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
@@ -159,7 +159,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byImage("film.stack".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBgColor(.systemTeal)
+            .byBackgroundColor(.systemTeal)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.pickVideosFromLibrary(maxSelection: self.videoMaxSelection) { [weak self] urls in
@@ -178,7 +178,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
     // MARK: - Preview
     private lazy var previewContainer: UIView = { [unowned self] in
-        UIView().byBgColor(.secondarySystemBackground)
+        UIView().byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] v, make in
                 make.top.equalTo(self.pickMultiVideoBtn.snp.bottom).offset(16)
@@ -189,7 +189,7 @@ final class PhotoAlbumDemoVC: BaseVC {
 
     private lazy var collectionView: UICollectionView = { [unowned self] in
         UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout().byScrollDirection(.vertical).byMinimumInteritemSpacing(gridSpacing).byMinimumLineSpacing(gridSpacing))
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byScrollEnabled(NO)
             .byShowsVerticalScrollIndicator(NO)
             .byDataSource(self)

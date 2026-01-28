@@ -39,7 +39,7 @@ final class LiveInputBar: UIView {
 
     private lazy var topLine: UIView = {
         UIView()
-            .byBgColor(.separator)
+            .byBackgroundColor(.separator)
             .byAddTo(self) { make in
                 make.top.leading.trailing.equalToSuperview()
                 make.height.equalTo(0.5)
@@ -52,7 +52,7 @@ final class LiveInputBar: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        byBgColor(.systemBackground)
+        byBackgroundColor(.systemBackground)
         isUserInteractionEnabled = true
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
         topLine.byVisible(YES)

@@ -74,14 +74,14 @@ open class JobsProgressBar: UIView {
     /// 轨道（背景）
     private lazy var trackView: UIView = {
         UIView()
-            .byBgColor(JobsCor.systemGray5)
+            .byBackgroundColor(JobsCor.systemGray5)
             .byMasksToBounds(true)
             .byAddTo(self)
     }()
     /// 填充（前景）
     private lazy var fillView: UIView = {
         UIView()
-            .byBgColor(.systemBlue)
+            .byBackgroundColor(.systemBlue)
             .byMasksToBounds(true)
             .byAddTo(trackView)
     }()

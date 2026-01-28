@@ -38,7 +38,7 @@ final class AFDemoVC: UIViewController {
             .byShowsVerticalScrollIndicator(true)
             .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byTextColor(.label)
-            .byBgColor(UIColor.secondarySystemBackground)
+            .byBackgroundColor(UIColor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(true)
             .byAddTo(view) { [unowned self] make in
@@ -53,7 +53,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("GET /zen (AF)", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemBlue)
+            .byBackgroundColor(.systemBlue)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -85,7 +85,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("GET /users/apple", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemIndigo)
+            .byBackgroundColor(.systemIndigo)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -120,7 +120,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("POST /login (ReqRes)", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemGreen)
+            .byBackgroundColor(.systemGreen)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -147,7 +147,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("UPLOAD /post (httpbin)", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemOrange)
+            .byBackgroundColor(.systemOrange)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -177,7 +177,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("DOWNLOAD /image/png", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemPink)
+            .byBackgroundColor(.systemPink)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -206,7 +206,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("DOWNLOAD /bytes/524288", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemTeal)
+            .byBackgroundColor(.systemTeal)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -235,7 +235,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("Combine GET /zen (AF)", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemPurple)
+            .byBackgroundColor(.systemPurple)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -267,7 +267,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("async/await /search/users", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemBrown)
+            .byBackgroundColor(.systemBrown)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -304,7 +304,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("Stub: sampleData (AF)", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.darkGray)
+            .byBackgroundColor(.darkGray)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -333,7 +333,7 @@ final class AFDemoVC: UIViewController {
         UIButton.sys()
             .byTitle("清空输出", for: .normal)
             .byTitleColor(.white, for: .normal)
-            .byBgColor(.systemRed)
+            .byBackgroundColor(.systemRed)
             .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
             .onTap { [weak self] _ in
                 guard let self else { return }

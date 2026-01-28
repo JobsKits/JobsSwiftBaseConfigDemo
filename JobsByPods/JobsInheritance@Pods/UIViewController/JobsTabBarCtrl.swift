@@ -74,7 +74,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             .byShowsHorizontalScrollIndicator(NO)
             .byAlwaysBounceHorizontal(YES)
             .byClipsToBounds(NO)
-            .byBgColor(barBackgroundColor)
+            .byBackgroundColor(barBackgroundColor)
     }()
 
     private lazy var contentScrollView: UIScrollView = {
@@ -84,7 +84,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             .byShowsHorizontalScrollIndicator(NO)
             .byShowsVerticalScrollIndicator(NO)
             .byDelegate(self)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byScrollEnabled(isSwipeEnabled)
             .byAlwaysBounceVertical(!horizontalOnly)
             .byDirectionalLockEnabled(YES)

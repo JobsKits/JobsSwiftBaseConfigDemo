@@ -21,7 +21,7 @@ import JobsGestureUnlock
 final class SlideToUnlockDemoVC: BaseVC {
     private lazy var slideView: SlideToUnlockView = {
         SlideToUnlockView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
 //            .byDirection(.rightToLeft)      // 从右往左滑动解锁
             .bySkeletonEnabled(true)          // 开启骨架屏闪动
             .byOnUnlock {[weak self] in
@@ -38,7 +38,7 @@ final class SlideToUnlockDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
         slideView.byVisible(YES)
     }
 }

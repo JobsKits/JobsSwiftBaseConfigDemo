@@ -21,7 +21,7 @@ final class TipsGrantPermissionView: UIView {
     /// 白色卡片
     private lazy var cardView: UIView = {
         UIView()
-            .byBgColor(.white)
+            .byBackgroundColor(.white)
             .byLayer { layer in
                 layer.byCornerRadius(14)
                     .byMasksToBounds(NO) // 有阴影就不要 masksToBounds = true，不然阴影会被裁掉
@@ -104,7 +104,7 @@ final class TipsGrantPermissionView: UIView {
 
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
-        // byBgColor(.black.withAlphaComponent(0.35))
+        // byBackgroundColor(.black.withAlphaComponent(0.35))
         // 触发懒加载，顺带确保整个层级建好
         cardView.byVisible(YES)
         confirmButton.byVisible(YES)

@@ -109,7 +109,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
             .byTitle("① 改 #2 的 name（id 不变）", for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBgColor(.systemBlue)
+            .byBackgroundColor(.systemBlue)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in self?.renameSameID() }
             .byAddTo(view) { [unowned self] make in
@@ -123,7 +123,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
             .byTitle("② 替换 #2（id → 99）", for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBgColor(.systemOrange)
+            .byBackgroundColor(.systemOrange)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in self?.replaceWithNewID() }
             .byAddTo(view) { [unowned self] make in

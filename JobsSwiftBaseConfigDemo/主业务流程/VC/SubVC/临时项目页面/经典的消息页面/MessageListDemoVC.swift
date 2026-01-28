@@ -90,7 +90,7 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - BottomBar
     private lazy var bottomBar: UIView = {
         let v = UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byShadowColor(.black.withAlphaComponent(0.10))
             .byShadowOpacity(1)
             .byShadowRadius(8)

@@ -46,7 +46,7 @@ final class SafetyPushDemoVC: BaseVC {
             .byCornerBadgeText("TOP") { cfg in
                 cfg.byOffset(.init(horizontal: -6, vertical: 6))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
             }
             .byAddTo(view) { [unowned self] make in
@@ -84,7 +84,7 @@ final class SafetyPushDemoVC: BaseVC {
             .byCornerBadgeText("BOTTOM") { cfg in
                 cfg.byOffset(.init(horizontal: -6, vertical: 6))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
             }
             .byAddTo(view) { [unowned self] make in
@@ -122,7 +122,7 @@ final class SafetyPushDemoVC: BaseVC {
             .byCornerBadgeText("LEFT") { cfg in
                 cfg.byOffset(.init(horizontal: -6, vertical: 6))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
             }
             .byAddTo(view) { [unowned self] make in
@@ -160,7 +160,7 @@ final class SafetyPushDemoVC: BaseVC {
             .byCornerBadgeText("RIGHT") { cfg in
                 cfg.byOffset(.init(horizontal: -6, vertical: 6))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
             }
             .byAddTo(view) { [unowned self] make in

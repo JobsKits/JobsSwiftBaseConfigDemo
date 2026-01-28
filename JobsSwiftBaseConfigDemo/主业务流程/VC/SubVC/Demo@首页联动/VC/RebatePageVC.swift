@@ -60,7 +60,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
-            .byBgColor(UIColor.systemGroupedBackground)
+            .byBackgroundColor(UIColor.systemGroupedBackground)
             .jobs_emptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)

@@ -37,7 +37,7 @@ final class KeyboardDemoVC: BaseVC {
     // 底部工具栏（跟随键盘上移）
     private lazy var bottomBar: UIView = {
         UIView()
-            .byBgColor(.systemGray6)
+            .byBackgroundColor(.systemGray6)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
                 make.height.equalTo(60)

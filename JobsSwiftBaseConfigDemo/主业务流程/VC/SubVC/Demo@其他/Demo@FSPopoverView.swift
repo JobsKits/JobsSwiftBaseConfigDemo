@@ -110,7 +110,7 @@ final class FSPopoverDemoVC: BaseVC {
             title: "Demo@FSPopoverView",
             rightButtons: [btn]
         )
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
         // 全局外观（如不需要，可移除）
         let ap = FSPopoverView.fs_appearance()
         ap.showsArrow = true
@@ -178,7 +178,7 @@ extension FSPopoverDemoVC: FSPopoverViewDataSource {
     }
     /// 内容
     func contentView(for popoverView: FSPopoverView) -> UIView? {
-        let container = UIView().byBgColor(.clear)
+        let container = UIView().byBackgroundColor(.clear)
         let title = UILabel()
             .byText("这是自定义内容")
             .byFont(.boldSystemFont(ofSize: 16))

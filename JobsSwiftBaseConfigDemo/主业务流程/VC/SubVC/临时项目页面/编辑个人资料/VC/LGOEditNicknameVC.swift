@@ -95,7 +95,7 @@ final class LGOEditNicknameVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor(.systemGroupedBackground)
+        view.byBackgroundColor(.systemGroupedBackground)
         jobsSetupGKNav(
             title: "编辑昵称".tr,
             rightButtons: [btn]

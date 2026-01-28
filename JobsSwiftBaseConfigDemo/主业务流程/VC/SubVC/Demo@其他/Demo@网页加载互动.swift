@@ -22,7 +22,7 @@ final class BaseWebViewDemoVC: BaseVC {
     // MARK: - 懒加载 Web（全通用，无业务常量）
     private lazy var web: BaseWebView = { [unowned self] in
         return BaseWebView()
-//            .byBgColor(.clear)
+//            .byBackgroundColor(.clear)
             .byAllowedHosts([])                  // 不限域
             .byOpenBlankInPlace(true)
             .byDisableSelectionAndCallout(false)

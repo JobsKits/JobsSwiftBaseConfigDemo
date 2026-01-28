@@ -159,7 +159,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     // === 内部画布：等屏宽，居中于父视图 ===
     private lazy var canvas: UIView = {
         UIView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             /// 画布：等屏宽、中心对齐到父视图
             .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                  // ✅ 中心对齐（不从 0,0 起）
@@ -198,7 +198,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        byBgColor(.clear).byUserInteractionEnabled(false)
+        byBackgroundColor(.clear).byUserInteractionEnabled(false)
         canvas.byAlpha(1)
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

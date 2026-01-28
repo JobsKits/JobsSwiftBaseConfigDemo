@@ -336,7 +336,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
         UITextView()
             .byEditable(NO)
             .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(10)
             .byTextContainerInset(.init(top: 10, left: 10, bottom: 10, right: 10))
             .byText("")

@@ -26,7 +26,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBgColor(.systemBlue) // ≈ Configuration.filled 的视觉
+            .byBackgroundColor(.systemBlue) // ≈ Configuration.filled 的视觉
             .onTap { [weak self] _ in
                 self?.onDefault()    // ✅ 保留原有触发逻辑
             }
@@ -43,7 +43,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
             .byTitleColor(.label, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBgColor(.secondarySystemBackground) // ≈ Configuration.gray 的视觉
+            .byBackgroundColor(.secondarySystemBackground) // ≈ Configuration.gray 的视觉
             .onTap { [weak self] _ in
                 self?.onCustom()     // ✅ 保留原有触发逻辑
             }

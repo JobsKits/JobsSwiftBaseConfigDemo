@@ -20,7 +20,7 @@ final class FeedListCell: UITableViewCell {
     // MARK: - 懒加载 UI
     private lazy var cover: UIImageView = { [unowned self] in
         UIImageView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
             .byAddTo(contentView) { [unowned self] make in

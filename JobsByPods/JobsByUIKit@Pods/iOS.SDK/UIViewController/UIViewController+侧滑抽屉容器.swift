@@ -109,7 +109,7 @@ public class JobsSideDrawerVC: UIViewController {
     }()
     private lazy var menuContainerView: UIView = {
         UIView()
-            .byBgColor(JobsCor.systemBackground)
+            .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.bottom.left.equalToSuperview()
                 make.width.equalTo(self.menuWidth)
@@ -117,7 +117,7 @@ public class JobsSideDrawerVC: UIViewController {
     }()
     private lazy var contentContainerView: UIView = {
         UIView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byAddTo(view) { [unowned self] make in
                 make.top.bottom.equalToSuperview()
                 make.width.equalToSuperview()
@@ -127,7 +127,7 @@ public class JobsSideDrawerVC: UIViewController {
     }()
     private lazy var dimView: UIView = {
         UIView()
-            .byBgColor(.black.withAlphaComponent(0.35))
+            .byBackgroundColor(.black.withAlphaComponent(0.35))
             .byUserInteractionEnabled(YES)
             .jobs_addGestureRetView(dimTapGR)
             .byVisible(NO) // ✅ 默认隐藏，打开时 byVisible(YES)

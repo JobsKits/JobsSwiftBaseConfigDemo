@@ -197,7 +197,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
                     make.edges.equalToSuperview().inset(8)
                 }
             cell.contentView
-                .byBgColor(.secondarySystemBackground)
+                .byBackgroundColor(.secondarySystemBackground)
                 .byCornerRadius(10)
                 .byMasksToBounds(true)
         }

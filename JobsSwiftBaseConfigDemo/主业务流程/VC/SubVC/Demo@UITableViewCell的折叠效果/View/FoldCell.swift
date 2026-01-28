@@ -23,7 +23,7 @@ final class FoldCell: UITableViewCell {
     private var isExpanded: Bool = false
     private lazy var cardView: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(14)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(Self.verticalInset)
@@ -104,7 +104,7 @@ final class FoldCell: UITableViewCell {
 
     private lazy var foldShadowView: UIView = {
         UIView()
-            .byBgColor(.black)
+            .byBackgroundColor(.black)
             .byAlpha(0.22)
             .byAddTo(detailClipView) { make in
                 make.edges.equalToSuperview()

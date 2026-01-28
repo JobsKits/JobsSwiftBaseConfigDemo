@@ -42,7 +42,7 @@ final class WalletSectionHeaderView: UICollectionReusableView {
 
     private lazy var separator: UIView = {
         UIView()
-            .byBgColor(.label.withAlphaComponent(0.06))
+            .byBackgroundColor(.label.withAlphaComponent(0.06))
             .byAddTo(self) { [unowned self] make in
                 make.left.equalToSuperview().offset(self.horizontalInset)
                 make.right.equalToSuperview().inset(self.horizontalInset)

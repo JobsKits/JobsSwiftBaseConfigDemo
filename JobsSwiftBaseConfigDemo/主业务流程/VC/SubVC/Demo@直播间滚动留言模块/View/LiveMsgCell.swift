@@ -17,7 +17,7 @@ import JobsSwiftBaseDefines
 final class LiveMsgCell: UITableViewCell {
     private lazy var bubble: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(true)
             .byAddTo(contentView) {[unowned self] make in

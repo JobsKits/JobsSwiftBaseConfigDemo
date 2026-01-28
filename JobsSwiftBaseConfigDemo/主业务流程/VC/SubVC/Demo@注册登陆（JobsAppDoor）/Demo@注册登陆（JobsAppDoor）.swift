@@ -71,7 +71,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 居中承载面板的容器（加圆角/毛玻璃都可以放这层）
     private lazy var panelHost: UIView = {
         UIView()
-            .byBgColor(UIColor(white: 1, alpha: 0.08))
+            .byBackgroundColor(UIColor(white: 1, alpha: 0.08))
             .byCornerRadius(14)
             .byAlpha(0)
             .byTransform(CGAffineTransform(scaleX: 0.001, y: 0.001)) // 进场起态（春
@@ -84,7 +84,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 登录面板（把真实的登录表单塞进来即可）
     private lazy var loginPanel: UIView = {
         UIView()
-            .byBgColor(.systemBackground.withAlphaComponent(0.75))
+            .byBackgroundColor(.systemBackground.withAlphaComponent(0.75))
             .byCornerRadius(14)
             .byAddTo(panelHost) { [unowned self] make in
                 make.edges.equalToSuperview()
@@ -93,7 +93,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 注册面板（同理，塞自己的注册表单）
     private lazy var registerPanel: UIView = {
         UIView()
-            .byBgColor(.systemBackground.withAlphaComponent(0.75))
+            .byBackgroundColor(.systemBackground.withAlphaComponent(0.75))
             .byCornerRadius(14)
             .byHidden(YES)
             .byAddTo(panelHost) { [unowned self] make in
@@ -105,7 +105,7 @@ final class JobsAppDoorDemoVC: BaseVC {
 //        UIButton(type: .system)
 //            .byTitle("客服", for: .normal)
 //            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
-//            .byBgColor(UIColor.black.withAlphaComponent(0.35))
+//            .byBackgroundColor(UIColor.black.withAlphaComponent(0.35))
 //            .byCornerRadius(10)
 //            .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
 //            .byAddTo(view) { make in

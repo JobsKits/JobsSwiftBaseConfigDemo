@@ -37,7 +37,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
 
     private lazy var cardView: UIView = { [unowned self] in
         UIView()
-            .byBgColor(.systemGray6)
+            .byBackgroundColor(.systemGray6)
             .byCornerRadius(10)
             .byClipsToBounds(true)
             .byAddTo(self.contentView) { make in
@@ -53,7 +53,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
             .byEditable(false)
             .bySelectable(true)               // 最终由 configure 调整
             .byTextAlignment(.center)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byTextContainerInset(UIEdgeInsets(top: 14, left: 12, bottom: 6, right: 12))
             .byAddTo(self.cardView) { make in
                 make.top.left.right.equalToSuperview()
@@ -74,7 +74,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.byBgColor(.clear)
+        contentView.byBackgroundColor(.clear)
         // 唤起懒加载（不改变视觉状态）
         titleLabel.byAlpha(1)
         cardView.byAlpha(1)

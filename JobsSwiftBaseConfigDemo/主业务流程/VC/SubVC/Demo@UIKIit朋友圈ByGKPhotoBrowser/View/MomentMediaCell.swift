@@ -21,7 +21,7 @@ final class MomentMediaCell: UICollectionViewCell {
     private var currentURL: URL?
     public lazy var imageViewRef: UIImageView = {
         UIImageView()
-            .byBgColor(.tertiarySystemFill)
+            .byBackgroundColor(.tertiarySystemFill)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byCornerRadius(8)

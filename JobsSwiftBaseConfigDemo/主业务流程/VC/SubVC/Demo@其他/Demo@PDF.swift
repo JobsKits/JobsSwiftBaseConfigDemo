@@ -31,7 +31,7 @@ final class PDFDemoVC: BaseVC {
             .byAutoScales(NO) // 交给我们手动控制
             .byDisplayMode(.singlePageContinuous)
             .byDisplayDirection(.vertical)
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -43,7 +43,7 @@ final class PDFDemoVC: BaseVC {
         PDFThumbnailView()
             .byLayoutMode(.horizontal)
             .byThumbnailSize(CGSize(width: 60, height: 80))
-            .byBgColor(.tertiarySystemBackground)
+            .byBackgroundColor(.tertiarySystemBackground)
             .byContentInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byAddTo(view) { [unowned self] make in
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)

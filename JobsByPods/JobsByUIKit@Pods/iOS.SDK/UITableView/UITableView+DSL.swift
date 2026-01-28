@@ -90,7 +90,7 @@ extension UITableView {
     }
     // MARK: - 隐藏分割线
     public func hiddenSeparator() {
-        tableFooterView = UIView().byBgColor(UIColor.clear)
+        tableFooterView = UIView().byBackgroundColor(UIColor.clear)
     }
     // MARK: - 设置整个区圆角
     public func sectionConner(cell: UITableViewCell,
@@ -119,7 +119,7 @@ extension UITableView {
         }
         cell.byBackgroundView(UIView(frame: bounds)
             .byInsertSublayer(CAShapeLayer().byPath(path.cgPath).byFillColor(bgColor), at: 0)
-            .byBgColor(.clear))
+            .byBackgroundColor(.clear))
     }
     // MARK: - Heights & Insets
     @discardableResult

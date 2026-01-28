@@ -109,7 +109,7 @@ final class WCDBDemoVC: BaseVC {
     // 5) 用 .byVisible(YES) 唤起
     private lazy var player: UIView = {
         UIView()
-            .byBgColor(UIColor(white: 0.96, alpha: 1))
+            .byBackgroundColor(UIColor(white: 0.96, alpha: 1))
             .byCornerRadius(12)
             .byVisible(NO)
             .byAddTo(view) { [unowned self] make in

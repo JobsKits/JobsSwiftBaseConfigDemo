@@ -28,7 +28,7 @@ final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
         UITextView()
             .byEditable(NO)
             .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byTextColor(.label)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)

@@ -35,7 +35,7 @@ final class CashbackCardCell: UITableViewCell {
 
     private lazy var iconWrap: UIView = {
         UIView()
-            .byBgColor(.systemOrange)
+            .byBackgroundColor(.systemOrange)
             .byCornerRadius(12)
             .byAddTo(cardView) { make in
                 make.leading.top.equalToSuperview().offset(18)

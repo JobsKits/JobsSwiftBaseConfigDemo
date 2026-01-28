@@ -276,7 +276,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
     }()
 
     private lazy var container: UIView = {
-        UIView().byBgColor(UIColor.black.withAlphaComponent(0.88))
+        UIView().byBackgroundColor(UIColor.black.withAlphaComponent(0.88))
     }()
 
     private lazy var label: UILabel = {

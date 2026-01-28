@@ -24,7 +24,7 @@ final class LottieDemoVC: BaseVC {
     // MARK: - UI（lazy：只配置，不 add/约束）
     private lazy var containerView: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()
@@ -179,7 +179,7 @@ final class LottieDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "Lottie 动画")
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
 
         containerView.byAlpha(1)
         controlsPanel.byAlpha(1)

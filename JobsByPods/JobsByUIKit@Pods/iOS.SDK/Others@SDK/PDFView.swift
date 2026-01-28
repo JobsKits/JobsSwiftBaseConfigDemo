@@ -18,7 +18,7 @@ public extension PDFView {
     @discardableResult func byPageBreakMargins(_ insets: UIEdgeInsets) -> Self { if #available(iOS 11.0, *) { self.pageBreakMargins = insets }; return self }
     @discardableResult func byDisplaysAsBook(_ on: Bool) -> Self { self.displaysAsBook = on; return self }
     @discardableResult func byDisplaysRTL(_ on: Bool) -> Self { if #available(iOS 11.0, *) { self.displaysRTL = on }; return self }
-    @discardableResult func byBgColor(_ color: UIColor) -> Self { self.backgroundColor = color; return self }
+    @discardableResult func byBackgroundColor(_ color: UIColor) -> Self { self.backgroundColor = color; return self }
     @discardableResult func byInterpolationQuality(_ q: PDFInterpolationQuality) -> Self { if #available(iOS 11.0, *) { self.interpolationQuality = q }; return self }
     @discardableResult func byPageShadowsEnabled(_ on: Bool) -> Self { if #available(iOS 12.0, *) { self.pageShadowsEnabled = on }; return self }
     @discardableResult func byUsePageVC(_ enable: Bool, options: [AnyHashable: Any]? = nil) -> Self { if #available(iOS 11.0, *) { self.usePageViewController(enable, withViewOptions: options) }; return self }

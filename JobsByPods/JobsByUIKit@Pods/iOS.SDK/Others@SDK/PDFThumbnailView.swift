@@ -22,7 +22,7 @@ public extension PDFThumbnailView {
         self.thumbnailSize = size;
         return self
     }
-    @discardableResult func byBgColor(_ color: UIColor) -> Self {
+    @discardableResult func byBackgroundColor(_ color: UIColor) -> Self {
         self.backgroundColor = color;
         return self
     }

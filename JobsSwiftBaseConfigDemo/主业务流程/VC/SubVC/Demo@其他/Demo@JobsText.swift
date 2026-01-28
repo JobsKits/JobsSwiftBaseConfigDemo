@@ -135,7 +135,7 @@ final class JobsTextDemoVC: BaseVC {
         UITextView()
             .byEditable(false)
             .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(8)
             .byAddTo(view) {[unowned self] make in
                 make.top.equalTo(self.exportRTFBtn.snp.bottom).offset(12)

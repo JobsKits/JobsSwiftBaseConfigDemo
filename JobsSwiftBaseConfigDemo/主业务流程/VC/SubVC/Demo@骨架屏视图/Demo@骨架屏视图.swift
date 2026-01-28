@@ -29,7 +29,7 @@ final class SkeletonViewDemoVC: BaseVC {
     // UI
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
-            .byBgColor(.systemGroupedBackground)
+            .byBackgroundColor(.systemGroupedBackground)
             .bySeparatorStyle(.none)
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(72)

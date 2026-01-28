@@ -23,7 +23,7 @@ final class FeedVideoCell: UITableViewCell {
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview()
             }
-            .byBgColor(.black)
+            .byBackgroundColor(.black)
             .byClipsToBounds(YES)
     }()
 

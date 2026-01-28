@@ -81,7 +81,7 @@ final class SafetyPresentDemoVC: BaseVC {
         stack.byVisible(YES)
         // 2️⃣ 从 UIView 内触发 presentSafely
         DemoInnerPresentView()
-            .byBgColor(.systemGreen.withAlphaComponent(0.2))
+            .byBackgroundColor(.systemGreen.withAlphaComponent(0.2))
             .byCornerRadius(8)
             .byAddTo(stack) { make in
                 make.width.equalTo(260.w)

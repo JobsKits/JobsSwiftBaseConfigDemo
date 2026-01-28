@@ -41,7 +41,7 @@ final class RootFoldTableCell: UITableViewCell {
     // MARK: - Lazy UI
     private lazy var card: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
 //            .byCornerRadius(14)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(Self.vInset)
@@ -100,7 +100,7 @@ final class RootFoldTableCell: UITableViewCell {
 
     private lazy var innerTableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .bySeparatorStyle(.singleLine)
             .byRowHeight(Self.innerRowH)
             .byScrollEnabled(NO)
@@ -124,7 +124,7 @@ final class RootFoldTableCell: UITableViewCell {
 
     private lazy var shadow: UIView = {
         UIView()
-            .byBgColor(.black)
+            .byBackgroundColor(.black)
             .byVisible(NO)
             .byAddTo(detailClip) { make in
                 make.edges.equalToSuperview()

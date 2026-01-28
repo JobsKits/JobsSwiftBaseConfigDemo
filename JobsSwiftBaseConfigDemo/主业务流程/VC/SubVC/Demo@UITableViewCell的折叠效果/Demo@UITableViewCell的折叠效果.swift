@@ -37,7 +37,7 @@ final class FoldTableDemoVC: BaseVC {
     }
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .bySeparatorStyle(.none)
             .byContentInset(UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0))
             .registerCell(FoldCell.self)

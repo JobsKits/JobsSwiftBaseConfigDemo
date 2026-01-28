@@ -77,7 +77,7 @@ public class JobsNavBar: UIView {
     public private(set) lazy var hairline: UIView = {
         UIView()
             .byVisible(!style.hairlineHidden)
-            .byBgColor(style.hairlineColor)
+            .byBackgroundColor(style.hairlineColor)
             .byAddTo(self) { v, make in
                 make.left.right.bottom.equalToSuperview()
                 make.height.equalTo(0.5)
@@ -184,9 +184,9 @@ public class JobsNavBar: UIView {
     @MainActor
     private func applyStyle() {
         // 访问懒属性以确保存在，然后再设值
-        backgroundView.byBgColor(style.backgroundColor)
+        backgroundView.byBackgroundColor(style.backgroundColor)
         hairline
-            .byBgColor(style.hairlineColor)
+            .byBackgroundColor(style.hairlineColor)
             .byVisible(!style.hairlineHidden)
     }
 

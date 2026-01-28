@@ -52,7 +52,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     private lazy var card: UIView = {
         UIView()
-            .byBgColor(.secondarySystemGroupedBackground)
+            .byBackgroundColor(.secondarySystemGroupedBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
             .byAddTo(contentView) { make in
@@ -64,7 +64,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     private lazy var avatar: UIImageView = {
         UIImageView()
-            .byBgColor(.tertiarySystemFill)
+            .byBackgroundColor(.tertiarySystemFill)
             .byCornerRadius(20)
             .byMasksToBounds(YES)
             .byContentMode(.scaleAspectFill)
@@ -103,7 +103,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     /// ✅ 用 UITextView 做“末尾内联 全文/收起”
     private lazy var contentTextView: UITextView = {
         UITextView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byEditable(NO)
             .byScrollEnabled(NO)
             .bySelectable(YES)
@@ -186,7 +186,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     /// ✅ commentsBG：不要在这里触发 commentsStack 的 lazy
     private lazy var commentsBG: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
     }()

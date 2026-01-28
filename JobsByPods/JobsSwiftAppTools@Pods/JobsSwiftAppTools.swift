@@ -259,7 +259,7 @@ extension UIView {
     @discardableResult
     public func makeBelowSeparatorBy(below anchor:UIView ,offset t:CGFloat = 0.0) -> UIView {
         UIView()
-            .byBgColor("#3C3C431F".cor)
+            .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(self) { make in
                 make.height.equalTo(0.6)
                 make.top.equalTo(anchor.snp.bottom).offset(t)
@@ -276,7 +276,7 @@ extension UIView {
         }
         // 2️⃣ 分割线加到 hostView 上，约束基于“当前 guide(self)” 的 bottom
         return UIView()
-            .byBgColor("#3C3C431F".cor)
+            .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(hostView) { make in
                 make.height.equalTo(0.6)
                 make.top.equalTo(anchor.snp.top).offset(t)
@@ -305,7 +305,7 @@ public extension UIView {
             .byTextColor(.white)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
-            .byBgColor(UIColor.black.withAlphaComponent(0.7))
+            .byBackgroundColor(UIColor.black.withAlphaComponent(0.7))
             .byCornerRadius(8)
             .byMasksToBounds(true)
             .byUserInteractionEnabled(YES)

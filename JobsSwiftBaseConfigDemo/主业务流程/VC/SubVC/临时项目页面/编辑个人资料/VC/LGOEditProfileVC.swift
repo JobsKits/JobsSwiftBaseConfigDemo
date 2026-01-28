@@ -85,7 +85,7 @@ final class LGOEditProfileVC: BaseVC {
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
-            .byBgColor("#EFEFEF".cor)
+            .byBackgroundColor("#EFEFEF".cor)
             .byDataSource(self)
             .byDelegate(self)
             .register()
@@ -144,7 +144,7 @@ final class LGOEditProfileVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor("#EFEFEF".cor)
+        view.byBackgroundColor("#EFEFEF".cor)
         jobsSetupGKNav(title: "Edit profile")
         tableView.byVisible(YES)
     }
@@ -197,7 +197,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
-        UIView().byBgColor(.clear)
+        UIView().byBackgroundColor(.clear)
     }
 
     func tipsGrantPermission(){
@@ -301,7 +301,7 @@ public final class AvatarCell: UITableViewCell {
             .kf_setImage("https://picsum.photos/200", placeholder: "Ani".img)
             .byClipsToBounds(true)
             .byCornerRadius(22)
-            .byBgColor(.systemGray5)
+            .byBackgroundColor(.systemGray5)
             .byAddTo(contentView) { [unowned self] make in
                 make.size.equalTo(CGSize(width: 44, height: 44))
                 make.centerY.equalToSuperview()

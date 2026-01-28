@@ -64,7 +64,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var jsonTextView: UITextView = {
         UITextView()
             .byFont(.monospacedSystemFont(ofSize: 13, weight: .regular))
-            .byBgColor(UIColor.secondarySystemBackground)
+            .byBackgroundColor(UIColor.secondarySystemBackground)
             .byCornerRadius(8)
             .byTextColor(.label)
             .byAddTo(view) { [unowned self] make in
@@ -152,7 +152,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var logTextView: UITextView = {
         UITextView()
             .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBgColor(UIColor.secondarySystemBackground)
+            .byBackgroundColor(UIColor.secondarySystemBackground)
             .byCornerRadius(8)
             .byTextColor(.label)
             .byAddTo(view) { [unowned self] make in

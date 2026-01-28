@@ -142,7 +142,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 if #available(iOS 11.0, *) {
                     make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
@@ -239,7 +239,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.upContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -328,7 +328,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.downContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -417,7 +417,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.leftContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -506,7 +506,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.rightContinuousMarquee.snp.bottom).offset(self.verticalSpacing * 2)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -595,7 +595,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.upFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -684,7 +684,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.downFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -773,7 +773,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.leftFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -812,7 +812,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.rightFrequencyMarquee.snp.bottom).offset(self.verticalSpacing * 2)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -867,7 +867,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.oneButtonMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -933,7 +933,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.twoButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1026,7 +1026,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.localImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1146,7 +1146,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                         }
                     },
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)

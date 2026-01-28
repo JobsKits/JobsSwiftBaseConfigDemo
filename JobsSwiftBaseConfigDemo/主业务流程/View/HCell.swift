@@ -29,7 +29,7 @@ public final class HCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.byVisible(YES)
-        contentView.byBgColor(.secondarySystemBackground)
+        contentView.byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
     }

@@ -84,7 +84,7 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var unlockView: GestureUnlockView = {
         GestureUnlockView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
                 make.centerX.equalToSuperview()

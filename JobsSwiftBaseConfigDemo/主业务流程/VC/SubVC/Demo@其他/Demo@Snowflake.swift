@@ -47,7 +47,7 @@ final class SnowflakeDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBgColor(.systemBlue)
+            .byBackgroundColor(.systemBlue)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
             .byImage("bolt.fill".sysImg, for: .normal)
@@ -56,7 +56,7 @@ final class SnowflakeDemoVC: BaseVC {
             .byCornerBadgeText("NEW") { cfg in
                 cfg.byOffset(.init(horizontal: -8, vertical: 8))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
             }
             .onTap { [weak self] _ in

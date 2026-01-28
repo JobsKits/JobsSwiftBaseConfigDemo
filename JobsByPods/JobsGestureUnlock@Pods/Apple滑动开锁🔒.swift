@@ -58,7 +58,7 @@ public class SlideToUnlockView: UIView {
     /// 背景轨道（灰色圆角条）
     private lazy var trackView: UIView = {
         UIView()
-            .byBgColor(JobsCor.systemGray5)
+            .byBackgroundColor(JobsCor.systemGray5)
             .byCornerRadius(28)
             .byMasksToBounds(YES)
             .byAddTo(self) { [unowned self] make in
@@ -90,7 +90,7 @@ public class SlideToUnlockView: UIView {
     /// 滑块视图
     private lazy var thumbView: UIView = { [unowned self] in
         UIView()
-            .byBgColor(.white)
+            .byBackgroundColor(.white)
             .byCornerRadius(thumbSize.height / 2)
             .byMasksToBounds(YES)
             .byShadowOpacity(0.15)

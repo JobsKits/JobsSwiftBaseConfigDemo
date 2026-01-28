@@ -15,7 +15,7 @@ import SnapKit
 
 extension UIView {
     @discardableResult
-    func byBgColor(_ color: UIColor?) -> Self {
+    func byBackgroundColor(_ color: UIColor?) -> Self {
         backgroundColor = color
         return self
     }

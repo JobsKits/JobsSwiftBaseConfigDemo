@@ -216,7 +216,7 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var resultCard: UIView = {
         UIView()
-            .byBgColor(.secondarySystemBackground)
+            .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddArranged(to: stack)
             .byHeight(72)

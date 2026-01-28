@@ -30,7 +30,7 @@ final class UnityDemoVC: BaseVC {
     /// 中间用来放 Unity 的容器（现在只是占位，如果以后要全屏可以不用它）
     private lazy var unityContainerView: UIView = {
         UIView()
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byCornerRadius(8)
             .byAddTo(view) { make in
                 make.center.equalToSuperview()

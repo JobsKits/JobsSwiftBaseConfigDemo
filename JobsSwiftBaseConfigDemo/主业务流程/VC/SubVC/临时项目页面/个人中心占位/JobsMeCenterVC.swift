@@ -36,7 +36,7 @@ final class JobsMeCenterVC: BaseVC {
     }
 
     private lazy var headerView: UIView = {
-        UIView().byBgColor(.systemBackground)
+        UIView().byBackgroundColor(.systemBackground)
     }()
 
     private lazy var tableView: UITableView = {

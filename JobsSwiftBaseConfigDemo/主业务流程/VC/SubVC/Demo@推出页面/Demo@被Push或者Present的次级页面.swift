@@ -65,7 +65,7 @@ class HalfSheetDemoVC: DemoDetailVC{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
             .byCornerRadius(16)
             .byClipsToBounds(true)
 

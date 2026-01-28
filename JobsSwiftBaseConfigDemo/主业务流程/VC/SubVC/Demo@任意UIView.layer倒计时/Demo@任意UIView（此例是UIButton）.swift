@@ -95,7 +95,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
         jobsSetupGKNav(title: "JobsSwiftTimer 按钮倒计时 Demo")
         hintLabel.byVisible(YES)
         countdownButton.byVisible(YES)

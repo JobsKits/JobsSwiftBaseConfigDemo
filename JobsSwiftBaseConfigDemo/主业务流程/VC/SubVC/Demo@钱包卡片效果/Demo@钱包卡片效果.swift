@@ -44,7 +44,7 @@ final class JobsWalletDemoVC: BaseVC {
 
     private lazy var collectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: walletLayout)
-            .byBgColor(.clear)
+            .byBackgroundColor(.clear)
             .byShowsVerticalScrollIndicator(NO)
             .byContentInset(UIEdgeInsets(top: 16, left: 0, bottom: 24, right: 0))
             .registerCell(WalletCardCell.self)

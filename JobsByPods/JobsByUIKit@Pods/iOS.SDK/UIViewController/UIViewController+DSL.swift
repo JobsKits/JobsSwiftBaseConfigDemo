@@ -22,7 +22,7 @@ public extension UIViewController {
     }
 
     @discardableResult
-    func byBgColor(_ color: UIColor) -> Self {
+    func byBackgroundColor(_ color: UIColor) -> Self {
         if viewIfLoaded == nil { loadViewIfNeeded() }
         self.view.backgroundColor = color
         return self

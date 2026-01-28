@@ -224,7 +224,7 @@ final class JobsSysProgressDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBgColor(.systemBackground)
+        view.byBackgroundColor(.systemBackground)
         jobsSetupGKNav(
             title: "JobsSwiftTimer 倒计时 Demo"
         )
