@@ -13,12 +13,12 @@ import UIKit
 
 import JobsSwiftBlock
 
-public extension UIWindow {
+extension UIWindow {
     // MARK: - 构造 / 附着
     /// 绑定到指定 WindowScene（不会 makeKeyAndVisible）
     /// - 兼容：iOS 12 也能编译。iOS 13+ 可进一步用 byAttach(toScene:)
     @discardableResult
-    func byAttach(to scene: Any?) -> Self {
+    public func byAttach(to scene: Any?) -> Self {
         if #available(iOS 13.0, *) {
             return byAttach(toScene: scene as? UIWindowScene)
         };return self
@@ -27,7 +27,7 @@ public extension UIWindow {
     /// - iOS 13+ 专用（真正做事）
     @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
-    func byAttach(toScene scene: UIWindowScene?) -> Self {
+    public func byAttach(toScene scene: UIWindowScene?) -> Self {
         // iOS 13+，且外界可传 nil（nil 时不动）
         if let scene {
             // 注意：不要强行覆盖另一个 scene 的 window
@@ -38,38 +38,38 @@ public extension UIWindow {
     }
     // MARK: - 根控制器 / 可见性
     @discardableResult
-    func byRootViewController(_ vc: UIViewController?) -> Self {
+    public func byRootViewController(_ vc: UIViewController?) -> Self {
         self.rootViewController = vc
         return self
     }
     /// 仅 makeKey
     @discardableResult
-    func byMakeKey() -> Self {
+    public func byMakeKey() -> Self {
         self.makeKey()
         return self
     }
     /// makeKeyAndVisible（最常用）
     @discardableResult
-    func byMakeKeyAndVisible() -> Self {
+    public func byMakeKeyAndVisible() -> Self {
         self.makeKeyAndVisible()
         return self
     }
     /// 退位（让位于别的 window）
     @discardableResult
-    func byResignKey() -> Self {
+    public func byResignKey() -> Self {
         self.resignKey()
         return self
     }
     // MARK: - 外观 / 显示层级
     @discardableResult
-    func byWindowLevel(_ level: UIWindow.Level) -> Self {
+    public func byWindowLevel(_ level: UIWindow.Level) -> Self {
         self.windowLevel = level
         return self
     }
 
     @available(*, deprecated, message: "Use windowScene assignment instead on iOS 13+")
     @discardableResult
-    func byScreen(_ screen: UIScreen) -> Self {
+    public func byScreen(_ screen: UIScreen) -> Self {
         if #available(iOS 13.0, *) {
             if let scene = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
@@ -82,7 +82,7 @@ public extension UIWindow {
     }
     // MARK: - 工具方法（少量“好用但容易踩坑”的动作）
     /// 快照整窗（不跨进程，不含系统状态栏）
-    func snapshotImage(afterScreenUpdates: Bool = true) -> UIImage? {
+    public func snapshotImage(afterScreenUpdates: Bool = true) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(bounds: bounds)
         return renderer.image { _ in
             self.drawHierarchy(in: self.bounds, afterScreenUpdates: afterScreenUpdates)
@@ -90,7 +90,7 @@ public extension UIWindow {
     }
     /// 在最顶层控制器 present 一个 VC（避免直接对 window 做 VC 管理）
     @discardableResult
-    func presentOnTop(_ vc: UIViewController,
+    public func presentOnTop(_ vc: UIViewController,
                       animated: Bool = true,
                       completion: (jobsByVoidBlock)? = nil) -> Self {
         guard let host = UIWindow.jobsTopMost(from: self.rootViewController) else { return self }
@@ -103,7 +103,7 @@ public extension UIWindow {
     }
     // MARK: - 坐标转换（链式味道）
     @discardableResult
-    func byConvert(_ point: CGPoint,
+    public func byConvert(_ point: CGPoint,
                    to other: UIWindow?,
                    sink: jobsByPointBlock) -> Self {
         sink(convert(point, to: other))
@@ -111,7 +111,7 @@ public extension UIWindow {
     }
 
     @discardableResult
-    func byConvert(_ rect: CGRect,
+    public func byConvert(_ rect: CGRect,
                    to other: UIWindow?,
                    sink: jobsByFrameBlock) -> Self {
         sink(convert(rect, to: other))

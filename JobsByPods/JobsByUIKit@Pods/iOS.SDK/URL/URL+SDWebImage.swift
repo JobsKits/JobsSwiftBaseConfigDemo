@@ -13,11 +13,11 @@ import UIKit
 // MARK: - SDWebImage 版本
 #if canImport(SDWebImage)
 import SDWebImage
-public extension URL {
+extension URL {
     // ================================== iOS 13+ async/await 入口 ==================================
     #if swift(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, tvOS 13.0, *)
-    func sdLoadImage() async throws -> UIImage {
+    public func sdLoadImage() async throws -> UIImage {
         if isHTTPRemote {
             return try await withCheckedThrowingContinuation { continuation in
                 var didResume = false
@@ -53,7 +53,7 @@ public extension URL {
     }
     #endif
     // ================================== iOS 12- completion 入口 ==================================
-    func sdLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
+    public func sdLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
         if isHTTPRemote {
             var didFinish = false
             SDWebImageManager.shared.loadImage(

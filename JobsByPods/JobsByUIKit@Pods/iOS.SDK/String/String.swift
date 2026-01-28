@@ -11,14 +11,14 @@ import AppKit
 import UIKit
 #endif
 // MARK: String? 扩展：nil 安全
-public extension Optional where Wrapped == String {
-    @inlinable var byTrimmedOrNil: String? {
+extension Optional where Wrapped == String {
+    @inlinable public var byTrimmedOrNil: String? {
         self?.byTrimmedOrNil
     }
-    @inlinable var isNonEmptyHttpURL: Bool {
+    @inlinable public var isNonEmptyHttpURL: Bool {
         self?.isNonEmptyHttpURL ?? false
     }
-    @inlinable var asHttpURLOrNil: String? {
+    @inlinable public var asHttpURLOrNil: String? {
         self?.asHttpURLOrNil
     }
 }

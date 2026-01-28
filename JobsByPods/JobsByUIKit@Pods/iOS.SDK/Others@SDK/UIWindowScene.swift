@@ -12,8 +12,8 @@ import UIKit
 #endif
 
 @available(iOS 13.0, *)
-public extension UIWindowScene {
-    var keyWindowCompat: UIWindow? {
+extension UIWindowScene {
+    public var keyWindowCompat: UIWindow? {
         if #available(iOS 15.0, *) {
             return self.keyWindow
         } else {

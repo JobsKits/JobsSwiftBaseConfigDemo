@@ -39,7 +39,7 @@ public extension ViewDataProtocol where Self: UIViewController {
     }
 }
 
-public extension UIViewController{
+extension UIViewController{
     @discardableResult
     public func goBack(_ result: Any?, animated: Bool = true) -> Self {
         if let r = result { sendResult(r) }
@@ -76,8 +76,8 @@ public extension UIViewController{
 }
 // `viewDidAppear` swizzle：出现完成时机
 private enum _JobsAppearSwizzleOnceToken { static var done = false }
-private extension UIViewController {
-    final class _JobsAppearSwizzler {
+extension UIViewController {
+    private final class _JobsAppearSwizzler {
         static func installIfNeeded() {
             guard !_JobsAppearSwizzleOnceToken.done else { return }
             _JobsAppearSwizzleOnceToken.done = true
@@ -90,7 +90,8 @@ private extension UIViewController {
         }
     }
 
-    @objc func jobs_viewDidAppear_swizzled(_ animated: Bool) {
+    @objc
+    private func jobs_viewDidAppear_swizzled(_ animated: Bool) {
         self.jobs_viewDidAppear_swizzled(animated) // 原实现
         self.jobs_fireAppearCompletionIfNeeded(reason: "viewDidAppear")
     }

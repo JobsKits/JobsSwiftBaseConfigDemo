@@ -11,11 +11,11 @@ import AppKit
 import UIKit
 #endif
 
-public extension UIWindow {
+extension UIWindow {
     /// 返回一个“保证非空”的 UIWindow
     /// - 优先 jobsKeyWindow（真实窗口）
     /// - 取不到时兜底创建一个离屏窗口，避免 unwrap 报错
-    static var wd: UIWindow {
+    public static var wd: UIWindow {
         if let real = UIApplication.jobsKeyWindow() {
             return real
         } else {
@@ -24,13 +24,12 @@ public extension UIWindow {
         }
     }
     /// 实例访问也保持一致
-    var wd: UIWindow { Self.wd }
+    public var wd: UIWindow { Self.wd }
     // ================================== 跨版本入口：iOS 12+ 可编译 ==================================
     @discardableResult
-    static func jobsMake(root: UIViewController? = nil,
-                         level: UIWindow.Level = .normal,
-                         makeKeyVisible: Bool = true) -> UIWindow {
-
+    public static func jobsMake(root: UIViewController? = nil,
+                                level: UIWindow.Level = .normal,
+                                makeKeyVisible: Bool = true) -> UIWindow {
         // iOS 13+ 走 scene 路径；iOS 12- 走 frame 路径
         if #available(iOS 13.0, *) {
             return jobsMake(scene: nil,
@@ -48,10 +47,10 @@ public extension UIWindow {
     /// 新建并附着到“最合适”的前台 scene（iOS 26+ 不要再用 init(frame:)）
     @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
-    static func jobsMake(scene: UIWindowScene? = nil,
-                         root: UIViewController? = nil,
-                         level: UIWindow.Level = .normal,
-                         makeKeyVisible: Bool = true) -> UIWindow {
+    public static func jobsMake(scene: UIWindowScene? = nil,
+                                root: UIViewController? = nil,
+                                level: UIWindow.Level = .normal,
+                                makeKeyVisible: Bool = true) -> UIWindow {
         let targetScene: UIWindowScene? = {
             if let scene { return scene }
             return UIApplication.shared.connectedScenes
@@ -71,7 +70,7 @@ public extension UIWindow {
             ._makeIfNeeded(makeKeyVisible)
     }
     // 顶层 VC（跨 UINavigationController / UITabBarController / presented 链）
-    static func jobsTopMost(from base: UIViewController?) -> UIViewController? {
+    public static func jobsTopMost(from base: UIViewController?) -> UIViewController? {
         guard let base else { return nil }
         if let nav = base as? UINavigationController {
             return jobsTopMost(from: nav.visibleViewController ?? nav.topViewController)

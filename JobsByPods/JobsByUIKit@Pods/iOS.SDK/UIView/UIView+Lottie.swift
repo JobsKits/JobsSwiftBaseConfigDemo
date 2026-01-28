@@ -15,13 +15,13 @@ import JobsSwiftBlock
 #if canImport(SnapKit) && canImport(Lottie)
 import SnapKit
 import Lottie
-public extension UIView {
+extension UIView {
     // 关联存储：挂载在任意 UIView 上的唯一 LottieAnimationView（够用了；要多实例你可以自行扩展一个池）
     private struct _JobsLottieAssoc {
         static var viewKey: UInt8 = 0
     }
     /// 当前挂载在该视图上的 Lottie 动画视图
-    var jobs_lottieView: LottieAnimationView? {
+    public var jobs_lottieView: LottieAnimationView? {
         get { objc_getAssociatedObject(self, &_JobsLottieAssoc.viewKey) as? LottieAnimationView }
         set { objc_setAssociatedObject(self, &_JobsLottieAssoc.viewKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }

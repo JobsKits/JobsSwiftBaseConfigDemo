@@ -10,13 +10,13 @@ import AppKit
 import UIKit
 #endif
 // MARK: 条形码
-public extension String {
+extension String {
     /// Code128 条形码（可指定目标尺寸；自动无插值放大）
     /// - Parameters:
     ///   - size: 目标尺寸（建议宽>>高，如 260x100）
     ///   - quietSpace: 左右留白（点数，默认 7）
     @MainActor
-    func code128BarcodeImage(size: CGSize, quietSpace: CGFloat = 7) -> UIImage {
+    public func code128BarcodeImage(size: CGSize, quietSpace: CGFloat = 7) -> UIImage {
         guard !isEmpty,
               // Code128 推荐 ASCII；退化到 UTF8 也给过
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
@@ -47,13 +47,13 @@ public extension String {
     ///   - background: 背景色（默认白）
     /// - Returns: UIImage
     @MainActor
-    func code128ByText(width: CGFloat,
-                       barHeight: CGFloat = 100,
-                       quietSpace: CGFloat = 7,
-                       spacing: CGFloat = 6,
-                       font: UIFont = .monospacedDigitSystemFont(ofSize: 16, weight: .regular),
-                       textColor: UIColor = .black,
-                       background: UIColor = .white) -> UIImage {
+    public func code128ByText(width: CGFloat,
+                              barHeight: CGFloat = 100,
+                              quietSpace: CGFloat = 7,
+                              spacing: CGFloat = 6,
+                              font: UIFont = .monospacedDigitSystemFont(ofSize: 16, weight: .regular),
+                              textColor: UIColor = .black,
+                              background: UIColor = .white) -> UIImage {
         guard !isEmpty,
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
               let f = CIFilter(name: "CICode128BarcodeGenerator"),

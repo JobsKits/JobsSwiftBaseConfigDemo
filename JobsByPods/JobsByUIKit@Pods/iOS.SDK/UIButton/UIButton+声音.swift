@@ -4,11 +4,13 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import AVFoundation
 // =============== 全局默认值（保持不变） ===============
 public enum JobsSound {
@@ -36,9 +38,9 @@ private var _kTapSoundBoxKey: UInt8 = 0
 private var _kTapSoundPlayerKey: UInt8 = 0
 private var _kTapSoundActionIDKey: UInt8 = 0   // 仅 iOS14+ 用于 removeAction
 private var _kTapSoundActionKey: UInt8 = 0
-public extension UIButton {
+extension UIButton {
     @discardableResult
-    func byTapSound(_ nameWithExt: String) -> Self {
+    public func byTapSound(_ nameWithExt: String) -> Self {
         // 查找资源
         let ns = nameWithExt as NSString
         let ext = ns.pathExtension
@@ -64,7 +66,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func byRemoveTapSound() -> Self {
+    public func byRemoveTapSound() -> Self {
         _jobs_unbindTapHandler()
         objc_setAssociatedObject(self, &_kTapSoundBoxKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(self, &_kTapSoundPlayerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)

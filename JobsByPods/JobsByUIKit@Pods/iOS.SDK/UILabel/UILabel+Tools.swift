@@ -16,14 +16,14 @@ extension UILabel {
     /// 一次性设置文本样式 + 开启 Dynamic Type
     @available(iOS 10.0, *)
     @discardableResult
-    func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
+    public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
         self.font = .preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
         return self
     }
     /// 段落样式（对 attributedText 生效；若当前是纯文本会自动构造）
     @discardableResult
-    func byParagraph(
+    public func byParagraph(
         lineSpacing: CGFloat? = nil,
         paragraphSpacing: CGFloat? = nil,
         alignment: NSTextAlignment? = nil,
@@ -58,18 +58,18 @@ extension UILabel {
         return self
     }
     /// 尺寸测量
-    func jobs_height(fittingWidth width: CGFloat) -> CGFloat {
+    public func jobs_height(fittingWidth width: CGFloat) -> CGFloat {
         let size = CGSize(width: width, height: .greatestFiniteMagnitude)
         return sizeThatFits(size).height
     }
 
-    func jobs_width(fittingHeight height: CGFloat) -> CGFloat {
+    public func jobs_width(fittingHeight height: CGFloat) -> CGFloat {
         let size = CGSize(width: .greatestFiniteMagnitude, height: height)
         return sizeThatFits(size).width
     }
     /// 轻量 Layer 阴影（UILabel 自带 shadowColor/Offset 太弱）
     @discardableResult
-    func byLayerShadow(
+    public func byLayerShadow(
         color: UIColor? = UIColor.black.withAlphaComponent(0.25),
         radius: CGFloat = 3,
         offset: CGSize = .init(width: 0, height: 2),
@@ -84,7 +84,7 @@ extension UILabel {
     }
     /// 显示样式（把旧枚举语义映射到具体行为）
     @discardableResult
-    func makeLabelByShowingType(_ type: UILabelShowingType) -> Self {
+    public func makeLabelByShowingType(_ type: UILabelShowingType) -> Self {
         superview?.layoutIfNeeded()
         switch type {
         case .type01:

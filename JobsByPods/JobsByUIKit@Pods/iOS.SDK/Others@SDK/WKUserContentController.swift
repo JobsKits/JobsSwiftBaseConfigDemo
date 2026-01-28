@@ -14,22 +14,22 @@ import UIKit
 import WebKit
 
 @MainActor
-public extension WKUserContentController {
+extension WKUserContentController {
     // MARK: - UserScripts
     @discardableResult
-    func byAddUserScript(_ script: WKUserScript) -> Self {
+    public func byAddUserScript(_ script: WKUserScript) -> Self {
         addUserScript(script)
         return self
     }
 
     @discardableResult
-    func byAddUserScripts(_ scripts: [WKUserScript]) -> Self {
+    public func byAddUserScripts(_ scripts: [WKUserScript]) -> Self {
         scripts.forEach(addUserScript(_:))
         return self
     }
     /// 基础版：所有系统可用
     @discardableResult
-    func byAddUserScript(
+    public func byAddUserScript(
         source: String,
         injectionTime: WKUserScriptInjectionTime = .atDocumentEnd,
         forMainFrameOnly: Bool = false
@@ -45,7 +45,7 @@ public extension WKUserContentController {
     /// iOS 14+：支持 contentWorld
     @available(iOS 14.0, *)
     @discardableResult
-    func byAddUserScript(
+    public func byAddUserScript(
         source: String,
         injectionTime: WKUserScriptInjectionTime = .atDocumentEnd,
         forMainFrameOnly: Bool = false,
@@ -62,14 +62,14 @@ public extension WKUserContentController {
     }
 
     @discardableResult
-    func byRemoveAllUserScripts() -> Self {
+    public func byRemoveAllUserScripts() -> Self {
         removeAllUserScripts()
         return self
     }
     // MARK: - Message Handlers (no-reply)
     /// 基础版（所有系统）：先移除同名再添加
     @discardableResult
-    func bySetHandler(
+    public func bySetHandler(
         _ handler: (any WKScriptMessageHandler)?,
         name: String
     ) -> Self {
@@ -80,7 +80,7 @@ public extension WKUserContentController {
     /// iOS 14+ 重载：带 contentWorld
     @available(iOS 14.0, *)
     @discardableResult
-    func bySetHandler(
+    public func bySetHandler(
         _ handler: (any WKScriptMessageHandler)?,
         name: String,
         in world: WKContentWorld
@@ -91,7 +91,7 @@ public extension WKUserContentController {
     }
     /// 基础版：直接添加（不先移除）
     @discardableResult
-    func byAddHandler(
+    public func byAddHandler(
         _ handler: any WKScriptMessageHandler,
         name: String
     ) -> Self {
@@ -101,7 +101,7 @@ public extension WKUserContentController {
     /// iOS 14+ 重载：直接添加到指定 world
     @available(iOS 14.0, *)
     @discardableResult
-    func byAddHandler(
+    public func byAddHandler(
         _ handler: any WKScriptMessageHandler,
         name: String,
         in world: WKContentWorld
@@ -111,7 +111,7 @@ public extension WKUserContentController {
     }
     /// 基础版：移除指定名称
     @discardableResult
-    func byRemoveHandler(
+    public func byRemoveHandler(
         named name: String
     ) -> Self {
         removeScriptMessageHandler(forName: name)
@@ -120,7 +120,7 @@ public extension WKUserContentController {
     /// iOS 14+ 重载：从指定 world 移除
     @available(iOS 14.0, *)
     @discardableResult
-    func byRemoveHandler(
+    public func byRemoveHandler(
         named name: String,
         in world: WKContentWorld
     ) -> Self {
@@ -130,7 +130,7 @@ public extension WKUserContentController {
     // MARK: - Message Handlers (with-reply)  —— 这两组本就 14+，签名里可以安全使用 WKContentWorld
     @available(iOS 14.0, *)
     @discardableResult
-    func bySetHandlerWithReply(
+    public func bySetHandlerWithReply(
         _ handler: (any WKScriptMessageHandlerWithReply)?,
         name: String,
         in world: WKContentWorld? = nil
@@ -143,7 +143,7 @@ public extension WKUserContentController {
 
     @available(iOS 14.0, *)
     @discardableResult
-    func byAddHandlerWithReply(
+    public func byAddHandlerWithReply(
         _ handler: any WKScriptMessageHandlerWithReply,
         name: String,
         in world: WKContentWorld? = nil
@@ -154,35 +154,35 @@ public extension WKUserContentController {
     // MARK: - Bulk remove
     @available(iOS 14.0, *)
     @discardableResult
-    func byRemoveAllHandlers(from world: WKContentWorld) -> Self {
+    public func byRemoveAllHandlers(from world: WKContentWorld) -> Self {
         removeAllScriptMessageHandlers(from: world)
         return self
     }
 
     @available(iOS 14.0, *)
     @discardableResult
-    func byRemoveAllHandlers() -> Self {
+    public func byRemoveAllHandlers() -> Self {
         removeAllScriptMessageHandlers()
         return self
     }
     // MARK: - Content Rule Lists
     @available(iOS 11.0, *)
     @discardableResult
-    func byAddContentRuleList(_ list: WKContentRuleList) -> Self {
+    public func byAddContentRuleList(_ list: WKContentRuleList) -> Self {
         add(list)
         return self
     }
 
     @available(iOS 11.0, *)
     @discardableResult
-    func byRemoveContentRuleList(_ list: WKContentRuleList) -> Self {
+    public func byRemoveContentRuleList(_ list: WKContentRuleList) -> Self {
         remove(list)
         return self
     }
 
     @available(iOS 11.0, *)
     @discardableResult
-    func byRemoveAllContentRuleLists() -> Self {
+    public func byRemoveAllContentRuleLists() -> Self {
         removeAllContentRuleLists()
         return self
     }

@@ -4,14 +4,15 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 // MARK: - 背景色兜底
-public extension UIButton {
-    func setBgCor(_ color: UIColor, forState: UIControl.State) {
+extension UIButton {
+    public func setBgCor(_ color: UIColor, forState: UIControl.State) {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
         UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)
         UIGraphicsGetCurrentContext()?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -20,7 +21,7 @@ public extension UIButton {
         setBackgroundImage(colorImage, for: forState)
     }
 
-    func setBackgroundColor(_ color: UIColor, forState state: UIControl.State) {
+    public func setBackgroundColor(_ color: UIColor, forState state: UIControl.State) {
         let size = CGSize(width: 1, height: 1)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()

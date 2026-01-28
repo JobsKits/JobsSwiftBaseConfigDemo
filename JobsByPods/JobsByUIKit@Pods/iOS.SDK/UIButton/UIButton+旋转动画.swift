@@ -4,15 +4,16 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 // MARK: - 旋转动画
-public extension UIButton {
-    static let rotationKey = "jobs.rotation"
-    enum RotationScope { case imageView, wholeButton, layer(CALayer) }
+extension UIButton {
+    public static let rotationKey = "jobs.rotation"
+    public enum RotationScope { case imageView, wholeButton, layer(CALayer) }
 
     private func targetLayer(for scope: RotationScope) -> CALayer? {
         switch scope {
@@ -22,14 +23,14 @@ public extension UIButton {
         }
     }
 
-    func isRotating(scope: RotationScope = .imageView,
+    public func isRotating(scope: RotationScope = .imageView,
                            key: String = UIButton.rotationKey) -> Bool {
         guard let tl = targetLayer(for: scope) else { return false }
         return tl.animation(forKey: key) != nil
     }
 
     @discardableResult
-    func setRotating(_ on: Bool,
+    public func setRotating(_ on: Bool,
                             scope: RotationScope = .imageView,
                             duration: CFTimeInterval = 1.0,
                             repeatCount: Float = .infinity,
@@ -61,7 +62,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func startRotating(duration: CFTimeInterval = 1.0,
+    public func startRotating(duration: CFTimeInterval = 1.0,
                               scope: RotationScope = .imageView,
                               clockwise: Bool = true,
                               key: String = UIButton.rotationKey) -> Self {
@@ -70,7 +71,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func stopRotating(scope: RotationScope = .imageView,
+    public func stopRotating(scope: RotationScope = .imageView,
                              key: String = UIButton.rotationKey,
                              resetTransformOnStop: Bool = true) -> Self {
         setRotating(false, scope: scope, duration: 0,

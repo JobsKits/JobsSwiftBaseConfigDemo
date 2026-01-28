@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -13,7 +14,7 @@ import UIKit
 extension UILabel {
     /// 点语法：给 UILabel 加点击事件，返回自己
     @discardableResult
-    func onTap(
+    public func onTap(
         taps: Int = 1,
         touches: Int = 1,
         cancelsTouchesInView: Bool = true,
@@ -37,7 +38,7 @@ extension UILabel {
     }
     /// 长按手势：返回 self，支持链式调用
     @discardableResult
-    func onLongPress(
+    public func onLongPress(
         minDuration: TimeInterval = 0.8,     // 最小按压时长
         movement: CGFloat = 12,              // 允许移动距离
         touches: Int = 1,                    // 手指数量

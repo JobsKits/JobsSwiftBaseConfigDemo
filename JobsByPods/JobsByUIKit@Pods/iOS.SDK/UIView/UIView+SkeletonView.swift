@@ -15,7 +15,7 @@ import JobsSwiftBaseDefines
 #if canImport(SkeletonView)
 import SkeletonView
 // MARK: - UIView · 基础属性与显隐
-public extension UIView {
+extension UIView {
     /// 标记为可骨架
     @discardableResult
     public func bySkeletonable(_ enabled: Bool = true) -> Self {
@@ -90,7 +90,7 @@ public extension UIView {
     }
 }
 // MARK: - 表格/集合 · 隐藏并 reload
-public extension UITableView {
+extension UITableView {
     @discardableResult
     public func byHideSkeletonAndReload(transition: TimeInterval = 0.25) -> Self {
         self.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(transition))
@@ -98,7 +98,7 @@ public extension UITableView {
     }
 }
 
-public extension UICollectionView {
+extension UICollectionView {
     @discardableResult
     public func byHideSkeletonAndReload(transition: TimeInterval = 0.25) -> Self {
         self.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(transition))
@@ -106,7 +106,7 @@ public extension UICollectionView {
     }
 }
 // MARK: - UILabel · 文本骨架细节
-public extension UILabel {
+extension UILabel {
     /// 骨架文本行圆角
     @discardableResult
     public func bySkeletonLinesCornerRadius(_ radius: Int) -> Self {

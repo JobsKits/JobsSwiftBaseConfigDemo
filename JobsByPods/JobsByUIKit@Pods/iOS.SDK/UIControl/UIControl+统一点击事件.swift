@@ -14,7 +14,7 @@ import UIKit
 import ObjectiveC
 import JobsSwiftBlock
 // MARK: - UIControl 统一事件 DSL
-public extension UIControl {
+extension UIControl {
     // 用一个 key 挂一整张表：[eventRawValue : wrapper]
     private struct JobsAssociatedKeys {
         static var handlersKey: UInt8 = 0
@@ -33,19 +33,19 @@ public extension UIControl {
     }
     // MARK: - 通用 Tap 事件（.touchUpInside）
     @discardableResult
-    func onJobsTap<T: UIControl>(_ handler: @escaping jobsByNonNullTypeBlock<T>) -> Self {
+    public func onJobsTap<T: UIControl>(_ handler: @escaping jobsByNonNullTypeBlock<T>) -> Self {
         addJobsAction(for: .touchUpInside, handler)
         return self
     }
     // MARK: - 通用 ValueChanged（UISwitch / UISlider / UIDatePicker 等）
     @discardableResult
-    func onJobsChange<T: UIControl>(_ handler: @escaping jobsByNonNullTypeBlock<T>) -> Self {
+    public func onJobsChange<T: UIControl>(_ handler: @escaping jobsByNonNullTypeBlock<T>) -> Self {
         addJobsAction(for: .valueChanged, handler)
         return self
     }
     // MARK: - 通用事件绑定（任意 Event）
     @discardableResult
-    func onJobsEvent<T: UIControl>(_ event: UIControl.Event,
+    public func onJobsEvent<T: UIControl>(_ event: UIControl.Event,
                                    _ handler: @escaping jobsByNonNullTypeBlock<T>) -> Self {
         addJobsAction(for: event, handler)
         return self

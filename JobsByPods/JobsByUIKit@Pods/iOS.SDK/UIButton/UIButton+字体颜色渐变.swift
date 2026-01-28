@@ -20,20 +20,17 @@ private enum _JobsBtnGradientKey {
     static var subtitleLabel: UInt8 = 0
     static var mainLayer: UInt8 = 0
     static var subLayer: UInt8 = 0
-
     static var mainColors: UInt8 = 0
     static var subColors: UInt8 = 0
-
     static var mainDir: UInt8 = 0
     static var subDir: UInt8 = 0
-
     static var stateRaw: UInt8 = 0
 }
 // MARK: - UIButton Subtitle Label (SnapKit)
-public extension UIButton {
+extension UIButton {
     /// 副标题 Label（第二个 Label）。不存在就自动创建并加到按钮里。
     /// 默认布局：在 titleLabel 下面 2pt，水平居中（全部 SnapKit）
-    var jobs_subtitleLabel: UILabel {
+    public var jobs_subtitleLabel: UILabel {
         if let lb = objc_getAssociatedObject(self, &_JobsBtnGradientKey.subtitleLabel) as? UILabel {
             return lb
         }
@@ -61,70 +58,81 @@ public extension UIButton {
     }
     /// DSL：设置副标题文本（不做渐变，只管 text/font）
     @discardableResult
-    func jobs_setSubtitle(_ text: String?, font: UIFont? = nil) -> Self {
+    public func jobs_setSubtitle(_ text: String?, font: UIFont? = nil) -> Self {
         jobs_subtitleLabel.text = text
         if let font { jobs_subtitleLabel.font = font }
         return self
     }
 }
 // MARK: - Public DSL (3 APIs)
-public extension UIButton {
+extension UIButton {
     /// 1) 只处理主标题（titleLabel）
     @discardableResult
-    func jobs_setGradientMainTitle(
+    public func jobs_setGradientMainTitle(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         for state: UIControl.State = .normal,
         autoLayout: Bool = true
     ) -> Self {
-
         if autoLayout {
             layoutIfNeeded()
             titleLabel?.layoutIfNeeded()
         }
-
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainDir, direction, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.stateRaw, state.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.mainColors,
+            colors,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.mainDir,
+            direction,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.stateRaw,
+            state.rawValue,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         _jobs_applyMainGradient(colors: colors, direction: direction, for: state)
         return self
     }
     /// 2) 只处理副标题（jobs_subtitleLabel）
     @discardableResult
-    func jobs_setGradientSubtitle(
+    public func jobs_setGradientSubtitle(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         autoLayout: Bool = true
     ) -> Self {
-
         if autoLayout {
             layoutIfNeeded()
             jobs_subtitleLabel.layoutIfNeeded()
         }
-
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.subColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.subDir, direction, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.subColors,
+            colors,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.subDir,
+            direction,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         _jobs_applySubGradient(colors: colors, direction: direction)
         return self
     }
-
     /// 3) 主标题 + 副标题一致（同一套 colors + direction）
     @discardableResult
-    func jobs_setGradientTitlesSame(
+    public func jobs_setGradientTitlesSame(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         for state: UIControl.State = .normal,
         autoLayout: Bool = true
     ) -> Self {
-
         if autoLayout {
             layoutIfNeeded()
             titleLabel?.layoutIfNeeded()
             jobs_subtitleLabel.layoutIfNeeded()
         }
-
         objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(self, &_JobsBtnGradientKey.subColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainDir, direction, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -138,7 +146,7 @@ public extension UIButton {
 
     /// 布局/约束变化后刷新（按缓存 colors/direction 重刷主+副）
     @discardableResult
-    func jobs_updateGradientTitlesLayout(autoLayout: Bool = true) -> Self {
+    public func jobs_updateGradientTitlesLayout(autoLayout: Bool = true) -> Self {
         if autoLayout {
             layoutIfNeeded()
             titleLabel?.layoutIfNeeded()
@@ -160,8 +168,8 @@ public extension UIButton {
     }
 }
 // MARK: - Private Apply
-private extension UIButton {
-    func _jobs_applyMainGradient(
+extension UIButton {
+    private func _jobs_applyMainGradient(
         colors: [UIColor],
         direction: JobsGradientDirection,
         for state: UIControl.State
@@ -177,7 +185,7 @@ private extension UIButton {
         )
     }
 
-    func _jobs_applySubGradient(
+    private func _jobs_applySubGradient(
         colors: [UIColor],
         direction: JobsGradientDirection
     ) {
@@ -191,7 +199,7 @@ private extension UIButton {
         )
     }
 
-    func _jobs_applyGradient(
+    private func _jobs_applyGradient(
         on label: UILabel,
         text: String?,
         colors: [UIColor],

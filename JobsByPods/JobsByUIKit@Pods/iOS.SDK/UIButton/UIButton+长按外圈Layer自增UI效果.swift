@@ -112,7 +112,7 @@ private final class JobsPressFuseDriver: NSObject {
     }
 }
 
-public extension UIButton {
+extension UIButton {
     private struct JobsPressFuseKeys {
         static var driverKey: UInt8 = 0
         static var gestureKey: UInt8 = 0
@@ -124,7 +124,7 @@ public extension UIButton {
     }
 
     @discardableResult
-    func jobs_enablePressFuseCountUp(
+    public func jobs_enablePressFuseCountUp(
         tickInterval: TimeInterval = 1.0 / 60.0,
         durationToFull: TimeInterval = 1.5,
         loopWhenFull: Bool = false,
@@ -158,11 +158,10 @@ public extension UIButton {
             g.cancelsTouchesInView = false
             addGestureRecognizer(g)
             objc_setAssociatedObject(self, &JobsPressFuseKeys.gestureKey, g, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        return self
+        };return self
     }
 
-    func jobs_disablePressFuseCountUp() {
+    public func jobs_disablePressFuseCountUp() {
         // ✅ 同等待遇：确保 endPress 在主线程执行
         if let d = jobs_pressFuseDriver {
             jobsRunOnMain(self) { vc in
@@ -170,14 +169,14 @@ public extension UIButton {
             }
         }
         jobs_pressFuseDriver = nil
-
         if let g = objc_getAssociatedObject(self, &JobsPressFuseKeys.gestureKey) as? UILongPressGestureRecognizer {
             removeGestureRecognizer(g)
         }
         objc_setAssociatedObject(self, &JobsPressFuseKeys.gestureKey, nil, .OBJC_ASSOCIATION_ASSIGN)
     }
 
-    @objc private func jobs_onPressFuse(_ g: UILongPressGestureRecognizer) {
+    @objc
+    private func jobs_onPressFuse(_ g: UILongPressGestureRecognizer) {
         guard let d = jobs_pressFuseDriver else { return }
         switch g.state {
         case .began:

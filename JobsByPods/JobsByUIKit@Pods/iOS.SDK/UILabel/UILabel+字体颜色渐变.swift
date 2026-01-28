@@ -13,8 +13,8 @@ import UIKit
 
 import JobsSwiftBaseDefines
 
-public extension UILabel {
-    func jobs_setGradientText(
+extension UILabel {
+    public func jobs_setGradientText(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight) {
         guard let text, !text.isEmpty else { return }

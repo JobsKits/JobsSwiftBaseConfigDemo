@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -30,16 +31,16 @@ public enum Start {
     case point(CGPoint) // 在“可用区域”(仅 safeArea)坐标系内
 }
 
-public extension UIView {
+extension UIView {
     // MARK: - 吸附策略
-    enum SuspendDocking {
+    public enum SuspendDocking {
         case none            // 不吸附
         case nearestEdge     // 吸附最近边
         case nearestCorner   // 吸附最近角
         case auto            // 👈 新增：由 start 推导（默认）
     }
     // MARK: - 悬浮行为配置
-    struct SuspendConfig {
+    public struct SuspendConfig {
         public var start: Start = .bottomRight
         public var container: UIView? = nil
         public var fallbackSize: CGSize = .init(width: 56, height: 56)
@@ -80,14 +81,14 @@ private enum SuspendKeys {
     static var panDelegateKey: UInt8 = 0   // ✅ 新增：持有手势 delegate（delegate 是 weak，不持有会被释放）
 }
 // MARK: - 主功能
-public extension UIView {
+extension UIView {
     /// 是否已经悬浮（关联对象标记）
-    var isSuspended: Bool {
+    public var isSuspended: Bool {
         (objc_getAssociatedObject(self, &SuspendKeys.suspendedKey) as? Bool) ?? false
     }
     /// 解除悬浮：从容器移除并清理内部手势/配置
     @MainActor
-    func unsuspend() {
+    public func unsuspend() {
         guard isSuspended else { return }
         if let pan = objc_getAssociatedObject(self, &SuspendKeys.panKey) as? UIPanGestureRecognizer {
             removeGestureRecognizer(pan)
@@ -101,7 +102,7 @@ public extension UIView {
     /// 悬浮：挂到活动窗口或指定容器；支持拖拽/吸附/安全区
     @discardableResult
     @MainActor
-    func suspend(_ config: SuspendConfig = .default) -> Self {
+    public func suspend(_ config: SuspendConfig = .default) -> Self {
         // 1) 保存配置
         objc_setAssociatedObject(self, &SuspendKeys.configKey, config, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         // 2) 容器
@@ -138,16 +139,16 @@ public extension UIView {
         return self
     }
     /// Builder 版本
-    @discardableResult
     @MainActor
-    func bySuspend(_ build: (SuspendConfig) -> SuspendConfig) -> Self {
+    @discardableResult
+    public func bySuspend(_ build: (SuspendConfig) -> SuspendConfig) -> Self {
         suspend(build(.default))
     }
 }
 // MARK: - 私有实现
-private extension UIView {
+extension UIView {
     // MARK: - ✅ 手势冲突处理（Pan + LongPress 同时识别）
-    final class JobsSuspendGestureDelegate: NSObject, UIGestureRecognizerDelegate {
+    private final class JobsSuspendGestureDelegate: NSObject, UIGestureRecognizerDelegate {
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
             // 只放行 Pan <-> LongPress 这组（避免影响你别的手势逻辑）
@@ -159,7 +160,7 @@ private extension UIView {
         }
     }
 
-    func _suspendGestureDelegate() -> JobsSuspendGestureDelegate {
+    private func _suspendGestureDelegate() -> JobsSuspendGestureDelegate {
         if let d = objc_getAssociatedObject(self, &SuspendKeys.panDelegateKey) as? JobsSuspendGestureDelegate {
             return d
         }
@@ -168,7 +169,7 @@ private extension UIView {
         return d
     }
 
-    func _enableSimultaneousPanWithLongPress(_ pan: UIPanGestureRecognizer) {
+    private func _enableSimultaneousPanWithLongPress(_ pan: UIPanGestureRecognizer) {
         let d = _suspendGestureDelegate()
         // pan 自己挂 delegate（允许与 longPress 同时识别）
         pan.delegate = d
@@ -182,7 +183,7 @@ private extension UIView {
         }
     }
     /// 根据 start & 可用区域推导初始 origin
-    func _origin(for start: Start, size: CGSize, in bounds: CGRect) -> CGPoint {
+    private func _origin(for start: Start, size: CGSize, in bounds: CGRect) -> CGPoint {
         switch start {
         case .bottomRight:
             return CGPoint(x: bounds.maxX - size.width, y: bounds.maxY - size.height)
@@ -200,7 +201,7 @@ private extension UIView {
         }
     }
     /// `.auto` → 用 start 推导实际吸附模式
-    func _effectiveDocking(_ cfg: UIView.SuspendConfig) -> UIView.SuspendDocking {
+    private func _effectiveDocking(_ cfg: UIView.SuspendConfig) -> UIView.SuspendDocking {
         switch cfg.docking {
         case .auto:
             switch cfg.start {
@@ -214,10 +215,10 @@ private extension UIView {
         }
     }
     /// 计算吸附目标 origin
-    func _snapOrigin(for mode: UIView.SuspendDocking,
-                     in container: UIView,
-                     cfg: UIView.SuspendConfig,
-                     currentFrame f: CGRect) -> CGPoint {
+    private func _snapOrigin(for mode: UIView.SuspendDocking,
+                             in container: UIView,
+                             cfg: UIView.SuspendConfig,
+                             currentFrame f: CGRect) -> CGPoint {
         let b = Self._availableBounds(in: container) // ✅ 去掉 extraInsets
         let w = f.width, h = f.height
         let center = CGPoint(x: f.midX, y: f.midY)
@@ -255,10 +256,10 @@ private extension UIView {
         }
     }
 
-    func _clamped(_ origin: CGPoint,
-                  size: CGSize,
-                  in bounds: CGRect,
-                  clamp: Bool) -> CGPoint {
+    private func _clamped(_ origin: CGPoint,
+                          size: CGSize,
+                          in bounds: CGRect,
+                          clamp: Bool) -> CGPoint {
         guard clamp else { return origin }
         let maxX = bounds.maxX - size.width
         let maxY = bounds.maxY - size.height
@@ -266,7 +267,7 @@ private extension UIView {
                        y: min(max(bounds.minY, origin.y), maxY))
     }
 
-    func _clampFrameWithinContainer() {
+    private func _clampFrameWithinContainer() {
         guard
             let cfg = objc_getAssociatedObject(self, &SuspendKeys.configKey) as? UIView.SuspendConfig,
             let container = self.superview
@@ -275,7 +276,8 @@ private extension UIView {
         frame.origin = _clamped(frame.origin, size: frame.size, in: b, clamp: cfg.confineInContainer)
     }
     /// 悬浮视图@手势算法实现
-    @objc func _onPan(_ gr: UIPanGestureRecognizer) {
+    @objc
+    private func _onPan(_ gr: UIPanGestureRecognizer) {
         guard
             let cfg = objc_getAssociatedObject(self, &SuspendKeys.configKey) as? UIView.SuspendConfig,
             let container = self.superview
@@ -313,13 +315,13 @@ private extension UIView {
         }
     }
     /// 可用区域（仅叠加 safeAreaInsets）
-    static func _availableBounds(in container: UIView) -> CGRect {
+    private static func _availableBounds(in container: UIView) -> CGRect {
         let safe = container.safeAreaInsets
         return container.bounds.inset(by: safe)
     }
     /// 悬浮视图@窗口几何
     /// 构造一个兜底窗口（极少会走到这里）
-    static func _fallbackWindow() -> UIWindow {
+    private static func _fallbackWindow() -> UIWindow {
         if #available(iOS 13.0, *),
            let scene = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })

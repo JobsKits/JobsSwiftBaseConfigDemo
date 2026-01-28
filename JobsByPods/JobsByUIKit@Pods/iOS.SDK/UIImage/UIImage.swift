@@ -10,15 +10,16 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import CoreGraphics
 /// 基础绘制
 extension UIImage {
-    //MARK: - 绘制渐变色图片：任意方向线性渐变
-    convenience init?(gradientColors: [UIColor],
-                      size: CGSize,
-                      startPoint: CGPoint = .zero,       // 0~1 相对点
-                      endPoint: CGPoint   = CGPoint(x: 1, y: 0),
-                      opaque: Bool = false) {
+    // MARK: - 绘制渐变色图片：任意方向线性渐变
+    public convenience init?(gradientColors: [UIColor],
+                             size: CGSize,
+                             startPoint: CGPoint = .zero,       // 0~1 相对点
+                             endPoint: CGPoint   = CGPoint(x: 1, y: 0),
+                             opaque: Bool = false) {
         guard gradientColors.count >= 2,
               size.width > 0, size.height > 0 else { return nil }
 
@@ -44,7 +45,7 @@ extension UIImage {
         guard let cg = img.cgImage else { return nil }
         self.init(cgImage: cg, scale: img.scale, orientation: .up)
     }
-    //MARK: - 通用绘制器👉绘制纯色图片
+    // MARK: - 通用绘制器👉绘制纯色图片
     public static func solidColor(size: CGSize,
                                   color: UIColor,
                                   opaque: Bool = false) -> UIImage? {
@@ -55,7 +56,7 @@ extension UIImage {
         UIRectFill(CGRect(origin: .zero, size: size))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
-    //MARK: - 按钮背景/控件填充👉将任意 UIColor 转换成一张纯色 UIImage
+    // MARK: - 按钮背景/控件填充👉将任意 UIColor 转换成一张纯色 UIImage
     public static func jobs_fromColor(_ color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -65,7 +66,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     }
-    //MARK: - 图片转灰度
+    // MARK: - 图片转灰度
     public func grayScale() -> UIImage? {
         guard let cgImg = self.cgImage else { return nil }
         let scale = self.scale
@@ -89,7 +90,7 @@ extension UIImage {
         guard let out = ctx.makeImage() else { return nil }
         return UIImage(cgImage: out, scale: scale, orientation: .up)
     }
-    //MARK: - 用颜色生成图片（默认 1x1）
+    // MARK: - 用颜色生成图片（默认 1x1）
     static func fromColor(_ color: UIColor,
                           size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
         let rect = CGRect(origin: .zero, size: size)
@@ -102,14 +103,14 @@ extension UIImage {
 }
 /// 功能性方法
 extension UIImage {
-    //MARK: - 拉伸适配（默认边距）
+    // MARK: - 拉伸适配（默认边距）
     func byResizable(edge: UIEdgeInsets = UIEdgeInsets(top: 10,
                                                        left: 20,
                                                        bottom: 10,
                                                        right: 20)) -> UIImage {
         return self.resizableImage(withCapInsets: edge, resizingMode: .stretch)
     }
-    //MARK: - 圆角/圆形 + 内描边
+    // MARK: - 圆角/圆形 + 内描边
     public func rounded(cornerRadius: CGFloat? = nil,
                         borderWidth: CGFloat = 0,
                         borderColor: UIColor = .clear) -> UIImage? {
@@ -152,7 +153,7 @@ extension UIImage {
             strokePath.stroke()
         };return UIGraphicsGetImageFromCurrentImageContext()
     }
-    //MARK: - 生成圆形图标
+    // MARK: - 生成圆形图标
     static func circleIcon(diameter: CGFloat, color: UIColor) -> UIImage {
         let size = CGSize(width: diameter, height: diameter)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -162,7 +163,7 @@ extension UIImage {
         ctx.fillEllipse(in: CGRect(origin: .zero, size: size))
         return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
     }
-    //MARK: - 图片叠加（overlay 居中 + 左右间距）
+    // MARK: - 图片叠加（overlay 居中 + 左右间距）
     func overlayed(with overlay: UIImage, horizontalInset: CGFloat = 2) -> UIImage {
         let size = self.size
         guard size.width > 0, size.height > 0 else { return self }

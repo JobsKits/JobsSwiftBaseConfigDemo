@@ -4,20 +4,21 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 // MARK: 二维码
-public extension String {
+extension String {
     /// 由当前字符串生成二维码 UIImage（无插值放大，清晰）
     /// - Parameters:
     ///   - widthSize: 目标边长（正方形）
     ///   - correction: 纠错等级 L/M/Q/H（默认 M）
     /// - Returns: 生成的二维码图片；失败返回空 UIImage()
     @MainActor
-    func qrcodeImage(_ widthSize: CGFloat, correction: String = "M") -> UIImage {
+    public func qrcodeImage(_ widthSize: CGFloat, correction: String = "M") -> UIImage {
         guard !self.isEmpty,
               let data = self.data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator")
@@ -39,10 +40,10 @@ public extension String {
     }
     /// 可选：着色版（前景/背景色）
     @MainActor
-    func qrcodeImage(_ widthSize: CGFloat,
-                     foreground: UIColor,
-                     background: UIColor = .white,
-                     correction: String = "M") -> UIImage {
+    public func qrcodeImage(_ widthSize: CGFloat,
+                            foreground: UIColor,
+                            background: UIColor = .white,
+                            correction: String = "M") -> UIImage {
         guard !self.isEmpty,
               let data = self.data(using: .utf8),
               let gen = CIFilter(name: "CIQRCodeGenerator"),
@@ -79,7 +80,7 @@ public extension String {
     ///   - borderColor: Logo 外围白边颜色
     /// - Returns: UIImage
     @MainActor
-    func qrcodeImage(
+    public func qrcodeImage(
         _ widthSize: CGFloat,
         correction: String = "H",
         centerLogo logo: UIImage?,

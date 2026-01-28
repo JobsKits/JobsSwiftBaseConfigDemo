@@ -14,10 +14,10 @@ import UIKit
 private var _nbHiddenKey: UInt8 = 0
 private var _nbAnimatedKey: UInt8 = 0
 private var _nbSwizzledKey: UInt8 = 0
-public extension UIViewController {
+extension UIViewController {
     /// 写在 viewDidLoad：进入本页隐藏，离开自动还原
     @discardableResult
-    func byNavBarHiddenLifecycle(_ hiddenOnAppear: Bool, animated: Bool = true) -> Self {
+    public func byNavBarHiddenLifecycle(_ hiddenOnAppear: Bool, animated: Bool = true) -> Self {
         objc_setAssociatedObject(self, &_nbHiddenKey, hiddenOnAppear as NSNumber, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(self, &_nbAnimatedKey, animated as NSNumber, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         Self._nb_swizzleOnce(for: type(of: self))
@@ -25,7 +25,7 @@ public extension UIViewController {
     }
     /// 立即切换（链式）
     @discardableResult
-    func byNavBarHidden(_ hidden: Bool, animated: Bool = false) -> Self {
+    public func byNavBarHidden(_ hidden: Bool, animated: Bool = false) -> Self {
         navigationController?.setNavigationBarHidden(hidden, animated: animated)
         return self
     }
@@ -47,7 +47,8 @@ public extension UIViewController {
                   #selector(UIViewController._nb_viewWillDisappear(_:)))
     }
 
-    @objc private func _nb_viewWillAppear(_ animated: Bool) {
+    @objc
+    private func _nb_viewWillAppear(_ animated: Bool) {
         _nb_viewWillAppear(animated) // 调原实现
         if let on = (objc_getAssociatedObject(self, &_nbHiddenKey) as? NSNumber)?.boolValue,
            let anim = (objc_getAssociatedObject(self, &_nbAnimatedKey) as? NSNumber)?.boolValue {
@@ -55,7 +56,8 @@ public extension UIViewController {
         }
     }
 
-    @objc private func _nb_viewWillDisappear(_ animated: Bool) {
+    @objc
+    private func _nb_viewWillDisappear(_ animated: Bool) {
         _nb_viewWillDisappear(animated) // 调原实现
         if let _ = objc_getAssociatedObject(self, &_nbHiddenKey) {
             // 只在启用了 lifecycle 时还原
@@ -65,8 +67,8 @@ public extension UIViewController {
 }
 
 private enum _JobsNavPopSwizzleOnceToken { static var done = false }
-public extension UINavigationController {
-    static func _jobs_installPopSwizzlesIfNeeded() {
+extension UINavigationController {
+    public static func _jobs_installPopSwizzlesIfNeeded() {
         guard !_JobsNavPopSwizzleOnceToken.done else { return }
         _JobsNavPopSwizzleOnceToken.done = true
         let cls: AnyClass = UINavigationController.self
@@ -87,7 +89,8 @@ public extension UINavigationController {
              #selector(UINavigationController._jobs_popToRootViewController_swizzled(animated:)))
     }
 
-    @objc func _jobs_popViewController_swizzled(animated: Bool) -> UIViewController? {
+    @objc
+    public func _jobs_popViewController_swizzled(animated: Bool) -> UIViewController? {
         // 手势交互进行中 → 走系统（避免破坏交互式返回）
         if let g = self.interactivePopGestureRecognizer,
            g.state == .began || g.state == .changed {
@@ -107,7 +110,8 @@ public extension UINavigationController {
         };return _jobs_popViewController_swizzled(animated: animated)
     }
 
-    @objc func _jobs_popToViewController_swizzled(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+    @objc
+    public func _jobs_popToViewController_swizzled(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         if let g = self.interactivePopGestureRecognizer,
            g.state == .began || g.state == .changed {
             return _jobs_popToViewController_swizzled(viewController, animated: animated)
@@ -126,7 +130,8 @@ public extension UINavigationController {
         };return _jobs_popToViewController_swizzled(viewController, animated: animated)
     }
 
-    @objc func _jobs_popToRootViewController_swizzled(animated: Bool) -> [UIViewController]? {
+    @objc
+    public func _jobs_popToRootViewController_swizzled(animated: Bool) -> [UIViewController]? {
         if let g = self.interactivePopGestureRecognizer,
            g.state == .began || g.state == .changed {
             return _jobs_popToRootViewController_swizzled(animated: animated)
@@ -147,13 +152,13 @@ public extension UINavigationController {
 }
 
 @MainActor
-public extension UIViewController {
+extension UIViewController {
     private struct _JobsNavKey {
         // 用地址作为唯一 key
         static var wrapper: UInt8 = 0
     }
 
-    var jobsNavContainer: UINavigationController {
+    public var jobsNavContainer: UINavigationController {
         if let nav = self as? UINavigationController { return nav }
         if let nav = self.navigationController { return nav }
         if let cached = objc_getAssociatedObject(self, &_JobsNavKey.wrapper) as? UINavigationController {
@@ -164,13 +169,13 @@ public extension UIViewController {
         return nav
     }
 
-    var jobsNav: Self {
+    public var jobsNav: Self {
         _ = jobsNavContainer
         return self
     }
 
     @discardableResult
-    func jobsNav(_ onWrap: (UINavigationController) -> Void) -> Self {
+    public func jobsNav(_ onWrap: (UINavigationController) -> Void) -> Self {
         let alreadyHad = (self is UINavigationController)
             || (self.navigationController != nil)
             || (objc_getAssociatedObject(self, &_JobsNavKey.wrapper) != nil)
@@ -191,17 +196,17 @@ public final class _JobsPushLockBox {
     var lockedUntil: TimeInterval = 0
 }
 
-public extension UINavigationController {
-    var _jobs_lockBox: _JobsPushLockBox {
+extension UINavigationController {
+    public var _jobs_lockBox: _JobsPushLockBox {
         if let b = objc_getAssociatedObject(self, &_jobsPushLockKey) as? _JobsPushLockBox { return b }
         let b = _JobsPushLockBox()
         objc_setAssociatedObject(self, &_jobsPushLockKey, b, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return b
     }
-    var _jobs_isPushingLocked: Bool {
+    public var _jobs_isPushingLocked: Bool {
         CFAbsoluteTimeGetCurrent() < _jobs_lockBox.lockedUntil
     }
-    func _jobs_lockPushing(for seconds: TimeInterval) {
+    public func _jobs_lockPushing(for seconds: TimeInterval) {
         _jobs_lockBox.lockedUntil = CFAbsoluteTimeGetCurrent() + max(0.05, seconds)
     }
 }

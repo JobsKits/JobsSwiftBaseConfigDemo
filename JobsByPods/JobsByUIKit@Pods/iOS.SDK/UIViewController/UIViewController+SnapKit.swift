@@ -15,13 +15,13 @@ import JobsSwiftBlock
 #if canImport(SnapKit)
 import SnapKit
 /// 利用SnapKit 给 UIViewController 加背景图（UIImageView）
-public extension UIViewController {
+extension UIViewController {
     // MARK: - AO Key（UInt8 哨兵）
     private struct _JobsAssocKeys {
         static var imageView: UInt8 = 0
     }
     // MARK: - 懒载 imageView（挂在 VC 上）
-    var jobsImageView: UIImageView {
+    public var jobsImageView: UIImageView {
         if let iv = objc_getAssociatedObject(self, &_JobsAssocKeys.imageView) as? UIImageView {
             return iv
         }
@@ -31,7 +31,7 @@ public extension UIViewController {
     }
     // MARK: - 安装并约束（默认铺满 Safe Area）
     @discardableResult
-    func bgImageView(
+    public func bgImageView(
         to container: UIView? = nil,
         contentMode: UIView.ContentMode = .scaleAspectFill,
         backgroundColor: UIColor? = nil,
@@ -74,7 +74,7 @@ public extension UIViewController {
         return iv
     }
     // MARK: - 卸载
-    func removeJobsImageView() {
+    public func removeJobsImageView() {
         jobsImageView.removeFromSuperview()
     }
 }

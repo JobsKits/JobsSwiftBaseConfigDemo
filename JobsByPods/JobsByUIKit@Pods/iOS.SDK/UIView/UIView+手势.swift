@@ -155,7 +155,7 @@ import JobsSwiftBlock
  view.removeAllSwipeActionsMulti()
  */
 // ================================== UIView + 手势 DSL（全量、兼容） ==================================
-public extension UIView {
+extension UIView {
     // 每个手势类型独立 key（同时用于“view->gesture”和“gesture->box”）
     private struct GestureKeys {
         static var tapKey: UInt8 = 0
@@ -173,7 +173,7 @@ public extension UIView {
     // MARK: - Tap（点击）
     /// 新接口：带 gesture；兼容链式配置
     @discardableResult
-    func addTapAction(
+    public func addTapAction(
         taps: Int = 1,
         cancelsTouchesInView: Bool = true,
         requiresExclusiveTouchType: Bool = false,
@@ -204,10 +204,10 @@ public extension UIView {
     }
     /// 旧接口：无参数（向下兼容）
     @discardableResult
-    func addTapAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addTapAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addTapAction { _ in action() }
     }
-    func removeTapAction() {
+    public func removeTapAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.tapKey) as? UITapGestureRecognizer {
             removeGestureRecognizer(g)
         }
@@ -215,7 +215,7 @@ public extension UIView {
     }
     // MARK: - LongPress（长按）
     @discardableResult
-    func addLongPressAction(
+    public func addLongPressAction(
         minimumPressDuration: TimeInterval = 0.5,
         allowableMovement: CGFloat = 10,
         numberOfTouchesRequired: Int = 1,
@@ -242,10 +242,10 @@ public extension UIView {
     }
     /// 旧接口兼容
     @discardableResult
-    func addLongPressAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addLongPressAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addLongPressAction { _ in action() }
     }
-    func removeLongPressAction() {
+    public func removeLongPressAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.longKey) as? UILongPressGestureRecognizer {
             removeGestureRecognizer(g)
         }
@@ -253,7 +253,7 @@ public extension UIView {
     }
     // MARK: - Pan（拖拽）
     @discardableResult
-    func addPanAction(
+    public func addPanAction(
         minimumNumberOfTouches: Int = 1,
         maximumNumberOfTouches: Int = Int.max,
         _ action: @escaping jobsByGRBlock
@@ -278,10 +278,10 @@ public extension UIView {
     }
     /// 旧接口兼容
     @discardableResult
-    func addPanAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addPanAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addPanAction { _ in action() }
     }
-    func removePanAction() {
+    public func removePanAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.panKey) as? UIPanGestureRecognizer {
             removeGestureRecognizer(g)
         }
@@ -289,7 +289,7 @@ public extension UIView {
     }
     // MARK: - Swipe（轻扫）
     @discardableResult
-    func addSwipeAction(
+    public func addSwipeAction(
         direction: UISwipeGestureRecognizer.Direction = .right,
         numberOfTouchesRequired: Int = 1,
         _ action: @escaping jobsByGRBlock
@@ -314,10 +314,10 @@ public extension UIView {
     }
     /// 旧接口兼容
     @discardableResult
-    func addSwipeAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addSwipeAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addSwipeAction { _ in action() }
     }
-    func removeSwipeAction() {
+    public func removeSwipeAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.swipeKey) as? UISwipeGestureRecognizer {
             removeGestureRecognizer(g)
         }
@@ -325,7 +325,7 @@ public extension UIView {
     }
     // MARK: - Pinch（捏合缩放）
     @discardableResult
-    func addPinchAction(_ action: @escaping jobsByGRBlock) -> Self {
+    public func addPinchAction(_ action: @escaping jobsByGRBlock) -> Self {
         isUserInteractionEnabled = true
 
         if let old = objc_getAssociatedObject(self, &GestureKeys.pinchKey) as? UIPinchGestureRecognizer {
@@ -345,10 +345,10 @@ public extension UIView {
     }
     /// 旧接口兼容
     @discardableResult
-    func addPinchAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addPinchAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addPinchAction { _ in action() }
     }
-    func removePinchAction() {
+    public func removePinchAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.pinchKey) as? UIPinchGestureRecognizer {
             removeGestureRecognizer(g)
         }
@@ -356,7 +356,7 @@ public extension UIView {
     }
     // MARK: - Rotation（旋转）
     @discardableResult
-    func addRotationAction(_ action: @escaping jobsByGRBlock) -> Self {
+    public func addRotationAction(_ action: @escaping jobsByGRBlock) -> Self {
         isUserInteractionEnabled = true
 
         if let old = objc_getAssociatedObject(self, &GestureKeys.rotateKey) as? UIRotationGestureRecognizer {
@@ -375,20 +375,21 @@ public extension UIView {
     }
     /// 旧接口兼容
     @discardableResult
-    func addRotationAction(_ action: @escaping jobsByVoidBlock) -> Self {
+    public func addRotationAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addRotationAction { _ in action() }
     }
-    @objc private func _gestureHandleRotate(_ sender: UIRotationGestureRecognizer) {
+    @objc
+    private func _gestureHandleRotate(_ sender: UIRotationGestureRecognizer) {
         (objc_getAssociatedObject(sender, &GestureKeys.rotateKey) as? _GestureActionBox)?.action(sender)
     }
-    func removeRotationAction() {
+    public func removeRotationAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.rotateKey) as? UIRotationGestureRecognizer {
             removeGestureRecognizer(g)
         }
         objc_setAssociatedObject(self, &GestureKeys.rotateKey, nil, .OBJC_ASSOCIATION_ASSIGN)
     }
     // MARK: - 便利方法：一次性清理
-    func removeAllGestureActions() {
+    public func removeAllGestureActions() {
         removeTapAction()
         removeLongPressAction()
         removePanAction()
@@ -414,7 +415,7 @@ public extension UIView {
      view.removeAllSwipeActionsMulti()
  */
 // MARK: - 多个方向的 swipe 并存
-public extension UIView {
+extension UIView {
     // 为每种手势维护一个 “id -> gesture” 的字典
     private struct GestureMultiKeys {
         static var tapMap:    UInt8 = 0
@@ -434,15 +435,14 @@ public extension UIView {
     // MARK: - Tap（多实例）
     /// 返回生成的 id（便于后续精确移除）
     @discardableResult
-    func addTapActionMulti(
-        id: String = UUID().uuidString,
-        taps: Int = 1,
-        cancelsTouchesInView: Bool = true,
-        requiresExclusiveTouchType: Bool = false,
-        _ action: @escaping jobsByGRBlock
+    public func addTapActionMulti(
+            id: String = UUID().uuidString,
+            taps: Int = 1,
+            cancelsTouchesInView: Bool = true,
+            requiresExclusiveTouchType: Bool = false,
+            _ action: @escaping jobsByGRBlock
     ) -> String {
         isUserInteractionEnabled = true
-
         var map = _grMap(for: &GestureMultiKeys.tapMap)
         // 如果同 id 已存在，先移除再覆盖
         if let old = map[id] as? UITapGestureRecognizer { removeGestureRecognizer(old) }
@@ -467,18 +467,18 @@ public extension UIView {
     }
     /// 提供一个便于链式的重载：自己指定 id，可继续链式
     @discardableResult
-    func addTapActionMulti(
-        use id: String,
-        taps: Int = 1,
-        cancelsTouchesInView: Bool = true,
-        requiresExclusiveTouchType: Bool = false,
-        _ action: @escaping jobsByGRBlock
+    public func addTapActionMulti(
+            use id: String,
+            taps: Int = 1,
+            cancelsTouchesInView: Bool = true,
+            requiresExclusiveTouchType: Bool = false,
+            _ action: @escaping jobsByGRBlock
     ) -> Self {
         _ = addTapActionMulti(id: id, taps: taps, cancelsTouchesInView: cancelsTouchesInView, requiresExclusiveTouchType: requiresExclusiveTouchType, action)
         return self
     }
 
-    func removeTapActionMulti(id: String) {
+    public func removeTapActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.tapMap)
         if let g = map[id] {
             removeGestureRecognizer(g)
@@ -486,7 +486,7 @@ public extension UIView {
             _setGrMap(map, for: &GestureMultiKeys.tapMap)
         }
     }
-    func removeAllTapActionsMulti() {
+    public func removeAllTapActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.tapMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll()
@@ -494,7 +494,7 @@ public extension UIView {
     }
     // MARK: - LongPress（多实例）
     @discardableResult
-    func addLongPressActionMulti(
+    public func addLongPressActionMulti(
         id: String = UUID().uuidString,
         minimumPressDuration: TimeInterval = 0.5,
         allowableMovement: CGFloat = 10,
@@ -502,10 +502,8 @@ public extension UIView {
         _ action: @escaping jobsByGRBlock
     ) -> String {
         isUserInteractionEnabled = true
-
         var map = _grMap(for: &GestureMultiKeys.longMap)
         if let old = map[id] as? UILongPressGestureRecognizer { removeGestureRecognizer(old) }
-
         let gr = jobs_addGesture(UILongPressGestureRecognizer
             .byConfig { gr in
                 (objc_getAssociatedObject(gr, &GestureKeys.longKey) as? _GestureActionBox)?.action(gr)
@@ -514,19 +512,18 @@ public extension UIView {
             .byMovement(allowableMovement)                    // 允许移动距离
             .byTouches(numberOfTouchesRequired)               // 单指
         )!
-
         objc_setAssociatedObject(gr, &GestureKeys.longKey, _GestureActionBox(action), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         map[id] = gr
         _setGrMap(map, for: &GestureMultiKeys.longMap)
         return id
     }
     @discardableResult
-    func addLongPressActionMulti(
-        use id: String,
-        minimumPressDuration: TimeInterval = 0.5,
-        allowableMovement: CGFloat = 10,
-        numberOfTouchesRequired: Int = 1,
-        _ action: @escaping jobsByGRBlock
+    public func addLongPressActionMulti(
+            use id: String,
+            minimumPressDuration: TimeInterval = 0.5,
+            allowableMovement: CGFloat = 10,
+            numberOfTouchesRequired: Int = 1,
+            _ action: @escaping jobsByGRBlock
     ) -> Self {
         _ = addLongPressActionMulti(id: id,
                                     minimumPressDuration: minimumPressDuration,
@@ -535,21 +532,21 @@ public extension UIView {
                                     action)
         return self
     }
-    func removeLongPressActionMulti(id: String) {
+    public func removeLongPressActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.longMap)
         if let g = map[id] {
             removeGestureRecognizer(g); map.removeValue(forKey: id)
             _setGrMap(map, for: &GestureMultiKeys.longMap)
         }
     }
-    func removeAllLongPressActionsMulti() {
+    public func removeAllLongPressActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.longMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll(); _setGrMap(map, for: &GestureMultiKeys.longMap)
     }
     // MARK: - Pan（多实例）
     @discardableResult
-    func addPanActionMulti(
+    public func addPanActionMulti(
         id: String = UUID().uuidString,
         minimumNumberOfTouches: Int = 1,
         maximumNumberOfTouches: Int = Int.max,
@@ -574,7 +571,7 @@ public extension UIView {
         return id
     }
     @discardableResult
-    func addPanActionMulti(
+    public func addPanActionMulti(
         use id: String,
         minimumNumberOfTouches: Int = 1,
         maximumNumberOfTouches: Int = Int.max,
@@ -586,21 +583,21 @@ public extension UIView {
                               action)
         return self
     }
-    func removePanActionMulti(id: String) {
+    public func removePanActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.panMap)
         if let g = map[id] {
             removeGestureRecognizer(g); map.removeValue(forKey: id)
             _setGrMap(map, for: &GestureMultiKeys.panMap)
         }
     }
-    func removeAllPanActionsMulti() {
+    public func removeAllPanActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.panMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll(); _setGrMap(map, for: &GestureMultiKeys.panMap)
     }
     // MARK: - Swipe（多实例）
     @discardableResult
-    func addSwipeActionMulti(
+    public func addSwipeActionMulti(
         id: String = UUID().uuidString,
         direction: UISwipeGestureRecognizer.Direction = .right,
         numberOfTouchesRequired: Int = 1,
@@ -625,7 +622,7 @@ public extension UIView {
         return id
     }
     @discardableResult
-    func addSwipeActionMulti(
+    public func addSwipeActionMulti(
         use id: String,
         direction: UISwipeGestureRecognizer.Direction = .right,
         numberOfTouchesRequired: Int = 1,
@@ -634,23 +631,23 @@ public extension UIView {
         _ = addSwipeActionMulti(id: id, direction: direction, numberOfTouchesRequired: numberOfTouchesRequired, action)
         return self
     }
-    func removeSwipeActionMulti(id: String) {
+    public func removeSwipeActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.swipeMap)
         if let g = map[id] {
             removeGestureRecognizer(g); map.removeValue(forKey: id)
             _setGrMap(map, for: &GestureMultiKeys.swipeMap)
         }
     }
-    func removeAllSwipeActionsMulti() {
+    public func removeAllSwipeActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.swipeMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll(); _setGrMap(map, for: &GestureMultiKeys.swipeMap)
     }
     // MARK: - Pinch（多实例）
     @discardableResult
-    func addPinchActionMulti(
-        id: String = UUID().uuidString,
-        _ action: @escaping jobsByGRBlock
+    public func addPinchActionMulti(
+            id: String = UUID().uuidString,
+            _ action: @escaping jobsByGRBlock
     ) -> String {
         isUserInteractionEnabled = true
 
@@ -670,25 +667,25 @@ public extension UIView {
         return id
     }
     @discardableResult
-    func addPinchActionMulti(use id: String, _ action: @escaping jobsByGRBlock) -> Self {
+    public func addPinchActionMulti(use id: String, _ action: @escaping jobsByGRBlock) -> Self {
         _ = addPinchActionMulti(id: id, action)
         return self
     }
-    func removePinchActionMulti(id: String) {
+    public func removePinchActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.pinchMap)
         if let g = map[id] {
             removeGestureRecognizer(g); map.removeValue(forKey: id)
             _setGrMap(map, for: &GestureMultiKeys.pinchMap)
         }
     }
-    func removeAllPinchActionsMulti() {
+    public func removeAllPinchActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.pinchMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll(); _setGrMap(map, for: &GestureMultiKeys.pinchMap)
     }
     // MARK: - Rotation（多实例）
     @discardableResult
-    func addRotationActionMulti(
+    public func addRotationActionMulti(
         id: String = UUID().uuidString,
         _ action: @escaping jobsByGRBlock
     ) -> String {
@@ -706,18 +703,18 @@ public extension UIView {
         return id
     }
     @discardableResult
-    func addRotationActionMulti(use id: String, _ action: @escaping jobsByGRBlock) -> Self {
+    public func addRotationActionMulti(use id: String, _ action: @escaping jobsByGRBlock) -> Self {
         _ = addRotationActionMulti(id: id, action)
         return self
     }
-    func removeRotationActionMulti(id: String) {
+    public func removeRotationActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.rotateMap)
         if let g = map[id] {
             removeGestureRecognizer(g); map.removeValue(forKey: id)
             _setGrMap(map, for: &GestureMultiKeys.rotateMap)
         }
     }
-    func removeAllRotationActionsMulti() {
+    public func removeAllRotationActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.rotateMap)
         map.values.forEach { removeGestureRecognizer($0) }
         map.removeAll(); _setGrMap(map, for: &GestureMultiKeys.rotateMap)

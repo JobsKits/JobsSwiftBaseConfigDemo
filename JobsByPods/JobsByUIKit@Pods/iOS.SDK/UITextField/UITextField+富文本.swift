@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -12,8 +13,8 @@ import UIKit
 
 import JobsTextTools
 // MARK: - 设置富文本（UITextField）
-public extension UITextField {
-    func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
+extension UITextField {
+     public func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
         self.attributedText = JobsRichText.make(runs, paragraphStyle: paragraphStyle)
     }
 }

@@ -13,25 +13,25 @@ import UIKit
 
 extension UISwitch {
     @discardableResult
-    func byOn(_ on: Bool) -> Self {
+    public func byOn(_ on: Bool) -> Self {
         self.setOn(on, animated: false)
         return self
     }
     
     @discardableResult
-    func byOnAnimated(_ on: Bool) -> Self {
+    public func byOnAnimated(_ on: Bool) -> Self {
         self.setOn(on, animated: true)
         return self
     }
     
     @discardableResult
-    func byOnTintColor(_ color: UIColor) -> Self {
+    public func byOnTintColor(_ color: UIColor) -> Self {
         self.onTintColor = color
         return self
     }
 
     @discardableResult
-    func byThumbTintColor(_ color: UIColor) -> Self {
+    public func byThumbTintColor(_ color: UIColor) -> Self {
         self.thumbTintColor = color
         return self
     }

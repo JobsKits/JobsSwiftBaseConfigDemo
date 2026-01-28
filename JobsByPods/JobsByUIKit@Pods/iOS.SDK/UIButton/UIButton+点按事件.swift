@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -42,9 +43,9 @@ private final class _JobsButtonLongPressSleeve: NSObject {
     }
 }
 // MARK: - 内部工具
-private extension UIButton {
+extension UIButton {
     // 点击：存一组 block，方便「覆盖」和「叠加」
-    var jobsTapBlocks: [jobsByBtnBlock] {
+    private var jobsTapBlocks: [jobsByBtnBlock] {
         get {
             objc_getAssociatedObject(self, &JobsUIButtonAssociatedKeys.tapBlocks) as? [jobsByBtnBlock] ?? []
         }
@@ -58,7 +59,7 @@ private extension UIButton {
         }
     }
     // 长按：最终聚合成一个 block（内部自己合并 old/new）
-    var jobsLongPressBlock: JobsButtonLongPressBlock? {
+    private var jobsLongPressBlock: JobsButtonLongPressBlock? {
         get {
             objc_getAssociatedObject(self, &JobsUIButtonAssociatedKeys.longPressBlock) as? JobsButtonLongPressBlock
         }
@@ -72,17 +73,17 @@ private extension UIButton {
         }
     }
     // 实际调用点击所有 block
-    func jobs_invokeTapBlocks() {
+    internal func jobs_invokeTapBlocks() {
         for block in jobsTapBlocks {
             block(self)
         }
     }
     // 实际调用长按聚合 block
-    func jobs_invokeLongPressBlocks(recognizer: UILongPressGestureRecognizer) {
+    internal func jobs_invokeLongPressBlocks(recognizer: UILongPressGestureRecognizer) {
         jobsLongPressBlock?(self, recognizer)
     }
     // 确保已经挂上「统一点击入口」
-    func jobs_ensureTapHandlerInstalled() {
+    private func jobs_ensureTapHandlerInstalled() {
         if #available(iOS 14.0, *) {
             let installed = (objc_getAssociatedObject(self, &JobsUIButtonAssociatedKeys.tapActionInstalled) as? Bool) ?? false
             if installed { return }
@@ -115,7 +116,7 @@ private extension UIButton {
         }
     }
     // 确保「统一长按入口」的手势已经挂上
-    func jobs_ensureLongPressRecognizer(minimumPressDuration: TimeInterval) {
+    private func jobs_ensureLongPressRecognizer(minimumPressDuration: TimeInterval) {
         if let existing = (gestureRecognizers ?? [])
             .compactMap({ $0 as? UILongPressGestureRecognizer })
             .first(where: { objc_getAssociatedObject($0, &kJobsUIButtonLongPressSleeveKey) != nil }) {
@@ -147,7 +148,7 @@ private extension UIButton {
 }
 // MARK: - 闭包回调（低版本兜底）（保留）
 private var actionKey: Void?
-public extension UIButton {
+extension UIButton {
     @discardableResult
     private func _bindTapClosure(_ action: @escaping jobsByBtnBlock,
                                  for events: UIControl.Event = .touchUpInside) -> Self {
@@ -157,17 +158,18 @@ public extension UIButton {
         return self
     }
     @discardableResult
-    func jobs_addTapClosure(_ action: @escaping jobsByBtnBlock,
+    public func jobs_addTapClosure(_ action: @escaping jobsByBtnBlock,
                             for events: UIControl.Event = .touchUpInside) -> Self {
         _bindTapClosure(action, for: events)
     }
     @discardableResult
-    func addAction(_ action: @escaping jobsByBtnBlock,
+    public func addAction(_ action: @escaping jobsByBtnBlock,
                    for events: UIControl.Event = .touchUpInside) -> Self {
         _bindTapClosure(action, for: events)
     }
 
-    @objc private func _jobsHandleAction(_ sender: UIButton) {
+    @objc
+    private func _jobsHandleAction(_ sender: UIButton) {
         if let action = objc_getAssociatedObject(self, &actionKey) as? (UIButton) -> Void {
             action(sender)
         }
@@ -175,14 +177,14 @@ public extension UIButton {
 }
 // MARK: - 点按事件统一入口
 public var kJobsUIButtonLongPressSleeveKey: UInt8 = 0
-public extension UIButton {
+extension UIButton {
     /// 点击方法@代码触发
-    func performTap() {
+    public func performTap() {
         sendActions(for: .touchUpInside)
     }
     @discardableResult
     /// 点击方法@普通
-    func onTap(_ handler: @escaping jobsByBtnBlock) -> Self {
+    public func onTap(_ handler: @escaping jobsByBtnBlock) -> Self {
         if #available(iOS 14.0, *) {
             (self as UIControl).addAction(UIAction { [weak self] _ in
                 guard let s = self else { return }
@@ -194,7 +196,7 @@ public extension UIButton {
     }
     /// 点击方法@叠加
     @discardableResult
-    func onTapAppend(_ handler: @escaping jobsByBtnBlock) -> Self {
+    public func onTapAppend(_ handler: @escaping jobsByBtnBlock) -> Self {
         var blocks = jobsTapBlocks
         blocks.append(handler)             // 叠加
         jobsTapBlocks = blocks
@@ -203,8 +205,8 @@ public extension UIButton {
     }
     /// 长按方法@普通
     @discardableResult
-     func onLongPress(minimumPressDuration: TimeInterval = 0.5,
-                      _ handler: @escaping JobsButtonLongPressBlock) -> Self {
+    public func onLongPress(minimumPressDuration: TimeInterval = 0.5,
+                            _ handler: @escaping JobsButtonLongPressBlock) -> Self {
          let gr = UILongPressGestureRecognizer(target: nil, action: nil)
          class _GRSleeve<T: UIGestureRecognizer> {
              let closure: (T) -> Void
@@ -237,7 +239,7 @@ public extension UIButton {
      }
     /// 长按方法@叠加
     @discardableResult
-    func onLongPressAppend(
+    public func onLongPressAppend(
         minimumPressDuration: TimeInterval = 0.5,
         _ handler: @escaping JobsButtonLongPressBlock
     ) -> Self {

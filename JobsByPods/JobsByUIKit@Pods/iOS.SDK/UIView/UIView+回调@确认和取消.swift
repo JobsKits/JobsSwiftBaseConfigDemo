@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -17,8 +18,8 @@ private struct JobsConfirmKeys {
     static var cancel:  UInt8 = 0
 }
 
-public extension UIView {
-    var confirmHandler: jobsByVoidBlock? {
+extension UIView {
+    public var confirmHandler: jobsByVoidBlock? {
         get {
             objc_getAssociatedObject(self, &JobsConfirmKeys.confirm) as? jobsByVoidBlock
         }
@@ -30,7 +31,7 @@ public extension UIView {
         }
     }
 
-    var cancelHandler: jobsByVoidBlock? {
+    public var cancelHandler: jobsByVoidBlock? {
         get {
             objc_getAssociatedObject(self, &JobsConfirmKeys.cancel) as? jobsByVoidBlock
         }
@@ -43,22 +44,22 @@ public extension UIView {
     }
     /// 确认回调
     @discardableResult
-    func onConfirm(_ handler: @escaping jobsByVoidBlock) -> Self {
+    public func onConfirm(_ handler: @escaping jobsByVoidBlock) -> Self {
         confirmHandler = handler
         return self
     }
     /// 取消回调
     @discardableResult
-    func onCancel(_ handler: @escaping jobsByVoidBlock) -> Self {
+    public func onCancel(_ handler: @escaping jobsByVoidBlock) -> Self {
         cancelHandler = handler
         return self
     }
 
-    func jobs_fireConfirm() {
+    public func jobs_fireConfirm() {
         confirmHandler?()
     }
 
-    func jobs_fireCancel() {
+    public func jobs_fireCancel() {
         cancelHandler?()
     }
 }

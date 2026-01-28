@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -16,7 +17,7 @@ private var _jobsInsetsKey: UInt8 = 0
 private var _jobsInsetsInstalledKey: UInt8 = 0
 extension UILabel {
     /// 给 UILabel 增加 contentInsets 能力（无需自定义子类）
-    var jobs_contentInsets: UIEdgeInsets {
+    public var jobs_contentInsets: UIEdgeInsets {
         get { (objc_getAssociatedObject(self, &_jobsInsetsKey) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
         set {
             objc_setAssociatedObject(self, &_jobsInsetsKey, NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -27,14 +28,14 @@ extension UILabel {
     }
 
     @discardableResult
-    func byLabContentInsets(_ insets: UIEdgeInsets) -> Self {
+    public func byLabContentInsets(_ insets: UIEdgeInsets) -> Self {
         self.jobs_contentInsets = insets
         return self
     }
 }
 
-private extension UILabel {
-    static let _once: Void = {
+extension UILabel {
+    private static let _once: Void = {
         let cls = UILabel.self
         // drawText(in:)
         _jobs_swizzle(cls, #selector(drawText(in:)), #selector(_jobs_drawText(in:)))
@@ -46,7 +47,7 @@ private extension UILabel {
         _jobs_swizzle(cls, #selector(getter: intrinsicContentSize), #selector(getter: _jobs_intrinsicContentSize))
     }()
 
-    func _jobs_installInsetsSwizzleIfNeeded() {
+    private func _jobs_installInsetsSwizzleIfNeeded() {
         let installed = (objc_getAssociatedObject(UILabel.self, &_jobsInsetsInstalledKey) as? Bool) ?? false
         if !installed {
             _ = UILabel._once
@@ -54,13 +55,15 @@ private extension UILabel {
         }
     }
 
-    @objc func _jobs_drawText(in rect: CGRect) {
+    @objc
+    private func _jobs_drawText(in rect: CGRect) {
         let inset = jobs_contentInsets
         let r = rect.inset(by: inset)
         _jobs_drawText(in: r)
     }
 
-    @objc func _jobs_textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+    @objc
+    private func _jobs_textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
         let inset = jobs_contentInsets
         let b = bounds.inset(by: inset)
         let rect = _jobs_textRect(forBounds: b, limitedToNumberOfLines: numberOfLines)
@@ -71,7 +74,8 @@ private extension UILabel {
                       height: rect.height + inset.top + inset.bottom)
     }
 
-    @objc var _jobs_intrinsicContentSize: CGSize {
+    @objc
+    private var _jobs_intrinsicContentSize: CGSize {
         let base = self._jobs_intrinsicContentSize
         let inset = jobs_contentInsets
         return CGSize(width: base.width + inset.left + inset.right,

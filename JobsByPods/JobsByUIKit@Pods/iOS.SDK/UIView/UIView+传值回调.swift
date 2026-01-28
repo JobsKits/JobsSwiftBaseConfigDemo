@@ -19,7 +19,7 @@ private enum JobsViewResultKey {
     static var callback: UInt8 = 0
 }
 /// ✅ 覆盖所有 View（UIView 及其子类）
-extension UIView: ViewDataProtocol {}
+extension UIView: @retroactive ViewDataProtocol {}
 @MainActor
 public extension ViewDataProtocol where Self: UIView {
     // ================================== 正向：传值即渲染（默认 no-op） ==================================

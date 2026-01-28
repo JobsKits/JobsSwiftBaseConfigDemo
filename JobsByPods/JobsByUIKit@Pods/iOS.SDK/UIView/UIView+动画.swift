@@ -4,26 +4,29 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 // MARK: 动画@旋转（✅ 默认转 sublayers：不影响悬浮拖动/点击）
 private var _jobs_spinPausedAngleKey: UInt8 = 0   // Double：暂停时角度
 private var _jobs_spinRevKey: UInt8 = 0           // Double：转速（rev/s）
-public extension UIView {
+extension UIView {
     /// 是否正在旋转（装了动画就算）
-    var jobs_isSpinning: Bool {
+    public var jobs_isSpinning: Bool {
         layer.animation(forKey: "jobs.spin") != nil
     }
     /// 是否处于“暂停态”（没有动画，但记录了角度）
-    var jobs_isSpinPaused: Bool {
+    public var jobs_isSpinPaused: Bool {
         !jobs_isSpinning && (objc_getAssociatedObject(self, &_jobs_spinPausedAngleKey) as? Double) != nil
     }
     /// 开始旋转（默认旋转 sublayers：✅ 不改变 view 自身 transform/不干扰手势）
     @discardableResult
-    func bySpinStart(revPerSec: Double = 1.0) -> Self {
+    public func bySpinStart(revPerSec: Double = 1.0) -> Self {
         let r = max(0.001, revPerSec)
         objc_setAssociatedObject(self, &_jobs_spinRevKey, r, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         // 如果已经在转，直接返回
@@ -47,7 +50,7 @@ public extension UIView {
     }
     /// 暂停旋转（保持当前角度）—— 不再用 layer.speed/timeOffset，避免影响其他动画/拖动
     @discardableResult
-    func bySpinPause() -> Self {
+    public func bySpinPause() -> Self {
         guard layer.animation(forKey: "jobs.spin") != nil else { return self }
         // 取 presentation 的当前 sublayerTransform，冻结到 model
         let current3D = layer.presentation()?.sublayerTransform ?? layer.sublayerTransform
@@ -61,13 +64,13 @@ public extension UIView {
     }
     /// 恢复旋转（从暂停角度继续）
     @discardableResult
-    func bySpinResume() -> Self {
+    public func bySpinResume() -> Self {
         let r = (objc_getAssociatedObject(self, &_jobs_spinRevKey) as? Double) ?? 1.0
         return bySpinStart(revPerSec: r)
     }
     /// 停止并移除旋转动画（回到初始角度）
     @discardableResult
-    func bySpinStop() -> Self {
+    public func bySpinStop() -> Self {
         layer.removeAnimation(forKey: "jobs.spin")
         layer.sublayerTransform = CATransform3DIdentity
         objc_setAssociatedObject(self, &_jobs_spinPausedAngleKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -77,9 +80,9 @@ public extension UIView {
 // MARK: 动画@点击放大
 private var _jobs_bounceAnimatingKey: UInt8 = 0
 @MainActor
-public extension UIView {
+extension UIView {
     /// 仅执行一轮“放大→回弹”动画（不挂手势/不注册事件）
-    func playTapBounce(
+    public func playTapBounce(
         scale: CGFloat = 1.08,
         upDuration: TimeInterval = 0.08,
         downDuration: TimeInterval = 0.30,
@@ -116,7 +119,7 @@ public extension UIView {
 }
 // MARK: 动画@视图左右晃动
 extension UIView {
-    func shake(duration: CFTimeInterval = 0.5, repeatCount: Float = 1) {
+    public func shake(duration: CFTimeInterval = 0.5, repeatCount: Float = 1) {
         let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
             .byTimingFunction(CAMediaTimingFunction(name: .linear))
             .byDuration(duration)
@@ -129,19 +132,15 @@ extension UIView {
 #if canImport(SnapKit)
 import SnapKit
 
-public enum JobsSlideDirection {
-    case top, bottom, left, right
-}
-
 public enum JobsSlideCase {
     /// 从某个方向“来”（展开到 size）
-    case show(from: JobsSlideDirection, size: CGFloat)
+    case show(from: JobsDirection, size: CGFloat)
     /// 到某个方向“去”（收起到 collapsedSize，默认 0）
-    case hide(to: JobsSlideDirection)
+    case hide(to: JobsDirection)
 }
 
-public extension UIView {
-    func jobs_slide(
+extension UIView {
+    public func jobs_slide(
         _ slide: JobsSlideCase,
         sizeConstraint: Constraint?,
         collapsedSize: CGFloat = 0,
@@ -180,6 +179,4 @@ public extension UIView {
         }
     }
 }
-
-
 #endif

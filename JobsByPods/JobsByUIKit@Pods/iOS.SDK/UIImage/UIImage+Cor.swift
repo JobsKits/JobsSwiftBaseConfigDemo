@@ -28,9 +28,7 @@ extension UIImage {
                 .createCGImage(output, from: output.extent)
         else {
             return nil
-        }
-
-        return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+        };return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
     }
     // MARK: 填充一个固定颜色
     public func filled(by color: UIColor) -> UIImage {

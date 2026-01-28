@@ -11,9 +11,9 @@ import AppKit
 import UIKit
 #endif
 
-public extension UIView {
+extension UIView {
     /// 修改 anchorPoint 但不让 view 在父视图里“跳一下”
-    func setAnchorPointWithoutJump(_ point: CGPoint) {
+    public func setAnchorPointWithoutJump(_ point: CGPoint) {
         let oldOrigin = frame.origin
         layer.anchorPoint = point
         let newOrigin = frame.origin

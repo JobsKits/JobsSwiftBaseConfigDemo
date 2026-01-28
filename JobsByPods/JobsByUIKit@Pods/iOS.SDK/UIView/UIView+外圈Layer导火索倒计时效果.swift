@@ -1,5 +1,5 @@
 //
-//  UIView+JobsCountdownFuse.swift
+//  UIView+外圈Layer导火索倒计时效果.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/10/25.
@@ -43,7 +43,7 @@ public struct JobsFuseConfig {
     }
 }
 
-public extension UIView {
+extension UIView {
     // MARK: - Associated Keys
     private struct JobsFuseKeys {
         static var processKey: UInt8 = 0   // 先保留，外部类型不改
@@ -102,9 +102,9 @@ public extension UIView {
     // MARK: - 公共 API
     /// DSL 写法：在当前视图上挂一个导火索倒计时
     @discardableResult
-    func byFuseCountdown(duration: TimeInterval,
-                         config: JobsFuseConfig = JobsFuseConfig(),
-                         finished: (() -> Void)? = nil) -> Self {
+    public func byFuseCountdown(duration: TimeInterval,
+                                config: JobsFuseConfig = JobsFuseConfig(),
+                                finished: (() -> Void)? = nil) -> Self {
         jobs_startFuseCountdown(duration: duration,
                                 config: config,
                                 finished: finished)
@@ -117,9 +117,9 @@ public extension UIView {
     ///   - config: 外观配置（线宽、颜色、inset、方向）
     ///   - finished: 结束时回调
     @discardableResult
-    func jobs_startFuseCountdown(duration: TimeInterval,
-                                 config: JobsFuseConfig = JobsFuseConfig(),
-                                 finished: (() -> Void)? = nil) -> JobsSwiftTimerCountdown? {
+    public func jobs_startFuseCountdown(duration: TimeInterval,
+                                        config: JobsFuseConfig = JobsFuseConfig(),
+                                        finished: (() -> Void)? = nil) -> JobsSwiftTimerCountdown? {
         layoutIfNeeded()
         guard bounds.width > 0, bounds.height > 0, duration > 0 else {
             // 没尺寸或者 duration <= 0，直接清掉
@@ -209,7 +209,7 @@ public extension UIView {
         return nil
     }
     /// 取消导火索倒计时
-    func jobs_cancelFuseCountdown(removeLayer: Bool = true) {
+    public func jobs_cancelFuseCountdown(removeLayer: Bool = true) {
         // 兼容旧的 Process
         jobs_fuseProcess?.cancel()
         jobs_fuseProcess = nil
@@ -221,7 +221,7 @@ public extension UIView {
     }
     // MARK: - 手动刷新布局（如果你在动画中改变了 view 的大小，可选调用）
     /// 如果 view 的 bounds 发生改变，想让导火索跟着更新一圈，可以在外面的 layoutSubviews/动画回调里手动调一下
-    func jobs_layoutFuseIfNeeded() {
+    public func jobs_layoutFuseIfNeeded() {
         guard let fuseLayer = jobs_fuseLayer,
               let config = jobs_fuseConfig else { return }
         layoutIfNeeded()
@@ -239,18 +239,15 @@ public extension UIView {
     }
 }
 // MARK: - ✅ 正计时（Progress）支持：准备一圈 + 按 progress 更新
-public extension UIView {
+extension UIView {
     /// 准备外圈（progress 初始为 0）
     /// - 注意：这里不做 CABasicAnimation，只是把 layer/path/样式准备好
-    func jobs_prepareFuseProgress(config: JobsFuseConfig = JobsFuseConfig()) {
+    public func jobs_prepareFuseProgress(config: JobsFuseConfig = JobsFuseConfig()) {
         layoutIfNeeded()
         guard bounds.width > 0, bounds.height > 0 else { return }
-
         // 停掉倒计时动画，但保留 layer
         jobs_cancelFuseCountdown(removeLayer: false)
-
         jobs_fuseConfig = config
-
         // 拿到 / 创建 Layer（复用你倒计时那套思路）
         let fuseLayer: CAShapeLayer
         if let existing = jobs_fuseLayer {
@@ -262,7 +259,6 @@ public extension UIView {
             layer.addSublayer(fuseLayer)
             jobs_fuseLayer = fuseLayer
         }
-
         // 配置几何与样式（复用你倒计时的 path 计算方式）
         fuseLayer.frame = bounds
         let inset = config.inset + config.lineWidth / 2.0
@@ -273,7 +269,6 @@ public extension UIView {
         fuseLayer.path = path.cgPath
         fuseLayer.lineWidth = config.lineWidth
         fuseLayer.strokeColor = config.color.cgColor
-
         // progress 初始=0（禁用隐式动画）
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -288,9 +283,8 @@ public extension UIView {
         }
         CATransaction.commit()
     }
-
     /// 更新外圈 progress（0...1）
-    func jobs_updateFuseProgress(_ progress: CGFloat, animated: Bool = false) {
+    public func jobs_updateFuseProgress(_ progress: CGFloat, animated: Bool = false) {
         let p = max(0, min(1, progress))
 
         guard let fuseLayer = jobs_fuseLayer else {

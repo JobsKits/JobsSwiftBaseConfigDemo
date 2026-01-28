@@ -5,19 +5,21 @@
 //  Created by Jobs on 12/3/25.
 //
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 #if canImport(GKNavigationBarSwift) && canImport(SnapKit)
 import GKNavigationBarSwift
 import SnapKit
 @MainActor
-public extension UIView {
+extension UIView {
     /// 返回已存在的“导航栏类视图”（不触发懒加载），找不到返回 nil。
     /// 类型统一用 UIView?，外部无需依赖 GKNavigationBar 的符号。
-    func jobs_existingTopBar(deep: Bool = true) -> UIView? {
+    public func jobs_existingTopBar(deep: Bool = true) -> UIView? {
         #if canImport(GKNavigationBarSwift)
         if let nb = jobs_firstSubview(of: GKNavigationBar.self, deep: deep),
            !nb.isHidden, nb.alpha > 0.001 {

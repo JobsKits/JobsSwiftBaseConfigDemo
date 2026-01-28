@@ -14,7 +14,8 @@ import JobsSwiftBlock
 // MARK: - UICollectionView@空数据源占位图
 /// 被交换的方法实现（调用原方法后自动评估空态）
 extension UICollectionView {
-    @objc dynamic func jobs_swizzled_reloadData() {
+    @objc dynamic
+    public func jobs_swizzled_reloadData() {
         // 交换后，此处调用的是“原始 reloadData”
         jobs_swizzled_reloadData()
         DispatchQueue.main.async { [weak self] in
@@ -23,7 +24,8 @@ extension UICollectionView {
         }
     }
 
-    @objc dynamic func jobs_swizzled_performBatchUpdates(
+    @objc dynamic
+    public func jobs_swizzled_performBatchUpdates(
         _ updates: (jobsByVoidBlock)?,
         completion: (jobsByBOOLBlock)?
     ) {

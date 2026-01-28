@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -61,11 +62,11 @@ public extension RTBadgeConfig {
     }
 }
 
-public extension UIView {
+extension UIView {
     /// 右上角角标：添加/更新，内容自定义（SnapKit 约束）
     @discardableResult
-    func byCornerBadge(_ content: RTBadgeContent,
-                       build: ((RTBadgeConfig) -> RTBadgeConfig)? = nil) -> Self {
+    public func byCornerBadge(_ content: RTBadgeContent,
+                              build: ((RTBadgeConfig) -> RTBadgeConfig)? = nil) -> Self {
         assert(Thread.isMainThread, "UI must be updated on main thread")
         var cfg = RTBadgeConfig()
         if let build = build { cfg = build(cfg) }
@@ -101,21 +102,19 @@ public extension UIView {
         } else {
             container.autoCapsule = true // 在 layoutSubviews 按高度一半
             container.refresh()
-        }
-
-        return self
+        };return self
     }
     /// 右上角角标：快捷文本
     @discardableResult
-    func byCornerBadgeText(_ text: String,
-                           build: ((RTBadgeConfig) -> RTBadgeConfig)? = nil) -> Self {
+    public func byCornerBadgeText(_ text: String,
+                                  build: ((RTBadgeConfig) -> RTBadgeConfig)? = nil) -> Self {
         byCornerBadge(.text(text), build: build)
     }
     /// 右上角小红点（纯圆）
     @discardableResult
-    func byCornerDot(diameter: CGFloat = 8,
-                     offset: UIOffset = .init(horizontal: -4, vertical: 4),
-                     color: UIColor = .systemRed) -> Self {
+    public func byCornerDot(diameter: CGFloat = 8,
+                            offset: UIOffset = .init(horizontal: -4, vertical: 4),
+                            color: UIColor = .systemRed) -> Self {
         return byCornerBadge(.custom(UIView()
             .byBackgroundColor(color)
             .byCornerRadius(diameter / 2)
@@ -132,9 +131,9 @@ public extension UIView {
     }
     /// 显示/隐藏（右上角）
     @discardableResult
-    func setCornerBadgeHidden(_ hidden: Bool,
-                              animated: Bool = false,
-                              duration: TimeInterval = 0.2) -> Self {
+    public func setCornerBadgeHidden(_ hidden: Bool,
+                                     animated: Bool = false,
+                                     duration: TimeInterval = 0.2) -> Self {
         guard let v = rt_badgeContainer() else { return self }
         let work = { v.alpha = hidden ? 0 : 1 }
         animated ? UIView.animate(withDuration: duration, animations: work) : work()
@@ -142,7 +141,7 @@ public extension UIView {
     }
     /// 移除（右上角）
     @discardableResult
-    func removeCornerBadge() -> Self {
+    public func removeCornerBadge() -> Self {
         rt_badgeContainer()?.removeFromSuperview()
         setRTBadgeContainer(nil)
         return self
@@ -160,9 +159,8 @@ private final class _BadgeContainerView: UIView {
 }
 /// 仅一个 key（右上角）
 private enum _RTBadgeKey { static var tr: UInt8 = 0 }
-private extension UIView {
-
-    func ensureRTBadgeContainer() -> _BadgeContainerView {
+extension UIView {
+    private func ensureRTBadgeContainer() -> _BadgeContainerView {
         if let v = rt_badgeContainer() as? _BadgeContainerView { return v }
         let v = _BadgeContainerView()
         setRTBadgeContainer(v)
@@ -170,15 +168,17 @@ private extension UIView {
         return v
     }
 
-    func rt_badgeContainer() -> UIView? {
+    private func rt_badgeContainer() -> UIView? {
         objc_getAssociatedObject(self, &_RTBadgeKey.tr) as? UIView
     }
 
-    func setRTBadgeContainer(_ v: UIView?) {
+    private func setRTBadgeContainer(_ v: UIView?) {
         objc_setAssociatedObject(self, &_RTBadgeKey.tr, v, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    func install(_ content: RTBadgeContent, into container: _BadgeContainerView, config: RTBadgeConfig) {
+    private func install(_ content: RTBadgeContent,
+                         into container: _BadgeContainerView,
+                         config: RTBadgeConfig) {
         container.subviews.forEach { $0.removeFromSuperview() }
 
         switch content {
@@ -212,9 +212,9 @@ private extension UIView {
         }
     }
     /// 右上角定位（统一 remake，避免重复约束）
-    func installRTBadgeConstraints(container: UIView,
-                                   offset: UIOffset,
-                                   maxWidth: CGFloat) {
+    private func installRTBadgeConstraints(container: UIView,
+                                           offset: UIOffset,
+                                           maxWidth: CGFloat) {
         // ② installRTBadgeConstraints(container:offset:maxWidth:)
         container.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(offset.vertical)

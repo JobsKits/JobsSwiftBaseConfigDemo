@@ -15,38 +15,38 @@ import Foundation
      print(s.removingEmojis)       // "Hi !  ok?"
      print("😀😀".isAllEmoji)      // true
  */
-public extension String {
+extension String {
     // MARK: - Emoji Core
     /// 单个 Character 是否是 emoji（包含复合序列）
-    static func isEmoji(_ ch: Character) -> Bool {
+    public static func isEmoji(_ ch: Character) -> Bool {
         // 只要该 Character 的 unicodeScalars 里有一个 scalar 被判定为 emoji，并且不是纯组合符号
         ch.unicodeScalars.contains { $0.properties.isEmojiPresentation || $0.properties.isEmoji } &&
         !ch.unicodeScalars.allSatisfy { $0.properties.generalCategory == .nonspacingMark }
     }
     /// 是否包含至少一个 emoji
-    var containsEmoji: Bool {
+    public var containsEmoji: Bool {
         self.contains { Self.isEmoji($0) }
     }
     /// 是否全部都是 emoji（忽略空白与换行）
-    var isAllEmoji: Bool {
+    public var isAllEmoji: Bool {
         let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return false }
         return trimmed.allSatisfy { Self.isEmoji($0) }
     }
     /// 提取字符串中的所有 emoji（按 Character 粒度）
-    var emojis: [String] {
+    public var emojis: [String] {
         self.compactMap { Self.isEmoji($0) ? String($0) : nil }
     }
     /// emoji 个数（按 Character 粒度：复合 emoji 算 1 个）
-    var emojiCount: Int {
+    public var emojiCount: Int {
         self.reduce(into: 0) { $0 += Self.isEmoji($1) ? 1 : 0 }
     }
     /// 移除所有 emoji
-    var removingEmojis: String {
+    public var removingEmojis: String {
         String(self.filter { !Self.isEmoji($0) })
     }
     /// 只保留 emoji
-    var keepingEmojisOnly: String {
+    public var keepingEmojisOnly: String {
         String(self.filter { Self.isEmoji($0) })
     }
 }
@@ -56,9 +56,9 @@ public extension String {
      print(s.weakEmojis)    // ["©️", "™️", "1️⃣", "#️⃣"]
      print(s.strongEmojis)  // ["😀", "👨‍👩‍👧‍👦", "🇹🇭"]
  */
-public extension String {
+extension String {
     // ================================== Emoji Categories ==================================
-    enum EmojiStrength {
+    public enum EmojiStrength {
         case none
         case weak
         case strong
@@ -84,7 +84,7 @@ public extension String {
     }
     // ================================== Core classification ==================================
     /// 对单个 Character 做分类：none / weak / strong
-    static func emojiStrength(of ch: Character) -> EmojiStrength {
+    public static func emojiStrength(of ch: Character) -> EmojiStrength {
         let scalars = Array(ch.unicodeScalars)
         if scalars.isEmpty { return .none }
         // 1) 必须至少是 Unicode 层面认定的 emoji（含序列）
@@ -120,27 +120,27 @@ public extension String {
     }
     // ================================== Convenience APIs (String-level) ==================================
     /// 是否包含 strong emoji
-    var containsStrongEmoji: Bool {
+    public var containsStrongEmoji: Bool {
         self.contains { Self.emojiStrength(of: $0) == .strong }
     }
     /// 是否包含 weak emoji
-    var containsWeakEmoji: Bool {
+    public var containsWeakEmoji: Bool {
         self.contains { Self.emojiStrength(of: $0) == .weak }
     }
     /// 提取 strong emoji
-    var strongEmojis: [String] {
+    public var strongEmojis: [String] {
         self.compactMap { Self.emojiStrength(of: $0) == .strong ? String($0) : nil }
     }
     /// 提取 weak emoji
-    var weakEmojis: [String] {
+    public var weakEmojis: [String] {
         self.compactMap { Self.emojiStrength(of: $0) == .weak ? String($0) : nil }
     }
     /// 过滤：只保留 strong emoji
-    var keepingStrongEmojisOnly: String {
+    public var keepingStrongEmojisOnly: String {
         String(self.filter { Self.emojiStrength(of: $0) == .strong })
     }
     /// 过滤：移除所有 weak emoji（保留 strong + 普通文本）
-    var removingWeakEmojis: String {
+    public var removingWeakEmojis: String {
         String(self.filter { Self.emojiStrength(of: $0) != .weak })
     }
 }

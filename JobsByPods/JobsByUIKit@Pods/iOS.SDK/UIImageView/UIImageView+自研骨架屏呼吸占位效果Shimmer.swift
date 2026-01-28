@@ -4,12 +4,6 @@
 //
 //  Created by Jobs on 12/20/25.
 //
-//  ================================== 设计意图 ==================================
-//  统一「Shimmer Loading」与「兜底图(Fallback)」语义，避免与 Kingfisher/SDWebImage 自带 placeholder 重复：
-//  1) 没配置兜底图：请求中/失败 都持续 Shimmer（直到成功拿到图）
-//  2) 配置了兜底图：请求中 只 Shimmer；失败后 才显示兜底图，并停止 Shimmer
-//  ============================================================================
-//
 
 #if os(OSX)
 import AppKit
@@ -19,6 +13,12 @@ import UIKit
 
 import ObjectiveC
 import JobsImageTools
+//  ================================== 设计意图 ==================================
+//  统一「Shimmer Loading」与「兜底图(Fallback)」语义，避免与 Kingfisher/SDWebImage 自带 placeholder 重复：
+//  1) 没配置兜底图：请求中/失败 都持续 Shimmer（直到成功拿到图）
+//  2) 配置了兜底图：请求中 只 Shimmer；失败后 才显示兜底图，并停止 Shimmer
+//  ============================================================================
+//
 // MARK: - 兜底图模式
 public enum JobsShimmerFallbackMode {
     /// 没兜底图：失败时继续 shimmer
@@ -39,9 +39,9 @@ private enum JobsImageLoadingKeys {
     static var taskKey: UInt8 = 0
 }
 
-private extension UIImageView {
+extension UIImageView {
     @inline(__always)
-    func jobs_runOnMain(_ work: @escaping (UIImageView) -> Void) {
+    private func jobs_runOnMain(_ work: @escaping (UIImageView) -> Void) {
         if Thread.isMainThread {
             work(self)
         } else {
@@ -53,7 +53,7 @@ private extension UIImageView {
     }
 }
 
-public extension UIImageView {
+extension UIImageView {
     // MARK: - JobsSimpleImageLoader 内部状态
     private var jobs_loadingURL: URL? {
         get { objc_getAssociatedObject(self, &JobsImageLoadingKeys.urlKey) as? URL }
@@ -65,7 +65,7 @@ public extension UIImageView {
     }
     /// 开启“无图态呼吸”
     @inline(__always)
-    func jobs_beginShimmerLoading(config: JobsShimmerConfig = .default) {
+    public func jobs_beginShimmerLoading(config: JobsShimmerConfig = .default) {
         byShimmering(true, config: config)
         // 下一帧补一次 layout，确保动画能跑起来（尤其是 autolayout 尚未落位时）
         DispatchQueue.main.async { [weak self] in
@@ -74,11 +74,11 @@ public extension UIImageView {
     }
     /// 结束“有图态”，关闭呼吸
     @inline(__always)
-    func jobs_endShimmerLoading() {
+    public func jobs_endShimmerLoading() {
         byShimmering(false)
     }
     /// 取消当前 JobsSimpleImageLoader 任务（仅 JobsSimpleImageLoader 用）
-    func jobs_cancelSimpleImageTask() {
+    public func jobs_cancelSimpleImageTask() {
         jobs_loadingTask?.cancel()
         jobs_loadingTask = nil
         jobs_loadingURL = nil
@@ -88,7 +88,7 @@ public extension UIImageView {
     /// - 有兜底图：展示兜底图 + 停止 shimmer
     /// - 无兜底图：继续 shimmer（image 保持 nil）
     @inline(__always)
-    func jobs_handleImageLoadFailure(
+    public func jobs_handleImageLoadFailure(
         mode: JobsShimmerFallbackMode,
         shimmerConfig: JobsShimmerConfig
     ) {
@@ -102,10 +102,10 @@ public extension UIImageView {
     }
 }
 // MARK: - JobsSimpleImageLoader
-public extension UIImageView {
+extension UIImageView {
     /// JobsSimpleImageLoader：请求中 shimmer；成功停 shimmer；失败按 mode 决定：兜底图 or 持续 shimmer
     @discardableResult
-    func jobs_setImageSimple(
+    public func jobs_setImageSimple(
         _ src: String?,
         fallback: UIImage? = nil,
         shimmerConfig: JobsShimmerConfig = .default
@@ -151,7 +151,7 @@ public extension UIImageView {
     }
     /// placeholder 在这里等价于“兜底图”（不会在 loading 阶段展示）
     @discardableResult
-    func jobs_setImageSimple(
+    public func jobs_setImageSimple(
         _ src: String?,
         placeholder: UIImage? = nil,
         shimmerConfig: JobsShimmerConfig = .default
@@ -164,13 +164,13 @@ public extension UIImageView {
 // MARK: - Kingfisher
 #if canImport(Kingfisher)
 import Kingfisher
-public extension UIImageView {
+extension UIImageView {
     /// 带 shimmer 的 Kingfisher 加载：
     /// - loading：只 shimmer
     /// - success：显示网络图并停止 shimmer
     /// - failure：有 fallback -> 显示 fallback 并停 shimmer；无 fallback -> 持续 shimmer
     @discardableResult
-    func kf_setImage(
+    public func kf_setImage(
         _ string: String,
         fallback: UIImage? = nil,
         fade: TimeInterval = 0.25,
@@ -220,7 +220,7 @@ public extension UIImageView {
     }
     /// placeholder 在这里等价于“兜底图”（不会在 loading 阶段展示）
     @discardableResult
-    func kf_setImage(
+    public func kf_setImage(
         _ string: String,
         placeholder: UIImage? = nil,
         fade: TimeInterval = 0.25,
@@ -237,13 +237,13 @@ public extension UIImageView {
 #if canImport(SDWebImage)
 import SDWebImage
 
-public extension UIImageView {
+extension UIImageView {
     /// 带 shimmer 的 SDWebImage 加载：
     /// - loading：只 shimmer
     /// - success：显示网络图并停止 shimmer
     /// - failure：有 fallback -> 显示 fallback 并停 shimmer；无 fallback -> 持续 shimmer
     @discardableResult
-    func sd_setImage(
+    public func sd_setImage(
         from string: String,
         fallback: UIImage? = nil,
         fade: TimeInterval = 0.25,
@@ -303,13 +303,16 @@ public extension UIImageView {
     }
     /// placeholder 在这里等价于“兜底图”（不会在 loading 阶段展示）
     @discardableResult
-    func sd_setImage(
+    public func sd_setImage(
         from string: String,
         placeholder: UIImage? = nil,
         fade: TimeInterval = 0.25,
         shimmerConfig: JobsShimmerConfig = .default
     ) -> Self {
-        sd_setImage(from: string, fallback: placeholder, fade: fade, shimmerConfig: shimmerConfig)
+        sd_setImage(from: string,
+                    fallback: placeholder,
+                    fade: fade,
+                    shimmerConfig: shimmerConfig)
     }
 }
 #endif

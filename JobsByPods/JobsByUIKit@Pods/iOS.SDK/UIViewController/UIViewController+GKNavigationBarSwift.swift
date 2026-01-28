@@ -15,16 +15,15 @@ import JobsTextTools
 import JobsSwiftBaseDefines
 import JobsScale
 import Jobsl10n
-
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
-public extension UIViewController {
+extension UIViewController {
     /// 统一配置 GKNav
     /// - Parameters:
     ///   - title: JobsText（支持纯文本/富文本，这里取 rawString 写到 gk_navTitle）
     ///   - leftButton: 左侧按钮（UIButton）。nil → 使用默认“< 返回”
     ///   - rightButtons: 右侧按钮组（[UIButton]）。nil 或空 → 不创建
-    func jobsSetupGKNav(
+    public func jobsSetupGKNav(
         title: JobsText,
         leftButton: UIButton? = nil,
         rightButtons: [UIButton]? = nil
@@ -50,7 +49,7 @@ public extension UIViewController {
     }
     /// 统一配置 GKNav（支持直接传入 String，如 "标题".tr）
     /// - Note: 如果传入的是 ".tr" 的结果，会自动注册语言切换刷新
-    func jobsSetupGKNav(
+    public func jobsSetupGKNav(
         title: String,
         leftButton: UIButton? = nil,
         rightButtons: [UIButton]? = nil
@@ -75,7 +74,7 @@ public extension UIViewController {
     }
     /// GKNav 标题绑定：支持 ".tr" 自动刷新
     @discardableResult
-    func tr_setGKNavTitle(_ string: String) -> Self {
+    public func tr_setGKNavTitle(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { vc, text in
             vc.gk_navTitle = text
         };return self
@@ -116,14 +115,14 @@ public extension UIViewController {
     }
     /// 立即隐藏/显示 GK 的导航栏（并把系统栏同步隐藏，避免双栏）
     @discardableResult
-    func byGKNavBarHidden(_ hidden: Bool) -> Self {
+    public func byGKNavBarHidden(_ hidden: Bool) -> Self {
         gk_navigationBar.isHidden = hidden   // 真实隐藏 GK 的 bar
         navigationController?.setNavigationBarHidden(hidden, animated: false) // 避免系统栏干扰
         return self
     }
     /// 透明导航/恢复（不移除视图，适合沉浸式）
     @discardableResult
-    func byGKNavTransparent(_ enable: Bool) -> Self {
+    public func byGKNavTransparent(_ enable: Bool) -> Self {
         _ = gk_navigationBar
         if enable {
             gk_navBarAlpha = 0

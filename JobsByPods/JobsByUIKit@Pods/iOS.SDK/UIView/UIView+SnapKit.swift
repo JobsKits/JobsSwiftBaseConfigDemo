@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -16,8 +17,8 @@ import SnapKit
 private enum _JobsAssocKeys {
     static var addClosureKey: UInt8 = 0
 }
-public extension UIView {
-    var jobsAddConstraintsClosure: jobsByConstraintMakerBlock? {
+extension UIView {
+    public var jobsAddConstraintsClosure: jobsByConstraintMakerBlock? {
         get {
             objc_getAssociatedObject(self, &_JobsAssocKeys.addClosureKey) as? jobsByConstraintMakerBlock
         }
@@ -31,14 +32,14 @@ public extension UIView {
     }
     // MARK: - 存储约束
     @discardableResult
-    func byAddConstraintsClosure(_ closure: ((_ make: ConstraintMaker) -> Void)? = nil) -> Self {
+    public func byAddConstraintsClosure(_ closure: ((_ make: ConstraintMaker) -> Void)? = nil) -> Self {
         if let closure {
             self.jobsAddConstraintsClosure = closure
         };return self
     }
     // MARK: - 添加约束
     @discardableResult
-    func byAdd(_ closure: ((_ make: ConstraintMaker) -> Void)? = nil) -> Self {
+    public func byAdd(_ closure: ((_ make: ConstraintMaker) -> Void)? = nil) -> Self {
         if let closure {
             self.byAddConstraintsClosure(closure)
             self.snp.makeConstraints(closure)
@@ -46,8 +47,8 @@ public extension UIView {
     }
     // MARK: - 添加到父视图
     @discardableResult
-    func byAddTo(_ superview: UIView,
-                 _ closure: ((ConstraintMaker) -> Void)? = nil) -> Self {
+    public func byAddTo(_ superview: UIView,
+                        _ closure: ((ConstraintMaker) -> Void)? = nil) -> Self {
         superview.addSubview(self)
         if let closure {
             self.snp.makeConstraints(closure)
@@ -55,8 +56,8 @@ public extension UIView {
     }
 
     @discardableResult
-    func byAddTo(_ superView: UIView,
-                 _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
+    public func byAddTo(_ superView: UIView,
+                        _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
         superView.addSubview(self)
         self.snp.makeConstraints { make in
             closure(self, make)
@@ -64,28 +65,28 @@ public extension UIView {
     }
     // MARK: - 链式 makeConstraints
     @discardableResult
-    func byMakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
+    public func byMakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
         self.byAddConstraintsClosure(closure)
         self.snp.makeConstraints(closure)
         return self
     }
     // MARK: - 链式 remakeConstraints
     @discardableResult
-    func byRemakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
+    public func byRemakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
         self.byAddConstraintsClosure(closure)
         self.snp.remakeConstraints(closure)
         return self
     }
     // MARK: - 链式 updateConstraints
     @discardableResult
-    func byUpdateConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
+    public func byUpdateConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
         self.byAddConstraintsClosure(closure)
         self.snp.updateConstraints(closure)
         return self
     }
     // MARK: - 链式 removeConstraints
     @discardableResult
-    func byRemoveConstraints() -> Self {
+    public func byRemoveConstraints() -> Self {
         self.byAddConstraintsClosure(nil)
         self.snp.removeConstraints()
         return self

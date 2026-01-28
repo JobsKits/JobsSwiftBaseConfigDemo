@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -17,15 +18,16 @@ import JobsSwiftBlock
 import JobsSwiftTimer
 // MARK: 一行打开：网址(任何支持的 URL scheme) 、一行拨号、发邮件
 @MainActor
-public extension String {
+extension String {
     // 内部委托：托管 MFMailComposeViewController 的回调与收尾
     fileprivate final class _JobsMailProxy: NSObject, @MainActor MFMailComposeViewControllerDelegate {
         static let shared = _JobsMailProxy()
         var completion: jobsByOpenResultBlock?
 
-        @MainActor func mailComposeController(_ controller: MFMailComposeViewController,
-                                   didFinishWith result: MFMailComposeResult,
-                                   error: Error?) {
+        @MainActor
+        public func mailComposeController(_ controller: MFMailComposeViewController,
+                                          didFinishWith result: MFMailComposeResult,
+                                          error: Error?) {
             controller.dismiss(animated: true) { [completion] in
                 // 这层 API 只关心“是否成功调起”，这里统一回调 .opened
                 completion?(.opened)
@@ -39,8 +41,8 @@ public extension String {
     /// "weixin://".open()
     /// 返回结果仅表示“是否成功调起系统打开”，并不保证目标 App 内部行为成功
     @discardableResult
-    func open(options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
-              jobsByVoidBlock: jobsByOpenResultBlock? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
+    public func open(options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+                     jobsByVoidBlock: jobsByOpenResultBlock? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
         // 1) 预处理：去空白 + 尝试补 scheme + 百分号编码
         guard let url = Self.makeURL(from: self) else {
             jobsByVoidBlock?(.invalidInput)
@@ -65,8 +67,8 @@ public extension String {
     /// - `telprompt://` 曾有被拒案例，**能不用就不用**。默认关。
     /// - 模拟器不支持拨号；真机的家长控制/MDM 也可能拦截。
     @discardableResult
-    func call(usePrompt: Bool = false,
-              jobsByVoidBlock: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
+    public func call(usePrompt: Bool = false,
+                     jobsByVoidBlock: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
         #if targetEnvironment(simulator)
         // ================== 模拟器环境直接拦截 ==================
         print("📵 模拟器不支持拨号功能")
@@ -112,14 +114,13 @@ public extension String {
     ///   - 支持 "a@b.com" 或 "a@b.com,b@c.com; d@e.com" 这样的分隔（逗号/分号/空格）
     ///   - 模拟器一般 `canSendMail == false`，会自动走 `mailto:` 回退
     @discardableResult
-    func mail(subject: String? = nil,
-              body: String? = nil,
-              isHTML: Bool = false,
-              cc: [String] = [],
-              bcc: [String] = [],
-              presentFrom: UIViewController? = nil,
-              completion: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
-
+    public func mail(subject: String? = nil,
+                     body: String? = nil,
+                     isHTML: Bool = false,
+                     cc: [String] = [],
+                     bcc: [String] = [],
+                     presentFrom: UIViewController? = nil,
+                     completion: (jobsByOpenResultBlock)? = nil) -> JobsSwiftBaseDefines.JobsOpenResult {
         let tos = Self._parseEmails(self)
         guard !tos.isEmpty else {
             completion?(.invalidInput)

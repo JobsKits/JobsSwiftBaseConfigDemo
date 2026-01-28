@@ -365,6 +365,14 @@ public enum JobsAxisDirection {
     case topToBottom
     case bottomToTop
 }
+
+public enum JobsPushDirection: Int {
+    case system = 0
+    case fromLeft
+    case fromRight
+    case fromTop
+    case fromBottom
+}
 // MARK: - 前进方向@三维
 public enum JobsGradientDirection {
     /// ← →

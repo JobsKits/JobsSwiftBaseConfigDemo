@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -15,7 +16,7 @@ import JobsSwiftBaseDefines
 extension UILabel {
     // MARK: 方向变换（使用 CATextLayer，避免富文本/对齐丢失）
     @discardableResult
-    func transformLayer(_ direction: TransformLayerDirectionType) -> Self {
+    public func transformLayer(_ direction: TransformLayerDirectionType) -> Self {
         superview?.layoutIfNeeded()
         // 清理旧 layer（避免重复叠加）
         layer.sublayers?
@@ -64,8 +65,8 @@ extension UILabel {
     }
 }
 // MARK: - 对齐映射（CATextLayerAlignmentMode ← NSTextAlignment）
-private extension CATextLayerAlignmentMode {
-    static func _jobs_fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
+extension CATextLayerAlignmentMode {
+    internal static func _jobs_fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
         switch a {
         case .left: return .left
         case .right: return .right

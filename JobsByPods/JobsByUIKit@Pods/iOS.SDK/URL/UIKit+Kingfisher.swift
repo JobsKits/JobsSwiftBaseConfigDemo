@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -13,11 +14,11 @@ import UIKit
 import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
-public extension URL {
+extension URL {
     // ================================== iOS 13+ async/await 入口 ==================================
     #if swift(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, tvOS 13.0, *)
-    func kfLoadImage() async throws -> UIImage {
+    public func kfLoadImage() async throws -> UIImage {
         // 远程：用 KF completion 桥接成 async（兼容所有 KF 版本）
         if isHTTPRemote {
             return try await withCheckedThrowingContinuation { cont in
@@ -43,7 +44,7 @@ public extension URL {
     }
     #endif
     // ================================== iOS 12- completion 入口 ==================================
-    func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
+    public func kfLoadImage(completion: @escaping (Result<UIImage, Error>) -> Void) {
         if isHTTPRemote {
             KingfisherManager.shared.retrieveImage(with: self) { result in
                 switch result {

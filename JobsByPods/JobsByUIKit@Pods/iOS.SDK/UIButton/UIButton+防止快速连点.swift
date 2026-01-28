@@ -4,14 +4,15 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 // MARK: - 防止快速连点
-public extension UIButton {
-    func disableAfterClick(interval: TimeInterval = 1.0) {
+extension UIButton {
+    public func disableAfterClick(interval: TimeInterval = 1.0) {
         self.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
             self.isUserInteractionEnabled = true

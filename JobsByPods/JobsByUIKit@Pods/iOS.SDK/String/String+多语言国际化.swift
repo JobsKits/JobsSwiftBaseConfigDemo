@@ -13,9 +13,9 @@ import UIKit
 
 import Jobsl10n
 
-public extension String {
+extension String {
     /// 多语言@唯一入口（支持自动刷新）
-    var tr: String {
+    public var tr: String {
         // ⭐️ 关键：把 key 注册进线程标记
         return TRAutoRefresh.Marker.pack(
             translated: NSLocalizedString(
@@ -30,7 +30,7 @@ public extension String {
         )
     }
     // 多语言@带参数版本
-    func tr(_ args: CVarArg...) -> String {
+    public func tr(_ args: CVarArg...) -> String {
         String(format: self.tr, arguments: args)
     }
 }

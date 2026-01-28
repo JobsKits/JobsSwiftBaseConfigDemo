@@ -150,9 +150,9 @@ extension UIButton {
     }
 }
 
-private extension UIButton {
+extension UIButton {
     // state -> UIFont
-    var _titleFontDict: [UInt: UIFont] {
+    private var _titleFontDict: [UInt: UIFont] {
         get { (objc_getAssociatedObject(self, &_jobsTitleFontDictKey) as? [UInt: UIFont]) ?? [:] }
         set { objc_setAssociatedObject(self, &_jobsTitleFontDictKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
@@ -161,13 +161,13 @@ private extension UIButton {
     typealias _JobsCfgPatch = (UIButton.Configuration) -> UIButton.Configuration
 
     @available(iOS 15.0, *)
-    var _jobsCfgPatches: [_JobsCfgPatch] {
+    private var _jobsCfgPatches: [_JobsCfgPatch] {
         get { (objc_getAssociatedObject(self, &_jobsConfigPatchListKey) as? [_JobsCfgPatch]) ?? [] }
         set { objc_setAssociatedObject(self, &_jobsConfigPatchListKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
     @available(iOS 15.0, *)
-    func _ensureConfigPatchHandlerInstalled() {
+    private func _ensureConfigPatchHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         let existing = self.configurationUpdateHandler
@@ -184,7 +184,7 @@ private extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    func _ensureTitleFontHandlerInstalled() {
+    private func _ensureTitleFontHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
@@ -211,14 +211,13 @@ private extension UIButton {
                     a.font = font
                     return a
                 }
-            }
-            btn.configuration = cfg
+            };btn.configuration = cfg
         }
     }
 }
 // MARK: - 进阶：按 state 的链式代理
-public extension UIButton {
-    final class StateProxy {
+extension UIButton {
+    public final class StateProxy {
         fileprivate let button: UIButton
         let state: UIControl.State
 
@@ -269,8 +268,7 @@ public extension UIButton {
         @discardableResult
         public func subTitleColor(_ color: UIColor) -> UIButton { button.bySubTitleColor(color, for: state) }
     }
-
-    func `for`(_ state: UIControl.State) -> StateProxy { StateProxy(button: self, state: state) }
+    public func `for`(_ state: UIControl.State) -> StateProxy { StateProxy(button: self, state: state) }
 }
 // MARK: - 布局 / 外观
 extension UIButton {

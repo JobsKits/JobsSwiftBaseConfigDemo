@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
 // MARK: - Kingfisher
@@ -34,92 +34,176 @@ public struct KFButtonLoadConfig {
 
 private enum _KFButtonAOKey { static var config: UInt8 = 0 }
 private var kfBgURLKey: UInt8 = 0
-public extension UIButton {
-    var _kf_config: KFButtonLoadConfig {
+extension UIButton {
+     public var _kf_config: KFButtonLoadConfig {
         get { (objc_getAssociatedObject(self, &_KFButtonAOKey.config) as? KFButtonLoadConfig) ?? KFButtonLoadConfig() }
         set { objc_setAssociatedObject(self, &_KFButtonAOKey.config, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 
-private extension UIButton {
-    @discardableResult func _kf_setImageURL(_ url: URL?) -> Self { var c = _kf_config; c.url = url; _kf_config = c; return self }
-    @discardableResult func _kf_setPlaceholder(_ img: UIImage?) -> Self { var c = _kf_config; c.placeholder = img; _kf_config = c; return self }
-    @discardableResult func _kf_setTargetSize(_ size: CGSize?) -> Self { var c = _kf_config; c.targetSize = size; _kf_config = c; return self }
-    @discardableResult func _kf_setBgTargetSize(_ size: CGSize?) -> Self { var c = _kf_config; c.bgTargetSize = size; _kf_config = c; return self }
-    @discardableResult func _kf_setOptions(_ opts: KingfisherOptionsInfo) -> Self { var c = _kf_config; c.options = opts; _kf_config = c; return self }
-    @discardableResult func _kf_setProgress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self { var c = _kf_config; c.progress = block; _kf_config = c; return self }
-    @discardableResult func _kf_setCompleted(_ block: KFCompleted?) -> Self { var c = _kf_config; c.completed = block; _kf_config = c; return self }
+extension UIButton {
+    @discardableResult
+    private func _kf_setImageURL(_ url: URL?) -> Self {
+        var c = _kf_config; c.url = url; _kf_config = c
+        return self
+    }
+    @discardableResult
+    private func _kf_setPlaceholder(_ img: UIImage?) -> Self {
+        var c = _kf_config; c.placeholder = img; _kf_config = c
+        return self
+    }
+    @discardableResult
+    private func _kf_setTargetSize(_ size: CGSize?) -> Self {
+        var c = _kf_config; c.targetSize = size; _kf_config = c
+        return self
+    }
+    @discardableResult
+    private func _kf_setBgTargetSize(_ size: CGSize?) -> Self { var c = _kf_config; c.bgTargetSize = size; _kf_config = c;
+        return self
+    }
+    @discardableResult
+    private func _kf_setOptions(_ opts: KingfisherOptionsInfo) -> Self {
+        var c = _kf_config; c.options = opts; _kf_config = c
+        return self
+    }
+    @discardableResult
+    private func _kf_setProgress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self {
+        var c = _kf_config; c.progress = block; _kf_config = c
+        return self
+    }
+    @discardableResult
+    private func _kf_setCompleted(_ block: KFCompleted?) -> Self {
+        var c = _kf_config; c.completed = block; _kf_config = c
+        return self
+    }
 }
 
-public extension UIButton {
+extension UIButton {
     // MARK: - 基础配置
-    @discardableResult func kf_imageURL(_ url: URL?) -> Self { _kf_setImageURL(url) }
-    @discardableResult func kf_imageURL(_ urlString: String?) -> Self {
-        guard let s = urlString, let u = URL(string: s) else { return _kf_setImageURL(nil) }
-        return _kf_setImageURL(u)
+    @discardableResult
+    public func kf_imageURL(_ url: URL?) -> Self {
+        _kf_setImageURL(url)
     }
-    @discardableResult func kf_placeholderImage(_ img: UIImage?) -> Self { _kf_setPlaceholder(img) }
-    @discardableResult func kf_targetSize(_ size: CGSize?) -> Self { _kf_setTargetSize(size) }
-    @discardableResult func kf_bgTargetSize(_ size: CGSize?) -> Self { _kf_setBgTargetSize(size) }
-    @discardableResult func kf_options(_ opts: KingfisherOptionsInfo) -> Self { _kf_setOptions(opts) }
-    @discardableResult func kf_progress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self { _kf_setProgress(block) }
-    @discardableResult func kf_completed(_ block: KFCompleted?) -> Self { _kf_setCompleted(block) }
+    @discardableResult
+    public func kf_imageURL(_ urlString: String?) -> Self {
+        guard let s = urlString, let u = URL(string: s)
+        else {
+            return _kf_setImageURL(nil)
+        };return _kf_setImageURL(u)
+    }
+    @discardableResult
+    public func kf_placeholderImage(_ img: UIImage?) -> Self {
+        _kf_setPlaceholder(img)
+    }
+    @discardableResult
+    public func kf_targetSize(_ size: CGSize?) -> Self {
+        _kf_setTargetSize(size)
+    }
+    @discardableResult
+    public func kf_bgTargetSize(_ size: CGSize?) -> Self {
+        _kf_setBgTargetSize(size)
+    }
+    @discardableResult
+    public func kf_options(_ opts: KingfisherOptionsInfo) -> Self {
+        _kf_setOptions(opts)
+    }
+    @discardableResult
+    public func kf_progress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self {
+        _kf_setProgress(block)
+    }
+    @discardableResult
+    public func kf_completed(_ block: KFCompleted?) -> Self {
+        _kf_setCompleted(block)
+    }
     // MARK: - 前景图加载
-    @discardableResult func kf_normalLoad() -> Self {
+    @discardableResult
+    public func kf_normalLoad() -> Self {
         _kf_loadImage(for: .normal)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() } // ✅刷新配置
-        return self
+        if #available(iOS 15.0, *) {
+            self.byAdoptConfigurationIfAvailable()// ✅刷新配置
+        };return self
     }
-    @discardableResult func kf_highlightedLoad() -> Self {
+    @discardableResult
+    public func kf_highlightedLoad() -> Self {
         _kf_loadImage(for: .highlighted)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
+        if #available(iOS 15.0, *) {
+            self.byAdoptConfigurationIfAvailable() }
         return self
     }
-    @discardableResult func kf_disabledLoad() -> Self {
+    @discardableResult
+    public func kf_disabledLoad() -> Self {
         _kf_loadImage(for: .disabled)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
-    @discardableResult func kf_selectedLoad() -> Self {
+    @discardableResult
+    public func kf_selectedLoad() -> Self {
         _kf_loadImage(for: .selected)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
     @available(iOS 9.0, *)
-    @discardableResult func kf_focusedLoad() -> Self {
+    @discardableResult
+    public func kf_focusedLoad() -> Self {
         _kf_loadImage(for: .focused)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
-    @discardableResult func kf_applicationLoad() -> Self {
+    @discardableResult
+    public func kf_applicationLoad() -> Self {
         _kf_loadImage(for: .application)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
-    @discardableResult func kf_reservedLoad() -> Self {
+    @discardableResult
+    public func kf_reservedLoad() -> Self {
         _kf_loadImage(for: .reserved)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
     // MARK: - 背景图加载
-    @discardableResult func kf_bgNormalLoad() -> Self { _kf_loadBackgroundImage(for: .normal); return self }
-    @discardableResult func kf_bgHighlightedLoad() -> Self { _kf_loadBackgroundImage(for: .highlighted); return self }
-    @discardableResult func kf_bgDisabledLoad() -> Self { _kf_loadBackgroundImage(for: .disabled); return self }
-    @discardableResult func kf_bgSelectedLoad() -> Self { _kf_loadBackgroundImage(for: .selected); return self }
+    @discardableResult
+    public func kf_bgNormalLoad() -> Self {
+        _kf_loadBackgroundImage(for: .normal)
+        return self }
+    @discardableResult
+    public func kf_bgHighlightedLoad() -> Self {
+        _kf_loadBackgroundImage(for: .highlighted)
+        return self
+    }
+    @discardableResult
+    public func kf_bgDisabledLoad() -> Self {
+        _kf_loadBackgroundImage(for: .disabled)
+        return self
+    }
+    @discardableResult
+    public func kf_bgSelectedLoad() -> Self {
+        _kf_loadBackgroundImage(for: .selected)
+        return self }
     @available(iOS 9.0, *)
-    @discardableResult func kf_bgFocusedLoad() -> Self { _kf_loadBackgroundImage(for: .focused); return self }
-    @discardableResult func kf_bgApplicationLoad() -> Self { _kf_loadBackgroundImage(for: .application); return self }
-    @discardableResult func kf_bgReservedLoad() -> Self { _kf_loadBackgroundImage(for: .reserved); return self }
+    @discardableResult
+    public func kf_bgFocusedLoad() -> Self {
+        _kf_loadBackgroundImage(for: .focused)
+        return self
+    }
+    @discardableResult
+    public func kf_bgApplicationLoad() -> Self {
+        _kf_loadBackgroundImage(for: .application)
+        return self
+    }
+    @discardableResult
+    public func kf_bgReservedLoad() -> Self {
+        _kf_loadBackgroundImage(for: .reserved)
+        return self
+    }
 }
 // MARK: - internal helpers
-private extension UIButton {
-    func _jobs_kfUpsertDownsampleOptions(_ options: KingfisherOptionsInfo, targetPointSize: CGSize) -> KingfisherOptionsInfo {
+extension UIButton {
+    private func _jobs_kfUpsertDownsampleOptions(_ options: KingfisherOptionsInfo, targetPointSize: CGSize) -> KingfisherOptionsInfo {
         var opts = options
-
         // 1) 强制替换 processor 为“按 UI 尺寸 Downsampling”
         opts.removeAll { if case .processor = $0 { return true } else { return false } }
         opts.append(.processor(DownsamplingImageProcessor(size: targetPointSize)))
-
         // 2) 确保 scaleFactor 一致
         if !opts.contains(where: { if case .scaleFactor = $0 { return true } else { return false } }) {
             opts.append(.scaleFactor(UIScreen.main.scale))
@@ -127,8 +211,8 @@ private extension UIButton {
     }
 }
 
-public extension UIButton {
-    func _kf_loadImage(for state: UIControl.State) {
+extension UIButton {
+    public func _kf_loadImage(for state: UIControl.State) {
         let cfg = _kf_config
         let token = _jobs_nextToken(loader: .kf, channel: .foreground, for: state)
         // ✅ 标记实际使用的框架（给 JobsImageCacheCleaner 用）
@@ -147,8 +231,7 @@ public extension UIButton {
                 guard btn._jobs_isCurrentToken(token, loader: .kf, channel: .foreground, for: state) else { return }
                 btn._jobs_stopForegroundShimmer()
                 btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
-            }
-            return
+            };return
         }
 
         self.jobs_remoteURL = url
@@ -187,7 +270,7 @@ public extension UIButton {
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
     }
     // ✅ Kingfisher 背景图加载：按原逻辑下载，回写时只走 jobsResetBtnBgImage（= legacy）
-    func _kf_loadBackgroundImage(for state: UIControl.State) {
+    public func _kf_loadBackgroundImage(for state: UIControl.State) {
         let cfg = _kf_config
         // ✅ 标记实际使用的框架（给 JobsImageCacheCleaner 用）
         self.jobs_imageLoaderKind = .kingfisher
@@ -247,18 +330,18 @@ public extension UIButton {
     }
 }
 
-public extension UIButton {
+extension UIButton {
     /// 记录用于背景图的 URL（供克隆阶段读取）
-    var kf_bgURL: URL? {
+    public var kf_bgURL: URL? {
         get { objc_getAssociatedObject(self, &kfBgURLKey) as? URL }
         set { objc_setAssociatedObject(self, &kfBgURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
     /// 源按钮使用：设置背景图并记录 URL（建议在 Demo 中用它替换直接的 kf.setBackgroundImage）
     @discardableResult
-    func kf_setBackgroundImageURL(_ urlString: String,
-                                  for state: UIControl.State = .normal,
-                                  placeholder: UIImage? = nil,
-                                  options: KingfisherOptionsInfo = [.transition(.fade(0.2)), .cacheOriginalImage]) -> Self {
+    public func kf_setBackgroundImageURL(_ urlString: String,
+                                         for state: UIControl.State = .normal,
+                                         placeholder: UIImage? = nil,
+                                         options: KingfisherOptionsInfo = [.transition(.fade(0.2)), .cacheOriginalImage]) -> Self {
         guard let u = URL(string: urlString) else { return self }
         kf_bgURL = u
         self.jobs_bgURL = u
@@ -268,9 +351,9 @@ public extension UIButton {
         return self
     }
     /// 克隆阶段调用：优先现成位图 → 缓存 →（按需）拉网
-    func kf_cloneBackground(to target: UIButton,
-                            for state: UIControl.State = .normal,
-                            allowNetworkIfMissing: Bool) {
+    public func kf_cloneBackground(to target: UIButton,
+                                   for state: UIControl.State = .normal,
+                                   allowNetworkIfMissing: Bool) {
         target.jobs_isClone = true
         target.jobs_bgState = state
         target.jobs_imageLoaderKind = .kingfisher
@@ -344,7 +427,7 @@ public extension UIButton {
         }
     }
     /// 克隆“前景图”
-    func kf_cloneImage(to target: UIButton, for state: UIControl.State = .normal) {
+    public func kf_cloneImage(to target: UIButton, for state: UIControl.State = .normal) {
         guard let url = _kf_config.url else { return }
         target.jobs_imageLoaderKind = .kingfisher
         target._kf_setImageURL(url)

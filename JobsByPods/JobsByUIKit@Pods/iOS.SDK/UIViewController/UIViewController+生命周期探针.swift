@@ -130,9 +130,9 @@ private final class WeakBox {
 private var _vcListenersKey: UInt8 = 0
 private var _vcSwizzledKey: UInt8 = 0
 // MARK: - Public API
-public extension UIViewController {
+extension UIViewController {
     /// 绑定一个 listener（通常是某个子 view）
-    func bindVCLifecycleListener(_ listener: VCLifeCycleListener) {
+    public func bindVCLifecycleListener(_ listener: VCLifeCycleListener) {
         VCLifecycleSwizzler.installIfNeeded()
         var arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [WeakBox]) ?? []
         // 去重（避免重复绑定）
@@ -147,7 +147,7 @@ public extension UIViewController {
         }
     }
     /// 解绑（可选）
-    func unbindVCLifecycleListener(_ listener: VCLifeCycleListener) {
+    public func unbindVCLifecycleListener(_ listener: VCLifeCycleListener) {
         guard var arr = objc_getAssociatedObject(self, &_vcListenersKey) as? [WeakBox] else { return }
         let obj = listener as AnyObject
         arr.removeAll { $0.value == nil || $0.value === obj }

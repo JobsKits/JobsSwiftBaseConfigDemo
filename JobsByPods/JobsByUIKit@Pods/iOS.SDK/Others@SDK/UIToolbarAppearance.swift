@@ -14,34 +14,34 @@ import UIKit
 import JobsSwiftBlock
 
 @available(iOS 13.0, *)
-public extension UIToolbarAppearance {
+extension UIToolbarAppearance {
     // MARK: - Configure presets
     @discardableResult
-    func byConfigureWithDefaultBackground() -> Self {
+    public func byConfigureWithDefaultBackground() -> Self {
         self.configureWithDefaultBackground()
         return self
     }
 
     @discardableResult
-    func byConfigureWithOpaqueBackground() -> Self {
+    public func byConfigureWithOpaqueBackground() -> Self {
         self.configureWithOpaqueBackground()
         return self
     }
 
     @discardableResult
-    func byConfigureWithTransparentBackground() -> Self {
+    public func byConfigureWithTransparentBackground() -> Self {
         self.configureWithTransparentBackground()
         return self
     }
     // MARK: - Button appearances
     @discardableResult
-    func byButtonAppearance(_ config: jobsByBarButtonItemAppearanceBlock) -> Self {
+    public func byButtonAppearance(_ config: jobsByBarButtonItemAppearanceBlock) -> Self {
         config(self.buttonAppearance)
         return self
     }
 
     @discardableResult
-    func byDoneButtonAppearance(_ config: jobsByBarButtonItemAppearanceBlock) -> Self {
+    public func byDoneButtonAppearance(_ config: jobsByBarButtonItemAppearanceBlock) -> Self {
         config(self.doneButtonAppearance)
         return self
     }

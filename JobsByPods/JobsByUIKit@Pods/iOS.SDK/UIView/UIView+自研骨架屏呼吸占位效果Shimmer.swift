@@ -4,6 +4,14 @@
 //
 //  Created by Jobs on 12/2/25.
 //
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import ObjectiveC
 //  ================================== 自述 ==================================
 //  这是一个给任意 UIView 添加「Shimmer / 骨架屏扫光」效果的扩展。
 //
@@ -23,13 +31,6 @@
 //
 //  ⚠️ 列表复用建议：cell.prepareForReuse() 里调用 jobs_stopShimmer()，避免残留 layer/动画。
 //  ========================================================================
-#if os(OSX)
-import AppKit
-#elseif os(iOS) || os(tvOS)
-import UIKit
-#endif
-
-import ObjectiveC
 // MARK: - 自动跟随布局更新（无需子类化）
 // 说明：很多时候 startShimmer 发生在 AutoLayout 真正出 frame 之前（bounds=0），
 // 如果外部又无法在 layoutSubviews / viewDidLayoutSubviews 里手动调用 update，
@@ -50,12 +51,13 @@ private enum JobsShimmerSwizzle {
     }()
 }
 
-private extension UIView {
-    static func jobs_enableShimmerAutoLayoutUpdatesOnce() {
+extension UIView {
+    private static func jobs_enableShimmerAutoLayoutUpdatesOnce() {
         _ = JobsShimmerSwizzle.once
     }
 
-    @objc func jobs_shimmer_layoutSubviews() {
+    @objc
+    internal func jobs_shimmer_layoutSubviews() {
         // 注意：交换实现后，这里调用的是“原始 layoutSubviews”
         self.jobs_shimmer_layoutSubviews()
         guard jobs_isShimmeringStored else { return }
@@ -93,15 +95,15 @@ private enum JobsShimmerAssociatedKeys {
     static var lastAnimWidthKey: UInt8 = 0
 }
 // MARK: - 私有工具
-private extension UIView {
-    func jobs_withoutImplicitAnimations(_ block: () -> Void) {
+extension UIView {
+    private func jobs_withoutImplicitAnimations(_ block: () -> Void) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         block()
         CATransaction.commit()
     }
 
-    var jobs_originalClipsToBounds: Bool? {
+    private var jobs_originalClipsToBounds: Bool? {
         get { objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.originClipsKey) as? Bool }
         set {
             objc_setAssociatedObject(
@@ -113,7 +115,7 @@ private extension UIView {
         }
     }
 
-    var jobs_originalCornerRadius: CGFloat? {
+    private var jobs_originalCornerRadius: CGFloat? {
         get {
             if let n = objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.originCornerKey) as? NSNumber {
                 return CGFloat(truncating: n)
@@ -131,7 +133,7 @@ private extension UIView {
         }
     }
 
-    var jobs_lastAnimationWidth: CGFloat? {
+    private var jobs_lastAnimationWidth: CGFloat? {
         get {
             if let n = objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.lastAnimWidthKey) as? NSNumber {
                 return CGFloat(truncating: n)
@@ -149,7 +151,7 @@ private extension UIView {
         }
     }
 
-    var jobs_shimmerLayer: CAGradientLayer? {
+    private var jobs_shimmerLayer: CAGradientLayer? {
         get {
             objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.layerKey) as? CAGradientLayer
         }
@@ -163,7 +165,7 @@ private extension UIView {
         }
     }
 
-    var jobs_shimmerConfig: JobsShimmerConfig {
+    private var jobs_shimmerConfig: JobsShimmerConfig {
         get {
             (objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.configKey) as? JobsShimmerConfig)
             ?? .default
@@ -178,7 +180,7 @@ private extension UIView {
         }
     }
 
-    var jobs_isShimmeringStored: Bool {
+    private var jobs_isShimmeringStored: Bool {
         get {
             (objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.isOnKey) as? Bool) ?? false
         }
@@ -192,7 +194,7 @@ private extension UIView {
         }
     }
 
-    func jobs_prepareShimmerLayerIfNeeded() -> CAGradientLayer {
+    private func jobs_prepareShimmerLayerIfNeeded() -> CAGradientLayer {
         if let layer = jobs_shimmerLayer {
             return layer
         }
@@ -217,7 +219,7 @@ private extension UIView {
         return layer
     }
 
-    func jobs_updateShimmerColors() {
+    private func jobs_updateShimmerColors() {
         guard let layer = jobs_shimmerLayer else { return }
 
         let cfg = jobs_shimmerConfig
@@ -244,7 +246,7 @@ private extension UIView {
         ]
     }
 
-    func jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: Bool = false) {
+    private func jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: Bool = false) {
         guard let layer = jobs_shimmerLayer else { return }
         guard jobs_isShimmeringStored else { return }
 
@@ -277,9 +279,9 @@ private extension UIView {
     }
 }
 // MARK: - 公共 API
-public extension UIView {
+extension UIView {
     /// 是否正在呼吸
-    var jobs_isShimmering: Bool {
+    public var jobs_isShimmering: Bool {
         get {
             jobs_isShimmeringStored
         }
@@ -293,7 +295,7 @@ public extension UIView {
         }
     }
     /// 开始呼吸效果
-    func jobs_startShimmer(config: JobsShimmerConfig = .default) {
+    public func jobs_startShimmer(config: JobsShimmerConfig = .default) {
         // ✅ 无需子类化：自动跟随布局变化刷新 shimmer layer frame
         UIView.jobs_enableShimmerAutoLayoutUpdatesOnce()
 
@@ -323,7 +325,7 @@ public extension UIView {
         layer.isHidden = false
     }
     /// 停止呼吸效果
-    func jobs_stopShimmer() {
+    public func jobs_stopShimmer() {
         jobs_isShimmeringStored = false
 
         jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
@@ -343,7 +345,7 @@ public extension UIView {
         jobs_lastAnimationWidth = nil
     }
     /// 视图尺寸变化时调用，更新渐变层 layout（建议在 layoutSubviews 里调用）
-    func jobs_updateShimmerLayout() {
+    public func jobs_updateShimmerLayout() {
         guard let layer = jobs_shimmerLayer, jobs_isShimmeringStored else { return }
 
         let w = bounds.width
@@ -367,15 +369,15 @@ public extension UIView {
         jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: true)
     }
     /// 仅给呼吸层设置 mask（SlideToUnlock 用这个来裁掉滑块经过区域）
-    func jobs_setShimmerMask(_ maskLayer: CALayer?) {
+    public func jobs_setShimmerMask(_ maskLayer: CALayer?) {
         jobs_shimmerLayer?.mask = maskLayer
     }
 }
 // MARK: - DSL
-public extension UIView {
+extension UIView {
     /// DSL：启用/关闭呼吸效果
     @discardableResult
-    func byShimmering(_ enabled: Bool,
+    public func byShimmering(_ enabled: Bool,
                       config: JobsShimmerConfig = .default) -> Self {
         if enabled {
             jobs_startShimmer(config: config)
@@ -386,7 +388,7 @@ public extension UIView {
     }
     /// DSL：修改呼吸颜色（不改变开关状态）
     @discardableResult
-    func byShimmerColors(base: UIColor, highlight: UIColor) -> Self {
+    public func byShimmerColors(base: UIColor, highlight: UIColor) -> Self {
         var cfg = jobs_shimmerConfig
         cfg.baseColor = base
         cfg.highlightColor = highlight
@@ -412,12 +414,12 @@ private enum JobsUIButtonFGOverlaySwizzle {
     }()
 }
 
-private extension UIButton {
-    static func jobs_enableForegroundOverlayAutoLayoutUpdatesOnce() {
+extension UIButton {
+    private static func jobs_enableForegroundOverlayAutoLayoutUpdatesOnce() {
         _ = JobsUIButtonFGOverlaySwizzle.once
     }
 
-    var jobs_fgOverlayTargetSize: CGSize? {
+    private var jobs_fgOverlayTargetSize: CGSize? {
         get {
             if let v = objc_getAssociatedObject(self, &JobsUIButtonFGOverlayAOKeys.targetSizeKey) as? NSValue {
                 return v.cgSizeValue
@@ -429,12 +431,12 @@ private extension UIButton {
         }
     }
 
-    var jobs_fgShimmerOverlayView: UIView? {
+    private var jobs_fgShimmerOverlayView: UIView? {
         get { objc_getAssociatedObject(self, &JobsUIButtonFGOverlayAOKeys.overlayKey) as? UIView }
         set { objc_setAssociatedObject(self, &JobsUIButtonFGOverlayAOKeys.overlayKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
-    func jobs_getOrCreateFGOverlayView() -> UIView {
+    private func jobs_getOrCreateFGOverlayView() -> UIView {
         if let v = jobs_fgShimmerOverlayView { return v }
         // overlay 尺寸/位置完全由 jobs_layoutFGOverlayIfNeeded() 决定
         let v = UIView(frame: .zero)
@@ -446,7 +448,7 @@ private extension UIButton {
         return v
     }
 
-    func jobs_fgOverlayRect(targetSize: CGSize) -> CGRect {
+    private func jobs_fgOverlayRect(targetSize: CGSize) -> CGRect {
         let b = self.bounds
         guard b.width > 1, b.height > 1 else { return .zero }
 
@@ -499,12 +501,10 @@ private extension UIButton {
             let insets = self.jobs_legacyImageEdgeInsets
             rect.origin.x += insets.left - insets.right
             rect.origin.y += insets.top - insets.bottom
-        }
-
-        return rect.integral
+        };return rect.integral
     }
 
-    func jobs_effectiveContentRect(in bounds: CGRect) -> CGRect {
+    private func jobs_effectiveContentRect(in bounds: CGRect) -> CGRect {
         if #available(iOS 15.0, *), let cfg = self.configuration {
             let di = cfg.contentInsets
             let isRTL = (self.effectiveUserInterfaceLayoutDirection == .rightToLeft)
@@ -518,7 +518,7 @@ private extension UIButton {
         }
     }
 
-    func jobs_layoutFGOverlayIfNeeded() {
+    private func jobs_layoutFGOverlayIfNeeded() {
         guard let overlay = jobs_fgShimmerOverlayView, !overlay.isHidden else { return }
         let size = jobs_fgOverlayTargetSize ?? CGSize(width: 48, height: 48)
         let r = jobs_fgOverlayRect(targetSize: size)
@@ -540,16 +540,17 @@ private extension UIButton {
         }
     }
 
-    @objc func jobs_fgOverlay_layoutSubviews() {
+    @objc
+    internal func jobs_fgOverlay_layoutSubviews() {
         // 注意：交换实现后，这里调用的是“原始 layoutSubviews”
         self.jobs_fgOverlay_layoutSubviews()
         jobs_layoutFGOverlayIfNeeded()
     }
 }
 
-public extension UIButton {
+extension UIButton {
     /// 前景图 loading：开启 shimmer（用 overlay，保证 iOS15 configuration / image=nil 时也可见）
-    func _jobs_startForegroundShimmerOverlay(targetSize: CGSize) {
+    public func _jobs_startForegroundShimmerOverlay(targetSize: CGSize) {
         UIButton.jobs_enableForegroundOverlayAutoLayoutUpdatesOnce()
         jobs_fgOverlayTargetSize = targetSize
 
@@ -576,7 +577,7 @@ public extension UIButton {
         }
     }
     /// 前景图 loading：关闭 shimmer
-    func _jobs_stopForegroundShimmerOverlay() {
+    public func _jobs_stopForegroundShimmerOverlay() {
         guard let overlay = jobs_fgShimmerOverlayView else { return }
         overlay.jobs_stopShimmer()
         overlay.isHidden = true

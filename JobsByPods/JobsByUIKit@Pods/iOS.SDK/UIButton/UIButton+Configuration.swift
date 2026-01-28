@@ -4,16 +4,17 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 // MARK: - 把按钮切到 configuration 模式
-public extension UIButton {
+extension UIButton {
     @available(iOS 15.0, *)
     @discardableResult
-    func byAdoptConfigurationIfAvailable() -> Self {
+    public func byAdoptConfigurationIfAvailable() -> Self {
         var cfg = self.configuration ?? .plain()
         // 同步主标题 & 颜色
         if cfg.title == nil, let t = self.title(for: .normal), !t.isEmpty { cfg.title = t }
@@ -48,9 +49,9 @@ public extension UIButton {
 }
 // MARK: - Configuration 快速编辑
 @available(iOS 15.0, *)
-public extension UIButton {
+extension UIButton {
     @discardableResult
-    func cfg(_ edit: (inout UIButton.Configuration) -> Void) -> Self {
+    public func cfg(_ edit: (inout UIButton.Configuration) -> Void) -> Self {
         var c = self.configuration ?? .filled()
         edit(&c)
         self.configuration = c
@@ -59,22 +60,22 @@ public extension UIButton {
     }
 
     @discardableResult
-    func cfgTitle(_ title: String?) -> Self { cfg { c in c.attributedTitle = nil; c.title = title } }
+    public func cfgTitle(_ title: String?) -> Self { cfg { c in c.attributedTitle = nil; c.title = title } }
 
     @discardableResult
-    func cfgTitleColor(_ color: UIColor) -> Self { cfg { $0.baseForegroundColor = color } }
+    public func cfgTitleColor(_ color: UIColor) -> Self { cfg { $0.baseForegroundColor = color } }
 
     @discardableResult
-    func cfgBackground(_ color: UIColor) -> Self { cfg { $0.baseBackgroundColor = color } }
+    public func cfgBackground(_ color: UIColor) -> Self { cfg { $0.baseBackgroundColor = color } }
 
     @discardableResult
-    func cfgCorner(_ style: UIButton.Configuration.CornerStyle) -> Self { cfg { $0.cornerStyle = style } }
+    public func cfgCorner(_ style: UIButton.Configuration.CornerStyle) -> Self { cfg { $0.cornerStyle = style } }
 
     @discardableResult
-    func cfgInsets(_ insets: NSDirectionalEdgeInsets) -> Self { cfg { $0.contentInsets = insets } }
+    public func cfgInsets(_ insets: NSDirectionalEdgeInsets) -> Self { cfg { $0.contentInsets = insets } }
 
     @discardableResult
-    func cfgFont(_ font: UIFont) -> Self {
+    public func cfgFont(_ font: UIFont) -> Self {
         cfg { c in
             c.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                 var attrs = incoming

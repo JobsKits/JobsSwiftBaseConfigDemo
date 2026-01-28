@@ -14,27 +14,29 @@ import UIKit
 import JobsTextTools
 import JobsSwiftBaseDefines
 // MARK: 设置富文本
-public extension UITextView {
-    func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
+extension UITextView {
+    public func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
         attributedText = JobsRichText.make(runs, paragraphStyle: paragraphStyle)
         isEditable = false
         isScrollEnabled = false
         dataDetectorTypes = [] // 仅走自定义 link
     }
 }
+/**
+ 
+     let ps = jobsMakeParagraphStyle {
+         $0.alignment = .center
+         $0.lineSpacing = 4
+     }
 
-let ps = jobsMakeParagraphStyle {
-    $0.alignment = .center
-    $0.lineSpacing = 4
-}
+     let runs: [JobsRichRun] = [
+         JobsRichRun(.text("如需帮助，请联系 "))
+             .font(.systemFont(ofSize: 15))
+             .color(JobsCor.secondaryLabel),
 
-let runs: [JobsRichRun] = [
-    JobsRichRun(.text("如需帮助，请联系 "))
-        .font(.systemFont(ofSize: 15))
-        .color(JobsCor.secondaryLabel),
-
-    JobsRichRun(.text("专属客服"))
-        .font(.systemFont(ofSize: 15))
-        .color(.systemBlue)
-        .link("click://customer")
-]
+         JobsRichRun(.text("专属客服"))
+             .font(.systemFont(ofSize: 15))
+             .color(.systemBlue)
+             .link("click://customer")
+     ]
+ */

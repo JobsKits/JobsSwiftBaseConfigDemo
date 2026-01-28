@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -20,17 +21,17 @@ public struct _JobsSubPackNoAttr {
 public var _jobsSubDictKey_noAttr: UInt8 = 0
 public var _jobsSubtitleHandlerInstalledKey: UInt8 = 0
 public var _jobsCfgBgImageKey: UInt8 = 0
-public extension UIButton {
-    var jobs_cfgBgImage: UIImage? {
+extension UIButton {
+    public var jobs_cfgBgImage: UIImage? {
         get { objc_getAssociatedObject(self, &_jobsCfgBgImageKey) as? UIImage }
         set { objc_setAssociatedObject(self, &_jobsCfgBgImageKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    var _subDict_noAttr: [UInt: _JobsSubPackNoAttr] {
+    public var _subDict_noAttr: [UInt: _JobsSubPackNoAttr] {
         get { (objc_getAssociatedObject(self, &_jobsSubDictKey_noAttr) as? [UInt: _JobsSubPackNoAttr]) ?? [:] }
         set { objc_setAssociatedObject(self, &_jobsSubDictKey_noAttr, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
-    func _subPack_noAttr(for state: UIControl.State, create: Bool = true) -> _JobsSubPackNoAttr {
+    public func _subPack_noAttr(for state: UIControl.State, create: Bool = true) -> _JobsSubPackNoAttr {
         var d = _subDict_noAttr
         if let p = d[state.raw] { return p }
         if create {
@@ -41,7 +42,7 @@ public extension UIButton {
         };return _JobsSubPackNoAttr()
     }
 
-    func _setSubPack_noAttr(_ p: _JobsSubPackNoAttr, for state: UIControl.State) {
+    public func _setSubPack_noAttr(_ p: _JobsSubPackNoAttr, for state: UIControl.State) {
         var d = _subDict_noAttr; d[state.raw] = p; _subDict_noAttr = d
         if #available(iOS 15.0, *) {
             _ensureSubtitleHandler_noAttrInstalled()
@@ -50,7 +51,7 @@ public extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    func _ensureSubtitleHandler_noAttrInstalled() {
+    public func _ensureSubtitleHandler_noAttrInstalled() {
         // 已安装就不重复装
         if (objc_getAssociatedObject(self, &_jobsSubtitleHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsSubtitleHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -111,7 +112,7 @@ public extension UIButton {
         }
     }
 
-    func _legacy_applySubtitle_noAttr(text: String?, for state: UIControl.State) {
+    public func _legacy_applySubtitle_noAttr(text: String?, for state: UIControl.State) {
         let titleText = self.title(for: state)
             ?? self.attributedTitle(for: state)?.string
             ?? self.title(for: .normal)
@@ -124,9 +125,9 @@ public extension UIButton {
     }
 }
 
-public extension UIButton {
+extension UIButton {
     @discardableResult
-    func bySubTitle(_ text: String?, for state: UIControl.State = .normal) -> Self {
+    public func bySubTitle(_ text: String?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.text = text ?? ""; _setSubPack_noAttr(p, for: state)
             // ⬇️ 立刻写入配置，保证首次就能看到
@@ -136,14 +137,14 @@ public extension UIButton {
         };return self
     }
     @discardableResult
-    func bySubTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
+    public func bySubTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.font = font; _setSubPack_noAttr(p, for: state)
             _applySubtitleToConfigurationNow(targetState: state)   // ⬅️
         };return self
     }
     @discardableResult
-    func bySubTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    public func bySubTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.color = color; _setSubPack_noAttr(p, for: state)
             _applySubtitleToConfigurationNow(targetState: state)   // ⬅️

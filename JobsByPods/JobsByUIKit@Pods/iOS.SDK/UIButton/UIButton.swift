@@ -4,6 +4,13 @@
 //
 //  Created by Jobs on 2025/6/16.
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import ObjectiveC
 //  说明（本版仅“计时器”相关做了统一改造，UI 链式等其余原样保留）：
 //  -----------------------------------------------------------------------------
 //  - 外部只需一个“是否传 total”的参数差异，即可决定【正计时】（不传）或【倒计时】（传）。
@@ -20,15 +27,6 @@
 //      `onTimerStateChange { btn, old, new in ... }` 订阅；
 //    默认的 UI 变化已内置（想自己接管就设置 onTimerStateChange 覆盖）。
 //
-
-#if os(OSX)
-import AppKit
-#elseif os(iOS) || os(tvOS)
-import UIKit
-#endif
-
-import ObjectiveC
-
 private var _jobsBGURLKey:   UInt8 = 0   // URL?
 private var _jobsBGStateKey: UInt8 = 0   // UIControl.State.RawValue
 private var _jobsIsCloneKey: UInt8 = 0   // Bool

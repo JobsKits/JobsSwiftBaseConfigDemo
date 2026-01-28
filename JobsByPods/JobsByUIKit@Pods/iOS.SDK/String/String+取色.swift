@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -21,18 +22,18 @@ import UIKit
  "80FF0000".cor(alpha: 1) // alpha 走字符串里的 0x80，而不是你传的 1
  "垃圾".cor(.black)        // 非法 → black
  */
-public extension String {
+extension String {
     /// 支持格式：
     /// "#RRGGBB" / "RRGGBB" / "0xRRGGBB"
     /// "#RGB"   / "RGB"
     /// "#AARRGGBB" / "AARRGGBB"
     /// 是否是合法的 hex 颜色字符串（只判断上面支持的几种格式）
-    var isValidHexColor: Bool {
+    public var isValidHexColor: Bool {
         jobsParseHexColor(self) != nil
     }
     /// 直接从字符串拿 UIColor
     /// - 若格式非法，直接返回红色（作为错误兜底）
-    var cor: UIColor {
+    public var cor: UIColor {
         guard let (rgb, alpha) = jobsParseHexColor(self),
               let color = UIColor(hexString: rgb, alpha: alpha) else {
             return .red
@@ -41,7 +42,7 @@ public extension String {
     /// 带 alpha 的版本
     /// - 若格式非法，返回对应 alpha 的红色
     /// - 若字符串本身带 AARRGGBB，则优先用字符串里的 alpha
-    func cor(alpha explicitAlpha: CGFloat) -> UIColor {
+    public func cor(alpha explicitAlpha: CGFloat) -> UIColor {
         let defaultAlpha = explicitAlpha
         guard let (rgb, parsedAlpha) = jobsParseHexColor(self, defaultAlpha: defaultAlpha),
               let color = UIColor(hexString: rgb, alpha: parsedAlpha) else {
@@ -49,7 +50,7 @@ public extension String {
         };return color
     }
     /// 指定兜底颜色版本（你要自定义 fallback 就用这个）
-    func cor(_ fallback: UIColor) -> UIColor {
+    public func cor(_ fallback: UIColor) -> UIColor {
         guard let (rgb, alpha) = jobsParseHexColor(self),
               let color = UIColor(hexString: rgb, alpha: alpha) else {
             return fallback

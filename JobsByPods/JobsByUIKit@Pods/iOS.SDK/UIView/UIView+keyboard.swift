@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -18,13 +19,13 @@ import NSObject_Rx
 import RxSwift
 import RxCocoa
 private var kKeyboardHeightKey: UInt8 = 0
-public extension UIView {
+extension UIView {
     /// 监听当前视图所处界面的键盘可见高度（单位：pt）
     /// - 说明：
     ///   - 当键盘显示/隐藏/高度变化时发出事件
     ///   - 已扣除 `safeAreaInsets.bottom`，拿到的是“真实遮挡高度”
     ///   - 已做去重（distinctUntilChanged）与主线程派发
-    var keyboardHeight: Observable<CGFloat> {
+    public var keyboardHeight: Observable<CGFloat> {
         // 缓存：确保同一视图多次访问用同一个 Observable
         if let cached = objc_getAssociatedObject(self, &kKeyboardHeightKey) as? Observable<CGFloat> {
             return cached

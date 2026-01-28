@@ -12,14 +12,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
-
-public enum JobsPushDirection: Int {
-    case system = 0
-    case fromLeft
-    case fromRight
-    case fromTop
-    case fromBottom
-}
+import JobsSwiftBaseDefines
 // MARK: - 内部：CATransition 的方向映射（含上下互换修正）
 public extension JobsPushDirection {
     var _caSubtype: CATransitionSubtype {
@@ -58,8 +51,8 @@ public var _jobsPushDirKey: UInt8 = 0
 public var _jobsEntryDirKey: UInt8 = 0
 public var _jobsEntryDurKey: UInt8 = 0
 public var _jobsEntryTimingKey: UInt8 = 0
-public extension UIViewController {
-    var _jobs_entryDirection: JobsPushDirection? {
+extension UIViewController {
+    public var _jobs_entryDirection: JobsPushDirection? {
         get {
             guard let n = objc_getAssociatedObject(self, &_jobsEntryDirKey) as? NSNumber else { return nil }
             return JobsPushDirection(rawValue: n.intValue)
@@ -72,27 +65,27 @@ public extension UIViewController {
             }
         }
     }
-    var _jobs_entryDuration: CFTimeInterval? {
+    public var _jobs_entryDuration: CFTimeInterval? {
         get { objc_getAssociatedObject(self, &_jobsEntryDurKey) as? CFTimeInterval }
         set { objc_setAssociatedObject(self, &_jobsEntryDurKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    var _jobs_entryTiming: CAMediaTimingFunctionName? {
+    public var _jobs_entryTiming: CAMediaTimingFunctionName? {
         get { objc_getAssociatedObject(self, &_jobsEntryTimingKey) as? CAMediaTimingFunctionName }
         set { objc_setAssociatedObject(self, &_jobsEntryTimingKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 @MainActor
-public extension UIViewController {
+extension UIViewController {
     // ============================== 链式配置：进入方向 ===============================
     /// 设定下一次 push/present 的进入方向（不设即 .system → 系统默认右进左出）
     @discardableResult
-    func byDirection(_ dir: JobsPushDirection) -> Self {
+    public func byDirection(_ dir: JobsPushDirection) -> Self {
         objc_setAssociatedObject(self, &_jobsPushDirKey, NSNumber(value: dir.rawValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return self
     }
     /// 清空已设置的方向（恢复默认）
     @discardableResult
-    func byDirectionReset() -> Self {
+    public func byDirectionReset() -> Self {
         objc_setAssociatedObject(self, &_jobsPushDirKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return self
     }
@@ -106,28 +99,27 @@ public extension UIViewController {
     }
 }
 // MARK: - byPush
-public extension UIViewController {
-
+extension UIViewController {
     @discardableResult
-    func byPush(_ from: UIResponder?, animated: Bool = true) -> Self {
+    public func byPush(_ from: UIResponder?, animated: Bool = true) -> Self {
         // 忽略旧的 animated 参数，统一交给新实现处理（含自定义方向 & 系统默认路径）
         return self.byPush(from, duration: 0.32, timing: .easeInEaseOut)
     }
 
     @discardableResult
-    func byPush(_ from: UIResponder?,
-                direction: JobsPushDirection,
-                duration: CFTimeInterval = 0.32,
-                CAMediaTimingFunctionName timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self {
+    public func byPush(_ from: UIResponder?,
+                       direction: JobsPushDirection,
+                       duration: CFTimeInterval = 0.32,
+                       CAMediaTimingFunctionName timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self {
         return self.byDirection(direction).byPush(from, duration: duration, timing: timing)
     }
     // ============================== 使用存储方向的 byPush ==============================
     /// 现用入口：`.byDirection(...).byPush(self)`；不设方向 → 系统默认
     /// - Note: 自定义方向使用 CATransition + 无动画 push；默认方向走系统动画。
     @discardableResult
-    func byPush(_ from: UIResponder?,
-                duration: CFTimeInterval = 0.32,
-                timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self{
+    public func byPush(_ from: UIResponder?,
+                       duration: CFTimeInterval = 0.32,
+                       timing: CAMediaTimingFunctionName = .easeInEaseOut) -> Self{
         let dir = _consumeDirection()   // ← 只影响这一次
         guard let host = from?.jobsNearestVC() else {
             assertionFailure("❌ byPush: 未找到宿主 VC")
@@ -243,9 +235,9 @@ public extension UIViewController {
     }
 }
 // MARK: - byPresent
-public extension UIViewController {
+extension UIViewController {
     @discardableResult
-    func byPresent(_ from: UIResponder?,
+    public func byPresent(_ from: UIResponder?,
                    animated: Bool = true,
                    policy: JobsPresentPolicy = .ignoreIfBusy,
                    jobsByVoidBlock: (jobsByVoidBlock)? = nil) -> Self {

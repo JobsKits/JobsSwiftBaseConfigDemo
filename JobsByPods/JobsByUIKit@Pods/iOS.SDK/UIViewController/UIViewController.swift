@@ -11,8 +11,8 @@ import AppKit
 import UIKit
 #endif
 // MARK: - 尽最大努力找到一个可用的 UINavigationController（先向上，再向下）
-public extension UIViewController {
-    var jobs_findNavController: UINavigationController? {
+extension UIViewController {
+    public var jobs_findNavController: UINavigationController? {
         // 1) 自己就是 nav
         if let nav = self as? UINavigationController { return nav }
         // 2) 系统 navigationController

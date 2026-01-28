@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -22,9 +23,9 @@ private final class _JobsImageCache {
     private init() {}
 }
 
-public extension UIButton {
+extension UIButton {
     @discardableResult
-    func byBackgroundImage(_ source: JobsImageSource?, for state: UIControl.State = .normal) -> Self {
+    public func byBackgroundImage(_ source: JobsImageSource?, for state: UIControl.State = .normal) -> Self {
         guard let source else {
             self.setBackgroundImage(nil, for: state)
             return self
@@ -58,9 +59,9 @@ public extension UIButton {
     }
 }
 // MARK: 统一写回图片
-public extension UIButton {
+extension UIButton {
     @MainActor
-    func jobsResetBtnImage(_ image: UIImage?, for state: UIControl.State) {
+    public func jobsResetBtnImage(_ image: UIImage?, for state: UIControl.State) {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()  // ✅ 没有也创建；前景建议用 .plain()
             cfg.image = image                         // ✅ 前景图写到 configuration.image
@@ -74,7 +75,7 @@ public extension UIButton {
         }
     }
     @MainActor
-    func jobsResetBtnBgImage(_ image: UIImage?, for state: UIControl.State) {
+    public func jobsResetBtnBgImage(_ image: UIImage?, for state: UIControl.State) {
         // 先把最终图粘住，供后续任何 config 重建时回填
         self.jobs_cfgBgImage = image
         // ① legacy 背景图：立刻可见，最稳
@@ -100,7 +101,7 @@ public extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    func _applySubtitleToConfigurationNow(targetState: UIControl.State = .normal) {
+    public func _applySubtitleToConfigurationNow(targetState: UIControl.State = .normal) {
         // 1) 基于现有 configuration 开始，避免默认值把东西清空
         var cfg = self.configuration ?? .plain()
         // 2) 先把当前“有效背景图”抓出来，稍后再回填，防止被覆盖

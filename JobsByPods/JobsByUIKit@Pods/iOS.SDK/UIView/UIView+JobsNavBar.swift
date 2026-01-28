@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -20,8 +21,8 @@ private enum _JobsNavBarAO {
 // MARK: - 配置体（挂在 UIView 上，而不是某个具体子类）
 #if canImport(SnapKit)
 import SnapKit
-public extension UIView {
-    struct JobsNavBarConfig {
+extension UIView {
+    public struct JobsNavBarConfig {
         public var enabled: Bool = false
         public var style: JobsNavBar.Style = .init()
         public var titleProvider: JobsRetAttributedString? = nil          // nil -> 隐藏标题；不设=由宿主决定
@@ -34,13 +35,13 @@ public extension UIView {
 }
 #endif
 // MARK: - 公开：取到当前视图身上的 NavBar（只读）
-public extension UIView {
-    var jobsNavBar: JobsNavBar? {
+extension UIView {
+    public var jobsNavBar: JobsNavBar? {
         objc_getAssociatedObject(self, &_JobsNavBarAO.bar) as? JobsNavBar
     }
     /// 是否存在可见的“导航栏类视图”（优先 GKNavigationBar，其次 UINavigationBar）
     /// - Parameter deep: 是否递归遍历整棵子树（默认 true）
-    func jobs_hasVisibleTopBar(deep: Bool = true) -> Bool {
+    public func jobs_hasVisibleTopBar(deep: Bool = true) -> Bool {
     #if canImport(GKNavigationBarSwift)
         return jobs_existingTopBar(deep: deep) != nil
     #else
@@ -50,17 +51,17 @@ public extension UIView {
 }
 // MARK: - 私有：配置读写 + 应用
 @MainActor
-private extension UIView {
-    var _jobsNavBarConfig: JobsNavBarConfig {
+extension UIView {
+    private var _jobsNavBarConfig: JobsNavBarConfig {
         get { (objc_getAssociatedObject(self, &_JobsNavBarAO.conf) as? JobsNavBarConfig) ?? .init() }
         set { objc_setAssociatedObject(self, &_JobsNavBarAO.conf, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
-    func _setJobsNavBar(_ bar: JobsNavBar?) {
+    private func _setJobsNavBar(_ bar: JobsNavBar?) {
         objc_setAssociatedObject(self, &_JobsNavBarAO.bar, bar, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    func _applyNavBarConfig() {
+    private func _applyNavBarConfig() {
         let cfg = _jobsNavBarConfig
         if cfg.enabled {
             let bar: JobsNavBar
@@ -100,9 +101,9 @@ private extension UIView {
 }
 // MARK: - UIView 链式 DSL（任何 UIView 均可使用）
 @MainActor
-public extension UIView {
+extension UIView {
     @discardableResult
-    func byNavBarEnabled(_ on: Bool = true) -> Self {
+    public func byNavBarEnabled(_ on: Bool = true) -> Self {
         var c = _jobsNavBarConfig
         c.enabled = on
         _jobsNavBarConfig = c
@@ -111,7 +112,7 @@ public extension UIView {
     }
 
     @discardableResult
-    func byNavBarStyle(_ edit: (inout JobsNavBar.Style) -> Void) -> Self {
+    public func byNavBarStyle(_ edit: (inout JobsNavBar.Style) -> Void) -> Self {
         var c = _jobsNavBarConfig
         edit(&c.style)
         _jobsNavBarConfig = c
@@ -120,7 +121,7 @@ public extension UIView {
     }
     /// 自定义标题（返回 nil -> 隐藏；不设置则留给宿主绑定，例如绑定到 webView.title）
     @discardableResult
-    func byNavBarTitleProvider(_ p: @escaping JobsRetAttributedString) -> Self {
+    public func byNavBarTitleProvider(_ p: @escaping JobsRetAttributedString) -> Self {
         var c = _jobsNavBarConfig
         c.titleProvider = p
         _jobsNavBarConfig = c
@@ -129,7 +130,7 @@ public extension UIView {
     }
     /// 自定义返回键（返回 nil -> 隐藏）
     @discardableResult
-    func byNavBarBackButtonProvider(_ p: @escaping JobsRetButtonBlock) -> Self {
+    public func byNavBarBackButtonProvider(_ p: @escaping JobsRetButtonBlock) -> Self {
         var c = _jobsNavBarConfig
         c.backButtonProvider = p
         _jobsNavBarConfig = c
@@ -138,7 +139,7 @@ public extension UIView {
     }
     /// 自定义返回键@约束
     @discardableResult
-    func byNavBarBackButtonLayout(_ layout: @escaping BackButtonLayout) -> Self {
+    public func byNavBarBackButtonLayout(_ layout: @escaping BackButtonLayout) -> Self {
         var c = _jobsNavBarConfig
         c.backButtonLayout = layout
         _jobsNavBarConfig = c
@@ -147,7 +148,7 @@ public extension UIView {
     }
     /// 返回行为（比如“优先 webView.goBack，否则 pop”）
     @discardableResult
-    func byNavBarOnBack(_ h: @escaping jobsByVoidBlock) -> Self {
+    public func byNavBarOnBack(_ h: @escaping jobsByVoidBlock) -> Self {
         var c = _jobsNavBarConfig
         c.onBack = h
         _jobsNavBarConfig = c
@@ -156,7 +157,7 @@ public extension UIView {
     }
     /// 覆盖默认布局（默认：贴宿主 safeArea 顶，左右铺满）
     @discardableResult
-    func byNavBarLayout(_ layout: @escaping (JobsNavBar, ConstraintMaker, UIView) -> Void) -> Self {
+    public func byNavBarLayout(_ layout: @escaping (JobsNavBar, ConstraintMaker, UIView) -> Void) -> Self {
         var c = _jobsNavBarConfig
         c.layout = layout
         _jobsNavBarConfig = c
