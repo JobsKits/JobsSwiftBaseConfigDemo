@@ -155,6 +155,7 @@ final class RootListVC: BaseVC {
             (title: "实用工具集", items: [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
                 ("🧹 支持左右上下刷新", JobsRefresherDemoVC.self),
+                ("🧹 支持左右上下刷新（非正式协议闭包化）", JobsRefresherBy非正式协议闭包化DemoVC.self),
                 ("⌨️ 键盘", KeyboardDemoVC.self),
                 ("📷 鉴权后调用相机/相册", PhotoAlbumDemoVC.self),
                 ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
