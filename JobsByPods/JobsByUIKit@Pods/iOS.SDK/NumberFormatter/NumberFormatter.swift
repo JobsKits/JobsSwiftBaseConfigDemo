@@ -8,13 +8,11 @@
 import Foundation
 import JobsSwiftBlock
 
-public extension NumberFormatter {
+extension NumberFormatter {
     /// 统一入口：NumberFormatter.make { $0.byNumberStyle(...).byLocale(...) }
-    static func make(_ configure: jobsByNumberFormatterBlock) -> NumberFormatter {
+    public static func make(_ configure: jobsByNumberFormatterBlock) -> NumberFormatter {
         let formatter = NumberFormatter()
         configure(formatter)
         return formatter
     }
 }
-
-

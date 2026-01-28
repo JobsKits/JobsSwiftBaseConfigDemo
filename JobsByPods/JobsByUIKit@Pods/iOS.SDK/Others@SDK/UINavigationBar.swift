@@ -13,35 +13,35 @@ import UIKit
 
 import JobsSwiftBlock
 
-public extension UINavigationBar {
+extension UINavigationBar {
     // ================================== 基础属性 ==================================
     /// barStyle（.default / .black 等）
     @discardableResult
-    func byBarStyle(_ style: UIBarStyle) -> Self {
+    public func byBarStyle(_ style: UIBarStyle) -> Self {
         barStyle = style
         return self
     }
     /// 是否半透明
     @discardableResult
-    func byTranslucent(_ translucent: Bool) -> Self {
+    public func byTranslucent(_ translucent: Bool) -> Self {
         isTranslucent = translucent
         return self
     }
     /// tintColor（按钮、返回箭头等）
     @discardableResult
-    func byTintColor(_ color: UIColor?) -> Self {
+    public func byTintColor(_ color: UIColor?) -> Self {
         tintColor = color
         return self
     }
     /// barTintColor（老 API，iOS13- 主要作用）
     @discardableResult
-    func byBarTintColor(_ color: UIColor?) -> Self {
+    public func byBarTintColor(_ color: UIColor?) -> Self {
         barTintColor = color
         return self
     }
     /// 是否使用大标题
     @discardableResult
-    func byPrefersLargeTitles(_ enable: Bool) -> Self {
+    public func byPrefersLargeTitles(_ enable: Bool) -> Self {
         if #available(iOS 11.0, *) {
             prefersLargeTitles = enable
         };return self
@@ -49,26 +49,26 @@ public extension UINavigationBar {
     /// 请求的行为风格（iOS16+）
     @available(iOS 15.0, *)
     @discardableResult
-    func byPreferredBehavioralStyle(_ style: UIBehavioralStyle) -> Self {
+    public func byPreferredBehavioralStyle(_ style: UIBehavioralStyle) -> Self {
         if #available(iOS 16.0, *) {
             preferredBehavioralStyle = style
         };return self
     }
 
     @discardableResult
-    func byTitleTextAttributes(_ att :[NSAttributedString.Key : Any]?) -> Self {
+    public func byTitleTextAttributes(_ att :[NSAttributedString.Key : Any]?) -> Self {
         titleTextAttributes = att
         return self
     }
 
     @discardableResult
-    func byLargeTitleTextAttributes(_ att :[NSAttributedString.Key : Any]?) -> Self {
+    public func byLargeTitleTextAttributes(_ att :[NSAttributedString.Key : Any]?) -> Self {
         largeTitleTextAttributes = att
         return self
     }
     // ================================== 标题 attributes（旧 API，兼容 iOS13-） ==================================
     @discardableResult
-    func byLegacyTitleFont(_ font: UIFont?) -> Self {
+    public func byLegacyTitleFont(_ font: UIFont?) -> Self {
         var attrs = titleTextAttributes ?? [:]
         if let font {
             attrs[.font] = font
@@ -79,7 +79,7 @@ public extension UINavigationBar {
     }
 
     @discardableResult
-    func byLegacyTitleColor(_ color: UIColor?) -> Self {
+    public func byLegacyTitleColor(_ color: UIColor?) -> Self {
         var attrs = titleTextAttributes ?? [:]
         if let color {
             attrs[.foregroundColor] = color
@@ -90,7 +90,7 @@ public extension UINavigationBar {
     }
 
     @discardableResult
-    func byLegacyLargeTitleFont(_ font: UIFont?) -> Self {
+    public func byLegacyLargeTitleFont(_ font: UIFont?) -> Self {
         if #available(iOS 11.0, *) {
             var attrs = largeTitleTextAttributes ?? [:]
             if let font {
@@ -102,7 +102,7 @@ public extension UINavigationBar {
     }
 
     @discardableResult
-    func byLegacyLargeTitleColor(_ color: UIColor?) -> Self {
+    public func byLegacyLargeTitleColor(_ color: UIColor?) -> Self {
         if #available(iOS 11.0, *) {
             var attrs = largeTitleTextAttributes ?? [:]
             if let color {
@@ -114,7 +114,7 @@ public extension UINavigationBar {
     }
     /// 垂直方向标题偏移（iOS13- 用得多）
     @discardableResult
-    func byTitleVerticalOffset(_ offset: CGFloat,
+    public func byTitleVerticalOffset(_ offset: CGFloat,
                                for metrics: UIBarMetrics = .default) -> Self {
         setTitleVerticalPositionAdjustment(offset, for: metrics)
         return self
@@ -122,14 +122,14 @@ public extension UINavigationBar {
     // ================================== 背景 & 阴影（老 API） ==================================
     /// 背景图片（简单版，按 barMetrics）
     @discardableResult
-    func byBackgroundImage(_ image: UIImage?,
+    public func byBackgroundImage(_ image: UIImage?,
                            for metrics: UIBarMetrics = .default) -> Self {
         setBackgroundImage(image, for: metrics)
         return self
     }
     /// 背景图片（带 barPosition）
     @discardableResult
-    func byBackgroundImage(_ image: UIImage?,
+    public func byBackgroundImage(_ image: UIImage?,
                            for position: UIBarPosition,
                            metrics: UIBarMetrics = .default) -> Self {
         setBackgroundImage(image, for: position, barMetrics: metrics)
@@ -137,13 +137,13 @@ public extension UINavigationBar {
     }
     /// 阴影图（下划线）
     @discardableResult
-    func byShadowImage(_ image: UIImage?) -> Self {
+    public func byShadowImage(_ image: UIImage?) -> Self {
         shadowImage = image
         return self
     }
     /// 返回按钮指示图标
     @discardableResult
-    func byBackIndicator(_ image: UIImage?, mask: UIImage? = nil) -> Self {
+    public func byBackIndicator(_ image: UIImage?, mask: UIImage? = nil) -> Self {
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = mask ?? image
         return self
@@ -152,7 +152,7 @@ public extension UINavigationBar {
     /// 配置 standardAppearance@闭包版
     @available(iOS 13.0, *)
     @discardableResult
-    func byStandardAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
+    public func byStandardAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
             let appearance = standardAppearance          // @NSCopying：这里拿到的是 copy
             builder(appearance)
@@ -162,7 +162,7 @@ public extension UINavigationBar {
     /// 直接设置 standardAppearance
     @available(iOS 13.0, *)
     @discardableResult
-    func byStandardAppearance(_ appearance: UINavigationBarAppearance) -> Self {
+    public func byStandardAppearance(_ appearance: UINavigationBarAppearance) -> Self {
         if #available(iOS 13.0, *) {
             standardAppearance = appearance
         };return self
@@ -170,7 +170,7 @@ public extension UINavigationBar {
     /// 配置 compactAppearance@闭包版（紧凑高度）
     @available(iOS 13.0, *)
     @discardableResult
-    func byCompactAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
+    public func byCompactAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
             let appearance = compactAppearance ?? standardAppearance
             builder(appearance)
@@ -180,7 +180,7 @@ public extension UINavigationBar {
     /// 直接设置 compactAppearance（可为 nil）
     @available(iOS 13.0, *)
     @discardableResult
-    func byCompactAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
+    public func byCompactAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 13.0, *) {
             compactAppearance = appearance
         };return self
@@ -188,7 +188,7 @@ public extension UINavigationBar {
     /// 配置 scrollEdgeAppearance@闭包版（滚动到边缘时）
     @available(iOS 13.0, *)
     @discardableResult
-    func byScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
+    public func byScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
             let appearance = scrollEdgeAppearance ?? standardAppearance
             builder(appearance)
@@ -198,7 +198,7 @@ public extension UINavigationBar {
     /// 直接设置 scrollEdgeAppearance（可为 nil）
     @available(iOS 13.0, *)
     @discardableResult
-    func byScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
+    public func byScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 13.0, *) {
             scrollEdgeAppearance = appearance
         };return self
@@ -206,7 +206,7 @@ public extension UINavigationBar {
     /// 配置 compactScrollEdgeAppearance@闭包版（紧凑 + 滚动到边缘）
     @available(iOS 13.0, *)
     @discardableResult
-    func byCompactScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
+    public func byCompactScrollEdgeAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 15.0, *) {
             let appearance = compactScrollEdgeAppearance
                 ?? scrollEdgeAppearance
@@ -219,7 +219,7 @@ public extension UINavigationBar {
     /// 直接设置 compactScrollEdgeAppearance（可为 nil）
     @available(iOS 13.0, *)
     @discardableResult
-    func byCompactScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
+    public func byCompactScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
             compactScrollEdgeAppearance = appearance
         };return self
@@ -227,7 +227,7 @@ public extension UINavigationBar {
     /// 一次把同一个appearance套到所有状态@闭包版（常用）
     @available(iOS 13.0, *)
     @discardableResult
-    func byUnifiedAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
+    public func byUnifiedAppearance(_ builder: jobsByNavigationBarAppearanceBlock) -> Self {
         if #available(iOS 13.0, *) {
             let appearance = standardAppearance
             builder(appearance)
@@ -242,7 +242,7 @@ public extension UINavigationBar {
     /// 用同一个 appearance 套到所有状态
     @available(iOS 13.0, *)
     @discardableResult
-    func byUnifiedAppearance(_ appearance: UINavigationBarAppearance) -> Self {
+    public func byUnifiedAppearance(_ appearance: UINavigationBarAppearance) -> Self {
         if #available(iOS 13.0, *) {
             standardAppearance = appearance
             scrollEdgeAppearance = appearance
@@ -254,7 +254,7 @@ public extension UINavigationBar {
     }
     /// 批量设置 items
     @discardableResult
-    func byItems(_ items: [UINavigationItem]?,
+    public func byItems(_ items: [UINavigationItem]?,
                  animated: Bool = false) -> Self {
         setItems(items, animated: animated)
         return self

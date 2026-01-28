@@ -13,25 +13,25 @@ import UIKit
 
 extension UIPopoverPresentationController {
     @discardableResult
-    func bySourceView(_ view: UIView?) -> Self {
+    public func bySourceView(_ view: UIView?) -> Self {
         self.sourceView = view
         return self
     }
 
     @discardableResult
-    func bySourceRect(_ rect: CGRect) -> Self {
+    public func bySourceRect(_ rect: CGRect) -> Self {
         self.sourceRect = rect
         return self
     }
 
     @discardableResult
-    func byPermittedArrowDirections(_ directions: UIPopoverArrowDirection) -> Self {
+    public func byPermittedArrowDirections(_ directions: UIPopoverArrowDirection) -> Self {
         self.permittedArrowDirections = directions
         return self
     }
 
     @discardableResult
-    func byDelegate(_ delegate: UIPopoverPresentationControllerDelegate?) -> Self {
+    public func byDelegate(_ delegate: UIPopoverPresentationControllerDelegate?) -> Self {
         self.delegate = delegate
         return self
     }

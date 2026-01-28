@@ -11,33 +11,33 @@ import AppKit
 import UIKit
 #endif
 
-public extension UIActivityIndicatorView {
+extension UIActivityIndicatorView {
     @discardableResult
-    func byStyle(_ style: UIActivityIndicatorView.Style) -> Self {
+    public func byStyle(_ style: UIActivityIndicatorView.Style) -> Self {
         self.style = style
         return self
     }
 
     @discardableResult
-    func byColor(_ color: UIColor) -> Self {
+    public func byColor(_ color: UIColor) -> Self {
         self.color = color
         return self
     }
 
     @discardableResult
-    func start() -> Self {
+    public func start() -> Self {
         self.startAnimating()
         return self
     }
 
     @discardableResult
-    func stop() -> Self {
+    public func stop() -> Self {
         self.stopAnimating()
         return self
     }
 
     @discardableResult
-    func byHidesWhenStopped(_ hides: Bool) -> Self {
+    public func byHidesWhenStopped(_ hides: Bool) -> Self {
         self.hidesWhenStopped = hides
         return self
     }

@@ -23,13 +23,13 @@ import UIKit
 // =======================================================
 // UIApplication + UI 层级工具（零弃用警告 / 多 Scene 兼容）
 // =======================================================
-public extension UIApplication {
+extension UIApplication {
     // MARK: - 对外 API
     /// ① 获取“最合理”的 Key Window（多 Scene / 外接屏 / 可见性 / windowLevel 兼容）
     /// - Parameter scene: 指定 UIScene；nil 则自动从所有 connectedScenes 中择优
     /// - Parameter preferMainScreen: 是否优先主屏幕（避免拿到外接屏/CarPlay 的 window）
     /// 通用版本：iOS 12 及以下也能编译
-    static func jobsKeyWindow(preferMainScreen: Bool = true) -> UIWindow? {
+    public static func jobsKeyWindow(preferMainScreen: Bool = true) -> UIWindow? {
         if #available(iOS 13.0, *) {
             guard let ws = bestWindowScene() else { return nil }
             return bestWindow(in: ws, preferMainScreen: preferMainScreen)
@@ -39,8 +39,8 @@ public extension UIApplication {
     }
     /// iOS 13+ 才暴露 UIScene 参数
     @available(iOS 13.0, *)
-    static func jobsKeyWindow(in scene: UIScene?,
-                              preferMainScreen: Bool = true) -> UIWindow? {
+    public static func jobsKeyWindow(in scene: UIScene?,
+                                     preferMainScreen: Bool = true) -> UIWindow? {
         let ws = (scene as? UIWindowScene) ?? bestWindowScene()
         guard let ws else { return nil }
         return bestWindow(in: ws, preferMainScreen: preferMainScreen)
@@ -51,7 +51,7 @@ public extension UIApplication {
     ///   - scene: 指定场景；默认自动选择前台/最合理的
     ///   - ignoreAlert: 是否忽略 UIAlertController（比如做 present 宿主时可忽略）
     /// iOS 12 也能编译：不暴露 UIScene
-    static func jobsTopMostVC(
+    public static func jobsTopMostVC(
         from root: UIViewController? = nil,
         ignoreAlert: Bool = false
     ) -> UIViewController? {
@@ -68,7 +68,7 @@ public extension UIApplication {
     }
     /// iOS 13+ 才提供 scene 版本
     @available(iOS 13.0, *)
-    static func jobsTopMostVC(
+    public static func jobsTopMostVC(
         from root: UIViewController? = nil,
         in scene: UIScene?,
         ignoreAlert: Bool = false
@@ -110,30 +110,28 @@ public extension UIApplication {
             if !(ignoreAlert && presented is UIAlertController) {
                 return _jobsVisibleVC(from: presented, ignoreAlert: ignoreAlert)
             }
-        }
-
-        return vc
+        };return vc
     }
     /// ③ 全局安全区 Insets（不依赖当前 VC）
-    static var jobsSafeAreaInsets: UIEdgeInsets {
+    public static var jobsSafeAreaInsets: UIEdgeInsets {
         return jobsKeyWindow()?.safeAreaInsets ?? .zero
     }
     /// ④ 四个边的便捷访问
-    static var jobsSafeTopInset: CGFloat { jobsSafeAreaInsets.top }
-    static var jobsSafeBottomInset: CGFloat { jobsSafeAreaInsets.bottom }
-    static var jobsSafeLeftInset: CGFloat { jobsSafeAreaInsets.left }
-    static var jobsSafeRightInset: CGFloat { jobsSafeAreaInsets.right }
+    public static var jobsSafeTopInset: CGFloat { jobsSafeAreaInsets.top }
+    public static var jobsSafeBottomInset: CGFloat { jobsSafeAreaInsets.bottom }
+    public static var jobsSafeLeftInset: CGFloat { jobsSafeAreaInsets.left }
+    public static var jobsSafeRightInset: CGFloat { jobsSafeAreaInsets.right }
     /// ⑤ 是否“刘海/全面屏 iPhone”（本质：是否存在 Home Indicator 的底部安全区）
     /// ✅ 模拟器同样有效（取决于你选的机型）
-    static var jobsIsNotchPhone: Bool {
+    public static var jobsIsNotchPhone: Bool {
         UIDevice.current.userInterfaceIdiom == .phone && jobsSafeBottomInset > 0
     }
 }
 // MARK: - 内部实现（iOS 13+）
 @available(iOS 13.0, *)
-private extension UIApplication {
+extension UIApplication {
     /// 选择最“活跃/合理”的 windowScene（前台激活 > 前台非激活 > 其余）
-    static func bestWindowScene() -> UIWindowScene? {
+    private static func bestWindowScene() -> UIWindowScene? {
         func rank(_ s: UIScene.ActivationState) -> Int {
             switch s {
             case .foregroundActive:   return 0
@@ -147,7 +145,7 @@ private extension UIApplication {
             .first
     }
     /// 在一个 windowScene 内选择“最佳窗口”
-    static func bestWindow(in ws: UIWindowScene, preferMainScreen: Bool) -> UIWindow? {
+    private static func bestWindow(in ws: UIWindowScene, preferMainScreen: Bool) -> UIWindow? {
         let windows = ws.windows
         guard !windows.isEmpty else { return nil }
         // 1) keyWindow 优先（iOS15 有 scene.keyWindow，但这里统一从 windows 里找）
@@ -169,7 +167,7 @@ private extension UIApplication {
         };return windows.sorted { a, b in windowRank(a) < windowRank(b) }.first
     }
     /// 从 windowScene 取 rootVC（统一入口，供 jobsTopMostVC 使用）
-    static func bestRootViewController(in ws: UIWindowScene) -> UIViewController? {
+    private static func bestRootViewController(in ws: UIWindowScene) -> UIViewController? {
         bestWindow(in: ws, preferMainScreen: true)?.rootViewController
     }
 }

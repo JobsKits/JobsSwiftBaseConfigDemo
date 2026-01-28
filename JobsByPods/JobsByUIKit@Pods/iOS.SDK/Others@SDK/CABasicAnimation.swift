@@ -7,22 +7,22 @@
 
 import QuartzCore
 
-public extension CABasicAnimation {
+extension CABasicAnimation {
     /// fromValue
     @discardableResult
-    func byFromValue(_ value: Any?) -> Self {
+    public func byFromValue(_ value: Any?) -> Self {
         self.fromValue = value
         return self
     }
     /// toValue
     @discardableResult
-    func byToValue(_ value: Any?) -> Self {
+    public func byToValue(_ value: Any?) -> Self {
         self.toValue = value
         return self
     }
     /// byValue
     @discardableResult
-    func byByValue(_ value: Any?) -> Self {
+    public func byByValue(_ value: Any?) -> Self {
         self.byValue = value
         return self
     }

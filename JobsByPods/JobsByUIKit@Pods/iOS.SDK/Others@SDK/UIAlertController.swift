@@ -28,43 +28,42 @@ import JobsSwiftBlock
 #if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
 #endif
-
 // ================================== 构建 & 配置 ==================================
-public extension UIAlertController {
+extension UIAlertController {
     // MARK: 工厂
     @discardableResult
-    static func makeAlert(_ title: String? = nil,
+    public static func makeAlert(_ title: String? = nil,
                           _ message: String? = nil) -> UIAlertController {
         UIAlertController(title: title, message: message, preferredStyle: .alert)
     }
 
     @discardableResult
-    static func makeActionSheet(_ title: String? = nil,
+    public static func makeActionSheet(_ title: String? = nil,
                                 _ message: String? = nil) -> UIAlertController {
         UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
     }
     // MARK: 基础属性
     @discardableResult
-    func byMessage(_ message: String?) -> Self {
+    public func byMessage(_ message: String?) -> Self {
         self.message = message
         return self
     }
 
     @available(iOS 16.0, *)
     @discardableResult
-    func bySeverity(_ severity: UIAlertControllerSeverity) -> Self {
+    public func bySeverity(_ severity: UIAlertControllerSeverity) -> Self {
         self.severity = severity
         return self
     }
 
     @discardableResult
-    func byTintColor(_ color: UIColor?) -> Self {
+    public func byTintColor(_ color: UIColor?) -> Self {
         if let color { self.view.tintColor = color }
         return self
     }
     // MARK: Actions
     @discardableResult
-    func byAddAction(title: String,
+    public func byAddAction(title: String,
                      style: UIAlertAction.Style = .default,
                      isPreferred: Bool = false,
                      handler: ((UIAlertAction) -> Void)? = nil) -> Self {
@@ -75,7 +74,7 @@ public extension UIAlertController {
     }
 
     @discardableResult
-    func byAddAction(title: String,
+    public func byAddAction(title: String,
                      style: UIAlertAction.Style = .default,
                      isPreferred: Bool = false,
                      byActionBlock handler: @escaping (_ alert: UIAlertController, _ action: UIAlertAction) -> Void) -> Self {
@@ -89,21 +88,21 @@ public extension UIAlertController {
     }
 
     @discardableResult
-    func byAddOK(_ title: String = "确定".tr,
+    public func byAddOK(_ title: String = "确定".tr,
                  isPreferred: Bool = true,
                  _ handler: ((UIAlertAction) -> Void)? = nil) -> Self {
         byAddAction(title: title, style: .default, isPreferred: isPreferred, handler: handler)
     }
 
     @discardableResult
-    func byAddOK(_ title: String = "确定".tr,
+    public func byAddOK(_ title: String = "确定".tr,
                  isPreferred: Bool = true,
                  _ handler: @escaping (_ alert: UIAlertController, _ action: UIAlertAction) -> Void) -> Self {
         byAddAction(title: title, style: .default, isPreferred: isPreferred, byActionBlock: handler)
     }
 
     @discardableResult
-    func byAddCancel(_ title: String = "取消",
+    public func byAddCancel(_ title: String = "取消",
                      _ handler: ((UIAlertAction) -> Void)? = nil) -> Self {
         let action = UIAlertAction(title: title, style: _effectiveCancelStyle, handler: handler)
         self.addAction(action)
@@ -112,7 +111,7 @@ public extension UIAlertController {
     }
 
     @discardableResult
-    func byAddCancel(_ title: String = "取消",
+    public func byAddCancel(_ title: String = "取消",
                      _ handler: @escaping (_ alert: UIAlertController, _ action: UIAlertAction) -> Void) -> Self {
         let action = UIAlertAction(title: title, style: _effectiveCancelStyle) { [weak self] act in
             guard let alert = self else { return }
@@ -124,36 +123,36 @@ public extension UIAlertController {
     }
 
     @discardableResult
-    func byAddDestructive(_ title: String,
+    public func byAddDestructive(_ title: String,
                           handler: ((UIAlertAction) -> Void)? = nil) -> Self {
         byAddAction(title: title, style: .destructive, handler: handler)
     }
 
     @discardableResult
-    func byAddDestructive(_ title: String,
+    public func byAddDestructive(_ title: String,
                           withAlert handler: @escaping (_ alert: UIAlertController, _ action: UIAlertAction) -> Void) -> Self {
         byAddAction(title: title, style: .destructive, byActionBlock: handler)
     }
 
     @discardableResult
-    func byPreferredAction(_ action: UIAlertAction?) -> Self {
+    public func byPreferredAction(_ action: UIAlertAction?) -> Self {
         self.preferredAction = action
         return self
     }
 
     @discardableResult
-    func byPreferredActionTitle(_ title: String) -> Self {
+    public func byPreferredActionTitle(_ title: String) -> Self {
         if let hit = actions.first(where: { $0.title == title }) { self.preferredAction = hit }
         return self
     }
     // MARK: TextFields（基础）
-    func textField(at index: Int) -> UITextField? {
+    public func textField(at index: Int) -> UITextField? {
         guard let tfs = self.textFields, (0..<tfs.count).contains(index) else { return nil }
         return tfs[index]
     }
 
     @discardableResult
-    func byAddTextField(_ configure: ((UITextField) -> Void)? = nil) -> Self {
+    public func byAddTextField(_ configure: ((UITextField) -> Void)? = nil) -> Self {
         self.addTextField { tf in
             configure?(tf)
         };return self
@@ -173,17 +172,17 @@ final class JobsTextFieldDelegateProxy:
         super.init(parentObject: textField, delegateProxy: JobsTextFieldDelegateProxy.self)
     }
 
-    static func registerKnownImplementations() {
+    public static func registerKnownImplementations() {
         self.register { JobsTextFieldDelegateProxy(textField: $0) }
     }
 
-    static func currentDelegate(for object: UITextField) -> UITextFieldDelegate? { object.delegate }
-    static func setCurrentDelegate(_ delegate: UITextFieldDelegate?, to object: UITextField) { object.delegate = delegate }
+    public static func currentDelegate(for object: UITextField) -> UITextFieldDelegate? { object.delegate }
+    public static func setCurrentDelegate(_ delegate: UITextFieldDelegate?, to object: UITextField) { object.delegate = delegate }
 }
 
 public extension UIAlertController {
     @discardableResult
-    func byAddTextField(placeholder: String?,
+    public func byAddTextField(placeholder: String?,
                         text: String? = nil,
                         isSecure: Bool = false,
                         keyboard: UIKeyboardType = .default,
@@ -250,15 +249,15 @@ public extension UIAlertController {
 }
 #endif
 // ================================== 统一锚点 & 一行展示 ==================================
-public extension UIAlertController {
-    enum Anchor {
+extension UIAlertController {
+    public enum Anchor {
         case auto
         case barButton(UIBarButtonItem)
         case view(UIView, CGRect? = nil, UIPopoverArrowDirection = [])
     }
 
     @discardableResult
-    func byAnchor(_ anchor: Anchor, host: UIViewController) -> Self {
+    public func byAnchor(_ anchor: Anchor, host: UIViewController) -> Self {
         guard let pop = self.popoverPresentationController else { return self }
         switch anchor {
         case .barButton(let item):
@@ -277,10 +276,10 @@ public extension UIAlertController {
     }
     /// present：与系统转场协调执行（本地背景“强制同步安装”，网络图“转场后淡入”）
     @discardableResult
-    func byPresent(_ vc: UIViewController,
-                   anchor: Anchor = .auto,
-                   animated: Bool = true,
-                   completion: (jobsByVoidBlock)? = nil) -> Self {
+    public func byPresent(_ vc: UIViewController,
+                          anchor: Anchor = .auto,
+                          animated: Bool = true,
+                          completion: (jobsByVoidBlock)? = nil) -> Self {
 
         let isSheet: Bool = {
             switch vc.modalPresentationStyle {
@@ -341,39 +340,40 @@ private struct _JobsAO {
     static var localBGImageKey: UInt8 = 0
     static var localBGHideBackdropKey: UInt8 = 0
 }
-private extension UIAlertController {
+
+ extension UIAlertController {
     typealias _BGTask = (UIAlertController) -> Void
 
-    var _bgTasksPre:  [_BGTask] {
+    private var _bgTasksPre:  [_BGTask] {
         get { (objc_getAssociatedObject(self, &_JobsAO.bgTasksPreKey)  as? [_BGTask]) ?? [] }
         set { objc_setAssociatedObject(self, &_JobsAO.bgTasksPreKey,  newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    var _bgTasksPost: [_BGTask] {
+    private var _bgTasksPost: [_BGTask] {
         get { (objc_getAssociatedObject(self, &_JobsAO.bgTasksPostKey) as? [_BGTask]) ?? [] }
         set { objc_setAssociatedObject(self, &_JobsAO.bgTasksPostKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
-    func _enqueueBGTask(preTransition: Bool, _ task: @escaping _BGTask) {
+    private func _enqueueBGTask(preTransition: Bool, _ task: @escaping _BGTask) {
         if preTransition { _bgTasksPre.append(task) } else { _bgTasksPost.append(task) }
     }
-    func _drainPreBGTasks()  { let t = _bgTasksPre;  _bgTasksPre.removeAll();  t.forEach { $0(self) } }
-    func _drainPostBGTasks() { let t = _bgTasksPost; _bgTasksPost.removeAll(); t.forEach { $0(self) } }
+    private func _drainPreBGTasks()  { let t = _bgTasksPre;  _bgTasksPre.removeAll();  t.forEach { $0(self) } }
+    private func _drainPostBGTasks() { let t = _bgTasksPost; _bgTasksPost.removeAll(); t.forEach { $0(self) } }
 
     // -------- 本地背景 AO --------
-    var _localBGImage: UIImage? {
+    private var _localBGImage: UIImage? {
         get { objc_getAssociatedObject(self, &_JobsAO.localBGImageKey) as? UIImage }
         set { objc_setAssociatedObject(self, &_JobsAO.localBGImageKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    var _localBGHideBackdrop: Bool {
+    private var _localBGHideBackdrop: Bool {
         get { (objc_getAssociatedObject(self, &_JobsAO.localBGHideBackdropKey) as? Bool) ?? true }
         set { objc_setAssociatedObject(self, &_JobsAO.localBGHideBackdropKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 // MARK: - 背景图（本地 / SD / KF）— 本地“强制同步”，网络“转场后淡入”
-public extension UIAlertController {
+extension UIAlertController {
     /// 本地图片：**强制同步安装**（present 前尝试一次；转场开始时再确保一次）
     @discardableResult
-    func byBgImage(
+    public func byBgImage(
         _ image: UIImage?,
         hideSystemBackdrop: Bool = true
     ) -> Self {
@@ -386,7 +386,7 @@ public extension UIAlertController {
 #if canImport(SDWebImage)
     /// SD：URL 为空则只装本地图；有 URL 时转场后淡入网络图
     @discardableResult
-    func bySDBgImageView(
+    public func bySDBgImageView(
         _ url: String,
         image: UIImage? = nil,
         hideSystemBackdrop: Bool = true,
@@ -428,7 +428,7 @@ public extension UIAlertController {
 #if canImport(Kingfisher)
     /// KF：URL 为空则只装本地图；有 URL 时转场后淡入网络图
     @discardableResult
-    func byKFBgImageView(
+    public func byKFBgImageView(
         _ url: String,
         image: UIImage? = nil,
         hideSystemBackdrop: Bool = true,
@@ -475,7 +475,7 @@ public extension UIAlertController {
 #endif
     /// 给 Alert 卡片加描边（外层容器，不是输入框）
     @discardableResult
-    func byCardBorder(width: CGFloat,
+    public func byCardBorder(width: CGFloat,
                       color: UIColor,
                       cornerRadius: CGFloat? = nil) -> Self {
         _enqueueBGTask(preTransition: true) { alert in
@@ -492,7 +492,7 @@ public extension UIAlertController {
     }
     /// 给指定 index 的输入框「外层灰色容器」描边（不是 UITextField 自身）
     @discardableResult
-    func byTextFieldOuterBorder(at index: Int = 0,
+    public func byTextFieldOuterBorder(at index: Int = 0,
                                 width: CGFloat,
                                 color: UIColor,
                                 cornerRadius: CGFloat? = nil,
@@ -528,7 +528,7 @@ public extension UIAlertController {
     }
 }
 // MARK: - 私有：找卡片 / 安装背景 / 视觉
-public extension UIAlertController {
+extension UIAlertController {
     /// 更稳的“找 Action 视图”（优先 Label 命中 Action 标题，退化到 UIControl / 私有类名前缀）
     @MainActor
     fileprivate func _findAnyActionView() -> UIView? {
@@ -617,10 +617,10 @@ public extension UIAlertController {
     }
 }
 // MARK: - 私有：同步安装“本地背景”
-private extension UIAlertController {
+extension UIAlertController {
     @discardableResult
     @MainActor
-    func _installLocalBGIfPending() -> Bool {
+    private func _installLocalBGIfPending() -> Bool {
         guard let img = _localBGImage else { return false }
         var did = false
         _withAlertCard { [weak self] card in
@@ -640,7 +640,7 @@ private extension UIAlertController {
     }
 }
 // ================================== Shim & 工具 ==================================
-public extension UIAlertController {
+extension UIAlertController {
     /// 在“整张 Alert 卡片”就绪后执行（找不到卡片则下一轮 RunLoop 再试一次，最后用根 view 兜底）
     @available(iOS 13.0, tvOS 13.0, *)
     @MainActor
@@ -726,13 +726,13 @@ public extension UIAlertController {
     }
 }
 
-private extension UIAlertController {
-    var _isPopoverActionSheet: Bool {
+extension UIAlertController {
+    private var _isPopoverActionSheet: Bool {
         return preferredStyle == .actionSheet
         && (traitCollection.userInterfaceIdiom == .pad
             || popoverPresentationController != nil)
     }
-    var _effectiveCancelStyle: UIAlertAction.Style {
+    private var _effectiveCancelStyle: UIAlertAction.Style {
         // 在 iPad 的 actionSheet(popover) 中，.cancel 会被系统隐藏：降级为 .default
         return _isPopoverActionSheet ? .default : .cancel
     }

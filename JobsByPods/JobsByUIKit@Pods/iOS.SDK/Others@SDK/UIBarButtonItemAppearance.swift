@@ -12,10 +12,10 @@ import UIKit
 #endif
 
 @available(iOS 13.0, *)
-public extension UIBarButtonItemAppearance {
+extension UIBarButtonItemAppearance {
     /// 快速配置不同状态的文本与颜色
     @discardableResult
-    func byTitleColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
+    public func byTitleColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
         switch state {
         case .normal:
             self.normal.titleTextAttributes[.foregroundColor] = color
@@ -31,7 +31,7 @@ public extension UIBarButtonItemAppearance {
     }
 
     @discardableResult
-    func byFont(_ font: UIFont, for state: UIControl.State = .normal) -> Self {
+    public func byFont(_ font: UIFont, for state: UIControl.State = .normal) -> Self {
         switch state {
         case .normal:
             self.normal.titleTextAttributes[.font] = font

@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -24,10 +25,10 @@ import UIKit
      let uiFmt = DateFormatter.jobs_localizedYMD()
      label.text = uiFmt.format(Date())
  */
-public extension DateFormatter {
+extension DateFormatter {
     /// “尽可能最全”的打印器：yyyy-MM-dd HH:mm:ss.SSS Z（完整时区）(区域名) 星期 纪元
     // MARK: - 用于日志，不建议把字符串入库
-    static func jobs_fullPrinter(
+    public static func jobs_fullPrinter(
         locale: Locale = Locale(identifier: "zh_CN"),
         timeZone: TimeZone = .current,
         calendar: Calendar = Calendar(identifier: .gregorian)
@@ -39,21 +40,21 @@ public extension DateFormatter {
             .byDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ (VV) EEEE G")
     }
     // MARK: - ISO8601（带毫秒，时区 Z/±hh:mm）
-    static func jobs_iso8601Millis() -> DateFormatter {
+    public static func jobs_iso8601Millis() -> DateFormatter {
         DateFormatter()
             .byLocale(Locale(identifier: "en_US_POSIX"))
             .byTimeZone(TimeZone(secondsFromGMT: 0)!)
             .byDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX")
     }
     // MARK: - RFC3339（常见后端日志/接口）
-    static func jobs_rfc3339() -> DateFormatter {
+    public static func jobs_rfc3339() -> DateFormatter {
         DateFormatter()
             .byLocale(Locale(identifier: "en_US_POSIX"))
             .byTimeZone(TimeZone(secondsFromGMT: 0)!)
             .byDateFormat("yyyy-MM-dd'T'HH:mm:ssXXXXX")
     }
     // MARK: - 本地化模板：按地区自动排布年月日（适合 UI 展示）
-    static func jobs_localizedYMD(
+    public static func jobs_localizedYMD(
         locale: Locale = .current
     ) -> DateFormatter {
         DateFormatter()

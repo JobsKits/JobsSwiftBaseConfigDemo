@@ -4,16 +4,18 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-public extension NSObject {
+
+extension NSObject {
     // 更稳的 rootVC 获取：优先前台激活场景 + 兼容 iOS13/14
     // 仅使用 UIWindowScene.windows，不再触发 UIApplication.shared.windows 的弃用告警
     @inline(__always)
-    func activeRootViewController() -> UIViewController? {
+    public func activeRootViewController() -> UIViewController? {
         if #available(iOS 13.0, *) {
             let scenes = UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
@@ -40,7 +42,7 @@ public extension NSObject {
     }
     /// 获取“屏幕上可见”的顶部控制器（递归 + 全容器支持）
     /// - 参数 base: 初始控制器（默认从前台激活场景 rootVC 开始）
-    func topViewController(
+    public func topViewController(
         base: UIViewController? = nil
     ) -> UIViewController? {
         // 如果没传 base，就自动拿当前激活场景的 rootVC
@@ -86,7 +88,7 @@ public extension NSObject {
         };return base // 7) 没有更深层就返回当前
     }
 
-    func activeKeyWindow() -> UIWindow? {
+    public func activeKeyWindow() -> UIWindow? {
         if #available(iOS 13.0, *) {
             for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
                 if #available(iOS 15.0, *), let key = scene.keyWindow { return key }
@@ -100,7 +102,7 @@ public extension NSObject {
         }
     }
     // MARK: - 顶部导航控制器（更健壮）
-    func topNavController() -> UINavigationController? {
+    public func topNavController() -> UINavigationController? {
         guard Thread.isMainThread else {
             return DispatchQueue.main.sync { topNavController() }
         }
@@ -117,13 +119,13 @@ public extension NSObject {
         return nil
     }
     // MARK: - 获取顶部控制器
-    func topViewController() -> UIViewController? {
+    public func topViewController() -> UIViewController? {
         guard Thread.isMainThread else { return DispatchQueue.main.sync { topViewController() } }
         guard let rootVC = activeKeyWindow()?.rootViewController else { return nil }
         return visibleViewController(from: rootVC)
     }
     // MARK: - 核心：寻找“可见 VC”（容器全面覆盖）
-    func visibleViewController(from root: UIViewController?, depth: Int = 0) -> UIViewController? {
+    public func visibleViewController(from root: UIViewController?, depth: Int = 0) -> UIViewController? {
         guard let root = root, depth < 32 else { return root } // 防御：最大 32 层
         // 1) 先穿透被 present 的 VC
         if let presented = root.presentedViewController {

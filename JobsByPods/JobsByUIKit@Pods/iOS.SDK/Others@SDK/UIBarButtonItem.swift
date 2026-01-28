@@ -16,11 +16,11 @@ import JobsSwiftBlock
 // MARK: - 私有存储
 private var _barItemActionKey: UInt8 = 0
 // MARK: - Block 事件 + 工厂 + 链式
-public extension UIBarButtonItem {
+extension UIBarButtonItem {
     // ========= 1) 事件：不用 #selector，iOS14+ 用 primaryAction，以下自动处理 =========
     /// 绑定点击回调（替代 #selector）
     @discardableResult
-    func onTap(_ block: @escaping jobsByBarBtnItemBlock) -> Self {
+    public func onTap(_ block: @escaping jobsByBarBtnItemBlock) -> Self {
         if #available(iOS 14.0, *) {
             // iOS14+：优先使用 UIAction，不需要 target/action
             self.primaryAction = UIAction { [weak self] _ in
@@ -42,19 +42,19 @@ public extension UIBarButtonItem {
     }
     // ========= 2) 工厂：不暴露 target/action 的简洁创建 =========
     /// 标题按钮（默认 .plain）
-    static func make(title: String?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
+    public static func make(title: String?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
         UIBarButtonItem(title: title, style: style, target: nil, action: nil)
     }
     /// 图片按钮（默认 .plain）
-    static func make(image: UIImage?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
+    public static func make(image: UIImage?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
         UIBarButtonItem(image: image, style: style, target: nil, action: nil)
     }
     /// 系统项按钮（如 .done / .cancel / .add 等）
-    static func make(systemItem: UIBarButtonItem.SystemItem) -> UIBarButtonItem {
+    public static func make(systemItem: UIBarButtonItem.SystemItem) -> UIBarButtonItem {
         UIBarButtonItem(barButtonSystemItem: systemItem, target: nil, action: nil)
     }
     /// 弹性空白（兼容 iOS14-）
-    static func flexible() -> UIBarButtonItem {
+    public static func flexible() -> UIBarButtonItem {
         if #available(iOS 14.0, *) {
             return .flexibleSpace()
         } else {
@@ -62,7 +62,7 @@ public extension UIBarButtonItem {
         }
     }
     /// 固定空白（iOS26 有 0 宽重载；iOS14 有带宽重载；更低版本用旧 API）
-    static func fixed(_ width: CGFloat = 0) -> UIBarButtonItem {
+    static public func fixed(_ width: CGFloat = 0) -> UIBarButtonItem {
         if #available(iOS 26.0, *), width == 0 {
             return .fixedSpace()
         } else if #available(iOS 14.0, *) {
@@ -75,51 +75,51 @@ public extension UIBarButtonItem {
     }
     // ========= 3) 链式：按一贯风格补常用点语法 =========
     @discardableResult
-    func byStyle(_ style: UIBarButtonItem.Style) -> Self {
+    public func byStyle(_ style: UIBarButtonItem.Style) -> Self {
         self.style = style
         return self
     }
 
     @discardableResult
-    func byTintColor(_ color: UIColor?) -> Self {
+    public func byTintColor(_ color: UIColor?) -> Self {
         self.tintColor = color
         return self
     }
     /// iOS16+ 控制隐藏
     @discardableResult
-    func byHidden(_ hidden: Bool) -> Self {
+    public func byHidden(_ hidden: Bool) -> Self {
         if #available(iOS 16.0, *) { self.isHidden = hidden }
         return self
     }
     /// iOS15+ 选择态主行为
     @discardableResult
-    func byChangesSelectionAsPrimaryAction(_ enable: Bool) -> Self {
+    public func byChangesSelectionAsPrimaryAction(_ enable: Bool) -> Self {
         if #available(iOS 15.0, *) { self.changesSelectionAsPrimaryAction = enable }
         return self
     }
     /// iOS15+ 选择态
     @discardableResult
-    func bySelected(_ selected: Bool) -> Self {
+    public func bySelected(_ selected: Bool) -> Self {
         if #available(iOS 15.0, *) { self.isSelected = selected }
         return self
     }
     /// iOS14+ 直接挂菜单
     @available(iOS 13.0, *)
     @discardableResult
-    func byMenu(_ menu: UIMenu?) -> Self {
+    public func byMenu(_ menu: UIMenu?) -> Self {
         if #available(iOS 14.0, *) { self.menu = menu }
         return self
     }
     /// iOS16+ 优先级
     @discardableResult
     @available(iOS 16.0, *)
-    func byPreferredMenuOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
+    public func byPreferredMenuOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
         self.preferredMenuElementOrder = order
         return self
     }
     /// 标题位置微调（兼容老系统）
     @discardableResult
-    func byTitleOffset(_ offset: UIOffset, for metrics: UIBarMetrics = .default) -> Self {
+    public func byTitleOffset(_ offset: UIOffset, for metrics: UIBarMetrics = .default) -> Self {
         setTitlePositionAdjustment(offset, for: metrics)
         return self
     }

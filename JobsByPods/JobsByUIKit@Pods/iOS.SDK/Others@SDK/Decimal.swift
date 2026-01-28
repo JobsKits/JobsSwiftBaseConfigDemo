@@ -27,9 +27,9 @@ import UIKit
      print(c.formatted(scale: 2, mode: .bankers))   // 1,234.56（随 locale 变化）
  */
 /// 结合 SafeCodable 使用更佳
-public extension Decimal {
+extension Decimal {
     /// 统一的舍入规则（覆盖业务常见口径）
-    enum RoundingRule {
+    public enum RoundingRule {
         /// 四舍五入（.plain）
         case plain
         /// 向下取整（绝对值方向变小，.down）
@@ -44,22 +44,22 @@ public extension Decimal {
         case awayFromZero
     }
     /// 非破坏性：返回舍入后的新值
-    func rounded(scale: Int, mode: RoundingRule = .bankers) -> Decimal {
+    public func rounded(scale: Int, mode: RoundingRule = .bankers) -> Decimal {
         var value = self
         var result = Decimal()
         NSDecimalRound(&result, &value, scale, Self._nsMode(for: value, rule: mode))
         return result
     }
     /// 原地舍入
-    mutating func round(scale: Int, mode: RoundingRule = .bankers) {
+    public mutating func round(scale: Int, mode: RoundingRule = .bankers) {
         var tmp = self
         NSDecimalRound(&self, &tmp, scale, Self._nsMode(for: tmp, rule: mode))
     }
     /// 字符串展示：先按规则舍入，再格式化
-    func formatted(scale: Int,
-                   mode: RoundingRule = .bankers,
-                   usesGroupingSeparator: Bool = true,
-                   locale: Locale = .current) -> String {
+    public func formatted(scale: Int,
+                          mode: RoundingRule = .bankers,
+                          usesGroupingSeparator: Bool = true,
+                          locale: Locale = .current) -> String {
         let rounded = self.rounded(scale: scale, mode: mode)
         // 直接用 NSDecimalNumber 包装以避免 Double 精度丢失
         return NumberFormatter()
@@ -86,6 +86,6 @@ public extension Decimal {
     }
 }
 // 便捷比较：Decimal 默认可用 < >，这里补个 >= 以便内部判断
-private extension Decimal {
-    static func >= (lhs: Decimal, rhs: Decimal) -> Bool { (lhs as NSDecimalNumber).compare(rhs as NSDecimalNumber) != .orderedAscending }
+extension Decimal {
+    public static func >= (lhs: Decimal, rhs: Decimal) -> Bool { (lhs as NSDecimalNumber).compare(rhs as NSDecimalNumber) != .orderedAscending }
 }

@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-public extension UISegmentedControl {
+extension UISegmentedControl {
     @discardableResult
     public func bySelectedSegmentIndex(_ index: Int) -> Self {
         self.selectedSegmentIndex = index

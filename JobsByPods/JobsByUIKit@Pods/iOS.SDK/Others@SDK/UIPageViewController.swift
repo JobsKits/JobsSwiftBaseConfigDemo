@@ -15,10 +15,10 @@ import JobsSwiftBlock
 
 extension UIPageViewController {
     @discardableResult
-    func byViewControllers(_ viewControllers: [UIViewController],
-                           direction: NavigationDirection,
-                           animated: Bool = true,
-                           completion: (jobsByBoolBlock)? = nil) -> Self {
+    public func byViewControllers(_ viewControllers: [UIViewController],
+                                  direction: NavigationDirection,
+                                  animated: Bool = true,
+                                  completion: (jobsByBoolBlock)? = nil) -> Self {
         self.setViewControllers(viewControllers,
                                 direction: direction,
                                 animated: animated,
@@ -27,21 +27,21 @@ extension UIPageViewController {
     }
 
     @discardableResult
-    func byDataSource(_ dataSource: UIPageViewControllerDataSource?) -> Self {
+    public func byDataSource(_ dataSource: UIPageViewControllerDataSource?) -> Self {
         self.dataSource = dataSource
         return self
     }
 
     @discardableResult
-    func byDelegate(_ delegate: UIPageViewControllerDelegate?) -> Self {
+    public func byDelegate(_ delegate: UIPageViewControllerDelegate?) -> Self {
         self.delegate = delegate
         return self
     }
 
     @discardableResult
-    func byTransitionStyle(_ style: UIPageViewController.TransitionStyle,
-                           navigationOrientation: UIPageViewController.NavigationOrientation,
-                           options: [UIPageViewController.OptionsKey : Any]? = nil) -> Self {
+    public func byTransitionStyle(_ style: UIPageViewController.TransitionStyle,
+                                  navigationOrientation: UIPageViewController.NavigationOrientation,
+                                  options: [UIPageViewController.OptionsKey : Any]? = nil) -> Self {
         return UIPageViewController(transitionStyle: style,
                                     navigationOrientation: navigationOrientation,
                                     options: options) as! Self

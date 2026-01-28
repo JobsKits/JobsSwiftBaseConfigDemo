@@ -11,9 +11,9 @@ import AppKit
 import UIKit
 #endif
 // MARK: - NSObject 层：只退键盘，按需退 accessory
-public extension NSObject {
+extension NSObject {
     /// 收起键盘；`hideAccessory = true` 时连 `inputAccessoryView` 一并收起
-    func jobsDismissKeyboard(hideAccessory: Bool = false) {
+    public func jobsDismissKeyboard(hideAccessory: Bool = false) {
         // 1) 定位当前第一响应者
         guard let fr = UIResponder.jobsCurrentFirstResponder() else {
             // 没有第一响应者：仅当要求隐藏 accessory 时，退宿主 VC

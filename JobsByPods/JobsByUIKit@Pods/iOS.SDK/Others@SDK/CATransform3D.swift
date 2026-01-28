@@ -4,42 +4,44 @@
 //
 //  Created by Mac on 10/30/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import QuartzCore
 import CoreGraphics
 // MARK: - DSL Entry
-public extension CATransform3D {
+extension CATransform3D {
     /// 入口：返回 Identity 作为链式起点
-    static func jobs() -> CATransform3D { CATransform3DIdentity }
+    public static func jobs() -> CATransform3D { CATransform3DIdentity }
 }
 // MARK: - 基础矩阵元素设置（16 项 & 批量）
-public extension CATransform3D {
-    @discardableResult func byM11(_ v: CGFloat) -> Self { var t = self; t.m11 = v; return t }
-    @discardableResult func byM12(_ v: CGFloat) -> Self { var t = self; t.m12 = v; return t }
-    @discardableResult func byM13(_ v: CGFloat) -> Self { var t = self; t.m13 = v; return t }
-    @discardableResult func byM14(_ v: CGFloat) -> Self { var t = self; t.m14 = v; return t }
+extension CATransform3D {
+    @discardableResult public func byM11(_ v: CGFloat) -> Self { var t = self; t.m11 = v; return t }
+    @discardableResult public func byM12(_ v: CGFloat) -> Self { var t = self; t.m12 = v; return t }
+    @discardableResult public func byM13(_ v: CGFloat) -> Self { var t = self; t.m13 = v; return t }
+    @discardableResult public func byM14(_ v: CGFloat) -> Self { var t = self; t.m14 = v; return t }
 
-    @discardableResult func byM21(_ v: CGFloat) -> Self { var t = self; t.m21 = v; return t }
-    @discardableResult func byM22(_ v: CGFloat) -> Self { var t = self; t.m22 = v; return t }
-    @discardableResult func byM23(_ v: CGFloat) -> Self { var t = self; t.m23 = v; return t }
-    @discardableResult func byM24(_ v: CGFloat) -> Self { var t = self; t.m24 = v; return t }
+    @discardableResult public func byM21(_ v: CGFloat) -> Self { var t = self; t.m21 = v; return t }
+    @discardableResult public func byM22(_ v: CGFloat) -> Self { var t = self; t.m22 = v; return t }
+    @discardableResult public func byM23(_ v: CGFloat) -> Self { var t = self; t.m23 = v; return t }
+    @discardableResult public func byM24(_ v: CGFloat) -> Self { var t = self; t.m24 = v; return t }
 
-    @discardableResult func byM31(_ v: CGFloat) -> Self { var t = self; t.m31 = v; return t }
-    @discardableResult func byM32(_ v: CGFloat) -> Self { var t = self; t.m32 = v; return t }
-    @discardableResult func byM33(_ v: CGFloat) -> Self { var t = self; t.m33 = v; return t }
-    @discardableResult func byM34(_ v: CGFloat) -> Self { var t = self; t.m34 = v; return t }
+    @discardableResult public func byM31(_ v: CGFloat) -> Self { var t = self; t.m31 = v; return t }
+    @discardableResult public func byM32(_ v: CGFloat) -> Self { var t = self; t.m32 = v; return t }
+    @discardableResult public func byM33(_ v: CGFloat) -> Self { var t = self; t.m33 = v; return t }
+    @discardableResult public func byM34(_ v: CGFloat) -> Self { var t = self; t.m34 = v; return t }
 
-    @discardableResult func byM41(_ v: CGFloat) -> Self { var t = self; t.m41 = v; return t }
-    @discardableResult func byM42(_ v: CGFloat) -> Self { var t = self; t.m42 = v; return t }
-    @discardableResult func byM43(_ v: CGFloat) -> Self { var t = self; t.m43 = v; return t }
-    @discardableResult func byM44(_ v: CGFloat) -> Self { var t = self; t.m44 = v; return t }
+    @discardableResult public func byM41(_ v: CGFloat) -> Self { var t = self; t.m41 = v; return t }
+    @discardableResult public func byM42(_ v: CGFloat) -> Self { var t = self; t.m42 = v; return t }
+    @discardableResult public func byM43(_ v: CGFloat) -> Self { var t = self; t.m43 = v; return t }
+    @discardableResult public func byM44(_ v: CGFloat) -> Self { var t = self; t.m44 = v; return t }
     /// 一次性设置 16 项
     @discardableResult
-    func byMatrix(
+    public func byMatrix(
         m11: CGFloat, m12: CGFloat, m13: CGFloat, m14: CGFloat,
         m21: CGFloat, m22: CGFloat, m23: CGFloat, m24: CGFloat,
         m31: CGFloat, m32: CGFloat, m33: CGFloat, m34: CGFloat,
@@ -54,42 +56,42 @@ public extension CATransform3D {
     }
 }
 // MARK: - 常用 3D 变换（平移/缩放/旋转/拼接/求逆）
-public extension CATransform3D {
+extension CATransform3D {
     /// 平移
     @discardableResult
-    func byTranslate(x: CGFloat = 0, y: CGFloat = 0, z: CGFloat = 0) -> Self {
+    public func byTranslate(x: CGFloat = 0, y: CGFloat = 0, z: CGFloat = 0) -> Self {
         CATransform3DTranslate(self, x, y, z)
     }
     /// 缩放
     @discardableResult
-    func byScale(x: CGFloat = 1, y: CGFloat = 1, z: CGFloat = 1) -> Self {
+    public func byScale(x: CGFloat = 1, y: CGFloat = 1, z: CGFloat = 1) -> Self {
         CATransform3DScale(self, x, y, z)
     }
     /// 绕任意轴旋转（弧度）
     @discardableResult
-    func byRotate(angle radians: CGFloat, axisX x: CGFloat, axisY y: CGFloat, axisZ z: CGFloat) -> Self {
+    public func byRotate(angle radians: CGFloat, axisX x: CGFloat, axisY y: CGFloat, axisZ z: CGFloat) -> Self {
         CATransform3DRotate(self, radians, x, y, z)
     }
     /// 绕 X / Y / Z 轴旋转（弧度）
-    @discardableResult func byRotateX(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 1, 0, 0) }
-    @discardableResult func byRotateY(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 0, 1, 0) }
-    @discardableResult func byRotateZ(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 0, 0, 1) }
+    @discardableResult public func byRotateX(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 1, 0, 0) }
+    @discardableResult public func byRotateY(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 0, 1, 0) }
+    @discardableResult public func byRotateZ(_ radians: CGFloat) -> Self { CATransform3DRotate(self, radians, 0, 0, 1) }
     /// 矩阵拼接（右乘）
     @discardableResult
-    func byConcat(_ other: CATransform3D) -> Self {
+    public func byConcat(_ other: CATransform3D) -> Self {
         CATransform3DConcat(self, other)
     }
     /// 求逆
     @discardableResult
-    func invertedOrSelf() -> Self {
+    public func invertedOrSelf() -> Self {
         CATransform3DInvert(self)
     }
 }
 // MARK: - 透视（m34）
-public extension CATransform3D {
+extension CATransform3D {
     /// 设置透视：m34 = -1 / d（d 取焦距，建议 400 ~ 800）
     @discardableResult
-    func byPerspective(d: CGFloat) -> Self {
+    public func byPerspective(d: CGFloat) -> Self {
         guard d != 0 else { return self }
         var t = self
         t.m34 = -1.0 / d
@@ -97,18 +99,18 @@ public extension CATransform3D {
     }
     /// 直接设置 m34（进阶自定义）
     @discardableResult
-    func byPerspectiveValue(_ m34: CGFloat) -> Self {
+    public func byPerspectiveValue(_ m34: CGFloat) -> Self {
         var t = self
         t.m34 = m34
         return t
     }
 }
 // MARK: - 工具 & 状态
-public extension CATransform3D {
+extension CATransform3D {
     /// 是否近似为 Identity（考虑浮点容差）
-    var jobs_isIdentity: Bool { CATransform3DIsIdentity(self) }
+    public var jobs_isIdentity: Bool { CATransform3DIsIdentity(self) }
     /// 与单位矩阵的“近似相等”判断（容差可调）
-    func jobs_isAlmostEqual(to other: CATransform3D, epsilon: CGFloat = 1e-6) -> Bool {
+    public func jobs_isAlmostEqual(to other: CATransform3D, epsilon: CGFloat = 1e-6) -> Bool {
         func eq(_ a: CGFloat, _ b: CGFloat) -> Bool { abs(a - b) <= epsilon }
         return eq(m11, other.m11) && eq(m12, other.m12) && eq(m13, other.m13) && eq(m14, other.m14) &&
                eq(m21, other.m21) && eq(m22, other.m22) && eq(m23, other.m23) && eq(m24, other.m24) &&
@@ -119,13 +121,13 @@ public extension CATransform3D {
 // MARK: - 便捷预设
 public extension CATransform3D {
     /// 轻量 3D 卡片左右翻转效果预设（带透视 & 沿 Y 轴旋转）
-    static func jobs_cardFlipY(angle: CGFloat = .pi / 6, perspectiveD: CGFloat = 600) -> CATransform3D {
+    public static func jobs_cardFlipY(angle: CGFloat = .pi / 6, perspectiveD: CGFloat = 600) -> CATransform3D {
         CATransform3D.jobs()
             .byPerspective(d: perspectiveD)
             .byRotateY(angle)
     }
     /// 进入动画：Z 轴向内推进 + 轻微缩放 + 透视
-    static func jobs_pushIn(z: CGFloat = -200, scale: CGFloat = 0.92, perspectiveD: CGFloat = 700) -> CATransform3D {
+    public static func jobs_pushIn(z: CGFloat = -200, scale: CGFloat = 0.92, perspectiveD: CGFloat = 700) -> CATransform3D {
         CATransform3D.jobs()
             .byPerspective(d: perspectiveD)
             .byTranslate(z: z)

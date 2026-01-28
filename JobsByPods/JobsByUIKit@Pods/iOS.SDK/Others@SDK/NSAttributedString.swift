@@ -11,8 +11,8 @@ import AppKit
 import UIKit
 #endif
 
-public extension NSAttributedString {
-    func boundingHeight(width: CGFloat, fontFallback: UIFont) -> CGFloat {
+extension NSAttributedString {
+    public func boundingHeight(width: CGFloat, fontFallback: UIFont) -> CGFloat {
         guard width > 0 else { return 0 }
         let rect = boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
