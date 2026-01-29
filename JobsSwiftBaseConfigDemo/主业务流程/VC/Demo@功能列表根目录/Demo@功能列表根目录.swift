@@ -24,6 +24,7 @@ import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftAppTools
+import JobsRefresher
 
 final class RootListVC: BaseVC {
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
@@ -113,6 +114,7 @@ final class RootListVC: BaseVC {
             ]),
             (title: "Pods集成@其他外源框架使用示例", items: g0),
             (title: "Pods集成@网络请求适用示例", items: [
+                ("🌍 JobsNetworking", JobsNetworkingDemoVC.self),
                 ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
                 ("🛜 Moya网络请求框架", MoyaDemoVC.self),
                 ("🛜 Alamofire网络请求框架", AFDemoVC.self),
@@ -296,6 +298,26 @@ final class RootListVC: BaseVC {
             .byContentInset(UIEdgeInsets(
                 top: 0,left: 0, bottom: 0, right: 0
             ))
+            // 下拉刷新 Header
+            .configRefreshHeader(component: JobsDefaultHeader(),
+                                 container: self,
+                                 trigger: 66) { [weak self] in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.tableView.byReloadData()
+                    self.tableView.switchRefreshHeader(to: .normal)
+                    self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
+                }
+            }
+            // 上拉加载 Footer
+            .configRefreshFooter(component: JobsDefaultFooter(),
+                                          container: self,
+                                          trigger: 66) { [weak self] in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.tableView.switchRefreshFooter(to: .noMoreData)
+                }
+            }
             .byAddTo(view) {[unowned self] make in
                 make.left.bottom.right.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
