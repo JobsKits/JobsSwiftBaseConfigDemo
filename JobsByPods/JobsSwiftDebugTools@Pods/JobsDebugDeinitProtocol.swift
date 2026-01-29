@@ -14,20 +14,20 @@ import UIKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsToast
+
 // MARK: —— 可选开启 “销毁提示”
 public protocol JobsDebugDeinitProtocol: AnyObject {
-    /// 自定义文案（可选）
     var debugDeinitToastText: String { get }
-    /// 是否开启（可选）
     var debugDeinitToastEnabled: Bool { get }
-    /// 手动调用一次即可完成挂钩
     func enableDebugDeinitToast()
 }
 
 public extension JobsDebugDeinitProtocol where Self: UIViewController {
     var debugDeinitToastText: String { "当前控制器销毁成功".tr }
     var debugDeinitToastEnabled: Bool { true }
+
     func enableDebugDeinitToast() {
+        #if DEBUG
         guard debugDeinitToastEnabled else { return }
         let vcType = String(describing: type(of: self))
         let timeText: String = {
@@ -42,5 +42,8 @@ public extension JobsDebugDeinitProtocol where Self: UIViewController {
                 text.toast
             }
         }
+        #else
+        return
+        #endif
     }
 }

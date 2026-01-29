@@ -7,8 +7,8 @@
 
 @import Foundation;
 @import UIKit;
-@import JobsSwiftDebugTools;
-/// 将此文件集成到主工程
+#import <objc/message.h>
+
 @interface JobsDebugDeinitAutoLoad : NSObject
 
 @end
@@ -16,9 +16,12 @@
 @implementation JobsDebugDeinitAutoLoad
 
 + (void)load {
-#if DEBUG
-    [JobsDebugDeinitAutoSwizzle start];
-#endif
+    // 不依赖 import / link，Debug 有类就调用，Release 没类就跳过
+    Class cls = NSClassFromString(@"JobsDebugDeinitAutoSwizzle");
+    SEL sel = NSSelectorFromString(@"start");
+    if (cls && [cls respondsToSelector:sel]) {
+        ((void (*)(id, SEL))objc_msgSend)(cls, sel);
+    }
 }
 
 @end

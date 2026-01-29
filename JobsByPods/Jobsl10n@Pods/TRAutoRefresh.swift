@@ -4,40 +4,46 @@
 //
 //  Created by Mac on 11/1/25.
 //
-//  语言切换自动刷新引擎（无兼容分支）
-//  依赖：Notification.Name.JobsLanguageDidChange、TRLang.bundleProvider()
-//
 
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+//
+//  语言切换自动刷新引擎（无兼容分支）
+//  依赖：Notification.Name.JobsLanguageDidChange、TRLang.bundleProvider()
+//
 // MARK: - Core
 public enum TRAutoRefresh {
     // MARK: - 线程本地标记（.tr 内部调用）
     public enum Marker {
         private static let threadKey = "jobs.tr.marker.key"
         /// .tr 调用尾部调用：把 key/table 放到当前线程词典里，然后原样返回翻译后的字符串
-        @inline(__always)
-        public static func pack(translated: String,
-                                key: String,
-                                table: String?) -> String {
+        public static func pack(
+            translated: String,
+            key: String,
+            table: String?
+        ) -> String {
             Thread.current.threadDictionary[threadKey] = Info(key: key, table: table)
             return translated
         }
         /// 由控件入口（UILabel/UIButton 等）“消费”最近一次的 Key；消费后即清空
-        @inline(__always)
         static func consume() -> Info? {
             let dict = Thread.current.threadDictionary
             guard let info = dict[threadKey] as? Info else { return nil }
             dict.removeObject(forKey: threadKey)
             return info
         }
-
-        public struct Info {
+        /// 注意：ThreadDictionary 存 Swift struct 会走桥接（_SwiftValue），在 Release -O 下更容易触发编译器/优化器的角落问题
+        /// 这里改为 NSObject 子类，避免桥接与类型擦除带来的不稳定因素
+        public final class Info: NSObject {
             public let key: String
             public let table: String?
+            public init(key: String, table: String?) {
+                self.key = key
+                self.table = table
+            }
         }
     }
     // MARK: - 注册表
@@ -47,10 +53,12 @@ public enum TRAutoRefresh {
         let table: String?
         let apply: (AnyObject, String) -> Void
 
-        init(target: AnyObject,
-             key: String,
-             table: String?,
-             apply: @escaping (AnyObject, String) -> Void) {
+        init(
+            target: AnyObject,
+            key: String,
+            table: String?,
+            apply: @escaping (AnyObject, String) -> Void
+        ) {
             self.target = target
             self.key = key
             self.table = table
@@ -63,12 +71,13 @@ public enum TRAutoRefresh {
     private static var isObserving = false
     private static var token: NSObjectProtocol?
     // MARK: - 注册与刷新
-    @inline(__always)
     private static func ensureObserver() {
         guard !isObserving else { return }
         isObserving = true
         token = NotificationCenter.default.addObserver(
-            forName: .JobsLanguageDidChange, object: nil, queue: .main
+            forName: .JobsLanguageDidChange,
+            object: nil,
+            queue: .main
         ) { _ in
             TRAutoRefresh.refreshAll()
         }
@@ -81,9 +90,11 @@ public enum TRAutoRefresh {
         apply: @escaping (T, String) -> Void
     ) {
         ensureObserver()
-        let entry = Entry(target: target,
-                          key: key,
-                          table: table) { obj, text in
+        let entry = Entry(
+            target: target,
+            key: key,
+            table: table
+        ) { obj, text in
             if let t = obj as? T {
                 apply(t, text)
             }
@@ -103,11 +114,13 @@ public enum TRAutoRefresh {
 
         for e in snapshot {
             guard let obj = e.target else { continue }
-            let translated = NSLocalizedString(e.key,
-                                               tableName: e.table,
-                                               bundle: bundle,
-                                               value: e.key,
-                                               comment: "")
+            let translated = NSLocalizedString(
+                e.key,
+                tableName: e.table,
+                bundle: bundle,
+                value: e.key,
+                comment: ""
+            )
             e.apply(obj, translated)
         }
         _isRefreshing = false
@@ -118,7 +131,6 @@ public enum TRAutoRefresh {
 /// - 任何对象/任何属性，只要能在语言变化后重新 apply，就能自动刷新
 public enum TRBind {
     /// 通用绑定：消费最近一次 ".tr" 的 marker，先 apply 一次，再注册语言变化自动 apply
-    @inline(__always)
     public static func bind<T: AnyObject>(
         _ target: T,
         translated: String,
@@ -126,16 +138,16 @@ public enum TRBind {
     ) {
         let info = TRAutoRefresh.Marker.consume()
         apply(target, translated)
-
         guard let info else { return }
-        TRAutoRefresh.register(target,
-                               key: info.key,
-                               table: info.table) { t, text in
+        TRAutoRefresh.register(
+            target,
+            key: info.key,
+            table: info.table
+        ) { t, text in
             apply(t, text)
         }
     }
     /// 非自动刷新的场景（富文本等）：清 marker，避免串台
-    @inline(__always)
     public static func consumeMarkerIfNeeded() {
         _ = TRAutoRefresh.Marker.consume()
     }
@@ -160,7 +172,6 @@ public extension UILabel {
 }
 // ===== UIButton =====
 public extension UIButton {
-    
     @discardableResult
     func tr_setTitle(_ string: String, for state: UIControl.State) -> Self {
         TRBind.bind(self, translated: string) { btn, text in
@@ -177,7 +188,6 @@ public extension UIButton {
 }
 // ===== UITextField =====
 public extension UITextField {
-
     @discardableResult
     func tr_setPlaceholder(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { tf, text in
@@ -208,7 +218,6 @@ public extension UITextField {
 }
 // ===== UITextView =====
 public extension UITextView {
-
     @discardableResult
     func tr_setText(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { tv, text in
@@ -225,7 +234,6 @@ public extension UITextView {
 }
 // ===== UIBarButtonItem =====
 public extension UIBarButtonItem {
-
     @discardableResult
     func tr_setTitle(_ string: String) -> Self {
         TRBind.bind(self, translated: string) { item, text in
@@ -236,7 +244,6 @@ public extension UIBarButtonItem {
 // MARK: - Common "container" text (still low API count)
 // ===== UINavigationItem =====
 public extension UINavigationItem {
-
     @discardableResult
     func tr_setTitle(_ string: String?) -> Self {
         guard let string else {
@@ -275,7 +282,6 @@ public extension UINavigationItem {
 }
 // ===== UITabBarItem =====
 public extension UITabBarItem {
-
     @discardableResult
     func tr_setTitle(_ string: String?) -> Self {
         guard let string else {
@@ -290,7 +296,6 @@ public extension UITabBarItem {
 }
 // ===== UISegmentedControl =====
 public extension UISegmentedControl {
-
     @discardableResult
     func tr_setTitle(_ string: String, forSegmentAt index: Int) -> Self {
         TRBind.bind(self, translated: string) { seg, text in
@@ -300,7 +305,6 @@ public extension UISegmentedControl {
 }
 // ===== UISearchBar =====
 public extension UISearchBar {
-
     @discardableResult
     func tr_setPlaceholder(_ string: String?) -> Self {
         guard let string else {
@@ -328,7 +332,6 @@ public extension UISearchBar {
 // MARK: - Alert (avoid inheritance name conflicts)
 /// 注意：不扩 UIViewController 的 tr_setTitle，避免和 UIAlertController 这种子类写同名 API 冲突
 public extension UIAlertController {
-
     @discardableResult
     func tr_setAlertTitle(_ string: String?) -> Self {
         guard let string else {

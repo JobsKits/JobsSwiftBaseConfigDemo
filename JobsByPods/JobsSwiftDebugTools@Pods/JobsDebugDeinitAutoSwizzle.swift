@@ -18,9 +18,12 @@ public final class JobsDebugDeinitAutoSwizzle: NSObject {
     public static func start() {
         #if DEBUG
         UIViewController.jobs_swizzleDebugDeinitOnce()
+        #else
+        return
         #endif
     }
 }
+
 #if DEBUG
 private var jobs_debugDeinit_swizzledKey: UInt8 = 0
 
@@ -29,14 +32,9 @@ private extension UIViewController {
         objc_sync_enter(self); defer { objc_sync_exit(self) }
 
         if (objc_getAssociatedObject(self, &jobs_debugDeinit_swizzledKey) as? Bool) == true { return }
-        objc_setAssociatedObject(
-            self,
-            &jobs_debugDeinit_swizzledKey,
-            true,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, &jobs_debugDeinit_swizzledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
         let cls: AnyClass = UIViewController.self
-
         let originalSel = #selector(UIViewController.viewDidLoad)
         let swizzledSel = #selector(UIViewController.jobs_debugDeinit_viewDidLoad)
 
@@ -49,9 +47,7 @@ private extension UIViewController {
     }
 
     @objc func jobs_debugDeinit_viewDidLoad() {
-        // 交换后这里调用的是原始 viewDidLoad
         jobs_debugDeinit_viewDidLoad()
-
         (self as? JobsDebugDeinitProtocol)?.enableDebugDeinitToast()
     }
 }

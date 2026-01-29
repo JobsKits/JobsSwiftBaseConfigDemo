@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBlock
+import JobsSwiftBaseDefines
 #if canImport(ESPullToRefresh) && canImport(SnapKit)
 import ESPullToRefresh
 import SnapKit
@@ -172,7 +174,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byHugging(.required, axis: .horizontal)
             .byCompressionResistance(.required, axis: .horizontal)
@@ -186,7 +188,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     }()
 
     private lazy var indicator: UIActivityIndicatorView = {
-        UIActivityIndicatorView(style: .medium)
+        UIActivityIndicatorView(jobsStyle: .medium)
             .byHidesWhenStopped(true)
             .byAddTo(canvas) { [unowned self] make in
                 make.centerY.equalTo(titleLabel)
@@ -251,7 +253,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
 
     private let canvas = UIView()
     private let titleLabel = UILabel()
-    private let indicator  = UIActivityIndicatorView(style: .medium)
+    private let indicator  = UIActivityIndicatorView(jobsStyle: .medium)
 
     private var canvasWidthConstraint: Constraint?
 
@@ -271,7 +273,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
 
         titleLabel
             .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byHugging(.required, axis: .horizontal)
             .byCompressionResistance(.required, axis: .horizontal)

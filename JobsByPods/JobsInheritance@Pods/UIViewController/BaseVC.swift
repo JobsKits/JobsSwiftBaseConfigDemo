@@ -14,16 +14,14 @@ import UIKit
 import SnapKit
 import JobsSwiftDebugTools
 
-open class BaseVC: UIViewController ,JobsDebugDeinitProtocol{
+open class BaseVC: UIViewController,JobsDebugDeinitProtocol {
     deinit {
         // 清理资源
         print("deinit")
     }
-//    public var debugDeinitToastText: String { "当前UIViewController销毁成功".tr }
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        enableDebugDeinitToast()
 //        jobsSetupGKNav(title: "定义当前的标题")
     }
     /// 手势返回

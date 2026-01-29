@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsToast
 import JobsSwiftBaseDefines
 // MARK: - 自定义滚动 TabBar（继承 BaseVC）
 open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {

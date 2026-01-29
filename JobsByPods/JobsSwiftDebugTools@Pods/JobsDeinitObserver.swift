@@ -11,24 +11,26 @@ import AppKit
 import UIKit
 #endif
 import ObjectiveC
-#if DEBUG
+
 // MARK: —— Deinit 观察者（释放时回调）
 public final class JobsDeinitObserver {
-    let onDeinit: () -> Void
-    init(_ onDeinit: @escaping () -> Void) { self.onDeinit = onDeinit }
+    private let onDeinit: () -> Void
+    public init(_ onDeinit: @escaping () -> Void) { self.onDeinit = onDeinit }
     deinit { onDeinit() }
 }
-#endif
 
-#if DEBUG
 public enum JobsDebugDeinitInstaller {
-    static var key: UInt8 = 0
-    static func install(on vc: UIViewController, onDeinit: @escaping () -> Void) {
-        // 防重复安装
+    private static var key: UInt8 = 0
+
+    @inline(__always)
+    public static func install(on vc: UIViewController, onDeinit: @escaping () -> Void) {
+        #if DEBUG
         if objc_getAssociatedObject(vc, &key) != nil { return }
         let observer = JobsDeinitObserver(onDeinit)
         objc_setAssociatedObject(vc, &key, observer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        #else
+        _ = vc
+        _ = onDeinit
+        #endif
     }
 }
-#endif
-
