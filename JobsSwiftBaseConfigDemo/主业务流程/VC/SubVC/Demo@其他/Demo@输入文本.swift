@@ -1,5 +1,5 @@
 //
-//  UITextViewDemoVC.swift
+//  Demo@输入文本.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 9/29/25.
@@ -26,7 +26,6 @@ final class UITextViewDemoVC: BaseVC {
     // MARK: 双向绑定（无 Rx）
     var relayValue = "Hello Value"
     var isSyncing = false
-
     // MARK: - Scroll
     private lazy var scrollerView: UIScrollView = {
         UIScrollView()
@@ -54,7 +53,7 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var title1: UILabel = {
         UILabel()
-            .byText("1️⃣ 输入监听（jobs_onInput）".tr)
+            .byText("1️⃣ 输入监听（byOnInput）".tr)
             .byFont(.boldSystemFont(ofSize: 15))
             .byTextColor(.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -72,7 +71,11 @@ final class UITextViewDemoVC: BaseVC {
             .bySelectable(true)
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .jobs_onInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+            .byHintLimit(12) { lb in
+                lb.byFont(.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
+                    .byTextColor(.red)
+            }
+            .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -80,10 +83,10 @@ final class UITextViewDemoVC: BaseVC {
                 // isLimited：是否设置了限制（limit != nil）
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -112,7 +115,7 @@ final class UITextViewDemoVC: BaseVC {
             .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("123.45")
-            .jobs_onInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+            .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -124,10 +127,10 @@ final class UITextViewDemoVC: BaseVC {
                 tv.byBorderColor(ok ? UIColor.systemGreen : UIColor.systemRed)
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -154,7 +157,7 @@ final class UITextViewDemoVC: BaseVC {
             .byKeyboardType(.numberPad)
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("13800138000")
-            .jobs_onInput(limit: 13) { [unowned self] char, value, mode, isLimited, text ,tv in
+            .byOnInput(limit: 13) { [unowned self] char, value, mode, isLimited, text ,tv in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -166,10 +169,10 @@ final class UITextViewDemoVC: BaseVC {
                 tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
                 print("📱 char='\(char)' value='\(formatted)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -209,10 +212,10 @@ final class UITextViewDemoVC: BaseVC {
             .byDataDetectorTypes([.link, .phoneNumber])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -245,10 +248,10 @@ final class UITextViewDemoVC: BaseVC {
             ])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -275,7 +278,7 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 16))
             .byText(relayValue)
             // A -> B
-            .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+            .byOnInput { [unowned self] _, value, _, _, _, _ in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -283,10 +286,10 @@ final class UITextViewDemoVC: BaseVC {
                 // isLimited：是否设置了限制（limit != nil）
                 sync(from: tvA, to: tvB, value: value)
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -302,7 +305,7 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 16))
             .byText(relayValue)
             // B -> A
-            .jobs_onInput { [unowned self] _, value, _, _, _, _ in
+            .byOnInput { [unowned self] _, value, _, _, _, _ in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -310,10 +313,10 @@ final class UITextViewDemoVC: BaseVC {
                 // isLimited：是否设置了限制（limit != nil）
                 sync(from: tvB, to: tvA, value: value)
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -350,7 +353,7 @@ final class UITextViewDemoVC: BaseVC {
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byFont(.systemFont(ofSize: 16))
             .byText("删除我试试看 👇")
-            .jobs_onInput { [unowned self] char, value, mode, isLimited, text ,tv in
+            .byOnInput { [unowned self] char, value, mode, isLimited, text ,tv in
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -359,10 +362,10 @@ final class UITextViewDemoVC: BaseVC {
                 guard mode == .delete else { return }
                 "点击了删除键".tr.toast
             }
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ end:", value)
             }
             .byAddTo(contentView) { [unowned self] make in

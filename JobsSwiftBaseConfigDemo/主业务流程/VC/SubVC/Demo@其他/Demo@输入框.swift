@@ -1,5 +1,5 @@
 //
-//  UITextFieldDemoVC.swift
+//  Demo@输入框.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 9/27/25.
@@ -34,10 +34,10 @@ final class UITextFieldDemoVC: BaseVC {
             .byLeftView(UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1)))
             .byLeftViewMode(.always)
             // MARK: Jobs 输入监听（无 Rx）—— 邮箱：去空格 + 最长 8 + 简单规则
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ email begin:", value)
             }
-            .jobs_onInput(limit: 8) { [weak self] char, value, mode, isLimited in
+            .byOnInput(limit: 8) { [weak self] char, value, mode, isLimited in
                 guard let self else { return }
                 let trimmed = value.trimmingCharacters(in: .whitespaces)
                 if trimmed != value {
@@ -47,7 +47,7 @@ final class UITextFieldDemoVC: BaseVC {
                 let ok = current.count >= 3 && current.contains("@")
                 print("📧 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ email end:", value)
             }
             .byAddTo(view) {[unowned self] make in
@@ -80,15 +80,15 @@ final class UITextFieldDemoVC: BaseVC {
             .byLeftViewMode(.always)
             .bySecureTextEntry(true)
             // MARK: Jobs 输入监听（无 Rx）—— 密码：最长 5，只做监听
-            .jobs_onBeginEditing { value in
+            .byBeginEditing { value in
                 print("✍️ password begin:", value)
             }
-            .jobs_onInput(limit: 5) { [weak self] char, value, mode, isLimited in
+            .byOnInput(limit: 5) { [weak self] char, value, mode, isLimited in
                 guard let self else { return }
                 let current = self.passwordTF.text ?? value
                 print("🔐 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited)")
             }
-            .jobs_onEndEditing { value in
+            .byEndEditing { value in
                 print("✅ password end:", value)
             }
             .byAddTo(view) { [unowned self] make in

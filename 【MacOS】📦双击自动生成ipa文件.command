@@ -1,53 +1,55 @@
-#!/bin/bash
+#!/bin/zsh
+# ================================== iOS IPA 打包助手 ==================================
+# 目标：
+# • 自动定位“主 iOS 工程”（避开 Flutter Runner 壳工程、避开 .xcodeproj 包内 workspace）
+# • 自动识别主 Scheme（优先用“与工程同名”的 Scheme），否则提供 fzf 选择
+# • 强制真机：xcodebuild -destination generic/platform=iOS
+# • 通过 Build Settings 精确定位 .app，然后打包为 .ipa 输出到桌面
+# • 失败时自动 open 日志（保留传统）
+# =====================================================================================
+
 set -euo pipefail
 
-# ================================== 基础：路径 / 日志 ==================================
-SCRIPT_PATH="$0"
-# 兼容双击与软链接
-if command -v python3 >/dev/null 2>&1; then
-  SCRIPT_PATH="$(python3 - <<'PY'
-import os,sys
-p=sys.argv[1]
-print(os.path.realpath(p))
-PY
-"$SCRIPT_PATH")"
-else
-  # fallback：尽量 realpath
-  SCRIPT_PATH="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)/$(basename "$SCRIPT_PATH")"
-fi
+# ================================== 默认配置 ==================================
+CONFIG="Release"                 # Debug / Release
+OUT_DIR="${HOME}/Desktop"        # 输出目录
+PROJECT_PATH=""                  # 指定 .xcodeproj 或 .xcworkspace（可空）
+SCHEME=""                        # 选择的 scheme（可空：自动识别）
+CONFIRM="0"                      # --confirm 开启交互确认
+DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/JobsIpaBuild"
+LOG_FILE="/tmp/$(basename "$0").log"
+ALLOW_UPDATES="0"                # --allow-updates 传 -allowProvisioningUpdates
 
-SCRIPT_BASENAME="$(basename "$SCRIPT_PATH")"
-SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+# ================================== 语义化输出（不污染变量） ==================================
+_color_echo() { local c="$1"; shift; printf "\033[%sm%s\033[0m\n" "$c" "$*"; }
+info_echo()   { _color_echo "34" "ℹ️  $*"; }
+success_echo(){ _color_echo "32" "✅ $*"; }
+warn_echo()   { _color_echo "33" "⚠️  $*"; }
+error_echo()  { _color_echo "31" "❌ $*"; }
+debug_echo()  { _color_echo "35" "🐛 $*"; }
+log()         { printf "%s %s\n" "$(date '+%F %T')" "$*" >> "$LOG_FILE"; }
 
-LOG_FILE="/tmp/${SCRIPT_BASENAME}.log"
-: > "$LOG_FILE"
+# ================================== 基础工具 ==================================
+have_cmd() { command -v "$1" >/dev/null 2>&1; }
 
-log() { printf '%s %s\n' "$(date '+%F %T')" "$*" >> "$LOG_FILE"; }
-
-color_echo() { printf '%b\n' "$*"; }
-info_echo() { color_echo "ℹ️  $*"; log "INFO $*"; }
-success_echo() { color_echo "✅ $*"; log "OK $*"; }
-warn_echo() { color_echo "⚠️  $*"; log "WARN $*"; }
-error_echo() { color_echo "❌ $*"; log "ERR $*"; }
-
-open_log() {
-  # 失败时保留“自动打开日志”的传统
-  if command -v open >/dev/null 2>&1; then
-    open "$LOG_FILE" >/dev/null 2>&1 || true
-  fi
-}
-
-die() {
-  error_echo "$*"
-  info_echo "看日志：$LOG_FILE"
-  open_log
+open_log_and_exit() {
+  local msg="$1"
+  error_echo "$msg（看日志）：$LOG_FILE"
+  log "ERR $msg（看日志）：$LOG_FILE"
+  open "$LOG_FILE" >/dev/null 2>&1 || true
   exit 1
 }
 
-trap 'rc=$?; if [ $rc -ne 0 ]; then log "TRAP_ERR exit_code=$rc line=$LINENO cmd=$BASH_COMMAND"; open_log; fi' EXIT
+trap_err() {
+  local exit_code="$?"
+  log "TRAP_ERR exit_code=$exit_code line=$1 cmd=$2"
+  open "$LOG_FILE" >/dev/null 2>&1 || true
+  exit "$exit_code"
+}
+trap 'trap_err $LINENO "$BASH_COMMAND"' ERR
 
-# ================================== UI ==================================
-banner() {
+# ================================== 自述 ==================================
+show_intro() {
   cat <<'EOF'
 📦==================================================
                 iOS IPA 打包助手
@@ -64,333 +66,424 @@ banner() {
 EOF
 }
 
-# ================================== 参数 ==================================
-CONFIRM=0
-CONFIG="Release"
-OUT_DIR="${HOME}/Desktop"
-ALLOW_UPDATES=0
-DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/JobsIpaBuild"
+usage() {
+  cat <<EOF
+用法:
+  $(basename "$0") [--config Debug|Release] [--out 输出目录] [--project 工程路径] [--scheme Scheme] [--confirm] [--allow-updates]
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --confirm) CONFIRM=1; shift ;;
-    --debug) CONFIG="Debug"; shift ;;
-    --release) CONFIG="Release"; shift ;;
-    --out) OUT_DIR="$2"; shift 2 ;;
-    --allow-updates) ALLOW_UPDATES=1; shift ;;
-    --derived-data) DERIVED_DATA="$2"; shift 2 ;;
-    *)
-      warn_echo "未知参数：$1（忽略）"
-      shift
-      ;;
-  esac
-done
+参数:
+  --config          构建配置，默认 Release
+  --out             .ipa 输出目录，默认 \$HOME/Desktop
+  --project         指定 .xcodeproj 或 .xcworkspace 的完整路径（可不填：自动定位）
+  --scheme          指定 Scheme（可不填：自动识别/选择）
+  --confirm         运行前交互确认
+  --allow-updates   传 -allowProvisioningUpdates（需要时再开，避免污染机器签名状态）
 
-# ================================== 工程定位（核心修复：只看脚本目录） ==================================
-cd "$SCRIPT_DIR"
-info_echo "📂 工作目录：$SCRIPT_DIR"
-log "SCRIPT_DIR=$SCRIPT_DIR"
-log "PWD=$PWD"
-log "CONFIG=$CONFIG"
-log "OUT_DIR=$OUT_DIR"
-log "DERIVED_DATA=$DERIVED_DATA"
+示例:
+  $(basename "$0") --config Release --out ~/Desktop
+  $(basename "$0") --project ./MyApp.xcworkspace --confirm
+EOF
+}
 
-is_flutter_shell_workspace() {
-  # 排除 Flutter Runner 壳工程（iOS / macOS）
-  # 例：.../my_flutter/ios/Runner.xcworkspace 或 .../macos/Runner.xcworkspace
-  case "$1" in
-    *"/ios/Runner.xcworkspace"*) return 0 ;;
-    *"/macos/Runner.xcworkspace"*) return 0 ;;
-    *"/windows/"*) return 0 ;;
-    *"/linux/"*) return 0 ;;
-    *) return 1 ;;
+# ================================== 参数解析 ==================================
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --config) CONFIG="${2:-}"; shift 2;;
+      --out) OUT_DIR="${2:-}"; shift 2;;
+      --project) PROJECT_PATH="${2:-}"; shift 2;;
+      --scheme) SCHEME="${2:-}"; shift 2;;
+      --confirm) CONFIRM="1"; shift 1;;
+      --allow-updates) ALLOW_UPDATES="1"; shift 1;;
+      -h|--help) usage; exit 0;;
+      *) error_echo "未知参数：$1"; usage; exit 1;;
+    esac
+  done
+}
+
+# ================================== 定位脚本目录（双击 .command 也稳定） ==================================
+resolve_script_dir() {
+  local src="$0"
+  if [[ "$src" != /* ]]; then
+    src="$(pwd)/$src"
+  fi
+  if [[ -L "$src" ]]; then
+    local link
+    link="$(readlink "$src")"
+    [[ "$link" != /* ]] && link="$(dirname "$src")/$link"
+    src="$link"
+  fi
+  local dir
+  dir="$(cd "$(dirname "$src")" && pwd)"
+  echo "$dir"
+}
+
+# ================================== 自动定位主工程（优先脚本目录） ==================================
+is_flutter_shell_project() {
+  local p="$1"
+  case "$p" in
+    *"/ios/Runner."*|*"/macos/Runner."*|*"/my_flutter/ios/Runner."*|*"/Flutter/"* ) return 0;;
+    *) return 1;;
   esac
 }
 
-find_best_project() {
-  # 优先：当前目录下的 *.xcworkspace（排除 Flutter Runner 壳工程）
-  # 其次：*.xcodeproj
-  # 评分：路径越短越优先；排除明显不对的
-  local best="" best_kind="" best_score=999999
-
-  # 1) workspace
-  while IFS= read -r p; do
-    [ -z "$p" ] && continue
-    # 过滤
-    case "$p" in
-      *"/Pods/"*|*"/Carthage/"*|*".bundle/"*) continue ;;
-    esac
-    if is_flutter_shell_workspace "$p"; then
-      continue
-    fi
-
-    # score = depth（越小越好）
-    local depth
-    depth="$(echo "$p" | awk -F/ '{print NF}')"
-    if [ "$depth" -lt "$best_score" ]; then
-      best="$p"
-      best_kind="workspace"
-      best_score="$depth"
-    fi
-  done < <(find "$SCRIPT_DIR" -maxdepth 4 -name "*.xcworkspace" -print 2>/dev/null | sort)
-
-  if [ -n "$best" ]; then
-    printf '%s|%s\n' "$best_kind" "$best"
-    return 0
-  fi
-
-  # 2) xcodeproj
-  while IFS= read -r p; do
-    [ -z "$p" ] && continue
-    case "$p" in
-      *"/Pods/"*|*"/Carthage/"*|*".bundle/"*) continue ;;
-    esac
-    local depth
-    depth="$(echo "$p" | awk -F/ '{print NF}')"
-    if [ "$depth" -lt "$best_score" ]; then
-      best="$p"
-      best_kind="project"
-      best_score="$depth"
-    fi
-  done < <(find "$SCRIPT_DIR" -maxdepth 4 -name "*.xcodeproj" -print 2>/dev/null | sort)
-
-  if [ -n "$best" ]; then
-    printf '%s|%s\n' "$best_kind" "$best"
-    return 0
-  fi
-
-  return 1
+is_inside_xcodeproj_bundle_workspace() {
+  local p="$1"
+  [[ "$p" == *".xcodeproj/project.xcworkspace" ]]
 }
 
-proj_info="$(find_best_project || true)"
-[ -n "$proj_info" ] || die "未找到 .xcworkspace/.xcodeproj（请确认脚本放在工程目录内）"
+pick_project_in_dir() {
+  local base_dir="$1"
 
-PROJECT_KIND="${proj_info%%|*}"
-PROJECT_PATH="${proj_info#*|}"
-PROJECT_NAME="$(basename "$PROJECT_PATH")"
-PROJECT_BASE="${PROJECT_NAME%.*}"
+  local candidates=()
+  local p
 
-success_echo "发现工程：$PROJECT_NAME"
-log "PROJECT_KIND=$PROJECT_KIND"
-log "PROJECT_PATH=$PROJECT_PATH"
+  for p in "$base_dir"/*.xcworkspace "$base_dir"/*/*.xcworkspace; do
+    [[ -e "$p" ]] || continue
+    is_inside_xcodeproj_bundle_workspace "$p" && continue
+    is_flutter_shell_project "$p" && continue
+    candidates+=("$p")
+  done
 
-# ================================== Scheme 列表解析（严禁把彩色文字塞进变量） ==================================
-xcodebuild_list() {
-  if [ "$PROJECT_KIND" = "workspace" ]; then
-    /usr/bin/xcodebuild -list -workspace "$PROJECT_PATH"
+  if [[ ${#candidates[@]} -eq 0 ]]; then
+    for p in "$base_dir"/*.xcodeproj "$base_dir"/*/*.xcodeproj; do
+      [[ -e "$p" ]] || continue
+      is_flutter_shell_project "$p" && continue
+      candidates+=("$p")
+    done
+  fi
+
+  if [[ ${#candidates[@]} -eq 0 ]]; then
+    echo ""
+    return 0
+  fi
+
+  local folder_name="${base_dir:t}"
+  for p in "${candidates[@]}"; do
+    if [[ "${p:t:r}" == "$folder_name" ]]; then
+      echo "$p"
+      return 0
+    fi
+  done
+
+  echo "${candidates[1]}"
+}
+
+ensure_project_path() {
+  local script_dir="$1"
+
+  if [[ -n "$PROJECT_PATH" ]]; then
+    if [[ "$PROJECT_PATH" != /* ]]; then
+      PROJECT_PATH="$script_dir/$PROJECT_PATH"
+    fi
+    [[ -e "$PROJECT_PATH" ]] || open_log_and_exit "指定工程不存在：$PROJECT_PATH"
+    return 0
+  fi
+
+  PROJECT_PATH="$(pick_project_in_dir "$script_dir")"
+  [[ -n "$PROJECT_PATH" ]] || open_log_and_exit "未在脚本目录找到工程（.xcworkspace / .xcodeproj）"
+}
+
+project_kind_flag() {
+  if [[ "$PROJECT_PATH" == *.xcworkspace ]]; then
+    echo "-workspace"
   else
-    /usr/bin/xcodebuild -list -project "$PROJECT_PATH"
+    echo "-project"
   fi
 }
 
-get_schemes() {
-  # 输出纯 schemes（每行一个）
-  local out rc
-  out="$(xcodebuild_list 2>&1)" || rc=$?
-  rc="${rc:-0}"
-  log "XCODEBUILD_LIST_EXIT=$rc"
-  log "XCODEBUILD_LIST_OUTPUT_BEGIN"
-  log "$out"
-  log "XCODEBUILD_LIST_OUTPUT_END"
+project_display_name() {
+  echo "${PROJECT_PATH:t:r}"
+}
 
-  [ "$rc" -eq 0 ] || return 1
+# ================================== 读取 Schemes（兼容 macOS awk；不使用 mapfile） ==================================
+xcodebuild_list_raw() {
+  local flag
+  flag="$(project_kind_flag)"
+  local cmd=(/usr/bin/xcodebuild -list "$flag" "$PROJECT_PATH")
+  log "XCODEBUILD_LIST_CMD=${(j: :)cmd}"
+  "${cmd[@]}" 2>&1
+}
 
-  echo "$out" | awk '
-    BEGIN{in_s=0}
-    /Schemes:/ {in_s=1; next}
-    in_s==1 {
-      if ($0 ~ /^[[:space:]]*$/) exit
+parse_schemes_from_list_output() {
+  awk '
+    BEGIN { ins=0 }
+    /^\s*Schemes:\s*$/ { ins=1; next }
+    ins==1 && /^[[:space:]]*$/ { ins=0; next }
+    ins==1 {
       gsub(/^[[:space:]]+/, "", $0)
-      print $0
+      if (length($0) > 0) print $0
     }
   '
 }
 
-raw_schemes="$(get_schemes || true)"
-if [ -z "${raw_schemes:-}" ]; then
-  die "未找到 Schemes（或 xcodebuild -list 失败）"
-fi
-
-# 过滤掉明显不是主工程 scheme 的项（但要留 fallback）
-filter_scheme() {
-  case "$1" in
-    Pods-*|*-Tests|*Tests|*UITests|Flutter\ Assemble|AFNetworking|Alamofire|SnapKit|Flutter|FlutterPluginRegistrant)
-      return 1 ;;
-    *)
-      return 0 ;;
-  esac
+filter_schemes() {
+  grep -vE '^(Pods-|Pods$|.*-Tests$|.*Tests$|.*UITests$|Flutter Assemble$|Flutter$|FlutterPluginRegistrant$)' || true
 }
 
-SCHEMES_FILTERED=""
-while IFS= read -r s; do
-  [ -z "$s" ] && continue
-  if filter_scheme "$s"; then
-    SCHEMES_FILTERED="${SCHEMES_FILTERED}${s}"$'\n'
+list_schemes() {
+  local out
+  out="$(xcodebuild_list_raw)" || {
+    log "XCODEBUILD_LIST_EXIT=$?"
+    log "XCODEBUILD_LIST_OUTPUT_BEGIN"
+    log "$out"
+    log "XCODEBUILD_LIST_OUTPUT_END"
+    open_log_and_exit "xcodebuild -list 失败"
+  }
+
+  log "XCODEBUILD_LIST_OUTPUT_BEGIN"
+  log "$out"
+  log "XCODEBUILD_LIST_OUTPUT_END"
+
+  local schemes
+  schemes="$(printf "%s\n" "$out" | parse_schemes_from_list_output | filter_schemes)"
+  if [[ -z "$schemes" ]]; then
+    open_log_and_exit "未找到可用 Schemes（工程可能未共享 Scheme，或被过滤规则误伤）"
   fi
-done <<< "$raw_schemes"
+  printf "%s\n" "$schemes"
+}
 
-SCHEMES_TO_USE="$SCHEMES_FILTERED"
-if [ -z "${SCHEMES_TO_USE//[$'\n\r\t ']}" ]; then
-  # 过滤后为空：回退到全部
-  SCHEMES_TO_USE="$raw_schemes"$'\n'
-fi
+# ================================== 自动挑选主 Scheme + fzf 兜底 ==================================
+auto_pick_main_scheme() {
+  local project_name="$1"
+  local schemes_text="$2"
 
-# ================================== 自动主工程 Scheme（你要求的“优先同名”） ==================================
-pick_default_scheme() {
-  # 1) 完全同名：优先
-  while IFS= read -r s; do
-    [ -z "$s" ] && continue
-    if [ "$s" = "$PROJECT_BASE" ]; then
-      echo "$s"; return 0
+  if printf "%s\n" "$schemes_text" | grep -Fxq "$project_name"; then
+    echo "$project_name"
+    return 0
+  fi
+
+  local s
+  s="$(printf "%s\n" "$schemes_text" | grep -E "($project_name|App|Main|Release)" | head -n 1)"
+  if [[ -n "$s" ]]; then
+    echo "$s"
+    return 0
+  fi
+
+  echo "$(printf "%s\n" "$schemes_text" | head -n 1)"
+}
+
+pick_scheme() {
+  local schemes_text
+  schemes_text="$(list_schemes)"
+
+  local project_name
+  project_name="$(project_display_name)"
+
+  if [[ -n "$SCHEME" ]]; then
+    if printf "%s\n" "$schemes_text" | grep -Fxq "$SCHEME"; then
+      echo "$SCHEME"
+      return 0
     fi
-  done <<< "$SCHEMES_TO_USE"
+    warn_echo "指定 Scheme 不在列表中：$SCHEME（将自动挑选/选择）"
+    log "WARN 指定 Scheme 不在列表中：$SCHEME"
+  fi
 
-  # 2) 次优：包含同名（例如 xxx-Release 之类）
-  while IFS= read -r s; do
-    [ -z "$s" ] && continue
-    case "$s" in
-      *"$PROJECT_BASE"*) echo "$s"; return 0 ;;
-    esac
-  done <<< "$SCHEMES_TO_USE"
+  local auto
+  auto="$(auto_pick_main_scheme "$project_name" "$schemes_text")"
 
-  # 3) 再次优：排除 Pods/Tests/Flutter Assemble 后的第一个
-  while IFS= read -r s; do
-    [ -z "$s" ] && continue
-    echo "$s"; return 0
-  done <<< "$SCHEMES_TO_USE"
+  if have_cmd fzf; then
+    local chosen
+    chosen="$(printf "%s\n" "$schemes_text" | fzf --prompt="选择 Scheme > " --height=40% --reverse --cycle --query="$auto" --select-1 --exit-0)" || true
+    [[ -n "$chosen" ]] || chosen="$auto"
+    echo "$chosen"
+    return 0
+  fi
 
+  echo "$auto"
+}
+
+# ================================== 真机构建 + 定位 .app ==================================
+xcodebuild_show_build_settings() {
+  local flag
+  flag="$(project_kind_flag)"
+  local scheme="$1"
+
+  local cmd=(/usr/bin/xcodebuild
+    "$flag" "$PROJECT_PATH"
+    -scheme "$scheme"
+    -configuration "$CONFIG"
+    -sdk iphoneos
+    -destination "generic/platform=iOS"
+    -derivedDataPath "$DERIVED_DATA"
+    -showBuildSettings
+  )
+  log "XCODEBUILD_SHOWBUILDSETTINGS_CMD=${(j: :)cmd}"
+  "${cmd[@]}" 2>&1
+}
+
+parse_build_setting_value() {
+  local key="$1"
+  awk -v k="$key" '
+    $0 ~ "^[[:space:]]*"k"[[:space:]]*=" {
+      sub("^[[:space:]]*"k"[[:space:]]*=[[:space:]]*", "", $0)
+      print $0
+      exit
+    }
+  '
+}
+
+locate_app_path() {
+  local scheme="$1"
+  local out
+  out="$(xcodebuild_show_build_settings "$scheme")" || {
+    log "XCODEBUILD_SHOWBUILDSETTINGS_EXIT=$?"
+    log "XCODEBUILD_SHOWBUILDSETTINGS_OUTPUT_BEGIN"
+    log "$out"
+    log "XCODEBUILD_SHOWBUILDSETTINGS_OUTPUT_END"
+    open_log_and_exit "xcodebuild -showBuildSettings 失败"
+  }
+
+  log "XCODEBUILD_SHOWBUILDSETTINGS_OUTPUT_BEGIN"
+  log "$out"
+  log "XCODEBUILD_SHOWBUILDSETTINGS_OUTPUT_END"
+
+  local target_build_dir full_product_name
+  target_build_dir="$(printf "%s\n" "$out" | parse_build_setting_value "TARGET_BUILD_DIR")"
+  full_product_name="$(printf "%s\n" "$out" | parse_build_setting_value "FULL_PRODUCT_NAME")"
+
+  if [[ -z "$target_build_dir" || -z "$full_product_name" ]]; then
+    return 1
+  fi
+
+  local app_path="$target_build_dir/$full_product_name"
+  if [[ -d "$app_path" ]]; then
+    echo "$app_path"
+    return 0
+  fi
   return 1
 }
 
-DEFAULT_SCHEME="$(pick_default_scheme || true)"
-[ -n "$DEFAULT_SCHEME" ] || die "无法自动选择 scheme"
+xcodebuild_build() {
+  local scheme="$1"
+  local flag
+  flag="$(project_kind_flag)"
 
-# 如果有 fzf，且候选多于 1，则给选择；否则直接用默认
-choose_scheme() {
-  local count
-  count="$(printf "%s\n" "$SCHEMES_TO_USE" | awk 'NF{c++} END{print c+0}')"
-  if command -v fzf >/dev/null 2>&1 && [ "$count" -gt 1 ]; then
-    printf "%s\n" "$SCHEMES_TO_USE" | awk 'NF' | fzf --prompt="选择 scheme > " --height=40% --reverse --header="默认：$DEFAULT_SCHEME" || true
-  else
-    echo "$DEFAULT_SCHEME"
+  local cmd=(/usr/bin/xcodebuild
+    "$flag" "$PROJECT_PATH"
+    -scheme "$scheme"
+    -configuration "$CONFIG"
+    -sdk iphoneos
+    -destination "generic/platform=iOS"
+    -derivedDataPath "$DERIVED_DATA"
+    build
+  )
+  if [[ "$ALLOW_UPDATES" == "1" ]]; then
+    cmd+=(-allowProvisioningUpdates)
   fi
+
+  log "XCODEBUILD_BUILD_CMD=${(j: :)cmd}"
+  "${cmd[@]}"
 }
 
-SCHEME="$(choose_scheme)"
-[ -n "${SCHEME:-}" ] || SCHEME="$DEFAULT_SCHEME"
-
-success_echo "选择 scheme：$SCHEME"
-success_echo "输出目录：$OUT_DIR"
-info_echo "🐛 DERIVED_DATA=$DERIVED_DATA"
-
-log "SCHEME=$SCHEME"
-
-# ================================== 编译（强制真机） ==================================
-ALLOW_UPDATES_ARGS=()
-if [ "$ALLOW_UPDATES" -eq 1 ]; then
-  ALLOW_UPDATES_ARGS+=("-allowProvisioningUpdates")
-fi
-
-DESTINATION_ARGS=("-destination" "generic/platform=iOS")
-
-build() {
-  info_echo "开始编译：$SCHEME ($CONFIG)"
-  if [ "$PROJECT_KIND" = "workspace" ]; then
-    /usr/bin/xcodebuild \
-      -workspace "$PROJECT_PATH" \
-      -scheme "$SCHEME" \
-      -configuration "$CONFIG" \
-      -sdk iphoneos \
-      "${DESTINATION_ARGS[@]}" \
-      -derivedDataPath "$DERIVED_DATA" \
-      "${ALLOW_UPDATES_ARGS[@]}" \
-      build
-  else
-    /usr/bin/xcodebuild \
-      -project "$PROJECT_PATH" \
-      -scheme "$SCHEME" \
-      -configuration "$CONFIG" \
-      -sdk iphoneos \
-      "${DESTINATION_ARGS[@]}" \
-      -derivedDataPath "$DERIVED_DATA" \
-      "${ALLOW_UPDATES_ARGS[@]}" \
-      build
-  fi
+fallback_find_app_in_deriveddata() {
+  local app
+  app="$(/usr/bin/find "$DERIVED_DATA" -type d -name "*.app" -path "*-iphoneos/*" -print 2>/dev/null | /usr/bin/xargs -I{} stat -f "%m %N" "{}" 2>/dev/null | sort -nr | head -n 1 | cut -d' ' -f2-)"
+  [[ -n "$app" && -d "$app" ]] && echo "$app" || echo ""
 }
 
-# 把 xcodebuild 输出同时写入日志
-{
-  log "XCODEBUILD_BUILD_BEGIN"
-  build
-  log "XCODEBUILD_BUILD_END"
-} 2>&1 | tee -a "$LOG_FILE"
+ensure_app_path() {
+  local scheme="$1"
 
-# ================================== 定位 .app（优先 Build Settings） ==================================
-show_build_settings() {
-  if [ "$PROJECT_KIND" = "workspace" ]; then
-    /usr/bin/xcodebuild -showBuildSettings \
-      -workspace "$PROJECT_PATH" \
-      -scheme "$SCHEME" \
-      -configuration "$CONFIG" \
-      -sdk iphoneos \
-      "${DESTINATION_ARGS[@]}" \
-      -derivedDataPath "$DERIVED_DATA"
-  else
-    /usr/bin/xcodebuild -showBuildSettings \
-      -project "$PROJECT_PATH" \
-      -scheme "$SCHEME" \
-      -configuration "$CONFIG" \
-      -sdk iphoneos \
-      "${DESTINATION_ARGS[@]}" \
-      -derivedDataPath "$DERIVED_DATA"
+  local app_path=""
+  app_path="$(locate_app_path "$scheme" || true)"
+
+  if [[ -n "$app_path" ]]; then
+    success_echo "定位 .app：$app_path"
+    log "OK 定位 .app：$app_path"
+    echo "$app_path"
+    return 0
   fi
+
+  info_echo "未能从 Build Settings 定位 .app，开始编译后回退匹配"
+  log "INFO 未能从 Build Settings 定位 .app，开始编译后回退匹配"
+
+  xcodebuild_build "$scheme" 2>&1 | tee -a "$LOG_FILE"
+  app_path="$(locate_app_path "$scheme" || true)"
+  if [[ -z "$app_path" ]]; then
+    app_path="$(fallback_find_app_in_deriveddata)"
+  fi
+  [[ -n "$app_path" ]] || open_log_and_exit "未能定位 .app（请确认真机构建成功，且 scheme 是主 iOS App）"
+  success_echo "定位 .app：$app_path"
+  log "OK 定位 .app：$app_path"
+  echo "$app_path"
 }
 
-bs_out="$(show_build_settings 2>&1 || true)"
-log "SHOW_BUILD_SETTINGS_OUTPUT_BEGIN"
-log "$bs_out"
-log "SHOW_BUILD_SETTINGS_OUTPUT_END"
+# ================================== 打包 .ipa ==================================
+make_ipa() {
+  local app_path="$1"
+  local app_name="${app_path:t:r}"
+  local stamp
+  stamp="$(date '+%Y%m%d_%H%M%S')"
+  local ipa_path="${OUT_DIR}/${app_name}_${CONFIG}_${stamp}.ipa"
 
-BUILT_PRODUCTS_DIR="$(echo "$bs_out" | sed -n 's/^[[:space:]]*BUILT_PRODUCTS_DIR[[:space:]]*=[[:space:]]*//p' | tail -n 1)"
-CODESIGNING_FOLDER_PATH="$(echo "$bs_out" | sed -n 's/^[[:space:]]*CODESIGNING_FOLDER_PATH[[:space:]]*=[[:space:]]*//p' | tail -n 1)"
-WRAPPER_NAME="$(echo "$bs_out" | sed -n 's/^[[:space:]]*WRAPPER_NAME[[:space:]]*=[[:space:]]*//p' | tail -n 1)"
+  local tmp_dir
+  tmp_dir="$(mktemp -d "/tmp/${app_name}.ipa.XXXXXX")"
+  mkdir -p "$tmp_dir/Payload"
+  /bin/cp -R "$app_path" "$tmp_dir/Payload/"
 
-APP_PATH=""
-if [ -n "$CODESIGNING_FOLDER_PATH" ] && [ -e "$CODESIGNING_FOLDER_PATH" ]; then
-  APP_PATH="$CODESIGNING_FOLDER_PATH"
-elif [ -n "$BUILT_PRODUCTS_DIR" ] && [ -n "$WRAPPER_NAME" ] && [ -e "$BUILT_PRODUCTS_DIR/$WRAPPER_NAME" ]; then
-  APP_PATH="$BUILT_PRODUCTS_DIR/$WRAPPER_NAME"
-fi
+  (cd "$tmp_dir" && /usr/bin/zip -qry "$ipa_path" "Payload") || {
+    rm -rf "$tmp_dir" || true
+    open_log_and_exit "打包 .ipa 失败"
+  }
+  rm -rf "$tmp_dir" || true
 
-# 回退：DerivedData 搜索
-if [ -z "$APP_PATH" ]; then
-  APP_PATH="$(find "$DERIVED_DATA" -type d -name "*.app" -path "*iphoneos*" 2>/dev/null | head -n 1 || true)"
-fi
+  success_echo "已生成：$ipa_path"
+  log "OK 已生成：$ipa_path"
+}
 
-[ -n "$APP_PATH" ] || die "未能定位 .app（编译已过但未找到产物）"
-[ -d "$APP_PATH" ] || die "定位到的 .app 不是目录：$APP_PATH"
+# ================================== 交互确认 ==================================
+confirm_or_exit() {
+  [[ "$CONFIRM" == "1" ]] || return 0
+  echo
+  warn_echo "确认开始打包？"
+  echo "  工程：$PROJECT_PATH"
+  echo "  Scheme：$SCHEME"
+  echo "  配置：$CONFIG"
+  echo "  输出：$OUT_DIR"
+  echo -n "继续 (y/N)："
+  read -r ans
+  [[ "$ans" == "y" || "$ans" == "Y" ]] || { warn_echo "已取消"; exit 0; }
+}
 
-success_echo "定位 .app：$APP_PATH"
-log "APP_PATH=$APP_PATH"
+# ================================== 主流程 ==================================
+main() {
+  : > "$LOG_FILE"
+  show_intro
+  parse_args "$@"
 
-# ================================== 打包 IPA ==================================
-TMP_DIR="$(mktemp -d "/tmp/ipa_build.XXXXXX")"
-PAYLOAD_DIR="$TMP_DIR/Payload"
-mkdir -p "$PAYLOAD_DIR"
+  mkdir -p "$OUT_DIR" || open_log_and_exit "创建输出目录失败：$OUT_DIR"
+  rm -rf "$DERIVED_DATA" >/dev/null 2>&1 || true
+  mkdir -p "$DERIVED_DATA" || open_log_and_exit "创建 DerivedData 失败：$DERIVED_DATA"
 
-APP_NAME="$(basename "$APP_PATH")"
-cp -R "$APP_PATH" "$PAYLOAD_DIR/$APP_NAME"
+  local script_dir
+  script_dir="$(resolve_script_dir)"
+  info_echo "📂 工作目录：$script_dir"
+  log "INFO 📂 工作目录：$script_dir"
+  log "LOG_FILE=$LOG_FILE"
+  log "CONFIG=$CONFIG"
+  log "OUT_DIR=$OUT_DIR"
+  log "SCRIPT_DIR=$script_dir"
+  debug_echo "DERIVED_DATA=$DERIVED_DATA"
+  log "INFO 🐛 DERIVED_DATA=$DERIVED_DATA"
 
-TS="$(date '+%Y%m%d_%H%M%S')"
-IPA_NAME="${SCHEME}_${CONFIG}_${TS}.ipa"
-IPA_PATH="${OUT_DIR%/}/$IPA_NAME"
+  ensure_project_path "$script_dir"
+  success_echo "发现工程：${PROJECT_PATH:t}"
+  log "OK 发现工程：${PROJECT_PATH:t}"
 
-( cd "$TMP_DIR" && /usr/bin/zip -qry "$IPA_PATH" "Payload" ) || die "zip 打包失败"
+  SCHEME="$(pick_scheme)"
+  success_echo "选择 scheme：$SCHEME"
+  log "OK 选择 scheme：$SCHEME"
 
-rm -rf "$TMP_DIR" || true
+  confirm_or_exit
 
-success_echo "🎉 IPA 已生成：$IPA_PATH"
-info_echo "日志：$LOG_FILE"
-if [ "$CONFIRM" -eq 1 ]; then
-  open "$OUT_DIR" >/dev/null 2>&1 || true
-fi
+  info_echo "开始构建并定位 .app：$SCHEME ($CONFIG)"
+  log "INFO 开始构建并定位 .app：$SCHEME ($CONFIG)"
+
+  local app_path
+  app_path="$(ensure_app_path "$SCHEME")"
+
+  make_ipa "$app_path"
+}
+
+main "$@"

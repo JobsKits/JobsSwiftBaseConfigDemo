@@ -46,7 +46,7 @@ final class LGOEditNicknameVC: BaseVC {
             .byDefaultTextAttributes([.kern: 0.5]) // 字距
             .byTypingAttributes([.foregroundColor: UIColor.label])
             // 新 API：输入监听 + 限制长度
-            .jobs_onInput(limit: 12) { [weak self] char, value, mode, isLimited in
+            .byOnInput(limit: 12) { [weak self] char, value, mode, isLimited in
                 guard let self else { return }
                 // 1) 超限提示
                 tipLabel.byVisible(isLimited)

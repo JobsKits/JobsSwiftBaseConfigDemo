@@ -16,7 +16,7 @@ import JobsSwiftBaseDefines
 extension UITextField {
     /// 输入监听（默认不限制）
     @discardableResult
-    public func jobs_onInput(limit: Int? = nil,
+    public func byOnInput(limit: Int? = nil,
                              _ callback: @escaping (_ char: String,
                                                     _ value: String,
                                                     _ mode: JobsTextInputMode,
@@ -32,7 +32,7 @@ extension UITextField {
     }
     /// 激活到输入态回调
     @discardableResult
-    public func jobs_onBeginEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
+    public func byBeginEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.onBegin = callback
         if delegate !== obs {
@@ -42,7 +42,7 @@ extension UITextField {
     }
     /// 失去激活状态回调
     @discardableResult
-    public func jobs_onEndEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
+    public func byEndEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.onEnd = callback
         if delegate !== obs {

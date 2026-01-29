@@ -4,15 +4,15 @@
 
 ## 一、介绍
 
-* 用**Toast**的方式来检验目标 `UIViewController` 是否释放
+* 用**Toast**的方式来<font color=red>检验目标 **`UIViewController`** 是否释放</font>
 
 * 利用协议挂载，没有入侵性
 
-* 文案有默认值，亦可以在当前`UIViewController`中自定义文案
+* 文案有默认值，亦可以在当前**`UIViewController`**中自定义文案
 
 * 不占用当前的 `deinit{/// TODO}`方法
 
-* 只在**Debug**环境下生效
+* 只在**Debug**环境下生效，能在**Release**环境下打包
 
 * 第三方引用
 
@@ -36,10 +36,16 @@
   * **方法交换** ➤ 将 `JobsDebugDeinitAutoLoad.m`集成在主工程
 
     ```objective-c
-    /// JobsDebugDeinitAutoLoad.m
+    //
+    //  JobsDebugDeinitAutoLoad.m
+    //  Pods
+    //
+    //  Created by Jobs on 27/1/26.
+    //
+    
     @import Foundation;
     @import UIKit;
-    @import JobsSwiftDebugTools;
+    #import <objc/message.h>
     
     @interface JobsDebugDeinitAutoLoad : NSObject
     
@@ -48,9 +54,12 @@
     @implementation JobsDebugDeinitAutoLoad
     
     + (void)load {
-    #if DEBUG
-        [JobsDebugDeinitAutoSwizzle start];
-    #endif
+        // 不依赖 import / link，Debug 有类就调用，Release 没类就跳过
+        Class cls = NSClassFromString(@"JobsDebugDeinitAutoSwizzle");
+        SEL sel = NSSelectorFromString(@"start");
+        if (cls && [cls respondsToSelector:sel]) {
+            ((void (*)(id, SEL))objc_msgSend)(cls, sel);
+        }
     }
     
     @end
