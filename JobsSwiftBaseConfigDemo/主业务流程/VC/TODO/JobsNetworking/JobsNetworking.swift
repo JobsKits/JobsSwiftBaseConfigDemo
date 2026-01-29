@@ -91,6 +91,9 @@ public final class JobsNetworking {
         private var uploadItem: UploadItem?
         private var downloadItem: DownloadItem?
 
+        // MARK: - ✅ Resumable Download Task
+        private var task: JobsNetworkingTask?
+
         // MARK: - Progress
         private var progressHandler: ((Double) -> Void)?
 
@@ -225,6 +228,56 @@ public final class JobsNetworking {
         @discardableResult public func byDownload(to directory: URL, fileName: String) -> Builder {
             self.downloadItem = DownloadItem(directory: directory, fileName: fileName)
             return self
+        }
+
+        // MARK: - Start (Resumable Download)
+        /// ✅ 新增：启动并返回可控任务句柄（用于下载断点续传）
+        @discardableResult
+        public func startDownloadTask() -> JobsNetworkingTask? {
+            // 只对 download 生效；否则退化为普通 start()
+            guard downloadItem != nil else {
+                start()
+                return nil
+            }
+
+            retainSelf()
+
+            let requestTime = JobsNetworking.formatMS(Date())
+            let fullURL = url
+            let outHeaders = headers
+
+            let bodyForCallback: Any? = {
+                if let rawBody { return rawBody }
+                if let params { return params }
+                return nil
+            }()
+
+            let execBlock = { [self] in
+                let cfg = URLSessionConfiguration.default
+                cfg.timeoutIntervalForRequest = self.timeout
+                cfg.timeoutIntervalForResource = self.timeout
+                cfg.waitsForConnectivity = true
+                self.session = Session(configuration: cfg)
+
+                let afHeaders = HTTPHeaders(outHeaders.map { HTTPHeader(name: $0.key, value: $0.value) })
+
+                self.performDownloadTask(fullURL: fullURL,
+                                         method: self.method,
+                                         headers: afHeaders,
+                                         downloadItem: self.downloadItem!,
+                                         requestTime: requestTime,
+                                         bodyForCallback: bodyForCallback)
+            }
+
+            if allowConcurrentThread {
+                workQueue.async(execute: execBlock)
+            } else {
+                execBlock()
+            }
+
+            let t = JobsNetworkingTask()
+            self.task = t
+            return t
         }
 
         // MARK: - Start
@@ -428,6 +481,53 @@ public final class JobsNetworking {
                 }
             }
         }
+
+        private func performDownloadTask(fullURL: String,
+                                         method: JobsHTTPMethod,
+                                         headers: HTTPHeaders,
+                                         downloadItem: DownloadItem,
+                                         requestTime: String,
+                                         bodyForCallback: Any?) {
+
+            let dst: DownloadRequest.Destination = { _, _ in
+                let fileURL = downloadItem.directory.appendingPathComponent(downloadItem.fileName)
+                return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+            }
+
+            let req = session.download(fullURL, method: method.alamofire, headers: headers, to: dst)
+            task?.downloadRequest = req
+
+            req.downloadProgress(queue: .global(qos: .utility)) { [weak self] p in
+                self?.emitProgress(p.fractionCompleted)
+            }
+
+            // ⚠️ 这里用 response（而不是 responseData），避免把大文件读进内存
+            req.response(queue: .global(qos: .utility)) { [weak self] resp in
+                guard let self else { return }
+                let receivedTime = JobsNetworking.formatMS(Date())
+
+                // 断点续传关键：拿到 resumeData
+                if let rd = resp.resumeData {
+                    self.task?.resumeData = rd
+                }
+
+                let cb = JobsNetworkingCallback(
+                    id: self.id,
+                    fullURL: fullURL,
+                    headers: self.headers,
+                    method: method,
+                    body: bodyForCallback,
+                    data: nil,
+                    requestTime: requestTime,
+                    receivedTime: receivedTime
+                )
+
+                DispatchQueue.main.async { [weak self] in
+                    self?.owner?.onCallback?(cb)
+                    self?.finishAndRelease()
+                }
+            }
+        }
     }
 
     // MARK: - Request Relay (请求接力)
@@ -462,5 +562,67 @@ public final class JobsNetworking {
         group.notify(queue: queue) {
             finished()
         }
+    }
+}
+// MARK: - Resumable Download Task Handle
+public final class JobsNetworkingTask {
+
+    fileprivate var downloadRequest: DownloadRequest?
+    fileprivate var resumeData: Data?
+
+    /// 暂停（产出 resumeData，用于断点续传）
+    public func pause(completion: ((Data?) -> Void)? = nil) {
+        // 优先走系统 URLSessionDownloadTask 的断点能力：不挑 AF 版本
+        if let t = downloadRequest?.task as? URLSessionDownloadTask {
+            t.cancel { [weak self] data in
+                self?.resumeData = data
+                completion?(data)
+            }
+            return
+        }
+
+        // fallback：拿不到 task，就返回已有缓存
+        completion?(resumeData)
+    }
+
+    /// 继续（优先用传入的 resumeData，否则用内部缓存）
+    public func resume(with data: Data? = nil,
+                       in session: Session,
+                       destination: @escaping DownloadRequest.Destination,
+                       progress: ((Double) -> Void)? = nil,
+                       completion: @escaping (AFDownloadResponse<URL?>) -> Void) {
+
+        let rd = data ?? resumeData
+        guard let rd else {
+            completion(AFDownloadResponse(
+                request: nil,
+                response: nil,
+                fileURL: nil,
+                resumeData: nil,
+                metrics: nil,
+                serializationDuration: 0,
+                result: .failure(AFError.explicitlyCancelled)
+            ))
+            return
+        }
+
+        let req = session.download(resumingWith: rd, to: destination)
+        downloadRequest = req
+
+        req.downloadProgress(queue: DispatchQueue.global(qos: .utility)) { p in
+            progress?(p.fractionCompleted)
+        }
+
+        req.response(queue: DispatchQueue.global(qos: .utility)) { [weak self] (resp: AFDownloadResponse<URL?>) in
+            if let rd2 = resp.resumeData {
+                self?.resumeData = rd2
+            }
+            completion(resp)
+        }
+    }
+
+    /// 取消（不产出 resumeData）
+    public func cancel() {
+        downloadRequest?.cancel()
     }
 }
