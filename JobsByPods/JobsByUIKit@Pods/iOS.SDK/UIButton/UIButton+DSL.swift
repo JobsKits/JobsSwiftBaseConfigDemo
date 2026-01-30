@@ -11,14 +11,72 @@ import AppKit
 import UIKit
 #endif
 
+import ObjectiveC.runtime
 import JobsSwiftBaseDefines
 // MARK: - 基础链式
 public var _jobsTitleFontDictKey: UInt8 = 0
 public var _jobsTitleFontHandlerInstalledKey: UInt8 = 0
 public var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 public var _jobsConfigPatchListKey: UInt8 = 0
+public var _jobsLegacyImagePlacementKey: UInt8 = 0
+public var _jobsTitleEdgeInsets15Key: UInt8 = 0
+
 extension UIButton {
-    @discardableResult
+    // MARK: - iOS12 legacy imagePlacement 标记（用于让后续 contentEdgeInsets.top 真正生效）
+    private enum _JobsLegacyImagePlacement: Int {
+        case none = 0
+        case top = 1
+        case bottom = 2
+        case left = 3
+        case right = 4
+    }
+        
+    private var _jobsLegacyImagePlacement: _JobsLegacyImagePlacement {
+        get {
+            let v = (objc_getAssociatedObject(self, &_jobsLegacyImagePlacementKey) as? Int) ?? 0
+            return _JobsLegacyImagePlacement(rawValue: v) ?? .none
+        }
+        set {
+            objc_setAssociatedObject(self, &_jobsLegacyImagePlacementKey, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    
+    // MARK: - Legacy Insets Shift Helper (iOS 14 and below)
+    private func _jobsShiftEdgeInsets(_ e: UIEdgeInsets, dx: CGFloat, dy: CGFloat) -> UIEdgeInsets {
+        UIEdgeInsets(top: e.top + dy,
+                     left: e.left + dx,
+                     bottom: e.bottom - dy,
+                     right: e.right - dx)
+    }
+
+    /// When legacy imagePlacement(.top/.bottom/.left/.right) has been applied on iOS 12,
+    /// changing contentEdgeInsets should also shift image/title insets, otherwise the legacy negative offsets can "push back".
+    private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets, new: UIEdgeInsets) {
+        switch _jobsLegacyImagePlacement {
+        case .top, .bottom:
+            let dy = new.top - old.top
+            guard dy != 0 else { return }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: 0, dy: dy)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: 0, dy: dy)
+        case .left:
+            _jobsLegacyImagePlacement = .left
+            let dx = new.left - old.left
+            guard dx != 0 else { return }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+        case .right:
+            _jobsLegacyImagePlacement = .right
+            // Increasing right inset should shift content to the left (negative dx)
+            let dx = -(new.right - old.right)
+            guard dx != 0 else { return }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+        case .none:
+            return
+        }
+    }
+@discardableResult
     public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
         self.setTitle(title, for: state)
         if #available(iOS 15.0, *), var cfg = self.configuration {
@@ -167,52 +225,64 @@ extension UIButton {
     }
 
     @available(iOS 15.0, *)
-    private func _ensureConfigPatchHandlerInstalled() {
+    private func _ensureUnifiedUpdateHandlerInstalled() {
         if (objc_getAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        let existing = self.configurationUpdateHandler
-        self.automaticallyUpdatesConfiguration = true
-        self.configurationUpdateHandler = { [weak self] btn in
-            existing?(btn)
-            guard let self else { return }
-            let patches = self._jobsCfgPatches
-            guard !patches.isEmpty else { return }
-            var cfg = btn.configuration ?? .plain()
-            for p in patches { cfg = p(cfg) }
-            btn.configuration = cfg
-        }
-    }
-
-    @available(iOS 15.0, *)
-    private func _ensureTitleFontHandlerInstalled() {
-        if (objc_getAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey) as? Bool) == true { return }
-        objc_setAssociatedObject(self, &_jobsTitleFontHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
         let existing = self.configurationUpdateHandler
         self.automaticallyUpdatesConfiguration = true
 
         self.configurationUpdateHandler = { [weak self] btn in
+            // keep external handler behavior
             existing?(btn)
             guard let self else { return }
 
-            let st = btn.state
             var cfg = btn.configuration ?? .plain()
-            // 主标题防丢（跟你 subtitle 那套一致）
+
+            // 主标题防丢
             if cfg.title == nil,
                let t = btn.title(for: .normal),
                !t.isEmpty {
                 cfg.title = t
             }
-            // 取 state 对应字体，没找到就回退 normal
+
+            // 1) Apply configuration patches
+            let patches = self._jobsCfgPatches
+            if !patches.isEmpty {
+                for p in patches { cfg = p(cfg) }
+            }
+
+            // 2) Apply title font per state (fallback to normal)
+            let st = btn.state
             let font = self._titleFontDict[st.rawValue] ?? self._titleFontDict[UIControl.State.normal.rawValue]
-            if let font {
+
+            // 3) Apply "titleEdgeInsets" approximation on iOS15+ (vertical only) via baselineOffset.
+            // NOTE: UIButton.Configuration has no true titleEdgeInsets. We approximate vertical offset:
+            // - Positive top inset means title goes down => baselineOffset negative.
+            let titleInsets = (objc_getAssociatedObject(self, &_jobsTitleEdgeInsets15Key) as? UIEdgeInsets) ?? .zero
+            let baselineOffset = (-titleInsets.top + titleInsets.bottom)
+
+            if font != nil || baselineOffset != 0 {
                 cfg.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                     var a = incoming
-                    a.font = font
+                    if let font { a.font = font }
+                    if baselineOffset != 0 { a.baselineOffset = baselineOffset }
                     return a
                 }
-            };btn.configuration = cfg
+            }
+
+            btn.configuration = cfg
         }
+    }
+
+    @available(iOS 15.0, *)
+    private func _ensureConfigPatchHandlerInstalled() {
+        _ensureUnifiedUpdateHandlerInstalled()
+    }
+
+    @available(iOS 15.0, *)
+    private func _ensureTitleFontHandlerInstalled() {
+        _ensureUnifiedUpdateHandlerInstalled()
     }
 }
 // MARK: - 进阶：按 state 的链式代理
@@ -324,13 +394,16 @@ extension UIButton {
             configuration = cfg
             byUpdateConfig()
         } else {
-            contentEdgeInsets = UIEdgeInsets(top: insets.top,
-                                             left: insets.leading,
-                                             bottom: insets.bottom,
-                                             right: insets.trailing)
+            let newInset = UIEdgeInsets(top: insets.top,
+                                        left: insets.leading,
+                                        bottom: insets.bottom,
+                                        right: insets.trailing)
+            let old = self.contentEdgeInsets
+            self.contentEdgeInsets = newInset
+            _jobsSyncLegacyInsetsIfNeeded(old: old, new: newInset)
         };return self
     }
-
+    
     @discardableResult
     public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
         let inset = insets ?? (UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
@@ -343,7 +416,12 @@ extension UIButton {
             configuration = cfg
             byUpdateConfig()
         } else {
+            // iOS 14 and below: keep legacy behavior.
+            // If legacy imagePlacement has been applied (esp. .top/.bottom with negative offsets),
+            // updating contentEdgeInsets should also shift image/title insets to avoid being "pushed back".
+            let old = self.contentEdgeInsets
             self.contentEdgeInsets = inset
+            _jobsSyncLegacyInsetsIfNeeded(old: old, new: inset)
         };return self
     }
 
@@ -362,12 +440,10 @@ extension UIButton {
     @discardableResult
     public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
-            var cfg = configuration ?? .filled()
-            cfg.contentInsets = NSDirectionalEdgeInsets(top: insets.top,
-                                                        leading: insets.left,
-                                                        bottom: insets.bottom,
-                                                        trailing: insets.right)
-            configuration = cfg
+            // UIButton.Configuration has no true titleEdgeInsets.
+            // We store the request and approximate vertical offset via baselineOffset in the update handler.
+            objc_setAssociatedObject(self, &_jobsTitleEdgeInsets15Key, insets, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
         } else {
             self.titleEdgeInsets = insets
@@ -407,8 +483,8 @@ extension UIButton {
         let pad = padding ?? 8.0
         if #available(iOS 15.0, *) {
             var cfg = configuration ?? .filled()
-            cfg.imagePlacement = p
-            cfg.imagePadding = pad
+            cfg.imagePlacement = p // 图文关系
+            cfg.imagePadding = pad // 图文距离
             configuration = cfg
             byUpdateConfig()
         } else {
@@ -428,7 +504,7 @@ extension UIButton {
     
     @discardableResult
     public func byImagePlacement(_ placement: JobsDirection,
-                          padding: CGFloat = 8.0) -> Self {
+                                 padding: CGFloat = 8.0) -> Self {
         if #available(iOS 13.0, *) {
             return byImagePlacement(placement.toDirectionalEdge, padding: padding)
         } else {
@@ -460,13 +536,18 @@ extension UIButton {
         }
         let img = safeImageSize()
         let ttl = safeTitleSize()
+        _jobsLegacyImagePlacement = .none
         switch placement {
         case .left:
+            _jobsLegacyImagePlacement = .left
+            _jobsLegacyImagePlacement = .none
             // 默认就是左图右文：只做间距 + 轻量内边距
             imageEdgeInsets = .zero
             titleEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: -padding)
             contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
         case .right:
+            _jobsLegacyImagePlacement = .right
+            _jobsLegacyImagePlacement = .none
             // 右图左文：互换位置（靠 insets 平移）
             imageEdgeInsets = UIEdgeInsets(top: 0,
                                            left: ttl.w + padding / 2,
@@ -478,6 +559,8 @@ extension UIButton {
                                            right: img.w + padding / 2)
             contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
         case .top:
+            _jobsLegacyImagePlacement = .top
+            _jobsLegacyImagePlacement = .top
             // 上图下文：
             // 目标：image 向上移 (titleH/2 + padding/2)，title 向下移 (imageH/2 + padding/2)
             // 同时水平对齐：image 向右移 titleW/2，title 向左移 imageW/2
@@ -497,6 +580,8 @@ extension UIButton {
                                              bottom: vPad / 2,
                                              right: hPad / 2)
         case .bottom:
+            _jobsLegacyImagePlacement = .bottom
+            _jobsLegacyImagePlacement = .bottom
             // 下图上文：
             // 与 top 相反：image 向下移，title 向上移
             imageEdgeInsets = UIEdgeInsets(top: (ttl.h + padding) / 2,

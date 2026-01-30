@@ -362,6 +362,12 @@ extension JobsProgressBar {
         self.trackView.backgroundColor = color
         return self
     }
+    
+    @discardableResult
+    public func byFillColor(_ color: UIColor) -> Self {
+        self.fillView.backgroundColor = color
+        return self
+    }
 
     @discardableResult
     public func byTrackCornerRadius(_ radius: CGFloat) -> Self {
