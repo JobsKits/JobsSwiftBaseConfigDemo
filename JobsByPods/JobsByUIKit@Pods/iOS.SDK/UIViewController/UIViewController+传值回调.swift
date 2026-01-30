@@ -21,7 +21,7 @@ private enum JobsAssocKey {
     static var appearCompletionFired: UInt8 = 2
 }
 /// ✅ 覆盖所有 ViewController（UIViewController 及其子类）
-extension UIViewController: ViewDataProtocol {}
+extension UIViewController: @retroactive ViewDataProtocol {}
 @MainActor
 public extension ViewDataProtocol where Self: UIViewController {
     // ================================== 正向：传值即渲染（默认 no-op） ==================================
@@ -97,7 +97,7 @@ extension UIViewController {
     }
 }
 
-extension UIViewController: JobsRouteComparable {
+extension UIViewController: @retroactive JobsRouteComparable {
     @inline(__always)
     public func jobs_isSameDestination(as other: UIViewController) -> Bool {
         type(of: self) == type(of: other)

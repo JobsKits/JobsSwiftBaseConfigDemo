@@ -11,8 +11,9 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import WebKit
+import GKNavigationBarSwift
+import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsToast
@@ -21,7 +22,7 @@ import JobsNavBar
 final class BaseWebViewDemoVC: BaseVC {
     // MARK: - 懒加载 Web（全通用，无业务常量）
     private lazy var web: BaseWebView = { [unowned self] in
-        return BaseWebView()
+        BaseWebView()
 //            .byBackgroundColor(.clear)
             .byAllowedHosts([])                  // 不限域
             .byOpenBlankInPlace(true)
@@ -69,7 +70,12 @@ final class BaseWebViewDemoVC: BaseVC {
                 goBack("")
             }
             .byAddTo(view) { [unowned self] make in
-                make.edges.equalToSuperview()
+                make.left.right.bottom.equalToSuperview()
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
             }
             /// 以下是依据前端暴露的自定义方法进行的JS交互
             .registerMobileAction("navigateToHome") {  [weak self] body, reply in
@@ -108,12 +114,35 @@ final class BaseWebViewDemoVC: BaseVC {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         /// 1️⃣ 加载线上 URL（任选其一）
-        web.loadBy("https://www.youtube.com/")
-        // web.loadBy("https://www.baidu.com")
+//        web.loadBy("https://www.youtube.com/")
+//        web.loadBy("https://www.google.com")
+        web.loadBy("https://www.baidu.com")
         /// 2️⃣ 加载内置 HTML（包含 JS↔︎Native 验证按钮）
         // web.loadHTMLBy(Self.demoHTML, baseURL: nil)
         /// 3️⃣ 加载本地 HTML 文件
         // web.loadBundleHTMLBy(named: "BaseWebViewDemo")
+        jobsSetupGKNav(
+            title: "WebView",
+            rightButtons: [
+                UIButton.sys()
+                    /// 按钮图片@图文关系
+                    .byImage("moon.circle.fill".sysImg, for: .normal)
+                    .byImage("moon.circle.fill".sysImg, for: .selected)
+                    /// 事件触发@点按
+                    .onTap { sender in
+                        sender.isSelected.toggle()
+                        BaseWebVC()
+                            .byData("https://www.youtube.com/")
+                            .onResult { id in
+                               print("回来了 id=\(String(describing: id))")
+                            }
+                            .byPush(self)           // 自带防重入，连点不重复
+                            .byCompletion{
+                                print("❤️结束❤️")
+                            }
+                    }
+            ]
+        )
     }
     // MARK: - 验证用 HTML（按钮覆盖 ping / alert / selection / _blank / 外链 / 下载）
     static let demoHTML = """

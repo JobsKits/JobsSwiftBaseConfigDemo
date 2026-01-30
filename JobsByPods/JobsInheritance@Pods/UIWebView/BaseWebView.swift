@@ -99,6 +99,13 @@ public class BaseWebView: UIView {
     public var urlRewriter: ((URL) -> URL?)?
     /// Safari 兜底规则：返回 true 时交给 Safari 打开（默认 nil）
     public var safariFallbackRule: ((URL) -> Bool)?
+    // ===== WKWebViewConfiguration 外部覆盖（外部优先；外部未设置则用内部默认）=====
+    /// 外部覆盖：nil 表示未设置（将使用内部默认值）
+    private var overrideWebsiteDataStore: WKWebsiteDataStore? = nil
+    /// 外部注入：在 WKWebView 初始化前回调，可配置除 dataStore 以外的其它项（或最终覆盖）
+    private var webViewConfigurationHook: ((WKWebViewConfiguration) -> Void)? = nil
+    /// 偏好用法：BaseWebView { cfg in ... }
+    public typealias WebViewConfigurationHook = (WKWebViewConfiguration) -> Void
     /// 循环重写保护
     public var rewriteBurstWindow: TimeInterval = 3
     public var rewriteBurstLimit: Int = 3
@@ -132,16 +139,21 @@ public class BaseWebView: UIView {
     private lazy var webView: WKWebView = {
         // ✅ 关键：强制使用非持久数据仓库（每个 BaseWebView 实例都是全新 session，零共享 Cookie/缓存）
         let cfg = WKWebViewConfiguration()
-        cfg.websiteDataStore = .nonPersistent()
+        // ✅ 内部默认：非持久数据仓库（每个 BaseWebView 实例都是全新 session，零共享 Cookie/缓存）
+        let internalDefaultStore: WKWebsiteDataStore = .nonPersistent()
+        // ✅ 外部优先：外部设置了就覆盖，否则用内部默认
+        cfg.websiteDataStore = overrideWebsiteDataStore ?? internalDefaultStore
         cfg.allowsInlineMediaPlayback = true
-
         let ucc = WKUserContentController()
         ucc.addUserScript(Self.makeBridgeUserScript())
         if #available(iOS 14.0, *) {
             // contentWorld 由 addScriptMessageHandler 时再设置
         }
         cfg.userContentController = ucc
-
+        // ✅ 外部注入：允许外层通过闭包配置 WKWebViewConfiguration
+        webViewConfigurationHook?(cfg)
+        // ✅ 若外层通过 byWebsiteDataStore 显式设置，则以它为最终值（避免被内部/闭包覆盖回去）
+        if let store = overrideWebsiteDataStore { cfg.websiteDataStore = store }
         let w = WKWebView(frame: .zero, configuration: cfg)
         return w
     }()
@@ -152,21 +164,40 @@ public class BaseWebView: UIView {
     private var kvoEstimatedProgress: NSKeyValueObservation?
     private var kvoTitle: NSKeyValueObservation?
     private var progressTopConstraint: Constraint?
-
     private lazy var refresher: UIRefreshControl = {
-        let r = UIRefreshControl()
-        r.onJobsChange { [weak self] (_: UIRefreshControl) in
-            guard let self = self else { return }
-            self.handlePullToRefresh()
+        UIRefreshControl()
+            .onJobsChange { [weak self] (_: UIRefreshControl) in
+                guard let self = self else { return }
+                self.handlePullToRefresh()
         }
-        return r
     }()
     /// 强引用 DocumentPicker 代理，避免立刻释放
     private var docPickerDelegate: DocumentPickerDelegateProxy?
     // ===== 初始化 =====
+    /// 默认构造：保持兼容
     @MainActor
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        commonInit()
+    }
+    /// ✅ 推荐构造：在 WKWebView 创建前注入 configuration（确保 websiteDataStore 等初始化参数生效）
+    @MainActor
+    public convenience init(_ configuration: @escaping WebViewConfigurationHook) {
+        self.init(frame: .zero, configuration: configuration)
+    }
+    /// 带 frame 的注入构造
+    @MainActor
+    public init(frame: CGRect = .zero,
+                configuration: WebViewConfigurationHook? = nil) {
+        super.init(frame: frame)
+        self.webViewConfigurationHook = configuration
+        commonInit()
+    }
+
+    @MainActor
+    private func commonInit() {
+        // ⚠️ 注意：这里会首次触发 webView 的 lazy 初始化
+        // 所以必须保证 webViewConfigurationHook 已在此之前赋值（上面的 init 已保证）
         webView.byVisible(true)
         registerMessageHandlers()
         setupUI()
@@ -904,7 +935,7 @@ extension BaseWebView: WKNavigationDelegate {
         SFSafariViewController(url: url)
             .byModalPresentationStyle(.pageSheet)
             .byData(3.14)
-            .onResult { name in print("回来了 \(name)") }
+            .onResult { name in print("回来了 \(String(describing: name))") }
             .byPresent(presentingVC)
             .byCompletion{ print("结束") }
     }
@@ -920,7 +951,7 @@ extension BaseWebView: WKUIDelegate {
             .makeAlert("提示".tr, message)
             .byAddOK { _ in completionHandler() }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(name)") }
+            .onResult { name in print("回来了 \(String(describing: name))") }
             .byPresent(presentingVC)
     }
     @MainActor
@@ -933,7 +964,7 @@ extension BaseWebView: WKUIDelegate {
             .byAddCancel { _ in completionHandler(false) }
             .byAddOK     { _ in completionHandler(true)  }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(name)") }
+            .onResult { name in print("回来了 \(String(describing: name))") }
             .byPresent(presentingVC)
     }
     @MainActor
@@ -949,7 +980,7 @@ extension BaseWebView: WKUIDelegate {
             .byAddCancel { _ in completionHandler(nil) }
             .byAddOK     { _ in completionHandler(nil) }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(name)") }
+            .onResult { name in print("回来了 \(String(describing: name))") }
             .byPresent(presentingVC)
     }
     /// iOS 18.4+ 自定义文件选择
@@ -1049,6 +1080,27 @@ public extension BaseWebView {
         self.safariFallbackRule = rule
         return self
     }
+    // ===== WKWebViewConfiguration 点语法注入（外部优先）=====
+    /// 外部显式设置 dataStore（优先级高于内部默认）
+    @discardableResult
+    func byWebsiteDataStore(_ store: WKWebsiteDataStore) -> Self {
+        // ⚠️ 必须在 webView 创建前调用；创建后修改不会影响现有 webView
+        self.overrideWebsiteDataStore = store
+        return self
+    }
+    /// 使用持久化数据仓库（共享 Cookie/缓存）
+    @discardableResult
+    func byPersistentStore() -> Self { byWebsiteDataStore(.default()) }
+    /// 使用非持久数据仓库（每次全新 session）
+    @discardableResult
+    func byEphemeralStore() -> Self { byWebsiteDataStore(.nonPersistent()) }
+    /// 外部注入 WKWebViewConfiguration：在 webView 初始化前回调（外部优先于内部）
+    @discardableResult
+    func byWebViewConfiguration(_ hook: @escaping (WKWebViewConfiguration) -> Void) -> Self {
+        self.webViewConfigurationHook = hook
+        return self
+    }
+
     @discardableResult
     func byApply(_ block: (BaseWebView) -> Void) -> Self { block(self); return self }
 }
