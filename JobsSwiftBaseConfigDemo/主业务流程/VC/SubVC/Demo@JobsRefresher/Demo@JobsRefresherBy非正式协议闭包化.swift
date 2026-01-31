@@ -45,7 +45,6 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .numberOfItemsInSection { [weak self] (obj: AnyObject, cv: UICollectionView, section: Int) -> Int in
                 self?.hItems ?? 0
             }
-
             .cellForItemAt { _, cv, indexPath in
                 cv
                     .dequeueCell(HCell.self, for: indexPath)

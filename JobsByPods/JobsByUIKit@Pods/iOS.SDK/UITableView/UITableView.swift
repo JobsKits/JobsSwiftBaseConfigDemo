@@ -12,6 +12,12 @@ import UIKit
 #endif
 
 import ObjectiveC
+
+enum JobsTableViewBlocksAssociatedKeys {
+    static var proxyKey = "jobs.tableview.blocks.proxy.key"
+    static var muxKey = "jobs.tableview.blocks.mux.key"
+    static var didSwizzleKey = "jobs.tableview.blocks.swizzle.key"
+}
 // MARK: - DSL
 extension UITableView {
     @discardableResult
@@ -19,9 +25,11 @@ extension UITableView {
         let p = jobs_blocksProxy()!
         p.target = target
         dataSource = p
-        // 关键：delegate 改用 mux，scroll delegate 交给 UIScrollViewBlocksProxy
+        // 关键：delegate 走 mux，避免被外部组件（例如下拉刷新、埋点、scroll 监听）覆盖后丢失回调
+        // 1) 先把 scroll 相关的 delegate 行为交给外部（如果你有 UIScrollView 的 blocks proxy）
+        // 2) 再用 mux 把 table 的 delegate（didSelect 等）和外部 delegate 合并
         byScrollTarget(target)
-        jobs_setDelegateMuxIfNeeded(primary: p)
+        jobs_installDelegateMuxIfNeeded(primary: p)
         return self
     }
     // MARK: - UITableViewDataSource
@@ -46,252 +54,117 @@ extension UITableView {
     }
 
     @discardableResult
-    public func titleForHeaderInSection(_ block: @escaping (AnyObject,
-                                                            UITableView,
-                                                            Int) -> String?) -> Self {
+    public func titleForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> String?) -> Self {
         jobs_blocksProxy()?.titleForHeaderInSection = block
         return self
     }
 
     @discardableResult
-    public func titleForFooterInSection(_ block: @escaping (AnyObject,
-                                                            UITableView,
-                                                            Int) -> String?) -> Self {
+    public func titleForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> String?) -> Self {
         jobs_blocksProxy()?.titleForFooterInSection = block
         return self
     }
 
     @discardableResult
-    public func canEditRowAt(_ block: @escaping (AnyObject,
-                                                 UITableView,
-                                                 IndexPath) -> Bool) -> Self {
+    public func canEditRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Bool) -> Self {
         jobs_blocksProxy()?.canEditRowAt = block
         return self
     }
 
     @discardableResult
-    public func commitEditingStyle(_ block: @escaping (AnyObject,
-                                                       UITableView,
-                                                       UITableViewCell.EditingStyle,
-                                                       IndexPath) -> Void) -> Self {
-        jobs_blocksProxy()?.commitEditingStyle = block
-        return self
-    }
-
-    @discardableResult
-    public func canMoveRowAt(_ block: @escaping (AnyObject,
-                                                 UITableView,
-                                                 IndexPath) -> Bool) -> Self {
+    public func canMoveRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Bool) -> Self {
         jobs_blocksProxy()?.canMoveRowAt = block
         return self
     }
 
     @discardableResult
-    public func moveRowAtTo(_ block: @escaping (AnyObject,
-                                                UITableView,
-                                                IndexPath,
-                                                IndexPath) -> Void) -> Self {
-        jobs_blocksProxy()?.moveRowAtTo = block
+    public func sectionIndexTitles(_ block: @escaping (AnyObject, UITableView) -> [String]?) -> Self {
+        jobs_blocksProxy()?.sectionIndexTitles = block
+        return self
+    }
+
+    @discardableResult
+    public func sectionForSectionIndexTitle(_ block: @escaping (AnyObject, UITableView, String, Int) -> Int) -> Self {
+        jobs_blocksProxy()?.sectionForSectionIndexTitle = block
+        return self
+    }
+
+    @discardableResult
+    public func commitEditingStyle(_ block: @escaping (AnyObject, UITableView, UITableViewCell.EditingStyle, IndexPath) -> Void) -> Self {
+        jobs_blocksProxy()?.commitEditingStyle = block
+        return self
+    }
+
+    @discardableResult
+    public func moveRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath, IndexPath) -> Void) -> Self {
+        jobs_blocksProxy()?.moveRowAt = block
         return self
     }
     // MARK: - UITableViewDelegate
     @discardableResult
-    public func didSelectRowAt(_ block: @escaping (AnyObject,
-                                                   UITableView,
-                                                   IndexPath) -> Void) -> Self {
+    public func willDisplay(_ block: @escaping (AnyObject, UITableView, UITableViewCell, IndexPath) -> Void) -> Self {
+        jobs_blocksProxy()?.willDisplay = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
+        return self
+    }
+
+    @discardableResult
+    public func didSelectRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didSelectRowAt = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func didDeselectRowAt(_ block: @escaping (AnyObject,
-                                                     UITableView,
-                                                     IndexPath) -> Void) -> Self {
+    public func didDeselectRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didDeselectRowAt = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func willDisplayCell(_ block: @escaping (AnyObject,
-                                                    UITableView,
-                                                    UITableViewCell,
-                                                    IndexPath) -> Void) -> Self {
-        jobs_blocksProxy()?.willDisplayCell = block
-        return self
-    }
-
-    @discardableResult
-    public func didEndDisplayingCell(_ block: @escaping (AnyObject,
-                                                         UITableView,
-                                                         UITableViewCell,
-                                                         IndexPath) -> Void) -> Self {
-        jobs_blocksProxy()?.didEndDisplayingCell = block
-        return self
-    }
-
-    @discardableResult
-    public func heightForRowAt(_ block: @escaping (AnyObject,
-                                                   UITableView,
-                                                   IndexPath) -> CGFloat) -> Self {
+    public func heightForRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForRowAt = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func estimatedHeightForRowAt(_ block: @escaping (AnyObject,
-                                                            UITableView,
-                                                            IndexPath) -> CGFloat) -> Self {
-        jobs_blocksProxy()?.estimatedHeightForRowAt = block
-        return self
-    }
-    // MARK: - UITableViewDataSourcePrefetching
-    @discardableResult
-    public func prefetchRowsAt(_ block: @escaping (AnyObject,
-                                                   UITableView,
-                                                   [IndexPath]) -> Void) -> Self {
-        let p = jobs_blocksProxy()!
-        p.prefetchRowsAt = block
-        prefetchDataSource = p
+    public func heightForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> CGFloat) -> Self {
+        jobs_blocksProxy()?.heightForHeaderInSection = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func cancelPrefetchingForRowsAt(_ block: @escaping (AnyObject,
-                                                               UITableView,
-                                                               [IndexPath]) -> Void) -> Self {
-        let p = jobs_blocksProxy()!
-        p.cancelPrefetchingForRowsAt = block
-        prefetchDataSource = p
+    public func heightForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> CGFloat) -> Self {
+        jobs_blocksProxy()?.heightForFooterInSection = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
-}
-// MARK: - Proxy
-private final class JobsTableViewBlocksProxy: NSObject,
-                                              UITableViewDelegate,
-                                              UITableViewDataSource,
-                                              UITableViewDataSourcePrefetching {
-    weak var target: AnyObject?
-    // MARK: - UITableViewDataSource
-    var numberOfSections: ((AnyObject, UITableView) -> Int)?
-    var numberOfRowsInSection: ((AnyObject, UITableView, Int) -> Int)?
-    var cellForRowAt: ((AnyObject, UITableView, IndexPath) -> UITableViewCell)?
-    var titleForHeaderInSection: ((AnyObject, UITableView, Int) -> String?)?
-    var titleForFooterInSection: ((AnyObject, UITableView, Int) -> String?)?
-    var canEditRowAt: ((AnyObject, UITableView, IndexPath) -> Bool)?
-    var canMoveRowAt: ((AnyObject, UITableView, IndexPath) -> Bool)?
-    var commitEditingStyle: ((AnyObject, UITableView, UITableViewCell.EditingStyle, IndexPath) -> Void)?
-    var moveRowAtTo: ((AnyObject, UITableView, IndexPath, IndexPath) -> Void)?
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        guard let t = target else { return 1 }
-        return numberOfSections?(t, tableView) ?? 1
+    @discardableResult
+    public func viewForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> UIView?) -> Self {
+        jobs_blocksProxy()?.viewForHeaderInSection = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
+        return self
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let t = target else { return 0 }
-        return numberOfRowsInSection?(t, tableView, section) ?? 0
+    @discardableResult
+    public func viewForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> UIView?) -> Self {
+        jobs_blocksProxy()?.viewForFooterInSection = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
+        return self
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let t = target else { return UITableViewCell() }
-        return cellForRowAt?(t, tableView, indexPath) ?? UITableViewCell()
+    @discardableResult
+    public func accessoryButtonTappedForRowWith(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
+        jobs_blocksProxy()?.accessoryButtonTappedForRowWith = block
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
+        return self
     }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let t = target else { return nil }
-        return titleForHeaderInSection?(t, tableView, section)
-    }
-
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard let t = target else { return nil }
-        return titleForFooterInSection?(t, tableView, section)
-    }
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard let t = target else { return false }
-        return canEditRowAt?(t, tableView, indexPath) ?? false
-    }
-
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        guard let t = target else { return false }
-        return canMoveRowAt?(t, tableView, indexPath) ?? false
-    }
-
-    func tableView(_ tableView: UITableView,
-                   commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        guard let t = target else { return }
-        commitEditingStyle?(t, tableView, editingStyle, indexPath)
-    }
-
-    func tableView(_ tableView: UITableView,
-                   moveRowAt sourceIndexPath: IndexPath,
-                   to destinationIndexPath: IndexPath) {
-        guard let t = target else { return }
-        moveRowAtTo?(t, tableView, sourceIndexPath, destinationIndexPath)
-    }
-    // MARK: - UITableViewDelegate
-    var didSelectRowAt: ((AnyObject, UITableView, IndexPath) -> Void)?
-    var didDeselectRowAt: ((AnyObject, UITableView, IndexPath) -> Void)?
-    var willDisplayCell: ((AnyObject, UITableView, UITableViewCell, IndexPath) -> Void)?
-    var didEndDisplayingCell: ((AnyObject, UITableView, UITableViewCell, IndexPath) -> Void)?
-    var heightForRowAt: ((AnyObject, UITableView, IndexPath) -> CGFloat)?
-    var estimatedHeightForRowAt: ((AnyObject, UITableView, IndexPath) -> CGFloat)?
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let t = target else { return }
-        didSelectRowAt?(t, tableView, indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let t = target else { return }
-        didDeselectRowAt?(t, tableView, indexPath)
-    }
-
-    func tableView(_ tableView: UITableView,
-                   willDisplay cell: UITableViewCell,
-                   forRowAt indexPath: IndexPath) {
-        guard let t = target else { return }
-        willDisplayCell?(t, tableView, cell, indexPath)
-    }
-
-    func tableView(_ tableView: UITableView,
-                   didEndDisplaying cell: UITableViewCell,
-                   forRowAt indexPath: IndexPath) {
-        guard let t = target else { return }
-        didEndDisplayingCell?(t, tableView, cell, indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let t = target else { return UITableView.automaticDimension }
-        return heightForRowAt?(t, tableView, indexPath) ?? UITableView.automaticDimension
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let t = target else { return UITableView.automaticDimension }
-        return estimatedHeightForRowAt?(t, tableView, indexPath) ?? UITableView.automaticDimension
-    }
-    // MARK: - UITableViewDataSourcePrefetching
-    var prefetchRowsAt: ((AnyObject, UITableView, [IndexPath]) -> Void)?
-    var cancelPrefetchingForRowsAt: ((AnyObject, UITableView, [IndexPath]) -> Void)?
-
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        guard let t = target else { return }
-        prefetchRowsAt?(t, tableView, indexPaths)
-    }
-
-    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
-        guard let t = target else { return }
-        cancelPrefetchingForRowsAt?(t, tableView, indexPaths)
-    }
-}
-// MARK: - Associated
-private enum JobsTableViewBlocksAssociatedKeys {
-    static var proxyKey = "jobs.tableview.blocks.proxy.key"
-}
-
-extension UITableView {
-     private func jobs_blocksProxy(createIfNeeded: Bool = true) -> JobsTableViewBlocksProxy? {
+    // MARK: - Private
+    private func jobs_blocksProxy(createIfNeeded: Bool = true) -> JobsTableViewBlocksProxy? {
         if let p = objc_getAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.proxyKey) as? JobsTableViewBlocksProxy {
             return p
         }
@@ -299,5 +172,196 @@ extension UITableView {
         let p = JobsTableViewBlocksProxy()
         objc_setAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.proxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return p
+    }
+    // MARK: - Delegate mux
+    func jobs_installDelegateMuxIfNeeded(primary: JobsTableViewBlocksProxy) {
+        jobs_swizzleSetDelegateIfNeeded()
+        // 已经是 mux：只更新 primary，并尽量保持 secondary
+        if let mux = objc_getAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.muxKey) as? JobsTableViewDelegateMux {
+            mux.primary = primary
+            // 如果外部又覆盖了 delegate（不是 mux），把它塞回 secondary 再抢回来
+            if let current = self.delegate as AnyObject?, current !== mux {
+                mux.secondary = current as? NSObjectProtocol
+                self.delegate = mux
+            };return
+        }
+        let mux = JobsTableViewDelegateMux()
+        mux.primary = primary
+        // 把当前 delegate 作为 secondary（可能是 byScrollTarget / refresher / 其他库）
+        if let current = self.delegate as AnyObject?, current !== mux {
+            mux.secondary = current as? NSObjectProtocol
+        }
+        objc_setAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.muxKey, mux, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        self.delegate = mux
+    }
+    // MARK: - Hard protect delegate (swizzle setDelegate:)
+    private func jobs_swizzleSetDelegateIfNeeded() {
+        // Swizzle is class-wide; attach a flag to UITableView class object
+        if objc_getAssociatedObject(UITableView.self, &JobsTableViewBlocksAssociatedKeys.didSwizzleKey) != nil {
+            return
+        }
+        objc_setAssociatedObject(UITableView.self,
+                                 &JobsTableViewBlocksAssociatedKeys.didSwizzleKey,
+                                 true,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+        let cls: AnyClass = UITableView.self
+        let original = #selector(setter: UITableView.delegate)
+        let swizzled = #selector(UITableView.jobs_setDelegate(_:))
+        guard
+            let m1 = class_getInstanceMethod(cls, original),
+            let m2 = class_getInstanceMethod(cls, swizzled)
+        else { return }
+        method_exchangeImplementations(m1, m2)
+    }
+
+    @objc private func jobs_setDelegate(_ delegate: UITableViewDelegate?) {
+        // After swizzle: this method name points to original implementation.
+        if let mux = objc_getAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.muxKey) as? JobsTableViewDelegateMux {
+            if let d = delegate as AnyObject?, d !== mux {
+                mux.secondary = d as? NSObjectProtocol
+            } else if delegate == nil {
+                mux.secondary = nil
+            }
+            // Always keep mux as the real delegate once installed
+            self.jobs_setDelegate(mux)
+            return
+        }
+        self.jobs_setDelegate(delegate)
+    }
+}
+// MARK: - Blocks Proxy
+class JobsTableViewBlocksProxy: NSObject, UITableViewDelegate, UITableViewDataSource {
+    weak var target: AnyObject?
+    // MARK: DataSource
+    var numberOfSections: ((AnyObject, UITableView) -> Int)?
+    var numberOfRowsInSection: ((AnyObject, UITableView, Int) -> Int)?
+    var cellForRowAt: ((AnyObject, UITableView, IndexPath) -> UITableViewCell)?
+    var titleForHeaderInSection: ((AnyObject, UITableView, Int) -> String?)?
+    var titleForFooterInSection: ((AnyObject, UITableView, Int) -> String?)?
+    var canEditRowAt: ((AnyObject, UITableView, IndexPath) -> Bool)?
+    var canMoveRowAt: ((AnyObject, UITableView, IndexPath) -> Bool)?
+    var sectionIndexTitles: ((AnyObject, UITableView) -> [String]?)?
+    var sectionForSectionIndexTitle: ((AnyObject, UITableView, String, Int) -> Int)?
+    var commitEditingStyle: ((AnyObject, UITableView, UITableViewCell.EditingStyle, IndexPath) -> Void)?
+    var moveRowAt: ((AnyObject, UITableView, IndexPath, IndexPath) -> Void)?
+    // MARK: Delegate
+    var willDisplay: ((AnyObject, UITableView, UITableViewCell, IndexPath) -> Void)?
+    var didSelectRowAt: ((AnyObject, UITableView, IndexPath) -> Void)?
+    var didDeselectRowAt: ((AnyObject, UITableView, IndexPath) -> Void)?
+    var heightForRowAt: ((AnyObject, UITableView, IndexPath) -> CGFloat)?
+    var heightForHeaderInSection: ((AnyObject, UITableView, Int) -> CGFloat)?
+    var heightForFooterInSection: ((AnyObject, UITableView, Int) -> CGFloat)?
+    var viewForHeaderInSection: ((AnyObject, UITableView, Int) -> UIView?)?
+    var viewForFooterInSection: ((AnyObject, UITableView, Int) -> UIView?)?
+    var accessoryButtonTappedForRowWith: ((AnyObject, UITableView, IndexPath) -> Void)?
+    // MARK: UITableViewDataSource
+    func numberOfSections(in tableView: UITableView) -> Int {
+        numberOfSections?(target ?? self, tableView) ?? 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        numberOfRowsInSection?(target ?? self, tableView, section) ?? 0
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        cellForRowAt?(target ?? self, tableView, indexPath) ?? UITableViewCell()
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        titleForHeaderInSection?(target ?? self, tableView, section)
+    }
+
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        titleForFooterInSection?(target ?? self, tableView, section)
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        canEditRowAt?(target ?? self, tableView, indexPath) ?? false
+    }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        canMoveRowAt?(target ?? self, tableView, indexPath) ?? false
+    }
+
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        sectionIndexTitles?(target ?? self, tableView)
+    }
+
+    func tableView(_ tableView: UITableView,
+                   sectionForSectionIndexTitle title: String,
+                   at index: Int) -> Int {
+        sectionForSectionIndexTitle?(target ?? self, tableView, title, index) ?? 0
+    }
+
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        commitEditingStyle?(target ?? self, tableView, editingStyle, indexPath)
+    }
+
+    func tableView(_ tableView: UITableView,
+                   moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath) {
+        moveRowAt?(target ?? self, tableView, sourceIndexPath, destinationIndexPath)
+    }
+
+    // MARK: UITableViewDelegate
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        willDisplay?(target ?? self, tableView, cell, indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectRowAt?(target ?? self, tableView, indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        didDeselectRowAt?(target ?? self, tableView, indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        heightForRowAt?(target ?? self, tableView, indexPath) ?? UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        heightForHeaderInSection?(target ?? self, tableView, section) ?? UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        heightForFooterInSection?(target ?? self, tableView, section) ?? UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        viewForHeaderInSection?(target ?? self, tableView, section)
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        viewForFooterInSection?(target ?? self, tableView, section)
+    }
+
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        accessoryButtonTappedForRowWith?(target ?? self, tableView, indexPath)
+    }
+}
+// MARK: - Delegate Mux
+class JobsTableViewDelegateMux: NSObject,
+                                UITableViewDelegate,
+                                UIScrollViewDelegate {
+    weak var primary: NSObjectProtocol?   // 优先：JobsTableViewBlocksProxy
+    weak var secondary: NSObjectProtocol? // 其次：外部 delegate（如果有）
+    override func responds(to aSelector: Selector!) -> Bool {
+        // 必须让 UIKit 认为我们“能响应”被转发对象的 selector
+        if (primary as AnyObject?)?.responds(to: aSelector) == true { return true }
+        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return true }
+        return super.responds(to: aSelector)
+    }
+
+    override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        // 选择性转发：优先 primary（确保 didSelect 走你的闭包）
+        if (primary as AnyObject?)?.responds(to: aSelector) == true { return primary }
+        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return secondary }
+        return super.forwardingTarget(for: aSelector)
     }
 }

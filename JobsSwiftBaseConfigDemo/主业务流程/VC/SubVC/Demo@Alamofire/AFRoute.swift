@@ -7,6 +7,49 @@
 
 import Foundation
 import Alamofire
+// MARK: - JSON body helper (avoid Encodable MainActor isolation issues)
+private func jobs_encodeJSONObject(_ value: Any) throws -> Data {
+    // Prefer [String: Any] directly
+    if let dict = value as? [String: Any] {
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
+    // Mirror-based fallback for simple DTO structs/classes with stored properties
+    let mirror = Mirror(reflecting: value)
+    var obj: [String: Any] = [:]
+    for (labelOpt, v) in mirror.children {
+        guard let label = labelOpt else { continue }
+        // unwrap Optional
+        let mv = Mirror(reflecting: v)
+        if mv.displayStyle == .optional {
+            if mv.children.count == 0 { continue } // nil
+            let unwrapped = mv.children.first!.value
+            if let json = jobs_jsonValue(unwrapped) { obj[label] = json }
+            continue
+        }
+        if let json = jobs_jsonValue(v) { obj[label] = json }
+    };return try JSONSerialization.data(withJSONObject: obj)
+}
+
+private func jobs_jsonValue(_ v: Any) -> Any? {
+    switch v {
+    case let x as String: return x
+    case let x as Int: return x
+    case let x as Int64: return x
+    case let x as Double: return x
+    case let x as Float: return x
+    case let x as Bool: return x
+    case let x as [Any]:
+        return x.compactMap { jobs_jsonValue($0) }
+    case let x as [String: Any]:
+        // sanitize nested dictionary
+        var out: [String: Any] = [:]
+        for (k, vv) in x {
+            if let j = jobs_jsonValue(vv) { out[k] = j }
+        };return out
+    default:
+        return nil
+    }
+}
 
 enum AFRoute: URLRequestConvertible {
     case ghZen
@@ -48,12 +91,16 @@ enum AFRoute: URLRequestConvertible {
         }
     }
 
-    var method: HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         switch self {
-        case .ghZen, .ghUser, .ghSearchUsers, .downloadPNG, .downloadBytes: return .get
-        case .login, .createUser, .uploadAvatar: return .post
-        case .updateUser: return .put
-        case .deleteUser: return .delete
+        case .ghZen, .ghUser, .ghSearchUsers, .downloadPNG, .downloadBytes:
+            return .get
+        case .login, .createUser, .uploadAvatar:
+            return .post
+        case .updateUser:
+            return .put
+        case .deleteUser:
+            return .delete
         }
     }
 
@@ -63,7 +110,6 @@ enum AFRoute: URLRequestConvertible {
         default: return 20
         }
     }
-
     // MARK: - Headers
     var headers: HTTPHeaders {
         var h: HTTPHeaders = ["Accept": "application/json"]
@@ -71,10 +117,8 @@ enum AFRoute: URLRequestConvertible {
             // multipart 自带 boundary Content-Type
         } else {
             h.add(name: "Content-Type", value: "application/json; charset=utf-8")
-        }
-        return h
+        };return h
     }
-
     // MARK: - Encoding / Body
     func asURLRequest() throws -> URLRequest {
         let url = baseURL.appendingPathComponent(path)
@@ -102,13 +146,14 @@ enum AFRoute: URLRequestConvertible {
             return req
 
         case let .createUser(b):
-            req.httpBody = try JSONEncoder().encode(b); return req
+            req.httpBody = try jobs_encodeJSONObject(b)
+            return req
 
         case let .updateUser(_, b):
-            req.httpBody = try JSONEncoder().encode(b); return req
+            req.httpBody = try jobs_encodeJSONObject(b)
+            return req
         }
     }
-
     // MARK: - Download Destination
     var destination: DownloadRequest.Destination? {
         switch self {
@@ -131,7 +176,6 @@ enum AFRoute: URLRequestConvertible {
             return nil
         }
     }
-
     // MARK: - sampleData（给 Stub 用，内容与 Moya 版一致）
     var sampleData: Data {
         switch self {

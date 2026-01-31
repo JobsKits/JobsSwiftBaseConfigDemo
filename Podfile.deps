@@ -75,6 +75,7 @@ def debugPods
 end
 # ============================== PodByJobs ==============================
 def byJobs
+  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods' , :configurations => ['Debug']
   pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
   pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
   pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
@@ -98,9 +99,8 @@ def byJobs
   pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods'
   pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
   pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
-  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods' , :configurations => ['Debug']
+  pod 'JobsNetworking',                     :path => 'JobsByPods/JobsNetworking@Pods'
   pod 'JobsSwiftStandardLibrary_extension', :path => 'JobsByPods/JobsSwiftStandardLibrary_extension@Pods'
-  
   pod 'JobsSwiftFoundation_extensions',     :path => 'JobsByPods/Foundation@Pods'                     # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
   pod 'JobsSwiftMetalKit_extensions',       :path => 'JobsByPods/MetalKit@Pods'                       # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
   pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods'                 # https://github.com/JobsKits/JobsSwiftBlock

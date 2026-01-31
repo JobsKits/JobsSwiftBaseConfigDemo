@@ -1,0 +1,56 @@
+//
+//  RequestAPIDemoVC.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 31/1/26.
+//
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import SnapKit
+import JobsNetworking
+import JobsByUIKit
+// MARK: - 请求接口(配置请求头)
+final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
+    
+    private lazy var agent: DefaultJobsAgent = {
+        let config = JobsRequestConfig(
+            baseURL: URL(string: "https://httpbin.org")!,
+            timeout: 20,
+            version: "v1",
+            userScope: "guest",
+            defaultRetryPolicy: .default
+        );return DefaultJobsAgent(config: config, headerHook: DemoAuthHook())
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        jobsSetupGKNav(title: "请求接口".tr)
+        runButton
+            .byTitle("Run: /uuid + /get", for: .normal)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                self.append("Start closure request...\n")
+                append("Running...\n")
+                Task {
+                    do {
+                        struct UUIDResp: Decodable { let uuid: String }
+                        let uuid = try await self.agent.send(JobsRequest(path: "/uuid", method: .get), as: UUIDResp.self)
+                        self.append("1) /uuid -> \(uuid.uuid)\n")
+                        let data = try await self.agent.send(JobsRequest(path: "/get", method: .get, query: ["k": AnySendable("v")]),
+                                                       as: Data.self)
+                        self.append("2) /get bytes -> \(data.count)\n\n")
+                    } catch {
+                        self.append("Error: \(error)\n\n")
+                    }
+                }
+            }
+        append("说明：演示基础 API 请求 + Decodable 解码\n\n")
+    }
+}
+
+

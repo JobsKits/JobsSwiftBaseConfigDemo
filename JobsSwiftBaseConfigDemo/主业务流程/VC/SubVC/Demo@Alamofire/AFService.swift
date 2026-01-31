@@ -19,7 +19,6 @@ final class AFService {
     init(mode: Mode = .live, uiLog: ((String) -> Void)? = nil) {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 20
-
         // stubbed: 走 URLProtocol
         if mode == .stubbed {
             config.protocolClasses = [AFStubURLProtocol.self]
@@ -44,7 +43,6 @@ final class AFService {
                 }
             }
         }
-
         // Token 注入 + 401 重试
         let tokenAdapter = TokenRetryInterceptor()
         self.interceptor = tokenAdapter
@@ -54,14 +52,12 @@ final class AFService {
                                interceptor: tokenAdapter,
                                eventMonitors: [logger])
     }
-
     // MARK: - Data Request (闭包风格)
     func request(_ route: AFRoute, jobsByVoidBlock: @escaping (Result<Data, AFError>) -> Void) {
         session.request(route)
             .validate()
             .responseData { resp in jobsByVoidBlock(resp.result) }
     }
-
     // MARK: - Upload (multipart) + Progress
     func uploadAvatar(_ route: AFRoute, imageData: Data,
                       progress: ((Double) -> Void)?,
@@ -75,7 +71,6 @@ final class AFService {
         .validate()
         .responseData { resp in jobsByVoidBlock(resp.result) }
     }
-
     // MARK: - Download + Progress
     func download(_ route: AFRoute,
                   progress: ((Double) -> Void)?,
@@ -90,7 +85,6 @@ final class AFService {
                 }
             }
     }
-
     // MARK: - Combine（可选）
     @available(iOS 13.0, *)
     func publisherString(_ route: AFRoute) -> AnyPublisher<String, AFError> {
@@ -102,7 +96,6 @@ final class AFService {
             .eraseToAnyPublisher()
     }
 }
-
 // MARK: - Token 注入 + 401 自动刷新重放
 final class TokenRetryInterceptor: RequestInterceptor {
     private let lock = NSLock()

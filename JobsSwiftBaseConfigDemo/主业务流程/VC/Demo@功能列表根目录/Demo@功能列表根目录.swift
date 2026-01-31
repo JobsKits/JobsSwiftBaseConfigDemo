@@ -114,7 +114,7 @@ final class RootListVC: BaseVC {
             ]),
             (title: "Pods集成@其他外源框架使用示例", items: g0),
             (title: "Pods集成@网络请求适用示例", items: [
-                ("🌍 JobsNetworking", JobsNetworkingDemoVC.self),
+                ("🌍 JobsNetworking", JobsNetworkingListDemoVC.self),
                 ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
                 ("🛜 Moya网络请求框架", MoyaDemoVC.self),
                 ("🛜 Alamofire网络请求框架", AFDemoVC.self),
