@@ -196,6 +196,7 @@
         <string>_http._tcp.</string>
         <string>_airplay._tcp.</string>
         <string>_yourservice._tcp.</string>
+        <string>_adhp._tcp.</string>
     </array>
 
     <!-- ====== NFC ====== -->
