@@ -1,6 +1,13 @@
+//
+//  Trace.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public struct JobsTrace: Sendable {
+public struct JobsTrace {
     public let requestId: String
     public let traceId: String
 

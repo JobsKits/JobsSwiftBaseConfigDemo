@@ -1,9 +1,16 @@
+//
+//  JobsLog.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
 public enum JobsLogLevel: String { case debug, info, warn, error }
 
-public struct JobsLogger: Sendable {
-    public typealias Handler = @Sendable (_ level: JobsLogLevel, _ message: String, _ meta: [String: String]) -> Void
+public struct JobsLogger {
+    public typealias Handler = (_ level: JobsLogLevel, _ message: String, _ meta: [String: String]) -> Void
 
     public var isEnabled: Bool
     public var handler: Handler

@@ -1,3 +1,10 @@
+//
+//  JobsAgent+Async.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
 public enum JobsBatch {
@@ -12,11 +19,9 @@ public enum JobsBatch {
             var result = Array<T?>(repeating: nil, count: tasks.count)
             for try await (idx, value) in group {
                 result[idx] = value
-            }
-            return result.compactMap { $0 }
+            };return result.compactMap { $0 }
         }
     }
-
     /// 请求接力：顺序 await（退化为串行）
     public static func chain<T: Sendable>(
         _ tasks: [@Sendable () async throws -> T]
@@ -25,7 +30,6 @@ public enum JobsBatch {
         out.reserveCapacity(tasks.count)
         for task in tasks {
             out.append(try await task())
-        }
-        return out
+        };return out
     }
 }

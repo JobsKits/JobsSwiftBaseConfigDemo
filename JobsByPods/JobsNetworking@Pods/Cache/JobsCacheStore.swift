@@ -1,13 +1,20 @@
+//
+//  JobsCacheStore.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public protocol JobsCacheStore: Sendable {
-    func get(key: JobsCacheKey) async -> JobsCachedValue?
-    func set(key: JobsCacheKey, value: JobsCachedValue) async
-    func remove(key: JobsCacheKey) async
-    func removeAll() async
+public protocol JobsCacheStore {
+    func get(key: JobsCacheKey) -> JobsCachedValue?
+    func set(key: JobsCacheKey, value: JobsCachedValue)
+    func remove(key: JobsCacheKey)
+    func removeAll()
 }
 
-public struct JobsCachedValue: Sendable {
+public struct JobsCachedValue: Codable {
     public let data: Data
     public let expiry: Date
     public let meta: [String: String]
@@ -21,32 +28,40 @@ public struct JobsCachedValue: Sendable {
     public var isExpired: Bool { Date() >= expiry }
 }
 
-public actor JobsMemoryCache: JobsCacheStore {
-    // Use String as the backing key to avoid any global-actor/default-isolation interactions
-    // with `Hashable` conformances in Swift 6 projects configured with MainActor default isolation.
+public final class JobsMemoryCache: JobsCacheStore {
     private var store: [String: JobsCachedValue] = [:]
+    private let lock = NSLock()
 
     public init() {}
 
-    public func get(key: JobsCacheKey) async -> JobsCachedValue? {
+    public func get(key: JobsCacheKey) -> JobsCachedValue? {
+        lock.lock(); defer { lock.unlock() }
         let k = key.raw
         guard let v = store[k], !v.isExpired else {
             store[k] = nil
             return nil
-        }
-        return v
+        };return v
     }
 
-    public func set(key: JobsCacheKey, value: JobsCachedValue) async {
+    public func set(key: JobsCacheKey, value: JobsCachedValue) {
+        lock.lock(); defer { lock.unlock() }
         store[key.raw] = value
     }
 
-    public func remove(key: JobsCacheKey) async { store[key.raw] = nil }
-    public func removeAll() async { store.removeAll() }
+    public func remove(key: JobsCacheKey) {
+        lock.lock(); defer { lock.unlock() }
+        store[key.raw] = nil
+    }
+
+    public func removeAll() {
+        lock.lock(); defer { lock.unlock() }
+        store.removeAll()
+    }
 }
 
-public actor JobsDiskCache: JobsCacheStore {
+public final class JobsDiskCache: JobsCacheStore {
     private let dir: URL
+    private let lock = NSLock()
 
     public init(namespace: String = "JobsNetworkingCache") {
         let base = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -54,10 +69,11 @@ public actor JobsDiskCache: JobsCacheStore {
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     }
 
-    public func get(key: JobsCacheKey) async -> JobsCachedValue? {
+    public func get(key: JobsCacheKey) -> JobsCachedValue? {
+        lock.lock(); defer { lock.unlock() }
         let url = fileURL(for: key)
-        guard let data = try? Data(contentsOf: url) else { return nil }
-        guard let wrapper = try? JSONDecoder().decode(DiskWrapper.self, from: data) else { return nil }
+        guard let data = try? Data(contentsOf: url),
+              let wrapper = try? JSONDecoder().decode(DiskWrapper.self, from: data) else { return nil }
         if Date() >= wrapper.expiry {
             try? FileManager.default.removeItem(at: url)
             return nil
@@ -65,7 +81,8 @@ public actor JobsDiskCache: JobsCacheStore {
         return JobsCachedValue(data: wrapper.data, expiry: wrapper.expiry, meta: wrapper.meta)
     }
 
-    public func set(key: JobsCacheKey, value: JobsCachedValue) async {
+    public func set(key: JobsCacheKey, value: JobsCachedValue) {
+        lock.lock(); defer { lock.unlock() }
         let url = fileURL(for: key)
         let wrapper = DiskWrapper(data: value.data, expiry: value.expiry, meta: value.meta)
         if let encoded = try? JSONEncoder().encode(wrapper) {
@@ -73,11 +90,13 @@ public actor JobsDiskCache: JobsCacheStore {
         }
     }
 
-    public func remove(key: JobsCacheKey) async {
+    public func remove(key: JobsCacheKey) {
+        lock.lock(); defer { lock.unlock() }
         try? FileManager.default.removeItem(at: fileURL(for: key))
     }
 
-    public func removeAll() async {
+    public func removeAll() {
+        lock.lock(); defer { lock.unlock() }
         try? FileManager.default.removeItem(at: dir)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     }

@@ -1,7 +1,14 @@
+//
+//  JobsPreparedRequest.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 import Alamofire
 
-struct JobsPreparedRequest: Sendable {
+struct JobsPreparedRequest {
     let url: URL
     let method: HTTPMethod
     let parameters: Parameters?
@@ -21,7 +28,6 @@ enum JobsEncodingRule {
             return .jsonBody
         }
     }
-
     /// 白皮书规则：Query 与 Body 不允许隐式混用
     static func validateNoImplicitMix(_ request: JobsRequest, encoding: JobsParameterEncoding) throws {
         switch encoding {
@@ -42,7 +48,6 @@ extension Dictionary where Key == String, Value == AnySendable {
         var out: Parameters = [:]
         for (k, v) in self {
             out[k] = v.value
-        }
-        return out
+        };return out
     }
 }

@@ -1,7 +1,13 @@
-import Foundation
+//
+//  JobsDownloadRequest.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
 
+import Foundation
 /// Download request wrapper used by the demo (absolute url + destination file url).
-public struct JobsDownloadRequest: Sendable {
+public struct JobsDownloadRequest {
     public var absoluteURL: URL
     public var destinationURL: URL
     public var headers: [String: String]

@@ -1,3 +1,10 @@
+//
+//  APIResponse.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
 /// 业务包装（code/msg/data）

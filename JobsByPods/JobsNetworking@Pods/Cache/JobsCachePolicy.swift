@@ -1,6 +1,13 @@
+//
+//  JobsCachePolicy.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public enum JobsCachePolicy: Sendable {
+public enum JobsCachePolicy {
     /// 不使用缓存
     case none
     /// 仅缓存（命中则直接返回；不发网络）

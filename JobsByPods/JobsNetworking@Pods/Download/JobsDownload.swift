@@ -1,6 +1,17 @@
+//
+//  JobsDownload.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
 public protocol JobsDownloadCapable: JobsAgent {
-    /// 断点下载接口占位（可扩展 resumeData / range header 等）
-    func download(_ request: JobsRequest, to destination: URL) async throws -> URL
+    /// 下载到本地文件（iOS12 主路径：closure API）
+    @discardableResult
+    func download(
+        _ request: JobsDownloadRequest,
+        completion: @escaping (Swift.Result<URL, JobsError>) -> Void
+    ) -> JobsRequestToken
 }

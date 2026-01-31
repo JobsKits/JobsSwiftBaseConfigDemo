@@ -1,6 +1,13 @@
+//
+//  JobsRequestConfig.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public struct JobsRequestConfig: Sendable {
+public struct JobsRequestConfig {
     public var baseURL: URL
     public var timeout: TimeInterval
     public var version: String

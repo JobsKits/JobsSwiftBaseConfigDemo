@@ -77,10 +77,9 @@ class JobsNetworkingDemoBaseVC: BaseVC {
 }
 
 struct DemoAuthHook: JobsHeaderHook {
-     public func headers(for request: JobsRequest) async -> [String : String] {
+    func headers(for request: JobsRequest) -> [String : String] {
         [
-            "X-Demo-Token": "demo-token",
-            "X-Trace-Id": request.trace.traceId
+            "Authorization": "Bearer xxx"
         ]
     }
 }

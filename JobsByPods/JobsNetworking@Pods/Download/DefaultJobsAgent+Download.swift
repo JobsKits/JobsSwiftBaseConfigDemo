@@ -1,45 +1,66 @@
+//
+//  DefaultJobsAgent+Download.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
+import DatadogInternal
 import Alamofire
 
-extension DefaultJobsAgent {
+extension DefaultJobsAgent: JobsDownloadCapable {
 
-    /// Download to a local file URL.
-    /// - Note: This API uses an absolute URL and still applies `headerHook`.
-    public nonisolated func download(_ request: JobsDownloadRequest) async throws -> URL {
-        try Task.checkCancellation()
+    @discardableResult
+    public func download(
+        _ request: JobsDownloadRequest,
+        completion: @escaping (Swift.Result<URL, JobsError>) -> Void
+    ) -> JobsRequestToken {
 
-        // Build a lightweight JobsRequest so the existing headerHook can be reused.
-        // Under Swift 6 default isolation (MainActor), JobsRequest's initializer may
-        // be MainActor-isolated; construct it on MainActor to avoid warnings.
-        let hookReq = await MainActor.run {
-            JobsRequest(
-                path: request.absoluteURL.absoluteString,
-                method: .get,
-                headers: request.headers,
-                timeout: request.timeout,
-                trace: request.trace
-            )
-        }
+        let token = JobsRequestToken()
+        let reqId = request.trace.requestId
+        token.setCancel { [weak self] in self?.client.cancel(requestId: reqId) }
 
-        var merged: [String: String] = [:]
-        // Hook first, then explicit headers override.
-        for (k, v) in await headerHook.headers(for: hookReq) { merged[k] = v }
-        for (k, v) in request.headers { merged[k] = v }
+        // header injection
+        var headers: [String: String] = [:]
+                headers.merge(request.headers) { _, new in new }
+        headers.merge(headerHook.headers(for: request.asJobsRequest())) { _, new in new }
 
-        let httpHeaders = HTTPHeaders(merged.map { HTTPHeader(name: $0.key, value: $0.value) })
+        var afHeaders: Alamofire.HTTPHeaders = [:]
+        headers.forEach { afHeaders[$0.key] = $0.value }
 
-        let (fileURL, httpResp) = try await client.download(
+        client.download(
             absoluteURL: request.absoluteURL,
-            headers: httpHeaders,
+            headers: afHeaders,
             destinationURL: request.destinationURL,
             trace: request.trace,
             timeout: request.timeout
-        )
+        ) { result in
+            switch result {
+            case .success(let (url, http)):
+                if !(200...299).contains(http.statusCode) {
+                    completion(.failure(.http(statusCode: http.statusCode, data: nil)))
+                } else {
+                    completion(.success(url))
+                }
+            case .failure(let e):
+                completion(.failure(e))
+            }
+        };return token
+    }
+}
 
-        let status = httpResp.statusCode
-        guard (200...299).contains(status) else {
-            throw JobsError.server(statusCode: status, data: nil)
-        }
-        return fileURL
+private extension JobsDownloadRequest {
+    func asJobsRequest() -> JobsRequest {
+        JobsRequest(
+            path: absoluteURL.absoluteString,
+            method: .get,
+            query: nil,
+            body: nil,
+            headers: headers,
+            timeout: timeout,
+            encoding: .urlQuery,
+            cachePolicy: .none, trace: trace
+        )
     }
 }

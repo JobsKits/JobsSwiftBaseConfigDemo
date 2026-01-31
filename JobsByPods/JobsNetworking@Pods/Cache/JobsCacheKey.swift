@@ -1,6 +1,13 @@
+//
+//  JobsCacheKey.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public struct JobsCacheKey: Sendable, Hashable {
+public struct JobsCacheKey: Hashable {
     public let raw: String
     public init(raw: String) { self.raw = raw }
 

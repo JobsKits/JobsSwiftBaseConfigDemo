@@ -1,6 +1,13 @@
+//
+//  JobsParameterEncoding.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public enum JobsParameterEncoding: Sendable, Codable {
+public enum JobsParameterEncoding: Codable {
     /// GET: URL Query 编码
     case urlQuery
     /// POST/PUT/PATCH: 默认 JSON Body

@@ -1,6 +1,13 @@
+//
+//  JobsRequest.swift
+//  JobsNetworking
+//
+//  Created by Jobs on 31/1/26.
+//
+
 import Foundation
 
-public struct JobsRequest: Sendable {
+public struct JobsRequest {
     public var path: String
     public var method: HTTPMethod
     public var query: [String: AnySendable]?
