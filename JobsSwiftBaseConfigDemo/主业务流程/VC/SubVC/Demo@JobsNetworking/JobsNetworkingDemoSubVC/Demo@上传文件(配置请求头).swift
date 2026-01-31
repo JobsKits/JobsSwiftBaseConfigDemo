@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 上传文件
 final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
 
@@ -60,6 +61,7 @@ final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
                     }
                 }
             }
+        textView.byVisible(YES)
         append("说明：演示 multipart/form-data 上传（用临时文件模拟）。\n\n")
     }
 }

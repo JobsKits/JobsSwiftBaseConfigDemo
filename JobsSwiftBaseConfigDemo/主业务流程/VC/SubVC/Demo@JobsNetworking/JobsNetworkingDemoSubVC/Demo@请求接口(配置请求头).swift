@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 请求接口(配置请求头)
 final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
     
@@ -49,6 +50,7 @@ final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
                     }
                 }
             }
+        textView.byVisible(YES)
         append("说明：演示基础 API 请求 + Decodable 解码\n\n")
     }
 }

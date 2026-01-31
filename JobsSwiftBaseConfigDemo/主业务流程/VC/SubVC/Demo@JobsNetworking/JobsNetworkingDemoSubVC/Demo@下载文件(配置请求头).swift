@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 下载文件到本地
 final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {
 
@@ -54,6 +55,7 @@ final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {
                     }
                 }
             }
+        textView.byVisible(YES)
         append("说明：演示下载到本地文件 + 取消。\n\n")
     }
 

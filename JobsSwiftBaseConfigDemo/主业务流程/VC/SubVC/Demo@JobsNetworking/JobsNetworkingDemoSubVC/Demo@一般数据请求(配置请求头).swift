@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 一般数据请求
 final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
     private var token: JobsRequestToken?
@@ -55,6 +56,7 @@ final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
                 }
                 self.append("Tip: 返回上一页会 cancel。\n\n")
             }
+        textView.byVisible(YES)
         append("说明：演示 cacheThenNetwork(ttl) + closure token cancel。\n\n")
     }
 

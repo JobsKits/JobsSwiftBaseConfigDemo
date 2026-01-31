@@ -15,23 +15,23 @@ import SnapKit
 import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
+import JobsBy3rdTools
 import JobsNetworking
 import JobsInheritance
 import JobsSwiftBaseDefines
-import JobsBy3rdTools
 // MARK: - 统一的 UI 骨架：TextView + Button（SnapKit）
 class JobsNetworkingDemoBaseVC: BaseVC {
     
     lazy var runButton: UIButton = {
         UIButton.sys()
+            /// 背景色
+            .byBackgroundColor(.systemGreen, for: .normal)
             /// 普通字符串@设置主标题
             .byTitle("点我运行".tr)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             .byAddTo(view) { [unowned self] make in
-                make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
-                make.trailing.equalTo(view.safeAreaLayoutGuide).inset(16)
-                make.height.equalTo(44)
-                make.left.right.bottom.equalToSuperview()
+                make.centerX.equalTo(view)
+                make.size.mas_equalTo(CGSizeMake(200.w, 44.h))
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                 } else {
@@ -66,8 +66,6 @@ class JobsNetworkingDemoBaseVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        runButton.byVisible(YES)
-        textView.byVisible(YES)
     }
 
     func append(_ s: String) {

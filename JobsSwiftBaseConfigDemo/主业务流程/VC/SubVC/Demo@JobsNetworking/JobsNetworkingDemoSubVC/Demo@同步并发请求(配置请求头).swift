@@ -14,6 +14,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftBaseDefines
 // MARK: - 同步并发请求
 final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
 
@@ -67,6 +68,7 @@ final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
                     }
                 }
             }
+        textView.byVisible(YES)
         append("说明：演示并发请求（TaskGroup），并收敛结果。\n\n")
     }
 }
