@@ -204,8 +204,10 @@ final class RootListVC: BaseVC {
             .bySuspend { cfg in
                 cfg
                     .byContainer(view)
-                    .byStart(.point(CGPoint(x: 15, y: 190)))
-                    .byFallbackSize(CGSize(width: 95.w, height: 50.h))
+                    .byStart { _ in
+                        CGPoint(x: 15, y: 120)  // 这里就是“safeArea 内部坐标”，不用再加 safeAreaInsets.top
+                    }
+                    .byFallbackSize(CGSize(width: 110, height: 66))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)
             }

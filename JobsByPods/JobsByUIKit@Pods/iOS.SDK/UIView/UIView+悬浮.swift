@@ -42,6 +42,10 @@ extension UIView {
     // MARK: - 悬浮行为配置
     public struct SuspendConfig {
         public var start: Start = .bottomRight
+        /// ✅ 新增：动态起点（返回值语义与 Start.point 一致：在“可用区域”(safeArea inset 后)坐标系内）
+        /// - 返回 CGPoint(x:15,y:120) 等价于：safeArea 左上角向右 15、向下 120。
+        /// - 若设置该闭包，会优先生效并覆盖 `start`。
+        public var startPointBuilder: ((UIView) -> CGPoint)? = nil
         public var container: UIView? = nil
         public var fallbackSize: CGSize = .init(width: 56, height: 56)
         public var initialOrigin: CGPoint? = nil
@@ -71,7 +75,20 @@ public extension UIView.SuspendConfig {
     @discardableResult func byAnimated(_ v: Bool) -> Self { var c = self; c.animated = v; return c }
     @discardableResult func byHapticOnDock(_ v: Bool) -> Self { var c = self; c.hapticOnDock = v; return c }
     @discardableResult func byConfineInContainer(_ v: Bool) -> Self { var c = self; c.confineInContainer = v; return c }
-    @discardableResult func byStart(_ v: Start) -> Self { var c = self; c.start = v; return c }
+    @discardableResult func byStart(_ v: Start) -> Self {
+        var c = self
+        c.start = v
+        c.startPointBuilder = nil
+        return c
+    }
+    /// 动态起点（返回值语义与 Start.point 一致：在“可用区域”(safeArea inset 后)坐标系内）
+    /// - 例：.byStart { _ in CGPoint(x: 15, y: 120) }
+    /// - 说明：无需自己加 safeAreaInsets.top；内部会基于 safeArea 计算。
+    @discardableResult func byStart(_ builder: @escaping (UIView) -> CGPoint) -> Self {
+        var c = self
+        c.startPointBuilder = builder
+        return c
+    }
 }
 // MARK: - 关联键
 private enum SuspendKeys {
@@ -112,12 +129,17 @@ extension UIView {
         if superview == nil { container.addSubview(self) }
         // 4) 尺寸兜底
         if bounds.size == .zero { frame.size = config.fallbackSize }
-        // 5) 初始位置：优先 initialOrigin -> start 推导 -> 右下角保底
+        // 5) 初始位置：优先 initialOrigin -> startPointBuilder -> start 推导 -> 右下角保底
         if let origin = config.initialOrigin {
             frame.origin = origin
         } else if frame.origin == .zero {
             let area = Self._availableBounds(in: container) // ✅ 去掉 extraInsets
-            frame.origin = _origin(for: config.start, size: frame.size, in: area)
+            if let builder = config.startPointBuilder {
+                // 语义：返回值与 Start.point 一致，处在“可用区域”(safeArea inset 后)坐标系内。
+                frame.origin = _origin(for: .point(builder(container)), size: frame.size, in: area)
+            } else {
+                frame.origin = _origin(for: config.start, size: frame.size, in: area)
+            }
         }
         // 6) 边界夹紧
         if config.confineInContainer { _clampFrameWithinContainer() }

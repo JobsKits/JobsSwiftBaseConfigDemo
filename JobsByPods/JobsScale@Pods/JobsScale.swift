@@ -28,8 +28,10 @@ public func ScreenHeight(_ rate:CGFloat = 1) -> CGFloat {
 public enum JobsScale {
     private static var designW: CGFloat = 390
     private static var designH: CGFloat = 843
+    /// 注意：Safe Area 是“布局概念”，不适合作为全局比例尺的输入。
+    /// 这里保留开关仅做兼容；当无法可靠获取主 window 时会自动回退到 Screen.size。
     private static var useSafeArea: Bool = false
-    
+
     public static func setup(designWidth: CGFloat,
                              designHeight: CGFloat,
                              useSafeArea: Bool = false) {
@@ -37,22 +39,32 @@ public enum JobsScale {
         self.designH = designHeight
         self.useSafeArea = useSafeArea
     }
-    
+    /// 用于计算缩放比例的“屏幕尺寸”：
+    /// - 默认使用 UIScreen（稳定，不会被 overlay/keyWindow 切换污染）
+    /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 UIScreen
     public static var screenSize: CGSize {
-        guard let window = UIApplication.jobsKeyWindow() else {
-            return UIScreen.main.bounds.size
-        }
-        if useSafeArea {
+        let base = Screen.size
+        guard useSafeArea else { return base }
+        // 尽量取到“主界面 window”，避免 toast/HUD/调试浮层 window 抢 keyWindow 导致比例跳变
+        if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
+           window.windowLevel == .normal,
+           !window.isHidden,
+           window.alpha > 0.01,
+           window.bounds.size != .zero {
+
             let insets = window.safeAreaInsets
-            return CGSize(
-                width: max(0, window.bounds.width - (insets.left + insets.right)),
-                height: max(0, window.bounds.height - (insets.top + insets.bottom))
-            )
-        } else {
-            return window.bounds.size
+            let w = max(0, window.bounds.width - (insets.left + insets.right))
+            let h = max(0, window.bounds.height - (insets.top + insets.bottom))
+
+            // 极端情况（比如 safeArea 扣完变 0）直接回退
+            if w > 0, h > 0 {
+                return CGSize(width: w, height: h)
+            }
         }
+
+        return base
     }
-    
+
     public static var x: CGFloat { screenSize.width / designW }
     public static var y: CGFloat { screenSize.height / designH }
 }
