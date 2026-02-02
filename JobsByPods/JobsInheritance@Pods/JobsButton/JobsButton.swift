@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftBaseDefines
 
 public final class JobsButton: UIImageView {
     // MARK: - Mode
@@ -62,7 +63,7 @@ public final class JobsButton: UIImageView {
             .byNumberOfLines(1)
             .byBackgroundColor(.clear)
             .byFont(.systemFont(ofSize: 17))
-            .byTextColor(self.tintColor)
+            .byTextColor(.black)
     }()
     /// 对标 UIButton.subtitle（拟合系统风格）
     public lazy var subtitleLabel: UILabel = {
@@ -70,7 +71,7 @@ public final class JobsButton: UIImageView {
             .byNumberOfLines(1)
             .byBackgroundColor(.clear)
             .byFont(.systemFont(ofSize: 12))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
     }()
     // MARK: - Init
     public override init(frame: CGRect) {
@@ -101,6 +102,39 @@ public final class JobsButton: UIImageView {
         self.mode = mode
         refreshUI()
         return self
+    }
+    // MARK: - DSL (Layout)
+    /// 前景图与主标题的距离
+    @discardableResult
+    public func byImageTitleSpacing(_ value: CGFloat) -> Self {
+        self.imageTitleSpacing = value
+        return self
+    }
+    /// 主标题与副标题的距离
+    @discardableResult
+    public func byTitleSubtitleSpacing(_ value: CGFloat) -> Self {
+        self.titleSubtitleSpacing = value
+        return self
+    }
+    /// 内容内边距
+    @discardableResult
+    public func byContentInsets(_ value: UIEdgeInsets) -> Self {
+        self.contentInsets = value
+        return self
+    }
+    /// 是否强制固定前景图尺寸
+    @discardableResult
+    public func byForegroundImageFixedSize(_ value: Bool) -> Self {
+        self.isForegroundImageFixedSize = value
+        return self
+    }
+    /// ✅ 聚合式 DSL：一次性配置多个布局参数，并自动触发刷新
+    /// - 说明：适合把一堆布局参数放到一个块里写，链式调用不被打断。
+    @discardableResult
+    public func byLayout(_ block: (_ dsl: JobsButtonLayoutDSL) -> Void) -> Self {
+        let dsl = JobsButtonLayoutDSL(owner: self)
+        block(dsl)
+        return self.byRefreshUI()
     }
     /// 设置前景图（如果传 nil，会自动隐藏前景图）
     @discardableResult
@@ -155,6 +189,31 @@ public final class JobsButton: UIImageView {
         // 外部一旦开始配置前景图，默认认为要显示（避免异步阶段被剔除布局）
         showsForegroundImage = true
         return self.byRefreshUI()
+    }
+
+    // MARK: - DSL Type
+    public struct JobsButtonLayoutDSL {
+        fileprivate unowned let owner: JobsButton
+
+        fileprivate init(owner: JobsButton) {
+            self.owner = owner
+        }
+        /// 前景图与主标题的距离
+        public func imageTitleSpacing(_ value: CGFloat) {
+            owner.imageTitleSpacing = value
+        }
+        /// 主标题与副标题的距离
+        public func titleSubtitleSpacing(_ value: CGFloat) {
+            owner.titleSubtitleSpacing = value
+        }
+        /// 内容内边距
+        public func contentInsets(_ value: UIEdgeInsets) {
+            owner.contentInsets = value
+        }
+        /// 是否强制固定前景图尺寸
+        public func foregroundImageFixedSize(_ value: Bool) {
+            owner.isForegroundImageFixedSize = value
+        }
     }
     // MARK: - Layout
     private var didSetupViews = false
@@ -269,9 +328,38 @@ public final class JobsButton: UIImageView {
             return titleSubtitleSpacing
         };return 0
     }
+}
+// MARK: - JobsButtonLayoutDSL
+/// JobsButton 布局参数 DSL
+/// - 用途：把多个 layout 参数集中在一个闭包内配置，避免链式调用过长。
+public final class JobsButtonLayoutDSL {
+    private weak var owner: JobsButton?
 
-    public override func tintColorDidChange() {
-        super.tintColorDidChange()
-        titleLabel.textColor = tintColor
+    fileprivate init(owner: JobsButton) {
+        self.owner = owner
+    }
+    /// 前景图与主标题的距离
+    @discardableResult
+    public func imageTitleSpacing(_ value: CGFloat) -> Self {
+        owner?.imageTitleSpacing = value
+        return self
+    }
+    /// 主标题与副标题的距离
+    @discardableResult
+    public func titleSubtitleSpacing(_ value: CGFloat) -> Self {
+        owner?.titleSubtitleSpacing = value
+        return self
+    }
+    /// 内容内边距
+    @discardableResult
+    public func contentInsets(_ value: UIEdgeInsets) -> Self {
+        owner?.contentInsets = value
+        return self
+    }
+    /// 是否强制固定前景图尺寸
+    @discardableResult
+    public func foregroundImageFixedSize(_ value: Bool) -> Self {
+        owner?.isForegroundImageFixedSize = value
+        return self
     }
 }

@@ -255,11 +255,49 @@ extension UIView {
     public func addTapAction(_ action: @escaping jobsByVoidBlock) -> Self {
         addTapAction { _ in action() }
     }
+    /// ✅ 旧接口：把「view 本身」作为参数回调（符合常见 onTap(sender) 习惯）
+    /// - 注意：如果手势未挂载到 view（理论上不会发生），该回调不会被触发。
+    @discardableResult
+    public func addTapAction(_ action: @escaping (UIView) -> Void) -> Self {
+        addTapAction { gr in
+            guard let v = gr.view else { return }
+            action(v)
+        }
+    }
+    /// ✅ 强类型接口：把「view 本身」以具体类型回调出去（例如 JobsButton / UIImageView / UILabel ...）
+    /// - 用法：
+    ///   `view.addTapAction { (sender: JobsButton) in ... }`
+    @discardableResult
+    public func addTapAction<T: UIView>(_ action: @escaping (T) -> Void) -> Self {
+        addTapAction { gr in
+            guard let v = gr.view as? T else { return }
+            action(v)
+        }
+    }
     /// ✅ Tap 事件叠加：无参数版本（向下兼容调用习惯）
     @discardableResult
     public func addTapActionAppend(_ action: @escaping jobsByVoidBlock) -> Self {
         addTapActionAppend { _ in action() }
     }
+    /// ✅ Tap 事件叠加：把「view 本身」作为参数回调
+    @discardableResult
+    public func addTapActionAppend(_ action: @escaping (UIView) -> Void) -> Self {
+        addTapActionAppend { gr in
+            guard let v = gr.view else { return }
+            action(v)
+        }
+    }
+    /// ✅ 强类型接口：Tap 事件叠加，把「view 本身」以具体类型回调出去（例如 JobsButton / UIImageView / UILabel ...）
+    /// - 用法：
+    ///   `view.addTapActionAppend { (sender: JobsButton) in ... }`
+    @discardableResult
+    public func addTapActionAppend<T: UIView>(_ action: @escaping (T) -> Void) -> Self {
+        addTapActionAppend { gr in
+            guard let v = gr.view as? T else { return }
+            action(v)
+        }
+    }
+    
     public func removeTapAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.tapKey) as? UITapGestureRecognizer {
             removeGestureRecognizer(g)
