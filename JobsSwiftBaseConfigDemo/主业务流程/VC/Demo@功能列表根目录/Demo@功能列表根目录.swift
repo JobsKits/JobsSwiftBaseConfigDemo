@@ -138,6 +138,8 @@ final class RootListVC: BaseVC {
                 ("⏱️ 仪表盘", FTDashboadDemoVC.self),
             ]),
             (title: "实用UI@Sys", items: [
+                ("🔘 按钮的替代解决方案", JobsButtonDemoVC.self),
+                ("🔘 按钮", UIButtonDemoVC.self),
                 ("🌞 BaseWebView", BaseWebViewDemoVC.self),
                 ("✍️ UITextField", UITextFieldDemoVC.self),
                 ("✍️ UITextView", UITextViewDemoVC.self),
@@ -146,13 +148,6 @@ final class RootListVC: BaseVC {
                 ("😂 按钮完全覆盖在UICollectionViewCell上", BtnFullOnCVCellDemoVC.self),
                 ("😂 按钮完全覆盖在UITableViewCell上", BtnFullOnTBVCellDemoVC.self),
                 ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
-                ("🔘 按钮", UIButtonDemoVC.self),
-            ]),
-            (title: "一些常见功能模块页面", items: [
-                ("📮 经典的消息页面", MessageListDemoVC.self),
-                ("🔥 编辑个人资料", LGOEditProfileVC.self),
-                ("🏠 首页联动", CashbackRootVC.self),
-                ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
             (title: "实用工具集", items: [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
@@ -168,6 +163,12 @@ final class RootListVC: BaseVC {
                 ("👮 中国大陆公民身份证号码校验", CNIDDemoVC.self),
                 ("🧧 TraitChange", TraitChangeDemoVC.self),
                 ("🚀 JobsOpen", JobsOpenDemoVC.self),
+            ]),
+            (title: "一些常见功能模块页面", items: [
+                ("📮 经典的消息页面", MessageListDemoVC.self),
+                ("🔥 编辑个人资料", LGOEditProfileVC.self),
+                ("🏠 首页联动", CashbackRootVC.self),
+                ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
             (title: "富文本/普通文本处理", items: [
                 ("🌋 富文本", RichTextDemoVC.self),
