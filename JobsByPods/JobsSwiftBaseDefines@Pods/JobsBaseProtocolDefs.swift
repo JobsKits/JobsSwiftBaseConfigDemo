@@ -58,35 +58,32 @@ public extension JobsAsyncable {
 ///  正向：byData（单参 + 不定参）
 ///  逆向：onResult + sendResult（单参 + 不定参）
 @MainActor
+/// ViewDataProtocol@单参数
 public protocol ViewDataProtocol: AnyObject {
-    /// 正向@单（入）参数
+    /// 正向@入参
     @discardableResult
-    func byData(_ any: Any?) -> Self
-    /// 逆向@单（入）参数
-    func sendResult(_ any: Any?)
-    /// 逆向@单（出）参数
+    func byData(_ data: Any?) -> Self
+    /// 逆向@入参
+    func sendResult(_ data: Any?)
+    /// 逆向@出参
     @discardableResult
     func onResult(_ callback: @escaping (Any?) -> Void) -> Self
 }
-
+/// ViewDataProtocol@不定参数
 public extension ViewDataProtocol {
-    /// 正向@不定（入）参数
+    /// 正向@入参
     @_disfavoredOverload
     @discardableResult
     func byData(_ items: Any?...) -> Self {
         items.count == 1 ? byData(items[0]) : byData(items)
     }
-    /// 逆向@不定（入）参数
+    /// 逆向@入参
     @_disfavoredOverload
     func sendResult(_ items: Any?...) {
         if items.count == 1 { sendResult(items[0]) }
         else { sendResult(items) }
     }
-    /// 逆向@无（入）参数
-    func sendResult() {
-        sendResult(nil as Any?)
-    }
-    /// 逆向@不定（出）参数
+    /// 逆向@出参
     @_disfavoredOverload
     @discardableResult
     func onResult(_ callback: @escaping ([Any?]) -> Void) -> Self {
@@ -97,5 +94,23 @@ public extension ViewDataProtocol {
                 callback([payload])
             }
         }
+    }
+}
+/// ViewDataProtocol@默认空实现
+public extension ViewDataProtocol {
+    /// 正向@入参
+    @discardableResult
+    func byData(_ data: Any?) -> Self { self }
+    /// 逆向@入参
+    func sendResult(_ data: Any?) {}
+    /// 逆向@出参
+    @discardableResult
+    func onResult(_ callback: @escaping (Any?) -> Void) -> Self { self }
+}
+
+public extension ViewDataProtocol {
+    /// 逆向@无（入）参数；便捷重载，等价于“发一个nil”
+    func sendResult() {
+        sendResult(nil as Any?)
     }
 }

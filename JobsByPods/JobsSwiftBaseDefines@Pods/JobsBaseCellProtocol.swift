@@ -11,12 +11,12 @@ import AppKit
 import UIKit
 #endif
 // MARK: - UITableViewCell Height Protocol
-public protocol UITableViewCellProtocol where Self: UITableViewCell {
+public protocol UITableViewCellProtocol: ViewDataProtocol where Self: UITableViewCell {
     /// 数据定UITableViewCell的高
     static func cellHeightByData(_ data: Any?) -> CGFloat
 }
 // MARK: - UICollectionViewCell Size Protocol
-public protocol UICollectionViewCellProtocol where Self: UICollectionViewCell {
+public protocol UICollectionViewCellProtocol : ViewDataProtocol where Self: UICollectionViewCell {
     /// 数据定UICollectionViewCell的尺寸
     static func cellSizeByData(_ data: Any?) -> CGSize
 }
