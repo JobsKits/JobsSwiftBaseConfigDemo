@@ -64,22 +64,22 @@ final class PicLoadDemoVC: BaseVC {
             .byImage("Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-            .onTap { iv in
-                "单击图片：\(iv)".toast
+             .addTapAction { (iv: UIImageView) in
+                 "单击图片：\(iv)".toast
              }
-            .onLongPress(minDuration: 0.8,
-                         movement: 12,
-                         touches: 1,
-                         name: "customLongPress") { iv, gr in
-                switch gr.state {
-                case .began:
-                    "长按开始 on \(iv)".toast
-                case .ended, .cancelled, .failed:
-                    "长按结束 on \(iv)".toast
-                default:
-                    break
-                }
-            }
+             .addLongPressAction(minimumPressDuration: 0.8,
+                                 allowableMovement: 12,
+                                 numberOfTouchesRequired: 1) { gr in
+                 guard let iv = gr.view as? UIImageView else { return }
+                 switch gr.state {
+                 case .began:
+                     "长按开始 on \(iv)".toast
+                 case .ended, .cancelled, .failed:
+                     "长按结束 on \(iv)".toast
+                 default:
+                     break
+                 }
+             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(localImgLabel.snp.bottom).offset(6.h)
                 make.left.equalTo(scrollView.frameLayoutGuide.snp.left).offset(20.w)
@@ -107,22 +107,22 @@ final class PicLoadDemoVC: BaseVC {
             .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-            .onTap { iv in
-                "单击图片：\(iv)".toast
+             .addTapAction { (iv: UIImageView) in
+                 "单击图片：\(iv)".toast
              }
-            .onLongPress(minDuration: 0.8,
-                         movement: 12,
-                         touches: 1,
-                         name: "customLongPress") { iv, gr in
-                switch gr.state {
-                case .began:
-                    "长按开始 on \(iv)".toast
-                case .ended, .cancelled, .failed:
-                    "长按结束 on \(iv)".toast
-                default:
-                    break
-                }
-            }
+             .addLongPressAction(minimumPressDuration: 0.8,
+                                 allowableMovement: 12,
+                                 numberOfTouchesRequired: 1) { gr in
+                 guard let iv = gr.view as? UIImageView else { return }
+                 switch gr.state {
+                 case .began:
+                     "长按开始 on \(iv)".toast
+                 case .ended, .cancelled, .failed:
+                     "长按结束 on \(iv)".toast
+                 default:
+                     break
+                 }
+             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(asyncImgLabel.snp.bottom).offset(6.h)
                 make.left.equalTo(scrollView.frameLayoutGuide.snp.left).offset(20.w)
@@ -149,13 +149,13 @@ final class PicLoadDemoVC: BaseVC {
             .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-            .onTap { iv in
+            .addTapAction { (iv: UIImageView) in
                 "单击图片：\(iv)".toast
-             }
-            .onLongPress(minDuration: 0.8,
-                         movement: 12,
-                         touches: 1,
-                         name: "customLongPress") { iv, gr in
+            }
+            .addLongPressAction(minimumPressDuration: 0.8,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { gr in
+                guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
                 case .began:
                     "长按开始 on \(iv)".toast
@@ -192,13 +192,13 @@ final class PicLoadDemoVC: BaseVC {
 //            .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .onTap { iv in
+            .addTapAction { (iv: UIImageView) in
                 "单击图片：\(iv)".toast
-             }
-            .onLongPress(minDuration: 0.8,
-                         movement: 12,
-                         touches: 1,
-                         name: "customLongPress") { iv, gr in
+            }
+            .addLongPressAction(minimumPressDuration: 0.8,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { gr in
+                guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
                 case .began:
                     "长按开始 on \(iv)".toast
@@ -234,13 +234,13 @@ final class PicLoadDemoVC: BaseVC {
             .byClipsToBounds()
 //            .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .sd_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .onTap { iv in
+            .addTapAction { (iv: UIImageView) in
                 "单击图片：\(iv)".toast
-             }
-            .onLongPress(minDuration: 0.8,
-                         movement: 12,
-                         touches: 1,
-                         name: "customLongPress") { iv, gr in
+            }
+            .addLongPressAction(minimumPressDuration: 0.8,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { gr in
+                guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
                 case .began:
                     "长按开始 on \(iv)".toast
