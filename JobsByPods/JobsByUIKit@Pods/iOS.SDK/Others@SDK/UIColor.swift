@@ -157,18 +157,15 @@ extension UIColor {
     public convenience init?(_ hex: String) {
         // 1）去掉首尾空白与换行
         var cString: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-
         // 2）如果以 # 开头，则去掉 #
         if cString.hasPrefix("#") {
             let index = cString.index(after: cString.startIndex)
             cString = String(cString[index..<cString.endIndex])
         }
-
         // 3）仅接受 6 位 RGB（RRGGBB）
         if cString.count != 6 {
             return nil
         }
-
         // 4）按两位一组切割出 R/G/B 字符串
         var startIndex = cString.startIndex
         var endIndex = cString.index(after: startIndex)
@@ -181,13 +178,11 @@ extension UIColor {
         startIndex = cString.index(after: endIndex)
         endIndex = cString.index(after: startIndex)
         let bString = String(cString[startIndex...endIndex])
-
         // 5）十六进制转数值（00~FF -> 0~255）
         var r: CUnsignedInt = 0, g: CUnsignedInt = 0, b: CUnsignedInt = 0
         Scanner(string: rString).scanHexInt32(&r)
         Scanner(string: gString).scanHexInt32(&g)
         Scanner(string: bString).scanHexInt32(&b)
-
         // 6）归一化到 0~1 并初始化 UIColor（默认 alpha = 1）
         self.init(
             red: CGFloat(r) / 255.0,
@@ -212,7 +207,6 @@ extension UIColor {
         guard getRed(&r, green: nil, blue: nil, alpha: nil) else { return 0 }
         return Int(r * 255)
     }
-
     /// UIColor 的绿色分量（只读）
     ///
     /// 说明：
@@ -359,6 +353,20 @@ extension UIColor {
         } else {
             return nil
         }
+    }
+}
+
+extension UIColor {
+    /// 生成 1×1 纯色图（默认可拉伸，适合做 UIButton backgroundImage）
+    func byImage() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1, height: 1), false, 0)
+        defer { UIGraphicsEndImageContext() }
+
+        setFill()
+        UIRectFill(CGRect(x: 0, y: 0, width: 1, height: 1))
+
+        let img = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        return img.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     }
 }
 /* 设置多颜色样式 会用到

@@ -25,6 +25,28 @@ private final class _JobsImageCache {
 
 extension UIButton {
     @discardableResult
+    public func byBackgroundImage(
+        _ image: UIImage?,
+        for state: UIControl.State = .normal
+    ) -> Self {
+        if #available(iOS 15.0, *) {
+            var cfg = self.configuration ?? .plain()
+
+            var bg = cfg.background
+            bg.image = image
+            bg.imageContentMode = .scaleAspectFill
+
+            cfg.background = bg
+            self.configuration = cfg
+
+            updateConfiguration()
+            return self
+        }
+        setBackgroundImage(image, for: state)
+        return self
+    }
+    
+    @discardableResult
     public func byBackgroundImage(_ source: JobsImageSource?, for state: UIControl.State = .normal) -> Self {
         guard let source else {
             self.setBackgroundImage(nil, for: state)
@@ -33,7 +55,6 @@ extension UIButton {
         switch source {
         case .image(let img):
             self.setBackgroundImage(img, for: state)
-
         case .base64(let b64):
             if let data = Data(base64Encoded: b64, options: .ignoreUnknownCharacters),
                let img = UIImage(data: data) {
@@ -41,7 +62,6 @@ extension UIButton {
             } else {
                 self.setBackgroundImage(nil, for: state)
             }
-
         case .url(let url):
             let key = url.absoluteString as NSString
             if let cached = _JobsImageCache.shared.cache.object(forKey: key) {

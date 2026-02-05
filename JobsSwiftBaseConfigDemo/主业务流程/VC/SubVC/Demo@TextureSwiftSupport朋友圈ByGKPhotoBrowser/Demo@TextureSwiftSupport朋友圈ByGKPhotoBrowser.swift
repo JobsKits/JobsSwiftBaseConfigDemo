@@ -16,13 +16,13 @@ import AsyncDisplayKit
 import TextureSwiftSupport
 import GKPhotoBrowser
 import GKNavigationBarSwift
-import JobsInheritance
 import SnapKit
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsTextTools
-import JobsSwiftBaseDefines
 import JobsRefresher
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
     // ✅ Fix：既然 node 通过 heightFormula 手算高度，就别开 estimated（避免滚动抖动/跳）

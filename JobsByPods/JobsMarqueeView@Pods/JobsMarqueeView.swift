@@ -22,8 +22,8 @@ import SDWebImage
 import Kingfisher
 #endif
 
-import JobsSwiftTimer
 import JobsByUIKit
+import JobsSwiftTimer
 import JobsSwiftBaseDefines
 /// 统一「跑马灯」&「轮播图」的视图组件
 /// 数据源：`[UIButton]`

@@ -27,12 +27,6 @@ extension UIView {
     }
 
     @discardableResult
-    public func byBackgroundColor(_ color: UIColor?) -> Self {
-        backgroundColor = color
-        return self
-    }
-
-    @discardableResult
     public func byInsertSublayer(_ layer: CALayer, at index: UInt32) -> Self {
         layer.insertSublayer(layer, at: index)
         return self
@@ -551,6 +545,63 @@ extension UIView {
     @discardableResult
     public func byConstraints(_ block: (Self) -> [NSLayoutConstraint]) -> Self {
         NSLayoutConstraint.activate(block(self))
+        return self
+    }
+}
+private var kBgColorMapKey: UInt8 = 0
+public extension UIView {
+    @discardableResult
+    func byBackgroundColor(
+        _ color: UIColor?,
+        for state: UIControl.State = .normal
+    ) -> Self {
+        // ===== UIButton =====
+        if let button = self as? UIButton {
+            // -------- iOS 15+ --------
+            if #available(iOS 15.0, *) {
+                // 1. 存颜色
+                var map = objc_getAssociatedObject(button, &kBgColorMapKey) as? [Int: UIColor] ?? [:]
+                map[Int(state.rawValue)] = color
+                objc_setAssociatedObject(
+                    button,
+                    &kBgColorMapKey,
+                    map,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
+                // 2. 初始化 configuration
+                if button.configuration == nil {
+                    var cfg = UIButton.Configuration.plain()
+                    cfg.background.backgroundColor = .clear   // 关键
+                    button.configuration = cfg
+                }
+                // 3. 状态渲染
+                button.configurationUpdateHandler = { btn in
+                    guard var c = btn.configuration else { return }
+                    let colors = objc_getAssociatedObject(btn, &kBgColorMapKey) as? [Int: UIColor]
+                    let key: Int
+                    if !btn.isEnabled {
+                        key = Int(UIControl.State.disabled.rawValue)
+                    } else if btn.isHighlighted {
+                        key = Int(UIControl.State.highlighted.rawValue)
+                    } else if btn.isSelected {
+                        key = Int(UIControl.State.selected.rawValue)
+                    } else {
+                        key = Int(UIControl.State.normal.rawValue)
+                    }
+                    // 🔥 真正生效的地方
+                    c.background.backgroundColor = colors?[key]
+                    btn.configuration = c
+                }
+                // 4. 立刻生效
+                button.updateConfiguration()
+                return self
+            }
+            // -------- iOS14- --------
+            button.byBackgroundImage(color?.byImage(), for: state)
+            return self
+        }
+        // ===== UIView（无状态）=====
+        self.backgroundColor = color
         return self
     }
 }

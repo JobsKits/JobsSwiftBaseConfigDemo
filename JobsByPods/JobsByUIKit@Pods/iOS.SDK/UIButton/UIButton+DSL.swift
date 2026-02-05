@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 import JobsSwiftBaseDefines
 // MARK: - 基础链式
 public var _jobsTitleFontDictKey: UInt8 = 0
@@ -20,7 +20,7 @@ public var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 public var _jobsConfigPatchListKey: UInt8 = 0
 public var _jobsLegacyImagePlacementKey: UInt8 = 0
 public var _jobsTitleEdgeInsets15Key: UInt8 = 0
-
+private var kBgColorMapKey: UInt8 = 0
 extension UIButton {
     // MARK: - iOS12 legacy imagePlacement 标记（用于让后续 contentEdgeInsets.top 真正生效）
     private enum _JobsLegacyImagePlacement: Int {
@@ -160,26 +160,6 @@ extension UIButton {
                                                forImageIn state: UIControl.State = .normal) -> Self {
         self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
         return self
-    }
-
-    @discardableResult
-    public func byBackgroundImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
-        #if DEBUG
-        if image == nil { print("❗️byBackgroundImage: image is nil for state=\(state)") }
-        #endif
-        if #available(iOS 15.0, *), state == .normal {
-            var cfg = self.configuration ?? .filled()
-            if cfg.title == nil, let t = self.title(for: .normal), !t.isEmpty { cfg.title = t }
-            if cfg.baseForegroundColor == nil, let tc = self.titleColor(for: .normal) { cfg.baseForegroundColor = tc }
-            var bg = cfg.background
-            bg.image = image
-            bg.imageContentMode = .scaleAspectFill
-            cfg.background = bg
-            self.configuration = cfg
-            byUpdateConfig()
-        } else {
-            self.setBackgroundImage(image, for: state)
-        };return self
     }
 
     @discardableResult
@@ -342,27 +322,6 @@ extension UIButton {
 }
 // MARK: - 布局 / 外观
 extension UIButton {
-    @discardableResult
-    public func byBackgroundColor(_ color: UIColor?,
-                                  for state: UIControl.State = .normal) -> Self {
-        let c = color ?? .clear
-        if #available(iOS 15.0, *), state == .normal {
-            var cfg = self.configuration ?? .plain()
-            cfg.baseBackgroundColor = c
-            if cfg.title == nil,
-               let t = self.title(for: .normal),
-               !t.isEmpty { cfg.title = t }
-            if cfg.baseForegroundColor == nil,
-               let tc = self.titleColor(for: .normal) { cfg.baseForegroundColor = tc }
-            self.configuration = cfg
-            // 保险：某些 configuration 情况下不立刻反映到 layer
-            self.backgroundColor = c
-            byUpdateConfig()
-        } else {
-            self.setBgCor(c, forState: state)
-        };return self
-    }
-    
     @discardableResult
     public func byClearConfigurationBackground() -> Self {
         if #available(iOS 15.0, *) {

@@ -140,6 +140,7 @@ final class RootListVC: BaseVC {
             (title: "实用UI@Sys", items: [
                 ("🔘 按钮的替代解决方案", JobsButtonDemoVC.self),
                 ("🔘 按钮", UIButtonDemoVC.self),
+                ("🔘 依据状态为按钮设置不同背景颜色", UIButtonBackgroundColorDemoVC.self),
                 ("🌞 BaseWebView", BaseWebViewDemoVC.self),
                 ("✍️ UITextField", UITextFieldDemoVC.self),
                 ("✍️ UITextView", UITextViewDemoVC.self),
@@ -253,7 +254,6 @@ final class RootListVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 10, weight: .bold))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemPurple, for: .normal)
-            .byBackgroundColor2(.black, for: .disabled)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsSwiftTimer
@@ -415,7 +415,6 @@ final class RootListVC: BaseVC {
         suspendSpinBtn.bySpinStart()
         suspendBtn.byVisible(YES)
         suspendFuseBtn.byVisible(YES)
-        suspendFuseBtn.isEnabled = false
 
         setupJobsTimers()
     }
