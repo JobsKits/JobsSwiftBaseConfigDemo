@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 import JobsSwiftBlock
 // MARK: ✏️ UITextField 链式配置
 extension UITextField {
@@ -23,8 +23,8 @@ extension UITextField {
     }
     
     @discardableResult
-    public func byPlaceholder(_ placeholder: String?) -> Self {
-        self.placeholder = placeholder
+    public func byRightViewMode(_ mode: UITextField.ViewMode) -> Self {
+        self.rightViewMode = mode
         return self
     }
 

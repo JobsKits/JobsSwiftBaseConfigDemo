@@ -87,6 +87,22 @@ extension NSObject {
         }
         jobs_store(t)
     }
+    /// 同时拿：noti / object / userInfo（都可选）
+    public func on(_ name: String,
+                   object: AnyObject? = nil,
+                   on queue: OperationQueue? = nil,
+                   _ block: @escaping jobsByNotiObjUserInfoBlock) {
+
+        let t = NotificationCenter._onBase(
+            Notification.Name(name),
+            object: object,
+            on: queue
+        ) { noti in
+            block(noti, noti.object as AnyObject?, noti.userInfo)
+        }
+
+        jobs_store(t)
+    }
     /// 如果想拿完整 Notification
     public func onNotification(_ name: String,
                                object: AnyObject? = nil,
@@ -103,27 +119,32 @@ extension NSObject {
 }
 // MARK: - 移除通知
 extension NSObject {
-    /// self.removeNotification(self)
-    /// self.removeNotification(self, name: "通知名称")
     @inline(__always)
-    public func removeNotification(_ observer: Any,
-                                   name: String? = nil,
-                                   object: Any? = nil) {
+     public func removeAllNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
+
+extension String {
+    /// "通知名称".removeNotification(self)
+    @inline(__always)
+    public func removeNotification(_ observer: Any) {
         NotificationCenter.default.removeObserver(
             observer,
-            name: name.map { Notification.Name($0) },
-            object: object
+            name: Notification.Name(self),
+            object: nil
         )
     }
-    /// self.removeNotification(self, name: Notification.Name(...))
+}
+
+extension Notification.Name {
+    /// Notification.Name("通知名称").removeNotification(self)
     @inline(__always)
-    public func removeNotification(_ observer: Any,
-                                   name: Notification.Name?,
-                                   object: Any? = nil) {
+    public func removeNotification(_ observer: Any) {
         NotificationCenter.default.removeObserver(
             observer,
-            name: name,
-            object: object
+            name: self,
+            object: nil
         )
     }
 }

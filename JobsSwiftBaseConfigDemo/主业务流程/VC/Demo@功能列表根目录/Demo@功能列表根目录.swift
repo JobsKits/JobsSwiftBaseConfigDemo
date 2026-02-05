@@ -253,6 +253,7 @@ final class RootListVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 10, weight: .bold))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemPurple, for: .normal)
+            .byBackgroundColor2(.black, for: .disabled)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsSwiftTimer
@@ -414,6 +415,7 @@ final class RootListVC: BaseVC {
         suspendSpinBtn.bySpinStart()
         suspendBtn.byVisible(YES)
         suspendFuseBtn.byVisible(YES)
+        suspendFuseBtn.isEnabled = false
 
         setupJobsTimers()
     }

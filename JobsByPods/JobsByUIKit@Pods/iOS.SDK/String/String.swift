@@ -22,3 +22,25 @@ extension Optional where Wrapped == String {
         self?.asHttpURLOrNil
     }
 }
+/**
+ 
+     let a: String? = nil
+     let b: String? = ""
+
+     a.isNilOrEmpty  // true
+     b.isNilOrEmpty  // true
+ */
+extension Optional where Wrapped == String {
+    
+    public var isNilOrEmpty: Bool {
+        self?.isEmpty ?? true
+    }
+
+    public var hasValue: Bool {
+        !(self?.isEmpty ?? true)
+    }
+    /// 更真实的业务场景（空白也算空）
+    public var isBlank: Bool {
+        self?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true
+    }
+}

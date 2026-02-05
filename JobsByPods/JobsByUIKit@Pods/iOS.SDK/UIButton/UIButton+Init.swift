@@ -23,6 +23,7 @@ extension UIButton {
     }
     @available(iOS 7.0, *)
     public static func sys() -> UIButton {
+        /// 有tintColor为蓝色
         UIButton(type: .system).byBackgroundColor(.clear, for: .normal)
     }
     @available(iOS 13.0, *)

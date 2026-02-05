@@ -15,6 +15,7 @@ import JobsSwiftBaseDefines
 // MARK: - UITextField 点语法
 extension UITextField {
     /// 输入监听（默认不限制）
+    /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
     @discardableResult
     public func byOnInput(limit: Int? = nil,
                              _ callback: @escaping (_ char: String,
@@ -30,7 +31,7 @@ extension UITextField {
             delegate = obs
         };return self
     }
-    /// 激活到输入态回调
+    /// 输入框由不活跃状态 ➤ 活跃状态 只调用一次
     @discardableResult
     public func byBeginEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
         let obs = jobs_textInputObserver

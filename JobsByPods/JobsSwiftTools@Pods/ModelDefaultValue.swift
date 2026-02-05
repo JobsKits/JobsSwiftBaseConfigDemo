@@ -7,7 +7,14 @@
 //
 
 import Foundation
-
+/**
+  
+      【举例】
+     hostId 这个属性在做 JSON -> Model 的 Decodable 解码时
+     如果 JSON 里没有 hostId 字段、或者字段是 null、或者类型不匹配导致解码失败（取决于实现）
+     就不会让整个解码失败，而是给 hostId 一个 默认值（对 DefaultInt 来说一般是 0）
+     @DecodableDefault.DefaultInt var hostId: Int
+ */
 enum DecodableDefault {}
 
 protocol DecodableDefaultSource {

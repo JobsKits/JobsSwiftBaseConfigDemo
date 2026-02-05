@@ -89,7 +89,6 @@ extension UIViewController: @retroactive _UISafeUnwrappedBan {}
 extension UIView: @retroactive _UISafeUnwrappedBan {}
 extension UIImage: @retroactive _UISafeUnwrappedBan {}
 extension UIColor: @retroactive _UISafeUnwrappedBan {}
-
 extension Optional where Wrapped: _UISafeUnwrappedBan {
     @available(*, unavailable, message: "🚫 UI 类型禁止使用 safelyUnwrapped()，请显式处理 nil 或提供业务兜底。")
     public func safelyUnwrapped(_ defaultValue: Wrapped? = nil) -> Wrapped { fatalError() }

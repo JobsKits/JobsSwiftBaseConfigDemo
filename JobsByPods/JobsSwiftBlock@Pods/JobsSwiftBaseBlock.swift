@@ -79,7 +79,7 @@ public typealias JobsYTKProgress = (_ progress: Progress) -> Void
 public typealias jobsByAnyStringBlock = (Any?, String?) -> Void
 public typealias MobileActionBlock = (_ body: [String: Any], _ reply: jobsByAnyBlock) -> Void
 public typealias NativeBlock = (_ payload: Any?, _ reply: @escaping jobsByAnyBlock) -> Void
-
+public typealias jobsByNotiObjUserInfoBlock = (_ noti: Any?, _ obj: AnyObject?, _ userInfo: [AnyHashable: Any]?) -> Void
 public typealias JobsRetStringByCGFloatBlock = (CGFloat) -> String
 /// 全局@泛型
 public typealias JobsRetTByVoidBlock<T> = () -> T

@@ -11,7 +11,29 @@ import AppKit
 import UIKit
 #endif
 
+import ObjectiveC
+
 extension UIControl {
+    
+    private final class _JobsActionTrampoline: NSObject {
+        let handler: (UIControl) -> Void
+        init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
+
+        @objc func invoke(_ sender: UIControl) { handler(sender) }
+    }
+
+    private struct _JobsAssocKey {
+        static var trampolines: UInt8 = 0
+    }
+
+    private var _jobs_trampolines: NSMutableArray {
+        if let arr = objc_getAssociatedObject(self, &_JobsAssocKey.trampolines) as? NSMutableArray {
+            return arr
+        }
+        let arr = NSMutableArray()
+        objc_setAssociatedObject(self, &_JobsAssocKey.trampolines, arr, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return arr
+    }
     // MARK: - 基础状态
     @discardableResult
     public func byEnabled(_ on: Bool?) -> Self { self.isEnabled = on ?? false; return self }
@@ -66,6 +88,29 @@ extension UIControl {
     @discardableResult
     public func byAddAction(_ action: UIAction, for events: UIControl.Event) -> Self {
         addAction(action, for: events); return self
+    }
+    /// ✅ 闭包形式，iOS12/13/14+ 都能用
+    @discardableResult
+    public func byAddAction(for events: UIControl.Event,
+                            _ handler: @escaping (Self) -> Void) -> Self {
+        // iOS 14+ 走系统 UIAction（更干净）
+        if #available(iOS 14.0, *) {
+            let action = UIAction { [weak self] _ in
+                guard let self else { return }
+                handler(self)
+            }
+            addAction(action, for: events)
+            // UIAction 系统会持有，不强制需要我们保存
+            return self
+        }
+        // iOS 13-：用 trampoline
+        let trampoline = _JobsActionTrampoline { control in
+            guard let typed = control as? Self else { return }
+            handler(typed)
+        }
+        _jobs_trampolines.add(trampoline) // 必须保存，不然 trampoline 会被释放
+        addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
+        return self
     }
     /// 移除指定实例的 UIAction
     @available(iOS 14.0, *)
