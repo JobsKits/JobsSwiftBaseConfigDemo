@@ -153,6 +153,12 @@ extension UIButton {
         self.setImage(image, for: state)
         return self
     }
+    
+    @discardableResult
+    public func byBgImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+        self.setBackgroundImage(image, for: state)
+        return self
+    }
 
     @available(iOS 13.0, *)
     @discardableResult

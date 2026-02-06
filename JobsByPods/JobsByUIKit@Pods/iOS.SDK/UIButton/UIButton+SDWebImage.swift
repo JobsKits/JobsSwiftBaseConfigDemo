@@ -18,6 +18,8 @@ import SDWebImage
 public struct SDButtonLoadConfig {
     public var url: URL?
     public var placeholder: UIImage?
+    /// ✅ 背景图占位（仅用于背景图：URL 为空/失败兜底；加载时仍优先 Shimmer）
+    public var bgPlaceholder: UIImage? = nil
     public var options: SDWebImageOptions = []
     public var context: [SDWebImageContextOption: Any]? = nil
     public var progress: SDImageLoaderProgressBlock? = nil
@@ -50,6 +52,11 @@ extension UIButton {
     @discardableResult
     private func _sd_setPlaceholder(_ img: UIImage?) -> Self {
         var c = _sd_config; c.placeholder = img; _sd_config = c
+        return self
+    }
+    @discardableResult
+    private func _sd_setBgPlaceholder(_ img: UIImage?) -> Self {
+        var c = _sd_config; c.bgPlaceholder = img; _sd_config = c
         return self
     }
     @discardableResult
@@ -98,6 +105,11 @@ extension UIButton {
     @discardableResult
     public func sd_placeholderImage(_ img: UIImage?) -> Self {
         _sd_setPlaceholder(img)
+    }
+    /// ✅ 背景图占位（仅作用于 UIButton 的 backgroundImage）
+    @discardableResult
+    public func sd_placeholderBgImage(_ img: UIImage?) -> Self {
+        _sd_setBgPlaceholder(img)
     }
     @discardableResult
     public func sd_options(_ opts: SDWebImageOptions) -> Self {
@@ -311,13 +323,14 @@ extension UIButton {
         self.jobs_bgState = state
         // ✅ Loading：永远先 Shimmer（placeholder 只作为「失败兜底」）
         _jobs_runOnMain { btn in
-            btn._jobs_forceSetBackgroundImage(nil, for: state)
+            // ✅ 背景加载：先落背景占位（如果有），再上 shimmer
+            btn._jobs_forceSetBackgroundImage((cfg.bgPlaceholder ?? cfg.placeholder), for: state)
             btn._jobs_startBackgroundShimmer()
         }
 
         guard let url = cfg.url else {
             // URL 解析失败也视为失败：有兜底图则显示兜底并停 shimmer；否则继续 shimmer
-            if let fb = cfg.placeholder {
+            if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {
                 _jobs_runOnMain { btn in
                     btn._jobs_stopBackgroundShimmer()
                     btn._jobs_forceSetBackgroundImage(fb, for: state)
@@ -365,7 +378,7 @@ extension UIButton {
                     }
                 } else {
                     // ✅ Failure：有兜底图才落兜底；否则继续 shimmer
-                    if let fb = cfg.placeholder {
+                    if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {
                         btn._jobs_stopBackgroundShimmer()
                         btn._jobs_forceSetBackgroundImage(fb, for: state)
                     }
@@ -398,14 +411,14 @@ extension UIButton {
                 };return
             }
             // 只有占位图的极端情况
-            if let ph = snapCfg.placeholder {
+            if let ph = (snapCfg.bgPlaceholder ?? snapCfg.placeholder) {
                 target._jobs_runOnMain { btn in
                     btn._jobs_forceSetBackgroundImage(ph, for: state)
                 }
             };return
         }
         // ===== 情况 2：有 URL，说明是远程图；此时现成位图很可能只是占位，不能直接 return =====
-        if let ph = snapCfg.placeholder {
+        if let ph = (snapCfg.bgPlaceholder ?? snapCfg.placeholder) {
             target._jobs_runOnMain { btn in
                 btn._jobs_forceSetBackgroundImage(ph, for: state)
             }
@@ -434,6 +447,7 @@ extension UIButton {
 
         target._sd_setImageURL(url)
         target._sd_setPlaceholder(snapCfg.placeholder)
+        target._sd_setBgPlaceholder(snapCfg.bgPlaceholder)
         target._sd_setOptions(opts)
         target._sd_setContext(snapCfg.context)
         target._sd_setProgress(snapCfg.progress)
