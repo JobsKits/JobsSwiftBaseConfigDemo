@@ -58,6 +58,5 @@ final class LocalNotificationDemoVC: BaseVC {
                 
             })
             .disposed(by: disposeBag)
-        
     }
 }

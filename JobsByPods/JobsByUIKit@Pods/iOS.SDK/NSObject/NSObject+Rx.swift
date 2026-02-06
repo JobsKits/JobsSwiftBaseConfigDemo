@@ -13,9 +13,9 @@ import UIKit
 #if canImport(NSObject_Rx) && canImport(RxSwift)
 import RxSwift
 import NSObject_Rx
-public extension NSObject {
+extension NSObject {
     /// 语法糖：tf.disposeBag 实际转发到 rx.disposeBag
-    var disposeBag: DisposeBag {
+    public var disposeBag: DisposeBag {
         get { rx.disposeBag }
         set {
             var r = rx            // ✅ 拷贝到可变局部
@@ -25,11 +25,11 @@ public extension NSObject {
 }
 #else
 import ObjectiveC
-public extension NSObject {
+extension NSObject {
     /// 用 UInt8 静态变量做关联对象 key（地址稳定）
     private static var _disposeBagKey: UInt8 = 0
 
-    var disposeBag: DisposeBag {
+    public var disposeBag: DisposeBag {
         get {
             if let bag = objc_getAssociatedObject(self, &Self._disposeBagKey) as? DisposeBag {
                 return bag
