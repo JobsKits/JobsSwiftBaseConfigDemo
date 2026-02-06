@@ -20,20 +20,15 @@ import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsScale
-/// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
-public extension NSAttributedString.Key {
-    static let jobsAction = NSAttributedString.Key("jobsAction")
-}
 // MARK: - 仅两个 cell：1) Delegate 方案  2) RAC 方案
 //  - “专属客服”使用系统默认蓝色（.link）
 //  - “400-123-4567” 可点击拨号，样式=红字+蓝色下划线（自定义）
 //  - 在卡片里追加一个“图标附件”示例（回形针 + 文本）
 //  - 新增第三行 rightAligned：演示富文本整体右对齐（文本与附件都右对齐）
-final class RichTextDemoVC: BaseVC, HasDisposeBag {
+final class RichTextDemoVC: BaseVC {
 
     private let customerText = "专属客服"
     private let customerURL  = "click://customer"
-
     private let phoneText    = "400-123-4567"
     private let phoneURL     = "tel://4001234567"
 
@@ -56,9 +51,7 @@ final class RichTextDemoVC: BaseVC, HasDisposeBag {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        jobsSetupGKNav(
-            title: "富文本演示（Delegate & RAC & RightAligned）"
-        )
+        jobsSetupGKNav(title: "富文本演示（Delegate & RAC & RightAligned）".tr)
         tableView.byAlpha(1)
     }
 }

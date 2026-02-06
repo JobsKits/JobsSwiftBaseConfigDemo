@@ -197,8 +197,8 @@ public func toastBy(_ string: String) {
     }
 }
 
-public extension String {
-    var toast: Void {
+extension String {
+     public var toast: Void {
         toastBy(self)
     }
 }

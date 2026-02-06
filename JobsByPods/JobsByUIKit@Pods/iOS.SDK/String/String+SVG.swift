@@ -23,7 +23,6 @@ extension String {
                              size: nil,
                              scale: UIScreen.main.scale)
     }
-
     /// 可选：指定输出尺寸
     public func svg(size: CGSize?,
                     in bundle: Bundle = .main,

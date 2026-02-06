@@ -63,6 +63,7 @@ final class RootListVC: BaseVC {
             ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
             ("🔘 依据状态为按钮设置不同背景颜色", UIButtonBackgroundColorDemoVC.self),
             ("💥 倒计时按钮", JobsCountdownDemoVC.self),
+            ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
             ("⏰ Timer", TimerDemoVC.self),
             ("🕖 时钟", ClockDemoVC.self),
             ("🎲 抽奖轮盘", LuckyWheelDemoVC.self),

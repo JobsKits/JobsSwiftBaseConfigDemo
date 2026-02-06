@@ -103,6 +103,7 @@ final class RootListVC: BaseVC {
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
                 ("🛠️ Jobs时间管理大师", JobsTimerManagerDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
+                ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
                 ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
                 ("💥 倒计时按钮", JobsCountdownDemoVC.self),
                 ("🕖 时钟", ClockDemoVC.self),
@@ -349,7 +350,7 @@ final class RootListVC: BaseVC {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         jobsSetupGKNav(
-            title: "演武堂",
+            title: "演武堂".tr,
             leftButton: UIButton.sys()
                 .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
                 .byImage("list.bullet".sysImg, for: .normal)
@@ -431,7 +432,10 @@ final class RootListVC: BaseVC {
     private func setupJobsTimers() {
         // 1) suspendBtn：每秒刷新当前时间
         do {
-            let cfg = JobsSwiftTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            let cfg = JobsSwiftTimerConfig(interval: 1.0,
+                                           repeats: true,
+                                           tolerance: 0,
+                                           queue: .main)
             suspendBtnTimer = try timerMgr.create(
                 kind: .gcd,
                 identifier: suspendBtnTimerID,
@@ -455,7 +459,10 @@ final class RootListVC: BaseVC {
         // 2) suspendSpinBtn：每秒 +1 显示秒数（替代旧 elapsed）
         do {
             spinSeconds = 0
-            let cfg = JobsSwiftTimerConfig(interval: 1.0, repeats: true, tolerance: 0, queue: .main)
+            let cfg = JobsSwiftTimerConfig(interval: 1.0,
+                                           repeats: true,
+                                           tolerance: 0,
+                                           queue: .main)
             suspendSpinBtnTimer = try timerMgr.create(
                 kind: .gcd,
                 identifier: suspendSpinBtnTimerID,

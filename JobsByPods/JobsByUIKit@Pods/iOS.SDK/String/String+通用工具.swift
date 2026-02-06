@@ -16,6 +16,17 @@ extension String {
     public func paste(){
         UIPasteboard.general.string = self
     }
+    /// 字符串拼接@链式：适用于字面量、let常量
+    @discardableResult
+    public func add(_ str: String) -> String {
+        self + str
+    }
+    /// 字符串拼接@原地：适用于var变量（性能、循环更好）
+    @discardableResult
+    public mutating func addInPlace(_ str: String) -> String {
+        self.append(str)
+        return self
+    }
     /// 安全取字符
     public subscript(_ index: Int) -> Character? {
         guard index >= 0 && index < count else { return nil }
@@ -111,10 +122,10 @@ extension String {
     }
 
     public static func _makeMailtoURL(to: [String],
-                               subject: String?,
-                               body: String?,
-                               cc: [String],
-                               bcc: [String]) -> URL? {
+                                      subject: String?,
+                                      body: String?,
+                                      cc: [String],
+                                      bcc: [String]) -> URL? {
         var comps = URLComponents()
         comps.scheme = "mailto"
         comps.path = to.joined(separator: ",")
@@ -125,5 +136,66 @@ extension String {
         if !bcc.isEmpty { items.append(.init(name: "bcc", value: bcc.joined(separator: ","))) }
         comps.queryItems = items.isEmpty ? nil : items
         return comps.url
+    }
+}
+// MARK: 一 字符串检测
+extension String {
+    // MARK: - Basic
+    /// 去掉首尾空白后是否为空
+    public var isBlank: Bool {
+        trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    /// 是否为纯数字（0-9 / Unicode decimal digits），且非空
+    public var isPureNumber: Bool {
+        !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+    }
+    /// 是否为纯英文大写（A-Z），且非空
+    public var isPureUppercaseEnglish: Bool {
+        guard !isEmpty else { return false }
+        return unicodeScalars.allSatisfy { $0.value >= 65 && $0.value <= 90 } // 'A'...'Z'
+    }
+    /// 是否为纯英文小写（a-z），且非空
+    public var isPureLowercaseEnglish: Bool {
+        guard !isEmpty else { return false }
+        return unicodeScalars.allSatisfy { $0.value >= 97 && $0.value <= 122 } // 'a'...'z'
+    }
+    // MARK: - Chinese
+    /// 是否全是汉字（含简体/繁体/同形字），且非空
+    /// 覆盖：CJK Unified Ideographs + Extension A（常用）
+    public var isPureChineseHan: Bool {
+        guard !isEmpty else { return false }
+        return unicodeScalars.allSatisfy { scalar in
+            switch scalar.value {
+            case 0x4E00...0x9FFF: return true        // CJK Unified Ideographs
+            case 0x3400...0x4DBF: return true        // CJK Unified Ideographs Extension A
+            default: return false
+            }
+        }
+    }
+    // MARK: - Simplified / Traditional (Practical)
+    /// 近似：是否“看起来是纯简体”
+    /// 逻辑：必须全是汉字；转换为繁体后发生变化（说明有简体字）；且转换回简体能还原
+    /// ⚠️ 同形字（简繁一致）会导致 false（无法区分）
+    public var isPureSimplifiedChinese: Bool {
+        guard isPureChineseHan else { return false }
+
+        let toTraditional = applyingTransform(.init("Hans-Hant"), reverse: false) ?? self
+        // 如果转换到繁体完全不变，可能是：全同形字 or 已是繁体/混合
+        if toTraditional == self { return false }
+
+        let backToSimplified = toTraditional.applyingTransform(.init("Hant-Hans"), reverse: false) ?? toTraditional
+        return backToSimplified == self
+    }
+    /// 近似：是否“看起来是纯繁体”
+    /// 逻辑：必须全是汉字；转换为简体后发生变化（说明有繁体字）；且转换回繁体能还原
+    /// ⚠️ 同形字（简繁一致）会导致 false（无法区分）
+    public var isPureTraditionalChinese: Bool {
+        guard isPureChineseHan else { return false }
+
+        let toSimplified = applyingTransform(.init("Hant-Hans"), reverse: false) ?? self
+        if toSimplified == self { return false }
+
+        let backToTraditional = toSimplified.applyingTransform(.init("Hans-Hant"), reverse: false) ?? toSimplified
+        return backToTraditional == self
     }
 }

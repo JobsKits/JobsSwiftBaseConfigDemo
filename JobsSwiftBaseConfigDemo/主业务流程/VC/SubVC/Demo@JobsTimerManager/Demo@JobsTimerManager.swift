@@ -4,13 +4,14 @@
 //
 //  Created by Jobs on 12/13/25.
 //
-//  ✅ 适配你当前 JobsSwiftTimerManager.swift：仅依赖
+//  ✅ 适配当前 JobsSwiftTimerManager.swift：仅依赖
 //  - JobsSwiftTimerManager.shared.create(kind:identifier:config:dedupPolicy:onTick:)
 //  - JobsSwiftTimerManager.shared.act(.start/.pause/.resume/.stop/.cancel, identifier:)
 //  - JobsSwiftTimerManager.shared.timer(for:)
 //  - JobsSwiftTimerManager.shared.removeAll(stopAll:)
 //  并统一用 VC 监听 App 前后台来执行策略（因为 Manager 内部将 autoManageAppState=false）
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -25,6 +26,7 @@ import JobsSwiftBaseTools
 import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
+import GKNavigationBarSwift
 // MARK: - Demo Timer ID
 private enum JobsTimerManagerDemoID: String, JobsSwiftTimerIdentifiable {
     case A_pauseResume
@@ -88,7 +90,6 @@ private final class JobsTimerManagerDemoUIBridge: @unchecked Sendable {
         }
     }
 }
-
 // MARK: - VC
 final class JobsTimerManagerDemoVC: BaseVC {
 
@@ -97,13 +98,11 @@ final class JobsTimerManagerDemoVC: BaseVC {
     private let rowHeight: CGFloat = 44
 
     private lazy var uiBridge: JobsTimerManagerDemoUIBridge = .init(self)
-
     // A 策略：pauseAndResume
     // - 手动 pause：前台不会自动 resume
     // - 后台 autoPause：回前台会自动 resume
     private var aManuallyPaused = false
     private var aAutoPausedInBackground = false
-
     // MARK: - UI
     private lazy var hintLabel: UILabel = {
         UILabel()
@@ -120,9 +119,13 @@ final class JobsTimerManagerDemoVC: BaseVC {
                 """
             )
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(12)
                 make.left.equalToSuperview().offset(horizontalInset)
                 make.right.equalToSuperview().inset(horizontalInset)
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
             }
     }()
 
@@ -137,7 +140,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             }
     }()
 
-    fileprivate lazy var statusLabel: UILabel = {
+    public lazy var statusLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
             .byFont(.systemFont(ofSize: 14, weight: .semibold))
@@ -150,7 +153,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             }
     }()
 
-    fileprivate lazy var countALabel: UILabel = {
+    public lazy var countALabel: UILabel = {
         UILabel()
             .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
             .byTextColor(.label)
@@ -162,7 +165,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             }
     }()
 
-    fileprivate lazy var countBLabel: UILabel = {
+    public lazy var countBLabel: UILabel = {
         UILabel()
             .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
             .byTextColor(.label)
@@ -174,7 +177,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             }
     }()
 
-    fileprivate lazy var oneShotLabel: UILabel = {
+    public lazy var oneShotLabel: UILabel = {
         UILabel()
             .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
             .byTextColor(.label)

@@ -18,6 +18,10 @@ import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftTools
+/// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
+public extension NSAttributedString.Key {
+    static let jobsAction = NSAttributedString.Key("jobsAction")
+}
 // MARK: - 单一 Cell（支持 Delegate / RAC / RightAligned）
 final class LinkCell: UITableViewCell, HasDisposeBag {
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned
