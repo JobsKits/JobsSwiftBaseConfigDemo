@@ -83,15 +83,21 @@ extension BRTextPickerView: UIPickerViewDataSource, UIPickerViewDelegate {
     public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
         style.columnWidth ?? max(0, pickerView.bounds.width - CGFloat(componentsCount() - 1) * style.columnSpacing) / CGFloat(componentsCount())
     }
-    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17)
-        label.textColor = JobsCor.label
-        label.text = modelAt(component: component, row: row)?.text
-        return label
+    public func pickerView(_ pickerView: UIPickerView,
+                           viewForRow row: Int,
+                           forComponent component: Int,
+                           reusing view: UIView?) -> UIView {
+        ((view as? UILabel) ?? UILabel())
+            .byTextAlignment(.center)
+            .byFont(style.pickerTextFont)
+            .byTextColor((row == pickerView.selectedRow(inComponent: component)) ?
+                         (style.pickerTextSelectedColor ?? style.pickerTextColor) : style.pickerTextColor)
+            .byText(modelAt(component: component, row: row)?.text)
     }
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    public func pickerView(_ pickerView: UIPickerView,
+                           didSelectRow row: Int,
+                           inComponent component: Int) {
+        pickerView.reloadComponent(component)
         if pickerMode == .cascade {
             let total = componentsCount()
             if component < total - 1 {

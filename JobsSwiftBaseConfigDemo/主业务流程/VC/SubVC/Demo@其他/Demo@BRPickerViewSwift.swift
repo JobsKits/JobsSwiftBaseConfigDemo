@@ -28,7 +28,17 @@ final class BRPickerDemoVC: BaseVC {
         BRTextPickerView()
             .brMode(.single)
             .brTitle("学历".tr)
-            .brStyle { $0.isAutoSelect = false }
+            .brStyle { style in
+                style
+                    .byPanelBackgroundColor(.yellow)               // ✅ 设置底部面板背景色
+                    .byToolbarBackgroundColor(.systemCyan)         // ✅ 设置顶部工具条背景色
+                    .byTitleColor(.white)                          // ✅ 设置标题文字颜色
+                    .byButtonColor(.systemRed)                     // ✅ 设置取消/完成按钮颜色
+                    .byMaskColor(.black.withAlphaComponent(0.55))  // ✅ 设置蒙层背景色（弹出时的遮罩）
+                    .byPickerTextColor(.red)                       // ✅ 未选中行文字颜色
+                    .byPickerTextSelectedColor(.blue)              // ✅ 选中行文字颜色
+                    .byPickerTextFont(.systemFont(ofSize: 20))     // ✅ 行文字字体
+            }
             .brDataSource(["大专以下".tr, "大专".tr, "本科".tr, "硕士".tr, "博士".tr, "博士后".tr])
             .brSelectIndex(2)
             .brOnSingle { m, idx in

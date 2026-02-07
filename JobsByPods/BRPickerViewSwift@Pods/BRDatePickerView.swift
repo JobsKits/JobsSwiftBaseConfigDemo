@@ -236,35 +236,37 @@ extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
                            viewForRow r: Int,
                            forComponent c: Int,
                            reusing v: UIView?) -> UIView {
+        let isSelected = r == pickerView.selectedRow(inComponent: c)
         let lab = (v as? UILabel) ?? UILabel()
-        lab.textAlignment = .center
-        lab.font = .systemFont(ofSize: 17)
-        lab.textColor = JobsCor.label
+        lab
+            .byTextAlignment(.center)
+            .byFont(style.pickerTextFont)
+            .byTextColor(isSelected ? (style.pickerTextSelectedColor ?? style.pickerTextColor) : style.pickerTextColor)
 
         switch pickerMode {
-        case .ymd: lab.text = c == 0 ? "\(years[r])年" : (c == 1 ? "\(months[r])月" : "\(days[r])日")
-        case .ym:  lab.text = c == 0 ? "\(years[r])年" : "\(months[r])月"
-        case .y:   lab.text = "\(years[r])年"
-        case .md:  lab.text = c == 0 ? "\(months[r])月" : "\(days[r])日"
-        case .hm:  lab.text = c == 0 ? "\(hours[r])时" : String(format: "%02d分", r * max(style.minuteInterval, 1))
+        case .ymd: lab.byText(c == 0 ? "\(years[r])年" : (c == 1 ? "\(months[r])月" : "\(days[r])日"))
+        case .ym:  lab.byText(c == 0 ? "\(years[r])年" : "\(months[r])月")
+        case .y:   lab.byText("\(years[r])年")
+        case .md:  lab.byText(c == 0 ? "\(months[r])月" : "\(days[r])日")
+        case .hm:  lab.byText(c == 0 ? "\(hours[r])时" : String(format: "%02d分", r * max(style.minuteInterval, 1)))
         default: break
         };return lab
     }
 
     public func pickerView(_ pickerView: UIPickerView,
                            didSelectRow r: Int,
-                           inComponent c: Int) {
-        if pickerMode == .ymd, (c == 0 || c == 1) {
+                           inComponent component: Int) {
+        pickerView.reloadComponent(component)
+        if pickerMode == .ymd, (component == 0 || component == 1) {
             let y = years[pickerView.selectedRow(inComponent: 0)]
             let m = months[pickerView.selectedRow(inComponent: 1)]
             rebuildDays(year: y, month: m)
             pickerView.reloadComponent(2)
-        } else if pickerMode == .md, c == 0 {
+        } else if pickerMode == .md, component == 0 {
             let m = months[pickerView.selectedRow(inComponent: 0)]
             rebuildDays(month: m)
             pickerView.reloadComponent(1)
         }
-
         if style.isAutoSelect { emitResult() }
     }
 }
