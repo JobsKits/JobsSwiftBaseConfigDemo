@@ -62,6 +62,7 @@ final class RootListVC: BaseVC {
     /// ✅ 唯一数据源：外层=一级目录；内层=二级目录列表
     private lazy var g0 : [DemoItem] = {
         var temp: [DemoItem] = [
+            ("🔽 下拉三角小菜单", FSPopoverDemoVC.self),
             ("🏞️ 利用第三方进行图片加载", PicLoadDemoVC.self),
             ("🍚 选择器", BRPickerDemoVC.self),
             ("🌛 朋友圈@GKPhotoBrowserByUIKit", GKPhotoBrowserByUIKitDemoVC.self),
@@ -72,7 +73,6 @@ final class RootListVC: BaseVC {
             ("🧒 Lottie动画", LottieDemoVC.self),
             ("☠️ 骨架屏", SkeletonViewDemoVC.self),
             ("🌹 弹出方式", SwiftEntryKitDemoVC.self),
-            ("🔽 下拉三角小菜单", FSPopoverDemoVC.self),
             ("💬 LiveChat", LiveChatDemoVC.self),
             ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
         ]

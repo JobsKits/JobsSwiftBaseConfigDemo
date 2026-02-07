@@ -28,6 +28,7 @@ Pod::Spec.new do |s|
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
   
+  s.dependency 'BMPlayer'
   s.dependency 'SwiftEntryKit'
   s.dependency 'YTKNetwork'
   s.dependency 'MJRefresh'
@@ -44,6 +45,5 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftStandardLibrary_extension'
   s.dependency 'JobsSwiftMetalKit_extensions'
-  s.dependency 'BMPlayer'
-  
+
 end

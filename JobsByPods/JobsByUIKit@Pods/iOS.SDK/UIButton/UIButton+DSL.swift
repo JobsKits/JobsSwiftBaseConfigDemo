@@ -180,10 +180,22 @@ extension UIButton {
 
     @discardableResult
     public func byTintColor(_ color: UIColor) -> Self {
-        self.tintColor = color
+        tintColor = color
         return self
     }
-
+    /// UIButton：按下高亮时是否自动调整图片（默认 true，会变暗/发亮）
+    @discardableResult
+    public func byAdjustsImageWhenHighlighted(_ on: Bool?) -> Self {
+        adjustsImageWhenHighlighted = on ?? false
+        return self
+    }
+    /// UIButton：按下时是否显示系统“触摸高亮”（默认 false，但你项目里可能被打开过）
+    @discardableResult
+    public func byShowsTouchWhenHighlighted(_ on: Bool?) -> Self {
+        showsTouchWhenHighlighted = on ?? false
+        return self
+    }
+    
     @available(iOS 15.0, *)
     @discardableResult
     public func byUpdateConfig() -> Self {

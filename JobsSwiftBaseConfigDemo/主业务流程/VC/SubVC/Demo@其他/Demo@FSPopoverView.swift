@@ -19,6 +19,7 @@ import JobsByUIKit
 import JobsToast
 import JobsSwiftBaseDefines
 import JobsTextTools
+import JobsBy3rdTools
 /// FSPopoverView Demo（链式 by-DSL 写法 + 约束写在懒加载里的 byAddTo）
 /// - 展示：
 ///   1) 列表弹窗（FSPopoverListView）
@@ -27,9 +28,9 @@ import JobsTextTools
 final class FSPopoverDemoVC: BaseVC {
     // MARK: - UI（by-DSL + 约束在 byAddTo 内）
     private lazy var exampleButton: UIButton = {
-        let b = UIButton.sys()
+        UIButton.sys()
             .byBackgroundColor(.systemGreen, for: .normal)
-            .byTitle("显示列表 ▶︎".tr, for: .normal)
+            .byTitle("从按钮处弹出列表 ▶︎".tr, for: .normal)
             .byTitle("隐藏".tr, for: .selected)
             .byTitleColor(.systemBlue, for: .normal)
             .byTitleColor(.systemRed, for: .selected)
@@ -49,22 +50,10 @@ final class FSPopoverDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
             }
-
-        if #available(iOS 15.0, *) {
-            b.byConfiguration { c in
-                c.byTitle("从按钮处弹出列表")
-                 .byBaseForegroundCor(.white)
-                 .byContentInsets(.init(top: 12, leading: 16, bottom: 12, trailing: 16))
-                 .byCornerStyle(.large)
-                 .byImagePlacement(.trailing)
-                 .byImagePadding(8)
-            }
-        }
-        return b
     }()
 
     private lazy var customButton: UIButton = {
-        let b = UIButton.sys()
+        UIButton.sys()
             .byBackgroundColor(.systemIndigo, for: .normal)
             .byTitle("从右上角弹出【自定义内容】 ▶︎".tr, for: .normal)
             .byTitleColor(.white, for: .normal)
@@ -79,14 +68,43 @@ final class FSPopoverDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
             }
-
-        if #available(iOS 15.0, *) {
-            b.byConfiguration { c in
-                c.byBaseForegroundCor(.white)
-                 .byImagePlacement(.trailing)
-                 .byImagePadding(8)
+    }()
+    
+    private lazy var jobsDialogBoxBtn: UIButton = {
+        UIButton.sys()
+            .byBackgroundColor("#4c4d4e".cor, for: .normal)
+            .byTitle("测试 JobsDialogBox ▶︎".tr, for: .normal)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.PingFangSC.Regular(12))
+            .byImage("globe".sysImg, for: .normal)
+            .byTitleEdgeInsets(.init(top: 0, left: 8, bottom: 0, right: -8))
+            .onTap { [weak self] sender in
+                sender.byDialogBoxContent { dialogBoxView in
+                    UITextView()
+                        .byBackgroundColor(.clear)
+                        .byText(
+                            "1.电话、QQ、微信号、乱码、全数字皆、不雅字眼、辱骂 词汇带、负面情绪字眼、标点符号皆会审核失败"
+                                .add("\n")
+                                .add("2. 中文字母8个为限、全英文字母或全拼音、中文字母或拼 音加数字、字母数字最多2个、超过、一律拒绝")
+                                .add("\n")
+                                .add("3. 昵称30日内仅能更改一次")
+                        )
+                        .byTextColor(.white)
+                        .byFont(.systemFont(ofSize: 16))
+                        .byEditable(NO)
+                        .byAddTo(dialogBoxView) { [unowned self] make in
+                            make.edges.equalToSuperview()
+                        }
+                }
+                .byDialogBoxSize(CGSize(width: 260, height: 140))
+                .byShownDirection(.bottom)
+                .byShowDialogBox(in: self!.view)
             }
-        };return b
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(self.customButton.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(24)
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btn: UIButton = {
@@ -106,16 +124,23 @@ final class FSPopoverDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.byBackgroundColor(.systemBackground)
         jobsSetupGKNav(
             title: "Demo@FSPopoverView",
             rightButtons: [btn]
         )
-        view.byBackgroundColor(.systemBackground)
+        
+        exampleButton.byVisible(YES)
+        customButton.byVisible(YES)
+        jobsDialogBoxBtn.byVisible(YES)
         // 全局外观（如不需要，可移除）
         let ap = FSPopoverView.fs_appearance()
         ap.showsArrow = true
         ap.showsDimBackground = true
     }
+}
+
+extension FSPopoverDemoVC{
     /// 从按钮的 rect 弹出 列表
     private func showListFromRect() {
         let listView = FSPopoverListView()
