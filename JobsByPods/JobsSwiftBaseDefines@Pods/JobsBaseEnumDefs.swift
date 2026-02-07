@@ -321,6 +321,13 @@ public enum MKRightBtnViewBtnType: Int {
          share   /// 分享
 }
 // MARK: - 方向
+public enum JobsResolvedEdge {
+   case top,
+        bottom,
+        left,
+        right
+}
+
 public enum JobsDirection: UInt {
     case top,   /// 上面
          bottom,/// 下面
@@ -340,14 +347,28 @@ public enum JobsDirection: UInt {
         }
     }
 }
-@available(iOS 13.0, *)
+
 public extension JobsDirection {
+    @available(iOS 13.0, *)
     var toDirectionalEdge: NSDirectionalRectEdge {
         switch self {
         case .top:    return .top
         case .left:   return .leading
         case .bottom: return .bottom
         case .right:  return .trailing
+        }
+    }
+    /// 在不使用 NSDirectionalRectEdge 的前提下，给你同样的 leading/trailing 语义：
+    /// - 当系统是 RTL 时：left/right 互换
+    /// - top/bottom 不变
+    func resolved(for layout: UIUserInterfaceLayoutDirection) -> JobsResolvedEdge {
+        switch self {
+        case .top: return .top
+        case .bottom: return .bottom
+        case .left:
+            return layout == .rightToLeft ? .right : .left
+        case .right:
+            return layout == .rightToLeft ? .left : .right
         }
     }
 }

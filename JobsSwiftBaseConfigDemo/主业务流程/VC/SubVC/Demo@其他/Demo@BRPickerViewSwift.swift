@@ -196,12 +196,9 @@ final class BRPickerDemoVC: BaseVC {
                 make.edges.equalTo(self.view.safeAreaLayoutGuide)
             }
     }()
-
-    private lazy var stack: UIStackView = {
-        UIStackView()
-            .byAxis(.vertical)
-            .bySpacing(12)
-            .byAlignment(.fill)
+    /// ScrollView 内容承载视图（替代 UIStackView，所有 UI 直接添加到该视图上）
+    private lazy var contentView: UIView = {
+        UIView()
             .byAddTo(scrollView) { [weak self] make in
                 guard let self else { return }
                 if view.jobs_hasVisibleTopBar() {
@@ -210,6 +207,7 @@ final class BRPickerDemoVC: BaseVC {
                 } else {
                     make.edges.equalToSuperview().inset(16)
                 }
+                // 关键：固定内容宽度，否则 ScrollView 会横向滚动/约束告警
                 make.width.equalTo(self.scrollView.frameLayoutGuide).offset(-32)
             }
     }()
@@ -218,8 +216,12 @@ final class BRPickerDemoVC: BaseVC {
         UIView()
             .byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(12)
-            .byAddArranged(to: stack)
-            .byHeight(72)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalToSuperview()
+                make.left.right.equalToSuperview()
+                make.height.equalTo(72)
+            }
     }()
 
     private lazy var secText: UILabel = {
@@ -227,7 +229,11 @@ final class BRPickerDemoVC: BaseVC {
             .byText("文本选择器（BRTextPickerView）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
-            .byAddArranged(to: stack)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.resultCard.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+            }
     }()
 
     private lazy var secSys: UILabel = {
@@ -235,7 +241,11 @@ final class BRPickerDemoVC: BaseVC {
             .byText("日期选择器（系统样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
-            .byAddArranged(to: stack)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnCascade.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+            }
     }()
 
     private lazy var secCustom: UILabel = {
@@ -243,7 +253,11 @@ final class BRPickerDemoVC: BaseVC {
             .byText("日期选择器（自定义样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(.secondaryLabel)
-            .byAddArranged(to: stack)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnSysCount.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+            }
     }()
 
     private lazy var btnSingle: UIButton = {
@@ -257,8 +271,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.textSinglePicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.secText.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnMulti: UIButton = {
@@ -272,8 +290,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 textMultiPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnSingle.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnCascade: UIButton = {
@@ -287,8 +309,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 textCascadePicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnMulti.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnSysDate: UIButton = {
@@ -302,8 +328,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 dateSysDatePicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.secSys.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnSysDateTime: UIButton = {
@@ -317,8 +347,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 dateSysDateTimePicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnSysDate.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnSysTime: UIButton = {
@@ -332,8 +366,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateSysTimePicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnSysDateTime.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnSysCount: UIButton = {
@@ -347,8 +385,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateSysCountPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnSysTime.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnYMD: UIButton = {
@@ -362,8 +404,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateYMDPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.secCustom.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnYM: UIButton = {
@@ -377,8 +423,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateYMPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnYMD.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnY: UIButton = {
@@ -392,8 +442,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateYPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnYM.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnMD: UIButton = {
@@ -407,8 +461,12 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateMDPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnY.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var btnHM: UIButton = {
@@ -422,13 +480,19 @@ final class BRPickerDemoVC: BaseVC {
                 guard let self else { return }
                 self.dateHMPicker.brPresent(in: self.view)
             }
-            .byAddArranged(to: stack)
-            .byHeight(44)
+            .byAddTo(contentView) { [weak self] make in
+                guard let self else { return }
+                make.top.equalTo(self.btnMD.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+                // 关键：最后一个控件把 contentView 的 bottom 撑开
+                make.bottom.equalToSuperview()
+            }
     }()
 
     override func loadView() {
         super.loadView()
-        _ = [scrollView, stack, resultCard,
+        _ = [scrollView, contentView, resultCard,
              secText, btnSingle, btnMulti, btnCascade,
              secSys, btnSysDate, btnSysDateTime, btnSysTime, btnSysCount,
              secCustom, btnYMD, btnYM, btnY, btnMD, btnHM]

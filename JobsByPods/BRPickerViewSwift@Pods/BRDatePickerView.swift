@@ -15,6 +15,7 @@ import SnapKit
 import JobsSwiftBaseDefines
 
 public final class BRDatePickerView: NSObject {
+    
     public var pickerMode: BRDatePickerMode = .date
     public var title: String?
     public var style = BRPickerStyle()
@@ -35,7 +36,10 @@ public final class BRDatePickerView: NSObject {
     private var minutes: [Int] = Array(0...59)
 
     public override init() { super.init() }
+}
 
+extension BRDatePickerView {
+    
     public func present(in container: UIView? = nil) {
         style.title = title ?? style.title
         let panel = BRPickerPanel(style: style)
@@ -60,7 +64,6 @@ public final class BRDatePickerView: NSObject {
             }
             preselectCustom()
         }
-
         // ✅ confirm/cancel 负责释放 panel
         panel.onConfirm = { [weak self] in
             self?.emitResult()
@@ -76,7 +79,6 @@ public final class BRDatePickerView: NSObject {
     }
 
     public func dismiss() { panel?.dismiss(); panel = nil }
-
     // MARK: - System
     private func configureSystemPicker() {
         if #available(iOS 13.4, *) { systemPicker.preferredDatePickerStyle = .wheels }
@@ -100,12 +102,12 @@ public final class BRDatePickerView: NSObject {
         }
 
         if style.isAutoSelect {
-            systemPicker.addTarget(self, action: #selector(systemChanged), for: .valueChanged)
+            systemPicker
+                .byAddAction(for: .valueChanged) { [weak self] _ in
+                    self?.emitResult()
+                }
         }
     }
-
-    @objc private func systemChanged() { emitResult() }
-
     // MARK: - Custom
     private func configureCustomData() {
         let cal = Calendar.current
@@ -180,8 +182,7 @@ public final class BRDatePickerView: NSObject {
             comps.minute = s(1) * max(style.minuteInterval, 1)
         default:
             return nil
-        }
-        return cal.date(from: comps)
+        };return cal.date(from: comps)
     }
 
     private func emitResult() {
@@ -202,6 +203,7 @@ public final class BRDatePickerView: NSObject {
 }
 
 extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
+    
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         switch pickerMode {
         case .ymd: return 3
@@ -230,7 +232,10 @@ extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         style.rowHeight
     }
 
-    public func pickerView(_ pickerView: UIPickerView, viewForRow r: Int, forComponent c: Int, reusing v: UIView?) -> UIView {
+    public func pickerView(_ pickerView: UIPickerView,
+                           viewForRow r: Int,
+                           forComponent c: Int,
+                           reusing v: UIView?) -> UIView {
         let lab = (v as? UILabel) ?? UILabel()
         lab.textAlignment = .center
         lab.font = .systemFont(ofSize: 17)
@@ -243,11 +248,12 @@ extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         case .md:  lab.text = c == 0 ? "\(months[r])月" : "\(days[r])日"
         case .hm:  lab.text = c == 0 ? "\(hours[r])时" : String(format: "%02d分", r * max(style.minuteInterval, 1))
         default: break
-        }
-        return lab
+        };return lab
     }
 
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow r: Int, inComponent c: Int) {
+    public func pickerView(_ pickerView: UIPickerView,
+                           didSelectRow r: Int,
+                           inComponent c: Int) {
         if pickerMode == .ymd, (c == 0 || c == 1) {
             let y = years[pickerView.selectedRow(inComponent: 0)]
             let m = months[pickerView.selectedRow(inComponent: 1)]

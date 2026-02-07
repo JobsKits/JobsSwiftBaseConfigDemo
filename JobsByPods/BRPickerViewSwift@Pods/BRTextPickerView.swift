@@ -76,7 +76,37 @@ public final class BRTextPickerView: NSObject {
     }
 }
 
+extension BRTextPickerView: UIPickerViewDataSource, UIPickerViewDelegate {
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int { componentsCount() }
+    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { rows(in: component) }
+    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { style.rowHeight }
+    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        style.columnWidth ?? max(0, pickerView.bounds.width - CGFloat(componentsCount() - 1) * style.columnSpacing) / CGFloat(componentsCount())
+    }
+    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let label = (view as? UILabel) ?? UILabel()
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 17)
+        label.textColor = JobsCor.label
+        label.text = modelAt(component: component, row: row)?.text
+        return label
+    }
+    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if pickerMode == .cascade {
+            let total = componentsCount()
+            if component < total - 1 {
+                for c in (component+1)..<total {
+                    pickerView.reloadComponent(c)
+                    if rows(in: c) > 0 { pickerView.selectRow(0, inComponent: c, animated: true) }
+                }
+            }
+        }
+        if style.isAutoSelect { emitResult() }
+    }
+}
+
 private extension BRTextPickerView {
+    
     func componentsCount() -> Int {
         switch pickerMode {
         case .single: return 1
@@ -84,6 +114,7 @@ private extension BRTextPickerView {
         case .cascade: return max(depth(of: cascadeRootNodes), 1)
         }
     }
+    
     func rows(in component: Int) -> Int {
         switch pickerMode {
         case .single: return dataSourceArr.count
@@ -91,6 +122,7 @@ private extension BRTextPickerView {
         case .cascade: return cascadeRows(for: component).count
         }
     }
+    
     func modelAt(component: Int, row: Int) -> BRTextModel? {
         switch pickerMode {
         case .single:  return normalize(dataSourceArr[safe: row])
@@ -98,16 +130,19 @@ private extension BRTextPickerView {
         case .cascade: return normalize(cascadeRows(for: component)[safe: row])
         }
     }
+    
     func normalize(_ any: Any?) -> BRTextModel? {
         if let m = any as? BRTextModel { return m }
         if let s = any as? String     { return BRTextModel(s) }
         if let n = any as? TextCascadeNode { return BRTextModel(n.text, value: n.value) }
         return nil
     }
+    
     func depth(of nodes: [TextCascadeNode]) -> Int {
         guard let f = nodes.first else { return 0 }
         return 1 + depth(of: f.children)
     }
+    
     func cascadeRows(for component: Int) -> [TextCascadeNode] {
         var cur = cascadeRootNodes
         for c in 0..<component {
@@ -140,34 +175,5 @@ private extension BRTextPickerView {
             cascadeResultBlock?(ms, idxs)
         }
         panel = nil
-    }
-}
-
-extension BRTextPickerView: UIPickerViewDataSource, UIPickerViewDelegate {
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int { componentsCount() }
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { rows(in: component) }
-    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { style.rowHeight }
-    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        style.columnWidth ?? max(0, pickerView.bounds.width - CGFloat(componentsCount() - 1) * style.columnSpacing) / CGFloat(componentsCount())
-    }
-    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17)
-        label.textColor = JobsCor.label
-        label.text = modelAt(component: component, row: row)?.text
-        return label
-    }
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerMode == .cascade {
-            let total = componentsCount()
-            if component < total - 1 {
-                for c in (component+1)..<total {
-                    pickerView.reloadComponent(c)
-                    if rows(in: c) > 0 { pickerView.selectRow(0, inComponent: c, animated: true) }
-                }
-            }
-        }
-        if style.isAutoSelect { emitResult() }
     }
 }
