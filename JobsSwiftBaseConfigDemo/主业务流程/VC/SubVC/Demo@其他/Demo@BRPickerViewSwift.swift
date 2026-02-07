@@ -26,9 +26,9 @@ final class BRPickerDemoVC: BaseVC {
     /// 文本：单列（学历）
     private lazy var textSinglePicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
-            .brMode(.single)
-            .brTitle("学历".tr)
-            .brStyle { style in
+            .byBrMode(.single)
+            .byBrTitle("学历".tr)
+            .byBrStyle { style in
                 style
                     .byPanelBackgroundColor(.yellow)               // ✅ 设置底部面板背景色
                     .byToolbarBackgroundColor(.systemCyan)         // ✅ 设置顶部工具条背景色
@@ -39,33 +39,33 @@ final class BRPickerDemoVC: BaseVC {
                     .byPickerTextSelectedColor(.blue)              // ✅ 选中行文字颜色
                     .byPickerTextFont(.systemFont(ofSize: 20))     // ✅ 行文字字体
             }
-            .brDataSource(["大专以下".tr, "大专".tr, "本科".tr, "硕士".tr, "博士".tr, "博士后".tr])
-            .brSelectIndex(2)
-            .brOnSingle { m, idx in
+            .byBrDataSource(["大专以下".tr, "大专".tr, "本科".tr, "硕士".tr, "博士".tr, "博士后".tr])
+            .byBrSelectIndex(2)
+            .byBrOnSingle { m, idx in
                 ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
             }
     }()
     /// 文本：多列（尺码/颜色）
     private lazy var textMultiPicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
-            .brMode(.multi)
-            .brTitle("尺码/颜色".tr)
-            .brMultiDataSource([
+            .byBrMode(.multi)
+            .byBrTitle("尺码/颜色".tr)
+            .byBrMultiDataSource([
                 ["S".tr, "M".tr, "L".tr, "XL"],
                 ["黑".tr, "白".tr, "蓝".tr, "粉".tr]
             ])
-            .brSelectIndexs([1, 2])
-            .brStyle { $0.isAutoSelect = false }
-            .brOnMulti { ms, idxs in
+            .byBrSelectIndexs([1, 2])
+            .byBrStyle { $0.isAutoSelect = false }
+            .byBrOnMulti { ms, idxs in
                 ("多列：\(ms.map { $0.text }.joined(separator: " / "))（index=\(idxs)）").toast
             }
     }()
     /// 文本：三级联动（省/市/区）
     private lazy var textCascadePicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
-            .brMode(.cascade)
-            .brTitle("选择地区".tr)
-            .brCascadeData([
+            .byBrMode(.cascade)
+            .byBrTitle("选择地区".tr)
+            .byBrCascadeData([
                 RegionNode(text: "浙江省".tr, children: [
                     RegionNode(text: "杭州市".tr, children: [
                         RegionNode(text: "西湖区".tr),
@@ -84,22 +84,22 @@ final class BRPickerDemoVC: BaseVC {
                     ])
                 ])
             ])
-            .brCascadeSelectIndexs([0, 0, 1])
-            .brStyle { $0.isAutoSelect = true }
-            .brOnCascade { ms, idxs in
+            .byBrCascadeSelectIndexs([0, 0, 1])
+            .byBrStyle { $0.isAutoSelect = true }
+            .byBrOnCascade { ms, idxs in
                 ("联动：\(ms.map { $0.text }.joined(separator: " / "))（index=\(idxs)）").toast
             }
     }()
     /// 日期：系统 Date（年月日）
     private lazy var dateSysDatePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.date)
-            .brTitle("出生日".tr)
-            .brSelectDate(Date())
-            .brMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
-            .brMaxDate(Date())
-            .brStyle { $0.minuteInterval = 1 }
-            .brOnResult { [weak self] dt in
+            .byBrMode(.date)
+            .byBrTitle("出生日".tr)
+            .byBrSelectDate(Date())
+            .byBrMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
+            .byBrMaxDate(Date())
+            .byBrStyle { $0.minuteInterval = 1 }
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("系统 Date：\(dt.map { fmt($0, "yyyy-MM-dd") } ?? "-")").toast
             }
@@ -107,11 +107,11 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：系统 Date & Time
     private lazy var dateSysDateTimePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.dateAndTime)
-            .brTitle("开会时间".tr)
-            .brSelectDate(Date())
-            .brStyle { $0.minuteInterval = 5 }
-            .brOnResult { [weak self] dt in
+            .byBrMode(.dateAndTime)
+            .byBrTitle("开会时间".tr)
+            .byBrSelectDate(Date())
+            .byBrStyle { $0.minuteInterval = 5 }
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("系统 Date&Time：\(dt.map { fmt($0, "yyyy-MM-dd HH:mm") } ?? "-")").toast
             }
@@ -119,14 +119,14 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：系统 Time（12h）
     private lazy var dateSysTimePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.time)
-            .brTitle("提醒时间".tr)
-            .brSelectDate(Date())
-            .brStyle {
+            .byBrMode(.time)
+            .byBrTitle("提醒时间".tr)
+            .byBrSelectDate(Date())
+            .byBrStyle {
                 $0.use12HourClock = true
                 $0.minuteInterval = 10
             }
-            .brOnResult { [weak self] dt in
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("系统 Time：\(dt.map { fmt($0, "HH:mm") } ?? "-")").toast
             }
@@ -134,10 +134,10 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：系统 CountDownTimer
     private lazy var dateSysCountPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.countDownTimer)
-            .brTitle("倒计时".tr)
-            .brSelectDate(Date())
-            .brOnResult { [weak self] dt in
+            .byBrMode(.countDownTimer)
+            .byBrTitle("倒计时".tr)
+            .byBrSelectDate(Date())
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("系统 CountDownTimer：\(dt.map { fmt($0, "HH:mm") } ?? "-")").toast
             }
@@ -145,10 +145,10 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：自定义 YMD（年月日）
     private lazy var dateYMDPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.ymd)
-            .brTitle("生日（YMD）".tr)
-            .brSelectDate(Date())
-            .brOnResult { [weak self] dt in
+            .byBrMode(.ymd)
+            .byBrTitle("生日（YMD）".tr)
+            .byBrSelectDate(Date())
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("自定义 YMD：\(dt.map { fmt($0, "yyyy-MM-dd") } ?? "-")").toast
             }
@@ -156,10 +156,10 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：自定义 YM（年月）
     private lazy var dateYMPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.ym)
-            .brTitle("账期（月度）".tr)
-            .brSelectDate(Date())
-            .brOnResult { [weak self] dt in
+            .byBrMode(.ym)
+            .byBrTitle("账期（月度）".tr)
+            .byBrSelectDate(Date())
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("自定义 YM：\(dt.map { fmt($0, "yyyy-MM") } ?? "-")").toast
             }
@@ -167,10 +167,10 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：自定义 Y（年）
     private lazy var dateYPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.y)
-            .brTitle("年份".tr)
-            .brSelectDate(Date())
-            .brOnResult { [weak self] dt in
+            .byBrMode(.y)
+            .byBrTitle("年份".tr)
+            .byBrSelectDate(Date())
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("自定义 Y：\(dt.map { fmt($0, "yyyy") } ?? "-")").toast
             }
@@ -178,10 +178,10 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：自定义 MD（月日）
     private lazy var dateMDPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.md)
-            .brTitle("纪念日（月/日）".tr)
-            .brSelectDate(Date())
-            .brOnResult { [weak self] dt in
+            .byBrMode(.md)
+            .byBrTitle("纪念日（月/日）".tr)
+            .byBrSelectDate(Date())
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("自定义 MD：\(dt.map { fmt($0, "MM-dd") } ?? "-")").toast
             }
@@ -189,11 +189,11 @@ final class BRPickerDemoVC: BaseVC {
     /// 日期：自定义 HM（时:分，步进 = 5）
     private lazy var dateHMPicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.hm)
-            .brTitle("提醒（时:分）".tr)
-            .brSelectDate(Date())
-            .brStyle { $0.minuteInterval = 5 }
-            .brOnResult { [weak self] dt in
+            .byBrMode(.hm)
+            .byBrTitle("提醒（时:分）".tr)
+            .byBrSelectDate(Date())
+            .byBrStyle { $0.minuteInterval = 5 }
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("自定义 HM：\(dt.map { fmt($0, "HH:mm") } ?? "-")").toast
             }
@@ -279,7 +279,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.textSinglePicker.brPresent(in: self.view)
+                self.textSinglePicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -298,7 +298,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                textMultiPicker.brPresent(in: self.view)
+                textMultiPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -317,7 +317,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                textCascadePicker.brPresent(in: self.view)
+                textCascadePicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -336,7 +336,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                dateSysDatePicker.brPresent(in: self.view)
+                dateSysDatePicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -355,7 +355,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                dateSysDateTimePicker.brPresent(in: self.view)
+                dateSysDateTimePicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -374,7 +374,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateSysTimePicker.brPresent(in: self.view)
+                self.dateSysTimePicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -393,7 +393,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateSysCountPicker.brPresent(in: self.view)
+                self.dateSysCountPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -412,7 +412,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateYMDPicker.brPresent(in: self.view)
+                self.dateYMDPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -431,7 +431,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateYMPicker.brPresent(in: self.view)
+                self.dateYMPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -450,7 +450,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateYPicker.brPresent(in: self.view)
+                self.dateYPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -469,7 +469,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateMDPicker.brPresent(in: self.view)
+                self.dateMDPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -488,7 +488,7 @@ final class BRPickerDemoVC: BaseVC {
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.dateHMPicker.brPresent(in: self.view)
+                self.dateHMPicker.byBrPresent(in: self.view)
             }
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }

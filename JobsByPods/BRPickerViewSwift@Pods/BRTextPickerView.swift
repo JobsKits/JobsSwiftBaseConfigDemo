@@ -183,3 +183,108 @@ private extension BRTextPickerView {
         panel = nil
     }
 }
+
+extension BRTextPickerView {
+    /// 设置样式：函数式（传入旧 style，返回新 style）
+    @discardableResult
+    public func byBrStyle(_ transform: (BRPickerStyle) -> BRPickerStyle) -> Self {
+        style = transform(style)
+        return self
+    }
+    /// 设置模式：单列/多列/联动
+    @discardableResult
+    public func byBrMode(_ m: BRTextPickerMode) -> Self {
+        pickerMode = m
+        return self
+    }
+    /// 设置标题
+    @discardableResult
+    public func byBrTitle(_ t: String) -> Self {
+        title = t
+        return self
+    }
+    /// 设置样式：inout（直接改 style 属性）
+    @discardableResult
+    public func byBrStyle(_ edit: (inout BRPickerStyle) -> Void) -> Self {
+        var s = style
+        edit(&s)
+        style = s
+        return self
+    }
+    /// 是否面板贴底
+    @discardableResult
+    public func byBrPanelFillToBottom(_ v: Bool) -> Self {
+        var s = style
+        s.panelFillToBottom = v
+        style = s
+        return self
+    }
+    /// 面板底部偏移
+    @discardableResult
+    public func byBrPanelBottomOffset(_ v: CGFloat) -> Self {
+        var s = style
+        s.panelBottomOffset = v
+        style = s
+        return self
+    }
+    /// 单列数据源
+    @discardableResult
+    public func byBrDataSource(_ arr: [Any]) -> Self {
+        dataSourceArr = arr
+        return self
+    }
+    /// 多列数据源
+    @discardableResult
+    public func byBrMultiDataSource(_ arr: [[Any]]) -> Self {
+        multiDataSourceArr = arr
+        return self
+    }
+    /// 联动数据源（树结构）
+    @discardableResult
+    public func byBrCascadeData(_ nodes: [TextCascadeNode]) -> Self {
+        cascadeRootNodes = nodes
+        return self
+    }
+    /// 单列默认选中索引
+    @discardableResult
+    public func byBrSelectIndex(_ idx: Int) -> Self {
+        selectIndex = idx
+        return self
+    }
+    /// 多列默认选中索引
+    @discardableResult
+    public func byBrSelectIndexs(_ idxs: [Int]) -> Self {
+        selectIndexs = idxs
+        return self
+    }
+    /// 联动默认选中索引
+    @discardableResult
+    public func byBrCascadeSelectIndexs(_ idxs: [Int]) -> Self {
+        cascadeSelectIndexs = idxs
+        return self
+    }
+    /// 单列结果回调
+    @discardableResult
+    public func byBrOnSingle(_ block: @escaping (BRTextModel?, Int) -> Void) -> Self {
+        singleResultBlock = block
+        return self
+    }
+    /// 多列结果回调
+    @discardableResult
+    public func byBrOnMulti(_ block: @escaping ([BRTextModel], [Int]) -> Void) -> Self {
+        multiResultBlock = block
+        return self
+    }
+    /// 联动结果回调
+    @discardableResult
+    public func byBrOnCascade(_ block: @escaping ([BRTextModel], [Int]) -> Void) -> Self {
+        cascadeResultBlock = block
+        return self
+    }
+    /// 弹出显示（可指定容器）
+    @discardableResult
+    public func byBrPresent(in container: UIView? = nil) -> Self {
+        present(in: container)
+        return self
+    }
+}

@@ -270,3 +270,84 @@ extension BRDatePickerView: UIPickerViewDataSource, UIPickerViewDelegate {
         if style.isAutoSelect { emitResult() }
     }
 }
+
+extension BRDatePickerView {
+    /// 设置样式：函数式（传入旧 style，返回新 style）
+    @discardableResult
+    public func byBrStyle(_ transform: (BRPickerStyle) -> BRPickerStyle) -> Self {
+        style = transform(style)
+        return self
+    }
+    /// 设置日期模式
+    @discardableResult
+    public func byBrMode(_ m: BRDatePickerMode) -> Self {
+        pickerMode = m
+        return self
+    }
+    /// 设置标题
+    @discardableResult
+    public func byBrTitle(_ t: String) -> Self {
+        title = t
+        return self
+    }
+    /// 设置样式：inout（直接改 style 属性）
+    @discardableResult
+    public func byBrStyle(_ edit: (inout BRPickerStyle) -> Void) -> Self {
+        var s = style
+        edit(&s)
+        style = s
+        return self
+    }
+    /// 是否面板贴底
+    @discardableResult
+    public func byBrPanelFillToBottom(_ v: Bool) -> Self {
+        var s = style
+        s.panelFillToBottom = v
+        style = s
+        return self
+    }
+    /// 面板底部偏移
+    @discardableResult
+    public func byBrPanelBottomOffset(_ v: CGFloat) -> Self {
+        var s = style
+        s.panelBottomOffset = v
+        style = s
+        return self
+    }
+    /// 设置最小日期
+    @discardableResult
+    public func byBrMinDate(_ d: Date?) -> Self {
+        minDate = d
+        return self
+    }
+    /// 设置最大日期
+    @discardableResult
+    public func byBrMaxDate(_ d: Date?) -> Self {
+        maxDate = d
+        return self
+    }
+    /// 设置默认选中日期
+    @discardableResult
+    public func byBrSelectDate(_ d: Date) -> Self {
+        selectDate = d
+        return self
+    }
+    /// 是否允许选择到当前时间
+    @discardableResult
+    public func byBrAllowToNow(_ v: Bool) -> Self {
+        allowToNow = v
+        return self
+    }
+    /// 结果回调
+    @discardableResult
+    public func byBrOnResult(_ block: @escaping (Date?) -> Void) -> Self {
+        resultBlock = block
+        return self
+    }
+    /// 弹出显示（可指定容器）
+    @discardableResult
+    public func byBrPresent(in container: UIView? = nil) -> Self {
+        present(in: container)
+        return self
+    }
+}

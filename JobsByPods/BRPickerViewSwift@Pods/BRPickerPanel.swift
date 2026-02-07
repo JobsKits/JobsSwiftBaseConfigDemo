@@ -137,6 +137,7 @@ public final class BRPickerPanel: UIView {
 
 extension BRPickerPanel{
     // ================================== Present ==================================
+    @discardableResult
     public func present(in container: UIView? = nil) -> Self {
         let host = container ?? BRPickerPanel.defaultHostView()
         guard let host else { return self }
