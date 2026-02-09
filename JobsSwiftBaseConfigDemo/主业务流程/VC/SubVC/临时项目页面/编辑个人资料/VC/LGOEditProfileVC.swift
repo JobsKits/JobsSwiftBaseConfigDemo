@@ -16,13 +16,13 @@ import SwiftEntryKit
 import JobsInheritance
 import GKNavigationBarSwift
 import BRPickerViewSwift
-import JobsSwiftBaseDefines
-import JobsByUIKit
 import JobsToast
 import JobsScale
-import JobsSwiftAppTools
+import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
+import JobsSwiftAppTools
+import JobsSwiftBaseDefines
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
     case avatar
@@ -106,37 +106,37 @@ final class LGOEditProfileVC: BaseVC {
     /// 文本：单列（学历）
     private lazy var eduPicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
-            .brMode(.single)
-            .brTitle("")
-            .brStyle { $0.isAutoSelect = false }
-            .brDataSource(["女", "男", "不想透露"])
-            .brSelectIndex(2)
-            .brOnSingle { m, idx in
+            .byBrMode(.single)
+            .byBrTitle("")
+            .byBrStyle { $0.isAutoSelect = false }
+            .byBrDataSource(["女", "男", "不想透露"])
+            .byBrSelectIndex(2)
+            .byBrOnSingle { m, idx in
                 ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
             }
     }()
     /// 文本：单列（情感状态）
     private lazy var emotionPicker: BRTextPickerView = { [unowned self] in
         BRTextPickerView()
-            .brMode(.single)
-            .brTitle("")
-            .brStyle { $0.isAutoSelect = false }
-            .brDataSource(["已婚", "单身", "不想透露"])
-            .brSelectIndex(2)
-            .brOnSingle { m, idx in
+            .byBrMode(.single)
+            .byBrTitle("")
+            .byBrStyle { $0.isAutoSelect = false }
+            .byBrDataSource(["已婚", "单身", "不想透露"])
+            .byBrSelectIndex(2)
+            .byBrOnSingle { m, idx in
                 ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
             }
     }()
     /// 日期：系统 Date（年月日）
     private lazy var dateSysDatePicker: BRDatePickerView = { [unowned self] in
         BRDatePickerView()
-            .brMode(.date)
-            .brTitle("出生日")
-            .brSelectDate(Date())
-            .brMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
-            .brMaxDate(Date())
-            .brStyle { $0.minuteInterval = 1 }
-            .brOnResult { [weak self] dt in
+            .byBrMode(.date)
+            .byBrTitle("出生日")
+            .byBrSelectDate(Date())
+            .byBrMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
+            .byBrMaxDate(Date())
+            .byBrStyle { $0.minuteInterval = 1 }
+            .byBrOnResult { [weak self] dt in
                 guard let self else { return }
                 ("系统 Date：\(dt.map { fmt($0, "yyyy-MM-dd") } ?? "-")").toast
             }
@@ -248,7 +248,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
                 .byPush(self)
                 .byCompletion { print("❤️结束❤️ fromBottom") }
         case .gender:
-            self.eduPicker.brPresent(in: self.view)
+            self.eduPicker.byBrPresent(in: self.view)
         case .sign:
             SwiftEntryKit.display(
                 entry: PhotoPermissionAlertView()
@@ -267,9 +267,9 @@ extension LGOEditProfileVC: UITableViewDelegate {
                 using: makeEKAttributes()
             )
         case .birthday:
-            dateSysDatePicker.brPresent(in: self.view)
+            dateSysDatePicker.byBrPresent(in: self.view)
         case .emotion:
-            self.eduPicker.brPresent(in: self.view)
+            self.eduPicker.byBrPresent(in: self.view)
         case .hometown:
             "可能这个最后要被取消".toast
         case .profession:

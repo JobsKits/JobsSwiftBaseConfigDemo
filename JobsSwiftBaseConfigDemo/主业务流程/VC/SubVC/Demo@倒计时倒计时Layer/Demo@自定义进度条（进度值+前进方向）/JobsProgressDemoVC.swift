@@ -106,15 +106,27 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var progressView: JobsProgressBar = {
         JobsProgressBar()
             .byDirection(.leftToRight)
-            .byValueMode(.countDown)           // 初始：显示为 100→0
-            .byTrackColor(.systemGray5)        // 你外层灰条在父视图，这里清空即可
-            .byTrackHorizontalInset(0)         // ✅ 不要内部留边
-            .byTrackVerticalInset(0)           // ✅ 不要内部留边
-            .byTrackThickness(nil)             // ✅ 厚度 = JobsProgressBar.height（也就是父视图高度）
-            .byAutoHideLabel(true)             // ✅ 小高度自动隐藏 label（12 高会隐藏）
+            .byValueMode(.countDown)
+            .byTrackColor(.systemGray5)
+            .byTrackHorizontalInset(0)
+            .byTrackVerticalInset(0)
+            .byTrackThickness(nil)
+            .byAutoHideLabel(true)
             .byLabelMinVisibleHeight(18)
             .byLabelBackgroundColor(.secondarySystemBackground)
             .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+
+            // ✅ 进度条“头”：图片 kk
+            .byThumbImage("足球".img)
+            .byThumbSize(CGSize(width: 20.h, height: 20.h))          // 一般跟条高一致
+            .byThumbCornerRadius(10.h)                               // 圆球
+            .byThumbContentMode(.scaleAspectFit)
+            .byThumbOffset(UIOffset(horizontal: 0, vertical: 0))     // 想浮起来就改成 -2~-4
+            // ✅ 可选：让“头”跟随 fillView 的颜色/阴影/描边
+            .byThumbFollowsFillStyle(true)
+            .byThumbShadow(opacity: 0.25, radius: 6, offset: CGSize(width: 0, height: 2), color: .black)
+            // .byThumbBorder(1, color: .white)
+
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
                 make.left.equalToSuperview().offset(40.w)

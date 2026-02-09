@@ -358,15 +358,12 @@ extension UIColor {
 
 extension UIColor {
     /// 生成 1×1 纯色图（默认可拉伸，适合做 UIButton backgroundImage）
-    func byImage() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1, height: 1), false, 0)
-        defer { UIGraphicsEndImageContext() }
-
-        setFill()
-        UIRectFill(CGRect(x: 0, y: 0, width: 1, height: 1))
-
-        let img = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-        return img.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
+    public func byImage(size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let img = renderer.image { ctx in
+            self.setFill()
+            ctx.fill(CGRect(origin: .zero, size: size))
+        };return img.withRenderingMode(.alwaysOriginal) // 🔥关键：禁止 tint 渲染
     }
 }
 /* 设置多颜色样式 会用到

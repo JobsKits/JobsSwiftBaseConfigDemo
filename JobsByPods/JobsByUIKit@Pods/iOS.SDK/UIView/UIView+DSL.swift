@@ -572,24 +572,36 @@ public extension UIView {
                 if button.configuration == nil {
                     var cfg = UIButton.Configuration.plain()
                     cfg.background.backgroundColor = .clear   // 关键
+                    cfg.background.backgroundColorTransformer = nil // ✅禁用系统自动变换（可选）
                     button.configuration = cfg
                 }
                 // 3. 状态渲染
                 button.configurationUpdateHandler = { btn in
                     guard var c = btn.configuration else { return }
                     let colors = objc_getAssociatedObject(btn, &kBgColorMapKey) as? [Int: UIColor]
-                    let key: Int
+
+                    let normalKey = Int(UIControl.State.normal.rawValue)
+                    let highlightedKey = Int(UIControl.State.highlighted.rawValue)
+                    let selectedKey = Int(UIControl.State.selected.rawValue)
+                    let disabledKey = Int(UIControl.State.disabled.rawValue)
+
+                    let wantedKey: Int
                     if !btn.isEnabled {
-                        key = Int(UIControl.State.disabled.rawValue)
+                        wantedKey = disabledKey
                     } else if btn.isHighlighted {
-                        key = Int(UIControl.State.highlighted.rawValue)
+                        wantedKey = highlightedKey
                     } else if btn.isSelected {
-                        key = Int(UIControl.State.selected.rawValue)
+                        wantedKey = selectedKey
                     } else {
-                        key = Int(UIControl.State.normal.rawValue)
+                        wantedKey = normalKey
                     }
-                    // 🔥 真正生效的地方
-                    c.background.backgroundColor = colors?[key]
+                    // ✅关键：没有设置对应状态色，就回退到 normal（避免变成 nil 触发系统蓝色高亮）
+                    let resolvedColor =
+                        colors?[wantedKey]
+                        ?? colors?[normalKey]
+                        ?? .clear
+
+                    c.background.backgroundColor = resolvedColor
                     btn.configuration = c
                 }
                 // 4. 立刻生效

@@ -9,10 +9,22 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+import ObjectiveC
 #endif
 
 import JobsSwiftBaseDefines
 import JobsSwiftTimer
+
+/// 进度标签显示位置
+public enum JobsProgressLabelPlacement {
+    /// 在进度条上方（水平/垂直通用）
+    case top
+    /// 在进度条下方（水平/垂直通用）
+    case bottom
+    /// 隐藏
+    case hidden
+}
+
 /// 自定义进度条@进度值和前进方向
 open class JobsProgressBar: UIView {
     // MARK: - Public API
@@ -63,6 +75,19 @@ open class JobsProgressBar: UIView {
     }
     // MARK: - Label Visibility Config (小高度自动隐藏 label)
     /// 是否启用“自动隐藏 label”（默认 true）
+
+    /// 进度百分比标签显示位置（默认 .top）
+    public var progressLabelPlacement: JobsProgressLabelPlacement = .top {
+        didSet {
+            if autoStopOnExternalChange { stopAutoProgress() }
+            setNeedsLayout()
+        }
+    }
+    /// 标签与进度条之间的间距（默认 6）
+    public var progressLabelSpacing: CGFloat = 6 {
+        didSet { setNeedsLayout() }
+    }
+
     public var autoHideLabel: Bool = true {
         didSet { setNeedsLayout() }
     }
@@ -71,6 +96,82 @@ open class JobsProgressBar: UIView {
     public var labelMinVisibleHeight: CGFloat = 18 {
         didSet { setNeedsLayout() }
     }
+
+#if os(iOS) || os(tvOS)
+// MARK: - Thumb Config（进度条“头”）
+/// 进度条“头”的图片（UIImageView）
+/// - nil：不显示
+public var thumbImage: UIImage? {
+    didSet {
+        thumbImageView.image = thumbImage
+#if os(iOS) || os(tvOS)
+        thumbImageView.isHidden = (thumbImage == nil)
+#endif
+        setNeedsLayout()
+    }
+}
+
+/// 进度条“头”的尺寸
+/// - nil：默认 = 轨道厚度（横向=高度，纵向=宽度），即正方形
+public var thumbSize: CGSize? {
+    didSet { setNeedsLayout() }
+}
+
+/// 进度条“头”相对“端点”的偏移（默认 .zero）
+public var thumbOffset: UIOffset = .zero {
+    didSet { setNeedsLayout() }
+}
+
+/// 进度条“头”的 contentMode（默认 .scaleAspectFit）
+public var thumbContentMode: UIView.ContentMode = .scaleAspectFit {
+    didSet { thumbImageView.contentMode = thumbContentMode }
+}
+
+/// 进度条“头”的圆角（默认 nil：不处理）
+public var thumbCornerRadius: CGFloat? {
+    didSet {
+        let r = thumbCornerRadius ?? 0
+        thumbImageView.layer.cornerRadius = r
+        thumbImageView.layer.masksToBounds = (r > 0)
+    }
+}
+
+/// ✅ 让“头”跟随 fillView 样式（颜色 / 描边 / 阴影）
+public var thumbFollowsFillStyle: Bool = false {
+    didSet { setNeedsLayout() }
+}
+
+/// Thumb 背景色（当 thumbFollowsFillStyle == false 时生效）
+public var thumbBackgroundColor: UIColor? {
+    didSet { setNeedsLayout() }
+}
+
+/// Thumb 描边颜色（当 thumbFollowsFillStyle == false 时生效）
+public var thumbBorderColor: UIColor? {
+    didSet { setNeedsLayout() }
+}
+
+/// Thumb 描边宽度（当 thumbFollowsFillStyle == false 时生效）
+public var thumbBorderWidth: CGFloat = 0 {
+    didSet { setNeedsLayout() }
+}
+
+/// Thumb 阴影（当 thumbFollowsFillStyle == false 时生效）
+public var thumbShadowOpacity: Float = 0 {
+    didSet { setNeedsLayout() }
+}
+public var thumbShadowRadius: CGFloat = 6 {
+    didSet { setNeedsLayout() }
+}
+public var thumbShadowOffset: CGSize = .zero {
+    didSet { setNeedsLayout() }
+}
+public var thumbShadowColor: UIColor? = UIColor.black {
+    didSet { setNeedsLayout() }
+}
+
+
+#endif
     /// 轨道（背景）
     private lazy var trackView: UIView = {
         UIView()
@@ -85,17 +186,21 @@ open class JobsProgressBar: UIView {
             .byMasksToBounds(true)
             .byAddTo(trackView)
     }()
-    /// 显示百分比的标签（跟随移动）
-    private lazy var progressLabel: UILabel = {
-        UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
-            .byTextColor(JobsCor.label)
-            .byTextAlignment(.center)
-            .byText("0%")
-            .byBgCor(JobsCor.secondarySystemBackground)
-            .byCornerRadius(10)
-            .byAddTo(self)
-    }()
+    /// 显示百分比的标签（通过 extension 挂载，避免污染“可视主体”）
+#if os(iOS) || os(tvOS)
+/// 进度条“头”（图片）
+/// - ✅ 放在 self 上，不在 trackView 内，因此不会被 track 裁切
+private lazy var thumbImageView: UIImageView = {
+    let v = UIImageView()
+    v.isHidden = true
+    v.contentMode = thumbContentMode
+    v.clipsToBounds = false
+    self.addSubview(v)
+    return v
+}()
+#endif
+
+
     // MARK: - Private
     /// 标准进度（0~1），不带模式
     private var _progress: CGFloat = 0
@@ -121,10 +226,16 @@ open class JobsProgressBar: UIView {
     }
 
     private func commonInit() {
+        // 允许 progressLabel 超出自身 bounds 显示在上/下方
+        clipsToBounds = false
+        layer.masksToBounds = false
         backgroundColor = .clear
         trackView.byVisible(true)
         fillView.byVisible(true)
         progressLabel.byVisible(true)
+#if os(iOS) || os(tvOS)
+        thumbImageView.isHidden = (thumbImage == nil)
+#endif
     }
 
     open override var intrinsicContentSize: CGSize {
@@ -137,12 +248,6 @@ open class JobsProgressBar: UIView {
     }
 
     private func layoutForCurrentState() {
-        // ✅ 小高度时自动隐藏 label（避免挡 UI）
-        if autoHideLabel, bounds.height < labelMinVisibleHeight {
-            progressLabel.isHidden = true
-        } else {
-            progressLabel.isHidden = false
-        }
         // 标准进度 0~1
         let raw = max(0, min(_progress, 1))
         // 根据数值模式得到“显示用进度”
@@ -153,9 +258,8 @@ open class JobsProgressBar: UIView {
         case .countDown:
             p = 1 - raw
         }
-        // 更新文案
-        let percent = Int(round(p * 100))
-        progressLabel.text = "\(percent)%"
+        // 更新文案（label 由 extension 挂载）
+        updateProgressLabelText(p)
         // ✅ 不再写死：默认厚度 = 自身高度，默认 inset = 0
         let hInset: CGFloat = max(0, trackHorizontalInset ?? 0)
         let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
@@ -185,24 +289,20 @@ open class JobsProgressBar: UIView {
             } else {
                 fillView.frame = CGRect(x: trackWidth - fillWidth, y: 0, width: fillWidth, height: trackHeight)
             }
-            // label 隐藏时，不再做 label 布局
-            guard progressLabel.isHidden == false else { return }
-            progressLabel.sizeToFit()
-            let labelSize = CGSize(
-                width: progressLabel.bounds.width + 8,
-                height: progressLabel.bounds.height + 4
-            )
-            progressLabel.bounds.size = labelSize
+
+            // 终点（用于 thumb/label 跟随）
             let endpointX: CGFloat = (direction == .leftToRight)
             ? (trackFrame.minX + fillWidth)
             : (trackFrame.maxX - fillWidth)
-            var centerX = endpointX
-            let minX = trackFrame.minX + labelSize.width / 2
-            let maxX = trackFrame.maxX - labelSize.width / 2
-            centerX = min(max(centerX, minX), maxX)
-            let centerY = trackFrame.minY - labelOffset - labelSize.height / 2
-            let finalCenterY = max(labelSize.height / 2, centerY)
-            progressLabel.center = CGPoint(x: centerX, y: finalCenterY)
+#if os(iOS) || os(tvOS)
+            // ✅ 进度条“头”（永远不被 track 裁切）
+            layoutThumb(center: CGPoint(x: endpointX, y: trackFrame.midY),
+                        thickness: trackHeight)
+#endif
+
+
+                        // label（外挂）：在进度条上/下方展示，不再挤在轨道内部
+            layoutProgressLabelForHorizontal(endpointX: endpointX, trackFrame: trackFrame)
         case .bottomToTop, .topToBottom:
             let availableWidth = max(0, bounds.width - 2 * hInset)
             let trackWidth = min(max(0, preferredThickness), availableWidth)
@@ -224,30 +324,83 @@ open class JobsProgressBar: UIView {
             } else {
                 fillView.frame = CGRect(x: 0, y: 0, width: trackWidth, height: fillHeight)
             }
-            // label 隐藏时，不再做 label 布局
-            guard progressLabel.isHidden == false else { return }
-            progressLabel.sizeToFit()
-            let labelSize = CGSize(
-                width: progressLabel.bounds.width + 8,
-                height: progressLabel.bounds.height + 4
-            )
-            progressLabel.bounds.size = labelSize
+
+            // 终点（用于 thumb/label 跟随）
             let endpointY: CGFloat = (direction == .bottomToTop)
             ? (trackFrame.minY + (trackHeight - fillHeight))
             : (trackFrame.minY + fillHeight)
-            var centerY = endpointY
-            let minY = trackFrame.minY + labelSize.height / 2
-            let maxY = trackFrame.maxY - labelSize.height / 2
-            centerY = min(max(centerY, minY), maxY)
-            let centerX = trackFrame.maxX + labelOffset + labelSize.width / 2
-            let minCenterX = labelSize.width / 2
-            let maxCenterX = bounds.width - labelSize.width / 2
-            progressLabel.center = CGPoint(
-                x: min(max(centerX, minCenterX), maxCenterX),
-                y: centerY
-            )
+#if os(iOS) || os(tvOS)
+            // ✅ 进度条“头”（永远不被 track 裁切）
+            layoutThumb(center: CGPoint(x: trackFrame.midX, y: endpointY),
+                        thickness: trackWidth)
+#endif
+
+
+                        // label（外挂）：在进度条上/下方展示
+            layoutProgressLabelForVertical(endpointY: endpointY, trackFrame: trackFrame)
         }
     }
+
+#if os(iOS) || os(tvOS)
+/// 布局进度条“头”
+/// - ✅ Thumb 在 self 上，不受 trackView.masksToBounds 影响，因此允许超出 track
+private func layoutThumb(center: CGPoint,
+                         thickness: CGFloat) {
+    guard thumbImage != nil else {
+        thumbImageView.isHidden = true
+        return
+    }
+    thumbImageView.isHidden = false
+    thumbImageView.contentMode = thumbContentMode
+
+    // 默认 size = 轨道厚度（正方形）
+    let defaultSide = max(0, thickness)
+    let size = thumbSize ?? CGSize(width: defaultSide, height: defaultSide)
+    thumbImageView.bounds = CGRect(origin: .zero, size: size)
+
+    // 样式同步（可选）
+    applyThumbStyleIfNeeded()
+
+    var c = center
+    c.x += thumbOffset.horizontal
+    c.y += thumbOffset.vertical
+
+    // ✅ 允许超出 track；同时避免完全飞出控件：保留半个可见
+    let halfW = size.width / 2
+    let halfH = size.height / 2
+    c.x = min(max(c.x, bounds.minX - halfW), bounds.maxX + halfW)
+    c.y = min(max(c.y, bounds.minY - halfH), bounds.maxY + halfH)
+
+    thumbImageView.center = c
+}
+
+/// 让 Thumb 跟随 fillView 样式（或使用自定义样式）
+private func applyThumbStyleIfNeeded() {
+    if thumbFollowsFillStyle {
+        thumbImageView.backgroundColor = fillView.backgroundColor
+        thumbImageView.layer.borderColor = (fillView.backgroundColor ?? UIColor.clear).cgColor
+        thumbImageView.layer.borderWidth = max(0, thumbBorderWidth)
+
+        thumbImageView.layer.shadowColor = (thumbShadowColor ?? UIColor.black).cgColor
+        thumbImageView.layer.shadowOpacity = max(0, thumbShadowOpacity)
+        thumbImageView.layer.shadowRadius = max(0, thumbShadowRadius)
+        thumbImageView.layer.shadowOffset = thumbShadowOffset
+        thumbImageView.layer.masksToBounds = false
+    } else {
+        thumbImageView.backgroundColor = thumbBackgroundColor
+        thumbImageView.layer.borderColor = thumbBorderColor?.cgColor
+        thumbImageView.layer.borderWidth = max(0, thumbBorderWidth)
+
+        thumbImageView.layer.shadowColor = (thumbShadowColor ?? UIColor.black).cgColor
+        thumbImageView.layer.shadowOpacity = max(0, thumbShadowOpacity)
+        thumbImageView.layer.shadowRadius = max(0, thumbShadowRadius)
+        thumbImageView.layer.shadowOffset = thumbShadowOffset
+        thumbImageView.layer.masksToBounds = false
+    }
+}
+
+#endif
+
     // MARK: - Auto Stop Helper
     private func autoStopIfNeeded() {
         guard autoStopOnExternalChange else { return }
@@ -430,6 +583,72 @@ extension JobsProgressBar {
         return self
     }
 
+
+#if os(iOS) || os(tvOS)
+// MARK: - Thumb DSL
+@discardableResult
+public func byThumbImage(_ img: UIImage?) -> Self {
+    self.thumbImage = img
+    return self
+}
+
+@discardableResult
+public func byThumbSize(_ size: CGSize?) -> Self {
+    self.thumbSize = size
+    return self
+}
+
+@discardableResult
+public func byThumbOffset(_ offset: UIOffset) -> Self {
+    self.thumbOffset = offset
+    return self
+}
+
+@discardableResult
+public func byThumbContentMode(_ mode: UIView.ContentMode) -> Self {
+    self.thumbContentMode = mode
+    return self
+}
+
+@discardableResult
+public func byThumbCornerRadius(_ radius: CGFloat?) -> Self {
+    self.thumbCornerRadius = radius
+    return self
+}
+
+@discardableResult
+public func byThumbFollowsFillStyle(_ v: Bool) -> Self {
+    self.thumbFollowsFillStyle = v
+    return self
+}
+
+@discardableResult
+public func byThumbBackgroundColor(_ c: UIColor?) -> Self {
+    self.thumbBackgroundColor = c
+    return self
+}
+
+@discardableResult
+public func byThumbBorder(_ width: CGFloat, color: UIColor?) -> Self {
+    self.thumbBorderWidth = width
+    self.thumbBorderColor = color
+    return self
+}
+
+@discardableResult
+public func byThumbShadow(opacity: Float,
+                          radius: CGFloat = 6,
+                          offset: CGSize = .zero,
+                          color: UIColor? = .black) -> Self {
+    self.thumbShadowOpacity = opacity
+    self.thumbShadowRadius = radius
+    self.thumbShadowOffset = offset
+    self.thumbShadowColor = color
+    return self
+}
+
+#endif
+
     @discardableResult
     public func byDisplayPercent(_ percent: CGFloat,
                                  animated: Bool = false,
@@ -438,3 +657,125 @@ extension JobsProgressBar {
         return self
     }
 }
+
+
+
+// MARK: - Progress Label (Decoupled via Extension)
+private struct _JobsProgressBarAssociatedKeys {
+    static var progressLabelKey: UInt8 = 0
+}
+
+extension JobsProgressBar {
+
+    fileprivate var progressLabel: UILabel {
+        if let v = objc_getAssociatedObject(self, &_JobsProgressBarAssociatedKeys.progressLabelKey) as? UILabel {
+            return v
+        }
+        let v = UILabel()
+        v.font = .monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        v.textColor = JobsCor.label
+        v.textAlignment = .center
+        v.text = "0%"
+        v.backgroundColor = JobsCor.secondarySystemBackground
+        v.layer.cornerRadius = 10
+        v.layer.masksToBounds = true
+        v.isUserInteractionEnabled = false
+        // ✅ 作为 JobsProgressBar 的“外挂”视图：仍由进度条负责驱动，但不侵入 track/fill 主体结构
+        self.addSubview(v)
+        objc_setAssociatedObject(self, &_JobsProgressBarAssociatedKeys.progressLabelKey, v, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return v
+    }
+
+    fileprivate func updateProgressLabelText(_ displayProgress: CGFloat) {
+        let percent = Int(round(displayProgress * 100))
+        progressLabel.text = "\(percent)%"
+    }
+
+    fileprivate func layoutProgressLabelForHorizontal(endpointX: CGFloat,
+                                                     trackFrame: CGRect) {
+        // placement 决定显示/隐藏
+        switch progressLabelPlacement {
+        case .hidden:
+            progressLabel.isHidden = true
+            return
+        case .top, .bottom:
+            break
+        }
+
+        // 小高度时自动隐藏（避免挡 UI）
+        if autoHideLabel, bounds.height < labelMinVisibleHeight {
+            progressLabel.isHidden = true
+            return
+        } else {
+            progressLabel.isHidden = false
+        }
+
+        progressLabel.sizeToFit()
+        let labelSize = CGSize(
+            width: progressLabel.bounds.width + 8,
+            height: progressLabel.bounds.height + 4
+        )
+        progressLabel.bounds.size = labelSize
+
+        var centerX = endpointX
+        let minX = trackFrame.minX + labelSize.width / 2
+        let maxX = trackFrame.maxX - labelSize.width / 2
+        centerX = min(max(centerX, minX), maxX)
+
+        let spacing = max(0, progressLabelSpacing)
+        let centerY: CGFloat = {
+            switch progressLabelPlacement {
+            case .top:
+                return trackFrame.minY - spacing - labelSize.height / 2
+            case .bottom:
+                return trackFrame.maxY + spacing + labelSize.height / 2
+            case .hidden:
+                return 0
+            }
+        }()
+
+        progressLabel.center = CGPoint(x: centerX, y: centerY)
+    }
+
+    fileprivate func layoutProgressLabelForVertical(endpointY: CGFloat,
+                                                   trackFrame: CGRect) {
+        switch progressLabelPlacement {
+        case .hidden:
+            progressLabel.isHidden = true
+            return
+        case .top, .bottom:
+            break
+        }
+
+        if autoHideLabel, bounds.height < labelMinVisibleHeight {
+            progressLabel.isHidden = true
+            return
+        } else {
+            progressLabel.isHidden = false
+        }
+
+        progressLabel.sizeToFit()
+        let labelSize = CGSize(
+            width: progressLabel.bounds.width + 8,
+            height: progressLabel.bounds.height + 4
+        )
+        progressLabel.bounds.size = labelSize
+
+        // ✅ 垂直方向也统一为“上/下”展示：x 居中到轨道
+        let centerX = trackFrame.midX
+        let spacing = max(0, progressLabelSpacing)
+        let centerY: CGFloat = {
+            switch progressLabelPlacement {
+            case .top:
+                return endpointY - spacing - labelSize.height / 2
+            case .bottom:
+                return endpointY + spacing + labelSize.height / 2
+            case .hidden:
+                return 0
+            }
+        }()
+
+        progressLabel.center = CGPoint(x: centerX, y: centerY)
+    }
+}
+

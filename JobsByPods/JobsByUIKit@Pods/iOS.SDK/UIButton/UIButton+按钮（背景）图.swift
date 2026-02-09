@@ -42,7 +42,11 @@ extension UIButton {
             updateConfiguration()
             return self
         }
-        setBackgroundImage(image, for: state)
+        let img = image?.withRenderingMode(.alwaysOriginal) // 🔥再保险
+        setBackgroundImage(img, for: state)
+        // 可选：避免系统高亮/禁用时自动“压暗”造成像 tint 的效果
+        self.adjustsImageWhenHighlighted = false
+        self.adjustsImageWhenDisabled = false
         return self
     }
     
