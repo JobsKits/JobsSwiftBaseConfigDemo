@@ -27,6 +27,16 @@ extension UIGestureRecognizer {
         gesture.addTarget(gesture, action: #selector(_gestureInvoke(_:)))
         return gesture
     }
+    /// 允许：UIPanGestureRecognizer.byConfig { (gr: UIPanGestureRecognizer) in ... }
+    public static func byConfig<T: UIGestureRecognizer>(_ block: @escaping (T) -> Void) -> Self {
+        let gesture = Self()
+        gesture._setActionBlock { sender in
+            guard let typed = sender as? T else { return }
+            block(typed)
+        }
+        gesture.addTarget(gesture, action: #selector(_gestureInvoke(_:)))
+        return gesture
+    }
     // MARK: - 为已有手势添加 block（非静态）
     @discardableResult
     public func byAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Self {

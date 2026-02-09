@@ -13,13 +13,13 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
-import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsScale
-import JobsSwiftTimer
+import JobsByUIKit
 import JobsTextTools
+import JobsSwiftTimer
+import JobsInheritance
 import JobsProgressBar
+import JobsSwiftBaseDefines
 /// Demo@系统进度条+倒计时JobsSwiftTimer+进度（方向）模式
 final class JobsSysProgressDemoVC: BaseVC {
     let horizontalInset: CGFloat = 40

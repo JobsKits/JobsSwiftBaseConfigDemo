@@ -112,6 +112,31 @@ extension UIControl {
         addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
         return self
     }
+
+    // ================================== ✅ 强壮版：允许链式中类型被“擦除”也能拿到具体 sender ==================================
+    /// 典型场景：UISwitch().byOn(YES).byAddAction(for: .valueChanged) { (sw: UISwitch) in ... }
+    /// 即使前面 DSL 把静态类型变成了 UIControl，这个重载也能通过闭包参数推断 T=UISwitch。
+    @discardableResult
+    public func byAddAction<T: UIControl>(for events: UIControl.Event,
+                                          _ handler: @escaping (T) -> Void) -> Self {
+        // iOS 14+：UIAction
+        if #available(iOS 14.0, *) {
+            let action = UIAction { [weak self] _ in
+                guard let self, let typed = self as? T else { return }
+                handler(typed)
+            }
+            addAction(action, for: events)
+            return self
+        }
+        // iOS 13-：trampoline
+        let trampoline = _JobsActionTrampoline { control in
+            guard let typed = control as? T else { return }
+            handler(typed)
+        }
+        _jobs_trampolines.add(trampoline)
+        addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
+        return self
+    }
     /// 移除指定实例的 UIAction
     @available(iOS 14.0, *)
     @discardableResult

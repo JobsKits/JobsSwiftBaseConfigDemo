@@ -31,7 +31,8 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'UIKit'
 
   s.dependency 'SnapKit'
+  s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsSwiftBaseDefines'
-
+  
 end
