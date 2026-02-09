@@ -198,6 +198,93 @@ private lazy var thumbImageView: UIImageView = {
     self.addSubview(v)
     return v
 }()
+
+    // ================================== Thumb Rotation ==================================
+    /// thumb 在“进度动画进行中”是否旋转（默认 true）
+    public var thumbRotatesWhileAnimating: Bool = true {
+        didSet {
+            if thumbRotatesWhileAnimating == false {
+                stopThumbRotation()
+            }
+        }
+    }
+    /// thumb 旋转一圈时长（秒，默认 0.85），数值越小转得越快
+    public var thumbRotationDuration: CFTimeInterval = 0.85
+
+    private let thumbRotationAnimationKey = "jobs.progress.thumb.rotation"
+    private var isAutoAnimating: Bool = false
+    private var lastDisplayProgress: CGFloat?
+    private var lastRotationSign: CGFloat = 1
+
+    private func displayProgressValue(forRaw raw: CGFloat) -> CGFloat {
+        let clamped = max(0, min(raw, 1))
+        switch valueMode {
+        case .countUp:
+            return clamped
+        case .countDown:
+            return 1 - clamped
+        }
+    }
+
+    /// sign: +1 = 顺时针，-1 = 逆时针
+    private func startThumbRotationIfNeeded(sign: CGFloat) {
+        guard thumbRotatesWhileAnimating else { return }
+        guard thumbImage != nil else { return }
+        guard thumbImageView.isHidden == false else { return }
+
+        let normalizedSign: CGFloat = (sign >= 0) ? 1 : -1
+
+        // 方向没变且已在转：不重复 add
+        if thumbImageView.layer.animation(forKey: thumbRotationAnimationKey) != nil,
+           normalizedSign == lastRotationSign {
+            return
+        }
+
+        // 取当前角度（用于无缝衔接、避免“跳回 0 度”）
+        var current: CGFloat = 0
+        if let p = thumbImageView.layer.presentation(),
+           let v = p.value(forKeyPath: "transform.rotation.z") as? CGFloat {
+            current = v
+        } else if let v = thumbImageView.layer.value(forKeyPath: "transform.rotation.z") as? CGFloat {
+            current = v
+        }
+
+        // 固化当前角度，确保 removeAnimation 不会回弹
+        thumbImageView.layer.removeAnimation(forKey: thumbRotationAnimationKey)
+        thumbImageView.layer.setValue(current, forKeyPath: "transform.rotation.z")
+
+        let anim = CABasicAnimation(keyPath: "transform.rotation.z")
+        anim.fromValue = current
+        anim.toValue = current + normalizedSign * (.pi * 2)
+        anim.duration = max(0.25, thumbRotationDuration)
+        anim.repeatCount = .infinity
+        anim.isRemovedOnCompletion = false
+        anim.fillMode = .forwards
+        anim.timingFunction = CAMediaTimingFunction(name: .linear)
+
+        thumbImageView.layer.add(anim, forKey: thumbRotationAnimationKey)
+        lastRotationSign = normalizedSign
+    }
+
+    private func stopThumbRotation() {
+        // 固化当前角度后再移除，避免停止时“跳一下”
+        if let p = thumbImageView.layer.presentation(),
+           let v = p.value(forKeyPath: "transform.rotation.z") as? CGFloat {
+            thumbImageView.layer.setValue(v, forKeyPath: "transform.rotation.z")
+        }
+        thumbImageView.layer.removeAnimation(forKey: thumbRotationAnimationKey)
+    }
+
+    private func stopThumbRotation(after delay: TimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let self else { return }
+            // 自动播放期间不允许被“短动画”提前停掉
+            if self.isAutoAnimating == false {
+                self.stopThumbRotation()
+            }
+        }
+    }
+
 #endif
 
 
@@ -414,6 +501,15 @@ private func applyThumbStyleIfNeeded() {
                                   interval: TimeInterval = 0.03,
                                   animated: Bool = true) {
         stopAutoProgress()
+        #if os(iOS) || os(tvOS)
+        isAutoAnimating = true
+        if animated {
+            // 以“显示进度”的变化方向判断：往前跑=顺时针；往后跑=逆时针
+            let displayDelta = (valueMode == .countUp) ? step : -step
+            startThumbRotationIfNeeded(sign: displayDelta >= 0 ? 1 : -1)
+        }
+        #endif
+
         autoStep = step
         if fromZero {
             _progress = 0
@@ -442,6 +538,10 @@ private func applyThumbStyleIfNeeded() {
     }
     
     public func stopAutoProgress() {
+        #if os(iOS) || os(tvOS)
+        isAutoAnimating = false
+        stopThumbRotation()
+        #endif
         autoTimer?.stop()
         autoTimer = nil
     }
@@ -452,6 +552,33 @@ private func applyThumbStyleIfNeeded() {
         autoStopIfNeeded()
         let clamped = max(0, min(progress, 1))
         _progress = clamped
+
+
+        #if os(iOS) || os(tvOS)
+        // 动画期间根据“进度是往前跑还是往后退”决定旋转方向（顺时针/逆时针）
+        if animated {
+            let newDisplay = displayProgressValue(forRaw: clamped)
+            let oldDisplay = lastDisplayProgress ?? newDisplay
+            let delta = newDisplay - oldDisplay
+            let eps: CGFloat = 0.0005
+            let sign: CGFloat
+            if abs(delta) < eps {
+                sign = lastRotationSign
+            } else {
+                sign = (delta > 0) ? 1 : -1
+            }
+            lastDisplayProgress = newDisplay
+            startThumbRotationIfNeeded(sign: sign)
+
+            // 非自动播放：短动画结束后停转（保留当前角度）
+            if isAutoAnimating == false {
+                stopThumbRotation(after: max(0.05, duration))
+            }
+        } else {
+            // 非动画更新也要同步记录，避免下一次 delta 判定抖动
+            lastDisplayProgress = displayProgressValue(forRaw: clamped)
+        }
+        #endif
 
         setNeedsLayout()
         guard animated else { return }
@@ -778,4 +905,3 @@ extension JobsProgressBar {
         progressLabel.center = CGPoint(x: centerX, y: centerY)
     }
 }
-
