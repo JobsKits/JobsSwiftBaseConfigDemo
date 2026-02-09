@@ -18,16 +18,17 @@ import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
 import CocoaLumberjack
 import BRPickerViewSwift
-import JobsSwiftBaseDefines
-import JobsByUIKit
-import JobsSwiftTimer
-import JobsSwiftFoundation_extensions
-import JobsScale
+
 import Jobsl10n
-import JobsSwiftBaseTools
+import JobsScale
+import JobsByUIKit
 import JobsSwiftTools
-import JobsSwiftAppTools
 import JobsBy3rdTools
+import JobsSwiftTimer
+import JobsSwiftAppTools
+import JobsSwiftBaseTools
+import JobsSwiftBaseDefines
+import JobsSwiftFoundation_extensions
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections
@@ -241,7 +242,9 @@ extension AppDelegate {
             t.start()
         }
 
-        setupLogging()
+        App显示语言环境配置()
+        日志框架接入()
+        
         udSave()
         udRead()
         udSaveAge()
@@ -277,8 +280,20 @@ extension AppDelegate {
         let name: String
         let isVIP: Bool
     }
-    /// 日志框架接入
-    func setupLogging() {
+    
+    func App显示语言环境配置(){
+        // MARK: - 语言跟随系统
+        LanguageManager.shared.followSystemLanguage()
+      
+        // MARK: - 语言切换成固定的
+//        Bundle.enableLanguageOverride()
+//        /// 先切语言（会更新 localizedBundle）
+//        LanguageManager.shared.switchTo("vi")
+//        /// 再把 Bundle.main 指到你的语言 bundle（让 storyboard/xib 也变）
+//        Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
+    }
+
+    func 日志框架接入() {
         dynamicLogLevel = .verbose   // Debug 包：全开
         // dynamicLogLevel = .warning // Release 包：只保留 warn/error
 

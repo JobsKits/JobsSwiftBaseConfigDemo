@@ -4,6 +4,28 @@
 
 ## 一、使用说明
 
+* 必要时，需要在启动时注册
+
+  ```swift
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions
+                   launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+      // MARK: - 语言跟随系统
+      LanguageManager.shared.followSystemLanguage()
+    
+      // MARK: - 语言切换成固定的
+      Bundle.enableLanguageOverride()
+      /// 先切语言（会更新 localizedBundle）
+      LanguageManager.shared.switchTo("vi")
+      /// 再把 Bundle.main 指到你的语言 bundle（让 storyboard/xib 也变）
+      Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
+    
+      print("✅ currentLanguageCode =", LanguageManager.shared.currentLanguageCode)
+      print("✅ preferredLanguages =", Locale.preferredLanguages)
+      print("✅ bundlePath =", Bundle.main.path(forResource: LanguageManager.shared.currentLanguageCode, ofType: "lproj") ?? "nil")
+  }
+  ```
+  
 * 字符映射文件（默认）➤ `Localizable.strings`
 
 * **应用层的调用方式**
@@ -192,7 +214,7 @@ alert.addAction(UIAlertAction(title: "KEY".tr, style: .default))
 present(alert, animated: true)
 ```
 
-### 10、`UIView`（无障碍 accessibilityLabel / Hint）
+### 10、`UIView`（无障碍 `accessibilityLabel` / `Hint`）
 
 ```swift
 UIView()

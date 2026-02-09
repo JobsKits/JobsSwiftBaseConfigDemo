@@ -7,11 +7,6 @@
 
 import Foundation
 
-public extension Notification.Name {
-    /// 全局：语言切换完成
-    static let JobsLanguageDidChange = Notification.Name("JobsLanguageDidChange")
-}
-
 public final class LanguageManager {
     public static let shared = LanguageManager()
 
@@ -19,12 +14,7 @@ public final class LanguageManager {
     public private(set) var currentLanguageCode: String
 
     public init() {
-        // 读持久化；默认跟随系统（可按需改）
-        if let saved = UserDefaults.standard.string(forKey: userDefaultsKey) {
-            currentLanguageCode = saved.normalizedLanguageCode
-        } else {
-            currentLanguageCode = (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
-        }
+        currentLanguageCode = resolveLanguageCode()
     }
     /// 动态 Bundle：每次按当前 code 解析路径
     public var localizedBundle: Bundle {
@@ -37,23 +27,31 @@ public final class LanguageManager {
     }
     /// 切换语言：更新 code → 持久化 → 发通知
     public func switchTo(_ code: String) {
-        guard code != currentLanguageCode else { return }
-        currentLanguageCode = code
-        UserDefaults.standard.set(code, forKey: userDefaultsKey)
+        let normalized = code.normalizedLanguageCode
+        // 1) 内存态必须立刻生效（不做 guard return，避免 “已是当前值” 但 bundle 没刷新）
+        currentLanguageCode = normalized
+        // 2) UserDefaults 必须写入（最高优先级覆盖旧值）
+        let ud = UserDefaults.standard
+        ud.set("custom", forKey: languageModeKey)   // 你现有的 mode key
+        ud.set(normalized, forKey: languageCodeKey) // 你现有的 code key
+        ud.synchronize()
+        // 3) 如果有 Bundle.main override（Storyboard/nib 需要），这里也要同步
+        Bundle.setLanguageBundle(localizedBundle)
+        // 4) 通知 UI 刷新
         NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
     }
 }
 
-extension String {
-    /// 将系统 / 外部语言码统一归一化为 App 内部支持的语言码
-    /// - Returns: "zh-Hans" | "en"
-    var normalizedLanguageCode: String {
-        let lower = self.lowercased()
-        guard !lower.hasPrefix("zh-hans") else {
-            return "zh-Hans"
-        }
-        guard !lower.hasPrefix("en") else {
-            return "en"
-        };return "en"// 明确兜底策略：默认英文
+extension LanguageManager {
+    /// 跟随系统语言（清除用户手动选择）
+    public func followSystemLanguage() {
+        let ud = UserDefaults.standard
+        ud.set("system", forKey: languageModeKey)
+        ud.removeObject(forKey: languageCodeKey)
+
+        let normalized = (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
+        guard normalized != currentLanguageCode else { return }
+        currentLanguageCode = normalized
+        NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
     }
 }

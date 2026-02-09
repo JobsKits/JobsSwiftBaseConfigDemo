@@ -20,15 +20,24 @@
 
 [toc]
 
-当前总行数：
-
 ## 🔥 <font id=前言>前言</font>
 
-> 温馨提示🔔：本文较长，需要⏬下载到本地以后，方能完整阅读。推荐阅读器 ➤ [**Typora**](https://typora.io/)
+> 当前总行数：
 
-* **工欲善其事必先利其器**
-* **站在巨人的肩膀上，才能看得更远**
-* **面向信仰编程**
+* 🔧**工欲善其事必先利其器**
+
+* 🌋 **站在巨人的肩膀上，才能看得更远**
+
+* ✝️ **面向信仰编程**
+
+* 🔔 **温馨提示**：本文较长，直接访问[**Github**](https://github.com/)无法完整阅读全文
+
+  * 推荐⏬下载到本地以便完整阅读。推荐阅读器 ➤ [**Typora**](https://typora.io/)
+
+  * 或者[**Google chrome浏览器**](https://www.google.com/intl/zh-CN/chrome/) 安装`Markdown Preview Plus`插件并启用
+
+    ![image-20260209141216136](./assets/image-20260209141216136.png)
+
 * [**➤ 点我查看运行效果**](https://appetize.io/app/b_m2n2epjk57dfbkij7n65izjciy)
 
 ## 一、🎯 项目白皮书 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -7153,13 +7162,22 @@ override func viewWillDisappear(_ animated: Bool) {
 * 启动配置
   
   ```swift
-  func application(
-      _ application: UIApplication,
-      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-      TRLang.bundleProvider = { LanguageManager.shared.localizedBundle }
-      TRLang.localeCodeProvider = { LanguageManager.shared.currentLanguageCode }
-      return true
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions
+                   launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+      // MARK: - 语言跟随系统
+      LanguageManager.shared.followSystemLanguage()
+    
+      // MARK: - 语言切换成固定的
+      Bundle.enableLanguageOverride()
+      /// 先切语言（会更新 localizedBundle）
+      LanguageManager.shared.switchTo("vi")
+      /// 再把 Bundle.main 指到你的语言 bundle（让 storyboard/xib 也变）
+      Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
+    
+      print("✅ currentLanguageCode =", LanguageManager.shared.currentLanguageCode)
+      print("✅ preferredLanguages =", Locale.preferredLanguages)
+      print("✅ bundlePath =", Bundle.main.path(forResource: LanguageManager.shared.currentLanguageCode, ofType: "lproj") ?? "nil")
   }
   ```
   
