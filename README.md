@@ -2169,11 +2169,31 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 ```swift
 private lazy var exampleButton: UIButton = {
     UIButton.sys()
+        /// 锁死标题颜色：任何 state 都保持同一种颜色，不跟 tint / 系统态自动变化
+        .byLockTitleColor(.red)
+        /// 图片吃 tint，但 tint 锁死为某个颜色
+        .byLockTintColor(.red)
+        /// 只锁 Background（背景色不随状态变）
+        .byLockBackgroundColor(.red)
+        /// 只锁 Border（边框色不随状态变，iOS 15+）
+        .byLockBorderColor(.red)
+        /// 背景色@按照不同的状态
+        .byBackgroundColor(.systemGreen, for: .normal)
+        .byBackgroundColor("#2F2F2F".cor, for: .disabled) // 对应按钮不可点击的状态
+        /// 背景图片
+        .byBackgroundImage("背景图片".img, for: .normal)
+        /// 字体颜色渐变@只处理主标题（titleLabel）
+        .jobs_setGradientMainTitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
+        /// 字体颜色渐变@只副标题渐变
+        .jobs_setGradientSubtitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .topLeftToBottomRight)
+        /// 字体颜色渐变@主副一致
+        .jobs_setGradientTitlesSame(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
         /// 普通字符串@设置主标题
         .byTitle("显示", for: .normal)
         .byTitle("隐藏", for: .selected)
-        .byTitleColor(.systemBlue, for: .normal)
-        .byTitleColor(.systemRed, for: .selected)
+        /// 字体颜色@按照不同的状态
+        .byTitleColor("#2F2F2F".cor, for: .normal)
+        .byTitleColor("#BBBBBB".cor, for: .disabled) // 对应按钮不可点击的状态
         .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
         /// 普通字符串@设置副标题
         .bySubTitle("显示", for: .normal)
@@ -2192,12 +2212,18 @@ private lazy var exampleButton: UIButton = {
             JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
         ]))
         /// 按钮图片@图文关系
-        .byImage(UIImage(systemName: "eye.slash"), for: .normal)                // 未选中图标
-        .byImage(UIImage(systemName: "eye"), for: .selected)                    // 选中图标
-        .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))// 图文内边距
+        .byImage("eye.slash".sysImg, for: .normal)                // 未选中图标
+        .byImage("eye".sysImg, for: .selected)                    // 选中图标
+        /// iOS15专用@清除偏移
+        .byClearConfigurationBackground() 
+        /// 按钮图片@图文关系iOS13（与下文互斥）
         .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6)) // 图标与文字间距
+        .byImagePlacement(.top)
+        /// 按钮图片@图文关系iOS12（与上文互斥）
+        .byImagePlacementLegacy(.top, padding: 5)
+        .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))// 图文内边距
         /// 点击@播放声音
-        .byTapSound("Sounddd.wav")    
+        .byTapSound("Sound.wav")    
         /// 普通@点按事件触发
         .onTap { [weak self] sender in
             guard let self else { return }
@@ -2207,10 +2233,10 @@ private lazy var exampleButton: UIButton = {
             self.passwordTF.togglePasswordVisibility()
             print("👁 当前状态：\(sender.isSelected ? "隐藏密码" : "显示密码")")
         }
-			  /// 追加@点按事件触发
-				.onTapAppend{ sender in
-						print("追加的点按事件")
-				}
+        /// 追加@点按事件触发
+        .onTapAppend{ sender in
+            print("追加的点按事件")
+        }
         /// 右上角提示文案@小红点
         .byCornerDot(diameter: 10, offset: .init(horizontal: -4, vertical: 4))// 红点
         /// 右上角提示文案@文字
@@ -2234,15 +2260,20 @@ private lazy var exampleButton: UIButton = {
                  print("长按结束")
              }
          }
-  			/// 追加@长按事件触发
+        /// 追加@长按事件触发
         .onLongPressAppend(minimumPressDuration: 0.8) { btn, gr in
-             print("追加的长按事件")
-				}
+            print("追加的长按事件")
+        }
         .byAddTo(view) { [unowned self] make in
             make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(40)
             make.left.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
+        .byBorderColor(.cyan)
+        .byBorderWidth(0.5)
+        .byMasksToBounds(YES)
+        .byClipsToBounds(YES)
+        .byCornerRadius(8.h)
         /// UIButtonConfiguration
         if #available(iOS 15.0, *) {
             b.byConfiguration { c in
@@ -2578,6 +2609,68 @@ private lazy var suspendSpinBtn: UIButton = {
                 .byStart(.point(CGPoint(x: 300.w, y: 500))) // 起始点（可用区域坐标）
                 .byFallbackSize(CGSize(width: 50, height: 50))
                 .byHapticOnDock(true)
+        }
+}()
+```
+
+##### 2.2.5、`JobsButton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+> 解决在某些iOS版本向下兼容的情况下，无法把握`UIButton`内部控件的生命周期，导致UI错版的问题
+
+```swift
+private lazy var btn1: JobsButton = {
+    JobsButton()
+        .byMode(.imageTopTextBottom)
+        .byTitleLabel { lab in
+            lab.byText("上图下文")
+                .byTextColor(.red)
+        }
+        .bySubTitleLabel { lab in
+            lab.byText("image -> title -> subtitle")
+                .byTextColor(.blue)
+        }
+        // 前景图：内部 foregroundImageView（链式不丢 self）
+        .byForegroundImageView { iv in
+            iv.byContentMode(.scaleAspectFill)
+                .byClipsToBounds()
+                .kf_setImage("https://picsum.photos/200?random=111", placeholder: "Ani".img)
+        }
+        // 背景图：JobsButton 自己是 UIImageView
+        .byContentMode(.scaleAspectFill)
+        .byClipsToBounds()
+        .kf_setImage("https://picsum.photos/600/200?random=11", placeholder: "Ani".img)
+        .byImageTitleSpacing(6)
+        .byTitleSubtitleSpacing(2)
+        .byContentInsets(.zero)
+        .byForegroundImageFixedSize(true)
+        .addTapActionAppend { _ in
+            print("btn1 tap #1")
+            "点击了悬浮按钮：上图下文（tap #1）".toast
+        }
+        .addTapActionAppend { _ in
+            print("btn1 tap #2 (append)")
+            "点击了悬浮按钮：上图下文（tap #2 叠加）".toast
+        }
+        .addLongPressActionAppend { gr in
+            guard gr.state == .began else { return }
+            print("btn1 longPress #1 began")
+            "长按了悬浮按钮：上图下文（longPress #1）".toast
+        }
+        .addLongPressActionAppend { gr in
+            guard gr.state == .began else { return }
+            print("btn1 longPress #2 began (append)")
+            "长按了悬浮按钮：上图下文（longPress #2 叠加）".toast
+        }
+        .byBorderColor(.cyan)
+        .byBorderWidth(0.5)
+        .byMasksToBounds(YES)
+        .byClipsToBounds(YES)
+        .byCornerRadius(8.h)
+        .byAddTo(view) { [unowned self] make in
+            make.top.equalTo(self.hintLabel.snp.bottom).offset(18)
+            make.left.equalToSuperview().offset(horizontalInset)
+            make.right.equalToSuperview().inset(horizontalInset)
+            make.height.equalTo(itemHeight)
         }
 }()
 ```
@@ -3374,6 +3467,74 @@ private lazy var web: BaseWebView = { [unowned self] in
         .disposed(by: rx.disposeBag)
     ```
 
+##### 2.11.3、`JobsTextField`
+
+> 在`UITextField`下面加了一个`UImageView`作为父视图，方便设置边距
+
+```swift
+private lazy var titleTF: JobsTextField = {
+    JobsTextField()
+        .byTextFieldConfig({ textField in
+            textField
+                .byPlaceholder("请输入内容（必填）")
+                .byPlaceholderFont(.PingFangSC.Regular(14))
+                .byPlaceholderColor("#BBBBBB".cor)
+                .byFont(.PingFangSC.Regular(14))
+                .byTextColor("#BBBBBB".cor)
+                .byKeyboardType(.default)
+                .byReturnKeyType(.next)
+                .byClearButtonMode(.whileEditing)
+                .byRightView(
+                    UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+                        .byAddSubviewRetSuper(
+                            UIButton.sys()
+                                .bySize(CGSizeMake(20, 20))
+                                /// 背景图片
+                                .byBackgroundImage("删除".img, for: .normal)
+                                /// 普通@点按事件触发
+                                .onTap { [weak self] sender in
+                                    guard let self else { return }
+                                    sender.isSelected.toggle()
+                                    titleTF.text = ""
+                                }
+                        )
+                )
+                .byRightViewMode(.whileEditing)
+                /// 输入框由不活跃状态 ➤ 活跃状态 只调用一次
+                .byBeginEditing { value in
+                    self.titleTF.byBorderColor("#C33E2D".cor)
+                        .byBorderWidth(0.5)
+                        .byMasksToBounds(YES)
+                    print("✍️ email begin:", value)
+                }
+                /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+                .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited in
+                    guard let self else { return }
+                    self.buttonStatusToChange()
+                }
+                .byEndEditing { value in
+                    print("✅ email end:", value)
+                    self.titleTF.byBorderColor("#eaeaea".cor)
+                }
+        })
+        .byInsetTop(14)
+        .byInsetLeft(12)
+        .byInsetRight(12)
+        .byInsetBottom(14)
+        .byAddTo(cardView) { [unowned self] make in
+            make.top.equalTo(typeRowView.snp.bottom).offset(AD(0))
+            make.leading.equalTo(cardView).offset(AD(16))
+            make.trailing.equalTo(cardView).offset(AD(-16))
+            make.height.equalTo(AD(44))
+        }
+        .byBorderColor("#eaeaea".cor)
+        .byBorderWidth(0.5)
+        .byMasksToBounds(YES)
+        .byClipsToBounds(YES)
+        .byCornerRadius(4.h)
+    }()
+```
+
 #### 2.12、✍️`UITextView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ##### 2.12.1、基础样式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -3956,7 +4117,99 @@ jobsSetupGKNav(
   view.removeAllSwipeActionsMulti()
   ```
 
-#### 2.15、<font id=UIAlertController>`UIAlertController`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 2.15、进度条<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+##### 2.15.1、系统进度条 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+/// 进度条（显示剩余/已完成比例，取决于 progressMode）
+private lazy var progressView: UIProgressView = {
+    UIProgressView(progressViewStyle: .default)
+        .byProgress(0)
+        .byAddTo(view) { [unowned self] make in
+            make.top.equalTo(self.timeLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().offset(horizontalInset)
+            make.right.equalToSuperview().inset(horizontalInset)
+        }
+}()
+```
+
+##### 2.15.2、自定义进度条 ➤ `JobsProgressBar` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+/// 自定义进度条
+private lazy var progressView: JobsProgressBar = {
+    JobsProgressBar()
+        .byDirection(.leftToRight)
+        .byValueMode(.countDown)           // 初始：显示为 100→0
+        .byTrackColor(.systemGray5)        // 你外层灰条在父视图，这里清空即可
+        .byTrackHorizontalInset(0)         // ✅ 不要内部留边
+        .byTrackVerticalInset(0)           // ✅ 不要内部留边
+        .byTrackThickness(nil)             // ✅ 厚度 = JobsProgressBar.height（也就是父视图高度）
+        .byAutoHideLabel(true)             // ✅ 小高度自动隐藏 label（12 高会隐藏）
+        .byLabelMinVisibleHeight(18)
+        .byLabelBackgroundColor(.secondarySystemBackground)
+        .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+        .byAddTo(view) { [unowned self] make in
+            make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
+            make.left.equalToSuperview().offset(40.w)
+            make.right.equalToSuperview().inset(40.w)
+            make.height.equalTo(20.h)
+        }
+}()
+```
+
+#### 2.16、带箭头的对话框 ➤ `JobsDialogBox` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+UIView().byDialogBoxContent { dialogBoxView in
+    UITextView()
+        .byBackgroundColor(.clear)
+        .byText(
+            "1.电话、QQ、微信号、乱码、全数字皆、不雅字眼、辱骂 词汇带、负面情绪字眼、标点符号皆会审核失败"
+                .add("\n")
+                .add("2. 中文字母8个为限、全英文字母或全拼音、中文字母或拼 音加数字、字母数字最多2个、超过、一律拒绝")
+                .add("\n")
+                .add("3. 昵称30日内仅能更改一次")
+        )
+        .byTextColor(.white)
+        .byFont(.systemFont(ofSize: 16))
+        .byEditable(NO)
+        .byAddTo(dialogBoxView) { [unowned self] make in
+            make.edges.equalToSuperview()
+        }
+}
+```
+
+#### 2.16、动效数字标签 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+private lazy var valueLabel: UILabel = {
+    UILabel()
+        .byTextAlignment(.center)
+        .byFont(.systemFont(ofSize: 52, weight: .bold))
+        .byTextColor(.label)
+        .byText("\(Int(defaultStart))")
+        .byNumberOfLines(1)
+        .byAnimatedTextNumber(duration: 0.9, minimumInterval: 1.0 / 60.0)
+        .byStopAnimatedTextNumber()
+        .byAnimatedTextNumber(
+            start: 60,
+            step: nil,
+            duration: 0.9,
+            minimumInterval: 1.0 / 60.0,
+            completion: nil
+        )
+        .byStartAnimatedTextNumber("3")
+        .byAddTo(cardView) { [unowned self] make in
+            make.top.equalToSuperview().offset(24)
+            make.left.equalToSuperview().offset(self.cardInset)
+            make.right.equalToSuperview().inset(self.cardInset)
+        }
+}()
+```
+
+#### 2.17、<font id=UIAlertController>`UIAlertController`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 最简单的 Alert：主/副标题 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
 
