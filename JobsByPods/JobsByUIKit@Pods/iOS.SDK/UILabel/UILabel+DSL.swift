@@ -35,11 +35,20 @@ extension UILabel {
         self.textColor = color
         return self
     }
+    /// 固定字号（严格设计稿）
     @discardableResult
     public func byFont(_ font: UIFont) -> Self {
         self.font = font
+        self.adjustsFontForContentSizeCategory = false
         return self
     }
+    /// 动态字号（跟随系统文字大小）
+    public func byDynamicFont(_ font: UIFont, style: UIFont.TextStyle) -> Self {
+        self.font = UIFontMetrics(forTextStyle: style).scaledFont(for: font)
+        self.adjustsFontForContentSizeCategory = true
+        return self
+    }
+
     @discardableResult
     public func byTextAlignment(_ alignment: NSTextAlignment) -> Self {
         self.textAlignment = alignment

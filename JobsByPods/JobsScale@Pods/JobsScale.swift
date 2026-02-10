@@ -1,9 +1,18 @@
 //
 //  JobsScale.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsScale
 //
-//  Created by Mac on 9/22/25.
+//  Created by Jobs on 10/2/26.
 //
+//  目标：
+//  - UI 宽：33.w
+//  - UI 高：33.h
+//  - 字体：33.fz（字体独立比例尺：分档/连续 + clamp + 像素对齐）
+//
+//  关键点：
+//  - 不使用 connectedScenes 判方向，避免在某些编译环境/扩展环境下报错
+//  - 优先用 UIApplication.jobsKeyWindow(preferMainScreen:) 拿 window.bounds（自带横竖屏正确宽高）
+//  - SafeArea 不建议作为全局比例尺输入，但保留开关兼容
 
 #if os(OSX)
 import AppKit
@@ -14,38 +23,75 @@ import UIKit
 #if canImport(JobsGetWindow)
 import JobsGetWindow
 #endif
+// MARK: - 快捷屏幕宽高（保持你原来接口）
+@inline(__always)
+public func ScreenWidth(_ rate: CGFloat = 1) -> CGFloat { Screen.width * rate }
 
 @inline(__always)
-public func ScreenWidth(_ rate:CGFloat = 1) -> CGFloat {
-    Screen.width * rate
+public func ScreenHeight(_ rate: CGFloat = 1) -> CGFloat { Screen.height * rate }
+// MARK: - 字体缩放模式
+public enum JobsFontScaleMode {
+    /// 连续缩放：font = base * (screenWidth / designWidth)
+    case continuous
+    /// 分档缩放：更稳定、可控（推荐用于字体）
+    case breakpoints
 }
-
-@inline(__always)
-public func ScreenHeight(_ rate:CGFloat = 1) -> CGFloat {
-    Screen.height * rate
-}
-// MARK: - 核心比例器
+// MARK: - 核心比例器（UI + Font 合一）
 public enum JobsScale {
-    private static var designW: CGFloat = 390
-    private static var designH: CGFloat = 843
-    /// 注意：Safe Area 是“布局概念”，不适合作为全局比例尺的输入。
+    // MARK: Design Reference
+    private static var designW: CGFloat = 375
+    private static var designH: CGFloat = 812
+    // MARK: Layout
+    /// Safe Area 是“布局概念”，不适合作为全局比例尺的输入。
     /// 这里保留开关仅做兼容；当无法可靠获取主 window 时会自动回退到 Screen.size。
     private static var useSafeArea: Bool = false
-
-    public static func setup(designWidth: CGFloat,
-                             designHeight: CGFloat,
-                             useSafeArea: Bool = false) {
+    // MARK: Font Scale Config
+    private static var fontMode: JobsFontScaleMode = .breakpoints
+    private static var fontMinScale: CGFloat = 1.0
+    private static var fontMaxScale: CGFloat = 1.15
+    /// 字体分档（按屏幕点宽 pt）
+    /// 你们可以按验收标准改：
+    /// - 375: 1.00
+    /// - 390: 1.05
+    /// - 414: 1.08
+    /// - 430+: 1.14
+    private static var fontBreakpoints: [(maxWidth: CGFloat, scale: CGFloat)] = [
+        (375, 1.00),
+        (390, 1.05),
+        (414, 1.08),
+        (430, 1.14),
+        (.greatestFiniteMagnitude, 1.14)
+    ]
+    // MARK: Setup
+    public static func setup(
+        designWidth: CGFloat,
+        designHeight: CGFloat,
+        useSafeArea: Bool = false,
+        fontMode: JobsFontScaleMode = .breakpoints,
+        fontMinScale: CGFloat = 1.0,
+        fontMaxScale: CGFloat = 1.15,
+        fontBreakpoints: [(maxWidth: CGFloat, scale: CGFloat)]? = nil
+    ) {
         self.designW = designWidth
         self.designH = designHeight
         self.useSafeArea = useSafeArea
+
+        self.fontMode = fontMode
+        self.fontMinScale = fontMinScale
+        self.fontMaxScale = fontMaxScale
+
+        if let bps = fontBreakpoints, !bps.isEmpty {
+            self.fontBreakpoints = bps
+        }
     }
+    // MARK: Screen Size（用于比例输入）
     /// 用于计算缩放比例的“屏幕尺寸”：
-    /// - 默认使用 UIScreen（稳定，不会被 overlay/keyWindow 切换污染）
-    /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 UIScreen
+    /// - 默认用 Screen.size（优先 window.bounds，天然横竖屏正确，不依赖 connectedScenes）
+    /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 Screen.size
     public static var screenSize: CGSize {
         let base = Screen.size
         guard useSafeArea else { return base }
-        // 尽量取到“主界面 window”，避免 toast/HUD/调试浮层 window 抢 keyWindow 导致比例跳变
+
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.windowLevel == .normal,
            !window.isHidden,
@@ -56,54 +102,80 @@ public enum JobsScale {
             let w = max(0, window.bounds.width - (insets.left + insets.right))
             let h = max(0, window.bounds.height - (insets.top + insets.bottom))
 
-            // 极端情况（比如 safeArea 扣完变 0）直接回退
             if w > 0, h > 0 {
                 return CGSize(width: w, height: h)
             }
-        }
-
-        return base
+        };return base
     }
-
+    // MARK: UI Scale
     public static var x: CGFloat { screenSize.width / designW }
     public static var y: CGFloat { screenSize.height / designH }
-}
+    // MARK: Font Scale（独立比例尺）
+    /// 字体缩放只看“宽度”，避免 height / min(w,h) 在横屏/Pad 上乱跳
+    public static var fontScale: CGFloat {
+        let w = screenSize.width
+        let raw: CGFloat
 
-public extension BinaryInteger {
-    var w: CGFloat { CGFloat(self) * JobsScale.x }
-    var h: CGFloat { CGFloat(self) * JobsScale.y }
-    var fz: CGFloat { CGFloat(self) * JobsScale.x }   // 字体缩放，默认跟随 X
-}
-
-public extension BinaryFloatingPoint {
-    var w: CGFloat { CGFloat(self) * JobsScale.x }
-    var h: CGFloat { CGFloat(self) * JobsScale.y }
-    var fz: CGFloat { CGFloat(self) * JobsScale.x }
-}
-// MARK: - 屏幕宽高（兼容设备横竖屏）
-public enum Screen {
-    /// 当前界面方向（兼容 iOS 12-）
-    private static var orientation: UIInterfaceOrientation {
-        if #available(iOS 13.0, *) {
-            return (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
-                .interfaceOrientation ?? .unknown
-        } else {
-            // iOS 12-：虽然 deprecated，但用于兼容是最稳的兜底
-            return UIApplication.shared.statusBarOrientation
-        }
+        switch fontMode {
+        case .continuous:
+            raw = w / designW
+        case .breakpoints:
+            raw = scaleFromBreakpoints(w)
+        };return clamp(raw, fontMinScale, fontMaxScale)
     }
-    /// 屏幕尺寸（以点为单位，已按当前横竖屏纠正宽高）
+
+    private static func scaleFromBreakpoints(_ width: CGFloat) -> CGFloat {
+        for item in fontBreakpoints {
+            if width <= item.maxWidth { return item.scale }
+        };return 1.0
+    }
+    // MARK: Pixel Align（像素对齐）
+    public static func pixelAlign(_ value: CGFloat) -> CGFloat {
+        #if os(iOS) || os(tvOS)
+        let s = UIScreen.main.scale
+        return (value * s).rounded() / s
+        #else
+        return value
+        #endif
+    }
+
+    private static func clamp(_ v: CGFloat,
+                              _ lo: CGFloat,
+                              _ hi: CGFloat) -> CGFloat {
+        min(max(v, lo), hi)
+    }
+}
+// MARK: - Sugar：你要的 33.w / 33.h / 33.fz
+extension BinaryInteger {
+    /// UI 宽度缩放（像素对齐）
+    public var w: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.x) }
+    /// UI 高度缩放（像素对齐）
+    public var h: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.y) }
+    /// 字体缩放（独立比例尺，像素对齐）
+    public var fz: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale) }
+}
+
+extension BinaryFloatingPoint {
+     public var w: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.x) }
+     public var h: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.y) }
+     public var fz: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale) }
+}
+
+// MARK: - Screen（兼容横竖屏，不依赖 connectedScenes）
+public enum Screen {
+    /// 屏幕尺寸（以点为单位）
+    /// - 优先 window.bounds.size：天然随横竖屏变化
+    /// - 回退 UIScreen.main.bounds.size：在 iOS 8+ 通常是“竖屏坐标系”，但作为兜底足够
     public static var size: CGSize {
-        let s = UIScreen.main.bounds.size   // iOS 8+ 始终是竖屏坐标
-        let w = s.width, h = s.height
-        switch orientation {
-        case .landscapeLeft, .landscapeRight:
-            return CGSize(width: max(w, h), height: min(w, h))
-        case .portrait, .portraitUpsideDown:
-            return CGSize(width: min(w, h), height: max(w, h))
-        default:
-            return s
+        #if os(iOS) || os(tvOS)
+        if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
+           window.bounds.size != .zero {
+            return window.bounds.size
         }
+        return UIScreen.main.bounds.size
+        #else
+        return .zero
+        #endif
     }
 
     public static var width: CGFloat  { size.width }

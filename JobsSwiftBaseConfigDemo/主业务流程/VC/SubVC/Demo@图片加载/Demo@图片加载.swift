@@ -64,12 +64,12 @@ final class PicLoadDemoVC: BaseVC {
             .byImage("Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-             .addTapAction { (iv: UIImageView) in
+            .addTapAction { (iv: UIImageView) in
                  "单击图片：\(iv)".toast
-             }
-             .addLongPressAction(minimumPressDuration: 0.8,
-                                 allowableMovement: 12,
-                                 numberOfTouchesRequired: 1) { gr in
+            }
+            .addLongPressAction(minimumPressDuration: 0.8,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { gr in
                  guard let iv = gr.view as? UIImageView else { return }
                  switch gr.state {
                  case .began:
