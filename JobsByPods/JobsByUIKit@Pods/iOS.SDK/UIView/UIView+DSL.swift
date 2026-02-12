@@ -145,24 +145,6 @@ extension UIView {
         return self
     }
     // MARK: - UIView · Geometry / Transform / Scale / Touch
-    /// 几何
-    @discardableResult
-    public func byFrame(_ f: CGRect) -> Self {
-        frame = f
-        return self
-    }
-
-    @discardableResult
-    public func byBounds(_ b: CGRect) -> Self {
-        bounds = b
-        return self
-    }
-
-    @discardableResult
-    public func byCenter(_ c: CGPoint) -> Self {
-        center = c
-        return self
-    }
     /// 2D/3D 变换
     @discardableResult
     public func byTransform(_ transf: CGAffineTransform) -> Self {
@@ -200,111 +182,6 @@ extension UIView {
     @discardableResult
     public func byExclusiveTouch(_ enabled: Bool) -> Self {
         isExclusiveTouch = enabled
-        return self
-    }
-    // MARK: 尺寸@绝对设置
-    @discardableResult
-    public func bySize(_ size: CGSize) -> Self {
-        frame.size = size
-        return self
-    }
-    /// 允许在链式调用里“根据自身当前状态”计算 size
-    @discardableResult
-    public func bySize(_ make: (Self) -> CGSize) -> Self {
-        sizeToFit()
-        frame.size = make(self)
-        return self
-    }
-
-    @discardableResult
-    public func bySize(width: CGFloat, height: CGFloat) -> Self {
-        frame.size = CGSize(width: width, height: height)
-        return self
-    }
-
-    @discardableResult
-    public func byWidth(_ width: CGFloat) -> Self {
-        var f = frame; f.size.width = width; frame = f
-        return self
-    }
-
-    @discardableResult
-    public func byHeight(_ height: CGFloat) -> Self {
-        var f = frame; f.size.height = height; frame = f
-        return self
-    }
-    // MARK: 尺寸@相对偏移叠加
-    /// 在当前宽度基础上叠加偏移（正负皆可）
-    @discardableResult
-    public func byWidthOffset(_ delta: CGFloat) -> Self {
-        var f = frame; f.size.width += delta; frame = f
-        return self
-    }
-    /// 在当前高度基础上叠加偏移（正负皆可）
-    @discardableResult
-    public func byHeightOffset(_ delta: CGFloat) -> Self {
-        var f = frame; f.size.height += delta; frame = f
-        return self
-    }
-    /// 同时对宽高做偏移（正负皆可）
-    @discardableResult
-    public func bySizeOffset(width dw: CGFloat = 0,height dh: CGFloat = 0) -> Self {
-        var f = frame; f.size.width += dw; f.size.height += dh; frame = f
-        return self
-    }
-    // MARK: Frame@绝对设置
-    @discardableResult
-    public func byFrame(x: CGFloat? = nil,
-                        y: CGFloat? = nil,
-                        width: CGFloat? = nil,
-                        height: CGFloat? = nil) -> Self {
-        var f = frame
-        if let x = x { f.origin.x = x }
-        if let y = y { f.origin.y = y }
-        if let w = width { f.size.width = w }
-        if let h = height { f.size.height = h }
-        frame = f
-        return self
-    }
-    // MARK: Frame@相对偏移叠加
-    /// 在当前 x/y 基础上叠加偏移
-    @discardableResult
-    public func byOriginOffset(dx: CGFloat = 0, dy: CGFloat = 0) -> Self {
-        var f = frame; f.origin.x += dx; f.origin.y += dy; frame = f
-        return self
-    }
-    @discardableResult
-    public func byOriginXOffset(_ dx: CGFloat = 0) -> Self {
-        var f = frame; f.origin.x += dx; frame = f
-        return self
-    }
-    @discardableResult
-    public func byOriginYOffset(_ dy: CGFloat = 0) -> Self {
-        var f = frame; f.origin.y += dy; frame = f
-        return self
-    }
-    /// 在当前 frame 基础上整体偏移（位置 + 尺寸）
-    @discardableResult
-    public func byFrameOffset(dx: CGFloat = 0,
-                              dy: CGFloat = 0,
-                              dw: CGFloat = 0,
-                              dh: CGFloat = 0) -> Self {
-        var f = frame
-        f.origin.x += dx; f.origin.y += dy
-        f.size.width += dw; f.size.height += dh
-        frame = f
-        return self
-    }
-    // MARK: 位置
-    @discardableResult
-    public func byOrigin(_ point: CGPoint) -> Self {
-        frame.origin = point
-        return self
-    }
-    /// 在当前中心点基础上叠加偏移
-    @discardableResult
-    public func byCenterOffset(dx: CGFloat = 0, dy: CGFloat = 0) -> Self {
-        center = CGPoint(x: center.x + dx, y: center.y + dy)
         return self
     }
     // MARK: - UIView · Subview Hierarchy
@@ -548,6 +425,7 @@ extension UIView {
         return self
     }
 }
+// MARK: 修改背景色
 private var kBgColorMapKey: UInt8 = 0
 public extension UIView {
     @discardableResult

@@ -146,6 +146,7 @@ final class RootListVC: BaseVC {
                 ("✍️ UITextField", UITextFieldDemoVC.self),
                 ("✍️ UITextView", UITextViewDemoVC.self),
                 ("🗄️ UITableView", EmptyTableViewDemoVC.self),
+                ("🗄️ UITableView设置圆角和边距", UITableViewCellCornerDemoVC.self),
                 ("🗄️ UICollectionView", EmptyCollectionViewDemoVC.self),
                 ("😂 按钮完全覆盖在UICollectionViewCell上", BtnFullOnCVCellDemoVC.self),
                 ("😂 按钮完全覆盖在UITableViewCell上", BtnFullOnTBVCellDemoVC.self),

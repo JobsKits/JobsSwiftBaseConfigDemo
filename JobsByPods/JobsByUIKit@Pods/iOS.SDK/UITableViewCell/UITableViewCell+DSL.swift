@@ -135,7 +135,7 @@ extension UITableViewCell {
     @available(iOS 14.0, *)
     @discardableResult
     public func byContentConfiguration(_ build: (inout UIListContentConfiguration) -> Void,
-                                automaticallyUpdates: Bool = false) -> Self {
+                                       automaticallyUpdates: Bool = false) -> Self {
         // ✅ 优先基于当前的 configuration 继续修改，避免每次重建把之前的覆盖掉
         var cfg: UIListContentConfiguration
         if let current = contentConfiguration as? UIListContentConfiguration {

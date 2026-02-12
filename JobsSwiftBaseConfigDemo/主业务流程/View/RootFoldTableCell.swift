@@ -15,18 +15,12 @@ import SnapKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
-typealias DemoItem = (title: String, vcType: UIViewController.Type)
-final class RootFoldTableCell: UITableViewCell {
-    static func collapsedHeight() -> CGFloat {
-        headerH + vInset * 2
-    }
-
-    static func expandedHeight(itemCount: Int) -> CGFloat {
-        collapsedHeight()
-        + innerTop
-        + CGFloat(itemCount) * innerRowH
-        + innerBottom
-    }
+final class RootFoldTableCell: UITableViewCell,
+                               UITableViewCellInsetProtocol,
+                               UITableViewCellRoundable {
+    typealias DemoItem = (title: String, vcType: UIViewController.Type)
+    let horizontalInset: CGFloat = 10
+    let cornerRadius: CGFloat = 20
     // MARK: - Layout
     private static let vInset: CGFloat = 8
     private static let headerH: CGFloat = 56
@@ -139,8 +133,14 @@ final class RootFoldTableCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
 
-        _ = card; _ = header; _ = titleLab; _ = chevron
-        _ = detailClip; _ = detailContent; _ = innerTableView; _ = shadow
+        card.byVisible(YES)
+        header.byVisible(YES)
+        titleLab.byVisible(YES)
+        chevron.byVisible(YES)
+        detailClip.byVisible(YES)
+        detailContent.byVisible(YES)
+        innerTableView.byVisible(YES)
+        shadow.byVisible(YES)
 
         setExpanded(false, animated: false)
     }
@@ -151,7 +151,27 @@ final class RootFoldTableCell: UITableViewCell {
         onSelectItem = nil
         setExpanded(false, animated: false)
     }
-    // MARK: - Public
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyInsets()      // 水平边距@距离TableView
+        applyCornerStyle() // 圆角
+    }
+}
+
+extension RootFoldTableCell{
+    
+    static func collapsedHeight() -> CGFloat {
+        headerH + vInset * 2
+    }
+
+    static func expandedHeight(itemCount: Int) -> CGFloat {
+        collapsedHeight()
+        + innerTop
+        + CGFloat(itemCount) * innerRowH
+        + innerBottom
+    }
+    
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
@@ -162,7 +182,7 @@ final class RootFoldTableCell: UITableViewCell {
         innerTableView.reloadData()
         setExpanded(expanded, animated: false)
     }
-
+    
     func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
         let targetH: CGFloat = expanded ? CGFloat(items.count) * Self.innerRowH : 0

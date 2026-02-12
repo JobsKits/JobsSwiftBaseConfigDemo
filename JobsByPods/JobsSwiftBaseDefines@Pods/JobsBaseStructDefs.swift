@@ -10,38 +10,67 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+public struct FramePatch {
+    public var x: CGFloat?
+    public var y: CGFloat?
+    public var width: CGFloat?
+    public var height: CGFloat?
+
+    public init(x: CGFloat? = nil,
+                y: CGFloat? = nil,
+                width: CGFloat? = nil,
+                height: CGFloat? = nil) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+    }
+}
 // MARK: - ShadowDirection
-struct ShadowDirection: OptionSet {
-    let rawValue: UInt
-    static let top        = ShadowDirection([])
-    static let down       = ShadowDirection(rawValue: 1 << 0)
-    static let left       = ShadowDirection(rawValue: 1 << 1)
-    static let right      = ShadowDirection(rawValue: 1 << 2)
-    static let leftTop    = ShadowDirection(rawValue: 1 << 3)
-    static let leftDown   = ShadowDirection(rawValue: 1 << 4)
-    static let rightTop   = ShadowDirection(rawValue: 1 << 5)
-    static let rightDown  = ShadowDirection(rawValue: 1 << 6)
-    static let all: ShadowDirection = [.top, .down, .left, .right, .leftTop, .leftDown, .rightTop, .rightDown]
+public struct ShadowDirection: OptionSet {
+    public let rawValue: UInt
+    public static let top        = ShadowDirection([])
+    public static let down       = ShadowDirection(rawValue: 1 << 0)
+    public static let left       = ShadowDirection(rawValue: 1 << 1)
+    public static let right      = ShadowDirection(rawValue: 1 << 2)
+    public static let leftTop    = ShadowDirection(rawValue: 1 << 3)
+    public static let leftDown   = ShadowDirection(rawValue: 1 << 4)
+    public static let rightTop   = ShadowDirection(rawValue: 1 << 5)
+    public static let rightDown  = ShadowDirection(rawValue: 1 << 6)
+    public static let all: ShadowDirection = [.top, .down, .left, .right, .leftTop, .leftDown, .rightTop, .rightDown]
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
 }
 // MARK: - UIBorderSideType
-struct UIBorderSideType: OptionSet {
-    let rawValue: UInt
-    static let all    = UIBorderSideType([])
-    static let top    = UIBorderSideType(rawValue: 1 << 0)
-    static let bottom = UIBorderSideType(rawValue: 1 << 1)
-    static let left   = UIBorderSideType(rawValue: 1 << 2)
-    static let right  = UIBorderSideType(rawValue: 1 << 3)
+public struct UIBorderSideType: OptionSet {
+    public let rawValue: UInt
+    public static let all    = UIBorderSideType([])
+    public static let top    = UIBorderSideType(rawValue: 1 << 0)
+    public static let bottom = UIBorderSideType(rawValue: 1 << 1)
+    public static let left   = UIBorderSideType(rawValue: 1 << 2)
+    public static let right  = UIBorderSideType(rawValue: 1 << 3)
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
 }
 // MARK: - 这样写的话，外面可以JobsIndexPath.section 进行调用
-struct JobsIndexPath {
-    var section: Int
-    var rowOrItem: Int
+public struct JobsIndexPath {
+    public var section: Int
+    public var rowOrItem: Int
 }
 // MARK: - 无数据占位图的类型
-struct JobsEmptyViewType: OptionSet {
-    let rawValue: UInt
-    static let none       = JobsEmptyViewType([])
-    static let label      = JobsEmptyViewType(rawValue: 1 << 0)
-    static let button     = JobsEmptyViewType(rawValue: 1 << 1)
-    static let customView = JobsEmptyViewType(rawValue: 1 << 2)
+public struct JobsEmptyViewType: OptionSet {
+    public let rawValue: UInt
+    public static let none       = JobsEmptyViewType([])
+    public static let label      = JobsEmptyViewType(rawValue: 1 << 0)
+    public static let button     = JobsEmptyViewType(rawValue: 1 << 1)
+    public static let customView = JobsEmptyViewType(rawValue: 1 << 2)
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
 }
