@@ -2691,12 +2691,31 @@ private lazy var tableView: UITableView = {
     UITableView(frame: .zero, style: .insetGrouped)
         .byDataSource(self)
         .byDelegate(self)
-        .registerCell(UITableViewCell.self)
+        .byRegisterCell(UITableViewCell.self)
         .byNoContentInsetAdjustment()
         .bySeparatorStyle(.singleLine)
         .byNoSectionHeaderTopPadding()
-    
-        .jobs_emptyButtonProvider { [unowned self] in
+        .byContentInsetTop(8)
+        .byExpandVerticalScrollDistance(200.h)
+        // 非正式协议闭包化
+        .byTarget(self)
+        .numberOfRowsInSection { [weak self] (obj: AnyObject, tv: UITableView, section: Int) -> Int in
+            self?.rows ?? 0
+        }
+        .cellForRowAt { _, tv, indexPath in
+            let c = tv.dequeueReusableCell(withIdentifier: "cell") ??
+                    UITableViewCell(style: .default, reuseIdentifier: "cell")
+            var cfg = c.defaultContentConfiguration()
+            cfg.text = "Row \(indexPath.row)"
+            c.contentConfiguration = cfg
+            return c
+        }
+        .didSelectRowAt { _, tv, indexPath in
+            tv.deselectRow(at: indexPath, animated: true)
+            print("点选逻辑")
+        }
+         // 空态按钮
+        .byEmptyButtonProvider { [unowned self] in
             UIButton(type: .system)
                 .byTitle("暂无数据", for: .normal)
                 .bySubTitle("点我填充示例数据", for: .normal)
@@ -2723,36 +2742,26 @@ private lazy var tableView: UITableView = {
 //                bottom: 0,
 //                right: 0
 //            ))
-            // 下拉刷新 Header
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
-                guard let self else { return }
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                    self.rows = 20
-                    self.tableView.byReloadData()
-                    self.tableView.switchRefreshHeader(to: .normal)
-                    self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
-                }
+        // 下拉刷新 Header
+        .byRefreshHeader(component: JobsDefaultHeader(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                self.tableView.byReloadData()
+                self.tableView.switchRefreshHeader(to: .normal)
+                self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
             }
-            // 上拉加载 Footer
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                          container: self,
-                                          trigger: 66) { [weak self] in
-                guard let self else { return }
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                    if self.rows < 60 {
-                        self.rows += 20
-                        self.tableView.byReloadData()
-                        self.tableView.switchRefreshFooter(to: .normal)
-                    } else {
-                        self.tableView.switchRefreshFooter(to: .noMoreData)
-                    }
-                }
+        }
+        // 上拉加载 Footer
+        .byRefreshFooter(component: JobsDefaultFooter(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                self.tableView.switchRefreshFooter(to: .noMoreData)
             }
-
+        }
         .byAddTo(view) {[unowned self] make in
             if view.jobs_hasVisibleTopBar() {
                 make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -2761,6 +2770,41 @@ private lazy var tableView: UITableView = {
                 make.edges.equalToSuperview()
             }
         }
+//        .showRefreshHeaderInfo(NO)   // 竖向Header + 横向Left
+//        .showRefreshFooterInfo(YES)  // 竖向Footer + 横向Right
+        .setLeftLottie(.custom(.init(animationName: "9squares_AlBoardman")))
+        .setRightLottie(.inherit)     // 继承全局（没有全局就回退菊花）
+        // 左侧拉：比如“上一页/回退”
+        .configSideRefresh(with: JobsDefaultLeftRefresher(),
+                           container: self,
+                           at: .left,
+                           trigger: 70) { [weak self] in
+            guard let self else { return }
+            jobsRunOnMain(self) { vc in
+                try? await Task.sleep(nanoseconds: 900_000_000)
+                // 模拟“刷新完成”：减少一个 item 并刷新
+                self.hItems = max(8, self.hItems - 1)
+                self.collectionView.byReloadData()
+                self.collectionView.switchSideRefresh(.left, to: .normal)
+            }
+       }
+       // 右侧拉：比如“下一页/加载更多卡片”
+       .configSideRefresh(with: JobsDefaultRightRefresher(),
+                          container: self,
+                          at: .right,
+                          trigger: 70) { [weak self] in
+           guard let self else { return }
+           jobsRunOnMain(self) { vc in
+               try? await Task.sleep(nanoseconds: 900_000_000)
+               self.hItems += 3
+               self.collectionView.byReloadData()
+               self.collectionView.switchSideRefresh(.right, to: .normal)
+           }
+       }
+      .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
+      .setFooterLottie(.disabled) // 强制 footer 回退菊花（即使全局配置了）
+      .enableRefreshHaptics(true)
+      .setRefreshSound("Sound.wav")
 }()
 ```
 
@@ -2775,12 +2819,28 @@ private lazy var tableView: UITableView = {
       UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
           .byDataSource(self)
           .byDelegate(self)
-          .registerCell(UICollectionViewCell.self)
+          .byRegisterCell(UICollectionViewCell.self)
           .byBackgroundView(nil)
           .byDragInteractionEnabled(false)
-  
-          // 空态按钮（与 UITableView Demo 一致）
-          .jobs_emptyButtonProvider { [unowned self] in
+          .byContentInsetTop(8)
+          .byExpandVerticalScrollDistance(200.h)
+          // 非正式协议闭包化
+          .byTarget(self)
+          .numberOfItemsInSection { [weak self] (obj: AnyObject, cv: UICollectionView, section: Int) -> Int in
+              self?.hItems ?? 0
+          }
+          .cellForItemAt { _, cv, indexPath in
+              cv
+                  .dequeueCell(HCell.self, for: indexPath)
+                  .byData(indexPath.item)
+                  .onResult { _ in }
+          }
+          .didSelectItemAt({ obj, cv, idx in
+              cv.deselectItem(at: idx, animated: true)
+              print("点选逻辑")
+          })
+          // 空态按钮
+          .byEmptyButtonProvider { [unowned self] in
               UIButton.sys()
                   .byTitle("暂无数据", for: .normal)
                   .bySubTitle("点我填充示例数据", for: .normal)
@@ -2800,37 +2860,6 @@ private lazy var tableView: UITableView = {
                       make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                   }
           }
-  
-              // 下拉刷新 Header
-              .configRefreshHeader(component: JobsDefaultHeader(),
-                                   container: self,
-                                   trigger: 66) { [weak self] in
-                  guard let self else { return }
-                  Task { @MainActor in
-                      try? await Task.sleep(nanoseconds: 1_000_000_000)
-                      self.rows = 20
-                      self.tableView.byReloadData()
-                      self.tableView.switchRefreshHeader(to: .normal)
-                      self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
-                  }
-              }
-              // 上拉加载 Footer
-              .configRefreshFooter(component: JobsDefaultFooter(),
-                                            container: self,
-                                            trigger: 66) { [weak self] in
-                  guard let self else { return }
-                  Task { @MainActor in
-                      try? await Task.sleep(nanoseconds: 1_000_000_000)
-                      if self.rows < 60 {
-                          self.rows += 20
-                          self.tableView.byReloadData()
-                          self.tableView.switchRefreshFooter(to: .normal)
-                      } else {
-                          self.tableView.switchRefreshFooter(to: .noMoreData)
-                      }
-                  }
-              }
-  
           .byAddTo(view) { [unowned self] make in
               if view.jobs_hasVisibleTopBar() {
                   make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -2839,6 +2868,70 @@ private lazy var tableView: UITableView = {
                   make.edges.equalToSuperview()
               }
           }
+  //        .showRefreshHeaderInfo(NO)   // 竖向Header + 横向Left
+  //        .showRefreshFooterInfo(YES)  // 竖向Footer + 横向Right
+          .setLeftLottie(.custom(.init(animationName: "9squares_AlBoardman")))
+          .setRightLottie(.inherit)     // 继承全局（没有全局就回退菊花）
+          .enableRefreshHaptics(true)
+          .setRefreshSound("Sound.wav") 
+          // 下拉刷新
+          .byRefreshHeader(component: JobsDefaultHeader(),
+                           container: self,
+                           trigger: 66) { [weak self] in
+              guard let self else { return }
+              jobsRunOnMain(self) { vc in
+                  self.items = self.makeMockItems(count: 12)
+                  self.collectionView.byReloadData()
+                  self.collectionView.switchRefreshHeader(to: .normal)
+                  self.collectionView.switchRefreshFooter(to: .normal)
+              }
+          }
+          // 上拉加载
+          .byRefreshFooter(component: JobsDefaultFooter(),
+                           container: self,
+                           trigger: 66) { [weak self] in
+              guard let self else { return }
+              jobsRunOnMain(self) { vc in
+                  if self.items.count < 60 {
+                      self.items.append(contentsOf: self.makeMockItems(count: 12, startAt: self.items.count + 1))
+                      self.collectionView.byReloadData()
+                      self.collectionView.switchRefreshFooter(to: .normal)
+                  } else {
+                      self.collectionView.switchRefreshFooter(to: .noMoreData)
+                  }
+              }
+          }
+          // 左侧拉：比如“上一页/回退”
+          .configSideRefresh(with: JobsDefaultLeftRefresher(),
+                             container: self,
+                             at: .left,
+                             trigger: 70) { [weak self] in
+              guard let self else { return }
+              jobsRunOnMain(self) { vc in
+                  try? await Task.sleep(nanoseconds: 900_000_000)
+                  // 模拟“刷新完成”：减少一个 item 并刷新
+                  self.hItems = max(8, self.hItems - 1)
+                  self.collectionView.byReloadData()
+                  self.collectionView.switchSideRefresh(.left, to: .normal)
+              }
+         }
+         // 右侧拉：比如“下一页/加载更多卡片”
+         .configSideRefresh(with: JobsDefaultRightRefresher(),
+                            container: self,
+                            at: .right,
+                            trigger: 70) { [weak self] in
+             guard let self else { return }
+             jobsRunOnMain(self) { vc in
+                 try? await Task.sleep(nanoseconds: 900_000_000)
+                 self.hItems += 3
+                 self.collectionView.byReloadData()
+                 self.collectionView.switchSideRefresh(.right, to: .normal)
+             }
+         }
+        .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
+        .setFooterLottie(.disabled) // 强制 footer 回退菊花（即使全局配置了）
+        .enableRefreshHaptics(true)
+        .setRefreshSound("Sound.wav")
   }()
   ```
   
@@ -3105,19 +3198,25 @@ private lazy var barButtonItem: UIBarButtonItem = {
 import WebKit
 
 private lazy var webView: WKWebView = {
-    WKWebView(frame: .zero, configuration: WKWebViewConfiguration()
-        .byWebsiteDataStore(.default())
-        .byAllowsInlineMediaPlayback(true)
-        .byUserContentController(WKUserContentController().byAddUserScript(Self.makeBridgeUserScript()))
-        .byDefaultWebpagePreferences { wp in
-            wp.allowsContentJavaScript = true
-        }
-    )
-    .byAddTo(view) { [unowned self] make in
-        make.top.equalTo(textField.snp.bottom).offset(12)
-        make.centerX.equalToSuperview()
-        make.height.equalTo(36)
+    // ✅ 关键：强制使用非持久数据仓库（每个 BaseWebView 实例都是全新 session，零共享 Cookie/缓存）
+    let cfg = WKWebViewConfiguration()
+    // ✅ 内部默认：非持久数据仓库（每个 BaseWebView 实例都是全新 session，零共享 Cookie/缓存）
+    let internalDefaultStore: WKWebsiteDataStore = .nonPersistent()
+    // ✅ 外部优先：外部设置了就覆盖，否则用内部默认
+    cfg.websiteDataStore = overrideWebsiteDataStore ?? internalDefaultStore
+    cfg.allowsInlineMediaPlayback = true
+    let ucc = WKUserContentController()
+    ucc.addUserScript(Self.makeBridgeUserScript())
+    if #available(iOS 14.0, *) {
+        // contentWorld 由 addScriptMessageHandler 时再设置
     }
+    cfg.userContentController = ucc
+    // ✅ 外部注入：允许外层通过闭包配置 WKWebViewConfiguration
+    webViewConfigurationHook?(cfg)
+    // ✅ 若外层通过 byWebsiteDataStore 显式设置，则以它为最终值（避免被内部/闭包覆盖回去）
+    if let store = overrideWebsiteDataStore { cfg.websiteDataStore = store }
+    let w = WKWebView(frame: .zero, configuration: cfg)
+    return w
 }()
 ```
 
@@ -3135,93 +3234,93 @@ private lazy var webView: WKWebView = {
 
 ```swift
 private lazy var web: BaseWebView = { [unowned self] in
-        return BaseWebView()
-            .byBgColor(.clear)
-            .byAllowedHosts([])                  // 不限域
-            .byOpenBlankInPlace(true)
-            .byDisableSelectionAndCallout(false)
-            .byUserAgentSuffixProvider { _ in
-                // 按请求动态追加 UA 后缀；nil = 使用系统默认 UA。
-                // 需要区分页面时在此 return "YourApp/1.0"
-                return nil
-            }
+    BaseWebView()
+//            .byBackgroundColor(.clear)
+        .byAllowedHosts([])                  // 不限域
+        .byOpenBlankInPlace(true)
+        .byDisableSelectionAndCallout(false)
+        .byUserAgentSuffixProvider { _ in
+            // 按请求动态追加 UA 后缀；nil = 使用系统默认 UA。
+            // 需要区分页面时在此 return "YourApp/1.0"
+            return nil
+        }
 //            .byNormalizeMToWWW(false)               // ❗️关闭 m→www
 //            .byForceHTTPSUpgrade(false)             // ❗️关闭 http→https
 //            .bySafariFallbackOnHTTP(false)          // ❗️关闭 Safari 兜底
 //            .byInjectRedirectSanitizerJS(false)     // 可关，避免干涉 H5 自己跳转
-            /// URL 重写策略（默认不重写；这里保持关闭）
-            .byURLRewriter { _ in
-                // 例如要做 http→https 升级：检测 url.scheme == "http" 再返回新 URL
-                // 现在返回 nil 表示不改写
-                return nil
+        /// URL 重写策略（默认不重写；这里保持关闭）
+        .byURLRewriter { _ in
+            // 例如要做 http→https 升级：检测 url.scheme == "http" 再返回新 URL
+            // 现在返回 nil 表示不改写
+            return nil
+        }
+        /// Safari 兜底（默认不开）；返回 true 即交给 Safari 打开
+        .bySafariFallbackRule { _ in
+            return false
+        }
+        /// 一键开导航栏（默认标题=webView.title，默认有返回键）
+        .byNavBarEnabled(true)
+        .byNavBarStyle { s in
+            s.byHairlineHidden(false)
+             .byBackgroundColor(.systemBackground)
+             .byTitleAlignmentCenter(true)
+        }
+        /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
+        .byNavBarBackButtonProvider {
+            UIButton(type: .system)
+                .byBackgroundColor(.clear)
+                .byImage(UIImage(systemName: "chevron.left"), for: .normal)
+                .byTitle("返回".tr, for: .normal)
+                .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+                .byTitleColor(.label, for: .normal)
+                .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
+                .byTapSound("Sound.wav")
+        }
+        /// 返回行为：优先后退，否则关闭当前控制器
+        .byNavBarOnBack { [weak self] in
+            guard let self else { return }
+            goBack("")
+        }
+        .byAddTo(view) { [unowned self] make in
+            make.left.right.bottom.equalToSuperview()
+            if view.jobs_hasVisibleTopBar() {
+                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+            } else {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             }
-            /// Safari 兜底（默认不开）；返回 true 即交给 Safari 打开
-            .bySafariFallbackRule { _ in
-                return false
-            }
-            /// 一键开导航栏（默认标题=webView.title，默认有返回键）
-            .byNavBarEnabled(true)
-            .byNavBarStyle { s in
-                s.byHairlineHidden(false)
-                 .byBackgroundColor(.systemBackground)
-                 .byTitleAlignmentCenter(true)
-            }
-            /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
-            .byNavBarBackButtonProvider {
-                UIButton(type: .system)
-                    .byBackgroundColor(.clear)
-                    .byImage(UIImage(systemName: "chevron.left"), for: .normal)
-                    .byTitle("返回", for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                    .byTitleColor(.label, for: .normal)
-                    .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
-                    .byTapSound("Sound.wav")
-            }
-            /// 返回行为：优先后退，否则关闭当前控制器
-            .byNavBarOnBack { [weak self] in
-                guard let self else { return }
-                closeByResult("")
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.edges.equalToSuperview()
-            }
-            /// 以下是依据前端暴露的自定义方法进行的JS交互
-            .registerMobileAction("navigateToHome") {  [weak self] body, reply in
-                /// 跳转到首页
-                self!.closeByResult("")
-                reply(nil)
-            }
-            .registerMobileAction("getToken") {  [weak self] body, reply in
+        }
+        /// 以下是依据前端暴露的自定义方法进行的JS交互
+        .registerMobileAction("navigateToHome") {  [weak self] body, reply in
+            /// 跳转到首页
+            self!.goBack("")
+            reply(nil)
+        }
+        .registerMobileAction("getToken") {  [weak self] body, reply in
 
-                reply(nil)
-            }
-            .registerMobileAction("navigateToSecurityCenter") {  [weak self] body, reply in
-                /// 跳转福利中心
-                reply(nil)
-            }
-            .registerMobileAction("navigateToLogin") {  [weak self] body, reply in
-                /// 跳转到登录页
-                reply(nil)
-            }
-            .registerMobileAction("navigateToDeposit") {  [weak self] body, reply in
-                /// 跳转到充值页
-                reply(nil)
-            }
-            .registerMobileAction("closeWebView") {  [weak self] body, reply in
-                /// 关闭WebView
-                reply(nil)
-            }
-            .registerMobileAction("showToast") {  [weak self] body, reply in
-                /// 显示Toast
-                JobsToast.show(
-                    text: body.stringValue(for: "message") ?? "",
-                    config: JobsToast.Config()
-                        .byBgColor(.systemGreen.withAlphaComponent(0.9))
-                        .byCornerRadius(12)
-                )
-                reply(nil)
-            }
-    }()
+            reply(nil)
+        }
+        .registerMobileAction("navigateToSecurityCenter") {  [weak self] body, reply in
+            /// 跳转福利中心
+            reply(nil)
+        }
+        .registerMobileAction("navigateToLogin") {  [weak self] body, reply in
+            /// 跳转到登录页
+            reply(nil)
+        }
+        .registerMobileAction("navigateToDeposit") {  [weak self] body, reply in
+            /// 跳转到充值页
+            reply(nil)
+        }
+        .registerMobileAction("closeWebView") {  [weak self] body, reply in
+            /// 关闭WebView
+            reply(nil)
+        }
+        .registerMobileAction("showToast") {  [weak self] body, reply in
+            /// 显示Toast
+            (body.stringValue(for: "message") ?? "").toast
+            reply(nil)
+        }
+}()
 ```
 
 * 加载线上 URL
@@ -3259,100 +3358,101 @@ private lazy var web: BaseWebView = { [unowned self] in
 * 一般性封装 
 
   ```swift
-  ///邮箱输入框
+  /// 邮箱输入框
   private lazy var emailTF: UITextField = {
       UITextField()
-          // 数据源
-          .byDelegate(self)
-          // 基础视觉
-          .byPlaceholder("请输入邮箱（至少 3 个字符）")
-          .byTextColor(.label)
+          .byPlaceholder("请输入邮箱（去空格 / 最长 8）")
           .byFont(.systemFont(ofSize: 16))
-          .byTextAlignment(.natural)
-          .byBorderStyle(.roundedRect)
-          .byClearButtonMode(.whileEditing)
-  
-          .byInputAccessoryView(accessory)
-          // 键盘
+          .byTextColor(.label)
           .byKeyboardType(.emailAddress)
-          .byKeyboardAppearance(.dark)
           .byReturnKeyType(.next)
-          .byEnablesReturnKeyAutomatically(true)
-          // 智能输入
-          .byAutocapitalizationType(.none)
-          .byAutocorrectionType(.no)
-          .bySpellCheckingType(.no)
-          .bySmartQuotesType(.no)
-          .bySmartDashesType(.no)
-          .bySmartInsertDeleteType(.no)
-          // 内容类型
-          .byTextContentType(.emailAddress)
-          // 编辑属性
-          .byAllowsEditingTextAttributes(true)
-          .byDefaultTextAttributes([.kern: 0.5]) // 字距
-          .byTypingAttributes([.foregroundColor: UIColor.label])
-          // 左/右视图
-          //.byLeftView(makeIcon("envelope"), mode: .always)
-          .byLeftIcon(UIImage(systemName: "envelope"),
-                      tint: .secondaryLabel,
-                      size: .init(width: 18, height: 18),
-                      leading: 12, spacing: 8)
-          .onChange { tf, input, old, isDeleting in
-              let new = tf.text ?? ""
-              print("✏️ input='\(input)' old='\(old)' new='\(new)' deleting=\(isDeleting)")
-  
-              // 示例：6~20 位有效态样式
-              let ok = (6...20).contains(new.count)
-              tf.layer.borderWidth = 1
-              tf.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-              tf.layer.masksToBounds = true
-              if #available(iOS 13.0, *) { tf.layer.cornerCurve = .continuous }
+          .byClearButtonMode(.whileEditing)
+          .byDelegate(self)
+          .byLeftView(UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1)))
+          .byLeftViewMode(.always)
+          .byRightView(
+              UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+                  .byAddSubviewRetSuper(
+                      UIButton.sys()
+                          .bySize(CGSizeMake(20, 20))
+                          /// 背景图片
+                          .byBackgroundImage("删除".img, for: .normal)
+                          /// 普通@点按事件触发
+                          .onTap { [weak self] sender in
+                              guard let self else { return }
+                              sender.isSelected.toggle()
+                              titleTF.text = ""
+                          }
+                  )
+          )
+          .byRightViewMode(.whileEditing)
+          /// 父系方法@UIControl.byAddAction
+          .byAddAction(for: .editingChanged, { [weak self] tf in
+              guard let self else { return }
+              /// TODO
+          })
+          /// 输入框由不活跃状态 ➤ 活跃状态 只调用一次
+          .byBeginEditing { value in
+              print("✍️ email begin:", value)
           }
-          .byAddTo(view) { [unowned self] make in
-              make.top.equalTo(textField.snp.bottom).offset(12)
-              make.centerX.equalToSuperview()
-              make.height.equalTo(36)
+          /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+          .byOnInput(limit: 8) { [weak self] char, value, mode, isLimited ,text ,tf in
+              // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+              // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+              // char：删除/回车时为 ""
+              // mode：space/delete/return/normal
+              // isLimited：是否设置了限制（limit != nil）
+              guard let self else { return }
+              let trimmed = value.trimmingCharacters(in: .whitespaces)
+              if trimmed != value {
+                  self.emailTF.text = trimmed
+              }
+              let current = self.emailTF.text ?? trimmed
+              let ok = current.count >= 3 && current.contains("@")
+              print("📧 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
           }
+          .byEndEditing { value in
+              print("✅ email end:", value)
+          }
+          .byAddTo(view) {[unowned self] make in
+              make.left.equalToSuperview().offset(16)
+              make.right.equalToSuperview().offset(-16)
+              make.height.equalTo(44)
+              if view.jobs_hasVisibleTopBar() {
+                  make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+              } else {
+                  make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+              }
+          }
+          .byBorderColor(.cyan)
+          .byBorderWidth(0.5)
+          .byMasksToBounds(YES)
+          .byClipsToBounds(YES)
+          .byCornerRadius(8.h)
   }()
-  
-  // iOS 17+
-  if #available(iOS 17.0, *) {
-      emailTF.byInlinePredictionType(.default)
-  }
-  // iOS 18+（演示：即使邮箱框也能设置，不影响）
-  if #available(iOS 18.0, *) {
-      emailTF.byMathExpressionCompletionType(.default)
-             .byWritingToolsBehavior(.default)
-      		   .byAllowedWritingToolsResultOptions([])
-  }
   ```
 
-* 功能性封装
+* 输入监听
 
-  * 删除按键的监听
-
-    ```swift
-    // MARK: Rx 绑定 —— 删除键广播
-    emailTF.didPressDelete
-        .subscribe(onNext: { [weak self] in
-            guard let self else { return }
-            print("🗑 delete on emailTF:", self.emailTF.text ?? "")
-        })
-        .disposed(by: rx.disposeBag)
-    ```
-
-  * 用`textInput`限定输入字符过滤条件
-
-    ```swift
-    // MARK: Rx 绑定 —— 邮箱：去空格 + 最长 8 + 简单规则
-    emailTF.textInput(
-        maxLength: 8,
-        formatter: { $0.trimmingCharacters(in: .whitespaces) },
-        validator: { $0.count >= 3 && $0.contains("@") }
-    ).isValid
-        .subscribe(onNext: { print("📧 email valid:", $0) })
-        .disposed(by: rx.disposeBag)
-    ```
+  ```swift
+  UITextField()
+       /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+      .byOnInput(limit: 8) { [weak self] char, value, mode, isLimited ,text ,tf in
+          // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+          // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+          // char：删除/回车时为 ""
+          // mode：space/delete/return/normal
+          // isLimited：是否设置了限制（limit != nil）
+          guard let self else { return }
+          let trimmed = value.trimmingCharacters(in: .whitespaces)
+          if trimmed != value {
+              self.emailTF.text = trimmed
+          }
+          let current = self.emailTF.text ?? trimmed
+          let ok = current.count >= 3 && current.contains("@")
+          print("📧 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
+      }
+  ```
 
 ##### 2.11.2、🔒 密码输入框 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -3427,21 +3527,23 @@ private lazy var web: BaseWebView = { [unowned self] in
                            print("👁 当前状态：\(sender.isSelected ? "隐藏密码" : "显示密码")")
                        }, mode: .always)
           .byInputView(datePicker) // 演示自定义 inputView：点密码框弹日期（纯展示，不建议真实项目这么用）
-          // 限制输入
-          .byLimitLength(12) {[weak self] isLimited, tf in
-              guard let self else { return }
-              tipLabel.byVisible(isLimited)
+          // MARK: Jobs 输入监听（无 Rx）—— 密码：最长 5，只做监听
+          .byBeginEditing { value in
+              print("✍️ password begin:", value)
           }
-          .onChange { tf, input, old, isDeleting in
-              let new = tf.text ?? ""
-              print("✏️ input='\(input)' old='\(old)' new='\(new)' deleting=\(isDeleting)")
-  
-              // 示例：6~20 位有效态样式
-              let ok = (6...20).contains(new.count)
-              tf.layer.borderWidth = 1
-              tf.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-              tf.layer.masksToBounds = true
-              if #available(iOS 13.0, *) { tf.layer.cornerCurve = .continuous }
+          /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+          .byOnInput(limit: 5) { [weak self] char, value, mode, isLimited ,text ,tf in
+              // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+              // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+              // char：删除/回车时为 ""
+              // mode：space/delete/return/normal
+              // isLimited：是否设置了限制（limit != nil）
+              guard let self else { return }
+              let current = self.passwordTF.text ?? value
+              print("🔐 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited)")
+          }
+          .byEndEditing { value in
+              print("✅ password end:", value)
           }
           .byAddTo(view) { [unowned self] make in
               make.top.equalTo(textField.snp.bottom).offset(12)
@@ -3453,28 +3555,26 @@ private lazy var web: BaseWebView = { [unowned self] in
 
 * 功能性封装
 
-  * 用`textInput`限定输入字符过滤条件（但是没有设置输入长度限制，输入长度限制用`.byLimitLength(5)`）
-
-    ```swift
-    // MARK: Rx 绑定 —— 密码：不做任何限制，只是监听（不要传 nil，直接用默认）
-    passwordTF.textInput(
-        maxLength: 5,
-        formatter: { $0.trimmingCharacters(in: .whitespaces) },
-        validator: nil
-    )
-    .isValid
-    .subscribe(onNext: { print("🔐 password valid:", $0) })
-    .disposed(by: rx.disposeBag)
-    ```
-
-  * 删除按键的监听
-
-    ```swift
-    // MARK: 监听删除键（无 .rx）
-    passwordTF.didPressDelete
-        .subscribe(onNext: { print("delete pressed") })
-        .disposed(by: rx.disposeBag)
-    ```
+  ```swift
+  UITextField()
+      .byBeginEditing { value in
+          print("✍️ password begin:", value)
+      }
+      /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+      .byOnInput(limit: 5) { [weak self] char, value, mode, isLimited ,text ,tf in
+          // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+          // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+          // char：删除/回车时为 ""
+          // mode：space/delete/return/normal
+          // isLimited：是否设置了限制（limit != nil）
+          guard let self else { return }
+          let current = self.passwordTF.text ?? value
+          print("🔐 char='\(char)' value='\(current)' mode=\(mode) limited=\(isLimited)")
+      }
+      .byEndEditing { value in
+          print("✅ password end:", value)
+      }
+  ```
 
 ##### 2.11.3、`JobsTextField`
 
@@ -3549,102 +3649,46 @@ private lazy var titleTF: JobsTextField = {
 ##### 2.12.1、基础样式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
-private lazy var tv: UITextView = { [unowned self] in
+private lazy var textView: UITextView = {
     UITextView()
-        .byText("这里展示基础链式调用：字体、颜色、边框、内边距等。")
         .byFont(.systemFont(ofSize: 16))
-        .byTextColor(.label)
-        .byTextAlignment(.left)
+        .byKeyboardType(.default)
         .byEditable(true)
         .bySelectable(true)
         .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
         .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .onChange { tv, input, old, isDeleting in
-            let new = tv.text ?? ""
-            print("✏️ input='\(input)' old='\(old)' new='\(new)' deleting=\(isDeleting)")
-
-            // 6~20 有效：绿边，否则红边
-            let ok = (6...20).contains(new.count)
-            tv.layer.borderWidth = 1
-            tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-            tv.layer.masksToBounds = true
-            if #available(iOS 13.0, *) { tv.layer.cornerCurve = .continuous }
+        .byPlaceHolder("哈哈哈哈".tr)
+        .byPlaceHolderCor(.blue)
+        .byPlaceHolderFont(.boldSystemFont(ofSize: 15))
+        .byHintLimit(12) { lb in
+            lb.byFont(.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
+                .byTextColor(.red)
         }
-        .onBackspace { tv in
-            print("👈 backspace: len=\(tv.text?.count ?? 0)")
+        .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+            guard let self else { return }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
+            print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
         }
-        .byAddTo(self.view) { [unowned self] make in
-            make.top.equalTo(self.textField.snp.bottom).offset(12)
-            make.centerX.equalToSuperview()
-            make.height.equalTo(36)
+        .byBeginEditing { value in
+            print("✍️ begin:", value)
         }
-}()
+        .byEndEditing { value in
+            print("✅ end:", value)
+        }
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(title1.snp.bottom).offset(8)
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
+            make.height.equalTo(100)
+        }
+    }()
 ```
 
-##### 2.12.2、**金额输入（只限定数字）** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private func demo_RxTextInput() {
-    addSectionTitle("2️⃣ 金额输入（formatter + validator + maxLength）")
-
-    let tvMoney = UITextView()
-        .byFont(.monospacedDigitSystemFont(ofSize: 16, weight: .regular))
-        .byKeyboardType(.decimalPad)
-        .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
-        .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .byText("123.45")
-
-    stack.addArrangedSubview(tvMoney)
-    tvMoney.snp.makeConstraints { $0.height.equalTo(80) }
-
-    tvMoney.textInput(
-        maxLength: 12,
-        formatter: JobsFormatters.decimal(scale: 2),
-        validator: JobsValidators.decimal(min: 0, max: 999_999),
-        distinct: true
-    )
-    .isValid
-    .distinctUntilChanged()
-    .observe(on: MainScheduler.instance)
-    .subscribe(onNext: { ok in
-        tvMoney.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemRed).cgColor
-    })
-    .disposed(by: rx.disposeBag)
-}
-```
-
-##### 2.12.3、**手机号输入** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private func demo_PhoneInput() {
-    addSectionTitle("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）")
-
-    let tvPhone = UITextView()
-        .byFont(.systemFont(ofSize: 16))
-        .byKeyboardType(.numberPad)
-        .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .byText("13800138000")
-
-    stack.addArrangedSubview(tvPhone)
-    tvPhone.snp.makeConstraints { $0.height.equalTo(80) }
-
-    tvPhone.textInput(
-        maxLength: 13,
-        formatter: JobsFormatters.phoneCN(),
-        validator: JobsValidators.phoneCN(),
-        distinct: true
-    )
-    .isValid
-    .distinctUntilChanged()
-    .observe(on: MainScheduler.instance)
-    .subscribe(onNext: { ok in
-        tvPhone.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
-    })
-    .disposed(by: rx.disposeBag)
-}
-```
-
-##### 2.12.4、**富文本**展示 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 2.12.2、**富文本**展示 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var tvBlue: UITextView = { [unowned self] in
@@ -3676,165 +3720,6 @@ private lazy var tvBlue: UITextView = { [unowned self] in
             make.height.equalTo(36)
         }
 }()
-```
-
-##### 2.12.5、查找高亮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private func demo_Find_Border_WritingTools() {
-    addSectionTitle("5️⃣ 查找 / 高亮 / Writing Tools")
-    // 文本视图
-    let tvFind = UITextView()
-        .byText("""
-        支持 iOS16+ 的查找（⌘F / 按钮触发），以及 iOS17+ 的系统边框样式。
-        iOS18+ 支持 textHighlightAttributes（用于系统查找/写作工具等场景）。
-        下面按钮可手动打开查找面板，并演示高亮。
-        """)
-        .byFont(.systemFont(ofSize: 15))
-        .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-    tvFind.byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-    // iOS16+ 开启系统查找
-    if #available(iOS 16.0, *) {
-        tvFind.byFindInteractionEnabled(true)
-    }
-
-    // iOS18+：配置高亮颜色（在系统“查找结果/写作工具”时由系统使用）
-    if #available(iOS 18.0, *) {
-        tvFind.byTextHighlightAttributes([
-            .backgroundColor: UIColor.systemYellow.withAlphaComponent(0.35)
-        ])
-    }
-
-    stack.addArrangedSubview(tvFind)
-    tvFind.snp.makeConstraints { $0.height.equalTo(160) }
-
-    // ——— 工具按钮区 ———
-    let btnRow = UIStackView()
-        .byAxis(.horizontal)
-        .bySpacing(8)
-        .byAlignment(.fill)
-        .byDistribution(.fillEqually)
-
-    let btnFind  = UIButton(type: .system)
-    btnFind.setTitle("打开查找面板", for: .normal)
-
-    let btnHi    = UIButton(type: .system)
-    btnHi.setTitle("模拟高亮“iOS”", for: .normal)
-
-    let btnClear = UIButton(type: .system)
-    btnClear.setTitle("清除高亮", for: .normal)
-
-    btnRow.addArrangedSubview(btnFind)
-    btnRow.addArrangedSubview(btnHi)
-    btnRow.addArrangedSubview(btnClear)
-    stack.addArrangedSubview(btnRow)
-
-    // 打开系统查找 UI（iOS16+）
-    if #available(iOS 16.0, *) {
-        btnFind.addAction(UIAction { _ in
-            tvFind.becomeFirstResponder()
-            tvFind.findInteraction?.presentFindNavigator(showingReplace: false)
-        }, for: .touchUpInside)
-    } else {
-        btnFind.isEnabled = false
-        btnFind.setTitle("系统版本需 ≥ iOS16", for: .normal)
-    }
-
-    // 模拟把“iOS”全部高亮（演示效果；与 iOS18 的 textHighlightAttributes 无冲突）
-    btnHi.addAction(UIAction { _ in
-        let text = tvFind.text as NSString? ?? ""
-        let full = NSRange(location: 0, length: text.length)
-        let regex = try? NSRegularExpression(pattern: "iOS", options: .caseInsensitive)
-        tvFind.textStorage.beginEditing()
-        regex?.enumerateMatches(in: text as String, options: [], range: full) { match, _, _ in
-            if let r = match?.range {
-                tvFind.textStorage.addAttributes(
-                    [.backgroundColor: UIColor.systemYellow.withAlphaComponent(0.35)],
-                    range: r
-                )
-            }
-        }
-        tvFind.textStorage.endEditing()
-    }, for: .touchUpInside)
-
-    // 清除模拟高亮
-    btnClear.addAction(UIAction { _ in
-        let full = NSRange(location: 0, length: (tvFind.text as NSString?)?.length ?? 0)
-        tvFind.textStorage.beginEditing()
-        tvFind.textStorage.removeAttribute(.backgroundColor, range: full)
-        tvFind.textStorage.endEditing()
-    }, for: .touchUpInside)
-}
-```
-
-##### 2.12.6、数据的双向绑定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private func demo_TwoWayBinding() {
-    addSectionTitle("6️⃣ 双向绑定示例：A ⇄ B ⇄ Relay")
-
-    let tvA = UITextView()
-        .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .byFont(.systemFont(ofSize: 16))
-        .byText("输入框 A")
-
-    let tvB = UITextView()
-        .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .byFont(.systemFont(ofSize: 16))
-        .byText("输入框 B")
-
-    stack.addArrangedSubview(tvA)
-    tvA.snp.makeConstraints { $0.height.equalTo(80) }
-    stack.addArrangedSubview(tvB)
-    tvB.snp.makeConstraints { $0.height.equalTo(80) }
-
-    let label = UILabel()
-        .byFont(.systemFont(ofSize: 13))
-        .byTextColor(.secondaryLabel)
-        .byText("Relay: —")
-    stack.addArrangedSubview(label)
-
-    let relay = BehaviorRelay<String>(value: "Hello Relay")
-
-    let d1 = tvA.bindTwoWay(relay, initial: .fromRelay)
-    let d2 = tvB.bindTwoWay(relay, initial: .fromRelay)
-    let d3 = relay.asDriver().drive(onNext: { v in label.text = "Relay: \(v)" })
-
-    disposeBag.insert(d1, d2, d3)
-}
-```
-
-##### 2.12.7、**删除键监听** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private func demo_DeleteBackward_Observe() {
-    addSectionTitle("7️⃣ 删除键监听")
-
-    let tv = UITextView()
-        .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-        .byFont(.systemFont(ofSize: 16))
-        .byText("删除我试试看 👇")
-    stack.addArrangedSubview(tv)
-    tv.snp.makeConstraints { $0.height.equalTo(80) }
-
-    let hint = UILabel()
-        .byFont(.systemFont(ofSize: 13))
-        .byTextColor(.systemPink)
-        .byText("⌫ 删除键触发")
-    hint.isHidden = true
-    stack.addArrangedSubview(hint)
-
-    tv.didPressDelete
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: {
-            hint.isHidden = false
-            hint.alpha = 1
-            UIView.animate(withDuration: 0.3, delay: 0.8, options: []) {
-                hint.alpha = 0
-            } completion: { _ in hint.isHidden = true }
-        })
-        .disposed(by: rx.disposeBag)
-}
 ```
 
 #### 2.13、`GKNavigationBarSwift` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

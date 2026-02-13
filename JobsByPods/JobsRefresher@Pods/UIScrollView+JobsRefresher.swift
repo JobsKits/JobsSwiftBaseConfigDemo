@@ -166,11 +166,11 @@ extension UIScrollView {
     }
 
     @discardableResult
-    public func configSideRefresh(with component: (UIView & JobsAnimatable),
-                                  container: AnyObject? = nil,
-                                  at position: JobsPosition,
-                                  trigger: CGFloat = 60,
-                                  action: @escaping jobsByVoidBlock) -> Self {
+    public func bySideRefresh(with component: (UIView & JobsAnimatable),
+                              container: AnyObject? = nil,
+                              at position: JobsPosition,
+                              trigger: CGFloat = 60,
+                              action: @escaping jobsByVoidBlock) -> Self {
         precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
         // apply per-slot pref
         if let v = component as? JobsLottieConfigurable {

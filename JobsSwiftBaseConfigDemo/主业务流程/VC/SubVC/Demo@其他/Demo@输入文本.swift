@@ -78,7 +78,9 @@ final class UITextViewDemoVC: BaseVC {
                 lb.byFont(.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
                     .byTextColor(.red)
             }
-            .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -118,7 +120,9 @@ final class UITextViewDemoVC: BaseVC {
             .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("123.45")
-            .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -160,7 +164,9 @@ final class UITextViewDemoVC: BaseVC {
             .byKeyboardType(.numberPad)
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byText("13800138000")
-            .byOnInput(limit: 13) { [unowned self] char, value, mode, isLimited, text ,tv in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: 13) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -281,13 +287,15 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 16))
             .byText(relayValue)
             // A -> B
-            .byOnInput { [unowned self] _, value, _, _, _, _ in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
                 // mode：space/delete/return/normal
                 // isLimited：是否设置了限制（limit != nil）
-                sync(from: tvA, to: tvB, value: value)
+                sync(from: self.tvA, to: self.tvB, value: value)
             }
             .byBeginEditing { value in
                 print("✍️ begin:", value)
@@ -308,7 +316,9 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 16))
             .byText(relayValue)
             // B -> A
-            .byOnInput { [unowned self] _, value, _, _, _, _ in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""
@@ -356,7 +366,9 @@ final class UITextViewDemoVC: BaseVC {
             .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
             .byFont(.systemFont(ofSize: 16))
             .byText("删除我试试看 👇")
-            .byOnInput { [unowned self] char, value, mode, isLimited, text ,tv in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
+                guard let self else { return }
                 // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
                 // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
                 // char：删除/回车时为 ""

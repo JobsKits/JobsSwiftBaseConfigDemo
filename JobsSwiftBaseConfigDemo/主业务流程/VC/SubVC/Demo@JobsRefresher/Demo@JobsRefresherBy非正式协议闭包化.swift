@@ -69,7 +69,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .setRightLottie(.inherit)
             .enableRefreshHaptics(true)
             .setRefreshSound("Sound.wav")
-            .configSideRefresh(with: JobsDefaultLeftRefresher(),
+            .bySideRefresh(with: JobsDefaultLeftRefresher(),
                                container: self,
                                at: .left,
                                trigger: 70) { [weak self] in
@@ -81,7 +81,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
                     self.collectionView.switchSideRefresh(.left, to: .normal)
                 }
             }
-            .configSideRefresh(with: JobsDefaultRightRefresher(),
+            .bySideRefresh(with: JobsDefaultRightRefresher(),
                                container: self,
                                at: .right,
                                trigger: 70) { [weak self] in

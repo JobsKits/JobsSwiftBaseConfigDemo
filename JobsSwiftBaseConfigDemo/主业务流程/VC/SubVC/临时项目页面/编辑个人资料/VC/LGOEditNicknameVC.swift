@@ -45,8 +45,13 @@ final class LGOEditNicknameVC: BaseVC {
             .byAllowsEditingTextAttributes(true)
             .byDefaultTextAttributes([.kern: 0.5]) // 字距
             .byTypingAttributes([.foregroundColor: UIColor.label])
-            // 新 API：输入监听 + 限制长度
-            .byOnInput(limit: 12) { [weak self] char, value, mode, isLimited in
+            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+            .byOnInput(limit: 12) { [weak self] char, value, mode, isLimited ,text ,tf in
+                // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                // char：删除/回车时为 ""
+                // mode：space/delete/return/normal
+                // isLimited：是否设置了限制（limit != nil）
                 guard let self else { return }
                 // 1) 超限提示
                 tipLabel.byVisible(isLimited)

@@ -245,8 +245,3 @@ let config = JobsSwiftTimerConfig(interval: 2, repeats: true, queue: .global(qos
 let t = JobsSwiftTimer(kind: .gcd, config: config) { /* poll */ }
 t.start()
 ```
-
-
-
-
-

@@ -91,7 +91,12 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                         return true                   // true 允许清空；false 拦截
                     }
                     /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-                    .byOnInput(limit: 20) { [weak self] _, value, _, _ in
+                    .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited ,text ,tf in
+                        // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+                        // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                        // char：删除/回车时为 ""
+                        // mode：space/delete/return/normal
+                        // isLimited：是否设置了限制（limit != nil）
                         guard let self else { return }
                         // 去空格 + 只保留数字格式
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
@@ -129,7 +134,12 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     .byReturnKeyType(.next)
                     .byClearButtonMode(.whileEditing)
                     /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-                    .byOnInput(limit: 20) { [weak self] _, value, _, _ in
+                    .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited ,text ,tf in
+                        // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+                        // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                        // char：删除/回车时为 ""
+                        // mode：space/delete/return/normal
+                        // isLimited：是否设置了限制（limit != nil）
                         guard let self else { return }
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
                         if trimmed != value { self.endTF.text = trimmed }

@@ -102,7 +102,7 @@ private lazy var collectionView: UICollectionView = {
         .enableRefreshHaptics(true)
         .setRefreshSound("Sound.wav") 
         // 左侧拉：比如“上一页/回退”
-        .configSideRefresh(with: JobsDefaultLeftRefresher(),
+        .bySideRefresh(with: JobsDefaultLeftRefresher(),
                            container: self,
                            at: .left,
                            trigger: 70) { [weak self] in
@@ -116,7 +116,7 @@ private lazy var collectionView: UICollectionView = {
             }
        }
        // 右侧拉：比如“下一页/加载更多卡片”
-       .configSideRefresh(with: JobsDefaultRightRefresher(),
+       .bySideRefresh(with: JobsDefaultRightRefresher(),
                           container: self,
                           at: .right,
                           trigger: 70) { [weak self] in

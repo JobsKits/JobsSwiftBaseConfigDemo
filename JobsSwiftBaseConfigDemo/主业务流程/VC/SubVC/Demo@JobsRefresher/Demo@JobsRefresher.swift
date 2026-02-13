@@ -58,10 +58,10 @@ final class JobsRefresherDemoVC: BaseVC {
             .enableRefreshHaptics(true)
             .setRefreshSound("Sound.wav") 
             // 左侧拉：比如“上一页/回退”
-            .configSideRefresh(with: JobsDefaultLeftRefresher(),
-                               container: self,
-                               at: .left,
-                               trigger: 70) { [weak self] in
+            .bySideRefresh(with: JobsDefaultLeftRefresher(),
+                           container: self,
+                           at: .left,
+                           trigger: 70) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 900_000_000)
@@ -72,10 +72,10 @@ final class JobsRefresherDemoVC: BaseVC {
                 }
            }
            // 右侧拉：比如“下一页/加载更多卡片”
-           .configSideRefresh(with: JobsDefaultRightRefresher(),
-                              container: self,
-                              at: .right,
-                              trigger: 70) { [weak self] in
+           .bySideRefresh(with: JobsDefaultRightRefresher(),
+                          container: self,
+                          at: .right,
+                          trigger: 70) { [weak self] in
                guard let self else { return }
                jobsRunOnMain(self) { vc in
                    try? await Task.sleep(nanoseconds: 900_000_000)

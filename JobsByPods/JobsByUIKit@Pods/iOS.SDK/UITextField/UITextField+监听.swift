@@ -22,10 +22,15 @@ extension UITextField {
                           _ callback: @escaping (_ char: String,
                                                  _ value: String,
                                                  _ mode: JobsTextInputMode,
-                                                 _ isLimited: Bool) -> Void) -> Self {
+                                                 _ isLimited: Bool,
+                                                 _ text: String,
+                                                 _ tv: UITextField) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.limit = limit
-        obs.onInput = callback
+        obs.onInput = { [weak self] char, value, mode, isLimited in
+            guard let self else { return }
+            callback(char, value, mode, isLimited, self.text ?? "", self)
+        }
 
         let proxy = installDelegateProxyIfNeeded()
         proxy.forward = obs
