@@ -36,7 +36,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
 
     private lazy var collectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: hLayout)
-            .registerCell(HCell.self)
+            .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byShowsHorizontalScrollIndicator(false)
             .byAlwaysBounceHorizontal(true)
@@ -47,7 +47,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             }
             .cellForItemAt { _, cv, indexPath in
                 cv
-                    .dequeueCell(HCell.self, for: indexPath)
+                    .byDequeueCell(HCell.self, for: indexPath)
                     .byData(indexPath.item)
                     .onResult { _ in }
             }

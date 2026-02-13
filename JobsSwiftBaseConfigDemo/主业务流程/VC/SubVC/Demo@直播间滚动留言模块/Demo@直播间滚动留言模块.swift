@@ -45,7 +45,7 @@ final class LiveCommentDemoVC: BaseVC {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(LiveMsgCell.self)
+            .byRegisterCell(LiveMsgCell.self)
             .bySeparatorStyle(.none)
             .byKeyboardDismissMode(.interactive)
             .byNoContentInsetAdjustment()

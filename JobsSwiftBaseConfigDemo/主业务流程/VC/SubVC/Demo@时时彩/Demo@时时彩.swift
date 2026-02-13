@@ -43,7 +43,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
             .byRowHeight(rowHeight)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(JobsCountdownCell.self) // ✅ 修正：注册真正使用的 cell
+            .byRegisterCell(JobsCountdownCell.self) // ✅ 修正：注册真正使用的 cell
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
@@ -82,7 +82,7 @@ extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate 
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
-            .py_dequeueReusableCell(withType: JobsCountdownCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: JobsCountdownCell.self, for: indexPath)
             .byData(data[indexPath.row])
     }
 

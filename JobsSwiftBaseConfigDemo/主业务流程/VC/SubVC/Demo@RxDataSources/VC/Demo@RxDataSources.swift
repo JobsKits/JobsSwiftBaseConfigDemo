@@ -43,7 +43,7 @@ final class RxDataSourcesDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
             .byDelegate(self)
-            .registerCell(BaseTableViewCellByDefault.self)
+            .byRegisterCell(BaseTableViewCellByDefault.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -113,7 +113,7 @@ final class RxDataSourcesDemoVC: BaseVC {
         UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
             // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
             .byDelegate(self)
-            .registerCell(HCell.self)
+            .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             .byContentInsetTop(8)
@@ -172,7 +172,7 @@ final class RxDataSourcesDemoVC: BaseVC {
     private lazy var tableDataSource: RxTableViewSectionedReloadDataSource<TVSection> = {
         .init(
             configureCell: { _, tv, indexPath, item in
-                tv.py_dequeueReusableCell(withType: BaseTableViewCellByDefault.self,for: indexPath)
+                tv.byDequeueReusableCell(withType: BaseTableViewCellByDefault.self,for: indexPath)
                     .byData(item)
                     .onResult { _ in }
             },
@@ -185,7 +185,7 @@ final class RxDataSourcesDemoVC: BaseVC {
     private lazy var collectionDataSource: RxCollectionViewSectionedReloadDataSource<CVSection> = {
         .init(
             configureCell: { _, cv, indexPath, item in
-                cv.dequeueCell(HCell.self, for: indexPath)
+                cv.byDequeueCell(HCell.self, for: indexPath)
                     .byData(item)
                     .onResult { _ in }
             }

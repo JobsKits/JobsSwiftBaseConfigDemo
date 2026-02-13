@@ -33,7 +33,7 @@ final class SkeletonViewDemoVC: BaseVC {
             .bySeparatorStyle(.none)
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(72)
-            .registerCell(SkeletonUserCell.self)
+            .byRegisterCell(SkeletonUserCell.self)
             .byDataSource(self)
             .byDelegate(self)
             .bySkeletonable(YES)
@@ -156,7 +156,7 @@ extension SkeletonViewDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { data.count }
     func numberOfSections(in tableView: UITableView) -> Int { 1 }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.py_dequeueReusableCell(withType: SkeletonUserCell.self, for: indexPath)
+        let c = tableView.byDequeueReusableCell(withType: SkeletonUserCell.self, for: indexPath)
         if !isLoading {
             c.configure(with: data[indexPath.row])
         };return c

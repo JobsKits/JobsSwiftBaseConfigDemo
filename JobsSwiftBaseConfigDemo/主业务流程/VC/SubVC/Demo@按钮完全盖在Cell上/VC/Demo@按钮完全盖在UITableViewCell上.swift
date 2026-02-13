@@ -27,8 +27,8 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(SDBtnTBVCell.self)
-            .registerCell(KFBtnTBVCell.self)
+            .byRegisterCell(SDBtnTBVCell.self)
+            .byRegisterCell(KFBtnTBVCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
@@ -126,8 +126,8 @@ extension BtnFullOnTBVCellDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
-            .py_dequeueReusableCell(withType: SDBtnTBVCell.self, for: indexPath)
-//            .py_dequeueReusableCell(withType: KFBtnTBVCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: SDBtnTBVCell.self, for: indexPath)
+//            .byDequeueReusableCell(withType: KFBtnTBVCell.self, for: indexPath)
             .byData(items[indexPath.row], indexPath.row)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 118 }

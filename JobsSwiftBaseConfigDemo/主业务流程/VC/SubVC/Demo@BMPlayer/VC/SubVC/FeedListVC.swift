@@ -33,7 +33,7 @@ final class FeedListVC: BaseVC,
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(FeedListCell.self)
+            .byRegisterCell(FeedListCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -89,7 +89,7 @@ final class FeedListVC: BaseVC,
     // MARK: DataSource / Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.py_dequeueReusableCell(withType: FeedListCell.self, for: indexPath)
+        let cell = tableView.byDequeueReusableCell(withType: FeedListCell.self, for: indexPath)
         cell.fill(items[indexPath.row])
         return cell
     }

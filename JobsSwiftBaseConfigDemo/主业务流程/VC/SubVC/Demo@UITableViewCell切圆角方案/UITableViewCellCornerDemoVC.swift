@@ -25,7 +25,7 @@ final class UITableViewCellCornerDemoVC: UIViewController {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(DemoInsetRoundTableViewCell.self) // ✅ 注册我们自己的 cell
+            .byRegisterCell(DemoInsetRoundTableViewCell.self) // ✅ 注册我们自己的 cell
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)               // ✅ 卡片风格建议关掉系统分割线
             .byNoSectionHeaderTopPadding()
@@ -61,7 +61,7 @@ extension UITableViewCellCornerDemoVC: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
-            .py_dequeueReusableCell(withType: DemoInsetRoundTableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: DemoInsetRoundTableViewCell.self, for: indexPath)
             .bySelectionStyle(.default)
             .byContentConfiguration({ cfg in
                 cfg = cfg

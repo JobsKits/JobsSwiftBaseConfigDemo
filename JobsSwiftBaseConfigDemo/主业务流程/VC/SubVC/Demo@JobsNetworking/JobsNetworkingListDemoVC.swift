@@ -56,7 +56,7 @@ final class JobsNetworkingListDemoVC : BaseVC{
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .bySeparatorStyle(.singleLine)
             .setRefreshSound("Sound.wav")
             // 非正式协议闭包化

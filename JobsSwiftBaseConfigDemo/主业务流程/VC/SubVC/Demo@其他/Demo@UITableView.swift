@@ -30,7 +30,7 @@ final class EmptyTableViewDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -144,9 +144,9 @@ extension EmptyTableViewDemoVC : UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         items.count
     }
-    // 先确保注册：tableView.registerCell(UITableViewCell.self)
+    // 先确保注册：tableView.byRegisterCell(UITableViewCell.self)
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+        tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(items[indexPath.row])
             .bySecondaryText("Section \(indexPath.section) · Row \(indexPath.row)")
     }

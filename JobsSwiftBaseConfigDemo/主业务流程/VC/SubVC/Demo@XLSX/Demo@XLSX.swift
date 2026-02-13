@@ -79,7 +79,7 @@ final class XLSXDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .bySeparatorStyle(.singleLine)
-            .registerCell(RowCell.self)
+            .byRegisterCell(RowCell.self)
             .byDataSource(self)
             .byDelegate(self)
             .byAddTo(view) { make in
@@ -274,7 +274,7 @@ extension XLSXDemoVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.py_dequeueReusableCell(withType: RowCell.self, for: indexPath)
+        tableView.byDequeueReusableCell(withType: RowCell.self, for: indexPath)
             .byData(allSheets[currentSheetIndex].rows[indexPath.row], indexPath.row + 1)
     }
 

@@ -192,7 +192,7 @@ extension RootFoldTableCell{
             detailClip.byVisible(YES)
         }
         if expanded {
-            detailContent.byVisible(YES) // 要的唤起方式
+            detailContent.byVisible(YES)
         } else if animated {
             // ✅ 如果是“从展开 -> 折叠”的动画，内容此时本来就是可见的；这里兜底保证可见以便折页动画能演
             detailContent.byVisible(YES)
@@ -255,7 +255,8 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+        tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(items[indexPath.row].title)
             .byAccessoryType(.disclosureIndicator)
     }

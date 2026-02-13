@@ -169,7 +169,7 @@ final class FMDBDemoVC: BaseVC {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byTableFooterView(UIView())
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.row2.snp.bottom).offset(14)
                 make.left.right.equalToSuperview()
@@ -208,7 +208,7 @@ extension FMDBDemoVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let p = data[indexPath.row]
         return tableView
-            .py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText("id=\(p.id) | \(p.name) | age=\(p.age)")
             .byData(nil)
             .onResult { _ in

@@ -34,8 +34,8 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
         UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(SDBtnCVCell.self)
-            .registerCell(KFBtnCVCell.self)
+            .byRegisterCell(SDBtnCVCell.self)
+            .byRegisterCell(KFBtnCVCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
@@ -142,8 +142,8 @@ extension BtnFullOnCVCellDemoVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView
-            // .dequeueCell(SDBtnCVCell.self, for: indexPath)
-            .dequeueCell(KFBtnCVCell.self, for: indexPath)
+            // .byDequeueCell(SDBtnCVCell.self, for: indexPath)
+            .byDequeueCell(KFBtnCVCell.self, for: indexPath)
             .byData(items[indexPath.item], indexPath.item)
             .onResult { _ in }
     }

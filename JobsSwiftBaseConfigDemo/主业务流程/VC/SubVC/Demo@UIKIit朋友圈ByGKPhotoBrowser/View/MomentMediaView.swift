@@ -44,7 +44,7 @@ final class MomentMediaView: UIView {
         UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
             .byDataSource(self)
                 .byDelegate(self)
-                .registerCell(MomentMediaCell.self)
+                .byRegisterCell(MomentMediaCell.self)
                 .byBackgroundView(nil)
                 .byDragInteractionEnabled(false)
                 .byScrollEnabled(NO)
@@ -127,7 +127,7 @@ extension MomentMediaView: UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView
-            .dequeueCell(MomentMediaCell.self, for: indexPath)
+            .byDequeueCell(MomentMediaCell.self, for: indexPath)
             .byData(items[indexPath.item])
             .onResult { _ in }
     }

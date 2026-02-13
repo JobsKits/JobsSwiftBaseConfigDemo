@@ -26,7 +26,7 @@ final class LeftMenuView: UIView {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(LeftMenuCell.self)
+            .byRegisterCell(LeftMenuCell.self)
             .bySeparatorStyle(.none)
             .byNoContentInsetAdjustment()
             .byAddTo(self) { make in make.edges.equalToSuperview() }
@@ -58,7 +58,7 @@ extension LeftMenuView: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let m = items[indexPath.row]
-        return (tableView.py_dequeueReusableCell(withType: LeftMenuCell.self, for: indexPath) as LeftMenuCell)
+        return (tableView.byDequeueReusableCell(withType: LeftMenuCell.self, for: indexPath) as LeftMenuCell)
             .byMenu(icon: m.icon, title: m.title, selected: indexPath.row == selectedIndex)
     }
 

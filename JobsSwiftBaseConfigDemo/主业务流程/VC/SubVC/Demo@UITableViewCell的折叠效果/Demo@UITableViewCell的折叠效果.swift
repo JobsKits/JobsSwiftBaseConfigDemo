@@ -40,7 +40,7 @@ final class FoldTableDemoVC: BaseVC {
             .byBackgroundColor(.clear)
             .bySeparatorStyle(.none)
             .byContentInset(UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0))
-            .registerCell(FoldCell.self)
+            .byRegisterCell(FoldCell.self)
             .byDataSource(self)
             .byDelegate(self)
             .byAddTo(view) { [unowned self] make in
@@ -67,7 +67,7 @@ extension FoldTableDemoVC: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: FoldCell = tableView.py_dequeueReusableCell(withType: FoldCell.self,for: indexPath) // 自动注册&复用 :contentReference[oaicite:1]{index=1}
+        let cell: FoldCell = tableView.byDequeueReusableCell(withType: FoldCell.self,for: indexPath) // 自动注册&复用 :contentReference[oaicite:1]{index=1}
         let r = rows[indexPath.row]
         let isExpanded = expanded.contains(indexPath)
         return cell.configure(title: r.title, subtitle: r.subtitle, detail: r.detail, expanded: isExpanded)

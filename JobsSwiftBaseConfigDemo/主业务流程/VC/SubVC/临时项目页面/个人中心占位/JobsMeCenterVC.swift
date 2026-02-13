@@ -43,7 +43,7 @@ final class JobsMeCenterVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byAddTo(view) { make in
                 make.edges.equalToSuperview()
             }
@@ -62,7 +62,7 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
-            .py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(Row(rawValue: indexPath.row)?.title)
             .byAccessoryType(.disclosureIndicator)
     }

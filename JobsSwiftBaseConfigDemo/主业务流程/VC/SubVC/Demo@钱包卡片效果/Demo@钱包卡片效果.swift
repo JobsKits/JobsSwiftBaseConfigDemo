@@ -47,10 +47,10 @@ final class JobsWalletDemoVC: BaseVC {
             .byBackgroundColor(.clear)
             .byShowsVerticalScrollIndicator(NO)
             .byContentInset(UIEdgeInsets(top: 16, left: 0, bottom: 24, right: 0))
-            .registerCell(WalletCardCell.self)
-            .registerCell(WalletAddCardCell.self)
+            .byRegisterCell(WalletCardCell.self)
+            .byRegisterCell(WalletAddCardCell.self)
             .byDelegate(self)
-            .registerSupplementaryView(WalletSectionHeaderView.self,kind: UICollectionView.elementKindSectionHeader)
+            .byRegisterSupplementaryView(WalletSectionHeaderView.self,kind: UICollectionView.elementKindSectionHeader)
             .byDataSource(self).byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
                 make.left.equalToSuperview().offset(self.horizontalInset)
@@ -126,12 +126,12 @@ extension JobsWalletDemoVC: UICollectionViewDataSource {
         case .card(let card):
             let isSelected = (selectedIndexPath == indexPath)
             return collectionView
-                .dequeueCell(WalletCardCell.self, for: indexPath)
+                .byDequeueCell(WalletCardCell.self, for: indexPath)
                 .byData(card, isSelected)
 
         case .addNew:
             return collectionView
-                .dequeueCell(WalletAddCardCell.self, for: indexPath)
+                .byDequeueCell(WalletAddCardCell.self, for: indexPath)
                 .byData(nil)
         }
     }
@@ -144,7 +144,7 @@ extension JobsWalletDemoVC: UICollectionViewDataSource {
         }
 
         let header: WalletSectionHeaderView =
-            collectionView.dequeueSupplementary(WalletSectionHeaderView.self,
+            collectionView.byDequeueSupplementary(WalletSectionHeaderView.self,
                                                kind: kind,
                                                for: indexPath)
         if indexPath.section == 0 {

@@ -59,7 +59,7 @@ final class LunarDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)                 
+            .byRegisterCell(UITableViewCell.self)                 
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -245,7 +245,7 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+        let cell: UITableViewCell = tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
         let row: Row
         switch Section(rawValue: indexPath.section)! {
         case .example:     row = exampleRows[indexPath.row]

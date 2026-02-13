@@ -297,7 +297,7 @@ final class RootListVC: BaseVC {
             .byEstimatedSectionFooterHeight(0)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(RootFoldTableCell.self)
+            .byRegisterCell(RootFoldTableCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
@@ -429,6 +429,9 @@ final class RootListVC: BaseVC {
         suspendBtnTimer?.resume()
         suspendSpinBtnTimer?.resume()
     }
+}
+
+extension RootListVC{
     // ================================== JobsSwiftTimer（新版）创建与绑定 UI ==================================
     private func setupJobsTimers() {
         // 1) suspendBtn：每秒刷新当前时间
@@ -505,7 +508,7 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         demo2D.count
     }
     func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: RootFoldTableCell = tableView.py_dequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
+        let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
         let row = indexPath.row
         let g = demo2D[row]
         let expanded = expandedGroups.contains(row)

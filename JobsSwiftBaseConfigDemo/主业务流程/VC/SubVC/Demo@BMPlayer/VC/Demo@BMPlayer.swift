@@ -36,7 +36,7 @@ final class BMPlayerDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -63,7 +63,7 @@ final class BMPlayerDemoVC: BaseVC {
 extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { Row.allCases.count }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+        tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(Row(rawValue: indexPath.row)?.title)
             .byAccessoryType(.disclosureIndicator)
             .onResult { _ in

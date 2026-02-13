@@ -122,7 +122,7 @@ final class MessageListDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(MessageCell.self)
+            .byRegisterCell(MessageCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -369,7 +369,7 @@ extension MessageListDemoVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.py_dequeueReusableCell(withType: MessageCell.self, for: indexPath)
+        let cell = tableView.byDequeueReusableCell(withType: MessageCell.self, for: indexPath)
         let item = items[indexPath.row]
         cell.render(item: item, editing: isEditingMode)
         return cell

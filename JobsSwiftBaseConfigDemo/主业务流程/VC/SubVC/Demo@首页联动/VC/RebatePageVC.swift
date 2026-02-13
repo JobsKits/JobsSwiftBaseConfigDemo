@@ -56,7 +56,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(CashbackCardCell.self)
+            .byRegisterCell(CashbackCardCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
@@ -113,7 +113,7 @@ extension RebatePageVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: CashbackCardCell = tableView.py_dequeueReusableCell(withType: CashbackCardCell.self, for: indexPath)
+        let cell: CashbackCardCell = tableView.byDequeueReusableCell(withType: CashbackCardCell.self, for: indexPath)
         cell.configure(title: items[indexPath.row], subtitle: "神秘彩金等你来拿")
         return cell
     }

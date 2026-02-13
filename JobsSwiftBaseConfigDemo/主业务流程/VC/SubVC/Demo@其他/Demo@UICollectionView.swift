@@ -56,7 +56,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byAlwaysBounceVertical(true)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UICollectionViewCell.self)
+            .byRegisterCell(UICollectionViewCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
@@ -96,7 +96,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byAlwaysBounceHorizontal(true)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UICollectionViewCell.self)
+            .byRegisterCell(UICollectionViewCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
@@ -181,7 +181,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: UICollectionViewCell = collectionView.dequeueCell(UICollectionViewCell.self, for: indexPath)
+        let cell: UICollectionViewCell = collectionView.byDequeueCell(UICollectionViewCell.self, for: indexPath)
 
         let label: UILabel
         if let exist = cell.contentView.viewWithTag(1001) as? UILabel {

@@ -194,10 +194,10 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byShowsVerticalScrollIndicator(NO)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UICollectionViewCell.self)
-            .registerCell(ImageCell.self)
-            .registerCell(VideoCell.self)
-            .registerCell(VideoThumbCell.self)
+            .byRegisterCell(UICollectionViewCell.self)
+            .byRegisterCell(ImageCell.self)
+            .byRegisterCell(VideoCell.self)
+            .byRegisterCell(VideoThumbCell.self)
             .byAddTo(self.previewContainer) { [unowned self] make in
                 make.edges.equalToSuperview().inset(gridInsets)
             }
@@ -271,22 +271,22 @@ extension PhotoAlbumDemoVC: UICollectionViewDataSource {
         case .cameraPhoto, .albumImages:
             let img = (mode == .cameraPhoto) ? images[0] : images[indexPath.item]
             return collectionView
-                .dequeueCell(ImageCell.self, for: indexPath)
+                .byDequeueCell(ImageCell.self, for: indexPath)
                 .byData(img)
 
         case .cameraVideo:
             return collectionView
-                .dequeueCell(VideoCell.self, for: indexPath)
+                .byDequeueCell(VideoCell.self, for: indexPath)
                 .byData(videoURL)
 
         case .albumVideos:
             return collectionView
-                .dequeueCell(VideoThumbCell.self, for: indexPath)
+                .byDequeueCell(VideoThumbCell.self, for: indexPath)
                 .byData(albumVideoURLs[indexPath.item])
 
         case .none:
             return collectionView
-                .dequeueCell(ImageCell.self, for: indexPath)
+                .byDequeueCell(ImageCell.self, for: indexPath)
                 .byData("暂无内容@黑底蓝字".img)
         }
     }

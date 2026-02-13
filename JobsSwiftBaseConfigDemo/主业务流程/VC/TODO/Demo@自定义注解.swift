@@ -35,7 +35,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self) // 先占位，后续会被 diffable 覆盖
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()

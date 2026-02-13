@@ -38,7 +38,7 @@ final class JobsRefresherDemoVC: BaseVC {
         UICollectionView(frame: .zero, collectionViewLayout: hLayout)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(HCell.self)
+            .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byShowsHorizontalScrollIndicator(false)
             .byAlwaysBounceHorizontal(true)// 即使不满一屏也允许左右拉
@@ -161,7 +161,7 @@ extension JobsRefresherDemoVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,numberOfItemsInSection section: Int) -> Int { hItems }
     func collectionView(_ collectionView: UICollectionView,cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView
-            .dequeueCell(HCell.self, for: indexPath)
+            .byDequeueCell(HCell.self, for: indexPath)
             .byData(indexPath.item)
             .onResult { _ in
 

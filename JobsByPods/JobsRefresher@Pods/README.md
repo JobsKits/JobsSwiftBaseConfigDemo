@@ -82,7 +82,7 @@ private lazy var collectionView: UICollectionView = {
     UICollectionView(frame: .zero, collectionViewLayout: hLayout)
         .byDataSource(self)
         .byDelegate(self)
-        .registerCell(HCell.self)
+        .byRegisterCell(HCell.self)
         .byBackgroundView(nil)
         .byShowsHorizontalScrollIndicator(false)
         .byAlwaysBounceHorizontal(true)// 即使不满一屏也允许左右拉
@@ -149,4 +149,3 @@ private lazy var collectionView: UICollectionView = {
 * [**CollectionViewSideRefresh**](https://github.com/dangercheng/CollectionViewSideRefresh) ➤ **Objc**
 * [**DGElasticPullToRefresh**](https://github.com/gontovnik/DGElasticPullToRefresh) ➤ **Swift**
 * [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) ➤ **Swift**
-

@@ -89,7 +89,7 @@ final class LGOEditProfileVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .register()
-            .registerCell(AvatarCell.self)
+            .byRegisterCell(AvatarCell.self)
             .byScrollEnabled(NO)
             .byNoContentInsetAdjustment()
             .byNoSectionHeaderTopPadding()
@@ -166,12 +166,12 @@ extension LGOEditProfileVC: UITableViewDataSource {
 
         switch row {
         case .avatar:
-            return tableView.py_dequeueReusableCell(
+            return tableView.byDequeueReusableCell(
                 withType: AvatarCell.self,
                 for: indexPath
             ).byData(JobsBaseCellConfig(title: row.title))
         default:
-            return tableView.py_dequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
+            return tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
                 .byTitleFont(.systemFont(ofSize: 16))
                 .byDetailTitleFont((.systemFont(ofSize: 14)))
                 .bySelectionStyle(.none)

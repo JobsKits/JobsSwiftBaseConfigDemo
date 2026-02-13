@@ -213,11 +213,11 @@ public func isHttpURL(_ raw: String?) -> Bool {
 extension UITableView {
     @discardableResult
     public func register() -> Self{
-        self.registerCell(UITableViewCell.self)
-        self.registerCell(BaseTableViewCellByDefault.self)
-        self.registerCell(BaseTableViewCellByValue1.self)
-        self.registerCell(BaseTableViewCellByValue2.self)
-        self.registerCell(BaseTableViewCellBySubtitle.self)
+        self.byRegisterCell(UITableViewCell.self)
+        self.byRegisterCell(BaseTableViewCellByDefault.self)
+        self.byRegisterCell(BaseTableViewCellByValue1.self)
+        self.byRegisterCell(BaseTableViewCellByValue2.self)
+        self.byRegisterCell(BaseTableViewCellBySubtitle.self)
         return self;
     }
 }
@@ -225,7 +225,7 @@ extension UITableView {
 extension UICollectionView {
     @discardableResult
     public func register() -> Self{
-        self.registerCell(UICollectionViewCell.self)
+        self.byRegisterCell(UICollectionViewCell.self)
         return self;
     }
 }

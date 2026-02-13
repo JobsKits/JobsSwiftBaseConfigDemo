@@ -40,7 +40,7 @@ final class RichTextDemoVC: BaseVC {
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(120)
             .byScrollEnabled(false)
-            .registerCellByID(CellCls: LinkCell.self, ID: LinkCell.reuseID)
+            .byRegisterCellOnID(CellCls: LinkCell.self, ID: LinkCell.reuseID)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10.h)
                 make.left.right.equalToSuperview()

@@ -275,7 +275,7 @@ final class RootListVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(UITableViewCell.self)
+            .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -445,7 +445,7 @@ extension RootListVC: UITableViewDataSource ,UITableViewDelegate{
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.py_dequeueReusableCell(withType: UITableViewCell.self,for: indexPath)
+        tableView.byDequeueReusableCell(withType: UITableViewCell.self,for: indexPath)
             .byText(demos[indexPath.row].title)
             .byAccessoryType(.disclosureIndicator)
     }

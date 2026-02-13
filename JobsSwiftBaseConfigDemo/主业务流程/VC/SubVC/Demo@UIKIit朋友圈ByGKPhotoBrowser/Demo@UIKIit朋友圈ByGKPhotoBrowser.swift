@@ -31,7 +31,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .registerCell(MomentPostCell.self)
+            .byRegisterCell(MomentPostCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
@@ -174,7 +174,7 @@ extension GKPhotoBrowserByUIKitDemoVC: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView
-            .py_dequeueReusableCell(withType: MomentPostCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: MomentPostCell.self, for: indexPath)
             .bySelectionStyle(.none)
             // ✅ 自动高度模式：同一帧合并一次 batchUpdates，抑制跳动
             .byOnNeedHeightUpdate({ [weak tableView] cell in
