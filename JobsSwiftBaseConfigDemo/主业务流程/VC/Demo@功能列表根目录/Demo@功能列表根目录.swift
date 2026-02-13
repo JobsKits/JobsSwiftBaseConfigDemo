@@ -305,9 +305,9 @@ final class RootListVC: BaseVC {
                 top: 0,left: 0, bottom: 0, right: 0
             ))
             // 下拉刷新 Header
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 Task { @MainActor in
                     self.tableView.byReloadData()
@@ -316,9 +316,9 @@ final class RootListVC: BaseVC {
                 }
             }
             // 上拉加载 Footer
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                          container: self,
-                                          trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 Task { @MainActor in
                     self.tableView.switchRefreshFooter(to: .noMoreData)

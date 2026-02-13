@@ -61,7 +61,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
             .byBackgroundColor(UIColor.systemGroupedBackground)
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -73,7 +73,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
                         self.tableView.reloadData()
                     }
             }
-            .configRefreshHeader(component: JobsDefaultHeader(), container: self, trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(), container: self, trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)

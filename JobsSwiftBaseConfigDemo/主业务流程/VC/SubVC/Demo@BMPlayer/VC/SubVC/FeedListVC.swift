@@ -38,14 +38,14 @@ final class FeedListVC: BaseVC,
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             // 空态按钮（点击加载首屏）
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我加载本地示例数据", for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in self?.reloadFromJSON() }
-                    .jobs_setEmptyLayout { _, make, host in
+                    .byEmptyLayout { _, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -78,7 +78,7 @@ final class FeedListVC: BaseVC,
         items = FeedModel.page(all: allItems, page: page, pageSize: pageSize)
         tableView.byReloadData()
         updateFooterAvailability()
-        tableView.jobs_reloadEmptyViewAuto()
+        tableView.byReloadEmptyViewAuto()
     }
 
     fileprivate func updateFooterAvailability() {

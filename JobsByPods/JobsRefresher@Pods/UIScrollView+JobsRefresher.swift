@@ -2,10 +2,6 @@
 //  UIScrollView+JobsRefresher.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  DSL additions:
-//  - showRefreshHeaderInfo / showRefreshFooterInfo
-//  - per-slot Lottie preference overrides global
-//
 
 #if os(OSX)
 import AppKit
@@ -39,11 +35,11 @@ extension UIScrollView {
 }
 
 @MainActor
-public extension UIScrollView {
+extension UIScrollView {
     // MARK: - Info visibility (group)
     /// 头部信息：竖向 Header + 横向 Left
     @discardableResult
-    func showRefreshHeaderInfo(_ show: Bool) -> Self {
+    public func showRefreshHeaderInfo(_ show: Bool) -> Self {
         mrk_proxy.showsHeaderInfo = show
         mrk_proxy.header?.showsInfo = show
         mrk_proxy.left?.showsInfo = show
@@ -51,7 +47,7 @@ public extension UIScrollView {
     }
     /// 尾部信息：竖向 Footer + 横向 Right
     @discardableResult
-    func showRefreshFooterInfo(_ show: Bool) -> Self {
+    public func showRefreshFooterInfo(_ show: Bool) -> Self {
         mrk_proxy.showsFooterInfo = show
         mrk_proxy.footer?.showsInfo = show
         mrk_proxy.right?.showsInfo = show
@@ -59,28 +55,28 @@ public extension UIScrollView {
     }
     // MARK: - Lottie per-slot (instance override > global)
     @discardableResult
-    func setHeaderLottie(_ pref: JobsLottiePreference) -> Self {
+    public func setHeaderLottie(_ pref: JobsLottiePreference) -> Self {
         mrk_proxy.headerLottiePref = pref
         (mrk_proxy.header?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
     }
 
     @discardableResult
-    func setFooterLottie(_ pref: JobsLottiePreference) -> Self {
+    public func setFooterLottie(_ pref: JobsLottiePreference) -> Self {
         mrk_proxy.footerLottiePref = pref
         (mrk_proxy.footer?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
     }
 
     @discardableResult
-    func setLeftLottie(_ pref: JobsLottiePreference) -> Self {
+    public func setLeftLottie(_ pref: JobsLottiePreference) -> Self {
         mrk_proxy.leftLottiePref = pref
         (mrk_proxy.left?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
     }
 
     @discardableResult
-    func setRightLottie(_ pref: JobsLottiePreference) -> Self {
+    public func setRightLottie(_ pref: JobsLottiePreference) -> Self {
         mrk_proxy.rightLottiePref = pref
         (mrk_proxy.right?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
@@ -88,7 +84,7 @@ public extension UIScrollView {
     // MARK: - Human interaction feedback (haptic + sound)
     /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
     @discardableResult
-    func enableRefreshHaptics(_ enable: Bool) -> Self {
+    public func enableRefreshHaptics(_ enable: Bool) -> Self {
         mrk_proxy.enablesHaptics = enable
         return self
     }
@@ -96,17 +92,17 @@ public extension UIScrollView {
     /// - Parameter fileName: Supports full name (e.g. "Sound.wav") or base name (e.g. "Sound").
     /// Passing nil or empty string disables sound.
     @discardableResult
-    func setRefreshSound(_ fileName: String?) -> Self {
+    public func setRefreshSound(_ fileName: String?) -> Self {
         let trimmed = fileName?.trimmingCharacters(in: .whitespacesAndNewlines)
         mrk_proxy.soundFileName = (trimmed?.isEmpty == true) ? nil : trimmed
         return self
     }
     // MARK: - Config header/footer/side
     @discardableResult
-    func configRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
-                             container: AnyObject? = nil,
-                             trigger: CGFloat = 60,
-                             action: @escaping jobsByVoidBlock) -> Self {
+    public func byRefreshHeader(component: (UIView & JobsAnimatable)? = nil,
+                                container: AnyObject? = nil,
+                                trigger: CGFloat = 60,
+                                action: @escaping jobsByVoidBlock) -> Self {
         let c = component ?? JobsDefaultHeader()
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.headerLottiePref
@@ -123,7 +119,7 @@ public extension UIScrollView {
     }
 
     @discardableResult
-    func switchRefreshHeader(to state: JobsSwitch) -> Self {
+    public func switchRefreshHeader(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
         switch state {
         case .refreshing: slot.beginRefreshing(on: sv)
@@ -137,10 +133,10 @@ public extension UIScrollView {
     }
 
     @discardableResult
-    func configRefreshFooter(component: (UIView & JobsAnimatable)? = nil,
-                             container: AnyObject? = nil,
-                             trigger: CGFloat = 60,
-                             action: @escaping jobsByVoidBlock) -> Self {
+    public func byRefreshFooter(component: (UIView & JobsAnimatable)? = nil,
+                                container: AnyObject? = nil,
+                                trigger: CGFloat = 60,
+                                action: @escaping jobsByVoidBlock) -> Self {
         let c = component ?? JobsDefaultFooter()
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.footerLottiePref
@@ -157,7 +153,7 @@ public extension UIScrollView {
     }
 
     @discardableResult
-    func switchRefreshFooter(to state: JobsSwitch) -> Self {
+    public func switchRefreshFooter(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
         switch state {
         case .refreshing: slot.beginRefreshing(on: sv, isFooter: true)
@@ -170,11 +166,11 @@ public extension UIScrollView {
     }
 
     @discardableResult
-    func configSideRefresh(with component: (UIView & JobsAnimatable),
-                           container: AnyObject? = nil,
-                           at position: JobsPosition,
-                           trigger: CGFloat = 60,
-                           action: @escaping jobsByVoidBlock) -> Self {
+    public func configSideRefresh(with component: (UIView & JobsAnimatable),
+                                  container: AnyObject? = nil,
+                                  at position: JobsPosition,
+                                  trigger: CGFloat = 60,
+                                  action: @escaping jobsByVoidBlock) -> Self {
         precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
         // apply per-slot pref
         if let v = component as? JobsLottieConfigurable {
@@ -193,7 +189,7 @@ public extension UIScrollView {
     }
 
     @discardableResult
-    func switchSideRefresh(_ position: JobsPosition, to state: JobsSwitch) -> Self {
+    public func switchSideRefresh(_ position: JobsPosition, to state: JobsSwitch) -> Self {
         guard (position == .left || position == .right),
               let sv = mrk_proxy.scrollView else { return self }
         let slot = (position == .left) ? mrk_proxy.left : mrk_proxy.right
@@ -213,7 +209,7 @@ public extension UIScrollView {
 @MainActor
 extension UIScrollView {
     /// Called by JobsSlot when a refresh/loading is actually triggered (state -> refreshing).
-    func jobs_triggerRefreshFeedback(for position: JobsPosition) {
+    public func byRefreshFeedback(for position: JobsPosition) {
         let proxy = mrk_proxy
         guard proxy.enablesHaptics || (proxy.soundFileName != nil) else { return }
         // Only trigger for the positions that represent user pull actions.

@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 12/3/25.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -20,7 +21,7 @@ extension UICollectionView {
         jobs_swizzled_reloadData()
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            (self as UIScrollView).jobs_reloadEmptyViewAuto()  // 你的评估逻辑
+            (self as UIScrollView).byReloadEmptyViewAuto()  // 你的评估逻辑
         }
     }
 
@@ -32,7 +33,7 @@ extension UICollectionView {
         jobs_swizzled_performBatchUpdates(updates) { [weak self] finished in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                (self as UIScrollView).jobs_reloadEmptyViewAuto()
+                (self as UIScrollView).byReloadEmptyViewAuto()
             };completion?(finished)
         }
     }

@@ -34,7 +34,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byContentInsetTop(8)
             // ✅ 空态 API：reloadData 后自动评估，无需手动 updateEmptyState
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -45,7 +45,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
                         self.items = self.makeMockItems(count: 20)
                         self.tableView.reloadData()
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -54,9 +54,9 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
                     }
             }
             // 下拉刷新
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     self.items = self.makeMockItems(count: 20)
@@ -66,9 +66,9 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
                 }
             }
             // 上拉加载
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     if self.items.count < 80 {

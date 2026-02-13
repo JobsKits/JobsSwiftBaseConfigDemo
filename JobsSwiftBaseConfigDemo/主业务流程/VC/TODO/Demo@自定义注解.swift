@@ -39,7 +39,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -51,7 +51,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                         self.rows = self.users.count
                         self.applySnapshot(animated: true)
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -59,7 +59,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .configRefreshHeader(
+            .byRefreshHeader(
                 component: JobsDefaultHeader(),
                 container: self,
                 trigger: 66
@@ -74,7 +74,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(
+            .byRefreshFooter(
                 component: JobsDefaultFooter(),
                 container: self,
                 trigger: 66

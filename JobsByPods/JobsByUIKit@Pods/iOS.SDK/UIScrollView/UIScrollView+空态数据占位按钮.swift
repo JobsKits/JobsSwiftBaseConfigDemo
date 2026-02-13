@@ -96,7 +96,7 @@ extension UIScrollView {
     // MARK: - 存取：全局/局部 Provider
     /// 链式：设置“本视图”的局部空态按钮提供器（会触发懒 swizzle）
     @discardableResult
-    public func jobs_emptyButtonProvider(_ provider: @escaping () -> UIButton) -> Self {
+    public func byEmptyButtonProvider(_ provider: @escaping () -> UIButton) -> Self {
         _JobsEmptySwizzle.ensureOnce() // ← 保证只交换一次
         objc_setAssociatedObject(self, &_jobsEmptyProviderKey, provider, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 
@@ -108,7 +108,7 @@ extension UIScrollView {
     }
     /// 链式：清除“本视图”的局部 Provider（回退到全局默认）
     @discardableResult
-    public func jobs_clearEmptyButtonProvider() -> Self {
+    public func byClearEmptyButtonProvider() -> Self {
         let _ = _JobsEmptyAutoBootstrap.ensure
         objc_setAssociatedObject(self, &_jobsEmptyProviderKey, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         return self
@@ -130,7 +130,7 @@ extension UIScrollView {
     // MARK: - 显隐控制（保留原手动/自动 API）
     /// 手动显隐：业务自己判断 empty -> true/false
     @discardableResult
-    public func jobs_reloadEmptyViewManual(isEmpty: Bool) -> Self {
+    public func byReloadEmptyViewManual(isEmpty: Bool) -> Self {
         let _ = _JobsEmptyAutoBootstrap.ensure
         jobs_emptyButton?.isHidden = !isEmpty
         return self
@@ -138,7 +138,7 @@ extension UIScrollView {
     /// 自动判断（支持 UITableView / UICollectionView）
     // MARK: - 自动评估空态显隐
     @discardableResult
-    public func jobs_reloadEmptyViewAuto(animated: Bool = true) -> Self {
+    public func byReloadEmptyViewAuto(animated: Bool = true) -> Self {
         _JobsEmptySwizzle.ensureOnce()                 // 幂等交换一次
         _jobs_ensureEmptyButtonIfNeeded()              // 懒创建并布置约束（若有 provider）
 
@@ -216,7 +216,7 @@ extension UIScrollView {
         if jobs_emptyButton == nil {
             let button = (_jobs_localProvider ?? JobsEmptyAuto.Config.defaultProvider)()
             _jobs_attachEmptyButton(button)
-        };jobs_reloadEmptyViewAuto()
+        };byReloadEmptyViewAuto()
     }
     /// 把按钮挂载到当前 ScrollView 上（会清旧的）
     fileprivate func _jobs_attachEmptyButton(_ btn: UIButton) {

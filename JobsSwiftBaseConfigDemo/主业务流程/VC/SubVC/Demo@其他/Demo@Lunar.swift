@@ -64,7 +64,7 @@ final class LunarDemoVC: BaseVC {
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
 
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -75,7 +75,7 @@ final class LunarDemoVC: BaseVC {
                         self.items = (1...10).map { "Row \($0)" }
                         self.tableView.byReloadData()
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -84,9 +84,9 @@ final class LunarDemoVC: BaseVC {
                     }
             }
             // 下拉刷新 Header
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -98,9 +98,9 @@ final class LunarDemoVC: BaseVC {
                 }
             }
             // 上拉加载 Footer
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)

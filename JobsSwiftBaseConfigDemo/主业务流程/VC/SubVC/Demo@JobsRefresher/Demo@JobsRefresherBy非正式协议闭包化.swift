@@ -129,9 +129,9 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .setFooterLottie(.disabled)
             .enableRefreshHaptics(true)
             .setRefreshSound("Sound.wav")
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { _ in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -141,9 +141,9 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { _ in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)

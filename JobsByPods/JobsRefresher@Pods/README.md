@@ -44,9 +44,9 @@ private lazy var tableView: UITableView = {
         .enableRefreshHaptics(true)
         .setRefreshSound("Sound.wav")
         // 下拉刷新 Header
-        .configRefreshHeader(component: JobsDefaultHeader(),
-                             container: self,
-                             trigger: 66) { [weak self] in
+        .byRefreshHeader(component: JobsDefaultHeader(),
+                         container: self,
+                         trigger: 66) { [weak self] in
             guard let self else { return }
             jobsRunOnMain(self) { vc in
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -57,9 +57,9 @@ private lazy var tableView: UITableView = {
             }
         }
         // 上拉加载 Footer
-        .configRefreshFooter(component: JobsDefaultFooter(),
-                             container: self,
-                             trigger: 66) { [weak self] in
+        .byRefreshFooter(component: JobsDefaultFooter(),
+                         container: self,
+                         trigger: 66) { [weak self] in
             guard let self else { return }
             jobsRunOnMain(self) { vc in
                 try? await Task.sleep(nanoseconds: 1_000_000_000)

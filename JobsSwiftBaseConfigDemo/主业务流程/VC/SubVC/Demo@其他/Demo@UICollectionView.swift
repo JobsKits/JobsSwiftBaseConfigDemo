@@ -60,7 +60,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据（竖向）", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -69,9 +69,9 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                     .onTap { [weak self] _ in
                         guard let self else { return }
                         self.collectionViewV.byReloadData()
-                        self.collectionViewV.jobs_reloadEmptyViewAuto()
+                        self.collectionViewV.byReloadEmptyViewAuto()
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -100,7 +100,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据（横向）", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -109,9 +109,9 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                     .onTap { [weak self] _ in
                         guard let self else { return }
                         self.collectionViewH.byReloadData()
-                        self.collectionViewH.jobs_reloadEmptyViewAuto()
+                        self.collectionViewH.byReloadEmptyViewAuto()
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-20)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -140,8 +140,8 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                         itemsV.removeAll(); itemsH.removeAll()
                         collectionViewV.byReloadData()
                         collectionViewH.byReloadData()
-                        collectionViewV.jobs_reloadEmptyViewAuto()
-                        collectionViewH.jobs_reloadEmptyViewAuto()
+                        collectionViewV.byReloadEmptyViewAuto()
+                        collectionViewH.byReloadEmptyViewAuto()
                     },
                 // 追加两个列表
                 UIButton.sys()
@@ -154,8 +154,8 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                         itemsH += (1...5).map { "Card \(bH + $0)" }
                         collectionViewV.byReloadData()
                         collectionViewH.byReloadData()
-                        collectionViewV.jobs_reloadEmptyViewAuto()
-                        collectionViewH.jobs_reloadEmptyViewAuto()
+                        collectionViewV.byReloadEmptyViewAuto()
+                        collectionViewH.byReloadEmptyViewAuto()
                     }
             ]
         )

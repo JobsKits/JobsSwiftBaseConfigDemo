@@ -126,7 +126,7 @@ final class MessageListDemoVC: BaseVC {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr, for: .normal)
@@ -139,7 +139,7 @@ final class MessageListDemoVC: BaseVC {
                         self.selectedIDs.removeAll()
                         self.tableView.reloadData()
                     }
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -147,9 +147,9 @@ final class MessageListDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     self.rows = 20
@@ -160,9 +160,9 @@ final class MessageListDemoVC: BaseVC {
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     if self.rows < 60 {

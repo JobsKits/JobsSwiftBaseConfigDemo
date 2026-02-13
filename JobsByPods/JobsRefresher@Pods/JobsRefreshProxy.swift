@@ -186,7 +186,7 @@ final class JobsSlot {
     func beginRefreshing(on sv: UIScrollView, isFooter: Bool = false) {
         guard state != .refreshing else { return }
         // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
-        sv.jobs_triggerRefreshFeedback(for: position)
+        sv.byRefreshFeedback(for: position)
 
         state = .refreshing
         view.isHidden = !showsInfo

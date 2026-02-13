@@ -52,7 +52,7 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
 
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -64,7 +64,7 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
                         self.posts = MomentPost.makeSample(rows: self.rows)
                         self.tableNode.reloadData()
                     }
-                    .jobs_setEmptyLayout { _, make, host in
+                    .byEmptyLayout { _, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -72,9 +72,9 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self, !self.isExiting else { return }
                 Task { @MainActor [weak self] in
                     guard let self, !self.isExiting else { return }
@@ -85,9 +85,9 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
                     self.tableNode.view.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self, !self.isExiting else { return }
                 Task { @MainActor [weak self] in
                     guard let self, !self.isExiting else { return }

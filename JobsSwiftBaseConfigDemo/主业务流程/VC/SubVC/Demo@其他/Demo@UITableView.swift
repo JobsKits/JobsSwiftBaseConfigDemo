@@ -35,7 +35,7 @@ final class EmptyTableViewDemoVC: BaseVC {
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
         
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -47,7 +47,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                         self.tableView.reloadData()   // ✅ reload 后会自动评估空态，无需再手动调用
                     }
                     // 可选：不满意默认居中 -> 自定义布局
-                    .jobs_setEmptyLayout { btn, make, host in
+                    .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -95,7 +95,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                         items.removeAll()
                         tableView.byReloadData()
                         updateFooterAvailability()
-                        tableView.jobs_reloadEmptyViewAuto()
+                        tableView.byReloadEmptyViewAuto()
                     }
                     .byAdd({ make in
                         make.size.equalTo(CGSize(width: 70, height: 44))
@@ -119,7 +119,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                         }
                         tableView.byReloadData()
                         updateFooterAvailability()
-                        tableView.jobs_reloadEmptyViewAuto()
+                        tableView.byReloadEmptyViewAuto()
                     }
                     .byAdd({ make in
                         make.size.equalTo(CGSize(width: 60, height: 44))

@@ -48,7 +48,7 @@ final class RxDataSourcesDemoVC: BaseVC {
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             .byContentInsetTop(8)
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton(type: .system)
                     .byTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr, for: .normal)
@@ -57,7 +57,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                     .onTap { [weak self] _ in
                         self?.fillTableDemoData(count: 10)
                     }
-                    .jobs_setEmptyLayout { _, make, host in
+                    .byEmptyLayout { _, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -65,9 +65,9 @@ final class RxDataSourcesDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
@@ -77,9 +77,9 @@ final class RxDataSourcesDemoVC: BaseVC {
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
@@ -117,7 +117,7 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             .byContentInsetTop(8)
-            .jobs_emptyButtonProvider { [unowned self] in
+            .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据", for: .normal)
                     .bySubTitle("点我填充示例数据", for: .normal)
@@ -126,7 +126,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                     .onTap { [weak self] _ in
                         self?.fillCollectionDemoData(count: 12)
                     }
-                    .jobs_setEmptyLayout { _, make, host in
+                    .byEmptyLayout { _, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -134,9 +134,9 @@ final class RxDataSourcesDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
@@ -146,9 +146,9 @@ final class RxDataSourcesDemoVC: BaseVC {
                     self.collectionView.switchRefreshFooter(to: .normal)
                 }
             }
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 jobsRunOnMain(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)

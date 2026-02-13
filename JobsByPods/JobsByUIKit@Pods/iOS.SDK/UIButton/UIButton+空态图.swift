@@ -24,7 +24,7 @@ extension UIButton {
     }
     /// 链式：设置空态按钮的自定义布局
     @discardableResult
-    public func jobs_setEmptyLayout(_ layout: @escaping JobsEmptyLayout) -> Self {
+    public func byEmptyLayout(_ layout: @escaping JobsEmptyLayout) -> Self {
         self._jobsEmptyLayout = layout
         return self
     }

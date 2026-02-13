@@ -79,9 +79,9 @@ final class JobsNetworkingListDemoVC : BaseVC{
                 self.items[indexPath.row].makeViewController().byPush(self, animated: YES)
             }
             // 下拉刷新 Header
-            .configRefreshHeader(component: JobsDefaultHeader(),
-                                 container: self,
-                                 trigger: 66) { [weak self] in
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 Task { @MainActor in
                     self.tableView.byReloadData()
@@ -90,9 +90,9 @@ final class JobsNetworkingListDemoVC : BaseVC{
                 }
             }
             // 上拉加载 Footer
-            .configRefreshFooter(component: JobsDefaultFooter(),
-                                          container: self,
-                                          trigger: 66) { [weak self] in
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
                 guard let self else { return }
                 self.tableView.byReloadData()
                 self.tableView.switchRefreshFooter(to: .noMoreData)
