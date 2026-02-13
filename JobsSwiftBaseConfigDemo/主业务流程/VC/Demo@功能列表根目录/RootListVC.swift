@@ -445,7 +445,8 @@ extension RootListVC: UITableViewDataSource ,UITableViewDelegate{
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.byDequeueReusableCell(withType: UITableViewCell.self,for: indexPath)
+        tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self,for: indexPath)
             .byText(demos[indexPath.row].title)
             .byAccessoryType(.disclosureIndicator)
     }

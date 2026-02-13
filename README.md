@@ -4951,7 +4951,7 @@ required init?(coder: NSCoder) {
   * 数据灌入
 
     ```swift
-    tableView.py_dequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
+    tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
         .byTitleFont(.systemFont(ofSize: 16))
         .byDetailTitleFont((.systemFont(ofSize: 14)))
         .bySelectionStyle(.none)
@@ -4961,7 +4961,7 @@ required init?(coder: NSCoder) {
     ```
 
     ```swift
-    tableView.py_dequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+    tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
         .byText(items[indexPath.row])
         .bySecondaryText("Section \(indexPath.section) · Row \(indexPath.row)")
     ```
@@ -7731,13 +7731,13 @@ public extension NSObject {
       switch row {
       case .avatar:
           /// 用自定义的 AvatarCell 子类，在其子类中覆写byData
-          return tableView.py_dequeueReusableCell(
+          return tableView.byDequeueReusableCell(
               withType: AvatarCell.self,
               for: indexPath
           ).byData(JobsCellConfig(title: row.title))
       default:
           /// 用系统默认的 UITableViewCell，在分类中统一处理数据
-          return tableView.py_dequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
+          return tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
               .byTitleFont(.systemFont(ofSize: 16))
               .byDetailTitleFont((.systemFont(ofSize: 14)))
               .bySelectionStyle(.none)
