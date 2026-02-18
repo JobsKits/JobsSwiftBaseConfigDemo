@@ -23,7 +23,7 @@ final class FoldCell: UITableViewCell {
     private var isExpanded: Bool = false
     private lazy var cardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(Self.verticalInset)
@@ -53,7 +53,7 @@ final class FoldCell: UITableViewCell {
     private lazy var subtitleLabel: UILabel = {
         UILabel()
             .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(6)
                 make.left.equalTo(self.titleLabel)
@@ -65,7 +65,7 @@ final class FoldCell: UITableViewCell {
     private lazy var chevron: UIImageView = {
         UIImageView(image: "chevron.down".sysImg)
             .byContentMode(.scaleAspectFit)
-            .byTintColor(.secondaryLabel)
+            .byTintColor(JobsCor.secondaryLabel)
             .byAddTo(headerView) { make in
                 make.centerY.equalToSuperview()
                 make.right.equalToSuperview().inset(16)

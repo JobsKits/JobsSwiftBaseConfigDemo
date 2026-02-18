@@ -64,7 +64,7 @@ final class PicLoadDemoVC: BaseVC {
             .byImage("Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-            .addTapAction { (iv: UIImageView) in
+            .addTapAction { [weak self] (iv: UIImageView) in
                  "单击图片：\(iv)".toast
             }
             .addLongPressAction(minimumPressDuration: 0.8,
@@ -107,9 +107,9 @@ final class PicLoadDemoVC: BaseVC {
             .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-             .addTapAction { (iv: UIImageView) in
+            .addTapAction {[weak self] (iv: UIImageView) in
                  "单击图片：\(iv)".toast
-             }
+            }
              .addLongPressAction(minimumPressDuration: 0.8,
                                  allowableMovement: 12,
                                  numberOfTouchesRequired: 1) { gr in
@@ -149,7 +149,7 @@ final class PicLoadDemoVC: BaseVC {
             .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-            .addTapAction { (iv: UIImageView) in
+            .addTapAction {[weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
             }
             .addLongPressAction(minimumPressDuration: 0.8,
@@ -192,7 +192,7 @@ final class PicLoadDemoVC: BaseVC {
 //            .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .addTapAction { (iv: UIImageView) in
+            .addTapAction {[weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
             }
             .addLongPressAction(minimumPressDuration: 0.8,
@@ -234,7 +234,7 @@ final class PicLoadDemoVC: BaseVC {
             .byClipsToBounds()
 //            .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
             .sd_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .addTapAction { (iv: UIImageView) in
+            .addTapAction {[weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
             }
             .addLongPressAction(minimumPressDuration: 0.8,

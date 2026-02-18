@@ -1,5 +1,5 @@
 //
-//  AppTools.swift
+//  JobsSwiftAppTools.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 9/29/25.
@@ -391,7 +391,74 @@ public func networkRichListenerBy(_ view:UIView){
 /// UIScrollView 的投射距离：减速到 0 速度时走了多少路
 /// v0: 手指离开瞬间的速度（pt/s）
 /// d: UIScrollView.DecelerationRate.normal.rawValue 之类
-func projectDistance(v0: CGFloat,
+public func projectDistance(v0: CGFloat,
                      decelerationRate d: CGFloat) -> CGFloat {
     return (v0 / 1000.0) * d / (1.0 - d)
+}
+/// 旋转180
+public func transform180ByBOOL(_ expanded : Bool) -> CGAffineTransform{
+    expanded
+    ? CGAffineTransform(rotationAngle: .pi)
+    : .identity
+}
+/// 旋转90
+public func transform90ByBOOL(_ expanded : Bool) -> CGAffineTransform{
+    expanded
+    ? CGAffineTransform(rotationAngle: .pi / 2)
+    : .identity
+}
+/// 根据展开状态返回对应的 3D 折叠变换矩阵
+///
+/// - Parameter expanded: 是否处于展开状态
+///   - true  → 返回 CATransform3DIdentity（无变换，正常显示）
+///   - false → 返回折叠变换矩阵，使视图绕 X 轴旋转 -90°，呈现折叠隐藏效果
+///
+/// - Returns: 用于 layer.transform 的 CATransform3D
+///
+/// 使用场景：
+/// 常用于 UITableViewCell / UICollectionViewCell 的展开收起动画，
+/// 配合 UIView.animate 可实现类似“翻页 / 折叠”的 3D 动画效果。
+public func foldTransformByBOOL(_ expanded : Bool) -> CATransform3D{
+    expanded
+    ? CATransform3DIdentity
+    : foldTransform()
+}
+/// 生成一个“折叠隐藏”的 3D 变换矩阵
+///
+/// 变换效果说明：
+///
+/// 1. 添加透视效果 (m34)
+///    m34 控制 3D 透视深度，使旋转具有真实空间感，而不是平面旋转。
+///
+///    推荐范围：
+///    - -1/300  → 强透视（夸张）
+///    - -1/700  → 推荐值（自然）
+///    - -1/1200 → 弱透视（更平）
+///
+/// 2. 绕 X 轴旋转 -90°
+///
+///    参数解释：
+///    CATransform3DRotate(transform, angle, x, y, z)
+///
+///    angle = -.pi/2 → -90°
+///    x = 1, y = 0, z = 0 → 绕 X 轴旋转（上下折叠）
+///
+///    最终效果：
+///    视图像“向内折叠”并消失，常用于：
+///
+///    - 折叠 cell 内容
+///    - 折叠面板
+///    - 卡片翻转动画
+///
+/// - Returns: 折叠状态的 CATransform3D
+public func foldTransform() -> CATransform3D {
+    var t = CATransform3DIdentity
+    t.m34 = -1 / 700
+    return CATransform3DRotate(
+        t,
+        -.pi / 2,
+        1,
+        0,
+        0
+    )
 }

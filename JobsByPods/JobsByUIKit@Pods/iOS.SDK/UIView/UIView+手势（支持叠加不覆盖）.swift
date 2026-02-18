@@ -115,7 +115,7 @@ import JobsSwiftBlock
  )
  // MARK: - 直接设置手势（已锚定视图）
  let views = UIView()
-     .addTapAction { gr in
+     .addTapAction {[weak self] gr in
          print("点击 \(gr.view!)")
      }
      .addLongPressAction { gr in

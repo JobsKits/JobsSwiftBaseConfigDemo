@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import ObjectiveC
 #if canImport(JXSegmentedView)
 import JXSegmentedView
@@ -47,20 +48,96 @@ private extension JXSegmentedTitleDataSource {
 }
 // MARK: - TitleDataSource 链式 DSL
 public extension JXSegmentedTitleDataSource {
-    @discardableResult func byTitles(_ v: [String]) -> Self { titles = v; return self }
-    @discardableResult func byTitleNumberOfLines(_ n: Int) -> Self { titleNumberOfLines = n; return self }
-    @discardableResult func byTitleNormalColor(_ c: UIColor) -> Self { titleNormalColor = c; return self }
-    @discardableResult func byTitleSelectedColor(_ c: UIColor) -> Self { titleSelectedColor = c; return self }
-    @discardableResult func byTitleColors(normal: UIColor, selected: UIColor) -> Self { titleNormalColor = normal; titleSelectedColor = selected; return self }
-    @discardableResult func byTitleNormalFont(_ f: UIFont) -> Self { titleNormalFont = f; return self }
-    @discardableResult func byTitleSelectedFont(_ f: UIFont?) -> Self { titleSelectedFont = f; return self }
-    @discardableResult func byTitleFonts(normal: UIFont, selected: UIFont?) -> Self { titleNormalFont = normal; titleSelectedFont = selected; return self }
-    @discardableResult func byColorGradientEnabled(_ on: Bool = true) -> Self { isTitleColorGradientEnabled = on; return self }
-    @discardableResult func byZoomEnabled(_ on: Bool = true, scale: CGFloat? = nil) -> Self { isTitleZoomEnabled = on; if let s = scale { titleSelectedZoomScale = s }; return self }
-    @discardableResult func byStrokeEnabled(_ on: Bool = true, selectedWidth: CGFloat? = nil) -> Self { isTitleStrokeWidthEnabled = on; if let w = selectedWidth { titleSelectedStrokeWidth = w }; return self }
-    @discardableResult func byMaskEnabled(_ on: Bool = true) -> Self { isTitleMaskEnabled = on; return self }
-    @discardableResult func byWidthForTitle(_ block: @escaping (String) -> CGFloat) -> Self { widthForTitleClosure = block; return self }
+    // MARK: - Titles
+    @discardableResult
+    func byTitles(_ value: [String]) -> Self {
+        titles = value
+        return self
+    }
+    // MARK: - Lines
+    @discardableResult
+    func byTitleNumberOfLines(_ lines: Int) -> Self {
+        titleNumberOfLines = lines
+        return self
+    }
+    // MARK: - Colors
+    @discardableResult
+    func byTitleNormalColor(_ color: UIColor) -> Self {
+        titleNormalColor = color
+        return self
+    }
 
+    @discardableResult
+    func byTitleSelectedColor(_ color: UIColor) -> Self {
+        titleSelectedColor = color
+        return self
+    }
+
+    @discardableResult
+    func byTitleColors(normal: UIColor, selected: UIColor) -> Self {
+        titleNormalColor = normal
+        titleSelectedColor = selected
+        return self
+    }
+    // MARK: - Fonts
+    @discardableResult
+    func byTitleNormalFont(_ font: UIFont) -> Self {
+        titleNormalFont = font
+        return self
+    }
+
+    @discardableResult
+    func byTitleSelectedFont(_ font: UIFont?) -> Self {
+        titleSelectedFont = font
+        return self
+    }
+
+    @discardableResult
+    func byTitleFonts(normal: UIFont, selected: UIFont?) -> Self {
+        titleNormalFont = normal
+        titleSelectedFont = selected
+        return self
+    }
+    // MARK: - Effects
+    @discardableResult
+    func byTitleColorGradientEnabled(_ enabled: Bool = true) -> Self {
+        isTitleColorGradientEnabled = enabled
+        return self
+    }
+    /// ⚠️ 开启 zoom 时，官方建议 normalFont 与 selectedFont 一致（否则可能视觉不稳）
+    @discardableResult
+    func byZoomEnabled(
+        _ enabled: Bool = true,
+        scale: CGFloat? = nil
+    ) -> Self {
+        isTitleZoomEnabled = enabled
+        if let scale {
+            titleSelectedZoomScale = scale
+        };return self
+    }
+    /// strokeWidth: 负数越小越粗（例如 -2）
+    @discardableResult
+    func byStrokeEnabled(
+        _ enabled: Bool = true,
+        selectedWidth: CGFloat? = nil
+    ) -> Self {
+        isTitleStrokeWidthEnabled = enabled
+        if let selectedWidth {
+            titleSelectedStrokeWidth = selectedWidth
+        };return self
+    }
+
+    @discardableResult
+    func byMaskEnabled(_ enabled: Bool = true) -> Self {
+        isTitleMaskEnabled = enabled
+        return self
+    }
+    // MARK: - Width Cache
+    @discardableResult
+    func byWidthForTitle(_ block: @escaping (String) -> CGFloat) -> Self {
+        widthForTitleClosure = block
+        return self
+    }
     /// 动态配置（按 index 定制），自动处理 weak 的强引
     @discardableResult
     func byDynamicConfiguration(_ build: (JobsSegmentedTitleClosureConfiguration) -> Void) -> Self {
@@ -70,7 +147,6 @@ public extension JXSegmentedTitleDataSource {
         jobs_cfg_holder = cfg        // strong
         return self
     }
-
     /// 便捷绑定到 segmentedView
     @discardableResult
     func byAttach(to segmentedView: JXSegmentedView,

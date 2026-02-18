@@ -11,6 +11,40 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+// MARK: - 不看代码，强制性的在本页面隐藏系统的导航栏
+/**
+ 
+     override func viewDidAppear(_ animated: Bool) {
+         super.viewDidAppear(animated)
+         jobsForceHideSystemNavBar(YES)
+     }
+ 
+     override func viewWillDisappear(_ animated: Bool) {
+         super.viewWillDisappear(animated)
+         jobsForceHideSystemNavBar(NO)
+     }
+ */
+extension UIViewController {
+
+    public func jobsForceHideSystemNavBar(_ hidden: Bool) {
+        jobsRunOnMain(self) { vc in
+            var r: UIResponder? = vc.view
+            while let cur = r {
+                if let hostVC = cur as? UIViewController,
+                   let nav = hostVC.navigationController {
+                    nav.setNavigationBarHidden(hidden, animated: false)
+                    nav.navigationBar.isHidden = hidden
+                    return
+                }
+                r = cur.next
+            }
+
+            vc.navigationController?.setNavigationBarHidden(hidden, animated: false)
+            vc.navigationController?.navigationBar.isHidden = hidden
+        }
+    }
+}
 private var _nbHiddenKey: UInt8 = 0
 private var _nbAnimatedKey: UInt8 = 0
 private var _nbSwizzledKey: UInt8 = 0
@@ -122,7 +156,7 @@ extension UINavigationController {
                 .byType(.push)
                 .bySubtype(dir._reverseCASubtype)
                 .byDuration(top._jobs_entryDuration ?? 0.32)                 // 来自 CAMediaTiming DSL
-                .byTimingFunction(                                          // 来自 CAAnimation DSL
+                .byTimingFunction(                                           // 来自 CAAnimation DSL
                     CAMediaTimingFunction(name: top._jobs_entryTiming ?? .easeInEaseOut)
                 )
             self.view.layer.add(tr, forKey: "jobs.popTo.\(dir._debugKey)")

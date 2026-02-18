@@ -14,12 +14,40 @@ import UIKit
 extension UICollectionViewFlowLayout {
     // MARK: - Spacing
     @discardableResult
+    /// 设置 UICollectionViewFlowLayout 的 minimumLineSpacing（“行间距/主轴相邻组之间的间距”）
+    ///
+    /// - Important:
+    ///   minimumLineSpacing 的方向取决于 scrollDirection：
+    ///
+    ///   1) scrollDirection = .vertical（默认：纵向滚动）
+    ///      - “行”是水平排列的一行 items
+    ///      - minimumLineSpacing 表示 **行与行之间的垂直间距（上下）**
+    ///
+    ///   2) scrollDirection = .horizontal（横向滚动）
+    ///      - “行”可以理解为竖着的一列 items
+    ///      - minimumLineSpacing 表示 **列与列之间的水平间距（左右）**
+    ///
+    /// - Parameter value: 间距值（points）
+    /// - Returns: Self（便于链式调用）
     public func byMinimumLineSpacing(_ value: CGFloat) -> Self {
         self.minimumLineSpacing = value
         return self
     }
 
     @discardableResult
+    /// 设置 UICollectionViewFlowLayout 的 minimumInteritemSpacing（“同一行/列内 item 之间的间距”）
+    ///
+    /// - Important:
+    ///   minimumInteritemSpacing 的方向同样取决于 scrollDirection：
+    ///
+    ///   1) scrollDirection = .vertical（默认：纵向滚动）
+    ///      - 表示 **同一行内 items 的水平间距（左右）**
+    ///
+    ///   2) scrollDirection = .horizontal（横向滚动）
+    ///      - 表示 **同一列内 items 的垂直间距（上下）**
+    ///
+    /// - Parameter value: 间距值（points）
+    /// - Returns: Self（便于链式调用）
     public func byMinimumInteritemSpacing(_ value: CGFloat) -> Self {
         self.minimumInteritemSpacing = value
         return self
