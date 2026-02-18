@@ -75,8 +75,8 @@ def debugPods
 end
 # ============================== PodByJobs ==============================
 def byJobs
-  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods' , :configurations => ['Debug']
-  
+    
+  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
 #  pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
 #  pod 'JobsNetworking/AF4',                 :path => 'JobsByPods/JobsNetworking@Pods'
   pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个

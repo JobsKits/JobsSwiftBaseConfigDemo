@@ -5,8 +5,6 @@
 //  Created by Jobs on 18/2/26.
 //
 
-#if DEBUG
-
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -20,6 +18,7 @@ import JobsToast
 @objc public protocol UIViewControllerDebugDeinitProtocol {
     @objc var debugDeinitTag: String { get }
 }
+#if DEBUG
 // MARK: - Deinit 监听器
 /// 通过关联对象给 VC 绑定一个监听器对象：
 /// - VC 释放时，监听器也会释放
