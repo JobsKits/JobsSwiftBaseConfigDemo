@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C43A26FD4510B1342471F3B0 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 454ADC5D4A0FCCD62BF92C4C /* Pods_JobsSwiftBaseConfigDemo.framework */; };
+		76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,9 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		454ADC5D4A0FCCD62BF92C4C /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		59C23BCFCA831B5E8F43DC86 /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		B8186132C955A72B7F065E1B /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
+		10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
+		7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,11 +61,15 @@
 		};
 		C59C65482F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = JobsSwiftBaseConfigDemoTests;
 			sourceTree = "<group>";
 		};
 		C59C65522F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = JobsSwiftBaseConfigDemoUITests;
 			sourceTree = "<group>";
 		};
@@ -76,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C43A26FD4510B1342471F3B0 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */,
+				76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,11 +101,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A015FC91762D3615F9A4CAC5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				59C23BCFCA831B5E8F43DC86 /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */,
-				B8186132C955A72B7F065E1B /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */,
+				7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */,
+				10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -115,7 +127,7 @@
 				C59C65522F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */,
 				C59C65372F1BFB1A0060EEAD /* Products */,
 				A015FC91762D3615F9A4CAC5 /* Pods */,
-				F5EBB4F4A1EB8915F88E573E /* Frameworks */,
+				0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,14 +141,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F5EBB4F4A1EB8915F88E573E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				454ADC5D4A0FCCD62BF92C4C /* Pods_JobsSwiftBaseConfigDemo.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -144,16 +148,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C59C65592F1BFB1A0060EEAD /* Build configuration list for PBXNativeTarget "JobsSwiftBaseConfigDemo" */;
 			buildPhases = (
-				16CB5CB638C64BA35680A201 /* [CP] Check Pods Manifest.lock */,
+				9B30AAF4C5CEA41A0405A645 /* [CP] Check Pods Manifest.lock */,
 				C57D6A082F1DD7D00093F898 /* ShellScript */,
-				7CC7E648ABBAC81D5CFA76F6 /* [CP-User] Run Flutter Build my_flutter Script */,
+				2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */,
 				C59C65322F1BFB1A0060EEAD /* Sources */,
 				C59C65332F1BFB1A0060EEAD /* Frameworks */,
 				C57D6A0A2F1DD7DD0093F898 /* ShellScript */,
 				C59C65342F1BFB1A0060EEAD /* Resources */,
 				C57D6C202F1DDCDB0093F898 /* ShellScript */,
-				F772D4980026F201E81F077F /* [CP] Copy Pods Resources */,
-				3E592F1367600737E6339B43 /* [CP-User] Embed Flutter Build my_flutter Script */,
+				6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */,
+				7F9C6F4C7E5585F935602E59 /* [CP-User] Embed Flutter Build my_flutter Script */,
 			);
 			buildRules = (
 			);
@@ -279,7 +283,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		16CB5CB638C64BA35680A201 /* [CP] Check Pods Manifest.lock */ = {
+		2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Run Flutter Build my_flutter Script";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
+		};
+		6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7F9C6F4C7E5585F935602E59 /* [CP-User] Embed Flutter Build my_flutter Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Embed Flutter Build my_flutter Script";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
+		};
+		9B30AAF4C5CEA41A0405A645 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -301,34 +340,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3E592F1367600737E6339B43 /* [CP-User] Embed Flutter Build my_flutter Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP-User] Embed Flutter Build my_flutter Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
-		};
-		7CC7E648ABBAC81D5CFA76F6 /* [CP-User] Run Flutter Build my_flutter Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP-User] Run Flutter Build my_flutter Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
-		};
 		C57D6A082F1DD7D00093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -345,8 +356,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "\n";
 		};
 		C57D6A0A2F1DD7DD0093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -364,8 +374,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "\n";
 		};
 		C57D6C202F1DDCDB0093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -383,27 +392,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
-		};
-		F772D4980026F201E81F077F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -572,7 +561,7 @@
 		};
 		C59C655A2F1BFB1A0060EEAD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59C23BCFCA831B5E8F43DC86 /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */;
+			baseConfigurationReference = 7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon@Host";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -612,7 +601,7 @@
 		};
 		C59C655B2F1BFB1A0060EEAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8186132C955A72B7F065E1B /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */;
+			baseConfigurationReference = 10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon@Host";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
