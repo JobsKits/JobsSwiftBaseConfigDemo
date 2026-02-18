@@ -12,12 +12,12 @@ import UIKit
 #endif
 
 import WebKit
-import GKNavigationBarSwift
 import SnapKit
-import JobsInheritance
-import JobsByUIKit
+import GKNavigationBarSwift
 import JobsToast
 import JobsNavBar
+import JobsByUIKit
+import JobsInheritance
 /// 用法示例：懒加载 + 链式 DSL + SnapKit 约束（基于最新版 BaseWebView.swift）
 final class BaseWebViewDemoVC: BaseVC {
     // MARK: - 懒加载 Web（全通用，无业务常量）
@@ -57,7 +57,7 @@ final class BaseWebViewDemoVC: BaseVC {
             .byNavBarBackButtonProvider {
                 UIButton(type: .system)
                     .byBackgroundColor(.clear)
-                    .byImage(UIImage(systemName: "chevron.left"), for: .normal)
+                    .byImage("chevron.left".sysImg, for: .normal)
                     .byTitle("返回".tr, for: .normal)
                     .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
                     .byTitleColor(.label, for: .normal)
@@ -129,7 +129,8 @@ final class BaseWebViewDemoVC: BaseVC {
                     .byImage("moon.circle.fill".sysImg, for: .normal)
                     .byImage("moon.circle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
-                    .onTap { sender in
+                    .onTap { [weak self] sender in
+                        guard let self else { return }
                         sender.isSelected.toggle()
                         BaseWebVC()
                             .byData("https://www.youtube.com/")

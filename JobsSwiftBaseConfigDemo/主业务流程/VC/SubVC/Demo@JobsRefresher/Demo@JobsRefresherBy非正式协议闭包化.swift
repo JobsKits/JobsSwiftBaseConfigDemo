@@ -12,30 +12,26 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
-import JobsByUIKit
-import JobsBy3rdTools
-import JobsSwiftBaseDefines
-import JobsRefresher
 import GKNavigationBarSwift
+import JobsToast
+import JobsByUIKit
+import JobsRefresher
+import JobsBy3rdTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18
     private var rows = 20
-
-    private lazy var hLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+    private lazy var collectionView: UICollectionView = {
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
             .byScrollDirection(.horizontal)
             .byMinimumLineSpacing(12)
             .byMinimumInteritemSpacing(12)
             .bySectionInset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-            .byItemSize(CGSize(width: 120, height: 156))
-    }()
-
-    private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: hLayout)
+            .byItemSize(CGSize(width: 120, height: 156)))
             .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byShowsHorizontalScrollIndicator(false)
@@ -53,7 +49,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             }
             .didSelectItemAt({ obj, cv, idx in
                 cv.deselectItem(at: idx, animated: true)
-                print("点选逻辑")
+                "点选逻辑".toast
             })
 
             .byAddTo(view) { [unowned self] make in
@@ -120,7 +116,7 @@ final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
             }
             .didSelectRowAt { _, tv, indexPath in
                 tv.deselectRow(at: indexPath, animated: true)
-                print("点选逻辑")
+                "点选逻辑".toast
             }
 
             .showRefreshHeaderInfo(YES)

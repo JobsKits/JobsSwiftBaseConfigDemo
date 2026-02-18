@@ -116,6 +116,7 @@ end
 # ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字
 target 'JobsSwiftBaseConfigDemo' do
   use_frameworks! :linkage => :static
+#  use_frameworks! :linkage => :dynamic
 
   flutter_application_path = File.join(__dir__, 'my_flutter')
   load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')

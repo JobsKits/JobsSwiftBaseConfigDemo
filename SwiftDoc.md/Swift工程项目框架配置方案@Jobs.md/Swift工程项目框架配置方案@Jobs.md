@@ -2803,6 +2803,24 @@ DemoDetailVC().onResult { name in
 }
 ```
 
+#### 2.23、Debug模式下弹窗检测是否释放`UIViewController`
+
+* 引入框架 **`JobsSwiftDebugTools`**
+
+  ```swift
+  #if DEBUG
+  import JobsSwiftDebugTools
+  #endif
+  ```
+
+* App入口处进行调用 **➤**  **`AppDelegate.swift`**
+
+  ```swift
+  #if DEBUG
+  VCDebugDeallocDebug.install()
+  #endif
+  ```
+
 ### 3、对抗记忆衰弱
 
 * 使用**Xcode**代码块的方式👉[**`JobsCodeSnippets`**](https://github.com/JobsKits/JobsCodeSnippets)脚本安装，自动注入系统指定目录，只需要重启**Xcode**即可使用

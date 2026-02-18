@@ -12,11 +12,13 @@ import UIKit
 #endif
 
 import SnapKit
+import GKNavigationBarSwift
+import JobsScale
+import JobsToast
 import JobsByUIKit
+import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
-import GKNavigationBarSwift
-import JobsTextTools
 // MARK: - 数据模型
 struct WalletCard {
     let bankName: String
@@ -33,25 +35,22 @@ enum WalletItem {
 
 final class JobsWalletDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 0
-    private lazy var walletLayout: WalletLayout = {
-        WalletLayout()
+    private lazy var collectionView: UICollectionView = {
+        UICollectionView(frame: .zero, collectionViewLayout: WalletLayout()
             .byPadding(20)
             .byItemHeight(120)
             .byOverlap(14)
             .byExpandOffset(14)
-            .byLayoutDelegate(self);
-    }()
-
-    private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: walletLayout)
+            .byLayoutDelegate(self))
             .byBackgroundColor(.clear)
             .byShowsVerticalScrollIndicator(NO)
-            .byContentInset(UIEdgeInsets(top: 16, left: 0, bottom: 24, right: 0))
+            .byContentInset(UIEdgeInsets(top: 16.h, left: 0.w, bottom: 24.h, right: 0.w))
             .byRegisterCell(WalletCardCell.self)
             .byRegisterCell(WalletAddCardCell.self)
             .byDelegate(self)
+            .byDataSource(self)
             .byRegisterSupplementaryView(WalletSectionHeaderView.self,kind: UICollectionView.elementKindSectionHeader)
-            .byDataSource(self).byAddTo(view) { [unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
                 make.left.equalToSuperview().offset(self.horizontalInset)
                 make.right.equalToSuperview().inset(self.horizontalInset)
@@ -60,37 +59,37 @@ final class JobsWalletDemoVC: BaseVC {
     }()
 
     private var sections: [[WalletItem]] = [[
-        .card(WalletCard(bankName: "上海银行",
+        .card(WalletCard(bankName: "上海银行".tr,
                          lastDigits: "7895",
                          holder: "Jobs",
                          brand: "VISA",
                          gradientColors: [.systemPurple, .systemBlue])),
-        .card(WalletCard(bankName: "国泰世华",
+        .card(WalletCard(bankName: "国泰世华".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "Mastercard",
                          gradientColors: [.systemPink, .systemOrange])),
-        .card(WalletCard(bankName: "台湾银行",
+        .card(WalletCard(bankName: "台湾银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "VISA",
                          gradientColors: [.systemTeal, .systemBlue])),
-        .card(WalletCard(bankName: "嘉华银行",
+        .card(WalletCard(bankName: "嘉华银行".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "UnionPay",
                          gradientColors: [.systemIndigo, .systemTeal])),
-        .card(WalletCard(bankName: "包头银行",
+        .card(WalletCard(bankName: "包头银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "Debit",
                          gradientColors: [.systemGreen, .systemTeal])),
-        .card(WalletCard(bankName: "成都银行",
+        .card(WalletCard(bankName: "成都银行".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "Credit",
                          gradientColors: [.systemRed, .systemOrange])),
-        .card(WalletCard(bankName: "南充商业银行",
+        .card(WalletCard(bankName: "南充商业银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "VISA",
@@ -102,7 +101,7 @@ final class JobsWalletDemoVC: BaseVC {
         super.viewDidLoad()
         view.backgroundColor = UIColor.systemGroupedBackground
         jobsSetupGKNav(
-            title: "钱包卡片效果"
+            title: "钱包卡片效果".tr
         )
         // 触发 collectionView 懒加载 + 布局
         collectionView.byVisible(YES)
@@ -148,9 +147,9 @@ extension JobsWalletDemoVC: UICollectionViewDataSource {
                                                kind: kind,
                                                for: indexPath)
         if indexPath.section == 0 {
-            header.configure(title: "我的银行卡")
+            header.configure(title: "我的银行卡".tr)
         } else {
-            header.configure(title: "更多操作")
+            header.configure(title: "更多操作".tr)
         };return header
     }
 }
@@ -172,11 +171,11 @@ extension JobsWalletDemoVC: UICollectionViewDelegate {
             } else {
                 selectedIndexPath = nil
             }
-            walletLayout.animateToggle(at: indexPath, allowExpand: allowExpand)
+            (collectionView.collectionViewLayout as! WalletLayout).animateToggle(at: indexPath, allowExpand: allowExpand)
             collectionView.reloadData()
         case .addNew:
             // 这里接自己的跳转绑卡页面逻辑
-            print("📇 点击添加新的银行卡")
+            "📇 点击添加新的银行卡".toast
         }
     }
 }

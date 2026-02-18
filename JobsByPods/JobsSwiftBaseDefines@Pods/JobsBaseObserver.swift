@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 // MARK: - 核心观察者（同时服务 UITextField / UITextView）
 public final class JobsTextInputObserver: NSObject,
                                           UITextFieldDelegate,
@@ -139,7 +139,7 @@ public final class JobsTextInputObserver: NSObject,
 }
 // MARK: - Associated Keys
 private enum JobsTextInputAssociatedKeys {
-    static var observer = "jobs.textinput.observer.key"
+    static var observer: UInt8 = 0
 }
 // MARK: - 内部：获取/绑定 observer
 public protocol JobsTextInputAttachable: AnyObject {}
@@ -147,11 +147,23 @@ extension UITextField: JobsTextInputAttachable {}
 extension UITextView: JobsTextInputAttachable {}
 extension JobsTextInputAttachable {
     public var jobs_textInputObserver: JobsTextInputObserver {
-        if let obj = objc_getAssociatedObject(self, &JobsTextInputAssociatedKeys.observer) as? JobsTextInputObserver {
+        if let obj = objc_getAssociatedObject(
+            self,
+            &JobsTextInputAssociatedKeys.observer
+        ) as? JobsTextInputObserver {
             return obj
         }
         let obj = JobsTextInputObserver()
-        objc_setAssociatedObject(self, &JobsTextInputAssociatedKeys.observer, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return obj
+        objc_setAssociatedObject(
+            self,
+            &JobsTextInputAssociatedKeys.observer,
+            obj,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return obj
     }
+}
+
+public final class WeakBox<T: AnyObject> {
+    public weak var value: T?
+    public init(_ value: T?) { self.value = value }
 }

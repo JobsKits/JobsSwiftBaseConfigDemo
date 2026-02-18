@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
 
 final class WalletLayout: UICollectionViewLayout {

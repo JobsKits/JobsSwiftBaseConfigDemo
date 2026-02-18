@@ -32,7 +32,7 @@ final class CashbackRootVC: BaseVC {
             .byTitleSelectedColor(.systemOrange)
             .byTitleNormalFont(.systemFont(ofSize: 16, weight: .regular))
             .byTitleSelectedFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byColorGradientEnabled(true)
+            .byTitleColorGradientEnabled(true)
             // 推荐：用 CoreText 测宽，规避 NSString/AttributedString 在少数环境下的崩
             .byWidthForTitle { [unowned self] title in
                 jobsCTTextWidth(title, font: segmentedDataSource.titleNormalFont)

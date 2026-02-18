@@ -25,42 +25,18 @@
 
 ## 二、使用方式
 
-* 引入框架 <font color=red>**import**</font> `JobsSwiftDebugTools`
+* 引入框架 **`JobsSwiftDebugTools`**
 
-* 挂载协议 `JobsDebugDeinitProtocol`
+  ```swift
+  #if DEBUG
+  import JobsSwiftDebugTools
+  #endif
+  ```
 
-* 挂载 （二选一）
+* App入口处进行调用 **➤**  **`AppDelegate.swift`**
 
-  * **手动集成** ➤ 在`UIViewController`的生命周期中进行注册 `enableDebugDeinitToast()`
-
-  * **方法交换** ➤ 将 `JobsDebugDeinitAutoLoad.m`集成在主工程
-
-    ```objective-c
-    //
-    //  JobsDebugDeinitAutoLoad.m
-    //  Pods
-    //
-    //  Created by Jobs on 27/1/26.
-    //
-    
-    @import Foundation;
-    @import UIKit;
-    #import <objc/message.h>
-    
-    @interface JobsDebugDeinitAutoLoad : NSObject
-    
-    @end
-    
-    @implementation JobsDebugDeinitAutoLoad
-    
-    + (void)load {
-        // 不依赖 import / link，Debug 有类就调用，Release 没类就跳过
-        Class cls = NSClassFromString(@"JobsDebugDeinitAutoSwizzle");
-        SEL sel = NSSelectorFromString(@"start");
-        if (cls && [cls respondsToSelector:sel]) {
-            ((void (*)(id, SEL))objc_msgSend)(cls, sel);
-        }
-    }
-    
-    @end
-    ```
+  ```swift
+  #if DEBUG
+  VCDebugDeallocDebug.install()
+  #endif
+  ```

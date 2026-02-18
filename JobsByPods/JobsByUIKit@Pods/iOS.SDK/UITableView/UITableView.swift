@@ -12,23 +12,37 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 
 enum JobsTableViewBlocksAssociatedKeys {
-    static var proxyKey = "jobs.tableview.blocks.proxy.key"
-    static var muxKey = "jobs.tableview.blocks.mux.key"
-    static var didSwizzleKey = "jobs.tableview.blocks.swizzle.key"
+    static var proxyKey: UInt8 = 0
+    static var muxKey: UInt8 = 0
+    static var didSwizzleKey: UInt8 = 0
+    static var targetKey: UInt8 = 0
 }
 // MARK: - DSL
 extension UITableView {
+    /// 如果现有实现依赖“取回 target”
+    public var jobs_target: AnyObject? {
+        (objc_getAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.targetKey) as? AnyWeakBox)?.value
+    }
+    
     @discardableResult
     public func byTarget(_ target: AnyObject) -> Self {
+        // 1) 保存 weak target（给其它地方取用，例如 scroll / mux 兜底）
+        objc_setAssociatedObject(self,
+                                 &JobsTableViewBlocksAssociatedKeys.targetKey,
+                                 AnyWeakBox(target),
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        // 2) 安装 table blocks proxy（table 的 proxy.target 已经是 weak）
         let p = jobs_blocksProxy()!
         p.target = target
         dataSource = p
-        // 关键：delegate 走 mux，避免被外部组件（例如下拉刷新、埋点、scroll 监听）覆盖后丢失回调
-        // 1) 先把 scroll 相关的 delegate 行为交给外部（如果你有 UIScrollView 的 blocks proxy）
-        // 2) 再用 mux 把 table 的 delegate（didSelect 等）和外部 delegate 合并
-        byScrollTarget(target)
+        // 3) 关键：scroll 相关 target 也要弱化，否则这里最容易形成环
+        //    ✅ 如果你有 byScrollTargetWeak，就用它
+        //    ❌ 如果没有，就必须去把 UIScrollView 的 blocksProxy.target 改成 weak
+        byScrollTargetWeak(target)
+        // 4) delegate 走 mux，避免外部覆盖 delegate 丢回调
         jobs_installDelegateMuxIfNeeded(primary: p)
         return self
     }

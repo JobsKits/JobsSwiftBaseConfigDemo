@@ -18,8 +18,8 @@ import JobsRefresher
 import JobsInheritance
 import JobsSwiftBaseDefines
 // MARK: - 外层入口：TableView + SnapKit
-final class JobsNetworkingListDemoVC : BaseVC{
-    
+final class JobsNetworkingListDemoVC : BaseVC {
+     
     private let items = DemoItem.allCases
     private enum DemoItem: CaseIterable {
         case requestAPI
@@ -61,12 +61,14 @@ final class JobsNetworkingListDemoVC : BaseVC{
             .setRefreshSound("Sound.wav")
             // 非正式协议闭包化
             .byTarget(self)
-            .numberOfRowsInSection { [weak self] (obj: AnyObject, tv: UITableView, section: Int) -> Int in
-                self!.items.count
+            .numberOfRowsInSection { [weak self] _, _, _ in
+                self?.items.count ?? 0
             }
-            .cellForRowAt { _, tv, indexPath in
+            .cellForRowAt { [weak self] _, tv, indexPath in
                 let cell = tv.dequeueReusableCell(withIdentifier: "cell") ??
-                        UITableViewCell(style: .default, reuseIdentifier: "cell")
+                    UITableViewCell(style: .default, reuseIdentifier: "cell")
+
+                guard let self else { return cell }
                 var cfg = cell.defaultContentConfiguration()
                 cfg.text = self.items[indexPath.row].title
                 cfg.textProperties.font = .systemFont(ofSize: 16, weight: .medium)
@@ -74,7 +76,8 @@ final class JobsNetworkingListDemoVC : BaseVC{
                 cell.accessoryType = .disclosureIndicator
                 return cell
             }
-            .didSelectRowAt { _, tv, indexPath in
+            .didSelectRowAt { [weak self] _, tv, indexPath in
+                guard let self else { return }
                 tv.deselectRow(at: indexPath, animated: true)
                 self.items[indexPath.row].makeViewController().byPush(self, animated: YES)
             }

@@ -16,9 +16,9 @@ import UIKit
 import MetalKit
 import AVFoundation
 import SnapKit
-import JobsInheritance
 import JobsByUIKit
 import JobsBy3rdTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsSwiftMetalKit_extensions
 
@@ -96,7 +96,6 @@ class PNPlayerDemoVC: BaseVC {
         loadSampleVideo()
         configureAudioSession()
     }
-
     // MARK: - 加载示例视频
     private func loadSampleVideo() {
         guard let videoURL = Bundle.main.url(forResource: "pano_360", withExtension: "mp4") else {
@@ -105,7 +104,6 @@ class PNPlayerDemoVC: BaseVC {
         }
         renderer.loadVideo(url: videoURL)
     }
-
     // MARK: - 音频会话
     private func configureAudioSession() {
         do {
@@ -115,7 +113,6 @@ class PNPlayerDemoVC: BaseVC {
             print("Failed to configure audio session: \(error)")
         }
     }
-
     // MARK: - 交互
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         renderer.handlePan(gesture, in: metalView)
@@ -151,7 +148,6 @@ class PNPlayerDemoVC: BaseVC {
         true
     }
 }
-
 // MARK: - PlayerControlsDelegate
 extension PNPlayerDemoVC: PlayerControlsDelegate {
     func didTapPlayPause() {
@@ -164,7 +160,6 @@ extension PNPlayerDemoVC: PlayerControlsDelegate {
         resetHideTimer()
     }
 }
-
 // MARK: - VideoTextureManagerDelegate
 extension PNPlayerDemoVC: VideoTextureManagerDelegate {
     func videoDidUpdateTime(currentTime: TimeInterval, duration: TimeInterval) {

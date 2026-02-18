@@ -1,3 +1,10 @@
+//
+//  Shaders.metal
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 19/2/26.
+//
+
 #include <metal_stdlib>
 using namespace metal;
 

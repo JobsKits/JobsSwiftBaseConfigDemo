@@ -1,11 +1,8 @@
-//JobsAppDoorDemoVC
-//  JobsAppDoorDemoVC.swift
+//
+//  Demo@注册登陆（JobsAppDoor）.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  保持与 OC 动画“平行”的 Swift 实现：
-//  - 视频当底（BMPlayer，循环，fill）
-//  - 居中弹窗进场：① 圆形揭示 ② 弹性放大（二选一）
-//  - 登录 / 注册 面板切换：轻透视 + 位移/缩放 + keyframe
+//  Created by Jobs on 18/2/26.
 //
 
 #if os(OSX)
@@ -22,28 +19,23 @@ import JobsSwiftBaseDefines
 import JobsBy3rdTools
 #if canImport(BMPlayer)
 import BMPlayer
+import JobsToast
 #endif
-// MARK: - 小工具
-private extension CATransform3D {
-    static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }
-}
-private extension UIView {
-    /// 给容器加一点透视（越小越夸张，-1/800 ~ -1/500 之间比较自然）
-    func enablePerspective(_ m34: CGFloat = -1/800) { layer.sublayerTransform = .m34(m34) }
+// MARK: 模型
+private enum PanelKind { case login, register }
+private enum EntranceStyle {
+    case circularReveal(from: CGPoint, startRadius: CGFloat)   // 从一个小点炸开
+    case springPop                                             // 弹性放大
 }
 // MARK: - Demo
 final class JobsAppDoorDemoVC: BaseVC {
+    
     deinit {
         if let o = loopObserver { NotificationCenter.default.removeObserver(o) }
     }
-    // MARK: 模型
-    private enum PanelKind { case login, register }
-    private enum EntranceStyle {
-        case circularReveal(from: CGPoint, startRadius: CGFloat)   // 从一个小点炸开
-        case springPop                                              // 弹性放大
-    }
     // 当前展示的面板
     private var current: PanelKind = .login
+    private var loopObserver: NSObjectProtocol?
     // MARK: UI
 #if canImport(BMPlayer)
     private lazy var player: BMPlayer = {
@@ -51,7 +43,7 @@ final class JobsAppDoorDemoVC: BaseVC {
         BMPlayer()
             .byResource(
                 BMPlayerResource(
-                    name: "welcome_video",
+                    name: "播放视频".tr,
                     definitions: [
                         .init(url: "welcome_video.mp4".bundleMediaURLRequire, definition: "本地")
                     ],
@@ -61,6 +53,10 @@ final class JobsAppDoorDemoVC: BaseVC {
                 definitionIndex: 0,
                 autoPlay: true
             )
+            .byBack({ [weak self] s in
+                guard let self else { return }
+                self.goBack("") // 系统通用返回
+            })
             .byVideoGravity(.resizeAspectFill)
             .byPanGestureEnabled(false)
             .byAddTo(view) { make in
@@ -100,6 +96,20 @@ final class JobsAppDoorDemoVC: BaseVC {
                 make.edges.equalToSuperview()
             }
     }()
+    
+    private lazy var switchButtons: UISegmentedControl = {
+        UISegmentedControl(items: ["登录".tr, "注册".tr])
+            .bySelectedSegmentIndex(1) // 默认 GCD
+            .onJobsChange { [weak self] (seg: UISegmentedControl) in
+                guard let self else { return }
+                let target: PanelKind = (seg.selectedSegmentIndex == 0) ? .login : .register
+                self.switchPanel(to: target, direction: (target == .login ? .toLeft : .toRight))
+            }
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+                make.centerX.equalToSuperview()
+            }
+    }()
     /// 右下角客服按钮（与 OC 的 alpha 动画保持“平行”）
 //    private lazy var customerServiceBtn: UIButton = {
 //        UIButton(type: .system)
@@ -113,9 +123,6 @@ final class JobsAppDoorDemoVC: BaseVC {
 //                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
 //            }
 //    }()
-
-    private var loopObserver: NSObjectProtocol?
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -126,9 +133,15 @@ final class JobsAppDoorDemoVC: BaseVC {
 //        customerServiceBtn.byVisible(YES)
 #if canImport(BMPlayer)
         player.byVisible(YES)
-        setupLoopPlayback()
+        // MARK: - 接收通知@视频循环
+        self.onNotification(Notification.Name.AVPlayerItemDidPlayToEndTime.rawValue, on: .main) { [weak self] noti in
+            guard let self else { return }
+            guard let av = self.player.playerLayer?.player else { return }
+            av.seek(to: .zero)
+            av.play()
+        }
 #endif
-        buildDemoSwitchButtons()   // Demo：顶部切换按钮（替换为真实跳转入口即可）
+        switchButtons.byVisible(YES) // Demo：顶部切换按钮（替换为真实跳转入口即可）
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -143,6 +156,9 @@ final class JobsAppDoorDemoVC: BaseVC {
         // 如果更想保守/平行 OC 的 spring:
         // runEntranceAnimation(style: .springPop)
     }
+}
+
+extension JobsAppDoorDemoVC {
     // MARK: 进场动画
     private func runEntranceAnimation(style: EntranceStyle) {
         // 轻透视（后面切换面板也会用到）
@@ -255,9 +271,10 @@ final class JobsAppDoorDemoVC: BaseVC {
             fromView.alpha = 1
             fromView.transform = .identity
             self.current = target
-
             // 与 OC 一样：非登录页隐藏客服按钮（举例）
-            _ = (target == .login)
+            jobsRunOnMain {
+                _ = (target == .login)
+            }
 //            UIView.animate(withDuration: 0.28) {
 //                self.customerServiceBtn.alpha = shouldShowService ? 1 : 0
 //            }
@@ -267,30 +284,13 @@ final class JobsAppDoorDemoVC: BaseVC {
     private func make2DTransform(translateX: CGFloat, scale: CGFloat) -> CGAffineTransform {
         CGAffineTransform.identity.translatedBy(x: translateX, y: 0).scaledBy(x: scale, y: scale)
     }
-    // MARK: 视频循环
-    private func setupLoopPlayback() {
-        loopObserver = NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: .main
-        ) { [weak self] _ in
-            guard let self, let av = self.player.playerLayer?.player else { return }
-            av.seek(to: .zero)
-            av.play()
-        }
-    }
-    // MARK: Demo 触发（把它换成现有按钮/手势）
-    private func buildDemoSwitchButtons() {
-        let seg = UISegmentedControl(items: ["登录", "注册"])
-        seg.selectedSegmentIndex = 0
-        seg.addTarget(self, action: #selector(onSeg(_:)), for: .valueChanged)
-        view.addSubview(seg)
-        seg.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-            make.centerX.equalToSuperview()
-        }
-    }
+}
+// MARK: - 小工具
+private extension CATransform3D {
+    static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }
+}
 
-    @objc private func onSeg(_ s: UISegmentedControl) {
-        let target: PanelKind = (s.selectedSegmentIndex == 0) ? .login : .register
-        switchPanel(to: target, direction: (target == .login ? .toLeft : .toRight))
-    }
+private extension UIView {
+    /// 给容器加一点透视（越小越夸张，-1/800 ~ -1/500 之间比较自然）
+    func enablePerspective(_ m34: CGFloat = -1/800) { layer.sublayerTransform = .m34(m34) }
 }

@@ -29,6 +29,9 @@ import JobsSwiftAppTools
 import JobsSwiftBaseTools
 import JobsSwiftBaseDefines
 import JobsSwiftFoundation_extensions
+#if DEBUG
+import JobsSwiftDebugTools
+#endif
 /// https://github.com/apple/swift-collections#
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections
@@ -244,6 +247,10 @@ extension AppDelegate {
 
         App显示语言环境配置()
         日志框架接入()
+        
+        #if DEBUG
+        VCDebugDeallocDebug.install()
+        #endif
         
         udSave()
         udRead()

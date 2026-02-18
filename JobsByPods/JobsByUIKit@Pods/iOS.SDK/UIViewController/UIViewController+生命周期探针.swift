@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 // MARK: - 📌给 UIViewController 的生命周期中加入探针@转发到挂载的子视图 UIView
 /// 示例代码 ➤ UIView 侧挂钩 @ UIViewController 的生命周期
 private final class UITestView: UIView, VCLifeCycleListener {
@@ -122,11 +123,7 @@ public extension VCLifeCycleListener {
     func hostViewDidLayoutSubviews() {}
     func hostViewSafeAreaInsetsDidChange() {}
 }
-// MARK: - WeakBox（非泛型：避免 any Protocol 导致 “requires class type” 报错）
-private final class WeakBox {
-    weak var value: AnyObject?
-    init(_ value: AnyObject?) { self.value = value }
-}
+public typealias AnyWeakBox = WeakBox<AnyObject>
 private var _vcListenersKey: UInt8 = 0
 private var _vcSwizzledKey: UInt8 = 0
 // MARK: - Public API
@@ -134,7 +131,7 @@ extension UIViewController {
     /// 绑定一个 listener（通常是某个子 view）
     public func bindVCLifecycleListener(_ listener: VCLifeCycleListener) {
         VCLifecycleSwizzler.installIfNeeded()
-        var arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [WeakBox]) ?? []
+        var arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox]) ?? []
         // 去重（避免重复绑定）
         let obj = listener as AnyObject
         if arr.contains(where: { $0.value === obj }) == false {
@@ -148,14 +145,14 @@ extension UIViewController {
     }
     /// 解绑（可选）
     public func unbindVCLifecycleListener(_ listener: VCLifeCycleListener) {
-        guard var arr = objc_getAssociatedObject(self, &_vcListenersKey) as? [WeakBox] else { return }
+        guard var arr = objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox] else { return }
         let obj = listener as AnyObject
         arr.removeAll { $0.value == nil || $0.value === obj }
         objc_setAssociatedObject(self, &_vcListenersKey, arr, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     /// 当前活着的 listeners（自动清理 nil）
     fileprivate var _vcLifecycleListeners: [VCLifeCycleListener] {
-        let arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [WeakBox]) ?? []
+        let arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox]) ?? []
         // 清理 nil，并把 AnyObject 转回协议类型
         let aliveObjects: [AnyObject] = arr.compactMap { $0.value }
         let aliveListeners: [VCLifeCycleListener] = aliveObjects.compactMap { $0 as? VCLifeCycleListener }

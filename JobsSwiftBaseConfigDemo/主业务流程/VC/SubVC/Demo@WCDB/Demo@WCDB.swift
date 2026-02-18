@@ -12,11 +12,11 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
 import GKNavigationBarSwift
-import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 #if !canImport(FMDB) && canImport(WCDB)
 final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
@@ -26,15 +26,16 @@ final class WCDBDemoVC: BaseVC {
             .byBgCor(.systemCyan)
             .byText("WCDB Demo\nDB: \(DemoDB.shared.dbPath)")
             .byAddTo(view) { [unowned self] make in
+                make.left.equalToSuperview().offset(horizontalInset)
+                make.right.equalToSuperview().inset(horizontalInset)
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                 } else {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
             }
     }()
+    
     private lazy var insertBtn: UIButton = {
         UIButton(type: .system)
             .byTitle("Insert One Row")
@@ -106,7 +107,7 @@ final class WCDBDemoVC: BaseVC {
                 make.left.right.height.equalTo(self.insertBtn)
             }
     }()
-    // 5) 用 .byVisible(YES) 唤起
+
     private lazy var player: UIView = {
         UIView()
             .byBackgroundColor(UIColor(white: 0.96, alpha: 1))
@@ -130,9 +131,10 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .systemBackground
         jobsSetupGKNav(
-            title: "腾讯数据库WCDB@演示DEMO"
+            title: "腾讯数据库WCDB@演示DEMO".tr
         )
         hintLabel.byVisible(YES)
         insertBtn.byVisible(YES)

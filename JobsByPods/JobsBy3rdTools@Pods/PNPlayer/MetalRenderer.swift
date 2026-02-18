@@ -49,9 +49,43 @@ public class MetalRenderer: NSObject {
     }
 
     private func setupMetal() {
-        guard let library = device.makeDefaultLibrary() else {
-            fatalError("Could not create Metal library")
+
+        // ✅ 重点：MetalRenderer 在 JobsBy3rdTools（Pod/Framework）里时，默认库通常在 framework bundle
+        let rendererBundle = Bundle(for: MetalRenderer.self)
+
+        var library: MTLLibrary?
+
+        // 1) iOS16+/tvOS16+/macOS13+：从指定 bundle 取默认库（最稳）
+        if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
+            library = try? device.makeDefaultLibrary(bundle: rendererBundle)
         }
+
+        // 2) fallback：手动找 default.metallib（仍然在 rendererBundle）
+        if library == nil,
+           let metallibURL = rendererBundle.url(forResource: "default", withExtension: "metallib") {
+            library = try? device.makeLibrary(URL: metallibURL)
+        }
+
+        // 3) 最后 fallback：main bundle 默认库（有些静态集成场景会命中）
+        if library == nil {
+            library = device.makeDefaultLibrary()
+        }
+
+        guard let library else {
+            let hasMetallib = (rendererBundle.url(forResource: "default", withExtension: "metallib") != nil)
+            fatalError(
+                """
+                ❌ Could not create Metal library
+                Bundle(for: MetalRenderer.self) = \(rendererBundle.bundlePath)
+                Has default.metallib in rendererBundle = \(hasMetallib)
+
+                Fix checklist:
+                1) Ensure Shaders.metal is included by podspec: s.source_files includes *.metal
+                2) Re-run: pod deintegrate && pod install, then Clean Build Folder
+                """
+            )
+        }
+
         let vertexFunction   = library.makeFunction(name: "vertex_main")
         let fragmentFunction = library.makeFunction(name: "fragment_main")
 
@@ -90,6 +124,7 @@ public class MetalRenderer: NSObject {
             .byDepthCompare(.less)
             .byDepthWriteEnabled(false) // 内部天空盒通常关闭写入，避免偶发闪烁
         depthStencilState = device.makeDepthStencilState(descriptor: dsDesc)
+
         // 采样器
         samplerState = device.makeSamplerState(
             descriptor: MTLSamplerDescriptor()

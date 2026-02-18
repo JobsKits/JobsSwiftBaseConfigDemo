@@ -14,11 +14,14 @@ import UIKit
 import SnapKit
 import JobsSwiftDebugTools
 
-open class BaseVC: UIViewController,JobsDebugDeinitProtocol {
+open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
+    // 可选：自定义 tag
+    public var debugDeinitTag: String { "Home" }
+    
     deinit {
-        // 清理资源
-        print("deinit")
+        print("✅ REAL deinit:", type(of: self))
     }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

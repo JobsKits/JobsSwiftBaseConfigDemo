@@ -14,6 +14,14 @@ import UIKit
 import ObjectiveC
 // MARK: - DSL
 extension UIScrollView {
+    
+    @discardableResult
+    public func byScrollTargetWeak(_ target: AnyObject) -> Self {
+        let p = jobs_scrollBlocksProxy()!   // 你现有的 scroll proxy getter
+        p.target = target                  // 这里 target 必须是 weak
+        delegate = p                       // 或者走你自己的 mux
+        return self
+    }
     /// 给 scroll blocks 设置 target（table/collection 的 byTarget 会自动调用这个，不用你手动调）
     @discardableResult
     public func byScrollTarget(_ target: AnyObject) -> Self {

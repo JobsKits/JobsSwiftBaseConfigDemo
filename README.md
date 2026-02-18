@@ -7690,6 +7690,26 @@ DemoDetailVC().onResult { name in
 }
 ```
 
+### 52、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+#### 52.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* 引入框架 **`JobsSwiftDebugTools`**
+
+  ```swift
+  #if DEBUG
+  import JobsSwiftDebugTools
+  #endif
+  ```
+
+* App入口处进行调用 **➤**  **`AppDelegate.swift`**
+
+  ```swift
+  #if DEBUG
+  VCDebugDeallocDebug.install()
+  #endif
+  ```
+
 ## 四、[**Swift**](https://developer.apple.com/swift/) 语言特性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ### 1、注解 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

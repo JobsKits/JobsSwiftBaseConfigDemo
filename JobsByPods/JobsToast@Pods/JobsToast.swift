@@ -200,5 +200,6 @@ public func toastBy(_ string: String) {
 extension String {
      public var toast: Void {
         toastBy(self)
+        print ("toast: \(self)")
     }
 }

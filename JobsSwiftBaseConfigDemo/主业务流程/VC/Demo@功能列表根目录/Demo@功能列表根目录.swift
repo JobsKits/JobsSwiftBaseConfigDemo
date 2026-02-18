@@ -14,17 +14,18 @@ import UIKit
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
-import JobsInheritance
-import JobsByUIKit
+
 import Jobsl10n
 import JobsScale
-import JobsSwiftTimer
 import JobsToast
-import JobsSwiftBaseDefines
-import JobsTextTools
-import JobsBy3rdTools
-import JobsSwiftAppTools
+import JobsByUIKit
 import JobsRefresher
+import JobsTextTools
+import JobsSwiftTimer
+import JobsBy3rdTools
+import JobsInheritance
+import JobsSwiftAppTools
+import JobsSwiftBaseDefines
 
 final class RootListVC: BaseVC {
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
@@ -67,14 +68,14 @@ final class RootListVC: BaseVC {
             ("🍚 选择器", BRPickerDemoVC.self),
             ("🌛 朋友圈@GKPhotoBrowserByUIKit", GKPhotoBrowserByUIKitDemoVC.self),
             ("🌛 朋友圈@GKPhotoBrowserByTexture", GKPhotoBrowserByTextureSwiftSupportDemoVC.self),
+            ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
             ("📅 日历", LunarDemoVC.self),
             ("📊 Excel", XLSXDemoVC.self),
             ("🌛 PDF", PDFDemoVC.self),
             ("🧒 Lottie动画", LottieDemoVC.self),
             ("☠️ 骨架屏", SkeletonViewDemoVC.self),
             ("🌹 弹出方式", SwiftEntryKitDemoVC.self),
-            ("💬 LiveChat", LiveChatDemoVC.self),
-            ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
+            ("💬 LiveChat", LiveChatDemoVC.self)
         ]
         #if canImport(FMDB) && !canImport(WCDB)
         temp.insert(("🛢️ FMDB@如需测试WCDB需要在Podfile屏蔽FMDB", FMDBDemoVC.self), at: 1) // 或 append

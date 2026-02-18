@@ -1,5 +1,5 @@
 //
-//  钟.swift
+//  JobsClock.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 11/28/25.
@@ -19,8 +19,15 @@ import JobsSwiftBaseDefines
 ///
 /// Swift 6 注意点：JobsSwiftTimer 的 handler 是 @Sendable
 /// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
-/// - 统一用 jobsRunOnMain(self) { vc in ... } 回到主线程更新 UI
+/// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 jobsRunOnMain(self)）
 open class JobsClockView: UIView {
+    
+    deinit {
+        // ✅ 关键：deinit 里不要 jobsRunOnMain / 不要 async / 不要调用 @MainActor 的 stop()
+        // 只做“同步断回调”，避免释放窗口期还在 tick
+        timer?.stop()
+        timer = nil
+    }
     // MARK: - 表盘 & 刻度
     /// 外圈表盘
     private lazy var dialLayer: CAShapeLayer = {
@@ -79,34 +86,30 @@ open class JobsClockView: UIView {
     }()
     private var timer: JobsSwiftTimerProtocol?
     // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
     }
-
-    deinit {
-        jobsRunOnMain { [weak self] in
-            self?.stop()
-        }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
     }
-
-    private func commonInit() {
-        backgroundColor = .clear
-        dialLayer.byHidden(NO)
-        tickLayer.byHidden(NO)
-        centerDotLayer.byHidden(NO)
-    }
-
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         layoutDialAndNumbers()
         layoutHandLayers()
         updateHands(animated: false)  // 布局完成后对齐当前时间
+    }
+}
+
+extension JobsClockView {
+    private func commonInit() {
+        backgroundColor = .clear
+        dialLayer.byHidden(NO)
+        tickLayer.byHidden(NO)
+        centerDotLayer.byHidden(NO)
     }
     /// 布局表盘 + 刻度 + 数字
     private func layoutDialAndNumbers() {
@@ -201,7 +204,6 @@ open class JobsClockView: UIView {
     @MainActor
     public func start(kind: JobsTimerKind = .gcd) {
         stop()
-        // 先对齐一次当前时间
         updateHands(animated: false)
         let config = JobsSwiftTimerConfig(
             interval: 1.0,          // 每秒 tick 一次
@@ -213,10 +215,10 @@ open class JobsClockView: UIView {
             pauseInBackground: true,
             autoManageAppState: true
         )
-        // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
+
         let t = JobsTimer(kind: kind, config: config) { [weak self] in
-            // ✅ Swift 6 / Sendable 同等待遇：回主线程再动 UI
-            jobsRunOnMain(self) { vc in
+            // ✅ @Sendable 回调里不直接碰 UI；回到 MainActor 再更新
+            jobsRunOnMain {
                 self?.updateHands(animated: true)
             }
         }
