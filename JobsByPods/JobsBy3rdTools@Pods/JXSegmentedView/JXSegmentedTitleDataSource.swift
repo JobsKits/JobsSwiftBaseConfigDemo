@@ -156,6 +156,46 @@ public extension JXSegmentedTitleDataSource {
         segmentedView.reloadData()
         return self
     }
+    
+    @discardableResult
+    func byTitleColorGradient(_ enabled: Bool = true) -> Self {
+        isTitleColorGradientEnabled = enabled
+        return self
+    }
+    // MARK: - zoom
+    @discardableResult
+    func byTitleZoom(enabled: Bool = true, scale: CGFloat? = nil) -> Self {
+        isTitleZoomEnabled = enabled
+        if let s = scale {
+            titleSelectedZoomScale = s
+        };return self
+    }
+    // MARK: - stroke width
+    @discardableResult
+    func byTitleStrokeWidth(enabled: Bool = true, width: CGFloat? = nil) -> Self {
+        isTitleStrokeWidthEnabled = enabled
+        if let w = width {
+            titleSelectedStrokeWidth = w
+        };return self
+    }
+    // MARK: - mask
+    @discardableResult
+    func byTitleMask(_ enabled: Bool = true) -> Self {
+        isTitleMaskEnabled = enabled
+        return self
+    }
+    // MARK: - width closure
+    @discardableResult
+    func byWidthClosure(_ closure: @escaping (String)->CGFloat) -> Self {
+        widthForTitleClosure = closure
+        return self
+    }
+    // MARK: - dynamic configuration
+    @discardableResult
+    func byConfiguration(_ config: JXSegmentedTitleDynamicConfiguration?) -> Self {
+        configuration = config
+        return self
+    }
 }
 
 #endif
