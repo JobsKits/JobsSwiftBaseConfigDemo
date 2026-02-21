@@ -71,8 +71,36 @@ extension UIButton {
         return s
     }
 }
-// MARK: - Public API（主标题）
+
 extension UIButton {
+    // MARK: - Public API（主标题）
+    /// 对外统一兼容入口：调用侧不需要写 #available
+    /// - iOS15+：强制走 configuration 渲染链路，然后使用 *_iOS15ConfigOnly
+    /// - iOS15-：走 legacy title 渲染链路
+    @discardableResult
+    public func byAnimatedMainTitleNumber_Compat(start: Double,
+                                                 initialTitle: String,
+                                                 duration: TimeInterval = 0.9,
+                                                 minimumInterval: TimeInterval = 1.0 / 60.0,
+                                                 completion: (() -> Void)? = nil) -> Self {
+        if #available(iOS 15.0, *) {
+            var cfg = self.configuration ?? UIButton.Configuration.plain()
+            cfg.title = initialTitle
+            return self
+                .byConfiguration(cfg)
+                .byAnimatedMainTitleNumber_iOS15ConfigOnly(start: start,
+                                                          duration: duration,
+                                                          minimumInterval: minimumInterval,
+                                                          completion: completion)
+        } else {
+            return self
+                .byTitle(initialTitle, for: .normal)
+                .byAnimatedMainTitleNumber(start: start,
+                                           duration: duration,
+                                           minimumInterval: minimumInterval,
+                                           completion: completion)
+        }
+    }
 
     @discardableResult
     public func byAnimatedMainTitleNumber(start: Double? = nil,
@@ -115,19 +143,16 @@ extension UIButton {
         _jobsStopAnimatedNumber(_jobsAnimNumStore.main)
         return self
     }
-}
-// MARK: - iOS15+ Configuration Only（主标题）——先跑通效果，再谈兼容
-//
-// 说明：
-// - 该组 API **仅面向 iOS15+** 的 UIButton.Configuration(title/attributedTitle) 渲染链路。
-// - 动效期间会临时关闭 automaticallyUpdatesConfiguration / configurationUpdateHandler，避免系统或外部 handler 覆盖我们写入的 cfg.title。
-// - 不改动你现有主/副标题逻辑；这是“增量新增”API。
-//
-// 存疑：当前 byAnimatedMainTitleNumber + _jobsEnsureConfigHandlerIfNeeded 的兜底链路在部分 configuration 场景仍可能出现“主标题不显示”。
-//      现阶段请在业务侧优先改用 *_iOS15ConfigOnly 先把效果跑通。
-@available(iOS 15.0, *)
-extension UIButton {
-
+    // MARK: - iOS15+ Configuration Only（主标题）——先跑通效果，再谈兼容
+    //
+    // 说明：
+    // - 该组 API **仅面向 iOS15+** 的 UIButton.Configuration(title/attributedTitle) 渲染链路。
+    // - 动效期间会临时关闭 automaticallyUpdatesConfiguration / configurationUpdateHandler，避免系统或外部 handler 覆盖我们写入的 cfg.title。
+    // - 不改动你现有主/副标题逻辑；这是“增量新增”API。
+    //
+    // 存疑：当前 byAnimatedMainTitleNumber + _jobsEnsureConfigHandlerIfNeeded 的兜底链路在部分 configuration 场景仍可能出现“主标题不显示”。
+    //      现阶段请在业务侧优先改用 *_iOS15ConfigOnly 先把效果跑通。
+    @available(iOS 15.0, *)
     @discardableResult
     public func byAnimatedMainTitleNumber_iOS15ConfigOnly(start: Double? = nil,
                                                           step: Double? = nil,
@@ -143,6 +168,7 @@ extension UIButton {
         return self
     }
 
+    @available(iOS 15.0, *)
     @discardableResult
     public func byStartAnimatedMainTitleNumber_iOS15ConfigOnly(_ targetText: String,
                                                                states: [UIControl.State]? = nil) -> Self {
@@ -150,6 +176,7 @@ extension UIButton {
         return self
     }
 
+    @available(iOS 15.0, *)
     @discardableResult
     public func byStartAnimatedMainTitleNumber_iOS15ConfigOnly(_ targetText: NSAttributedString,
                                                                states: [UIControl.State]? = nil) -> Self {
@@ -157,15 +184,13 @@ extension UIButton {
         return self
     }
 
+    @available(iOS 15.0, *)
     @discardableResult
     public func byStopAnimatedMainTitleNumber_iOS15ConfigOnly() -> Self {
         _jobsStopAnimatedNumber(_jobsAnimNumStore.main)
         return self
     }
-}
-// MARK: - Public API（副标题）
-extension UIButton {
-
+    // MARK: - Public API（副标题）
     @discardableResult
     public func byAnimatedSubTitleNumber(start: Double? = nil,
                                          step: Double? = nil,
@@ -207,10 +232,7 @@ extension UIButton {
         _jobsStopAnimatedNumber(_jobsAnimNumStore.sub)
         return self
     }
-}
-
-// MARK: - Core
-extension UIButton {
+    // MARK: - Core
     private enum _JobsAnimTitleKind { case main, sub }
 
     private func _jobsStopAnimatedNumber(_ channel: _JobsBtnAnimNumChannel) {
@@ -396,10 +418,7 @@ extension UIButton {
 
         if #available(iOS 15.0, *) { setNeedsUpdateConfiguration() }
     }
-}
-// MARK: - iOS15+ Configuration 兜底（关键：避免“后创建 configuration 导致 title 丢失”）
-extension UIButton {
-
+    // MARK: - iOS15+ Configuration 兜底（关键：避免“后创建 configuration 导致 title 丢失”）
     private func _jobsResolvedStateKey(_ state: UIControl.State) -> UInt {
         let s = _jobsAnimNumStore
         let raw = state.rawValue
@@ -488,19 +507,16 @@ extension UIButton {
         setNeedsUpdateConfiguration()
         updateConfiguration()
     }
-}
-// MARK: - iOS15+ Configuration Only（主标题）实现
-//
-// 目标：先确保「主标题」在 configuration 场景一定可见且能动；
-//      该实现不依赖 configurationUpdateHandler，也不依赖 legacy setTitle。
-@available(iOS 15.0, *)
-extension UIButton {
-
+    // MARK: - iOS15+ Configuration Only（主标题）实现
+    //
+    // 目标：先确保「主标题」在 configuration 场景一定可见且能动；
+    //      该实现不依赖 configurationUpdateHandler，也不依赖 legacy setTitle。
     private struct _JobsMainCfgRestore {
         let autoUpdates: Bool
         let handler: UIButton.ConfigurationUpdateHandler?
     }
 
+    @available(iOS 15.0, *)
     private func _jobsStartAnimatedMainConfigOnly(target: Any) {
         let channel = _jobsAnimNumStore.main
         _jobsStopAnimatedNumber(channel)
@@ -588,17 +604,20 @@ extension UIButton {
         timer.start()
     }
 
+    @available(iOS 15.0, *)
     private func _jobsCurrentMainConfigRaw() -> Any {
         if let at = configuration?.attributedTitle { return NSAttributedString(at) }
         if let t = configuration?.title { return t }
         return ""
     }
 
+    @available(iOS 15.0, *)
     private func _jobsCurrentMainConfigText() -> String {
         let raw = _jobsCurrentMainConfigRaw()
         return (raw as? NSAttributedString)?.string ?? (raw as? String) ?? ""
     }
 
+    @available(iOS 15.0, *)
     private func _jobsApplyMainConfigOnly(_ target: Any) {
         var cfg = configuration ?? UIButton.Configuration.plain()
         if let a = target as? NSAttributedString {
@@ -615,6 +634,7 @@ extension UIButton {
         _jobsForceUpdateMainTitleLabel(target)
     }
 
+    @available(iOS 15.0, *)
     private func _jobsApplyMainConfigFrame(value: Double,
                                           template: _JobsNumberTemplate,
                                           decimals: Int) {
@@ -636,6 +656,7 @@ extension UIButton {
         }
     }
 
+    @available(iOS 15.0, *)
     private func _jobsDisableConfigurationAutoUpdatesForMainAnim() -> _JobsMainCfgRestore {
         let restore = _JobsMainCfgRestore(autoUpdates: automaticallyUpdatesConfiguration,
                                           handler: configurationUpdateHandler)
@@ -644,16 +665,14 @@ extension UIButton {
         return restore
     }
 
+    @available(iOS 15.0, *)
     private func _jobsRestoreConfigurationAutoUpdates(_ restore: _JobsMainCfgRestore) {
         automaticallyUpdatesConfiguration = restore.autoUpdates
         configurationUpdateHandler = restore.handler
         setNeedsUpdateConfiguration()
         updateConfiguration()
     }
-}
-// MARK: - Current Text / Template
-extension UIButton {
-
+    // MARK: - Current Text / Template
     private func _jobsCurrentRaw(kind: _JobsAnimTitleKind, state: UIControl.State) -> Any {
         switch kind {
         case .main:
@@ -699,9 +718,6 @@ extension UIButton {
                          rawAttributed: nil)
         }
     }
-}
-// MARK: - Helpers
-extension UIButton {
     // MARK: - Main title (iOS15+ configuration 强制同步 + 强制刷新 titleLabel)
     //
     // 说明：
@@ -751,7 +767,9 @@ extension UIButton {
         let pattern = #"[+-]?\d+(?:\.\d+)?"#
         let ns = str as NSString
         guard let re = try? NSRegularExpression(pattern: pattern, options: []) else { return [] }
-        return re.matches(in: str, options: [], range: NSRange(location: 0, length: ns.length)).map { $0.range }
+        return re.matches(in: str,
+                          options: [],
+                          range: NSRange(location: 0, length: ns.length)).map { $0.range }
     }
 
     private func _jobsDecimalPlaces(of str: String) -> Int {

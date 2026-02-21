@@ -178,6 +178,13 @@ extension UIButton {
         self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
         return self
     }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfiguration(_ cfg: UIButton.Configuration?) -> Self {
+        self.configuration = cfg
+        return self
+    }
 
     @discardableResult
     public func byBackgroundImageContentMode(_ mode: UIView.ContentMode) -> Self {

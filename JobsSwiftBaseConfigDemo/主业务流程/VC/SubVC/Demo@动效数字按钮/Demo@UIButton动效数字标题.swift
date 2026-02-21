@@ -81,9 +81,18 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
             .byBackgroundColor(.systemBlue)
             .byCornerRadius(10)
-            .onTap { [weak self] _ in
+            .onTap { [weak self] sender in
                 guard let self else { return }
-                self._runBtn1()
+                let start = Double(tf1Start.text ?? "") ?? 99
+                let end   = Double(tf1End.text ?? "") ?? 199
+                sender
+                    .byAnimatedMainTitleNumber_Compat(start: start,
+                                                      initialTitle: "¥\(Int(start))",
+                                                      duration: 0.9,
+                                                      minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }
+                    .byStartAnimatedMainTitleNumber("¥\(Int(end))")
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tf1Start.snp.bottom).offset(10)
@@ -132,9 +141,29 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .bySubTitleFont(.systemFont(ofSize: 13))
             .byBackgroundColor("#2F2F2F".cor)
             .byCornerRadius(10)
-            .onTap { [weak self] _ in
+            .onTap { [weak self] sender in
                 guard let self else { return }
-                self._runBtn2()
+                let start = Double(tf2Start.text ?? "") ?? 199
+                let end   = Double(tf2End.text ?? "") ?? 99
+                // subtitle 富文本：只动数字，其他不动
+                let startAttr = JobsRichText.make([
+                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
+                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
+                ])
+                let endAttr = JobsRichText.make([
+                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
+                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
+                ])
+                
+                sender
+                    .byRichSubTitle(startAttr)
+                    .byAnimatedSubTitleNumber(start: start,
+                                              duration: 1.0,
+                                              minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }.byStartAnimatedSubTitleNumber(endAttr)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tf2Start.snp.bottom).offset(10)
@@ -184,9 +213,27 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemGreen)
             .byCornerRadius(10)
-            .onTap { [weak self] _ in
+            .onTap { [weak self] sender in
                 guard let self else { return }
-                self._runBtn3()
+                let start = Double(tf3Start.text ?? "") ?? 99
+                let end   = Double(tf3End.text ?? "") ?? 299
+                
+                let startRich = JobsRichText.make([
+                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                ])
+                let endRich = JobsRichText.make([
+                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                ])
+                
+                sender
+                    .byRichTitle(startRich)
+                    .byAnimatedMainTitleNumber(start: start,
+                                               duration: 0.9,
+                                               minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }.byStartAnimatedMainTitleNumber(endRich)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tf3Start.snp.bottom).offset(10)
@@ -237,9 +284,18 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemPurple)
             .byCornerRadius(10)
-            .onTap { [weak self] _ in
+            .onTap { [weak self] sender in
                 guard let self else { return }
-                self._runBtn4()
+                let start = Double(tf4Start.text ?? "") ?? 199
+                let end   = Double(tf4End.text ?? "") ?? 9
+                sender
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .normal)
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .selected)
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .disabled)
+                    .byAnimatedSubTitleNumber(start: start, duration: 1.1, minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }
+                    .byStartAnimatedSubTitleNumber("倒计时 \(Int(end)) 秒")
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tf4Start.snp.bottom).offset(10)
@@ -248,7 +304,6 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.bottom.equalToSuperview().offset(-24)
             }
     }()
-
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -272,91 +327,11 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         tf4Start.byVisible(YES)
         tf4End.byVisible(YES)
         btn4.byVisible(YES)
-
     }
 }
 
 extension AnimatedButtonNumberDemoVC {
-    
-    private func _runBtn1() {
-        let start = Double(tf1Start.text ?? "") ?? 99
-        let end   = Double(tf1End.text ?? "") ?? 199
-        
-        if #available(iOS 15.0, *) {
-            // iOS15+：先让按钮明确进入 configuration 渲染链路（避免 legacy/handler 干扰）
-            var cfg = btn1.configuration ?? UIButton.Configuration.plain()
-            cfg.title = "¥\(Int(start))"
-            btn1.configuration = cfg
-            
-            btn1.byAnimatedMainTitleNumber_iOS15ConfigOnly(start: start,
-                                                           duration: 0.9,
-                                                           minimumInterval: 1.0 / 60.0) {
-                "动画结束".toast
-            }
-                                                           .byStartAnimatedMainTitleNumber("¥\(Int(end))")
-        }
-    }
-        
-    private func _runBtn2() {
-        let start = Double(tf2Start.text ?? "") ?? 199
-        let end   = Double(tf2End.text ?? "") ?? 99
-        // subtitle 富文本：只动数字，其他不动
-        let startAttr = JobsRichText.make([
-            JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-            JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
-        ])
-        let endAttr = JobsRichText.make([
-            JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-            JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
-        ])
-        
-        btn2.byRichSubTitle(startAttr)
-        
-            .byAnimatedSubTitleNumber(start: start,
-                                      duration: 1.0,
-                                      minimumInterval: 1.0/60.0) {
-                "动画结束".toast
-            }
-                                      .byStartAnimatedSubTitleNumber(endAttr)
-    }
-        
-    private func _runBtn3() {
-        let start = Double(tf3Start.text ?? "") ?? 99
-        let end   = Double(tf3End.text ?? "") ?? 299
-        
-        let startRich = JobsRichText.make([
-            JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
-        ])
-        let endRich = JobsRichText.make([
-            JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
-        ])
-        
-        btn3.byRichTitle(startRich)
-            .byAnimatedMainTitleNumber(start: start,
-                                       duration: 0.9,
-                                       minimumInterval: 1.0/60.0) {
-                "动画结束".toast
-            }
-                                       .byStartAnimatedMainTitleNumber(endRich)
-    }
-        
-    private func _runBtn4() {
-        let start = Double(tf4Start.text ?? "") ?? 199
-        let end   = Double(tf4End.text ?? "") ?? 9
-        
-        btn4.bySubTitle("倒计时 \(Int(start)) 秒", for: .normal)
-            .bySubTitle("倒计时 \(Int(start)) 秒", for: .selected)
-            .bySubTitle("倒计时 \(Int(start)) 秒", for: .disabled)
-            .byAnimatedSubTitleNumber(start: start, duration: 1.1, minimumInterval: 1.0/60.0) {
-                "动画结束".toast
-            }
-            .byStartAnimatedSubTitleNumber("倒计时 \(Int(end)) 秒")
-    }
-    
+
     private func _makeTF(ph: String) -> UITextField {
         UITextField()
             .byPlaceholder(ph)
