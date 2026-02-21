@@ -14,6 +14,25 @@ import UIKit
 import ObjectiveC
 // MARK: - 获取 MainWindow
 @inline(__always)
+public func jobsGetMainWindow() -> UIWindow? {
+    let mainWindowBefore13 = jobsGetMainWindowBefore13()
+    let mainWindowAfter13 = jobsGetMainWindowAfter13()
+    
+    let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
+    let resultWindow = systemVersion >= 13.0 ? mainWindowAfter13 : mainWindowBefore13
+
+    if let window = resultWindow {
+        return window
+    } else if let window = mainWindowBefore13 {
+        return window
+    } else if let window = mainWindowAfter13 {
+        return window
+    } else {
+        return nil
+    }
+}
+
+@inline(__always)
 public func jobsGetMainWindowBefore13() -> UIWindow? {
     var window: UIWindow?
     // 使用 AppDelegate 的 window 属性
@@ -46,23 +65,4 @@ public func jobsGetMainWindowAfter13() -> UIWindow? {
             }
         }
     };return nil
-}
-
-@inline(__always)
-public func jobsGetMainWindow() -> UIWindow? {
-    let mainWindowBefore13 = jobsGetMainWindowBefore13()
-    let mainWindowAfter13 = jobsGetMainWindowAfter13()
-    
-    let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
-    let resultWindow = systemVersion >= 13.0 ? mainWindowAfter13 : mainWindowBefore13
-
-    if let window = resultWindow {
-        return window
-    } else if let window = mainWindowBefore13 {
-        return window
-    } else if let window = mainWindowAfter13 {
-        return window
-    } else {
-        return nil
-    }
 }

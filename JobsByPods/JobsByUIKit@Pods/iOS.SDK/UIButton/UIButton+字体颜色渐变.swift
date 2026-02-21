@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import SnapKit
-import ObjectiveC.runtime
+import ObjectiveC
 import JobsSwiftBaseDefines
 // MARK: - Associated Object Keys (NO WARNING)
 private enum _JobsBtnGradientKey {
@@ -68,7 +68,7 @@ extension UIButton {
 extension UIButton {
     /// 1) 只处理主标题（titleLabel）
     @discardableResult
-    public func jobs_setGradientMainTitle(
+    public func byGradientMainTitle(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         for state: UIControl.State = .normal,
@@ -98,7 +98,7 @@ extension UIButton {
     }
     /// 2) 只处理副标题（jobs_subtitleLabel）
     @discardableResult
-    public func jobs_setGradientSubtitle(
+    public func byGradientSubtitle(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         autoLayout: Bool = true
@@ -122,7 +122,7 @@ extension UIButton {
     }
     /// 3) 主标题 + 副标题一致（同一套 colors + direction）
     @discardableResult
-    public func jobs_setGradientTitlesSame(
+    public func byGradientTitlesSame(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight,
         for state: UIControl.State = .normal,

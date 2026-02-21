@@ -40,8 +40,6 @@ extension UIButton {
             objc_setAssociatedObject(self, &_jobsLegacyImagePlacementKey, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-
-    
     // MARK: - Legacy Insets Shift Helper (iOS 14 and below)
     private func _jobsShiftEdgeInsets(_ e: UIEdgeInsets, dx: CGFloat, dy: CGFloat) -> UIEdgeInsets {
         UIEdgeInsets(top: e.top + dy,
@@ -49,7 +47,6 @@ extension UIButton {
                      bottom: e.bottom - dy,
                      right: e.right - dx)
     }
-
     /// When legacy imagePlacement(.top/.bottom/.left/.right) has been applied on iOS 12,
     /// changing contentEdgeInsets should also shift image/title insets, otherwise the legacy negative offsets can "push back".
     private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets, new: UIEdgeInsets) {
@@ -76,7 +73,7 @@ extension UIButton {
             return
         }
     }
-@discardableResult
+    @discardableResult
     public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
         self.setTitle(title, for: state)
         if #available(iOS 15.0, *), var cfg = self.configuration {
@@ -141,7 +138,21 @@ extension UIButton {
             }
         };return self
     }
-
+    /// 主标题和副标题之间的距离（兼容 iOS12+）
+    @discardableResult
+    public func byTitlePadding(_ value: CGFloat) -> Self {
+        _jobsTitlePadding = value
+        if #available(iOS 15.0, *) {
+            var cfg = configuration ?? .plain()
+            cfg.titlePadding = value
+            configuration = cfg
+            byUpdateConfig()
+        } else {
+            // iOS 12–14：重新应用 legacy composite
+            _applyLegacyComposite(for: .normal)
+        };return self
+    }
+    
     @discardableResult
     public func byTitleShadowColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         self.setTitleShadowColor(color, for: state)

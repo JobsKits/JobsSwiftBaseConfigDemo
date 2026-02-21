@@ -22,44 +22,6 @@ import JobsToast
 import JobsCountdownButton
 
 final class JobsCountdownDemoVC: BaseVC {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(
-            title: "倒计时按钮"
-        )
-        if #available(iOS 15.0, *) {
-            title1Label.byVisible(YES)
-            button1Basic.byVisible(YES)
-
-            title2Label.byVisible(YES)
-            button2Flash.byVisible(YES)
-
-            title3Label.byVisible(YES)
-            button3Up.byVisible(YES)
-
-            title4Label.byVisible(YES)
-            button4RenderOnInit.byVisible(YES)
-
-            title5Label.byVisible(YES)
-            button5RichText.byVisible(YES)
-
-            title6Label.byVisible(YES)
-            button6Attachment.byVisible(YES)
-
-            title7Label.byVisible(YES)
-            button7Tappable.byVisible(YES)
-        } else {
-            UILabel()
-                .byText("需要 iOS 15+ 的 UIButton.Configuration")
-                .byTextColor(.secondaryLabel)
-                .byTextAlignment(.center)
-                .byAddTo(view) { make in
-                    make.center.equalToSuperview()
-                }
-        }
-    }
     /// 外层滚动视图
     private lazy var scrollView: UIScrollView = { [unowned self] in
         UIScrollView()
@@ -92,8 +54,8 @@ final class JobsCountdownDemoVC: BaseVC {
     private lazy var button1Basic: UIButton = { [unowned self] in
         UIButton.sys()
             .byBackgroundColor(.systemBlue, for: .normal)
-            .byTitle("获取验证码", for: .normal)
-            .byTitle("获取验证码", for: .selected)
+            .byTitle("获取验证码".tr, for: .normal)
+            .byTitle("获取验证码".tr, for: .selected)
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
@@ -132,8 +94,8 @@ final class JobsCountdownDemoVC: BaseVC {
     private lazy var button2Flash: UIButton = { [unowned self] in
         UIButton.sys()
             .byBackgroundColor(.systemTeal, for: .normal)
-            .byTitle("开始闪烁倒计时", for: .normal)
-            .byTitle("开始闪烁倒计时", for: .selected)
+            .byTitle("开始闪烁倒计时".tr, for: .normal)
+            .byTitle("开始闪烁倒计时".tr, for: .selected)
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
@@ -213,8 +175,8 @@ final class JobsCountdownDemoVC: BaseVC {
     private lazy var button4RenderOnInit: UIButton = { [unowned self] in
         UIButton.sys()
             .byBackgroundColor(.systemIndigo, for: .normal)
-            .byTitle("进入已显示", for: .normal)
-            .byTitle("进入已显示", for: .selected)
+            .byTitle("进入已显示".tr, for: .normal)
+            .byTitle("进入已显示".tr, for: .selected)
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
@@ -251,8 +213,8 @@ final class JobsCountdownDemoVC: BaseVC {
     private lazy var button5RichText: UIButton = { [unowned self] in
         UIButton.sys()
             .byBackgroundColor(.systemPurple, for: .normal)
-            .byTitle("富文本倒计时", for: .normal)
-            .byTitle("富文本倒计时", for: .selected)
+            .byTitle("富文本倒计时".tr, for: .normal)
+            .byTitle("富文本倒计时".tr, for: .selected)
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
@@ -311,8 +273,8 @@ final class JobsCountdownDemoVC: BaseVC {
     private lazy var button6Attachment: UIButton = { [unowned self] in
         UIButton.sys()
             .byBackgroundColor(.systemPink, for: .normal)
-            .byTitle("附件说明", for: .normal)
-            .byTitle("附件说明", for: .selected)
+            .byTitle("附件说明".tr, for: .normal)
+            .byTitle("附件说明".tr, for: .selected)
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
@@ -388,4 +350,42 @@ final class JobsCountdownDemoVC: BaseVC {
                 make.bottom.equalTo(contentView.snp.bottom).offset(-24)
             }
     }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        jobsSetupGKNav(
+            title: "倒计时按钮"
+        )
+        if #available(iOS 15.0, *) {
+            title1Label.byVisible(YES)
+            button1Basic.byVisible(YES)
+
+            title2Label.byVisible(YES)
+            button2Flash.byVisible(YES)
+
+            title3Label.byVisible(YES)
+            button3Up.byVisible(YES)
+
+            title4Label.byVisible(YES)
+            button4RenderOnInit.byVisible(YES)
+
+            title5Label.byVisible(YES)
+            button5RichText.byVisible(YES)
+
+            title6Label.byVisible(YES)
+            button6Attachment.byVisible(YES)
+
+            title7Label.byVisible(YES)
+            button7Tappable.byVisible(YES)
+        } else {
+            UILabel()
+                .byText("需要 iOS 15+ 的 UIButton.Configuration")
+                .byTextColor(.secondaryLabel)
+                .byTextAlignment(.center)
+                .byAddTo(view) { make in
+                    make.center.equalToSuperview()
+                }
+        }
+    }
 }

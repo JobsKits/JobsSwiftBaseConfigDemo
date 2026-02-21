@@ -134,7 +134,7 @@ final class JobsAppDoorDemoVC: BaseVC {
 #if canImport(BMPlayer)
         player.byVisible(YES)
         // MARK: - 接收通知@视频循环
-        self.onNotification(Notification.Name.AVPlayerItemDidPlayToEndTime.rawValue, on: .main) { [weak self] noti in
+        self.on(Notification.Name.AVPlayerItemDidPlayToEndTime.rawValue) { [weak self] noti, obj, userInfo in
             guard let self else { return }
             guard let av = self.player.playerLayer?.player else { return }
             av.seek(to: .zero)

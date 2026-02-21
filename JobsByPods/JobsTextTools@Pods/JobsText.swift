@@ -5,7 +5,6 @@
 //  Created by Mac on 10/23/25.
 //
 
-import Foundation
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)

@@ -105,6 +105,7 @@ final class RootListVC: BaseVC {
                 ("🛠️ Jobs时间管理大师", JobsTimerManagerDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
                 ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
+                ("🏷️ 动效数字按钮", AnimatedButtonNumberDemoVC.self),
                 ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
                 ("💥 倒计时按钮", JobsCountdownDemoVC.self),
                 ("🕖 时钟", ClockDemoVC.self),

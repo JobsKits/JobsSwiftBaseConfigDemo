@@ -191,6 +191,9 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                 let endValue   = self.parseValue(endRaw,   fallback: self.defaultEnd)
 
                 let endText = self.formatTargetText(endValue)
+                if endText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    "❌ 目标值为空".toast; return
+                }
 
                 self.valueLabel
                     .byStopAnimatedTextNumber()

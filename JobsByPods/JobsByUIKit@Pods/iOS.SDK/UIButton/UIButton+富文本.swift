@@ -38,9 +38,9 @@ extension UIButton {
 }
 private var _richTitleKey: UInt8 = 0
 private var _richSubKey:   UInt8 = 0
+private var _jobsTitlePaddingKey: UInt8 = 0
 extension UIButton {
     typealias StateRaw = UInt
-
     private var _legacyRichTitleMap: [StateRaw: NSAttributedString] {
         get { objc_getAssociatedObject(self, &_richTitleKey) as? [StateRaw: NSAttributedString] ?? [:] }
         set { objc_setAssociatedObject(self, &_richTitleKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -49,6 +49,23 @@ extension UIButton {
     private var _legacyRichSubMap: [StateRaw: NSAttributedString] {
         get { objc_getAssociatedObject(self, &_richSubKey) as? [StateRaw: NSAttributedString] ?? [:] }
         set { objc_setAssociatedObject(self, &_richSubKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+    
+    var _jobsTitlePadding: CGFloat {
+        get {
+            (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsTitlePaddingKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    var _jobsLegacyTitlePadding: CGFloat {
+        get { (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0 }
+        set { objc_setAssociatedObject(self, &_jobsTitlePaddingKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
     private func _setLegacyRichTitle(_ rich: NSAttributedString?, for state: UIControl.State) {
@@ -65,11 +82,10 @@ extension UIButton {
         _legacyRichSubMap = m
     }
 
-    private func _applyLegacyComposite(for state: UIControl.State) {
+    func _applyLegacyComposite(for state: UIControl.State) {
         let k = state.rawValue
         let title = _legacyRichTitleMap[k]
         let sub   = _legacyRichSubMap[k]
-
         switch (title, sub) {
         case (nil, nil):
             setAttributedTitle(nil, for: state)
@@ -81,10 +97,26 @@ extension UIButton {
             titleLabel?
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
-            byAttributedTitle(NSMutableAttributedString()
-                .byAdd(t)
-                .byAdd("\n".rich)
-                .byAdd(s), for: state)
+            // ✅ 关键：用 paragraphSpacingBefore 控制“主副标题间距”
+            let padding = _jobsLegacyTitlePadding
+            let subMutable = NSMutableAttributedString(attributedString: s)
+            if padding != 0 {
+                let p = NSMutableParagraphStyle()
+                p.paragraphSpacingBefore = padding
+                // 如果你还想保持居中（也可以不写，取 label alignment）
+                p.alignment = titleLabel?.textAlignment ?? .center
+
+                subMutable.addAttribute(.paragraphStyle,
+                                        value: p,
+                                        range: NSRange(location: 0, length: subMutable.length))
+            }
+
+            let combined = NSMutableAttributedString()
+            combined.append(t)
+            combined.append(NSAttributedString(string: "\n")) // 保留换行（必须要有两行）
+            combined.append(subMutable)
+
+            byAttributedTitle(combined, for: state)
         }
     }
 }

@@ -110,7 +110,8 @@ extension UIButton {
     @discardableResult
     public func startTimer(total: Int? = nil,
                            interval: TimeInterval = 1.0,
-                           kind: JobsTimerKind = .gcd) -> Self {
+                           kind: JobsTimerKind? = nil) -> Self {
+        let kind = kind ?? .gcd
         stopTimer()
         if let total {
             objc_setAssociatedObject(self, &_timerModeKey,
