@@ -513,7 +513,7 @@ extension UIButton {
     //      该实现不依赖 configurationUpdateHandler，也不依赖 legacy setTitle。
     private struct _JobsMainCfgRestore {
         let autoUpdates: Bool
-        let handler: UIButton.ConfigurationUpdateHandler?
+        let handler: ((UIButton) -> Void)?
     }
 
     @available(iOS 15.0, *)
