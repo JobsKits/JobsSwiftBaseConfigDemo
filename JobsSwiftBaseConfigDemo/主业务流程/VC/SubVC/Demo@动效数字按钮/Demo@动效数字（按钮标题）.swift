@@ -1,5 +1,5 @@
 //
-//  AnimatedButtonNumberDemoVC.swift
+//  Demo@动效数字（按钮标题）.swift
 //  JobsByUIKitDemo
 //
 //  Created by Jobs on 21/2/26.
@@ -71,7 +71,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-
+    /// 数字动效按钮@主标题（普通文本）
     private lazy var btn1: UIButton = {
         UIButton.sys()
             .byTitle("¥99", for: .normal)
@@ -130,7 +130,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-
+    /// 数字动效按钮@副标题（富文本）
     private lazy var btn2: UIButton = {
         UIButton.sys()
             .byTitle("会员价格", for: .normal)
@@ -201,7 +201,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-
+    /// 数字动效按钮@主标题（富文本）
     private lazy var btn3: UIButton = {
         UIButton.sys()
             .byRichTitle(JobsRichText.make([
@@ -271,7 +271,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-
+    /// 数字动效按钮@副标题（普通文本）
     private lazy var btn4: UIButton = {
         UIButton.sys()
             .byTitle("限时折扣", for: .normal)

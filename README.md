@@ -2158,7 +2158,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
   > UILabel().underline(color:PYConst.main_color)
   > ```
 
-#### 2.2、🔘`UIBUtton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 2.2、🔘`UIButton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > * **按钮选中/非选中**
 >
@@ -2173,7 +2173,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 >   ```
 >
 
-##### 2.2.1、🔘普通按钮（事件追加） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 2.2.1、🔘普通按钮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var exampleButton: UIButton = {
@@ -2192,11 +2192,11 @@ private lazy var exampleButton: UIButton = {
         /// 背景图片
         .byBackgroundImage("背景图片".img, for: .normal)
         /// 字体颜色渐变@只处理主标题（titleLabel）
-        .jobs_setGradientMainTitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
+        .byGradientMainTitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
         /// 字体颜色渐变@只副标题渐变
-        .jobs_setGradientSubtitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .topLeftToBottomRight)
+        .byGradientSubtitle(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .topLeftToBottomRight)
         /// 字体颜色渐变@主副一致
-        .jobs_setGradientTitlesSame(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
+        .byGradientTitlesSame(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
         /// 普通字符串@设置主标题
         .byTitle("显示", for: .normal)
         .byTitle("隐藏", for: .selected)
@@ -2220,17 +2220,20 @@ private lazy var exampleButton: UIButton = {
             JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
             JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
         ]))
+        /// 主标题和副标题之间的距离（兼容 iOS12+）
+        .byTitlePadding(4.h)
         /// 按钮图片@图文关系
         .byImage("eye.slash".sysImg, for: .normal)                // 未选中图标
         .byImage("eye".sysImg, for: .selected)                    // 选中图标
         /// iOS15专用@清除偏移
         .byClearConfigurationBackground() 
-        /// 按钮图片@图文关系iOS13（与下文互斥）
-        .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6)) // 图标与文字间距
-        .byImagePlacement(.top)
-        /// 按钮图片@图文关系iOS12（与上文互斥）
-        .byImagePlacementLegacy(.top, padding: 5)
-        .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))// 图文内边距
+        /// 按钮@图文位置关系
+        .byImagePlacement(.top ,padding: 5)        // 通用（向下兼容）
+        .byImagePlacementLegacy(.top, padding: 5)  // 只满足iOS13以下
+        /// 按钮图文间距@iOS13（与下文互斥）
+        .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6)) 
+        /// 按钮图文内边距@iOS12（与上文互斥）
+        .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
         /// 点击@播放声音
         .byTapSound("Sound.wav")    
         /// 普通@点按事件触发
@@ -2301,6 +2304,176 @@ private lazy var exampleButton: UIButton = {
         }
 }()
 ```
+
+* <font color=red>风险提示：一旦用了最新的`UIButtonConfiguration`可能影响到老旧的Api的使用（直观感受，老旧Api配置的按钮将会不起效）</font>
+
+* 可视**UI**（向下兼容，且启用`UIButtonConfiguration`）
+
+  * 普通文本配置主副标题（文本内容、文本字体颜色大小）
+  * <font color=blue>富文本</font>配置主副标题
+  * 设置**背景图**片
+  * 设置背景色
+  * **前景图**文位置关系（空间位置和距离）
+  * 操作Layer层：切角、描边
+  * 锁住**tint**
+  * [**snapkit**](https://github.com/SnapKit/SnapKit)约束
+  * 右上角提示（参考**Objc**库[**PPBadgeView**](https://github.com/jkpang/PPBadgeView)）
+
+* 事件
+
+  * （点按、长按）事件封装 **➤** 绕过<font color=red>**@selector**</font>和**Target**
+
+  * （点按、长按）<font color=blue>**事件追加**</font>
+
+  * 点击播放声音
+
+  * 主副标题的数字动效
+
+    ```swift
+    /// 数字动效按钮@主标题（普通文本）
+    private lazy var btn1: UIButton = {
+        UIButton.sys()
+            .byTitle("¥99", for: .normal)
+            .byTitle("¥99", for: .selected)
+            .byTitle("¥99", for: .disabled)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
+            .byBackgroundColor(.systemBlue)
+            .byCornerRadius(10)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                let start = Double(tf1Start.text ?? "") ?? 99
+                let end   = Double(tf1End.text ?? "") ?? 199
+                sender
+                    .byAnimatedMainTitleNumber_Compat(start: start,
+                                                      initialTitle: "¥\(Int(start))",
+                                                      duration: 0.9,
+                                                      minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }
+                    .byStartAnimatedMainTitleNumber("¥\(Int(end))")
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf1Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(52)
+            }
+    }()
+    /// 数字动效按钮@副标题（富文本）
+    private lazy var btn2: UIButton = {
+        UIButton.sys()
+            .byTitle("会员价格", for: .normal)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .bySubTitle("原价 ¥199 /月", for: .normal)
+            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(.systemFont(ofSize: 13))
+            .byBackgroundColor("#2F2F2F".cor)
+            .byCornerRadius(10)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                let start = Double(tf2Start.text ?? "") ?? 199
+                let end   = Double(tf2End.text ?? "") ?? 99
+                // subtitle 富文本：只动数字，其他不动
+                let startAttr = JobsRichText.make([
+                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
+                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
+                ])
+                let endAttr = JobsRichText.make([
+                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
+                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
+                ])
+                
+                sender
+                    .byRichSubTitle(startAttr)
+                    .byAnimatedSubTitleNumber(start: start,
+                                              duration: 1.0,
+                                              minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }.byStartAnimatedSubTitleNumber(endAttr)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf2Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(64)
+            }
+    }()
+    /// 数字动效按钮@主标题（富文本）
+    private lazy var btn3: UIButton = {
+        UIButton.sys()
+            .byRichTitle(JobsRichText.make([
+                JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+            ]))
+            .byTitleColor(.white, for: .normal)
+            .byImage("star.fill".sysImg, for: .normal)
+            .byImagePlacement(.leading, padding: 8)
+            .byBackgroundColor(.systemGreen)
+            .byCornerRadius(10)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                let start = Double(tf3Start.text ?? "") ?? 99
+                let end   = Double(tf3End.text ?? "") ?? 299
+                
+                let startRich = JobsRichText.make([
+                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                ])
+                let endRich = JobsRichText.make([
+                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                ])
+                
+                sender
+                    .byRichTitle(startRich)
+                    .byAnimatedMainTitleNumber(start: start,
+                                               duration: 0.9,
+                                               minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }.byStartAnimatedMainTitleNumber(endRich)
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf3Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(56)
+            }
+    }()
+    /// 数字动效按钮@副标题（普通文本）
+    private lazy var btn4: UIButton = {
+        UIButton.sys()
+            .byTitle("限时折扣", for: .normal)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .bySubTitle("倒计时 199 秒", for: .normal)
+            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(.systemFont(ofSize: 13))
+            .byImage("clock".sysImg, for: .normal)
+            .byImagePlacement(.leading, padding: 8)
+            .byBackgroundColor(.systemPurple)
+            .byCornerRadius(10)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                let start = Double(tf4Start.text ?? "") ?? 199
+                let end   = Double(tf4End.text ?? "") ?? 9
+                sender
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .normal)
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .selected)
+                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .disabled)
+                    .byAnimatedSubTitleNumber(start: start, duration: 1.1, minimumInterval: 1.0/60.0) {
+                        "动画结束".tr.toast
+                    }
+                    .byStartAnimatedSubTitleNumber("倒计时 \(Int(end)) 秒")
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf4Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(64)
+                make.bottom.equalToSuperview().offset(-24)
+            }
+    }()
+    ```
 
 ##### 2.2.2、⏰ <font color=red id=计数按钮>**计数按钮**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -4090,22 +4263,28 @@ private lazy var valueLabel: UILabel = {
         .byTextColor(.label)
         .byText("\(Int(defaultStart))")
         .byNumberOfLines(1)
+        /// 配置@数字动效
         .byAnimatedTextNumber(duration: 0.9, minimumInterval: 1.0 / 60.0)
-        .byStopAnimatedTextNumber()
-        .byAnimatedTextNumber(
-            start: 60,
-            step: nil,
-            duration: 0.9,
-            minimumInterval: 1.0 / 60.0,
-            completion: nil
-        )
-        .byStartAnimatedTextNumber("3")
         .byAddTo(cardView) { [unowned self] make in
             make.top.equalToSuperview().offset(24)
             make.left.equalToSuperview().offset(self.cardInset)
             make.right.equalToSuperview().inset(self.cardInset)
         }
 }()
+```
+
+```swift
+/// 启动@数字动效
+self.valueLabel
+    .byStopAnimatedTextNumber()
+    .byAnimatedTextNumber(
+        start: startValue,
+        step: nil,
+        duration: 0.9,
+        minimumInterval: 1.0 / 60.0,
+        completion: nil
+    )
+    .byStartAnimatedTextNumber(endText)
 ```
 
 #### 2.17、<font id=UIAlertController>`UIAlertController`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

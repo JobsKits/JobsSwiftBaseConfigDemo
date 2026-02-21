@@ -1,5 +1,5 @@
 //
-//  Demo@动效数字标签.swift
+//  Demo@动效数字（普通标签）.swift
 //  JobsSwiftBaseConfigDemo
 //
 
@@ -48,6 +48,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
             .byTextColor(.label)
             .byText("\(Int(defaultStart))")
             .byNumberOfLines(1)
+            /// 配置@数字动效
             .byAnimatedTextNumber(duration: 0.9, minimumInterval: 1.0 / 60.0)
             .byAddTo(cardView) { [unowned self] make in
                 make.top.equalToSuperview().offset(24)
@@ -194,7 +195,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                 if endText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     "❌ 目标值为空".toast; return
                 }
-
+                /// 启动@数字动效
                 self.valueLabel
                     .byStopAnimatedTextNumber()
                     .byAnimatedTextNumber(
