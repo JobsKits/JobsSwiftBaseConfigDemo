@@ -7,10 +7,10 @@
 // MARK: - 统一协议
 public protocol JobsSwiftTimerProtocol: AnyObject {
     var isRunning: Bool { get }
-    func start()
-    func pause()
-    func resume()
-    func stop()
+    @discardableResult func start() -> Self
+    @discardableResult func pause() -> Self
+    @discardableResult func resume() -> Self
+    @discardableResult func stop() -> Self
 
     @discardableResult
     func onTick(_ block: @escaping JobsTimerCallback) -> Self

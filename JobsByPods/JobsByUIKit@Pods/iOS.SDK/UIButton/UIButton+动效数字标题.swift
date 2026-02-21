@@ -2,12 +2,6 @@
 //  UIButton+动效数字标题.swift
 //  JobsByUIKit
 //
-//  UIButton 主标题/副标题数字动效（仅改内容，不改结构/图文布局）
-//  - 支持常用 state（normal/selected/disabled/highlighted/focused；组合态自动降级）
-//  - 支持富文本：仅替换数字片段，保留原 attributes
-//  - iOS15+ Configuration：安装 configurationUpdateHandler 兜底，并在安装时强制 updateConfiguration 一次
-//  - 定时器：JobsSwiftTimer（JobsTimer）
-//
 //  Created by Jobs on 2026/2/21.
 //
 
@@ -19,6 +13,14 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftTimer
+/**
+ 
+     UIButton 主标题/副标题数字动效（仅改内容，不改结构/图文布局）
+     - 支持常用 state（normal/selected/disabled/highlighted/focused；组合态自动降级）
+     - 支持富文本：仅替换数字片段，保留原 attributes
+     - iOS15+ Configuration：安装 configurationUpdateHandler 兜底，并在安装时强制 updateConfiguration 一次
+     - 定时器：JobsSwiftTimer（JobsTimer）
+ */
 // MARK: - Assoc
 private enum _JobsBtnAnimNumAssocKey { static var store: UInt8 = 0 }
 // MARK: - Model
@@ -55,11 +57,11 @@ private final class _JobsBtnAnimNumStore {
     var subDisplayByState:  [UInt: Any] = [:] // String / NSAttributedString
 
     var configHandlerInstalled = false
-    var originalConfigHandler: UIButton.ConfigurationUpdateHandler?
+    var originalConfigHandler: ((UIButton) -> Void)?
 }
 
 extension UIButton {
-     private var _jobsAnimNumStore: _JobsBtnAnimNumStore {
+    private var _jobsAnimNumStore: _JobsBtnAnimNumStore {
         if let s = objc_getAssociatedObject(self, &_JobsBtnAnimNumAssocKey.store) as? _JobsBtnAnimNumStore { return s }
         let s = _JobsBtnAnimNumStore()
         objc_setAssociatedObject(self,
@@ -114,6 +116,53 @@ extension UIButton {
         return self
     }
 }
+// MARK: - iOS15+ Configuration Only（主标题）——先跑通效果，再谈兼容
+//
+// 说明：
+// - 该组 API **仅面向 iOS15+** 的 UIButton.Configuration(title/attributedTitle) 渲染链路。
+// - 动效期间会临时关闭 automaticallyUpdatesConfiguration / configurationUpdateHandler，避免系统或外部 handler 覆盖我们写入的 cfg.title。
+// - 不改动你现有主/副标题逻辑；这是“增量新增”API。
+//
+// 存疑：当前 byAnimatedMainTitleNumber + _jobsEnsureConfigHandlerIfNeeded 的兜底链路在部分 configuration 场景仍可能出现“主标题不显示”。
+//      现阶段请在业务侧优先改用 *_iOS15ConfigOnly 先把效果跑通。
+@available(iOS 15.0, *)
+extension UIButton {
+
+    @discardableResult
+    public func byAnimatedMainTitleNumber_iOS15ConfigOnly(start: Double? = nil,
+                                                          step: Double? = nil,
+                                                          duration: TimeInterval = 0.8,
+                                                          minimumInterval: TimeInterval = 1.0 / 60.0,
+                                                          completion: (() -> Void)? = nil) -> Self {
+        let c = _jobsAnimNumStore.main
+        c.start = start
+        c.step = step
+        c.duration = max(0, duration)
+        c.minimumInterval = max(0.000_001, minimumInterval)
+        c.completion = completion
+        return self
+    }
+
+    @discardableResult
+    public func byStartAnimatedMainTitleNumber_iOS15ConfigOnly(_ targetText: String,
+                                                               states: [UIControl.State]? = nil) -> Self {
+        _jobsStartAnimatedMainConfigOnly(target: targetText)
+        return self
+    }
+
+    @discardableResult
+    public func byStartAnimatedMainTitleNumber_iOS15ConfigOnly(_ targetText: NSAttributedString,
+                                                               states: [UIControl.State]? = nil) -> Self {
+        _jobsStartAnimatedMainConfigOnly(target: targetText)
+        return self
+    }
+
+    @discardableResult
+    public func byStopAnimatedMainTitleNumber_iOS15ConfigOnly() -> Self {
+        _jobsStopAnimatedNumber(_jobsAnimNumStore.main)
+        return self
+    }
+}
 // MARK: - Public API（副标题）
 extension UIButton {
 
@@ -159,9 +208,11 @@ extension UIButton {
         return self
     }
 }
+
 // MARK: - Core
 extension UIButton {
     private enum _JobsAnimTitleKind { case main, sub }
+
     private func _jobsStopAnimatedNumber(_ channel: _JobsBtnAnimNumChannel) {
         channel.timer?.stop()
         channel.timer = nil
@@ -219,12 +270,12 @@ extension UIButton {
             }
             channel.targetTextByState[st.rawValue] = target
         }
-
         // 先落起点帧（保证第一帧就有字）
         _jobsApplyFrame(value: from,
                         channel: channel,
                         kind: kind,
                         states: states)
+
         let cfg = JobsSwiftTimerConfig(interval: interval,
                                        repeats: true,
                                        tolerance: 0,
@@ -319,6 +370,12 @@ extension UIButton {
                 setTitle(t, for: state)
                 _jobsAnimNumStore.mainDisplayByState[state.rawValue] = (t ?? "")
             }
+            // 🔧 iOS15+：如果按钮已经走 Configuration 渲染链路，legacy 的 setTitle 可能不会立刻驱动 titleLabel 更新
+            if #available(iOS 15.0, *), configuration != nil {
+                _jobsWriteMainToConfigurationIfNeeded(target)
+            }
+            // 🔧 再补一刀：直接推到 titleLabel，确保动画期间可见
+            _jobsForceUpdateMainTitleLabel(target)
 
         case .sub:
             if let a = target as? NSAttributedString {
@@ -343,7 +400,7 @@ extension UIButton {
 // MARK: - iOS15+ Configuration 兜底（关键：避免“后创建 configuration 导致 title 丢失”）
 extension UIButton {
 
-     private func _jobsResolvedStateKey(_ state: UIControl.State) -> UInt {
+    private func _jobsResolvedStateKey(_ state: UIControl.State) -> UInt {
         let s = _jobsAnimNumStore
         let raw = state.rawValue
         if s.mainDisplayByState[raw] != nil || s.subDisplayByState[raw] != nil { return raw }
@@ -369,7 +426,10 @@ extension UIButton {
             }
         }
         // 2) 若 configuration 已存在但 title 丢失：立刻把 cache 的 normal 填回 cfg.title/attributedTitle
-        guard var cfg = configuration else { return }
+        guard var cfg = configuration else {
+            return
+        }
+
         if cfg.title == nil && cfg.attributedTitle == nil {
             if let a = s.mainDisplayByState[UIControl.State.normal.rawValue] as? NSAttributedString {
                 cfg.attributedTitle = AttributedString(a)
@@ -394,7 +454,6 @@ extension UIButton {
         let existing = configurationUpdateHandler
         s.originalConfigHandler = existing
         automaticallyUpdatesConfiguration = true
-
         _jobsSeedDisplayCachesAndSyncConfigTitleIfNeeded()
 
         configurationUpdateHandler = { [weak self] btn in
@@ -426,6 +485,168 @@ extension UIButton {
             if changed { btn.configuration = cfg }
         }
         // 立刻触发一次，让 UI 不等下一帧/下一次系统更新
+        setNeedsUpdateConfiguration()
+        updateConfiguration()
+    }
+}
+// MARK: - iOS15+ Configuration Only（主标题）实现
+//
+// 目标：先确保「主标题」在 configuration 场景一定可见且能动；
+//      该实现不依赖 configurationUpdateHandler，也不依赖 legacy setTitle。
+@available(iOS 15.0, *)
+extension UIButton {
+
+    private struct _JobsMainCfgRestore {
+        let autoUpdates: Bool
+        let handler: UIButton.ConfigurationUpdateHandler?
+    }
+
+    private func _jobsStartAnimatedMainConfigOnly(target: Any) {
+        let channel = _jobsAnimNumStore.main
+        _jobsStopAnimatedNumber(channel)
+        let targetString = (target as? NSAttributedString)?.string ?? (target as? String) ?? ""
+        guard let targetNumber = _jobsParseFirstNumber(targetString) else {
+            _jobsApplyMainConfigOnly(target)
+            channel.completion?()
+            return
+        }
+        // from：优先 start；否则从当前 configuration 文本里解析
+        let from = channel.start ?? _jobsParseFirstNumber(_jobsCurrentMainConfigText()) ?? 0
+        if from == targetNumber {
+            _jobsApplyMainConfigOnly(target)
+            channel.completion?()
+            return
+        }
+
+        channel.targetValue = targetNumber
+        channel.currentValue = from
+        channel.decimals = _jobsDecimalPlaces(of: targetString)
+
+        let interval = max(0.000_001, channel.minimumInterval)
+        let ticks = max(1, Int((channel.duration / interval).rounded(.toNearestOrAwayFromZero)))
+        let delta = targetNumber - from
+
+        let perTick: Double
+        if let userStep = channel.step, userStep != 0 {
+            let s = abs(userStep)
+            perTick = delta > 0 ? s : -s
+        } else {
+            perTick = delta / Double(ticks)
+        }
+        channel.deltaPerTick = perTick
+        // 模板：优先用当前 configuration 显示内容；若拿不到数字（例如刚创建 configuration），回退用 target 作为模板
+        let tplCurrent = _jobsMakeTemplate(from: _jobsCurrentMainConfigRaw())
+        let tplTarget = _jobsMakeTemplate(from: target)
+        let template = tplCurrent.hasNumber ? tplCurrent : tplTarget
+
+        guard template.hasNumber else {
+            _jobsApplyMainConfigOnly(target)
+            channel.completion?()
+            return
+        }
+        // 动效期间：临时关闭自动更新/handler，避免被覆盖
+        let restore = _jobsDisableConfigurationAutoUpdatesForMainAnim()
+        // 第一帧立刻落地（保证立刻有字）
+        _jobsApplyMainConfigFrame(value: from,
+                                  template: template,
+                                  decimals: channel.decimals)
+        let cfg = JobsSwiftTimerConfig(interval: interval,
+                                       repeats: true,
+                                       tolerance: 0,
+                                       queue: .main,
+                                       runLoop: .main,
+                                       runLoopMode: .common,
+                                       pauseInBackground: true,
+                                       autoManageAppState: true)
+
+        let timer = JobsTimer(kind: .foundation, config: cfg) { [weak self] in
+            guard let self else { return }
+            guard channel.timer != nil else { return }
+
+            let targetV = channel.targetValue
+            var cur = channel.currentValue
+            let step = channel.deltaPerTick
+
+            cur += step
+            channel.currentValue = cur
+
+            let reached = step > 0 ? (cur >= targetV) : (cur <= targetV)
+            if reached {
+                self._jobsApplyMainConfigOnly(target)
+                self._jobsStopAnimatedNumber(channel)
+                self._jobsRestoreConfigurationAutoUpdates(restore)
+                channel.completion?()
+                return
+            }
+            // 节流日志：每 ~15% 打一次
+            let denom = (targetV - from == 0) ? 1 : (targetV - from)
+            let prog = abs((cur - from) / denom)
+            self._jobsApplyMainConfigFrame(value: cur, template: template, decimals: channel.decimals)
+        }
+
+        channel.timer = timer
+        timer.start()
+    }
+
+    private func _jobsCurrentMainConfigRaw() -> Any {
+        if let at = configuration?.attributedTitle { return NSAttributedString(at) }
+        if let t = configuration?.title { return t }
+        return ""
+    }
+
+    private func _jobsCurrentMainConfigText() -> String {
+        let raw = _jobsCurrentMainConfigRaw()
+        return (raw as? NSAttributedString)?.string ?? (raw as? String) ?? ""
+    }
+
+    private func _jobsApplyMainConfigOnly(_ target: Any) {
+        var cfg = configuration ?? UIButton.Configuration.plain()
+        if let a = target as? NSAttributedString {
+            cfg.attributedTitle = AttributedString(a)
+            cfg.title = nil
+        } else {
+            let t = (target as? String) ?? ""
+            cfg.title = t
+            cfg.attributedTitle = nil
+        }
+        configuration = cfg
+        setNeedsUpdateConfiguration()
+        updateConfiguration()
+        _jobsForceUpdateMainTitleLabel(target)
+    }
+
+    private func _jobsApplyMainConfigFrame(value: Double,
+                                          template: _JobsNumberTemplate,
+                                          decimals: Int) {
+        let numberString = _jobsFormatNumber(value, decimals: decimals)
+
+        if let rawAttr = template.rawAttributed {
+            let m = NSMutableAttributedString(attributedString: rawAttr)
+            for (idx, r) in template.numberRanges.enumerated().reversed() {
+                let attrs = template.numberAttrs[idx] ?? rawAttr.attributes(at: max(0, min(r.location, max(0, rawAttr.length - 1))), effectiveRange: nil)
+                m.replaceCharacters(in: r, with: NSAttributedString(string: numberString, attributes: attrs))
+            }
+            _jobsApplyMainConfigOnly(m)
+        } else {
+            var s = template.rawString as NSString
+            for r in template.numberRanges.reversed() {
+                s = (s.replacingCharacters(in: r, with: numberString)) as NSString
+            }
+            _jobsApplyMainConfigOnly(s as String)
+        }
+    }
+
+    private func _jobsDisableConfigurationAutoUpdatesForMainAnim() -> _JobsMainCfgRestore {
+        let restore = _JobsMainCfgRestore(autoUpdates: automaticallyUpdatesConfiguration,
+                                          handler: configurationUpdateHandler)
+        automaticallyUpdatesConfiguration = false
+        configurationUpdateHandler = nil
+        return restore
+    }
+
+    private func _jobsRestoreConfigurationAutoUpdates(_ restore: _JobsMainCfgRestore) {
+        automaticallyUpdatesConfiguration = restore.autoUpdates
+        configurationUpdateHandler = restore.handler
         setNeedsUpdateConfiguration()
         updateConfiguration()
     }
@@ -481,9 +702,44 @@ extension UIButton {
 }
 // MARK: - Helpers
 extension UIButton {
+    // MARK: - Main title (iOS15+ configuration 强制同步 + 强制刷新 titleLabel)
+    //
+    // 说明：
+    // - 你当前的现象是：animation 期间 configuration 写入了，但 titleLabel 不刷新；最终一次写入才刷新。
+    // - 这通常是 configuration 渲染链路/布局节拍导致（尤其有 attributedTitle 时）。
+    // - 这里采用最“直给”的策略：每次写入同时：
+    //   1) 同步到 configuration（若存在）
+    //   2) 直接把文本推到 titleLabel（确保动画期间可见）
+    // - 这不依赖 JobsTimer 的实现细节，只解决 UI 不刷新的问题。
+    @available(iOS 15.0, *)
+    private func _jobsWriteMainToConfigurationIfNeeded(_ target: Any) {
+        guard var cfg = configuration else { return }
+        if let a = target as? NSAttributedString {
+            cfg.attributedTitle = AttributedString(a)
+            cfg.title = nil
+        } else {
+            let t = (target as? String) ?? ""
+            cfg.title = t
+            cfg.attributedTitle = nil
+        }
+        configuration = cfg
+        setNeedsUpdateConfiguration()
+        updateConfiguration()
+    }
 
+    private func _jobsForceUpdateMainTitleLabel(_ target: Any) {
+        if let a = target as? NSAttributedString {
+            titleLabel?.attributedText = a
+        } else if let t = target as? String {
+            titleLabel?.text = t
+        }
+        setNeedsLayout()
+        #if DEBUG
+        layoutIfNeeded()
+        #endif
+    }
+    
     private func _jobsCommonStates() -> [UIControl.State] { [.normal, .selected, .disabled, .highlighted, .focused] }
-
     private func _jobsParseFirstNumber(_ str: String) -> Double? {
         let ns = str as NSString
         let ranges = _jobsFindNumberRanges(in: str)

@@ -223,33 +223,12 @@ extension AppDelegate {
             print(minV, maxV)   // 1 9
         }
 
-        // ✅ 新版 JobsSwiftTimer：不再用 JobsTimerFactory.make
-        do {
-            let cfg = JobsSwiftTimerConfig(
-                interval: 1,
-                repeats: true,
-                tolerance: 0.002,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: true,
-                autoManageAppState: true
-            )
-
-            let t = JobsTimer(kind: .displayLink, config: cfg) {
-                /// 日期打印（这里只是打印，不触碰 UI，不需要 MainActor）
-                print(Date().formatted(date: .numeric, time: .standard))
-            }
-
-            appTickerTimer = t
-            t.start()
-        }
-
         App显示语言环境配置()
         日志框架接入()
         
         #if DEBUG
         VCDebugDeallocDebug.install()
+//        循环打印当前的时间()
         #endif
         
         udSave()
@@ -282,10 +261,30 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
+    
     struct UserInfoModel: Codable {
         let id: Int
         let name: String
         let isVIP: Bool
+    }
+    
+    func 循环打印当前的时间() {
+        do {
+            appTickerTimer = JobsTimer(kind: .displayLink,
+                                       config: JobsSwiftTimerConfig(
+                                        interval: 1,
+                                        repeats: true,
+                                        tolerance: 0.002,
+                                        queue: .main,
+                                        runLoop: .main,
+                                        runLoopMode: .common,
+                                        pauseInBackground: true,
+                                        autoManageAppState: true
+                                    )) {
+                /// 日期打印（这里只是打印，不触碰 UI，不需要 MainActor）
+                print(Date().formatted(date: .numeric, time: .standard))
+            }.start()
+        }
     }
     
     func App显示语言环境配置(){
@@ -346,6 +345,7 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
+    
     func Subscript_Character() {
         let s = "Jobs"
         print(s[1] as Any)   // Optional("o")
@@ -562,6 +562,7 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
+    
     func GK配置() {
         GKNavigationBarConfigure
             .bySetupDefault()

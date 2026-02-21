@@ -190,7 +190,6 @@ final class RootListVC: BaseVC {
             ])
         ]
     }
-
     // ================================== 悬浮控件（原逻辑不动） ==================================
     private lazy var suspendBtn: UIButton = {
         UIButton(type: .system)
@@ -254,7 +253,7 @@ final class RootListVC: BaseVC {
 
     private lazy var suspendFuseBtn: UIButton = {
         UIButton(type: .system)
-            .byTitle("按", for: .normal)
+            .byTitle("按".tr, for: .normal)
             .byTitleFont(.systemFont(ofSize: 10, weight: .bold))
             .byTitleColor(.white, for: .normal)
             .byBackgroundColor(.systemPurple, for: .normal)

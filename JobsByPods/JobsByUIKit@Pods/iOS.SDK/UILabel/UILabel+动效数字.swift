@@ -29,6 +29,45 @@ private final class _JobsAnimatedNumberStore {
     var decimals: Int = 0
     var originalText: String = "0"
 }
+// MARK: - DSL
+extension _JobsAnimatedNumberStore {
+    /// DSL: .byTimer { $0.duration = 1 }
+    @discardableResult
+    func byTimer(_ configure: (_JobsAnimatedNumberStore) -> Void) -> Self {
+        configure(self)
+        return self
+    }
+    /// DSL: .byStep(0.5)
+    @discardableResult
+    func byStep(_ value: Double?) -> Self {
+        self.step = value
+        return self
+    }
+    /// DSL: .byStart(0)
+    @discardableResult
+    func byStart(_ value: Double?) -> Self {
+        self.start = value
+        return self
+    }
+    /// DSL: .byDuration(1)
+    @discardableResult
+    func byDuration(_ value: TimeInterval) -> Self {
+        self.duration = value
+        return self
+    }
+    /// DSL: .byFPS(60)
+    @discardableResult
+    func byFPS(_ fps: Double) -> Self {
+        self.minimumInterval = 1.0 / fps
+        return self
+    }
+    /// DSL: .byCompletion { }
+    @discardableResult
+    func byCompletion(_ block: (() -> Void)?) -> Self {
+        self.completion = block
+        return self
+    }
+}
 
 private enum _JobsAnimatedNumberAssocKey {
     static var storeKey: UInt8 = 0
@@ -53,12 +92,12 @@ extension UILabel {
                                      duration: TimeInterval = 0.8,
                                      minimumInterval: TimeInterval = 1.0 / 60.0,
                                      completion: (() -> Void)? = nil) -> UILabel {
-        let s = _jobsAnimatedNumberStore
-        s.start = start
-        s.step = step
-        s.duration = max(0, duration)
-        s.minimumInterval = max(0.000_001, minimumInterval)
-        s.completion = completion
+        _jobsAnimatedNumberStore
+            .byStart(start)
+            .byStep(step)
+            .byDuration(max(0, duration))
+            .byFPS(max(0.000_001, minimumInterval))
+            .byCompletion(completion)
         return self
     }
     /// ✅ 启动（读取 byAnimatedTextNumber 的配置）——链式
@@ -70,7 +109,7 @@ extension UILabel {
         // 非数字：直接设置文本
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let target = _jobsParseNumber(trimmed) else {
-            self.text = text
+            self.byText(text)
             s.completion?()
             return self
         }
@@ -78,11 +117,10 @@ extension UILabel {
         let from = s.start ?? _jobsParseNumber((self.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
         if from == target {
             // 已经是目标：直接落到原文本（保持格式）
-            self.text = text
+            self.byText(text)
             s.completion?()
             return self
         }
-
         // decimals：以目标文本的小数位为准
         let decimals = _jobsDecimalPlaces(of: trimmed)
         // interval / ticks
@@ -105,7 +143,7 @@ extension UILabel {
         s.decimals = decimals
         s.originalText = text
         // 先显示起点（更直观）
-        self.text = _jobsFormatNumber(from, decimals: decimals)
+        self.byText(_jobsFormatNumber(from, decimals: decimals))
         // JobsSwiftTimer 驱动
         let config = JobsSwiftTimerConfig(
             interval: interval,
@@ -135,15 +173,15 @@ extension UILabel {
     }
 }
 // MARK: - Internal Tick / Stop
-private extension UILabel {
+extension UILabel {
 
-    func _jobsStopAnimatedNumberTimer() {
+    private func _jobsStopAnimatedNumberTimer() {
         let s = _jobsAnimatedNumberStore
         s.timer?.stop()
         s.timer = nil
     }
 
-    func _jobsTickAnimatedNumber() {
+    private func _jobsTickAnimatedNumber() {
         let s = _jobsAnimatedNumberStore
         guard s.timer != nil else { return }
 
@@ -164,26 +202,25 @@ private extension UILabel {
 
         if reached {
             // 结束：落到原始文本（保持用户传入的格式）
-            self.text = s.originalText
+            self.byText(s.originalText)
             _jobsStopAnimatedNumberTimer()
             s.completion?()
             return
         }
-
         // 中间帧：按 decimals 格式化显示
-        self.text = _jobsFormatNumber(cur, decimals: s.decimals)
+        self.byText(_jobsFormatNumber(cur, decimals: s.decimals))
     }
 }
 // MARK: - Helpers
-private extension UILabel {
+extension UILabel {
     /// 解析数字：支持 -123 / 123.45 / +12.3
-    func _jobsParseNumber(_ str: String) -> Double? {
+    private func _jobsParseNumber(_ str: String) -> Double? {
         // Double() 本身已经支持正负号与小数点；不支持千分位逗号
         // 如果你需要 "1,234.56" 这种格式，再加 NumberFormatter 即可
         return Double(str)
     }
     /// 以目标文本的小数位决定展示小数位
-    func _jobsDecimalPlaces(of str: String) -> Int {
+    private func _jobsDecimalPlaces(of str: String) -> Int {
         guard let dotRange = str.range(of: ".") else { return 0 }
         let fraction = str[dotRange.upperBound...]
         // 过滤掉可能的尾部空格
@@ -191,7 +228,7 @@ private extension UILabel {
         return digits.count
     }
 
-    func _jobsFormatNumber(_ value: Double, decimals: Int) -> String {
+    private func _jobsFormatNumber(_ value: Double, decimals: Int) -> String {
         if decimals <= 0 {
             return "\(Int(value.rounded()))"
         } else {

@@ -252,6 +252,9 @@ final class AnimationEffectLabelDemoVC: BaseVC {
         startBtn.byVisible(YES)
         stopBtn.byVisible(YES)
     }
+}
+
+extension AnimationEffectLabelDemoVC {
     // MARK: - Helpers
     private func syncStartTextToLabel(_ str: String?) {
         let raw = (str ?? "").trimmingCharacters(in: .whitespacesAndNewlines)

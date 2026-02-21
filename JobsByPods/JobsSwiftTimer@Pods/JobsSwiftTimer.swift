@@ -106,7 +106,8 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
         teardownAppState()
     }
     // MARK: - JobsSwiftTimerProtocol
-    public func start() {
+    @discardableResult
+    public func start() -> Self {
         if kind != .gcd { requireMainThreadForRunLoopAPI("start") }
 
         let token = stateLock.jobs_withLock { () -> UInt64? in
@@ -121,7 +122,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
                 return nil
             }
         }
-        guard let token else { return }
+        guard let token else { return self }
 
         switch kind {
         case .gcd:
@@ -132,10 +133,11 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             startDisplayLink(token: token)
         case .runLoop:
             startRunLoopTimer(token: token)
-        }
+        };return self
     }
 
-    public func pause() {
+    @discardableResult
+    public func pause() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("pause") }
 
         let shouldPause = stateLock.jobs_withLock { () -> Bool in
@@ -144,7 +146,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             generation &+= 1
             return true
         }
-        guard shouldPause else { return }
+        guard shouldPause else { return self}
 
         switch kind {
         case .gcd:
@@ -160,10 +162,11 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
                 CFRunLoopTimerInvalidate(t)
                 rlTimer = nil
             }
-        }
+        };return self
     }
 
-    public func resume() {
+    @discardableResult
+    public func resume() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("resume") }
 
         let token = stateLock.jobs_withLock { () -> UInt64? in
@@ -172,7 +175,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             generation &+= 1
             return generation
         }
-        guard let token else { return }
+        guard let token else { return self}
 
         switch kind {
         case .gcd:
@@ -183,10 +186,11 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             startDisplayLink(token: token)
         case .runLoop:
             startRunLoopTimer(token: token)
-        }
+        };return self
     }
 
-    public func stop() {
+    @discardableResult
+    public func stop() -> Self{
         if kind != .gcd {
             // 外部 stop 强制主线程；内部（比如 one-shot）会走 routeStopIfNeeded
             requireMainThreadForRunLoopAPI("stop")
@@ -198,9 +202,9 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             generation &+= 1
             return true
         }
-        guard shouldStop else { return }
-
+        guard shouldStop else { return self}
         stopInternal()
+        return self
     }
 
     @discardableResult
@@ -234,6 +238,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     }
 
     private func routeStopIfNeededFromCallback() {
+        
         if kind == .gcd {
             // GCD：不要求主线程
             stateLock.jobs_withLock {
@@ -245,7 +250,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             stopInternal()
             return
         }
-
         // 非 GCD：必须主线程 stop
         if Thread.isMainThread {
             stop()
@@ -257,7 +261,10 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     }
     // MARK: - Dispatch
     private func fireTickIfValid(token: UInt64) {
-        let snapshot = stateLock.jobs_withLock { () -> (shouldFire: Bool, tick: JobsTimerCallback, finish: JobsTimerCallback?, repeats: Bool) in
+        let snapshot = stateLock.jobs_withLock { () -> (shouldFire: Bool,
+                                                        tick: JobsTimerCallback,
+                                                        finish: JobsTimerCallback?,
+                                                        repeats: Bool) in
             guard state == .running, token == generation else {
                 return (false, {}, nil, config.repeats)
             }
