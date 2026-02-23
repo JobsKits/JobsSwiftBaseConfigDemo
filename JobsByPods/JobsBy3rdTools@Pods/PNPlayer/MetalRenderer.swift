@@ -14,7 +14,7 @@ import UIKit
 import Metal
 import MetalKit
 import simd
-import JobsSwiftMetalKit_extensions
+import JobsSwiftMetalKit
 
 struct Uniforms { var modelViewProjectionMatrix: float4x4 }
 public class MetalRenderer: NSObject {
