@@ -63,8 +63,48 @@ public final class JobsTextField: UIImageView {
         layoutIfNeeded()
     }
 }
-
+// MARK: - Convenience
 extension JobsTextField {
+    
+    public convenience init() {
+        self.init(frame: .zero)
+    }
+    
+    public var text: String? {
+        get { textField.text }
+        set { textField.text = newValue }
+    }
+
+    public var placeholder: String? {
+        get { textField.placeholder }
+        set { textField.placeholder = newValue }
+    }
+
+    public var delegate: UITextFieldDelegate? {
+        get { textField.delegate }
+        set { textField.delegate = newValue }
+    }
+}
+// MARK: - DSL
+extension JobsTextField {
+    /// 设置 text（链式）
+    @discardableResult
+    public func byText(_ text: String?) -> Self {
+        textField.text = text
+        return self
+    }
+    /// 设置 placeholder（链式）
+    @discardableResult
+    public func byPlaceholder(_ placeholder: String?) -> Self {
+        textField.placeholder = placeholder
+        return self
+    }
+    /// 设置 delegate（链式）
+    @discardableResult
+    public func byDelegate(_ delegate: UITextFieldDelegate?) -> Self {
+        textField.delegate = delegate
+        return self
+    }
     /// 用回调配置内部 textField（链式）
     @discardableResult
     public func byTextFieldConfig(_ block: (UITextField) -> Void) -> Self {
@@ -121,27 +161,5 @@ extension JobsTextField {
         textInsets = .init(top: v, left: v, bottom: v, right: v)
         updateTextInsets()
         return self
-    }
-}
-// MARK: - Convenience
-extension JobsTextField {
-    
-    public convenience init() {
-        self.init(frame: .zero)
-    }
-    
-    public var text: String? {
-        get { textField.text }
-        set { textField.text = newValue }
-    }
-
-    public var placeholder: String? {
-        get { textField.placeholder }
-        set { textField.placeholder = newValue }
-    }
-
-    public var delegate: UITextFieldDelegate? {
-        get { textField.delegate }
-        set { textField.delegate = newValue }
     }
 }

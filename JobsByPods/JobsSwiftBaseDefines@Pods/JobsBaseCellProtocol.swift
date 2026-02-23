@@ -30,34 +30,57 @@ public extension UICollectionViewCellProtocol {
 }
 // MARK: - 在不修改外界 UITableViewCell 的正常调用的情况下，使得 UITableViewCell 和 UITableView 之间存在距离（系统默认是 UITableView 的宽度 == UITableViewCell 宽度）
 public protocol UITableViewCellInsetProtocol: AnyObject {
-    /// 左右缩进
-    var horizontalInset: CGFloat { get }
+    /// 四边缩进（支持上下左右）
+    var contentInsets: UIEdgeInsets { get }
     /// 是否也缩进 separator（可选）
     var shouldInsetSeparator: Bool { get }
-    /// 执行缩进（由协议默认实现）
+    /// 执行缩进（建议在 layoutSubviews 里调用）
     func applyInsets()
 }
 
 public extension UITableViewCellInsetProtocol where Self: UITableViewCell {
-    var horizontalInset: CGFloat { 16 }
+    
+    var contentInsets: UIEdgeInsets { .init(top: 8, left: 16, bottom: 8, right: 16) }
     var shouldInsetSeparator: Bool { true }
+
     func applyInsets() {
-        // 关键：避免 layoutSubviews 多次调用导致 inset 叠加
-        // 用 bounds 为基准，而不是用当前 contentView.frame 再 inset
+        // ⚠️ 必须保证这是在 super.layoutSubviews() 之后调用
+        // 因为系统会先计算 contentView.frame（包含 accessory/editing/indentation 的影响）
+        let inset = contentInsets
+        // 以系统给的 contentView.frame 为基准，每次重新计算，避免叠加
         var f = contentView.frame
-        f.origin.x = horizontalInset
-        f.size.width = bounds.width - horizontalInset * 2
+        // 上下左右都支持
+        f.origin.x += inset.left
+        f.origin.y += inset.top
+        f.size.width -= (inset.left + inset.right)
+        f.size.height -= (inset.top + inset.bottom)
+
+        // 防御：避免出现负数（例如极端小高度、或外界错误 insets）
+        if f.size.width < 0 { f.size.width = 0 }
+        if f.size.height < 0 { f.size.height = 0 }
+
         contentView.frame = f
-        // 系统 label 的 layoutMargins（可选）
+        // layoutMargins 同步（可选，主要影响 cell 内部系统控件/constraints 的默认边距）
         contentView.layoutMargins = UIEdgeInsets(
             top: contentView.layoutMargins.top,
-            left: horizontalInset,
+            left: inset.left,
             bottom: contentView.layoutMargins.bottom,
-            right: horizontalInset
+            right: inset.right
         )
+        // separator 跟随 contentView 的左右边缘（更稳：不直接用 inset.left/right）
         if shouldInsetSeparator {
-            separatorInset = UIEdgeInsets(top: 0, left: horizontalInset, bottom: 0, right: horizontalInset)
+            let left = contentView.frame.minX
+            let right = bounds.width - contentView.frame.maxX
+            separatorInset = UIEdgeInsets(top: 0, left: left, bottom: 0, right: right)
             preservesSuperviewLayoutMargins = false
+        }
+        // 如果你用了 selectedBackgroundView / backgroundView 想和 contentView 一样“缩进去”
+        // 也可以选择同步它们（看你需求；默认不动）
+        if let bg = backgroundView {
+            bg.frame = contentView.frame
+        }
+        if let sbg = selectedBackgroundView {
+            sbg.frame = contentView.frame
         }
     }
 }

@@ -101,6 +101,12 @@ extension UIView {
         layer.masksToBounds = masksToBounds ?? false
         return self
     }
+    /// 设置 layer.maskedCorners（指定哪些角参与圆角）
+    @discardableResult
+    public func byMaskedCorners(_ corners: CACornerMask?) -> Self {
+        layer.maskedCorners = corners ?? []
+        return self
+    }
 
     @discardableResult
     public func byBorderColor(_ color: UIColor?) -> Self {

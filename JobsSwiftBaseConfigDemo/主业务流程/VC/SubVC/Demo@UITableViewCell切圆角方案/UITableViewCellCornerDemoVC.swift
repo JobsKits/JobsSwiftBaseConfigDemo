@@ -13,9 +13,9 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
+import JobsScale
 import JobsByUIKit
 import JobsSwiftBaseDefines
-import JobsScale
 // MARK: - UITableViewCellCornerDemoVC
 final class UITableViewCellCornerDemoVC: UIViewController {
 

@@ -361,7 +361,12 @@ open class JobsProgressBar: UIView {
             ? (trackFrame.minX + fillWidth)
             : (trackFrame.maxX - fillWidth)
 
-            layoutThumb(center: CGPoint(x: endpointX, y: trackFrame.midY), thickness: trackHeight)
+            layoutThumb(
+                center: CGPoint(x: endpointX, y: trackFrame.midY),
+                thickness: trackHeight,
+                displayProgress: displayProgress,
+                trackFrame: trackFrame
+            )
             layoutProgressLabelForHorizontal(endpointX: endpointX, trackFrame: trackFrame)
 
         case .bottomToTop, .topToBottom:
@@ -385,7 +390,12 @@ open class JobsProgressBar: UIView {
             let endpointY: CGFloat = (direction == .bottomToTop)
             ? (trackFrame.minY + (trackHeight - fillHeight))
             : (trackFrame.minY + fillHeight)
-            layoutThumb(center: CGPoint(x: trackFrame.midX, y: endpointY), thickness: trackWidth)
+            layoutThumb(
+                center: CGPoint(x: trackFrame.midX, y: endpointY),
+                thickness: trackWidth,
+                displayProgress: displayProgress,
+                trackFrame: trackFrame
+            )
             layoutProgressLabelForVertical(endpointY: endpointY, trackFrame: trackFrame)
         }
     }
@@ -724,7 +734,10 @@ extension JobsProgressBar {
 // MARK: - Thumb Layout + Style
 extension JobsProgressBar {
 
-    fileprivate func layoutThumb(center: CGPoint, thickness: CGFloat) {
+    fileprivate func layoutThumb(center: CGPoint,
+                                 thickness: CGFloat,
+                                 displayProgress: CGFloat,
+                                 trackFrame: CGRect) {
         guard thumbImage != nil else {
             thumbImageView.isHidden = true
             return
@@ -744,6 +757,32 @@ extension JobsProgressBar {
 
         let halfW = size.width / 2
         let halfH = size.height / 2
+        // ✅ 只在边界时，把 thumb 往“里”推，保证完整可见（针对 clipsToBounds = true 特别有效）
+        let eps: CGFloat = 0.0001
+        if displayProgress <= eps {
+            switch direction {
+            case .leftToRight:
+                c.x = max(c.x, trackFrame.minX + halfW)
+            case .rightToLeft:
+                c.x = min(c.x, trackFrame.maxX - halfW)
+            case .topToBottom:
+                c.y = max(c.y, trackFrame.minY + halfH)
+            case .bottomToTop:
+                c.y = min(c.y, trackFrame.maxY - halfH)
+            }
+        } else if displayProgress >= 1 - eps {
+            switch direction {
+            case .leftToRight:
+                c.x = min(c.x, trackFrame.maxX - halfW)
+            case .rightToLeft:
+                c.x = max(c.x, trackFrame.minX + halfW)
+            case .topToBottom:
+                c.y = min(c.y, trackFrame.maxY - halfH)
+            case .bottomToTop:
+                c.y = max(c.y, trackFrame.minY + halfH)
+            }
+        }
+        // 你原来的 clamp（可保留，避免 thumbOffset 推太离谱）
         c.x = min(max(c.x, bounds.minX - halfW), bounds.maxX + halfW)
         c.y = min(max(c.y, bounds.minY - halfH), bounds.maxY + halfH)
 
