@@ -20,7 +20,7 @@ import JobsByUIKit
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
-import JobsSwiftMetalKit_extensions
+import JobsSwiftMetalKit
 
 class PNPlayerDemoVC: BaseVC {
 

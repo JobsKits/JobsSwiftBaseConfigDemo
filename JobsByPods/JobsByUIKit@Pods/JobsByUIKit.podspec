@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
   ]
   
   s.ios.frameworks = 'UIKit',
+                     'PhotosUI',
                      'WebKit',
                      'MessageUI',
                      'CoreImage'
@@ -57,5 +58,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsImageTools'
   s.dependency 'Jobsl10n'
   s.dependency 'JobsScale'
+  s.dependency 'JobsByPhotosUI'
 
 end

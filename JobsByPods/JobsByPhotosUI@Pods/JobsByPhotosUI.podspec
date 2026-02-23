@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
-  s.name         = 'JobsSwiftFoundation_extensions'          # Pod 名
-  s.version      = '0.1.1'
-  s.summary      = 'Swift中关于Foundation的拓展'
+  s.name         = 'JobsByPhotosUI'          # Pod 名
+  s.version      = '0.0.1'
+  s.summary      = 'Swift中，对PhotosUI进行的拓展（持续更新中）'
   s.description  = <<-DESC
-                      Swift.Foundation.Extensions
+                     PhotosUI
                    DESC
 
-  s.homepage     = 'https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions'
+  s.homepage     = 'https://github.com/JobsKits/JobsByPhotosUI'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
@@ -14,9 +14,9 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   # 你的源码从 Git 仓库下载
-  s.source       = { :git => 'https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions.git',
+  s.source       = { :git => 'https://github.com/JobsKits/JobsByPhotosUI.git',
                      :tag => s.version.to_s }
-
+                     
   # 全局排除脚本 / 图标
   s.exclude_files = [
     '【MacOS】🫘JobsPublishPods.command',
@@ -24,7 +24,8 @@ Pod::Spec.new do |s|
     'LICENSE',
   ]
   
+  s.ios.frameworks = 'UIKit','PhotosUI','SwiftUI'
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
-
+  
 end

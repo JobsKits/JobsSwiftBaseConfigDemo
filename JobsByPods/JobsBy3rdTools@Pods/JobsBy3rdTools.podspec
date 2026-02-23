@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version      = '0.0.1'
   s.summary      = 'Swift中的一些手搓工具（持续更新）'
   s.description  = <<-DESC
-                      Swift.Foundation.Extensions
+                      JobsBy3rdTools
                    DESC
 
   s.homepage     = 'https://github.com/JobsKits/JobsBy3rdTools'
@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   s.dependency 'JobsScale'
   s.dependency 'JobsSwiftTools'
   s.dependency 'JobsSwiftBaseDefines'
-  s.dependency 'JobsSwiftStandardLibrary_extension'
-  s.dependency 'JobsSwiftMetalKit_extensions'
+  s.dependency 'JobsSwiftStandardLibrary'
+  s.dependency 'JobsSwiftMetalKit'
 
 end

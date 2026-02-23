@@ -30,7 +30,7 @@ import JobsToast
 import JobsScale
 import JobsTextTools
 import JobsMarqueeView
-import JobsSwiftFoundation_extensions
+import JobsSwiftFoundation
 /// Demo：13 组 JobsMarqueeView
 /// 1. 向上连续滚动
 /// 2. 向下连续滚动

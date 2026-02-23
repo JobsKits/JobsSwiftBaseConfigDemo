@@ -28,7 +28,7 @@ import JobsSwiftTimer
 import JobsSwiftAppTools
 import JobsSwiftBaseTools
 import JobsSwiftBaseDefines
-import JobsSwiftFoundation_extensions
+import JobsSwiftFoundation
 #if DEBUG
 import JobsSwiftDebugTools
 #endif
