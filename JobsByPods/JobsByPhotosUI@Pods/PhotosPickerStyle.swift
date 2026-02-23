@@ -6,6 +6,7 @@
 //
 
 import PhotosUI
+import _PhotosUI_SwiftUI
 
 @available(iOS 17.0, macOS 14.0, *)
 @available(watchOS, unavailable)
