@@ -31,6 +31,8 @@ Pod::Spec.new do |s|
   s.dependency 'BMPlayer'
   s.dependency 'SwiftEntryKit'
   s.dependency 'YTKNetwork'
+  s.dependency 'Kingfisher'
+  s.dependency 'SDWebImage'
   s.dependency 'MJRefresh'
   s.dependency 'JXSegmentedView'
   s.dependency 'SDWebImage'
