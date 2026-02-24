@@ -128,6 +128,20 @@ extension UIView {
         self.layer.add(animation, forKey: "shake")
     }
 }
+// MARK: 呼吸灯动画效果
+extension UIView {
+    public func doShineAnimation() {
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = NSNumber(1.0)
+        animation.toValue = NSNumber(1.0)
+        animation.autoreverses = true
+        animation.duration = 1
+        animation.repeatCount = 3
+        animation.fillMode = CAMediaTimingFillMode.forwards
+        animation.isRemovedOnCompletion = true
+        self.layer.add(animation, forKey: "A")
+    }
+}
 // MARK: 动画@哪里来哪里去
 #if canImport(SnapKit)
 import SnapKit
@@ -180,3 +194,4 @@ extension UIView {
     }
 }
 #endif
+

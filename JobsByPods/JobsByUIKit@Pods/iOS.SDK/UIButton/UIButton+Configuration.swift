@@ -12,6 +12,15 @@ import UIKit
 #endif
 // MARK: - 把按钮切到 configuration 模式
 extension UIButton {
+    /// 禁用系统 configuration
+    @discardableResult
+    public func byDisableConfiguration() -> Self {
+        if #available(iOS 15.0, *) {
+            configuration = nil
+            configurationUpdateHandler = nil
+        };return self
+    }
+    
     @available(iOS 15.0, *)
     @discardableResult
     public func byAdoptConfigurationIfAvailable() -> Self {

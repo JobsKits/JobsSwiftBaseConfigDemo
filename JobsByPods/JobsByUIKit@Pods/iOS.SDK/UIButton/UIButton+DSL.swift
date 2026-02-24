@@ -453,7 +453,7 @@ extension UIButton {
     }
     // MARK: - 阴影
     @discardableResult
-    public func byMasksToBounds(radius: Bool) -> Self {
+    public func byMasksToBounds(_ radius: Bool) -> Self {
         layer.masksToBounds = radius
         return self
     }

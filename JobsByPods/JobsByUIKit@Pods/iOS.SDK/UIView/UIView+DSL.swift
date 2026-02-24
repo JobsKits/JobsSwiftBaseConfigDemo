@@ -101,10 +101,31 @@ extension UIView {
         layer.masksToBounds = masksToBounds ?? false
         return self
     }
-    /// 设置 layer.maskedCorners（指定哪些角参与圆角）
+    /// 用 CoreAnimation 的圆角渲染，指定参与圆角的角（CACornerMask），再配合 layer.cornerRadius 生效。
+    /// layerMaxXMaxYCorner – 右下角
+    /// layerMaxXMinYCorner – 右上角
+    /// layerMinXMaxYCorner – 左下角
+    /// layerMinXMinYCorner – 左上角
+    @available(iOS 11.0, *)
     @discardableResult
     public func byMaskedCorners(_ corners: CACornerMask?) -> Self {
         layer.maskedCorners = corners ?? []
+        return self
+    }
+    /// 【优点】
+    /// 兼容更早系统（老 iOS 也能用）。
+    /// 可以做“非等半径圆角”、不规则路径、甚至切角/异形（这点 maskedCorners 做不到）。
+    /// 【 致命点 / 常见坑】
+    /// 依赖 self.bounds：你现在的实现如果在 AutoLayout 前调用，bounds 可能是 .zero，mask 就错了。通常要在 layoutSubviews / layoutSublayers(of:) 里更新，或者在尺寸确定后再调一次。
+    /// 会影响阴影：layer.mask 会把阴影也一起裁掉（阴影经常“消失”），除非你额外用外层容器做 shadow。
+    /// 动态变化时需要反复更新 maskPath，否则旋转、尺寸变化圆角会错。
+    @discardableResult
+    public func byCornerRaduis(corner: UIRectCorner, raduis: CGFloat) -> Self {
+        let maskPath = UIBezierPath(roundedRect: self.bounds,
+                                    byRoundingCorners: corner,
+                                    cornerRadii: CGSize(width: raduis, height: raduis))
+        self.layer.mask = CAShapeLayer().byFrame(self.bounds).byPath(maskPath.cgPath)
+        self.clipsToBounds = true
         return self
     }
 

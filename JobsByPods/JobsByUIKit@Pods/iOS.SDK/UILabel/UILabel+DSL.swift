@@ -12,24 +12,29 @@ import UIKit
 #endif
 
 import JobsTextTools
+
 extension UILabel {
+    
     @discardableResult
     public func byJobsAttributedText(_ text: JobsText?) -> Self {
         guard let text else { return self }
         self.attributedText = text.asAttributed
         return self
     }
+    
     @discardableResult
     public func byJobsText(_ text: JobsText?) -> Self {
         guard let text else { return self }
         self.text = text.asString
         return self
     }
+    
     @discardableResult
     public func byText(_ text: String?) -> Self {
         self.text = text
         return self
     }
+    
     @discardableResult
     public func byTextColor(_ color: UIColor) -> Self {
         self.textColor = color
@@ -54,31 +59,37 @@ extension UILabel {
         self.textAlignment = alignment
         return self
     }
+    
     @discardableResult
     public func byNumberOfLines(_ lines: Int) -> Self {
         self.numberOfLines = lines
         return self
     }
+    
     @discardableResult
     public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self {
         self.lineBreakMode = mode
         return self
     }
+    
     @discardableResult
     public func byBgCor(_ color: UIColor) -> Self {
         self.backgroundColor = color
         return self
     }
+    
     @discardableResult
     public func byAttributedString(_ attributed: NSAttributedString?) -> Self {
         self.attributedText = attributed
         return self
     }
+    
     @discardableResult
     public func byNextText(_ str: String?) -> Self {
         self.text = (self.text ?? "") + (str ?? "")
         return self
     }
+    
     @discardableResult
     public func byNextAttributedText(_ attributed: NSAttributedString?) -> Self {
         if let current = self.attributedText {
@@ -91,13 +102,14 @@ extension UILabel {
     }
     @discardableResult
     public func byHugging(_ priority: UILayoutPriority,
-                   axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
+                          axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
         setContentHuggingPriority(priority, for: axis)
         return self
     }
     /// 双轴便捷
     @discardableResult
-    public func byHugging(_ horizontal: UILayoutPriority, _ vertical: UILayoutPriority) -> Self {
+    public func byHugging(_ horizontal: UILayoutPriority,
+                          _ vertical: UILayoutPriority) -> Self {
         setContentHuggingPriority(horizontal, for: .horizontal)
         setContentHuggingPriority(vertical, for: .vertical)
         return self
@@ -105,18 +117,18 @@ extension UILabel {
 
     @discardableResult
     public func byCompressionResistance(_ priority: UILayoutPriority,
-                                 axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
+                                        axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
         setContentCompressionResistancePriority(priority, for: axis)
         return self
     }
     /// 双轴便捷
     @discardableResult
-    public func byCompressionResistance(_ horizontal: UILayoutPriority, _ vertical: UILayoutPriority) -> Self {
+    public func byCompressionResistance(_ horizontal: UILayoutPriority,
+                                        _ vertical: UILayoutPriority) -> Self {
         setContentCompressionResistancePriority(horizontal, for: .horizontal)
         setContentCompressionResistancePriority(vertical, for: .vertical)
         return self
     }
-
     // MARK: 背景图 → 平铺色
     @discardableResult
     public func bgImage(_ image: UIImage?) -> Self {
