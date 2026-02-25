@@ -108,9 +108,13 @@ extension UIButton {
     }
     // MARK: - Start / Pause / Resume / Stop
     @discardableResult
-    public func startTimer(total: Int? = nil,
-                           interval: TimeInterval = 1.0,
-                           kind: JobsTimerKind? = nil) -> Self {
+    public func startTimer(
+        total: Int? = nil,
+        interval: TimeInterval = 1.0,
+        kind: JobsTimerKind? = nil,
+        onStartBlock: ((UIButton) -> Void)? = nil
+    ) -> Self {
+
         let kind = kind ?? .gcd
         stopTimer()
         if let total {
@@ -118,12 +122,12 @@ extension UIButton {
                                      _TimerMode.countdown(remain: total, total: total),
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             isEnabled = false
-            setTitle("\(total)s", for: .normal)
+            onStartBlock?(self)
         } else {
             objc_setAssociatedObject(self, &_timerModeKey,
                                      _TimerMode.countUp(elapsed: 0),
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            setTitle("0", for: .normal)
+            onStartBlock?(self)
         }
         objc_setAssociatedObject(self, &_timerKindKey, kind, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         let cfg = JobsSwiftTimerConfig(
