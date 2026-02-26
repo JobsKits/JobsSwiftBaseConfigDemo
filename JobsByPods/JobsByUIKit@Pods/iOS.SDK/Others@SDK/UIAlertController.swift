@@ -11,8 +11,8 @@ import AppKit
 import UIKit
 #endif
 
-import NSObject_Rx
 import SnapKit
+import NSObject_Rx
 import SDWebImage
 import Kingfisher
 
@@ -180,7 +180,7 @@ final class JobsTextFieldDelegateProxy:
     public static func setCurrentDelegate(_ delegate: UITextFieldDelegate?, to object: UITextField) { object.delegate = delegate }
 }
 
-public extension UIAlertController {
+extension UIAlertController {
     @discardableResult
     public func byAddTextField(placeholder: String?,
                         text: String? = nil,
@@ -252,6 +252,7 @@ public extension UIAlertController {
 extension UIAlertController {
     public enum Anchor {
         case auto
+        case center   // 屏幕中心（无箭头）
         case barButton(UIBarButtonItem)
         case view(UIView, CGRect? = nil, UIPopoverArrowDirection = [])
     }
@@ -270,6 +271,12 @@ extension UIAlertController {
             pop.sourceView = host.view
             pop.sourceRect = CGRect(x: host.view.bounds.midX,
                                     y: host.view.bounds.maxY - 1,
+                                    width: 1, height: 1)
+            pop.permittedArrowDirections = []
+        case .center:
+            pop.sourceView = host.view
+            pop.sourceRect = CGRect(x: host.view.bounds.midX,
+                                    y: host.view.bounds.midY,
                                     width: 1, height: 1)
             pop.permittedArrowDirections = []
         };return self
