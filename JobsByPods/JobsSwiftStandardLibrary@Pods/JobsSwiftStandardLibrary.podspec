@@ -17,7 +17,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftStandardLibrary.git',
                      :tag => s.version.to_s }
 
-
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
 
@@ -27,5 +26,6 @@ Pod::Spec.new do |s|
     'icon.png',
     'LICENSE',
   ]
-
+  s.dependency 'JobsSwiftBaseDefines'
+  
 end

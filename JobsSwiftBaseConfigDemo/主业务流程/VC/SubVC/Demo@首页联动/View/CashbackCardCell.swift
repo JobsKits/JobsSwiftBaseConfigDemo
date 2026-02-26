@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsByQuartzCore
 import JobsSwiftBaseDefines
 
 final class CashbackCardCell: UITableViewCell {

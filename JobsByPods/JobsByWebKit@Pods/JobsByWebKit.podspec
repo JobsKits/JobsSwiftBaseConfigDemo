@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
-  s.name         = 'JobsSwiftFoundation'          # Pod 名
-  s.version      = '0.1.1'
-  s.summary      = 'Swift中关于Foundation的拓展'
+  s.name         = 'JobsByWebKit'          # Pod 名
+  s.version      = '0.0.1'
+  s.summary      = 'Swift中，对UIKit进行的拓展（持续更新中）'
   s.description  = <<-DESC
-                      Swift.Foundation
+                      JobsByWebKit
                    DESC
 
-  s.homepage     = 'https://github.com/JobsKits/Jobs.Swift.Foundation'
+  s.homepage     = 'https://github.com/JobsKits/JobsByWebKit'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
@@ -14,17 +14,19 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   # 你的源码从 Git 仓库下载
-  s.source       = { :git => 'https://github.com/JobsKits/Jobs.Swift.Foundation.git',
+  s.source       = { :git => 'https://github.com/JobsKits/JobsByWebKit.git',
                      :tag => s.version.to_s }
-
+                     
   # 全局排除脚本 / 图标
   s.exclude_files = [
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
-    'LICENSE',
+    'LICENSE'
   ]
   
+  s.ios.frameworks = 'UIKit','WebKit'
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
+  s.dependency 'JobsByUIKit'
 
 end

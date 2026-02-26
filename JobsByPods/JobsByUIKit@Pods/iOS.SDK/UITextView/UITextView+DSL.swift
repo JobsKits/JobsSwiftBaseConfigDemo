@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsByQuartzCore
 import JobsSwiftBaseDefines
 
 extension UITextView {

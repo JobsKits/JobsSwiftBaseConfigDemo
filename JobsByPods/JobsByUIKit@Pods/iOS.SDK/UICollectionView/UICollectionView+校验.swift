@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 //let cell = collectionView[section: 0, item: 3]
-public extension UICollectionView {
+extension UICollectionView {
     /// 校验 IndexPath 是否在当前 collectionView 的有效范围内
     private func isValid(indexPath: IndexPath) -> Bool {
         let section = indexPath.section
@@ -23,12 +23,12 @@ public extension UICollectionView {
         return true
     }
     /// 通过 IndexPath 安全获取 cell：越界 / 不存在 返回 nil
-    subscript(safe indexPath: IndexPath) -> UICollectionViewCell? {
+    public subscript(safe indexPath: IndexPath) -> UICollectionViewCell? {
         guard isValid(indexPath: indexPath) else { return nil }
         return cellForItem(at: indexPath)
     }
     /// 通过 section / item 安全获取 cell：越界 / 不存在 返回 nil
-    subscript(section section: Int, item item: Int) -> UICollectionViewCell? {
+    public subscript(section section: Int, item item: Int) -> UICollectionViewCell? {
         let indexPath = IndexPath(item: item, section: section)
         return self[safe: indexPath]
     }

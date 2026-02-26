@@ -103,44 +103,62 @@ final class LGOEditProfileVC: BaseVC {
                 }
             }
     }()
-    /// 文本：单列（学历）
-    private lazy var eduPicker: BRTextPickerView = { [unowned self] in
-        BRTextPickerView()
-            .byBrMode(.single)
-            .byBrTitle("")
-            .byBrStyle { $0.isAutoSelect = false }
-            .byBrDataSource(["女", "男", "不想透露"])
-            .byBrSelectIndex(2)
-            .byBrOnSingle { m, idx in
-                ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
+    /// 文本：单列（性别）
+    private lazy var eduPicker: BRStringPicker = { [unowned self] in
+        BRStringPicker()
+            .byDataSource(["女", "男", "不想透露"])
+            .bySelectedIndex(2)
+            .byTheme { theme in
+                theme.byAutoSelect(false)
+            }
+            .byToolbar { cfg in
+                cfg.byTitle("")
+                   .byCancelText("取消")
+                   .byConfirmText("完成")
+            }
+            .byResult { value in
+                let idx = ["女", "男", "不想透露"].firstIndex(of: value) ?? -1
+                ("单列：\(value)（index=\(idx)）").toast
             }
     }()
     /// 文本：单列（情感状态）
-    private lazy var emotionPicker: BRTextPickerView = { [unowned self] in
-        BRTextPickerView()
-            .byBrMode(.single)
-            .byBrTitle("")
-            .byBrStyle { $0.isAutoSelect = false }
-            .byBrDataSource(["已婚", "单身", "不想透露"])
-            .byBrSelectIndex(2)
-            .byBrOnSingle { m, idx in
-                ("单列：\(m?.text ?? "-")（index=\(idx)）").toast
+    private lazy var emotionPicker: BRStringPicker = { [unowned self] in
+        BRStringPicker()
+            .byDataSource(["已婚", "单身", "不想透露"])
+            .bySelectedIndex(2)
+            .byTheme { theme in
+                theme.byAutoSelect(false)
+            }
+            .byToolbar { cfg in
+                cfg.byTitle("")
+                   .byCancelText("取消")
+                   .byConfirmText("完成")
+            }
+            .byResult { value in
+                ("单列：\(value)（index=?）").toast
             }
     }()
     /// 日期：系统 Date（年月日）
-    private lazy var dateSysDatePicker: BRDatePickerView = { [unowned self] in
-        BRDatePickerView()
-            .byBrMode(.date)
-            .byBrTitle("出生日")
-            .byBrSelectDate(Date())
-            .byBrMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
-            .byBrMaxDate(Date())
-            .byBrStyle { $0.minuteInterval = 1 }
-            .byBrOnResult { [weak self] dt in
-                guard let self else { return }
-                ("系统 Date：\(dt.map { fmt($0, "yyyy-MM-dd") } ?? "-")").toast
+    private lazy var dateSysDatePicker: BRSystemDatePicker = { [unowned self] in
+        BRSystemDatePicker()
+            .byTitle("出生日")
+            .bySelectDate(Date())
+            .byMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
+            .byMaxDate(Date())
+            .byMinuteInterval(1)
+            .byTheme { theme in
+                theme.byAutoSelect(false)
             }
-    }()        
+            .byToolbar { cfg in
+                cfg.byTitle("出生日")
+                   .byCancelText("取消")
+                   .byConfirmText("完成")
+            }
+            .byResult { [weak self] dt in
+                guard let self else { return }
+                ("系统 Date：\(fmt(dt, "yyyy-MM-dd"))").toast
+            }
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -248,7 +266,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
                 .byPush(self)
                 .byCompletion { print("❤️结束❤️ fromBottom") }
         case .gender:
-            self.eduPicker.byBrPresent(in: self.view)
+            self.eduPicker.byPresent(in: self.view)
         case .sign:
             SwiftEntryKit.display(
                 entry: PhotoPermissionAlertView()
@@ -267,9 +285,9 @@ extension LGOEditProfileVC: UITableViewDelegate {
                 using: makeEKAttributes()
             )
         case .birthday:
-            dateSysDatePicker.byBrPresent(in: self.view)
+            dateSysDatePicker.byPresent(in: self.view)
         case .emotion:
-            self.eduPicker.byBrPresent(in: self.view)
+            eduPicker.byPresent(in: self.view)
         case .hometown:
             "可能这个最后要被取消".toast
         case .profession:

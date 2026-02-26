@@ -11,8 +11,9 @@ import AppKit
 import UIKit
 #endif
 
-import JobsByUIKit
 import SnapKit
+import JobsByUIKit
+import JobsByQuartzCore
 import JobsSwiftBaseDefines
 // MARK: - 普通银行卡 Cell（懒加载 + byAddTo）
 final class WalletCardCell: UICollectionViewCell {

@@ -2,8 +2,6 @@
 # ================================== Podfile ==================================
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 require 'fileutils'
-# ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
-platform :ios, '15.6'
 source 'https://github.com/CocoaPods/Specs.git'
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
@@ -14,6 +12,8 @@ install! 'cocoapods',
 # 统一的构建设置（一次改全工程 & Pods）
 JOBS_DEPLOYMENT_TARGET = '15.0'
 JOBS_DISABLE_SCRIPT_SANDBOXING = 'NO'
+# ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
+platform :ios, "#{JOBS_DEPLOYMENT_TARGET}"
 # 判断当前 iOS 工程是否集成了 Unity（或存在 Unity 导出的工程痕迹）
 #
 # 命中任一条件即可认为“有 Unity”：

@@ -10,7 +10,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+import JobsByQuartzCore
 
 final class HollowOverlayView: UIView {
     enum HoleShape {

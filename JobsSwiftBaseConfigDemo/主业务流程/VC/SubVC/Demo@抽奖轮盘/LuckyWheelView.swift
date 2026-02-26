@@ -13,8 +13,9 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsSwiftTimer
+import JobsByQuartzCore
+import JobsSwiftBaseDefines
 /// 扇形圆盘 + 中央按钮（按钮用 Jobs 封装 API）
 /// 旋转动画用 JobsSwiftTimer（displayLink 内核） + ScrollDecelerator 实现 UIScrollView 式减速
 /// 支持:

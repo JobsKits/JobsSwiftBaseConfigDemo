@@ -15,7 +15,10 @@ import WebKit
 import SnapKit
 import GKNavigationBarSwift
 import JobsByUIKit
+import JobsByWebKit
+import JobsSwiftFoundation
 import JobsSwiftBaseDefines
+import JobsSwiftStandardLibrary
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")

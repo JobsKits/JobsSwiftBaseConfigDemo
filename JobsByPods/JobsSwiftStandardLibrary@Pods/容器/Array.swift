@@ -14,10 +14,6 @@ import UIKit
 import ObjectiveC
 
 extension Array {
-    /// 安全读：越界返回 nil，不 crash
-    subscript(safe index: Int) -> Element? {
-        indices.contains(index) ? self[index] : nil
-    }
     /// 不改原数组，返回一个新数组
     @discardableResult
     public func add(_ element: Element) -> [Element] {

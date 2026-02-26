@@ -13,8 +13,9 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsImageTools
+import JobsSwiftFoundation
+import JobsSwiftBaseDefines
 
 final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // callbacks (✅ 回调把 cell 自己带出去)

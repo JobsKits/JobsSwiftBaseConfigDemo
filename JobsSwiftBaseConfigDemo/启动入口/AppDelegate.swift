@@ -27,8 +27,9 @@ import JobsBy3rdTools
 import JobsSwiftTimer
 import JobsSwiftAppTools
 import JobsSwiftBaseTools
-import JobsSwiftBaseDefines
 import JobsSwiftFoundation
+import JobsSwiftBaseDefines
+import JobsSwiftStandardLibrary
 #if DEBUG
 import JobsSwiftDebugTools
 #endif
@@ -367,7 +368,7 @@ extension AppDelegate {
         let x = dict[safe: "a"]                 // Optional(1)
         let y = dict[safe: "zzz"]               // nil
 
-        print(x as Any)   // Optional("o")
+        print(x as Any)   // Optional("1")
         print(y as Any)   // nil
     }
 }

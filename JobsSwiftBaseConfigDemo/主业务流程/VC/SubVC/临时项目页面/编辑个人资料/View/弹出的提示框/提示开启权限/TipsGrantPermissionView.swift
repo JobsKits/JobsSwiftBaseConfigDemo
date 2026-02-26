@@ -13,9 +13,10 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsBy3rdTools
+import JobsByQuartzCore
 import JobsSwiftAppTools
+import JobsSwiftBaseDefines
 
 final class TipsGrantPermissionView: UIView {
     /// 白色卡片

@@ -86,6 +86,9 @@ def byJobs
   pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
   pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'
   pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
+  pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods'
+  pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
+  pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
   pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
   pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
   pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
@@ -107,7 +110,7 @@ def byJobs
   pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
   pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
   pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods'
-  pod 'JobsSwiftFoundation',                :path => 'JobsByPods/Foundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+  pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
   pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods' # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
   pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods' # https://github.com/JobsKits/JobsSwiftBlock
   pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods' # https://github.com/JobsKits/JobsSwiftBaseDefines

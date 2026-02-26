@@ -13,14 +13,16 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+
+import JobsToast
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
-import JobsSwiftBaseTools
 import JobsSwiftTools
+import JobsInheritance
+import JobsSwiftBaseTools
+import JobsSwiftFoundation
 import JobsSwiftBaseDefines
-import JobsToast
 
 final class UITextViewDemoVC: BaseVC {
     // MARK: 双向绑定（无 Rx）

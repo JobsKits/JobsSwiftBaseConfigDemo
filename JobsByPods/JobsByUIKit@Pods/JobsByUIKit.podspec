@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version      = '0.0.1'
   s.summary      = 'Swift中，对UIKit进行的拓展（持续更新中）'
   s.description  = <<-DESC
-                      Swift.Foundation.Extensions
+                      JobsByUIKit
                    DESC
 
   s.homepage     = 'https://github.com/JobsKits/JobsByUIKit'
@@ -49,15 +49,14 @@ Pod::Spec.new do |s|
   s.dependency 'NSObject+Rx'
   s.dependency 'SkeletonView'
   s.dependency 'lottie-ios'
-  s.dependency 'JobsSwiftBlock'
-  s.dependency 'JobsSwiftBaseDefines'
-  s.dependency 'Jobsl10n'
-  s.dependency 'JobsSwiftTimer'
-  s.dependency 'JobsNavBar'
-  s.dependency 'JobsTextTools'
-  s.dependency 'JobsImageTools'
   s.dependency 'Jobsl10n'
   s.dependency 'JobsScale'
-  s.dependency 'JobsByPhotosUI'
+  s.dependency 'JobsNavBar'
+  s.dependency 'JobsTextTools'
+  s.dependency 'JobsSwiftTimer'
+  s.dependency 'JobsSwiftBlock'
+  s.dependency 'JobsImageTools'
+  s.dependency 'JobsByQuartzCore'
+  s.dependency 'JobsSwiftBaseDefines'
 
 end
