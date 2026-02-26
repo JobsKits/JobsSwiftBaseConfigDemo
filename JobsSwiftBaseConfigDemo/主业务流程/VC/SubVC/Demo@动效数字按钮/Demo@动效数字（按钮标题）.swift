@@ -71,42 +71,13 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-    /// 数字动效按钮@主标题（普通文本）
-    private lazy var btn1: UIButton = {
-        UIButton.sys()
-            .byTitle("¥99", for: .normal)
-            .byTitle("¥99", for: .selected)
-            .byTitle("¥99", for: .disabled)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
-            .byBackgroundColor(.systemBlue)
-            .byCornerRadius(10)
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                let start = Double(tf1Start.text ?? "") ?? 99
-                let end   = Double(tf1End.text ?? "") ?? 199
-                sender
-                    .byAnimatedMainTitleNumber_Compat(start: start,
-                                                      initialTitle: "¥\(Int(start))",
-                                                      duration: 0.9,
-                                                      minimumInterval: 1.0/60.0) {
-                        "动画结束".tr.toast
-                    }
-                    .byStartAnimatedMainTitleNumber("¥\(Int(end))")
-            }
-            .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(tf1Start.snp.bottom).offset(10)
-                make.left.right.equalToSuperview().inset(16)
-                make.height.equalTo(52)
-            }
-    }()
-
+    
     private lazy var titleLab2: UILabel = {
         UILabel()
             .byText("② 无图：副标题（富文本，只动数字）")
             .byFont(.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(btn1.snp.bottom).offset(18)
+                make.top.equalTo(btn_1.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
@@ -130,54 +101,13 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-    /// 数字动效按钮@副标题（富文本）
-    private lazy var btn2: UIButton = {
-        UIButton.sys()
-            .byTitle("会员价格", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .bySubTitle("原价 ¥199 /月", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
-            .bySubTitleFont(.systemFont(ofSize: 13))
-            .byBackgroundColor("#2F2F2F".cor)
-            .byCornerRadius(10)
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                let start = Double(tf2Start.text ?? "") ?? 199
-                let end   = Double(tf2End.text ?? "") ?? 99
-                // subtitle 富文本：只动数字，其他不动
-                let startAttr = JobsRichText.make([
-                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
-                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
-                ])
-                let endAttr = JobsRichText.make([
-                    JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow),
-                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8))
-                ])
-                
-                sender
-                    .byRichSubTitle(startAttr)
-                    .byAnimatedSubTitleNumber(start: start,
-                                              duration: 1.0,
-                                              minimumInterval: 1.0/60.0) {
-                        "动画结束".tr.toast
-                    }.byStartAnimatedSubTitleNumber(endAttr)
-            }
-            .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(tf2Start.snp.bottom).offset(10)
-                make.left.right.equalToSuperview().inset(16)
-                make.height.equalTo(64)
-            }
-    }()
-
+    
     private lazy var titleLab3: UILabel = {
         UILabel()
             .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）")
             .byFont(.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(btn2.snp.bottom).offset(18)
+                make.top.equalTo(btn_3.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
@@ -201,53 +131,13 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-    /// 数字动效按钮@主标题（富文本）
-    private lazy var btn3: UIButton = {
-        UIButton.sys()
-            .byRichTitle(JobsRichText.make([
-                JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-                JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
-            ]))
-            .byTitleColor(.white, for: .normal)
-            .byImage("star.fill".sysImg, for: .normal)
-            .byImagePlacement(.leading, padding: 8)
-            .byBackgroundColor(.systemGreen)
-            .byCornerRadius(10)
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                let start = Double(tf3Start.text ?? "") ?? 99
-                let end   = Double(tf3End.text ?? "") ?? 299
-                
-                let startRich = JobsRichText.make([
-                    JobsRichRun(.text("¥\(Int(start))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
-                ])
-                let endRich = JobsRichText.make([
-                    JobsRichRun(.text("¥\(Int(end))")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-                    JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
-                ])
-                
-                sender
-                    .byRichTitle(startRich)
-                    .byAnimatedMainTitleNumber(start: start,
-                                               duration: 0.9,
-                                               minimumInterval: 1.0/60.0) {
-                        "动画结束".tr.toast
-                    }.byStartAnimatedMainTitleNumber(endRich)
-            }
-            .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(tf3Start.snp.bottom).offset(10)
-                make.left.right.equalToSuperview().inset(16)
-                make.height.equalTo(56)
-            }
-    }()
 
     private lazy var titleLab4: UILabel = {
         UILabel()
             .byText("④ 有图：副标题（普通字符串，只动数字）")
             .byFont(.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
-                make.top.equalTo(btn3.snp.bottom).offset(18)
+                make.top.equalTo(btn_2.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
@@ -271,12 +161,174 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
+    /// 数字动效按钮@主标题（普通文本）
+    private lazy var btn_1: UIButton = {
+        UIButton.sys()
+            .byTitle("¥99", for: .normal)
+            .byTitle("¥99", for: .selected)
+            .byTitle("¥99", for: .disabled)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
+            .byBackgroundColor(.systemBlue)
+            /// 数字动效按钮@关键配置
+            .byAnimationTitleConfig({ cfg in
+                cfg.byDuration(10) // 动画的作用时间
+                    .byFps(60) //
+                    .byTitleColor(.white, for: .normal)
+                    .byTitleFont(.DINPro.Bold(14.fz))
+                    .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
+                    .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
+                    .byShowsDecimals(true)// 是否展示小数（默认不展示）
+                    .bySeparate(",")// 分隔符是 , 不写也行
+                    .byDecimals(2)// 保留2位小数（默认）
+                    .byTitleDecimalsCor(.red)
+                    .byTitleDecimalsFont(.DINPro.Bold(12.fz))
+            })
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                /// 启动动效@回调倒计时行为：进行中（多次）
+                sender.byStartAnim { m in
+                    print("title:", m.title ?? "nil",
+                          "sub:", m.subTitle ?? "nil",
+                          "seconds:", m.seconds)
+                }
+                /// 启动动效@回调倒计时行为：结束（一次）
+                .byEndAnim {
+                    "动画结束".tr.toast
+                }
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf1Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(52)
+            }
+    }()
+    /// 数字动效按钮@主标题（富文本）
+    private lazy var btn_2: UIButton = {
+        UIButton.sys()
+            // 初始展示：你原来的 rich title 仍然可以保留（首次显示用）
+            .byRichTitle(JobsRichText.make([
+                JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
+                JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+            ]))
+            .byTitleColor(.white, for: .normal)
+            .byImage("star.fill".sysImg, for: .normal)
+            .byImagePlacement(.leading, padding: 8)
+            .byBackgroundColor(.systemGreen)
+            /// 数字动效按钮@关键配置➤主标题富文本Builder
+            .byAnimationTitleConfig { cfg in
+                cfg.byDuration(10)
+                    .byFps(60)
+                    .byStartValue("\(Int(0))")
+                    .byEndValue("\(Int(1000))")
+                    .byShowsDecimals(true)
+                    .bySeparate(",")
+                    .byDecimals(2)
+                    // 如果仍然希望 plain/fallback 的字体颜色也一致，可以保留
+                    .byTitleColor(.white, for: .normal)
+                    .byTitleFont(.DINPro.Bold(14.fz))
+                    .byTitleDecimalsCor(.red)
+                    .byTitleDecimalsFont(.DINPro.Bold(12.fz))
+                    // 主标题整体富文本（¥ + 数字 + /月）
+                    .byTitleAttributedBuilder { text, decimalsRange, _ in
+                        // full: "¥1,234.56 /月"
+                        let full = "¥\(text) /月"
+                        let attr = NSMutableAttributedString(string: full)
+                        // 数字段（含 ¥）：红色 18 semibold
+                        let numberRange = NSRange(location: 0, length: 1 + (text as NSString).length) // "¥" + text
+                        attr.addAttributes([
+                            .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
+                            .foregroundColor: UIColor.systemRed
+                        ], range: numberRange)
+                        // 后缀段：白色 16
+                        let suffixStart = numberRange.length
+                        let suffixRange = NSRange(location: suffixStart, length: (full as NSString).length - suffixStart)
+                        attr.addAttributes([
+                            .font: UIFont.systemFont(ofSize: 16),
+                            .foregroundColor: UIColor.white
+                        ], range: suffixRange)
+                        // 小数段（如果存在）：DINPro 12 + 红色（只改小数部分，不影响整数）
+                        if let dr = decimalsRange {
+                            // decimalsRange 是在 text 里的 range，要平移到 full 里（前面多了一个 "¥"）
+                            let shifted = NSRange(location: 1 + dr.location, length: dr.length)
+                            attr.addAttributes([
+                                .font: UIFont.DINPro.Bold(12.fz),
+                                .foregroundColor: UIColor.red
+                            ], range: shifted)
+                        };return attr
+                    }
+            }
+            .onTap { [weak self] sender in
+                guard let self else { return }
+
+                // 你这里读 tf 的 start/end 只是业务参数；真正动画起终值由 config 的 startValue/endValue 控制
+                // 如果你想“按输入框变更动画起终值”，需要在点击时重新调用 byAnimationTitleConfig 覆盖 start/end
+                // 这里先按你原逻辑保留回调即可
+                sender.byStartAnim { m in
+                    print("title:", m.title ?? "nil",
+                          "sub:", m.subTitle ?? "nil",
+                          "seconds:", m.seconds)
+                }
+                .byEndAnim {
+                    "动画结束".tr.toast
+                }
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf3Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(56)
+            }
+    }()
     /// 数字动效按钮@副标题（普通文本）
-    private lazy var btn4: UIButton = {
+    private lazy var btn_3: UIButton = {
+        UIButton.sys()
+            .byTitle("会员价格", for: .normal)
+            .byTitleColor(.white, for: .normal)
+            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .bySubTitle("原价 ¥199 /月", for: .normal)
+            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(.systemFont(ofSize: 13))
+            .byBackgroundColor("#2F2F2F".cor)
+            /// 数字动效按钮@关键配置
+            .byAnimationSubTitleConfig({ cfg in
+                cfg.byDuration(10) // 动画的作用时间
+                    .byFps(60) //
+                    .bySubTitleColor(.blue)
+                    .bySubTitleFont(.DINPro.Bold(14.fz))
+                    .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
+                    .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
+                    .byShowsDecimals(true)// 是否展示小数（默认不展示）
+                    .bySeparate(",")// 分隔符是 , 不写也行
+                    .byDecimals(2)// 保留2位小数（默认）
+                    .bySubTitleDecimalsCor(.red)
+                    .bySubTitleDecimalsFont(.DINPro.Bold(12.fz))
+            })
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                /// 启动动效@回调倒计时行为：进行中（多次）
+                sender.byStartAnim { m in
+                    print("title:", m.title ?? "nil",
+                          "sub:", m.subTitle ?? "nil",
+                          "seconds:", m.seconds)
+                }
+                /// 启动动效@回调倒计时行为：结束（一次）
+                .byEndAnim {
+                    "动画结束".tr.toast
+                }
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(tf2Start.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(64)
+            }
+    }()
+    /// 数字动效按钮@副标题（富文本）
+    private lazy var btn_4: UIButton = {
         UIButton.sys()
             .byTitle("限时折扣", for: .normal)
             .byTitleColor(.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            // 初始展示：先给一个普通副标题（首次显示用）
             .bySubTitle("倒计时 199 秒", for: .normal)
             .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
             .bySubTitleFont(.systemFont(ofSize: 13))
@@ -284,18 +336,57 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemPurple)
             .byCornerRadius(10)
+            /// 数字动效按钮@关键配置➤副标题富文本Builder
+            .byAnimationSubTitleConfig { cfg in
+                cfg.byDuration(10)
+                    .byFps(60)
+
+                    // 这里的 start/end 才是副标题动画的数值来源
+                    .byStartValue("199")
+                    .byEndValue("9")
+
+                    // 倒计时一般不需要小数，这里关掉
+                    .byShowsDecimals(false)
+
+                    // 可选：给副标题的基础样式（非 builder 场景兜底）
+                    .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+                    .bySubTitleFont(.systemFont(ofSize: 13))
+
+                    // ✅ 副标题整体富文本： "倒计时 199 秒"
+                    .bySubTitleAttributedBuilder { text, _, _ in
+                        let prefix = "倒计时 "
+                        let suffix = " 秒"
+                        let full = prefix + text + suffix
+                        let attr = NSMutableAttributedString(string: full)
+
+                        // 全段默认（灰白 13）
+                        attr.addAttributes([
+                            .font: UIFont.systemFont(ofSize: 13),
+                            .foregroundColor: UIColor.white.withAlphaComponent(0.85)
+                        ], range: NSRange(location: 0, length: (full as NSString).length))
+
+                        // 数字段强调（白色 13 medium，或你想要的高亮色）
+                        let numberRange = NSRange(location: (prefix as NSString).length,
+                                                  length: (text as NSString).length)
+                        attr.addAttributes([
+                            .font: UIFont.systemFont(ofSize: 13, weight: .semibold),
+                            .foregroundColor: UIColor.white
+                        ], range: numberRange)
+
+                        return attr
+                    }
+            }
+
             .onTap { [weak self] sender in
                 guard let self else { return }
-                let start = Double(tf4Start.text ?? "") ?? 199
-                let end   = Double(tf4End.text ?? "") ?? 9
-                sender
-                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .normal)
-                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .selected)
-                    .bySubTitle("倒计时 \(Int(start)) 秒", for: .disabled)
-                    .byAnimatedSubTitleNumber(start: start, duration: 1.1, minimumInterval: 1.0/60.0) {
-                        "动画结束".tr.toast
-                    }
-                    .byStartAnimatedSubTitleNumber("倒计时 \(Int(end)) 秒")
+                sender.byStartAnim { m in
+                    print("title:", m.title ?? "nil",
+                          "sub:", m.subTitle ?? "nil",
+                          "seconds:", m.seconds)
+                }
+                .byEndAnim {
+                    "动画结束".tr.toast
+                }
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tf4Start.snp.bottom).offset(10)
@@ -314,19 +405,19 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         titleLab1.byVisible(YES)
         tf1Start.byVisible(YES)
         tf1End.byVisible(YES)
-        btn1.byVisible(YES)
+        btn_1.byVisible(YES)
         titleLab2.byVisible(YES)
         tf2Start.byVisible(YES)
         tf2End.byVisible(YES)
-        btn2.byVisible(YES)
+        btn_3.byVisible(YES)
         titleLab3.byVisible(YES)
         tf3Start.byVisible(YES)
         tf3End.byVisible(YES)
-        btn3.byVisible(YES)
+        btn_2.byVisible(YES)
         titleLab4.byVisible(YES)
         tf4Start.byVisible(YES)
         tf4End.byVisible(YES)
-        btn4.byVisible(YES)
+        btn_4.byVisible(YES)
     }
 }
 

@@ -349,6 +349,12 @@ extension UIButton {
 
         @discardableResult
         public func subTitle(_ text: String?) -> UIButton { button.bySubTitle(text, for: state) }
+        /// 副标题富文本（按 state）
+        @discardableResult
+        public func attributedSubTitle(_ text: NSAttributedString?) -> UIButton {
+            button.byAttributedSubTitle(text, for: state)
+        }
+
         @discardableResult
         public func subTitleFont(_ font: UIFont) -> UIButton { button.bySubTitleFont(font, for: state) }
         @discardableResult
@@ -557,8 +563,6 @@ extension UIButton {
             _jobsLegacyImagePlacement = .top
             _jobsLegacyImagePlacement = .top
             // 上图下文：
-            // 目标：image 向上移 (titleH/2 + padding/2)，title 向下移 (imageH/2 + padding/2)
-            // 同时水平对齐：image 向右移 titleW/2，title 向左移 imageW/2
             imageEdgeInsets = UIEdgeInsets(top: -(ttl.h + padding) / 2,
                                            left: (ttl.w) / 2,
                                            bottom: (ttl.h + padding) / 2,
@@ -567,7 +571,6 @@ extension UIButton {
                                            left: -(img.w) / 2,
                                            bottom: -(img.h + padding) / 2,
                                            right: (img.w) / 2)
-            // content 需要把整体上下扩出来，否则容易被按钮 bounds 裁掉/看似溢出
             let vPad = (img.h + ttl.h + padding) / 2
             let hPad = max(img.w, ttl.w) / 2
             contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
@@ -577,8 +580,6 @@ extension UIButton {
         case .bottom:
             _jobsLegacyImagePlacement = .bottom
             _jobsLegacyImagePlacement = .bottom
-            // 下图上文：
-            // 与 top 相反：image 向下移，title 向上移
             imageEdgeInsets = UIEdgeInsets(top: (ttl.h + padding) / 2,
                                            left: (ttl.w) / 2,
                                            bottom: -(ttl.h + padding) / 2,
@@ -724,4 +725,3 @@ extension UIButton {
         AttributedString(a)
     }
 }
-

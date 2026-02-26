@@ -22,6 +22,7 @@ import JobsSwiftBaseDefines
      - 修复点击高亮/选中时标题丢失：Title/Attributed 同步写入常见状态（legacy）
      - ✅ 写入统一走 DSL：byTitle/bySubTitle（Configuration/Legacy 由 DSL 接管）
      - ✅ byStartAnim 回调 model：主标题/副标题/当前秒数（elapsedSeconds）
+     - ✅ 支持主/副标题"整体富文本 Builder" ➤ 比如：¥ + 数字 + /月；整数/小数不同字体颜色；前后缀不变只动数字
  */
 // MARK: - Tick Model
 public struct JobsButtonNumberAnimTickModel {
@@ -184,7 +185,7 @@ extension UIButton {
         case .subTitle:
             objc_setAssociatedObject(self, &_jobsAnimLatestSubTitleKey, text, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        // 缓存秒数：主副同时跑时，取更大的 elapsed（更接近真实“当前秒数”）
+        // 缓存秒数：主副同时跑时，取更大的 elapsed
         let old = (objc_getAssociatedObject(self, &_jobsAnimLatestSecondsKey) as? NSNumber)?.doubleValue ?? 0
         if elapsed >= old {
             objc_setAssociatedObject(self, &_jobsAnimLatestSecondsKey, NSNumber(value: elapsed), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -235,7 +236,11 @@ extension UIButton {
 public enum JobsButtonNumberAnimConfig {
 
     public enum Grouping: Int { case international3 = 3; case china4 = 4 }
-
+    /// ✅ 整体富文本 Builder
+    /// - text: 例如 "1,234.56"
+    /// - decimalsRange: 小数部分 range（在 text 内），可能为 nil
+    /// - value: 当前数值
+    public typealias AttributedBuilder = (_ text: String, _ decimalsRange: NSRange?, _ value: Double) -> NSAttributedString
     public final class DecimalsSnapshot: NSObject {
         public var showsDecimals: Bool = false
         public var decimals: Int = 2
@@ -260,6 +265,9 @@ public enum JobsButtonNumberAnimConfig {
         public var subTitleFont: UIFont?
         public var subTitleColorNormal: UIColor?
         public var subTitleColorSelected: UIColor?
+        /// ✅ 主/副标题整体富文本
+        public var titleAttributedBuilder: AttributedBuilder?
+        public var subTitleAttributedBuilder: AttributedBuilder?
     }
 
     public final class Title {
@@ -294,6 +302,12 @@ public enum JobsButtonNumberAnimConfig {
         @discardableResult public func byDecimals(_ v: Int) -> Self { snapshot.decimalsCfg.decimals = max(0, v); return self }
         @discardableResult public func byTitleDecimalsCor(_ v: UIColor?) -> Self { snapshot.decimalsCfg.decimalsColor = v; return self }
         @discardableResult public func byTitleDecimalsFont(_ v: UIFont?) -> Self { snapshot.decimalsCfg.decimalsFont = v; return self }
+        /// ✅ 主标题整体富文本 Builder
+        @discardableResult
+        public func byTitleAttributedBuilder(_ builder: AttributedBuilder?) -> Self {
+            snapshot.titleAttributedBuilder = builder
+            return self
+        }
     }
 
     public final class SubTitle {
@@ -328,6 +342,12 @@ public enum JobsButtonNumberAnimConfig {
         @discardableResult public func byDecimals(_ v: Int) -> Self { snapshot.decimalsCfg.decimals = max(0, v); return self }
         @discardableResult public func bySubTitleDecimalsCor(_ v: UIColor?) -> Self { snapshot.decimalsCfg.decimalsColor = v; return self }
         @discardableResult public func bySubTitleDecimalsFont(_ v: UIFont?) -> Self { snapshot.decimalsCfg.decimalsFont = v; return self }
+        /// ✅ 副标题整体富文本 Builder
+        @discardableResult
+        public func bySubTitleAttributedBuilder(_ builder: AttributedBuilder?) -> Self {
+            snapshot.subTitleAttributedBuilder = builder
+            return self
+        }
     }
 }
 // MARK: - Runner
@@ -393,7 +413,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                             runLoopMode: .common,
                             pauseInBackground: true,
                             autoManageAppState: true
-                        )) { [weak self] in
+                          )) { [weak self] in
             self?.tick()
         }.start()
     }
@@ -478,7 +498,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
         ?? Self.findSubTitleLabel(from: button)?.textColor
         ?? JobsCor.label
     }
-    /// ✅ 写入统一走 DSL（plain），attributed：iOS15+ 额外补齐 config.attributedTitle/subtitle
+    /// ✅ 写入统一走 DSL（plain），富文本：支持 Builder；未配置 Builder 时继续支持“小数 range 样式”
     @discardableResult
     private func applyNumber(button: UIButton, value: Double) -> String {
 
@@ -490,7 +510,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             separator: ds.separator,
             groupingSize: ds.grouping.rawValue
         )
-        // 先写 plain：走 DSL（你要的那套）
+        // 1) 先写 plain（保持你原有 DSL 行为）
         switch kind {
         case .title:
             button.byTitle(formatted.text, for: .normal)
@@ -504,7 +524,16 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             button.bySubTitle(formatted.text, for: .highlighted)
             button.bySubTitle(formatted.text, for: .disabled)
         }
-        // decimals 样式
+        // 2) 如果配置了整体富文本 Builder：优先使用（避免和 decimals 样式互相覆盖）
+        if let attr = buildAttributedIfNeeded(text: formatted.text,
+                                             decimalsRange: formatted.decimalsRange,
+                                             value: value) {
+            writeAttributed(button: button,
+                            attributed: attr,
+                            plain: formatted.text)
+            return formatted.text
+        }
+        // 3) 否则：走你原来的“小数 range 上样式”
         if ds.showsDecimals,
            ds.decimals > 0,
            (ds.decimalsFont != nil || ds.decimalsColor != nil),
@@ -522,34 +551,52 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                 baseFont = subTitleBaseFont(button: button)
                 baseColor = subTitleBaseColor(button: button)
             }
-
+            // ✅ 必须整段补齐 font/color（你注释里提到的“无标题/无动画”根源之一就是这里没补齐）
             attr.addAttribute(.font, value: baseFont, range: NSRange(location: 0, length: attr.length))
             attr.addAttribute(.foregroundColor, value: baseColor, range: NSRange(location: 0, length: attr.length))
 
             if let f = ds.decimalsFont { attr.addAttribute(.font, value: f, range: decRange) }
             if let c = ds.decimalsColor { attr.addAttribute(.foregroundColor, value: c, range: decRange) }
-            // legacy：主标题给一份 attributed（副标题 legacy 没有原生 state attributedSubtitle，先不强上）
-            if kind == .title {
-                button.byAttributedTitle(attr, for: .normal)
-                button.byAttributedTitle(attr, for: .selected)
-                button.byAttributedTitle(attr, for: .highlighted)
-                button.byAttributedTitle(attr, for: .disabled)
-            }
-            // iOS15+：补齐 configuration attributed（保证 Configuration 模式也能看到小数样式）
+
+            writeAttributed(button: button,
+                            attributed: attr,
+                            plain: formatted.text)
+        };return formatted.text
+    }
+
+    private func buildAttributedIfNeeded(text: String,
+                                         decimalsRange: NSRange?,
+                                         value: Double) -> NSAttributedString? {
+        switch kind {
+        case .title:
+            return snapshot.titleAttributedBuilder?(text, decimalsRange, value)
+        case .subTitle:
+            return snapshot.subTitleAttributedBuilder?(text, decimalsRange, value)
+        }
+    }
+    /// 统一写入 attributed：主标题 legacy 多状态 + iOS15 configuration；副标题走 byAttributedSubTitle 多状态
+    private func writeAttributed(button: UIButton, attributed: NSAttributedString, plain: String) {
+        switch kind {
+        case .title:
+            button.byAttributedTitle(attributed, for: .normal)
+            button.byAttributedTitle(attributed, for: .selected)
+            button.byAttributedTitle(attributed, for: .highlighted)
+            button.byAttributedTitle(attributed, for: .disabled)
+
             if #available(iOS 15.0, *) {
                 if var cfg = button.configuration {
-                    switch kind {
-                    case .title:
-                        cfg.title = formatted.text
-                        cfg.attributedTitle = AttributedString(attr)
-                    case .subTitle:
-                        cfg.subtitle = formatted.text
-                        cfg.attributedSubtitle = AttributedString(attr)
-                    }
+                    cfg.title = plain
+                    cfg.attributedTitle = AttributedString(attributed)
                     button.configuration = cfg
                 }
             }
-        };return formatted.text
+        case .subTitle:
+            // ✅ 关键：副标题富文本走你 Subtitle 扩展的 byAttributedSubTitle（iOS15+ 会写 attributedSubtitle，iOS15- 会 legacy 合成）
+            button.byAttributedSubTitle(attributed, for: .normal)
+            button.byAttributedSubTitle(attributed, for: .selected)
+            button.byAttributedSubTitle(attributed, for: .highlighted)
+            button.byAttributedSubTitle(attributed, for: .disabled)
+        }
     }
 
     private static func parseDouble(_ s: String?, separator: String) -> Double? {
@@ -623,7 +670,9 @@ private enum JobsNumberFormatter {
         String(format: "%.\(decimals)f", v)
     }
 
-    private static func groupDigits(_ digits: String, groupSize: Int, separator: String) -> String {
+    private static func groupDigits(_ digits: String,
+                                    groupSize: Int,
+                                    separator: String) -> String {
         let chars = Array(digits)
         if chars.count <= groupSize { return digits }
 

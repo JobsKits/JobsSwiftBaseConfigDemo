@@ -19,6 +19,11 @@ public struct _JobsSubPackNoAttr {
     var color: UIColor?
 }
 public var _jobsSubDictKey_noAttr: UInt8 = 0
+// MARK: - Subtitle（富文本）
+public struct _JobsSubPackAttr {
+    var attr: NSAttributedString?
+}
+public var _jobsSubDictKey_attr: UInt8 = 0
 public var _jobsSubtitleHandlerInstalledKey: UInt8 = 0
 public var _jobsCfgBgImageKey: UInt8 = 0
 extension UIButton {
@@ -26,11 +31,17 @@ extension UIButton {
         get { objc_getAssociatedObject(self, &_jobsCfgBgImageKey) as? UIImage }
         set { objc_setAssociatedObject(self, &_jobsCfgBgImageKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
+    // no-attr dict
     public var _subDict_noAttr: [UInt: _JobsSubPackNoAttr] {
         get { (objc_getAssociatedObject(self, &_jobsSubDictKey_noAttr) as? [UInt: _JobsSubPackNoAttr]) ?? [:] }
         set { objc_setAssociatedObject(self, &_jobsSubDictKey_noAttr, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-
+    // attr dict
+    public var _subDict_attr: [UInt: _JobsSubPackAttr] {
+        get { (objc_getAssociatedObject(self, &_jobsSubDictKey_attr) as? [UInt: _JobsSubPackAttr]) ?? [:] }
+        set { objc_setAssociatedObject(self, &_jobsSubDictKey_attr, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+    // MARK: packs
     public func _subPack_noAttr(for state: UIControl.State, create: Bool = true) -> _JobsSubPackNoAttr {
         var d = _subDict_noAttr
         if let p = d[state.raw] { return p }
@@ -44,6 +55,25 @@ extension UIButton {
 
     public func _setSubPack_noAttr(_ p: _JobsSubPackNoAttr, for state: UIControl.State) {
         var d = _subDict_noAttr; d[state.raw] = p; _subDict_noAttr = d
+        if #available(iOS 15.0, *) {
+            _ensureSubtitleHandler_noAttrInstalled()
+            setNeedsUpdateConfiguration()
+        }
+    }
+
+    public func _subPack_attr(for state: UIControl.State, create: Bool = true) -> _JobsSubPackAttr {
+        var d = _subDict_attr
+        if let p = d[state.raw] { return p }
+        if create {
+            let p = _JobsSubPackAttr(attr: nil)
+            d[state.raw] = p
+            _subDict_attr = d
+            return p
+        };return _JobsSubPackAttr(attr: nil)
+    }
+
+    public func _setSubPack_attr(_ p: _JobsSubPackAttr, for state: UIControl.State) {
+        var d = _subDict_attr; d[state.raw] = p; _subDict_attr = d
         if #available(iOS 15.0, *) {
             _ensureSubtitleHandler_noAttrInstalled()
             setNeedsUpdateConfiguration()
@@ -74,22 +104,28 @@ extension UIButton {
                !t.isEmpty {
                 cfg.title = t
             }
-            // ---------- 副标题：从我们保存的包读取并应用 ----------
-            // _subDict_noAttr 是你已有的 AO 字典：[UInt : _JobsSubPackNoAttr]
-            let pack = self._subDict_noAttr[st.rawValue] ?? self._subDict_noAttr[UIControl.State.normal.rawValue]
-            let subText = pack?.text ?? ""
-            cfg.subtitle = subText.isEmpty ? nil : subText
+            // ---------- 副标题：优先富文本（✅ NEW） ----------
+            let apack = self._subDict_attr[st.rawValue] ?? self._subDict_attr[UIControl.State.normal.rawValue]
+            if let a = apack?.attr, a.length > 0 {
+                cfg.subtitle = nil
+                cfg.attributedSubtitle = AttributedString(a)
+                // 提交背景等后续逻辑仍然走
+            } else {
+                // ---------- 副标题：无富文本（原逻辑） ----------
+                let pack = self._subDict_noAttr[st.rawValue] ?? self._subDict_noAttr[UIControl.State.normal.rawValue]
+                let subText = pack?.text ?? ""
+                cfg.subtitle = subText.isEmpty ? nil : subText
 
-            let f = pack?.font
-            let c = pack?.color
-            cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-                var a = incoming
-                if let f { a.font = f }
-                if let c { a.foregroundColor = c }
-                return a
+                let f = pack?.font
+                let c = pack?.color
+                cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+                    var a = incoming
+                    if let f { a.font = f }
+                    if let c { a.foregroundColor = c }
+                    return a
+                }
             }
             // ---------- 背景图：优先“粘住”的，再兜底 legacy ----------
-            // jobs_cfgBgImage 是你在 jobsResetBtnBgImage 中同步/粘住的最终图
             var bg = cfg.background
             if let keep = self.jobs_cfgBgImage {
                 if bg.image !== keep {
@@ -98,7 +134,6 @@ extension UIButton {
                     bg.backgroundColor = .clear
                 }
             } else if bg.image == nil {
-                // 没有“粘住”的图，再尝试用 legacy 按 state 的背景图兜底，避免空
                 if let legacy = self.backgroundImage(for: st) ?? self.backgroundImage(for: .normal) {
                     bg.image = legacy
                     if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
@@ -108,7 +143,6 @@ extension UIButton {
             cfg.background = bg
             // ---------- 提交 ----------
             btn.configuration = cfg
-            // 不要在这里再 setNeedsUpdateConfiguration()，避免循环重建
         }
     }
 
@@ -123,31 +157,76 @@ extension UIButton {
         titleLabel?.numberOfLines = 2
         titleLabel?.textAlignment = .center
     }
+    // iOS15 以下富文本副标题兜底（合成 attributedTitle）
+    public func _legacy_applySubtitle_attr(_ subAttr: NSAttributedString?, for state: UIControl.State) {
+        // title 取当前状态优先，再 normal
+        let titleAttr: NSAttributedString? =
+        self.attributedTitle(for: state)
+        ?? self.attributedTitle(for: .normal)
+        ?? {
+            let t = self.title(for: state) ?? self.title(for: .normal) ?? ""
+            if t.isEmpty { return nil }
+            return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? UIFont.systemFont(ofSize: 15)])
+        }()
+
+        let sub = subAttr
+        if titleAttr == nil, sub == nil {
+            setAttributedTitle(nil, for: state)
+            return
+        }
+
+        let full = NSMutableAttributedString()
+        if let titleAttr { full.append(titleAttr) }
+        if let sub {
+            if full.length > 0 { full.append(NSAttributedString(string: "\n")) }
+            full.append(sub)
+        }
+
+        setAttributedTitle(full, for: state)
+        titleLabel?.numberOfLines = 2
+        titleLabel?.textAlignment = .center
+    }
 }
 
 extension UIButton {
+
     @discardableResult
     public func bySubTitle(_ text: String?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.text = text ?? ""; _setSubPack_noAttr(p, for: state)
-            // ⬇️ 立刻写入配置，保证首次就能看到
+            // ⬇️ 立刻写入配置，保证首次就能看到（该方法你工程里已存在时正常生效）
             _applySubtitleToConfigurationNow(targetState: state)
         } else {
             _legacy_applySubtitle_noAttr(text: text, for: state)
         };return self
     }
+
     @discardableResult
     public func bySubTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.font = font; _setSubPack_noAttr(p, for: state)
-            _applySubtitleToConfigurationNow(targetState: state)   // ⬅️
+            _applySubtitleToConfigurationNow(targetState: state)
         };return self
     }
+
     @discardableResult
     public func bySubTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var p = _subPack_noAttr(for: state); p.color = color; _setSubPack_noAttr(p, for: state)
-            _applySubtitleToConfigurationNow(targetState: state)   // ⬅️
+            _applySubtitleToConfigurationNow(targetState: state)
+        };return self
+    }
+    // 副标题富文本（按 state 存储 + iOS15 configuration 同步）
+    @discardableResult
+    public func byAttributedSubTitle(_ attr: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
+        if #available(iOS 15.0, *) {
+            var p = _subPack_attr(for: state)
+            p.attr = attr
+            _setSubPack_attr(p, for: state)
+            _applySubtitleToConfigurationNow(targetState: state)
+        } else {
+            // legacy：直接合成 attributedTitle 显示
+            _legacy_applySubtitle_attr(attr, for: state)
         };return self
     }
 }
