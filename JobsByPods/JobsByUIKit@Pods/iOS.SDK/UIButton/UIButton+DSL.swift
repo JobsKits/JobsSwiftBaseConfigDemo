@@ -712,3 +712,16 @@ extension UIButton {
         return self
     }
 }
+
+extension UIButton {
+    @available(iOS 15.0, *)
+    public func byToNS(_ a: AttributedString) -> NSAttributedString {
+        NSAttributedString(a)
+    }
+
+    @available(iOS 15.0, *)
+    public func byToSwift(_ a: NSAttributedString) -> AttributedString {
+        AttributedString(a)
+    }
+}
+

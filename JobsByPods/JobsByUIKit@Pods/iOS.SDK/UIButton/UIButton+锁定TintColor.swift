@@ -73,12 +73,27 @@ extension UIButton {
         if #available(iOS 15.0, *) {
             ensureConfigUpdateHandler { btn in
                 var c = btn.configuration ?? .plain()
+                // 1) style 用 plain（不要 tinted/filled）
+                //    如果外部已经给了别的 style，这里强行回到 plain，避免 tint 介入背景
+                if c.background.cornerRadius == nil {
+                    // 保留你原有 cornerRadius 逻辑的话，这里不动也行
+                }
+                // 2) 背景彻底锁死
                 c.baseBackgroundColor = color
+                c.background.backgroundColor = color
+                c.background.strokeColor = .clear
+                c.background.strokeWidth = 0
+                // 3) 干掉系统的“按状态变色” transformer（关键）
+                c.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in
+                    color
+                }
+                // 4) 如果不希望系统自动根据状态调外观（推荐关）
+                btn.automaticallyUpdatesConfiguration = false
                 btn.configuration = c
             }
             setNeedsUpdateConfiguration()
+            if #available(iOS 15.0, *) { updateConfiguration() }
         } else {
-            // iOS 14- 没有 configuration：你如果是用 backgroundColor，就直接锁
             backgroundColor = color
         };return self
     }

@@ -98,14 +98,13 @@ public final class JobsMarqueeView: UIView {
     }
     // ================================== ScrollView ==================================
     private lazy var scrollView: UIScrollView = {
-        let v = UIScrollView()
-        v.showsHorizontalScrollIndicator = false
-        v.showsVerticalScrollIndicator = false
-        v.bounces = false
-        v.isPagingEnabled = false
-        v.isScrollEnabled = false   // 默认全程由 JobsSwiftTimer 驱动（开启 isManualScrollEnabled 后会打开）
-        v.scrollsToTop = false
-        return v
+        UIScrollView()
+            .byShowsHorizontalScrollIndicator(false)
+            .byShowsVerticalScrollIndicator(false)
+            .byBounces(false)
+            .byPagingEnabled(false)
+            .byScrollEnabled(false) // 默认全程由 JobsSwiftTimer 驱动（开启 isManualScrollEnabled 后会打开）
+            .byScrollsToTop(false)
     }()
     // ================================== PageControl (iOS/tvOS only) ==================================
     public enum PageControlPosition {
@@ -139,11 +138,10 @@ public final class JobsMarqueeView: UIView {
     }
     /// 懒加载点语法：独立对象，但挂在 JobsMarqueeView 上
     public private(set) lazy var pageControl: UIPageControl = {
-        let pc = UIPageControl()
-        pc.isHidden = true
-        pc.isUserInteractionEnabled = false
-        addSubview(pc)
-        return pc
+        UIPageControl()
+            .byHidden(true)
+            .byUserInteractionEnabled(false)
+            .byAddTo(self)
     }()
     private var realPageCount: Int { dataSourceButtons.count }
     // ================================== Internal State ==================================
@@ -290,9 +288,9 @@ public final class JobsMarqueeView: UIView {
     }
     // ================================== Manual Scroll Helpers ==================================
     private func applyManualScrollConfig() {
-        scrollView.isScrollEnabled = isManualScrollEnabled
+        scrollView.byScrollEnabled(isManualScrollEnabled)
         // 轮播图模式：paging 体验更自然
-        scrollView.isPagingEnabled = isManualScrollEnabled && (itemSizeMode == .fillBounds)
+        scrollView.byPagingEnabled(isManualScrollEnabled && (itemSizeMode == .fillBounds))
     }
     /// 手动拖拽结束后：如果是轮播图（fillBounds），对齐到最近页
     @MainActor
