@@ -1,4 +1,3 @@
-
 import UIKit
 import Foundation
 
@@ -12,6 +11,8 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     private var districts: [BRAreaNode] = []
 
     private var lastSelectedRow: [Int: Int] = [:]
+    /// Only highlight the component(s) that the user has actually scrolled.
+    private var touchedComponents: Set<Int> = []
 
     // MARK: - Fluent
     @discardableResult
@@ -39,7 +40,11 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         districts = cities.first?.children ?? []
 
         applyPendingSelectionIfNeeded()
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
+
+        // Default state: no highlight until user scrolls.
+        for c in 0..<3 {
+            lastSelectedRow[c] = picker.selectedRow(inComponent: c)
+        }
         return picker
     }
 
@@ -92,6 +97,9 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
+        // mark user interaction for this component
+        touchedComponents.insert(component)
+
         let oldRow = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
 
@@ -123,10 +131,31 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         br_on_main_async { [weak self] in
             guard let self else { return }
             self.applyRowColor(pickerView, component: component, row: oldRow, selected: false)
-            self.applyRowColor(pickerView, component: component, row: row, selected: true)
+            self.applyRowColor(
+                pickerView,
+                component: component,
+                row: row,
+                selected: self.touchedComponents.contains(component)
+            )
 
-            // after reload, ensure selected rows colored
-            self.applySelectionColors()
+            // If province changed, city/district were reset & reloaded.
+            if component == 0 {
+                let cityComp = 1
+                let districtComp = 2
+
+                let cityRow = pickerView.selectedRow(inComponent: cityComp)
+                self.applyRowColor(pickerView, component: cityComp, row: cityRow, selected: self.touchedComponents.contains(cityComp))
+
+                let districtRow = pickerView.selectedRow(inComponent: districtComp)
+                self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
+            }
+
+            // If city changed, district was reset & reloaded.
+            if component == 1 {
+                let districtComp = 2
+                let districtRow = pickerView.selectedRow(inComponent: districtComp)
+                self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
+            }
         }
 
         if theme.autoSelect {
@@ -158,14 +187,6 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         }
         BRiOS12SafePickerReload.reload(picker)
         _pendingSelection = nil
-    }
-
-    private func applySelectionColors() {
-        for c in 0..<3 {
-            let r = picker.selectedRow(inComponent: c)
-            lastSelectedRow[c] = r
-            applyRowColor(picker, component: c, row: r, selected: true)
-        }
     }
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {

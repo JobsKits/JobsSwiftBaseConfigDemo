@@ -12,6 +12,8 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
 
     private let picker = UIPickerView()
     private var lastSelectedRow: [Int: Int] = [:]
+    /// Only highlight the component(s) that the user has actually scrolled.
+    private var touchedComponents: Set<Int> = []
 
     @discardableResult public func bySelectDate(_ d: Date) -> Self { selectDate = d; return self }
     @discardableResult public func byMinDate(_ d: Date?) -> Self { minDate = d; return self }
@@ -28,7 +30,9 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
         BRiOS12SafePickerReload.reload(picker, component: 1)
         picker.selectRow(min(d - 1, max(0, days.count - 1)), inComponent: 1, animated: false)
 
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
+        // Default state: no highlight until user scrolls.
+        lastSelectedRow[0] = picker.selectedRow(inComponent: 0)
+        lastSelectedRow[1] = picker.selectedRow(inComponent: 1)
         return picker
     }
 
@@ -83,6 +87,9 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
         let old = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
 
+        // mark user interaction for this component
+        touchedComponents.insert(component)
+
         if component == 0 {
             let m = months[row]
             rebuildDays(month: m)
@@ -95,21 +102,32 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
         br_on_main_async { [weak self] in
             guard let self else { return }
             self.applyRowColor(pickerView, component: component, row: old, selected: false)
-            self.applyRowColor(pickerView, component: component, row: row, selected: true)
-            self.applySelectionColors()
+            self.applyRowColor(
+                pickerView,
+                component: component,
+                row: row,
+                selected: self.touchedComponents.contains(component)
+            )
+
+            // If month changed, day component reloaded; only highlight it if user has interacted with day column.
+            if component == 0 {
+                let dayComp = 1
+                let dayRow = pickerView.selectedRow(inComponent: dayComp)
+                let oldDay = self.lastSelectedRow[dayComp] ?? dayRow
+                self.lastSelectedRow[dayComp] = dayRow
+                self.applyRowColor(pickerView, component: dayComp, row: oldDay, selected: false)
+                self.applyRowColor(
+                    pickerView,
+                    component: dayComp,
+                    row: dayRow,
+                    selected: self.touchedComponents.contains(dayComp)
+                )
+            }
         }
 
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()
-        }
-    }
-
-    private func applySelectionColors() {
-        for comp in 0..<2 {
-            let r = picker.selectedRow(inComponent: comp)
-            lastSelectedRow[comp] = r
-            applyRowColor(picker, component: comp, row: r, selected: true)
         }
     }
 

@@ -1,4 +1,3 @@
-
 import UIKit
 
 public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -6,6 +5,9 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     private var columns: [[String]] = []
     private var selectedRows: [Int] = []
     private let picker = UIPickerView()
+    private var lastSelectedRow: [Int: Int] = [:]
+    /// Only highlight the component(s) that the user has actually scrolled.
+    private var touchedComponents: Set<Int> = []
 
     @discardableResult
     public func byColumns(_ cols: [[String]]) -> Self {
@@ -30,7 +32,10 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
         for (i,r) in selectedRows.enumerated() {
             picker.selectRow(r, inComponent: i, animated: false)
         }
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
+        // Default state: no highlight until user scrolls.
+        for c in 0..<numberOfComponents(in: picker) {
+            lastSelectedRow[c] = picker.selectedRow(inComponent: c)
+        }
         return picker
     }
 
@@ -61,20 +66,32 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // mark user interaction for this component
+        touchedComponents.insert(component)
+
+        let old = lastSelectedRow[component] ?? row
+        lastSelectedRow[component] = row
+
+        // update colors only for changed component
+        br_on_main_async { [weak self] in
+            guard let self else { return }
+            self.applyRowColor(pickerView, component: component, row: old, selected: false)
+            self.applyRowColor(
+                pickerView,
+                component: component,
+                row: row,
+                selected: self.touchedComponents.contains(component)
+            )
+        }
+
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()
         }
-        // color update (minimal)
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
     }
 
-    private func applySelectionColors() {
-        for c in 0..<numberOfComponents(in: picker) {
-            let r = picker.selectedRow(inComponent: c)
-            if let label = picker.view(forRow: r, forComponent: c) as? UILabel {
-                label.textColor = theme.pickerSelectedTextColor
-            }
-        }
+    private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
+        guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
+        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
     }
 }

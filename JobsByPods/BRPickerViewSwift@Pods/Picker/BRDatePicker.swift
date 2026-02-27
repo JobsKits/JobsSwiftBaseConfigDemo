@@ -1,4 +1,3 @@
-
 import UIKit
 import Foundation
 
@@ -18,6 +17,8 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
 
     private let picker = UIPickerView()
     private var lastSelectedRow: [Int: Int] = [:]
+    /// Only highlight the component(s) that the user has actually scrolled.
+    private var touchedComponents: Set<Int> = []
 
     // MARK: - Fluent
     @discardableResult public func byMode(_ m: Mode) -> Self { mode = m; return self }
@@ -35,8 +36,10 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         // preselect
         preselect()
 
-        // ensure selection color after views created
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
+        // Default state: no highlight until user scrolls.
+        for comp in 0..<numberOfComponents(in: picker) {
+            lastSelectedRow[comp] = picker.selectedRow(inComponent: comp)
+        }
 
         return picker
     }
@@ -170,6 +173,9 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
+        // mark user interaction for this component
+        touchedComponents.insert(component)
+
         // store old row for color swap
         let oldRow = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
@@ -195,7 +201,12 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
 
             // update colors for just old/new rows in changed component
             self.applyRowColor(pickerView, component: component, row: oldRow, selected: false)
-            self.applyRowColor(pickerView, component: component, row: row, selected: true)
+            self.applyRowColor(
+                pickerView,
+                component: component,
+                row: row,
+                selected: self.touchedComponents.contains(component)
+            )
 
             if needsReloadDays {
                 let dayComp = 2
@@ -203,21 +214,18 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
                 let oldDay = self.lastSelectedRow[dayComp] ?? dayRow
                 self.lastSelectedRow[dayComp] = dayRow
                 self.applyRowColor(pickerView, component: dayComp, row: oldDay, selected: false)
-                self.applyRowColor(pickerView, component: dayComp, row: dayRow, selected: true)
+                self.applyRowColor(
+                    pickerView,
+                    component: dayComp,
+                    row: dayRow,
+                    selected: self.touchedComponents.contains(dayComp)
+                )
             }
         }
 
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()
-        }
-    }
-
-    private func applySelectionColors() {
-        for comp in 0..<numberOfComponents(in: picker) {
-            let r = picker.selectedRow(inComponent: comp)
-            lastSelectedRow[comp] = r
-            applyRowColor(picker, component: comp, row: r, selected: true)
         }
     }
 

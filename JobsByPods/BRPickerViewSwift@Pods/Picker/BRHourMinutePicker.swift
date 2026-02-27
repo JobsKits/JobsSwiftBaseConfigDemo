@@ -11,6 +11,8 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
     private var minutes: [Int] = Array(0...59)
 
     private var lastSelectedRow: [Int: Int] = [:]
+    /// Only highlight the component(s) that the user has actually scrolled.
+    private var touchedComponents: Set<Int> = []
 
     @discardableResult public func bySelectDate(_ d: Date) -> Self { selectDate = d; return self }
     @discardableResult public func byMinuteInterval(_ v: Int) -> Self { minuteInterval = max(1, min(v, 30)); return self }
@@ -29,7 +31,9 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
         picker.selectRow(h, inComponent: 0, animated: false)
         picker.selectRow(minuteRow, inComponent: 1, animated: false)
 
-        br_on_main_async { [weak self] in self?.applySelectionColors() }
+        // Default state: no highlight until user scrolls.
+        lastSelectedRow[0] = picker.selectedRow(inComponent: 0)
+        lastSelectedRow[1] = picker.selectedRow(inComponent: 1)
         return picker
     }
 
@@ -86,24 +90,23 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
         let old = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
 
+        // mark user interaction for this component
+        touchedComponents.insert(component)
+
         br_on_main_async { [weak self] in
             guard let self else { return }
             self.applyRowColor(pickerView, component: component, row: old, selected: false)
-            self.applyRowColor(pickerView, component: component, row: row, selected: true)
-            self.applySelectionColors()
+            self.applyRowColor(
+                pickerView,
+                component: component,
+                row: row,
+                selected: self.touchedComponents.contains(component)
+            )
         }
 
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()
-        }
-    }
-
-    private func applySelectionColors() {
-        for comp in 0..<2 {
-            let r = picker.selectedRow(inComponent: comp)
-            lastSelectedRow[comp] = r
-            applyRowColor(picker, component: comp, row: r, selected: true)
         }
     }
 
