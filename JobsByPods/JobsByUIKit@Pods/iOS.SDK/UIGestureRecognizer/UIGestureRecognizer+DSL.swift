@@ -10,10 +10,6 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
-import RxSwift
-import RxCocoa
-import NSObject_Rx          // 自动提供 disposeBag
 /**
  let tap = UITapGestureRecognizer()
      .byTarget(self, action: #selector(onTap))
@@ -29,8 +25,7 @@ extension UIGestureRecognizer {
         // ⚠️ 注意：这里不是安全复用的做法，仅供链式设置使用
         if let target, let action {
             self.addTarget(target, action: action)
-        }
-        return self
+        };return self
     }
     /// Delegate
     @discardableResult
@@ -114,27 +109,69 @@ extension UIGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UITapGestureRecognizer
 extension UITapGestureRecognizer {
-    @discardableResult public func byTaps(_ count: Int) -> Self { numberOfTapsRequired = count; return self }
-    @discardableResult public func byTouches(_ count: Int) -> Self { numberOfTouchesRequired = count; return self }
+    
+    @discardableResult
+    public func byTaps(_ count: Int) -> Self {
+        numberOfTapsRequired = count
+        return self
+    }
+    
+    @discardableResult
+    public func byTouches(_ count: Int) -> Self {
+        numberOfTouchesRequired = count
+        return self
+    }
 }
 // MARK: 子类专属链式扩展@UILongPressGestureRecognizer
 extension UILongPressGestureRecognizer {
-    @discardableResult public func byMinDuration(_ t: TimeInterval) -> Self { minimumPressDuration = t; return self }
-    @discardableResult public func byMovement(_ v: CGFloat) -> Self { allowableMovement = v; return self }
-    @discardableResult public func byTouches(_ n: Int) -> Self { numberOfTouchesRequired = n; return self }
+    
+    @discardableResult
+    public func byMinDuration(_ t: TimeInterval) -> Self {
+        minimumPressDuration = t
+        return self
+    }
+    
+    @discardableResult
+    public func byMovement(_ v: CGFloat) -> Self {
+        allowableMovement = v
+        return self
+    }
+    
+    @discardableResult
+    public func byTouches(_ n: Int) -> Self {
+        numberOfTouchesRequired = n
+        return self
+    }
 }
 // MARK: 子类专属链式扩展@UIPanGestureRecognizer
 extension UIPanGestureRecognizer {
-    @discardableResult public func byMinTouches(_ n: Int) -> Self { minimumNumberOfTouches = n; return self }
-    @discardableResult public func byMaxTouches(_ n: Int) -> Self {
+    
+    @discardableResult
+    public func byMinTouches(_ n: Int) -> Self {
+        minimumNumberOfTouches = n
+        return self
+    }
+    
+    @discardableResult
+    public func byMaxTouches(_ n: Int) -> Self {
         if maximumNumberOfTouches != Int.max {maximumNumberOfTouches = n;}
         return self
     }
 }
 // MARK: 子类专属链式扩展@UISwipeGestureRecognizer
 extension UISwipeGestureRecognizer {
-    @discardableResult public func byDirection(_ d: UISwipeGestureRecognizer.Direction) -> Self { direction = d; return self }
-    @discardableResult public func byTouches(_ n: Int) -> Self { numberOfTouchesRequired = n; return self }
+    
+    @discardableResult
+    public func byDirection(_ d: UISwipeGestureRecognizer.Direction) -> Self {
+        direction = d
+        return self
+    }
+    
+    @discardableResult
+    public func byTouches(_ n: Int) -> Self {
+        numberOfTouchesRequired = n
+        return self
+    }
 }
 // MARK: 子类专属链式扩展@UIRotationGestureRecognizer
 /// Rotation（旋转）
@@ -162,12 +199,16 @@ extension UIRotationGestureRecognizer {
     }
 }
 // MARK: 子类专属链式扩展@UITapGestureRecognizer
+#if canImport(RxSwift) && canImport(RxCocoa)
+import RxSwift
+import RxCocoa
 extension UITapGestureRecognizer {
     /// 语义属性：等价于 `.rx.event`
     public var event: ControlEvent<UITapGestureRecognizer> {
         self.rx.event
     }
 }
+#endif
 // MARK: 子类专属链式扩展@UIPinchGestureRecognizer
 /// Pinch（捏合缩放）
 extension UIPinchGestureRecognizer {

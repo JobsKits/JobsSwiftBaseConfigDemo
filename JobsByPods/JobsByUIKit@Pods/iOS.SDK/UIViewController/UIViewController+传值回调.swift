@@ -31,8 +31,12 @@ public extension ViewDataProtocol where Self: UIViewController {
     // ================================== 逆向：回传 ==================================
     @discardableResult
     func onResult(_ callback: @escaping jobsByAnyBlock) -> Self {
-        objc_setAssociatedObject(self, &JobsAssocKey.callback, callback, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &JobsAssocKey.callback,
+            callback,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
     func sendResult(_ any: Any?) {
         (objc_getAssociatedObject(self, &JobsAssocKey.callback) as? jobsByAnyBlock)?(any)
@@ -56,10 +60,18 @@ extension UIViewController{
         UIViewController._JobsAppearSwizzler.installIfNeeded()
         var arr = (objc_getAssociatedObject(self, &JobsAssocKey.onAppearCompletions) as? [jobsByVoidBlock]) ?? []
         arr.append(block)
-        objc_setAssociatedObject(self, &JobsAssocKey.onAppearCompletions, arr, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &JobsAssocKey.onAppearCompletions,
+            arr,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 若已在窗口（先跳转后注册），下一轮主线程立即触发
         if self.viewIfLoaded?.window != nil {
-            DispatchQueue.main.async { [weak self] in self?.jobs_fireAppearCompletionIfNeeded(reason: "alreadyVisible") }
+            jobsRunOnMain { [weak self] in
+                guard let self else { return }
+                jobs_fireAppearCompletionIfNeeded(reason: "alreadyVisible")
+            }
         };return self
     }
 
@@ -68,8 +80,18 @@ extension UIViewController{
         guard !fired else { return }
         guard let blocks = objc_getAssociatedObject(self, &JobsAssocKey.onAppearCompletions) as? [jobsByVoidBlock],
               !blocks.isEmpty else { return }
-        objc_setAssociatedObject(self, &JobsAssocKey.appearCompletionFired, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &JobsAssocKey.onAppearCompletions, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &JobsAssocKey.appearCompletionFired,
+            true,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &JobsAssocKey.onAppearCompletions,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         blocks.forEach { $0() }
         // print("✅ [JobsAppearCompletion] fired by \(reason) for \(self)")
     }

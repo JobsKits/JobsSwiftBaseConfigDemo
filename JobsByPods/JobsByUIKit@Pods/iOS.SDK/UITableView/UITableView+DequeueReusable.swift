@@ -18,12 +18,26 @@ private var st_registeredHeaderFooterIdsKey: UInt8 = 0
 extension UITableView {
     private var st_registeredCellIds: Set<String> {
         get { (objc_getAssociatedObject(self, &st_registeredCellIdsKey) as? Set<String>) ?? [] }
-        set { objc_setAssociatedObject(self, &st_registeredCellIdsKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &st_registeredCellIdsKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     private var st_registeredHeaderFooterIds: Set<String> {
         get { (objc_getAssociatedObject(self, &st_registeredHeaderFooterIdsKey) as? Set<String>) ?? [] }
-        set { objc_setAssociatedObject(self, &st_registeredHeaderFooterIdsKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &st_registeredHeaderFooterIdsKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 }
 
@@ -32,7 +46,6 @@ extension UITableView {
     @discardableResult
     public func byDequeueReusableCell<T: UITableViewCell>(withType cellType: T.Type, for indexPath: IndexPath) -> T {
         let reuseId = cellType.className
-
         if !st_registeredCellIds.contains(reuseId) {
             byRegisterCell(cellType)
             st_registeredCellIds.insert(reuseId)

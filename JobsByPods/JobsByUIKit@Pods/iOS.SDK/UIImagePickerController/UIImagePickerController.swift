@@ -179,7 +179,11 @@ extension UIImagePickerController {
         }
         guard createIfNeeded else { return nil }
         let p = JobsImagePickerBlocksProxy()
-        objc_setAssociatedObject(self, &JobsImagePickerBlocksAssociatedKeys.proxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return p
+        objc_setAssociatedObject(
+            self,
+            &JobsImagePickerBlocksAssociatedKeys.proxyKey,
+            p,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return p
     }
 }

@@ -42,35 +42,43 @@ extension UIButton {
 }
 
 extension UIButton {
+    
     @discardableResult
     private func _kf_setImageURL(_ url: URL?) -> Self {
         var c = _kf_config; c.url = url; _kf_config = c
         return self
     }
+    
     @discardableResult
     private func _kf_setPlaceholder(_ img: UIImage?) -> Self {
         var c = _kf_config; c.placeholder = img; _kf_config = c
         return self
     }
+    
     @discardableResult
     private func _kf_setTargetSize(_ size: CGSize?) -> Self {
         var c = _kf_config; c.targetSize = size; _kf_config = c
         return self
     }
+    
     @discardableResult
-    private func _kf_setBgTargetSize(_ size: CGSize?) -> Self { var c = _kf_config; c.bgTargetSize = size; _kf_config = c;
+    private func _kf_setBgTargetSize(_ size: CGSize?) -> Self {
+        var c = _kf_config; c.bgTargetSize = size; _kf_config = c;
         return self
     }
+    
     @discardableResult
     private func _kf_setOptions(_ opts: KingfisherOptionsInfo) -> Self {
         var c = _kf_config; c.options = opts; _kf_config = c
         return self
     }
+    
     @discardableResult
     private func _kf_setProgress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self {
         var c = _kf_config; c.progress = block; _kf_config = c
         return self
     }
+    
     @discardableResult
     private func _kf_setCompleted(_ block: KFCompleted?) -> Self {
         var c = _kf_config; c.completed = block; _kf_config = c
@@ -84,6 +92,7 @@ extension UIButton {
     public func kf_imageURL(_ url: URL?) -> Self {
         _kf_setImageURL(url)
     }
+    
     @discardableResult
     public func kf_imageURL(_ urlString: String?) -> Self {
         guard let s = urlString, let u = URL(string: s)
@@ -91,26 +100,32 @@ extension UIButton {
             return _kf_setImageURL(nil)
         };return _kf_setImageURL(u)
     }
+    
     @discardableResult
     public func kf_placeholderImage(_ img: UIImage?) -> Self {
         _kf_setPlaceholder(img)
     }
+    
     @discardableResult
     public func kf_targetSize(_ size: CGSize?) -> Self {
         _kf_setTargetSize(size)
     }
+    
     @discardableResult
     public func kf_bgTargetSize(_ size: CGSize?) -> Self {
         _kf_setBgTargetSize(size)
     }
+    
     @discardableResult
     public func kf_options(_ opts: KingfisherOptionsInfo) -> Self {
         _kf_setOptions(opts)
     }
+    
     @discardableResult
     public func kf_progress(_ block: ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)?) -> Self {
         _kf_setProgress(block)
     }
+    
     @discardableResult
     public func kf_completed(_ block: KFCompleted?) -> Self {
         _kf_setCompleted(block)
@@ -123,6 +138,7 @@ extension UIButton {
             self.byAdoptConfigurationIfAvailable()// ✅刷新配置
         };return self
     }
+    
     @discardableResult
     public func kf_highlightedLoad() -> Self {
         _kf_loadImage(for: .highlighted)
@@ -130,18 +146,21 @@ extension UIButton {
             self.byAdoptConfigurationIfAvailable() }
         return self
     }
+    
     @discardableResult
     public func kf_disabledLoad() -> Self {
         _kf_loadImage(for: .disabled)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
+    
     @discardableResult
     public func kf_selectedLoad() -> Self {
         _kf_loadImage(for: .selected)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
+    
     @available(iOS 9.0, *)
     @discardableResult
     public func kf_focusedLoad() -> Self {
@@ -149,12 +168,14 @@ extension UIButton {
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
+    
     @discardableResult
     public func kf_applicationLoad() -> Self {
         _kf_loadImage(for: .application)
         if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
         return self
     }
+    
     @discardableResult
     public func kf_reservedLoad() -> Self {
         _kf_loadImage(for: .reserved)
@@ -165,32 +186,40 @@ extension UIButton {
     @discardableResult
     public func kf_bgNormalLoad() -> Self {
         _kf_loadBackgroundImage(for: .normal)
-        return self }
+        return self
+    }
+    
     @discardableResult
     public func kf_bgHighlightedLoad() -> Self {
         _kf_loadBackgroundImage(for: .highlighted)
         return self
     }
+    
     @discardableResult
     public func kf_bgDisabledLoad() -> Self {
         _kf_loadBackgroundImage(for: .disabled)
         return self
     }
+    
     @discardableResult
     public func kf_bgSelectedLoad() -> Self {
         _kf_loadBackgroundImage(for: .selected)
-        return self }
+        return self
+    }
+    
     @available(iOS 9.0, *)
     @discardableResult
     public func kf_bgFocusedLoad() -> Self {
         _kf_loadBackgroundImage(for: .focused)
         return self
     }
+    
     @discardableResult
     public func kf_bgApplicationLoad() -> Self {
         _kf_loadBackgroundImage(for: .application)
         return self
     }
+    
     @discardableResult
     public func kf_bgReservedLoad() -> Self {
         _kf_loadBackgroundImage(for: .reserved)
@@ -199,7 +228,8 @@ extension UIButton {
 }
 // MARK: - internal helpers
 extension UIButton {
-    private func _jobs_kfUpsertDownsampleOptions(_ options: KingfisherOptionsInfo, targetPointSize: CGSize) -> KingfisherOptionsInfo {
+    private func _jobs_kfUpsertDownsampleOptions(_ options: KingfisherOptionsInfo,
+                                                 targetPointSize: CGSize) -> KingfisherOptionsInfo {
         var opts = options
         // 1) 强制替换 processor 为“按 UI 尺寸 Downsampling”
         opts.removeAll { if case .processor = $0 { return true } else { return false } }
@@ -233,9 +263,7 @@ extension UIButton {
                 btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
             };return
         }
-
         self.jobs_remoteURL = url
-
         // ✅ 折中策略：先灌入兜底图（或透明占位）把前景 imageView 撑开 → 再盖 overlay 做 shimmer
         // 这样 overlay 的 frame 可以直接跟随系统最终算出来的 imageView/frame。
         _jobs_runOnMain { btn in
@@ -254,7 +282,10 @@ extension UIButton {
                          progressBlock: { r, t in cfg.progress?(Int64(r), Int64(t)) }) { [weak self] result in
             guard let self else { return }
             self._jobs_runOnMain { btn in
-                guard btn._jobs_isCurrentToken(token, loader: .kf, channel: .foreground, for: state) else { return }
+                guard btn._jobs_isCurrentToken(token,
+                                               loader: .kf,
+                                               channel: .foreground,
+                                               for: state) else { return }
                 // ✅ 请求结束（成功/失败/取消）都必须停 shimmer
                 btn._jobs_stopForegroundShimmer()
                 switch result {
@@ -334,7 +365,14 @@ extension UIButton {
     /// 记录用于背景图的 URL（供克隆阶段读取）
     public var kf_bgURL: URL? {
         get { objc_getAssociatedObject(self, &kfBgURLKey) as? URL }
-        set { objc_setAssociatedObject(self, &kfBgURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &kfBgURLKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     /// 源按钮使用：设置背景图并记录 URL（建议在 Demo 中用它替换直接的 kf.setBackgroundImage）
     @discardableResult

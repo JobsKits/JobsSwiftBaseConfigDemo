@@ -15,37 +15,67 @@ import ObjectiveC
 import JobsSwiftBaseDefines
 // MARK: - CAGradientLayer DSL
 extension CAGradientLayer {
+    
     @discardableResult
     public func byColors(_ uiColors: [UIColor]) -> Self {
-        self.colors = uiColors.map { $0.cgColor }; return self
+        self.colors = uiColors.map { $0.cgColor }
+        return self
     }
 
     @discardableResult
+    public func byColors(_ cgColors: [CGColor]) -> Self {
+        self.colors = cgColors
+        return self
+    }
+    
+    @discardableResult
     public func byCGColors(_ cgColors: [CGColor]) -> Self {
-        self.colors = cgColors; return self
+        self.colors = cgColors
+        return self
     }
 
     @discardableResult
     public func byLocations(_ locs: [CGFloat]) -> Self {
-        self.locations = locs.map { NSNumber(value: Double($0)) }; return self
+        self.locations = locs.map { NSNumber(value: Double($0)) }
+        return self
+    }
+    
+    @discardableResult
+    public func byLocations(_ locs: [NSNumber]) -> Self {
+        self.locations = locs
+        return self
     }
 
     @discardableResult
-    public func byStartPoint(_ p: CGPoint) -> Self { self.startPoint = p; return self }
+    public func byStartPoint(_ p: CGPoint) -> Self {
+        self.startPoint = p
+        return self
+    }
 
     @discardableResult
-    public func byEndPoint(_ p: CGPoint) -> Self { self.endPoint = p; return self }
+    public func byEndPoint(_ p: CGPoint) -> Self {
+        self.endPoint = p
+        return self
+    }
 
     @discardableResult
     public func byPoints(_ start: CGPoint, _ end: CGPoint) -> Self {
-        self.startPoint = start; self.endPoint = end; return self
+        self.startPoint = start
+        self.endPoint = end
+        return self
     }
 
     @discardableResult
-    public func byType(_ t: CAGradientLayerType) -> Self { self.type = t; return self }
+    public func byType(_ t: CAGradientLayerType) -> Self {
+        self.type = t
+        return self
+    }
 
     @discardableResult
-    public func byLayerFrame(_ f: CGRect) -> Self { self.frame = f; return self }
+    public func byLayerFrame(_ f: CGRect) -> Self {
+        self.frame = f
+        return self
+    }
     /// 插入到某个 view 的 layer（默认最底层）
     @discardableResult
     public func byInsert(into view: UIView, at index: UInt32 = 0) -> Self {

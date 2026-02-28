@@ -19,7 +19,8 @@ extension UICollectionView {
     ///   - indexPath: 位置
     /// - Returns: 出队后的具体 Cell
     @discardableResult
-    public func byDequeueCell<T: UICollectionViewCell>(_ type: T.Type, for indexPath: IndexPath) -> T {
+    public func byDequeueCell<T: UICollectionViewCell>(_ type: T.Type,
+                                                       for indexPath: IndexPath) -> T {
         dequeueReusableCell(
             withReuseIdentifier: String(describing: type),
             for: indexPath
@@ -32,7 +33,8 @@ extension UICollectionView {
     ///   - indexPath: 位置
     /// - Returns: 出队后的具体 Cell
     @discardableResult
-    public func byDequeueReusableCell<T: UICollectionViewCell>(withType cellType: T.Type, for indexPath: IndexPath) -> T {
+    public func byDequeueReusableCell<T: UICollectionViewCell>(withType cellType: T.Type,
+                                                               for indexPath: IndexPath) -> T {
         dequeueReusableCell(
             withReuseIdentifier: cellType.className,
             for: indexPath
@@ -62,7 +64,8 @@ extension UICollectionView {
     ///   - indexPath: 位置
     /// - Returns: Header 视图
     @discardableResult
-    public func byDequeueReusableHeaderView<T: UICollectionReusableView>(viewType: T.Type, for indexPath: IndexPath) -> T {
+    public func byDequeueReusableHeaderView<T: UICollectionReusableView>(viewType: T.Type,
+                                                                         for indexPath: IndexPath) -> T {
         dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: viewType.className,
@@ -76,7 +79,8 @@ extension UICollectionView {
     ///   - indexPath: 位置
     /// - Returns: Footer 视图
     @discardableResult
-    public func byDequeueReusableFooterView<T: UICollectionReusableView>(viewType: T.Type, for indexPath: IndexPath) -> T {
+    public func byDequeueReusableFooterView<T: UICollectionReusableView>(viewType: T.Type,
+                                                                         for indexPath: IndexPath) -> T {
         dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: viewType.className,

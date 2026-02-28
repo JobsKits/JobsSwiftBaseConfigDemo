@@ -162,7 +162,9 @@ extension UICollectionView {
     }
 
     @discardableResult
-    public func cancelPrefetchingForItemsAt(_ block: @escaping (AnyObject, UICollectionView, [IndexPath]) -> Void) -> Self {
+    public func cancelPrefetchingForItemsAt(_ block: @escaping (AnyObject,
+                                                                UICollectionView,
+                                                                [IndexPath]) -> Void) -> Self {
         let p = jobs_blocksProxy()!
         p.cancelPrefetchingForItemsAt = block
         prefetchDataSource = p
@@ -178,9 +180,16 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     weak var target: AnyObject?
     // MARK: - UICollectionViewDataSource
     var numberOfSections: ((AnyObject, UICollectionView) -> Int)?
-    var numberOfItemsInSection: ((AnyObject, UICollectionView, Int) -> Int)?
-    var cellForItemAt: ((AnyObject, UICollectionView, IndexPath) -> UICollectionViewCell)?
-    var viewForSupplementaryElementOfKind: ((AnyObject, UICollectionView, String, IndexPath) -> UICollectionReusableView)?
+    var numberOfItemsInSection: ((AnyObject,
+                                  UICollectionView,
+                                  Int) -> Int)?
+    var cellForItemAt: ((AnyObject,
+                         UICollectionView,
+                         IndexPath) -> UICollectionViewCell)?
+    var viewForSupplementaryElementOfKind: ((AnyObject,
+                                             UICollectionView,
+                                             String,
+                                             IndexPath) -> UICollectionReusableView)?
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let t = target else { return 1 }
@@ -192,7 +201,8 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
         return numberOfItemsInSection?(t, collectionView, section) ?? 0
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let t = target else { return UICollectionViewCell() }
         return cellForItemAt?(t, collectionView, indexPath) ?? UICollectionViewCell()
     }
@@ -201,20 +211,35 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
         guard let t = target else { return UICollectionReusableView() }
-        return viewForSupplementaryElementOfKind?(t, collectionView, kind, indexPath) ?? UICollectionReusableView()
+        return viewForSupplementaryElementOfKind?(t,
+                                                  collectionView,
+                                                  kind,
+                                                  indexPath) ?? UICollectionReusableView()
     }
     // MARK: - UICollectionViewDelegate
-    var didSelectItemAt: ((AnyObject, UICollectionView, IndexPath) -> Void)?
-    var didDeselectItemAt: ((AnyObject, UICollectionView, IndexPath) -> Void)?
-    var willDisplayCell: ((AnyObject, UICollectionView, UICollectionViewCell, IndexPath) -> Void)?
-    var didEndDisplayingCell: ((AnyObject, UICollectionView, UICollectionViewCell, IndexPath) -> Void)?
+    var didSelectItemAt: ((AnyObject,
+                           UICollectionView,
+                           IndexPath) -> Void)?
+    var didDeselectItemAt: ((AnyObject,
+                             UICollectionView,
+                             IndexPath) -> Void)?
+    var willDisplayCell: ((AnyObject,
+                           UICollectionView,
+                           UICollectionViewCell,
+                           IndexPath) -> Void)?
+    var didEndDisplayingCell: ((AnyObject,
+                                UICollectionView,
+                                UICollectionViewCell,
+                                IndexPath) -> Void)?
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
         guard let t = target else { return }
         didSelectItemAt?(t, collectionView, indexPath)
     }
 
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didDeselectItemAt indexPath: IndexPath) {
         guard let t = target else { return }
         didDeselectItemAt?(t, collectionView, indexPath)
     }
@@ -233,12 +258,30 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
         didEndDisplayingCell?(t, collectionView, cell, indexPath)
     }
     // MARK: - UICollectionViewDelegateFlowLayout
-    var sizeForItemAt: ((AnyObject, UICollectionView, UICollectionViewLayout, IndexPath) -> CGSize)?
-    var insetForSectionAt: ((AnyObject, UICollectionView, UICollectionViewLayout, Int) -> UIEdgeInsets)?
-    var minimumLineSpacingForSectionAt: ((AnyObject, UICollectionView, UICollectionViewLayout, Int) -> CGFloat)?
-    var minimumInteritemSpacingForSectionAt: ((AnyObject, UICollectionView, UICollectionViewLayout, Int) -> CGFloat)?
-    var referenceSizeForHeaderInSection: ((AnyObject, UICollectionView, UICollectionViewLayout, Int) -> CGSize)?
-    var referenceSizeForFooterInSection: ((AnyObject, UICollectionView, UICollectionViewLayout, Int) -> CGSize)?
+    var sizeForItemAt: ((AnyObject,
+                         UICollectionView,
+                         UICollectionViewLayout,
+                         IndexPath) -> CGSize)?
+    var insetForSectionAt: ((AnyObject,
+                             UICollectionView,
+                             UICollectionViewLayout,
+                             Int) -> UIEdgeInsets)?
+    var minimumLineSpacingForSectionAt: ((AnyObject,
+                                          UICollectionView,
+                                          UICollectionViewLayout,
+                                          Int) -> CGFloat)?
+    var minimumInteritemSpacingForSectionAt: ((AnyObject,
+                                               UICollectionView,
+                                               UICollectionViewLayout,
+                                               Int) -> CGFloat)?
+    var referenceSizeForHeaderInSection: ((AnyObject,
+                                           UICollectionView,
+                                           UICollectionViewLayout,
+                                           Int) -> CGSize)?
+    var referenceSizeForFooterInSection: ((AnyObject,
+                                           UICollectionView,
+                                           UICollectionViewLayout,
+                                           Int) -> CGSize)?
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -295,8 +338,12 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     }
 
     // MARK: - UICollectionViewDataSourcePrefetching
-    var prefetchItemsAt: ((AnyObject, UICollectionView, [IndexPath]) -> Void)?
-    var cancelPrefetchingForItemsAt: ((AnyObject, UICollectionView, [IndexPath]) -> Void)?
+    var prefetchItemsAt: ((AnyObject,
+                           UICollectionView,
+                           [IndexPath]) -> Void)?
+    var cancelPrefetchingForItemsAt: ((AnyObject,
+                                       UICollectionView,
+                                       [IndexPath]) -> Void)?
 
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         guard let t = target else { return }
@@ -329,7 +376,9 @@ private struct JobsCollectionViewDelegateMuxAssociatedKeys {
     static var muxKey: UInt8 = 0
 }
 /// 代理合并器：primary 负责 blocks 回调；secondary 保留外部 delegate（例如 refresh/埋点/scroll 监听）
-final class JobsCollectionViewDelegateMux: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+final class JobsCollectionViewDelegateMux: NSObject,
+                                           UICollectionViewDelegate,
+                                           UICollectionViewDelegateFlowLayout {
 
     weak var primary: NSObjectProtocol?
     weak var secondary: NSObjectProtocol?
@@ -393,7 +442,6 @@ extension UICollectionView {
         // 已经是 mux：只更新 primary，并尽量保持 secondary
         if let mux = objc_getAssociatedObject(self, &JobsCollectionViewDelegateMuxAssociatedKeys.muxKey) as? JobsCollectionViewDelegateMux {
             mux.primary = primary
-
             // 如果外部又覆盖了 delegate（不是 mux），把它塞回 secondary 再抢回来
             if let current = self.delegate as AnyObject?, current !== mux {
                 mux.secondary = current as? NSObjectProtocol
@@ -407,7 +455,11 @@ extension UICollectionView {
             mux.secondary = current as? NSObjectProtocol
         }
 
-        objc_setAssociatedObject(self, &JobsCollectionViewDelegateMuxAssociatedKeys.muxKey, mux, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        self.delegate = mux
+        objc_setAssociatedObject(
+            self,
+            &JobsCollectionViewDelegateMuxAssociatedKeys.muxKey,
+            mux,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );self.delegate = mux
     }
 }

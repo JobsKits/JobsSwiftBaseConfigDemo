@@ -21,7 +21,7 @@ extension UIView {
     }
 
     @discardableResult
-    public func byAddArranged(to stack: UIStackView) -> Self {
+    public func byAddArranged(_ stack: UIStackView) -> Self {
         stack.addArrangedSubview(self)
         return self
     }
@@ -53,6 +53,12 @@ extension UIView {
     @discardableResult
     public func byAlpha(_ a: CGFloat) -> Self {
         alpha = a
+        return self
+    }
+    
+    @discardableResult
+    public func byAddSublayer(_ layer: CALayer) -> Self {
+        self.layer.addSublayer(layer)
         return self
     }
     /// 是否可见：true 显示；false 隐藏（折叠布局）
@@ -121,6 +127,7 @@ extension UIView {
     /// 动态变化时需要反复更新 maskPath，否则旋转、尺寸变化圆角会错。
     @discardableResult
     public func byCornerRaduis(corner: UIRectCorner, raduis: CGFloat) -> Self {
+        if self.bounds == .zero { return self }
         let maskPath = UIBezierPath(roundedRect: self.bounds,
                                     byRoundingCorners: corner,
                                     cornerRadii: CGSize(width: raduis, height: raduis))
@@ -128,7 +135,7 @@ extension UIView {
         self.clipsToBounds = true
         return self
     }
-
+    
     @discardableResult
     public func byBorderColor(_ color: UIColor?) -> Self {
         layer.borderColor = color?.cgColor   // 传 nil 会清掉边框颜色
@@ -475,11 +482,13 @@ public extension UIView {
                 )
                 // 2. 初始化 configuration
                 if button.configuration == nil {
-                    var cfg = UIButton.Configuration.plain()
-                    cfg.background.backgroundColor = .clear   // 关键
-                    cfg.background.backgroundColorTransformer = nil // ✅禁用系统自动变换（可选）
-                    button.configuration = cfg
+                    button.configuration = UIButton.Configuration.plain()
+                        .byBackgroundPatch { bg in
+                            bg.backgroundColor = .clear
+                            bg.backgroundColorTransformer = nil
+                        }
                 }
+                button.updateConfiguration()
                 // 3. 状态渲染
                 button.configurationUpdateHandler = { btn in
                     guard var c = btn.configuration else { return }

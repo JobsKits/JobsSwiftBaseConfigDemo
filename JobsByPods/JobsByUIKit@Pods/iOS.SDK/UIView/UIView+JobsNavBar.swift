@@ -52,13 +52,25 @@ extension UIView {
 // MARK: - 私有：配置读写 + 应用
 @MainActor
 extension UIView {
+    
     private var _jobsNavBarConfig: JobsNavBarConfig {
         get { (objc_getAssociatedObject(self, &_JobsNavBarAO.conf) as? JobsNavBarConfig) ?? .init() }
-        set { objc_setAssociatedObject(self, &_JobsNavBarAO.conf, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_JobsNavBarAO.conf,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private func _setJobsNavBar(_ bar: JobsNavBar?) {
-        objc_setAssociatedObject(self, &_JobsNavBarAO.bar, bar, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsNavBarAO.bar,
+            bar,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 
     private func _applyNavBarConfig() {

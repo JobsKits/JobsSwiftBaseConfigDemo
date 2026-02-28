@@ -29,7 +29,11 @@ extension UIBarButtonItem {
             }
         } else {
             // iOS14-：内部 target/action 兜底，但对外仍是 block
-            objc_setAssociatedObject(self, &_barItemActionKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_barItemActionKey,
+                block,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC)
             self.target = self
             self.action  = #selector(_jobs_handleAction(_:))
         };return self
@@ -42,23 +46,35 @@ extension UIBarButtonItem {
     }
     // ========= 2) 工厂：不暴露 target/action 的简洁创建 =========
     /// 标题按钮（默认 .plain）
-    public static func make(title: String?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
-        UIBarButtonItem(title: title, style: style, target: nil, action: nil)
+    public static func make(title: String?,
+                            style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
+        UIBarButtonItem(title: title,
+                        style: style,
+                        target: nil,
+                        action: nil)
     }
     /// 图片按钮（默认 .plain）
-    public static func make(image: UIImage?, style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
-        UIBarButtonItem(image: image, style: style, target: nil, action: nil)
+    public static func make(image: UIImage?,
+                            style: UIBarButtonItem.Style = .plain) -> UIBarButtonItem {
+        UIBarButtonItem(image: image,
+                        style: style,
+                        target: nil,
+                        action: nil)
     }
     /// 系统项按钮（如 .done / .cancel / .add 等）
     public static func make(systemItem: UIBarButtonItem.SystemItem) -> UIBarButtonItem {
-        UIBarButtonItem(barButtonSystemItem: systemItem, target: nil, action: nil)
+        UIBarButtonItem(barButtonSystemItem: systemItem,
+                        target: nil,
+                        action: nil)
     }
     /// 弹性空白（兼容 iOS14-）
     public static func flexible() -> UIBarButtonItem {
         if #available(iOS 14.0, *) {
             return .flexibleSpace()
         } else {
-            return UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            return UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+                                   target: nil,
+                                   action: nil)
         }
     }
     /// 固定空白（iOS26 有 0 宽重载；iOS14 有带宽重载；更低版本用旧 API）
@@ -68,15 +84,21 @@ extension UIBarButtonItem {
         } else if #available(iOS 14.0, *) {
             return .fixedSpace(width)
         } else {
-            let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-            item.width = width
-            return item
+            return UIBarButtonItem(barButtonSystemItem: .fixedSpace,
+                                   target: nil,
+                                   action: nil).byWidth(width)
         }
     }
     // ========= 3) 链式：按一贯风格补常用点语法 =========
     @discardableResult
     public func byStyle(_ style: UIBarButtonItem.Style) -> Self {
         self.style = style
+        return self
+    }
+    
+    @discardableResult
+    public func byWidth(_ width: CGFloat) -> Self {
+        self.width = width
         return self
     }
 

@@ -34,16 +34,35 @@ public extension UIButton {
     /// 最近一次设置“背景图”的 URL（供克隆或复用）
     var jobs_bgURL: URL? {
         get { objc_getAssociatedObject(self, &_jobsBGURLKey) as? URL }
-        set { objc_setAssociatedObject(self, &_jobsBGURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsBGURLKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     /// 最近一次设置背景图时使用的 state
     var jobs_bgState: UIControl.State {
         get { UIControl.State(rawValue: (objc_getAssociatedObject(self, &_jobsBGStateKey) as? UInt) ?? UIControl.State.normal.rawValue) }
-        set { objc_setAssociatedObject(self, &_jobsBGStateKey, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsBGStateKey,
+                newValue.rawValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     /// 是否“克隆按钮”：克隆时禁用过渡动画、优先现成位图/缓存
     var jobs_isClone: Bool {
         get { (objc_getAssociatedObject(self, &_jobsIsCloneKey) as? Bool) ?? false }
-        set { objc_setAssociatedObject(self, &_jobsIsCloneKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsIsCloneKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }

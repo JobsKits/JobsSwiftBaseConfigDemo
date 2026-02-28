@@ -28,14 +28,18 @@ extension UIView {
     @discardableResult
     public func bySpinStart(revPerSec: Double = 1.0) -> Self {
         let r = max(0.001, revPerSec)
-        objc_setAssociatedObject(self, &_jobs_spinRevKey, r, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_jobs_spinRevKey,
+            r,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 如果已经在转，直接返回
         if layer.animation(forKey: "jobs.spin") != nil { return self }
         // 如果是从暂停恢复：从记录角度继续；否则从 0 开始
         let startAngle = (objc_getAssociatedObject(self, &_jobs_spinPausedAngleKey) as? Double) ?? 0
         // 先把 model 层固定到当前角度，避免 add animation 时跳变
         layer.sublayerTransform = CATransform3DMakeRotation(CGFloat(startAngle), 0, 0, 1)
-
         let a = CABasicAnimation(keyPath: "sublayerTransform.rotation.z")
             .byFromValue(startAngle)
             .byToValue(startAngle + Double.pi * 2)
@@ -45,8 +49,12 @@ extension UIView {
             .byFillMode(.forwards)
         layer.add(a, forKey: "jobs.spin")
         // 清掉暂停角度（现在已经在运行）
-        objc_setAssociatedObject(self, &_jobs_spinPausedAngleKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_jobs_spinPausedAngleKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
     /// 暂停旋转（保持当前角度）—— 不再用 layer.speed/timeOffset，避免影响其他动画/拖动
     @discardableResult
@@ -57,8 +65,12 @@ extension UIView {
         layer.sublayerTransform = current3D
         // 从矩阵里解出当前 z 旋转角（atan2）
         let angle = Double(atan2(current3D.m12, current3D.m11))
-        objc_setAssociatedObject(self, &_jobs_spinPausedAngleKey, angle, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
+        objc_setAssociatedObject(
+            self,
+            &_jobs_spinPausedAngleKey,
+            angle,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         layer.removeAnimation(forKey: "jobs.spin")
         return self
     }
@@ -73,8 +85,12 @@ extension UIView {
     public func bySpinStop() -> Self {
         layer.removeAnimation(forKey: "jobs.spin")
         layer.sublayerTransform = CATransform3DIdentity
-        objc_setAssociatedObject(self, &_jobs_spinPausedAngleKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_jobs_spinPausedAngleKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
 }
 // MARK: 动画@点击放大
@@ -92,8 +108,12 @@ extension UIView {
     ) {
         // 去抖：正在做上一轮就不叠加
         if (objc_getAssociatedObject(self, &_jobs_bounceAnimatingKey) as? Bool) == true { return }
-        objc_setAssociatedObject(self, &_jobs_bounceAnimatingKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
+        objc_setAssociatedObject(
+            self,
+            &_jobs_bounceAnimatingKey,
+            true,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 以“当前 transform”为基准，避免覆盖你已有的缩放
         let original = self.transform
         if let style = haptic { UIImpactFeedbackGenerator(style: style).impactOccurred() }
@@ -112,7 +132,12 @@ extension UIView {
                            options: [.beginFromCurrentState, .allowUserInteraction]) { [weak self] in
                 self?.transform = original
             } completion: { [weak self] _ in
-                objc_setAssociatedObject(self as Any, &_jobs_bounceAnimatingKey, false, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(
+                    self as Any,
+                    &_jobs_bounceAnimatingKey,
+                    false,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
             }
         }
     }
@@ -120,32 +145,31 @@ extension UIView {
 // MARK: 动画@视图左右晃动
 extension UIView {
     public func shake(duration: CFTimeInterval = 0.5, repeatCount: Float = 1) {
-        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-            .byTimingFunction(CAMediaTimingFunction(name: .linear))
-            .byDuration(duration)
-            .byValues([-10, 10, -8, 8, -5, 5, 0])   // 左右偏移
-            .byRepeatCount(repeatCount)             // 注意 repeatCount 是 Float
-        self.layer.add(animation, forKey: "shake")
+        self.layer.add(
+            CAKeyframeAnimation(keyPath: "transform.translation.x")
+                .byTimingFunction(CAMediaTimingFunction(name: .linear))
+                .byDuration(duration)
+                .byValues([-10, 10, -8, 8, -5, 5, 0])   // 左右偏移
+                .byRepeatCount(repeatCount) ,            // 注意 repeatCount 是 Float,
+            forKey: "shake")
     }
 }
 // MARK: 呼吸灯动画效果
 extension UIView {
     public func doShineAnimation() {
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = NSNumber(1.0)
-        animation.toValue = NSNumber(1.0)
-        animation.autoreverses = true
-        animation.duration = 1
-        animation.repeatCount = 3
-        animation.fillMode = CAMediaTimingFillMode.forwards
-        animation.isRemovedOnCompletion = true
-        self.layer.add(animation, forKey: "A")
+        self.layer.add(CABasicAnimation(keyPath: "opacity")
+            .byFromValue(NSNumber(1.0))
+            .byToValue(NSNumber(1.0))
+            .byAutoreverses(true)
+            .byDuration(1)
+            .byRepeatCount(3)
+            .byFillMode(CAMediaTimingFillMode.forwards)
+            .byRemovedOnCompletion(true), forKey: "A")
     }
 }
 // MARK: 动画@哪里来哪里去
 #if canImport(SnapKit)
 import SnapKit
-
 public enum JobsSlideCase {
     /// 从某个方向“来”（展开到 size）
     case show(from: JobsDirection, size: CGFloat)
@@ -166,24 +190,25 @@ extension UIView {
     ) {
         guard let superview else { completion?(); return }
         guard let sizeConstraint else { completion?(); return }
-
         superview.layoutIfNeeded()
-
         switch slide {
         case let .show(from: _, size: size):
             isHidden = false
             if fade { alpha = 0 }
             sizeConstraint.update(offset: size)
-            UIView.animate(withDuration: duration, delay: 0, options: options) {
+            UIView.animate(withDuration: duration,
+                           delay: 0,
+                           options: options) {
                 if fade { self.alpha = 1 }
                 superview.layoutIfNeeded()
             } completion: { _ in
                 completion?()
             }
-
         case .hide(to: _):
             sizeConstraint.update(offset: collapsedSize)
-            UIView.animate(withDuration: duration, delay: 0, options: options) {
+            UIView.animate(withDuration: duration,
+                           delay: 0,
+                           options: options) {
                 if fade { self.alpha = 0 }
                 superview.layoutIfNeeded()
             } completion: { _ in
@@ -194,4 +219,3 @@ extension UIView {
     }
 }
 #endif
-

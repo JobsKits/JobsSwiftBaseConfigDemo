@@ -341,24 +341,3 @@ extension UIListContentConfiguration {
         self.makeContentView()
     }
 }
-// ================================== Cell 侧便捷接入 ==================================
-@available(iOS 14.0, tvOS 14.0, *)
-public extension UITableViewCell {
-    /// 以链式闭包方式配置并设置 `contentConfiguration`
-    @discardableResult
-    public func byListConfig(_ builder: JobsRetByListContentConfigBlock) -> Self {
-        let base = (contentConfiguration as? UIListContentConfiguration) ?? .cell()
-        contentConfiguration = builder(base)
-        return self
-    }
-}
-@available(iOS 14.0, tvOS 14.0, *)
-public extension UICollectionViewListCell {
-    /// 以链式闭包方式配置并设置 `contentConfiguration`
-    @discardableResult
-    public func byListConfig(_ builder: JobsRetByListContentConfigBlock) -> Self {
-        let base = (contentConfiguration as? UIListContentConfiguration) ?? .cell()
-        contentConfiguration = builder(base)
-        return self
-    }
-}

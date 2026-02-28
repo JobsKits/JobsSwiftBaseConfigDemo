@@ -51,7 +51,12 @@ extension UILabel {
         let installed = (objc_getAssociatedObject(UILabel.self, &_jobsInsetsInstalledKey) as? Bool) ?? false
         if !installed {
             _ = UILabel._once
-            objc_setAssociatedObject(UILabel.self, &_jobsInsetsInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                UILabel.self,
+                &_jobsInsetsInstalledKey,
+                true,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 
@@ -83,7 +88,9 @@ extension UILabel {
     }
 }
 // MARK: - 轻量方法交换
-private func _jobs_swizzle(_ cls: AnyClass, _ orig: Selector, _ repl: Selector) {
+private func _jobs_swizzle(_ cls: AnyClass,
+                           _ orig: Selector,
+                           _ repl: Selector) {
     guard let m1 = class_getInstanceMethod(cls, orig),
           let m2 = class_getInstanceMethod(cls, repl) else { return }
     method_exchangeImplementations(m1, m2)

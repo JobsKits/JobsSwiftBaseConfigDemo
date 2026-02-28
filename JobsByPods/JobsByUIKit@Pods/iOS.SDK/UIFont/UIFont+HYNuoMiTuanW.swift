@@ -9,8 +9,8 @@ import UIKit
 #endif
 
 extension UIFont {
+    
     enum HYNuoMiTuanW {
-
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:

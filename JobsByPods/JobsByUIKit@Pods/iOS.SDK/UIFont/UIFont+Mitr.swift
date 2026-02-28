@@ -9,13 +9,19 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
-#endif 
+#endif
 
 extension UIFont {
     public enum Mitr {
-        public static func Regular(_ size: CGFloat) -> UIFont { make("Mitr-Regular", size, fallback: .regular) }
-        public static func Medium(_ size: CGFloat) -> UIFont  { make("Mitr-Medium",  size, fallback: .medium) }
-        public static func Semibold(_ size: CGFloat) -> UIFont{ make("Mitr-SemiBold",size, fallback: .semibold) } // 具体看你字体包命名
+        public static func Regular(_ size: CGFloat) -> UIFont {
+            make("Mitr-Regular", size, fallback: .regular)
+        }
+        public static func Medium(_ size: CGFloat) -> UIFont  {
+            make("Mitr-Medium",  size, fallback: .medium)
+        }
+        public static func Semibold(_ size: CGFloat) -> UIFont{
+            make("Mitr-SemiBold",size, fallback: .semibold)
+        }
 
         private static func make(_ name: String,
                                  _ size: CGFloat,

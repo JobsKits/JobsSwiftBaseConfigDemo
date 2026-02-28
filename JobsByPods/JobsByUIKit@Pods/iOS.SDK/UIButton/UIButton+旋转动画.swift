@@ -10,8 +10,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsByQuartzCore
 // MARK: - 旋转动画
 extension UIButton {
+    
     public static let rotationKey = "jobs.rotation"
     public enum RotationScope { case imageView, wholeButton, layer(CALayer) }
 
@@ -23,6 +26,7 @@ extension UIButton {
         }
     }
 
+    @discardableResult
     public func isRotating(scope: RotationScope = .imageView,
                            key: String = UIButton.rotationKey) -> Bool {
         guard let tl = targetLayer(for: scope) else { return false }
@@ -40,15 +44,15 @@ extension UIButton {
         guard let tl = targetLayer(for: scope) else { return self }
         if on {
             guard tl.animation(forKey: key) == nil else { return self }
-            let anim = CABasicAnimation(keyPath: "transform.rotation")
-            let fullTurn = CGFloat.pi * 2 * (clockwise ? 1 : -1)
-            anim.fromValue = 0
-            anim.toValue = fullTurn
-            anim.duration = max(0.001, duration)
-            anim.repeatCount = repeatCount
-            anim.isCumulative = true
-            anim.isRemovedOnCompletion = false
-            tl.add(anim, forKey: key)
+            tl.add(
+                CABasicAnimation(keyPath: "transform.rotation")
+                    .byFromValue(0)
+                    .byToValue(CGFloat.pi * 2 * (clockwise ? 1 : -1))
+                    .byDuration(max(0.001, duration))
+                    .byRepeatCount(repeatCount)
+                    .byCumulative(true)
+                    .byRemovedOnCompletion(false),
+                forKey: key)
         } else {
             tl.removeAnimation(forKey: key)
             if resetTransformOnStop {
@@ -66,16 +70,27 @@ extension UIButton {
                               scope: RotationScope = .imageView,
                               clockwise: Bool = true,
                               key: String = UIButton.rotationKey) -> Self {
-        setRotating(true, scope: scope, duration: duration,
-                    repeatCount: .infinity, clockwise: clockwise, key: key)
+        setRotating(
+            true,
+            scope: scope,
+            duration: duration,
+            repeatCount: .infinity,
+            clockwise: clockwise,
+            key: key
+        )
     }
 
     @discardableResult
     public func stopRotating(scope: RotationScope = .imageView,
                              key: String = UIButton.rotationKey,
                              resetTransformOnStop: Bool = true) -> Self {
-        setRotating(false, scope: scope, duration: 0,
-                    repeatCount: 0, clockwise: true,
-                    key: key, resetTransformOnStop: resetTransformOnStop)
+        setRotating(
+            false,
+            scope: scope,
+            duration: 0,
+            repeatCount: 0,
+            clockwise: true,
+            key: key,
+            resetTransformOnStop: resetTransformOnStop)
     }
 }

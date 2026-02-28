@@ -51,15 +51,15 @@ extension UIToolbar {
     // MARK: - Background / Shadow
     @discardableResult
     public func byBackgroundImage(_ image: UIImage?,
-                           forToolbarPosition position: UIBarPosition,
-                           barMetrics: UIBarMetrics = .default) -> Self {
+                                  forToolbarPosition position: UIBarPosition,
+                                  barMetrics: UIBarMetrics = .default) -> Self {
         self.setBackgroundImage(image, forToolbarPosition: position, barMetrics: barMetrics)
         return self
     }
 
     @discardableResult
     public func byShadowImage(_ image: UIImage?,
-                       forToolbarPosition position: UIBarPosition) -> Self {
+                              forToolbarPosition position: UIBarPosition) -> Self {
         self.setShadowImage(image, forToolbarPosition: position)
         return self
     }

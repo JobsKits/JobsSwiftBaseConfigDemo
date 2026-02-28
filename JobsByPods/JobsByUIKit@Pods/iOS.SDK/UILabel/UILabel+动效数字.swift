@@ -79,8 +79,12 @@ private extension UILabel {
             return obj
         }
         let obj = _JobsAnimatedNumberStore()
-        objc_setAssociatedObject(self, &_JobsAnimatedNumberAssocKey.storeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return obj
+        objc_setAssociatedObject(
+            self,
+            &_JobsAnimatedNumberAssocKey.storeKey,
+            obj,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return obj
     }
 }
 // MARK: - Public Chain API
@@ -145,24 +149,21 @@ extension UILabel {
         // 先显示起点（更直观）
         self.byText(_jobsFormatNumber(from, decimals: decimals))
         // JobsSwiftTimer 驱动
-        let config = JobsSwiftTimerConfig(
-            interval: interval,
-            repeats: true,
-            tolerance: 0,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
-
-        let timer = JobsTimer(kind: .foundation, config: config) { [weak self] in
-            self?._jobsTickAnimatedNumber()
-        }
-
-        s.timer = timer
-        timer.start()
-
+        let timer = JobsTimer(kind: .foundation,
+                              config: JobsSwiftTimerConfig(
+                                interval: interval,
+                                repeats: true,
+                                tolerance: 0,
+                                queue: .main,
+                                runLoop: .main,
+                                runLoopMode: .common,
+                                pauseInBackground: true,
+                                autoManageAppState: true
+                            )) { [weak self] in
+                                guard let self else { return }
+                                self._jobsTickAnimatedNumber()
+                            }
+        s.timer = timer.start()
         return self
     }
     /// ✅ 停止 —— 链式

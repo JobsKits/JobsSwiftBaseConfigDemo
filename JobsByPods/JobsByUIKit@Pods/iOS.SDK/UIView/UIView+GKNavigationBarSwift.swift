@@ -12,9 +12,9 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(GKNavigationBarSwift) && canImport(SnapKit)
-import GKNavigationBarSwift
+#if canImport(SnapKit) && canImport(GKNavigationBarSwift)
 import SnapKit
+import GKNavigationBarSwift
 @MainActor
 extension UIView {
     /// 返回已存在的“导航栏类视图”（不触发懒加载），找不到返回 nil。

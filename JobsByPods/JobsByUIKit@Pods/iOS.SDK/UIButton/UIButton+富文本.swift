@@ -13,7 +13,8 @@ import UIKit
 // MARK: - UIButton@富文本
 extension UIButton {
     @discardableResult
-    public func byRichTitle(_ rich: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
+    public func byRichTitle(_ rich: NSAttributedString?,
+                            for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
             cfg.attributedTitle = rich.map { AttributedString($0) }
@@ -25,7 +26,8 @@ extension UIButton {
     }
 
     @discardableResult
-    public func byRichSubTitle(_ rich: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
+    public func byRichSubTitle(_ rich: NSAttributedString?,
+                               for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
             cfg.attributedSubtitle = rich.map { AttributedString($0) }
@@ -43,12 +45,25 @@ extension UIButton {
     typealias StateRaw = UInt
     private var _legacyRichTitleMap: [StateRaw: NSAttributedString] {
         get { objc_getAssociatedObject(self, &_richTitleKey) as? [StateRaw: NSAttributedString] ?? [:] }
-        set { objc_setAssociatedObject(self, &_richTitleKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_richTitleKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     
     private var _legacyRichSubMap: [StateRaw: NSAttributedString] {
         get { objc_getAssociatedObject(self, &_richSubKey) as? [StateRaw: NSAttributedString] ?? [:] }
-        set { objc_setAssociatedObject(self, &_richSubKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_richSubKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     
     var _jobsTitlePadding: CGFloat {
@@ -56,16 +71,25 @@ extension UIButton {
             (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &_jobsTitlePaddingKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitlePaddingKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
     
     var _jobsLegacyTitlePadding: CGFloat {
         get { (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0 }
-        set { objc_setAssociatedObject(self, &_jobsTitlePaddingKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitlePaddingKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     private func _setLegacyRichTitle(_ rich: NSAttributedString?, for state: UIControl.State) {

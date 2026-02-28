@@ -37,8 +37,7 @@ extension UIWindow {
                             level: level,
                             makeKeyVisible: makeKeyVisible)
         } else {
-            let win = UIWindow(frame: UIScreen.main.bounds)
-            return win
+            return UIWindow(frame: UIScreen.main.bounds)
                 .byRootViewController(root)
                 .byWindowLevel(level)
                 ._makeIfNeeded(makeKeyVisible)

@@ -10,6 +10,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftBaseDefines
 // MARK: 按钮背景图加载（UIImage / Base64 / URL）
 public enum JobsImageSource: Equatable {
     case image(UIImage)
@@ -51,7 +53,8 @@ extension UIButton {
     }
     
     @discardableResult
-    public func byBackgroundImage(_ source: JobsImageSource?, for state: UIControl.State = .normal) -> Self {
+    public func byBackgroundImage(_ source: JobsImageSource?,
+                                  for state: UIControl.State = .normal) -> Self {
         guard let source else {
             self.setBackgroundImage(nil, for: state)
             return self
@@ -72,9 +75,12 @@ extension UIButton {
                 self.setBackgroundImage(cached, for: state)
             } else {
                 URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-                    guard let self, let data, let img = UIImage(data: data) else { return }
+                    guard let self,
+                          let data,
+                          let img = UIImage(data: data)
+                    else { return }
                     _JobsImageCache.shared.cache.setObject(img, forKey: key)
-                    DispatchQueue.main.async {
+                    jobsRunOnMain {
                         self.setBackgroundImage(img, for: state)
                     }
                 }.resume()
@@ -87,12 +93,11 @@ extension UIButton {
     @MainActor
     public func jobsResetBtnImage(_ image: UIImage?, for state: UIControl.State) {
         if #available(iOS 15.0, *) {
-            var cfg = self.configuration ?? .plain()  // ✅ 没有也创建；前景建议用 .plain()
-            cfg.image = image                         // ✅ 前景图写到 configuration.image
-            self.configuration = cfg
+            self.configuration = (self.configuration ?? .plain()).byImage(image)
             byUpdateConfig()
         } else {
-            self.setImage(image, for: state)          // ✅ 旧系统走 legacy API
+            // ✅ 旧系统走 legacy API
+            self.setImage(image, for: state)
         }
         if #available(iOS 15.0, *) {
             self.setNeedsUpdateConfiguration()
@@ -109,11 +114,12 @@ extension UIButton {
             var cfg = self.configuration ?? .plain()
             var bg  = cfg.background
             bg.image = image
-            if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
+            if bg.imageContentMode == .scaleToFill {
+                bg.imageContentMode = .scaleAspectFill
+            }
             bg.backgroundColor = .clear
             cfg.background = bg
             self.configuration = cfg
-
             // 让生命周期继续，但这里不要马上“强制”刷新，避免刚设的图被别的 handler 抢写
             self.automaticallyUpdatesConfiguration = true
             // self.setNeedsUpdateConfiguration()  // ← 刻意不在这里触发
@@ -136,7 +142,9 @@ extension UIButton {
             ?? self.backgroundImage(for: .normal)              // legacy 背景（normal）
         )
         // 3) 同步主标题（防 title 丢）
-        if cfg.title == nil, let t = self.title(for: .normal), !t.isEmpty {
+        if cfg.title == nil,
+            let t = self.title(for: .normal),
+            !t.isEmpty {
             cfg.title = t
         }
         cfg.titleAlignment = .center
@@ -145,7 +153,6 @@ extension UIButton {
                 ?? self._subDict_noAttr[UIControl.State.normal.rawValue]
         let text = pack?.text ?? ""
         cfg.subtitle = text.isEmpty ? nil : text
-
         let f = pack?.font
         let c = pack?.color
         cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in

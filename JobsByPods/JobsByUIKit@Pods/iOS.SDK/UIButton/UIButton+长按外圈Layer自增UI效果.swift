@@ -13,9 +13,9 @@ import UIKit
 
 import ObjectiveC
 import QuartzCore
-import JobsSwiftBaseDefines
 import JobsSwiftTimer
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 private final class JobsPressFuseDriver: NSObject {
     weak var btn: UIButton?
@@ -48,49 +48,46 @@ private final class JobsPressFuseDriver: NSObject {
         // DisplayLink 更适合这种“持续增长”的视觉
         timer?.stop()
         timer = nil
-        let interval = max(0.000_001, tickInterval)
-        let cfg = JobsSwiftTimerConfig(
-            interval: interval,
-            repeats: true,
-            tolerance: 0,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
         // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
-        let t = JobsTimer(kind: .displayLink, config: cfg) { [weak self] in
-            guard let self else { return }
-            jobsRunOnMain {
-                // 1) btn 如果是非 Optional：直接用
-                let btn = self.btn
-                // 如果 btn 是 Optional：用这一行替换上面那行
-                // guard let btn = self.btn else { return }
-                guard self.startTS > 0 else { return }
+        let t = JobsTimer(kind: .displayLink,
+                          config: JobsSwiftTimerConfig(
+                            interval: max(0.000_001, tickInterval),
+                            repeats: true,
+                            tolerance: 0,
+                            queue: .main,
+                            runLoop: .main,
+                            runLoopMode: .common,
+                            pauseInBackground: true,
+                            autoManageAppState: true
+                        )) { [weak self] in
+                            guard let self else { return }
+                            jobsRunOnMain {
+                                // 1) btn 如果是非 Optional：直接用
+                                let btn = self.btn
+                                // 如果 btn 是 Optional：用这一行替换上面那行
+                                // guard let btn = self.btn else { return }
+                                guard self.startTS > 0 else { return }
 
-                let elapsed = max(0, CACurrentMediaTime() - self.startTS)
-                let raw = elapsed / max(0.0001, self.durationToFull)
+                                let elapsed = max(0, CACurrentMediaTime() - self.startTS)
+                                let raw = elapsed / max(0.0001, self.durationToFull)
 
-                let p: CGFloat
-                if self.loopWhenFull {
-                    p = CGFloat(raw.truncatingRemainder(dividingBy: 1.0))
-                } else {
-                    p = min(1, CGFloat(raw))
-                }
+                                let p: CGFloat
+                                if self.loopWhenFull {
+                                    p = CGFloat(raw.truncatingRemainder(dividingBy: 1.0))
+                                } else {
+                                    p = min(1, CGFloat(raw))
+                                }
 
-                self.lastProgress = p
-                btn!.jobs_updateFuseProgress(p, animated: false)
-                self.onTick?(btn!, elapsed, p)
+                                self.lastProgress = p
+                                btn!.jobs_updateFuseProgress(p, animated: false)
+                                self.onTick?(btn!, elapsed, p)
 
-                if !self.loopWhenFull, p >= 1 {
-                    self.timer?.stop()
-                    self.timer = nil
-                }
-            }
-        }
-        self.timer = t
-        t.start()
+                                if !self.loopWhenFull, p >= 1 {
+                                    self.timer?.stop()
+                                    self.timer = nil
+                                }
+                            }
+                        };self.timer = t.start()
     }
 
     @MainActor
@@ -113,6 +110,7 @@ private final class JobsPressFuseDriver: NSObject {
 }
 
 extension UIButton {
+    
     private struct JobsPressFuseKeys {
         static var driverKey: UInt8 = 0
         static var gestureKey: UInt8 = 0
@@ -120,7 +118,14 @@ extension UIButton {
 
     private var jobs_pressFuseDriver: JobsPressFuseDriver? {
         get { objc_getAssociatedObject(self, &JobsPressFuseKeys.driverKey) as? JobsPressFuseDriver }
-        set { objc_setAssociatedObject(self, &JobsPressFuseKeys.driverKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsPressFuseKeys.driverKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     @discardableResult
@@ -157,7 +162,12 @@ extension UIButton {
             g.allowableMovement = 10_000
             g.cancelsTouchesInView = false
             addGestureRecognizer(g)
-            objc_setAssociatedObject(self, &JobsPressFuseKeys.gestureKey, g, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsPressFuseKeys.gestureKey,
+                g,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         };return self
     }
 
@@ -172,7 +182,12 @@ extension UIButton {
         if let g = objc_getAssociatedObject(self, &JobsPressFuseKeys.gestureKey) as? UILongPressGestureRecognizer {
             removeGestureRecognizer(g)
         }
-        objc_setAssociatedObject(self, &JobsPressFuseKeys.gestureKey, nil, .OBJC_ASSOCIATION_ASSIGN)
+        objc_setAssociatedObject(
+            self,
+            &JobsPressFuseKeys.gestureKey,
+            nil,
+            .OBJC_ASSOCIATION_ASSIGN
+        )
     }
 
     @objc

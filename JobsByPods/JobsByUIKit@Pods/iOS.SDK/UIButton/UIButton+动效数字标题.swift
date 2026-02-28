@@ -60,44 +60,72 @@ extension UIButton {
     public func byAnimationTitleConfig(_ block: (JobsButtonNumberAnimConfig.Title) -> Void) -> Self {
         let cfg = JobsButtonNumberAnimConfig.Title(button: self)
         block(cfg)
-        objc_setAssociatedObject(self, &_jobsAnimTitleCfgKey, cfg.snapshot, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimTitleCfgKey,
+            cfg.snapshot,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
     /// 副标题数字动效配置
     @discardableResult
     public func byAnimationSubTitleConfig(_ block: (JobsButtonNumberAnimConfig.SubTitle) -> Void) -> Self {
         let cfg = JobsButtonNumberAnimConfig.SubTitle(button: self)
         block(cfg)
-        objc_setAssociatedObject(self, &_jobsAnimSubTitleCfgKey, cfg.snapshot, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimSubTitleCfgKey,
+            cfg.snapshot,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
     // MARK: Start / End Hook
     /// ✅ 每次 tick 回调一次（无参）
     @discardableResult
     public func byStartAnim(_ onTick: (() -> Void)? = nil) -> Self {
         if let onTick {
-            objc_setAssociatedObject(self, &_jobsAnimTickVoidKey, onTick, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimTickVoidKey,
+                onTick,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
         };return _jobsStartAnimIfNeeded()
     }
     /// ✅ 每次 tick 回调“已变化后的 title/subTitle”
     @discardableResult
     public func byStartAnim(_ onTick: ((String?, String?) -> Void)?) -> Self {
         if let onTick {
-            objc_setAssociatedObject(self, &_jobsAnimTickValueKey, onTick, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimTickValueKey,
+                onTick,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
         };return _jobsStartAnimIfNeeded()
     }
     /// ✅ 每次 tick 回调一个 model（title/subTitle/seconds）
     @discardableResult
     public func byStartAnim(_ onTick: ((JobsButtonNumberAnimTickModel) -> Void)?) -> Self {
         if let onTick {
-            objc_setAssociatedObject(self, &_jobsAnimTickModelKey, onTick, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimTickModelKey,
+                onTick,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
         };return _jobsStartAnimIfNeeded()
     }
     /// 绑定结束回调（全部结束时触发一次）
     @discardableResult
     public func byEndAnim(_ end: (() -> Void)? = nil) -> Self {
         if let end {
-            objc_setAssociatedObject(self, &_jobsAnimEndKey, end, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimEndKey,
+                end,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
         };return self
     }
     // MARK: Manual Stop (可选)
@@ -122,9 +150,24 @@ extension UIButton {
             return self
         }
         // 清空上一轮缓存
-        objc_setAssociatedObject(self, &_jobsAnimLatestTitleKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_jobsAnimLatestSubTitleKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_jobsAnimLatestSecondsKey, NSNumber(value: 0.0), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimLatestTitleKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimLatestSubTitleKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimLatestSecondsKey,
+            NSNumber(value: 0.0),
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 先停掉旧的
         _jobsStopTitleAnim()
         _jobsStopSubTitleAnim()
@@ -141,8 +184,12 @@ extension UIButton {
                     self?._jobsTryFireEndIfAllFinished()
                 }
             )
-            objc_setAssociatedObject(self, &_jobsAnimTitleRunnerKey, runner, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            runner.start()
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimTitleRunnerKey,
+                runner,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            );runner.start()
         }
         // 副标题 runner
         if let cfg = objc_getAssociatedObject(self, &_jobsAnimSubTitleCfgKey) as? JobsButtonNumberAnimConfig.Snapshot {
@@ -157,21 +204,37 @@ extension UIButton {
                     self?._jobsTryFireEndIfAllFinished()
                 }
             )
-            objc_setAssociatedObject(self, &_jobsAnimSubTitleRunnerKey, runner, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            runner.start()
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimSubTitleRunnerKey,
+                runner,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            );runner.start()
         };return self
     }
 
     private func _jobsStopTitleAnim() {
         if let r = objc_getAssociatedObject(self, &_jobsAnimTitleRunnerKey) as? JobsButtonNumberAnimRunner {
             r.stop()
-        };objc_setAssociatedObject(self, &_jobsAnimTitleRunnerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimTitleRunnerKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 
     private func _jobsStopSubTitleAnim() {
         if let r = objc_getAssociatedObject(self, &_jobsAnimSubTitleRunnerKey) as? JobsButtonNumberAnimRunner {
             r.stop()
-        };objc_setAssociatedObject(self, &_jobsAnimSubTitleRunnerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimSubTitleRunnerKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
     /// ✅ 接收 runner “已变化值”，并按帧 gate 回调给业务层
     fileprivate func _jobsReceiveTickValue(now: CFTimeInterval,
@@ -181,23 +244,42 @@ extension UIButton {
         // 缓存最新文本
         switch kind {
         case .title:
-            objc_setAssociatedObject(self, &_jobsAnimLatestTitleKey, text, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimLatestTitleKey,
+                text,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         case .subTitle:
-            objc_setAssociatedObject(self, &_jobsAnimLatestSubTitleKey, text, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimLatestSubTitleKey,
+                text,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
         // 缓存秒数：主副同时跑时，取更大的 elapsed
         let old = (objc_getAssociatedObject(self, &_jobsAnimLatestSecondsKey) as? NSNumber)?.doubleValue ?? 0
         if elapsed >= old {
-            objc_setAssociatedObject(self, &_jobsAnimLatestSecondsKey, NSNumber(value: elapsed), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsAnimLatestSecondsKey,
+                NSNumber(value: elapsed),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
-
         _jobsFireTickOncePerFrame(now: now)
     }
     /// ✅ tick 回调：同一帧最多触发一次（主/副同时跑不重复）
     fileprivate func _jobsFireTickOncePerFrame(now: CFTimeInterval) {
         let gate = (objc_getAssociatedObject(self, &_jobsAnimTickGateKey) as? NSNumber)?.doubleValue ?? 0
         if gate > 0, (now - gate) < (1.0 / 120.0) { return }
-        objc_setAssociatedObject(self, &_jobsAnimTickGateKey, NSNumber(value: now), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimTickGateKey,
+            NSNumber(value: now),
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
 
         if let tick0 = objc_getAssociatedObject(self, &_jobsAnimTickVoidKey) as? (() -> Void) {
             tick0()
@@ -224,8 +306,18 @@ extension UIButton {
         let subDone = (subRunner == nil) || (subRunner?.isFinished == true)
         guard titleDone, subDone else { return }
 
-        objc_setAssociatedObject(self, &_jobsAnimTitleRunnerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_jobsAnimSubTitleRunnerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimTitleRunnerKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_jobsAnimSubTitleRunnerKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
 
         if let end = objc_getAssociatedObject(self, &_jobsAnimEndKey) as? (() -> Void) {
             end()
@@ -240,7 +332,9 @@ public enum JobsButtonNumberAnimConfig {
     /// - text: 例如 "1,234.56"
     /// - decimalsRange: 小数部分 range（在 text 内），可能为 nil
     /// - value: 当前数值
-    public typealias AttributedBuilder = (_ text: String, _ decimalsRange: NSRange?, _ value: Double) -> NSAttributedString
+    public typealias AttributedBuilder = (_ text: String,
+                                          _ decimalsRange: NSRange?,
+                                          _ value: Double) -> NSAttributedString
     public final class DecimalsSnapshot: NSObject {
         public var showsDecimals: Bool = false
         public var decimals: Int = 2
@@ -271,15 +365,35 @@ public enum JobsButtonNumberAnimConfig {
     }
 
     public final class Title {
+        
         fileprivate weak var button: UIButton?
         fileprivate let snapshot = Snapshot()
         fileprivate init(button: UIButton) { self.button = button }
 
-        @discardableResult public func byDuration(_ v: TimeInterval) -> Self { snapshot.duration = max(0, v); return self }
-        @discardableResult public func byFps(_ v: Int) -> Self { snapshot.fps = max(1, v); return self }
-        @discardableResult public func byStartValue(_ v: String?) -> Self { snapshot.startValue = v; return self }
-        @discardableResult public func byEndValue(_ v: String?) -> Self { snapshot.endValue = v; return self }
-        @discardableResult public func byFallbackEndValue(_ v: String?) -> Self { snapshot.fallbackEndValue = v; return self }
+        @discardableResult public func byDuration(_ v: TimeInterval) -> Self {
+            snapshot.duration = max(0, v)
+            return self
+        }
+        
+        @discardableResult public func byFps(_ v: Int) -> Self {
+            snapshot.fps = max(1, v)
+            return self
+        }
+        
+        @discardableResult public func byStartValue(_ v: String?) -> Self {
+            snapshot.startValue = v
+            return self
+        }
+        
+        @discardableResult public func byEndValue(_ v: String?) -> Self {
+            snapshot.endValue = v
+            return self
+        }
+        
+        @discardableResult public func byFallbackEndValue(_ v: String?) -> Self {
+            snapshot.fallbackEndValue = v
+            return self
+        }
 
         @discardableResult
         public func byTitleFont(_ font: UIFont?) -> Self {
@@ -296,12 +410,34 @@ public enum JobsButtonNumberAnimConfig {
             return self
         }
 
-        @discardableResult public func byShowsDecimals(_ v: Bool) -> Self { snapshot.decimalsCfg.showsDecimals = v; return self }
-        @discardableResult public func bySeparate(_ v: String?) -> Self { snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!; return self }
-        @discardableResult public func byGrouping(_ v: Grouping) -> Self { snapshot.decimalsCfg.grouping = v; return self }
-        @discardableResult public func byDecimals(_ v: Int) -> Self { snapshot.decimalsCfg.decimals = max(0, v); return self }
-        @discardableResult public func byTitleDecimalsCor(_ v: UIColor?) -> Self { snapshot.decimalsCfg.decimalsColor = v; return self }
-        @discardableResult public func byTitleDecimalsFont(_ v: UIFont?) -> Self { snapshot.decimalsCfg.decimalsFont = v; return self }
+        @discardableResult public func byShowsDecimals(_ v: Bool) -> Self {
+            snapshot.decimalsCfg.showsDecimals = v
+            return self
+        }
+        
+        @discardableResult public func bySeparate(_ v: String?) -> Self {
+            snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!
+            return self
+        }
+        
+        @discardableResult public func byGrouping(_ v: Grouping) -> Self {
+            snapshot.decimalsCfg.grouping = v
+            return self
+        }
+        
+        @discardableResult public func byDecimals(_ v: Int) -> Self {
+            snapshot.decimalsCfg.decimals = max(0, v)
+            return self
+        }
+        
+        @discardableResult public func byTitleDecimalsCor(_ v: UIColor?) -> Self {
+            snapshot.decimalsCfg.decimalsColor = v
+            return self
+        }
+        @discardableResult public func byTitleDecimalsFont(_ v: UIFont?) -> Self {
+            snapshot.decimalsCfg.decimalsFont = v
+            return self
+        }
         /// ✅ 主标题整体富文本 Builder
         @discardableResult
         public func byTitleAttributedBuilder(_ builder: AttributedBuilder?) -> Self {
@@ -311,15 +447,35 @@ public enum JobsButtonNumberAnimConfig {
     }
 
     public final class SubTitle {
+        
         fileprivate weak var button: UIButton?
         fileprivate let snapshot = Snapshot()
         fileprivate init(button: UIButton) { self.button = button }
 
-        @discardableResult public func byDuration(_ v: TimeInterval) -> Self { snapshot.duration = max(0, v); return self }
-        @discardableResult public func byFps(_ v: Int) -> Self { snapshot.fps = max(1, v); return self }
-        @discardableResult public func byStartValue(_ v: String?) -> Self { snapshot.startValue = v; return self }
-        @discardableResult public func byEndValue(_ v: String?) -> Self { snapshot.endValue = v; return self }
-        @discardableResult public func byFallbackEndValue(_ v: String?) -> Self { snapshot.fallbackEndValue = v; return self }
+        @discardableResult public func byDuration(_ v: TimeInterval) -> Self {
+            snapshot.duration = max(0, v)
+            return self
+        }
+        
+        @discardableResult public func byFps(_ v: Int) -> Self {
+            snapshot.fps = max(1, v)
+            return self
+        }
+        
+        @discardableResult public func byStartValue(_ v: String?) -> Self {
+            snapshot.startValue = v
+            return self
+        }
+        
+        @discardableResult public func byEndValue(_ v: String?) -> Self {
+            snapshot.endValue = v
+            return self
+        }
+        
+        @discardableResult public func byFallbackEndValue(_ v: String?) -> Self {
+            snapshot.fallbackEndValue = v
+            return self
+        }
 
         @discardableResult
         public func bySubTitleFont(_ font: UIFont?) -> Self {
@@ -336,12 +492,41 @@ public enum JobsButtonNumberAnimConfig {
             return self
         }
 
-        @discardableResult public func byShowsDecimals(_ v: Bool) -> Self { snapshot.decimalsCfg.showsDecimals = v; return self }
-        @discardableResult public func bySeparate(_ v: String?) -> Self { snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!; return self }
-        @discardableResult public func byGrouping(_ v: Grouping) -> Self { snapshot.decimalsCfg.grouping = v; return self }
-        @discardableResult public func byDecimals(_ v: Int) -> Self { snapshot.decimalsCfg.decimals = max(0, v); return self }
-        @discardableResult public func bySubTitleDecimalsCor(_ v: UIColor?) -> Self { snapshot.decimalsCfg.decimalsColor = v; return self }
-        @discardableResult public func bySubTitleDecimalsFont(_ v: UIFont?) -> Self { snapshot.decimalsCfg.decimalsFont = v; return self }
+        @discardableResult
+        public func byShowsDecimals(_ v: Bool) -> Self {
+            snapshot.decimalsCfg.showsDecimals = v
+            return self
+        }
+        
+        @discardableResult
+        public func bySeparate(_ v: String?) -> Self {
+            snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!
+            return self
+        }
+        
+        @discardableResult
+        public func byGrouping(_ v: Grouping) -> Self {
+            snapshot.decimalsCfg.grouping = v
+            return self
+        }
+        
+        @discardableResult
+        public func byDecimals(_ v: Int) -> Self {
+            snapshot.decimalsCfg.decimals = max(0, v)
+            return self
+        }
+        
+        @discardableResult
+        public func bySubTitleDecimalsCor(_ v: UIColor?) -> Self {
+            snapshot.decimalsCfg.decimalsColor = v
+            return self
+        }
+        
+        @discardableResult
+        public func bySubTitleDecimalsFont(_ v: UIFont?) -> Self {
+            snapshot.decimalsCfg.decimalsFont = v
+            return self
+        }
         /// ✅ 副标题整体富文本 Builder
         @discardableResult
         public func bySubTitleAttributedBuilder(_ builder: AttributedBuilder?) -> Self {
@@ -385,10 +570,10 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     func start() {
+        
         guard let button else { finish(); return }
-
         resolveValuesIfNeeded(button: button)
-
+        
         let now = CACurrentMediaTime()
         startTime = now
 
@@ -413,8 +598,10 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                             runLoopMode: .common,
                             pauseInBackground: true,
                             autoManageAppState: true
-                          )) { [weak self] in
-            self?.tick()
+                          ))
+        { [weak self] in
+            guard let self else { return }
+            self.tick()
         }.start()
     }
 
@@ -425,6 +612,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     private func tick() {
+        
         guard let button else { finish(); return }
         if isFinished { return }
 
@@ -552,12 +740,19 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                 baseColor = subTitleBaseColor(button: button)
             }
             // ✅ 必须整段补齐 font/color（你注释里提到的“无标题/无动画”根源之一就是这里没补齐）
-            attr.addAttribute(.font, value: baseFont, range: NSRange(location: 0, length: attr.length))
-            attr.addAttribute(.foregroundColor, value: baseColor, range: NSRange(location: 0, length: attr.length))
+            attr.addAttribute(.font,
+                              value: baseFont,
+                              range: NSRange(location: 0, length: attr.length))
+            attr.addAttribute(.foregroundColor,
+                              value: baseColor,
+                              range: NSRange(location: 0, length: attr.length))
 
-            if let f = ds.decimalsFont { attr.addAttribute(.font, value: f, range: decRange) }
-            if let c = ds.decimalsColor { attr.addAttribute(.foregroundColor, value: c, range: decRange) }
-
+            if let f = ds.decimalsFont { attr.addAttribute(.font,
+                                                           value: f,
+                                                           range: decRange) }
+            if let c = ds.decimalsColor { attr.addAttribute(.foregroundColor,
+                                                            value: c,
+                                                            range: decRange) }
             writeAttributed(button: button,
                             attributed: attr,
                             plain: formatted.text)

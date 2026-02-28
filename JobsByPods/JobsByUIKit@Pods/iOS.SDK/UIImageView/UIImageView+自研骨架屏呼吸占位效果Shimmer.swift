@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsImageTools
+import JobsSwiftBaseDefines
 //  ================================== 设计意图 ==================================
 //  统一「Shimmer Loading」与「兜底图(Fallback)」语义，避免与 Kingfisher/SDWebImage 自带 placeholder 重复：
 //  1) 没配置兜底图：请求中/失败 都持续 Shimmer（直到成功拿到图）
@@ -42,13 +43,8 @@ private enum JobsImageLoadingKeys {
 extension UIImageView {
     @inline(__always)
     private func jobs_runOnMain(_ work: @escaping (UIImageView) -> Void) {
-        if Thread.isMainThread {
+        jobsRunOnMain {
             work(self)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                work(self)
-            }
         }
     }
 }
@@ -57,19 +53,32 @@ extension UIImageView {
     // MARK: - JobsSimpleImageLoader 内部状态
     private var jobs_loadingURL: URL? {
         get { objc_getAssociatedObject(self, &JobsImageLoadingKeys.urlKey) as? URL }
-        set { objc_setAssociatedObject(self, &JobsImageLoadingKeys.urlKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsImageLoadingKeys.urlKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     private var jobs_loadingTask: URLSessionDataTask? {
         get { objc_getAssociatedObject(self, &JobsImageLoadingKeys.taskKey) as? URLSessionDataTask }
-        set { objc_setAssociatedObject(self, &JobsImageLoadingKeys.taskKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsImageLoadingKeys.taskKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     /// 开启“无图态呼吸”
     @inline(__always)
     public func jobs_beginShimmerLoading(config: JobsShimmerConfig = .default) {
         byShimmering(true, config: config)
         // 下一帧补一次 layout，确保动画能跑起来（尤其是 autolayout 尚未落位时）
-        DispatchQueue.main.async { [weak self] in
-            self?.jobs_updateShimmerLayout()
+        jobsRunOnMain { [weak self] in
+            guard let self else { return }
+            self.jobs_updateShimmerLayout()
         }
     }
     /// 结束“有图态”，关闭呼吸
@@ -177,7 +186,6 @@ extension UIImageView {
         shimmerConfig: JobsShimmerConfig = .default
     ) -> Self {
         let mode: JobsShimmerFallbackMode = fallback.map { .shimmerThenFallback($0) } ?? .shimmerOnly
-
         switch string.imageSource {
         case .remote(let url)?:
             jobs_remoteURL = url
@@ -236,7 +244,6 @@ extension UIImageView {
 // MARK: - SDWebImage
 #if canImport(SDWebImage)
 import SDWebImage
-
 extension UIImageView {
     /// 带 shimmer 的 SDWebImage 加载：
     /// - loading：只 shimmer

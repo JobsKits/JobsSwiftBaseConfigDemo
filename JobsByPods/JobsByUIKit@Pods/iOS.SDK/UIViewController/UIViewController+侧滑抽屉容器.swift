@@ -30,11 +30,9 @@ final class JobsSideDrawerGestureDelegate: NSObject, UIGestureRecognizerDelegate
             let owner,
             let pan = gestureRecognizer as? UIPanGestureRecognizer
         else { return true }
-
         let v = pan.velocity(in: owner.view)
         // 过滤竖向滚动（tableView）
         if abs(v.x) <= abs(v.y) { return false }
-
         // 关闭状态：只允许左边缘触发，避免列表横滑误触
         if !owner.isOpen {
             let loc = pan.location(in: owner.view)
@@ -56,7 +54,13 @@ public class JobsSideDrawerVC: UIViewController {
     private var currentOffset: CGFloat = 0
     private var panStartOffset: CGFloat = 0
     private lazy var panGR: UIPanGestureRecognizer = {
-        UIPanGestureRecognizer
+        UIPanGestureRecognizer()
+            .byMinTouches(1)
+            .byMaxTouches(1)
+            .byCancelsTouchesInView(true)
+            .byEnabled(true)
+            .byName("JobsSideDrawerPan")
+            .byDelegate(drawerGestureDelegate)
             .byConfig { [weak self] gr in
                 guard let self, let pan = gr as? UIPanGestureRecognizer else { return }
                 let translation = pan.translation(in: view)
@@ -89,24 +93,20 @@ public class JobsSideDrawerVC: UIViewController {
                     break
                 }
             }
-            .byMinTouches(1)
-            .byMaxTouches(1)
-            .byCancelsTouchesInView(true)
-            .byEnabled(true)
-            .byName("JobsSideDrawerPan")
-            .byDelegate(drawerGestureDelegate)
     }()
+    
     private lazy var dimTapGR: UITapGestureRecognizer = {
-        UITapGestureRecognizer
-            .byConfig { [weak self] _ in
-                self?.closeDrawer(animated: true)
-            }
+        UITapGestureRecognizer()
             .byTaps(1)
             .byTouches(1)
             .byCancelsTouchesInView(true)
             .byEnabled(true)
             .byName("JobsSideDrawerDimTap")
+            .byConfig { [weak self] _ in
+                self?.closeDrawer(animated: true)
+            }
     }()
+    
     private lazy var menuContainerView: UIView = {
         UIView()
             .byBackgroundColor(JobsCor.systemBackground)
@@ -115,16 +115,18 @@ public class JobsSideDrawerVC: UIViewController {
                 make.width.equalTo(self.menuWidth)
             }
     }()
+    
     private lazy var contentContainerView: UIView = {
         UIView()
             .byBackgroundColor(.clear)
+            .jobs_addGestureRetView(panGR)
             .byAddTo(view) { [unowned self] make in
                 make.top.bottom.equalToSuperview()
                 make.width.equalToSuperview()
                 self.contentLeadingConstraint = make.left.equalToSuperview().constraint
             }
-            .jobs_addGestureRetView(panGR)
     }()
+    
     private lazy var dimView: UIView = {
         UIView()
             .byBackgroundColor(.black.withAlphaComponent(0.35))
@@ -133,9 +135,9 @@ public class JobsSideDrawerVC: UIViewController {
             .byVisible(NO) // ✅ 默认隐藏，打开时 byVisible(YES)
     }()
 
-   public init(menuVC: UIViewController,
-         mainVC: UIViewController,
-         menuWidth: CGFloat = JobsSideDrawerVC.defaultMenuWidth) {
+    public init(menuVC: UIViewController,
+                mainVC: UIViewController,
+                menuWidth: CGFloat = JobsSideDrawerVC.defaultMenuWidth) {
         self.menuVC = menuVC
         self.mainVC = mainVC
         self.menuWidth = menuWidth
@@ -250,7 +252,7 @@ extension UIViewController {
     }
     /// 在父控制器链路里找 JobsMainPushProviding，找到就返回主内容 nav
     public func jobs_findMainNavFromAncestors(closeDrawer: Bool = true,
-                                      animated: Bool = true) -> UINavigationController? {
+                                              animated: Bool = true) -> UINavigationController? {
         // 1) 先用你现成的 jobsSideDrawer（沿 parent 找）
         if let drawer = self.jobsSideDrawer,
            let nav = drawer.jobs_mainNavForPush {

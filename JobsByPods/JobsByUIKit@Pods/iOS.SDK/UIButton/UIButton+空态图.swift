@@ -16,11 +16,20 @@ import UIKit
 import SnapKit
 public var _jobsEmptyLayoutKey: UInt8 = 0
 extension UIButton {
-    public typealias JobsEmptyLayout = (_ btn: UIButton, _ make: ConstraintMaker, _ host: UIScrollView) -> Void
+    
+    public typealias JobsEmptyLayout = (_ btn: UIButton,
+                                        _ make: ConstraintMaker,
+                                        _ host: UIScrollView) -> Void
     /// 内部读取：UIScrollView._jobs_attachEmptyButton 会使用
     public var _jobsEmptyLayout: JobsEmptyLayout? {
         get { objc_getAssociatedObject(self, &_jobsEmptyLayoutKey) as? JobsEmptyLayout }
-        set { objc_setAssociatedObject(self, &_jobsEmptyLayoutKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsEmptyLayoutKey,
+                newValue,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
     }
     /// 链式：设置空态按钮的自定义布局
     @discardableResult

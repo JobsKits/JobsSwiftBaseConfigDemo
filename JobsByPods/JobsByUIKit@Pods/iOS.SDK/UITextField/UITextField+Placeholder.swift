@@ -40,7 +40,7 @@ extension UITextField {
     @discardableResult
     public func byPlaceholderColor(_ color: UIColor) -> Self {
         if let label = jobs_placeholderLabel_byRuntime() {
-            label.textColor = color
+            label.byTextColor(color)
         } else {
             jobs_applyAttributedPlaceholder(color: color, font: nil) // 兜底
         };return self
@@ -49,7 +49,7 @@ extension UITextField {
     @discardableResult
     public func byPlaceholderFont(_ font: UIFont) -> Self {
         if let label = jobs_placeholderLabel_byRuntime() {
-            label.font = font
+            label.byFont(font)
         } else {
             jobs_applyAttributedPlaceholder(color: nil, font: font) // 兜底
         };return self
@@ -57,9 +57,7 @@ extension UITextField {
     /// 更接近 OC 的方式：通过 runtime 取 ivar，再 object_getIvar
     fileprivate func jobs_placeholderLabel_byRuntime() -> UILabel? {
         // 有的系统叫 _placeholderLabel，有的可能叫 placeholderLabel（通常是前者）
-        let candidates = ["_placeholderLabel", "placeholderLabel"]
-
-        for name in candidates {
+        for name in ["_placeholderLabel", "placeholderLabel"] {
             if let ivar = class_getInstanceVariable(UITextField.self, name) {
                 return object_getIvar(self, ivar) as? UILabel
             }

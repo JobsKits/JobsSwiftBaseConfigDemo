@@ -38,7 +38,12 @@ extension UIButton {
             return _JobsLegacyImagePlacement(rawValue: v) ?? .none
         }
         set {
-            objc_setAssociatedObject(self, &_jobsLegacyImagePlacementKey, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsLegacyImagePlacementKey,
+                newValue.rawValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
     // MARK: - Legacy Insets Shift Helper (iOS 14 and below)
@@ -251,12 +256,24 @@ extension UIButton {
     // MARK: - state -> UIFont
     private var _titleFontDict: [UInt: UIFont] {
         get { (objc_getAssociatedObject(self, &_jobsTitleFontDictKey) as? [UInt: UIFont]) ?? [:] }
-        set { objc_setAssociatedObject(self, &_jobsTitleFontDictKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitleFontDictKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     // MARK: - state -> UIColor (Title color)
     private var _titleColorDict: [UInt: UIColor] {
         get { (objc_getAssociatedObject(self, &_jobsTitleColorDictKey) as? [UInt: UIColor]) ?? [:] }
-        set { objc_setAssociatedObject(self, &_jobsTitleColorDictKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitleColorDictKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     // MARK: - Configuration patch list
     @available(iOS 15.0, tvOS 15.0, *)
@@ -265,7 +282,13 @@ extension UIButton {
     @available(iOS 15.0, tvOS 15.0, *)
     private var _jobsCfgPatches: [_JobsCfgPatch] {
         get { (objc_getAssociatedObject(self, &_jobsConfigPatchListKey) as? [_JobsCfgPatch]) ?? [] }
-        set { objc_setAssociatedObject(self, &_jobsConfigPatchListKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsConfigPatchListKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     /// iOS15+：注册一个 configuration patch（会在 update handler 内执行）
     @available(iOS 15.0, tvOS 15.0, *)
@@ -283,7 +306,8 @@ extension UIButton {
             self,
             &_jobsConfigPatchHandlerInstalledKey,
             true,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         self.automaticallyUpdatesConfiguration = true
         // 保存旧 handler（避免递归）
         let previousHandler = self.configurationUpdateHandler
@@ -412,11 +436,15 @@ extension UIButton {
         }
 
         @discardableResult
-        public func backgroundImage(_ image: UIImage?) -> UIButton { button.setBackgroundImage(image, for: state); return button
+        public func backgroundImage(_ image: UIImage?) -> UIButton {
+            button.setBackgroundImage(image, for: state)
+            return button
         }
 
         @discardableResult
-        public func subTitle(_ text: String?) -> UIButton { button.bySubTitle(text, for: state) }
+        public func subTitle(_ text: String?) -> UIButton {
+            button.bySubTitle(text, for: state)
+        }
         /// 副标题富文本（按 state）
         @discardableResult
         public func attributedSubTitle(_ text: NSAttributedString?) -> UIButton {
@@ -519,7 +547,8 @@ extension UIButton {
                 self,
                 &_jobsTitleEdgeInsets15Key,
                 insets,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
         } else {
@@ -648,8 +677,14 @@ extension UIButton {
             _jobsLegacyImagePlacement = .none
             // 默认就是左图右文：只做间距 + 轻量内边距
             imageEdgeInsets = .zero
-            titleEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: -padding)
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
+            titleEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: padding,
+                                           bottom: 0,
+                                           right: -padding)
+            contentEdgeInsets = UIEdgeInsets(top: 0,
+                                             left: padding / 2,
+                                             bottom: 0,
+                                             right: padding / 2)
         case .right:
             _jobsLegacyImagePlacement = .right
             _jobsLegacyImagePlacement = .none

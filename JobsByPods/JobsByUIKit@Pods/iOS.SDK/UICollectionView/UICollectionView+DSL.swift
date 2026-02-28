@@ -26,7 +26,8 @@ extension UICollectionView {
     }
     // MARK: - 选择/取消选择
     @discardableResult
-    public func bySelectItem(_ indexPath: IndexPath?, animated: Bool = true,
+    public func bySelectItem(_ indexPath: IndexPath?,
+                             animated: Bool = true,
                              scrollPosition: UICollectionView.ScrollPosition = []) -> Self {
         selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
         return self

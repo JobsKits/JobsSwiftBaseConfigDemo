@@ -31,7 +31,14 @@ private var _timerStateDidChangeKey: UInt8 = 0
 extension UIButton {
     public var timer: JobsSwiftTimerProtocol? {
         get { objc_getAssociatedObject(self, &_timerCoreKey) as? JobsSwiftTimerProtocol }
-        set { objc_setAssociatedObject(self, &_timerCoreKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_timerCoreKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     public var timerState: TimerState {
@@ -80,15 +87,23 @@ extension UIButton {
                                                   _ current: Int,
                                                   _ total: Int?,
                                                   _ kind: JobsTimerKind) -> Void) -> Self {
-        objc_setAssociatedObject(self, &_timerTickAnyKey, handler, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_timerTickAnyKey,
+            handler,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
 
     @discardableResult
     public func onTimerFinish(_ handler: @escaping (_ button: UIButton,
                                                     _ kind: JobsTimerKind) -> Void) -> Self {
-        objc_setAssociatedObject(self, &_timerFinishAnyKey, handler, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_timerFinishAnyKey,
+            handler,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
 
     @discardableResult
@@ -96,7 +111,7 @@ extension UIButton {
                                                       _ remain: Int,
                                                       _ total: Int,
                                                       _ kind: JobsTimerKind) -> Void) -> Self {
-        return onTimerTick { btn, current, totalOpt, kind in
+        onTimerTick { btn, current, totalOpt, kind in
             if let total = totalOpt { handler(btn, current, total, kind) }
         }
     }
@@ -104,7 +119,7 @@ extension UIButton {
     @discardableResult
     public func onCountdownFinish(_ handler: @escaping (_ button: UIButton,
                                                         _ kind: JobsTimerKind) -> Void) -> Self {
-        return onTimerFinish(handler)
+        onTimerFinish(handler)
     }
     // MARK: - Start / Pause / Resume / Stop
     @discardableResult
@@ -118,26 +133,35 @@ extension UIButton {
         let kind = kind ?? .gcd
         stopTimer()
         if let total {
-            objc_setAssociatedObject(self, &_timerModeKey,
-                                     _TimerMode.countdown(remain: total, total: total),
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_timerModeKey,
+                _TimerMode.countdown(remain: total, total: total),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
             isEnabled = false
             onStartBlock?(self)
         } else {
-            objc_setAssociatedObject(self, &_timerModeKey,
-                                     _TimerMode.countUp(elapsed: 0),
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            onStartBlock?(self)
+            objc_setAssociatedObject(
+                self,
+                &_timerModeKey,
+                _TimerMode.countUp(elapsed: 0),
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            );onStartBlock?(self)
         }
-        objc_setAssociatedObject(self, &_timerKindKey, kind, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        let cfg = JobsSwiftTimerConfig(
-            interval: interval,
-            repeats: true,
-            tolerance: 0.01,
-            queue: .main
+        objc_setAssociatedObject(
+            self,
+            &_timerKindKey,
+            kind,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-        // ✅ 新版 JobsSwiftTimer：直接 new（不再用 JobsTimerFactory.make）
-        let core = JobsTimer(kind: kind, config: cfg) { [weak self] in
+        let core = JobsTimer(kind: kind,
+                             config: JobsSwiftTimerConfig(
+                                interval: interval,
+                                repeats: true,
+                                tolerance: 0.01,
+                                queue: .main))
+        { [weak self] in
             guard let self else { return }
             // ✅ Swift 6：handler 是 @Sendable，触 UI 统一回 MainActor
             jobsRunOnMain(self) { vc in
@@ -148,7 +172,12 @@ extension UIButton {
                 case .countUp(let elapsed0):
                     let elapsed = elapsed0 + 1
                     mode = .countUp(elapsed: elapsed)
-                    objc_setAssociatedObject(self, &_timerModeKey, mode, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                    objc_setAssociatedObject(
+                        self,
+                        &_timerModeKey,
+                        mode,
+                        .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                    )
 
                     self.setTitle("\(elapsed)", for: .normal)
 
@@ -161,7 +190,12 @@ extension UIButton {
                     let remain = remain0 - 1
                     if remain > 0 {
                         mode = .countdown(remain: remain, total: total)
-                        objc_setAssociatedObject(self, &_timerModeKey, mode, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                        objc_setAssociatedObject(
+                            self,
+                            &_timerModeKey,
+                            mode,
+                            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                        )
 
                         self.setTitle("\(remain)s", for: .normal)
 
@@ -224,10 +258,12 @@ extension UIButton {
             case .countUp(let elapsed0):
                 let elapsed = elapsed0 + 1
                 mode = .countUp(elapsed: elapsed)
-                objc_setAssociatedObject(self,
-                                         &_timerModeKey,
-                                         mode,
-                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(
+                    self,
+                    &_timerModeKey,
+                    mode,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
                 self.setTitle("\(elapsed)", for: .normal)
                 if let tick = objc_getAssociatedObject(self, &_timerTickAnyKey)
                     as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
@@ -237,10 +273,12 @@ extension UIButton {
                 let remain = remain0 - 1
                 if remain > 0 {
                     mode = .countdown(remain: remain, total: total)
-                    objc_setAssociatedObject(self,
-                                             &_timerModeKey,
-                                             mode,
-                                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                    objc_setAssociatedObject(
+                        self,
+                        &_timerModeKey,
+                        mode,
+                        .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                    )
                     self.setTitle("\(remain)s", for: .normal)
                     if let tick = objc_getAssociatedObject(self, &_timerTickAnyKey)
                         as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
@@ -276,7 +314,12 @@ extension UIButton {
         timer?.stop()
         timer = nil
 
-        objc_setAssociatedObject(self, &_timerModeKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_timerModeKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
 
         timerState = .stopped
 
@@ -329,13 +372,21 @@ extension UIButton {
 
     @discardableResult
     public func onJobsCountdownTick(_ block: @escaping (_ remain: Int, _ total: Int) -> Void) -> Self {
-        objc_setAssociatedObject(self, &_legacyCountdownTickKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_legacyCountdownTickKey,
+            block,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
 
     @discardableResult
     public func onJobsCountdownFinish(_ block: @escaping jobsByVoidBlock) -> Self {
-        objc_setAssociatedObject(self, &_legacyCountdownFinishKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_legacyCountdownFinishKey,
+            block,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
 }

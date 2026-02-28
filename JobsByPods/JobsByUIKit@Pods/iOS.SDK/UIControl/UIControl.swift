@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftBlock
 
 public final class _JobsClosureWrapper: NSObject {
+    
     private let closure: jobsByVoidBlock
 
     init(_ closure: @escaping jobsByVoidBlock) {

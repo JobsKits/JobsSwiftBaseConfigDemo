@@ -57,10 +57,11 @@ extension UIView {
             objc_getAssociatedObject(self, &JobsFuseKeys.processKey) as? JobsSwiftTimerCountdown
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &JobsFuseKeys.processKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsFuseKeys.processKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
@@ -69,10 +70,11 @@ extension UIView {
             objc_getAssociatedObject(self, &JobsFuseKeys.layerKey) as? CAShapeLayer
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &JobsFuseKeys.layerKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsFuseKeys.layerKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
@@ -81,10 +83,11 @@ extension UIView {
             objc_getAssociatedObject(self, &JobsFuseKeys.configKey) as? JobsFuseConfig
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &JobsFuseKeys.configKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsFuseKeys.configKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
@@ -93,10 +96,11 @@ extension UIView {
             objc_getAssociatedObject(self, &JobsFuseKeys.completionKey) as? (() -> Void)
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &JobsFuseKeys.completionKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsFuseKeys.completionKey,
+                newValue,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     // MARK: - 公共 API
@@ -121,7 +125,9 @@ extension UIView {
                                         config: JobsFuseConfig = JobsFuseConfig(),
                                         finished: (() -> Void)? = nil) -> JobsSwiftTimerCountdown? {
         layoutIfNeeded()
-        guard bounds.width > 0, bounds.height > 0, duration > 0 else {
+        guard bounds.width > 0,
+              bounds.height > 0,
+              duration > 0 else {
             // 没尺寸或者 duration <= 0，直接清掉
             jobs_cancelFuseCountdown()
             finished?()
@@ -131,35 +137,31 @@ extension UIView {
         jobs_cancelFuseCountdown(removeLayer: false)
         jobs_fuseConfig = config
         jobs_fuseCompletion = finished
-
         // 拿到 / 创建 Layer
         let fuseLayer: CAShapeLayer
         if let existing = jobs_fuseLayer {
             fuseLayer = existing
         } else {
             fuseLayer = CAShapeLayer()
-            fuseLayer.fillColor = UIColor.clear.cgColor
-            fuseLayer.lineCap = .round
-            layer.addSublayer(fuseLayer)
+                .byFillColor(.clear)
+                .byLineCap(.round)
+                .byAddSublayer(layer)
             jobs_fuseLayer = fuseLayer
         }
-        // 配置 Layer 几何与样式
-        fuseLayer.frame = bounds
-
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
         let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
-
-        fuseLayer.path = path.cgPath
-        fuseLayer.lineWidth = config.lineWidth
-        fuseLayer.strokeColor = config.color.cgColor
-
+        // 配置 Layer 几何与样式
+        fuseLayer
+            .byFrame(bounds)
+            .byPath(path.cgPath)
+            .byLineWidth(config.lineWidth)
+            .byStrokeColor(config.color)
         // 重置到“满格”状态（禁用隐式动画）
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        fuseLayer.strokeStart = 0
-        fuseLayer.strokeEnd = 1
+        fuseLayer.byStrokeStart(0).byStrokeEnd(1)
         CATransaction.commit()
         // 用 CABasicAnimation 按方向动 strokeStart / strokeEnd
         let animKey = "jobsFuseStroke"
@@ -167,7 +169,6 @@ extension UIView {
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in
             guard let self else { return }
-
             if config.removeOnFinish {
                 self.jobs_removeFuseLayer()
             } else {
@@ -186,24 +187,18 @@ extension UIView {
         switch config.direction {
         case .counterClockwise:
             // 旧行为：尾巴往回缩，视觉上逆时针烧
-            anim = CABasicAnimation(keyPath: "strokeEnd")
-            anim.fromValue = 1.0
-            anim.toValue = 0.0
+            anim = CABasicAnimation(keyPath: "strokeEnd").byFromValue(1.0).byToValue(0.0)
         case .clockwise:
             // 固定 end = 1，头往前推，视觉上顺时针烧
-            anim = CABasicAnimation(keyPath: "strokeStart")
-            anim.fromValue = 0.0
-            anim.toValue = 1.0
+            anim = CABasicAnimation(keyPath: "strokeStart").byFromValue(0.0).byToValue(1.0)
         }
 
-        anim.duration = duration
-        anim.timingFunction = CAMediaTimingFunction(name: .linear)
-        anim.fillMode = .forwards
-        anim.isRemovedOnCompletion = false
-
+        anim.byDuration(duration)
+            .byTimingFunction(CAMediaTimingFunction(name: .linear))
+            .byFillMode(.forwards)
+            .byRemovedOnCompletion(false)
         fuseLayer.add(anim, forKey: animKey)
         CATransaction.commit()
-
         // 现在不再依赖 JobsSwiftTimerCountdown，直接返回 nil 即可
         jobs_fuseProcess = nil
         return nil
@@ -225,12 +220,11 @@ extension UIView {
         guard let fuseLayer = jobs_fuseLayer,
               let config = jobs_fuseConfig else { return }
         layoutIfNeeded()
-        fuseLayer.frame = bounds
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
         let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
-        fuseLayer.path = path.cgPath
+        fuseLayer.byFrame(bounds).byPath(path.cgPath)
     }
     // MARK: - Private
     private func jobs_removeFuseLayer() {
@@ -254,21 +248,20 @@ extension UIView {
             fuseLayer = existing
         } else {
             fuseLayer = CAShapeLayer()
-            fuseLayer.fillColor = UIColor.clear.cgColor
-            fuseLayer.lineCap = .round
-            layer.addSublayer(fuseLayer)
+                .byFillColor(.clear)
+                .byLineCap(.round)
+                .byAddSublayer(layer)
             jobs_fuseLayer = fuseLayer
         }
         // 配置几何与样式（复用你倒计时的 path 计算方式）
-        fuseLayer.frame = bounds
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
         let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
-
-        fuseLayer.path = path.cgPath
-        fuseLayer.lineWidth = config.lineWidth
-        fuseLayer.strokeColor = config.color.cgColor
+        fuseLayer.byFrame(bounds)
+            .byPath(path.cgPath)
+            .byLineWidth(config.lineWidth)
+            .byStrokeColor(config.color)
         // progress 初始=0（禁用隐式动画）
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -286,7 +279,6 @@ extension UIView {
     /// 更新外圈 progress（0...1）
     public func jobs_updateFuseProgress(_ progress: CGFloat, animated: Bool = false) {
         let p = max(0, min(1, progress))
-
         guard let fuseLayer = jobs_fuseLayer else {
             // 没准备过就先准备（用默认 config）
             jobs_prepareFuseProgress()
@@ -298,17 +290,15 @@ extension UIView {
             jobs_updateFuseProgress(p, animated: animated)
             return
         }
-
         CATransaction.begin()
         CATransaction.setDisableActions(!animated)
         switch config.direction {
         case .clockwise:
-            fuseLayer.strokeStart = 0
-            fuseLayer.strokeEnd = p
+            fuseLayer.byStrokeStart(0)
+                .byStrokeEnd(p)
         case .counterClockwise:
             // 反向增长：露出“尾部”那一段
-            fuseLayer.strokeStart = 1 - p
-            fuseLayer.strokeEnd = 1
+            fuseLayer.byStrokeStart(1 - p).byStrokeEnd(1)
         }
         CATransaction.commit()
     }

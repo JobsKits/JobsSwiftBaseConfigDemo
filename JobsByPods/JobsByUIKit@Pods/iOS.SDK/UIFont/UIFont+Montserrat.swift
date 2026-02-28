@@ -9,6 +9,7 @@ import UIKit
 #endif
 
 extension UIFont {
+    
     public enum Montserrat {
 
         public static func Regular(_ size: CGFloat) -> UIFont {

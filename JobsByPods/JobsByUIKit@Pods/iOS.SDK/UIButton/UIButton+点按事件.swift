@@ -116,13 +116,12 @@ extension UIButton {
         }
     }
     // 确保「统一长按入口」的手势已经挂上
-    private func jobs_ensureLongPressRecognizer(minimumPressDuration: TimeInterval) {
+    private func jobs_ensureLongPressRecognizer(minimumPressDuration: TimeInterval) -> Self {
         if let existing = (gestureRecognizers ?? [])
             .compactMap({ $0 as? UILongPressGestureRecognizer })
             .first(where: { objc_getAssociatedObject($0, &kJobsUIButtonLongPressSleeveKey) != nil }) {
-
             existing.minimumPressDuration = minimumPressDuration
-            return
+            return self
         }
 
         let gr = UILongPressGestureRecognizer(target: nil, action: nil)
@@ -133,7 +132,6 @@ extension UIButton {
             sleeve,
             action: #selector(_JobsButtonLongPressSleeve.invoke(_:))
         )
-
         // 用全局指针 key 标记这是我们挂的 GR，clone 时也能保留 sleeve
         objc_setAssociatedObject(
             gr,
@@ -144,6 +142,7 @@ extension UIButton {
 
         addGestureRecognizer(gr)
         isUserInteractionEnabled = true
+        return self
     }
 }
 // MARK: - 闭包回调（低版本兜底）（保留）
@@ -152,7 +151,12 @@ extension UIButton {
     @discardableResult
     private func _bindTapClosure(_ action: @escaping jobsByBtnBlock,
                                  for events: UIControl.Event = .touchUpInside) -> Self {
-        objc_setAssociatedObject(self, &actionKey, action, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &actionKey,
+            action,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        )
         removeTarget(self, action: #selector(_jobsHandleAction(_:)), for: events)
         addTarget(self, action: #selector(_jobsHandleAction(_:)), for: events)
         return self
@@ -251,8 +255,6 @@ extension UIButton {
             }
         } else {
             jobsLongPressBlock = handler
-        }
-        jobs_ensureLongPressRecognizer(minimumPressDuration: minimumPressDuration)
-        return self
+        };return jobs_ensureLongPressRecognizer(minimumPressDuration: minimumPressDuration)
     }
 }

@@ -29,17 +29,37 @@ public var _jobsCfgBgImageKey: UInt8 = 0
 extension UIButton {
     public var jobs_cfgBgImage: UIImage? {
         get { objc_getAssociatedObject(self, &_jobsCfgBgImageKey) as? UIImage }
-        set { objc_setAssociatedObject(self, &_jobsCfgBgImageKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsCfgBgImageKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     // no-attr dict
     public var _subDict_noAttr: [UInt: _JobsSubPackNoAttr] {
         get { (objc_getAssociatedObject(self, &_jobsSubDictKey_noAttr) as? [UInt: _JobsSubPackNoAttr]) ?? [:] }
-        set { objc_setAssociatedObject(self, &_jobsSubDictKey_noAttr, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsSubDictKey_noAttr,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     // attr dict
     public var _subDict_attr: [UInt: _JobsSubPackAttr] {
         get { (objc_getAssociatedObject(self, &_jobsSubDictKey_attr) as? [UInt: _JobsSubPackAttr]) ?? [:] }
-        set { objc_setAssociatedObject(self, &_jobsSubDictKey_attr, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsSubDictKey_attr,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
     // MARK: packs
     public func _subPack_noAttr(for state: UIControl.State, create: Bool = true) -> _JobsSubPackNoAttr {

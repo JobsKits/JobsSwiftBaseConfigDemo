@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
 internal enum JobsButtonImageLoader: UInt8 {
     case sd = 1
@@ -45,7 +45,12 @@ extension UIButton {
         let key = (UInt64(loader.rawValue) << 56) | (UInt64(channel.rawValue) << 48) | UInt64(state.rawValue)
         let next = (map[key] ?? 0) + 1
         map[key] = next
-        objc_setAssociatedObject(self, &_JobsButtonTokenAOKey.tokenMap, map, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsButtonTokenAOKey.tokenMap,
+            map,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         return next
     }
 

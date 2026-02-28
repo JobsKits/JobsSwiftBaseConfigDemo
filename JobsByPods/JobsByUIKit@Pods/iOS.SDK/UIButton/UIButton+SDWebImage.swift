@@ -39,31 +39,43 @@ private enum _SDButtonAOKey {
 extension UIButton {
     private var _sd_config: SDButtonLoadConfig {
         get { (objc_getAssociatedObject(self, &_SDButtonAOKey.config) as? SDButtonLoadConfig) ?? SDButtonLoadConfig() }
-        set { objc_setAssociatedObject(self, &_SDButtonAOKey.config, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_SDButtonAOKey.config,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 }
 
 extension UIButton {
+    
     @discardableResult
     private func _sd_setImageURL(_ url: URL?) -> Self {
         var c = _sd_config; c.url = url; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setPlaceholder(_ img: UIImage?) -> Self {
         var c = _sd_config; c.placeholder = img; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setBgPlaceholder(_ img: UIImage?) -> Self {
         var c = _sd_config; c.bgPlaceholder = img; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setOptions(_ opts: SDWebImageOptions) -> Self {
         var c = _sd_config; c.options = opts; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setContext(_ ctx: [SDWebImageContextOption: Any]?) -> Self {
         var c = _sd_config; c.context = ctx; _sd_config = c
@@ -74,16 +86,19 @@ extension UIButton {
         var c = _sd_config; c.progress = block; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setCompleted(_ block: SDExternalCompletionBlock?) -> Self {
         var c = _sd_config; c.completed = block; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setTargetSize(_ size: CGSize?) -> Self {
         var c = _sd_config; c.targetSize = size; _sd_config = c
         return self
     }
+    
     @discardableResult
     private func _sd_setBgTargetSize(_ size: CGSize?) -> Self {
         var c = _sd_config; c.bgTargetSize = size; _sd_config = c
@@ -92,9 +107,12 @@ extension UIButton {
 }
 
 extension UIButton {
+    
     @discardableResult
     public func sd_imageURL(_ url: URL?) -> Self {
-        _sd_setImageURL(url) }
+        _sd_setImageURL(url)
+    }
+    
     @discardableResult
     public func sd_imageURL(_ urlString: String?) -> Self {
         guard let s = urlString, let u = URL(string: s)
@@ -102,6 +120,7 @@ extension UIButton {
             return _sd_setImageURL(nil)
         };return _sd_setImageURL(u)
     }
+    
     @discardableResult
     public func sd_placeholderImage(_ img: UIImage?) -> Self {
         _sd_setPlaceholder(img)
@@ -111,18 +130,22 @@ extension UIButton {
     public func sd_placeholderBgImage(_ img: UIImage?) -> Self {
         _sd_setBgPlaceholder(img)
     }
+    
     @discardableResult
     public func sd_options(_ opts: SDWebImageOptions) -> Self {
         _sd_setOptions(opts)
     }
+    
     @discardableResult
     public func sd_context(_ ctx: [SDWebImageContextOption: Any]?) -> Self {
         _sd_setContext(ctx)
     }
+    
     @discardableResult
     public func sd_progress(_ block: SDImageLoaderProgressBlock?) -> Self {
         _sd_setProgress(block)
     }
+    
     @discardableResult
     public func sd_completed(_ block: SDExternalCompletionBlock?) -> Self {
         _sd_setCompleted(block)
@@ -143,68 +166,81 @@ extension UIButton {
         _sd_loadImage(for: .normal)
         return self
     }
+    
     @discardableResult
     public func sd_highlightedLoad() -> Self {
         _sd_loadImage(for: .highlighted)
         return self
     }
+    
     @discardableResult
     public func sd_disabledLoad() -> Self {
         _sd_loadImage(for: .disabled)
         return self
     }
+    
     @discardableResult
     public func sd_selectedLoad() -> Self {
         _sd_loadImage(for: .selected)
         return self
     }
+    
     @available(iOS 9.0, *)
     @discardableResult
     public func sd_focusedLoad() -> Self {
         _sd_loadImage(for: .focused)
         return self
     }
+    
     @discardableResult
     public func sd_applicationLoad() -> Self {
         _sd_loadImage(for: .application)
         return self
     }
+    
     @discardableResult
     public func sd_reservedLoad() -> Self {
         _sd_loadImage(for: .reserved)
         return self
     }
+    
     @discardableResult
     public func sd_bgNormalLoad() -> Self {
         _sd_loadBackgroundImage(for: .normal)
         return self
     }
+    
     @discardableResult
     public func sd_bgHighlightedLoad() -> Self {
         _sd_loadBackgroundImage(for: .highlighted)
         return self
     }
+    
     @discardableResult
     public func sd_bgDisabledLoad() -> Self {
         _sd_loadBackgroundImage(for: .disabled)
         return self
     }
+    
     @discardableResult
     public func sd_bgSelectedLoad() -> Self {
         _sd_loadBackgroundImage(for: .selected)
         return self
     }
+    
     @available(iOS 9.0, *)
     @discardableResult
     public func sd_bgFocusedLoad() -> Self {
         _sd_loadBackgroundImage(for: .focused)
         return self
     }
+    
     @discardableResult
     public func sd_bgApplicationLoad() -> Self {
         _sd_loadBackgroundImage(for: .application)
         return self
     }
+    
     @discardableResult
     public func sd_bgReservedLoad() -> Self {
         _sd_loadBackgroundImage(for: .reserved)
@@ -246,7 +282,10 @@ extension UIButton {
             self.jobs_remoteURL = nil
             // URL 解析失败也视为失败：直接落兜底（不需要 shimmer）
             _jobs_runOnMain { btn in
-                guard btn._jobs_isCurrentToken(token, loader: .sd, channel: .foreground, for: state) else { return }
+                guard btn._jobs_isCurrentToken(token,
+                                               loader: .sd,
+                                               channel: .foreground,
+                                               for: state) else { return }
                 btn._jobs_stopForegroundShimmer()
                 btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
             };return
@@ -255,7 +294,10 @@ extension UIButton {
         // ✅ 折中策略：先灌入兜底图（或透明占位）把前景 imageView 撑开 → 再盖 overlay 做 shimmer
         // 这样 overlay 的 frame 可以直接跟随系统最终算出来的 imageView/frame。
         _jobs_runOnMain { btn in
-            guard btn._jobs_isCurrentToken(token, loader: .sd, channel: .foreground, for: state) else { return }
+            guard btn._jobs_isCurrentToken(token,
+                                           loader: .sd,
+                                           channel: .foreground,
+                                           for: state) else { return }
             btn._jobs_forceSetForegroundImage(loadingPlaceholder, for: state)
             btn.setNeedsLayout()
             btn.layoutIfNeeded()
@@ -280,7 +322,10 @@ extension UIButton {
         ) { [weak self] img, err, cacheType, imageURL in
             guard let self else { return }
             self._jobs_runOnMain { btn in
-                guard btn._jobs_isCurrentToken(token, loader: .sd, channel: .foreground, for: state) else { return }
+                guard btn._jobs_isCurrentToken(token,
+                                               loader: .sd,
+                                               channel: .foreground,
+                                               for: state) else { return }
                 let nsErr = err as NSError?
                 let isCancelled = (nsErr?.domain == SDWebImageErrorDomain && nsErr?.code == SDWebImageError.cancelled.rawValue)
                 if isCancelled {

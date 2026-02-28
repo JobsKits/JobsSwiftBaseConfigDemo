@@ -38,27 +38,89 @@ public struct RTBadgeConfig {
 }
 
 public extension RTBadgeConfig {
-    @discardableResult func byOffset(_ v: UIOffset = .init(horizontal: -6, vertical: 6)) -> Self { var c=self; c.offset=v; return c }
-    @discardableResult func byInsets(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self { var c=self; c.insets=v; return c }
-    @discardableResult func byInset(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self { var c=self; c.insets=v; return c }
-    @discardableResult func byBackgroundColor(_ v: UIColor = .systemRed) -> Self { var c=self; c.backgroundColor=v; return c }
-    @discardableResult func byTextColor(_ v: UIColor = .white) -> Self { var c=self; c.textColor=v; return c }
-    @discardableResult func byFont(_ v: UIFont = .systemFont(ofSize: 11, weight: .bold)) -> Self { var c=self; c.font=v; return c }
-    @discardableResult func byCornerRadius(_ v: CGFloat? = nil) -> Self { var c=self; c.cornerRadius=v; return c }
-    @discardableResult func byBorder(color: UIColor? = nil, width: CGFloat = 0) -> Self { var c=self; c.borderColor=color; c.borderWidth=width; return c }
-    @discardableResult func byMaxWidth(_ v: CGFloat = 200) -> Self { var c=self; c.maxWidth=v; return c }
-    @discardableResult func byZIndex(_ v: CGFloat = 9999) -> Self { var c=self; c.zIndex=v; return c }
+    
     @discardableResult
-    func byShadow(color: UIColor? = UIColor.black.withAlphaComponent(0.25),
-                  radius: CGFloat = 2,
-                  opacity: Float = 0.6,
-                  offset: CGSize = .init(width: 0, height: 1)) -> Self {
-        var c = self
-        c.shadowColor = color
-        c.shadowRadius = radius
-        c.shadowOpacity = opacity
-        c.shadowOffset = offset
-        return c
+    func byOffset(_ v: UIOffset = .init(horizontal: -6, vertical: 6)) -> Self {
+        var c = self; c.offset = v; return c
+    }
+    
+    @discardableResult
+    func byInsets(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self {
+        var c = self; c.insets = v; return c
+    }
+    
+    @discardableResult
+    func byInset(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self {
+        var c = self; c.insets = v; return c
+    }
+    
+    @discardableResult
+    func byBackgroundColor(_ v: UIColor = .systemRed) -> Self {
+        var c = self; c.backgroundColor = v; return c
+    }
+    
+    @discardableResult
+    func byTextColor(_ v: UIColor = .white) -> Self {
+        var c = self; c.textColor = v; return c
+    }
+    
+    @discardableResult
+    func byFont(_ v: UIFont = .systemFont(ofSize: 11, weight: .bold)) -> Self {
+        var c = self; c.font = v; return c
+    }
+    
+    @discardableResult
+    func byCornerRadius(_ v: CGFloat? = nil) -> Self {
+        var c = self; c.cornerRadius = v; return c
+    }
+    
+    @discardableResult
+    func byBorder(color: UIColor? = nil, width: CGFloat = 0) -> Self {
+        var c = self; c.borderColor = color; c.borderWidth = width; return c
+    }
+    
+    @discardableResult
+    func byMaxWidth(_ v: CGFloat = 200) -> Self {
+        var c = self; c.maxWidth = v; return c
+    }
+    
+    @discardableResult
+    func byZIndex(_ v: CGFloat = 9999) -> Self {
+        var c = self; c.zIndex = v; return c
+    }
+
+    @discardableResult
+    func byShadowColor(_ v: UIColor?) -> Self {
+        var c = self; c.shadowColor = v; return c
+    }
+
+    @discardableResult
+    func byShadowRadius(_ v: CGFloat) -> Self {
+        var c = self; c.shadowRadius = v; return c
+    }
+
+    @discardableResult
+    func byShadowOpacity(_ v: Float) -> Self {
+        var c = self; c.shadowOpacity = v; return c
+    }
+
+    @discardableResult
+    func byShadowOffset(_ v: CGSize) -> Self {
+        var c = self; c.shadowOffset = v; return c
+    }
+
+    @discardableResult
+    func byShadow(
+        color: UIColor? = UIColor.black.withAlphaComponent(0.25),
+        radius: CGFloat = 2,
+        opacity: Float = 0.6,
+        offset: CGSize = .init(width: 0, height: 1)
+    ) -> Self {
+        self
+            .byShadowColor(color)
+            .byShadowRadius(radius)
+            .byShadowOpacity(opacity)
+            .byShadowOffset(offset)
     }
 }
 
@@ -173,14 +235,18 @@ extension UIView {
     }
 
     private func setRTBadgeContainer(_ v: UIView?) {
-        objc_setAssociatedObject(self, &_RTBadgeKey.tr, v, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_RTBadgeKey.tr,
+            v,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 
     private func install(_ content: RTBadgeContent,
                          into container: _BadgeContainerView,
                          config: RTBadgeConfig) {
         container.subviews.forEach { $0.removeFromSuperview() }
-
         switch content {
         case .text(let s):
             let label = _InsetLabel()
@@ -189,10 +255,11 @@ extension UIView {
                 .byFont(config.font)
                 .byNumberOfLines(1)
                 .byContentInsets(config.insets)
-            container.addSubview(label)
+                .byAddTo(container) { [unowned self] make in
+                    make.edges.equalToSuperview()
+                }
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
-            label.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         case .attributed(let attr):
             let label = _InsetLabel()
@@ -201,14 +268,17 @@ extension UIView {
                 .byFont(config.font)
                 .byNumberOfLines(1)
                 .byContentInsets(config.insets)
-            container.addSubview(label)
+                .byAddTo(container) { [unowned self] make in
+                    make.edges.equalToSuperview()
+                }
+
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
-            label.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         case .custom(let view):
-            container.addSubview(view)
-            view.snp.makeConstraints { $0.edges.equalToSuperview().inset(config.insets) }
+            view.byAddTo(container) { [unowned self] make in
+                make.edges.equalToSuperview().inset(config.insets)
+            }
         }
     }
     /// 右上角定位（统一 remake，避免重复约束）
@@ -270,19 +340,31 @@ private extension _InsetLabel {
     /// 上下左右等距
     @discardableResult
     func byContentInsets(_ all: CGFloat) -> Self {
-        self.contentInsets = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
+        self.contentInsets = UIEdgeInsets(top: all,
+                                          left: all,
+                                          bottom: all,
+                                          right: all)
         return self
     }
     /// 垂直/水平 分量设置（例如 vertical=6, horizontal=10）
     @discardableResult
     func byContentInsets(vertical v: CGFloat, horizontal h: CGFloat) -> Self {
-        self.contentInsets = UIEdgeInsets(top: v, left: h, bottom: v, right: h)
+        self.contentInsets = UIEdgeInsets(top: v,
+                                          left: h,
+                                          bottom: v,
+                                          right: h)
         return self
     }
     /// 分别指定四边
     @discardableResult
-    func byContentInsets(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat) -> Self {
-        self.contentInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+    func byContentInsets(top: CGFloat,
+                         left: CGFloat,
+                         bottom: CGFloat,
+                         right: CGFloat) -> Self {
+        self.contentInsets = UIEdgeInsets(top: top,
+                                          left: left,
+                                          bottom: bottom,
+                                          right: right)
         return self
     }
 }

@@ -95,11 +95,13 @@ extension UITableView {
     }
     // MARK: - 设置整个区圆角
     public func sectionConner(cell: UITableViewCell,
-                       bgColor: UIColor = JobsCor.systemBackground,
-                       indexPath: IndexPath,
-                       cornerRadius: CGFloat = 10.0) {
-        let bounds = CGRect(x: self.separatorInset.left, y: 0,
-                            width: self.bounds.width - self.separatorInset.left*2, height: cell.bounds.height)
+                              bgColor: UIColor = JobsCor.systemBackground,
+                              indexPath: IndexPath,
+                              cornerRadius: CGFloat = 10.0) {
+        let bounds = CGRect(x: self.separatorInset.left,
+                            y: 0,
+                            width: self.bounds.width - self.separatorInset.left*2,
+                            height: cell.bounds.height)
 
         let path: UIBezierPath
         let isFirst = indexPath.row == 0
@@ -326,7 +328,8 @@ extension UITableView {
     /// iOS 11.0+
     @available(iOS 11.0, *)
     @discardableResult
-    public func byPerformBatchUpdates(_ updates: (jobsByVoidBlock)?, completion: (jobsByBOOLBlock)? = nil) -> Self {
+    public func byPerformBatchUpdates(_ updates: (jobsByVoidBlock)?,
+                                      completion: (jobsByBOOLBlock)? = nil) -> Self {
         self.performBatchUpdates(updates, completion: completion)
         return self
     }

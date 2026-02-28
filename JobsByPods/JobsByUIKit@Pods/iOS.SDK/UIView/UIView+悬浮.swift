@@ -67,14 +67,38 @@ public extension UIView.SuspendConfig {
         build(&cfg)
         return cfg
     }
-    @discardableResult func byContainer(_ v: UIView?) -> Self { var c = self; c.container = v; return c }
-    @discardableResult func byFallbackSize(_ v: CGSize) -> Self { var c = self; c.fallbackSize = v; return c }
-    @discardableResult func byDocking(_ v: UIView.SuspendDocking) -> Self { var c = self; c.docking = v; return c }
-    @discardableResult func byInitialOrigin(_ v: CGPoint?) -> Self { var c = self; c.initialOrigin = v; return c }
-    @discardableResult func byDraggable(_ v: Bool) -> Self { var c = self; c.draggable = v; return c }
-    @discardableResult func byAnimated(_ v: Bool) -> Self { var c = self; c.animated = v; return c }
-    @discardableResult func byHapticOnDock(_ v: Bool) -> Self { var c = self; c.hapticOnDock = v; return c }
-    @discardableResult func byConfineInContainer(_ v: Bool) -> Self { var c = self; c.confineInContainer = v; return c }
+    @discardableResult func byContainer(_ v: UIView?) -> Self {
+        var c = self; c.container = v; return c
+    }
+    
+    @discardableResult func byFallbackSize(_ v: CGSize) -> Self {
+        var c = self; c.fallbackSize = v; return c
+    }
+    
+    @discardableResult func byDocking(_ v: UIView.SuspendDocking) -> Self {
+        var c = self; c.docking = v; return c
+    }
+    
+    @discardableResult func byInitialOrigin(_ v: CGPoint?) -> Self {
+        var c = self; c.initialOrigin = v; return c
+    }
+    
+    @discardableResult func byDraggable(_ v: Bool) -> Self {
+        var c = self; c.draggable = v; return c
+    }
+    
+    @discardableResult func byAnimated(_ v: Bool) -> Self {
+        var c = self; c.animated = v; return c
+    }
+    
+    @discardableResult func byHapticOnDock(_ v: Bool) -> Self {
+        var c = self; c.hapticOnDock = v; return c
+    }
+    
+    @discardableResult func byConfineInContainer(_ v: Bool) -> Self {
+        var c = self; c.confineInContainer = v; return c
+    }
+    
     @discardableResult func byStart(_ v: Start) -> Self {
         var c = self
         c.start = v
@@ -110,10 +134,30 @@ extension UIView {
         if let pan = objc_getAssociatedObject(self, &SuspendKeys.panKey) as? UIPanGestureRecognizer {
             removeGestureRecognizer(pan)
         }
-        objc_setAssociatedObject(self, &SuspendKeys.configKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &SuspendKeys.panKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &SuspendKeys.panDelegateKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) // ✅ 新增
-        objc_setAssociatedObject(self, &SuspendKeys.suspendedKey, false, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.configKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.panKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.panDelegateKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.suspendedKey,
+            false,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         removeFromSuperview()
     }
     /// 悬浮：挂到活动窗口或指定容器；支持拖拽/吸附/安全区
@@ -121,7 +165,12 @@ extension UIView {
     @MainActor
     public func suspend(_ config: SuspendConfig = .default) -> Self {
         // 1) 保存配置
-        objc_setAssociatedObject(self, &SuspendKeys.configKey, config, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.configKey,
+            config,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 2) 容器
         let container: UIView = config.container ?? (UIApplication.jobsKeyWindow() ?? Self._fallbackWindow())
         container.layoutIfNeeded()
@@ -149,16 +198,69 @@ extension UIView {
             if let old = objc_getAssociatedObject(self, &SuspendKeys.panKey) as? UIPanGestureRecognizer {
                 pan = old
             } else {
-                pan = UIPanGestureRecognizer(target: self, action: #selector(_onPan(_:)))
-                addGestureRecognizer(pan)
-                objc_setAssociatedObject(self, &SuspendKeys.panKey, pan, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                pan = self.jobs_addGesture(
+                    /// 悬浮视图@手势算法实现
+                    UIPanGestureRecognizer
+                        .byConfig { [weak self] gr in
+                            guard let self else { return }
+                            guard let pan = gr as? UIPanGestureRecognizer else { return }
+                            guard
+                                let cfg = objc_getAssociatedObject(self, &SuspendKeys.configKey) as? UIView.SuspendConfig,
+                                let container = self.superview
+                            else { return }
+
+                            switch pan.state {
+                            case .changed:
+                                let delta = pan.translation(in: container)
+                                self.frame.origin.x += delta.x
+                                self.frame.origin.y += delta.y
+                                pan.setTranslation(.zero, in: container)
+                                if cfg.confineInContainer { self._clampFrameWithinContainer() }
+
+                            case .ended, .cancelled, .failed:
+                                let mode = self._effectiveDocking(cfg)
+                                let target = self._snapOrigin(for: mode, in: container, cfg: cfg, currentFrame: self.frame)
+                                if cfg.animated {
+                                    UIView.animate(withDuration: 0.25,
+                                                   delay: 0,
+                                                   options: [.curveEaseOut]) {
+                                        self.frame.origin = target
+                                    } completion: { _ in
+                                        if cfg.hapticOnDock {
+                                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                        }
+                                    }
+                                } else {
+                                    self.frame.origin = target
+                                    if cfg.hapticOnDock {
+                                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    }
+                                }
+                            default:
+                                break
+                            }
+                        }
+                        .byMinTouches(1)
+                        .byMaxTouches(2)
+                        .byCancelsTouchesInView(true)
+                )!
+                objc_setAssociatedObject(
+                    self,
+                    &SuspendKeys.panKey,
+                    pan,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
             }
             // ✅ 关键：解决 “悬浮 pan” 与 “外圈长按 longPress(min=0)” 的冲突
             _enableSimultaneousPanWithLongPress(pan)
         }
         // 8) 标记
-        objc_setAssociatedObject(self, &SuspendKeys.suspendedKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &SuspendKeys.suspendedKey,
+            true,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
     /// Builder 版本
     @MainActor
@@ -296,45 +398,6 @@ extension UIView {
         else { return }
         let b = Self._availableBounds(in: container) // ✅ 去掉 extraInsets
         frame.origin = _clamped(frame.origin, size: frame.size, in: b, clamp: cfg.confineInContainer)
-    }
-    /// 悬浮视图@手势算法实现
-    @objc
-    private func _onPan(_ gr: UIPanGestureRecognizer) {
-        guard
-            let cfg = objc_getAssociatedObject(self, &SuspendKeys.configKey) as? UIView.SuspendConfig,
-            let container = self.superview
-        else { return }
-
-        switch gr.state {
-        case .changed:
-            let delta = gr.translation(in: container)
-            frame.origin.x += delta.x
-            frame.origin.y += delta.y
-            gr.setTranslation(.zero, in: container)
-            if cfg.confineInContainer { _clampFrameWithinContainer() }
-
-        case .ended, .cancelled, .failed:
-            let mode = _effectiveDocking(cfg)
-            let target = _snapOrigin(for: mode, in: container, cfg: cfg, currentFrame: frame)
-            if cfg.animated {
-                UIView.animate(withDuration: 0.25,
-                               delay: 0,
-                               options: [.curveEaseOut]) {
-                    self.frame.origin = target
-                } completion: { _ in
-                    if cfg.hapticOnDock {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    }
-                }
-            } else {
-                frame.origin = target
-                if cfg.hapticOnDock {
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                }
-            }
-        default:
-            break
-        }
     }
     /// 可用区域（仅叠加 safeAreaInsets）
     private static func _availableBounds(in container: UIView) -> CGRect {

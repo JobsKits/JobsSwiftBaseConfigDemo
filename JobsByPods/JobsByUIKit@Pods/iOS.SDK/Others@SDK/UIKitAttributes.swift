@@ -12,11 +12,11 @@ import UIKit
 #endif
 
 @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-public extension AttributeContainer {
+extension AttributeContainer {
     // MARK: - UIKitAttributes
     @discardableResult
     @inlinable
-    func byFont(_ font: UIFont?) -> Self {
+    public func byFont(_ font: UIFont?) -> Self {
         var c = self
         c.uiKit.font = font
         return c
@@ -24,7 +24,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byParagraphStyle(_ style: NSParagraphStyle?) -> Self {
+    public func byParagraphStyle(_ style: NSParagraphStyle?) -> Self {
         var c = self
         c.uiKit.paragraphStyle = style
         return c
@@ -32,7 +32,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byForegroundColor(_ color: UIColor?) -> Self {
+    public func byForegroundColor(_ color: UIColor?) -> Self {
         var c = self
         c.uiKit.foregroundColor = color
         return c
@@ -40,7 +40,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byBackgroundColor(_ color: UIColor?) -> Self {
+    public func byBackgroundColor(_ color: UIColor?) -> Self {
         var c = self
         c.uiKit.backgroundColor = color
         return c
@@ -48,7 +48,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byLigature(_ v: Int?) -> Self {
+    public func byLigature(_ v: Int?) -> Self {
         var c = self
         c.uiKit.ligature = v
         return c
@@ -56,7 +56,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byKern(_ v: CGFloat?) -> Self {
+    public func byKern(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.kern = v
         return c
@@ -64,7 +64,7 @@ public extension AttributeContainer {
     /// tracking / kern 的区别：tracking 是 “字距建议值”(TextKit / AttributedString)
     @discardableResult
     @inlinable
-    func byTracking(_ v: CGFloat?) -> Self {
+    public func byTracking(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.tracking = v
         return c
@@ -72,7 +72,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byStrikethroughStyle(_ style: NSUnderlineStyle?) -> Self {
+    public func byStrikethroughStyle(_ style: NSUnderlineStyle?) -> Self {
         var c = self
         c.uiKit.strikethroughStyle = style
         return c
@@ -80,7 +80,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byUnderlineStyle(_ style: NSUnderlineStyle?) -> Self {
+    public func byUnderlineStyle(_ style: NSUnderlineStyle?) -> Self {
         var c = self
         c.uiKit.underlineStyle = style
         return c
@@ -88,7 +88,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byStrokeColor(_ color: UIColor?) -> Self {
+    public func byStrokeColor(_ color: UIColor?) -> Self {
         var c = self
         c.uiKit.strokeColor = color
         return c
@@ -96,7 +96,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byStrokeWidth(_ v: CGFloat?) -> Self {
+    public func byStrokeWidth(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.strokeWidth = v
         return c
@@ -104,7 +104,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byShadow(_ shadow: NSShadow?) -> Self {
+    public func byShadow(_ shadow: NSShadow?) -> Self {
         var c = self
         c.uiKit.shadow = shadow
         return c
@@ -112,7 +112,7 @@ public extension AttributeContainer {
     /// 这个类型在 SDK 里通常是 String（NSAttributedString.Key.textEffect 的值）
     @discardableResult
     @inlinable
-    func byTextEffect(_ v: NSAttributedString.TextEffectStyle?) -> Self {
+    public func byTextEffect(_ v: NSAttributedString.TextEffectStyle?) -> Self {
         var c = self
         c.uiKit.textEffect = v
         return c
@@ -120,7 +120,7 @@ public extension AttributeContainer {
     
     @discardableResult
     @inlinable
-    func byBaselineOffset(_ v: CGFloat?) -> Self {
+    public func byBaselineOffset(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.baselineOffset = v
         return c
@@ -128,7 +128,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byUnderlineColor(_ color: UIColor?) -> Self {
+    public func byUnderlineColor(_ color: UIColor?) -> Self {
         var c = self
         c.uiKit.underlineColor = color
         return c
@@ -136,7 +136,7 @@ public extension AttributeContainer {
 
     @discardableResult
     @inlinable
-    func byStrikethroughColor(_ color: UIColor?) -> Self {
+    public func byStrikethroughColor(_ color: UIColor?) -> Self {
         var c = self
         c.uiKit.strikethroughColor = color
         return c
@@ -145,7 +145,7 @@ public extension AttributeContainer {
     @available(watchOS, unavailable)
     @discardableResult
     @inlinable
-    func byAttachment(_ attachment: NSTextAttachment?) -> Self {
+    public func byAttachment(_ attachment: NSTextAttachment?) -> Self {
         var c = self
         c.uiKit.attachment = attachment
         return c
@@ -154,7 +154,7 @@ public extension AttributeContainer {
     @available(iOS, introduced: 15.0, deprecated: 100000.0, message: "This attribute is not supported with TextKit 2")
     @discardableResult
     @inlinable
-    func byObliqueness(_ v: CGFloat?) -> Self {
+    public func byObliqueness(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.obliqueness = v
         return c
@@ -163,7 +163,7 @@ public extension AttributeContainer {
     @available(iOS, introduced: 15.0, deprecated: 100000.0, message: "This attribute is not supported with TextKit 2")
     @discardableResult
     @inlinable
-    func byExpansion(_ v: CGFloat?) -> Self {
+    public func byExpansion(_ v: CGFloat?) -> Self {
         var c = self
         c.uiKit.expansion = v
         return c
@@ -174,7 +174,7 @@ public extension AttributeContainer {
     @available(tvOS, unavailable)
     @discardableResult
     @inlinable
-    func byTextItemTag(_ tag: Any?) -> Self {
+    public func byTextItemTag(_ tag: Any?) -> Self {
         var c = self
         // 如果你的 SDK 类型不是 Any?，把 Any? 改成真实类型即可
         c.uiKit.textItemTag = tag as! AttributeScopes.UIKitAttributes.TextItemTagAttribute.Value
@@ -185,7 +185,7 @@ public extension AttributeContainer {
     @available(macOS 15.0, iOS 18.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
     @discardableResult
     @inlinable
-    func byAdaptiveImageGlyph(_ v: Any?) -> Self {
+    public func byAdaptiveImageGlyph(_ v: Any?) -> Self {
         var c = self
         c.uiKit.adaptiveImageGlyph = v as! AttributeScopes.UIKitAttributes.AdaptiveImageGlyphAttribute.Value
         return c
@@ -193,7 +193,7 @@ public extension AttributeContainer {
     // MARK: - Generic patch
     @discardableResult
     @inlinable
-    func byUIKit(_ patch: (inout AttributeContainer) -> Void) -> Self {
+    public func byUIKit(_ patch: (inout AttributeContainer) -> Void) -> Self {
         var c = self
         patch(&c)
         return c

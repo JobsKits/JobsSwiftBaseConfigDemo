@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import ObjectiveC
+import JobsByQuartzCore
 import JobsSwiftBaseDefines
 // MARK: - Associated Object Keys (NO WARNING)
 private enum _JobsBtnGradientKey {
@@ -35,10 +36,8 @@ extension UIButton {
             return lb
         }
 
-        let lb = UILabel().byNumberOfLines(1).byTextAlignment(.center)
-        addSubview(lb)
-        _ = self.titleLabel // 触发创建
-
+        let lb = UILabel().byNumberOfLines(1).byTextAlignment(.center).byAddTo(self)
+        self.titleLabel?.byVisible(YES)
         if let tl = self.titleLabel {
             lb.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
@@ -53,14 +52,18 @@ extension UIButton {
             }
         }
 
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.subtitleLabel, lb, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return lb
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.subtitleLabel,
+            lb,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return lb
     }
     /// DSL：设置副标题文本（不做渐变，只管 text/font）
     @discardableResult
     public func jobs_setSubtitle(_ text: String?, font: UIFont? = nil) -> Self {
-        jobs_subtitleLabel.text = text
-        if let font { jobs_subtitleLabel.font = font }
+        jobs_subtitleLabel.byText(text)
+        jobs_subtitleLabel.byFont(font)
         return self
     }
 }
@@ -82,17 +85,20 @@ extension UIButton {
             self,
             &_JobsBtnGradientKey.mainColors,
             colors,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         objc_setAssociatedObject(
             self,
             &_JobsBtnGradientKey.mainDir,
             direction,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         objc_setAssociatedObject(
             self,
             &_JobsBtnGradientKey.stateRaw,
             state.rawValue,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         _jobs_applyMainGradient(colors: colors, direction: direction, for: state)
         return self
     }
@@ -111,12 +117,14 @@ extension UIButton {
             self,
             &_JobsBtnGradientKey.subColors,
             colors,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         objc_setAssociatedObject(
             self,
             &_JobsBtnGradientKey.subDir,
             direction,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         _jobs_applySubGradient(colors: colors, direction: direction)
         return self
     }
@@ -133,11 +141,36 @@ extension UIButton {
             titleLabel?.layoutIfNeeded()
             jobs_subtitleLabel.layoutIfNeeded()
         }
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.subColors, colors, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.mainDir, direction, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.subDir, direction, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_JobsBtnGradientKey.stateRaw, state.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.mainColors,
+            colors,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.subColors,
+            colors,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.mainDir,
+            direction,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.subDir,
+            direction,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_JobsBtnGradientKey.stateRaw,
+            state.rawValue,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
 
         _jobs_applyMainGradient(colors: colors, direction: direction, for: state)
         _jobs_applySubGradient(colors: colors, direction: direction)
@@ -215,27 +248,27 @@ extension UIButton {
             old.removeFromSuperlayer()
         }
 
-        let textLayer = CATextLayer()
-        textLayer.string = text
-        textLayer.font = label.font
-        textLayer.fontSize = label.font.pointSize
-        textLayer.alignmentMode = .center
-        textLayer.contentsScale = UIScreen.main.scale
-        textLayer.frame = b
-
         let g = CAGradientLayer()
-        g.frame = b
-        g.colors = colors.map(\.cgColor)
+            .byFrame(b)
+            .byColors(colors.map(\.cgColor))
+            .byStartPoint(direction.points.start)
+            .byEndPoint(direction.points.end)
+            .byMask(
+                CATextLayer()
+                    .byString(text)
+                    .byFont(label.font)
+                    .byFontSize(label.font.pointSize)
+                    .byAlignmentMode(.center)
+                    .byContentsScale(UIScreen.main.scale)
+                    .byFrame(b))
 
-        let p = direction.points
-        g.startPoint = p.start
-        g.endPoint = p.end
-
-        g.mask = textLayer
-
-        label.textColor = .clear
-        label.layer.addSublayer(g)
-
-        objc_setAssociatedObject(self, layerKey, g, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        label.byTextColor(.clear).byAddSublayer(g)
+        
+        objc_setAssociatedObject(
+            self,
+            layerKey,
+            g,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 }

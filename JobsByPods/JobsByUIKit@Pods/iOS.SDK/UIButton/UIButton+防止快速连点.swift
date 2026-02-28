@@ -13,7 +13,7 @@ import UIKit
 // MARK: - 防止快速连点
 extension UIButton {
     public func disableAfterClick(interval: TimeInterval = 1.0) {
-        self.isUserInteractionEnabled = false
+        byUserInteractionEnabled(false)
         DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
             self.isUserInteractionEnabled = true
         }

@@ -62,7 +62,7 @@ extension UICollectionViewCell {
     @available(iOS 14.0, *)
     @discardableResult
     public func byContentConfiguration(_ build: (inout UIListContentConfiguration) -> Void,
-                                automaticallyUpdates: Bool = false) -> Self {
+                                       automaticallyUpdates: Bool = false) -> Self {
         // UICollectionViewCell 没有 defaultContentConfiguration；
         // UICollectionViewListCell 才有。做个兜底：
         var cfg = (self as? UICollectionViewListCell)?.defaultContentConfiguration()
@@ -76,7 +76,7 @@ extension UICollectionViewCell {
     @available(iOS 14.0, *)
     @discardableResult
     public func byBackgroundConfiguration(_ build: jobsByInoutBackgroundConfigurationBlock,
-                                   automaticallyUpdates: Bool = false) -> Self {
+                                          automaticallyUpdates: Bool = false) -> Self {
         var bg = UIBackgroundConfiguration.listPlainCell()
         build(&bg)
         self.automaticallyUpdatesBackgroundConfiguration = automaticallyUpdates
@@ -109,9 +109,9 @@ extension UICollectionViewCell {
     @available(iOS 14.0, *)
     @discardableResult
     public func byListContent(text: String? = nil,
-                       secondaryText: String? = nil,
-                       image: UIImage? = nil,
-                       config: (jobsByInoutListContentConfigBlock)? = nil) -> Self {
+                              secondaryText: String? = nil,
+                              image: UIImage? = nil,
+                              config: (jobsByInoutListContentConfigBlock)? = nil) -> Self {
         return byContentConfiguration { cfg in
             cfg.text = text
             cfg.secondaryText = secondaryText
@@ -123,16 +123,14 @@ extension UICollectionViewCell {
     @available(iOS 14.0, *)
     @discardableResult
     public func byListBackground(normal: UIColor? = nil,
-                          selected: UIColor? = nil) -> Self {
+                                 selected: UIColor? = nil) -> Self {
         if let normal {
             _ = byBackgroundConfiguration { bg in
                 bg.backgroundColor = normal
             }
         }
         if let selected {
-            let v = UIView()
-            v.backgroundColor = selected
-            self.selectedBackgroundView = v
+            self.selectedBackgroundView = UIView().byBackgroundColor(selected)
         };return self
     }
     // MARK: - invalidate@Configuration (iOS 14+)

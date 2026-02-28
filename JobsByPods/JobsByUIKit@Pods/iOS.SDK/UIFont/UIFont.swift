@@ -9,9 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
-#endif 
+#endif
 
 extension UIFont {
+    
     public convenience init?(medium: CGFloat) {
         self.init(name: "PingFangSC-Medium", size: medium)
     }
@@ -66,6 +67,7 @@ extension UIFont {
      label.font = .Mitr.Regular(14)
  */
 extension UIFont {
+    
     public enum App {
         public static func Regular(_ size: CGFloat) -> UIFont { pick(.regular, size) }
         public static func Medium(_ size: CGFloat) -> UIFont  { pick(.medium,  size) }

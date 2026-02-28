@@ -56,7 +56,7 @@ extension UIBarItem {
     }
 }
 // MARK: - 链式：iOS 5+ landscapeImagePhone / landscapeImagePhoneInsets
-public extension UIBarItem {
+extension UIBarItem {
     @available(iOS 5.0, *)
     @discardableResult
     public func byLandscapeImagePhone(_ value: UIImage?) -> Self {

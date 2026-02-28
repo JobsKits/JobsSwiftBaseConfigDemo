@@ -29,8 +29,12 @@ public extension ViewDataProtocol where Self: UIView {
     // ================================== 逆向：回传 ==================================
     @discardableResult
     func onResult(_ callback: @escaping jobsByAnyBlock) -> Self {
-        objc_setAssociatedObject(self, &JobsViewResultKey.callback, callback, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &JobsViewResultKey.callback,
+            callback,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
 
     func sendResult(_ any: Any?) {

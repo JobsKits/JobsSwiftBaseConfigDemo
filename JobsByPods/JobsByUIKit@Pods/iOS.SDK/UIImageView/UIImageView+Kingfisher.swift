@@ -92,7 +92,10 @@ extension UIImageView {
         _ src: String,
         placeholder: @autoclosure @escaping @Sendable () -> UIImage
     ) -> Self {
-        byShimmeringAsyncImageKF(src, fallback: placeholder(), shimmerConfig: .default, fade: 0.25)
+        byShimmeringAsyncImageKF(src,
+                                 fallback: placeholder(),
+                                 shimmerConfig: .default,
+                                 fade: 0.25)
     }
     /// 保持原来的 async 版本（不带 shimmer）
     #if compiler(>=5.5)

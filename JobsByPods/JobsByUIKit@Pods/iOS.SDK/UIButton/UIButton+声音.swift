@@ -14,13 +14,14 @@ import UIKit
 import AVFoundation
 // =============== 全局默认值（保持不变） ===============
 public enum JobsSound {
+    
+    public static var defaults = Defaults()
     public struct Defaults {
         public var bundle: Bundle = .main
         public var ignoreSilentSwitch = false   // 遵从静音键
         public var mixWithOthers = true         // 允许与其它 App 混音
         public init() {}
     }
-    public static var defaults = Defaults()
 }
 // =============== 内部存储 ===============
 private final class _JobsSoundBox: NSObject {
@@ -51,15 +52,29 @@ extension UIButton {
         else {
             // 找不到：解绑并静默
             _jobs_unbindTapHandler()
-            objc_setAssociatedObject(self, &_kTapSoundBoxKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            objc_setAssociatedObject(self, &_kTapSoundPlayerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            return self
+            objc_setAssociatedObject(
+                self,
+                &_kTapSoundBoxKey,
+                nil,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+            objc_setAssociatedObject(
+                self,
+                &_kTapSoundPlayerKey,
+                nil,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            );return self
         }
         // 固化当前默认配置
         let box = _JobsSoundBox(url: url,
                                 ignoreSilentSwitch: JobsSound.defaults.ignoreSilentSwitch,
                                 mixWithOthers: JobsSound.defaults.mixWithOthers)
-        objc_setAssociatedObject(self, &_kTapSoundBoxKey, box, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &_kTapSoundBoxKey,
+            box,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 绑定点击：iOS14+ 用 UIAction(闭包)，老系统回退到 target-action
         _jobs_bindTapHandler()
         return self
@@ -68,9 +83,18 @@ extension UIButton {
     @discardableResult
     public func byRemoveTapSound() -> Self {
         _jobs_unbindTapHandler()
-        objc_setAssociatedObject(self, &_kTapSoundBoxKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &_kTapSoundPlayerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_kTapSoundBoxKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &_kTapSoundPlayerKey,
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return self
     }
     // MARK: - 点击时播放（核心逻辑）
     @objc private func _jobs_onTapPlaySound() {
@@ -88,14 +112,18 @@ extension UIButton {
             player = try? AVAudioPlayer(contentsOf: box.url)
             player?.numberOfLoops = 0
             player?.prepareToPlay()
-            objc_setAssociatedObject(self, &_kTapSoundPlayerKey, player, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_kTapSoundPlayerKey,
+                player,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
         guard let p = player else { return }
         if p.isPlaying {
             p.stop()
             p.currentTime = 0
-        }
-        p.play()
+        };p.play()
     }
 
     private func _jobs_bindTapHandler() {
@@ -109,7 +137,12 @@ extension UIButton {
                 self?._jobs_onTapPlaySound()
             }
             addAction(action, for: .touchUpInside)
-            objc_setAssociatedObject(self, &_kTapSoundActionKey, action, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_kTapSoundActionKey,
+                action,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         } else {
             // 回退：target-action
             removeTarget(self, action: #selector(_jobs_onTapPlaySound), for: .touchUpInside)
@@ -121,7 +154,12 @@ extension UIButton {
         if #available(iOS 14.0, *) {
             if let old = objc_getAssociatedObject(self, &_kTapSoundActionKey) as? UIAction {
                 removeAction(old, for: .touchUpInside)   // ✅ 正确的移除方式
-                objc_setAssociatedObject(self, &_kTapSoundActionKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(
+                    self,
+                    &_kTapSoundActionKey,
+                    nil,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
             }
         } else {
             removeTarget(self, action: #selector(_jobs_onTapPlaySound), for: .touchUpInside)

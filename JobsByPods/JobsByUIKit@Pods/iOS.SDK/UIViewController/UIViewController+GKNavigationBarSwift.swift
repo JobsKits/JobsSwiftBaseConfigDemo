@@ -82,8 +82,6 @@ extension UIViewController {
     // MARK: - rightButtons 默认 size 策略
     private func jobs_prepareNavRightButtonSizeIfNeeded(_ v: UIView) {
         #if canImport(SnapKit)
-        let defaultSize = CGSize(width: 44, height: 44)
-
         if let closure = v.jobsAddConstraintsClosure {
             // 有自定义 closure：按它来（避免重复约束，用 remake）
             v.snp.remakeConstraints { make in
@@ -92,7 +90,7 @@ extension UIViewController {
         } else {
             // 没有：给默认 44×44
             v.snp.remakeConstraints { make in
-                make.size.equalTo(defaultSize)
+                make.size.equalTo(CGSize(width: 44, height: 44))
             }
         }
         #else

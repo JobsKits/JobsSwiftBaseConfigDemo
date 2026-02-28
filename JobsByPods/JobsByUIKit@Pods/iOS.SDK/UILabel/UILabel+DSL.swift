@@ -36,14 +36,17 @@ extension UILabel {
     }
     
     @discardableResult
-    public func byTextColor(_ color: UIColor) -> Self {
-        self.textColor = color
-        return self
+    public func byTextColor(_ color: UIColor?) -> Self {
+        if color != nil {
+            self.textColor = color
+        };return self
     }
     /// 固定字号（严格设计稿）
     @discardableResult
-    public func byFont(_ font: UIFont) -> Self {
-        self.font = font
+    public func byFont(_ font: UIFont?) -> Self {
+        if font != nil {
+            self.font = font
+        }
         self.adjustsFontForContentSizeCategory = false
         return self
     }
@@ -73,7 +76,7 @@ extension UILabel {
     }
     
     @discardableResult
-    public func byBgCor(_ color: UIColor) -> Self {
+    public func byBgCor(_ color: UIColor?) -> Self {
         self.backgroundColor = color
         return self
     }
@@ -139,38 +142,71 @@ extension UILabel {
 
     // 高亮 / 交互 / 启用
     @discardableResult
-    public func byHighlightedTextColor(_ color: UIColor?) -> Self { self.highlightedTextColor = color; return self }
+    public func byHighlightedTextColor(_ color: UIColor?) -> Self {
+        self.highlightedTextColor = color
+        return self
+    }
 
     @discardableResult
-    public func byIsHighlighted(_ v: Bool) -> Self { self.isHighlighted = v; return self }
+    public func byIsHighlighted(_ v: Bool) -> Self {
+        self.isHighlighted = v
+        return self
+    }
 
     @discardableResult
-    public func byEnabled(_ v: Bool) -> Self { self.isEnabled = v; return self }
+    public func byEnabled(_ v: Bool) -> Self {
+        self.isEnabled = v
+        return self
+    }
     // 文本压缩/缩放策略
     @discardableResult
-    public func byAdjustsFontSizeToFitWidth(_ v: Bool) -> Self { self.adjustsFontSizeToFitWidth = v; return self }
+    public func byAdjustsFontSizeToFitWidth(_ v: Bool) -> Self {
+        self.adjustsFontSizeToFitWidth = v
+        return self
+    }
 
     @discardableResult
-    public func byBaselineAdjustment(_ v: UIBaselineAdjustment) -> Self { self.baselineAdjustment = v; return self }
+    public func byBaselineAdjustment(_ v: UIBaselineAdjustment) -> Self {
+        self.baselineAdjustment = v
+        return self
+    }
 
     @discardableResult
-    public func byMinimumScaleFactor(_ v: CGFloat) -> Self { self.minimumScaleFactor = v; return self }
+    public func byMinimumScaleFactor(_ v: CGFloat) -> Self {
+        self.minimumScaleFactor = v
+        return self
+    }
 
     @discardableResult
-    public func byAllowsDefaultTighteningForTruncation(_ v: Bool) -> Self { self.allowsDefaultTighteningForTruncation = v; return self }
+    public func byAllowsDefaultTighteningForTruncation(_ v: Bool) -> Self {
+        self.allowsDefaultTighteningForTruncation = v
+        return self
+    }
 
     @available(iOS 14.0, *)
     @discardableResult
-    public func byLineBreakStrategy(_ s: NSParagraphStyle.LineBreakStrategy) -> Self { self.lineBreakStrategy = s; return self }
+    public func byLineBreakStrategy(_ s: NSParagraphStyle.LineBreakStrategy) -> Self {
+        self.lineBreakStrategy = s
+        return self
+    }
     // AutoLayout
     @discardableResult
-    public func byPreferredMaxLayoutWidth(_ w: CGFloat) -> Self { self.preferredMaxLayoutWidth = w; return self }
+    public func byPreferredMaxLayoutWidth(_ w: CGFloat) -> Self {
+        self.preferredMaxLayoutWidth = w
+        return self
+    }
     // iOS 17
     @available(iOS 17.0, *)
     @discardableResult
-    public func byPreferredVibrancy(_ v: UILabelVibrancy) -> Self { self.preferredVibrancy = v; return self }
+    public func byPreferredVibrancy(_ v: UILabelVibrancy) -> Self {
+        self.preferredVibrancy = v
+        return self
+    }
 
     @available(iOS 17.0, *)
     @discardableResult
-    public func byShowsExpansionTextWhenTruncated(_ v: Bool) -> Self { self.showsExpansionTextWhenTruncated = v; return self }
+    public func byShowsExpansionTextWhenTruncated(_ v: Bool) -> Self {
+        self.showsExpansionTextWhenTruncated = v
+        return self
+    }
 }

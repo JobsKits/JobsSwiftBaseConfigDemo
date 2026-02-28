@@ -26,10 +26,12 @@ extension UIView {
             (objc_getAssociatedObject(self, &JobsAssociatedKeys.handlersKey) as? [UInt: _JobsClosureWrapper]) ?? [:]
         }
         set {
-            objc_setAssociatedObject(self,
-                                     &JobsAssociatedKeys.handlersKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsAssociatedKeys.handlersKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
     // MARK: - 通用 Tap 事件（对 UIView -> 手势，对 UIControl -> touchUpInside）
@@ -54,7 +56,6 @@ extension UIView {
     // MARK: - 内部统一注册函数（分流：UIControl 用 addTarget；UIView 用手势）
     private func addJobsAction<T: UIView>(for event: UIControl.Event,
                                           _ handler: @escaping jobsByNonNullTypeBlock<T>) {
-
         let box = _JobsClosureWrapper { [weak self] in
             guard let self else { return }
             if let specific = self as? T {
@@ -73,7 +74,6 @@ extension UIView {
         // 2) 纯 UIView：目前只支持“点击”等价于 touchUpInside
         if event == .touchUpInside {
             isUserInteractionEnabled = true
-
             // 防止重复加手势：只加一次
             if objc_getAssociatedObject(self, &JobsAssociatedKeys.tapGestureKey) as? UITapGestureRecognizer == nil {
                 let tap = UITapGestureRecognizer(target: self, action: #selector(_jobs_handleViewTap))

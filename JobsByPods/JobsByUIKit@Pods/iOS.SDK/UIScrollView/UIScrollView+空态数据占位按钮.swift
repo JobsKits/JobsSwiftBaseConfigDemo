@@ -47,7 +47,9 @@ public enum JobsEmptyAuto {
                  #selector(UICollectionView.jobs_swizzled_performBatchUpdates(_:completion:)))
     }()
     public static func enable() { _ = once }   // 触发 once 里对 UITableView/UICollectionView 的 swizzle
-    private static func _swizzle(_ cls: AnyClass, _ original: Selector, _ swizzled: Selector) {
+    private static func _swizzle(_ cls: AnyClass,
+                                 _ original: Selector,
+                                 _ swizzled: Selector) {
         guard let m1 = class_getInstanceMethod(cls, original),
               let m2 = class_getInstanceMethod(cls, swizzled) else { return }
         method_exchangeImplementations(m1, m2)
@@ -98,20 +100,33 @@ extension UIScrollView {
     @discardableResult
     public func byEmptyButtonProvider(_ provider: @escaping () -> UIButton) -> Self {
         _JobsEmptySwizzle.ensureOnce() // ← 保证只交换一次
-        objc_setAssociatedObject(self, &_jobsEmptyProviderKey, provider, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-
-        // 可选：切换 provider 时，丢弃旧按钮，下一次自动重建
+        objc_setAssociatedObject(
+            self,
+            &_jobsEmptyProviderKey,
+            provider,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        )
+        // 切换 provider 时，丢弃旧按钮，下一次自动重建
         if let btn = jobs_emptyButton {
             btn.removeFromSuperview()
-            objc_setAssociatedObject(self, &_jobsEmptyBtnKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &_jobsEmptyBtnKey,
+                nil,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         };return self
     }
-    /// 链式：清除“本视图”的局部 Provider（回退到全局默认）
+    /// 清除“本视图”的局部 Provider（回退到全局默认）
     @discardableResult
     public func byClearEmptyButtonProvider() -> Self {
         let _ = _JobsEmptyAutoBootstrap.ensure
-        objc_setAssociatedObject(self, &_jobsEmptyProviderKey, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        return self
+        objc_setAssociatedObject(
+            self,
+            &_jobsEmptyProviderKey,
+            nil,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        );return self
     }
     /// 内部读取：局部 Provider
     fileprivate var _jobs_localProvider: (() -> UIButton)? {
@@ -125,7 +140,12 @@ extension UIScrollView {
     /// 关闭本视图的“自动空态”（默认 false）
     public var jobs_emptyAutoDisabled: Bool {
         get { (objc_getAssociatedObject(self, &_jobsEmptyDisabledKey) as? Bool) ?? false }
-        set { objc_setAssociatedObject(self, &_jobsEmptyDisabledKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set { objc_setAssociatedObject(
+            self,
+            &_jobsEmptyDisabledKey,
+            newValue,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     // MARK: - 显隐控制（保留原手动/自动 API）
     /// 手动显隐：业务自己判断 empty -> true/false
@@ -141,7 +161,6 @@ extension UIScrollView {
     public func byReloadEmptyViewAuto(animated: Bool = true) -> Self {
         _JobsEmptySwizzle.ensureOnce()                 // 幂等交换一次
         _jobs_ensureEmptyButtonIfNeeded()              // 懒创建并布置约束（若有 provider）
-
         // 仅表格/集合视图需要自动显隐
         let isEmpty: Bool
         if let t = self as? UITableView {
@@ -151,25 +170,27 @@ extension UIScrollView {
         } else {
             return self
         }
-
         guard let btn = jobs_emptyButton else { return self }
-
         // 切显隐（带轻动画）；显示时放到最上层
         if animated {
             if isEmpty {
-                if btn.isHidden { btn.alpha = 0; btn.isHidden = false }
+                if btn.isHidden {
+                    btn.byAlpha(0)
+                    btn.byHidden(false)
+                }
                 bringSubviewToFront(btn)
-                UIView.animate(withDuration: 0.15) { btn.alpha = 1 }
+                UIView.animate(withDuration: 0.15) {
+                    btn.byAlpha(1)
+                }
             } else {
                 UIView.animate(withDuration: 0.15, animations: { btn.alpha = 0 }) { _ in
-                    btn.isHidden = true
+                    btn.byHidden(true)
                 }
             }
         } else {
-            btn.alpha = isEmpty ? 1 : 0
-            btn.isHidden = !isEmpty
+            btn.byVisible(isEmpty)
         }
-        btn.isUserInteractionEnabled = isEmpty
+        btn.byUserInteractionEnabled(isEmpty)
         return self
     }
     // MARK: - 懒创建空态按钮 & 约束
@@ -179,12 +200,13 @@ extension UIScrollView {
               let provider = objc_getAssociatedObject(self, &_jobsEmptyProviderKey) as? () -> UIButton
         else { return }
 
-        let btn = provider()
-        btn.isHidden = true
-        btn.alpha = 0
-        addSubview(btn)
-        objc_setAssociatedObject(self, &_jobsEmptyBtnKey, btn, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
+        let btn = provider().byVisible(NO).byAddTo(self)
+        objc_setAssociatedObject(
+            self,
+            &_jobsEmptyBtnKey,
+            btn,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // 若外部提供了自定义布局闭包，优先使用；否则走默认约束
         if let anyLayout = objc_getAssociatedObject(self, &_jobsEmptyLayoutKey) {
             #if canImport(SnapKit)
@@ -202,7 +224,7 @@ extension UIScrollView {
     }
 
     private func _jobs_defaultEmptyButtonConstraints(_ btn: UIButton) {
-        btn.snp.makeConstraints { make in
+        btn.byMakeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-20)
             make.leading.greaterThanOrEqualToSuperview().offset(16)
@@ -226,19 +248,25 @@ extension UIScrollView {
         btn.snp.removeConstraints()
         // 移除旧按钮
         if let old = jobs_emptyButton { old.removeFromSuperview() }
-        addSubview(btn)
-        bringSubviewToFront(btn)
         // 自定义布局优先；否则使用默认居中 + 宽度<=90% + 左右不贴边
-        btn.snp.makeConstraints { make in
-            if let L = btn._jobsEmptyLayout {
-                L(btn, make, self)
-            } else {
-                make.center.equalToSuperview()
-                make.width.lessThanOrEqualToSuperview().multipliedBy(0.9)
-                make.leading.greaterThanOrEqualToSuperview().offset(16)
-                make.trailing.lessThanOrEqualToSuperview().inset(16)
+        btn
+            .byAddTo(self) { [unowned self] make in
+                if let L = btn._jobsEmptyLayout {
+                    L(btn, make, self)
+                } else {
+                    make.center.equalToSuperview()
+                    make.width.lessThanOrEqualToSuperview().multipliedBy(0.9)
+                    make.leading.greaterThanOrEqualToSuperview().offset(16)
+                    make.trailing.lessThanOrEqualToSuperview().inset(16)
+                }
             }
-        };objc_setAssociatedObject(self, &_jobsEmptyBtnKey, btn, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .byBringToFront(self)
+        objc_setAssociatedObject(
+            self,
+            &_jobsEmptyBtnKey,
+            btn,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
     /// 判空：UITableView
     fileprivate func _jobs_isEmpty(for table: UITableView) -> Bool {

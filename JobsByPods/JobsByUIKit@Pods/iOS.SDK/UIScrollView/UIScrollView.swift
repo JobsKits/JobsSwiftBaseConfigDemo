@@ -123,6 +123,7 @@ private final class JobsScrollViewBlocksProxy: NSObject, UIScrollViewDelegate {
 }
 // MARK: - Delegate Multiplexer（把 scroll 回调分发出去）
 private final class JobsScrollDelegateMux: NSObject {
+    
     private weak var primary: NSObject?
     private weak var scroll: JobsScrollViewBlocksProxy?
 
@@ -151,21 +152,29 @@ private enum JobsScrollViewBlocksAssociatedKeys {
 }
 
 extension UIScrollView {
+    
     private func jobs_scrollBlocksProxy(createIfNeeded: Bool = true) -> JobsScrollViewBlocksProxy? {
         if let p = objc_getAssociatedObject(self, &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey) as? JobsScrollViewBlocksProxy {
             return p
         }
         guard createIfNeeded else { return nil }
         let p = JobsScrollViewBlocksProxy()
-        objc_setAssociatedObject(self, &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return p
+        objc_setAssociatedObject(
+            self,
+            &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey,
+            p,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return p
     }
 
     public func jobs_setDelegateMuxIfNeeded(primary: NSObject?) {
-        let scrollP = jobs_scrollBlocksProxy()!
-        let mux = JobsScrollDelegateMux(primary: primary, scroll: scrollP)
-        objc_setAssociatedObject(self, &JobsScrollViewBlocksAssociatedKeys.delegateMuxKey, mux, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        delegate = mux as? UIScrollViewDelegate
+        let mux = JobsScrollDelegateMux(primary: primary, scroll: jobs_scrollBlocksProxy()!)
+        objc_setAssociatedObject(
+            self,
+            &JobsScrollViewBlocksAssociatedKeys.delegateMuxKey,
+            mux,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );delegate = mux as? UIScrollViewDelegate
     }
 }
 

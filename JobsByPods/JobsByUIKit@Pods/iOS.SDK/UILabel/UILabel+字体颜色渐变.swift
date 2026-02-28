@@ -12,33 +12,27 @@ import UIKit
 #endif
 
 import JobsSwiftBaseDefines
+import JobsByQuartzCore
 
 extension UILabel {
     public func jobs_setGradientText(
         colors: [UIColor],
         direction: JobsGradientDirection = .leftToRight) {
         guard let text, !text.isEmpty else { return }
-        let textLayer = CATextLayer()
-        textLayer.string = text
-        textLayer.font = font
-        textLayer.fontSize = font.pointSize
-        textLayer.alignmentMode = .center
-        textLayer.contentsScale = UIScreen.main.scale
-        textLayer.frame = bounds
-
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.colors = colors.map(\.cgColor)
-
-        let p = direction.points
-        gradientLayer.startPoint = p.start
-        gradientLayer.endPoint   = p.end
-
-        gradientLayer.mask = textLayer
-
         layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
-        layer.addSublayer(gradientLayer)
-
-        textColor = .clear
+        layer.addSublayer(
+            CAGradientLayer()
+                .byFrame(bounds)
+                .byColors(colors.map(\.cgColor))
+                .byStartPoint(direction.points.start)
+                .byEndPoint(direction.points.end)
+                .byMask(
+                    CATextLayer()
+                        .byString(text)
+                        .byFont(font)
+                        .byFontSize(font.pointSize)
+                        .byAlignmentMode(.center)
+                        .byContentsScale(UIScreen.main.scale)))
+            byTextColor(.clear)
     }
 }

@@ -9,6 +9,7 @@ import UIKit
 #endif
 
 extension UIFont {
+    
     public enum DSDigital {
 
         public static func Regular(_ size: CGFloat) -> UIFont {
@@ -20,7 +21,6 @@ extension UIFont {
             case .arabic:
                 return UIFont.SFArabic.Regular(size)
             default:
-                // 你原文件用 "DS-Digital"
                 return make("DS-Digital", size, fallback: .regular)
             }
         }

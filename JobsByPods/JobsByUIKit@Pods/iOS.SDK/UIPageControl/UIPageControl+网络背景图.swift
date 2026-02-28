@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import SnapKit
+import JobsSwiftBaseDefines
 
 #if canImport(SDWebImage)
 import SDWebImage
@@ -44,13 +45,38 @@ extension UIPageControl {
         let n = normal?.withRenderingMode(.alwaysOriginal)
         let c = current?.withRenderingMode(.alwaysOriginal)
         
-        objc_setAssociatedObject(self, &kJobsPCNormalImageKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &kJobsPCCurrentImageKey, c, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &kJobsPCDotDiameterKey, dotDiameter, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &kJobsPCDotSpacingKey, dotSpacing, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCNormalImageKey,
+            n,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCCurrentImageKey,
+            c,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCDotDiameterKey,
+            dotDiameter,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCDotSpacingKey,
+            dotSpacing,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         // ✅ 只要设置了图片，就用 overlay 渲染（不赌系统内部层级）
         let useOverlay = (n != nil || c != nil)
-        objc_setAssociatedObject(self, &kJobsPCUseOverlayKey, useOverlay, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCUseOverlayKey,
+            useOverlay,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         if useOverlay {
             // ✅ 隐藏系统默认点，避免叠影
             self.pageIndicatorTintColor = .clear
@@ -108,11 +134,9 @@ extension UIPageControl {
 
         group.notify(queue: .main) { [weak self] in
             guard let self else { return }
-
             // ✅ picsum 是 JPG：裁圆 + 透明背景 + alwaysOriginal
             let n = self.jobs_circleDotImage(normalImage, diameter: dotDiameter) ?? fallbackNormal
             let c = self.jobs_circleDotImage(currentImage, diameter: dotDiameter) ?? fallbackCurrent
-
             self.jobs_setIndicatorImages(
                 normal: n,
                 current: c,
@@ -125,28 +149,40 @@ extension UIPageControl {
     private func jobs_ensureOverlay() {
         if objc_getAssociatedObject(self, &kJobsPCOverlayKey) as? UIView != nil { return }
         let overlay = UIView()
-        overlay.isUserInteractionEnabled = false
-        overlay.backgroundColor = .clear
-        self.addSubview(overlay)
-        // overlay 跟随 UIPageControl 自己居中
-        overlay.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.height.equalToSuperview()
-            make.width.lessThanOrEqualToSuperview()
-        }
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .equalSpacing
-        stack.backgroundColor = .clear
-        overlay.addSubview(stack)
-        stack.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.height.lessThanOrEqualToSuperview()
-        }
-        objc_setAssociatedObject(self, &kJobsPCOverlayKey, overlay, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &kJobsPCStackKey, stack, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &kJobsPCDotViewsKey, [UIImageView](), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            .byUserInteractionEnabled(false)
+            .byBackgroundColor(.clear)
+            // overlay 跟随 UIPageControl 自己居中
+            .byAddTo(self) { [unowned self] make in
+                make.center.equalToSuperview()
+                make.height.equalToSuperview()
+                make.width.lessThanOrEqualToSuperview()
+            }
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCOverlayKey,
+            overlay,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCStackKey,
+            UIStackView()
+                .byAxis(.horizontal)
+                .byAlignment(.center)
+                .byDistribution(.equalSpacing)
+                .byBackgroundColor(.clear)
+                .byAddTo(overlay) { [unowned self] make in
+                    make.center.equalToSuperview()
+                    make.height.lessThanOrEqualToSuperview()
+                },
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCDotViewsKey,
+            [UIImageView](),
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
     }
 
     private func jobs_renderOverlayDots(normal: UIImage?, current: UIImage?) {
@@ -169,14 +205,13 @@ extension UIPageControl {
         } else if dots.count < pages {
             // 增加不足的
             for _ in dots.count..<pages {
-                let iv = UIImageView()
-                iv.isUserInteractionEnabled = false
-                iv.contentMode = .scaleAspectFit
-                stack.addArrangedSubview(iv)
-                iv.snp.makeConstraints { make in
-                    make.width.height.equalTo(dotDiameter)
-                }
-                dots.append(iv)
+                dots.append(
+                    UIImageView()
+                        .byUserInteractionEnabled(false)
+                        .byContentMode(.scaleAspectFit)
+                        .byAddTo(stack) { [unowned self] make in
+                            make.width.height.equalTo(dotDiameter)
+                        })
             }
         }
         // 更新图片
@@ -188,13 +223,17 @@ extension UIPageControl {
             }
         }
 
-        objc_setAssociatedObject(self, &kJobsPCDotViewsKey, dots, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        // 让 stack 的宽度更确定，避免被压缩到 1 个点的视觉
-        let minWidth = CGFloat(pages) * dotDiameter + CGFloat(max(0, pages - 1)) * dotSpacing
-        stack.snp.remakeConstraints { make in
+        objc_setAssociatedObject(
+            self,
+            &kJobsPCDotViewsKey,
+            dots,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+    
+        stack.byRemakeConstraints { make in
             make.center.equalToSuperview()
             make.height.lessThanOrEqualToSuperview()
-            make.width.greaterThanOrEqualTo(minWidth).priority(.required)
+            make.width.greaterThanOrEqualTo(CGFloat(pages) * dotDiameter + CGFloat(max(0, pages - 1)) * dotSpacing).priority(.required) // 让 stack 的宽度更确定，避免被压缩到 1 个点的视觉
             make.width.lessThanOrEqualToSuperview().priority(.required)
         }
     }
@@ -217,8 +256,9 @@ extension UIPageControl {
         completion: @escaping (UIImage?) -> Void
     ) {
         guard let url else {
-            DispatchQueue.main.async { completion(fallback) }
-            return
+            jobsRunOnMain {
+                completion(fallback)
+            };return
         }
         #if canImport(SDWebImage)
         SDWebImageManager.shared.loadImage(
@@ -226,7 +266,7 @@ extension UIPageControl {
             options: [.retryFailed, .highPriority],
             progress: nil
         ) { image, _, error, _, _, _ in
-            DispatchQueue.main.async {
+            jobsRunOnMain {
                 if error != nil { completion(fallback) }
                 else { completion(image ?? fallback) }
             }
@@ -235,7 +275,7 @@ extension UIPageControl {
 
         #if canImport(Kingfisher)
         KingfisherManager.shared.retrieveImage(with: url) { result in
-            DispatchQueue.main.async {
+            jobsRunOnMain {
                 switch result {
                 case .success(let value): completion(value.image)
                 case .failure: completion(fallback)
@@ -243,11 +283,10 @@ extension UIPageControl {
             }
         };return
         #endif
-
-        let task = URLSession.shared.dataTask(with: url) { data, _, _ in
-            let image = data.flatMap { UIImage(data: $0) }
-            DispatchQueue.main.async { completion(image ?? fallback) }
-        }
-        task.resume()
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            jobsRunOnMain {
+                completion(data.flatMap { UIImage(data: $0) } ?? fallback)
+            }
+        }.resume()
     }
 }

@@ -24,43 +24,44 @@ extension UILabel {
             .forEach { $0.removeFromSuperlayer() }
 
         let textLayer = CATextLayer()
-        textLayer.name = "JobsTextLayer"
-        textLayer.contentsScale = UIScreen.main.scale
-        textLayer.alignmentMode = ._jobs_fromNSTextAlignment(textAlignment)
-        textLayer.truncationMode = (lineBreakMode == .byTruncatingHead) ? .start :
-                                   (lineBreakMode == .byTruncatingMiddle) ? .middle :
-                                   (lineBreakMode == .byTruncatingTail) ? .end : .none
-        textLayer.isWrapped = (numberOfLines == 0)
+            .byName("JobsTextLayer")
+            .byContentsScale(UIScreen.main.scale)
+            .byAlignmentMode(._jobs_fromNSTextAlignment(textAlignment))
+            .byTruncationMode((lineBreakMode == .byTruncatingHead) ? .start :
+                                (lineBreakMode == .byTruncatingMiddle) ? .middle :
+                                (lineBreakMode == .byTruncatingTail) ? .end : .none)
+            .byWrapped((numberOfLines == 0))
 
         if let attributed = attributedText {
-            textLayer.string = attributed
+            textLayer.byString(attributed)
         } else {
-            textLayer.string = text ?? ""
-            textLayer.foregroundColor = textColor.cgColor
-            textLayer.font = font
-            textLayer.fontSize = font.pointSize
+            textLayer.byString(text ?? "")
+                .byForegroundColor(textColor.cgColor)
+                .byFont(font)
+                .byFontSize(font.pointSize)
         }
-        textLayer.frame = bounds
+        textLayer.byFrame(bounds)
 
         switch direction {
         case .up:
             break
         case .left:
-            textLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            textLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-            textLayer.transform = CATransform3DMakeRotation(-.pi/2, 0, 0, 1)
+            textLayer
+                .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
+                .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
+                .byTransform(CATransform3DMakeRotation(-.pi/2, 0, 0, 1))
         case .down:
-            textLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            textLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-            textLayer.transform = CATransform3DMakeRotation(.pi, 0, 0, 1)
+            textLayer
+                .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
+                .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
+                .byTransform(CATransform3DMakeRotation(.pi, 0, 0, 1))
         case .right:
-            textLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            textLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-            textLayer.transform = CATransform3DMakeRotation(.pi/2, 0, 0, 1)
+            textLayer.byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
+                .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
+                .byTransform(CATransform3DMakeRotation(.pi/2, 0, 0, 1))
         }
-
-        layer.addSublayer(textLayer)
-        textColor = .clear // 只显示 layer 的文字
+        self.byAddSublayer(textLayer)
+        byTextColor(.clear) // 只显示 layer 的文字
         return self
     }
 }

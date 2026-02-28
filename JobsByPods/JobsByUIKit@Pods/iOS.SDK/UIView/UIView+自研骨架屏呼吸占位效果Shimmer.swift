@@ -52,6 +52,7 @@ private enum JobsShimmerSwizzle {
 }
 
 extension UIView {
+    
     private static func jobs_enableShimmerAutoLayoutUpdatesOnce() {
         _ = JobsShimmerSwizzle.once
     }
@@ -66,11 +67,12 @@ extension UIView {
 }
 // MARK: - 配置对象
 public struct JobsShimmerConfig {
+    
     public var baseColor: UIColor
     public var highlightColor: UIColor
     public var duration: CFTimeInterval
     public var highlightWidthRatio: CGFloat   // 0 ~ 1
-
+    public static let `default` = JobsShimmerConfig()
     public init(
         baseColor: UIColor = UIColor(white: 0.90, alpha: 1),
         highlightColor: UIColor = UIColor(white: 1.0, alpha: 0.9),
@@ -82,8 +84,6 @@ public struct JobsShimmerConfig {
         self.duration = duration
         self.highlightWidthRatio = highlightWidthRatio
     }
-
-    public static let `default` = JobsShimmerConfig()
 }
 // MARK: - 关联 Key
 private enum JobsShimmerAssociatedKeys {
@@ -96,6 +96,7 @@ private enum JobsShimmerAssociatedKeys {
 }
 // MARK: - 私有工具
 extension UIView {
+    
     private func jobs_withoutImplicitAnimations(_ block: () -> Void) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -119,8 +120,7 @@ extension UIView {
         get {
             if let n = objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.originCornerKey) as? NSNumber {
                 return CGFloat(truncating: n)
-            }
-            return nil
+            };return nil
         }
         set {
             let boxed = newValue.map { NSNumber(value: Double($0)) }
@@ -137,8 +137,7 @@ extension UIView {
         get {
             if let n = objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.lastAnimWidthKey) as? NSNumber {
                 return CGFloat(truncating: n)
-            }
-            return nil
+            };return nil
         }
         set {
             let boxed = newValue.map { NSNumber(value: Double($0)) }
@@ -195,35 +194,35 @@ extension UIView {
     }
 
     private func jobs_prepareShimmerLayerIfNeeded() -> CAGradientLayer {
+        
         if let layer = jobs_shimmerLayer {
             return layer
         }
 
         let layer = CAGradientLayer()
-        layer.name = "jobs.shimmer.layer"
-        // 禁用布局更新时的隐式动画（避免闪一下）
-        layer.actions = [
-            "bounds": NSNull(),
-            "position": NSNull(),
-            "frame": NSNull(),
-            "cornerRadius": NSNull(),
-            "contents": NSNull(),
-            "colors": NSNull(),
-            "locations": NSNull()
-        ]
-        layer.startPoint = CGPoint(x: 0, y: 0.5)
-        layer.endPoint   = CGPoint(x: 1, y: 0.5)
-        self.layer.addSublayer(layer)
+            .byName("jobs.shimmer.layer")
+            // 禁用布局更新时的隐式动画（避免闪一下）
+            .byActions([
+                "bounds": NSNull(),
+                "position": NSNull(),
+                "frame": NSNull(),
+                "cornerRadius": NSNull(),
+                "contents": NSNull(),
+                "colors": NSNull(),
+                "locations": NSNull()
+            ])
+            .byStartPoint(CGPoint(x: 0, y: 0.5))
+            .byEndPoint(CGPoint(x: 1, y: 0.5))
+            .byAddSublayer(self.layer)
 
         jobs_shimmerLayer = layer
         return layer
     }
 
     private func jobs_updateShimmerColors() {
+        
         guard let layer = jobs_shimmerLayer else { return }
-
         let cfg = jobs_shimmerConfig
-
         // 动态色支持：resolvedColor(with:) 可跟随暗黑模式变化
         let base = cfg.baseColor.jobsResolvedColor(with: traitCollection)
         let highlight = cfg.highlightColor.jobsResolvedColor(with: traitCollection)
@@ -236,17 +235,19 @@ extension UIView {
         let start = max(0, mid - half)
         let end   = min(1, mid + half)
 
-        layer.colors = [c1, c1, c2, c1, c1]
-        layer.locations = [
-            0.0 as NSNumber,
-            NSNumber(value: start),
-            NSNumber(value: mid),
-            NSNumber(value: end),
-            1.0 as NSNumber
-        ]
+        layer
+            .byColors([c1, c1, c2, c1, c1])
+            .byLocations([
+                0.0 as NSNumber,
+                NSNumber(value: start),
+                NSNumber(value: mid),
+                NSNumber(value: end),
+                1.0 as NSNumber
+            ])
     }
 
     private func jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: Bool = false) {
+        
         guard let layer = jobs_shimmerLayer else { return }
         guard jobs_isShimmeringStored else { return }
 
@@ -265,16 +266,15 @@ extension UIView {
             jobs_lastAnimationWidth = w
             return
         }
-
-        let animation = CABasicAnimation(keyPath: "transform.translation.x")
-        animation.fromValue = -w
-        animation.toValue   = w
-        animation.duration  = max(cfg.duration, 0.01)
-        animation.repeatCount = .greatestFiniteMagnitude
-        animation.isRemovedOnCompletion = false
-        animation.timingFunction = CAMediaTimingFunction(name: .linear)
-
-        layer.add(animation, forKey: "jobs.shimmer")
+        
+        layer.add(
+            CABasicAnimation(keyPath: "transform.translation.x")
+                .byFromValue(-w)
+                .byToValue(w)
+                .byDuration(max(cfg.duration, 0.01))
+                .byRepeatCount(.greatestFiniteMagnitude)
+                .byRemovedOnCompletion(false)
+                .byTimingFunction(CAMediaTimingFunction(name: .linear)), forKey: "jobs.shimmer")
         jobs_lastAnimationWidth = w
     }
 }

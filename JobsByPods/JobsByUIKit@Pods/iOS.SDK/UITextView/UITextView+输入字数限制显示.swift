@@ -19,7 +19,8 @@ extension UITextView {
     /// 右下角计数提示：`当前字数/限制字数`，如 `3/200`
     /// - Note: 视觉优先。一旦设置，对于限制字数的优先级 ➤ byHintLimit > byOnInput
     @discardableResult
-    public func byHintLimit(_ limit: Int, _ config: ((UILabel) -> Void)? = nil) -> Self {
+    public func byHintLimit(_ limit: Int,
+                            _ config: ((UILabel) -> Void)? = nil) -> Self {
         let locked = max(0, limit)
         jobs_hintLimitLocked = locked // ✅ 锁定优先级来源
         // ✅ 强制同步到真正的输入限制
@@ -31,12 +32,13 @@ extension UITextView {
         jobs_installTextDidChangeObserverIfNeeded()
         jobs_installSuperviewHookIfNeeded()
         jobs_attachHintLabelIfPossible()
-        DispatchQueue.main.async { [weak self] in
-            self?.jobs_attachHintLabelIfPossible()
-            self?.jobs_updateHintLabel()
+        jobsRunOnMain { [weak self] in
+            guard let self else { return }
+            self.jobs_attachHintLabelIfPossible()
+            self.jobs_updateHintLabel()
             // 再同步一次，确保后续链式不会改掉
-            if let locked = self?.jobs_hintLimitLocked {
-                self?.jobs_textInputObserver.limit = locked
+            if let locked = self.jobs_hintLimitLocked {
+                self.jobs_textInputObserver.limit = locked
             }
         };return self
     }
@@ -75,12 +77,20 @@ extension UITextView {
     }
 
     private final class JobsSuperviewHookView: UIView {
+        
         weak var host: UITextView?
+        @discardableResult
+        public func byHost(_ host: UITextView?) -> Self {
+            self.host = host
+            return self
+        }
+        
         override func didMoveToSuperview() {
             super.didMoveToSuperview()
             host?.jobs_attachHintLabelIfPossible()
             host?.jobs_updateHintLabel()
         }
+        
         override func didMoveToWindow() {
             super.didMoveToWindow()
             host?.jobs_attachHintLabelIfPossible()
@@ -90,40 +100,84 @@ extension UITextView {
 
     internal var jobs_hintLimitLocked: Int? {
         get { objc_getAssociatedObject(self, &JobsHintKeys.hintLockedKey) as? Int }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.hintLockedKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.hintLockedKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     fileprivate var jobs_hintLabel: UILabel? {
         get { objc_getAssociatedObject(self, &JobsHintKeys.labelKey) as? UILabel }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.labelKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.labelKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     private var jobs_textDidChangeToken: NSObjectProtocol? {
         get { objc_getAssociatedObject(self, &JobsHintKeys.tokenKey) as? NSObjectProtocol }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.tokenKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.tokenKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     private var jobs_originalTextInset: UIEdgeInsets? {
         get { (objc_getAssociatedObject(self, &JobsHintKeys.originalInsetKey) as? NSValue)?.uiEdgeInsetsValue }
         set {
-            let v: NSValue? = newValue.map { NSValue(uiEdgeInsets: $0) }
-            objc_setAssociatedObject(self, &JobsHintKeys.originalInsetKey, v, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.originalInsetKey,
+                newValue.map { NSValue(uiEdgeInsets: $0) },
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
     }
 
     fileprivate var jobs_didAdjustInset: Bool {
         get { (objc_getAssociatedObject(self, &JobsHintKeys.didAdjustInsetKey) as? Bool) ?? false }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.didAdjustInsetKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.didAdjustInsetKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 
     private var jobs_deinitBox: JobsDeinitBox? {
         get { objc_getAssociatedObject(self, &JobsHintKeys.deinitBoxKey) as? JobsDeinitBox }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.deinitBoxKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.deinitBoxKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_superviewHook: JobsSuperviewHookView? {
         get { objc_getAssociatedObject(self, &JobsHintKeys.superviewHookKey) as? JobsSuperviewHookView }
-        set { objc_setAssociatedObject(self, &JobsHintKeys.superviewHookKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsHintKeys.superviewHookKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }
 // MARK: - Install / Update
@@ -167,15 +221,13 @@ extension UITextView {
 
     fileprivate func jobs_installSuperviewHookIfNeeded() {
         if jobs_superviewHook != nil { return }
-        let hook = JobsSuperviewHookView(frame: .zero)
-        hook.backgroundColor = .clear
-        hook.isUserInteractionEnabled = false
-        hook.host = self
-        addSubview(hook)
-        hook.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        jobs_superviewHook = hook
+        jobs_superviewHook = JobsSuperviewHookView(frame: .zero)
+            .byBackgroundColor(.clear)
+            .byUserInteractionEnabled(false)
+            .byHost(self)
+            .byAddTo(self) { [unowned self] make in
+                make.edges.equalToSuperview()
+            }
     }
 
     fileprivate func jobs_adjustTextInsetForHintLabelIfNeeded() {
@@ -208,7 +260,8 @@ extension UITextView {
             object: self,
             queue: .main
         ) { [weak self] _ in
-            self?.jobs_updateHintLabel()
+            guard let self else { return }
+            self.jobs_updateHintLabel()
         }
         jobs_textDidChangeToken = token
         if jobs_deinitBox == nil {

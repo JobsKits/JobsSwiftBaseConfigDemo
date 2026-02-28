@@ -13,7 +13,7 @@ import UIKit
 
 extension UIButton {
     // MARK: - 锁死标题颜色：任何 state 都保持同一种颜色，不跟 tint / 系统态自动变化
-    public func byLockTitleColor(_ color: UIColor) -> Self{
+    public func byLockTitleColor(_ color: UIColor) -> Self {
         // 1) 锁死所有状态的 titleColor
         let states: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
         states.forEach { self.setTitleColor(color, for: $0) }

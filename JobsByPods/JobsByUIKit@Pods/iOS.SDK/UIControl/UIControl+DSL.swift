@@ -16,9 +16,9 @@ import ObjectiveC
 extension UIControl {
     
     private final class _JobsActionTrampoline: NSObject {
+        
         let handler: (UIControl) -> Void
         init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
-
         @objc func invoke(_ sender: UIControl) { handler(sender) }
     }
 
@@ -31,16 +31,31 @@ extension UIControl {
             return arr
         }
         let arr = NSMutableArray()
-        objc_setAssociatedObject(self, &_JobsAssocKey.trampolines, arr, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return arr
+        objc_setAssociatedObject(
+            self,
+            &_JobsAssocKey.trampolines,
+            arr,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return arr
     }
     // MARK: - 基础状态
     @discardableResult
-    public func byEnabled(_ on: Bool?) -> Self { self.isEnabled = on ?? false; return self }
+    public func byEnabled(_ on: Bool?) -> Self {
+        self.isEnabled = on ?? false
+        return self
+    }
+    
     @discardableResult
-    public func bySelected(_ on: Bool?) -> Self { self.isSelected = on ?? false; return self }
+    public func bySelected(_ on: Bool?) -> Self {
+        self.isSelected = on ?? false
+        return self
+    }
+    
     @discardableResult
-    public func byHighlighted(_ on: Bool?) -> Self { self.isHighlighted = on ?? false; return self }
+    public func byHighlighted(_ on: Bool?) -> Self {
+        self.isHighlighted = on ?? false
+        return self
+    }
     // MARK: - 内容对齐（你关心的 contentHorizontalAlignment / contentVerticalAlignment）
     /// ✅ 单独设置 contentHorizontalAlignment
     @discardableResult
@@ -54,10 +69,10 @@ extension UIControl {
         self.contentVerticalAlignment = alignment
         return self
     }
-    /// 兼容你原来的“同时设置”写法（保留）
+    /// 同时设置
     @discardableResult
     public func byContentAlignment(horizontal: UIControl.ContentHorizontalAlignment? = nil,
-                            vertical: UIControl.ContentVerticalAlignment? = nil) -> Self {
+                                   vertical: UIControl.ContentVerticalAlignment? = nil) -> Self {
         if let h = horizontal { self.contentHorizontalAlignment = h }
         if let v = vertical { self.contentVerticalAlignment = v }
         return self
@@ -70,24 +85,32 @@ extension UIControl {
     }
     // MARK: - Target-Action（传统）
     @discardableResult
-    public func byAddTarget(_ target: Any?, action: Selector, for events: UIControl.Event) -> Self {
-        addTarget(target, action: action, for: events); return self
+    public func byAddTarget(_ target: Any?,
+                            action: Selector,
+                            for events: UIControl.Event) -> Self {
+        addTarget(target, action: action, for: events)
+        return self
     }
     @discardableResult
-    public func byRemoveTarget(_ target: Any?, action: Selector? = nil, for events: UIControl.Event) -> Self {
-        removeTarget(target, action: action, for: events); return self
+    public func byRemoveTarget(_ target: Any?,
+                               action: Selector? = nil,
+                               for events: UIControl.Event) -> Self {
+        removeTarget(target, action: action, for: events)
+        return self
     }
     /// 触发指定事件（比如 .touchUpInside）
     @discardableResult
     public func bySendActions(for events: UIControl.Event) -> Self {
-        sendActions(for: events); return self
+        sendActions(for: events)
+        return self
     }
     // MARK: - UIAction（iOS 14+）
     /// 直接加一个 UIAction；identifier 相同会被替换
     @available(iOS 14.0, *)
     @discardableResult
     public func byAddAction(_ action: UIAction, for events: UIControl.Event) -> Self {
-        addAction(action, for: events); return self
+        addAction(action, for: events)
+        return self
     }
     /// ✅ 闭包形式，iOS12/13/14+ 都能用
     @discardableResult
@@ -112,7 +135,6 @@ extension UIControl {
         addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
         return self
     }
-
     // ================================== ✅ 强壮版：允许链式中类型被“擦除”也能拿到具体 sender ==================================
     /// 典型场景：UISwitch().byOn(YES).byAddAction(for: .valueChanged) { (sw: UISwitch) in ... }
     /// 即使前面 DSL 把静态类型变成了 UIControl，这个重载也能通过闭包参数推断 T=UISwitch。
@@ -153,48 +175,52 @@ extension UIControl {
     @available(iOS 14.0, *)
     @discardableResult
     public func byOn(_ events: UIControl.Event,
-              id: UIAction.Identifier? = nil,
-              _ handler: @escaping (UIAction) -> Void) -> Self {
-        let action = UIAction(identifier: id, handler: handler)
-        addAction(action, for: events)
+                     id: UIAction.Identifier? = nil,
+                     _ handler: @escaping (UIAction) -> Void) -> Self {
+        addAction( UIAction(identifier: id, handler: handler), for: events)
         return self
     }
     /// 便捷：primaryActionTriggered
     @available(iOS 14.0, *)
     @discardableResult
     public func byOnPrimaryAction(id: UIAction.Identifier? = nil,
-                           _ handler: @escaping (UIAction) -> Void) -> Self {
+                                  _ handler: @escaping (UIAction) -> Void) -> Self {
         byOn(.primaryActionTriggered, id: id, handler)
     }
     // MARK: - Primary Action（iOS 17.4+）
     @available(iOS 17.4, *)
     @discardableResult
     public func byPerformPrimaryAction() -> Self {
-        performPrimaryAction(); return self
+        performPrimaryAction()
+        return self
     }
     // MARK: - Context Menu（iOS 14+）
     /// 开启/关闭把菜单作为主操作（touch-down 展开）
     @available(iOS 14.0, *)
     @discardableResult
     public func byShowsMenuAsPrimaryAction(_ on: Bool) -> Self {
-        self.showsMenuAsPrimaryAction = on; return self
+        self.showsMenuAsPrimaryAction = on
+        return self
     }
     /// 启用/禁用上下文菜单交互
     @available(iOS 14.0, *)
     @discardableResult
     public func byContextMenuEnabled(_ on: Bool) -> Self {
-        self.isContextMenuInteractionEnabled = on; return self
+        self.isContextMenuInteractionEnabled = on
+        return self
     }
     // MARK: - ToolTip（iOS 15+）
     @available(iOS 15.0, *)
     @discardableResult
     public func byToolTip(_ text: String?) -> Self {
-        self.toolTip = text; return self
+        self.toolTip = text
+        return self
     }
     // MARK: - SF Symbol 动画（iOS 17+）
     @available(iOS 17.0, *)
     @discardableResult
     public func bySymbolAnimationEnabled(_ on: Bool) -> Self {
-        self.isSymbolAnimationEnabled = on; return self
+        self.isSymbolAnimationEnabled = on
+        return self
     }
 }
