@@ -100,28 +100,46 @@ extension UIButton {
         self.setAttributedTitle(text, for: state)
         return self
     }
-    /// 记录某个 state 的标题字体（iOS15+ 会在 handler 内生效；iOS14- 你自己用 titleLabel?.font 即可）
+    /// 记录某个 state 的标题字体（iOS15+ 会在 handler 内生效；iOS14- 同步 titleLabel.font + attributedTitle）
     @discardableResult
     public func byTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
-        
+
+        // 记录 state -> font（给 iOS15+ update handler 使用）
         if let font {
             _titleFontDict[state.rawValue] = font
         } else {
             _titleFontDict.removeValue(forKey: state.rawValue)
         }
-        
+
+        // iOS15+：走 configurationUpdateHandler，不要再用 legacy attributedTitle 去覆盖
         if #available(iOS 15.0, tvOS 15.0, *) {
+            // 这句不是必须，但加上更稳：有些场景 titleLabel 仍然参与计算/展示
+            self.titleLabel?.font = font
+
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
-        } else {
-            self.titleLabel?.font = font
+            return self
         }
-        // iOS14 及以下：尽量用 attributedTitle 做 state 区分（前提：先 setTitle 再调这个）
-        let t = self.title(for: state) ?? self.attributedTitle(for: state)?.string ?? ""
-        if !t.isEmpty {
-            var attrs: [NSAttributedString.Key: Any] = [.font: font ?? UIFont.systemFont(ofSize: 15)]
-            if let c = self.titleColor(for: state) { attrs[.foregroundColor] = c }
-            self.setAttributedTitle(NSAttributedString(string: t, attributes: attrs), for: state)
+        // iOS14 及以下：legacy
+        // 1) 先把 titleLabel.font 设置上（你要的“肯定需要”就在这里）
+        self.titleLabel?.font = font
+        // 2) 用 attributedTitle 补齐常用状态，避免按下/选中/禁用时回系统字体
+        let syncStates: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
+        for st in syncStates {
+            // 如果该状态你已经手动设置过 attributedTitle，就别覆盖
+            if self.attributedTitle(for: st) != nil { continue }
+            // 优先取该状态的 title，取不到回退 normal
+            let t = self.title(for: st) ?? self.title(for: .normal) ?? ""
+            if t.isEmpty { continue }
+
+            var attrs: [NSAttributedString.Key: Any] = [
+                .font: font ?? UIFont.systemFont(ofSize: 15)
+            ]
+            // 颜色：优先该状态，取不到回退 normal
+            if let c = self.titleColor(for: st) ?? self.titleColor(for: .normal) {
+                attrs[.foregroundColor] = c
+            }
+            self.setAttributedTitle(NSAttributedString(string: t, attributes: attrs), for: st)
         };return self
     }
     /// 记录某个 state 的标题颜色（iOS15+ 走 configuration；iOS14- 走 setTitleColor）
