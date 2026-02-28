@@ -22,10 +22,10 @@ extension UIButton {
             if var c = self.configuration {
                 c.baseForegroundColor = color
                 self.configuration = c
-            }
+            };byUpdateConfig()
         }
         // 3) 避免 tint 影响（尤其是 system button）
-        self.tintColor = .clear
+        byTintColor(.clear)
         // 4) 禁止 UIButton 自动“变暗/变亮”之类的调整（有时会影响观感）
         self.adjustsImageWhenHighlighted = false
         self.adjustsImageWhenDisabled = false
@@ -44,7 +44,6 @@ extension UIButton {
                 setBackgroundImage(bg.withRenderingMode(.alwaysOriginal), for: st)
             }
         }
-
         // 避免系统按压/禁用自动“变暗”
         adjustsImageWhenHighlighted = false
         adjustsImageWhenDisabled = false
@@ -64,7 +63,7 @@ extension UIButton {
                     c.imageColorTransformer = UIConfigurationColorTransformer { _ in color }
                     btn.configuration = c
                 }
-            };setNeedsUpdateConfiguration()
+            };byUpdateConfig()
         };return self
     }
     // MARK: - 只锁 Background（背景色不随状态变）
@@ -73,12 +72,6 @@ extension UIButton {
         if #available(iOS 15.0, *) {
             ensureConfigUpdateHandler { btn in
                 var c = btn.configuration ?? .plain()
-                // 1) style 用 plain（不要 tinted/filled）
-                //    如果外部已经给了别的 style，这里强行回到 plain，避免 tint 介入背景
-                if c.background.cornerRadius == nil {
-                    // 保留你原有 cornerRadius 逻辑的话，这里不动也行
-                }
-                // 2) 背景彻底锁死
                 c.baseBackgroundColor = color
                 c.background.backgroundColor = color
                 c.background.strokeColor = .clear
@@ -87,14 +80,10 @@ extension UIButton {
                 c.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in
                     color
                 }
-                // 4) 如果不希望系统自动根据状态调外观（推荐关）
-                btn.automaticallyUpdatesConfiguration = false
                 btn.configuration = c
-            }
-            setNeedsUpdateConfiguration()
-            if #available(iOS 15.0, *) { updateConfiguration() }
+            };byUpdateConfig()
         } else {
-            backgroundColor = color
+            byBackgroundColor(color)
         };return self
     }
     // MARK: - 只锁 Border（边框色不随状态变，iOS 15+）
@@ -104,17 +93,15 @@ extension UIButton {
         layer.borderColor = color.cgColor
         if #available(iOS 15.0, *) {
             ensureConfigUpdateHandler { btn in
-                var c = btn.configuration ?? .plain()
-                var bg = c.background
-                bg.strokeColor = color
-                if let width { bg.strokeWidth = width }
-                c.background = bg
-                btn.configuration = c
-
-                // 同步 layer（有时候你没用 configuration.background，也能看到边框）
+                btn.configuration = (btn.configuration ?? .plain())
+                    .byBackgroundPatch { bg in
+                        bg.strokeColor = color
+                        if let width { bg.strokeWidth = width }
+                    }
+                // 同步 layer（有时候没用 configuration.background，也能看到边框）
                 btn.layer.borderColor = color.cgColor
                 if let width { btn.layer.borderWidth = width }
-            };setNeedsUpdateConfiguration()
+            };byUpdateConfig()
         };return self
     }
     // MARK: - 一个“不会互相覆盖”的 handler 合并器

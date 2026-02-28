@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 
 final class FoldCell: UITableViewCell {
@@ -110,8 +111,8 @@ final class FoldCell: UITableViewCell {
                 make.edges.equalToSuperview()
             }
     }()
-
     // MARK: - Init
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -131,9 +132,6 @@ final class FoldCell: UITableViewCell {
 
         setExpanded(false, animated: false)
     }
-
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
     override func layoutSubviews() {
         super.layoutSubviews()
         // 折页从顶部边开始翻
@@ -144,23 +142,25 @@ final class FoldCell: UITableViewCell {
         super.prepareForReuse()
         setExpanded(false, animated: false)
     }
+}
 
-    func configure(title: String,
-                   subtitle: String,
-                   detail: String,
-                   expanded: Bool) -> Self{
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
-        detailLabel.text = detail
+extension FoldCell {
+    
+    func byData(title: String,
+                subtitle: String,
+                detail: String,
+                expanded: Bool) -> Self{
+        titleLabel.byText(title)
+        subtitleLabel.byText(subtitle)
+        detailLabel.byText(detail)
         setExpanded(expanded, animated: false)
         return self
     }
-
+    /// 展开/收起的核心方法
     func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
 
         if expanded {
-            // 用的时候：byVisible(YES) “唤起”
             detailContentView.byVisible(YES)
         }
 

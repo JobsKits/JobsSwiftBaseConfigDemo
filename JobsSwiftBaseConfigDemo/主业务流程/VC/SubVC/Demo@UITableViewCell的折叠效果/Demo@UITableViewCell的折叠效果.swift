@@ -61,6 +61,54 @@ final class FoldTableDemoVC: BaseVC {
     }
 }
 
+extension FoldTableDemoVC {
+    /// 统一的展开/收起切换逻辑（cell 点击、按钮点击都走这里）
+    private func toggle(at indexPath: IndexPath) {
+        let willExpand = !expanded.contains(indexPath)
+        if willExpand { expanded.insert(indexPath) } else { expanded.remove(indexPath) }
+
+        if let cell = tableView.cellForRow(at: indexPath) as? FoldCell {
+            cell.setExpanded(willExpand, animated: true)
+        }
+        /// 让 tableView 重新计算该行高度
+        tableView.performBatchUpdates(nil, completion: nil)
+    }
+    /// 全部展开
+    func expandAll(animated: Bool = true) {
+        // 1) 生成所有行的 indexPath（按你的数据源来）
+        var all = Set<IndexPath>()
+        let sections = tableView.numberOfSections
+        for section in 0..<sections {
+            let rows = tableView.numberOfRows(inSection: section)
+            for row in 0..<rows {
+                all.insert(IndexPath(row: row, section: section))
+            }
+        }
+        // 2) 写入状态
+        expanded = all
+        // 3) 同步可见 cell 的 UI（避免等复用才更新）
+        for cell in tableView.visibleCells {
+            guard let foldCell = cell as? FoldCell,
+                  let _ = tableView.indexPath(for: foldCell) else { continue }
+            foldCell.setExpanded(true, animated: animated)
+        }
+        // 4) 触发高度重算
+        tableView.performBatchUpdates(nil, completion: nil)
+    }
+    /// 全部收起
+    func collapseAll(animated: Bool = true) {
+        // 1) 清空状态
+        expanded.removeAll()
+        // 2) 同步可见 cell 的 UI
+        for cell in tableView.visibleCells {
+            guard let foldCell = cell as? FoldCell else { continue }
+            foldCell.setExpanded(false, animated: animated)
+        }
+        // 3) 触发高度重算
+        tableView.performBatchUpdates(nil, completion: nil)
+    }
+}
+
 extension FoldTableDemoVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -70,7 +118,10 @@ extension FoldTableDemoVC: UITableViewDataSource {
         let cell: FoldCell = tableView.byDequeueReusableCell(withType: FoldCell.self,for: indexPath) // 自动注册&复用 :contentReference[oaicite:1]{index=1}
         let r = rows[indexPath.row]
         let isExpanded = expanded.contains(indexPath)
-        return cell.configure(title: r.title, subtitle: r.subtitle, detail: r.detail, expanded: isExpanded)
+        return cell.byData(title: r.title,
+                           subtitle: r.subtitle,
+                           detail: r.detail,
+                           expanded: isExpanded)
     }
 }
 
@@ -80,14 +131,7 @@ extension FoldTableDemoVC: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let willExpand = !expanded.contains(indexPath)
-        if willExpand { expanded.insert(indexPath) } else { expanded.remove(indexPath) }
-
-        if let cell = tableView.cellForRow(at: indexPath) as? FoldCell {
-            cell.setExpanded(willExpand, animated: true)
-        }
-
-        tableView.performBatchUpdates(nil, completion: nil)
+        self.toggle(at: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

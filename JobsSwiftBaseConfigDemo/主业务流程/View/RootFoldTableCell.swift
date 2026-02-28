@@ -13,6 +13,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
 final class RootFoldTableCell: UITableViewCell,
@@ -182,7 +183,7 @@ extension RootFoldTableCell{
         innerTableView.reloadData()
         setExpanded(expanded, animated: false)
     }
-    
+    /// 展开/收起的核心方法
     func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
         let targetH: CGFloat = expanded ? CGFloat(items.count) * Self.innerRowH : 0
