@@ -33,7 +33,7 @@ final class JobsUnfairLock {
 /// - stop 后 late event：generation token 防穿透
 /// - ✅ 修复：GCD suspend/cancel 平衡（不会炸）
 /// - ✅ 修复：one-shot 在非 main queue 上 stop 的主线程路由（不会炸）
-public final class JobsTimer: JobsSwiftTimerProtocol { 
+public final class JobsTimer: JobsSwiftTimerProtocol {
     // MARK: - State
     private enum State: Equatable {
         case idle
@@ -106,6 +106,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
         teardownAppState()
     }
     // MARK: - JobsSwiftTimerProtocol
+    /// 启动计时器
     @discardableResult
     public func start() -> Self {
         if kind != .gcd { requireMainThreadForRunLoopAPI("start") }
@@ -135,7 +136,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             startRunLoopTimer(token: token)
         };return self
     }
-
+    /// 暂停计时器
     @discardableResult
     public func pause() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("pause") }
@@ -164,7 +165,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             }
         };return self
     }
-
+    /// 恢复计时器
     @discardableResult
     public func resume() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("resume") }
@@ -188,7 +189,32 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             startRunLoopTimer(token: token)
         };return self
     }
+    /// 停止计时器（销毁@有回调）
+    @discardableResult
+    public func fireOnce() -> Self {
+        // 非 GCD：RunLoop/DisplayLink/Foundation 的 invalidate 必须主线程做
+        if kind != .gcd, !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                _ = self?.fireOnce()
+            }
+            return self
+        }
 
+        let (shouldStop, finish) = stateLock.jobs_withLock { () -> (Bool, JobsTimerCallback?) in
+            guard state != .stopped else { return (false, nil) }
+            state = .stopped
+            generation &+= 1
+            return (true, finishBlock)
+        }
+        guard shouldStop else { return self }
+        // 真正销毁底层 timer
+        stopInternal()
+        // “有回调”：补一次 finish
+        if let finish {
+            config.queue.async { finish() }
+        };return self
+    }
+    /// 停止计时器（销毁@无回调）
     @discardableResult
     public func stop() -> Self{
         if kind != .gcd {
@@ -206,13 +232,13 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
         stopInternal()
         return self
     }
-
+    /// 注册回调（每 tick 执行一次）
     @discardableResult
     public func onTick(_ block: @escaping JobsTimerCallback) -> Self {
         stateLock.jobs_withLock { tickBlock = block }
         return self
     }
-
+    /// 注册完成回调（用于一次性定时器或倒计时）
     @discardableResult
     public func onFinish(_ block: @escaping JobsTimerCallback) -> Self {
         stateLock.jobs_withLock { finishBlock = block }

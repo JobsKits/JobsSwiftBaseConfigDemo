@@ -2572,66 +2572,26 @@ private lazy var exampleButton: UIButton = {
 
 ##### 2.2.2、⏰ <font color=red id=计数按钮>**计数按钮**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-> * ⏰ 计时器开始
->
->   * 正计时
->
->     ```swift
->     self?.startButton.startTimer(
->         total: nil,                 // ❤️ 不传 => 正计时
->         interval: self.intervalSec,
->         kind: self.currentKind
->     )
->     ```
->
->   * 倒计时
->
->     ```swift
->     let total = self.parseCountdownTotal(10)
+> ```swift
+>import JobsByUIKit
+> /// 正/倒计时配置
+>guard isCountdownTime else {
 >     btn.startTimer(
->         total: total, // ❤️ 传 total => 倒计时
->         interval: self.intervalSec,
->         kind: self.currentKind
->     )
->     ```
->
-> * ⏰ 计时器暂停
->
->   ```swift
->   self?.startButton.pauseTimer()
->   self?.countdownButton.pauseTimer()
->   ```
->
-> * ⏰ 计时器重新开始（恢复计时）
->
->   ```swift
->   self?.startButton.resumeTimer()
->   self?.countdownButton.resumeTimer()
->   ```
->
-> * ⏰ 计时器销毁
->
->   > 触发回调后销毁定时器
->
->   ```swift
->   self?.startButton.fireTimerOnce()
->   self?.countdownButton.fireTimerOnce()
->   ```
->
-> * ⏰ 计时器停止 
->
->   > 销毁但不触发回调
->
->   ```swift
->   self?.startButton.stopTimer()
->   self?.countdownButton.stopTimer()
->   ```
->
+>         total: 60,// ❤️ 这里的参数如果不传（nil） => 则为正计时
+>         interval: 1,
+>         kind: nil) { [weak self] btn in
+>             guard let self else { return }
+>             isCountdownTime = YES
+>                             /// TODO
+>        };return
+> }
+>```
 
-###### 2.2.2.1、⏰ 正计时计数按钮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+###### 2.2.2.1、⏰ 计时按钮（创建方案一） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
-// MARK: - 开始按钮（正计时：不传 total；按钮标题自动显示 elapsed）
+import JobsByUIKit
+
 private lazy var startButton: UIButton = {
     UIButton(type: .system)
         .byTitle("开始", for: .normal)
@@ -2641,74 +2601,88 @@ private lazy var startButton: UIButton = {
         .byCornerRadius(10)
         .byMasksToBounds(true)
         // 每 tick：更新时间 & 最近触发时间
-        .onTimerTick { [weak self] btn, elapsed, _, kind in
-            guard let self else { return }
-            // 正计时：elapsed（秒）已由按钮内部自动设置为标题，这里只补充 lastFireLabel
-            self.lastFireLabel.text = "Last: " + Self.fmt(Date())
-        }
+        .onCountdownTick({ button, remain, total, kind in
+            /// TODO
+        })
         // 状态变化：驱动控制键（暂停/继续/Fire/停止）的可用与配色
-        .onTimerStateChange { [weak self] _, _, new in
-            self?.updateControlButtons(by: new)
-        }
+        .onTimerStateChange({ [weak self] button, old, new in
+            guard let self else { return }
+            /// TODO
+        })
         // 点击开始：不传 total => 正计时
         .onTap { [weak self] btn in
             guard let self else { return }
-            self.lastFireLabel.text = "Last: -"
-            btn.startTimer(
-                total: nil,                 // ❤️ 不传 => 正计时
-                interval: self.intervalSec,
-                kind: self.currentKind
-            )
+            /// 正/倒计时配置
+            guard isCountdownTime else {
+                btn.startTimer(
+                    total: 60,// ❤️ 这里的参数如果不传（nil） => 则为正计时
+                    interval: 1,
+                    kind: nil) { [weak self] btn in
+                        guard let self else { return }
+                        isCountdownTime = YES
+                                        /// TODO
+                    };return
+            }
         }
         .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(countdownField.snp.bottom).offset(14)
-            make.left.equalToSuperview().offset(horizontalInset)
-            make.right.equalToSuperview().inset(horizontalInset)
-            make.height.equalTo(56)
+            /// TODO
         }
 }()
 ```
 
-###### 2.2.2.2、⏰ 倒计时计数按钮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+###### 2.2.2.2、⏰ 计时按钮（创建方案二） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
-// MARK: - 倒计时演示按钮（同一套 API：传 total => 倒计时）
+import JobsCountdownButton
+
 private lazy var countdownButton: UIButton = {
-    UIButton(type: .system)
-        .byTitle("获取验证码", for: .normal)
-        .byTitleColor(.white, for: .normal)
-        .byBackgroundColor(.systemGreen, for: .normal)
-        .onCountdownTick { [weak self] btn, remain, total, kind in
-            guard let self else { return }
-            print("⏱️ [\(kind.jobs_displayName)] \(remain)/\(total)")
-            self.lastFireLabel.text = "Last: " + Self.fmt(Date())
-            btn.byTitle("还剩 \(remain)s", for: .normal)
-        }
-        .onCountdownFinish { _, kind in
-            print("✅ [\(kind.jobs_displayName)] 倒计时完成")
-        }
-        .onTap { [weak self] btn in
-            guard let self else { return }
-            let total = self.parseCountdownTotal(10)
-            btn.startTimer(
-                total: total, // ❤️ 传 total => 倒计时
-                interval: self.intervalSec,
-                kind: self.currentKind
-            )
-            // 关键：等 startTimer 把 "10s" 设好后再加前缀，避免被覆盖
-            DispatchQueue.main.async {
-                let cur = btn.title(for: .normal) ?? "\(total)s"
-                if !cur.hasPrefix("还剩 ") {
-                    btn.byTitle("还剩 \(cur)", for: .normal)
-                }
+    UIButton()
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
+            cfg.mode = .down(from: 12)
+            cfg.clickableWhileRunning = true
+            cfg.onTapWhileRunning = { btn, _ in
+                "运行中被点击！".toast
+            }
+            cfg.renderConfiguration = { sec, base in
+                var c = base
+                c.title = "可点 \(sec)s"
+                return c
             }
         }
-        .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(self.hintLabel.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(horizontalInset)
-            make.right.equalToSuperview().inset(horizontalInset)
-            make.height.equalTo(50)
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        //.byCountdownOnTapAuto()
+        .onTap { [weak self] sender in
+            guard let self = self,
+                  let ctrl = sender.jobsCountdownController
+            else { return }
+
+            if ctrl.isRunning {
+                // 正在跑
+                if ctrl.config.clickableWhileRunning {
+                    ctrl.config.onTapWhileRunning?(sender, ctrl.config)
+                } else {
+                    // 不可点就直接吞掉点击
+                }
+            } else {
+                // 未运行 -> 开始
+                ctrl.start()
+            }
         }
+    
+        .byAddTo(self) { [unowned self] make in
+            /// TODO
+        }
+        .byBorderColor(.cyan)
+        .byBorderWidth(0.5)
+        .byMasksToBounds(YES)
+        .byClipsToBounds(YES)
+        /// 切角@平面四个角全切
+        .byCornerRadius(8.h)
+        /// 切角@切固定角，iOS11及其以后可用。需要再配合layer.cornerRadius以生效
+        .byMaskedCorners([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+        /// 切角@切固定角，兼容旧版本iOS系统
+        .byCornerRaduis(corner: [.bottomLeft, .bottomRight], raduis: 4)
 }()
 ```
 
@@ -6081,36 +6055,52 @@ AppLaunchManager.handleLaunch(
 #### 22.1、⏰[（`NSTimer`/`GCD`/`DisplayLink`/`RunLoop`）统一协议方便调用](#定时器) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
-public protocol JobsTimerProtocol: AnyObject {
-    /// 当前是否运行中
+import Foundation
+// MARK: - 统一协议
+public protocol JobsSwiftTimerProtocol: AnyObject {
+    /// 计时器当前是否处于运行中
     var isRunning: Bool { get }
     /// 启动计时器
-    func start()
+    @discardableResult
+    func start() -> Self
     /// 暂停计时器
-    func pause()
+    @discardableResult
+    func pause() -> Self
     /// 恢复计时器
-    func resume()
+    @discardableResult
+    func resume() -> Self
     /// 停止计时器（销毁@有回调）
-    func fireOnce()
+    @discardableResult
+    func fireOnce() -> Self
     /// 停止计时器（销毁@无回调）
-    func stop()
+    @discardableResult
+    func stop() -> Self
     /// 注册回调（每 tick 执行一次）
     @discardableResult
-    func onTick(_ block: @escaping () -> Void) -> Self
+    func onTick(_ block: @escaping JobsTimerCallback) -> Self
     /// 注册完成回调（用于一次性定时器或倒计时）
     @discardableResult
-    func onFinish(_ block: @escaping () -> Void) -> Self
+    func onFinish(_ block: @escaping JobsTimerCallback) -> Self
+}
+// MARK: - 标识协议（建议用于 Manager ID 管理）
+public protocol JobsSwiftTimerIdentifiable {
+    var identifier: String? { get }
 }
 ```
 
 #### 22.2、使用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
-JobsTimerFactory.make(kind: .displayLink,
-                      config: JobsTimerConfig(interval: 1, repeats: true, tolerance: 0.002, queue: .main)) {
-    ///  日期打印
-    print(Date().formatted(date: .numeric, time: .standard))
-}.start()
+let t = JobsTimer(kind: kind, config: config) { [weak self] in
+    guard let self else { return }
+    guard self.state == .running else { return }
+    guard let start = self.startDate else { return }
+		/// TODO
+}
+
+timer?.stop()
+timer = t
+t.start()
 ```
 
 #### 22.3、[计数按钮](#计数按钮) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

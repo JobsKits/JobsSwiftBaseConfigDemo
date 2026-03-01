@@ -22,6 +22,37 @@ import JobsCountdownButton
 import JobsSwiftBaseDefines
 
 final class JobsCountdownDemoVC: BaseVC {
+    /// 是否正在倒计时这个状态除了本页使用以外，也要防止App闪退，所以需要实时记录在UserDefaults
+    /// 倒计时剩余的时间，也需要用UserDefaults进行存取，防止App闪退
+    /// 只有倒计时正在进行中的状态时，有剩余的时间（数据来源：UserDefaults存取，如果为0，则用默认值）
+    private let countdownTimeKey = "com.BSports.countdownTimeKey"
+    private let isCountdownTimeKey = "com.BSports.isCountdownTimeKey"
+
+    private let defaultCountdownTime = 15 * 60
+    /// 为真则正在跑计时器
+    var isCountdownTime: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: isCountdownTimeKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: isCountdownTimeKey)
+        }
+    }
+
+    var countdownTime: Int {
+        get {
+            // 不在倒计时，直接返回默认值
+            guard isCountdownTime else {
+                return defaultCountdownTime
+            }
+            let value = UserDefaults.standard.integer(forKey: countdownTimeKey)
+            // 如果 UserDefaults 里是 0，说明异常或未存储，用默认值
+            return value > 0 ? value : defaultCountdownTime
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: countdownTimeKey)
+        }
+    }
     /// 外层滚动视图
     private lazy var scrollView: UIScrollView = { [unowned self] in
         UIScrollView()
@@ -36,6 +67,43 @@ final class JobsCountdownDemoVC: BaseVC {
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
                 make.width.equalTo(scrollView.snp.width)
+            }
+    }()
+    /// 另一种方式@创建倒计时按钮
+    private lazy var startButton: UIButton = {
+        UIButton(type: .system)
+            .byTitle("开始", for: .normal)
+            .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
+            .byTitleColor(.white, for: .normal)
+            .byBackgroundColor(.systemBlue, for: .normal)
+            .byCornerRadius(10)
+            .byMasksToBounds(true)
+            // 每 tick：更新时间 & 最近触发时间
+            .onCountdownTick({ button, remain, total, kind in
+                /// TODO
+            })
+            // 状态变化：驱动控制键（暂停/继续/Fire/停止）的可用与配色
+            .onTimerStateChange({ [weak self] button, old, new in
+                guard let self else { return }
+                /// TODO
+            })
+            // 点击开始：不传 total => 正计时
+            .onTap { [weak self] btn in
+                guard let self else { return }
+                /// 正/倒计时配置
+                guard isCountdownTime else {
+                    btn.startTimer(
+                        total: 60,// ❤️ 这里的参数如果不传（nil） => 则为正计时
+                        interval: 1,
+                        kind: nil) { [weak self] btn in
+                            guard let self else { return }
+                            isCountdownTime = YES
+                                            /// TODO
+                        };return
+                }
+            }
+            .byAddTo(view) { [unowned self] make in
+                /// TODO
             }
     }()
     // MARK: - 1️⃣ 基础 60s（控制台打印）
