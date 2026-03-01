@@ -13,10 +13,10 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsScale
 import JobsByUIKit
 import JobsTextTools
-import JobsScale
+import JobsInheritance
 
 final class JobsControlEventsDemoVC: BaseVC {
     // 统一用一个垂直栈承载所有 Demo
@@ -49,7 +49,10 @@ final class JobsControlEventsDemoVC: BaseVC {
                 .byCancelsTouchesInView(false)
         )
     }
+}
 
+extension JobsControlEventsDemoVC {
+    
     private func buildDemos() {
         stack.byAlpha(1)
         demo_Switch_onJobsChange()

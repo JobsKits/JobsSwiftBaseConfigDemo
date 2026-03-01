@@ -13,12 +13,13 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
-import JobsInheritance
 import JobsBy3rdTools
-import JobsSwiftBaseDefines
+import JobsInheritance
 import JobsGestureUnlock
+import JobsSwiftBaseDefines
 
 final class SlideToUnlockDemoVC: BaseVC {
+    
     private lazy var slideView: SlideToUnlockView = {
         SlideToUnlockView()
             .byBackgroundColor(.clear)

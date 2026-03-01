@@ -23,7 +23,6 @@ final class PhotoPermissionAlertView: UIView {
     private var limitedHandler: (jobsByVoidBlock)?
     private var fullHandler: (jobsByVoidBlock)?
     private var denyHandler: (jobsByVoidBlock)?
-
     // MARK: - 链式配置回调（点语法）
     @discardableResult
     func onLimited(_ handler: @escaping jobsByVoidBlock) -> Self {

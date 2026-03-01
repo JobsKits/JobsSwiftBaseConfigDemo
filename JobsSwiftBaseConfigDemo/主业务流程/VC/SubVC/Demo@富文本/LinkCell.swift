@@ -18,6 +18,7 @@ import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftTools
+import JobsSwiftBaseDefines
 /// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
 public extension NSAttributedString.Key {
     static let jobsAction = NSAttributedString.Key("jobsAction")
@@ -25,7 +26,6 @@ public extension NSAttributedString.Key {
 // MARK: - 单一 Cell（支持 Delegate / RAC / RightAligned）
 final class LinkCell: UITableViewCell, HasDisposeBag {
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned
-    static let reuseID = "LinkCell"
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
         UILabel()
@@ -75,17 +75,20 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
             }
     }()
     // ============================== Init ==============================
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.byBackgroundColor(.clear)
         // 唤起懒加载（不改变视觉状态）
-        titleLabel.byAlpha(1)
-        cardView.byAlpha(1)
-        textView.byAlpha(1)
-        attachmentLabel.byAlpha(1)
+        titleLabel.byVisible(YES)
+        cardView.byVisible(YES)
+        textView.byVisible(YES)
+        attachmentLabel.byVisible(YES)
     }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
+extension LinkCell {
     // ============================== 配置入口 ==============================
     func configure(title: String,
                    runs: [JobsRichRun],

@@ -13,9 +13,9 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 
 final class UIAlertDemoVC: BaseVC {

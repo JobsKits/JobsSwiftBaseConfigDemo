@@ -14,13 +14,47 @@ import UIKit
 import Foundation
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
-import JobsSwiftBaseDefines
+import JobsInheritance
 import JobsSwiftBaseTools
+import JobsSwiftBaseDefines
 
 final class SafeCodableDemoVC: BaseVC {
+    // MARK: - Model
+    private struct User: Codable {
+        @SafeCodable var id: Int
+        @SafeCodable var name: String
+        @SafeCodable var vip: Bool
+        @SafeCodable var score: Double
+        @SafeCodable var createdAt: Date
+        @SafeCodable var homepage: URL
+        @SafeCodableOptional var avatarURL: URL?
+    }
+    // MARK: - Sample JSON
+    private let dirtyJSONString = #"""
+    {
+      "id": "42",
+      "name": 777,
+      "vip": "true",
+      "score": "3.14",
+      "createdAt": "2024-08-20 10:00:00",
+      "homepage": "",
+      "avatarURL": "https://a.b/c.png"
+    }
+    """#
+
+    private let cleanJSONString = #"""
+    {
+      "id": 42,
+      "name": "Jobs",
+      "vip": true,
+      "score": 3.14,
+      "createdAt": 1724148000,
+      "homepage": "https://example.com",
+      "avatarURL": null
+    }
+    """#
     // MARK: - Reporter：把宽松转换/默认值上报到 UI
     private final class UIReporter: SafeCodableReporting {
         private weak var owner: SafeCodableDemoVC?
@@ -38,16 +72,6 @@ final class SafeCodableDemoVC: BaseVC {
                 }
             }
         }
-    }
-    // MARK: - Model
-    private struct User: Codable {
-        @SafeCodable var id: Int
-        @SafeCodable var name: String
-        @SafeCodable var vip: Bool
-        @SafeCodable var score: Double
-        @SafeCodable var createdAt: Date
-        @SafeCodable var homepage: URL
-        @SafeCodableOptional var avatarURL: URL?
     }
     // MARK: - Lazy UI（全部懒加载，byAddTo + SnapKit）
     private lazy var jsonTitleLabel: UILabel = {
@@ -122,22 +146,6 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var createdAtLabel: UILabel = makeValueLabel(baseline: scoreLabel)
     private lazy var homepageLabel: UILabel  = makeValueLabel(baseline: createdAtLabel)
     private lazy var avatarURLLabel: UILabel = makeValueLabel(baseline: homepageLabel)
-
-    private func makeValueLabel(baseline: UILabel?) -> UILabel {
-        UILabel()
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.label)
-            .byNumberOfLines(0)
-            .byAddTo(view) { [unowned self] make in
-                if let base = baseline {
-                    make.top.equalTo(base.snp.bottom).offset(6)
-                } else {
-                    make.top.equalTo(self.valuesTitleLabel.snp.bottom).offset(6)
-                }
-                make.left.right.equalToSuperview().inset(16)
-            }
-    }
-
     private lazy var logTitleLabel: UILabel = {
         UILabel()
             .byText("解码日志")
@@ -185,6 +193,24 @@ final class SafeCodableDemoVC: BaseVC {
         logTextView.byVisible(YES)
         /// 默认展示“脏数据”
         useDirtyJSONAndDecode()
+    }
+}
+
+extension SafeCodableDemoVC {
+    
+    private func makeValueLabel(baseline: UILabel?) -> UILabel {
+        UILabel()
+            .byFont(.systemFont(ofSize: 14))
+            .byTextColor(.label)
+            .byNumberOfLines(0)
+            .byAddTo(view) { [unowned self] make in
+                if let base = baseline {
+                    make.top.equalTo(base.snp.bottom).offset(6)
+                } else {
+                    make.top.equalTo(self.valuesTitleLabel.snp.bottom).offset(6)
+                }
+                make.left.right.equalToSuperview().inset(16)
+            }
     }
     // MARK: - SafeCodable 引导
     private func bootstrapSafeCodable() {
@@ -255,28 +281,4 @@ final class SafeCodableDemoVC: BaseVC {
     }
 
     private func clearLog() { logTextView.text = "" }
-    // MARK: - Sample JSON
-    private let dirtyJSONString = #"""
-    {
-      "id": "42",
-      "name": 777,
-      "vip": "true",
-      "score": "3.14",
-      "createdAt": "2024-08-20 10:00:00",
-      "homepage": "",
-      "avatarURL": "https://a.b/c.png"
-    }
-    """#
-
-    private let cleanJSONString = #"""
-    {
-      "id": 42,
-      "name": "Jobs",
-      "vip": true,
-      "score": 3.14,
-      "createdAt": 1724148000,
-      "homepage": "https://example.com",
-      "avatarURL": null
-    }
-    """#
 }

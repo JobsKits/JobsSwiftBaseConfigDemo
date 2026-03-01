@@ -233,10 +233,6 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                 make.height.equalTo(44)
             }
     }()
-    
-    deinit {
-        valueLabel.byStopAnimatedTextNumber()
-    }
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -252,6 +248,10 @@ final class AnimationEffectLabelDemoVC: BaseVC {
 
         startBtn.byVisible(YES)
         stopBtn.byVisible(YES)
+    }
+    
+    deinit {
+        valueLabel.byStopAnimatedTextNumber()
     }
 }
 

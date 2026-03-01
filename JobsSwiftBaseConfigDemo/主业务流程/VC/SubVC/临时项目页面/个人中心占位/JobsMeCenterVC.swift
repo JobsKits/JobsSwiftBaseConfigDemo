@@ -19,6 +19,7 @@ import JobsSwiftBaseDefines
 import JobsToast
 
 final class JobsMeCenterVC: BaseVC {
+    
     enum Row: Int, CaseIterable {
         case profile
         case favorites

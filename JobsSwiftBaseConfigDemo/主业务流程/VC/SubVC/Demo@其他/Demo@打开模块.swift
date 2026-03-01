@@ -77,7 +77,6 @@ final class JobsOpenDemoVC: BaseVC {
                 "13434343434".call(usePrompt: true)
             }
     }()
-
     // ========================== ✉️ 邮件相关 demo ==========================
     private lazy var btnMailSimple: UIButton = {
         UIButton(type: .system)

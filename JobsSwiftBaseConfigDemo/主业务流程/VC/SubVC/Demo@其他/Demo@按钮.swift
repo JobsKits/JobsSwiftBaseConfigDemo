@@ -12,11 +12,11 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
-import JobsByUIKit
-import JobsTextTools
 import GKNavigationBarSwift
 import JobsScale
+import JobsByUIKit
+import JobsTextTools
+import JobsInheritance
 
 final class UIButtonDemoVC: BaseVC {
     // 滚动容器
@@ -40,12 +40,15 @@ final class UIButtonDemoVC: BaseVC {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         jobsSetupGKNav(
-            title: "UIButton 语法糖 Demo"
+            title: "UIButton 语法糖 Demo".tr
         )
         setupLayout()
         buildDemos()
     }
+}
 
+extension UIButtonDemoVC {
+    
     private func setupLayout() {
         // 1) 加入 ScrollView
         view.addSubview(scroll)

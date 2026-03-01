@@ -18,12 +18,14 @@ import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 final class KFBtnTBVCell: UITableViewCell {
+    
     private lazy var coverButton: UIButton = {
         UIButton.sys()
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview()
             }
     }()
+    
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value2, reuseIdentifier: reuseIdentifier)
@@ -45,6 +47,9 @@ final class KFBtnTBVCell: UITableViewCell {
             layer.borderColor = (isSelected ? UIColor.systemRed : UIColor.clear).cgColor
         }
     }
+}
+
+extension KFBtnTBVCell {
     // MARK: ViewDataProtocol
     @discardableResult
     func byData(_ model: JobsBtnCellModel, _ index: Int? = nil) -> Self {

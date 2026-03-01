@@ -26,6 +26,14 @@ struct User {
 }
 // MARK: - Demo VC
 final class SkeletonViewDemoVC: BaseVC {
+    // 状态
+    private var data: [User] = []
+    private var isLoading = true
+    private var useGradient = true
+    // Skeleton 配置
+    private let gradient = SkeletonGradient(baseColor: .systemGray5)
+    private let solid     = SkeletonGradient(baseColor: .systemGray5) // 纯色也用 gradient 类型，动画不同
+    private let slideAnim = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
     // UI
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
@@ -46,14 +54,6 @@ final class SkeletonViewDemoVC: BaseVC {
                 }
             }
     }()
-    // 状态
-    private var data: [User] = []
-    private var isLoading = true
-    private var useGradient = true
-    // Skeleton 配置
-    private let gradient = SkeletonGradient(baseColor: .systemGray5)
-    private let solid     = SkeletonGradient(baseColor: .systemGray5) // 纯色也用 gradient 类型，动画不同
-    private let slideAnim = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +100,29 @@ final class SkeletonViewDemoVC: BaseVC {
         // 模拟网络
         simulateFetch()
     }
+}
+// MARK: - UITableViewDataSource / UITableViewDelegate
+extension SkeletonViewDemoVC: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { data.count }
+    func numberOfSections(in tableView: UITableView) -> Int { 1 }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let c = tableView.byDequeueReusableCell(withType: SkeletonUserCell.self, for: indexPath)
+        if !isLoading {
+            c.configure(with: data[indexPath.row])
+        };return c
+    }
+}
+// MARK: - Skeleton 数据源（关键）
+extension SkeletonViewDemoVC: SkeletonTableViewDataSource {
+    // 骨架期的占位行数
+    func numSections(in collectionSkeletonView: UITableView) -> Int { 1 }
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {8}
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        String(describing: SkeletonUserCell.self)
+    }
+}
+
+extension SkeletonViewDemoVC {
     // MARK: - Skeleton 显隐
     private func startSkeleton() {
         isLoading = true
@@ -149,25 +172,5 @@ final class SkeletonViewDemoVC: BaseVC {
                 color: randColor()
             )
         }
-    }
-}
-// MARK: - UITableViewDataSource / UITableViewDelegate
-extension SkeletonViewDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { data.count }
-    func numberOfSections(in tableView: UITableView) -> Int { 1 }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.byDequeueReusableCell(withType: SkeletonUserCell.self, for: indexPath)
-        if !isLoading {
-            c.configure(with: data[indexPath.row])
-        };return c
-    }
-}
-// MARK: - Skeleton 数据源（关键）
-extension SkeletonViewDemoVC: SkeletonTableViewDataSource {
-    // 骨架期的占位行数
-    func numSections(in collectionSkeletonView: UITableView) -> Int { 1 }
-    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {8}
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        String(describing: SkeletonUserCell.self)
     }
 }

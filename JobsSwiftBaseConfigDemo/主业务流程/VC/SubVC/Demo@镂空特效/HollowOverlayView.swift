@@ -15,15 +15,16 @@ import JobsByUIKit
 import JobsByQuartzCore
 
 final class HollowOverlayView: UIView {
+    
     enum HoleShape {
         case oval
         case roundedRect(CGFloat)
     }
+    var holeRect: CGRect = .zero { didSet { setNeedsLayout() } }
+    var holeShape: HoleShape = .oval { didSet { setNeedsLayout() } }
     private let shapeLayer: CAShapeLayer = {
         CAShapeLayer().byFillRule(.evenOdd)
     }()
-    var holeRect: CGRect = .zero { didSet { setNeedsLayout() } }
-    var holeShape: HoleShape = .oval { didSet { setNeedsLayout() } }
     /// 半透明遮罩颜色
     var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.5) {
         didSet { shapeLayer.fillColor = overlayColor.cgColor }
@@ -59,6 +60,7 @@ final class HollowOverlayView: UIView {
             .byMaxTouches(2)
             .byCancelsTouchesInView(true)
     }()
+    
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,6 +71,7 @@ final class HollowOverlayView: UIView {
         shapeLayer.fillColor = overlayColor.cgColor
         jobs_addGesture(panGR)
     }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -91,7 +94,18 @@ final class HollowOverlayView: UIView {
         guard enableDrag else { return false }
         return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(point)
     }
+}
 
+extension HollowOverlayView : UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard enableDrag else { return false }
+        let p = gestureRecognizer.location(in: self)
+        return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(p)
+    }
+}
+
+extension HollowOverlayView {
+    
     private func moveHole(by translation: CGPoint) {
         var r = holeRect
         r.origin.x += translation.x
@@ -107,41 +121,39 @@ final class HollowOverlayView: UIView {
         holeRect = r
     }
 }
-
-extension HollowOverlayView : UIGestureRecognizerDelegate {
-    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard enableDrag else { return false }
-        let p = gestureRecognizer.location(in: self)
-        return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(p)
-    }
-}
 // MARK: - HollowOverlayView@DSL
 extension HollowOverlayView {
+    
     @discardableResult
     func byHoleRect(_ rect: CGRect) -> Self {
         holeRect = rect
         return self
     }
+    
     @discardableResult
     func byHoleRect(x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat) -> Self {
         holeRect = CGRect(x: x, y: y, width: w, height: h)
         return self
     }
+    
     @discardableResult
     func byHoleShape(_ shape: HoleShape) -> Self {
         holeShape = shape
         return self
     }
+    
     @discardableResult
     func byOverlayColor(_ color: UIColor, alpha: CGFloat? = nil) -> Self {
         overlayColor = alpha == nil ? color : color.withAlphaComponent(alpha!)
         return self
     }
+    
     @discardableResult
     func byEnableDrag(_ enable: Bool) -> Self {
         enableDrag = enable
         return self
     }
+    
     @discardableResult
     func byDragPadding(_ padding: CGFloat) -> Self {
         dragPadding = padding

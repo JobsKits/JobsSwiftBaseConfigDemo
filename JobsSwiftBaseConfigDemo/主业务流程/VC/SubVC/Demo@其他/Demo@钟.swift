@@ -12,14 +12,15 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
 import JobsByUIKit
 import JobsTextTools
 import JobsSwiftTimer
 import JobsBy3rdTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 
 final class ClockDemoVC: BaseVC {
+    
     private lazy var clockView: JobsClockView = {
         JobsClockView()
             .byAddTo(view) { [weak self] make in

@@ -13,10 +13,10 @@ import UIKit
 
 import SnapKit
 import QuartzCore
-import JobsInheritance
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 // MARK: - Demo VC（iOS 17+ 使用 UITraitChangeObservable + 内置调试按钮）
 final class TraitChangeDemoVC: BaseVC {
@@ -183,7 +183,9 @@ final class TraitChangeDemoVC: BaseVC {
         super.viewDidLayoutSubviews()
         gradientLayer.frame = swatch.bounds // 旋转/分屏后需更新
     }
+}
 
+extension TraitChangeDemoVC {
     // MARK: - 初始与按模块更新
     private func configureForCurrentTraits() {
         updateColors()

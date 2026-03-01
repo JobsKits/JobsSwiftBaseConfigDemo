@@ -14,10 +14,10 @@ import UIKit
 import SnapKit
 import ObjectiveC
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsScale
 import JobsByUIKit
 import JobsTextTools
-import JobsScale
+import JobsInheritance
 import JobsSwiftBaseDefines
 
 final class UITextFieldDemoVC: BaseVC {

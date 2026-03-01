@@ -75,6 +75,9 @@ final class CrashLogDemoVC: BaseVC {
         tv.byVisible(YES)
         reloadLog()
     }
+}
+
+extension CrashLogDemoVC {
     // ================================== Actions ==================================
     private func reloadLog(keyword: String = "") {
         // 尽量读 tail，避免特别大时卡 UI

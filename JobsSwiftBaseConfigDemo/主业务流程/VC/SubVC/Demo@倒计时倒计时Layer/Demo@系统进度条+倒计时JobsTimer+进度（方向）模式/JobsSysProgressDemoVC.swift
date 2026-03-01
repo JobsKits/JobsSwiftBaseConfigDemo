@@ -22,6 +22,7 @@ import JobsProgressBar
 import JobsSwiftBaseDefines
 /// Demo@系统进度条+倒计时JobsSwiftTimer+进度（方向）模式
 final class JobsSysProgressDemoVC: BaseVC {
+    
     let horizontalInset: CGFloat = 40
     /// 当前正在运行的倒计时过程
     private var countdownProcess: JobsSwiftTimerCountdown?
@@ -245,6 +246,9 @@ final class JobsSysProgressDemoVC: BaseVC {
         countdownProcess = nil
         setStartButton(true)
     }
+}
+
+extension JobsSysProgressDemoVC {
     // MARK: - Helper
     /// 空闲状态下，根据当前选中的时长更新文案 + 进度初始值
     private func updateTimeLabelForIdle() {

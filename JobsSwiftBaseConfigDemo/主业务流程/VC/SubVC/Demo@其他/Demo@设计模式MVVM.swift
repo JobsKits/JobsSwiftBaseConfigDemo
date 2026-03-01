@@ -4,6 +4,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
 // ========== Model ==========
 struct MVVMUser: Decodable { let id: String; let name: String }
@@ -26,7 +27,14 @@ enum MVVMUserListState {
     case content([MVVMUser])
     case error(String)
 }
-
+// ========== Builder ==========
+enum MVVMBuilder {
+    @MainActor
+    static func build() -> UIViewController {
+        let vm = MVVMUserListViewModel(repo: MVVMMockUserRepo())
+        return MVVMUserListVC(vm: vm)
+    }
+}
 // ========== ViewModel ==========
 @MainActor
 final class MVVMUserListViewModel {
@@ -101,14 +109,5 @@ final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableView
         vc.view.backgroundColor = .systemBackground
         vc.title = "Detail \(u.name)"
         navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-// ========== Builder ==========
-enum MVVMBuilder {
-    @MainActor
-    static func build() -> UIViewController {
-        let vm = MVVMUserListViewModel(repo: MVVMMockUserRepo())
-        return MVVMUserListVC(vm: vm)
     }
 }

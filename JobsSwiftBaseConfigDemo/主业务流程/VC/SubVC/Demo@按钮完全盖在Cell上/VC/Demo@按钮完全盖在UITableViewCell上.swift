@@ -12,13 +12,14 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
+
 import GKNavigationBarSwift
-import JobsByUIKit
-import JobsBy3rdTools
-import JobsTextTools
 import JobsToast
+import JobsByUIKit
+import JobsTextTools
 import JobsRefresher
+import JobsBy3rdTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 /// UITableView是不支持在Section内部直接定义Cell之间的距离的
 final class BtnFullOnTBVCellDemoVC: BaseVC {
@@ -100,25 +101,6 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
 //        tableView.contentInset.bottom = 100
 //        tableView.contentInset.right = 100
     }
-
-    private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
-        let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
-        return (0..<count).map { i in
-            let idx = startAt + i
-            return JobsBtnCellModel(
-                title: titles[idx % titles.count],
-                titleCor: .systemCyan,
-                subTitle: "发言时聊天专属皮肤",
-                subTitleCor: .blue,
-                imageURL:"https://picsum.photos/200",
-                bgImageURL:"https://picsum.photos/300",
-                selected: false,
-                highlighted: false,
-                userInteractionEnabled: false,   // ✅ 核心：按钮不吃点击
-                enabled: true
-            )
-        }
-    }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
 extension BtnFullOnTBVCellDemoVC: UITableViewDataSource, UITableViewDelegate {
@@ -143,4 +125,26 @@ extension BtnFullOnTBVCellDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { UIView() }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { .leastNormalMagnitude }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { UIView() }
+}
+
+extension BtnFullOnTBVCellDemoVC {
+    
+    private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
+        let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
+        return (0..<count).map { i in
+            let idx = startAt + i
+            return JobsBtnCellModel(
+                title: titles[idx % titles.count],
+                titleCor: .systemCyan,
+                subTitle: "发言时聊天专属皮肤",
+                subTitleCor: .blue,
+                imageURL:"https://picsum.photos/200",
+                bgImageURL:"https://picsum.photos/300",
+                selected: false,
+                highlighted: false,
+                userInteractionEnabled: false,   // ✅ 核心：按钮不吃点击
+                enabled: true
+            )
+        }
+    }
 }

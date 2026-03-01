@@ -16,10 +16,10 @@ import RxCocoa
 import SnapKit
 import NSObject_Rx
 import GKNavigationBarSwift
-import JobsInheritance
-import JobsByUIKit
 import JobsScale
+import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
 
 final class KeyboardDemoVC: BaseVC {
     private let bag = DisposeBag()

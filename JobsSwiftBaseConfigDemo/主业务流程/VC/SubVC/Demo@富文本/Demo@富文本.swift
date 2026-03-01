@@ -13,13 +13,13 @@ import UIKit
 
 import RxSwift
 import RxCocoa
-import NSObject_Rx          // 自动提供 disposeBag
 import SnapKit
+import NSObject_Rx          // 自动提供 disposeBag
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsScale
 import JobsByUIKit
 import JobsTextTools
-import JobsScale
+import JobsInheritance
 // MARK: - 仅两个 cell：1) Delegate 方案  2) RAC 方案
 //  - “专属客服”使用系统默认蓝色（.link）
 //  - “400-123-4567” 可点击拨号，样式=红字+蓝色下划线（自定义）
@@ -40,7 +40,7 @@ final class RichTextDemoVC: BaseVC {
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(120)
             .byScrollEnabled(false)
-            .byRegisterCellOnID(CellCls: LinkCell.self, ID: LinkCell.reuseID)
+            .byRegisterCell(LinkCell.self)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10.h)
                 make.left.right.equalToSuperview()
@@ -70,8 +70,7 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
             }
         }()
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: LinkCell.reuseID,
-                                                 for: indexPath) as! LinkCell
+        let cell = tableView.byDequeueReusableCell(withType: LinkCell.self, for: indexPath)
         if mode == .rightAligned {
             // ====================== 右对齐示例 ======================
             let rightPS = jobsMakeParagraphStyle {
@@ -108,7 +107,8 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                 attachmentRuns: [
                     JobsRichRun(.attachment(
                         NSTextAttachment().byImage(
-                            UIImage(systemName: "paperclip", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .medium))!
+                            UIImage(systemName: "paperclip",
+                                    withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .medium))!
                         ),
                         CGSize(width: 16, height: 16)
                     )),

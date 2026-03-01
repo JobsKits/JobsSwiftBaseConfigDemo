@@ -172,7 +172,16 @@ final class LuckyWheelView: UIView {
         super.init(coder: coder)
         commonInit()
     }
+    // MARK: - Layout / Draw ==============================
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        rebuildSlices()
+        bringSubviewToFront(centerButton)   // 再保险一次
+    }
+}
 
+extension LuckyWheelView {
+    
     private func commonInit() {
         backgroundColor = .clear
         clipsToBounds = false
@@ -197,13 +206,7 @@ final class LuckyWheelView: UIView {
         centerButton.byVisible(YES)
         bringSubviewToFront(centerButton)
     }
-    // MARK: - Layout / Draw ==============================
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        rebuildSlices()
-        bringSubviewToFront(centerButton)   // 再保险一次
-    }
-
+    
     private func rebuildSlices() {
         sliceLayers.forEach { $0.removeFromSuperlayer() }
         sliceLayers.removeAll()
@@ -316,6 +319,7 @@ final class LuckyWheelView: UIView {
         plateView.layer.addSublayer(dotLayer)
         sliceLayers.append(dotLayer)
     }
+    
     private func makeSegmentAttributedText(for segment: LuckyWheelSegment) -> NSAttributedString? {
         if let attr = segment.attributedText {
             return attr
@@ -561,8 +565,7 @@ final class LuckyWheelView: UIView {
             point = CGPoint(x: center.x - radius + inset, y: center.y)
         case .right:
             point = CGPoint(x: center.x + radius - inset, y: center.y)
-        }
-        return segmentIndex(point)
+        };return segmentIndex(point)
     }
 }
 // MARK: - LuckyWheelView 点语法 DSL ===================

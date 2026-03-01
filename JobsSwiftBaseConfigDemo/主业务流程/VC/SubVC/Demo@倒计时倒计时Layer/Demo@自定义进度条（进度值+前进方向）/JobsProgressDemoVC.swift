@@ -13,12 +13,12 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
-import JobsByUIKit
 import JobsScale
-import JobsSwiftBaseDefines
+import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
 import JobsProgressBar
+import JobsSwiftBaseDefines
 /// Demo@自定义进度条（进度值+前进方向+拖动）
 final class JobsProgressDemoVC: BaseVC {
     deinit {
@@ -385,12 +385,6 @@ final class JobsProgressDemoVC: BaseVC {
         percentTextField.text = "0"
         stateLabel.byText("Ready".tr)
     }
-    // MARK: - 手势开关
-    @objc private func onDragSwitchChanged(_ sender: UISwitch) {
-        progressView.isDraggable = sender.isOn
-        stateLabel.byText(sender.isOn ? "已开启拖动".tr : "已关闭拖动".tr)
-    }
-
 }
 // MARK: - 工具
 extension JobsProgressDemoVC{

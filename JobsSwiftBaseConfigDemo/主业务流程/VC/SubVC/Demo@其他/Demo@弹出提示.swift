@@ -13,11 +13,11 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsToast
 import JobsByUIKit
 import JobsTextTools
-import JobsToast
 import JobsSwiftBlock
+import JobsInheritance
 
 final class ToastDemoVC: BaseVC {
 
@@ -29,7 +29,9 @@ final class ToastDemoVC: BaseVC {
         )
         setupButtons()
     }
+}
 
+extension ToastDemoVC {
     // MARK: - UI
     private func setupButtons() {
         // 统一样式

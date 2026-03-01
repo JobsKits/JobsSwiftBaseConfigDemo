@@ -5,7 +5,11 @@
 //  Created by Jobs on 12/23/25.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 /// Model
 struct JobsBtnCellModel {
     // MARK: - 主标题

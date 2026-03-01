@@ -12,13 +12,14 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
-import JobsByUIKit
 import JobsToast
+import JobsByUIKit
 import JobsTextTools
+import JobsInheritance
 import JobsSwiftBaseDefines
 
 final class LuckyWheelDemoVC: BaseVC {
+    
     private lazy var wheelView: LuckyWheelView = {
         LuckyWheelView()
             .bySegments([

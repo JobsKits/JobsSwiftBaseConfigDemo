@@ -18,6 +18,7 @@ import JobsSwiftBaseDefines
 import Kingfisher
 import JobsByUIKit
 final class KFBtnCVCell: UICollectionViewCell {
+    
     private lazy var coverButton: UIButton = {
         UIButton.custom()
             .byAddTo(contentView) { make in
@@ -46,7 +47,10 @@ final class KFBtnCVCell: UICollectionViewCell {
             layer.borderColor = (isSelected ? UIColor.systemRed : UIColor.clear).cgColor
         }
     }
-    // MARK: ViewDataProtocol
+}
+// MARK: ViewDataProtocol
+extension KFBtnCVCell {
+
     @discardableResult
     func byData(_ model: JobsBtnCellModel, _ index: Int? = nil) -> Self {
         coverButton
@@ -108,4 +112,5 @@ final class KFBtnCVCell: UICollectionViewCell {
         return self
     }
 }
+
 #endif

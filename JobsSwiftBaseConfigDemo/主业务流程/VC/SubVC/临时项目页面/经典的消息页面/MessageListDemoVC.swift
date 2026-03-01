@@ -13,12 +13,12 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
 import JobsByUIKit
-import JobsBy3rdTools
-import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsRefresher
+import JobsBy3rdTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class MessageListDemoVC: BaseVC {
     // MARK: - Data
@@ -253,6 +253,72 @@ final class MessageListDemoVC: BaseVC {
             tableView.scrollIndicatorInsets = s
         }
     }
+}
+// MARK: - UITableViewDataSource
+extension MessageListDemoVC: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        items.count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = tableView.byDequeueReusableCell(withType: MessageCell.self, for: indexPath)
+        let item = items[indexPath.row]
+        cell.render(item: item, editing: isEditingMode)
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView,
+                   canMoveRowAt indexPath: IndexPath) -> Bool {
+        isEditingMode
+    }
+
+    func tableView(_ tableView: UITableView,
+                   moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath) {
+        let moved = items.remove(at: sourceIndexPath.row)
+        items.insert(moved, at: destinationIndexPath.row)
+    }
+}
+// MARK: - UITableViewDelegate
+extension MessageListDemoVC: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isEditingMode {
+            selectedIDs.insert(items[indexPath.row].id)
+            updateBottomBarUI()
+            tableView.cellForRow(at: indexPath)?.setNeedsLayout()
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard isEditingMode else { return }
+        selectedIDs.remove(items[indexPath.row].id)
+        updateBottomBarUI()
+        tableView.cellForRow(at: indexPath)?.setNeedsLayout()
+    }
+
+    func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        .none
+    }
+
+    func tableView(_ tableView: UITableView,
+                   shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        true
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        true
+    }
+}
+
+extension MessageListDemoVC {
     // MARK: - Editing
     private func applyEditingMode(_ editing: Bool) {
         tableView.allowsMultipleSelectionDuringEditing = true
@@ -292,7 +358,7 @@ final class MessageListDemoVC: BaseVC {
         bottomDeleteButton.isEnabled = !selectedIDs.isEmpty
         bottomDeleteButton.alpha = selectedIDs.isEmpty ? 0.35 : 1
     }
-
+    
     private func syncSelectionToUI() {
         guard !items.isEmpty else { return }
         for (idx, item) in items.enumerated() where selectedIDs.contains(item.id) {
@@ -358,66 +424,5 @@ final class MessageListDemoVC: BaseVC {
                 isUnread: (i % 3 != 0)
             )
         }
-    }
-}
-// MARK: - UITableViewDataSource
-extension MessageListDemoVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        items.count
-    }
-
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let cell = tableView.byDequeueReusableCell(withType: MessageCell.self, for: indexPath)
-        let item = items[indexPath.row]
-        cell.render(item: item, editing: isEditingMode)
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        isEditingMode
-    }
-
-    func tableView(_ tableView: UITableView,
-                   moveRowAt sourceIndexPath: IndexPath,
-                   to destinationIndexPath: IndexPath) {
-        let moved = items.remove(at: sourceIndexPath.row)
-        items.insert(moved, at: destinationIndexPath.row)
-    }
-}
-// MARK: - UITableViewDelegate
-extension MessageListDemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isEditingMode {
-            selectedIDs.insert(items[indexPath.row].id)
-            updateBottomBarUI()
-            tableView.cellForRow(at: indexPath)?.setNeedsLayout()
-        } else {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard isEditingMode else { return }
-        selectedIDs.remove(items[indexPath.row].id)
-        updateBottomBarUI()
-        tableView.cellForRow(at: indexPath)?.setNeedsLayout()
-    }
-
-    func tableView(_ tableView: UITableView,
-                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        .none
-    }
-
-    func tableView(_ tableView: UITableView,
-                   shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        true
-    }
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        true
     }
 }

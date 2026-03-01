@@ -71,7 +71,10 @@ final class MessageCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         updateSystemSelectionControlIfNeeded()
     }
+}
 
+extension MessageCell {
+    
     func render(item: MessageItem, editing: Bool) {
         titleLabel.byText(item.title)
         previewLabel.byText(item.preview)

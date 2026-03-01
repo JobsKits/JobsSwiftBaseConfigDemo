@@ -13,17 +13,15 @@ import UIKit
 
 import RxSwift
 import RxCocoa
-import JobsInheritance
-import JobsByUIKit
-import JobsToast
-import JobsSwiftBaseDefines
-import JobsTextTools
+
 import Jobsl10n
+import JobsToast
+import JobsByUIKit
+import JobsTextTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class JobsNavigationDemoVC: BaseVC {
-    deinit {
-        print("JobsNavigationDemoVC deinit")
-    }
     // MARK: - 左侧：自定义返回按钮
     private lazy var backButton: UIButton = {
         UIButton.sys()
@@ -77,6 +75,10 @@ final class JobsNavigationDemoVC: BaseVC {
                 }
             }
     }()
+    // MARK: - 状态栏样式
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,6 +135,13 @@ final class JobsNavigationDemoVC: BaseVC {
         navigationController?.navigationBar.isHidden = false
         UINavigationBar.appearance().isHidden = false
     }
+    
+    deinit {
+        print("JobsNavigationDemoVC deinit")
+    }
+}
+
+extension JobsNavigationDemoVC {
     // MARK: - 导航栏外观
     private func configureNavigationBarAppearance() {
         guard let navBar = navigationController?.navigationBar else { return }
@@ -172,9 +181,5 @@ final class JobsNavigationDemoVC: BaseVC {
                     .font: UIFont.boldSystemFont(ofSize: 18)
                 ])
         }
-    }
-    // MARK: - 状态栏样式
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
     }
 }

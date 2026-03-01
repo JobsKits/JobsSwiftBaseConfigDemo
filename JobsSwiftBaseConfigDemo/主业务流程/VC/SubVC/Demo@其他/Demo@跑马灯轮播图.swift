@@ -46,9 +46,27 @@ import JobsSwiftBaseDefines
 /// 12. SDWebImage@背景图
 /// 13. Kingfisher@背景图
 final class JobsMarqueeDemoVC: BaseVC {
+    
     private let horizontalInset: CGFloat = 16
     private let verticalSpacing: CGFloat = 12
     private let marqueeHeight: CGFloat = 50
+    private var allMarquees: [JobsMarqueeView] {
+        [
+            upContinuousMarquee,          // 向上连续滚动
+            downContinuousMarquee,        // 向下连续滚动
+            leftContinuousMarquee,        // 向左连续滚动（典型横向跑马灯）
+            rightContinuousMarquee,       // 向右连续滚动
+            upFrequencyMarquee,           // 向上间隔滚动（公告@一条一条翻）
+            downFrequencyMarquee,         // 向下间隔滚动（公告@一条一条翻）
+            leftFrequencyMarquee,         // 向左间隔滚动（轮播图@一屏一页）
+            rightFrequencyMarquee,        // 向右间隔滚动（轮播图@一屏一页）
+            oneButtonMarquee,             // 极端：只有 1 个按钮
+            twoButtonsMarquee,            // 极端：只有 2 个按钮
+            localImageButtonsMarquee,     // 本地@背景图
+            sdWebImageButtonsMarquee,     // SDWebImage@背景图
+            kingfisherImageButtonsMarquee // Kingfisher@背景图
+        ]
+    }
     /// 所有 JobsMarqueeView 统一加在这个 scrollView 上
     private lazy var scrollView: UIScrollView = { [unowned self] in
         UIScrollView()
@@ -1209,23 +1227,5 @@ final class JobsMarqueeDemoVC: BaseVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         allMarquees.forEach { $0.stop() }
-    }
-
-    private var allMarquees: [JobsMarqueeView] {
-        [
-            upContinuousMarquee,          // 向上连续滚动
-            downContinuousMarquee,        // 向下连续滚动
-            leftContinuousMarquee,        // 向左连续滚动（典型横向跑马灯）
-            rightContinuousMarquee,       // 向右连续滚动
-            upFrequencyMarquee,           // 向上间隔滚动（公告@一条一条翻）
-            downFrequencyMarquee,         // 向下间隔滚动（公告@一条一条翻）
-            leftFrequencyMarquee,         // 向左间隔滚动（轮播图@一屏一页）
-            rightFrequencyMarquee,        // 向右间隔滚动（轮播图@一屏一页）
-            oneButtonMarquee,             // 极端：只有 1 个按钮
-            twoButtonsMarquee,            // 极端：只有 2 个按钮
-            localImageButtonsMarquee,     // 本地@背景图
-            sdWebImageButtonsMarquee,     // SDWebImage@背景图
-            kingfisherImageButtonsMarquee // Kingfisher@背景图
-        ]
     }
 }

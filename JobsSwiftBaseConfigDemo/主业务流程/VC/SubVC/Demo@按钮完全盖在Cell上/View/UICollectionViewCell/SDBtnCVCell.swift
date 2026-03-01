@@ -18,6 +18,7 @@ import JobsSwiftBaseDefines
 #if canImport(SDWebImage)
 import SDWebImage
 final class SDBtnCVCell: UICollectionViewCell {
+    
     private lazy var coverButton: UIButton = {
         UIButton.sys()
             .byAddTo(contentView) { make in
@@ -46,6 +47,9 @@ final class SDBtnCVCell: UICollectionViewCell {
             layer.borderColor = (isSelected ? UIColor.systemRed : UIColor.clear).cgColor
         }
     }
+}
+
+extension SDBtnCVCell {
     // MARK: ViewDataProtocol
     @discardableResult
     func byData(_ model: JobsBtnCellModel, _ index: Int? = nil) -> Self {

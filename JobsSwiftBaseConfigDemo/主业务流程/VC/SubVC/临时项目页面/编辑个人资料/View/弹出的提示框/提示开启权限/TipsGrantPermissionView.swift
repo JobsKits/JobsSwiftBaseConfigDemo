@@ -102,7 +102,10 @@ final class TipsGrantPermissionView: UIView {
         super.init(coder: coder)
         setupUI()
     }
+}
 
+extension TipsGrantPermissionView {
+    
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
         // byBackgroundColor(.black.withAlphaComponent(0.35))

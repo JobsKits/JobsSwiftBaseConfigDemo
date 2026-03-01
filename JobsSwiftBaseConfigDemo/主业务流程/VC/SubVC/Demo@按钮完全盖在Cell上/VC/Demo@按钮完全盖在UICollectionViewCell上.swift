@@ -13,13 +13,13 @@ import UIKit
 
 import GKNavigationBarSwift
 import SnapKit
-import JobsInheritance
-import JobsByUIKit
-import JobsBy3rdTools
-import JobsTextTools
 import JobsToast
-import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsTextTools
 import JobsRefresher
+import JobsBy3rdTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class BtnFullOnCVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []
@@ -114,24 +114,6 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
         let itemW = floor((w - total) / columns)
         flowLayout.itemSize = CGSize(width: itemW, height: 118)
     }
-
-    private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
-        let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
-        return (0..<count).map { i in
-            let idx = startAt + i
-            return JobsBtnCellModel(
-                title: titles[idx % titles.count],
-                titleCor:.red,
-                subTitle: "发言时聊天专属皮肤",
-                subTitleCor: .blue,
-                imageURL:"https://picsum.photos/200",
-                bgImageURL:"https://picsum.photos/300",
-                selected: NO,
-                userInteractionEnabled:NO,
-                enabled: YES
-            )
-        }
-    }
 }
 
 extension BtnFullOnCVCellDemoVC : UICollectionViewDataSource {
@@ -165,6 +147,25 @@ extension BtnFullOnCVCellDemoVC : UICollectionViewDelegate {
     }
 }
 
-extension BtnFullOnCVCellDemoVC : UICollectionViewDelegateFlowLayout {
+extension BtnFullOnCVCellDemoVC : UICollectionViewDelegateFlowLayout {}
 
+extension BtnFullOnCVCellDemoVC {
+    
+    private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
+        let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
+        return (0..<count).map { i in
+            let idx = startAt + i
+            return JobsBtnCellModel(
+                title: titles[idx % titles.count],
+                titleCor:.red,
+                subTitle: "发言时聊天专属皮肤",
+                subTitleCor: .blue,
+                imageURL:"https://picsum.photos/200",
+                bgImageURL:"https://picsum.photos/300",
+                selected: NO,
+                userInteractionEnabled:NO,
+                enabled: YES
+            )
+        }
+    }
 }

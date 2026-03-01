@@ -414,7 +414,10 @@ final class UITextViewDemoVC: BaseVC {
         title7.byVisible(YES)
         tvDelete.byVisible(YES)
     }
+}
 
+extension UITextViewDemoVC {
+    
     func sync(from source: UITextView, to target: UITextView, value: String) {
         guard !isSyncing else { return }
         isSyncing = true

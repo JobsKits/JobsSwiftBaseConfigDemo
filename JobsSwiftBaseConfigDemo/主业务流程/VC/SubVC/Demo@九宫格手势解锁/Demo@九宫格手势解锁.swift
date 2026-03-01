@@ -135,54 +135,6 @@ final class GestureUnlockDemoVC: BaseVC {
         configureUnlockView()
         refreshStateFromStorage()
     }
-
-    private func configureUnlockView() {
-        var config = GestureUnlockConfiguration()
-        config.gridDimension = 3
-        config.minimumPatternLength = 4
-        config.hapticsEnabled = true
-
-        unlockView.configuration = config
-        unlockView.delegate = self
-    }
-
-    private func refreshStateFromStorage() {
-        if store.hasPattern {
-            flowState = .verify
-            hintLabel.text = "请输入手势解锁".tr
-            modeControl.selectedSegmentIndex = 1
-            unlockView.byVisible(YES)
-            unlockView.isInputEnabled = true
-            unlockView.reset()
-        } else {
-            flowState = .createFirst
-            modeControl.selectedSegmentIndex = 0
-            unlockView.byVisible(YES)
-            unlockView.isInputEnabled = true
-            showInfoHintAndClear("请先设置手势（至少 4 个点）".tr) // ✅ 提示后清痕
-        }
-    }
-    // MARK: - Trace Helpers
-    private func clearGestureTrace(after delay: TimeInterval = 0.65) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-            self?.unlockView.reset()
-        }
-    }
-    /// toast + 显示错误态 + 提示结束后清痕
-    private func toastErrorAndClear(_ text: String, clearAfter delay: TimeInterval = 0.65) {
-        unlockView.showError()
-        text.toast
-        clearGestureTrace(after: delay)
-    }
-    /// 状态提示：立即清痕（避免残留）
-    private func showInfoHintAndClear(_ text: String) {
-        hintLabel.text = text
-        unlockView.reset()
-    }
-    /// 成功提示：保留短暂展示，再清痕
-    private func delayedReset() {
-        clearGestureTrace(after: 0.65)
-    }
 }
 // MARK: - GestureUnlockViewDelegate（分类解耦）
 extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
@@ -231,29 +183,54 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
         }
     }
 }
-// MARK: - Demo Store（示例用 UserDefaults + SHA256）
-private final class PatternStore {
-    private let keyHash = "gesture_unlock.pattern_hash"
-    private let keySalt = "gesture_unlock.salt"
 
-    var hasPattern: Bool { UserDefaults.standard.string(forKey: keyHash) != nil }
+extension GestureUnlockDemoVC{
+    
+    private func configureUnlockView() {
+        var config = GestureUnlockConfiguration()
+        config.gridDimension = 3
+        config.minimumPatternLength = 4
+        config.hapticsEnabled = true
 
-    func save(pattern: GesturePattern) {
-        let salt = saltValue()
-        let hash = pattern.sha256Hex(salt: salt)
-        UserDefaults.standard.set(hash, forKey: keyHash)
+        unlockView.configuration = config
+        unlockView.delegate = self
     }
 
-    func verify(pattern: GesturePattern) -> Bool {
-        guard let saved = UserDefaults.standard.string(forKey: keyHash) else { return false }
-        let hash = pattern.sha256Hex(salt: saltValue())
-        return hash == saved
+    private func refreshStateFromStorage() {
+        if store.hasPattern {
+            flowState = .verify
+            hintLabel.text = "请输入手势解锁".tr
+            modeControl.selectedSegmentIndex = 1
+            unlockView.byVisible(YES)
+            unlockView.isInputEnabled = true
+            unlockView.reset()
+        } else {
+            flowState = .createFirst
+            modeControl.selectedSegmentIndex = 0
+            unlockView.byVisible(YES)
+            unlockView.isInputEnabled = true
+            showInfoHintAndClear("请先设置手势（至少 4 个点）".tr) // ✅ 提示后清痕
+        }
     }
-
-    private func saltValue() -> String {
-        if let s = UserDefaults.standard.string(forKey: keySalt) { return s }
-        let new = UUID().uuidString
-        UserDefaults.standard.set(new, forKey: keySalt)
-        return new
+    // MARK: - Trace Helpers
+    private func clearGestureTrace(after delay: TimeInterval = 0.65) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            self?.unlockView.reset()
+        }
+    }
+    /// toast + 显示错误态 + 提示结束后清痕
+    private func toastErrorAndClear(_ text: String, clearAfter delay: TimeInterval = 0.65) {
+        unlockView.showError()
+        text.toast
+        clearGestureTrace(after: delay)
+    }
+    /// 状态提示：立即清痕（避免残留）
+    private func showInfoHintAndClear(_ text: String) {
+        hintLabel.text = text
+        unlockView.reset()
+    }
+    /// 成功提示：保留短暂展示，再清痕
+    private func delayedReset() {
+        clearGestureTrace(after: 0.65)
     }
 }

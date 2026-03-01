@@ -12,10 +12,10 @@ import UIKit
 #endif
 
 import SnapKit
-import JobsInheritance
 import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsTextTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class QRCodeDemoVC: BaseVC {
     // 编码的内容（可自行替换）

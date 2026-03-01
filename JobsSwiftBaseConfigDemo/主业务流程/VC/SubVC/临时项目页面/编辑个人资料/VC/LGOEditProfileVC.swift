@@ -13,7 +13,6 @@ import UIKit
 
 import SnapKit
 import SwiftEntryKit
-import JobsInheritance
 import GKNavigationBarSwift
 import BRPickerViewSwift
 import JobsToast
@@ -21,10 +20,12 @@ import JobsScale
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
+import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
+    
     case avatar
     case nickname
     case gender
@@ -53,10 +54,12 @@ private enum EditProfileRow: CaseIterable {
             return nil
         case .nickname:
             return JobsText(JobsRichText.make([
-                JobsRichRun(.text("等级达到2级才能修改昵称"))
+                JobsRichRun(
+                    .text("等级达到2级才能修改昵称"))
                     .font(.systemFont(ofSize: 14))
                     .color(.systemRed),
-                JobsRichRun(.text("Eric"))
+                JobsRichRun(
+                    .text("Eric"))
                     .font(.systemFont(ofSize: 14, weight: .semibold))
                     .color(.secondaryLabel)
             ]))

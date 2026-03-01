@@ -13,13 +13,13 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsToast
 import JobsByUIKit
-import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsBy3rdTools
-import JobsToast
+import JobsInheritance
 import JobsCountdownButton
+import JobsSwiftBaseDefines
 
 final class JobsCountdownDemoVC: BaseVC {
     /// 外层滚动视图
@@ -59,6 +59,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 60)
                 cfg.renderConfiguration = { sec, base in
@@ -70,7 +71,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("🕒 倒计时运行中: \(sec)s")
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title1Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -99,6 +102,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 20)
                 cfg.renderConfiguration = { sec, base in
@@ -111,7 +115,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("💡 闪烁中：\(sec)")
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title2Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -140,6 +146,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .up(to: 10)
                 cfg.interval = 0.5
@@ -152,7 +159,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("⚡️ 进度: \(sec)/10")
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title3Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -180,6 +189,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 10)
                 cfg.renderOnInit = true
@@ -189,7 +199,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title4Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -218,6 +230,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 15)
                 cfg.renderConfiguration = { sec, base in
@@ -249,7 +262,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title5Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -278,6 +293,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 8)
                 cfg.renderConfiguration = { sec, base in
@@ -301,7 +317,9 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title6Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -329,6 +347,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .byTitleColor(.white, for: .normal)
             .byTitleColor(.white, for: .selected)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            /// 倒计时按钮核心配置
             .byCountdown { cfg in
                 cfg.mode = .down(from: 12)
                 cfg.clickableWhileRunning = true
@@ -341,7 +360,26 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
-            .byCountdownOnTapAuto()
+            /// 把「点击按钮」和「启动倒计时」自动绑定起来
+//            .byCountdownOnTapAuto()
+            .onTap { [weak self] sender in
+                guard let self = self,
+                      let ctrl = sender.jobsCountdownController
+                else { return }
+
+                if ctrl.isRunning {
+                    // 正在跑
+                    if ctrl.config.clickableWhileRunning {
+                        ctrl.config.onTapWhileRunning?(sender, ctrl.config)
+                    } else {
+                        // 不可点就直接吞掉点击
+                    }
+                } else {
+                    // 未运行 -> 开始
+                    ctrl.start()
+                }
+            }
+        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title7Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)

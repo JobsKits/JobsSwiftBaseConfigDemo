@@ -25,20 +25,19 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+
 import JobsByUIKit
-import JobsSwiftTimer
-import JobsBy3rdTools
 import JobsTextTools
+import JobsBy3rdTools
+import JobsSwiftTimer
+import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 
 final class TimerDemoVC: BaseVC {
-
     // MARK: - Layout 常量
     let horizontalInset: CGFloat = 40
     let spacing: CGFloat = 12
-
     // MARK: - TimerState（旧文件依赖 TimerState，这里完整补齐）
     private enum TimerState {
         case idle
@@ -46,11 +45,9 @@ final class TimerDemoVC: BaseVC {
         case paused
         case stopped
     }
-
     // MARK: - 计时器配置（由 UI 驱动）
     private var currentKind: JobsTimerKind = .gcd
     private var intervalSec: TimeInterval = 1.0   // 步长（秒），由输入框维护
-
     // MARK: - 运行状态（VC 自己管理，不再依赖 UIButton.timer 扩展）
     private var countUpTimer: JobsSwiftTimerProtocol?
     private var countdownTimer: JobsSwiftTimerProtocol?
@@ -61,14 +58,11 @@ final class TimerDemoVC: BaseVC {
     private var elapsed: TimeInterval = 0
     private var countdownTotal: TimeInterval = 0
     private var countdownRemaining: TimeInterval = 0
-
-    deinit {
-        countUpTimer?.stop()
-        countdownTimer?.stop()
-    }
-
     // MARK: - Segmented（选择计时器内核）
-    private lazy var kindSelector = UISegmentedControl(items: ["NSTimer".tr, "GCD".tr, "DisplayLink".tr, "RunLoop".tr])
+    private lazy var kindSelector = UISegmentedControl(items: ["NSTimer".tr,
+                                                               "GCD".tr,
+                                                               "DisplayLink".tr,
+                                                               "RunLoop".tr])
         .bySelectedSegmentIndex(1) // 默认 GCD
         .onJobsChange { [weak self] (seg: UISegmentedControl) in
             guard let strongSelf = self else { return }
@@ -156,7 +150,6 @@ final class TimerDemoVC: BaseVC {
                 make.height.equalTo(56)
             }
     }()
-
     // MARK: - 控制键：暂停 / 继续 / Fire / 停止
     private lazy var pauseButton = makeActionButton(
         title: "暂停",
@@ -237,29 +230,6 @@ final class TimerDemoVC: BaseVC {
                 make.height.equalTo(50)
             }
     }()
-
-    // MARK: - 布局（两排：开始 / 暂停-继续-Fire-停止）
-    private func layoutButtons() {
-        let totalWidth = UIScreen.main.bounds.width - horizontalInset * 2
-        let itemWidth = (totalWidth - spacing * 3) / 4.0
-
-        // 第一排：开始
-        startButton.byAlpha(1)
-
-        // 第二排：暂停 / 继续 / Fire / 停止
-        for (i, btn) in [pauseButton, resumeButton, fireButton, stopButton].enumerated() {
-            btn.byAddTo(view) { [unowned self] make in
-                make.top.equalTo(startButton.snp.bottom).offset(16)
-                make.left.equalToSuperview().offset(horizontalInset + CGFloat(i) * (itemWidth + spacing))
-                make.width.equalTo(itemWidth)
-                make.height.greaterThanOrEqualTo(52)
-            }
-        }
-
-        hintLabel.byAlpha(1)
-        _ = countdownButton
-    }
-
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -280,7 +250,33 @@ final class TimerDemoVC: BaseVC {
         // 离开页面时清掉 timer
         stopAll()
     }
+    
+    deinit {
+        countUpTimer?.stop()
+        countdownTimer?.stop()
+    }
+}
 
+extension TimerDemoVC {
+    // MARK: - 布局（两排：开始 / 暂停-继续-Fire-停止）
+    private func layoutButtons() {
+        let totalWidth = UIScreen.main.bounds.width - horizontalInset * 2
+        let itemWidth = (totalWidth - spacing * 3) / 4.0
+        // 第一排：开始
+        startButton.byAlpha(1)
+        // 第二排：暂停 / 继续 / Fire / 停止
+        for (i, btn) in [pauseButton, resumeButton, fireButton, stopButton].enumerated() {
+            btn.byAddTo(view) { [unowned self] make in
+                make.top.equalTo(startButton.snp.bottom).offset(16)
+                make.left.equalToSuperview().offset(horizontalInset + CGFloat(i) * (itemWidth + spacing))
+                make.width.equalTo(itemWidth)
+                make.height.greaterThanOrEqualTo(52)
+            }
+        }
+
+        hintLabel.byAlpha(1)
+        _ = countdownButton
+    }
     // MARK: - Timer 构建（统一入口）
     @MainActor
     private func makeTimer(kind: JobsTimerKind,
@@ -415,7 +411,6 @@ final class TimerDemoVC: BaseVC {
             startButton.byTitle(String(format: "%.1fs", elapsed), for: .normal)
             lastFireLabel.text = "Last: " + fmt(Date())
         }
-
         // 手动触发一次“倒计时 tick”
         if countdownState == .running {
             countdownRemaining -= intervalSec
@@ -429,7 +424,6 @@ final class TimerDemoVC: BaseVC {
             }
             lastFireLabel.text = "Last: " + fmt(Date())
         }
-
         // 然后 stop（触发并销毁）
         countUpTimer?.stop()
         countdownTimer?.stop()
@@ -441,7 +435,6 @@ final class TimerDemoVC: BaseVC {
         countdownState = .stopped
         updateControlButtons(by: .stopped)
     }
-
     /// Stop：直接 stop（不额外触发）
     @MainActor
     private func stopAll() {
@@ -472,7 +465,6 @@ final class TimerDemoVC: BaseVC {
             updateControlButtons(by: .idle)
         }
     }
-
     // MARK: - 切换内核 / 修改步长：按“当前模式”重建
     @MainActor
     private func rebuildActiveTimersForNewKind() {
@@ -483,7 +475,6 @@ final class TimerDemoVC: BaseVC {
     private func rebuildActiveTimersForNewInterval() {
         rebuildActiveTimersForNewParams()
     }
-
     /// 同时重建两个 timer（保留 elapsed / remaining）
     @MainActor
     private func rebuildActiveTimersForNewParams() {
@@ -511,17 +502,14 @@ final class TimerDemoVC: BaseVC {
                     strongSelf.lastFireLabel.text = "Last: " + fmt(Date())
                 }
             }
-
             countUpTimer = t
             t.start()
-
             if wasPaused {
                 t.pause()
                 countUpState = .paused
                 updateControlButtons(by: .paused)
             }
         }
-
         // 倒计时：running/paused 则用剩余时间近似重建
         if countdownState == .running || countdownState == .paused {
             let wasPaused = (countdownState == .paused)
@@ -570,7 +558,6 @@ final class TimerDemoVC: BaseVC {
             }
         }
     }
-
     // MARK: - 控制键 UI（由 VC 状态驱动）
     @MainActor
     private func updateControlButtons(by state: TimerState) {
@@ -604,7 +591,6 @@ final class TimerDemoVC: BaseVC {
             set(stopButton,   true,  .systemRed)
         }
     }
-
     // MARK: - 工具：构造次级按钮
     private func makeActionButton(
         title: String,
@@ -647,7 +633,6 @@ final class TimerDemoVC: BaseVC {
             self.rebuildActiveTimersForNewInterval()
         }
     }
-
     // MARK: - 工具
     private func parseCountdownTotal(_ time: Int) -> Int {
         let v = (countdownField.text ?? "").trimmingCharacters(in: .whitespaces)
