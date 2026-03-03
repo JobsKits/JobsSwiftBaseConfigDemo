@@ -557,51 +557,67 @@ public final class JobsMarqueeView: UIView {
     private func cloneButton(from source: UIButton) -> UIButton {
         let button = UIButton.sys()
         button.jobs_isClone = true
-
-        let states: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
-        for state in states {
-            if let title = source.title(for: state) {
-                button.byTitle(title, for: state)
+        // 0) 先处理 iOS15+ configuration（放最前，避免后续把字体/样式冲掉）
+        if #available(iOS 15.0, *) {
+            if let cfg = source.configuration {
+                button.configuration = cfg
+                // 如果你希望 clone 的配置更新策略和 source 一致，可以打开：
+                // button.automaticallyUpdatesConfiguration = source.automaticallyUpdatesConfiguration
             }
-            if let attrTitle = source.attributedTitle(for: state) {
-                button.byAttributedTitle(attrTitle, for: state)
-            }
-            if let color = source.titleColor(for: state) {
-                button.byTitleColor(color, for: state)
-            }
-            if let image = source.image(for: state) {
-                button.byImage(image, for: state)
-            }
-            if let bgImage = source.backgroundImage(for: state) {
-                button.byBackgroundImage(bgImage, for: state)
-            }
-        }
-
-        if let font = source.titleLabel?.font {
-            button.byTitleFont(font)
-        }
-
-        if #available(iOS 15.0, *), let cfg = source.configuration {
-            button.configuration = cfg
         } else {
+            // iOS14-：拷贝 legacy inset
             button
                 .byContentEdgeInsets(source.contentEdgeInsets)
                 .byTitleEdgeInsets(source.titleEdgeInsets)
                 .byImageEdgeInsets(source.imageEdgeInsets)
         }
+        // 1) 复制常用状态下的 title / attributedTitle / color / image / backgroundImage
+        let states: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
+        for st in states {
 
+            if let title = source.title(for: st) {
+                button.byTitle(title, for: st)
+            }
+            // ✅ 写法1：iOS15+ 且 source 有 configuration 时，不拷贝 legacy attributedTitle
+            if #available(iOS 15.0, *) {
+                if source.configuration == nil {
+                    if let att = source.attributedTitle(for: st) {
+                        button.byAttributedTitle(att, for: st)
+                    }
+                }
+            } else {
+                if let att = source.attributedTitle(for: st) {
+                    button.byAttributedTitle(att, for: st)
+                }
+            }
+
+            if let color = source.titleColor(for: st) {
+                button.byTitleColor(color, for: st)
+            }
+
+            if let image = source.image(for: st) {
+                button.byImage(image, for: st)
+            }
+
+            if let bgImage = source.backgroundImage(for: st) {
+                button.byBackgroundImage(bgImage, for: st)
+            }
+        }
+        // 2) 背景色（按你的原逻辑只拷 normal）
         if let bgColor = source.backgroundColor {
             button.byBackgroundColor(bgColor, for: .normal)
         }
-
+        // 3) 对齐/布局相关
         button.contentHorizontalAlignment = source.contentHorizontalAlignment
         button.contentVerticalAlignment   = source.contentVerticalAlignment
-
+        button.semanticContentAttribute   = source.semanticContentAttribute
+        button.tintColor                  = source.tintColor
+        // 4) layer 外观
         button.layer.cornerRadius  = source.layer.cornerRadius
         button.layer.masksToBounds = source.layer.masksToBounds
         button.layer.borderWidth   = source.layer.borderWidth
         button.layer.borderColor   = source.layer.borderColor
-
+        // 5) 网络背景图 clone（你原逻辑保留）
         #if canImport(SDWebImage)
         source.sd_cloneBackground(to: button,
                                   for: .normal,
@@ -613,7 +629,15 @@ public final class JobsMarqueeView: UIView {
                                   for: .normal,
                                   allowNetworkIfMissing: true)
         #endif
-
+        // ✅ 6) 字体一定最后刷（关键！）
+        for st in states {
+             if let f = source.jobs_titleFont(for: st) {
+                 button.byTitleFont(f, for: st)
+             }
+        }
+        // ✅ 7) iOS15+ 强制触发一次配置更新（让 DSL 的 update handler / transformer 生效）
+        button.byUpdateConfig()
+        
         var hasTapTarget = false
         for target in source.allTargets {
             for event in [

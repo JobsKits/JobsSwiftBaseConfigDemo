@@ -133,12 +133,38 @@ extension UIButton {
             return c
         };return self.titleColor(for: state) ?? self.titleColor(for: .normal) // 3) legacy
     }
+    /// 读取 DSL 记录的标题字体（最可靠）
+    public func jobs_dslTitleFont(for state: UIControl.State) -> UIFont? {
+        // 你内部已经有 _titleFontDict
+        _titleFontDict[state.rawValue] ?? _titleFontDict[UIControl.State.normal.rawValue]
+    }
     /// 主标题字体（业务视角 best-effort）
     public func jobs_titleFont(for state: UIControl.State) -> UIFont? {
-        if let att = jobs_attributedTitle(for: state),
-           let f = att.jobs_firstFont {
+
+        let st = (state == .normal) ? jobs_effectiveState : state
+
+        // ✅ 0) 最优先：读 DSL 缓存（不会被系统“冲”）
+        if let f = jobs_dslTitleFont(for: st) {
             return f
-        };return self.titleLabel?.font
+        }
+        if let f = jobs_dslTitleFont(for: .normal) {
+            return f
+        }
+
+        // 1) attributedTitle 里如果写了 UIFont，也返回
+        if let att = self.attributedTitle(for: st), let f = att.jobs_firstFont { return f }
+        if let att = self.attributedTitle(for: .normal), let f = att.jobs_firstFont { return f }
+
+        // 2) iOS15+ configuration.attributedTitle
+        if #available(iOS 15.0, *),
+           let cfg = configuration,
+           let att = cfg.attributedTitle {
+            let ns = NSAttributedString(att)
+            if let f = ns.jobs_firstFont { return f }
+        }
+
+        // 3) 最后兜底（不稳）
+        return self.titleLabel?.font
     }
     // MARK: SubTitle color / font
     /// 副标题颜色（业务视角 best-effort）

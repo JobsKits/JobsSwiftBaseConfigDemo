@@ -254,7 +254,7 @@ extension UIButton {
 
 extension UIButton {
     // MARK: - state -> UIFont
-    private var _titleFontDict: [UInt: UIFont] {
+    var _titleFontDict: [UInt: UIFont] {
         get { (objc_getAssociatedObject(self, &_jobsTitleFontDictKey) as? [UInt: UIFont]) ?? [:] }
         set {
             objc_setAssociatedObject(

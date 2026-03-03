@@ -28,8 +28,8 @@ Pod::Spec.new do |s|
                      'WebKit'
   # 递归匹配当前目录下所有子目录里的 .swift 文件
   s.source_files = '**/*.{swift,h,m,mm}'
+  s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsSwiftBaseDefines'
-  s.dependency 'JobsByUIKit'
-  
+
 end
