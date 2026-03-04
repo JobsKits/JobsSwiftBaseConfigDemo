@@ -10,12 +10,22 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 /// Line 指示器专属
-public extension JXSegmentedIndicatorLineView {
-    @discardableResult func byLineStyle(_ s: JXSegmentedIndicatorLineStyle) -> Self { lineStyle = s; return self }
+ extension JXSegmentedIndicatorLineView {
+    
+    @discardableResult
+    public func byLineStyle(_ s: JXSegmentedIndicatorLineStyle) -> Self {
+        lineStyle = s
+        return self
+    }
     /// 仅对 `.lengthenOffset` 生效
-    @discardableResult func byLineScrollOffsetX(_ x: CGFloat) -> Self { lineScrollOffsetX = x; return self }
+    @discardableResult
+     public func byLineScrollOffsetX(_ x: CGFloat) -> Self {
+         lineScrollOffsetX = x
+         return self
+     }
 }
 #endif

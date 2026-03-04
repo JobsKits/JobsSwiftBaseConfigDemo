@@ -7959,9 +7959,109 @@ DemoDetailVC().onResult { name in
 }
 ```
 
-### 52、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 52、`JXSegmentedView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 52.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+* **数据源**
+
+  ```swift
+  private var titleData: [String] {
+      let data = ["体育".tr, "DB体育".tr, "游戏".tr, "直播".tr]
+      guard GameStatusManager.isLoginThisPlatform() else { return data }
+      return data.add("广场".tr)
+  }
+  
+  private lazy var segmentedDataSource: JXSegmentedTitleImageDataSource = {
+      JXSegmentedTitleImageDataSource()
+          .byTitles(titleData)
+          .byTitleColorGradientEnabled(YES)
+          .byTitleNormalColor("#FFFFFF".cor)
+          .byTitleSelectedColor("#C33E2D".cor)
+          .byTitleNormalFont(.PingFangSC.Semibold(14.fz))
+          .byTitleSelectedFont(.PingFangSC.Semibold(16.fz))
+          .byTitleColorGradientEnabled(YES)
+          .byTitleImageType(.leftImage)
+          .byTitleImageSpacing(3.w)
+          .byNormalImages([
+              "B体育（未选择）白天",
+              "DB（未选择）白天",
+              "游戏（未选择）白天",
+              "直播（未选择）白天",
+              "广场（未选择）白天"])
+          .bySelectedImages([
+              "B体育（已选择）白天",
+              "DB（已选择）白天",
+              "游戏（已选择）白天",
+              "直播（已选择）白天",
+              "广场（已选择）白天"])
+  }()
+  ```
+
+* **UI**
+
+  ```swift
+  lazy var segmentedView: JXSegmentedView = {
+      JXSegmentedView()
+          .byContentEdgeInsetLeft(0)
+          .byContentEdgeInsetRight(0)
+          .byDefaultSelectedIndex(0)
+          .byBackgroundColor(.clear)
+          .byListContainer(JXSegmentedListContainerView(dataSource: self)
+              .byIndexChange()
+              .byDidIndexChanged { from, to in
+                  "切换完成：\(from) -> \(to)".toast
+              }
+              .byBackgroundColor(.clear)
+              .byAddTo(contentView) { [unowned self] make in
+                  make.top.equalTo(topBarBackgroundView.snp.bottom)
+                  make.left.right.bottom.equalToSuperview()
+              }, defaultIndex: 0)
+          .byIndicators([JXSegmentedIndicatorLineView()
+              .byIndicatorWidth(26.w)
+              .byIndicatorHeight(3.h)
+              .byVerticalOffset(10.h)
+              .byLineStyle(.normal)
+              .byIndicatorColor("#C33E2D".cor)])
+          .byDataSource(segmentedDataSource)
+          .byAddTo(topBarBackgroundView) { [unowned self] make in
+              make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(0.h)
+              make.height.mas_equalTo(50.w)
+              if GameStatusManager.isLoginThisPlatform() {
+                  make.centerX.equalToSuperview()
+                  make.left.equalTo(btn.mas_right).offset(11.5.h)
+                  make.right.equalTo(onLineBtn.mas_left).offset(-11.5.h)
+              } else {
+                  make.left.equalTo(btn.mas_right).offset(11.5.h)
+                  make.right.equalTo(loginBtn.mas_left).offset(-11.5.h)
+              }
+          }
+  }()
+  ```
+
+* `JXSegmentedView` 的代理协议
+
+  ```swift
+  // MARK: - JXSegmentedListContainerViewDataSource
+  extension BSportHomeVC: JXSegmentedListContainerViewDataSource {
+      
+      func numberOfLists(in listContainerView: JXSegmentedListContainerView) -> Int {
+          segmentedDataSource.titles.count
+      }
+      
+      func listContainerView(_ listContainerView: JXSegmentedListContainerView, initListAt index: Int) -> any JXSegmentedListContainerViewListDelegate {
+          [
+              BSportHomeListBSportSubVC(),   // 体育
+              BSportHomeDBSportSubVC(),   // DB体育
+              BSportHomeGameSubVC(),  // 游戏
+              BSportHomeLiveSubVC(),  // 直播
+              BSportHomePlazaSubVC(), // 广场
+          ][index]
+      }
+  }
+  ```
+
+### 53、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+#### 53.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 引入框架 **`JobsSwiftDebugTools`**
 
