@@ -17,21 +17,20 @@ import JobsSwiftBaseDefines
 #if canImport(SnapKit)
 import SnapKit
 
-private enum _JobsAssocKeys {
-    static var addClosureKey: UInt8 = 0
-}
-
+private var addClosureKey: UInt8 = 0
 extension UIView {
     public var jobsAddConstraintsClosure: jobsByConstraintMakerBlock? {
         get {
-            objc_getAssociatedObject(self, &_JobsAssocKeys.addClosureKey) as? jobsByConstraintMakerBlock
+            objc_getAssociatedObject(self, &addClosureKey) as? jobsByConstraintMakerBlock
         }
         set {
             // 闭包推荐 COPY 语义
-            objc_setAssociatedObject(self,
-                                     &_JobsAssocKeys.addClosureKey,
-                                     newValue,
-                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(
+                self,
+                &addClosureKey,
+                newValue,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
         }
     }
     // MARK: - 存储约束
@@ -50,22 +49,43 @@ extension UIView {
         };return self
     }
     // MARK: - 添加到父视图
+    /**
+     
+         .byAddTo(view) { [unowned self] make in
+             /// TODO
+         }
+     */
+    // ✅ 允许只传 superView
     @discardableResult
-    public func byAddTo(_ superview: UIView,
-                        _ closure: ((ConstraintMaker) -> Void)? = nil) -> Self {
-        superview.addSubview(self)
+    public func byAddTo(
+        _ superView: UIView?,
+        _ closure: ((ConstraintMaker) -> Void)? = nil
+    ) -> Self {
+        guard let superView else { return self }
+        superView.addSubview(self)
         if let closure {
             self.snp.makeConstraints(closure)
-        };return self
+        }
+        return self
     }
-
+    /**
+     
+         UI.byAddTo(view) { v, make in
+             /// TODO
+         }
+     */
+    // ✅ 必须传 closure（不提供默认值），避免歧义
     @discardableResult
-    public func byAddTo(_ superView: UIView,
-                        _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
+    public func byAddTo(
+        _ superView: UIView?,
+        _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void
+    ) -> Self {
+        guard let superView else { return self }
         superView.addSubview(self)
         self.snp.makeConstraints { make in
             closure(self, make)
-        };return self
+        }
+        return self
     }
     // MARK: - 链式 makeConstraints
     @discardableResult
@@ -74,14 +94,14 @@ extension UIView {
         self.snp.makeConstraints(closure)
         return self
     }
-    // MARK: - 链式 remakeConstraints
+    // MARK: - 链式 remakeConstraints（先移除旧约束，再添加新约束）
     @discardableResult
     public func byRemakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
         self.byAddConstraintsClosure(closure)
         self.snp.remakeConstraints(closure)
         return self
     }
-    // MARK: - 链式 updateConstraints
+    // MARK: - 链式 updateConstraints（更新之前的约束，要求一定要和之前的约束匹配的上，否则崩溃）
     @discardableResult
     public func byUpdateConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {
         self.byAddConstraintsClosure(closure)
@@ -252,23 +272,23 @@ extension UIView {
     }
 }
 // MARK: - ✅ btnArr 链式：addSubview + distribute
-public extension Array where Element: UIView {
+extension Array where Element: UIView {
     /// 把数组里的 view 全部 add 到 superView（链式返回 self）
     @discardableResult
-    func addTo(_ superView: UIView) -> Self {
+    public func addTo(_ superView: UIView) -> Self {
         forEach { superView.addSubview($0) }
         return self
     }
     /// 在 superView 内对数组 view 做均分分布（链式返回 self）
     /// 注意：默认要求已经 addSubview 进 superView（可配合 jobs_addTo）
     @discardableResult
-    func snapDistribute(in superView: UIView, model: SnapDistributeModel) -> Self {
+    public func snapDistribute(in superView: UIView, model: SnapDistributeModel) -> Self {
         superView.snap_distribute(self, model)
         return self
     }
     /// 一步到位：addTo + distribute
     @discardableResult
-    func addDistributeTo(_ superView: UIView, model: SnapDistributeModel) -> Self {
+    public func addDistributeTo(_ superView: UIView, model: SnapDistributeModel) -> Self {
         addTo(superView)
         snapDistribute(in: superView, model: model)
         return self
