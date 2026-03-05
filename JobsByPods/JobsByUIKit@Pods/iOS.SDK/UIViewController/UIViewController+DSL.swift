@@ -62,7 +62,7 @@ extension UIViewController {
     /// 统一语义化 dismiss
     @discardableResult
     public func byDismiss(animated: Bool = true,
-                   completion: (jobsByVoidBlock)? = nil) -> Self {
+                          completion: (jobsByVoidBlock)? = nil) -> Self {
         self.dismiss(animated: animated, completion: completion)
         return self
     }
@@ -227,4 +227,3 @@ extension UIViewController {
         return self
     }
 }
-

@@ -26,3 +26,31 @@ extension Array {
         append(element)
     }
 }
+/**
+ 
+     lazy var titles: [String] = .build { arr in
+         arr.addBy("1".tr)
+         .addBy("2".tr)
+         .addBy("3".tr)
+         .addBy("4".tr)
+         .addBy("5".tr)
+     }
+ */
+public extension Array {
+    /// 链式构建器：在闭包里支持 .addBy(...).addBy(...)
+    struct Builder {
+        fileprivate var arr: UnsafeMutablePointer<[Element]>
+        @discardableResult
+        public func addBy(_ element: Element) -> Builder {
+            arr.pointee.append(element)
+            return self
+        }
+    }
+    /// 使用方式：lazy var titles: [String] = .build { $0.addBy(...).addBy(...) }
+    public static func build(_ block: (Builder) -> Void) -> [Element] {
+        var array: [Element] = []
+        withUnsafeMutablePointer(to: &array) { ptr in
+            block(Builder(arr: ptr))
+        };return array
+    }
+}

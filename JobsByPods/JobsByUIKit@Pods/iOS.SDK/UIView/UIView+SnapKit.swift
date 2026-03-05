@@ -87,6 +87,20 @@ extension UIView {
         }
         return self
     }
+    /// 把当前 view 作为 arrangedSubview 加入 stackView，并支持链式 + 可选约束
+    @discardableResult
+    public func byArrangedTo(
+        _ container: UIStackView?,
+        _ closure: ((ConstraintMaker) -> Void)? = nil
+    ) -> Self {
+        guard
+            let stackView = container as? UIStackView
+        else { return self }
+        stackView.addArrangedSubview(self)
+        if let closure {
+            self.snp.makeConstraints(closure)
+        };return self
+    }
     // MARK: - 链式 makeConstraints
     @discardableResult
     public func byMakeConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) -> Self {

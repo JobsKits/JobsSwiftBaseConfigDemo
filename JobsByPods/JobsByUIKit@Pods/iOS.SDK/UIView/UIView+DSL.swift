@@ -461,9 +461,9 @@ extension UIView {
 }
 // MARK: 修改背景色
 private var kBgColorMapKey: UInt8 = 0
-public extension UIView {
+extension UIView {
     @discardableResult
-    func byBackgroundColor(
+    public func byBackgroundColor(
         _ color: UIColor?,
         for state: UIControl.State = .normal
     ) -> Self {
