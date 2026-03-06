@@ -148,6 +148,12 @@ extension UIButton {
         };return self
     }
     /// 记录某个 state 的标题颜色（iOS15+ 走 configuration；iOS14- 走 setTitleColor）
+    ///
+    /// ✅ 根治“iOS15+ system button 标题变成跟背景同色/看起来像没字”：
+    /// - iOS 15+ 的标题颜色很多场景会优先走 `configuration.baseForegroundColor`（或 tintColor）
+    /// - 只写 transformer 有时不会立刻体现在当前帧上，尤其是 `.system` + `.plain` / 自动更新配置时
+    ///
+    /// 因此这里除了记录到 dict（给 update handler 使用），也会在“当前正处于该 state”时同步写入 baseForegroundColor。
     @discardableResult
     public func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, tvOS 15.0, *) {
@@ -157,6 +163,24 @@ extension UIButton {
             } else {
                 _titleColorDict.removeValue(forKey: state.rawValue)
             }
+
+            // 如果当前按钮“正处于”该 state，则立刻同步 baseForegroundColor，避免看起来丢字
+            // （其它 state 仍由 configurationUpdateHandler 统一兜底）
+            let stateIsActive: Bool = {
+                switch state {
+                case .disabled:   return !self.isEnabled
+                case .selected:   return self.isSelected
+                case .highlighted:return self.isHighlighted
+                case .normal:     return self.isEnabled && !self.isSelected && !self.isHighlighted
+                default:          return false
+                }
+            }()
+            if stateIsActive, let color {
+                var cfg = self.configuration ?? .plain()
+                cfg.baseForegroundColor = color
+                self.configuration = cfg
+            }
+
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
         } else {
@@ -354,6 +378,10 @@ extension UIButton {
                 ?? (btn.isSelected ? self._titleColorDict[UIControl.State.selected.rawValue] : nil)
                 ?? (btn.isHighlighted ? self._titleColorDict[UIControl.State.highlighted.rawValue] : nil)
                 ?? self._titleColorDict[UIControl.State.normal.rawValue]
+            // ---------- iOS15+ 关键：同时写 baseForegroundColor（否则 system button 很容易用 tintColor 渲染） ----------
+            if let color {
+                cfg.baseForegroundColor = color
+            }
             // ---------- 合并 transformer：font + color 同时写（避免互相覆盖） ----------
             if font != nil || color != nil {
                 cfg = cfg
