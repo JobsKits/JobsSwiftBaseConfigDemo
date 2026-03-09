@@ -13,7 +13,6 @@ import UIKit
 
 import ObjectiveC
 import JobsByUIKit
-
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 // MARK: - 便捷工厂
@@ -215,5 +214,4 @@ private final class _JXScrollDelegateProxy: NSObject, UIScrollViewDelegate {
         self.post("jx.segmented.scrollViewDidEndScrollingAnimation", object: scrollView)
     }
 }
-
 #endif

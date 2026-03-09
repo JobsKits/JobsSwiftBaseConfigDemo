@@ -100,5 +100,4 @@ extension JXSegmentedTitleImageDataSource {
         return self
     }
 }
-
 #endif

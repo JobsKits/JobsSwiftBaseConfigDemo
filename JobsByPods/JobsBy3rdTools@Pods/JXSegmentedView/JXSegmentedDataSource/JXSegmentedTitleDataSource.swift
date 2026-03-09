@@ -197,5 +197,4 @@ extension JXSegmentedTitleDataSource {
         return self
     }
 }
-
 #endif

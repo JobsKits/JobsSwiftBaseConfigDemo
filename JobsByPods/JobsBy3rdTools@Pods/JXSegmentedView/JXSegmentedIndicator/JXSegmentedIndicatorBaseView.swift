@@ -51,5 +51,35 @@ extension JXSegmentedIndicatorBaseView {
         indicatorCornerRadius = v
         return self
     }
+    /// 宽度增量：最终宽度 = indicatorWidth + indicatorWidthIncrement
+    @discardableResult
+    public func byIndicatorWidthIncrement(_ v: CGFloat) -> Self {
+        indicatorWidthIncrement = v
+        return self
+    }
+    /// 指示器是否跟随 contentScrollView 滚动（部分指示器需要）
+    @discardableResult
+    public func byScrollEnabled(_ on: Bool = true) -> Self {
+        isScrollEnabled = on
+        return self
+    }
+    /// 是否把 indicator 的 frame 转换到 itemFrame 坐标系（嵌套/特殊布局时可能用到）
+    @discardableResult
+    public func byConvertToItemFrameEnabled(_ on: Bool = true) -> Self {
+        isIndicatorConvertToItemFrameEnabled = on
+        return self
+    }
+
+    @discardableResult
+    public func byScrollAnimationDuration(_ d: TimeInterval) -> Self {
+        scrollAnimationDuration = d
+        return self
+    }
+    /// 指示器宽度是否以 itemContentWidth 作为基准（而不是 itemFrame.width）
+    @discardableResult
+    public func byWidthSameAsItemContent(_ on: Bool = true) -> Self {
+        isIndicatorWidthSameAsItemContent = on
+        return self
+    }
 }
 #endif

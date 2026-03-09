@@ -83,6 +83,24 @@ extension JXSegmentedBaseDataSource {
     public func byReload(selectedIndex: Int = 0) -> Self {
         reloadData(selectedIndex: selectedIndex); return self
     }
-}
+    /// content 宽度：用于 indicatorWidthSameAsItemContent 等场景
+    @discardableResult
+    public func byItemContentWidth(_ v: CGFloat) -> Self {
+        itemContentWidth = v
+        return self
+    }
 
+    /// 直接覆盖内部 dataSource（itemModels）
+    @discardableResult
+    public func byItemModels(_ v: [JXSegmentedBaseItemModel]) -> Self {
+        dataSource = v
+        return self
+    }
+
+    @discardableResult
+    public func byItemWidthZoomAnimable(_ on: Bool = true) -> Self {
+        isItemWidthZoomAnimable = on
+        return self
+    }
+}
 #endif

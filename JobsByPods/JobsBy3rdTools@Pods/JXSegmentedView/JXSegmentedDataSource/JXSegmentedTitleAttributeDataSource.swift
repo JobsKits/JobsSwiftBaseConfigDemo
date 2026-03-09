@@ -31,7 +31,6 @@ extension JXSegmentedTitleAttributeDataSource {
         selectedAttributedTitles = value
         return self
     }
-
     /// 富文本宽度缓存/计算（影响 cell 宽度 & indicator 对齐）
     @discardableResult
     public func byWidthForTitle(_ block: @escaping (NSAttributedString) -> CGFloat) -> Self {
@@ -45,5 +44,4 @@ extension JXSegmentedTitleAttributeDataSource {
         return self
     }
 }
-
 #endif
