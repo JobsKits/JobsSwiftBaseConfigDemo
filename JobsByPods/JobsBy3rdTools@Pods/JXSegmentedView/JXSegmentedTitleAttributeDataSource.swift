@@ -32,6 +32,13 @@ extension JXSegmentedTitleAttributeDataSource {
         return self
     }
 
+    /// 富文本宽度缓存/计算（影响 cell 宽度 & indicator 对齐）
+    @discardableResult
+    public func byWidthForTitle(_ block: @escaping (NSAttributedString) -> CGFloat) -> Self {
+        widthForTitleClosure = block
+        return self
+    }
+
     @discardableResult
     public func byItemSpacingAverageEnabled(_ enabled: Bool = true) -> Self {
         isItemSpacingAverageEnabled = enabled
