@@ -1,0 +1,92 @@
+//
+//  BaseWebView+UIDelegate.swift
+//  JobsInheritance
+//
+//  Created by OpenClaw refactor on 2026/03/13.
+//
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+#endif
+
+import WebKit
+import SafariServices
+import SnapKit
+import JobsByUIKit
+
+extension BaseWebView: WKUIDelegate {
+
+    @MainActor
+    public func webView(_ webView: WKWebView,
+                        runJavaScriptAlertPanelWithMessage message: String,
+                        initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping () -> Void) {
+        UIAlertController
+            .makeAlert("提示".tr, message)
+            .byAddOK { _ in completionHandler() }
+            .byData("Jobs")
+            .onResult { name in print("回来了 \(String(describing: name))") }
+            .byPresent(presentingVC)
+    }
+
+    @MainActor
+    public func webView(_ webView: WKWebView,
+                        runJavaScriptConfirmPanelWithMessage message: String,
+                        initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping (Bool) -> Void) {
+        UIAlertController
+            .makeAlert("确认".tr, message)
+            .byAddCancel { _ in completionHandler(false) }
+            .byAddOK { _ in completionHandler(true) }
+            .byData("Jobs")
+            .onResult { name in print("回来了 \(String(describing: name))") }
+            .byPresent(presentingVC)
+    }
+
+    @MainActor
+    public func webView(_ webView: WKWebView,
+                        runJavaScriptTextInputPanelWithPrompt prompt: String,
+                        defaultText: String?,
+                        initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping (String?) -> Void) {
+        UIAlertController
+            .makeAlert("确认".tr, prompt)
+            .byAddTextField { tf in
+                tf.text = defaultText
+            }
+            .byAddCancel { _ in completionHandler(nil) }
+            .byAddOK { _ in completionHandler(nil) }
+            .byData("Jobs")
+            .onResult { name in print("回来了 \(String(describing: name))") }
+            .byPresent(presentingVC)
+    }
+    /// iOS 18.4+ 自定义文件选择
+    @available(iOS 18.4, *)
+    @MainActor
+    public func webView(_ webView: WKWebView,
+                        runOpenPanelWith parameters: WKOpenPanelParameters,
+                        initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping ([URL]?) -> Void) {
+        var types: [UTType] = [.item]
+        if parameters.allowsDirectories { types = [.folder] }
+
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
+        picker.allowsMultipleSelection = parameters.allowsMultipleSelection
+
+        let proxy = DocumentPickerDelegateProxy { [weak self] urls in
+            completionHandler(urls)
+            self?.docPickerDelegate = nil
+        }
+
+        docPickerDelegate = proxy
+        picker.delegate = proxy
+        picker.modalPresentationStyle = .formSheet
+        presentingVC?.present(picker, animated: true)
+    }
+}

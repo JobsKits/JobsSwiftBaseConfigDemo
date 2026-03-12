@@ -4,6 +4,7 @@
 //
 //  Created by Jobs on 2025/6/16.
 //
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
@@ -12,8 +13,16 @@ import UIKit
 
 import WebKit
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 extension WKWebView {
+    
+    @discardableResult
+    public func byScrollView(_ block: (UIScrollView) -> Void) -> Self {
+        block(self.scrollView)
+        return self
+    }
+    
     @discardableResult
     public func loadURL(_ urlString: String) -> Self {
         guard let url = URL(string: urlString) else { return self }
@@ -27,7 +36,30 @@ extension WKWebView {
         self.load(request)
         return self
     }
-
+    /// iOS 16.4+ 开启 Web Inspector
+    /// - Parameter enabled: 是否开启；传 nil 时不做任何处理
+    @discardableResult
+    public func byInspectable(_ enabled: Bool? = true) -> Self {
+        guard let enabled else { return self }
+        if #available(iOS 16.4, *) {
+            isInspectable = enabled
+        };return self
+    }
+    /// 设置 customUserAgent
+    /// - Parameter userAgent: 传 nil 时不做处理
+    @discardableResult
+    public func byCustomUserAgent(_ userAgent: String? = nil) -> Self {
+        guard let userAgent else { return self }
+        self.customUserAgent = userAgent
+        return self
+    }
+    
+    @discardableResult
+    public func byConfiguration(_ block: (WKWebViewConfiguration) -> Void) -> Self {
+        block(self.configuration)
+        return self
+    }
+    
     @discardableResult
     public func byNavigationDelegate(_ delegate: WKNavigationDelegate?) -> Self {
         self.navigationDelegate = delegate
@@ -60,9 +92,9 @@ extension WKWebView {
     /// fire-and-forget：不关心回调
     public func jobsEval(_ js: String) {
         if #available(iOS 15.0, *) {
-            Task { @MainActor [weak self] in
+            jobsRunOnMain { [weak self] in
                 guard let self else { return }
-                _ = try? await self.evaluateJavaScript(js)
+                try? await self.evaluateJavaScript(js)
             }
         } else {
             self.evaluateJavaScript(js, completionHandler: nil)
@@ -70,9 +102,9 @@ extension WKWebView {
     }
     /// 带回调（@Sendable 友好）
     public func jobsEval(_ js: String,
-                  completion: JobsByAnyErrMASendableBlock?) {
+                         completion: JobsByAnyErrMASendableBlock?) {
         if #available(iOS 15.0, *) {
-            Task { @MainActor [weak self] in
+            jobsRunOnMain { [weak self] in
                 guard let self else { return }
                 do {
                     let result = try await self.evaluateJavaScript(js)

@@ -28,13 +28,14 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.{swift,h,m,mm}'
   s.dependency 'SnapKit'
   s.dependency 'GKNavigationBarSwift'
-  s.dependency 'JobsByUIKit'
-  s.dependency 'JobsNavBar'
-  s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsToast'
+  s.dependency 'JobsNavBar'
+  s.dependency 'JobsByUIKit'
   s.dependency 'JobsByWebKit'
+  s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftDebugTools'
   s.dependency 'JobsSwiftFoundation'
+  s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftStandardLibrary'
   
 end

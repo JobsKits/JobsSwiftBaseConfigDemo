@@ -61,6 +61,10 @@ public typealias jobsByBarButtonItemBlock = (UIBarButtonItem?) -> Void
 public typealias jobsByBarBtnItemBlock = (UIBarButtonItem) -> Void
 public typealias jobsByGestureRecognizerBlock = (UIGestureRecognizer?) -> Void
 public typealias jobsByGRBlock = (UIGestureRecognizer) -> Void
+@available(iOS 8.0, *)
+public typealias jobsByWKWebConfigurationBlock = (WKWebViewConfiguration?) -> Void
+@available(iOS 8.0, *)
+public typealias jobsByWKWebConfigBlock = (WKWebViewConfiguration) -> Void
 public typealias jobsByNumberFormatterBlock = (NumberFormatter) -> Void
 @available(iOS 13.0, *)
 public typealias jobsByNavigationBarAppearanceBlock = (UINavigationBarAppearance) -> Void
@@ -77,7 +81,7 @@ public typealias jobsByUIContextMenuInteractionBlock = (UIContextMenuInteraction
 public typealias jobsByContextMenuInteractionBlock = (UIContextMenuInteraction) -> Void
 public typealias JobsYTKProgress = (_ progress: Progress) -> Void
 public typealias jobsByAnyStringBlock = (Any?, String?) -> Void
-public typealias MobileActionBlock = (_ body: [String: Any], _ reply: jobsByAnyBlock) -> Void
+public typealias MobileActionBlock = (_ body: [String: Any], _ reply: @escaping jobsByAnyBlock) -> Void
 public typealias NativeBlock = (_ payload: Any?, _ reply: @escaping jobsByAnyBlock) -> Void
 public typealias jobsByNotiObjUserInfoBlock = (_ noti: Any?, _ obj: AnyObject?, _ userInfo: [AnyHashable: Any]?) -> Void
 public typealias JobsRetStringByCGFloatBlock = (CGFloat) -> String

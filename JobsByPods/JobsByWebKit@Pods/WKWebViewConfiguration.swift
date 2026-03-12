@@ -28,64 +28,77 @@ extension WKWebViewConfiguration {
     #endif
     @discardableResult
     public func byProcessPool(_ pool: WKProcessPool) -> Self {
-        self.processPool = pool; return self
+        self.processPool = pool
+        return self
     }
     /// 直接拿到 `preferences` 引用修改（WKPreferences 是引用类型）
     @discardableResult
     public func byPreferences(_ edit: (WKPreferences) -> Void) -> Self {
-        edit(self.preferences); return self
+        edit(self.preferences)
+        return self
     }
 
     @discardableResult
     public func byUserContentController(_ ucc: WKUserContentController) -> Self {
-        self.userContentController = ucc; return self
+        self.userContentController = ucc
+        return self
     }
 
     @available(iOS 18.4, *)
     @discardableResult
     public func byWebExtensionController(_ controller: WKWebExtensionController?) -> Self {
-        self.webExtensionController = controller; return self
+        self.webExtensionController = controller
+        return self
     }
 
     @available(iOS 9.0, *)
     @discardableResult
-    public func byWebsiteDataStore(_ store: WKWebsiteDataStore) -> Self {
-        self.websiteDataStore = store; return self
+    public func byWebsiteDataStore(_ store: WKWebsiteDataStore? = nil) -> Self {
+        guard let store else { return self }
+        self.websiteDataStore = store
+        return self
     }
 
     @discardableResult
     public func bySuppressesIncrementalRendering(_ on: Bool = true) -> Self {
-        self.suppressesIncrementalRendering = on; return self
+        self.suppressesIncrementalRendering = on
+        return self
     }
 
     @available(iOS 9.0, *)
     @discardableResult
-    public func byApplicationNameForUserAgent(_ suffix: String?) -> Self {
-        self.applicationNameForUserAgent = suffix; return self
+    public func byApplicationNameForUserAgent(_ suffix: String? = nil) -> Self {
+        guard let suffix else { return self }
+        self.applicationNameForUserAgent = suffix
+        return self
     }
 
     @available(iOS 9.0, *)
     @discardableResult
     public func byAllowsAirPlayForMediaPlayback(_ on: Bool = true) -> Self {
-        self.allowsAirPlayForMediaPlayback = on; return self
+        self.allowsAirPlayForMediaPlayback = on
+        return self
     }
 
     @available(iOS 26.0, *)
     @discardableResult
     public func byShowsSystemScreenTimeBlockingView(_ on: Bool = true) -> Self {
-        self.showsSystemScreenTimeBlockingView = on; return self
+        self.showsSystemScreenTimeBlockingView = on
+        return self
     }
 
     @available(iOS 14.5, *)
     @discardableResult
     public func byUpgradeKnownHostsToHTTPS(_ on: Bool = true) -> Self {
-        self.upgradeKnownHostsToHTTPS = on; return self
+        self.upgradeKnownHostsToHTTPS = on
+        return self
     }
 
     @available(iOS 10.0, *)
     @discardableResult
     public func byMediaTypesRequiringUserActionForPlayback(_ types: WKAudiovisualMediaTypes) -> Self {
-        self.mediaTypesRequiringUserActionForPlayback = types; return self
+        self.mediaTypesRequiringUserActionForPlayback = types
+        return self
     }
 
     @available(iOS 13.0, *)
@@ -101,65 +114,76 @@ extension WKWebViewConfiguration {
     @available(iOS 14.0, *)
     @discardableResult
     public func byLimitsNavigationsToAppBoundDomains(_ on: Bool = true) -> Self {
-        self.limitsNavigationsToAppBoundDomains = on; return self
+        self.limitsNavigationsToAppBoundDomains = on
+        return self
     }
 
     @available(iOS 17.0, *)
     @discardableResult
     public func byAllowsInlinePredictions(_ on: Bool = true) -> Self {
-        self.allowsInlinePredictions = on; return self
+        self.allowsInlinePredictions = on
+        return self
     }
 
     @discardableResult
     public func byAllowsInlineMediaPlayback(_ on: Bool = true) -> Self {
-        self.allowsInlineMediaPlayback = on; return self
+        self.allowsInlineMediaPlayback = on
+        return self
     }
 
     @available(iOS, introduced: 8.0, deprecated: 11.0, message: "Ignored since iOS 11; selection is always character.")
     @discardableResult
     public func bySelectionGranularity(_ g: WKSelectionGranularity) -> Self {
-        self.selectionGranularity = g; return self
+        self.selectionGranularity = g
+        return self
     }
 
     @available(iOS 9.0, *)
     @discardableResult
     public func byAllowsPictureInPictureMediaPlayback(_ on: Bool = true) -> Self {
-        self.allowsPictureInPictureMediaPlayback = on; return self
+        self.allowsPictureInPictureMediaPlayback = on
+        return self
     }
 
     @available(iOS 10.0, *)
     @discardableResult
     public func byDataDetectorTypes(_ types: WKDataDetectorTypes) -> Self {
-        self.dataDetectorTypes = types; return self
+        self.dataDetectorTypes = types
+        return self
     }
 
     @available(iOS 10.0, *)
     @discardableResult
     public func byIgnoresViewportScaleLimits(_ on: Bool = true) -> Self {
-        self.ignoresViewportScaleLimits = on; return self
+        self.ignoresViewportScaleLimits = on
+        return self
     }
     // MARK: - URL Scheme Handler
     @available(iOS 11.0, *)
     @discardableResult
     public func byURLSchemeHandler(_ handler: (any WKURLSchemeHandler)?, for scheme: String) -> Self {
-        self.setURLSchemeHandler(handler, forURLScheme: scheme); return self
+        self.setURLSchemeHandler(handler, forURLScheme: scheme)
+        return self
     }
 
     @available(iOS 11.0, *)
     @discardableResult
     public func byRemoveURLSchemeHandler(for scheme: String) -> Self {
-        self.setURLSchemeHandler(nil, forURLScheme: scheme); return self
+        self.setURLSchemeHandler(nil, forURLScheme: scheme)
+        return self
     }
     // MARK: - iOS 18+
     @available(iOS 18.0, *)
     @discardableResult
     public func bySupportsAdaptiveImageGlyph(_ on: Bool = true) -> Self {
-        self.supportsAdaptiveImageGlyph = on; return self
+        self.supportsAdaptiveImageGlyph = on
+        return self
     }
 
     @available(iOS 18.0, *)
     @discardableResult
     public func byWritingToolsBehavior(_ behavior: UIWritingToolsBehavior) -> Self {
-        self.writingToolsBehavior = behavior; return self
+        self.writingToolsBehavior = behavior
+        return self
     }
 }

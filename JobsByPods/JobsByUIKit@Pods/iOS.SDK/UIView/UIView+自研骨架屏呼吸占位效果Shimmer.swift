@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import os.lock
 //  ================================== 自述 ==================================
 //  这是一个给任意 UIView 添加「Shimmer / 骨架屏扫光」效果的扩展。
 //
@@ -51,6 +52,30 @@ private enum JobsShimmerSwizzle {
     }()
 }
 
+/// 全局运行态：用于保证 shimmer 的 swizzle 对“未启用 shimmer 的视图”开销尽可能低。
+/// 注意：即便如此，若同时存在 SkeletonView 等其它库也 swizzle 了 layoutSubviews，
+/// 调用栈仍会串联出现（这是 swizzle 的机制决定的），但这里确保只有我们自己的 shimmer view
+/// 才会执行 jobs_updateShimmerLayout()。
+private enum JobsShimmerRuntime {
+    private static var lock = os_unfair_lock_s()
+    private static var _activeCount: Int = 0
+    static var activeCount: Int {
+        os_unfair_lock_lock(&lock)
+        defer { os_unfair_lock_unlock(&lock) }
+        return _activeCount
+    }
+    static func inc() {
+        os_unfair_lock_lock(&lock)
+        _activeCount += 1
+        os_unfair_lock_unlock(&lock)
+    }
+    static func dec() {
+        os_unfair_lock_lock(&lock)
+        _activeCount = max(0, _activeCount - 1)
+        os_unfair_lock_unlock(&lock)
+    }
+}
+
 extension UIView {
     
     private static func jobs_enableShimmerAutoLayoutUpdatesOnce() {
@@ -59,9 +84,14 @@ extension UIView {
 
     @objc
     internal func jobs_shimmer_layoutSubviews() {
-        // 注意：交换实现后，这里调用的是“原始 layoutSubviews”
+        // 注意：交换实现后，这里调用的是“原始 layoutSubviews”（可能已被其它库 swizzle 过）。
         self.jobs_shimmer_layoutSubviews()
+
+        // 全局没有任何 shimmer 活跃时，直接返回（避免对非 shimmer view 产生额外开销）。
+        guard JobsShimmerRuntime.activeCount > 0 else { return }
+        // 只对我们自己的 shimmer view 生效
         guard jobs_isShimmeringStored else { return }
+
         jobs_updateShimmerLayout()
     }
 }
@@ -308,6 +338,9 @@ extension UIView {
         }
 
         jobs_shimmerConfig = config
+        if jobs_isShimmeringStored == false {
+            JobsShimmerRuntime.inc()
+        }
         jobs_isShimmeringStored = true
 
         // 临时开启裁剪：因为 shimmer layer 会比 bounds 更宽（-w...3w）
@@ -326,6 +359,9 @@ extension UIView {
     }
     /// 停止呼吸效果
     public func jobs_stopShimmer() {
+        if jobs_isShimmeringStored {
+            JobsShimmerRuntime.dec()
+        }
         jobs_isShimmeringStored = false
 
         jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
