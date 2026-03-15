@@ -1,0 +1,835 @@
+PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - Alamofire (5.11.0)
+  - AMPopTip (4.12.0)
+  - BMPlayer (1.3.2):
+    - BMPlayer/Full (= 1.3.2)
+  - BMPlayer/Core (1.3.2)
+  - BMPlayer/Full (1.3.2):
+    - BMPlayer/Core
+    - NVActivityIndicatorView (~> 4.7.0)
+    - SnapKit (~> 5.0.0)
+  - BRPickerViewSwift (0.0.1):
+    - JobsByUIKit
+    - SnapKit
+  - Cache (7.4.0)
+  - CocoaLumberjack (3.9.0):
+    - CocoaLumberjack/Core (= 3.9.0)
+  - CocoaLumberjack/Core (3.9.0)
+  - CocoaLumberjack/Swift (3.9.0):
+    - CocoaLumberjack/Core
+  - CoreXLSX (0.14.1):
+    - XMLCoder (~> 0.11.1)
+    - ZIPFoundation (~> 0.9.11)
+  - DatadogInternal (3.6.0)
+  - Descriptors (0.2.1):
+    - Descriptors/Core (= 0.2.1)
+  - Descriptors/Core (0.2.1)
+  - DeviceKit (5.7.0)
+  - Differentiator (5.0.0)
+  - ESPullToRefresh (2.9.3)
+  - FingerprintJS (1.6.0):
+    - FingerprintJS/Core (= 1.6.0)
+  - FingerprintJS/Core (1.6.0):
+    - FingerprintJS/SystemControl
+  - FingerprintJS/SystemControl (1.6.0)
+  - Flutter (1.0.0)
+  - FlutterPluginRegistrant (0.0.1):
+    - Flutter
+  - FSPopoverView (3.1.6)
+  - GKLivePhotoManager (1.0.7)
+  - GKNavigationBarSwift (1.7.3)
+  - GKPhotoBrowser (3.2.8):
+    - GKPhotoBrowser/Default (= 3.2.8)
+  - GKPhotoBrowser/AF (3.2.8):
+    - AFNetworking
+    - GKLivePhotoManager
+    - GKPhotoBrowser/Core
+  - GKPhotoBrowser/AVPlayer (3.2.8):
+    - GKPhotoBrowser/Core
+  - GKPhotoBrowser/Core (3.2.8):
+    - GKPhotoBrowser/Resources
+  - GKPhotoBrowser/Cover (3.2.8):
+    - GKPhotoBrowser/Core
+  - GKPhotoBrowser/Default (3.2.8):
+    - GKPhotoBrowser/AF
+    - GKPhotoBrowser/AVPlayer
+    - GKPhotoBrowser/Cover
+    - GKPhotoBrowser/Progress
+    - GKPhotoBrowser/SD
+  - GKPhotoBrowser/Progress (3.2.8):
+    - GKPhotoBrowser/Core
+    - GKSliderView
+  - GKPhotoBrowser/Resources (3.2.8)
+  - GKPhotoBrowser/SD (3.2.8):
+    - GKPhotoBrowser/Core
+    - SDWebImage (~> 5.0)
+  - GKSliderView (1.2.3)
+  - HaishinKit (2.0.9):
+    - Logboard (~> 2.5.0)
+  - HTMLReader (2.2.1)
+  - InternalCollectionsUtilities (1.1.1)
+  - IQKeyboardCore (1.0.8)
+  - IQKeyboardManagerSwift (8.0.1):
+    - IQKeyboardManagerSwift/Appearance (= 8.0.1)
+    - IQKeyboardManagerSwift/Core (= 8.0.1)
+    - IQKeyboardManagerSwift/IQKeyboardReturnManager (= 8.0.1)
+    - IQKeyboardManagerSwift/IQKeyboardToolbarManager (= 8.0.1)
+    - IQKeyboardManagerSwift/IQTextView (= 8.0.1)
+    - IQKeyboardManagerSwift/Resign (= 8.0.1)
+  - IQKeyboardManagerSwift/Appearance (8.0.1):
+    - IQKeyboardManagerSwift/Core
+  - IQKeyboardManagerSwift/Core (8.0.1):
+    - IQKeyboardNotification
+    - IQTextInputViewNotification
+  - IQKeyboardManagerSwift/IQKeyboardReturnManager (8.0.1):
+    - IQKeyboardReturnManager
+  - IQKeyboardManagerSwift/IQKeyboardToolbarManager (8.0.1):
+    - IQKeyboardManagerSwift/Core
+    - IQKeyboardToolbarManager
+  - IQKeyboardManagerSwift/IQTextView (8.0.1):
+    - IQTextView
+  - IQKeyboardManagerSwift/Resign (8.0.1):
+    - IQKeyboardManagerSwift/Core
+  - IQKeyboardNotification (1.0.6)
+  - IQKeyboardReturnManager (1.0.6):
+    - IQKeyboardCore
+  - IQKeyboardToolbar (1.1.3):
+    - IQKeyboardToolbar/Core (= 1.1.3)
+  - IQKeyboardToolbar/Core (1.1.3):
+    - IQKeyboardCore
+    - IQKeyboardToolbar/Placeholderable
+  - IQKeyboardToolbar/Placeholderable (1.1.3)
+  - IQKeyboardToolbarManager (1.1.5):
+    - IQKeyboardToolbar
+    - IQTextInputViewNotification
+  - IQTextInputViewNotification (1.0.9):
+    - IQKeyboardCore
+  - IQTextView (1.0.5):
+    - IQKeyboardToolbar/Placeholderable
+  - JobsBy3rdTools (0.0.1):
+    - BMPlayer
+    - GKNavigationBarSwift
+    - JobsByUIKit
+    - JobsInheritance
+    - JobsScale
+    - JobsSwiftBaseDefines
+    - JobsSwiftBaseTools
+    - JobsSwiftMetalKit
+    - JobsSwiftStandardLibrary
+    - JobsSwiftTools
+    - JobsTextTools
+    - JXSegmentedView
+    - Kingfisher
+    - MJRefresh
+    - SDWebImage
+    - SnapKit
+    - SwiftEntryKit
+    - YTKNetwork
+  - JobsByPDFKit (0.0.1)
+  - JobsByPhotosUI (0.0.1)
+  - JobsByQuartzCore (0.0.1):
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+  - JobsByUIKit (0.0.1):
+    - ESPullToRefresh
+    - GKNavigationBarSwift
+    - JobsByQuartzCore
+    - JobsImageTools
+    - Jobsl10n
+    - JobsNavBar
+    - JobsScale
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsSwiftTimer
+    - JobsTextTools
+    - Kingfisher
+    - lottie-ios
+    - "NSObject+Rx"
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SkeletonView
+    - SnapKit
+    - SVGKit
+  - JobsByWebKit (0.0.1):
+    - JobsByUIKit
+  - JobsCountdownButton (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftTimer
+  - JobsCryptoKit (0.0.1)
+  - JobsEmptyView (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - SnapKit
+  - JobsGestureUnlock (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - SnapKit
+  - JobsGetWindow (0.1.14)
+  - JobsImageTools (0.1.14):
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - Kingfisher
+    - SDWebImage
+  - JobsInheritance (0.0.1):
+    - GKNavigationBarSwift
+    - JobsByUIKit
+    - JobsByWebKit
+    - JobsNavBar
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsSwiftDebugTools
+    - JobsSwiftFoundation
+    - JobsSwiftStandardLibrary
+    - JobsToast
+    - SnapKit
+  - Jobsl10n (0.1.14)
+  - JobsLocalNotification (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftTools
+  - JobsLuckyEnvelopeRain (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftTimer
+    - SnapKit
+  - JobsMarqueeView (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftTimer
+  - JobsNavBar (0.1.14):
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - SnapKit
+    - SwiftMessages
+  - JobsNetworking/AF5 (0.0.1):
+    - Alamofire
+    - JobsNetworking/Core
+  - JobsNetworking/Async (0.0.1):
+    - JobsNetworking/Core
+  - JobsNetworking/Core (0.0.1):
+    - Alamofire
+    - DatadogInternal
+  - JobsProgressBar (0.1.14):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftTimer
+    - SnapKit
+  - JobsRefresher (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - lottie-ios
+    - SnapKit
+  - JobsScale (0.1.14):
+    - JobsGetWindow
+  - JobsSwiftAppTools (0.0.1):
+    - JobsBy3rdTools
+    - JobsByUIKit
+    - JobsInheritance
+    - JobsScale
+    - JobsSwiftBaseDefines
+    - JobsSwiftBaseTools
+    - JobsSwiftBlock
+    - JobsSwiftTools
+    - JobsTextTools
+    - SnapKit
+    - SwiftEntryKit
+  - JobsSwiftBaseDefines (0.1.6):
+    - JobsSwiftBlock
+    - JobsTextTools
+  - JobsSwiftBaseTools (0.1.14):
+    - Alamofire
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBaseTools/JobsSwiftTimer (= 0.1.14)
+    - "JobsSwiftBaseTools/🛜网络流量监控 (= 0.1.14)"
+    - JobsSwiftBlock
+    - "NSObject+Rx"
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+  - JobsSwiftBaseTools/JobsSwiftTimer (0.1.14):
+    - Alamofire
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - "NSObject+Rx"
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+  - "JobsSwiftBaseTools/🛜网络流量监控 (0.1.14)":
+    - Alamofire
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - "NSObject+Rx"
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+  - JobsSwiftBlock (0.1.0):
+    - Kingfisher
+    - Moya
+    - SnapKit
+    - YTKNetwork
+  - JobsSwiftDebugTools (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsToast
+  - JobsSwiftFoundation (0.1.1):
+    - JobsByUIKit
+  - JobsSwiftMetalKit (0.1.0)
+  - JobsSwiftStandardLibrary (0.0.1):
+    - JobsSwiftBaseDefines
+  - JobsSwiftTaskCenterComponent (0.0.1):
+    - JobsSwiftTimer
+  - JobsSwiftTimer (0.1.0)
+  - JobsSwiftTools (0.1.1):
+    - Flutter
+    - FlutterPluginRegistrant
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsToast
+  - JobsTextTools (0.1.14)
+  - JobsToast (0.1.14):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - SnapKit
+  - JXBanner (0.3.6):
+    - JXBanner/Banner (= 0.3.6)
+    - JXBanner/PageControl (= 0.3.6)
+  - JXBanner/Banner (0.3.6):
+    - JXBanner/Banner/API (= 0.3.6)
+    - JXBanner/Banner/Banner (= 0.3.6)
+    - JXBanner/Banner/Cell (= 0.3.6)
+    - JXBanner/Banner/Common (= 0.3.6)
+    - JXBanner/Banner/Transform (= 0.3.6)
+  - JXBanner/Banner/API (0.3.6):
+    - JXBanner/Banner/Cell
+    - JXBanner/PageControl
+  - JXBanner/Banner/Banner (0.3.6):
+    - JXBanner/Banner/API
+    - JXBanner/Banner/Common
+    - JXBanner/Banner/Transform
+  - JXBanner/Banner/Cell (0.3.6)
+  - JXBanner/Banner/Common (0.3.6)
+  - JXBanner/Banner/Transform (0.3.6):
+    - JXBanner/Banner/API
+  - JXBanner/PageControl (0.3.6):
+    - JXPageControl
+  - JXPageControl (0.1.5):
+    - JXPageControl/Common (= 0.1.5)
+    - JXPageControl/Jump (= 0.1.5)
+    - JXPageControl/Transform (= 0.1.5)
+  - JXPageControl/Common (0.1.5)
+  - JXPageControl/Jump (0.1.5):
+    - JXPageControl/Common
+  - JXPageControl/Transform (0.1.5):
+    - JXPageControl/Common
+  - JXSegmentedView (1.4.1)
+  - KakaJSON (1.1.2)
+  - KeychainAccess (4.2.2)
+  - Kingfisher (8.6.2)
+  - KRPresentationKit (0.13.0):
+    - KRTimingFunction (~> 1.0.0)
+  - KRTimingFunction (1.0.0)
+  - libwebp (1.5.0):
+    - libwebp/demux (= 1.5.0)
+    - libwebp/mux (= 1.5.0)
+    - libwebp/sharpyuv (= 1.5.0)
+    - libwebp/webp (= 1.5.0)
+  - libwebp/demux (1.5.0):
+    - libwebp/webp
+  - libwebp/mux (1.5.0):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.5.0)
+  - libwebp/webp (1.5.0):
+    - libwebp/sharpyuv
+  - LiveChat (2.0.26)
+  - Logboard (2.5.0)
+  - LookinServer/Core (1.2.8)
+  - LookinServer/Swift (1.2.8):
+    - LookinServer/Core
+  - lottie-ios (4.6.0)
+  - LunarSwift (1.1.8)
+  - MJRefresh (3.7.9)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
+  - "NSObject+Rx (5.2.2)":
+    - RxSwift (~> 6.2)
+  - NVActivityIndicatorView (4.7.0):
+    - NVActivityIndicatorView/Presenter (= 4.7.0)
+  - NVActivityIndicatorView/Presenter (4.7.0)
+  - PhoneNumberKit (4.2.3):
+    - PhoneNumberKit/PhoneNumberKitCore (= 4.2.3)
+    - PhoneNumberKit/UIKit (= 4.2.3)
+  - PhoneNumberKit/PhoneNumberKitCore (4.2.3)
+  - PhoneNumberKit/UIKit (4.2.3):
+    - PhoneNumberKit/PhoneNumberKitCore
+  - Plan (0.2.1)
+  - PromiseKit (8.2.0):
+    - PromiseKit/CorePromise (= 8.2.0)
+    - PromiseKit/Foundation (= 8.2.0)
+    - PromiseKit/UIKit (= 8.2.0)
+  - PromiseKit/CorePromise (8.2.0)
+  - PromiseKit/Foundation (8.2.0):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (8.2.0):
+    - PromiseKit/CorePromise
+  - ReactiveSwift (7.2.1)
+  - RxCocoa (6.9.0):
+    - RxRelay (= 6.9.0)
+    - RxSwift (= 6.9.0)
+  - RxDataSources (5.0.0):
+    - Differentiator (~> 5.0)
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.9.0):
+    - RxSwift (= 6.9.0)
+  - RxSwift (6.9.0)
+  - ScreenProtectorKit (1.4.5)
+  - SDWebImage (5.21.5):
+    - SDWebImage/Core (= 5.21.5)
+  - SDWebImage/Core (5.21.5)
+  - SDWebImageWebPCoder (0.15.0):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.17)
+  - SkeletonView (1.30.4)
+  - SnapKit (5.0.1)
+  - SVGKit (3.0.0):
+    - CocoaLumberjack (~> 3.0)
+  - swift-collections (1.1.1):
+    - swift-collections/BitCollections (= 1.1.1)
+    - swift-collections/DequeModule (= 1.1.1)
+    - swift-collections/HashTreeCollections (= 1.1.1)
+    - swift-collections/HeapModule (= 1.1.1)
+    - swift-collections/OrderedCollections (= 1.1.1)
+  - swift-collections/BitCollections (1.1.1):
+    - InternalCollectionsUtilities (= 1.1.1)
+  - swift-collections/DequeModule (1.1.1):
+    - InternalCollectionsUtilities (= 1.1.1)
+  - swift-collections/HashTreeCollections (1.1.1):
+    - InternalCollectionsUtilities (= 1.1.1)
+  - swift-collections/HeapModule (1.1.1):
+    - InternalCollectionsUtilities (= 1.1.1)
+  - swift-collections/OrderedCollections (1.1.1):
+    - InternalCollectionsUtilities (= 1.1.1)
+  - SwiftEntryKit (2.0.0)
+  - SwiftMessages (10.0.2):
+    - SwiftMessages/App (= 10.0.2)
+  - SwiftMessages/App (10.0.2)
+  - SwiftProtobuf (1.33.3)
+  - Texture/Core (3.2.0)
+  - TextureSwiftSupport (3.19.0):
+    - Texture/Core (>= 3)
+    - TextureSwiftSupport/Components (= 3.19.0)
+    - TextureSwiftSupport/Experiments (= 3.19.0)
+    - TextureSwiftSupport/Extensions (= 3.19.0)
+    - TextureSwiftSupport/LayoutSpecBuilders (= 3.19.0)
+  - TextureSwiftSupport/Components (3.19.0):
+    - Descriptors (>= 0.2.1)
+    - Texture/Core (>= 3)
+    - TextureSwiftSupport/LayoutSpecBuilders
+  - TextureSwiftSupport/Experiments (3.19.0):
+    - Texture/Core (>= 3)
+  - TextureSwiftSupport/Extensions (3.19.0):
+    - Texture/Core (>= 3)
+  - TextureSwiftSupport/LayoutSpecBuilders (3.19.0):
+    - Texture/Core (>= 3)
+  - Then (3.0.0)
+  - WCDB (2.1.15):
+    - WCDBOptimizedSQLCipher (= 1.4.8)
+  - WCDBOptimizedSQLCipher (1.4.8)
+  - XMLCoder (0.11.1)
+  - YTKNetwork (3.0.6):
+    - AFNetworking/NSURLSession (~> 4.0)
+  - ZIPFoundation (0.9.20)
+
+DEPENDENCIES:
+  - Alamofire (~> 5.9)
+  - AMPopTip
+  - BMPlayer
+  - "BRPickerViewSwift (from `JobsByPods/BRPickerViewSwift@Pods`)"
+  - Cache (from `https://github.com/hyperoslo/Cache.git`)
+  - CocoaLumberjack/Swift
+  - CoreXLSX
+  - DeviceKit
+  - ESPullToRefresh
+  - FingerprintJS
+  - Flutter (from `my_flutter/.ios/Flutter`)
+  - FlutterPluginRegistrant (from `my_flutter/.ios/Flutter/FlutterPluginRegistrant`)
+  - FSPopoverView
+  - GKNavigationBarSwift
+  - GKPhotoBrowser
+  - HaishinKit
+  - HTMLReader
+  - IQKeyboardManagerSwift
+  - "JobsBy3rdTools (from `JobsByPods/JobsBy3rdTools@Pods`)"
+  - "JobsByPDFKit (from `JobsByPods/JobsByPDFKit@Pods`)"
+  - "JobsByPhotosUI (from `JobsByPods/JobsByPhotosUI@Pods`)"
+  - "JobsByQuartzCore (from `JobsByPods/JobsByQuartzCore@Pods`)"
+  - "JobsByUIKit (from `JobsByPods/JobsByUIKit@Pods`)"
+  - "JobsByWebKit (from `JobsByPods/JobsByWebKit@Pods`)"
+  - "JobsCountdownButton (from `JobsByPods/JobsCountdownButton@Pods`)"
+  - "JobsCryptoKit (from `JobsByPods/JobsCryptoKit@Pods`)"
+  - "JobsEmptyView (from `JobsByPods/JobsEmptyView@Pods`)"
+  - "JobsGestureUnlock (from `JobsByPods/JobsGestureUnlock@Pods`)"
+  - "JobsGetWindow (from `JobsByPods/JobsGetWindow@Pods`)"
+  - "JobsImageTools (from `JobsByPods/JobsImageTools@Pods`)"
+  - "JobsInheritance (from `JobsByPods/JobsInheritance@Pods`)"
+  - "Jobsl10n (from `JobsByPods/Jobsl10n@Pods`)"
+  - "JobsLocalNotification (from `JobsByPods/JobsLocalNotification@Pods`)"
+  - "JobsLuckyEnvelopeRain (from `JobsByPods/JobsLuckyEnvelopeRain@Pods`)"
+  - "JobsMarqueeView (from `JobsByPods/JobsMarqueeView@Pods`)"
+  - "JobsNavBar (from `JobsByPods/JobsNavBar@Pods`)"
+  - "JobsNetworking/AF5 (from `JobsByPods/JobsNetworking@Pods`)"
+  - "JobsNetworking/Async (from `JobsByPods/JobsNetworking@Pods`)"
+  - "JobsProgressBar (from `JobsByPods/JobsProgressBar@Pods`)"
+  - "JobsRefresher (from `JobsByPods/JobsRefresher@Pods`)"
+  - "JobsScale (from `JobsByPods/JobsScale@Pods`)"
+  - "JobsSwiftAppTools (from `JobsByPods/JobsSwiftAppTools@Pods`)"
+  - "JobsSwiftBaseDefines (from `JobsByPods/JobsSwiftBaseDefines@Pods`)"
+  - "JobsSwiftBaseTools (from `JobsByPods/JobsSwiftBaseTools@Pods`)"
+  - "JobsSwiftBlock (from `JobsByPods/JobsSwiftBlock@Pods`)"
+  - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
+  - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
+  - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
+  - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
+  - "JobsSwiftTaskCenterComponent (from `JobsByPods/JobsSwiftTaskCenterComponent@Pods`)"
+  - "JobsSwiftTimer (from `JobsByPods/JobsSwiftTimer@Pods`)"
+  - "JobsSwiftTools (from `JobsByPods/JobsSwiftTools@Pods`)"
+  - "JobsTextTools (from `JobsByPods/JobsTextTools@Pods`)"
+  - "JobsToast (from `JobsByPods/JobsToast@Pods`)"
+  - JXBanner
+  - JXSegmentedView
+  - KakaJSON
+  - KeychainAccess
+  - Kingfisher
+  - KRPresentationKit
+  - KRTimingFunction
+  - LiveChat
+  - LookinServer/Swift
+  - lottie-ios
+  - LunarSwift
+  - MJRefresh
+  - Moya
+  - "NSObject+Rx"
+  - PhoneNumberKit
+  - Plan
+  - PromiseKit
+  - ReactiveSwift
+  - RxCocoa
+  - RxDataSources
+  - RxRelay
+  - RxSwift
+  - ScreenProtectorKit
+  - SDWebImage
+  - SDWebImageWebPCoder
+  - SkeletonView
+  - SnapKit
+  - SVGKit
+  - swift-collections
+  - SwiftEntryKit
+  - SwiftMessages
+  - SwiftProtobuf
+  - TextureSwiftSupport
+  - Then
+  - WCDB
+  - YTKNetwork
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - AFNetworking
+    - Alamofire
+    - AMPopTip
+    - BMPlayer
+    - CocoaLumberjack
+    - CoreXLSX
+    - DatadogInternal
+    - Descriptors
+    - DeviceKit
+    - Differentiator
+    - ESPullToRefresh
+    - FingerprintJS
+    - FSPopoverView
+    - GKLivePhotoManager
+    - GKNavigationBarSwift
+    - GKPhotoBrowser
+    - GKSliderView
+    - HaishinKit
+    - HTMLReader
+    - InternalCollectionsUtilities
+    - IQKeyboardCore
+    - IQKeyboardManagerSwift
+    - IQKeyboardNotification
+    - IQKeyboardReturnManager
+    - IQKeyboardToolbar
+    - IQKeyboardToolbarManager
+    - IQTextInputViewNotification
+    - IQTextView
+    - JXBanner
+    - JXPageControl
+    - JXSegmentedView
+    - KakaJSON
+    - KeychainAccess
+    - Kingfisher
+    - KRPresentationKit
+    - KRTimingFunction
+    - libwebp
+    - LiveChat
+    - Logboard
+    - LookinServer
+    - lottie-ios
+    - LunarSwift
+    - MJRefresh
+    - Moya
+    - "NSObject+Rx"
+    - NVActivityIndicatorView
+    - PhoneNumberKit
+    - Plan
+    - PromiseKit
+    - ReactiveSwift
+    - RxCocoa
+    - RxDataSources
+    - RxRelay
+    - RxSwift
+    - ScreenProtectorKit
+    - SDWebImage
+    - SDWebImageWebPCoder
+    - SkeletonView
+    - SnapKit
+    - SVGKit
+    - swift-collections
+    - SwiftEntryKit
+    - SwiftMessages
+    - SwiftProtobuf
+    - Texture
+    - TextureSwiftSupport
+    - Then
+    - WCDB
+    - WCDBOptimizedSQLCipher
+    - XMLCoder
+    - YTKNetwork
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  BRPickerViewSwift:
+    :path: "JobsByPods/BRPickerViewSwift@Pods"
+  Cache:
+    :git: https://github.com/hyperoslo/Cache.git
+  Flutter:
+    :path: my_flutter/.ios/Flutter
+  FlutterPluginRegistrant:
+    :path: my_flutter/.ios/Flutter/FlutterPluginRegistrant
+  JobsBy3rdTools:
+    :path: "JobsByPods/JobsBy3rdTools@Pods"
+  JobsByPDFKit:
+    :path: "JobsByPods/JobsByPDFKit@Pods"
+  JobsByPhotosUI:
+    :path: "JobsByPods/JobsByPhotosUI@Pods"
+  JobsByQuartzCore:
+    :path: "JobsByPods/JobsByQuartzCore@Pods"
+  JobsByUIKit:
+    :path: "JobsByPods/JobsByUIKit@Pods"
+  JobsByWebKit:
+    :path: "JobsByPods/JobsByWebKit@Pods"
+  JobsCountdownButton:
+    :path: "JobsByPods/JobsCountdownButton@Pods"
+  JobsCryptoKit:
+    :path: "JobsByPods/JobsCryptoKit@Pods"
+  JobsEmptyView:
+    :path: "JobsByPods/JobsEmptyView@Pods"
+  JobsGestureUnlock:
+    :path: "JobsByPods/JobsGestureUnlock@Pods"
+  JobsGetWindow:
+    :path: "JobsByPods/JobsGetWindow@Pods"
+  JobsImageTools:
+    :path: "JobsByPods/JobsImageTools@Pods"
+  JobsInheritance:
+    :path: "JobsByPods/JobsInheritance@Pods"
+  Jobsl10n:
+    :path: "JobsByPods/Jobsl10n@Pods"
+  JobsLocalNotification:
+    :path: "JobsByPods/JobsLocalNotification@Pods"
+  JobsLuckyEnvelopeRain:
+    :path: "JobsByPods/JobsLuckyEnvelopeRain@Pods"
+  JobsMarqueeView:
+    :path: "JobsByPods/JobsMarqueeView@Pods"
+  JobsNavBar:
+    :path: "JobsByPods/JobsNavBar@Pods"
+  JobsNetworking:
+    :path: "JobsByPods/JobsNetworking@Pods"
+  JobsProgressBar:
+    :path: "JobsByPods/JobsProgressBar@Pods"
+  JobsRefresher:
+    :path: "JobsByPods/JobsRefresher@Pods"
+  JobsScale:
+    :path: "JobsByPods/JobsScale@Pods"
+  JobsSwiftAppTools:
+    :path: "JobsByPods/JobsSwiftAppTools@Pods"
+  JobsSwiftBaseDefines:
+    :path: "JobsByPods/JobsSwiftBaseDefines@Pods"
+  JobsSwiftBaseTools:
+    :path: "JobsByPods/JobsSwiftBaseTools@Pods"
+  JobsSwiftBlock:
+    :path: "JobsByPods/JobsSwiftBlock@Pods"
+  JobsSwiftDebugTools:
+    :path: "JobsByPods/JobsSwiftDebugTools@Pods"
+  JobsSwiftFoundation:
+    :path: "JobsByPods/JobsSwiftFoundation@Pods"
+  JobsSwiftMetalKit:
+    :path: "JobsByPods/MetalKit@Pods"
+  JobsSwiftStandardLibrary:
+    :path: "JobsByPods/JobsSwiftStandardLibrary@Pods"
+  JobsSwiftTaskCenterComponent:
+    :path: "JobsByPods/JobsSwiftTaskCenterComponent@Pods"
+  JobsSwiftTimer:
+    :path: "JobsByPods/JobsSwiftTimer@Pods"
+  JobsSwiftTools:
+    :path: "JobsByPods/JobsSwiftTools@Pods"
+  JobsTextTools:
+    :path: "JobsByPods/JobsTextTools@Pods"
+  JobsToast:
+    :path: "JobsByPods/JobsToast@Pods"
+
+CHECKOUT OPTIONS:
+  Cache:
+    :commit: 86165db6a184874611c532a7422511270b2f549a
+    :git: https://github.com/hyperoslo/Cache.git
+
+SPEC CHECKSUMS:
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
+  Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
+  AMPopTip: cf89d8690aa6e59ddc86bf46c0ccabb3e7d148a1
+  BMPlayer: e4b241bd088644d7b89d991a1a65d1b1615d19b3
+  BRPickerViewSwift: 206adc24e1719663255ea075fb432a2647a73210
+  Cache: 11fe825910b467bf12931fc12624a2f380b3e09b
+  CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
+  CoreXLSX: f9a7a70b509150ceb675b05877b7ac041a587030
+  DatadogInternal: 92ca12e827c853948146528e11bda83429b68c5b
+  Descriptors: 44f9f316368c2815048b1062e0be49be59c1c696
+  DeviceKit: d1a956e25b957efb60a87bfe70be4e00ef36846d
+  Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
+  ESPullToRefresh: 0d68daa602b343c81753a1b95e09fd0bfcddfd40
+  FingerprintJS: 3a0c3e7f5035ecae199e5e5836200d9b20f1266a
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  FlutterPluginRegistrant: 1bf2b93dcc6a731089dfe77f7a867be153c5008f
+  FSPopoverView: 632d6e3dcd1ba41f941e81a5a0601e51003d01c3
+  GKLivePhotoManager: 7fba1ae3eebbbd9323320e137a88a231bc5af5fa
+  GKNavigationBarSwift: a7815e2f2b25a3f19b6f6baa49e47a39aa1b2ebd
+  GKPhotoBrowser: 5df74bd87613896269fe4ba1244c32e1b4a0c824
+  GKSliderView: 7c6f853afeb0ae370bb8dce76ec669d6e9109d1d
+  HaishinKit: add48c1321b98351e38498fe869efee230c92d05
+  HTMLReader: 1839a8505df3fb7a833e767759a799ce8e210de1
+  InternalCollectionsUtilities: af3f471602c4a67cbcb0bee0a80f6f55a33ae453
+  IQKeyboardCore: 8652977ec919cf5351aa2977fedd1a6546476fbc
+  IQKeyboardManagerSwift: 835fc9c6e4732398113406d84900ad2e8f141218
+  IQKeyboardNotification: eb4910401f5a0e68f97e71c62f8a0c5b7e9d535c
+  IQKeyboardReturnManager: fcbf51fc68d7536fc1fbcca5231c4e82576b12ac
+  IQKeyboardToolbar: 9fe900f8e7def414be4025af0ca098df764d4fe3
+  IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
+  IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
+  IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
+  JobsBy3rdTools: 826696e7a63d0c963ae90e0b4d8474cf30b75354
+  JobsByPDFKit: 56d3656161a201d1e33f1218d0d201267e668b10
+  JobsByPhotosUI: 41a5057bbbac15a9d021a1ffd6f884982f0e4ec4
+  JobsByQuartzCore: 5db2d93a1d350e98287c7c6c3184cca84b617824
+  JobsByUIKit: 2cb8694846231c7891ceb1934e16e4ea53ef3ed9
+  JobsByWebKit: 96a7a3fd8638470d05eb76e73496452325dc4808
+  JobsCountdownButton: 51a91c52f3d3cc69d8da8d1faa82d5d9984f8925
+  JobsCryptoKit: f9d2b6f7d11c0cf76f57ecc0c6690e0603f63b19
+  JobsEmptyView: 2bed790a55c3ab5292e0012b4c973631b63c51eb
+  JobsGestureUnlock: 91a2746f062909e7cc3c2809a1d6f238b169e3ce
+  JobsGetWindow: f562b91ed3812946e4b944c04ebbf4cd1ef8b212
+  JobsImageTools: ee5983885b38b418799da8b6903ea893fee7ad5b
+  JobsInheritance: f0dea962792507d69f51c7cd7ce3dc36c6d3263f
+  Jobsl10n: 17e47e87e949bd102afdbed0c7f1c20020d61637
+  JobsLocalNotification: 274bdba6e8d8d33bdf0c1e8b5d3911951e161408
+  JobsLuckyEnvelopeRain: b3fc3e43fefcbd1d9c72aa074ddca7834c9e166f
+  JobsMarqueeView: 6d42539ab81e65a7ced84679ff9b12985fb72f41
+  JobsNavBar: aeeb44adc14113c1311f7232b8bdaa29aa7741b8
+  JobsNetworking: e7817224990d31168c44ed99b7646c66987af434
+  JobsProgressBar: 177e16b652b93886baba13bbfea455e560972280
+  JobsRefresher: c9dbafc9ed96012b661f76d28d9543111851eb7d
+  JobsScale: c067caa5a33cb452d8d137b448943fdbfab76a97
+  JobsSwiftAppTools: f29b2a5378e95e36df01971a856333bc66544dfb
+  JobsSwiftBaseDefines: 3e9ae1bad099951551f26035339256ee1b363409
+  JobsSwiftBaseTools: 6fe63de3454bf137a2360bfdcf24fb628bb714f9
+  JobsSwiftBlock: 601027c8df5e0d7be3e7cea2bb81b6235f8964fd
+  JobsSwiftDebugTools: 260c8c3d8e5eaa705fb1e73864e131ce30fdab39
+  JobsSwiftFoundation: 0fedf6339ca90fd090ab635cc54536b9646ecb38
+  JobsSwiftMetalKit: e8ef2417cb94a794372f4c249d74f7686a559e16
+  JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
+  JobsSwiftTaskCenterComponent: ab60d6e736a53cebd821cf4c8c0f70d61f273dc4
+  JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
+  JobsSwiftTools: 1f37df61e617dbf47590c328785f7126fb7f4468
+  JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
+  JobsToast: 5fed48764301f708158b3ba6341fb5d052d282e9
+  JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
+  JXPageControl: e9487b39e2e58fc17790833214f3b8e935bef98b
+  JXSegmentedView: cd73555ce2134d1656db2cb383ba9c2f36fb5078
+  KakaJSON: cc5ff50a8c1cfbb09413db8496cb709a209e6137
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  Kingfisher: 23d18f54677d973b713e54ce6a8f5eef6e7056ba
+  KRPresentationKit: 11785469f6011a4743131eba264e24e98ac2ac1e
+  KRTimingFunction: f74a7630fb2e7e8daf7e619059cfedce1a76545b
+  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
+  LiveChat: 08570cee4312f1620bf4cbeadfa05047426912c9
+  Logboard: 4674a3d86681539a0ad1fca528d888b90871e268
+  LookinServer: 1b2b61c6402ae29fa22182d48f5cd067b4e99e80
+  lottie-ios: 8f959969761e9c45d70353667d00af0e5b9cadb3
+  LunarSwift: 8ad9d06cb1b774755be2f6e9b41c07dcaf82d37d
+  MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  "NSObject+Rx": 61cf1f7306a73dcef8b36649198af0813ec18dfd
+  NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
+  PhoneNumberKit: d6b20eab1cdd77216e24f9b15878a78b69fb5a4d
+  Plan: e0026af5b3cab93b9077b192911832665b762e44
+  PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440
+  ReactiveSwift: 4dfa83fbdc2392d1112050411641705412c0c705
+  RxCocoa: ac16414696ae706516be3e1ab00fcce5bdc9be8a
+  RxDataSources: aa47cc1ed6c500fa0dfecac5c979b723542d79cf
+  RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
+  RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
+  ScreenProtectorKit: 322ed190203835593ef4ef40be24442060d7900f
+  SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
+  SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
+  SkeletonView: 5a050f6411e697abd4cda0a8d767013399dccd69
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
+  swift-collections: ba248ecaf44ef500b27d5cf94d304218c89892ff
+  SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
+  SwiftMessages: bfefe945bc05ce7cd328303d53d0d1849e29109d
+  SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
+  Texture: 61e86ea2ee124f545be40293b54b5b8986006da2
+  TextureSwiftSupport: 2de508abb74363be84f02721c5f0c273439963ee
+  Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
+  WCDB: 86b8267c5c7ed14a7d94d456000d4df1892877ae
+  WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
+  XMLCoder: c4638336674de7ba279cd23f2005817d69f538e0
+  YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
+  ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
+
+PODFILE CHECKSUM: 010f4590365e9c5106ca97e69f496227f0f76ba3
+
+COCOAPODS: 1.16.2
