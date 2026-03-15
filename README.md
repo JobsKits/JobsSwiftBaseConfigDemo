@@ -2792,7 +2792,7 @@ private lazy var countdownButton: UIButton = {
   }()
   ```
 
-##### 2.2.4、🔘 旋转按钮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 2.2.4、🔘 旋转按钮（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var suspendSpinBtn: UIButton = {
@@ -4275,7 +4275,7 @@ private lazy var progressView: UIProgressView = {
 }()
 ```
 
-##### 2.15.2、自定义进度条 ➤ `JobsProgressBar` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 2.15.2、自定义进度条 ➤ `JobsProgressBar`（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 自定义进度条
@@ -4322,7 +4322,7 @@ UIView().byDialogBoxContent { dialogBoxView in
 }
 ```
 
-#### 2.16、动效数字标签 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 2.16、动效数字标签（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var valueLabel: UILabel = {
@@ -6088,7 +6088,7 @@ public protocol JobsSwiftTimerIdentifiable {
 }
 ```
 
-#### 22.2、使用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 22.2、`JobsSwiftTimer` 的使用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let t = JobsTimer(kind: kind, config: config) { [weak self] in
@@ -6103,9 +6103,9 @@ timer = t
 t.start()
 ```
 
-#### 22.3、[计数按钮](#计数按钮) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 22.3、[计数按钮](#计数按钮)（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 23、跑马灯+轮播图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 23、跑马灯+轮播图（内核基于`JobsSwiftTimer`）  <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 跑马灯
 
@@ -6315,7 +6315,171 @@ t.start()
   }()
   ```
 
-### 24、控制器添加背景图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 24、计划任务（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+import JobsSwiftTaskCenter
+
+let task = JobsPlan.after(.second * 2).do {
+    print("2 秒后执行")
+}
+```
+
+### 25、红包雨（内核基于`JobsSwiftTimer`）  <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+private lazy var rainView: RedPacketRainView = {
+      RedPacketRainView
+          .dsl(
+              config: RedPacketRainConfig(
+                  // 你可以改成 .default，或者继续用这套 Demo 配置
+                  spawnInterval: 0.2,
+                  minFallDuration: 5.5,
+                  maxFallDuration: 8.0,
+                  packetSize: CGSize(width: 44, height: 54),
+                  maxConcurrentCount: 80,
+                  spawnInsets: .init(top: 0, left: 10, bottom: 0, right: 10),
+                  tapEnabled: true,
+                  packetImage: nil
+              ),
+              timerKind: .gcd
+          )
+          .onPacketTap { [weak self] _, count in
+              guard let self else { return }
+              self.countLabel.byText("已抢到：\(count) 个")
+          }
+          .byAddTo(view) { [unowned self] make in
+              make.edges.equalToSuperview()
+          }
+  }()
+```
+
+### 26、网络数据的监听（内核基于`JobsSwiftTimer`）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+![image-20251117172827722](./assets/image-20251117172827722.png)
+
+#### 26.1、监听：数据来源 + 上行⬆️ / 下载⬇️ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+networkNormalListenerBy(view) // 普通文本
+networkRichListenerBy(view) // 富文本
+```
+
+```swift
+/// 手动移除
+deinit {
+    JobsNetworkTrafficMonitorStop()  /// 停止网络实时监听
+}
+```
+
+#### 26.2、监听第一次数据源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```swift
+jobsWaitNetworkDataReady(
+   onWiFiReady: {
+       print("✅ Wi-Fi 已有真实流量")
+   },
+   onCellularReady: {
+       print("✅ 蜂窝已实际可用，可以走后续逻辑")
+       // 比如这里再去重试接口、发起播放等
+   }
+)
+```
+
+```swift
+/// 手动移除
+deinit {
+    JobsCancelWaitNetworkDataReady()       /// 停止网络数据源监听
+}
+```
+
+### 27、旋转的抽奖轮盘（内核基于`JobsSwiftTimer`）  <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* ```swift
+  private lazy var wheelView: LuckyWheelView = {
+      LuckyWheelView()
+          .bySegments([
+              .init(text: "一等奖".tr,
+                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textColor: .randomColor,
+                    backgroundColor: .randomColor,
+                    placeholderImage: "globe".sysImg,
+                    imageURLString:"https://picsum.photos/30"),
+              .init(text: "二等奖".tr,
+                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textColor: .randomColor,
+                    backgroundColor: .randomColor,
+                    placeholderImage: "plus".sysImg,
+                    imageURLString:"https://picsum.photos/30"),
+              .init(text: "三等奖".tr,
+                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textColor: .randomColor,
+                    backgroundColor: .randomColor,
+                    placeholderImage: "message".sysImg,
+                    imageURLString:"https://picsum.photos/30"),
+              .init(text: "谢谢参与".tr,
+                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textColor: .randomColor,
+                    backgroundColor: .randomColor,
+                    placeholderImage: "tray".sysImg,
+                    imageURLString:"https://picsum.photos/30"),
+          ])
+          .byPointerDirection(.right) // 停止锚点作为中奖结果
+          .bySpinDuration(3.0)
+          .byInitialVelocity(25.0)
+          .byPanRotationEnabled(true)
+          .onSegmentTap { segment in
+              /// 短按和旋转停止后的中奖结果
+              toastBy("🍀 短按扇形 \(String(describing: segment.text?.rnl))")
+          }
+          .onSegmentLongPress { segment, gr in
+              if gr.state == .began {
+                  toastBy("👆 长按开始 \(String(describing: segment.text?.rnl))")
+              }
+          }
+          .byAddTo(view) { make in
+              make.center.equalToSuperview()
+              make.width.height.equalTo(300)
+          }
+  }()
+  ```
+
+* ```swift
+   wheelView.stopSpin() // 停止
+  ```
+
+### 28、自定义进度条（内核基于`JobsSwiftTimer`）  <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* 解决痛点：系统进度条（不能定义前进方向以及实时进度值）
+
+* 快捷创建
+
+  ```swift
+  /// 自定义进度条：实时进度值、前进方向
+  private lazy var progressView: JobsProgressView = {
+      JobsProgressView()
+          .byDirection(.leftToRight)
+          .byValueMode(.countDown)   // 初始：显示为 100→0
+          .byTrackColor(.systemGray5)
+          .byLabelBackgroundColor(.secondarySystemBackground)
+          .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+          .byAddTo(view) { [unowned self] make in
+              make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
+              make.left.equalToSuperview().offset(40.w)
+              make.right.equalToSuperview().inset(40.w)
+              make.height.equalTo(80.h) /// 给点高度让上方 label 有空间移动
+          }
+  }()
+  ```
+
+* 手动设置进度（动画呈现）
+
+  ```swift
+  private var currentProgress: CGFloat = 0
+  progressView.setProgress(currentProgress, animated: true)
+  ```
+
+### 29、控制器添加背景图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 本地背景图
 
@@ -6337,9 +6501,9 @@ t.start()
   }
   ```
 
-### 25、弹出窗 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 30、弹出窗 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 25.1、**`JobsToast`** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 30.1、**`JobsToast`** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 自定义持续动画时间
 
@@ -6374,7 +6538,7 @@ t.start()
   )
   ```
 
-#### 25.2、[`UIAlertController`](#UIAlertController) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a> 
+#### 30.2、[`UIAlertController`](#UIAlertController) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a> 
 
 * 最简单的 Alert：主/副标题 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
 
@@ -6472,9 +6636,9 @@ t.start()
   }()
   ```
 
-### 26、调用系统设备（内部有鉴权@需配置[**`Info.plist`**](#Info.plist) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 31、调用系统设备（内部有鉴权@需配置[**`Info.plist`**](#Info.plist) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 26.1、调用iOS系统相机@照相 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 31.1、调用iOS系统相机@照相 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 #if targetEnvironment(simulator)
@@ -6491,7 +6655,7 @@ t.start()
 #endif
 ```
 
-#### 26.2、调用iOS系统相机@录像 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 31.2、调用iOS系统相机@录像 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 #if targetEnvironment(simulator)
@@ -6505,7 +6669,7 @@ MediaPickerService.recordVideo(from: self, maxDuration: 30, quality: .typeHigh) 
 #endif
 ```
 
-#### 26.3、调用iOS系统相册@选照片 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 31.3、调用iOS系统相册@选照片 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// maxSelection:最大可选
@@ -6516,7 +6680,7 @@ pickFromPhotoLibrary(maxSelection: imageMaxSelection, imagesOnly: true) { [weak 
 }
 ```
 
-#### 26.4、调用iOS系统相册@选视频 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 31.4、调用iOS系统相册@选视频 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// maxSelection:最大可选
@@ -6527,9 +6691,9 @@ pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
 }
 ```
 
-### 27、[📖](https://sdwebimage.github.io/documentation/sdwebimage/) [**`SDWebImage`**](https://github.com/SDWebImage/SDWebImage) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 32、[📖](https://sdwebimage.github.io/documentation/sdwebimage/) [**`SDWebImage`**](https://github.com/SDWebImage/SDWebImage) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 27.1、`SDAnimatedImage` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 32.1、`SDAnimatedImage` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **SDAnimatedImage 是 [`SDWebImage`](https://github.com/SDWebImage/SDWebImage) 提供的“可播放的动态图像对象”**（继承自 `UIImage`），搭配 **`SDAnimatedImageView`** 来播放。它解决了 `UIImage.animatedImage…` 一次性把所有帧解码进内存、容易内存暴涨/掉帧的问题
   
@@ -6587,7 +6751,7 @@ pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
   * 需要 **WebP**/**AVIF** 等，**别忘装对应 coder 插件并注册**。
   * 超大、超长动图仍会吃 CPU，必要时**限制尺寸/帧率或懒加载**。
 
-### 28、悬浮视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 33、悬浮视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 UIView().bySuspend { cfg in
@@ -6611,7 +6775,7 @@ UIView().suspend(
 )
 ```
 
-### 29、旋转视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 34、旋转视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 btn.onTap { [weak self] btn in
@@ -6641,7 +6805,7 @@ btn.onTap { [weak self] btn in
 }
 ```
 
-### 30、角标提示@右上角提示文案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 35、角标提示@右上角提示文案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 展示
 
@@ -6688,9 +6852,9 @@ btn.onTap { [weak self] btn in
       }
   ```
 
-### 31、条件编译 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 36、条件编译 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 31.1、`DEBUG` 模式下才允许做的事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 36.1、`DEBUG` 模式下才允许做的事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 定义
 
@@ -6717,7 +6881,7 @@ btn.onTap { [weak self] btn in
   }
   ```
 
-#### 31.2、代码启用（当引入某第三方后）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 36.2、代码启用（当引入某第三方后）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 #if canImport(Kingfisher)
@@ -6728,7 +6892,7 @@ import ObjectiveC.runtime
 #endif
 ```
 
-### 32、💼 <font color=green id=bundle>**Bundle**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 37、💼 <font color=green id=bundle>**Bundle**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 打印当前**Bundle**的路径
 
@@ -6743,7 +6907,7 @@ import ObjectiveC.runtime
   print("SomeThing in bundle:", all.map { $0.lastPathComponent })
   ```
 
-### 33、返回到上一页 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 38、返回到上一页 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**定义在控制器层的返回功能**](#关闭页面实现逻辑)
 
@@ -6751,7 +6915,7 @@ import ObjectiveC.runtime
   closeByResult("")
   ```
 
-### 34、给控制器带上导航控制器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 39、给控制器带上导航控制器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -6769,9 +6933,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-### 35、**`NavigationBar`**的显隐控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 40、**`NavigationBar`**的显隐控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 35.1、对系统的导航栏 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 40.1、对系统的导航栏 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 官方姿势
 
@@ -6805,7 +6969,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   }
   ```
 
-#### 35.2、对[**`GKNavigationBarSwift`**]( https://github.com/QuintGao/GKNavigationBarSwift) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 40.2、对[**`GKNavigationBarSwift`**]( https://github.com/QuintGao/GKNavigationBarSwift) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 override func viewWillAppear(_ animated: Bool) {
@@ -6821,7 +6985,7 @@ override func viewWillDisappear(_ animated: Bool) {
 }
 ```
 
-### 36、修改状态栏颜色@当前控制器页面 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 41、修改状态栏颜色@当前控制器页面 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 修改**Info.plist**
 
@@ -6851,7 +7015,7 @@ override func viewWillDisappear(_ animated: Bool) {
   }
   ```
 
-### 37、动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 42、动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **`UIView`**点击放大动画
 
@@ -6885,9 +7049,9 @@ override func viewWillDisappear(_ animated: Bool) {
     btn.bySpinStop()
     ```
 
-### 38、多语言国际化 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 43、多语言国际化 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 38.1、对`info.plist`文件里面用到的字符串进行多语言国际化的处理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 43.1、对`info.plist`文件里面用到的字符串进行多语言国际化的处理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > 只能靠 **`InfoPlist.strings` 做多语言**，不能用 `NSLocalizedString` 那一套在运行时切。
 
@@ -7296,7 +7460,7 @@ override func viewWillDisappear(_ animated: Bool) {
   ```
 
 
-#### 38.2、<font id=国际化>对全局普通的字符串进行多语言国际化的处理</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 43.2、<font id=国际化>对全局普通的字符串进行多语言国际化的处理</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 新建语言映射文件`*.strings`
  ![image-20251101165105182](./assets/image-20251101165105182.png)
@@ -7346,7 +7510,7 @@ override func viewWillDisappear(_ animated: Bool) {
    * 切换语言的时候，是通过发通知来转换的
    * 对于已经赋值的UI控件，还是需要重新赋值。**`*.tr`**只是改变字符串
 
-### 39、PDF <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 44、PDF <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import PDFKit // 系统API
@@ -7396,13 +7560,13 @@ override func viewWillTransition(to size: CGSize, with coordinator: UIViewContro
 }
 ```
 
-### 40、软键盘退出 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 45、软键盘退出 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 jobsDismissKeyboard()
 ```
 
-### 41、`UITableViewCell`  的数据配置体系（`UICollectionViewCell` 同理）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 46、`UITableViewCell`  的数据配置体系（`UICollectionViewCell` 同理）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 此协议用于 `UITableViewCell` 亦可用于`UICollectionViewCell` 
 
@@ -7520,76 +7684,7 @@ jobsDismissKeyboard()
       }
   }
   ```
-
-### 42、红包雨 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-private lazy var rainView: RedPacketRainView = {
-      RedPacketRainView
-          .dsl(
-              config: RedPacketRainConfig(
-                  // 你可以改成 .default，或者继续用这套 Demo 配置
-                  spawnInterval: 0.2,
-                  minFallDuration: 5.5,
-                  maxFallDuration: 8.0,
-                  packetSize: CGSize(width: 44, height: 54),
-                  maxConcurrentCount: 80,
-                  spawnInsets: .init(top: 0, left: 10, bottom: 0, right: 10),
-                  tapEnabled: true,
-                  packetImage: nil
-              ),
-              timerKind: .gcd
-          )
-          .onPacketTap { [weak self] _, count in
-              guard let self else { return }
-              self.countLabel.byText("已抢到：\(count) 个")
-          }
-          .byAddTo(view) { [unowned self] make in
-              make.edges.equalToSuperview()
-          }
-  }()
-```
-
-### 43、网络数据的监听 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-![image-20251117172827722](./assets/image-20251117172827722.png)
-
-#### 43.1、监听：数据来源 + 上行⬆️ / 下载⬇️ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-networkNormalListenerBy(view) // 普通文本
-networkRichListenerBy(view) // 富文本
-```
-
-```swift
-/// 手动移除
-deinit {
-    JobsNetworkTrafficMonitorStop()  /// 停止网络实时监听
-}
-```
-
-#### 43.2、监听第一次数据源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
- jobsWaitNetworkDataReady(
-     onWiFiReady: {
-         print("✅ Wi-Fi 已有真实流量")
-     },
-     onCellularReady: {
-         print("✅ 蜂窝已实际可用，可以走后续逻辑")
-         // 比如这里再去重试接口、发起播放等
-     }
- )
-```
-
-```swift
-/// 手动移除
-deinit {
-    JobsCancelWaitNetworkDataReady()       /// 停止网络数据源监听
-}
-```
-
-### 44、真机/模拟器区分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 47、真机/模拟器区分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > 只能按照**CPU**架构来进行区分，具体设备要在真机代码部分，再进行详细区分
 
@@ -7617,9 +7712,7 @@ deinit {
   #endif
   ```
 
-
-
-### 45、有序字典 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 48、有序字典 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 iOS 的原生字典，在打印的时候不会按照键值对的添加先后顺序打印。此时需要用到[**OrderedDictionary**](https://github.com/apple/swift-collections#)
 
@@ -7639,7 +7732,7 @@ import OrderedCollections   // ✅ SPM 只接 OrderedCollections product 的情�
 
 ![image-20251118154055795](./assets/image-20251118154055795.png)
 
-### 46、[**安全取值**](#Subscript) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 49、[**安全取值**](#Subscript) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 安全取字符
 
@@ -7688,7 +7781,7 @@ import OrderedCollections   // ✅ SPM 只接 OrderedCollections product 的情�
   print("")
   ```
 
-### 47、`UserDefaults.standard` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 50、`UserDefaults.standard` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 public let UD = UserDefaults.standard
@@ -7700,7 +7793,7 @@ struct UserInfoModel: Codable {
 }
 ```
 
-#### 47.1、存取对象 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 50.1、存取对象 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **存对象**
 
@@ -7725,7 +7818,7 @@ struct UserInfoModel: Codable {
   }
   ```
 
-#### 47.2、存取[**Swift**](https://developer.apple.com/swift/)的基本数据类型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 50.2、存取[**Swift**](https://developer.apple.com/swift/)的基本数据类型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **存 Int**
 
@@ -7749,62 +7842,7 @@ struct UserInfoModel: Codable {
   }
   ```
 
-### 48、旋转的抽奖轮盘 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-* ```swift
-  private lazy var wheelView: LuckyWheelView = {
-      LuckyWheelView()
-          .bySegments([
-              .init(text: "一等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
-                    textColor: .randomColor,
-                    backgroundColor: .randomColor,
-                    placeholderImage: "globe".sysImg,
-                    imageURLString:"https://picsum.photos/30"),
-              .init(text: "二等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
-                    textColor: .randomColor,
-                    backgroundColor: .randomColor,
-                    placeholderImage: "plus".sysImg,
-                    imageURLString:"https://picsum.photos/30"),
-              .init(text: "三等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
-                    textColor: .randomColor,
-                    backgroundColor: .randomColor,
-                    placeholderImage: "message".sysImg,
-                    imageURLString:"https://picsum.photos/30"),
-              .init(text: "谢谢参与".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
-                    textColor: .randomColor,
-                    backgroundColor: .randomColor,
-                    placeholderImage: "tray".sysImg,
-                    imageURLString:"https://picsum.photos/30"),
-          ])
-          .byPointerDirection(.right) // 停止锚点作为中奖结果
-          .bySpinDuration(3.0)
-          .byInitialVelocity(25.0)
-          .byPanRotationEnabled(true)
-          .onSegmentTap { segment in
-              /// 短按和旋转停止后的中奖结果
-              toastBy("🍀 短按扇形 \(String(describing: segment.text?.rnl))")
-          }
-          .onSegmentLongPress { segment, gr in
-              if gr.state == .began {
-                  toastBy("👆 长按开始 \(String(describing: segment.text?.rnl))")
-              }
-          }
-          .byAddTo(view) { make in
-              make.center.equalToSuperview()
-              make.width.height.equalTo(300)
-          }
-  }()
-  ```
-
-* ```swift
-   wheelView.stopSpin() // 停止
-  ```
-
-### 49、屏幕常亮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 51、屏幕常亮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 // MARK: - 屏幕常亮
@@ -7825,40 +7863,9 @@ public extension NSObject {
 }
 ```
 
-### 50、自定义进度条 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 52、（全局）协议传参（支持不定参数） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-* 解决痛点：系统进度条（不能定义前进方向以及实时进度值）
-
-* 快捷创建
-
-  ```swift
-  /// 自定义进度条：实时进度值、前进方向
-  private lazy var progressView: JobsProgressView = {
-      JobsProgressView()
-          .byDirection(.leftToRight)
-          .byValueMode(.countDown)   // 初始：显示为 100→0
-          .byTrackColor(.systemGray5)
-          .byLabelBackgroundColor(.secondarySystemBackground)
-          .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
-          .byAddTo(view) { [unowned self] make in
-              make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
-              make.left.equalToSuperview().offset(40.w)
-              make.right.equalToSuperview().inset(40.w)
-              make.height.equalTo(80.h) /// 给点高度让上方 label 有空间移动
-          }
-  }()
-  ```
-
-* 手动设置进度（动画呈现）
-
-  ```swift
-  private var currentProgress: CGFloat = 0
-  progressView.setProgress(currentProgress, animated: true)
-  ```
-
-### 51、（全局）协议传参（支持不定参数） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-#### 51.1、正向传参数：<font size=5>**`byData`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 52.1、正向传参数：<font size=5>**`byData`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **VC / View**
 
@@ -7948,7 +7955,7 @@ public extension NSObject {
   }
   ```
 
-#### 51.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 52.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 逆向传入
@@ -7959,7 +7966,7 @@ DemoDetailVC().onResult { name in
 }
 ```
 
-### 52、`JXSegmentedView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 53、`JXSegmentedView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **数据源**
 
@@ -8059,9 +8066,9 @@ DemoDetailVC().onResult { name in
   }
   ```
 
-### 53、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 54、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-#### 53.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 54.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 引入框架 **`JobsSwiftDebugTools`**
 
