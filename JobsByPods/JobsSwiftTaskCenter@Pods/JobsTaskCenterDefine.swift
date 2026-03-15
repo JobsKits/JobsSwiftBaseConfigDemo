@@ -70,14 +70,13 @@ public extension Date {
     /// 在当前日期基础上添加时间段
     /// - Parameter period: 要添加的时间段
     /// - Returns: 新的日期
-    func adding(_ period: JobsPeriod) -> Date {
+    func adding(period: JobsPeriod) -> Date {
         addingTimeInterval(period.timeInterval)
     }
-    
     /// 从当前日期减去时间段
     /// - Parameter period: 要减去的时间段
     /// - Returns: 新的日期
-    func subtracting(_ period: JobsPeriod) -> Date {
+    func subtracting(period: JobsPeriod) -> Date {
         addingTimeInterval(-period.timeInterval)
     }
 }
