@@ -5,15 +5,21 @@
 //  Created by Jobs on 15/3/26.
 //
 
-import Foundation
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
 /// JobsTaskManager - Jobs 系列任务管理器
 /// 提供任务的集中管理、生命周期控制和应用状态监听
 /// 线程安全：使用 NSLock 保护内部状态
 public final class JobsTaskManager: @unchecked Sendable {
-    
+
     public static let `default` = JobsTaskManager()
     private let lock = NSLock()
     private var tasks: [JobsTaskItem] = []
+    private var statusObservers: [UUID: @Sendable (JobsTaskStatusChange) -> Void] = [:]
+    private var lifecycleObserverTokens: [String: UUID] = [:]
 
     private init() {
         #if os(iOS) || os(tvOS)
@@ -38,9 +44,7 @@ public final class JobsTaskManager: @unchecked Sendable {
 }
 
 extension JobsTaskManager {
-    /// 便利构建器@合并多个任务的执行流
-    /// - Parameter tags: 任务标签数组
-    /// - Returns: 合并的异步序列
+    
     @discardableResult
     public func mergedExecutions(for tags: [String]) -> JobsMergedTaskExecutionSequence {
         let sequences = tags.compactMap { tag -> (String, JobsTaskExecutionSequence)? in
@@ -48,7 +52,7 @@ extension JobsTaskManager {
             return (tag, item.task.executions())
         };return JobsMergedTaskExecutionSequence(sequences)
     }
-    
+
     @discardableResult
     public func task(by tag: String) -> JobsTaskItem? {
         lock.lock()
@@ -58,20 +62,25 @@ extension JobsTaskManager {
 
     @discardableResult
     public func addTask(task item: JobsTaskItem) -> JobsTaskManager {
+        let didAdd: Bool
         lock.lock()
-        // 检查是否已存在同名标签
         let tagExists = tasks.contains { $0.tag == item.tag }
         if tagExists {
-            lock.unlock()
-            return self
+            didAdd = false
+        } else {
+            tasks.append(item)
+            didAdd = true
         }
-        tasks.append(item)
         lock.unlock()
-        
+
+        guard didAdd else { return self }
+
+        bindLifecycle(for: item)
         InternalTaskCenter.default.add(item.task)
         InternalTaskCenter.default.addTag(item.tag, to: item.task)
         item.task.suspend()
-        
+        let newStatus = status(for: item.task, fallback: item.status)
+        updateStatus(for: item.tag, to: newStatus, emitWhenUnchanged: true)
         return self
     }
 
@@ -82,188 +91,181 @@ extension JobsTaskManager {
 
     @discardableResult
     public func removeTask(by tag: String) -> JobsTaskManager {
+        let item: JobsTaskItem?
         lock.lock()
         let idx = tasks.firstIndex { $0.tag == tag }
-        let item = idx.map { tasks.remove(at: $0) }
+        item = idx.map { tasks.remove(at: $0) }
+        let lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
+
         if let item {
+            if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
             InternalTaskCenter.default.remove(item.task)
-        }
-        return self
+            notifyStatusChange(tag: tag, oldStatus: item.status, newStatus: nil)
+        };return self
     }
 
     @discardableResult
     public func removeAllTask() -> JobsTaskManager {
+        let snapshot: [JobsTaskItem]
+        let tokens: [String: UUID]
         lock.lock()
+        snapshot = tasks
         tasks.removeAll()
+        tokens = lifecycleObserverTokens
+        lifecycleObserverTokens.removeAll()
         lock.unlock()
+
+        for item in snapshot {
+            if let token = tokens[item.tag] {
+                item.task.removeLifecycleObserver(token)
+            }
+            notifyStatusChange(tag: item.tag, oldStatus: item.status, newStatus: nil)
+        }
         InternalTaskCenter.default.removeAll()
         return self
     }
 
     @discardableResult
     public func resume(by tag: String) -> JobsTaskManager {
-        lock.lock()
-        let matched = tasks.filter { $0.tag == tag }
-        lock.unlock()
-        matched.forEach {
-            $0.task.resume()
-            $0.status = .execute
-        }
-        return self
+        let matched = tasksSnapshot().filter { $0.tag == tag }
+        matched.forEach { item in
+            item.task.resume()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
+        };return self
     }
 
     @discardableResult
     public func resume(condition: (JobsTaskItem) -> Bool) -> JobsTaskManager {
-        lock.lock()
-        let snapshot = tasks
-        lock.unlock()
-        snapshot.filter(condition).forEach {
-            $0.task.resume()
-            $0.status = .execute
-        }
-        return self
+        let snapshot = tasksSnapshot()
+        snapshot.filter(condition).forEach { item in
+            item.task.resume()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
+        };return self
     }
 
     @discardableResult
     public func executeNow(by tag: String) -> JobsTaskManager {
-        lock.lock()
-        let matched = tasks.filter { $0.tag == tag }
-        lock.unlock()
-        matched.forEach {
-            $0.task.executeNow()
-            $0.status = .execute
-        }
-        return self
+        let matched = tasksSnapshot().filter { $0.tag == tag }
+        matched.forEach { item in
+            item.task.executeNow()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
+        };return self
     }
 
     @discardableResult
     public func executeNow(condition: (JobsTaskItem) -> Bool) -> JobsTaskManager {
-        lock.lock()
-        let snapshot = tasks
-        lock.unlock()
-        snapshot.filter(condition).forEach {
-            $0.task.executeNow()
-            $0.status = .execute
-        }
-        return self
+        let snapshot = tasksSnapshot()
+        snapshot.filter(condition).forEach { item in
+            item.task.executeNow()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
+        };return self
     }
 
     @discardableResult
     public func suspend(by tag: String) -> JobsTaskManager {
-        lock.lock()
-        let matched = tasks.filter { $0.tag == tag }
-        lock.unlock()
-        matched.forEach {
-            guard $0.status == .execute else { return }
-            $0.task.suspend()
-            $0.status = .suspend
-        }
-        return self
+        let matched = tasksSnapshot().filter { $0.tag == tag }
+        matched.forEach { item in
+            item.task.suspend()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .suspend))
+        };return self
     }
 
     @discardableResult
     public func suspend() -> JobsTaskManager {
-        lock.lock()
-        let snapshot = tasks
-        lock.unlock()
-        snapshot.forEach {
-            guard $0.status == .execute else { return }
-            $0.task.suspend()
-            $0.status = .suspend
-        }
-        return self
+        let snapshot = tasksSnapshot()
+        snapshot.forEach { item in
+            item.task.suspend()
+            updateStatus(for: item.tag, to: status(for: item.task, fallback: .suspend))
+        };return self
     }
 
     @discardableResult
     public func cancel(by tag: String) -> JobsTaskManager {
+        let item: JobsTaskItem?
+        let lifecycleToken: UUID?
         lock.lock()
         let idx = tasks.firstIndex { $0.tag == tag }
-        let item = idx.map { tasks.remove(at: $0) }
+        item = idx.map { tasks.remove(at: $0) }
+        lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
+
         if let item {
+            if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
             item.task.cancel()
+            let oldStatus = item.status
             item.status = .ended
-        }
-        return self
+            notifyStatusChange(tag: tag,
+                               oldStatus: oldStatus,
+                               newStatus: .ended)
+        };return self
     }
 
     @discardableResult
     public func cancel() -> JobsTaskManager {
+        let snapshot: [JobsTaskItem]
+        let tokens: [String: UUID]
         lock.lock()
-        let snapshot = tasks
+        snapshot = tasks
         tasks.removeAll()
+        tokens = lifecycleObserverTokens
+        lifecycleObserverTokens.removeAll()
         lock.unlock()
-        snapshot.forEach {
-            $0.task.cancel()
-            $0.status = .ended
-        }
-        return self
+
+        snapshot.forEach { item in
+            if let token = tokens[item.tag] {
+                item.task.removeLifecycleObserver(token)
+            }
+            item.task.cancel()
+            let oldStatus = item.status
+            item.status = .ended
+            notifyStatusChange(tag: item.tag,
+                               oldStatus: oldStatus,
+                               newStatus: .ended)
+        };return self
     }
-    
-    // MARK: - 批量查询与筛选
-    /// 获取所有任务项的快照
+
     public var allTasks: [JobsTaskItem] {
-        lock.lock()
-        defer { lock.unlock() }
-        return tasks
+        tasksSnapshot()
     }
-    /// 根据条件筛选任务
-    /// - Parameter predicate: 筛选条件
-    /// - Returns: 符合条件的任务数组
+
     public func tasks(where predicate: (JobsTaskItem) -> Bool) -> [JobsTaskItem] {
-        lock.lock()
-        defer { lock.unlock() }
-        return tasks.filter(predicate)
+        tasksSnapshot().filter(predicate)
     }
-    /// 获取指定状态的所有任务
-    /// - Parameter status: 任务状态
-    /// - Returns: 符合条件的任务数组
+
     public func tasks(with status: JobsTaskStatus) -> [JobsTaskItem] {
         tasks(where: { $0.status == status })
     }
-    /// 任务总数
+
     public var taskCount: Int {
         lock.lock()
         defer { lock.unlock() }
         return tasks.count
     }
 }
+
 // MARK: - JobsTaskManager Async/Await Support
 extension JobsTaskManager {
-    /// 异步等待任务添加完成
-    /// - Parameter item: 任务项
-    /// - Returns: 是否成功添加
     @discardableResult
     public func addTaskAsync(_ item: JobsTaskItem) async -> Bool {
-        await withCheckedContinuation { continuation in
-            let result = addTask(task: item)
-            continuation.resume(returning: result === self)
-        }
+        let existedBefore = task(by: item.tag) != nil
+        _ = addTask(task: item)
+        return !existedBefore && task(by: item.tag) != nil
     }
-    /// 异步移除任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: 是否成功移除
+
     @discardableResult
     public func removeTaskAsync(by tag: String) async -> Bool {
-        await withCheckedContinuation { continuation in
-            lock.lock()
-            let existed = tasks.contains { $0.tag == tag }
-            lock.unlock()
-            
-            removeTask(by: tag)
-            continuation.resume(returning: existed)
-        }
+        let existed = task(by: tag) != nil
+        removeTask(by: tag)
+        return existed
     }
-    /// 异步执行任务并等待
-    /// - Parameter tag: 任务标签
-    /// - Returns: 是否成功执行
+
     @discardableResult
     public func executeNowAsync(by tag: String) async -> Bool {
         guard let item = task(by: tag) else { return false }
         return await item.task.executeAndWait()
     }
-    /// 等待所有任务完成
+
     public func waitForAllTasks() async {
         let snapshot = allTasks
         await withTaskGroup(of: Void.self) { group in
@@ -274,15 +276,12 @@ extension JobsTaskManager {
             }
         }
     }
-    /// 等待指定标签的任务完成
-    /// - Parameter tag: 任务标签
+
     public func waitForTask(by tag: String) async {
         guard let item = task(by: tag) else { return }
         await item.task.waitUntilFinished()
     }
-    /// 批量异步执行任务
-    /// - Parameter tags: 任务标签数组
-    /// - Returns: 成功执行的任务数量
+
     @discardableResult
     public func executeNowAsync(tags: [String]) async -> Int {
         await withTaskGroup(of: Bool.self) { group in
@@ -291,143 +290,195 @@ extension JobsTaskManager {
                     await self.executeNowAsync(by: tag)
                 }
             }
-            
+
             var successCount = 0
             for await success in group {
                 if success {
                     successCount += 1
                 }
-            }
-            return successCount
+            };return successCount
         }
     }
-    /// 创建任务执行流
-    /// - Parameter tag: 任务标签
-    /// - Returns: 异步序列
+
     public func executionStream(for tag: String) -> JobsTaskManagerExecutionStream {
         JobsTaskManagerExecutionStream(manager: self, tag: tag)
     }
-    /// 创建所有任务状态变化流
-    /// - Returns: 异步序列
+
     public func statusChanges() -> JobsTaskManagerStatusStream {
         JobsTaskManagerStatusStream(manager: self)
     }
 }
+// MARK: - JobsTaskManager internals
+extension JobsTaskManager {
+    @discardableResult
+    func addStatusObserver(_ observer: @escaping @Sendable (JobsTaskStatusChange) -> Void) -> UUID {
+        let id = UUID()
+        lock.lock()
+        statusObservers[id] = observer
+        lock.unlock()
+        return id
+    }
+
+    func removeStatusObserver(_ id: UUID) {
+        lock.lock()
+        statusObservers.removeValue(forKey: id)
+        lock.unlock()
+    }
+
+    private func tasksSnapshot() -> [JobsTaskItem] {
+        lock.lock()
+        defer { lock.unlock() }
+        return tasks
+    }
+
+    private func bindLifecycle(for item: JobsTaskItem) {
+        let token = item.task.addLifecycleObserver { [weak self] lifecycle in
+            guard let self else { return }
+            guard let mappedStatus = self.status(for: lifecycle) else { return }
+            self.updateStatus(for: item.tag, to: mappedStatus)
+        }
+        lock.lock()
+        lifecycleObserverTokens[item.tag] = token
+        lock.unlock()
+    }
+
+    private func updateStatus(for tag: String,
+                              to newStatus: JobsTaskStatus,
+                              emitWhenUnchanged: Bool = false) {
+        let oldStatus: JobsTaskStatus?
+        let shouldEmit: Bool
+        lock.lock()
+        if let item = tasks.first(where: { $0.tag == tag }) {
+            oldStatus = item.status
+            shouldEmit = emitWhenUnchanged || item.status != newStatus
+            item.status = newStatus
+        } else {
+            oldStatus = nil
+            shouldEmit = false
+        }
+        let observers = Array(statusObservers.values)
+        lock.unlock()
+
+        guard shouldEmit else { return }
+        let change = JobsTaskStatusChange(tag: tag,
+                                          oldStatus: oldStatus,
+                                          newStatus: newStatus,
+                                          timestamp: Date())
+        observers.forEach { $0(change) }
+    }
+
+    private func notifyStatusChange(tag: String,
+                                    oldStatus: JobsTaskStatus?,
+                                    newStatus: JobsTaskStatus?) {
+        lock.lock()
+        let observers = Array(statusObservers.values)
+        lock.unlock()
+        let change = JobsTaskStatusChange(tag: tag,
+                                          oldStatus: oldStatus,
+                                          newStatus: newStatus,
+                                          timestamp: Date())
+        observers.forEach { $0(change) }
+    }
+
+    private func status(for task: JobsTask, fallback: JobsTaskStatus) -> JobsTaskStatus {
+        status(for: task.lifecycle) ?? fallback
+    }
+
+    private func status(for lifecycle: JobsTaskLifecycle) -> JobsTaskStatus? {
+        switch lifecycle {
+        case .idle: return .prepare
+        case .running: return .execute
+        case .suspended: return .suspend
+        case .cancelled, .finished: return .ended
+        }
+    }
+}
 // MARK: - JobsTaskManager@DSL
 extension JobsTaskManager {
-    /// 链式添加任务
-    /// - Parameter item: 任务项
-    /// - Returns: self
     @discardableResult
     public func byAddTask(_ item: JobsTaskItem) -> Self {
         addTask(task: item)
         return self
     }
-    /// 链式移除任务
-    /// - Parameter item: 任务项
-    /// - Returns: self
+
     @discardableResult
     public func byRemoveTask(_ item: JobsTaskItem) -> Self {
         removeTask(task: item)
         return self
     }
-    /// 链式根据标签移除任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byRemoveTask(tag: String) -> Self {
         removeTask(by: tag)
         return self
     }
-    /// 链式移除所有任务
-    /// - Returns: self
+
     @discardableResult
     public func byRemoveAllTask() -> Self {
         removeAllTask()
         return self
     }
-    /// 链式根据标签恢复任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byResume(tag: String) -> Self {
         resume(by: tag)
         return self
     }
-    /// 链式根据条件恢复任务
-    /// - Parameter condition: 筛选条件
-    /// - Returns: self
+
     @discardableResult
     public func byResume(condition: @escaping (JobsTaskItem) -> Bool) -> Self {
         resume(condition: condition)
         return self
     }
-    /// 链式根据标签立即执行任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byExecuteNow(tag: String) -> Self {
         executeNow(by: tag)
         return self
     }
-    /// 链式根据条件立即执行任务
-    /// - Parameter condition: 筛选条件
-    /// - Returns: self
+
     @discardableResult
     public func byExecuteNow(condition: @escaping (JobsTaskItem) -> Bool) -> Self {
         executeNow(condition: condition)
         return self
     }
-    /// 链式根据标签暂停任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func bySuspend(tag: String) -> Self {
         suspend(by: tag)
         return self
     }
-    /// 链式暂停所有任务
-    /// - Returns: self
+
     @discardableResult
     public func bySuspend() -> Self {
         suspend()
         return self
     }
-    /// 链式根据标签取消任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byCancel(tag: String) -> Self {
         cancel(by: tag)
         return self
     }
-    /// 链式取消所有任务
-    /// - Returns: self
+
     @discardableResult
     public func byCancel() -> Self {
         cancel()
         return self
     }
-    // MARK: - Async Builders (DSL)
-    /// 异步链式添加任务
-    /// - Parameter item: 任务项
-    /// - Returns: self
+
     @discardableResult
     public func byAddTaskAsync(_ item: JobsTaskItem) async -> Self {
         _ = await addTaskAsync(item)
         return self
     }
-    /// 异步链式移除任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byRemoveTaskAsync(tag: String) async -> Self {
         _ = await removeTaskAsync(by: tag)
         return self
     }
-    /// 异步链式执行任务
-    /// - Parameter tag: 任务标签
-    /// - Returns: self
+
     @discardableResult
     public func byExecuteNowAsync(tag: String) async -> Self {
         _ = await executeNowAsync(by: tag)
@@ -436,7 +487,7 @@ extension JobsTaskManager {
 }
 #if os(iOS) || os(tvOS)
 extension JobsTaskManager: TaskForApplicationStatusDelegate {
-    
+
     @objc private func backgroundState() {
         applicationStatusDidChanged(.background)
     }
@@ -446,9 +497,7 @@ extension JobsTaskManager: TaskForApplicationStatusDelegate {
     }
 
     public func applicationStatusDidChanged(_ state: UIApplication.State) {
-        lock.lock()
-        let snapshot = tasks
-        lock.unlock()
+        let snapshot = tasksSnapshot()
 
         switch state {
         case .active:
@@ -457,9 +506,9 @@ extension JobsTaskManager: TaskForApplicationStatusDelegate {
                 executeNow(by: $0.tag)
             }
         case .background:
-            snapshot.filter { $0.status == .execute }.forEach {
-                suspend(by: $0.tag)
-                $0.status = .background
+            snapshot.filter { $0.status == .execute }.forEach { item in
+                item.task.suspend()
+                updateStatus(for: item.tag, to: .background)
             }
         default:
             break

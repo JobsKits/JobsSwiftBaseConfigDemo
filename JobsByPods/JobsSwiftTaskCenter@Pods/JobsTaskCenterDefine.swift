@@ -25,8 +25,6 @@ import UIKit
 public struct JobsPeriod: Sendable, Equatable, Comparable {
     /// 以秒为单位的底层时间间隔。
     public let timeInterval: TimeInterval
-    /// 是否为负时间段（由于初始化已钳制为非负，通常为 false）。
-    public var isNegative: Bool { timeInterval < 0 }
     /// 是否为 0 秒。
     public var isZero: Bool { timeInterval == 0 }
     /// 表示 0 秒的时间段。
