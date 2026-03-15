@@ -7,4 +7,10 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:ASYNC_GUIDE.md">
+   </FileRef>
+   <FileRef
+      location = "group:SWIFT_CONCURRENCY_REPORT.md">
+   </FileRef>
 </Workspace>

@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
-  s.name         = 'JobsSwiftTaskCenterComponent'          # Pod 名
+  s.name         = 'JobsSwiftTaskCenter'          # Pod 名
   s.version      = '0.0.1'
   s.summary      = 'Swift中，对JobsSwiftTimer进行的拓展（计划任务）'
   s.description  = <<-DESC
-                        JobsSwiftTaskCenterComponent
+                        JobsSwiftTaskCenter
                    DESC
 
-  s.homepage     = 'https://github.com/JobsKits/JobsSwiftTaskCenterComponent'
+  s.homepage     = 'https://github.com/JobsKits/JobsSwiftTaskCenter'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Jobs' => 'lg295060456@gmail.com' }
 
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   # 你的源码从 Git 仓库下载
-  s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftTaskCenterComponent.git',
+  s.source       = { :git => 'https://github.com/JobsKits/JobsSwiftTaskCenter.git',
                      :tag => s.version.to_s }
                      
   # 全局排除脚本 / 图标

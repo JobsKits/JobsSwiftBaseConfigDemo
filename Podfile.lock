@@ -297,7 +297,7 @@ PODS:
   - JobsSwiftMetalKit (0.1.0)
   - JobsSwiftStandardLibrary (0.0.1):
     - JobsSwiftBaseDefines
-  - JobsSwiftTaskCenterComponent (0.0.1):
+  - JobsSwiftTaskCenter (0.0.1):
     - JobsSwiftTimer
   - JobsSwiftTimer (0.1.0)
   - JobsSwiftTools (0.1.1):
@@ -515,7 +515,7 @@ DEPENDENCIES:
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
-  - "JobsSwiftTaskCenterComponent (from `JobsByPods/JobsSwiftTaskCenterComponent@Pods`)"
+  - "JobsSwiftTaskCenter (from `JobsByPods/JobsSwiftTaskCenter@Pods`)"
   - "JobsSwiftTimer (from `JobsByPods/JobsSwiftTimer@Pods`)"
   - "JobsSwiftTools (from `JobsByPods/JobsSwiftTools@Pods`)"
   - "JobsTextTools (from `JobsByPods/JobsTextTools@Pods`)"
@@ -701,8 +701,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/MetalKit@Pods"
   JobsSwiftStandardLibrary:
     :path: "JobsByPods/JobsSwiftStandardLibrary@Pods"
-  JobsSwiftTaskCenterComponent:
-    :path: "JobsByPods/JobsSwiftTaskCenterComponent@Pods"
+  JobsSwiftTaskCenter:
+    :path: "JobsByPods/JobsSwiftTaskCenter@Pods"
   JobsSwiftTimer:
     :path: "JobsByPods/JobsSwiftTimer@Pods"
   JobsSwiftTools:
@@ -780,7 +780,7 @@ SPEC CHECKSUMS:
   JobsSwiftFoundation: 0fedf6339ca90fd090ab635cc54536b9646ecb38
   JobsSwiftMetalKit: e8ef2417cb94a794372f4c249d74f7686a559e16
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
-  JobsSwiftTaskCenterComponent: ab60d6e736a53cebd821cf4c8c0f70d61f273dc4
+  JobsSwiftTaskCenter: 7069bba77c72693aec641df61832ad4408b367e5
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
   JobsSwiftTools: 1f37df61e617dbf47590c328785f7126fb7f4468
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a

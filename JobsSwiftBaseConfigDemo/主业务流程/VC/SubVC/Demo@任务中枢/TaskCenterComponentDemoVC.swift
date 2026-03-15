@@ -16,18 +16,19 @@ import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsInheritance
+import JobsSwiftTaskCenter
 import JobsSwiftBaseDefines
-import JobsSwiftTaskCenterComponent
 
 final class TaskCenterComponentDemoVC: BaseVC {
+    
     private let heartbeatTag = "TaskCenterDemo.heartbeat"
-    private var heartbeatComponent: TaskCenterComponent?
-    private var heartbeatItem: TaskItem?
+    private var heartbeatComponent: JobsTaskCenterComponent?
+    private var heartbeatItem: JobsTaskItem?
     private var heartbeatCounter = 0
 
     private let burstPlannedCount = 3
     private let burstInitialDelaySeconds = 2
-    private var burstComponent: TaskCenterComponent?
+    private var burstComponent: JobsTaskCenterComponent?
     private var burstExecutedCount = 0
 
     private var logs: [String] = []
@@ -118,7 +119,10 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var heartbeatButtonsStack: UIStackView = { [unowned self] in
-        UIStackView(arrangedSubviews: [heartbeatStartBtn, heartbeatPauseBtn, heartbeatFireBtn, heartbeatResetBtn])
+        UIStackView(arrangedSubviews: [heartbeatStartBtn,
+                                       heartbeatPauseBtn,
+                                       heartbeatFireBtn,
+                                       heartbeatResetBtn])
             .byAxis(.horizontal)
             .bySpacing(8)
             .byDistribution(.fillEqually)
@@ -233,8 +237,6 @@ final class TaskCenterComponentDemoVC: BaseVC {
             }
     }()
 
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -252,36 +254,36 @@ final class TaskCenterComponentDemoVC: BaseVC {
     deinit {
         heartbeatComponent?.cancel()
         burstComponent?.cancel()
-        TaskManager.default.removeTask(by: heartbeatTag)
+        JobsTaskManager.default.removeTask(by: heartbeatTag)
     }
 }
 
 private extension TaskCenterComponentDemoVC {
     
     func startHeartbeat() {
-        TaskManager.default.resume(by: heartbeatTag)
+        JobsTaskManager.default.resume(by: heartbeatTag)
         updateHeartbeatState()
         appendLog("✅ 心跳任务已开始")
     }
 
     func pauseHeartbeat() {
-        TaskManager.default.suspend(by: heartbeatTag)
+        JobsTaskManager.default.suspend(by: heartbeatTag)
         updateHeartbeatState()
         appendLog("⏸️ 心跳任务已暂停")
     }
 
     func fireHeartbeatOnce() {
-        TaskManager.default.executeNow(by: heartbeatTag)
+        JobsTaskManager.default.executeNow(by: heartbeatTag)
         updateHeartbeatState()
         appendLog("⚡️ 手动触发心跳一次")
     }
 
     func resetHeartbeatTask(showToast: Bool) {
-        TaskManager.default.removeTask(by: heartbeatTag)
+        JobsTaskManager.default.removeTask(by: heartbeatTag)
         heartbeatComponent?.cancel()
         heartbeatCounter = 0
 
-        let config = TaskCenterComponent.Configuration(
+        let config = JobsTaskCenterComponent.Configuration(
             interval: 1.seconds,
             initialDelay: .zero,
             repeatCount: nil,
@@ -289,7 +291,7 @@ private extension TaskCenterComponentDemoVC {
             runLoopMode: nil,
             fireImmediately: true
         )
-        let component = TaskCenterComponent.schedule(configuration: config) { [weak self] in
+        let component = JobsTaskCenterComponent.schedule(configuration: config) { [weak self] in
             self?.handleHeartbeatTick()
         }
         heartbeatComponent = component
@@ -323,7 +325,7 @@ private extension TaskCenterComponentDemoVC {
     func startBurstTask() {
         burstComponent?.cancel()
         burstExecutedCount = 0
-        let config = TaskCenterComponent.Configuration(
+        let config = JobsTaskCenterComponent.Configuration(
             interval: 1.seconds,
             initialDelay: burstInitialDelaySeconds.seconds,
             repeatCount: burstPlannedCount,
@@ -331,7 +333,7 @@ private extension TaskCenterComponentDemoVC {
             runLoopMode: nil,
             fireImmediately: false
         )
-        burstComponent = TaskCenterComponent.schedule(configuration: config) { [weak self] in
+        burstComponent = JobsTaskCenterComponent.schedule(configuration: config) { [weak self] in
             self?.handleBurstTick()
         }
         updateBurstStateLabel(extra: "等待 \(burstInitialDelaySeconds)s 后开始……")
@@ -374,7 +376,7 @@ private extension TaskCenterComponentDemoVC {
         burstStateLabel.byText(rows.joined(separator: "\n"))
     }
 
-    func describeLifecycle(_ lifecycle: STTask.Lifecycle) -> String {
+    func describeLifecycle(_ lifecycle: JobsTask.Lifecycle) -> String {
         switch lifecycle {
         case .idle: return "待启动"
         case .running: return "运行中"
@@ -391,10 +393,9 @@ private extension TaskCenterComponentDemoVC {
             logs.removeFirst(logs.count - 80)
         }
         let body = logs.joined(separator: "\n")
-        logTextView.text = body.isEmpty ? "--" : body
+        logTextView.byText(body.isEmpty ? "--" : body)
         if !body.isEmpty {
-            let range = NSRange(location: (body as NSString).length - 1, length: 1)
-            logTextView.scrollRangeToVisible(range)
+            logTextView.scrollRangeToVisible( NSRange(location: (body as NSString).length - 1, length: 1))
         }
     }
 }
