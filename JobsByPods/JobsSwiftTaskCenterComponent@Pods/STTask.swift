@@ -10,13 +10,19 @@ public final class STTask {
     private var iterator: AnyIterator<Period>
     private var actions: [UUID: Action] = [:]
     private var timer: JobsSwiftTimerProtocol?
-    private var state: State = .idle
+    private var state: Lifecycle = .idle
     private var generation: UInt64 = 0
 
     public private(set) var executionCount: Int = 0
     public private(set) var estimatedNextExecutionDate: Date?
 
-    private enum State {
+    public var lifecycle: Lifecycle {
+        lock.lock()
+        defer { lock.unlock() }
+        return state
+    }
+
+    public enum Lifecycle: Sendable, Equatable {
         case idle
         case running
         case suspended

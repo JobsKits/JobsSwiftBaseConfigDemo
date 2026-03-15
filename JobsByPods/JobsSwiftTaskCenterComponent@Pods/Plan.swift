@@ -16,8 +16,33 @@ public struct Plan: Sequence, Sendable {
         Plan(builder: builder)
     }
 
-    public static func every(_ interval: Period) -> Plan {
-        Plan.make { AnyIterator { interval } }
+    public static func every(
+        _ interval: Period,
+        initialDelay: Period = .zero,
+        repeatCount: Int? = nil,
+        fireImmediately: Bool = false
+    ) -> Plan {
+        Plan.make {
+            var emitted = 0
+            var hasEmittedImmediate = !fireImmediately
+            var shouldEmitInitialDelay = !initialDelay.isZero
+            return AnyIterator {
+                if let repeatCount, emitted >= repeatCount { return nil }
+                emitted += 1
+
+                if fireImmediately && !hasEmittedImmediate {
+                    hasEmittedImmediate = true
+                    return .zero
+                }
+
+                if shouldEmitInitialDelay {
+                    shouldEmitInitialDelay = false
+                    return initialDelay
+                }
+
+                return interval
+            }
+        }
     }
 
     public static func after(_ delay: Period) -> Plan {

@@ -7,11 +7,14 @@ public struct Period: Sendable, Equatable, Comparable {
         self.timeInterval = max(0, timeInterval)
     }
 
+    public static var zero: Period { Period(0) }
+
     public static func < (lhs: Period, rhs: Period) -> Bool {
         lhs.timeInterval < rhs.timeInterval
     }
 
     public var isNegative: Bool { timeInterval < 0 }
+    public var isZero: Bool { timeInterval == 0 }
 }
 
 public extension Int {

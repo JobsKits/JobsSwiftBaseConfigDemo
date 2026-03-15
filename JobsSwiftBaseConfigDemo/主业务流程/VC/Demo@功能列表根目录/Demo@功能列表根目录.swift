@@ -101,6 +101,7 @@ final class RootListVC: BaseVC {
     private func makeDemo2D() -> [DemoGroup] {
         return [
             (title: "JobsSwiftTimer系列衍生产品", items: [
+                ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
                 ("🛠️ Jobs时间管理大师", JobsTimerManagerDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
