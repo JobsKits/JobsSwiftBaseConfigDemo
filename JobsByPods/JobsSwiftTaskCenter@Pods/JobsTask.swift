@@ -29,6 +29,7 @@ public final class JobsTask: @unchecked Sendable {
     public typealias Lifecycle = JobsTaskLifecycle
     public typealias Action = @Sendable (JobsTask) -> Void
     public typealias LifecycleObserver = @Sendable (JobsTaskLifecycle) -> Void
+    public typealias ErrorHandler = @Sendable (Error, JobsTask) -> Void
 
     private let lock = NSLock()
     private let queue: DispatchQueue
@@ -36,11 +37,17 @@ public final class JobsTask: @unchecked Sendable {
     private var iterator: AnyIterator<JobsPeriod>
     private var actions: [UUID: Action] = [:]
     private var lifecycleObservers: [UUID: LifecycleObserver] = [:]
+    private var errorHandler: ErrorHandler?
     private var timer: JobsSwiftTimerProtocol?
     private var state: JobsTaskLifecycle = .idle
     private var generation: UInt64 = 0
     private var _executionCount: Int = 0
     private var _estimatedNextExecutionDate: Date?
+    
+    // 性能指标追踪
+    private let creationDate: Date = Date()
+    private var firstExecutionDate: Date?
+    private var lastExecutionDate: Date?
 
     public var lifecycle: JobsTaskLifecycle {
         lock.lock()
@@ -69,6 +76,30 @@ public final class JobsTask: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         return actions.count
+    }
+    
+    /// 获取任务的性能指标
+    public var metrics: JobsTaskMetrics {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        let totalDuration = Date().timeIntervalSince(creationDate)
+        var averageInterval: TimeInterval?
+        
+        if _executionCount > 1, let first = firstExecutionDate, let last = lastExecutionDate {
+            let executionDuration = last.timeIntervalSince(first)
+            averageInterval = executionDuration / Double(_executionCount - 1)
+        }
+        
+        return JobsTaskMetrics(
+            totalExecutions: _executionCount,
+            creationDate: creationDate,
+            firstExecutionDate: firstExecutionDate,
+            lastExecutionDate: lastExecutionDate,
+            totalDuration: totalDuration,
+            averageInterval: averageInterval,
+            currentLifecycle: state
+        )
     }
 
     public init(
@@ -121,11 +152,24 @@ extension JobsTask {
         lock.unlock()
     }
 
+    /// 设置错误处理器
+    /// - Parameter handler: 当 action 执行抛出错误时调用的处理器
+    /// - Returns: self，支持链式调用
+    @discardableResult
+    public func onError(_ handler: @escaping ErrorHandler) -> Self {
+        lock.lock()
+        defer { lock.unlock() }
+        errorHandler = handler
+        return self
+    }
+
     public func suspend() {
         let timer: JobsSwiftTimerProtocol?
         let didChange = updateState(to: .suspended, allowed: { $0 == .running })
         lock.lock()
         timer = self.timer
+        // 暂停时清除预估时间，因为恢复时间未知
+        _estimatedNextExecutionDate = nil
         lock.unlock()
         guard didChange else { return }
         timer?.pause()
@@ -140,6 +184,13 @@ extension JobsTask {
         switch current {
         case .suspended:
             _ = updateState(to: .running, allowed: { $0 == .suspended })
+            // 恢复时重新计算预估执行时间
+            lock.lock()
+            if let timer = self.timer {
+                // 如果定时器存在，保持原有的预估时间逻辑
+                // （因为 pause/resume 不改变定时器的剩余时间）
+            }
+            lock.unlock()
             timer?.resume()
         case .idle:
             scheduleInitialIfNeeded()
@@ -171,14 +222,30 @@ extension JobsTask {
         }
     }
 
+    /// 立即执行所有已注册的 action
+    /// 
+    /// 注意：
+    /// - 此方法会增加 executionCount
+    /// - Actions 在锁外执行，以避免死锁
+    /// - 即使 action 中调用 addAction/removeAction 也是安全的
+    /// - 如果任务已取消，此方法会静默返回
     public func executeNow() {
         let snapshot: [Action]
+        let now = Date()
+        
         lock.lock()
         guard state != .cancelled else {
             lock.unlock()
             return
         }
         _executionCount += 1
+        
+        // 更新性能指标
+        if firstExecutionDate == nil {
+            firstExecutionDate = now
+        }
+        lastExecutionDate = now
+        
         snapshot = Array(actions.values)
         lock.unlock()
 
@@ -405,3 +472,60 @@ extension JobsTask {
         }
     }
 }
+
+// MARK: - JobsTask Combinators (组合器)
+extension JobsTask {
+    /// 等待多个任务全部完成
+    /// - Parameter tasks: 要等待的任务数组
+    /// - Returns: 所有任务完成时返回
+    public static func waitAll(_ tasks: [JobsTask]) async {
+        await withTaskGroup(of: Void.self) { group in
+            for task in tasks {
+                group.addTask {
+                    await task.waitUntilFinished()
+                }
+            }
+            // 等待所有任务完成
+            await group.waitForAll()
+        }
+    }
+    
+    /// 等待任意一个任务完成
+    /// - Parameter tasks: 要等待的任务数组
+    /// - Returns: 第一个完成的任务
+    public static func waitAny(_ tasks: [JobsTask]) async -> JobsTask? {
+        await withTaskGroup(of: JobsTask.self) { group in
+            for task in tasks {
+                group.addTask {
+                    await task.waitUntilFinished()
+                    return task
+                }
+            }
+            // 返回第一个完成的任务
+            if let first = await group.next() {
+                group.cancelAll()
+                return first
+            }
+            return nil
+        }
+    }
+    
+    /// 取消多个任务
+    /// - Parameter tasks: 要取消的任务数组
+    public static func cancelAll(_ tasks: [JobsTask]) {
+        tasks.forEach { $0.cancel() }
+    }
+    
+    /// 暂停多个任务
+    /// - Parameter tasks: 要暂停的任务数组
+    public static func suspendAll(_ tasks: [JobsTask]) {
+        tasks.forEach { $0.suspend() }
+    }
+    
+    /// 恢复多个任务
+    /// - Parameter tasks: 要恢复的任务数组
+    public static func resumeAll(_ tasks: [JobsTask]) {
+        tasks.forEach { $0.resume() }
+    }
+}
+

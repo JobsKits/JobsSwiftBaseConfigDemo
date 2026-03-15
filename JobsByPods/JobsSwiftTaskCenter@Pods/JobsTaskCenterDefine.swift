@@ -65,6 +65,22 @@ public extension JobsPeriod {
         JobsPeriod(lhs.timeInterval / rhs)
     }
 }
+// MARK: - Date 扩展：支持 JobsPeriod 时间计算
+public extension Date {
+    /// 在当前日期基础上添加时间段
+    /// - Parameter period: 要添加的时间段
+    /// - Returns: 新的日期
+    func adding(_ period: JobsPeriod) -> Date {
+        addingTimeInterval(period.timeInterval)
+    }
+    
+    /// 从当前日期减去时间段
+    /// - Parameter period: 要减去的时间段
+    /// - Returns: 新的日期
+    func subtracting(_ period: JobsPeriod) -> Date {
+        addingTimeInterval(-period.timeInterval)
+    }
+}
 /// JobsPlan@系列任务计划
 /// 定义了任务执行的时间序列，支持一次性、重复、延迟等多种调度策略
 public struct JobsPlan: Sequence, Sendable {
@@ -236,6 +252,29 @@ public struct TaskExecution: Sendable {
     public let lifecycle: JobsTaskLifecycle
     /// 下次预计执行时间
     public let nextFireDate: Date?
+}
+/// 任务性能指标
+public struct JobsTaskMetrics: Sendable {
+    /// 总执行次数
+    public let totalExecutions: Int
+    /// 任务创建时间
+    public let creationDate: Date
+    /// 第一次执行时间（如果有）
+    public let firstExecutionDate: Date?
+    /// 最后一次执行时间（如果有）
+    public let lastExecutionDate: Date?
+    /// 任务总运行时长（从创建到当前）
+    public let totalDuration: TimeInterval
+    /// 平均执行间隔（如果执行次数 > 1）
+    public let averageInterval: TimeInterval?
+    /// 当前生命周期状态
+    public let currentLifecycle: JobsTaskLifecycle
+    
+    /// 计算平均执行频率（次/秒）
+    public var executionRate: Double? {
+        guard totalExecutions > 0, totalDuration > 0 else { return nil }
+        return Double(totalExecutions) / totalDuration
+    }
 }
 /// 任务状态变化
 public struct JobsTaskStatusChange: Sendable {
