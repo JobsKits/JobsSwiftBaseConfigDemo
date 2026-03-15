@@ -65,21 +65,6 @@ public extension JobsPeriod {
         JobsPeriod(lhs.timeInterval / rhs)
     }
 }
-// MARK: - Date 扩展：支持 JobsPeriod 时间计算
-public extension Date {
-    /// 在当前日期基础上添加时间段
-    /// - Parameter period: 要添加的时间段
-    /// - Returns: 新的日期
-    func adding(period: JobsPeriod) -> Date {
-        addingTimeInterval(period.timeInterval)
-    }
-    /// 从当前日期减去时间段
-    /// - Parameter period: 要减去的时间段
-    /// - Returns: 新的日期
-    func subtracting(period: JobsPeriod) -> Date {
-        addingTimeInterval(-period.timeInterval)
-    }
-}
 /// JobsPlan@系列任务计划
 /// 定义了任务执行的时间序列，支持一次性、重复、延迟等多种调度策略
 public struct JobsPlan: Sequence, Sendable {
