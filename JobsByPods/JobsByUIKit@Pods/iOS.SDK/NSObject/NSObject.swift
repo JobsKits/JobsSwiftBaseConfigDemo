@@ -11,8 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
-import RxSwift
+import ObjectiveC
 
 #if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
@@ -39,13 +38,18 @@ extension NSObject {
 }
 
 extension NSObject {
-    /// 类名 -> 字符串
+    /// 类名 ➤ 字符串
+    /// 拿到的是更短的类名。例如：MyApp.TestView ➤ "TestView"
     public var className: String {
-        return type(of: self).className
+        type(of: self).className
     }
-    /// 枚举 -> 类名
+    /// 拿到的是Objective-C Runtime 风格的完整类名。例如：MyApp.TestView ➤ "MyApp.TestView"
+    public var theClassName: String {
+        NSStringFromClass(type(of: self))
+    }
+    /// 枚举 ➤ 类名
     public static var className: String {
-        return String(describing: self)
+        String(describing: self)
     }
 
     func py_description() -> String {

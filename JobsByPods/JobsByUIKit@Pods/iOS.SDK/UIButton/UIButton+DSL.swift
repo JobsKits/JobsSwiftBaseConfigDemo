@@ -21,7 +21,6 @@ private var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 private var _jobsConfigPatchListKey: UInt8 = 0
 private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
-private var kBgColorMapKey: UInt8 = 0
 extension UIButton {
     // MARK: - iOS12 legacy imagePlacement 标记（用于让后续 contentEdgeInsets.top 真正生效）
     private enum _JobsLegacyImagePlacement: Int {

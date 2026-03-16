@@ -8,7 +8,7 @@
 import Foundation
 import ObjectiveC
 import JobsSwiftBlock
-
+import JobsSwiftBaseDefines
 // MARK: - 使用方式（建议看完）
 /// =============================== 发通知（对齐系统参数） ===============================
 ///
@@ -116,6 +116,7 @@ private final class JobsNotiTokenBag: NSObject {
 
 private var jobsNotiBagKey: UInt8 = 0
 private extension NSObject {
+    
     var jobs_notiBag: JobsNotiTokenBag {
         if let bag = objc_getAssociatedObject(self, &jobsNotiBagKey) as? JobsNotiTokenBag {
             return bag
@@ -166,8 +167,7 @@ extension NotificationCenter {
         owner: NSObject,
         object: AnyObject? = nil,
         queue queue: OperationQueue? = nil,
-        handler: @escaping jobsByNotiBlock
-    ) {
+        handler: @escaping jobsByNotiBlock) {
         let t = _onBase(Notification.Name(rawName),
                         object: object,
                         queue: queue,
@@ -180,8 +180,7 @@ extension NotificationCenter {
         owner: NSObject,
         object: AnyObject? = nil,
         queue queue: OperationQueue? = nil,
-        handler: @escaping jobsByNotiBlock
-    ) {
+        handler: @escaping jobsByNotiBlock) {
         let t = _onBase(name,
                         object: object,
                         queue: queue,
@@ -236,12 +235,11 @@ extension NSObject {
                            object: Any? = nil,
                            userInfo: [AnyHashable: Any]? = nil) {
         let notiName = Notification.Name(name)
-        let block = {
+        byMain {
             NotificationCenter.default.post(name: notiName,
                                             object: object,
                                             userInfo: userInfo)
         }
-        if Thread.isMainThread { block() } else { DispatchQueue.main.async(execute: block) }
     }
 }
 // MARK: - 接收通知（易用 API）
