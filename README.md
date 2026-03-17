@@ -8012,6 +8012,10 @@ DemoDetailVC().onResult { name in
           .byContentEdgeInsetRight(0)
           .byDefaultSelectedIndex(0)
           .byBackgroundColor(.clear)
+          .byClickTransitionAnimationEnabled(false)
+          .byContentScrollViewConfig({ scrollView in
+              scrollView.byBounces(false).byDecelerationRate(.fast)
+          })
           .byListContainer(JXSegmentedListContainerView(dataSource: self)
               .byIndexChange()
               .byDidIndexChanged { from, to in
