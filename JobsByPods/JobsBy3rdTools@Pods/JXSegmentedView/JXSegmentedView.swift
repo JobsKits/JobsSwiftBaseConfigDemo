@@ -14,7 +14,14 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedView {
-    // MARK: 绑定对象
+
+    @discardableResult
+    public func byContentScrollViewConfig(_ block: (UIScrollView) -> Void) -> Self {
+        if let scrollView = self.contentScrollView {
+            block(scrollView)
+        };return self
+    }
+    
     @discardableResult
     public func byDataSource(_ ds: JXSegmentedViewDataSource) -> Self {
         self.dataSource = ds
@@ -28,7 +35,8 @@ extension JXSegmentedView {
     }
     /// 绑定 JXSegmentedListContainerView（其实现了 JXSegmentedViewListContainer 协议）
     @discardableResult
-    public func byListContainer(_ container: JXSegmentedViewListContainer, defaultIndex: Int? = nil) -> Self {
+    public func byListContainer(_ container: JXSegmentedViewListContainer,
+                                defaultIndex: Int? = nil) -> Self {
         if let i = defaultIndex { self.defaultSelectedIndex = i }
         self.listContainer = container
         return self
@@ -36,13 +44,13 @@ extension JXSegmentedView {
     /// 直接绑定一个外部的内容滚动视图（不用 listContainer 的场景）
     @discardableResult
     public func byContentScrollView(_ scrollView: UIScrollView,
-                             clickAnimation: Bool? = nil) -> Self {
+                                    clickAnimation: Bool? = nil) -> Self {
         self.contentScrollView = scrollView
         if let v = clickAnimation {
             self.isContentScrollViewClickTransitionAnimationEnabled = v
         };return self
     }
-    // MARK: 视觉/行为
+
     @discardableResult
     public func byIndicators(_ views: [JXSegmentedIndicatorProtocol]) -> Self {
         self.indicators = views
