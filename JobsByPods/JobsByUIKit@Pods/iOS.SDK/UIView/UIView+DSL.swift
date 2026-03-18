@@ -10,7 +10,404 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-// MARK: 语法糖🍬
+// MARK: - 直接赋值@单参数
+extension UIView {
+    
+    @discardableResult
+    public func byHidden(_ hidden: Bool) -> Self {
+        self.isHidden = hidden
+        return self
+    }
+
+    @discardableResult
+    public func byAlpha(_ a: CGFloat) -> Self {
+        self.alpha = a
+        return self
+    }
+    /// 统一圆角：按钮走 UIButton.Configuration 方案，其他视图保持原始 layer 逻辑
+    @discardableResult
+    public func byCornerRadius(_ radius: CGFloat?) -> Self {
+        let r = max(0, radius ?? 0.0)
+        if let btn = self as? UIButton {
+            if #available(iOS 15.0, *), var cfg = btn.configuration {
+                cfg.cornerStyle = .fixed
+                var bg = cfg.background
+                bg.cornerRadius = r
+                cfg.background = bg
+                btn.configuration = cfg
+            }
+            btn.layer.cornerRadius = r
+            if #available(iOS 13.0, *) {
+                btn.layer.cornerCurve = .continuous
+            }
+            btn.clipsToBounds = (r > 0)
+            return self
+        }
+        self.layer.cornerRadius = r
+        return self
+    }
+    /// 裁剪超出边界
+    @discardableResult
+    public func byClipsToBounds(_ enabled: Bool = true) -> Self {
+        self.clipsToBounds = enabled
+        return self
+    }
+
+    @discardableResult
+    public func byMasksToBounds(_ masksToBounds: Bool?) -> Self {
+        self.layer.masksToBounds = masksToBounds ?? false
+        return self
+    }
+    /// 用 CoreAnimation 的圆角渲染，指定参与圆角的角（CACornerMask），再配合 layer.cornerRadius 生效。
+    /// layerMaxXMaxYCorner – 右下角
+    /// layerMaxXMinYCorner – 右上角
+    /// layerMinXMaxYCorner – 左下角
+    /// layerMinXMinYCorner – 左上角
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byMaskedCorners(_ corners: CACornerMask?) -> Self {
+        self.layer.maskedCorners = corners ?? []
+        return self
+    }
+
+    @discardableResult
+    public func byBorderColor(_ color: UIColor?) -> Self {
+        self.layer.borderColor = color?.cgColor
+        if color == nil { self.layer.borderWidth = 0 };return self
+    }
+
+    @discardableResult
+    public func byZPosition(_ z: CGFloat) -> Self {
+        self.layer.zPosition = z
+        return self
+    }
+
+    @discardableResult
+    public func byBorderWidth(_ width: CGFloat) -> Self {
+        self.layer.borderWidth = width
+        return self
+    }
+
+    @discardableResult
+    public func byShadowRadius(_ radius: CGFloat) -> Self {
+        self.layer.shadowRadius = radius
+        return self
+    }
+
+    @discardableResult
+    public func byShadowColor(_ color: UIColor?) -> Self {
+        self.layer.shadowColor = color?.cgColor
+        return self
+    }
+
+    @discardableResult
+    public func byShadowOpacity(_ opacity: Float = 0.0) -> Self {
+        self.layer.shadowOpacity = opacity
+        return self
+    }
+
+    @discardableResult
+    public func byShadowOffset(_ offset: CGSize = CGSize.zero) -> Self {
+        self.layer.shadowOffset = offset
+        return self
+    }
+    /// 2D/3D 变换
+    @discardableResult
+    public func byTransform(_ transf: CGAffineTransform) -> Self {
+        self.transform = transf
+        return self
+    }
+
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byTransform3D(_ t3d: CATransform3D) -> Self {
+        self.transform3D = t3d
+        return self
+    }
+    /// 缩放因子（渲染分辨率）
+    @available(iOS 4.0, *)
+    @discardableResult
+    public func byContentScaleFactor(_ scale: CGFloat) -> Self {
+        self.contentScaleFactor = scale
+        return self
+    }
+    /// 锚点（注意：会影响 frame，需要配合 position/center 调整）
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func byAnchorPoint(_ anchor: CGPoint) -> Self {
+        self.anchorPoint = anchor
+        return self
+    }
+    /// 触摸行为
+    @discardableResult
+    public func byMultipleTouchEnabled(_ enabled: Bool) -> Self {
+        self.isMultipleTouchEnabled = enabled
+        return self
+    }
+
+    @discardableResult
+    public func byExclusiveTouch(_ enabled: Bool) -> Self {
+        self.isExclusiveTouch = enabled
+        return self
+    }
+    /// 是否对子视图做 autoresize
+    @discardableResult
+    public func byAutoresizesSubviews(_ enabled: Bool) -> Self {
+        self.autoresizesSubviews = enabled
+        return self
+    }
+    /// 自伸缩掩码
+    @discardableResult
+    public func byAutoresizingMask(_ mask: UIView.AutoresizingMask) -> Self {
+        self.autoresizingMask = mask
+        return self
+    }
+    /// 传统 layoutMargins
+    @available(iOS 8.0, *)
+    @discardableResult
+    public func byLayoutMargins(_ insets: UIEdgeInsets) -> Self {
+        self.layoutMargins = insets
+        return self
+    }
+    /// 方向化的 layoutMargins（更现代）
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDirectionalLayoutMargins(_ insets: NSDirectionalEdgeInsets) -> Self {
+        self.directionalLayoutMargins = insets
+        return self
+    }
+    /// 是否继承父视图的 layoutMargins
+    @available(iOS 8.0, *)
+    @discardableResult
+    public func byPreservesSuperviewLayoutMargins(_ enabled: Bool) -> Self {
+        self.preservesSuperviewLayoutMargins = enabled
+        return self
+    }
+    /// 是否将 safeArea 纳入 layoutMargins 计算
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byInsetsLayoutMarginsFromSafeArea(_ enabled: Bool) -> Self {
+        self.insetsLayoutMarginsFromSafeArea = enabled
+        return self
+    }
+
+    @discardableResult
+    public func byContentMode(_ mode: UIView.ContentMode) -> Self {
+        self.contentMode = mode
+        return self
+    }
+
+    @discardableResult
+    public func byTag(_ T: Int) -> Self {
+        self.tag = T
+        return self
+    }
+
+    @discardableResult
+    public func byUserInteractionEnabled(_ enabled: Bool?) -> Self {
+        self.isUserInteractionEnabled = enabled ?? false
+        return self
+    }
+    /// 开启 AutoLayout（等价于 translatesAutoresizingMaskIntoConstraints = false）
+    @discardableResult
+    public func byAutoLayout() -> Self {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        return self
+    }
+    /// 直接设置 translatesAutoresizingMaskIntoConstraints
+    @discardableResult
+    public func byTranslatesAutoresizingMaskIntoConstraints(_ value: Bool) -> Self {
+        self.translatesAutoresizingMaskIntoConstraints = value
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UIView {
+    
+    @discardableResult
+    public func byHidden(_ builder: () -> Bool) -> Self {
+        self.isHidden = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAlpha(_ builder: () -> CGFloat) -> Self {
+        self.alpha = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byCornerRadius(_ builder: () -> CGFloat?) -> Self {
+        let radius = builder()
+        return self.byCornerRadius(radius)
+    }
+
+    @discardableResult
+    public func byClipsToBounds(_ builder: () -> Bool) -> Self {
+        self.clipsToBounds = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byMasksToBounds(_ builder: () -> Bool?) -> Self {
+        self.layer.masksToBounds = builder() ?? false
+        return self
+    }
+
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byMaskedCorners(_ builder: () -> CACornerMask?) -> Self {
+        self.layer.maskedCorners = builder() ?? []
+        return self
+    }
+
+    @discardableResult
+    public func byBorderColor(_ builder: () -> UIColor?) -> Self {
+        let color = builder()
+        self.layer.borderColor = color?.cgColor
+        if color == nil { self.layer.borderWidth = 0 };return self
+    }
+
+    @discardableResult
+    public func byZPosition(_ builder: () -> CGFloat) -> Self {
+        self.layer.zPosition = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byBorderWidth(_ builder: () -> CGFloat) -> Self {
+        self.layer.borderWidth = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byShadowRadius(_ builder: () -> CGFloat) -> Self {
+        self.layer.shadowRadius = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byShadowColor(_ builder: () -> UIColor?) -> Self {
+        self.layer.shadowColor = builder()?.cgColor
+        return self
+    }
+
+    @discardableResult
+    public func byShadowOpacity(_ builder: () -> Float) -> Self {
+        self.layer.shadowOpacity = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byShadowOffset(_ builder: () -> CGSize) -> Self {
+        self.layer.shadowOffset = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTransform(_ builder: () -> CGAffineTransform) -> Self {
+        self.transform = builder()
+        return self
+    }
+
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byTransform3D(_ builder: () -> CATransform3D) -> Self {
+        self.transform3D = builder()
+        return self
+    }
+
+    @available(iOS 4.0, *)
+    @discardableResult
+    public func byContentScaleFactor(_ builder: () -> CGFloat) -> Self {
+        self.contentScaleFactor = builder()
+        return self
+    }
+
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func byAnchorPoint(_ builder: () -> CGPoint) -> Self {
+        self.anchorPoint = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byMultipleTouchEnabled(_ builder: () -> Bool) -> Self {
+        self.isMultipleTouchEnabled = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byExclusiveTouch(_ builder: () -> Bool) -> Self {
+        self.isExclusiveTouch = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAutoresizesSubviews(_ builder: () -> Bool) -> Self {
+        self.autoresizesSubviews = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAutoresizingMask(_ builder: () -> UIView.AutoresizingMask) -> Self {
+        self.autoresizingMask = builder()
+        return self
+    }
+
+    @available(iOS 8.0, *)
+    @discardableResult
+    public func byLayoutMargins(_ builder: () -> UIEdgeInsets) -> Self {
+        self.layoutMargins = builder()
+        return self
+    }
+
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDirectionalLayoutMargins(_ builder: () -> NSDirectionalEdgeInsets) -> Self {
+        self.directionalLayoutMargins = builder()
+        return self
+    }
+
+    @available(iOS 8.0, *)
+    @discardableResult
+    public func byPreservesSuperviewLayoutMargins(_ builder: () -> Bool) -> Self {
+        self.preservesSuperviewLayoutMargins = builder()
+        return self
+    }
+
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byInsetsLayoutMarginsFromSafeArea(_ builder: () -> Bool) -> Self {
+        self.insetsLayoutMarginsFromSafeArea = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byContentMode(_ builder: () -> UIView.ContentMode) -> Self {
+        self.contentMode = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTag(_ builder: () -> Int) -> Self {
+        self.tag = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byUserInteractionEnabled(_ builder: () -> Bool?) -> Self {
+        self.isUserInteractionEnabled = builder() ?? false
+        return self
+    }
+
+    @discardableResult
+    public func byTranslatesAutoresizingMaskIntoConstraints(_ builder: () -> Bool) -> Self {
+        self.translatesAutoresizingMaskIntoConstraints = builder()
+        return self
+    }
+}
+
 extension UIView {
     // MARK: 设置UI
     /// 统一在一个回调里配置 layer
@@ -45,18 +442,6 @@ extension UIView {
     }
 
     @discardableResult
-    public func byHidden(_ hidden: Bool) -> Self {
-        isHidden = hidden
-        return self
-    }
-
-    @discardableResult
-    public func byAlpha(_ a: CGFloat) -> Self {
-        alpha = a
-        return self
-    }
-    
-    @discardableResult
     public func byAddSublayer(_ layer: CALayer) -> Self {
         self.layer.addSublayer(layer)
         return self
@@ -67,55 +452,6 @@ extension UIView {
     public func byVisible(_ visible: Bool) -> Self {
         self.byHidden(!visible)
         self.byAlpha(visible ? 1 : 0)
-        return self
-    }
-    /// 统一圆角：按钮走 UIButton.Configuration 方案，其他视图保持原始 layer 逻辑
-    @discardableResult
-    public func byCornerRadius(_ radius: CGFloat?) -> Self {
-        let r = max(0, radius ?? 0.0)
-        // === 按钮：套用 byBtnCornerRadius 的实现（maskedCorners=nil, isContinuous=true） ===
-        if let btn = self as? UIButton {
-            if #available(iOS 15.0, *), var cfg = btn.configuration {
-                cfg.cornerStyle = .fixed
-                var bg = cfg.background
-                bg.cornerRadius = r
-                cfg.background = bg
-                btn.configuration = cfg
-            }
-            btn.layer.cornerRadius = r
-            if #available(iOS 13.0, *) {
-                btn.layer.cornerCurve = .continuous
-            }
-            // maskedCorners 默认不传（等同 nil），因此这里不改 maskedCorners
-            btn.clipsToBounds = (r > 0)
-            return self
-        }
-        // === 非按钮 ===
-        self.layer.cornerRadius = r
-        return self
-    }
-    // MARK: 设置Layer
-    /// 裁剪超出边界
-    @discardableResult
-    public func byClipsToBounds(_ enabled: Bool = true) -> Self {
-        clipsToBounds = enabled
-        return self
-    }
-
-    @discardableResult
-    public func byMasksToBounds(_ masksToBounds: Bool?) -> Self {
-        layer.masksToBounds = masksToBounds ?? false
-        return self
-    }
-    /// 用 CoreAnimation 的圆角渲染，指定参与圆角的角（CACornerMask），再配合 layer.cornerRadius 生效。
-    /// layerMaxXMaxYCorner – 右下角
-    /// layerMaxXMinYCorner – 右上角
-    /// layerMinXMaxYCorner – 左下角
-    /// layerMinXMinYCorner – 左上角
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byMaskedCorners(_ corners: CACornerMask?) -> Self {
-        layer.maskedCorners = corners ?? []
         return self
     }
     /// 【优点】
@@ -133,89 +469,6 @@ extension UIView {
                                     cornerRadii: CGSize(width: raduis, height: raduis))
         self.layer.mask = CAShapeLayer().byFrame(self.bounds).byPath(maskPath.cgPath)
         self.clipsToBounds = true
-        return self
-    }
-    
-    @discardableResult
-    public func byBorderColor(_ color: UIColor?) -> Self {
-        layer.borderColor = color?.cgColor   // 传 nil 会清掉边框颜色
-        if color == nil { layer.borderWidth = 0 }
-        return self
-    }
-
-    @discardableResult
-    public func byZPosition(_ z: CGFloat) -> Self {
-        layer.zPosition = z
-        return self
-    }
-
-    @discardableResult
-    public func byBorderWidth(_ width: CGFloat) -> Self {
-        layer.borderWidth = width
-        return self
-    }
-    // 单项：半径
-    @discardableResult
-    public func byShadowRadius(_ radius: CGFloat) -> Self {
-        layer.shadowRadius = radius
-        return self
-    }
-
-    @discardableResult
-    public func byShadowColor(_ color: UIColor?) -> Self {
-        layer.shadowColor = color?.cgColor
-        return self
-    }
-
-    @discardableResult
-    public func byShadowOpacity(_ opacity: Float = 0.0) -> Self {
-        layer.shadowOpacity = opacity
-        return self
-    }
-
-    @discardableResult
-    public func byShadowOffset(_ offset: CGSize = CGSizeZero) -> Self {
-        layer.shadowOffset = offset
-        return self
-    }
-    // MARK: - UIView · Geometry / Transform / Scale / Touch
-    /// 2D/3D 变换
-    @discardableResult
-    public func byTransform(_ transf: CGAffineTransform) -> Self {
-        transform = transf
-        return self
-    }
-
-    @available(iOS 13.0, *)
-    @discardableResult
-    public func byTransform3D(_ t3d: CATransform3D) -> Self {
-        transform3D = t3d
-        return self
-    }
-    /// 缩放因子（渲染分辨率）
-    @available(iOS 4.0, *)
-    @discardableResult
-    public func byContentScaleFactor(_ scale: CGFloat) -> Self {
-        contentScaleFactor = scale
-        return self
-    }
-    /// 锚点（注意：会影响 frame，需要配合 position/center 调整）
-    @available(iOS 16.0, *)
-    @discardableResult
-    public func byAnchorPoint(_ anchor: CGPoint) -> Self {
-        anchorPoint = anchor
-        return self
-    }
-    /// 触摸行为
-    @discardableResult
-    public func byMultipleTouchEnabled(_ enabled: Bool) -> Self {
-        isMultipleTouchEnabled = enabled
-        return self
-    }
-
-    @discardableResult
-    public func byExclusiveTouch(_ enabled: Bool) -> Self {
-        isExclusiveTouch = enabled
         return self
     }
     // MARK: - UIView · Subview Hierarchy
@@ -309,47 +562,6 @@ extension UIView {
         subviews.forEach { $0.removeFromSuperview() }
         return self
     }
-    // MARK: - UIView · Autoresizing / Layout Margins / Safe Area
-    /// 是否对子视图做 autoresize
-    @discardableResult
-    public func byAutoresizesSubviews(_ enabled: Bool) -> Self {
-        autoresizesSubviews = enabled
-        return self
-    }
-    /// 自伸缩掩码
-    @discardableResult
-    public func byAutoresizingMask(_ mask: UIView.AutoresizingMask) -> Self {
-        autoresizingMask = mask
-        return self
-    }
-    /// 传统 layoutMargins
-    @available(iOS 8.0, *)
-    @discardableResult
-    public func byLayoutMargins(_ insets: UIEdgeInsets) -> Self {
-        layoutMargins = insets
-        return self
-    }
-    /// 方向化的 layoutMargins（更现代）
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byDirectionalLayoutMargins(_ insets: NSDirectionalEdgeInsets) -> Self {
-        directionalLayoutMargins = insets
-        return self
-    }
-    /// 是否继承父视图的 layoutMargins
-    @available(iOS 8.0, *)
-    @discardableResult
-    public func byPreservesSuperviewLayoutMargins(_ enabled: Bool) -> Self {
-        preservesSuperviewLayoutMargins = enabled
-        return self
-    }
-    /// 是否将 safeArea 纳入 layoutMargins 计算
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byInsetsLayoutMarginsFromSafeArea(_ enabled: Bool) -> Self {
-        insetsLayoutMarginsFromSafeArea = enabled
-        return self
-    }
     // MARK: - UIView · Layout Triggers
     /// 标记需要布局
     @discardableResult
@@ -373,24 +585,6 @@ extension UIView {
     @discardableResult
     public func bySizeToFit() -> Self {
         sizeToFit()
-        return self
-    }
-    // MARK: 其他
-    @discardableResult
-    public func byContentMode(_ mode: UIView.ContentMode) -> Self {
-        contentMode = mode;
-        return self
-    }
-
-    @discardableResult
-    public func byTag(_ T: Int) -> Self {
-        tag = T
-        return self
-    }
-
-    @discardableResult
-    public func byUserInteractionEnabled(_ enabled: Bool?) -> Self {
-        isUserInteractionEnabled = enabled ?? false
         return self
     }
     /// 手势封装：添加手势以后返回这个手势本身@常用于链式调用
@@ -439,18 +633,6 @@ extension UIView {
             superview?.layoutIfNeeded()
             setNeedsLayout()
         };return self
-    }
-    /// 开启 AutoLayout（等价于 translatesAutoresizingMaskIntoConstraints = false）
-    @discardableResult
-    public func byAutoLayout() -> Self {
-        translatesAutoresizingMaskIntoConstraints = false
-        return self
-    }
-    /// 直接设置 translatesAutoresizingMaskIntoConstraints
-    @discardableResult
-    public func byTranslatesAutoresizingMaskIntoConstraints(_ value: Bool) -> Self {
-        translatesAutoresizingMaskIntoConstraints = value
-        return self
     }
      /// 激活约束（链式）
     @discardableResult

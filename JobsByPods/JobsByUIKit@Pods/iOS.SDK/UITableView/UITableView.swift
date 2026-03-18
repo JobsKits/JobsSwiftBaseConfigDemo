@@ -54,7 +54,9 @@ extension UITableView {
     }
 
     @discardableResult
-    public func numberOfRowsInSection(_ block: @escaping (AnyObject, UITableView, Int) -> Int) -> Self {
+    public func numberOfRowsInSection(_ block: @escaping (AnyObject,
+                                                          UITableView,
+                                                          Int) -> Int) -> Self {
         jobs_blocksProxy()?.numberOfRowsInSection = block
         return self
     }
@@ -68,25 +70,33 @@ extension UITableView {
     }
 
     @discardableResult
-    public func titleForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> String?) -> Self {
+    public func titleForHeaderInSection(_ block: @escaping (AnyObject,
+                                                            UITableView,
+                                                            Int) -> String?) -> Self {
         jobs_blocksProxy()?.titleForHeaderInSection = block
         return self
     }
 
     @discardableResult
-    public func titleForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> String?) -> Self {
+    public func titleForFooterInSection(_ block: @escaping (AnyObject,
+                                                            UITableView,
+                                                            Int) -> String?) -> Self {
         jobs_blocksProxy()?.titleForFooterInSection = block
         return self
     }
 
     @discardableResult
-    public func canEditRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Bool) -> Self {
+    public func canEditRowAt(_ block: @escaping (AnyObject,
+                                                 UITableView,
+                                                 IndexPath) -> Bool) -> Self {
         jobs_blocksProxy()?.canEditRowAt = block
         return self
     }
 
     @discardableResult
-    public func canMoveRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Bool) -> Self {
+    public func canMoveRowAt(_ block: @escaping (AnyObject,
+                                                 UITableView,
+                                                 IndexPath) -> Bool) -> Self {
         jobs_blocksProxy()?.canMoveRowAt = block
         return self
     }
@@ -98,81 +108,108 @@ extension UITableView {
     }
 
     @discardableResult
-    public func sectionForSectionIndexTitle(_ block: @escaping (AnyObject, UITableView, String, Int) -> Int) -> Self {
+    public func sectionForSectionIndexTitle(_ block: @escaping (AnyObject,
+                                                                UITableView,
+                                                                String, Int) -> Int) -> Self {
         jobs_blocksProxy()?.sectionForSectionIndexTitle = block
         return self
     }
 
     @discardableResult
-    public func commitEditingStyle(_ block: @escaping (AnyObject, UITableView, UITableViewCell.EditingStyle, IndexPath) -> Void) -> Self {
+    public func commitEditingStyle(_ block: @escaping (AnyObject,
+                                                       UITableView,
+                                                       UITableViewCell.EditingStyle,
+                                                       IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.commitEditingStyle = block
         return self
     }
 
     @discardableResult
-    public func moveRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath, IndexPath) -> Void) -> Self {
+    public func moveRowAt(_ block: @escaping (AnyObject,
+                                              UITableView,
+                                              IndexPath,
+                                              IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.moveRowAt = block
         return self
     }
     // MARK: - UITableViewDelegate
     @discardableResult
-    public func willDisplay(_ block: @escaping (AnyObject, UITableView, UITableViewCell, IndexPath) -> Void) -> Self {
+    public func willDisplay(_ block: @escaping (AnyObject,
+                                                UITableView,
+                                                UITableViewCell,
+                                                IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.willDisplay = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func didSelectRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
+    public func didSelectRowAt(_ block: @escaping (AnyObject,
+                                                   UITableView,
+                                                   IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didSelectRowAt = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func didDeselectRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
+    public func didDeselectRowAt(_ block: @escaping (AnyObject,
+                                                     UITableView,
+                                                     IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didDeselectRowAt = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func heightForRowAt(_ block: @escaping (AnyObject, UITableView, IndexPath) -> CGFloat) -> Self {
+    public func heightForRowAt(_ block: @escaping (AnyObject,
+                                                   UITableView,
+                                                   IndexPath) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForRowAt = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func heightForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> CGFloat) -> Self {
+    public func heightForHeaderInSection(_ block: @escaping (AnyObject,
+                                                             UITableView,
+                                                             Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForHeaderInSection = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func heightForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> CGFloat) -> Self {
+    public func heightForFooterInSection(_ block: @escaping (AnyObject,
+                                                             UITableView,
+                                                             Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForFooterInSection = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func viewForHeaderInSection(_ block: @escaping (AnyObject, UITableView, Int) -> UIView?) -> Self {
+    public func viewForHeaderInSection(_ block: @escaping (AnyObject,
+                                                           UITableView,
+                                                           Int) -> UIView?) -> Self {
         jobs_blocksProxy()?.viewForHeaderInSection = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func viewForFooterInSection(_ block: @escaping (AnyObject, UITableView, Int) -> UIView?) -> Self {
+    public func viewForFooterInSection(_ block: @escaping (AnyObject,
+                                                           UITableView,
+                                                           Int) -> UIView?) -> Self {
         jobs_blocksProxy()?.viewForFooterInSection = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
     }
 
     @discardableResult
-    public func accessoryButtonTappedForRowWith(_ block: @escaping (AnyObject, UITableView, IndexPath) -> Void) -> Self {
+    public func accessoryButtonTappedForRowWith(_ block: @escaping (AnyObject,
+                                                                    UITableView,
+                                                                    IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.accessoryButtonTappedForRowWith = block
         if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
         return self
@@ -184,8 +221,12 @@ extension UITableView {
         }
         guard createIfNeeded else { return nil }
         let p = JobsTableViewBlocksProxy()
-        objc_setAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.proxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return p
+        objc_setAssociatedObject(
+            self,
+            &JobsTableViewBlocksAssociatedKeys.proxyKey,
+            p,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return p
     }
     // MARK: - Delegate mux
     func jobs_installDelegateMuxIfNeeded(primary: JobsTableViewBlocksProxy) {
@@ -205,7 +246,10 @@ extension UITableView {
         if let current = self.delegate as AnyObject?, current !== mux {
             mux.secondary = current as? NSObjectProtocol
         }
-        objc_setAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.muxKey, mux, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self,
+                                 &JobsTableViewBlocksAssociatedKeys.muxKey,
+                                 mux,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         self.delegate = mux
     }
     // MARK: - Hard protect delegate (swizzle setDelegate:)
@@ -218,7 +262,6 @@ extension UITableView {
                                  &JobsTableViewBlocksAssociatedKeys.didSwizzleKey,
                                  true,
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
         let cls: AnyClass = UITableView.self
         let original = #selector(setter: UITableView.delegate)
         let swizzled = #selector(UITableView.jobs_setDelegate(_:))

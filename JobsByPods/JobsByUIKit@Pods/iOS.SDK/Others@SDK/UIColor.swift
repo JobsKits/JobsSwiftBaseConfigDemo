@@ -304,12 +304,14 @@ extension UIColor {
 }
 // MARK: - 生成随机颜色
 extension UIColor {
+    
     public static func randomColor(_ alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(red: CGFloat.random(in: 0...1),
                        green: CGFloat.random(in: 0...1),
                        blue: CGFloat.random(in: 0...1),
                        alpha: alpha)
     }
+    
     public static var randomColor: UIColor {
         randomColor()
     }

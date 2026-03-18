@@ -17,7 +17,7 @@ import JobsSwiftBaseDefines
 extension UIImage {
     public static func jobs_solidColor(_ color: UIColor,
                                        size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { ctx in
+        UIGraphicsImageRenderer(size: size).image { ctx in
             color.setFill()
             ctx.fill(CGRect(origin: .zero, size: size))
         }

@@ -45,20 +45,20 @@ private final class JobsPHPickerBlocksProxy: NSObject, PHPickerViewControllerDel
     }
 }
 // MARK: - Associated
-@available(iOS 14, *)
-private enum JobsPHPickerBlocksAssociatedKeys {
-    static var proxyKey: UInt8 = 0
-}
-
+private var proxyPHPickerVCKey: UInt8 = 0
 @available(iOS 14, *)
 extension PHPickerViewController {
     private func jobs_phpickerBlocksProxy(createIfNeeded: Bool = true) -> JobsPHPickerBlocksProxy? {
-        if let p = objc_getAssociatedObject(self, &JobsPHPickerBlocksAssociatedKeys.proxyKey) as? JobsPHPickerBlocksProxy {
+        if let p = objc_getAssociatedObject(self, &proxyPHPickerVCKey) as? JobsPHPickerBlocksProxy {
             return p
         }
         guard createIfNeeded else { return nil }
         let p = JobsPHPickerBlocksProxy()
-        objc_setAssociatedObject(self, &JobsPHPickerBlocksAssociatedKeys.proxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return p
+        objc_setAssociatedObject(
+            self,
+            &proxyPHPickerVCKey,
+            p,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return p
     }
 }

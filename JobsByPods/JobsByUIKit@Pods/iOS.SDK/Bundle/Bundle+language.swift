@@ -11,7 +11,7 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectiveC.runtime
+import ObjectiveC
 import Jobsl10n
 
 private var _jobs_swizzled: Bool = false

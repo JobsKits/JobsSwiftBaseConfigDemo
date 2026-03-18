@@ -10,7 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-// MARK: - UIImageView 链式封装
+// MARK: - 直接赋值@单参数
 extension UIImageView {
     // MARK: 图片
     @discardableResult
@@ -86,5 +86,78 @@ extension UIImageView {
     public func stopAnimation() -> Self {
         stopAnimating()
         return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UIImageView {
+
+    @discardableResult
+    public func byImage(_ builder: () -> UIImage?) -> Self {
+        self.image = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byHighlightedImage(_ builder: () -> UIImage?) -> Self {
+        self.highlightedImage = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byHighlighted(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] highlighted in
+            guard let self else { return }
+            self.isHighlighted = highlighted
+        }
+    }
+
+    @discardableResult
+    public func byAnimationImages(_ builder: () -> [UIImage]?) -> Self {
+        self.animationImages = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byHighlightedAnimationImages(_ builder: () -> [UIImage]?) -> Self {
+        self.highlightedAnimationImages = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAnimationDuration(_ builder: () -> TimeInterval) -> Self {
+        _byApplyValue(builder) { [weak self] duration in
+            guard let self else { return }
+            self.animationDuration = duration
+        }
+    }
+
+    @discardableResult
+    public func byAnimationRepeatCount(_ builder: () -> Int) -> Self {
+        _byApplyValue(builder) { [weak self] count in
+            guard let self else { return }
+            self.animationRepeatCount = count
+        }
+    }
+
+    @discardableResult
+    public func byTintColor(_ builder: () -> UIColor?) -> Self {
+        self.tintColor = builder()
+        return self
+    }
+
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func bySymbolConfig(_ builder: () -> UIImage.SymbolConfiguration?) -> Self {
+        self.preferredSymbolConfiguration = builder()
+        return self
+    }
+
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func byPreferredImageDynamicRange(_ builder: () -> UIImage.DynamicRange) -> Self {
+        _byApplyValue(builder) { [weak self] range in
+            guard let self else { return }
+            self.preferredImageDynamicRange = range
+        }
     }
 }

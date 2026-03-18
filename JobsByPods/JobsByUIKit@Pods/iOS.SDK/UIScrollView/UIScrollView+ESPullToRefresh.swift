@@ -55,8 +55,9 @@ extension UIScrollView {
     @discardableResult
     public func pullDownAutoIfExpired() -> Self {
         if let key = self.header?.refreshIdentifier, JobsRefreshCache.isExpired(forKey: key) {
-            DispatchQueue.main.async { [weak self] in
-                self?.header?.startRefreshing(isAuto: true)
+            onMainSync { [weak self] in
+                guard let self else { return }
+                self.header?.startRefreshing(isAuto: true)
             }
         };return self
     }
@@ -106,16 +107,16 @@ extension UIScrollView {
         if self.footer == nil {
             let animator = JobsFooterAnimator()
             config?(animator)
-            let footer = ESRefreshFooterView(frame: .zero, handler: action, animator: animator)
-            let footerH = animator.executeIncremental
-            footer.frame = CGRect(
+            self.footer = ESRefreshFooterView(frame: .zero,
+                                              handler: action,
+                                              animator: animator)
+            .byFrame(CGRect(
                 x: 0,
                 y: self.contentSize.height + self.contentInset.bottom,
                 width: self.bounds.width,
-                height: footerH
-            )
-            self.addSubview(footer)
-            self.footer = footer
+                height: animator.executeIncremental
+            ))
+            .byAddTo(self)
         };return self
     }
     /// 停止上拉加载
@@ -152,17 +153,17 @@ extension UIScrollView {
 }
 // MARK: - 下拉刷新（Header）
 public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnimatorProtocol {
+    
     public var state: ESRefreshViewState = .pullToRefresh
-
     public var idleDescription: String = "下拉刷新".tr
     public var releaseToRefreshDescription: String = "松开立即刷新".tr
     public var loadingDescription: String = "刷新中…".tr
     public var noMoreDataDescription: String = "已经是最新数据".tr
-
     public var view: UIView { self }
     public var insets: UIEdgeInsets = .zero
     public var trigger: CGFloat = 60
     public var executeIncremental: CGFloat = 60
+    private var canvasWidthConstraint: Constraint?
     // === 内部画布：等屏宽，居中于父视图 ===
     private lazy var canvas: UIView = {
         UIView()
@@ -201,7 +202,6 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             }
     }()
 
-    private var canvasWidthConstraint: Constraint?
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override init(frame: CGRect) {
         super.init(frame: frame)

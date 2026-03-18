@@ -110,7 +110,6 @@ private final class JobsNavigationControllerBlocksProxy: NSObject, UINavigationC
         guard let t = target else { return nil }
         return interactionControllerForAnimationController?(t, navigationController, animationController)
     }
-
     // MARK: 显示回调
     var willShow: ((AnyObject, UINavigationController, UIViewController, Bool) -> Void)?
     func navigationController(_ navigationController: UINavigationController,
@@ -141,19 +140,19 @@ private final class JobsNavigationControllerBlocksProxy: NSObject, UINavigationC
         return supportedInterfaceOrientations?(t, navigationController) ?? .all
     }
 }
-// MARK: - Associated
-private enum JobsNavigationControllerBlocksAssociatedKeys {
-    static var proxyKey: UInt8 = 0
-}
 
+private var proxyNavKey: UInt8 = 0
 extension UINavigationController {
     private func jobs_navBlocksProxy(createIfNeeded: Bool = true) -> JobsNavigationControllerBlocksProxy? {
-        if let p = objc_getAssociatedObject(self, &JobsNavigationControllerBlocksAssociatedKeys.proxyKey) as? JobsNavigationControllerBlocksProxy {
+        if let p = objc_getAssociatedObject(self, &proxyNavKey) as? JobsNavigationControllerBlocksProxy {
             return p
         }
         guard createIfNeeded else { return nil }
         let p = JobsNavigationControllerBlocksProxy()
-        objc_setAssociatedObject(self, &JobsNavigationControllerBlocksAssociatedKeys.proxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return p
+        objc_setAssociatedObject(
+            self,
+            &proxyNavKey,
+            p,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC);return p
     }
 }

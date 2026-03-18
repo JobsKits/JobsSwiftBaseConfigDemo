@@ -254,10 +254,13 @@ extension UIScrollView {
                 if let L = btn._jobsEmptyLayout {
                     L(btn, make, self)
                 } else {
-                    make.center.equalToSuperview()
+                    // 默认布局：居中显示，但在超窄容器（例如 section index 宽度只有 25）下要允许约束让步，
+                    // 否则会触发 unsatisfiable constraints（centerX vs leading>=16 等）。
+                    make.centerY.equalToSuperview()
+                    make.centerX.equalToSuperview().priority(.low)
                     make.width.lessThanOrEqualToSuperview().multipliedBy(0.9)
-                    make.leading.greaterThanOrEqualToSuperview().offset(16)
-                    make.trailing.lessThanOrEqualToSuperview().inset(16)
+                    make.leading.greaterThanOrEqualToSuperview().offset(16).priority(.high)
+                    make.trailing.lessThanOrEqualToSuperview().inset(16).priority(.high)
                 }
             }
             .byBringToFront(self)

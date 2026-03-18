@@ -13,167 +13,158 @@ import UIKit
 
 import JobsByQuartzCore
 import JobsSwiftBaseDefines
-
+// MARK: - 直接赋值@单参数
 extension UITextView {
-    // MARK:  文本基础属性
+    // MARK: 文本基础属性
     @discardableResult
     public func byText(_ string: String?) -> Self {
-        text = string
+        self.text = string
         return self
     }
-
+    
     @discardableResult
     public func byTextColor(_ color: UIColor) -> Self {
-        textColor = color
+        self.textColor = color
         return self
     }
-
+    
     @discardableResult
     public func byFont(_ f: UIFont) -> Self {
-        font = f
+        self.font = f
         return self
     }
-
+    
     @discardableResult
     public func byTextAlignment(_ alignment: NSTextAlignment) -> Self {
-        textAlignment = alignment
+        self.textAlignment = alignment
         return self
     }
-
+    
     @discardableResult
     public func byAttributedText(_ attrText: NSAttributedString) -> Self {
-        attributedText = attrText
+        self.attributedText = attrText
         return self
     }
-
+    
     @discardableResult
     public func byTypingAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        typingAttributes = attrs
+        self.typingAttributes = attrs
         return self
     }
     // MARK: 可编辑与交互
     @discardableResult
     public func byEditable(_ editable: Bool) -> Self {
-        isEditable = editable
+        self.isEditable = editable
         return self
     }
-
+    
     @discardableResult
     public func bySelectable(_ selectable: Bool) -> Self {
-        isSelectable = selectable
+        self.isSelectable = selectable
         return self
     }
-
+    
     @discardableResult
     public func byDataDetectorTypes(_ types: UIDataDetectorTypes) -> Self {
-        dataDetectorTypes = types
+        self.dataDetectorTypes = types
         return self
     }
-
+    
     @discardableResult
     public func byAllowsEditingTextAttributes(_ allow: Bool) -> Self {
-        allowsEditingTextAttributes = allow
+        self.allowsEditingTextAttributes = allow
         return self
     }
     // MARK: 输入相关
     @discardableResult
     public func byKeyboardType(_ type: UIKeyboardType) -> Self {
-        keyboardType = type
+        self.keyboardType = type
         return self
     }
-
+    
     @discardableResult
     public func byInputView(_ view: UIView?) -> Self {
-        inputView = view
+        self.inputView = view
         return self
     }
-
+    
     @discardableResult
     public func byInputAccessoryView(_ view: UIView?) -> Self {
-        inputAccessoryView = view
+        self.inputAccessoryView = view
         return self
     }
-
+    
     @discardableResult
     public func byClearsOnInsertion(_ clear: Bool) -> Self {
-        clearsOnInsertion = clear
+        self.clearsOnInsertion = clear
         return self
     }
     // MARK: 富文本与链接样式
     @discardableResult
     public func byLinkTextAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        linkTextAttributes = attrs
+        self.linkTextAttributes = attrs
         return self
     }
-
     @discardableResult
     @available(iOS 13.0, *)
     public func byUsesStandardTextScaling(_ enable: Bool) -> Self {
-        usesStandardTextScaling = enable
+        self.usesStandardTextScaling = enable
         return self
     }
     // MARK: 布局与内边距
     @discardableResult
     public func byTextContainerInset(_ inset: UIEdgeInsets) -> Self {
-        textContainerInset = inset
-        return self
-    }
-    // MARK: 滚动与范围
-    @discardableResult
-    public func byScrollToVisible(range: NSRange) -> Self {
-        scrollRangeToVisible(range)
+        self.textContainerInset = inset
         return self
     }
     // MARK: 查找功能 (iOS 16+)
     @available(iOS 16.0, *)
     @discardableResult
     public func byFindInteractionEnabled(_ enable: Bool) -> Self {
-        isFindInteractionEnabled = enable
+        self.isFindInteractionEnabled = enable
         return self
     }
     // MARK: 边框样式 (iOS 17+)
     @available(iOS 17.0, *)
     @discardableResult
     public func byBorderStyle(_ style: UITextView.BorderStyle) -> Self {
-        borderStyle = style
+        self.borderStyle = style
         return self
     }
     // MARK: 高亮显示 (iOS 18+)
     @available(iOS 18.0, *)
     @discardableResult
     public func byTextHighlightAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        textHighlightAttributes = attrs
+        self.textHighlightAttributes = attrs
         return self
     }
-    // MARK:  Writing Tools (iOS 18+)
+    // MARK: Writing Tools (iOS 18+)
     @available(iOS 18.0, *)
     @discardableResult
     public func byWritingToolsBehavior(_ behavior: UIWritingToolsBehavior) -> Self {
-        writingToolsBehavior = behavior
+        self.writingToolsBehavior = behavior
         return self
     }
-
+    
     @available(iOS 18.0, *)
     @discardableResult
     public func byAllowedWritingToolsResultOptions(_ options: UIWritingToolsResultOptions) -> Self {
         var safe = options
-        // ⚠️ iOS 18.0 / 18.1 暂不支持 table（部分机型连 list 也不行）
         safe.remove(.table)
-        // safe.remove(.list) // 如果遇到崩溃，再打开这一行
-        allowedWritingToolsResultOptions = safe
+        self.allowedWritingToolsResultOptions = safe
         return self
     }
     // MARK: 富文本格式配置 (iOS 18+)
     @available(iOS 18.0, *)
     @discardableResult
     public func byTextFormattingConfiguration(_ config: UITextFormattingViewController.Configuration) -> Self {
-        textFormattingConfiguration = config
+        self.textFormattingConfiguration = config
         return self
     }
     // MARK: 代理设置
     @discardableResult
     public func byDelegate(_ textViewDelegate: UITextViewDelegate?) -> Self {
-        delegate = textViewDelegate
+        self.delegate = textViewDelegate
         return self
     }
     @available(iOS 10.0, *)
@@ -181,6 +172,190 @@ extension UITextView {
     public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
         self.font = .preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
+        return self
+    }
+    /// DSL：专门给 lineFragmentPadding 赋值（更短）
+    @discardableResult
+    public func byLineFragmentPadding(_ padding: CGFloat) -> Self {
+        return byTextContainer { $0.lineFragmentPadding = padding }
+    }
+}
+
+// MARK: - 闭包重载@单参数
+extension UITextView {
+    
+    @discardableResult
+    public func byText(_ builder: () -> String?) -> Self {
+        self.text = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTextColor(_ builder: () -> UIColor) -> Self {
+        self.textColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byFont(_ builder: () -> UIFont) -> Self {
+        self.font = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
+        self.textAlignment = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byAttributedText(_ builder: () -> NSAttributedString) -> Self {
+        self.attributedText = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTypingAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.typingAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byEditable(_ builder: () -> Bool) -> Self {
+        self.isEditable = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func bySelectable(_ builder: () -> Bool) -> Self {
+        self.isSelectable = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byDataDetectorTypes(_ builder: () -> UIDataDetectorTypes) -> Self {
+        self.dataDetectorTypes = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byAllowsEditingTextAttributes(_ builder: () -> Bool) -> Self {
+        self.allowsEditingTextAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byKeyboardType(_ builder: () -> UIKeyboardType) -> Self {
+        self.keyboardType = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byInputView(_ builder: () -> UIView?) -> Self {
+        self.inputView = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byInputAccessoryView(_ builder: () -> UIView?) -> Self {
+        self.inputAccessoryView = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byClearsOnInsertion(_ builder: () -> Bool) -> Self {
+        self.clearsOnInsertion = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byLinkTextAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.linkTextAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    @available(iOS 13.0, *)
+    public func byUsesStandardTextScaling(_ builder: () -> Bool) -> Self {
+        self.usesStandardTextScaling = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTextContainerInset(_ builder: () -> UIEdgeInsets) -> Self {
+        self.textContainerInset = builder()
+        return self
+    }
+    
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func byFindInteractionEnabled(_ builder: () -> Bool) -> Self {
+        self.isFindInteractionEnabled = builder()
+        return self
+    }
+    
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func byBorderStyle(_ builder: () -> UITextView.BorderStyle) -> Self {
+        self.borderStyle = builder()
+        return self
+    }
+    
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byTextHighlightAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.textHighlightAttributes = builder()
+        return self
+    }
+    
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byWritingToolsBehavior(_ builder: () -> UIWritingToolsBehavior) -> Self {
+        self.writingToolsBehavior = builder()
+        return self
+    }
+    
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byAllowedWritingToolsResultOptions(_ builder: () -> UIWritingToolsResultOptions) -> Self {
+        var safe = builder()
+        safe.remove(.table)
+        self.allowedWritingToolsResultOptions = safe
+        return self
+    }
+    
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byTextFormattingConfiguration(_ builder: () -> UITextFormattingViewController.Configuration) -> Self {
+        self.textFormattingConfiguration = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byDelegate(_ builder: () -> UITextViewDelegate?) -> Self {
+        self.delegate = builder()
+        return self
+    }
+    
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byDynamicTextStyle(_ builder: () -> UIFont.TextStyle) -> Self {
+        self.font = .preferredFont(forTextStyle: builder())
+        self.adjustsFontForContentSizeCategory = true
+        return self
+    }
+    
+    @discardableResult
+    public func byLineFragmentPadding(_ builder: () -> CGFloat) -> Self {
+        return byTextContainer { $0.lineFragmentPadding = builder() }
+    }
+}
+
+extension UITextView {
+    // MARK: 滚动与范围
+    @discardableResult
+    public func byScrollToVisible(range: NSRange) -> Self {
+        scrollRangeToVisible(range)
         return self
     }
     /// DSL：用回调配置 textContainer（iOS: 一定存在；macOS: 可能为 nil）
@@ -194,14 +369,6 @@ extension UITextView {
         #endif
         return self
     }
-    /// DSL：专门给 lineFragmentPadding 赋值（更短）
-    @discardableResult
-    public func byLineFragmentPadding(_ padding: CGFloat) -> Self {
-        return byTextContainer { $0.lineFragmentPadding = padding }
-    }
-}
-
-extension UITextView {
     // MARK: 统一的圆角边框样式（跨 iOS 版本）
     @discardableResult
     public func byRoundedBorder(

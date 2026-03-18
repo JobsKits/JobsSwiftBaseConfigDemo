@@ -12,101 +12,198 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+// MARK: - 直接赋值@单参数
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {
-    // ================================== 标题（inline title） ==================================
     /// 设置普通标题字体
     @discardableResult
     public func byTitleFont(_ font: UIFont?) -> Self {
         if let font {
-            titleTextAttributes[.font] = font
+            self.titleTextAttributes[.font] = font
         } else {
-            titleTextAttributes.removeValue(forKey: .font)
+            self.titleTextAttributes.removeValue(forKey: .font)
         };return self
     }
     /// 设置普通标题颜色
     @discardableResult
     public func byTitleColor(_ color: UIColor?) -> Self {
         if let color {
-            titleTextAttributes[.foregroundColor] = color
+            self.titleTextAttributes[.foregroundColor] = color
         } else {
-            titleTextAttributes.removeValue(forKey: .foregroundColor)
+            self.titleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
     /// 整体设置普通标题的 attributes
     @discardableResult
     public func byTitleAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        titleTextAttributes = attrs
+        self.titleTextAttributes = attrs
         return self
     }
     /// 标题位置微调
     @discardableResult
     public func byTitlePositionAdjustment(_ offset: UIOffset) -> Self {
-        titlePositionAdjustment = offset
+        self.titlePositionAdjustment = offset
         return self
     }
-    // ================================== 大标题（large title） ==================================
     /// 设置大标题字体
     @discardableResult
     public func byLargeTitleFont(_ font: UIFont?) -> Self {
         if let font {
-            largeTitleTextAttributes[.font] = font
+            self.largeTitleTextAttributes[.font] = font
         } else {
-            largeTitleTextAttributes.removeValue(forKey: .font)
+            self.largeTitleTextAttributes.removeValue(forKey: .font)
         };return self
     }
     /// 设置大标题颜色
     @discardableResult
     public func byLargeTitleColor(_ color: UIColor?) -> Self {
         if let color {
-            largeTitleTextAttributes[.foregroundColor] = color
+            self.largeTitleTextAttributes[.foregroundColor] = color
         } else {
-            largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
+            self.largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
     /// 整体设置大标题 attributes
     @discardableResult
     public func byLargeTitleAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        largeTitleTextAttributes = attrs
+        self.largeTitleTextAttributes = attrs
         return self
     }
-    // ================================== 副标题（iOS 26+） ==================================
     /// 副标题文本 attributes
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        subtitleTextAttributes = attrs
+        self.subtitleTextAttributes = attrs
         return self
     }
-
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleFont(_ font: UIFont?) -> Self {
         if let font {
-            subtitleTextAttributes[.font] = font
+            self.subtitleTextAttributes[.font] = font
         } else {
-            subtitleTextAttributes.removeValue(forKey: .font)
+            self.subtitleTextAttributes.removeValue(forKey: .font)
         };return self
     }
-
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleColor(_ color: UIColor?) -> Self {
         if let color {
-            subtitleTextAttributes[.foregroundColor] = color
+            self.subtitleTextAttributes[.foregroundColor] = color
         } else {
-            subtitleTextAttributes.removeValue(forKey: .foregroundColor)
+            self.subtitleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
     /// 大标题下副标题
     @discardableResult
     @available(iOS 26.0, *)
     public func byLargeSubtitleAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
-        largeSubtitleTextAttributes = attrs
+        self.largeSubtitleTextAttributes = attrs
         return self
     }
-    // ================================== Back 指示图标 ==================================
-    /// 同时设置 backIndicatorImage / transitionMaskImage
+}
+// MARK: - 闭包重载@单参数
+@available(iOS 15.0, *)
+extension UINavigationBarAppearance {
+    
+    @discardableResult
+    public func byTitleFont(_ builder: () -> UIFont?) -> Self {
+        let font = builder()
+        if let font {
+            self.titleTextAttributes[.font] = font
+        } else {
+            self.titleTextAttributes.removeValue(forKey: .font)
+        };return self
+    }
+    
+    @discardableResult
+    public func byTitleColor(_ builder: () -> UIColor?) -> Self {
+        let color = builder()
+        if let color {
+            self.titleTextAttributes[.foregroundColor] = color
+        } else {
+            self.titleTextAttributes.removeValue(forKey: .foregroundColor)
+        };return self
+    }
+    
+    @discardableResult
+    public func byTitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.titleTextAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTitlePositionAdjustment(_ builder: () -> UIOffset) -> Self {
+        self.titlePositionAdjustment = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byLargeTitleFont(_ builder: () -> UIFont?) -> Self {
+        let font = builder()
+        if let font {
+            self.largeTitleTextAttributes[.font] = font
+        } else {
+            self.largeTitleTextAttributes.removeValue(forKey: .font)
+        };return self
+    }
+    
+    @discardableResult
+    public func byLargeTitleColor(_ builder: () -> UIColor?) -> Self {
+        let color = builder()
+        if let color {
+            self.largeTitleTextAttributes[.foregroundColor] = color
+        } else {
+            self.largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
+        };return self
+    }
+    
+    @discardableResult
+    public func byLargeTitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.largeTitleTextAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    @available(iOS 26.0, *)
+    public func bySubtitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.subtitleTextAttributes = builder()
+        return self
+    }
+    
+    @discardableResult
+    @available(iOS 26.0, *)
+    public func bySubtitleFont(_ builder: () -> UIFont?) -> Self {
+        let font = builder()
+        if let font {
+            self.subtitleTextAttributes[.font] = font
+        } else {
+            self.subtitleTextAttributes.removeValue(forKey: .font)
+        };return self
+    }
+    
+    @discardableResult
+    @available(iOS 26.0, *)
+    public func bySubtitleColor(_ builder: () -> UIColor?) -> Self {
+        let color = builder()
+        if let color {
+            self.subtitleTextAttributes[.foregroundColor] = color
+        } else {
+            self.subtitleTextAttributes.removeValue(forKey: .foregroundColor)
+        };return self
+    }
+    
+    @discardableResult
+    @available(iOS 26.0, *)
+    public func byLargeSubtitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
+        self.largeSubtitleTextAttributes = builder()
+        return self
+    }
+}
+
+@available(iOS 15.0, *)
+extension UINavigationBarAppearance {
+    /// Back指示图标@同时设置 backIndicatorImage / transitionMaskImage
     @discardableResult
     public func byBackIndicator(_ image: UIImage?, mask: UIImage? = nil) -> Self {
         setBackIndicatorImage(image, transitionMaskImage: mask ?? image)

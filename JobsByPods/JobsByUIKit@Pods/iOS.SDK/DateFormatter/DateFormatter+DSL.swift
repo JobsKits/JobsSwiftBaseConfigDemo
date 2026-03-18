@@ -122,64 +122,124 @@ extension DateFormatter {
     }
     // MARK: - Symbols（按属性逐个拆分）
     @discardableResult
-    public func byAMSymbol(_ am: String) -> Self { self.amSymbol = am; return self }
+    public func byAMSymbol(_ am: String) -> Self {
+        self.amSymbol = am
+        return self
+    }
 
     @discardableResult
-    public func byPMSymbol(_ pm: String) -> Self { self.pmSymbol = pm; return self }
+    public func byPMSymbol(_ pm: String) -> Self {
+        self.pmSymbol = pm
+        return self
+    }
 
     @discardableResult
-    public func byEraSymbols(_ symbols: [String]) -> Self { self.eraSymbols = symbols; return self }
+    public func byEraSymbols(_ symbols: [String]) -> Self {
+        self.eraSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byLongEraSymbols(_ symbols: [String]) -> Self { self.longEraSymbols = symbols; return self }
+    public func byLongEraSymbols(_ symbols: [String]) -> Self {
+        self.longEraSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byMonthSymbols(_ symbols: [String]) -> Self { self.monthSymbols = symbols; return self }
+    public func byMonthSymbols(_ symbols: [String]) -> Self {
+        self.monthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortMonthSymbols(_ symbols: [String]) -> Self { self.shortMonthSymbols = symbols; return self }
+    public func byShortMonthSymbols(_ symbols: [String]) -> Self {
+        self.shortMonthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byVeryShortMonthSymbols(_ symbols: [String]) -> Self { self.veryShortMonthSymbols = symbols; return self }
+    public func byVeryShortMonthSymbols(_ symbols: [String]) -> Self {
+        self.veryShortMonthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byStandaloneMonthSymbols(_ symbols: [String]) -> Self { self.standaloneMonthSymbols = symbols; return self }
+    public func byStandaloneMonthSymbols(_ symbols: [String]) -> Self {
+        self.standaloneMonthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortStandaloneMonthSymbols(_ symbols: [String]) -> Self { self.shortStandaloneMonthSymbols = symbols; return self }
+    public func byShortStandaloneMonthSymbols(_ symbols: [String]) -> Self {
+        self.shortStandaloneMonthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byVeryShortStandaloneMonthSymbols(_ symbols: [String]) -> Self { self.veryShortStandaloneMonthSymbols = symbols; return self }
+    public func byVeryShortStandaloneMonthSymbols(_ symbols: [String]) -> Self {
+        self.veryShortStandaloneMonthSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byWeekdaySymbols(_ symbols: [String]) -> Self { self.weekdaySymbols = symbols; return self }
+    public func byWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.weekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortWeekdaySymbols(_ symbols: [String]) -> Self { self.shortWeekdaySymbols = symbols; return self }
+    public func byShortWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.shortWeekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byVeryShortWeekdaySymbols(_ symbols: [String]) -> Self { self.veryShortWeekdaySymbols = symbols; return self }
+    public func byVeryShortWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.veryShortWeekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byStandaloneWeekdaySymbols(_ symbols: [String]) -> Self { self.standaloneWeekdaySymbols = symbols; return self }
+    public func byStandaloneWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.standaloneWeekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortStandaloneWeekdaySymbols(_ symbols: [String]) -> Self { self.shortStandaloneWeekdaySymbols = symbols; return self }
+    public func byShortStandaloneWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.shortStandaloneWeekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byVeryShortStandaloneWeekdaySymbols(_ symbols: [String]) -> Self { self.veryShortStandaloneWeekdaySymbols = symbols; return self }
+    public func byVeryShortStandaloneWeekdaySymbols(_ symbols: [String]) -> Self {
+        self.veryShortStandaloneWeekdaySymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byQuarterSymbols(_ symbols: [String]) -> Self { self.quarterSymbols = symbols; return self }
+    public func byQuarterSymbols(_ symbols: [String]) -> Self {
+        self.quarterSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortQuarterSymbols(_ symbols: [String]) -> Self { self.shortQuarterSymbols = symbols; return self }
+    public func byShortQuarterSymbols(_ symbols: [String]) -> Self {
+        self.shortQuarterSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byStandaloneQuarterSymbols(_ symbols: [String]) -> Self { self.standaloneQuarterSymbols = symbols; return self }
+    public func byStandaloneQuarterSymbols(_ symbols: [String]) -> Self {
+        self.standaloneQuarterSymbols = symbols
+        return self
+    }
 
     @discardableResult
-    public func byShortStandaloneQuarterSymbols(_ symbols: [String]) -> Self { self.shortStandaloneQuarterSymbols = symbols; return self }
+    public func byShortStandaloneQuarterSymbols(_ symbols: [String]) -> Self {
+        self.shortStandaloneQuarterSymbols = symbols
+        return self
+    }
     // MARK: - Calendar Start
     @discardableResult
     public func byGregorianStartDate(_ date: Date?) -> Self {
@@ -188,7 +248,11 @@ extension DateFormatter {
     }
     // MARK: - Convenience
     /// 格式化
-    public func format(_ date: Date) -> String { string(from: date) }
+    public func format(_ date: Date) -> String {
+        string(from: date)
+    }
     /// 解析
-    public func parse(_ text: String) -> Date? { date(from: text) }
+    public func parse(_ text: String) -> Date? {
+        date(from: text)
+    }
 }

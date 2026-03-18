@@ -1,5 +1,5 @@
 //
-//  UIToolbar.swift
+//  UIToolbar+DSL.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Mac on 10/2/25.
@@ -10,7 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
+// MARK: - 直接赋值@单参数
 extension UIToolbar {
     // MARK: - Items
     @discardableResult
@@ -18,7 +18,6 @@ extension UIToolbar {
         self.setItems(items, animated: true)
         return self
     }
-    // MARK: - ❤️ 映射为OC版本的:UIToolbar().items
     @discardableResult
     public func byItems(_ items: [UIBarButtonItem]?) -> Self {
         self.setItems(items, animated: false)
@@ -95,6 +94,79 @@ extension UIToolbar {
     @discardableResult
     public func byDelegate(_ delegate: UIToolbarDelegate?) -> Self {
         self.delegate = delegate
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UIToolbar {
+    
+    @discardableResult
+    public func byItemsAnimated(_ builder: () -> [UIBarButtonItem]?) -> Self {
+        self.setItems(builder(), animated: true)
+        return self
+    }
+    
+    @discardableResult
+    public func byItems(_ builder: () -> [UIBarButtonItem]?) -> Self {
+        self.setItems(builder(), animated: false)
+        return self
+    }
+    
+    @discardableResult
+    public func byBarStyle(_ builder: () -> UIBarStyle) -> Self {
+        self.barStyle = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTranslucent(_ builder: () -> Bool) -> Self {
+        self.isTranslucent = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTintColor(_ builder: () -> UIColor) -> Self {
+        self.tintColor = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byBarTintColor(_ builder: () -> UIColor?) -> Self {
+        self.barTintColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byStandardAppearance(_ builder: () -> UIToolbarAppearance) -> Self {
+        if #available(iOS 13.0, *) {
+            self.standardAppearance = builder()
+        };return self
+    }
+
+    @discardableResult
+    public func byCompactAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
+        if #available(iOS 13.0, *) {
+            self.compactAppearance = builder()
+        };return self
+    }
+
+    @discardableResult
+    public func byScrollEdgeAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
+        if #available(iOS 15.0, *) {
+            self.scrollEdgeAppearance = builder()
+        };return self
+    }
+
+    @discardableResult
+    public func byCompactScrollEdgeAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
+        if #available(iOS 15.0, *) {
+            self.compactScrollEdgeAppearance = builder()
+        };return self
+    }
+    
+    @discardableResult
+    public func byDelegate(_ builder: () -> UIToolbarDelegate?) -> Self {
+        self.delegate = builder()
         return self
     }
 }

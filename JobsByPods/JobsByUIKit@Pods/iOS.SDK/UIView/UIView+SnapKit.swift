@@ -65,8 +65,7 @@ extension UIView {
         superView.addSubview(self)
         if let closure {
             self.snp.makeConstraints(closure)
-        }
-        return self
+        };return self
     }
     /**
      
@@ -84,8 +83,7 @@ extension UIView {
         superView.addSubview(self)
         self.snp.makeConstraints { make in
             closure(self, make)
-        }
-        return self
+        };return self
     }
     /// 把当前 view 作为 arrangedSubview 加入 stackView，并支持链式 + 可选约束
     @discardableResult

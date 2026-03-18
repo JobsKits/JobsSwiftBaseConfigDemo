@@ -13,6 +13,63 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBlock
+// MARK: - 直接赋值@单参数
+extension UICollectionViewCell {
+    // MARK: - autoUpdate@Configuration (iOS 14+)
+    /// iOS14+: 是否自动根据状态更新 contentConfiguration
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesContentConfiguration(_ on: Bool) -> Self {
+        self.automaticallyUpdatesContentConfiguration = on
+        return self
+    }
+    /// iOS14+: 是否自动根据状态更新 backgroundConfiguration
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesBackgroundConfiguration(_ on: Bool) -> Self {
+        self.automaticallyUpdatesBackgroundConfiguration = on
+        return self
+    }
+    // MARK: - backgroundView / selectedBackgroundView
+    /// 普通背景视图
+    @discardableResult
+    public func byBackgroundView(_ view: UIView?) -> Self {
+        self.backgroundView = view
+        return self
+    }
+    /// 选中态背景视图
+    @discardableResult
+    public func bySelectedBackgroundView(_ view: UIView?) -> Self {
+        self.selectedBackgroundView = view
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UICollectionViewCell {
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesContentConfiguration(_ builder: () -> Bool) -> Self {
+        self.automaticallyUpdatesContentConfiguration = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesBackgroundConfiguration(_ builder: () -> Bool) -> Self {
+        self.automaticallyUpdatesBackgroundConfiguration = builder()
+        return self
+    }
+    @discardableResult
+    public func byBackgroundView(_ builder: () -> UIView?) -> Self {
+        self.backgroundView = builder()
+        return self
+    }
+    @discardableResult
+    public func bySelectedBackgroundView(_ builder: () -> UIView?) -> Self {
+        self.selectedBackgroundView = builder()
+        return self
+    }
+}
 
 extension UICollectionViewCell {
     // MARK: - state@selected / highlighted
@@ -44,20 +101,6 @@ extension UICollectionViewCell {
         };return self
     }
     // MARK: - autoUpdate@Configuration (iOS 14+)
-    /// iOS14+: 是否自动根据状态更新 contentConfiguration
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byAutomaticallyUpdatesContentConfiguration(_ on: Bool) -> Self {
-        self.automaticallyUpdatesContentConfiguration = on
-        return self
-    }
-    /// iOS14+: 是否自动根据状态更新 backgroundConfiguration
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byAutomaticallyUpdatesBackgroundConfiguration(_ on: Bool) -> Self {
-        self.automaticallyUpdatesBackgroundConfiguration = on
-        return self
-    }
     /// iOS14+: 主内容配置（UIListContentConfiguration）
     @available(iOS 14.0, *)
     @discardableResult
@@ -81,19 +124,6 @@ extension UICollectionViewCell {
         build(&bg)
         self.automaticallyUpdatesBackgroundConfiguration = automaticallyUpdates
         self.backgroundConfiguration = bg
-        return self
-    }
-    // MARK: - backgroundView / selectedBackgroundView
-    /// 普通背景视图
-    @discardableResult
-    public func byBackgroundView(_ view: UIView?) -> Self {
-        self.backgroundView = view
-        return self
-    }
-    /// 选中态背景视图
-    @discardableResult
-    public func bySelectedBackgroundView(_ view: UIView?) -> Self {
-        self.selectedBackgroundView = view
         return self
     }
     // MARK: - dragState (iOS 11+)

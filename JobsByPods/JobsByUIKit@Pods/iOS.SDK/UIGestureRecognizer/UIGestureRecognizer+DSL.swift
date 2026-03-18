@@ -11,12 +11,13 @@ import AppKit
 import UIKit
 #endif
 /**
- let tap = UITapGestureRecognizer()
-     .byTarget(self, action: #selector(onTap))
-     .byCancelsTouchesInView(true)
-     .byRequiresExclusiveTouchType(false)
-     .byName("customTap")
-     .byEnabled(true)
+ 
+     let tap = UITapGestureRecognizer()
+         .byTarget(self, action: #selector(onTap))
+         .byCancelsTouchesInView(true)
+         .byRequiresExclusiveTouchType(false)
+         .byName("customTap")
+         .byEnabled(true)
  */
 extension UIGestureRecognizer {
     /// 初始化方法封装

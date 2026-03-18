@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 import JobsTextTools
-
+// MARK: - 直接赋值@单参数
 extension UILabel {
     
     @discardableResult
@@ -208,5 +208,172 @@ extension UILabel {
     public func byShowsExpansionTextWhenTruncated(_ v: Bool) -> Self {
         self.showsExpansionTextWhenTruncated = v
         return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UILabel {
+    
+    @discardableResult
+    public func byJobsAttributedText(_ builder: () -> JobsText?) -> Self {
+        _byApplyOptional(builder) { [weak self] text in
+            guard let self else { return }
+            self.attributedText = text.asAttributed
+        }
+    }
+    
+    @discardableResult
+    public func byJobsText(_ builder: () -> JobsText?) -> Self {
+        _byApplyOptional(builder) { [weak self] text in
+            guard let self else { return }
+            self.text = text.asString
+        }
+    }
+    
+    @discardableResult
+    public func byText(_ builder: () -> String?) -> Self {
+        self.text = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTextColor(_ builder: () -> UIColor?) -> Self {
+        _byApplyOptional(builder) { [weak self] color in
+            guard let self else { return }
+            self.textColor = color
+        }
+    }
+    
+    @discardableResult
+    public func byFont(_ builder: () -> UIFont?) -> Self {
+        self.adjustsFontForContentSizeCategory = false
+        return _byApplyOptional(builder) { [weak self] font in
+            guard let self else { return }
+            self.font = font
+        }
+    }
+    
+    @discardableResult
+    public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
+        _byApplyValue(builder) { [weak self] alignment in
+            guard let self else { return }
+            self.textAlignment = alignment
+        }
+    }
+    
+    @discardableResult
+    public func byNumberOfLines(_ builder: () -> Int) -> Self {
+        _byApplyValue(builder) { [weak self] lines in
+            guard let self else { return }
+            self.numberOfLines = lines
+        }
+    }
+    
+    @discardableResult
+    public func byLineBreakMode(_ builder: () -> NSLineBreakMode) -> Self {
+        _byApplyValue(builder) { [weak self] mode in
+            guard let self else { return }
+            self.lineBreakMode = mode
+        }
+    }
+    
+    @discardableResult
+    public func byBgCor(_ builder: () -> UIColor?) -> Self {
+        self.backgroundColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byAttributedString(_ builder: () -> NSAttributedString?) -> Self {
+        self.attributedText = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byHighlightedTextColor(_ builder: () -> UIColor?) -> Self {
+        self.highlightedTextColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byIsHighlighted(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.isHighlighted = value
+        }
+    }
+    
+    @discardableResult
+    public func byEnabled(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.isEnabled = value
+        }
+    }
+    
+    @discardableResult
+    public func byAdjustsFontSizeToFitWidth(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.adjustsFontSizeToFitWidth = value
+        }
+    }
+    
+    @discardableResult
+    public func byBaselineAdjustment(_ builder: () -> UIBaselineAdjustment) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.baselineAdjustment = value
+        }
+    }
+    
+    @discardableResult
+    public func byMinimumScaleFactor(_ builder: () -> CGFloat) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.minimumScaleFactor = value
+        }
+    }
+    
+    @discardableResult
+    public func byAllowsDefaultTighteningForTruncation(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.allowsDefaultTighteningForTruncation = value
+        }
+    }
+    
+    @discardableResult
+    public func byPreferredMaxLayoutWidth(_ builder: () -> CGFloat) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.preferredMaxLayoutWidth = value
+        }
+    }
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byLineBreakStrategy(_ builder: () -> NSParagraphStyle.LineBreakStrategy) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.lineBreakStrategy = value
+        }
+    }
+    
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func byPreferredVibrancy(_ builder: () -> UILabelVibrancy) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.preferredVibrancy = value
+        }
+    }
+    
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func byShowsExpansionTextWhenTruncated(_ builder: () -> Bool) -> Self {
+        _byApplyValue(builder) { [weak self] value in
+            guard let self else { return }
+            self.showsExpansionTextWhenTruncated = value
+        }
     }
 }

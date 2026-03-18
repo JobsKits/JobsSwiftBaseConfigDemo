@@ -10,6 +10,96 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+// MARK: - 直接赋值@单参数
+extension UINavigationController {
+    // MARK: - ✅ 替换控制器栈（带动画）
+    @discardableResult
+    public func byViewControllersByAnimated(_ controllers: [UIViewController]) -> Self {
+        self.setViewControllers(controllers, animated: true)
+        return self
+    }
+    // MARK: - ✅ 替换控制器栈（无动画）
+    @discardableResult
+    public func byViewControllers(_ controllers: [UIViewController]) -> Self {
+        self.setViewControllers(controllers, animated: false)
+        return self
+    }
+    // MARK: - ✅ 链式写法：设置导航栏隐藏状态
+    @discardableResult
+    public func byNavigationBarHidden(_ hidden: Bool) -> Self {
+        self.isNavigationBarHidden = hidden
+        return self
+    }
+    // MARK: - ✅ 导航栏显示/隐藏（带动画）
+    @discardableResult
+    public func byNaBarHiddenByAnimated(_ hidden: Bool) -> Self {
+        self.setNavigationBarHidden(hidden, animated: true)
+        return self
+    }
+    // MARK: - ✅ 导航栏显示/隐藏（无动画）
+    @discardableResult
+    public func byNavBarHidden(_ hidden: Bool) -> Self {
+        self.setNavigationBarHidden(hidden, animated: false)
+        return self
+    }
+    // MARK: - ✅ 工具栏显示/隐藏（带动画）
+    @discardableResult
+    public func byToolbarHiddenByAnimated(_ hidden: Bool) -> Self {
+        self.setToolbarHidden(hidden, animated: true)
+        return self
+    }
+    // MARK: - ✅ 工具栏显示/隐藏（无动画）
+    @discardableResult
+    public func byToolbarHidden(_ hidden: Bool) -> Self {
+        self.setToolbarHidden(hidden, animated: false)
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UINavigationController {
+    
+    @discardableResult
+    public func byViewControllersByAnimated(_ builder: () -> [UIViewController]) -> Self {
+        self.setViewControllers(builder(), animated: true)
+        return self
+    }
+    
+    @discardableResult
+    public func byViewControllers(_ builder: () -> [UIViewController]) -> Self {
+        self.setViewControllers(builder(), animated: false)
+        return self
+    }
+    
+    @discardableResult
+    public func byNavigationBarHidden(_ builder: () -> Bool) -> Self {
+        self.isNavigationBarHidden = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byNaBarHiddenByAnimated(_ builder: () -> Bool) -> Self {
+        self.setNavigationBarHidden(builder(), animated: true)
+        return self
+    }
+    
+    @discardableResult
+    public func byNavBarHidden(_ builder: () -> Bool) -> Self {
+        self.setNavigationBarHidden(builder(), animated: false)
+        return self
+    }
+    
+    @discardableResult
+    public func byToolbarHiddenByAnimated(_ builder: () -> Bool) -> Self {
+        self.setToolbarHidden(builder(), animated: true)
+        return self
+    }
+    
+    @discardableResult
+    public func byToolbarHidden(_ builder: () -> Bool) -> Self {
+        self.setToolbarHidden(builder(), animated: false)
+        return self
+    }
+}
 
 extension UINavigationController {
     // ================================== Push / Pop ==================================
@@ -59,53 +149,6 @@ extension UINavigationController {
     @discardableResult
     public func popToRootViewController() -> Self {
         self.popToRootViewController(animated: false)
-        return self
-    }
-    // ================================== Set Stack ==================================
-    // MARK: - ✅ 替换控制器栈（带动画）
-    @discardableResult
-    public func byViewControllersByAnimated(_ controllers: [UIViewController]) -> Self {
-        self.setViewControllers(controllers, animated: true)
-        return self
-    }
-    // MARK: - ✅ 替换控制器栈（无动画）
-    @discardableResult
-    public func byViewControllers(_ controllers: [UIViewController]) -> Self {
-        self.setViewControllers(controllers, animated: false)
-        return self
-    }
-    // ================================== 导航栏显示/隐藏 ==================================
-    // MARK: - ✅ 链式写法：设置导航栏隐藏状态
-    @discardableResult
-    public func byNavigationBarHidden(_ hidden: Bool) -> Self {
-        /// 只是修改标志位，UIKit 会在下一次布局刷新时才更新 UI（可能延迟、或被打断）。
-        self.isNavigationBarHidden = hidden
-        return self
-    }
-    // MARK: - ✅ 导航栏显示/隐藏（带动画）
-    @discardableResult
-    public func byNaBarHiddenByAnimated(_ hidden: Bool) -> Self {
-        self.setNavigationBarHidden(hidden, animated: true)
-        return self
-    }
-    // MARK: - ✅ 导航栏显示/隐藏（无动画）
-    @discardableResult
-    public func byNavBarHidden(_ hidden: Bool) -> Self {
-        /// 不仅改变属性，还会触发布局和动画。
-        self.setNavigationBarHidden(hidden, animated: false)
-        return self
-    }
-    // ================================== 工具栏显示/隐藏 ==================================
-    // MARK: - ✅ 工具栏显示/隐藏（带动画）
-    @discardableResult
-    public func byToolbarHiddenByAnimated(_ hidden: Bool) -> Self {
-        self.setToolbarHidden(hidden, animated: true)
-        return self
-    }
-    // MARK: - ✅ 工具栏显示/隐藏（无动画）
-    @discardableResult
-    public func byToolbarHidden(_ hidden: Bool) -> Self {
-        self.setToolbarHidden(hidden, animated: false)
         return self
     }
     // ================================== show / 工具方法 ==================================

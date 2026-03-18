@@ -12,9 +12,8 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
-
+// MARK: - 直接赋值@单参数
 extension UIWindow {
-    // MARK: - 构造 / 附着
     /// 绑定到指定 WindowScene（不会 makeKeyAndVisible）
     /// - 兼容：iOS 12 也能编译。iOS 13+ 可进一步用 byAttach(toScene:)
     @discardableResult
@@ -28,9 +27,7 @@ extension UIWindow {
     @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
     public func byAttach(toScene scene: UIWindowScene?) -> Self {
-        // iOS 13+，且外界可传 nil（nil 时不动）
         if let scene {
-            // 注意：不要强行覆盖另一个 scene 的 window
             if self.windowScene !== scene {
                 self.windowScene = scene
             }
@@ -40,24 +37,6 @@ extension UIWindow {
     @discardableResult
     public func byRootViewController(_ vc: UIViewController?) -> Self {
         self.rootViewController = vc
-        return self
-    }
-    /// 仅 makeKey
-    @discardableResult
-    public func byMakeKey() -> Self {
-        self.makeKey()
-        return self
-    }
-    /// makeKeyAndVisible（最常用）
-    @discardableResult
-    public func byMakeKeyAndVisible() -> Self {
-        self.makeKeyAndVisible()
-        return self
-    }
-    /// 退位（让位于别的 window）
-    @discardableResult
-    public func byResignKey() -> Self {
-        self.resignKey()
         return self
     }
     // MARK: - 外观 / 显示层级
@@ -80,19 +59,87 @@ extension UIWindow {
             self.screen = screen
         };return self
     }
+}
+// MARK: - 闭包重载@单参数
+extension UIWindow {
+    
+    @discardableResult
+    public func byAttach(to builder: () -> Any?) -> Self {
+        if #available(iOS 13.0, *) {
+            return byAttach(toScene: builder() as? UIWindowScene)
+        };return self
+    }
+    
+    @available(iOS 13.0, tvOS 13.0, *)
+    @discardableResult
+    public func byAttach(toScene builder: () -> UIWindowScene?) -> Self {
+        let scene = builder()
+        if let scene {
+            if self.windowScene !== scene {
+                self.windowScene = scene
+            }
+        };return self
+    }
+    
+    @discardableResult
+    public func byRootViewController(_ builder: () -> UIViewController?) -> Self {
+        self.rootViewController = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byWindowLevel(_ builder: () -> UIWindow.Level) -> Self {
+        self.windowLevel = builder()
+        return self
+    }
+
+    @available(*, deprecated, message: "Use windowScene assignment instead on iOS 13+")
+    @discardableResult
+    public func byScreen(_ builder: () -> UIScreen) -> Self {
+        let screen = builder()
+        if #available(iOS 13.0, *) {
+            if let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.screen == screen }) {
+                self.windowScene = scene
+            }
+        } else {
+            self.screen = screen
+        };return self
+    }
+}
+
+extension UIWindow {
+    /// 仅 makeKey
+    @discardableResult
+    public func byMakeKey() -> Self {
+        self.makeKey()
+        return self
+    }
+    /// makeKeyAndVisible（最常用）
+    @discardableResult
+    public func byMakeKeyAndVisible() -> Self {
+        self.makeKeyAndVisible()
+        return self
+    }
+    /// 退位（让位于别的 window）
+    @discardableResult
+    public func byResignKey() -> Self {
+        self.resignKey()
+        return self
+    }
     // MARK: - 工具方法（少量“好用但容易踩坑”的动作）
     /// 快照整窗（不跨进程，不含系统状态栏）
     public func snapshotImage(afterScreenUpdates: Bool = true) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
-        return renderer.image { _ in
+        UIGraphicsImageRenderer(bounds: bounds).image { _ in
             self.drawHierarchy(in: self.bounds, afterScreenUpdates: afterScreenUpdates)
         }
     }
     /// 在最顶层控制器 present 一个 VC（避免直接对 window 做 VC 管理）
     @discardableResult
     public func presentOnTop(_ vc: UIViewController,
-                      animated: Bool = true,
-                      completion: (jobsByVoidBlock)? = nil) -> Self {
+                             animated: Bool = true,
+                             completion: (jobsByVoidBlock)? = nil) -> Self {
         guard let host = UIWindow.jobsTopMost(from: self.rootViewController) else { return self }
         // 宿主正在转场就别叠
         if host.transitionCoordinator != nil { return self }
@@ -104,16 +151,16 @@ extension UIWindow {
     // MARK: - 坐标转换（链式味道）
     @discardableResult
     public func byConvert(_ point: CGPoint,
-                   to other: UIWindow?,
-                   sink: jobsByPointBlock) -> Self {
+                          to other: UIWindow?,
+                          sink: jobsByPointBlock) -> Self {
         sink(convert(point, to: other))
         return self
     }
 
     @discardableResult
     public func byConvert(_ rect: CGRect,
-                   to other: UIWindow?,
-                   sink: jobsByFrameBlock) -> Self {
+                          to other: UIWindow?,
+                          sink: jobsByFrameBlock) -> Self {
         sink(convert(rect, to: other))
         return self
     }

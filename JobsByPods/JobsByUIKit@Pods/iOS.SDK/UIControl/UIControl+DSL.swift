@@ -13,31 +13,9 @@ import UIKit
 
 import ObjectiveC
 
+// MARK: - 直接赋值@单参数
 extension UIControl {
     
-    private final class _JobsActionTrampoline: NSObject {
-        
-        let handler: (UIControl) -> Void
-        init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
-        @objc func invoke(_ sender: UIControl) { handler(sender) }
-    }
-
-    private struct _JobsAssocKey {
-        static var trampolines: UInt8 = 0
-    }
-
-    private var _jobs_trampolines: NSMutableArray {
-        if let arr = objc_getAssociatedObject(self, &_JobsAssocKey.trampolines) as? NSMutableArray {
-            return arr
-        }
-        let arr = NSMutableArray()
-        objc_setAssociatedObject(
-            self,
-            &_JobsAssocKey.trampolines,
-            arr,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return arr
-    }
     // MARK: - 基础状态
     @discardableResult
     public func byEnabled(_ on: Bool?) -> Self {
@@ -68,6 +46,114 @@ extension UIControl {
     public func byContentVerticalAlignment(_ alignment: UIControl.ContentVerticalAlignment) -> Self {
         self.contentVerticalAlignment = alignment
         return self
+    }
+    // MARK: - Context Menu（iOS 14+）
+    /// 开启/关闭把菜单作为主操作（touch-down 展开）
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byShowsMenuAsPrimaryAction(_ on: Bool) -> Self {
+        self.showsMenuAsPrimaryAction = on
+        return self
+    }
+    /// 启用/禁用上下文菜单交互
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byContextMenuEnabled(_ on: Bool) -> Self {
+        self.isContextMenuInteractionEnabled = on
+        return self
+    }
+    // MARK: - ToolTip（iOS 15+）
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byToolTip(_ text: String?) -> Self {
+        self.toolTip = text
+        return self
+    }
+    // MARK: - SF Symbol 动画（iOS 17+）
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func bySymbolAnimationEnabled(_ on: Bool) -> Self {
+        self.isSymbolAnimationEnabled = on
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UIControl {
+    
+    @discardableResult
+    public func byEnabled(_ builder: () -> Bool?) -> Self {
+        self.isEnabled = builder() ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func bySelected(_ builder: () -> Bool?) -> Self {
+        self.isSelected = builder() ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func byHighlighted(_ builder: () -> Bool?) -> Self {
+        self.isHighlighted = builder() ?? false
+        return self
+    }
+    @discardableResult
+    public func byContentHorizontalAlignment(_ builder: () -> UIControl.ContentHorizontalAlignment) -> Self {
+        self.contentHorizontalAlignment = builder()
+        return self
+    }
+    @discardableResult
+    public func byContentVerticalAlignment(_ builder: () -> UIControl.ContentVerticalAlignment) -> Self {
+        self.contentVerticalAlignment = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byShowsMenuAsPrimaryAction(_ builder: () -> Bool) -> Self {
+        self.showsMenuAsPrimaryAction = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byContextMenuEnabled(_ builder: () -> Bool) -> Self {
+        self.isContextMenuInteractionEnabled = builder()
+        return self
+    }
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byToolTip(_ builder: () -> String?) -> Self {
+        self.toolTip = builder()
+        return self
+    }
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func bySymbolAnimationEnabled(_ builder: () -> Bool) -> Self {
+        self.isSymbolAnimationEnabled = builder()
+        return self
+    }
+}
+
+private var trampolines: UInt8 = 0
+extension UIControl {
+    
+    private final class _JobsActionTrampoline: NSObject {
+        
+        let handler: (UIControl) -> Void
+        init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
+        @objc func invoke(_ sender: UIControl) { handler(sender) }
+    }
+
+    private var _jobs_trampolines: NSMutableArray {
+        if let arr = objc_getAssociatedObject(self, &trampolines) as? NSMutableArray {
+            return arr
+        }
+        let arr = NSMutableArray()
+        objc_setAssociatedObject(
+            self,
+            &trampolines,
+            arr,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        );return arr
     }
     /// 同时设置
     @discardableResult
@@ -192,35 +278,6 @@ extension UIControl {
     @discardableResult
     public func byPerformPrimaryAction() -> Self {
         performPrimaryAction()
-        return self
-    }
-    // MARK: - Context Menu（iOS 14+）
-    /// 开启/关闭把菜单作为主操作（touch-down 展开）
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byShowsMenuAsPrimaryAction(_ on: Bool) -> Self {
-        self.showsMenuAsPrimaryAction = on
-        return self
-    }
-    /// 启用/禁用上下文菜单交互
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byContextMenuEnabled(_ on: Bool) -> Self {
-        self.isContextMenuInteractionEnabled = on
-        return self
-    }
-    // MARK: - ToolTip（iOS 15+）
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byToolTip(_ text: String?) -> Self {
-        self.toolTip = text
-        return self
-    }
-    // MARK: - SF Symbol 动画（iOS 17+）
-    @available(iOS 17.0, *)
-    @discardableResult
-    public func bySymbolAnimationEnabled(_ on: Bool) -> Self {
-        self.isSymbolAnimationEnabled = on
         return self
     }
 }

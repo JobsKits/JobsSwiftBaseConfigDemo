@@ -13,7 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBlock
-// MARK: ✏️ UITextField 链式配置
+// MARK: - 直接赋值@单参数
 extension UITextField {
     // MARK: 🌸 基础文本属性
     @discardableResult
@@ -64,7 +64,6 @@ extension UITextField {
         self.attributedText = attributedText
         return self
     }
-
     @available(iOS 6.0, *)
     @discardableResult
     public func byAttributedPlaceholder(_ attributedPlaceholder: NSAttributedString?) -> Self {
@@ -155,28 +154,24 @@ extension UITextField {
         self.spellCheckingType = type
         return self
     }
-
     @available(iOS 11.0, *)
     @discardableResult
     public func bySmartQuotesType(_ type: UITextSmartQuotesType) -> Self {
         self.smartQuotesType = type
         return self
     }
-
     @available(iOS 11.0, *)
     @discardableResult
     public func bySmartDashesType(_ type: UITextSmartDashesType) -> Self {
         self.smartDashesType = type
         return self
     }
-
     @available(iOS 11.0, *)
     @discardableResult
     public func bySmartInsertDeleteType(_ type: UITextSmartInsertDeleteType) -> Self {
         self.smartInsertDeleteType = type
         return self
     }
-
     @available(iOS 17.0, *)
     @discardableResult
     public func byInlinePredictionType(_ type: UITextInlinePredictionType) -> Self {
@@ -190,14 +185,12 @@ extension UITextField {
         self.mathExpressionCompletionType = type
         return self
     }
-
     @available(iOS 18.0, *)
     @discardableResult
     public func byWritingToolsBehavior(_ behavior: UIWritingToolsBehavior) -> Self {
         self.writingToolsBehavior = behavior
         return self
     }
-
     @available(iOS 18.0, *)
     @discardableResult
     public func byAllowedWritingToolsResultOptions(_ options: UIWritingToolsResultOptions) -> Self {
@@ -210,7 +203,6 @@ extension UITextField {
         self.textContentType = type
         return self
     }
-
     @available(iOS 12.0, *)
     @discardableResult
     public func byPasswordRules(_ rules: UITextInputPasswordRules?) -> Self {
@@ -223,35 +215,18 @@ extension UITextField {
         self.clearButtonMode = mode
         return self
     }
-
-    @discardableResult
-    public func byLeftView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
-        self.leftView = view
-        self.leftViewMode = mode
-        return self
-    }
-
-    @discardableResult
-    public func byRightView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
-        self.rightView = view
-        self.rightViewMode = mode
-        return self
-    }
-
     @available(iOS 7.0, *)
     @discardableResult
     public func byDefaultTextAttributes(_ attrs: [NSAttributedString.Key : Any]) -> Self {
         self.defaultTextAttributes = attrs
         return self
     }
-
     @available(iOS 6.0, *)
     @discardableResult
     public func byAllowsEditingTextAttributes(_ allows: Bool) -> Self {
         self.allowsEditingTextAttributes = allows
         return self
     }
-
     @available(iOS 6.0, *)
     @discardableResult
     public func byTypingAttributes(_ attrs: [NSAttributedString.Key : Any]?) -> Self {
@@ -270,18 +245,272 @@ extension UITextField {
         self.inputAccessoryView = view
         return self
     }
-    // ⚠️ delegate 弱引用属性：仅便捷设置，别强持有
+    /// ⚠️ delegate 弱引用属性：仅便捷设置，别强持有
     @discardableResult
     public func byDelegate(_ delegate: UITextFieldDelegate?) -> Self {
         self.delegate = delegate
         return self
     }
-
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
         self.font = .preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UITextField {
+    
+    @discardableResult
+    public func byLeftViewMode(_ builder: () -> UITextField.ViewMode) -> Self {
+        self.leftViewMode = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byRightViewMode(_ builder: () -> UITextField.ViewMode) -> Self {
+        self.rightViewMode = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byText(_ builder: () -> String?) -> Self {
+        self.text = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTextColor(_ builder: () -> UIColor?) -> Self {
+        self.textColor = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byFont(_ builder: () -> UIFont?) -> Self {
+        self.font = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
+        self.textAlignment = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byBorderStyle(_ builder: () -> UITextField.BorderStyle) -> Self {
+        self.borderStyle = builder()
+        return self
+    }
+    @available(iOS 6.0, *)
+    @discardableResult
+    public func byAttributedText(_ builder: () -> NSAttributedString?) -> Self {
+        self.attributedText = builder()
+        return self
+    }
+    @available(iOS 6.0, *)
+    @discardableResult
+    public func byAttributedPlaceholder(_ builder: () -> NSAttributedString?) -> Self {
+        self.attributedPlaceholder = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byBackground(_ builder: () -> UIImage?) -> Self {
+        self.background = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byDisabledBackground(_ builder: () -> UIImage?) -> Self {
+        self.disabledBackground = builder()
+        return self
+    }
+    @discardableResult
+    public func byClearsOnBeginEditing(_ builder: () -> Bool) -> Self {
+        self.clearsOnBeginEditing = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byClearsOnInsertion(_ builder: () -> Bool) -> Self {
+        self.clearsOnInsertion = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAdjustsFontSizeToFitWidth(_ builder: () -> Bool) -> Self {
+        self.adjustsFontSizeToFitWidth = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byMinimumFontSize(_ builder: () -> CGFloat) -> Self {
+        self.minimumFontSize = builder()
+        return self
+    }
+
+    @discardableResult
+    public func bySecureTextEntry(_ builder: () -> Bool) -> Self {
+        self.isSecureTextEntry = builder()
+        return self
+    }
+    @discardableResult
+    public func byKeyboardType(_ builder: () -> UIKeyboardType) -> Self {
+        self.keyboardType = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byKeyboardAppearance(_ builder: () -> UIKeyboardAppearance) -> Self {
+        self.keyboardAppearance = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byReturnKeyType(_ builder: () -> UIReturnKeyType) -> Self {
+        self.returnKeyType = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byEnablesReturnKeyAutomatically(_ builder: () -> Bool) -> Self {
+        self.enablesReturnKeyAutomatically = builder()
+        return self
+    }
+    @discardableResult
+    public func byAutocapitalizationType(_ builder: () -> UITextAutocapitalizationType) -> Self {
+        self.autocapitalizationType = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAutocorrectionType(_ builder: () -> UITextAutocorrectionType) -> Self {
+        self.autocorrectionType = builder()
+        return self
+    }
+
+    @discardableResult
+    public func bySpellCheckingType(_ builder: () -> UITextSpellCheckingType) -> Self {
+        self.spellCheckingType = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func bySmartQuotesType(_ builder: () -> UITextSmartQuotesType) -> Self {
+        self.smartQuotesType = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func bySmartDashesType(_ builder: () -> UITextSmartDashesType) -> Self {
+        self.smartDashesType = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func bySmartInsertDeleteType(_ builder: () -> UITextSmartInsertDeleteType) -> Self {
+        self.smartInsertDeleteType = builder()
+        return self
+    }
+    @available(iOS 17.0, *)
+    @discardableResult
+    public func byInlinePredictionType(_ builder: () -> UITextInlinePredictionType) -> Self {
+        self.inlinePredictionType = builder()
+        return self
+    }
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byMathExpressionCompletionType(_ builder: () -> UITextMathExpressionCompletionType) -> Self {
+        self.mathExpressionCompletionType = builder()
+        return self
+    }
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byWritingToolsBehavior(_ builder: () -> UIWritingToolsBehavior) -> Self {
+        self.writingToolsBehavior = builder()
+        return self
+    }
+    @available(iOS 18.0, *)
+    @discardableResult
+    public func byAllowedWritingToolsResultOptions(_ builder: () -> UIWritingToolsResultOptions) -> Self {
+        self.allowedWritingToolsResultOptions = builder()
+        return self
+    }
+    @discardableResult
+    public func byTextContentType(_ builder: () -> UITextContentType?) -> Self {
+        self.textContentType = builder()
+        return self
+    }
+    @available(iOS 12.0, *)
+    @discardableResult
+    public func byPasswordRules(_ builder: () -> UITextInputPasswordRules?) -> Self {
+        self.passwordRules = builder()
+        return self
+    }
+    @discardableResult
+    public func byClearButtonMode(_ builder: () -> UITextField.ViewMode) -> Self {
+        self.clearButtonMode = builder()
+        return self
+    }
+    @available(iOS 7.0, *)
+    @discardableResult
+    public func byDefaultTextAttributes(_ builder: () -> [NSAttributedString.Key : Any]) -> Self {
+        self.defaultTextAttributes = builder()
+        return self
+    }
+    @available(iOS 6.0, *)
+    @discardableResult
+    public func byAllowsEditingTextAttributes(_ builder: () -> Bool) -> Self {
+        self.allowsEditingTextAttributes = builder()
+        return self
+    }
+    @available(iOS 6.0, *)
+    @discardableResult
+    public func byTypingAttributes(_ builder: () -> [NSAttributedString.Key : Any]?) -> Self {
+        self.typingAttributes = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byInputView(_ builder: () -> UIView?) -> Self {
+        self.inputView = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byInputAccessoryView(_ builder: () -> UIView?) -> Self {
+        self.inputAccessoryView = builder()
+        return self
+    }
+    @discardableResult
+    public func byDelegate(_ builder: () -> UITextFieldDelegate?) -> Self {
+        self.delegate = builder()
+        return self
+    }
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byDynamicTextStyle(_ builder: () -> UIFont.TextStyle) -> Self {
+        self.font = .preferredFont(forTextStyle: builder())
+        self.adjustsFontForContentSizeCategory = true
+        return self
+    }
+}
+
+extension UITextField {
+
+    @discardableResult
+    public func byLeftView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
+        self.leftView = view
+        self.leftViewMode = mode
+        return self
+    }
+
+    @discardableResult
+    public func byRightView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
+        self.rightView = view
+        self.rightViewMode = mode
         return self
     }
     /// 链式监听“发送/回车”键
@@ -311,13 +540,18 @@ extension UITextField {
     }
 }
 
+private var onReturnKey: UInt8 = 0
 extension UITextField {
-    private struct _JobsAssoc {
-        static var onReturnKey: UInt8 = 0
-    }
     private var _jobs_onReturnHandler: (jobsByTextFieldBlock)? {
-        get { objc_getAssociatedObject(self, &_JobsAssoc.onReturnKey) as? (jobsByTextFieldBlock) }
-        set { objc_setAssociatedObject(self, &_JobsAssoc.onReturnKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC) }
+        get { objc_getAssociatedObject(self, &onReturnKey) as? (jobsByTextFieldBlock) }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &onReturnKey,
+                newValue,
+                .OBJC_ASSOCIATION_COPY_NONATOMIC
+            )
+        }
     }
     @objc private func _jobs_handleReturn() {
         _jobs_onReturnHandler?(self)

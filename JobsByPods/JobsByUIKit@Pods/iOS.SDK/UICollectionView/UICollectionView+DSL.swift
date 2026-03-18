@@ -11,19 +11,274 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
-/// 选择、编辑、焦点@UICollectionView
+// MARK: - 直接赋值@单参数
 extension UICollectionView {
+    
     @discardableResult
     public func byAllowsSelection(_ allow: Bool) -> Self {
-        allowsSelection = allow
+        self.allowsSelection = allow
         return self
     }
 
     @discardableResult
     public func byAllowsMultipleSelection(_ allow: Bool) -> Self {
-        allowsMultipleSelection = allow
+        self.allowsMultipleSelection = allow
         return self
     }
+    /// 数据源 delegate
+    @discardableResult
+    public func byDelegate(_ delegate: UICollectionViewDelegate?) -> Self {
+        self.delegate = delegate
+        return self
+    }
+    /// 数据源 dataSource
+    @discardableResult
+    public func byDataSource(_ dataSource: UICollectionViewDataSource?) -> Self {
+        self.dataSource = dataSource
+        return self
+    }
+    /// 布局对象 UICollectionViewLayout
+    @discardableResult
+    func byCollectionViewLayout(_ layout: UICollectionViewLayout) -> Self {
+        self.collectionViewLayout = layout
+        return self
+    }
+    /// FlowLayout 的滚动方向
+    @discardableResult
+    public func byScrollDirection(_ direction: UICollectionView.ScrollDirection) -> Self {
+        (self.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = direction
+        return self
+    }
+    /// iOS 14.0+ 编辑状态
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byEditing(_ editing: Bool) -> Self {
+        self.isEditing = editing
+        return self
+    }
+    /// iOS 14.0+ 编辑时允许选择
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAllowsSelectionDuringEditing(_ allow: Bool) -> Self {
+        self.allowsSelectionDuringEditing = allow
+        return self
+    }
+    /// iOS 14.0+ 编辑时允许多选
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAllowsMultipleSelectionDuringEditing(_ allow: Bool) -> Self {
+        self.allowsMultipleSelectionDuringEditing = allow
+        return self
+    }
+    /// iOS 9.0+ 记住上次聚焦
+    @available(iOS 9.0, *)
+    @discardableResult
+    public func byRemembersLastFocusedIndexPath(_ remember: Bool) -> Self {
+        self.remembersLastFocusedIndexPath = remember
+        return self
+    }
+    /// iOS 14.0+ 焦点移动自动选中
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func bySelectionFollowsFocus(_ enable: Bool) -> Self {
+        self.selectionFollowsFocus = enable
+        return self
+    }
+    /// iOS 15.0+ 允许聚焦
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAllowsFocus(_ allow: Bool) -> Self {
+        self.allowsFocus = allow
+        return self
+    }
+    /// iOS 15.0+ 编辑时允许聚焦
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAllowsFocusDuringEditing(_ allow: Bool) -> Self {
+        self.allowsFocusDuringEditing = allow
+        return self
+    }
+    /// iOS 10.0+ 预取数据源
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byPrefetchDataSource(_ ds: UICollectionViewDataSourcePrefetching?) -> Self {
+        self.prefetchDataSource = ds
+        return self
+    }
+    /// iOS 10.0+ 是否启用预取
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byPrefetchingEnabled(_ enabled: Bool) -> Self {
+        self.isPrefetchingEnabled = enabled
+        return self
+    }
+    /// iOS 11.0+ 拖拽代理
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDragDelegate(_ delegate: UICollectionViewDragDelegate?) -> Self {
+        self.dragDelegate = delegate
+        return self
+    }
+    /// iOS 11.0+ 放置代理
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDropDelegate(_ delegate: UICollectionViewDropDelegate?) -> Self {
+        self.dropDelegate = delegate
+        return self
+    }
+    /// iOS 11.0+ 是否启用拖拽交互
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDragInteractionEnabled(_ enabled: Bool) -> Self {
+        self.dragInteractionEnabled = enabled
+        return self
+    }
+    /// iOS 11.0+ 重排节奏
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byReorderingCadence(_ cadence: UICollectionView.ReorderingCadence) -> Self {
+        self.reorderingCadence = cadence
+        return self
+    }
+    /// iOS 16.0+ 自适应失效策略
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func bySelfSizingInvalidation(_ value: UICollectionView.SelfSizingInvalidation) -> Self {
+        self.selfSizingInvalidation = value
+        return self
+    }
+    @discardableResult
+    public func byBackgroundView(_ view: UIView?) -> Self {
+        self.backgroundView = view
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UICollectionView {
+    
+    @discardableResult
+    public func byAllowsSelection(_ builder: () -> Bool) -> Self {
+        self.allowsSelection = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byAllowsMultipleSelection(_ builder: () -> Bool) -> Self {
+        self.allowsMultipleSelection = builder()
+        return self
+    }
+    @discardableResult
+    public func byDelegate(_ builder: () -> UICollectionViewDelegate?) -> Self {
+        self.delegate = builder()
+        return self
+    }
+    @discardableResult
+    public func byDataSource(_ builder: () -> UICollectionViewDataSource?) -> Self {
+        self.dataSource = builder()
+        return self
+    }
+    @discardableResult
+    func byCollectionViewLayout(_ builder: () -> UICollectionViewLayout) -> Self {
+        self.collectionViewLayout = builder()
+        return self
+    }
+    @discardableResult
+    public func byScrollDirection(_ builder: () -> UICollectionView.ScrollDirection) -> Self {
+        (self.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byEditing(_ builder: () -> Bool) -> Self {
+        self.isEditing = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAllowsSelectionDuringEditing(_ builder: () -> Bool) -> Self {
+        self.allowsSelectionDuringEditing = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byAllowsMultipleSelectionDuringEditing(_ builder: () -> Bool) -> Self {
+        self.allowsMultipleSelectionDuringEditing = builder()
+        return self
+    }
+    @available(iOS 9.0, *)
+    @discardableResult
+    public func byRemembersLastFocusedIndexPath(_ builder: () -> Bool) -> Self {
+        self.remembersLastFocusedIndexPath = builder()
+        return self
+    }
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func bySelectionFollowsFocus(_ builder: () -> Bool) -> Self {
+        self.selectionFollowsFocus = builder()
+        return self
+    }
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAllowsFocus(_ builder: () -> Bool) -> Self {
+        self.allowsFocus = builder()
+        return self
+    }
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAllowsFocusDuringEditing(_ builder: () -> Bool) -> Self {
+        self.allowsFocusDuringEditing = builder()
+        return self
+    }
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byPrefetchDataSource(_ builder: () -> UICollectionViewDataSourcePrefetching?) -> Self {
+        self.prefetchDataSource = builder()
+        return self
+    }
+    @available(iOS 10.0, *)
+    @discardableResult
+    public func byPrefetchingEnabled(_ builder: () -> Bool) -> Self {
+        self.isPrefetchingEnabled = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDragDelegate(_ builder: () -> UICollectionViewDragDelegate?) -> Self {
+        self.dragDelegate = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDropDelegate(_ builder: () -> UICollectionViewDropDelegate?) -> Self {
+        self.dropDelegate = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byDragInteractionEnabled(_ builder: () -> Bool) -> Self {
+        self.dragInteractionEnabled = builder()
+        return self
+    }
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func byReorderingCadence(_ builder: () -> UICollectionView.ReorderingCadence) -> Self {
+        self.reorderingCadence = builder()
+        return self
+    }
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func bySelfSizingInvalidation(_ builder: () -> UICollectionView.SelfSizingInvalidation) -> Self {
+        self.selfSizingInvalidation = builder()
+        return self
+    }
+    @discardableResult
+    public func byBackgroundView(_ builder: () -> UIView?) -> Self {
+        self.backgroundView = builder()
+        return self
+    }
+}
+
+extension UICollectionView {
     // MARK: - 选择/取消选择
     @discardableResult
     public func bySelectItem(_ indexPath: IndexPath?,
@@ -38,85 +293,9 @@ extension UICollectionView {
         deselectItem(at: indexPath, animated: animated)
         return self
     }
-    // MARK: - iOS 14.0+ 编辑状态
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byEditing(_ editing: Bool) -> Self {
-        isEditing = editing
-        return self
-    }
-    // MARK: - iOS 14.0+ 编辑时允许选择
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byAllowsSelectionDuringEditing(_ allow: Bool) -> Self {
-        allowsSelectionDuringEditing = allow
-        return self
-    }
-    // MARK: - iOS 14.0+ 编辑时允许多选
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byAllowsMultipleSelectionDuringEditing(_ allow: Bool) -> Self {
-        allowsMultipleSelectionDuringEditing = allow
-        return self
-    }
-    // MARK: - iOS 9.0+ 记住上次聚焦
-    @available(iOS 9.0, *)
-    @discardableResult
-    public func byRemembersLastFocusedIndexPath(_ remember: Bool) -> Self {
-        remembersLastFocusedIndexPath = remember
-        return self
-    }
-    // MARK: - iOS 14.0+ 焦点移动自动选中
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func bySelectionFollowsFocus(_ enable: Bool) -> Self {
-        selectionFollowsFocus = enable
-        return self
-    }
-    // MARK: - iOS 15.0+ 允许聚焦
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byAllowsFocus(_ allow: Bool) -> Self {
-        allowsFocus = allow
-        return self
-    }
-    // MARK: - iOS 15.0+ 编辑时允许聚焦
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byAllowsFocusDuringEditing(_ allow: Bool) -> Self {
-        allowsFocusDuringEditing = allow
-        return self
-    }
-}
-/// UICollectionView@数据源
-extension UICollectionView {
-    // MARK: - 数据源 delegate
-    @discardableResult
-    public func byDelegate(_ delegate: UICollectionViewDelegate?) -> Self {
-        self.delegate = delegate
-        return self
-    }
-    // MARK: - 数据源 dataSource
-    @discardableResult
-    public func byDataSource(_ dataSource: UICollectionViewDataSource?) -> Self {
-        self.dataSource = dataSource
-        return self
-    }
 }
 /// UICollectionView@UICollectionViewLayout
 extension UICollectionView {
-    // MARK: - 布局对象 UICollectionViewLayout
-    @discardableResult
-    func byCollectionViewLayout(_ layout: UICollectionViewLayout) -> Self {
-        collectionViewLayout = layout
-        return self
-    }
-    // MARK: - FlowLayout 的滚动方向
-    @discardableResult
-    public func byScrollDirection(_ direction: UICollectionView.ScrollDirection) -> Self {
-        (collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = direction
-        return self
-    }
     // MARK: - 切换布局（动画）
     @discardableResult
     public func bySetLayout(_ layout: UICollectionViewLayout, animated: Bool) -> Self {
@@ -135,65 +314,8 @@ extension UICollectionView {
         return self
     }
 }
-/// 预取、拖拽放置、重排、自适应失效@UICollectionView
-extension UICollectionView {
-    // MARK: - iOS 10.0+ 预取数据源
-    @available(iOS 10.0, *)
-    @discardableResult
-    public func byPrefetchDataSource(_ ds: UICollectionViewDataSourcePrefetching?) -> Self {
-        prefetchDataSource = ds
-        return self
-    }
-    // MARK: - iOS 10.0+ 是否启用预取
-    @available(iOS 10.0, *)
-    @discardableResult
-    public func byPrefetchingEnabled(_ enabled: Bool) -> Self {
-        isPrefetchingEnabled = enabled
-        return self
-    }
-    // MARK: - iOS 11.0+ 拖拽代理
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byDragDelegate(_ delegate: UICollectionViewDragDelegate?) -> Self {
-        dragDelegate = delegate
-        return self
-    }
-    // MARK: - iOS 11.0+ 放置代理
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byDropDelegate(_ delegate: UICollectionViewDropDelegate?) -> Self {
-        dropDelegate = delegate
-        return self
-    }
-    // MARK: - iOS 11.0+ 是否启用拖拽交互
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byDragInteractionEnabled(_ enabled: Bool) -> Self {
-        dragInteractionEnabled = enabled
-        return self
-    }
-    // MARK: - iOS 11.0+ 重排节奏
-    @available(iOS 11.0, *)
-    @discardableResult
-    public func byReorderingCadence(_ cadence: UICollectionView.ReorderingCadence) -> Self {
-        reorderingCadence = cadence
-        return self
-    }
-    // MARK: - iOS 16.0+ 自适应失效策略
-    @available(iOS 16.0, *)
-    @discardableResult
-    public func bySelfSizingInvalidation(_ value: UICollectionView.SelfSizingInvalidation) -> Self {
-        selfSizingInvalidation = value
-        return self
-    }
-}
 /// 背景、Context_Menu@UICollectionView
 extension UICollectionView {
-    @discardableResult
-    public func byBackgroundView(_ view: UIView?) -> Self {
-        backgroundView = view
-        return self
-    }
     // MARK: - iOS 13.2+ ContextMenuInteraction 配置闭包
     @available(iOS 13.2, *)
     @discardableResult

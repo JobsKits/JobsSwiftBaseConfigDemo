@@ -26,6 +26,10 @@ extension UIFont {
         public static func Bold(_ size: CGFloat) -> UIFont {
             make("DINPro-Bold", size, fallback: .bold)
         }
+        
+        public static func Medium(_ size: CGFloat) -> UIFont {
+            make("DINPro-Medium", size, fallback: .medium)
+        }
 
         private static func make(_ name: String,
                                  _ size: CGFloat,

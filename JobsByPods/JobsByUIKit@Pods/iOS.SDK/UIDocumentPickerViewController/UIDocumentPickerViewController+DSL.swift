@@ -68,36 +68,58 @@ extension UIDocumentPickerViewController {
         UIDocumentPickerViewController(forExporting: urls, asCopy: asCopy)
             .byShouldShowFileExtensions(shouldShowFileExtensions)
     }
-    // MARK: Chain Config
+}
+// MARK: - 直接赋值@单参数
+extension UIDocumentPickerViewController {
+    
     @discardableResult
     public func byDelegate(_ v: UIDocumentPickerDelegate?) -> Self {
         self.delegate = v
         return self
     }
-
+    
     @discardableResult
     public func byAllowsMultipleSelection(_ v: Bool) -> Self {
         self.allowsMultipleSelection = v
         return self
     }
-
     @available(iOS 13.0, *)
     @discardableResult
     public func byShouldShowFileExtensions(_ v: Bool) -> Self {
         self.shouldShowFileExtensions = v
         return self
     }
-
     @available(iOS 13.0, *)
     @discardableResult
     public func byDirectoryURL(_ url: URL?) -> Self {
         self.directoryURL = url
         return self
     }
-
+}
+// MARK: - 闭包重载@单参数
+extension UIDocumentPickerViewController {
+    
     @discardableResult
-    public func byAdd(_ block: (UIDocumentPickerViewController) -> Void) -> Self {
-        block(self)
+    public func byDelegate(_ builder: () -> UIDocumentPickerDelegate?) -> Self {
+        self.delegate = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byAllowsMultipleSelection(_ builder: () -> Bool) -> Self {
+        self.allowsMultipleSelection = builder()
+        return self
+    }
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byShouldShowFileExtensions(_ builder: () -> Bool) -> Self {
+        self.shouldShowFileExtensions = builder()
+        return self
+    }
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byDirectoryURL(_ builder: () -> URL?) -> Self {
+        self.directoryURL = builder()
         return self
     }
 }

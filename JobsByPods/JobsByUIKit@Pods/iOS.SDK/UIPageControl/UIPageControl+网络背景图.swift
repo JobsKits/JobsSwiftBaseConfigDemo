@@ -39,8 +39,7 @@ extension UIPageControl {
         normal: UIImage?,
         current: UIImage?,
         dotDiameter: CGFloat = 10,
-        dotSpacing: CGFloat = 6
-    ) {
+        dotSpacing: CGFloat = 6) {
         // ✅ 强制 alwaysOriginal：保留网络图纹理/颜色
         let n = normal?.withRenderingMode(.alwaysOriginal)
         let c = current?.withRenderingMode(.alwaysOriginal)
@@ -106,8 +105,7 @@ extension UIPageControl {
         fallbackNormal: UIImage?,
         fallbackCurrent: UIImage?,
         dotDiameter: CGFloat = 10,
-        dotSpacing: CGFloat = 6
-    ) {
+        dotSpacing: CGFloat = 6) {
         // 先用兜底图顶上，保证立即有 UI
         self.jobs_setIndicatorImages(
             normal: fallbackNormal,
@@ -242,8 +240,7 @@ extension UIPageControl {
     private func jobs_circleDotImage(_ image: UIImage?, diameter: CGFloat) -> UIImage? {
         guard let image else { return nil }
         let size = CGSize(width: diameter, height: diameter)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        let out = renderer.image { _ in
+        let out = UIGraphicsImageRenderer(size: size).image { _ in
             let rect = CGRect(origin: .zero, size: size)
             UIBezierPath(ovalIn: rect).addClip()
             image.draw(in: rect)
@@ -253,8 +250,7 @@ extension UIPageControl {
     private func jobs_loadImage(
         url: URL?,
         fallback: UIImage?,
-        completion: @escaping (UIImage?) -> Void
-    ) {
+        completion: @escaping (UIImage?) -> Void) {
         guard let url else {
             onMainAsync {
                 completion(fallback)

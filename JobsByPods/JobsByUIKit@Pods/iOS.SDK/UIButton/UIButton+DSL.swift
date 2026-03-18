@@ -21,6 +21,622 @@ private var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 private var _jobsConfigPatchListKey: UInt8 = 0
 private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
+// MARK: - 直接赋值@单参数
+extension UIButton {
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfiguration(_ cfg: UIButton.Configuration?) -> Self {
+        self.configuration = cfg
+        return self
+    }
+    
+    @discardableResult
+    public func byTintColor(_ color: UIColor) -> Self {
+        self.tintColor = color
+        return self
+    }
+    
+    @discardableResult
+    public func byAdjustsImageWhenHighlighted(_ on: Bool?) -> Self {
+        self.adjustsImageWhenHighlighted = on ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func byShowsTouchWhenHighlighted(_ on: Bool?) -> Self {
+        self.showsTouchWhenHighlighted = on ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func byNumberOfLines(_ lines: Int) -> Self {
+        self.titleLabel?.numberOfLines = lines
+        return self
+    }
+    
+    @discardableResult
+    public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self {
+        self.titleLabel?.lineBreakMode = mode
+        return self
+    }
+    
+    @discardableResult
+    public func byTitleAlignment(_ alignment: NSTextAlignment) -> Self {
+        self.titleLabel?.textAlignment = alignment
+        return self
+    }
+    
+    @discardableResult
+    public func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byContentInsets(insets)
+            self.byUpdateConfig()
+        } else {
+            let newInset = UIEdgeInsets(top: insets.top,
+                                        left: insets.leading,
+                                        bottom: insets.bottom,
+                                        right: insets.trailing)
+            self.contentEdgeInsets = newInset
+            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
+        let inset = insets ?? .zero
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byContentInsets(
+                NSDirectionalEdgeInsets(top: inset.top,
+                                        leading: inset.left,
+                                        bottom: inset.bottom,
+                                        trailing: inset.right)
+            )
+            self.byUpdateConfig()
+        } else {
+            self.contentEdgeInsets = inset
+            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byImageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byImagePadding((insets.left + insets.right) / 2)
+            self.byUpdateConfig()
+        } else {
+            self.imageEdgeInsets = insets
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        if #available(iOS 15.0, *) {
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitleEdgeInsets15Key,
+                insets,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+            _ensureUnifiedUpdateHandlerInstalled()
+            self.byUpdateConfig()
+        } else {
+            self.titleEdgeInsets = insets
+        }
+        return self
+    }
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byMenu(_ menu: UIMenu?) -> Self {
+        self.menu = menu
+        return self
+    }
+    
+    @available(iOS 13.4, *)
+    @discardableResult
+    public func byPointerInteractionEnabled(_ on: Bool) -> Self {
+        self.isPointerInteractionEnabled = on
+        return self
+    }
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byRole(_ role: UIButton.Role) -> Self {
+        self.role = role
+        return self
+    }
+    
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func byPreferredMenuElementOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
+        self.preferredMenuElementOrder = order
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byChangesSelectionAsPrimaryAction(_ on: Bool) -> Self {
+        self.changesSelectionAsPrimaryAction = on
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesConfiguration(_ on: Bool) -> Self {
+        self.automaticallyUpdatesConfiguration = on
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfigurationUpdateHandler(_ handler: @escaping UIButton.ConfigurationUpdateHandler) -> Self {
+        self.configurationUpdateHandler = handler
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewContentMode(_ mode: UIView.ContentMode) -> Self {
+        self.imageView?.contentMode = mode
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewBackgroundColor(_ color: UIColor?) -> Self {
+        self.imageView?.backgroundColor = color
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewCornerRadius(_ radius: CGFloat) -> Self {
+        self.imageView?.layer.cornerRadius = radius
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewMasksToBounds(_ on: Bool) -> Self {
+        self.imageView?.layer.masksToBounds = on
+        return self
+    }
+}
+// MARK: - 闭包重载@单参数
+extension UIButton {
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfiguration(_ builder: () -> UIButton.Configuration?) -> Self {
+        self.configuration = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTintColor(_ builder: () -> UIColor) -> Self {
+        self.tintColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byAdjustsImageWhenHighlighted(_ builder: () -> Bool?) -> Self {
+        self.adjustsImageWhenHighlighted = builder() ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func byShowsTouchWhenHighlighted(_ builder: () -> Bool?) -> Self {
+        self.showsTouchWhenHighlighted = builder() ?? false
+        return self
+    }
+    
+    @discardableResult
+    public func byNumberOfLines(_ builder: () -> Int) -> Self {
+        self.titleLabel?.numberOfLines = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byLineBreakMode(_ builder: () -> NSLineBreakMode) -> Self {
+        self.titleLabel?.lineBreakMode = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byTitleAlignment(_ builder: () -> NSTextAlignment) -> Self {
+        self.titleLabel?.textAlignment = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byContentInsets(_ builder: () -> NSDirectionalEdgeInsets) -> Self {
+        let insets = builder()
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byContentInsets(insets)
+            self.byUpdateConfig()
+        } else {
+            let newInset = UIEdgeInsets(top: insets.top,
+                                        left: insets.leading,
+                                        bottom: insets.bottom,
+                                        right: insets.trailing)
+            self.contentEdgeInsets = newInset
+            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byContentEdgeInsets(_ builder: () -> UIEdgeInsets?) -> Self {
+        let inset = builder() ?? .zero
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byContentInsets(
+                NSDirectionalEdgeInsets(top: inset.top,
+                                        leading: inset.left,
+                                        bottom: inset.bottom,
+                                        trailing: inset.right)
+            )
+            self.byUpdateConfig()
+        } else {
+            self.contentEdgeInsets = inset
+            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byImageEdgeInsets(_ builder: () -> UIEdgeInsets) -> Self {
+        let insets = builder()
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byImagePadding((insets.left + insets.right) / 2)
+            self.byUpdateConfig()
+        } else {
+            self.imageEdgeInsets = insets
+        }
+        return self
+    }
+    
+    @discardableResult
+    public func byTitleEdgeInsets(_ builder: () -> UIEdgeInsets) -> Self {
+        let insets = builder()
+        if #available(iOS 15.0, *) {
+            objc_setAssociatedObject(
+                self,
+                &_jobsTitleEdgeInsets15Key,
+                insets,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+            _ensureUnifiedUpdateHandlerInstalled()
+            self.byUpdateConfig()
+        } else {
+            self.titleEdgeInsets = insets
+        }
+        return self
+    }
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byMenu(_ builder: () -> UIMenu?) -> Self {
+        self.menu = builder()
+        return self
+    }
+    
+    @available(iOS 13.4, *)
+    @discardableResult
+    public func byPointerInteractionEnabled(_ builder: () -> Bool) -> Self {
+        self.isPointerInteractionEnabled = builder()
+        return self
+    }
+    
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byRole(_ builder: () -> UIButton.Role) -> Self {
+        self.role = builder()
+        return self
+    }
+    
+    @available(iOS 16.0, *)
+    @discardableResult
+    public func byPreferredMenuElementOrder(_ builder: () -> UIContextMenuConfiguration.ElementOrder) -> Self {
+        self.preferredMenuElementOrder = builder()
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byChangesSelectionAsPrimaryAction(_ builder: () -> Bool) -> Self {
+        self.changesSelectionAsPrimaryAction = builder()
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byAutomaticallyUpdatesConfiguration(_ builder: () -> Bool) -> Self {
+        self.automaticallyUpdatesConfiguration = builder()
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfigurationUpdateHandler(_ builder: () -> UIButton.ConfigurationUpdateHandler) -> Self {
+        self.configurationUpdateHandler = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewContentMode(_ builder: () -> UIView.ContentMode) -> Self {
+        self.imageView?.contentMode = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewBackgroundColor(_ builder: () -> UIColor?) -> Self {
+        self.imageView?.backgroundColor = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewCornerRadius(_ builder: () -> CGFloat) -> Self {
+        self.imageView?.layer.cornerRadius = builder()
+        return self
+    }
+    
+    @discardableResult
+    public func byImageViewMasksToBounds(_ builder: () -> Bool) -> Self {
+        self.imageView?.layer.masksToBounds = builder()
+        return self
+    }
+}
+
+extension UIButton {
+    /// 一步到位：图标圆底（你现在那 4 行就用这个）
+    @discardableResult
+    public func byImageCircleBackground(_ bgColor: UIColor?,
+                                        radius: CGFloat,
+                                        contentMode: UIView.ContentMode = .center,
+                                        masksToBounds: Bool = true) -> Self {
+        self.imageView?
+            .byContentMode(contentMode)
+            .byBackgroundColor(bgColor)
+            .byCornerRadius(radius)
+            .byMasksToBounds(masksToBounds)
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func bySetNeedsUpdateConfiguration() -> Self {
+        self.setNeedsUpdateConfiguration();
+        return self
+    }
+    
+    @available(iOS 15.0, *)
+    public func byToNS(_ a: AttributedString) -> NSAttributedString {
+        NSAttributedString(a)
+    }
+
+    @available(iOS 15.0, *)
+    public func byToSwift(_ a: NSAttributedString) -> AttributedString {
+        AttributedString(a)
+    }
+    
+    @discardableResult
+    public func byClearConfigurationBackground() -> Self {
+        if #available(iOS 15.0, *) {
+            return byConfiguration { cfg in
+                var c = cfg
+                c.background = .clear()
+                return c
+            }
+        };return self
+    }
+    
+    @discardableResult
+    public func byNormalBgColor(_ color: UIColor) -> Self {
+        byBackgroundColor(color, for: .normal)
+    }
+
+    @discardableResult
+    public func byBorder(color: UIColor, width: CGFloat) -> Self {
+        layer.borderColor = color.cgColor
+        layer.borderWidth = width
+        return self
+    }
+    // MARK: - 阴影
+    @discardableResult
+    public func byMasksToBounds(_ radius: Bool) -> Self {
+        layer.masksToBounds = radius
+        return self
+    }
+
+    @discardableResult
+    public func byShadow(color: UIColor = .black,
+                  opacity: Float = 0.15,
+                  radius: CGFloat = 6,
+                  offset: CGSize = .init(width: 0, height: 2)) -> Self {
+        layer
+            .byShadowColor(color)
+            .byShadowOpacity(opacity)
+            .byShadowRadius(radius)
+            .byShadowOffset(offset)
+            .byMasksToBounds(false)
+        return self
+    }
+    /// 图文位置关系
+    @discardableResult
+    public func byImagePlacement(_ placement: JobsDirection,
+                                 padding: CGFloat = 8.0) -> Self {
+        if #available(iOS 13.0, *) {
+            return byImagePlacement(placement.toDirectionalEdge, padding: padding)
+        } else {
+            return byImagePlacementLegacy(placement, padding: padding)
+        }
+    }
+
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
+        let p = placement ?? .top
+        let pad = padding ?? 8.0
+        if #available(iOS 15.0, *) {
+            var cfg = configuration ?? .plain()
+            // ✅ 同步：老式 API 设置过的 title/image → cfg
+            let state: UIControl.State = isSelected ? .selected : .normal
+            // title
+            if cfg.title == nil || cfg.title?.isEmpty == true {
+                if let t = title(for: state), !t.isEmpty {
+                    cfg.title = t
+                } else if let t = title(for: .normal), !t.isEmpty {
+                    cfg.title = t
+                }
+            }
+            // image
+            if cfg.image == nil {
+                cfg.image = image(for: state) ?? image(for: .normal)
+            }
+            // ✅ 同步：颜色/字体（Configuration 更推荐 attributedTitle）
+            // 如果你不想做复杂的 attributedTitle，这段可以先不加；
+            // 但你现在“没字”的问题，title 同步就够解决大多数情况。
+            if cfg.attributedTitle == nil {
+                let t = cfg.title ?? ""
+                if !t.isEmpty {
+                    var attrs: [NSAttributedString.Key: Any] = [:]
+                    if let font = titleLabel?.font { attrs[.font] = font }
+                    let color = titleColor(for: state) ?? titleColor(for: .normal)
+                    if let color { attrs[.foregroundColor] = color }
+                    cfg.attributedTitle = AttributedString(NSAttributedString(string: t, attributes: attrs))
+                    // 注意：你如果设置了 attributedTitle，系统会优先用它
+                }
+            }
+            cfg.imagePlacement = p // 图文关系
+            cfg.imagePadding = pad // 图文距离
+            configuration = cfg
+            byUpdateConfig()
+        } else {
+            switch placement {
+            case .leading:  semanticContentAttribute = .forceLeftToRight
+            case .trailing: semanticContentAttribute = .forceRightToLeft
+            case .top, .bottom:
+                let inset = pad / 2
+                contentEdgeInsets = UIEdgeInsets(top: inset,
+                                                 left: inset,
+                                                 bottom: inset,
+                                                 right: inset)
+            default: break
+            }
+        };return self
+    }
+    
+    @discardableResult
+    public func byImagePlacementLegacy(_ placement: JobsDirection,
+                                       padding: CGFloat) -> Self {
+        // iOS12: 用 edgeInsets 模拟 imagePlacement
+        // 依赖 imageView/titleLabel 的尺寸，所以先 layout 一次
+        layoutIfNeeded()
+        let imageW = imageView?.bounds.width ?? 0
+        let imageH = imageView?.bounds.height ?? 0
+        let titleW = titleLabel?.bounds.width ?? 0
+        let titleH = titleLabel?.bounds.height ?? 0
+        // 兜底：避免 0 尺寸导致算不出（尤其是刚 setTitle/setImage 但还没 layout）
+        // 这里不强行 sizeToFit，尽量不破坏外部约束体系
+        func safeImageSize() -> (w: CGFloat, h: CGFloat) {
+            if imageW > 0, imageH > 0 { return (imageW, imageH) }
+            let s = imageView?.intrinsicContentSize ?? .zero
+            return (max(0, s.width), max(0, s.height))
+        }
+        func safeTitleSize() -> (w: CGFloat, h: CGFloat) {
+            if titleW > 0, titleH > 0 { return (titleW, titleH) }
+            let s = titleLabel?.intrinsicContentSize ?? .zero
+            return (max(0, s.width), max(0, s.height))
+        }
+        let img = safeImageSize()
+        let ttl = safeTitleSize()
+        _jobsLegacyImagePlacement = .none
+        switch placement {
+        case .left:
+            _jobsLegacyImagePlacement = .left
+            _jobsLegacyImagePlacement = .none
+            // 默认就是左图右文：只做间距 + 轻量内边距
+            imageEdgeInsets = .zero
+            titleEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: padding,
+                                           bottom: 0,
+                                           right: -padding)
+            contentEdgeInsets = UIEdgeInsets(top: 0,
+                                             left: padding / 2,
+                                             bottom: 0,
+                                             right: padding / 2)
+        case .right:
+            _jobsLegacyImagePlacement = .right
+            _jobsLegacyImagePlacement = .none
+            // 右图左文：互换位置（靠 insets 平移）
+            imageEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: ttl.w + padding / 2,
+                                           bottom: 0,
+                                           right: -(ttl.w + padding / 2))
+            titleEdgeInsets = UIEdgeInsets(top: 0,
+                                           left: -(img.w + padding / 2),
+                                           bottom: 0,
+                                           right: img.w + padding / 2)
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
+        case .top:
+            _jobsLegacyImagePlacement = .top
+            _jobsLegacyImagePlacement = .top
+            // 上图下文：
+            imageEdgeInsets = UIEdgeInsets(top: -(ttl.h + padding) / 2,
+                                           left: (ttl.w) / 2,
+                                           bottom: (ttl.h + padding) / 2,
+                                           right: -(ttl.w) / 2)
+            titleEdgeInsets = UIEdgeInsets(top: (img.h + padding) / 2,
+                                           left: -(img.w) / 2,
+                                           bottom: -(img.h + padding) / 2,
+                                           right: (img.w) / 2)
+            let vPad = (img.h + ttl.h + padding) / 2
+            let hPad = max(img.w, ttl.w) / 2
+            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
+                                             left: hPad / 2,
+                                             bottom: vPad / 2,
+                                             right: hPad / 2)
+        case .bottom:
+            _jobsLegacyImagePlacement = .bottom
+            _jobsLegacyImagePlacement = .bottom
+            imageEdgeInsets = UIEdgeInsets(top: (ttl.h + padding) / 2,
+                                           left: (ttl.w) / 2,
+                                           bottom: -(ttl.h + padding) / 2,
+                                           right: -(ttl.w) / 2)
+
+            titleEdgeInsets = UIEdgeInsets(top: -(img.h + padding) / 2,
+                                           left: -(img.w) / 2,
+                                           bottom: (img.h + padding) / 2,
+                                           right: (img.w) / 2)
+            let vPad = (img.h + ttl.h + padding) / 2
+            let hPad = max(img.w, ttl.w) / 2
+            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
+                                             left: hPad / 2,
+                                             bottom: vPad / 2,
+                                             right: hPad / 2)
+        };return self
+    }
+
+    @available(iOS 13.0, *)
+    @discardableResult
+    public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
+        byImagePlacement(placement, padding: 8.0)
+    }
+
+    @available(iOS 15.0, *)
+    @discardableResult
+    public func byConfiguration(_ build: @escaping (UIButton.Configuration) -> UIButton.Configuration) -> Self {
+        _ensureUnifiedUpdateHandlerInstalled()
+        var patches = _jobsCfgPatches
+        patches.append(build)
+        _jobsCfgPatches = patches
+        let current = self.configuration ?? .plain()
+        self.configuration = build(current)
+        byUpdateConfig()
+        return self
+    }
+}
+
 extension UIButton {
     // MARK: - iOS12 legacy imagePlacement 标记（用于让后续 contentEdgeInsets.top 真正生效）
     private enum _JobsLegacyImagePlacement: Int {
@@ -107,14 +723,12 @@ extension UIButton {
     /// 记录某个 state 的标题字体（iOS15+ 会在 handler 内生效；iOS14- 同步 titleLabel.font + attributedTitle）
     @discardableResult
     public func byTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
-
         // 记录 state -> font（给 iOS15+ update handler 使用）
         if let font {
             _titleFontDict[state.rawValue] = font
         } else {
             _titleFontDict.removeValue(forKey: state.rawValue)
         }
-
         // iOS15+：走 configurationUpdateHandler，不要再用 legacy attributedTitle 去覆盖
         if #available(iOS 15.0, tvOS 15.0, *) {
             // 这句不是必须，但加上更稳：有些场景 titleLabel 仍然参与计算/展示
@@ -228,13 +842,6 @@ extension UIButton {
         self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
         return self
     }
-    
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byConfiguration(_ cfg: UIButton.Configuration?) -> Self {
-        self.configuration = cfg
-        return self
-    }
 
     @discardableResult
     public func byBackgroundImageContentMode(_ mode: UIView.ContentMode) -> Self {
@@ -243,24 +850,6 @@ extension UIButton {
         };return self
     }
 
-    @discardableResult
-    public func byTintColor(_ color: UIColor) -> Self {
-        tintColor = color
-        return self
-    }
-    /// UIButton：按下高亮时是否自动调整图片（默认 true，会变暗/发亮）
-    @discardableResult
-    public func byAdjustsImageWhenHighlighted(_ on: Bool?) -> Self {
-        adjustsImageWhenHighlighted = on ?? false
-        return self
-    }
-    /// UIButton：按下时是否显示系统“触摸高亮”（默认 false，但你项目里可能被打开过）
-    @discardableResult
-    public func byShowsTouchWhenHighlighted(_ on: Bool?) -> Self {
-        showsTouchWhenHighlighted = on ?? false
-        return self
-    }
-    
     @discardableResult
     public func byUpdateConfig() -> Self {
         if #available(iOS 15.0, *) {
@@ -487,407 +1076,5 @@ extension UIButton {
         public func subTitleColor(_ color: UIColor) -> UIButton {
             button.bySubTitleColor(color, for: state)
         }
-    }
-}
-// MARK: - 布局 / 外观
-extension UIButton {
-    @discardableResult
-    public func byClearConfigurationBackground() -> Self {
-        if #available(iOS 15.0, *) {
-            return byConfiguration { cfg in
-                var c = cfg
-                c.background = .clear()
-                return c
-            }
-        };return self
-    }
-    
-    @discardableResult
-    public func byNormalBgColor(_ color: UIColor) -> Self {
-        byBackgroundColor(color, for: .normal)
-    }
-
-    @discardableResult
-    public func byNumberOfLines(_ lines: Int) -> Self {
-        titleLabel?.numberOfLines = lines; return self
-    }
-
-    @discardableResult
-    public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self {
-        titleLabel?.lineBreakMode = mode; return self
-    }
-
-    @discardableResult
-    public func byTitleAlignment(_ alignment: NSTextAlignment) -> Self {
-        titleLabel?.textAlignment = alignment; return self
-    }
-
-    @discardableResult
-    public func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
-        if #available(iOS 15.0, *) {
-            configuration = (configuration ?? .plain()).byContentInsets(insets)
-            byUpdateConfig()
-        } else {
-            let newInset = UIEdgeInsets(top: insets.top,
-                                        left: insets.leading,
-                                        bottom: insets.bottom,
-                                        right: insets.trailing)
-            self.contentEdgeInsets = newInset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets,new: newInset)
-        };return self
-    }
-    
-    @discardableResult
-    public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
-        let inset = insets ?? (UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-        if #available(iOS 15.0, *) {
-            configuration = (configuration ?? .plain()).byContentInsets(NSDirectionalEdgeInsets(top: inset.top,
-                                                                                                leading: inset.left,
-                                                                                                bottom: inset.bottom,
-                                                                                                trailing: inset.right))
-            byUpdateConfig()
-        } else {
-            // iOS 14 and below: keep legacy behavior.
-            // If legacy imagePlacement has been applied (esp. .top/.bottom with negative offsets),
-            // updating contentEdgeInsets should also shift image/title insets to avoid being "pushed back".
-            self.contentEdgeInsets = inset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
-        };return self
-    }
-
-    @discardableResult
-    public func byImageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
-        if #available(iOS 15.0, *) {
-            configuration = (configuration ?? .plain()).byImagePadding((insets.left + insets.right) / 2)
-            byUpdateConfig()
-        } else {
-            self.imageEdgeInsets = insets
-        };return self
-    }
-
-    @discardableResult
-    public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
-        if #available(iOS 15.0, *) {
-            // UIButton.Configuration 本身并没有真正的 titleEdgeInsets
-            // 这里先记录这个需求，然后在 update handler 中通过 baselineOffset 的方式近似实现标题的垂直偏移效果。
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitleEdgeInsets15Key,
-                insets,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
-            _ensureUnifiedUpdateHandlerInstalled()
-            byUpdateConfig()
-        } else {
-            self.titleEdgeInsets = insets
-        };return self
-    }
-
-    @discardableResult
-    public func byBorder(color: UIColor, width: CGFloat) -> Self {
-        layer.borderColor = color.cgColor
-        layer.borderWidth = width
-        return self
-    }
-    // MARK: - 阴影
-    @discardableResult
-    public func byMasksToBounds(_ radius: Bool) -> Self {
-        layer.masksToBounds = radius
-        return self
-    }
-
-    @discardableResult
-    public func byShadow(color: UIColor = .black,
-                  opacity: Float = 0.15,
-                  radius: CGFloat = 6,
-                  offset: CGSize = .init(width: 0, height: 2)) -> Self {
-        layer.shadowColor = color.cgColor
-        layer.shadowOpacity = opacity
-        layer.shadowRadius = radius
-        layer.shadowOffset = offset
-        layer.masksToBounds = false
-        return self
-    }
-    /// 图文位置关系
-    @discardableResult
-    public func byImagePlacement(_ placement: JobsDirection,
-                                 padding: CGFloat = 8.0) -> Self {
-        if #available(iOS 13.0, *) {
-            return byImagePlacement(placement.toDirectionalEdge, padding: padding)
-        } else {
-            return byImagePlacementLegacy(placement, padding: padding)
-        }
-    }
-
-    @available(iOS 13.0, *)
-    @discardableResult
-    public func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
-        let p = placement ?? .top
-        let pad = padding ?? 8.0
-        if #available(iOS 15.0, *) {
-            var cfg = configuration ?? .plain()
-            // ✅ 同步：老式 API 设置过的 title/image → cfg
-            let state: UIControl.State = isSelected ? .selected : .normal
-            // title
-            if cfg.title == nil || cfg.title?.isEmpty == true {
-                if let t = title(for: state), !t.isEmpty {
-                    cfg.title = t
-                } else if let t = title(for: .normal), !t.isEmpty {
-                    cfg.title = t
-                }
-            }
-            // image
-            if cfg.image == nil {
-                cfg.image = image(for: state) ?? image(for: .normal)
-            }
-            // ✅ 同步：颜色/字体（Configuration 更推荐 attributedTitle）
-            // 如果你不想做复杂的 attributedTitle，这段可以先不加；
-            // 但你现在“没字”的问题，title 同步就够解决大多数情况。
-            if cfg.attributedTitle == nil {
-                let t = cfg.title ?? ""
-                if !t.isEmpty {
-                    var attrs: [NSAttributedString.Key: Any] = [:]
-                    if let font = titleLabel?.font { attrs[.font] = font }
-                    let color = titleColor(for: state) ?? titleColor(for: .normal)
-                    if let color { attrs[.foregroundColor] = color }
-                    cfg.attributedTitle = AttributedString(NSAttributedString(string: t, attributes: attrs))
-                    // 注意：你如果设置了 attributedTitle，系统会优先用它
-                }
-            }
-            cfg.imagePlacement = p // 图文关系
-            cfg.imagePadding = pad // 图文距离
-            configuration = cfg
-            byUpdateConfig()
-        } else {
-            switch placement {
-            case .leading:  semanticContentAttribute = .forceLeftToRight
-            case .trailing: semanticContentAttribute = .forceRightToLeft
-            case .top, .bottom:
-                let inset = pad / 2
-                contentEdgeInsets = UIEdgeInsets(top: inset,
-                                                 left: inset,
-                                                 bottom: inset,
-                                                 right: inset)
-            default: break
-            }
-        };return self
-    }
-    
-    @discardableResult
-    public func byImagePlacementLegacy(_ placement: JobsDirection,
-                                       padding: CGFloat) -> Self {
-        // iOS12: 用 edgeInsets 模拟 imagePlacement
-        // 依赖 imageView/titleLabel 的尺寸，所以先 layout 一次
-        layoutIfNeeded()
-        let imageW = imageView?.bounds.width ?? 0
-        let imageH = imageView?.bounds.height ?? 0
-        let titleW = titleLabel?.bounds.width ?? 0
-        let titleH = titleLabel?.bounds.height ?? 0
-        // 兜底：避免 0 尺寸导致算不出（尤其是刚 setTitle/setImage 但还没 layout）
-        // 这里不强行 sizeToFit，尽量不破坏外部约束体系
-        func safeImageSize() -> (w: CGFloat, h: CGFloat) {
-            if imageW > 0, imageH > 0 { return (imageW, imageH) }
-            let s = imageView?.intrinsicContentSize ?? .zero
-            return (max(0, s.width), max(0, s.height))
-        }
-        func safeTitleSize() -> (w: CGFloat, h: CGFloat) {
-            if titleW > 0, titleH > 0 { return (titleW, titleH) }
-            let s = titleLabel?.intrinsicContentSize ?? .zero
-            return (max(0, s.width), max(0, s.height))
-        }
-        let img = safeImageSize()
-        let ttl = safeTitleSize()
-        _jobsLegacyImagePlacement = .none
-        switch placement {
-        case .left:
-            _jobsLegacyImagePlacement = .left
-            _jobsLegacyImagePlacement = .none
-            // 默认就是左图右文：只做间距 + 轻量内边距
-            imageEdgeInsets = .zero
-            titleEdgeInsets = UIEdgeInsets(top: 0,
-                                           left: padding,
-                                           bottom: 0,
-                                           right: -padding)
-            contentEdgeInsets = UIEdgeInsets(top: 0,
-                                             left: padding / 2,
-                                             bottom: 0,
-                                             right: padding / 2)
-        case .right:
-            _jobsLegacyImagePlacement = .right
-            _jobsLegacyImagePlacement = .none
-            // 右图左文：互换位置（靠 insets 平移）
-            imageEdgeInsets = UIEdgeInsets(top: 0,
-                                           left: ttl.w + padding / 2,
-                                           bottom: 0,
-                                           right: -(ttl.w + padding / 2))
-            titleEdgeInsets = UIEdgeInsets(top: 0,
-                                           left: -(img.w + padding / 2),
-                                           bottom: 0,
-                                           right: img.w + padding / 2)
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
-        case .top:
-            _jobsLegacyImagePlacement = .top
-            _jobsLegacyImagePlacement = .top
-            // 上图下文：
-            imageEdgeInsets = UIEdgeInsets(top: -(ttl.h + padding) / 2,
-                                           left: (ttl.w) / 2,
-                                           bottom: (ttl.h + padding) / 2,
-                                           right: -(ttl.w) / 2)
-            titleEdgeInsets = UIEdgeInsets(top: (img.h + padding) / 2,
-                                           left: -(img.w) / 2,
-                                           bottom: -(img.h + padding) / 2,
-                                           right: (img.w) / 2)
-            let vPad = (img.h + ttl.h + padding) / 2
-            let hPad = max(img.w, ttl.w) / 2
-            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
-                                             left: hPad / 2,
-                                             bottom: vPad / 2,
-                                             right: hPad / 2)
-        case .bottom:
-            _jobsLegacyImagePlacement = .bottom
-            _jobsLegacyImagePlacement = .bottom
-            imageEdgeInsets = UIEdgeInsets(top: (ttl.h + padding) / 2,
-                                           left: (ttl.w) / 2,
-                                           bottom: -(ttl.h + padding) / 2,
-                                           right: -(ttl.w) / 2)
-
-            titleEdgeInsets = UIEdgeInsets(top: -(img.h + padding) / 2,
-                                           left: -(img.w) / 2,
-                                           bottom: (img.h + padding) / 2,
-                                           right: (img.w) / 2)
-            let vPad = (img.h + ttl.h + padding) / 2
-            let hPad = max(img.w, ttl.w) / 2
-            contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
-                                             left: hPad / 2,
-                                             bottom: vPad / 2,
-                                             right: hPad / 2)
-        };return self
-    }
-
-    @available(iOS 13.0, *)
-    @discardableResult
-    public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
-        byImagePlacement(placement, padding: 8.0)
-    }
-
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byConfiguration(_ build: @escaping (UIButton.Configuration) -> UIButton.Configuration) -> Self {
-        _ensureUnifiedUpdateHandlerInstalled()
-        var patches = _jobsCfgPatches
-        patches.append(build)
-        _jobsCfgPatches = patches
-        let current = self.configuration ?? .plain()
-        self.configuration = build(current)
-        byUpdateConfig()
-        return self
-    }
-}
-// MARK: - 交互 / 菜单 / 角色 / Pointer / Config 生命周期
-extension UIButton {
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byMenu(_ menu: UIMenu?) -> Self {
-        self.menu = menu;
-        return self
-    }
-
-    @available(iOS 13.4, *)
-    @discardableResult
-    public func byPointerInteractionEnabled(_ on: Bool) -> Self {
-        self.isPointerInteractionEnabled = on;
-        return self
-    }
-
-    @available(iOS 14.0, *)
-    @discardableResult
-    public func byRole(_ role: UIButton.Role) -> Self {
-        self.role = role;
-        return self
-    }
-
-    @available(iOS 16.0, *)
-    @discardableResult
-    public func byPreferredMenuElementOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
-        self.preferredMenuElementOrder = order; return self
-    }
-
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byChangesSelectionAsPrimaryAction(_ on: Bool) -> Self {
-        self.changesSelectionAsPrimaryAction = on;
-        return self
-    }
-
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byAutomaticallyUpdatesConfiguration(_ on: Bool) -> Self {
-        self.automaticallyUpdatesConfiguration = on;
-        return self
-    }
-
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func byConfigurationUpdateHandler(_ handler: @escaping UIButton.ConfigurationUpdateHandler) -> Self {
-        self.configurationUpdateHandler = handler;
-        return self
-    }
-
-    @available(iOS 15.0, *)
-    @discardableResult
-    public func bySetNeedsUpdateConfiguration() -> Self {
-        self.setNeedsUpdateConfiguration();
-        return self
-    }
-}
-// MARK: - imageView 外观链式
-extension UIButton {
-    /// imageView 内容模式
-    @discardableResult
-    public func byImageViewContentMode(_ mode: UIView.ContentMode) -> Self {
-        self.imageView?.contentMode = mode
-        return self
-    }
-    /// imageView 背景色
-    @discardableResult
-    public func byImageViewBackgroundColor(_ color: UIColor?) -> Self {
-        self.imageView?.backgroundColor = color
-        return self
-    }
-    /// imageView 圆角（可配合 masksToBounds）
-    @discardableResult
-    public func byImageViewCornerRadius(_ radius: CGFloat) -> Self {
-        self.imageView?.layer.cornerRadius = radius
-        return self
-    }
-    /// imageView 是否裁剪
-    @discardableResult
-    public func byImageViewMasksToBounds(_ on: Bool) -> Self {
-        self.imageView?.layer.masksToBounds = on
-        return self
-    }
-    /// 一步到位：图标圆底（你现在那 4 行就用这个）
-    @discardableResult
-    public func byImageCircleBackground(_ bgColor: UIColor?,
-                                        radius: CGFloat,
-                                        contentMode: UIView.ContentMode = .center,
-                                        masksToBounds: Bool = true) -> Self {
-        self.imageView?.contentMode = contentMode
-        self.imageView?.backgroundColor = bgColor
-        self.imageView?.layer.cornerRadius = radius
-        self.imageView?.layer.masksToBounds = masksToBounds
-        return self
-    }
-}
-
-extension UIButton {
-    @available(iOS 15.0, *)
-    public func byToNS(_ a: AttributedString) -> NSAttributedString {
-        NSAttributedString(a)
-    }
-
-    @available(iOS 15.0, *)
-    public func byToSwift(_ a: NSAttributedString) -> AttributedString {
-        AttributedString(a)
     }
 }
