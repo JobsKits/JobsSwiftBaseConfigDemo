@@ -22,8 +22,7 @@ Pod::Spec.new do |s|
     '【MacOS】🫘JobsPublishPods.command',
     'icon.png',
     'LICENSE',
-    'UnityManager.swift',
-    'FlutterBridge.swift'
+    'UnityManager.swift'
   ]
   
   # 递归匹配当前目录下所有子目录里的 .swift 文件
@@ -37,8 +36,8 @@ Pod::Spec.new do |s|
                      'CoreBluetooth',
                      'CoreText'
   
-#  s.dependency 'Flutter'
-#  s.dependency 'FlutterPluginRegistrant'
+  s.dependency 'Flutter'
+  s.dependency 'FlutterPluginRegistrant'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsByPhotosUI'

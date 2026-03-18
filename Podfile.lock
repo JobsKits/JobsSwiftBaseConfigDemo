@@ -301,6 +301,8 @@ PODS:
     - JobsSwiftTimer
   - JobsSwiftTimer (0.1.0)
   - JobsSwiftTools (0.1.1):
+    - Flutter
+    - FlutterPluginRegistrant
     - JobsByPhotosUI
     - JobsByUIKit
     - JobsSwiftBaseDefines
@@ -781,7 +783,7 @@ SPEC CHECKSUMS:
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
-  JobsSwiftTools: 748c7a70f1344b503d0eaf63183ee7ca927f9842
+  JobsSwiftTools: ba448de8a240c41b68927e5121affef2f429a6a6
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
   JobsToast: 5fed48764301f708158b3ba6341fb5d052d282e9
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
