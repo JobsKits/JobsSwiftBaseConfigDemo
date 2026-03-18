@@ -431,7 +431,7 @@ open class JobsProgressBar: UIView {
             queue: .main
         )
         let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
-            jobsRunOnMain(self) { bar in
+            onMainAsync(self) { bar in
                 let next = min(1, max(0, bar._progress + bar.autoStep))
                 bar._progress = next
                 bar._isAutoTick = true
@@ -484,7 +484,7 @@ open class JobsProgressBar: UIView {
         // ⚠️ layoutIfNeeded() 会触发布局引擎求解；如果页面上其他地方有约束冲突，
         // 会被符号断点 UIViewAlertForUnsatisfiableConstraints 捕获，并表现为“总是断在这里”。
         // 这里改为更温和的布局驱动：只对自身做 layoutSubviews 的时机交给系统 runloop，避免强制求解。
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             self.setNeedsLayout()
         }

@@ -136,7 +136,7 @@ public final class JobsCountdownCell: UITableViewCell {
             ) { [weak self] in
                 // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
                 guard let strongSelf = self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     // 复用保护：tick 回来的时候，确保还是当前这条数据的 timer
                     guard id == strongSelf.currentTimerId else { return }
                     strongSelf.renderCountdown()

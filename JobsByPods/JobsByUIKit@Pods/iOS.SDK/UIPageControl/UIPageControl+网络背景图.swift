@@ -256,7 +256,7 @@ extension UIPageControl {
         completion: @escaping (UIImage?) -> Void
     ) {
         guard let url else {
-            jobsRunOnMain {
+            onMainAsync {
                 completion(fallback)
             };return
         }
@@ -266,7 +266,7 @@ extension UIPageControl {
             options: [.retryFailed, .highPriority],
             progress: nil
         ) { image, _, error, _, _, _ in
-            jobsRunOnMain {
+            onMainAsync {
                 if error != nil { completion(fallback) }
                 else { completion(image ?? fallback) }
             }
@@ -275,7 +275,7 @@ extension UIPageControl {
 
         #if canImport(Kingfisher)
         KingfisherManager.shared.retrieveImage(with: url) { result in
-            jobsRunOnMain {
+            onMainAsync {
                 switch result {
                 case .success(let value): completion(value.image)
                 case .failure: completion(fallback)
@@ -284,7 +284,7 @@ extension UIPageControl {
         };return
         #endif
         URLSession.shared.dataTask(with: url) { data, _, _ in
-            jobsRunOnMain {
+            onMainAsync {
                 completion(data.flatMap { UIImage(data: $0) } ?? fallback)
             }
         }.resume()

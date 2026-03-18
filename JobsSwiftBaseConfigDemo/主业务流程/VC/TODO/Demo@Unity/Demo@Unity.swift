@@ -155,7 +155,7 @@ private extension UnityDemoVC {
         let timer = JobsTimer(kind: unityTimerKind, config: config) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：先冻结，再切回 MainActor
             guard let strongSelf = self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 strongSelf.closeUnity()
             }
         }

@@ -19,11 +19,11 @@ import JobsSwiftBaseDefines
 ///
 /// Swift 6 注意点：JobsSwiftTimer 的 handler 是 @Sendable
 /// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
-/// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 jobsRunOnMain(self)）
+/// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 onMainAsync(self)）
 open class JobsClockView: UIView {
     
     deinit {
-        // ✅ 关键：deinit 里不要 jobsRunOnMain / 不要 async / 不要调用 @MainActor 的 stop()
+        // ✅ 关键：deinit 里不要 onMainAsync / 不要 async / 不要调用 @MainActor 的 stop()
         // 只做“同步断回调”，避免释放窗口期还在 tick
         timer?.stop()
         timer = nil
@@ -218,7 +218,7 @@ extension JobsClockView {
 
         let t = JobsTimer(kind: kind, config: config) { [weak self] in
             // ✅ @Sendable 回调里不直接碰 UI；回到 MainActor 再更新
-            jobsRunOnMain {
+            onMainAsync {
                 self?.updateHands(animated: true)
             }
         }

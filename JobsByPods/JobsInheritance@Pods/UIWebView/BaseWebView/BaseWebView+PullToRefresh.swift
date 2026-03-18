@@ -26,7 +26,7 @@ extension BaseWebView {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 self.refresher.endRefreshing()
             }

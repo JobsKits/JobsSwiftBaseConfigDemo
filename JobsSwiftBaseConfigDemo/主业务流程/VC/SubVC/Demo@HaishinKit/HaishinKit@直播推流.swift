@@ -97,7 +97,7 @@ final class HKLiveVC: BaseVC {
                 guard let self else { return }
                 /// 切换前后摄像头（2.x 写法，不再用 DeviceUtil）
                 currentPosition = (currentPosition == .back) ? .front : .back
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     guard let device = AVCaptureDevice.default(
                         .builtInWideAngleCamera,
                         for: .video,
@@ -141,7 +141,7 @@ final class HKLiveVC: BaseVC {
         /// 配置音频 Session（来自官方 README 的写法，2.x 推荐）
         setupAudioSession()
         /// 初始化 HaishinKit 采集管线
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             await self.setupCapturePipeline()
         }
     }
@@ -225,7 +225,7 @@ final class HKLiveVC: BaseVC {
     }
     // MARK: - 推流控制
     private func toggleStreaming(_ sender: UIButton) {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             if self.isStreaming {
                 await self.stopStreaming()
             } else {

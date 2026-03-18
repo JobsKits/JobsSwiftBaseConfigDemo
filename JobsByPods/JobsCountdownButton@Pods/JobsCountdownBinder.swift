@@ -60,7 +60,7 @@ public final class JobsCountdownBinder {
         let t = JobsTimer(kind: kind, config: cfg) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：先冻结 self，再切 MainActor
             guard let strongSelf = self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 guard let btn = strongSelf.button else {
                     strongSelf.stop()
                     return

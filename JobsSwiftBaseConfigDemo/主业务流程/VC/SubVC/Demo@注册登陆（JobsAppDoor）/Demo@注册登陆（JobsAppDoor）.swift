@@ -272,7 +272,7 @@ extension JobsAppDoorDemoVC {
             fromView.transform = .identity
             self.current = target
             // 与 OC 一样：非登录页隐藏客服按钮（举例）
-            jobsRunOnMain {
+            onMainAsync {
                 _ = (target == .login)
             }
 //            UIView.animate(withDuration: 0.28) {

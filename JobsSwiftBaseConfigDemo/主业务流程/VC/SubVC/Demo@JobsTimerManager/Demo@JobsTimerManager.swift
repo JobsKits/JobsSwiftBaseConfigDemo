@@ -197,7 +197,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.createTimers()
                 }
             }
@@ -217,7 +217,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.replaceA()
                 }
             }
@@ -235,7 +235,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.pauseA()
                 }
             }
@@ -253,7 +253,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.resumeA()
                 }
             }
@@ -271,7 +271,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.startOneShot()
                 }
             }
@@ -289,7 +289,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.cancelOneShot()
                 }
             }
@@ -307,7 +307,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.dumpIDs()
                 }
             }
@@ -325,7 +325,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.stopAll()
                 }
             }
@@ -665,7 +665,7 @@ final class JobsTimerManagerDemoVC: BaseVC {
                 dedupPolicy: .replace
             ) { [uiBridge] in
                 // 立刻 stop+remove
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     uiBridge.log("OneShot tick ✅ (repeats=false) -> cancel(remove)")
                     uiBridge.setOneShot("OneShot: fired ✅")
                     do {

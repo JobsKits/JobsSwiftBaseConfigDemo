@@ -107,8 +107,8 @@ extension UIImageView {
         // 统一记录 URL，便于 JobsImageCacheCleaner 遍历重下
         if case .remote(let url)? = src.imageSource { jobs_remoteURL = url } else { jobs_remoteURL = nil }
         if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
-            // iOS13+：保留 async/await 路径（内部仍用 jobsRunOnMain）
-            jobsRunOnMain { @MainActor in
+            // iOS13+：保留 async/await 路径（内部仍用 onMainAsync）
+            onMainAsync { @MainActor in
                 let img = await src.kfLoadImage(fallbackImage: fallback())
                 self.image = img
             }
@@ -118,7 +118,7 @@ extension UIImageView {
                 if case .remote(let u) = source { return u }
                 return nil
             }) else {
-                jobsRunOnMain { @MainActor in
+                onMainAsync { @MainActor in
                     self.image = fallback()
                 };return self
             }
@@ -132,7 +132,7 @@ extension UIImageView {
                 case .failure:
                     img = fallback()
                 }
-                jobsRunOnMain { @MainActor in
+                onMainAsync { @MainActor in
                     self.image = img
                 }
             }

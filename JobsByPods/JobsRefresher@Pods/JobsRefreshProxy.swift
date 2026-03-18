@@ -49,10 +49,10 @@ final class JobsProxy: NSObject {
     private func observe() {
         guard let sv = scrollView else { return }
         kvo = sv.observe(\.contentOffset, options: [.new]) { [weak self] _, _ in
-            jobsRunOnMain(self) { _ in self?.tick() }
+            onMainAsync(self) { _ in self?.tick() }
         }
         panKvo = sv.panGestureRecognizer.observe(\.state, options: [.new]) { [weak self] _, _ in
-            jobsRunOnMain(self) { _ in self?.tick() }
+            onMainAsync(self) { _ in self?.tick() }
         }
     }
 

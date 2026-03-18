@@ -92,7 +92,7 @@ extension WKWebView {
     /// fire-and-forget：不关心回调
     public func jobsEval(_ js: String) {
         if #available(iOS 15.0, *) {
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 try? await self.evaluateJavaScript(js)
             }
@@ -104,7 +104,7 @@ extension WKWebView {
     public func jobsEval(_ js: String,
                          completion: JobsByAnyErrMASendableBlock?) {
         if #available(iOS 15.0, *) {
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 do {
                     let result = try await self.evaluateJavaScript(js)

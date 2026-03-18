@@ -73,7 +73,7 @@ extension UIScrollView {
     /// 手动触发下拉刷新
     @discardableResult
     public func pullDownStart(auto: Bool = false) -> Self {
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             if auto { self.header?.startRefreshing(isAuto: true) }
             else { self.header?.startRefreshing(isAuto: false) }

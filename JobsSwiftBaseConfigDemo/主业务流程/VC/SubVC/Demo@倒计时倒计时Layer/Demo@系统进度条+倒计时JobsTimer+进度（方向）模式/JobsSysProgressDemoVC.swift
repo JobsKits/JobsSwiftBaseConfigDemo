@@ -167,7 +167,7 @@ final class JobsSysProgressDemoVC: BaseVC {
                 // 2) 再显式切回 MainActor，安全触碰 UIKit
                 .byProgress { [weak self] snap in
                     guard let strongSelf = self else { return }
-                    jobsRunOnMain(self) { vc in
+                    onMainAsync(self) { vc in
                         let ratio = Float(snap.progress(for: strongSelf.progressMode))
                         print("mode=\(strongSelf.progressMode) elapsed=\(snap.elapsedRatio) remaining=\(snap.remainingRatio) ratio=\(ratio)")
                         strongSelf.progressView.setProgress(ratio, animated: true)
@@ -176,7 +176,7 @@ final class JobsSysProgressDemoVC: BaseVC {
                 }
                 .byFinished { [weak self] snap in
                     guard let strongSelf = self else { return }
-                    jobsRunOnMain(self) { vc in
+                    onMainAsync(self) { vc in
                         let finalRatio: Float = {
                             switch strongSelf.progressMode {
                             case .countUp:   return 1.0

@@ -72,7 +72,7 @@ extension String {
         #if targetEnvironment(simulator)
         // ================== 模拟器环境直接拦截 ==================
         print("📵 模拟器不支持拨号功能")
-        jobsRunOnMain {
+        onMainAsync {
             print("📵 模拟器不支持拨号功能")
         }
         jobsByVoidBlock?(.cannotOpen)

@@ -235,7 +235,7 @@ extension NSObject {
                            object: Any? = nil,
                            userInfo: [AnyHashable: Any]? = nil) {
         let notiName = Notification.Name(name)
-        byMain {
+        onMainImmediateOrAsync {
             NotificationCenter.default.post(name: notiName,
                                             object: object,
                                             userInfo: userInfo)

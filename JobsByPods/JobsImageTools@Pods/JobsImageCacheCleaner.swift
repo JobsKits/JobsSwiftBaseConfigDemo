@@ -140,7 +140,7 @@ public enum JobsImageCacheCleaner {
                             placeholder: placeholder,
                             options: opts,
                             completionHandler:  { result in
-                jobsRunOnMain {
+                onMainAsync {
                     switch result {
                     case .success(let r): btn.jobsResetBtnImage(r.image, for: state)
                     case .failure:        btn.jobsResetBtnImage(placeholder, for: state)
@@ -163,7 +163,7 @@ public enum JobsImageCacheCleaner {
                                       placeholder: placeholder,
                                       options: opts,
                                       completionHandler:  { result in
-                jobsRunOnMain {
+                onMainAsync {
                     switch result {
                     case .success(let r): btn.jobsResetBtnBgImage(r.image, for: state)
                     case .failure:        btn.jobsResetBtnBgImage(placeholder, for: state)
@@ -208,7 +208,7 @@ public enum JobsImageCacheCleaner {
                             options: opts,
                             context: ctx,
                             progress: nil) { img, err, _, _ in
-                jobsRunOnMain {
+                onMainAsync {
                     btn.jobsResetBtnImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }
@@ -230,7 +230,7 @@ public enum JobsImageCacheCleaner {
                                       options: opts,
                                       context: ctx,
                                       progress: nil) { img, err, _, _ in
-                jobsRunOnMain {
+                onMainAsync {
                     btn.jobsResetBtnBgImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }

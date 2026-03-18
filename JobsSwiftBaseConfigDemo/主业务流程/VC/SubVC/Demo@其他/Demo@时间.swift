@@ -12,7 +12,7 @@
 //  - 不再把 timer 挂在 UIButton 内部（旧扩展不再依赖）
 //  - ✅ Swift 6 并发“同等待遇”
 //    1) @Sendable tick 回调里：先冻结 weak self -> strongSelf
-//    2) 再 jobsRunOnMain(self) { vc in ... } 安全触碰 UIKit
+//    2) 再 onMainAsync(self) { vc in ... } 安全触碰 UIKit
 //  - 输入 interval：结束编辑后若有活动 timer，按“当前模式”重建
 //  - 切换内核：若有活动 timer，按“当前模式”用新内核重建并延续
 // -----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ final class TimerDemoVC: BaseVC {
         .bySelectedSegmentIndex(1) // 默认 GCD
         .onJobsChange { [weak self] (seg: UISegmentedControl) in
             guard let strongSelf = self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 let mapping: [JobsTimerKind] = [.foundation, .gcd, .displayLink, .runLoop]
                 let idx = max(0, min(seg.selectedSegmentIndex, mapping.count - 1))
                 strongSelf.currentKind = mapping[idx]
@@ -138,7 +138,7 @@ final class TimerDemoVC: BaseVC {
             .byMasksToBounds(true)
             .onTap { [weak self] _ in
                 guard let strongSelf = self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     strongSelf.lastFireLabel.text = "Last: -"
                     strongSelf.startCountUp()
                 }
@@ -157,7 +157,7 @@ final class TimerDemoVC: BaseVC {
         subtitle: "悬空"
     ) { [weak self] _ in
         guard let strongSelf = self else { return }
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             strongSelf.pauseAll()
         }
     }
@@ -168,7 +168,7 @@ final class TimerDemoVC: BaseVC {
         subtitle: "恢复计时"
     ) { [weak self] _ in
         guard let strongSelf = self else { return }
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             strongSelf.resumeAll()
         }
     }
@@ -179,7 +179,7 @@ final class TimerDemoVC: BaseVC {
         subtitle: "触发并销毁"
     ) { [weak self] _ in
         guard let strongSelf = self else { return }
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             strongSelf.fireOnceAll()
         }
     }
@@ -190,7 +190,7 @@ final class TimerDemoVC: BaseVC {
         subtitle: "销毁(无回调)"
     ) { [weak self] _ in
         guard let strongSelf = self else { return }
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             strongSelf.stopAll()
         }
     }
@@ -217,7 +217,7 @@ final class TimerDemoVC: BaseVC {
             .byBackgroundColor(.systemGreen, for: .normal)
             .onTap { [weak self] btn in
                 guard let strongSelf = self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     let total = strongSelf.parseCountdownTotal(10)
                     strongSelf.startCountDown(total: total)
                     btn.byTitle("还剩 \(total)s", for: .normal)
@@ -315,7 +315,7 @@ extension TimerDemoVC {
         let t = makeTimer(kind: kind, interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
             guard let strongSelf = self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 guard strongSelf.countUpState == .running else { return }
                 strongSelf.elapsed += interval
                 strongSelf.startButton.byTitle(String(format: "%.1fs", strongSelf.elapsed), for: .normal)
@@ -347,7 +347,7 @@ extension TimerDemoVC {
         let t = makeTimer(kind: kind, interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
             guard let strongSelf = self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 guard strongSelf.countdownState == .running else { return }
 
                 strongSelf.countdownRemaining -= interval
@@ -495,7 +495,7 @@ extension TimerDemoVC {
 
             let t = makeTimer(kind: kind, interval: interval) { [weak self] in
                 guard let strongSelf = self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     guard strongSelf.countUpState == .running else { return }
                     strongSelf.elapsed += interval
                     strongSelf.startButton.byTitle(String(format: "%.1fs", strongSelf.elapsed), for: .normal)
@@ -525,7 +525,7 @@ extension TimerDemoVC {
 
             let t = makeTimer(kind: kind, interval: interval) { [weak self] in
                 guard let strongSelf = self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     guard strongSelf.countdownState == .running else { return }
 
                     strongSelf.countdownRemaining -= interval
@@ -629,7 +629,7 @@ extension TimerDemoVC {
             t.text = "1.0"
         }
         guard commit else { return }
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             self.rebuildActiveTimersForNewInterval()
         }
     }

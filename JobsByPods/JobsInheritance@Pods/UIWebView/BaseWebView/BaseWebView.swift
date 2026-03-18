@@ -187,7 +187,7 @@ public final class BaseWebView: UIView {
 
     // —— 学院派：deinit 非隔离；同步跳主线程做清理（无 Task、无 weak self）——
     deinit {
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             cleanupNow()
         }
@@ -232,7 +232,7 @@ private extension BaseWebView {
             guard let self else { return }
             guard let p = change.newValue else { return }
 
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 self.progressView.isHidden = p >= 1.0
                 self.progressView.setProgress(Float(p), animated: true)
@@ -352,7 +352,7 @@ public extension BaseWebView {
                     return try await webView.evaluateJavaScript(js)
                 } else {
                     return try await withCheckedThrowingContinuation { cont in
-                        jobsRunOnMain {
+                        onMainAsync {
                             webView.jobsEval(js) { res, err in
                                 if let err {
                                     cont.resume(throwing: err)

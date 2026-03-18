@@ -126,7 +126,7 @@ extension BaseWebView {
         // 2) 没有注册时：默认 getToken（可选）
         if action == "getToken", let f = mobileConfig.tokenProvider {
             if #available(iOS 13.0, *) {
-                jobsRunOnMain { [weak self] in
+                onMainAsync { [weak self] in
                     guard let self else { return }
                     let token = await f() ?? ""
                     guard !callback.isEmpty else { return }

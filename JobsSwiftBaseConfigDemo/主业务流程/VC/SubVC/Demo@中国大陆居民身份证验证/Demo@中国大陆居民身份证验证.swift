@@ -95,7 +95,7 @@ final class CNIDDemoVC: BaseVC {
             title: "身份证校验 Demo"
         )
         bgImageView().byImage("唐老鸭".img)
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             self.bgImageView().byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
             self.bgImageView().byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
         }

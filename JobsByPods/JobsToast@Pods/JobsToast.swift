@@ -187,7 +187,7 @@ private extension JobsToast {
 // MARK: - Tips
 public func toastBy(_ string: String) {
     /// 允许任意线程调用这个方法
-    jobsRunOnMain {
+    onMainAsync {
         JobsToast.show(
             text: string,
             config: JobsToast.Config()

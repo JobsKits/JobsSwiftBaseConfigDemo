@@ -68,7 +68,7 @@ extension UIViewController{
         )
         // 若已在窗口（先跳转后注册），下一轮主线程立即触发
         if self.viewIfLoaded?.window != nil {
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 jobs_fireAppearCompletionIfNeeded(reason: "alreadyVisible")
             }

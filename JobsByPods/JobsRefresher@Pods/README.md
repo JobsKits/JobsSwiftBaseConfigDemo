@@ -48,7 +48,7 @@ private lazy var tableView: UITableView = {
                          container: self,
                          trigger: 66) { [weak self] in
             guard let self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 self.rows = 20
                 self.tableView.byReloadData()
@@ -61,7 +61,7 @@ private lazy var tableView: UITableView = {
                          container: self,
                          trigger: 66) { [weak self] in
             guard let self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 if self.rows < 60 {
                     self.rows += 20
@@ -107,7 +107,7 @@ private lazy var collectionView: UICollectionView = {
                            at: .left,
                            trigger: 70) { [weak self] in
             guard let self else { return }
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 try? await Task.sleep(nanoseconds: 900_000_000)
                 // 模拟“刷新完成”：减少一个 item 并刷新
                 self.hItems = max(8, self.hItems - 1)
@@ -121,7 +121,7 @@ private lazy var collectionView: UICollectionView = {
                           at: .right,
                           trigger: 70) { [weak self] in
            guard let self else { return }
-           jobsRunOnMain(self) { vc in
+           onMainAsync(self) { vc in
                try? await Task.sleep(nanoseconds: 900_000_000)
                self.hItems += 3
                self.collectionView.byReloadData()

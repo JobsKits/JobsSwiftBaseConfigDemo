@@ -88,7 +88,7 @@ final class LunarDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.buildTodayRows()
                     self.buildInteractiveRows(for: self.datePicker.date)
@@ -102,7 +102,7 @@ final class LunarDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     let base = self.items.count
                     self.items += (1...5).map { "Row \(base + $0)" }

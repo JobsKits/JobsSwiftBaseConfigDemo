@@ -52,10 +52,10 @@ public final class PermissionCenter: NSObject {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
         case .authorized:
-            onMain { onAuthorized() }
+            onMainAsync { onAuthorized() }
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                granted ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
             }
         case .denied, .restricted:
             showNoPermissionToast(in: presenter)
@@ -69,11 +69,11 @@ public final class PermissionCenter: NSObject {
             let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
             switch status {
             case .authorized, .limited:
-                onMain { onAuthorized() }   // limited 也放行
+                onMainAsync { onAuthorized() }   // limited 也放行
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
                     switch newStatus {
-                    case .authorized, .limited: onMain { onAuthorized() }
+                    case .authorized, .limited: onMainAsync { onAuthorized() }
                     default: showNoPermissionToast(in: presenter)
                     }
                 }
@@ -86,10 +86,10 @@ public final class PermissionCenter: NSObject {
             let status = PHPhotoLibrary.authorizationStatus()
             switch status {
             case .authorized:
-                onMain { onAuthorized() }
+                onMainAsync { onAuthorized() }
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization { newStatus in
-                    newStatus == .authorized ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                    newStatus == .authorized ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
             default:
                 showNoPermissionToast(in: presenter)
@@ -102,10 +102,10 @@ public final class PermissionCenter: NSObject {
             let p = AVAudioApplication.shared.recordPermission
             switch p {
             case .granted:
-                onMain { onAuthorized() }
+                onMainAsync { onAuthorized() }
             case .undetermined:
                 AVAudioApplication.requestRecordPermission { granted in
-                    granted ? onMain {onAuthorized()} : showNoPermissionToast(in: presenter)
+                    granted ? onMainAsync {onAuthorized()} : showNoPermissionToast(in: presenter)
                 }
             case .denied:
                 showNoPermissionToast(in: presenter)
@@ -116,10 +116,10 @@ public final class PermissionCenter: NSObject {
             let p = AVAudioSession.sharedInstance().recordPermission
             switch p {
             case .granted:
-                onMain { onAuthorized() }
+                onMainAsync { onAuthorized() }
             case .undetermined:
                 AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                    granted ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                    granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
             case .denied:
                 showNoPermissionToast(in: presenter)
@@ -140,10 +140,10 @@ public final class PermissionCenter: NSObject {
 
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
-            onMain { onAuthorized() }
+            onMainAsync { onAuthorized() }
         case .notDetermined:
             locProxy.requestWhenInUse { granted in
-                granted ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
             }
         case .denied, .restricted:
             showNoPermissionToast(in: presenter)
@@ -158,10 +158,10 @@ public final class PermissionCenter: NSObject {
             let auth = CBCentralManager.authorization
             switch auth {
             case .allowedAlways:
-                onMain { onAuthorized() }
+                onMainAsync { onAuthorized() }
             case .notDetermined:
                 btProxy.request { granted in
-                    granted ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                    granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
             case .denied, .restricted:
                 showNoPermissionToast(in: presenter)
@@ -170,13 +170,13 @@ public final class PermissionCenter: NSObject {
             }
         } else {
             btProxy.request { granted in
-                granted ? onMain { onAuthorized() } : showNoPermissionToast(in: presenter)
+                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
             }
         }
     }
     // MARK: Toast
     private static func showNoPermissionToast(in presenter: UIViewController?) {
-        jobsRunOnMain {
+        onMainAsync {
             "请获取相关权限".toast
         }
     }

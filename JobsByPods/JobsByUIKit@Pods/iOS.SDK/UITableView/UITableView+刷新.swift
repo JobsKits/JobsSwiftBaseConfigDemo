@@ -19,7 +19,7 @@ extension UITableView {
     @discardableResult
     public func reloadDatas() -> Self {
         /// 回调到主线程刷新
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             self?.reloadData()
         };return self
     }
@@ -33,7 +33,7 @@ extension UITableView {
     @discardableResult
     public func reloadCells(at indexPaths: [IndexPath],
                             animation: UITableView.RowAnimation = .none) -> Self {
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             guard !indexPaths.isEmpty else { return }
             // 防止越界导致崩溃
@@ -49,7 +49,7 @@ extension UITableView {
     @discardableResult
     public func reloadSection(_ section: Int,
                               animation: UITableView.RowAnimation = .none) -> Self {
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             guard section >= 0 && section < self.numberOfSections else { return }
             self.reloadSections(IndexSet(integer: section), with: animation)
@@ -59,7 +59,7 @@ extension UITableView {
     @discardableResult
     public func reloadSections(_ sections: [Int],
                                animation: UITableView.RowAnimation = .none) -> Self {
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             guard !sections.isEmpty else { return }
 

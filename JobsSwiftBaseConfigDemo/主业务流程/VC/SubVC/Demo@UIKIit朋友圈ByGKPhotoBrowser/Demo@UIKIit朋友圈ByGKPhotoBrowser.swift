@@ -60,7 +60,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     self.rows = 20
                     self.posts = MomentPost.makeSample(rows: self.rows)
                     self.heightCache.removeAll()
@@ -73,7 +73,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     if self.rows < 60 {
                         self.rows += 20
                         self.posts = MomentPost.makeSample(rows: self.rows)

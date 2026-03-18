@@ -32,7 +32,7 @@ extension UITextView {
         jobs_installTextDidChangeObserverIfNeeded()
         jobs_installSuperviewHookIfNeeded()
         jobs_attachHintLabelIfPossible()
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             self.jobs_attachHintLabelIfPossible()
             self.jobs_updateHintLabel()

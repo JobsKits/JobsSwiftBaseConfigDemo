@@ -13,12 +13,12 @@ import UIKit
 
 import JobsSwiftBlock
 // MARK: - DEBUG 模式下才允许做的事
-/// ✅ Debug 才执行：并保证在 MainActor/主线程运行（复用 jobsRunOnMain）
+/// ✅ Debug 才执行：并保证在 MainActor/主线程运行（复用 onMainAsync）
 /// - 全系统可用（同步闭包）
 @inline(__always)
 public func debugOnly(_ work: @MainActor @escaping () -> Void) {
 #if DEBUG
-    jobsRunOnMain(work)
+    onMainAsync(work)
 #endif
 }
 /// ✅ Debug 才执行：支持 async/await，并保证在 MainActor/主线程运行
@@ -28,7 +28,7 @@ public func debugOnly(_ work: @MainActor @escaping () -> Void) {
 @inline(__always)
 public func debugOnly(_ work: @MainActor @escaping () async -> Void) {
 #if DEBUG
-    jobsRunOnMain(work)
+    onMainAsync(work)
 #endif
 }
 #endif
@@ -40,7 +40,7 @@ public func debugOnly<Object: AnyObject>(
     _ work: @MainActor @escaping (Object) -> Void
 ) {
 #if DEBUG
-    jobsRunOnMain(object, work)
+    onMainAsync(object, work)
 #endif
 }
 /// ✅ Debug 才执行：async 版本（object 可能为 nil 直接跳过）
@@ -53,7 +53,7 @@ public func debugOnly<Object: AnyObject>(
     _ work: @MainActor @escaping (Object) async -> Void
 ) {
 #if DEBUG
-    jobsRunOnMain(object, work)
+    onMainAsync(object, work)
 #endif
 }
 #endif

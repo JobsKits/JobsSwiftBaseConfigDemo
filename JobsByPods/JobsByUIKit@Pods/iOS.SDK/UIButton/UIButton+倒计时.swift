@@ -164,7 +164,7 @@ extension UIButton {
         { [weak self] in
             guard let self else { return }
             // ✅ Swift 6：handler 是 @Sendable，触 UI 统一回 MainActor
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 guard var mode = objc_getAssociatedObject(self, &_timerModeKey) as? _TimerMode else { return }
                 let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? kind
 
@@ -252,7 +252,7 @@ extension UIButton {
             return self
         }
         let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? .gcd
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             var mode = mode0
             switch mode {
             case .countUp(let elapsed0):

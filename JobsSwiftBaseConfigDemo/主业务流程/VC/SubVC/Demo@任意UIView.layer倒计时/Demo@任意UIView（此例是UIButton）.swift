@@ -126,7 +126,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     }
     /// 开始 / 重新开始
     private func startCountdown(on btn: UIButton, total: Int) {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             // 先停旧
             self.stopCountdown()
 
@@ -142,7 +142,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 // ✅ JobsSwiftTimer 的 handler 是 @Sendable：这里不要直接碰 UIKit / self 的可变状态
                 guard let self else { return }
                 guard let btn else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     guard self.timerState == .running else { return }
 
                     self.remainingSeconds -= 1
@@ -183,7 +183,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     }
     /// 暂停
     private func pauseCountdown() {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             guard self.timerState == .running else { return }
             self.countdownTimer?.pause()
             self.timerState = .paused
@@ -191,7 +191,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     }
     /// 继续
     private func resumeCountdown() {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             guard self.timerState == .paused else { return }
             self.countdownTimer?.resume()
             self.timerState = .running
@@ -199,7 +199,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     }
     /// 停止（不触发完成逻辑）
     private func stopCountdown() {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             self.countdownTimer?.stop()
             self.countdownTimer = nil
 

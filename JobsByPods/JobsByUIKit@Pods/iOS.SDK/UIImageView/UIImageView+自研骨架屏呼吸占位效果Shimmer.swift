@@ -43,7 +43,7 @@ private enum JobsImageLoadingKeys {
 extension UIImageView {
     @inline(__always)
     private func jobs_runOnMain(_ work: @escaping (UIImageView) -> Void) {
-        jobsRunOnMain {
+        onMainAsync {
             work(self)
         }
     }
@@ -76,7 +76,7 @@ extension UIImageView {
     public func jobs_beginShimmerLoading(config: JobsShimmerConfig = .default) {
         byShimmering(true, config: config)
         // 下一帧补一次 layout，确保动画能跑起来（尤其是 autolayout 尚未落位时）
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             self.jobs_updateShimmerLayout()
         }

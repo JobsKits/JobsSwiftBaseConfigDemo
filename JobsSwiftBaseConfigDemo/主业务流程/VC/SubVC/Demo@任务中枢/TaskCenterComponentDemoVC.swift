@@ -218,7 +218,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
         UIButton(type: .system)
             .byTitle("异步触发")
             .onTap { [weak self] sender in
-                jobsRunOnMain { [weak self] in
+                onMainAsync { [weak self] in
                     guard let self else { return }
                     let success = await JobsTaskManager.default.executeNowAsync(by: DemoTag.heartbeat)
                     self.updateHeartbeatState()
@@ -505,7 +505,7 @@ private extension TaskCenterComponentDemoVC {
     
     func handleHeartbeatTick() {
         heartbeatCounter += 1
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             self.heartbeatMetricsLabel.byText("累计执行：\(heartbeatCounter) 次\nattach tag：\(DemoTag.heartbeat)")
             self.updateHeartbeatState()
@@ -549,7 +549,7 @@ private extension TaskCenterComponentDemoVC {
     
     func handleBurstTick() {
         burstExecutedCount += 1
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             self.appendLog("🎯 burst 第\(burstExecutedCount)次触发")
             self.updateBurstStateLabel(
@@ -601,21 +601,21 @@ private extension TaskCenterComponentDemoVC {
         isObserving = true
         appendLog("👀 已开启观察：statusChanges + heartbeat.executionStream + burst.executionStream")
         
-        statusObserverTask = jobsObserveOnMain(
+        statusObserverTask = observeOnMain(
             JobsTaskManager.default.statusChanges()
         ) { [weak self] change in
             guard let self else { return }
             self.handleStatusChange(change)
         }
         
-        heartbeatExecutionObserverTask = jobsObserveOnMain(
+        heartbeatExecutionObserverTask = observeOnMain(
             JobsTaskManager.default.executionStream(for: DemoTag.heartbeat)
         ) { [weak self] execution in
             guard let self else { return }
             self.handleExecution(execution, tag: DemoTag.heartbeat)
         }
 
-        burstExecutionObserverTask = jobsObserveOnMain(
+        burstExecutionObserverTask = observeOnMain(
             JobsTaskManager.default.executionStream(for: DemoTag.burst)
         ) { [weak self] execution in
             guard let self else { return }

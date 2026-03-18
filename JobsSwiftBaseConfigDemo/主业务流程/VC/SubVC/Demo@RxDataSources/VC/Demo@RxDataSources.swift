@@ -69,7 +69,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
                     self.fillTableDemoData(count: self.rows)
@@ -81,7 +81,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
                         self.rows += 20
@@ -138,7 +138,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
                     self.fillCollectionDemoData(count: self.rows)
@@ -150,7 +150,7 @@ final class RxDataSourcesDemoVC: BaseVC {
                              container: self,
                              trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
                         self.rows += 20

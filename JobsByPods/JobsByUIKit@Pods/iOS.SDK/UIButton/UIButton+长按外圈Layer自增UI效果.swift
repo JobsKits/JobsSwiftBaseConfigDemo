@@ -61,7 +61,7 @@ private final class JobsPressFuseDriver: NSObject {
                             autoManageAppState: true
                         )) { [weak self] in
                             guard let self else { return }
-                            jobsRunOnMain {
+                            onMainAsync {
                                 // 1) btn 如果是非 Optional：直接用
                                 let btn = self.btn
                                 // 如果 btn 是 Optional：用这一行替换上面那行
@@ -174,7 +174,7 @@ extension UIButton {
     public func jobs_disablePressFuseCountUp() {
         // ✅ 同等待遇：确保 endPress 在主线程执行
         if let d = jobs_pressFuseDriver {
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 d.endPress()
             }
         }
@@ -195,11 +195,11 @@ extension UIButton {
         guard let d = jobs_pressFuseDriver else { return }
         switch g.state {
         case .began:
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 d.begin()
             }
         case .ended, .cancelled, .failed:
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 d.endPress()
             }
         default:

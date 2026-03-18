@@ -16,7 +16,9 @@ import UniformTypeIdentifiers // iOS 14+
 import Photos
 import PhotosUI
 import AVFoundation
-import ObjectiveC.runtime
+import ObjectiveC
+import JobsByUIKit
+import JobsByPhotosUI
 import JobsSwiftBaseDefines
 
 public final class MediaPickerService: NSObject {
@@ -26,18 +28,17 @@ public final class MediaPickerService: NSObject {
                                       onImage: @escaping (UIImage) -> Void) {
         PermissionCenter.ensure(.camera, from: presenter) {
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                onMain {
+                onMainAsync {
                     "此设备不支持相机".toast
                 };return
             }
-            onMain {
+            onMainAsync {
                 let proxy = CameraProxy(allowsEditing: allowsEditing, jobsByVoidBlock: onImage)
-                let picker = UIImagePickerController()
-                picker.sourceType = .camera
-                picker.allowsEditing = allowsEditing
-                picker.delegate = proxy
                 attachProxy(proxy, to: presenter)
-                presenter.present(picker, animated: true)
+                presenter.present(UIImagePickerController()
+                    .bySourceType(.camera)
+                    .byAllowsEditing(allowsEditing)
+                    .byDelegate(proxy), animated: true)
             }
         }
     }
@@ -47,27 +48,24 @@ public final class MediaPickerService: NSObject {
                                             imagesOnly: Bool = true,
                                             onImages: @escaping ([UIImage]) -> Void) {
         PermissionCenter.ensure(.photoLibraryReadWrite, from: presenter) {
-            onMain {
+            onMainAsync {
                 if #available(iOS 14, *) {
                     var config = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
                     config.selectionLimit = maxSelection <= 0 ? 0 : maxSelection // 0=不限制
                     config.filter = imagesOnly ? .images : .any(of: [.images, .livePhotos, .videos])
                     let proxy = PHPickerProxy(jobsByVoidBlock: onImages)
-                    let picker = PHPickerViewController(configuration: config)
-                    picker.delegate = proxy
                     attachProxy(proxy, to: presenter)
-                    presenter.present(picker, animated: true)
+                    presenter.present(PHPickerViewController(configuration: config).byDelegate(proxy), animated: true)
                 } else {
                     guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
                     let proxy = LegacyLibraryProxy(acceptsImagesOnly: imagesOnly) { img in
                         onImages(img.map { [$0] } ?? [])
                     }
-                    let picker = UIImagePickerController()
-                    picker.sourceType = .photoLibrary
-                    picker.allowsEditing = false
-                    picker.delegate = proxy
                     attachProxy(proxy, to: presenter)
-                    presenter.present(picker, animated: true)
+                    presenter.present(UIImagePickerController()
+                        .bySourceType(.photoLibrary)
+                        .byAllowsEditing(false)
+                        .byDelegate(proxy), animated: true)
                 }
             }
         }
@@ -80,7 +78,6 @@ public final class MediaPickerService: NSObject {
         // 依次确认相机 + 麦克风
         PermissionCenter.ensure(.camera, from: presenter) {
             PermissionCenter.ensure(.microphone, from: presenter) {
-
                 guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
                     "此设备不支持相机".toast
                     return
@@ -114,25 +111,25 @@ public final class MediaPickerService: NSObject {
                     return nil
                 }()
                 guard let device = chooseDevice else {
-                    onMain {
+                    onMainAsync {
                         "未检测到可用摄像头用于录制".toast
                     };return
                 }
                 // 3) 顺序很重要：先 mediaTypes，后 cameraCaptureMode
-                onMain {
+                onMainAsync {
                     let proxy = VideoCameraProxy { url in onVideoURL(url) }
                     let picker = UIImagePickerController()
-                    picker.sourceType = .camera
-                    picker.cameraDevice = device
+                        .bySourceType(.camera)
+                        .byCameraDevice(device)
+                        .byVideoQuality(quality)
+                        .byVideoMaximumDuration(maxDuration)
+                        .byCameraCaptureMode(.video) // ✅ 再切视频模式
+                        .byDelegate(proxy)
                     if #available(iOS 14.0, *) {
                         picker.mediaTypes = [UTType.movie.identifier]   // ✅ 先设类型
                     } else {
                         picker.mediaTypes = ["public.movie"]
                     }
-                    picker.videoQuality = quality
-                    picker.videoMaximumDuration = maxDuration
-                    picker.cameraCaptureMode = .video                   // ✅ 再切视频模式
-                    picker.delegate = proxy
                     attachProxy(proxy, to: presenter)
                     presenter.present(picker, animated: true)
                 }
@@ -165,12 +162,14 @@ private final class CameraProxy: NSObject, UIImagePickerControllerDelegate, UINa
 // iOS 14+ 相册多选
 @available(iOS 14, *)
 private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate {
+    
     let jobsByVoidBlock: ([UIImage]) -> Void
     init(jobsByVoidBlock: @escaping ([UIImage])->Void) { self.jobsByVoidBlock = jobsByVoidBlock }
 
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+    func picker(_ picker: PHPickerViewController,
+                didFinishPicking results: [PHPickerResult]) {
+        
         picker.dismiss(animated: true)
-
         guard !results.isEmpty else { jobsByVoidBlock([]); return }
 
         var images = [UIImage]()
@@ -187,11 +186,15 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate {
             }
         }
 
-        group.notify(queue: .main) { [jobsByVoidBlock] in jobsByVoidBlock(images) }
+        group.notify(queue: .main) { [jobsByVoidBlock] in
+            jobsByVoidBlock(images)
+        }
     }
 }
 // 老系统相册（单选）
-private final class LegacyLibraryProxy: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+private final class LegacyLibraryProxy: NSObject,
+                                        UIImagePickerControllerDelegate,
+                                        UINavigationControllerDelegate {
     let acceptsImagesOnly: Bool
     let jobsByVoidBlock: (UIImage?) -> Void
 
@@ -213,7 +216,10 @@ private final class LegacyLibraryProxy: NSObject, UIImagePickerControllerDelegat
     }
 }
 // 录像
-private final class VideoCameraProxy: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+private final class VideoCameraProxy: NSObject,
+                                      UIImagePickerControllerDelegate,
+                                      UINavigationControllerDelegate {
+    
     let jobsByVoidBlock: (URL) -> Void
     init(jobsByVoidBlock: @escaping (URL) -> Void) { self.jobsByVoidBlock = jobsByVoidBlock }
 
@@ -228,19 +234,21 @@ private final class VideoCameraProxy: NSObject, UIImagePickerControllerDelegate,
     }
 }
 // ================================== AO：把代理挂到 VC 防止释放 ==================================
-private enum _JobsAssocKeys {
-    static var mediaPickerProxy = UInt8(0)
-}
-
+private var mediaPickerProxy = UInt8(0)
 private func attachProxy(_ proxy: AnyObject, to host: UIViewController) {
-    objc_setAssociatedObject(host, &_JobsAssocKeys.mediaPickerProxy, proxy, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    objc_setAssociatedObject(host,
+                             &mediaPickerProxy,
+                             proxy,
+                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 // ================================== VC 便利方法 ==================================
 public extension NSObject {
     /// 一键：相机拍照
     func pickFromCamera(allowsEditing: Bool = false,
                         onImage: @escaping (UIImage) -> Void) {
-        MediaPickerService.pickFromCamera(from: UIApplication.jobsTopMostVC()!, allowsEditing: allowsEditing, onImage: onImage)
+        MediaPickerService.pickFromCamera(from: UIApplication.jobsTopMostVC()!,
+                                          allowsEditing: allowsEditing,
+                                          onImage: onImage)
     }
     /// 一键：相册选图（默认最多 9 张；传 0 表示不限制）
     func pickFromPhotoLibrary(maxSelection: Int = 9,

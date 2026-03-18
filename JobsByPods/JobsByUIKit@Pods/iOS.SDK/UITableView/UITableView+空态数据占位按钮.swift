@@ -18,7 +18,7 @@ extension UITableView {
     @objc dynamic
     public func jobs_swizzled_reloadData() {
         self.jobs_swizzled_reloadData()        // 原始实现
-        jobsRunOnMain { [weak self] in
+        onMainAsync { [weak self] in
             guard let self else { return }
             (self as UIScrollView)._jobs_autoEnsureEmptyButtonThenEval()
         }

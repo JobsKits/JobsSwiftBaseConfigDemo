@@ -110,7 +110,7 @@ public final class JobsCountdownBtnCtrl {
         // 只是初始化，不自动开跑
         if config.renderOnInit {
             current = initialValue()
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 self.applyRender(sec: self.current ?? 0)
             }
@@ -131,7 +131,7 @@ extension JobsCountdownBtnCtrl {
         stop(resetUI: false)
         current = initialValue()
         if config.renderOnInit {
-            jobsRunOnMain { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
                 self.applyRender(sec: self.current)
             }
@@ -154,7 +154,7 @@ extension JobsCountdownBtnCtrl {
         // ✅ 新版 JobsSwiftTimer：直接 new（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
             // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 self?.onTickMainActor()
             }
         }

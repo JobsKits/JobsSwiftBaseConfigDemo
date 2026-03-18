@@ -69,7 +69,7 @@ class JobsNetworkingDemoBaseVC: BaseVC {
     }
 
     func append(_ s: String) {
-        jobsRunOnMain {
+        onMainAsync {
             self.textView.byText((self.textView.text ?? "") + s)
             self.textView.scrollRangeToVisible(NSRange(location: max(0, self.textView.text.count - 1), length: 1))
         }

@@ -393,7 +393,7 @@ public final class JobsMarqueeView: UIView {
                 autoManageAppState: true
             )
             timer = JobsTimer(kind: timerKindForFrequency, config: config) { [weak self] in
-                jobsRunOnMain(self) { _ in
+                onMainAsync(self) { _ in
                     self?.tickFrequency()
                 }
             }
@@ -409,7 +409,7 @@ public final class JobsMarqueeView: UIView {
                 autoManageAppState: true
             )
             timer = JobsTimer(kind: timerKindForContinuous, config: config) { [weak self] in
-                jobsRunOnMain(self) { _ in
+                onMainAsync(self) { _ in
                     self?.tickContinuous()
                 }
             }

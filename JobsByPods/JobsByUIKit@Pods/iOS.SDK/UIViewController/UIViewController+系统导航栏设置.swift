@@ -28,7 +28,7 @@ import JobsSwiftBaseDefines
 extension UIViewController {
 
     public func jobsForceHideSystemNavBar(_ hidden: Bool) {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             var r: UIResponder? = vc.view
             while let cur = r {
                 if let hostVC = cur as? UIViewController,

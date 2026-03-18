@@ -107,15 +107,15 @@ extension UIImageView {
         fallback: @autoclosure @escaping @Sendable () -> UIImage
     ) -> Self {
         if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
-            // iOS13+：保留你原来的 async/await 路径（内部仍用 jobsRunOnMain）
-            jobsRunOnMain { @MainActor in
+            // iOS13+：保留你原来的 async/await 路径（内部仍用 onMainAsync）
+            onMainAsync { @MainActor in
                 let img = await src.sdLoadImage(fallbackImage: fallback())
                 self.image = img
             }
         } else {
             // iOS12-：走 SDWebImage 回调路径（能做事）
             guard let url = URL(string: src) else {
-                jobsRunOnMain { @MainActor in
+                onMainAsync { @MainActor in
                     self.image = fallback()
                 };return self
             }
@@ -126,7 +126,7 @@ extension UIImageView {
                 progress: nil
             ) { [weak self] image, _, _, _, _, _ in
                 guard let self else { return }
-                jobsRunOnMain { @MainActor in
+                onMainAsync { @MainActor in
                     self.image = image ?? fallback()
                 }
             }

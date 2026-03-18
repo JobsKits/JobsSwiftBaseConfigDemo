@@ -153,7 +153,7 @@ final class TabBarDemoVC: BaseVC {
                             guard let self else { return }
                             // 点击以后倒计时：300s
                             // 你原来写死 kind:.gcd，这里保持一致
-                            jobsRunOnMain(self) { vc in
+                            onMainAsync(self) { vc in
                                 btn.jobs_countdownBinder.start(
                                     on: btn,
                                     total: 300,

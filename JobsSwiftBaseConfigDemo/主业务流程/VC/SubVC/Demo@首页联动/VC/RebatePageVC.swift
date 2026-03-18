@@ -75,7 +75,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
             }
             .byRefreshHeader(component: JobsDefaultHeader(), container: self, trigger: 66) { [weak self] in
                 guard let self else { return }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.items = (1...5).map { "返水 - \(self.menuView.currentTitle) 活动 \($0)" }
                     self.tableView.byReloadData()

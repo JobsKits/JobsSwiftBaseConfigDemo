@@ -448,7 +448,7 @@ extension RootListVC{
                 config: cfg,
                 dedupPolicy: .replace
             ) { [weak self] in
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     let btn = vc.suspendBtn
                     if btn.title(for: .normal) != "当前时间" {
                         btn.byTitle("当前时间", for: .normal)
@@ -475,7 +475,7 @@ extension RootListVC{
                 config: cfg,
                 dedupPolicy: .replace
             ) { [weak self] in
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     vc.spinSeconds += 1
                     let btn = vc.suspendSpinBtn
                     let sec = vc.spinSeconds

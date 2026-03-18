@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
 internal enum JobsButtonImageLoader: UInt8 {
     case sd = 1
@@ -27,13 +28,8 @@ extension UIButton {
     // MARK: - Main thread helper
     /// ✅ 统一主线程执行：避免占位/回调乱序覆盖
     internal func _jobs_runOnMain(_ work: @escaping (UIButton) -> Void) {
-        if Thread.isMainThread {
-            work(self)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                work(self)
-            }
+        onMainImmediateOrAsync(self) { button in
+            work(button)
         }
     }
     // MARK: - Token helpers（解决：旧请求回调/取消回调把新请求的 shimmer 停掉）
@@ -50,8 +46,7 @@ extension UIButton {
             &_JobsButtonTokenAOKey.tokenMap,
             map,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
-        return next
+        );return next
     }
 
     func _jobs_isCurrentToken(_ token: Int,
@@ -96,7 +91,6 @@ extension UIButton {
     /// ✅ 强制写入“前景图”（先走 jobsReset；如果没生效再强制覆盖）
     func _jobs_forceSetForegroundImage(_ image: UIImage?, for state: UIControl.State) {
         self.jobsResetBtnImage(image, for: state)
-
         if #available(iOS 15.0, *), state == .normal, var cfg = self.configuration {
             let current = cfg.image
             if (current !== image) && !(current == nil && image == nil) {
@@ -113,7 +107,6 @@ extension UIButton {
     /// ✅ 强制写入“背景图”（逻辑同上）
     func _jobs_forceSetBackgroundImage(_ image: UIImage?, for state: UIControl.State) {
         self.jobsResetBtnBgImage(image, for: state)
-
         if #available(iOS 15.0, *), state == .normal, var cfg = self.configuration {
             let current = cfg.background.image
             if (current !== image) && !(current == nil && image == nil) {
@@ -150,8 +143,9 @@ extension UIButton {
     // MARK: - Loading placeholder
     /// 用于撑开 imageView frame，便于 overlay 精准覆盖
     internal func _jobs_loadingPlaceholderImage(targetPointSize: CGSize, fallback: UIImage?) -> UIImage? {
-        if let fallback { return fallback }
-        return UIImage._jobs_transparentPlaceholder(size: targetPointSize)
+        guard let fallback else {
+            return UIImage._jobs_transparentPlaceholder(size: targetPointSize)
+        };return fallback
     }
 }
 // MARK: - Transparent placeholder (internal)

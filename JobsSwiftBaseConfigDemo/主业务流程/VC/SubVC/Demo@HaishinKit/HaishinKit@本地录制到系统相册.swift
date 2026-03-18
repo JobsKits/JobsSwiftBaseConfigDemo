@@ -85,7 +85,7 @@ final class HKLocalRecordVC: BaseVC {
                 guard let self else { return }
                 /// 切换前后摄像头（2.x 写法，不再用 DeviceUtil）
                 currentPosition = (currentPosition == .back) ? .front : .back
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     guard let device = AVCaptureDevice.default(
                         .builtInWideAngleCamera,
                         for: .video,
@@ -122,7 +122,7 @@ final class HKLocalRecordVC: BaseVC {
         requestCameraAndMicrophoneAuthorization()
         setupAudioSession()
         // 初始化 HaishinKit 采集管线
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             await self.setupCapturePipeline()
         }
     }
@@ -210,7 +210,7 @@ final class HKLocalRecordVC: BaseVC {
     }
     // MARK: - 录制控制
     private func toggleRecord(_ sender: UIButton) {
-        jobsRunOnMain(self) { vc in
+        onMainAsync(self) { vc in
             if self.isRecording {
                 await self.stopRecording()
             } else {

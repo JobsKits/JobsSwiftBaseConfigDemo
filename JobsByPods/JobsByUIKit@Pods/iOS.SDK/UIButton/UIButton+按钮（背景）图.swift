@@ -80,7 +80,7 @@ extension UIButton {
                           let img = UIImage(data: data)
                     else { return }
                     _JobsImageCache.shared.cache.setObject(img, forKey: key)
-                    jobsRunOnMain {
+                    onMainAsync {
                         self.setBackgroundImage(img, for: state)
                     }
                 }.resume()

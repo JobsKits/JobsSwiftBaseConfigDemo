@@ -340,7 +340,7 @@ extension UIButton {
             options: opts,
             progressBlock: { r, t in cfg.progress?(Int64(r), Int64(t)) }
         ) { [weak self] result in
-            jobsRunOnMain(self) { strongSelf in
+            onMainAsync(self) { strongSelf in
                 strongSelf._jobs_runOnMain { btn in
                     switch result {
                     case .success(let s):
@@ -400,18 +400,18 @@ extension UIButton {
         // 1) 只有“纯本地背景图”（没有 url）时，才直接复用现成位图，不走缓存/网络
         if snapCfg.url == nil, self.kf_bgURL == nil, self.jobs_bgURL == nil {
             if #available(iOS 15.0, *), let img = self.configuration?.background.image {
-                jobsRunOnMain(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
+                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
                 return
             }
             if let img = self.backgroundImage(for: state) {
-                jobsRunOnMain(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
+                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
                 return
             }
         }
         // 2) 先把占位图顶上，保证克隆按钮立刻有图
         let ph = snapCfg.placeholder
         if let ph {
-            jobsRunOnMain(self) { vc in target.jobsResetBtnBgImage(ph, for: state) }
+            onMainAsync(self) { vc in target.jobsResetBtnBgImage(ph, for: state) }
         }
         // 3) URL：优先 jobs_bgURL，其次显式记录的 kf_bgURL，再其次配置里的 url
         guard let url = self.jobs_bgURL ?? self.kf_bgURL ?? snapCfg.url else { return }
@@ -425,7 +425,7 @@ extension UIButton {
         KingfisherManager.shared.retrieveImage(with: url, options: cacheOnlyOpts) { result in
             switch result {
             case .success(let r):
-                jobsRunOnMain(self) { vc in target.jobsResetBtnBgImage(r.image, for: state) }
+                onMainAsync(self) { vc in target.jobsResetBtnBgImage(r.image, for: state) }
             case .failure:
                 // 5) 缓存没命中：按需走网
                 guard allowNetworkIfMissing else { return }
@@ -440,7 +440,7 @@ extension UIButton {
                 if !opts.contains(where: { if case .backgroundDecode = $0 { return true } else { return false } }) {
                     opts.append(.backgroundDecode)
                 }
-                jobsRunOnMain(self) { vc in
+                onMainAsync(self) { vc in
                     // ✅ 克隆走网也要 Downsampling 到 UI 尺寸
                     let targetSize = snapCfg.bgTargetSize ?? target._jobs_guessBackgroundTargetSize()
                     let finalOpts = target._jobs_kfUpsertDownsampleOptions(opts, targetPointSize: targetSize)
@@ -452,7 +452,7 @@ extension UIButton {
                         options: finalOpts,
                         progressBlock: { r, t in snapCfg.progress?(Int64(r), Int64(t)) }
                     ) { res in
-                        jobsRunOnMain(self) { vc in
+                        onMainAsync(self) { vc in
                             switch res {
                             case .success(let s): target.jobsResetBtnBgImage(s.image, for: state)
                             case .failure:        target.jobsResetBtnBgImage(ph, for: state)

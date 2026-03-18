@@ -405,7 +405,7 @@ extension UIAlertController {
         guard !trimmed.isEmpty else { return self }
 
         _enqueueBGTask(preTransition: false) { alert in
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
@@ -419,7 +419,7 @@ extension UIAlertController {
                         }
                     } else {
                         trimmed.sdLoadImage(fallbackImage: placeholder) { img in
-                            jobsRunOnMain(self) { _ in
+                            onMainAsync(self) { _ in
                                 if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
                                 else { iv.image = img }
                                 iv.layer.cornerRadius = card.layer.cornerRadius
@@ -447,7 +447,7 @@ extension UIAlertController {
         guard !trimmed.isEmpty else { return self }
 
         _enqueueBGTask(preTransition: false) { alert in
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
@@ -461,7 +461,7 @@ extension UIAlertController {
                         }
                     } else {
                         trimmed.kfLoadImage { result in
-                            jobsRunOnMain(self) { _ in
+                            onMainAsync(self) { _ in
                                 let img: UIImage
                                 switch result {
                                 case .success(let value):
@@ -486,7 +486,7 @@ extension UIAlertController {
                       color: UIColor,
                       cornerRadius: CGFloat? = nil) -> Self {
         _enqueueBGTask(preTransition: true) { alert in
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 alert._withAlertCard { card in
                     card.layer.borderWidth = width
                     card.layer.borderColor = color.cgColor
@@ -505,7 +505,7 @@ extension UIAlertController {
                                 cornerRadius: CGFloat? = nil,
                                 insets: UIEdgeInsets = .zero) -> Self {
         _enqueueBGTask(preTransition: true) { alert in
-            jobsRunOnMain(self) { vc in
+            onMainAsync(self) { vc in
                 alert._withAlertCard { _ in
                     guard let tf = alert.textField(at: index) else { return }
                     guard let box = alert._findTextFieldBox(for: tf) else { return }
