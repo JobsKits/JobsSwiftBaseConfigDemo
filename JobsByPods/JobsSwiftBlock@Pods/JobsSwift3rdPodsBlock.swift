@@ -25,6 +25,8 @@ import SnapKit
 /// SnapKit 语法糖🍬
 // 存的就是这个类型
 public typealias jobsByConstraintMakerBlock = (_ make: ConstraintMaker) -> Void
+public typealias JobsEmptyButtonLayout = (UIButton, ConstraintMaker, UIScrollView) -> Void
+public typealias JobsEmptyViewLayout = (UIView, ConstraintMaker, UIScrollView) -> Void
 #endif
 /// Cocoapods@YTKNetwork
 #if canImport(YTKNetwork)

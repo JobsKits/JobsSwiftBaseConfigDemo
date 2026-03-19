@@ -12,28 +12,27 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBlock
 import JobsSwiftBaseDefines
 #if canImport(SnapKit)
 import SnapKit
-
 public enum JobsEmptyViewAuto {
     public enum Config {
         /// 全局默认空态视图提供器（可在 App 任意位置重写）
-        /// 这是“View层”的默认能力；按钮文件依旧保留自己的按钮默认 provider。
+        /// 这里只负责 View provider，不再参与 swizzle
         public static var defaultProvider: (() -> UIView)?
     }
 }
+
 var _jobsEmptyViewKey: UInt8 = 0
 var _jobsEmptyViewProviderKey: UInt8 = 0
 var _jobsEmptyViewLayoutKey: UInt8 = 0
-public typealias JobsEmptyViewLayout = (UIView, ConstraintMaker, UIScrollView) -> Void
 extension UIScrollView {
     // MARK: - Provider
     /// 链式：设置“本视图”的局部空态视图提供器
-    /// 注意：这里会触发按钮系统的 swizzle，因为当前自动评估入口仍保留在按钮文件里
     @discardableResult
     public func byEmptyViewProvider(_ provider: @escaping () -> UIView) -> Self {
-        JobsEmptyAuto.enable()
+        _JobsEmptyAutoBootstrap.ensure
         objc_setAssociatedObject(
             self,
             &_jobsEmptyViewProviderKey,
@@ -64,7 +63,7 @@ extension UIScrollView {
     /// 清除“本视图”的局部 View Provider（回退到全局默认）
     @discardableResult
     public func byClearEmptyViewProvider() -> Self {
-        JobsEmptyAuto.enable()
+        let _ = _JobsEmptyAutoBootstrap.ensure
         objc_setAssociatedObject(
             self,
             &_jobsEmptyViewProviderKey,
@@ -80,14 +79,13 @@ extension UIScrollView {
     /// 为当前 ScrollView 指定空态 View 布局
     @discardableResult
     public func byEmptyViewLayout(_ layout: @escaping JobsEmptyViewLayout) -> Self {
-        JobsEmptyAuto.enable()
+        _JobsEmptyAutoBootstrap.ensure
         objc_setAssociatedObject(
             self,
             &_jobsEmptyViewLayoutKey,
             layout,
             .OBJC_ASSOCIATION_COPY_NONATOMIC
         )
-
         if let view = jobs_emptyView {
             view.snp.remakeConstraints { [unowned self] make in
                 layout(view, make, self)
@@ -134,13 +132,11 @@ extension UIScrollView {
         if let oldView = jobs_emptyView {
             oldView.removeFromSuperview()
         }
-
         view
             .byAddTo(self) { [unowned self] make in
                 if let layout = _jobs_emptyViewLayout {
                     layout(view, make, self)
                 } else {
-                    // 默认布局尽量对齐你按钮 attach 时的策略
                     make.centerY.equalToSuperview()
                     make.centerX.equalToSuperview().priority(.low)
                     make.width.lessThanOrEqualToSuperview().multipliedBy(0.9)

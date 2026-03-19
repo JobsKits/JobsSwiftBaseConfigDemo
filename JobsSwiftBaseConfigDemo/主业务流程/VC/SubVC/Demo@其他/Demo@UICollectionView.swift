@@ -159,8 +159,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
         )
         // 布局：上竖向、下横向
         collectionViewV.reloadData()
-        collectionViewH.reloadData()
-    }
+        collectionViewH.reloadData()    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
