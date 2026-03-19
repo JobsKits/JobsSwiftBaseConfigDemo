@@ -15,9 +15,7 @@ import ObjectiveC.runtime
 import JobsSwiftBaseDefines
 import JobsSwiftBlock
 
-private enum JobsViewResultKey {
-    static var callback: UInt8 = 0
-}
+private var JobsViewCallbackResultKey: UInt8 = 0
 /// ✅ 覆盖所有 View（UIView 及其子类）
 extension UIView: @retroactive ViewDataProtocol {}
 @MainActor
@@ -31,13 +29,13 @@ public extension ViewDataProtocol where Self: UIView {
     func onResult(_ callback: @escaping jobsByAnyBlock) -> Self {
         objc_setAssociatedObject(
             self,
-            &JobsViewResultKey.callback,
+            &JobsViewCallbackResultKey,
             callback,
             .OBJC_ASSOCIATION_COPY_NONATOMIC
         );return self
     }
 
     func sendResult(_ any: Any?) {
-        (objc_getAssociatedObject(self, &JobsViewResultKey.callback) as? jobsByAnyBlock)?(any)
+        (objc_getAssociatedObject(self, &JobsViewCallbackResultKey) as? jobsByAnyBlock)?(any)
     }
 }

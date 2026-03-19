@@ -114,6 +114,12 @@ extension UIViewController {
 extension UIViewController {
     
     @discardableResult
+    public func byView(_ builder: (UIView) -> Void) -> Self {
+        builder(view)
+        return self
+    }
+    
+    @discardableResult
     public func byTitle(_ builder: () -> String?) -> Self {
         self.title = builder()
         return self

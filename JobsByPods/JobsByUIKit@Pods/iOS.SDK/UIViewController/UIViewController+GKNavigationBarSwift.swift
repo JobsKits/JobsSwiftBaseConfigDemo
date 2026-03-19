@@ -11,10 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+import JobsScale
 import JobsTextTools
 import JobsSwiftBaseDefines
-import JobsScale
-import Jobsl10n
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 extension UIViewController {
@@ -26,8 +26,7 @@ extension UIViewController {
     public func jobsSetupGKNav(
         title: JobsText,
         leftButton: UIButton? = nil,
-        rightButtons: [UIButton]? = nil
-    ) {
+        rightButtons: [UIButton]? = nil) {
         gk_navTitle = title.asString
         // 避免上游用 JobsText("xxx".tr) 这种写法时 marker 串台
         TRBind.consumeMarkerIfNeeded()
@@ -52,8 +51,7 @@ extension UIViewController {
     public func jobsSetupGKNav(
         title: String,
         leftButton: UIButton? = nil,
-        rightButtons: [UIButton]? = nil
-    ) {
+        rightButtons: [UIButton]? = nil) {
         // 让 GK 标题也具备自动刷新能力
         _ = tr_setGKNavTitle(title)
         let btn = leftButton ?? makeDefaultBackButton()
