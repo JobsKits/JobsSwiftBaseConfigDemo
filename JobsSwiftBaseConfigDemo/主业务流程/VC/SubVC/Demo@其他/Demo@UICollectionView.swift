@@ -18,9 +18,12 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
-import JobsInheritance
+import JobsToast
 import JobsByUIKit
+import JobsEmptyView
 import JobsTextTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
 final class EmptyCollectionViewDemoVC: BaseVC {
     // ============================== 数据源 & 状态 ==============================
@@ -32,26 +35,13 @@ final class EmptyCollectionViewDemoVC: BaseVC {
     private var itemsH: [String] = []
     private var isPullRefreshingH = false
     private var isLoadingMoreH    = false
-    // ============================== UI：两个独立 FlowLayout ==============================
-    private lazy var flowLayoutV: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+    // ============================== UI：上面的【竖向】CollectionView ==============================
+    private lazy var collectionViewV: UICollectionView = {
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)
-            .bySectionInset(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-    }()
-
-    private lazy var flowLayoutH: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
-            .byScrollDirection(.horizontal)
-            .byMinimumLineSpacing(12)
-            .byMinimumInteritemSpacing(12)
-            .bySectionInset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-    }()
-
-    // ============================== UI：上面的【竖向】CollectionView ==============================
-    private lazy var collectionViewV: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: flowLayoutV)
+            .bySectionInset(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12)))
             .byBounces(true)
             .byAlwaysBounceVertical(true)
             .byDataSource(self)
@@ -60,24 +50,36 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             // 空态按钮
-            .byEmptyButtonProvider { [unowned self] in
-                UIButton.sys()
-                    .byTitle("暂无数据（竖向）", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
-                    .byImage("square.grid.2x2".sysImg, for: .normal)
-                    .byImagePlacement(.top)
-                    .onTap { [weak self] _ in
-                        guard let self else { return }
-                        self.collectionViewV.byReloadData()
-                        self.collectionViewV.byReloadEmptyViewAuto()
+//            .byEmptyButtonProvider { [unowned self] in
+//                UIButton.sys()
+//                    .byTitle("暂无数据（竖向）", for: .normal)
+//                    .bySubTitle("点我填充示例数据", for: .normal)
+//                    .byImage("square.grid.2x2".sysImg, for: .normal)
+//                    .byImagePlacement(.top)
+//                    .onTap { [weak self] _ in
+//                        guard let self else { return }
+//                        addVData()
+//                    }
+//                    .byEmptyLayout { btn, make, host in
+//                        make.centerX.equalTo(host)
+//                        make.centerY.equalTo(host).offset(-40)
+//                        make.leading.greaterThanOrEqualTo(host).offset(16)
+//                        make.trailing.lessThanOrEqualTo(host).inset(16)
+//                        make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
+//                    }
+//            }
+            .byEmptyViewProvider { [unowned self] in
+                JobsEmptyView()
+                    .byOnTapRetry { [weak self] in
+                        "hello".tr.toast
                     }
-                    .byEmptyLayout { btn, make, host in
-                        make.centerX.equalTo(host)
-                        make.centerY.equalTo(host).offset(-40)
-                        make.leading.greaterThanOrEqualTo(host).offset(16)
-                        make.trailing.lessThanOrEqualTo(host).inset(16)
-                        make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
-                    }
+            }
+            .byEmptyViewLayout { emptyView, make, host in
+                make.centerX.equalTo(host)
+                make.centerY.equalTo(host).offset(-40)
+                make.leading.greaterThanOrEqualTo(host).offset(16)
+                make.trailing.lessThanOrEqualTo(host).inset(16)
+                make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
             }
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -91,7 +93,11 @@ final class EmptyCollectionViewDemoVC: BaseVC {
     }()
     // ============================== UI：下面的【横向】CollectionView ==============================
     private lazy var collectionViewH: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: flowLayoutH)
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
+            .byScrollDirection(.horizontal)
+            .byMinimumLineSpacing(12)
+            .byMinimumInteritemSpacing(12)
+            .bySectionInset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)))
             .byBounces(true)
             .byAlwaysBounceHorizontal(true)
             .byDataSource(self)
@@ -108,8 +114,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
                         guard let self else { return }
-                        self.collectionViewH.byReloadData()
-                        self.collectionViewH.byReloadEmptyViewAuto()
+                        addHData()
                     }
                     .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
@@ -148,24 +153,39 @@ final class EmptyCollectionViewDemoVC: BaseVC {
                     .byImage("plus".sysImg, for: .normal)
                     .onTap { [weak self] _ in
                         guard let self else { return }
-                        let bV = itemsV.count
-                        itemsV += (1...6).map { "Item \(bV + $0)" }
-                        let bH = itemsH.count
-                        itemsH += (1...5).map { "Card \(bH + $0)" }
-                        collectionViewV.byReloadData()
-                        collectionViewH.byReloadData()
-                        collectionViewV.byReloadEmptyViewAuto()
-                        collectionViewH.byReloadEmptyViewAuto()
+                        addAllData()
                     }
             ]
         )
         // 布局：上竖向、下横向
-        collectionViewV.byAlpha(1)
-        collectionViewH.byAlpha(1)
+        collectionViewV.reloadData()
+        collectionViewH.reloadData()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+}
+
+extension EmptyCollectionViewDemoVC {
+    // 追加两个列表@全部
+    func addAllData() {
+        addVData()
+        addHData()
+    }
+    // 追加两个列表@竖向
+    func addVData() {
+        let bV = itemsV.count
+        itemsV += (1...6).map { "Item \(bV + $0)" }
+        collectionViewV.byReloadData()
+        collectionViewV.byReloadEmptyViewAuto()
+    }
+    // 追加两个列表@横向
+    func addHData() {
+        let bH = itemsH.count
+        itemsH += (1...5).map { "Card \(bH + $0)" }
+        collectionViewH.byReloadData()
+        collectionViewH.byReloadEmptyViewAuto()
     }
 }
 // MARK: - UICollectionViewDataSource
@@ -211,6 +231,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
 }
 // MARK: - UICollectionViewDelegate
 extension EmptyCollectionViewDemoVC: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView === collectionViewV {
             print("✅[V] didSelect Item: \(indexPath.item)")
@@ -228,6 +249,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDelegate {
 }
 // MARK: - UICollectionViewDelegateFlowLayout
 extension EmptyCollectionViewDemoVC: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

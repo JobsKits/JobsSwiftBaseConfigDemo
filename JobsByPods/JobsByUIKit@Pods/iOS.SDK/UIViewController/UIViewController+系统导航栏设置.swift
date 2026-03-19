@@ -1,6 +1,6 @@
 //
 //  UIViewController+系统导航栏显隐.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsByUIKit
 //
 //  Created by Jobs on 12/2/25.
 //

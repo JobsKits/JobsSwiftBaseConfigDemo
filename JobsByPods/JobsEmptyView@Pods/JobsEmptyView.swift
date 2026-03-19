@@ -16,12 +16,13 @@ import JobsByUIKit
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
 
-class JobsEmptyView: UIView {
-    var onTapRetry: jobsByVoidBlock?
+public class JobsEmptyView: UIView {
+
     private lazy var tapGR: UITapGestureRecognizer = {
         UITapGestureRecognizer
             .byConfig { [weak self] _ in
-                self?.onTapRetry?()
+                guard let self else { return }
+                self.jobsValueVoidCallback()
             }
             .byTaps(1)
             .byTouches(1)
@@ -40,6 +41,7 @@ class JobsEmptyView: UIView {
                 make.center.equalToSuperview()
             }
     }()
+    
     required init?(coder: NSCoder) { fatalError() }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,12 +52,10 @@ class JobsEmptyView: UIView {
 }
 /// DSL
 extension JobsEmptyView{
-    // ✅ DSL：外部只写 Void，内部自动 return self（满足 () -> EmptyView）
+
     @discardableResult
-    func byOnTapRetry(_ block: @escaping jobsByVoidBlock) -> Self {
-        onTapRetry = { [weak self] in
-            guard self != nil else { return }
-            block()
-        };return self
+    public func byOnTapRetry(_ block: @escaping jobsByVoidBlock) -> Self {
+        jobsByVoidCallback(block)
+        return self
     }
 }

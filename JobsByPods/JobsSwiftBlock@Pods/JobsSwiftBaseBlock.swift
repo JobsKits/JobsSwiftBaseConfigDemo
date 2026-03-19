@@ -16,6 +16,9 @@ import WebKit
 /// 全局@基础
 public typealias jobsByVoidBlock = () -> Void
 public typealias jobsByAnyBlock = (Any?) -> Void
+public typealias jobsByAnyVoidBlock = (Any) -> Void
+public typealias jobsByAnyArgsVoidBlock = ([Any]) -> Void
+public typealias jobsByAnyTransformBlock = (Any) -> Any
 public typealias jobsByTypeBlock<T> = (T?) -> Void
 
 public typealias jobsByNonNullTypeBlock<T> = (T) -> Void

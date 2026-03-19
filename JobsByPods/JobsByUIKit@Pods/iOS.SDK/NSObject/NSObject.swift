@@ -26,7 +26,7 @@ private var nameKey: UInt8 = 0
 extension NSObject {
     var nickname: String {
         get {
-            return objc_getAssociatedObject(self, &nameKey) as? String ?? ""
+            objc_getAssociatedObject(self, &nameKey) as? String ?? ""
         }
         set {
             objc_setAssociatedObject(self, &nameKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
