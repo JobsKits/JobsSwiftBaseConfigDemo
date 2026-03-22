@@ -13,15 +13,17 @@ import UIKit
 
 import YTKNetwork
 import SnapKit
-import JobsInheritance
+
 import GKNavigationBarSwift
-import JobsSwiftBaseDefines
-import JobsByUIKit
 import JobsScale
+import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
+import JobsInheritance
+import JobsSwiftBaseDefines
 
-final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
+final class YTKNetworkDemoVC: BaseVC {
+    
     private var currentChainRequest: YTKChainRequest?
     /// 输出日志
     private lazy var logTextView: UITextView = {
@@ -190,7 +192,7 @@ final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
                     .onTap { [weak self] sender in
                         guard let self else { return }
                         sender.isSelected.toggle()
-                        logTextView.text = "";
+                        logTextView.byText("")
                     }
             ]
         )
@@ -210,8 +212,12 @@ final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
         logTextView.scrollRangeToVisible(range)
         print(line)
     }
-    // MARK: - YTKChainRequestDelegate
+}
+// MARK: - YTKChainRequestDelegate
+extension YTKNetworkDemoVC: YTKChainRequestDelegate {
+    
     func chainRequestFinished(_ chainRequest: YTKChainRequest) {
+        
         guard let last = chainRequest.requestArray().last as? GetHeadersRequest else {
             appendLog("⚠️ 链式成功但取不到最后一个请求")
             return
@@ -247,4 +253,3 @@ final class YTKNetworkDemoVC: BaseVC, YTKChainRequestDelegate {
         appendLog("❌ 链式失败：\(String(describing: request.error))")
     }
 }
-

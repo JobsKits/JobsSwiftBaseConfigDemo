@@ -17,16 +17,16 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 // MARK: - 一般数据请求
 final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
+    
     private var token: JobsRequestToken?
     private lazy var agent: DefaultJobsAgent = {
-        let config = JobsRequestConfig(
+        DefaultJobsAgent(config: JobsRequestConfig(
             baseURL: URL(string: "https://httpbin.org")!,
             timeout: 20,
             version: "v1",
             userScope: "guest",
             defaultRetryPolicy: .default
-        )
-        return DefaultJobsAgent(config: config, headerHook: DemoAuthHook())
+        ), headerHook: DemoAuthHook())
     }()
 
     override func viewDidLoad() {

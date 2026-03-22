@@ -12,7 +12,7 @@ import Foundation
 public extension JobsAgent {
     func send<T: Decodable>(_ request: JobsRequest, as type: T.Type) async throws -> T {
         try await withCheckedThrowingContinuation { cont in
-            _ = send(request, as: type) { result in
+            send(request, as: type) { result in
                 switch result {
                 case .success(let v): cont.resume(returning: v)
                 case .failure(let e): cont.resume(throwing: e)

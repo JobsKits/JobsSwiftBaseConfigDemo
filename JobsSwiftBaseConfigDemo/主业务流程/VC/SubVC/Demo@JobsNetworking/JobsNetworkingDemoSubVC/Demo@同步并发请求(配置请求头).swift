@@ -19,13 +19,13 @@ import JobsSwiftBaseDefines
 final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
 
     private lazy var agent: DefaultJobsAgent = {
-        let config = JobsRequestConfig(
+        DefaultJobsAgent(config:  JobsRequestConfig(
             baseURL: URL(string: "https://httpbin.org")!,
             timeout: 20,
             version: "v1",
             userScope: "guest",
             defaultRetryPolicy: .default
-        );return DefaultJobsAgent(config: config, headerHook: DemoAuthHook() as JobsHeaderHook)
+        ), headerHook: DemoAuthHook() as JobsHeaderHook)
     }()
 
     override func viewDidLoad() {

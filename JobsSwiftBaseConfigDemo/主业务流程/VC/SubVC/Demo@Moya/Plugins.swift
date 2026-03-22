@@ -10,8 +10,8 @@ import Moya
 
 // MARK: - 把 cURL 也喂回 UI
 public struct CurlLoggerPlugin: PluginType {
+    
     private let emit: ((String) -> Void)?
-
     public init(emit: ((String) -> Void)? = nil) {
         self.emit = emit
     }
@@ -26,6 +26,7 @@ public struct CurlLoggerPlugin: PluginType {
 }
 
 private extension URLRequest {
+    
     func cURLDescription() -> String {
         var comps = ["curl -v"]
         if let method = httpMethod { comps.append("-X \(method)") }
@@ -37,7 +38,6 @@ private extension URLRequest {
         return comps.joined(separator: " \\\n  ")
     }
 }
-
 // MARK: - 每接口超时：在真正发起前改 URLRequest（仍保留）
 public struct TimeoutPlugin: PluginType {
     public init() {}

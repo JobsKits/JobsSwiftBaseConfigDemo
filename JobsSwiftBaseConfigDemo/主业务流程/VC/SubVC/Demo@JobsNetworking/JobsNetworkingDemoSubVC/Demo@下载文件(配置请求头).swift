@@ -19,15 +19,14 @@ import JobsSwiftBaseDefines
 final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {
 
     private var token: JobsRequestToken?
-
     private lazy var agent: DefaultJobsAgent = {
-        let config = JobsRequestConfig(
+        DefaultJobsAgent(config: JobsRequestConfig(
             baseURL: URL(string: "https://httpbin.org")!,
             timeout: 120,
             version: "v1",
             userScope: "guest",
             defaultRetryPolicy: .default
-        );return DefaultJobsAgent(config: config, headerHook: DemoAuthHook())
+        ), headerHook: DemoAuthHook())
     }()
 
     override func viewDidLoad() {

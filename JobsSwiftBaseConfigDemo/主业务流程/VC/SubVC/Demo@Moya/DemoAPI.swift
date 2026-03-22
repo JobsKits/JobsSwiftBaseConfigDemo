@@ -14,13 +14,11 @@ public enum DemoAPI {
     case ghZen
     case ghUser(username: String)
     case ghSearchUsers(q: String, page: Int?)
-
     // ReqRes：登录/CRUD
     case login(email: String, password: String)
     case createUser(CreateUserReq)
     case updateUser(id: Int, UpdateUserReq)
     case deleteUser(id: Int)
-
     // httpbin：上传/下载
     case uploadAvatar(imageData: Data)
     case downloadPNG
@@ -109,8 +107,7 @@ extension DemoAPI: TargetType {
                 }()
                 let url = dir.appendingPathComponent(name)
                 return (url, [.removePreviousFile, .createIntermediateDirectories])
-            }
-            return .downloadDestination(destination)
+            };return .downloadDestination(destination)
         }
     }
 
@@ -152,7 +149,6 @@ extension DemoAPI: TargetType {
     }
 
     public var validationType: ValidationType { .successCodes }
-
     public var timeout: TimeInterval {
         switch self {
         case .uploadAvatar, .downloadPNG, .downloadBytes: return 60

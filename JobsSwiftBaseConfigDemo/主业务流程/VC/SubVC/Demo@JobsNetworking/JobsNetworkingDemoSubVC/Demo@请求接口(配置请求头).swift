@@ -19,13 +19,13 @@ import JobsSwiftBaseDefines
 final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
     
     private lazy var agent: DefaultJobsAgent = {
-        let config = JobsRequestConfig(
-            baseURL: URL(string: "https://httpbin.org")!,
+        DefaultJobsAgent(config: JobsRequestConfig(
+            baseURL: "https://httpbin.org".url!,
             timeout: 20,
             version: "v1",
             userScope: "guest",
             defaultRetryPolicy: .default
-        );return DefaultJobsAgent(config: config, headerHook: DemoAuthHook())
+        ), headerHook: DemoAuthHook())
     }()
 
     override func viewDidLoad() {
@@ -54,5 +54,3 @@ final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
         append("说明：演示基础 API 请求 + Decodable 解码\n\n")
     }
 }
-
-

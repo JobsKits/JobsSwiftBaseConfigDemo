@@ -24,7 +24,8 @@ final class MoyaDemoVC: BaseVC {
     // ✅ 改为 lazy，并把 Moya 日志重定向到 UI
     private lazy var api: APIService = {
         APIService.live { [weak self] text in
-            self?.appendRawLog(text ?? "")
+            guard let self else { return }
+            self.appendRawLog(text ?? "")
         }
     }()
 
@@ -47,7 +48,6 @@ final class MoyaDemoVC: BaseVC {
                 make.height.greaterThanOrEqualTo(180)
             }
     }()
-
     // =============== 按钮们（懒加载 + DSL + 每个块内 byAddTo 约束） ===============
     private lazy var btnZen: UIButton = {
         UIButton.sys()
@@ -64,9 +64,11 @@ final class MoyaDemoVC: BaseVC {
                     switch result {
                     case .success(let resp):
                         let text = String(data: resp.data, encoding: .utf8) ?? ""
-                        show(title: "GET /zen ✅", body: text)
+                        show(title: "GET /zen ✅",
+                             body: text)
                     case .failure(let e):
-                        show(title: "GET /zen ❌", body: "\(e)")
+                        show(title: "GET /zen ❌",
+                             body: "\(e)")
                     }
                 }
             }
@@ -100,10 +102,12 @@ final class MoyaDemoVC: BaseVC {
                             show(title: "GET /users/apple ✅",
                                  body: "login=\(user.login), id=\(user.id)\navatar=\(user.avatar_url)")
                         } catch {
-                            show(title: "解析失败 ❌", body: "\(error)")
+                            show(title: "解析失败 ❌",
+                                 body: "\(error)")
                         }
                     case .failure(let e):
-                        show(title: "GET /users/apple ❌", body: "\(e)")
+                        show(title: "GET /users/apple ❌",
+                             body: "\(e)")
                     }
                 }
             }
@@ -128,9 +132,11 @@ final class MoyaDemoVC: BaseVC {
                     guard let self else { return }
                     switch res {
                     case .success(let resp):
-                        show(title: "POST /login ✅", body: self.prettyJSON(resp.data))
+                        show(title: "POST /login ✅",
+                             body: self.prettyJSON(resp.data))
                     case .failure(let e):
-                        show(title: "POST /login ❌", body: "\(e)")
+                        show(title: "POST /login ❌",
+                             body: "\(e)")
                     }
                 }
             }
@@ -154,14 +160,17 @@ final class MoyaDemoVC: BaseVC {
                 let fake = Data(repeating: 0xFF, count: 200_000)
                 api.provider.request(.uploadAvatar(imageData: fake), progress: { [weak self] prog in
                     guard let self else { return }
-                    self.show(title: "⬆️ 上传进度", body: String(format: "%.1f%%", prog.progress * 100))
+                    self.show(title: "⬆️ 上传进度",
+                              body: String(format: "%.1f%%", prog.progress * 100))
                 }, completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let resp):
-                        show(title: "UPLOAD ✅", body: self.prettyJSON(resp.data))
+                        show(title: "UPLOAD ✅",
+                             body: self.prettyJSON(resp.data))
                     case .failure(let e):
-                        show(title: "UPLOAD ❌", body: "\(e)")
+                        show(title: "UPLOAD ❌",
+                             body: "\(e)")
                     }
                 })
             }
@@ -184,15 +193,17 @@ final class MoyaDemoVC: BaseVC {
                 show(title: "DOWNLOAD /image/png → 下载中…")
                 api.provider.request(.downloadPNG, progress: { [weak self] prog in
                     guard let self else { return }
-                    show(title: "⬇️ PNG 进度", body: String(format: "%.1f%%", prog.progress * 100))
+                    show(title: "⬇️ PNG 进度",
+                         body: String(format: "%.1f%%", prog.progress * 100))
                 }) { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let resp):
                         show(title: "DOWNLOAD PNG ✅",
-                                  body: "保存至：\(resp.response?.url?.path ?? "-")")
+                             body: "保存至：\(resp.response?.url?.path ?? "-")")
                     case .failure(let e):
-                        show(title: "DOWNLOAD PNG ❌", body: "\(e)")
+                        show(title: "DOWNLOAD PNG ❌",
+                             body: "\(e)")
                     }
                 }
             }
@@ -214,15 +225,17 @@ final class MoyaDemoVC: BaseVC {
                 show(title: "DOWNLOAD /bytes/524288 → 下载中…")
                 api.provider.request(.downloadBytes(size: 524_288), progress: { [weak self] prog in
                     guard let self else { return }
-                    show(title: "⬇️ BYTES 进度", body: String(format: "%.1f%%", prog.progress * 100))
+                    show(title: "⬇️ BYTES 进度",
+                         body: String(format: "%.1f%%", prog.progress * 100))
                 }) { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let resp):
                         show(title: "DOWNLOAD BYTES ✅",
-                                  body: "保存至：\(resp.response?.url?.path ?? "-")")
+                             body: "保存至：\(resp.response?.url?.path ?? "-")")
                     case .failure(let e):
-                        show(title: "DOWNLOAD BYTES ❌", body: "\(e)")
+                        show(title: "DOWNLOAD BYTES ❌",
+                             body: "\(e)")
                     }
                 }
             }
@@ -248,16 +261,17 @@ final class MoyaDemoVC: BaseVC {
                     .tryMap { response -> String in
                         guard (200..<300).contains(response.statusCode) else {
                             throw MoyaError.statusCode(response)
-                        }
-                        return String(data: response.data, encoding: .utf8) ?? ""
+                        };return String(data: response.data, encoding: .utf8) ?? ""
                     }
                     .sink { [weak self] jobsByVoidBlock in
                         guard let self else { return }
                         if case let .failure(err) = jobsByVoidBlock {
-                            show(title: "Combine /zen ❌", body: "\(err)")
+                            show(title: "Combine /zen ❌",
+                                 body: "\(err)")
                         }
                     } receiveValue: { [weak self] text in
-                        show(title: "Combine /zen ✅", body: text)
+                        show(title: "Combine /zen ✅",
+                             body: text)
                     }
                     .store(in: &bag)
                 #else
@@ -282,14 +296,18 @@ final class MoyaDemoVC: BaseVC {
                 clear()
                 show(title: "Stub 示例 → 使用 sampleData")
                 let stubAPI = APIService.stubbed { [weak self] text in
-                    self?.appendRawLog(text ?? "")
+                    guard let self else { return }
+                    self.appendRawLog(text ?? "")
                 }
                 stubAPI.provider.request(.ghZen) { [weak self] r in
+                    guard let self else { return }
                     switch r {
                     case .success(let resp):
-                        self?.show(title: "Stub /zen ✅", body: String(data: resp.data, encoding: .utf8))
+                        self.show(title: "Stub /zen ✅",
+                                  body: String(data: resp.data, encoding: .utf8))
                     case .failure(let e):
-                        self?.show(title: "Stub /zen ❌", body: "\(e)")
+                        self.show(title: "Stub /zen ❌",
+                                  body: "\(e)")
                     }
                 }
             }
@@ -299,8 +317,7 @@ final class MoyaDemoVC: BaseVC {
                 make.height.equalTo(44)
             }
     }()
-
-    // 新增：清空输出按钮（就地约束，位于 resultView 之上右侧）
+    /// 清空输出按钮（就地约束，位于 resultView 之上右侧）
     private lazy var btnClear: UIButton = {
         UIButton.sys()
             .byTitle("清空输出", for: .normal)
@@ -317,13 +334,6 @@ final class MoyaDemoVC: BaseVC {
                 make.height.equalTo(36)
             }
     }()
-
-    private func clear() {
-        DispatchQueue.main.async { [weak self] in
-            self?.resultView.text = ""
-        }
-    }
-
     // =============== 生命周期 ===============
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -344,26 +354,34 @@ final class MoyaDemoVC: BaseVC {
 
         show(title: "准备就绪 ✅", body: "点上面的按钮触发网络示例，结果会回显到这里。")
     }
+}
 
+extension MoyaDemoVC {
+    
+    private func clear() {
+        onMainSync { [weak self] in
+            guard let self else { return }
+            self.resultView.byText("")
+        }
+    }
     // =============== 回显 & 工具 ===============
     private func show(title: String, body: String? = nil) {
         let header = "【\(title)】\n"
         // 强制回主线程，避免偶发回调不在 main 导致 UI 不刷新
-        DispatchQueue.main.async { [weak self] in
+        onMainSync { [weak self] in
             guard let self else { return }
             if let b = body, !b.isEmpty {
-                self.resultView.text = header + b + "\n\n" + (self.resultView.text ?? "")
+                self.resultView.byText(header + b + "\n\n" + (self.resultView.text ?? ""))
             } else {
-                self.resultView.text = header + (self.resultView.text ?? "")
+                self.resultView.byText(header + (self.resultView.text ?? ""))
             }
         }
     }
-
     /// 把 NetworkLoggerPlugin/CurlLoggerPlugin 的原始文本直接塞进 UI（不加标题）
     private func appendRawLog(_ text: String) {
-        DispatchQueue.main.async { [weak self] in
+        onMainSync { [weak self] in
             guard let self else { return }
-            self.resultView.text = text + "\n\n" + (self.resultView.text ?? "")
+            self.resultView.byText(text + "\n\n" + (self.resultView.text ?? ""))
         }
     }
 
@@ -374,10 +392,8 @@ final class MoyaDemoVC: BaseVC {
             let s = String(data: pretty, encoding: .utf8)
         else {
             return String(data: data, encoding: .utf8) ?? "(\(data.count) bytes)"
-        }
-        return s
+        };return s
     }
-
     // ===============（可选）async/await 示例：保留但不默认调用） ===============
     #if compiler(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, *)

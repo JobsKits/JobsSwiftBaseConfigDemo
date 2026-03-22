@@ -15,13 +15,12 @@ public final class APIService {
     public init(provider: MoyaProvider<DemoAPI>) { self.provider = provider }
 }
 // MARK: - 工厂：live / stubbed 都支持把日志回灌到 UI
-public extension APIService {
+extension APIService {
     /// live：真实网络
-    static func live(uiLog: (jobsByStringBlock)? = nil) -> APIService {
+    public static func live(uiLog: (jobsByStringBlock)? = nil) -> APIService {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 20
         let session = Alamofire.Session(configuration: config)
-
         let endpointClosure: (DemoAPI) -> Endpoint = { target in
             Endpoint(url: URL(target: target).absoluteString,
                      sampleResponseClosure: { .networkResponse(200, target.sampleData) },
@@ -29,7 +28,6 @@ public extension APIService {
                      task: target.task,
                      httpHeaderFields: target.headers)
         }
-
         // 注意：这里的参数是 Endpoint（不是 Target）
         let requestClosure: MoyaProvider<DemoAPI>.RequestClosure = { endpoint, done in
             do {
@@ -60,9 +58,8 @@ public extension APIService {
             plugins: [logger, curl, token, TimeoutPlugin()]
         );return APIService(provider: provider)
     }
-
     /// stubbed：本地桩
-    static func stubbed(uiLog: (jobsByStringBlock)? = nil) -> APIService {
+    public static func stubbed(uiLog: (jobsByStringBlock)? = nil) -> APIService {
         let output: NetworkLoggerPlugin.Configuration.OutputType = { _, items in
             uiLog?(items.joined(separator: "\n"))
         }
@@ -80,10 +77,11 @@ public extension APIService {
     }
 }
 // MARK: - 401 -> 刷新 Token -> 重放一次
-public extension APIService {
-    func requestWithAutoRefresh(_ target: DemoAPI,
-                                retryOnce: Bool = true,
-                                completion: @escaping jobsByMoyaResultBlock) {
+extension APIService {
+    
+    public func requestWithAutoRefresh(_ target: DemoAPI,
+                                       retryOnce: Bool = true,
+                                       completion: @escaping jobsByMoyaResultBlock) {
         provider.request(target) { [weak self] result in
             guard let self else { return }
             switch result {

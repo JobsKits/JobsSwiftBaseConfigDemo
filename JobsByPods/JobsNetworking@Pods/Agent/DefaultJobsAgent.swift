@@ -15,10 +15,8 @@ public final class DefaultJobsAgent: JobsAgent {
 
     public let config: JobsRequestConfig
     public let headerHook: JobsHeaderHook
-
     // Exposed for capability extensions (Download/Upload) in other files
     let client: HTTPClient
-
     private let memoryCache: JobsCacheStore
     private let diskCache: JobsCacheStore
 
@@ -26,8 +24,7 @@ public final class DefaultJobsAgent: JobsAgent {
         config: JobsRequestConfig,
         headerHook: JobsHeaderHook = EmptyHeaderHook(),
         memoryCache: JobsCacheStore = JobsMemoryCache(),
-        diskCache: JobsCacheStore = JobsDiskCache()
-    ) {
+        diskCache: JobsCacheStore = JobsDiskCache()) {
         self.config = config
         self.headerHook = headerHook
         self.client = AlamofireClient(config: config)
@@ -59,8 +56,8 @@ public final class DefaultJobsAgent: JobsAgent {
         type: T.Type,
         token: JobsRequestToken,
         attempt: Int,
-        completion: @escaping (Swift.Result<T, JobsError>) -> Void
-    ) {
+        completion: @escaping (Swift.Result<T, JobsError>) -> Void) {
+            
         do {
             let prepared = try prepareRequest(request)
             // Cache decision
@@ -69,9 +66,11 @@ public final class DefaultJobsAgent: JobsAgent {
                 // Network only
                 client.perform(prepared) { [weak self] result in
                     guard let self else { return }
-                    completion(self.mapNetworkResult(result, request: request, type: type, cacheTTL: nil))
-                }
-                return
+                    completion(self.mapNetworkResult(result,
+                                                     request: request,
+                                                     type: type,
+                                                     cacheTTL: nil))
+                };return
             } else {
                 handleCache(policy: policy,
                             request: request,
@@ -94,8 +93,8 @@ public final class DefaultJobsAgent: JobsAgent {
         prepared: JobsPreparedRequest,
         type: T.Type,
         attempt: Int,
-        completion: @escaping (Swift.Result<T, JobsError>) -> Void
-    ) {
+        completion: @escaping (Swift.Result<T, JobsError>) -> Void) {
+            
         let cacheKey = JobsCacheKey.make(
             method: request.method,
             url: prepared.url,
@@ -105,15 +104,23 @@ public final class DefaultJobsAgent: JobsAgent {
         )
 
         func decodeCached(_ cached: JobsCachedValue) -> Swift.Result<T, JobsError> {
-            do { return .success(try decodeResponse(data: cached.data, type: type, request: request, response: nil)) }
+            do { return .success(try decodeResponse(data: cached.data,
+                                                    type: type,
+                                                    request: request,
+                                                    response: nil)) }
             catch let e as JobsError { return .failure(e) }
-            catch { return .failure(.decode(underlying: error, data: nil)) }
+            catch {
+                return .failure(.decode(underlying: error, data: nil))
+            }
         }
 
         func fetchNetwork(writeTTL: TimeInterval?) {
             client.perform(prepared) { [weak self] result in
                 guard let self else { return }
-                let mapped = self.mapNetworkResult(result, request: request, type: type, cacheTTL: writeTTL.map { ($0, cacheKey) })
+                let mapped = self.mapNetworkResult(result,
+                                                   request: request,
+                                                   type: type,
+                                                   cacheTTL: writeTTL.map { ($0, cacheKey) })
                 completion(mapped)
             }
         }
@@ -217,9 +224,11 @@ public final class DefaultJobsAgent: JobsAgent {
             encoding = URLEncoding(destination: .httpBody)
             parameters = request.body?.toParameters()
         case .multipart:
-            throw JobsError.unknown(underlying: NSError(domain: "JobsNetworking", code: -10001, userInfo: [NSLocalizedDescriptionKey: "multipart encoding is not supported by DefaultJobsAgent.prepareRequest yet"]))
+            throw JobsError.unknown(underlying: NSError(domain: "JobsNetworking", code: -10001,
+                                                        userInfo: [NSLocalizedDescriptionKey: "multipart encoding is not supported by DefaultJobsAgent.prepareRequest yet"]))
         case .rawData:
-            throw JobsError.unknown(underlying: NSError(domain: "JobsNetworking", code: -10002, userInfo: [NSLocalizedDescriptionKey: "rawData encoding is not supported by DefaultJobsAgent.prepareRequest yet"]))
+            throw JobsError.unknown(underlying: NSError(domain: "JobsNetworking", code: -10002,
+                                                        userInfo: [NSLocalizedDescriptionKey: "rawData encoding is not supported by DefaultJobsAgent.prepareRequest yet"]))
         };return JobsPreparedRequest(
             url: url,
             method: request.method,

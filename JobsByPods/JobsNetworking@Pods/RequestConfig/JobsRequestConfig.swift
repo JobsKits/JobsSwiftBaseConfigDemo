@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import JobsSwiftFoundation
 
 public struct JobsRequestConfig {
+    
     public var baseURL: URL
     public var timeout: TimeInterval
     public var version: String
@@ -25,8 +27,8 @@ public struct JobsRequestConfig {
         defaultRetryPolicy: JobsRetryPolicy = .default,
         decoder: JSONDecoder = .jobsDefault,
         logger: JobsLogger = JobsLogger(),
-        sslPinning: JobsSSLPinning? = nil
-    ) {
+        sslPinning: JobsSSLPinning? = nil) {
+            
         self.baseURL = baseURL
         self.timeout = timeout
         self.version = version
@@ -40,9 +42,8 @@ public struct JobsRequestConfig {
 
 public extension JSONDecoder {
     static var jobsDefault: JSONDecoder {
-        let d = JSONDecoder()
-        d.keyDecodingStrategy = .useDefaultKeys
-        d.dateDecodingStrategy = .deferredToDate
-        return d
+        JSONDecoder()
+            .bykeyDecodingStrategy(.useDefaultKeys)
+            .byDateDecodingStrategy(.deferredToDate)
     }
 }

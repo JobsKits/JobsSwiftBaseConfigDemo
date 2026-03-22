@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
     sp.ios.deployment_target = '12.0'
     sp.dependency 'Alamofire'
     sp.dependency 'DatadogInternal'
+    sp.dependency 'JobsSwiftFoundation'
     sp.source_files = [
       'Core/**/*.{swift,h,m,mm}',
       'Support/**/*.{swift,h,m,mm}',
