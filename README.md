@@ -5339,14 +5339,16 @@ required init?(coder: NSCoder) {
   let value = await MainActor.run { /* UI 读写 */ }
   ```
 
-* 异步，下一轮再跑
+* `Task` 是把工作丢进 [**Swift**](https://developer.apple.com/swift/) **Concurrency** 的任务系统里异步执行
 
   * ```swift
     Task {
-        await updateUI()
+        print(Thread.isMainThread) // 不保证 true
+        await updateUI()           // 这里跳到 MainActor
+        print(Thread.isMainThread) // 这里也不保证 true
     }
     ```
-
+    
   * ```swift
     Task { @MainActor in
         /// UI 更新
@@ -5387,7 +5389,8 @@ required init?(coder: NSCoder) {
   extension Then where Self: AnyObject {
       @discardableResult
       func then(_ block: (Self) -> Void) -> Self {
-          block(self); return self
+          block(self)
+          return self
       }
   }
   extension NSObject: Then {}
@@ -8070,7 +8073,7 @@ DemoDetailVC().onResult { name in
   }
   ```
 
-### 54、Debug <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 54、**Debug** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 #### 54.1、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -10698,204 +10701,243 @@ let b = v as! UIButton                  // 若不是 UIButton 会崩溃
 
 ### 30、<font color=red>**`defer`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-> <font color=red>**`defer`**</font> 不是必须写在 `try` 里，它放在“当前作用域”里的任何位置，都会在**离开这个作用域时**必定执行（除非进程被杀/`fatalError` 之类）
+> <font color=red>**`defer`**</font> = **作用域退出时必执行的收尾代码（栈式执行）**  
+> 类似 `finally`，但更严格、与作用域强绑定
 
-* **触发时机**：离开“当前作用域”（函数/`init`/`deinit`/`do` 块/循环体）时执行。
+#### 30.1、核心语义（必须掌握）
 
-* **无论路径**：正常走到结尾、`return`、`throw`、`break/continue` 都会执行。
+* **触发时机**：离开“当前作用域”时执行
 
-* **执行顺序**：**后注册先执行**（LIFO）
+  * 函数 / `init` / `deinit`
+  * `do` 块
+  * 循环体
 
-  * <font color=red>**`defer`**</font> 绑定的是它所在的最内层作用域：
+* **无论路径都会执行**：
 
-    ```swift
-    /// 输出顺序：B → A（后注册先执行 + 内层先退出）
-    func f() {
-        defer { print("A") }       // 退出 f 时执行
-    
-        do {
-            defer { print("B") }   // 退出 do 块时执行（早于 A）
-            if cond { return }     // return 前会先打印 B，再打印 A
-        }
+  * 正常结束 ✅  
+  * `return` ✅  
+  * `throw` ✅  
+  * `break / continue` ✅  
+
+* **执行顺序（重点）**：
+
+  > **后注册 → 先执行（LIFO，栈）**
+
+```swift
+defer { print("A") }
+defer { print("B") }
+defer { print("C") }
+
+// 输出：C → B → A
+```
+
+#### 30.2、作用域绑定（非常关键）
+
+> <font color=red>**`defer`**</font> 绑定的是“最近的作用域”，不是整个函数
+
+```swift
+func f() {
+    defer { print("A") }       // 退出 f 时执行
+
+    do {
+        defer { print("B") }   // 退出 do 时执行（更早）
+        return
     }
-    ```
+}
+```
 
-    ```swift
-    /// defer 可以放在 async 函数里；可以调用 await 的收尾方法（只要所在函数是 async）。
-    /// 常见模式：任务取消、句柄关闭、HUD 收起。
-    /// 注意：defer 本身不能 async/throws，但可以在里面写 try? 或调用返回 Void/Never 的 API。
-    func work() async {
-        let t = Task { await poll() }
-        defer { t.cancel() }            // 离开作用域一定取消子任务
-        await use()
+```swift
+// 输出：B → A（内层先退出）
+```
+
+#### 30.3、变量捕获（容易误解）
+
+> <font color=red>**`defer`**</font> 中变量是“执行时取值”，不是注册时
+
+```swift
+var x = 1
+
+defer { print(x) }
+
+x = 2
+// 输出：2
+```
+
+✅ 如果需要“快照”
+
+```swift
+let snapshot = x
+defer { print(snapshot) }
+```
+
+#### 30.4、async 场景（现代 Swift 必会）
+
+```swift
+func work() async {
+    let t = Task { await poll() }
+
+    defer { t.cancel() }
+
+    await use()
+}
+```
+
+👉 常见用途：
+
+* 任务取消
+* 资源释放
+* loading / HUD 收尾
+
+⚠️ 限制：
+
+* <font color=red>**`defer`**</font> 本身不能 `async / throws`
+* 但可以写：
+
+```swift
+defer {
+    try? something()
+}
+```
+
+#### 30.5、不会执行的情况
+
+以下情况 <font color=red>**`defer`**</font> **不会执行**：
+
+* `fatalError()`
+* `preconditionFailure()`
+* `abort()`
+* 进程被杀
+
+```swift
+func crash() {
+    defer { print("❌ 不会执行") }
+    fatalError("boom")
+}
+```
+
+#### 30.6、⚠️ 最大坑：作用域错位（异步 / 逃逸闭包）
+
+> <font color=red>**`defer`**</font> 只跟“当前作用域”绑定，不会等待异步
+
+❌ 错误示例
+
+```swift
+func fetch() {
+    let conn = Connection()
+
+    defer { conn.close() }            // 函数结束就执行
+
+    URLSession.shared.dataTask(with: url) { _,_,_ in
+        use(conn)                     // ❌ conn 可能已关闭
+    }.resume()
+}
+```
+
+👉 问题本质：
+
+> `defer` 跟函数走，不跟异步任务走
+
+✅ 正确做法
+
+✔️ 绑定到 async 作用域
+
+```swift
+func fetchBetter() async throws -> Data {
+    let conn = Connection()
+    defer { conn.close() }
+
+    return try await conn.request()
+}
+```
+
+✔️ 或绑定到闭包内部
+
+```swift
+URLSession.shared.dataTask(with: url) { _,_,_ in
+    let conn = Connection()
+    defer { conn.close() }
+
+    // ...
+}.resume()
+```
+
+#### 30.7、锁 & 并发（经典误用）
+
+❌ 错误：锁提前释放
+
+```swift
+lock.lock()
+defer { lock.unlock() }
+
+DispatchQueue.global().async {
+    work() // ❌ 已经 unlock
+}
+```
+
+✅ 正确方式
+
+✔️ 非逃逸闭包
+
+```swift
+lock.lock()
+defer { lock.unlock() }
+
+block()
+```
+
+✔️ 锁放进闭包
+
+```swift
+DispatchQueue.global().async {
+    lock.lock()
+    defer { lock.unlock() }
+
+    work()
+}
+```
+
+✔️ 更推荐（现代写法）
+
+* 串行队列
+* actor（彻底避免锁）
+
+#### 30.8、性能注意（热路径）
+
+> <font color=red>**`defer`**</font> 很轻，但不是 0 成本
+
+❌ 高频循环中滥用
+
+```swift
+for x in xs {
+    defer { ... } // 每次都会注册
+}
+```
+
+✅ 优化方式
+
+```swift
+for x in xs {
+    do {
+        acquire()
+        defer { release() }
+        work(x)
     }
-    ```
+}
+```
 
-  * 捕获时机 & 快照
+#### 30.9、使用建议（工程实践）
 
-    ```swift
-    /// defer 里读取外部变量是执行时取值，不是注册时。
-    /// 需要“快照”就先 let 一下：
-    var path = "/a"
-    let snapshot = path
-    defer { print(snapshot) }   // 打印 /a（快照）
-    path = "/b"
-    defer { print(path) }       // 打印 /b（执行时值）
-    ```
+优先使用在：
 
-* <font color=red>**注意事项**</font>：
+* **资源释放**：文件 / 连接 / 句柄
 
-  * <font color=red>**`defer`**</font> 本身不能 `async`/`throws`，但可以在里面写 `try?` 或调用返回 `Void`/`Never` 的 API
+* **状态恢复**：loading / UI 状态
 
-  * 不要把重活放<font color=red>**`defer`**</font>里(尾延迟)
+* **对称操作**：lock / unlock
 
-  * **真正不会执行**：程序被杀、`fatalError()`/`preconditionFailure()`/`abort()` 这类**不会返回**的终止，**不会**回到栈清理阶段，<font color=red>**`defer`**</font> 无法执行。
+#### 30.10、一句话总结
 
-    ```swift
-    func crash() {
-        defer { print("❌ 不会看到这行") }
-        fatalError("boom")
-    }
-    ```
-
-  * 闭包里不会自动触发外层的 <font color=red>**`defer`**</font>
-
-    > 逃逸闭包的**生命周期独立**于外层函数，**不会**触发外层的 <font color=red>**`defer`**</font>
-
-    * ```swift
-      /// 错误做法
-      func fetch() {
-          let conn = Connection()
-          defer { conn.close() }            // 将在 fetch() 结束时执行
-      
-          URLSession.shared.dataTask(with: url) { _,_,_ in
-              // ⛔️ 这个闭包可能在 fetch() 返回很久之后才执行
-              // 外层的 defer 早就跑了，conn 早就 close 了
-              // 你以为 defer 会等这里？不会
-              use(conn)                      // ← 可能已关闭，风险！
-          }.resume()
-      } // ← 退出函数，defer 触发，conn.close() 被调用
-      /// 正确做法：把资源管理绑定到闭包/异步任务的作用域里；
-      func fetchBetter() async throws -> Data {
-          let conn = Connection()
-          defer { conn.close() }            // ✅ 作用域与 async 函数绑定
-          return try await conn.request()
-      }
-      /// 正确做法：闭包内自己 defer：
-      func fetchWithClosure() {
-          URLSession.shared.dataTask(with: url) { _,_,_ in
-              let conn = Connection()
-              defer { conn.close() }        // ✅ 绑定到闭包的生命周期
-              // ...
-          }.resume()
-      }
-      ```
-
-    * ```swift
-      /// 错误做法
-      func doWork(_ block: @escaping () -> Void) {
-          let lock = NSLock()
-          lock.lock()
-          defer { lock.unlock() }           // ← 只在 doWork 退出时解锁
-      
-          DispatchQueue.global().async {
-              // ⛔️ 这里会在 doWork 返回后才执行
-              // 若想在 block 执行期间持有锁，你做不到
-              block()
-          }
-      } // ← 此处已 unlock，block 执行时没有锁保护
-      /// 正确做法：不逃逸（@noescape/默认闭包），在当前作用域执行；
-      func doWork(_ block: () -> Void) {           // 默认 non-escaping
-          lock.lock()
-          defer { lock.unlock() }
-          block()
-      }
-      /// 正确做法：✅ 把锁放到闭包内部作用域：
-      DispatchQueue.global().async {
-          let lock = NSLock()
-          lock.lock()
-          defer { lock.unlock() }
-          block()
-      }
-      /// 正确做法：用串行队列替代锁（更稳）
-      final class Worker {
-          private let q = DispatchQueue(label: "work.serial")
-      
-          func doWork(_ block: @escaping () -> Void) {
-              q.async { block() }                // 同一队列上的任务串行执行
-          }
-      
-          // 若要“提交并等待完成”
-          func doWorkSync(_ block: () -> Void) {
-              q.sync { block() }                 // 同步执行，直到 block 完成
-          }
-      }
-      /// 正确做法：Swift Concurrency 的 actor（从根上消灭数据竞争）
-      /// 把共享状态放进 actor，所有访问都通过 await，无需手动锁。
-      actor SafeBox {
-          private var value = 0
-          func mutate(_ f: (inout Int) -> Void) { f(&value) }
-          func get() -> Int { value }
-      }
-      // 用法
-      let box = SafeBox()
-      await box.mutate { $0 += 1 }
-      let v = await box.get()
-      /// 正确做法：with 风格工具，强制“同一作用域执行”
-      @discardableResult
-      func withLock<T>(_ lock: NSLock, _ body: () -> T) -> T {
-          lock.lock(); defer { lock.unlock() }
-          return body()
-      }
-      
-      withLock(lock) {
-          // 在锁内，确保作用域结束才释放
-      }
-      ```
-
-  * 热路径里每次都注册很多 <font color=red>**`defer`**</font> ⇒ **微成本叠加**
-
-    ```swift
-    /// defer 本身很轻，但在超高频场景（小循环、内层 tight path）反复进出作用域，栈操作/捕获开销会积累：
-    @inline(__always)
-    func hot(_ xs: [Int]) -> Int {
-        var s = 0
-        for x in xs {
-            // ❌ 每次迭代都注册 3 个 defer，热到发烫
-            defer { _ = 0 }
-            defer { _ = 0 }
-            defer { _ = 0 }
-            s &+= x
-        }
-        return s
-    }
-    
-    /// 替代策略：把需配对的逻辑拉出循环，或缩小作用域：
-    func hotBetter(_ xs: [Int]) -> Int {
-        // ✅ 一次性资源，外层配对
-        setup()
-        defer { teardown() }
-    
-        var s = 0
-        for x in xs {
-            // ✅ 循环内部“对称写法”，不用 defer
-            fastOpen()
-            // ... do work ...
-            fastClose()
-            s &+= x
-        }
-        return s
-    }
-    
-    /// 替代策略：或用更细粒度作用域代替多重 defer：
-    for x in xs {
-        do {                  // 小作用域 + 1 个 defer
-            acquire()
-            defer { release() }
-            work(x)
-        }
-    }
-    ```
+> <font color=red>**`defer`**</font> = **作用域级 finally + 栈式收尾机制**
 
 
 ### 31、**`UIAlertController`** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -12097,16 +12139,66 @@ Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS
 | **可变容器但希望拷贝隔离**       | <font color=red>**`struct`**</font> + `mutating`         |
 | **全局单例或引用共享**           | <font color=red>**`class`**</font> + `static let shared` |
 
+### 21、**`class`** 🆚 <font color=red>**`static`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* `class` 无法修饰存储属性，而 <font color=red>**`static`**</font> 可以
+
+* `static` 修饰的类型方法或类型属性，**不能被子类重写 <font color=red>`override`</font>**
+
+  * ```swift
+    class Parent {
+        class func run() {
+            print("Parent run")
+        }
+    }
+    
+    class Child: Parent {
+        override class func run() {
+            print("Child run")
+        }
+    }
+    ```
+
+  * ```swift
+    class Parent {
+        static func run() {
+            print("Parent run")
+        }
+    }
+    
+    class Child: Parent {
+        // ❌ 报错，不能 override static method
+        // override static func run() {
+        //     print("Child run")
+        // }
+    }
+    ```
+
+### 22、重写 / 覆写 🆚 重载 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+> 一个是**继承行为**，一个是**函数签名行为**
+
+* **重写 / 覆写**（<font color=red>**`override`**</font>）：子类把父类的方法**替换实现**
+  * 子类对父类方法“重新实现”
+  * 方法签名必须一样
+  * 需要 <font color=red>**`override`**</font>
+  * 运行时决定调用哪个（动态派发）
+* **重载**（<font color=red>**`overload`**</font>）：同一个作用域里，<font size=5>**名字一样，参数不一样**</font>（[**Flutter**](https://flutter.dev/)里面没有重载）
+  * 方法名相同 
+  * 参数不同（类型 / 个数 / label）
+  * 编译期决定调用哪个（静态派发）
+
 ### 21、**`DispatchQueue.main.async`** 🆚 [<font color=red>**`@MainActor`**</font>](#@MainActor) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 #### 21.1、核心对比 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **`DispatchQueue.main.async`**
+  
   * 本质：**GCD** 把闭包**异步入队**到主队列@[**回调主线程**](#回调主线程)
   * 作用：保证**稍后**在主线程执行（通常是**当前调用返回之后**，多半是下一轮 runloop；<font color=red>**不是立刻**</font>）
   * 用途：从后台切回 UI 线程；**刻意“下一帧再做”**；把重活拆出去避免阻塞当前调用
   * 语义：**时序**（when），不提供编译器隔离检查
-
+  
 *  [<font color=red>**`@MainActor`**</font>](#@MainActor) 
 
   > ```swift
@@ -12123,12 +12215,12 @@ Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS
   * 用途：声明“这玩意儿必须在主线程用”（UI 类型/方法，状态容器等）
   * 语义：**归属**（where/which executor），不承诺“下一帧”，可能**立刻**在主线程执行
   
-* | 点                          | `@MainActor`                   | `DispatchQueue.main.async` |
-  | --------------------------- | ------------------------------ | -------------------------- |
-  | 是否静态检查                | ✅ 有，编译期就拦               | ❌ 完全靠你自觉             |
-  | 是否表达数据隔离            | ✅ 是 actor 隔离域的一部分      | ❌ 只是队列调度             |
-  | 是否和 async/await 深度整合 | ✅ 有，自动 hop、需要 `await`   | ❌ 只是闭包回调             |
-  | 是否可以标记类型 / 属性     | ✅ 可以（整类、属性、全局变量） | ❌ 不行                     |
+* | 点                                                     | `@MainActor`                                          | `DispatchQueue.main.async` |
+  | ------------------------------------------------------ | ----------------------------------------------------- | -------------------------- |
+  | 是否静态检查                                           | ✅ 有，编译期就拦                                      | ❌ 完全靠你自觉             |
+  | 是否表达数据隔离                                       | ✅ 是 actor 隔离域的一部分                             | ❌ 只是队列调度             |
+  | 是否和 <font color=red>**async/await**</font> 深度整合 | ✅ 有，自动 hop、需要 <font color=red>**await**</font> | ❌ 只是闭包回调             |
+  | 是否可以标记类型 / 属性                                | ✅ 可以（整类、属性、全局变量）                        | ❌ 不行                     |
 
 #### 21.2、组合关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -12187,6 +12279,11 @@ Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS
 ### 23、⛑️ <font id=避免循环引用>`[weak self]` 🆚 `[unowned self]`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > **避免循环引用（强持有）**：在 [**Swift**](https://developer.apple.com/swift/)  里，<font color=red>**闭包（block）默认会强引用 `self`**</font>。如果闭包被 `self` 持有，就会形成循环引用
+>
+> `weak`、`unowned` 都能解决 循环引用，`unowned` 要比 `weak` 性能 稍高
+>
+> - 在生命周期中可能会 变成 `nil` 的使用 `weak`
+> - 初始化赋值以后再也不会变成 `nil` 使用 `unowned`
 
 | 写法             | 特点                                                         |
 | ---------------- | ------------------------------------------------------------ |
@@ -12269,10 +12366,12 @@ flowchart TD
           nil: "空 key",
           "a": "值 A"
       ]
+      
+      let value = dict[nil] // "空 key"
       ```
 
   * Value：没有约束，任意类型都行（<font color=red>但字典里的 Value 类型必须统一</font>）
-
+  
     ```swift
     // 全是 Int
     var d1: [String: Int] = [
@@ -12311,7 +12410,7 @@ flowchart TD
 
 * 实现视角：底层确实有“对象”，但对其隐藏了
 
-  * 虽然语义是值类型，但为了性能，[**Swift**](https://developer.apple.com/swift/) **不会每次赋值就真的立刻拷贝整块内存**，而是：数组本体 (`Array<T>`) 是一个 `struct`，里面持有一个指向堆上 buffer（一个 **引用类型的存储对象**） 的引用
+  * 虽然语义是值类型，但为了性能，[**Swift**](https://developer.apple.com/swift/) **不会每次赋值就真的立刻拷贝整块内存**，而是：数组本体 (`Array<T>`) 是一个 `struct`，里面持有一个指向堆上（一个 **引用类型的存储对象**） 的引用
 
     ```swift
     var a = [1, 2, 3]
@@ -12322,6 +12421,7 @@ flowchart TD
 ### 27、<font color=red id=COW>**C**</font>opy-<font color=red>**O**</font>n-<font color=red>**W**</font>rite（**第一次写入且有共享时**：才真的复制）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > * **定义**：当你复制一个值类型的时候，[**Swift**](https://developer.apple.com/swift/) 不会立即复制它的底层存储，而是让两个变量共享同一块内存
+> * <font color=red>**COW**</font> 本质：struct + 内部 class（引用存储）
 > * **触发拷贝的时机**：一旦其中一个变量尝试 **写入（修改）** 数据，[**Swift**](https://developer.apple.com/swift/) 才会真正复制一份新的内存，以保证<u>值语义</u>的正确性
 > * 为什么这样设计？
 >   * **性能优化**：避免不必要的深拷贝，提升效率

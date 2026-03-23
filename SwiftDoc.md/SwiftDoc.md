@@ -1,5 +1,7 @@
 # Swift 相关经验
 
+![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
+
 [toc]
 
 当前总行数：0 行
@@ -16,29 +18,22 @@
 
 ## 网络分层 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 最常见的网络分层是 **OSI**（***O**pen **S**ystems **I**nterconnection*）
+
 ### OSI 参考模型
 
-* **物理层（*Physical Layer*）**：
-   - 负责传输比特流（0 和 1）。
-   - 包括物理介质、电压等传输媒介的规范。
-* **数据链路层（*Data Link Layer*）**：
-   - 提供了物理层之上的逻辑传输，将比特流转化为数据帧。
-   - 提供了数据帧的传输和错误检测。
-* **网络层（*Network Layer*）**：
-   - 负责将数据包从源节点传输到目的节点，跨越不同的网络。
-   - 提供了路由选择、分组转发等功能。
-* **传输层（*Transport Layer*）**：
-   - 提供端到端的数据传输服务，确保数据的可靠性和完整性。
-   - 提供了流量控制、拥塞控制等功能，如 TCP 和 UDP 协议。
-* **会话层（*Session Layer*）**：
-   - 管理应用程序之间的会话，建立、维护和终止会话。
-   - 提供了会话管理、同步和恢复等功能。
-* **表示层（*Presentation Layer*）**：
-   - 负责数据的格式化、加密和解密，以确保数据的可读性和安全性。
-   - 提供了数据的表示、编码和解码。
-* **应用层（*Application Layer*）**：
-   - 提供了网络服务和应用程序之间的接口。
-   - 包括 HTTP、FTP、SMTP 等协议，以及各种应用程序。
+```mermaid
+flowchart TB
+    G["物理层<br/>Physical Layer<br/><br/>传输比特流（0 和 1）<br/>规定介质、电压等规范"]
+    F["数据链路层<br/>Data Link Layer<br/><br/>将比特流封装成数据帧<br/>负责差错检测"]
+    E["网络层<br/>Network Layer<br/><br/>负责跨网络传输<br/>路由选择、分组转发"]
+    D["传输层<br/>Transport Layer<br/><br/>提供端到端传输<br/>保证可靠性、流控、拥塞控制"]
+    C["会话层<br/>Session Layer<br/><br/>建立、维护、终止会话<br/>支持同步与恢复"]
+    B["表示层<br/>Presentation Layer<br/><br/>负责格式转换<br/>编码解码、加密解密"]
+    A["应用层<br/>Application Layer<br/><br/>提供网络服务接口<br/>如 HTTP、FTP、SMTP"]
+
+    G --> F --> E --> D --> C --> B --> A
+```
+
 ### 参考模型和 TCP/IP 协议族
 
 * **应用层**：包含了 OSI 参考模型中的应用层、表示层和会话层;
@@ -187,7 +182,7 @@
   * 由节点（顶点）和边组成，用于表示各种实体之间的关系；
   * 图常用于网络分析、路由算法等场景。
 
-## 锁🔼
+## 锁 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 在操作系统中，常见的锁包括：
 
@@ -253,10 +248,23 @@ lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过
 */
 ```
 
-## 在***Swift***中，一个结构体（*struct*），占据多大的内存？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 在[**Swift**](https://developer.apple.com/swift/) 中，一个结构体（*struct*），占据多大的内存？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-* 在*Swift*中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
-* *Swift* 的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
+* 在[**Swift**](https://developer.apple.com/swift/) 中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
+
+* [**Swift**](https://developer.apple.com/swift/)  的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
+
+* [**Swift**](https://developer.apple.com/swift/)  中结构体是值类型，通常在简单场景下可能被优化到栈上，但并不保证一定在栈上；
+
+  * 有没有被 closure 捕获？
+  * 有没有逃逸？
+  * 有没有转成 protocol / Any？
+  * 有没有被 class 持有？
+  * 有没有桥接 ObjC？
+  * 内部有没有引用类型（String / Array）？
+
+  👉 有一个 YES → **基本就和堆沾边了**
+
 * 通常情况下，***结构体的内存布局是按照其成员变量的顺序依次排列的，并且可能会进行字节对齐***。这意味着如果结构体的成员包含不同类型的数据，编译器**可能会在其间插入一些填充字节以保持对齐**。
 你可以使用Swift的`MemoryLayout`来获取结构体的大小。例如：
 ```swift
@@ -426,7 +434,7 @@ print(result)  // 输出: 5
   NSLog(@"%d", result); // 输出 1（true）
   ```
 
-* 尾随闭包（Trailing Closure）：是***Swift***语法糖，**适用于闭包是最后一个参数的情况**。
+* 尾随闭包（Trailing Closure）：是[**Swift**](https://developer.apple.com/swift/) 语法糖，**适用于闭包是最后一个参数的情况**。
 
   ```swift
   func sendMessage(to name: String, completion: (String) -> Void) {
@@ -459,7 +467,7 @@ print(result)  // 输出: 5
   * `savedClosure` 是函数外部的变量
   * 所以这个闭包会**逃逸出函数作用域**
   * 必须加 `@escaping`，否则编译报错 ❌**Escaping closure captures non-escaping parameter 'completion'**（你不能把一个非逃逸闭包保存在函数外面！）
-    * 因为 ***Swift*** 默认函数参数中的闭包是 **non-escaping（非逃逸）**，也就是说：它必须在函数体内被调用完，不能带出去！
+    * 因为 [**Swift**](https://developer.apple.com/swift/)  默认函数参数中的闭包是 **non-escaping（非逃逸）**，也就是说：它必须在函数体内被调用完，不能带出去！
 
   ```swift
   /// 逃逸闭包
@@ -661,7 +669,7 @@ print(result)  // 输出: 5
   }
   ```
 
-## 能看懂这个，***swift*闭包简写天下无敌** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 能看懂这个，[**Swift**](https://developer.apple.com/swift/)闭包简写天下无敌 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 ```swift
 func transformAndSort<T>(_ input: [T], 
@@ -677,7 +685,7 @@ transformAndSort([true, false, true],
                  sorter: { $0 > $1 })
 ```
 
-## ***Swift.初始化方法*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://developer.apple.com/swift/).初始化方法 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 初始化方法负责确保新创建的实例在使用之前完成所有必要的初始化工作。
 
@@ -758,7 +766,7 @@ enum MyEnum {
 }
 ```
 
-## ***Swift***.数组
+## [**Swift**](https://developer.apple.com/swift/) .数组
 
 | 特性                 | Objective-C                  | Swift                                   |
 | -------------------- | ---------------------------- | --------------------------------------- |
@@ -864,9 +872,9 @@ enum MyEnum {
   // 输出：["hello", "world", "swift", "is", "fun"]  
   ```
 
-## ***Swift.`where`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://developer.apple.com/swift/).`where` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-* 在*Swift*中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
+* 在[**Swift**](https://developer.apple.com/swift/)中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
 
 * 它在泛型参数列表之后，可以用于指定一些条件，以限制泛型的类型。
 
@@ -1036,7 +1044,7 @@ enum MyEnum {
   }
   ```
 
-***Swift***.<font color="red">*`mutating`*</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+[**Swift**](https://developer.apple.com/swift/) .<font color="red">*`mutating`*</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 ***mutating***：
 
@@ -1063,7 +1071,7 @@ print("Before moving: \(point)")
 point.moveBy(x: 2.0, y: 3.0)
 print("After moving: \(point)")
 ```
-### 对比 ***Swift***.<font color="red">*`mutating`*</font> 和 ***Swift***.<font color="red">*`inout`*</font>
+### 对比 [**Swift**](https://developer.apple.com/swift/) .<font color="red">*`mutating`*</font> 和 [**Swift**](https://developer.apple.com/swift/) .<font color="red">*`inout`*</font>
 
 * <font color="red">***inout***</font>
   
@@ -1099,13 +1107,12 @@ print("After moving: \(point)")
 
 * `\(表达式)`：运算完表达式，结果转成字符串，并插入字符串
 
-## 内联函数。内联这两个字，我怎么去理解？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 内联函数，<font color=red>内联</font>这两个字，我怎么去理解？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-```
-理解内联（Inlining）涉及到编程语言的编译和执行的一些概念。
-简单来说，内联是一种编译器优化技术，它将调用函数的地方直接替换为被调用函数的实际代码，而不是通过在执行时跳转到函数的位置。
-这样可以减少函数调用的开销，提高代码的执行效率。
-```
+> 理解内联（Inlining）涉及到编程语言的编译和执行的一些概念。
+> 简单来说，内联是一种编译器优化技术，它将调用函数的地方直接替换为被调用函数的实际代码，而不是通过在执行时跳转到函数的位置。
+> 这样可以减少函数调用的开销，提高代码的执行效率。
+
 ✅ 宏定义（Macro） vs 内联函数（Inlining）
 
 | 特性             | 宏定义（C/C++ 的 `#define`）         | 内联函数（C/C++/Swift 的 inline 优化）              |
@@ -1762,7 +1769,7 @@ struct MyView: View {
 
 ### <font color="red">***`@Published`***</font>
 
-*是 Swift 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<font color="red">**`@Published`**</font> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`* 
+是 [**Swift**](https://developer.apple.com/swift/) 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<font color="red">**`@Published`**</font> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`
 
 ```swift
 import SwiftUI
@@ -1815,7 +1822,7 @@ struct MyView: View {
    - <font color="red">***`@UIApplicationMain`***</font> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
    综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 <font color="red">***`@main`***</font>。如果您在较早的Swift版本上仅进行iOS开发，可以使用 <font color="red">***`@UIApplicationMain`***</font>。在实践中，大多数新的Swift项目会选择使用 <font color="red">***`@main`***</font>，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
 
-## ***Swift***中，***Any***和***Anyobject***的区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://developer.apple.com/swift/) 中，***Any***和***Anyobject***的区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 ***Any***：
 
@@ -1867,7 +1874,7 @@ struct MyView: View {
     }
 }
 ```
-## `#available` 和 <font color="red">***`@available`***</font>在***Swift***中有什么区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## `#available` 和 <font color="red">***`@available`***</font>在[**Swift**](https://developer.apple.com/swift/) 中有什么区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 *在Swift中，`#available`和 <font color="red">**`@available`**</font>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
 **`#available`：** 
@@ -1896,7 +1903,7 @@ func myFunction() {
 
 2、在实际编码中，它们经常一起使用，以确保代码在编译和运行时都考虑到平台和版本的差异；
 
-##  ***Swift***.<font color="red">***`extension`***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+##  [**Swift**](https://developer.apple.com/swift/) .<font color="red">***`extension`***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 1、<font color="red">***类似于OC中的分类***</font>；
 2、***允许你在不修改原始类型定义的情况下，向已有的类（Class）、结构体（Struct）、枚举（enum）或协议（Protocol）添加新的功能。***；
