@@ -19,8 +19,8 @@ import SnapKit
 import JobsByUIKit
 import JobsBy3rdTools
 import JobsInheritance
-import JobsSwiftBaseDefines
 import JobsSwiftMetalKit
+import JobsSwiftBaseDefines
 
 class PNPlayerDemoVC: BaseVC {
 
