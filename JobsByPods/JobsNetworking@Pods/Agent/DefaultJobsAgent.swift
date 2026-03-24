@@ -216,13 +216,13 @@ public final class DefaultJobsAgent: JobsAgent {
         switch rule {
         case .urlQuery:
             encoding = URLEncoding(destination: .queryString)
-            parameters = request.query?.toParameters()
+            parameters = request.query?.toAFParameters()
         case .jsonBody:
             encoding = JSONEncoding.default
-            parameters = request.body?.toParameters()
+            parameters = request.body?.toAFParameters()
         case .formURLEncoded:
             encoding = URLEncoding(destination: .httpBody)
-            parameters = request.body?.toParameters()
+            parameters = request.body?.toAFParameters()
         case .multipart:
             throw JobsError.unknown(underlying: NSError(domain: "JobsNetworking", code: -10001,
                                                         userInfo: [NSLocalizedDescriptionKey: "multipart encoding is not supported by DefaultJobsAgent.prepareRequest yet"]))
@@ -260,12 +260,4 @@ public final class DefaultJobsAgent: JobsAgent {
         }
     }
 }
-// MARK: - Helpers
-private extension Dictionary where Key == String, Value == AnySendable {
-    func toParameters() -> Parameters {
-        var out: Parameters = [:]
-        for (k, v) in self {
-            out[k] = v.value ?? NSNull()
-        };return out
-    }
-}
+

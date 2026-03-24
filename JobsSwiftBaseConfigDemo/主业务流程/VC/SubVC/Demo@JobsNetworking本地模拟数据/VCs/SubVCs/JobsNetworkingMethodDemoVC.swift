@@ -100,6 +100,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
+//                debugRequestByURLSession()
                 self.sendRequest(triggerError: false)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -207,6 +208,19 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
 extension JobsNetworkingMethodDemoVC {
     
+    func debugRequestByURLSession() {
+        let url = URL(string: "http://127.0.0.1:18080/api/get/dashboard?tab=overview&client=swift-demo")!
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            print("===== URLSession Debug =====")
+            print("error =", error as Any)
+            print("response =", response as Any)
+            if let data, let text = String(data: data, encoding: .utf8) {
+                print("body =", text)
+            }
+        }
+        task.resume()
+    }
+    
     func sendRequest(triggerError: Bool) {
         requestButton.isEnabled = false
         errorButton.isEnabled = false
@@ -216,12 +230,88 @@ extension JobsNetworkingMethodDemoVC {
         Task {
             do {
                 try await performRequest(triggerError: triggerError)
-            } catch {
+            } catch let error as JobsError {
+                let message: String
+
+                switch error {
+                case let .transport(underlying):
+                    message = """
+                    JobsError.transport
+                    underlying = \(underlying)
+                    localized = \(underlying.localizedDescription)
+                    """
+
+                case let .http(statusCode, data):
+                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                    message = """
+                    JobsError.http
+                    statusCode = \(statusCode)
+                    raw =
+                    \(raw)
+                    """
+
+                case let .server(statusCode, data):
+                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                    message = """
+                    JobsError.server
+                    statusCode = \(statusCode)
+                    raw =
+                    \(raw)
+                    """
+
+                case let .decode(underlying, data):
+                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                    message = """
+                    JobsError.decode
+                    underlying = \(underlying)
+                    localized = \(underlying.localizedDescription)
+                    raw =
+                    \(raw)
+                    """
+
+                case let .business(code, msg, data):
+                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                    message = """
+                    JobsError.business
+                    code = \(code)
+                    message = \(msg)
+                    raw =
+                    \(raw)
+                    """
+
+                case .cacheMiss:
+                    message = "JobsError.cacheMiss"
+
+                case .cancelled:
+                    message = "JobsError.cancelled"
+
+                case let .unknown(underlying):
+                    message = """
+                    JobsError.unknown
+                    underlying = \(underlying)
+                    localized = \(underlying.localizedDescription)
+                    """
+                }
+
                 onMainSync { [weak self] in
                     guard let self else { return }
-                    self.statusText = "\(self.item.methodType.title) 请求异常：\(error.localizedDescription)"
-                    self.renderResultText = self.statusText
-                    self.rawResponseText = self.statusText
+                    self.statusText = "\(self.item.methodType.title) 请求异常"
+                    self.renderResultText = message
+                    self.rawResponseText = message
+                    self.finishRequest()
+                }
+            } catch {
+                let message = """
+                Unknown Error
+                \(error)
+                localized = \(error.localizedDescription)
+                """
+
+                onMainSync { [weak self] in
+                    guard let self else { return }
+                    self.statusText = "\(self.item.methodType.title) 请求异常"
+                    self.renderResultText = message
+                    self.rawResponseText = message
                     self.finishRequest()
                 }
             }

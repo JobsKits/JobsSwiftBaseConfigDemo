@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'UIKit'
 
   # 默认只装 Core（iOS 12 可用）
-  s.default_subspec = 'Core'
+  s.default_subspec = ['Core', 'AF5', 'Async']
 
   # ------------------------------ Core (iOS 12) ------------------------------
   s.subspec 'Core' do |sp|

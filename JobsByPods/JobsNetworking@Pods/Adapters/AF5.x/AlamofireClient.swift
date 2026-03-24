@@ -28,10 +28,15 @@ final class AlamofireClient: HTTPClient {
 
         let r = session.request(
             req.url,
-            method: Alamofire.HTTPMethod(rawValue: req.method.rawValue) ?? .get,
+            method: req.method.afMethod,
             parameters: req.parameters,
             encoding: req.encoding,
-            headers: req.headers
+            headers: req.headers,
+            requestModifier: req.timeout.map { timeout in
+                { (urlRequest: inout URLRequest) in
+                    urlRequest.timeoutInterval = timeout
+                }
+            }
         )
 
         store(requestId: requestId, request: r)
@@ -119,7 +124,7 @@ final class AlamofireClient: HTTPClient {
                 }
             },
             to: url,
-            method: Alamofire.HTTPMethod(rawValue: method.rawValue) ?? .post,
+            method: method.afMethod,
             headers: headers,
             requestModifier: timeout.map { t in { (req: inout URLRequest) in req.timeoutInterval = t } }
         )
@@ -149,8 +154,6 @@ final class AlamofireClient: HTTPClient {
         requests[requestId] = nil
     }
 
-    // MARK: - Private
-
     private func store(requestId: String, request: Request) {
         lock.lock(); defer { lock.unlock() }
         requests[requestId] = request
@@ -164,5 +167,18 @@ final class AlamofireClient: HTTPClient {
     private static func mapError(_ error: AFError) -> JobsError {
         if error.isExplicitlyCancelledError { return .cancelled }
         return .transport(underlying: error)
+    }
+}
+
+private extension HTTPMethod {
+    var afMethod: Alamofire.HTTPMethod {
+        switch self {
+        case .get: return .get
+        case .post: return .post
+        case .put: return .put
+        case .patch: return .patch
+        case .delete: return .delete
+        case .head: return .head
+        }
     }
 }

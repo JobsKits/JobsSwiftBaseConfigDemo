@@ -11,13 +11,23 @@ import Foundation
 @available(iOS 13.0, *)
 public extension JobsDownloadCapable {
     func download(_ request: JobsDownloadRequest) async throws -> URL {
-        try await withCheckedThrowingContinuation { cont in
-            _ = download(request) { result in
-                switch result {
-                case .success(let v): cont.resume(returning: v)
-                case .failure(let e): cont.resume(throwing: e)
+        var token: JobsRequestToken?
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { cont in
+                token = download(request) { result in
+                    switch result {
+                    case .success(let value):
+                        cont.resume(returning: value)
+                    case .failure(let error):
+                        cont.resume(throwing: error)
+                    }
+                    token = nil
                 }
             }
+        } onCancel: {
+            token?.cancel()
+            token = nil
         }
     }
 }

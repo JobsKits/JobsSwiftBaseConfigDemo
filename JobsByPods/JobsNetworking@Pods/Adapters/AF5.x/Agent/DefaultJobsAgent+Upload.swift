@@ -124,13 +124,23 @@ public extension DefaultJobsAgent {
     /// iOS 13 async/await API（Demo 用 try await 的话就走这个）
     func upload<T: Decodable>(_ request: JobsUploadRequest,
                               as type: T.Type) async throws -> T {
-        try await withCheckedThrowingContinuation { cont in
-            _ = upload(request, as: type) { result in
-                switch result {
-                case .success(let v): cont.resume(returning: v)
-                case .failure(let e): cont.resume(throwing: e)
+        var token: JobsRequestToken?
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { cont in
+                token = upload(request, as: type) { result in
+                    switch result {
+                    case .success(let value):
+                        cont.resume(returning: value)
+                    case .failure(let error):
+                        cont.resume(throwing: error)
+                    }
+                    token = nil
                 }
             }
+        } onCancel: {
+            token?.cancel()
+            token = nil
         }
     }
 }

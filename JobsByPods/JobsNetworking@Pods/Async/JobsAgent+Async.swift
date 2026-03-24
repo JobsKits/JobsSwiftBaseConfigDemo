@@ -11,13 +11,23 @@ import Foundation
 @available(iOS 13.0, *)
 public extension JobsAgent {
     func send<T: Decodable>(_ request: JobsRequest, as type: T.Type) async throws -> T {
-        try await withCheckedThrowingContinuation { cont in
-            send(request, as: type) { result in
-                switch result {
-                case .success(let v): cont.resume(returning: v)
-                case .failure(let e): cont.resume(throwing: e)
+        var token: JobsRequestToken?
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { cont in
+                token = send(request, as: type) { result in
+                    switch result {
+                    case .success(let value):
+                        cont.resume(returning: value)
+                    case .failure(let error):
+                        cont.resume(throwing: error)
+                    }
+                    token = nil
                 }
             }
+        } onCancel: {
+            token?.cancel()
+            token = nil
         }
     }
 }

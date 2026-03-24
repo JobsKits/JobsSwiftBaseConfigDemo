@@ -28,26 +28,61 @@ enum JobsEncodingRule {
             return .jsonBody
         }
     }
-    /// 白皮书规则：Query 与 Body 不允许隐式混用
+
     static func validateNoImplicitMix(_ request: JobsRequest, encoding: JobsParameterEncoding) throws {
         switch encoding {
         case .urlQuery:
             if request.body != nil && !(request.body?.isEmpty ?? true) {
-                throw JobsError.decode(underlying: NSError(domain: "JobsNetworking", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL Query 编码下不允许携带 Body 参数"]), data: nil)
+                throw JobsError.decode(
+                    underlying: NSError(
+                        domain: "JobsNetworking",
+                        code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "URL Query 编码下不允许携带 Body 参数"]
+                    ),
+                    data: nil
+                )
             }
         case .jsonBody, .formURLEncoded, .multipart, .rawData:
-            // 允许 query + body 同时存在，但必须显式（这里的显式性体现在你设置了 query/body）
-            // 如需更严格（禁止 query+body 同时存在），可在此改为 throw。
             break
+        }
+    }
+}
+
+enum JobsParameterNormalizer {
+    static func normalize(_ value: Any?) -> Any {
+        guard let value else { return NSNull() }
+
+        switch value {
+        case let value as AnySendable:
+            return normalize(value.value)
+        case let value as [String: AnySendable]:
+            return value.reduce(into: Parameters()) { partialResult, item in
+                partialResult[item.key] = normalize(item.value.value)
+            }
+        case let value as [String: Any]:
+            return value.reduce(into: Parameters()) { partialResult, item in
+                partialResult[item.key] = normalize(item.value)
+            }
+        case let value as [AnySendable]:
+            return value.map { normalize($0.value) }
+        case let value as [Any]:
+            return value.map(normalize)
+        case let value as URL:
+            return value.absoluteString
+        case let value as Date:
+            return ISO8601DateFormatter().string(from: value)
+        case let value as Data:
+            return value.base64EncodedString()
+        default:
+            return value
         }
     }
 }
 
 extension Dictionary where Key == String, Value == AnySendable {
     func toAFParameters() -> Parameters {
-        var out: Parameters = [:]
-        for (k, v) in self {
-            out[k] = v.value
-        };return out
+        reduce(into: Parameters()) { partialResult, item in
+            partialResult[item.key] = JobsParameterNormalizer.normalize(item.value.value)
+        }
     }
 }

@@ -101,10 +101,10 @@ final class JobsNetworkingDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "JobsNetworking@本地模拟数据".tr)
+        jobsSetupGKNav(title: "JobsNetworking@本地模拟数据（iOS模拟器可看数据，真机无法）".tr)
         view.byBackgroundColor(.systemBackground)
         tableView.byVisible(YES)
-        loadCatalog()
+//        loadCatalog()
     }
 }
 
@@ -114,13 +114,15 @@ extension JobsNetworkingDemoVC {
         Task {
             do {
                 let items = try await DioDemoService.shared.loadCatalog()
-                await MainActor.run {
+                onMainSync { [weak self] in
+                    guard let self else { return }
                     self.dataSources = items
                     self.tableView.byReloadData()
                     self.endRefreshing()
                 }
             } catch {
-                await MainActor.run {
+                onMainSync { [weak self] in
+                    guard let self else { return }
                     self.endRefreshing()
                     "目录加载失败：\(error.localizedDescription)".toast
                     self.tableView.byReloadData()
@@ -146,4 +148,3 @@ extension JobsNetworkingDemoVC {
         }
     }
 }
-
