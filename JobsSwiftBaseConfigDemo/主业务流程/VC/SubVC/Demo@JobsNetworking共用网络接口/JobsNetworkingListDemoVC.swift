@@ -85,8 +85,8 @@ final class JobsNetworkingListDemoVC : BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
-                Task { @MainActor in
+                onMainSync { [weak self] in
+                    guard let self else { return }
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshHeader(to: .normal)
                     self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
@@ -96,9 +96,11 @@ final class JobsNetworkingListDemoVC : BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
-                self.tableView.byReloadData()
-                self.tableView.switchRefreshFooter(to: .noMoreData)
+                onMainSync { [weak self] in
+                    guard let self else { return }
+                    self.tableView.byReloadData()
+                    self.tableView.switchRefreshFooter(to: .noMoreData)
+                }
             }
             .byAddTo(view) {[unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -113,7 +115,7 @@ final class JobsNetworkingListDemoVC : BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "JobsNetworking".tr)
+        jobsSetupGKNav(title: "JobsNetworking@共用网络接口".tr)
         tableView.byVisible(YES)
     }
 }
