@@ -211,20 +211,20 @@ extension PromiseKitDemoVC {
     private func runDemo(_ row: Row) {
         switch row {
         case .serial:
-            runSerialChainDemo()
+            上一个请求的产物给下一个请求继续用()
         case .parallel:
-            runParallelHomeDemo()
+            多个互不依赖的请求同时发最后一次性收口()
         case .fallback:
-            runRecoverFallbackDemo()
+            主链路挂了以后不把页面打死直接切缓存()
         case .partialSuccess:
-            runPartialSuccessDemo()
+            一个接口失败不影响其它接口的成功结果展示()
         case .timeoutRace:
-            runRaceTimeoutDemo()
+            哪个先完成就用哪个()
         }
     }
     // MARK: - Demo 1
     /// 串行依赖：上一个请求的产物给下一个请求继续用
-    private func runSerialChainDemo() {
+    private func 上一个请求的产物给下一个请求继续用() {
         setLoading(true, text: "串行中...")
 
         firstly {
@@ -248,7 +248,7 @@ extension PromiseKitDemoVC {
     }
     // MARK: - Demo 2
     /// 并发聚合：多个互不依赖的请求同时发，最后一次性收口
-    private func runParallelHomeDemo() {
+    private func 多个互不依赖的请求同时发最后一次性收口() {
         setLoading(true, text: "并发中...")
 
         firstly {
@@ -273,7 +273,7 @@ extension PromiseKitDemoVC {
     }
     // MARK: - Demo 3
     /// 失败回退：主链路挂了以后，不把页面打死，直接切缓存
-    private func runRecoverFallbackDemo() {
+    private func 主链路挂了以后不把页面打死直接切缓存() {
         setLoading(true, text: "回退中...")
 
         firstly {
@@ -295,7 +295,7 @@ extension PromiseKitDemoVC {
     }
     // MARK: - Demo 4
     /// 部分成功：一个接口失败，不影响其它接口的成功结果展示
-    private func runPartialSuccessDemo() {
+    private func 一个接口失败不影响其它接口的成功结果展示() {
         setLoading(true, text: "收集中...")
 
         let promises: [Promise<String>] = [
@@ -329,7 +329,7 @@ extension PromiseKitDemoVC {
     }
     // MARK: - Demo 5
     /// 竞争 / 超时：哪个先完成就用哪个
-    private func runRaceTimeoutDemo() {
+    private func 哪个先完成就用哪个() {
         setLoading(true, text: "竞争中...")
 
         let request = service.fetchSlowResource(delay: 2.0)
