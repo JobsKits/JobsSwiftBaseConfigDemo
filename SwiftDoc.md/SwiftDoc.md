@@ -1,4 +1,4 @@
-# Swift 相关经验
+# [Swift](https://www.swift.org/)相关经验
 
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
 
@@ -9,12 +9,12 @@
 ## <font id=资料来源>资料来源</font>
 
 * 一些相关文献
-  * [***Swift自动布局SnapKit的详细使用介绍***](https://www.jianshu.com/p/2bad53a2a180)
-  * [***SwiftUI - 与UIKit集成***](https://www.jianshu.com/p/fbc920c11b0d)
-  * [***SwiftUI -SwiftUI 和 UIKit 的相互引用***](https://juejin.cn/post/7153879743107399710)
+  * [***[Swift](https://www.swift.org/) 自动布局SnapKit的详细使用介绍***](https://www.jianshu.com/p/2bad53a2a180)
+  * [***[Swift](https://www.swift.org/) UI - 与UIKit集成***](https://www.jianshu.com/p/fbc920c11b0d)
+  * [***[Swift](https://www.swift.org/) UI -[Swift](https://www.swift.org/) UI 和 UIKit 的相互引用***](https://juejin.cn/post/7153879743107399710)
   * [***JXSegmentedView***](https://github.com/pujiaxin33/JXSegmentedView)
-* *Swift*视频教学
-  * [***BBCo - iOS开发入门教程 SwiftUI 微博App项目实战 Lesson 1 (零基础学习Swift编程)***](https://www.youtube.com/watch?v=5n0qoRZ8gXA&list=PLotizAeaV0nPM7a7Yy3Uyh4rkgBvT9N_H&index=2)
+* *[Swift](https://www.swift.org/) *视频教学
+  * [***BBCo - iOS开发入门教程 [Swift](https://www.swift.org/) UI 微博App项目实战 Lesson 1 (零基础学习[Swift](https://www.swift.org/) 编程)***](https://www.youtube.com/watch?v=5n0qoRZ8gXA&list=PLotizAeaV0nPM7a7Yy3Uyh4rkgBvT9N_H&index=2)
 
 ## 网络分层 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 最常见的网络分层是 **OSI**（***O**pen **S**ystems **I**nterconnection*）
@@ -36,12 +36,16 @@ flowchart TB
 
 ### 参考模型和 TCP/IP 协议族
 
-* **应用层**：包含了 OSI 参考模型中的应用层、表示层和会话层;
-* **传输层**：类似于 OSI 参考模型的传输层，提供了端到端的数据传输，如 TCP 和 UDP 协议;
-* **网络层**：类似于 OSI 参考模型的网络层，负责数据包的传输和路由选择，如 IP 协议;
-* **链路层**：类似于 OSI 参考模型的数据链路层和物理层，负责数据帧的传输和物理介质的规范;
+* **应用层**：包含了 OSI 参考模型中的应用层、表示层和会话层
+* **传输层**：类似于 OSI 参考模型的传输层，提供了端到端的数据传输，如 TCP 和 UDP 协议
+* **网络层**：类似于 OSI 参考模型的网络层，负责数据包的传输和路由选择，如 IP 协议
+* **链路层**：类似于 OSI 参考模型的数据链路层和物理层，负责数据帧的传输和物理介质的规范
 
 ## <font color="red">**内存区域分类**</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+
+> 不同操作系统和编程语言的实现可能会有所不同，下面的分类只是一种常见的划分方式；
+> **TCP/IP** 协议族中的层次结构并不是严格按照 OSI 参考模型来定义的，但它们都提供了类似的功能；
+> 网络分层的好处在于可以提高系统的模块化、灵活性和可维护性，同时也促进了不同厂商之间的互操作性
 
 ```lua
 低地址
@@ -75,16 +79,11 @@ flowchart TB
 ```
 
 * **全局区（*Global Segment*）**：
-   * 全局区存储全局变量，但是和数据区的区别是，它包含了**未初始化的全局变量**；
-   * 在程序开始时，未初始化的全局变量会被初始化为默认值；
-   * 已初始化的全局变量属于数据段；
-   * 未初始化的全局变量属于 BSS 段；
-   * 全局区实际上已经被包含在 **数据段** 和 **BSS 段** 中；
-```
-1、不同操作系统和编程语言的实现可能会有所不同，上述分类只是一种常见的划分方式；
-2、TCP/IP 协议族中的层次结构并不是严格按照 OSI 参考模型来定义的，但它们都提供了类似的功能；
-3、网络分层的好处在于可以提高系统的模块化、灵活性和可维护性，同时也促进了不同厂商之间的互操作性；
-```
+   * 全局区存储全局变量，但是和数据区的区别是，它包含了**未初始化的全局变量**
+   * 在程序开始时，未初始化的全局变量会被初始化为默认值
+   * 已初始化的全局变量属于数据段
+   * 未初始化的全局变量属于 BSS 段
+   * 全局区实际上已经被包含在 **数据段** 和 **BSS 段** 中
 ## 数据结构 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * **单向链表**是一种常见的链表数据结构
@@ -182,7 +181,7 @@ flowchart TB
   * 由节点（顶点）和边组成，用于表示各种实体之间的关系；
   * 图常用于网络分析、路由算法等场景。
 
-## 锁 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 锁🔒 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 在操作系统中，常见的锁包括：
 
@@ -239,7 +238,6 @@ func testCustomLock() {
 }
 
 testCustomLock()
-
 /**
 在这个示例中，我们定义了一个名为 CustomLock 的类，它使用 NSLock 来实现互斥锁。
 lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过调用 NSLock 的 unlock 方法来释放锁。
@@ -248,44 +246,48 @@ lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过
 */
 ```
 
-## 在[**Swift**](https://developer.apple.com/swift/) 中，一个结构体（*struct*），占据多大的内存？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 在[Swift](https://www.swift.org/)中，一个结构体（*struct*），占据多大的内存？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-* 在[**Swift**](https://developer.apple.com/swift/) 中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
+* 在[**Swift**](https://www.swift.org/)中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
 
-* [**Swift**](https://developer.apple.com/swift/)  的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
+* [**Swift**](https://www.swift.org/)的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
 
-* [**Swift**](https://developer.apple.com/swift/)  中结构体是值类型，通常在简单场景下可能被优化到栈上，但并不保证一定在栈上；
+* [**Swift**](https://www.swift.org/)中结构体是值类型，通常在简单场景下可能被优化到栈上，但并不保证一定在栈上；
 
   * 有没有被 closure 捕获？
   * 有没有逃逸？
   * 有没有转成 protocol / Any？
   * 有没有被 class 持有？
-  * 有没有桥接 ObjC？
+  * 有没有桥接 **ObjC**？
   * 内部有没有引用类型（String / Array）？
 
-  👉 有一个 YES → **基本就和堆沾边了**
+  👉 有一个 YES ➤ **基本就和堆沾边了**
 
 * 通常情况下，***结构体的内存布局是按照其成员变量的顺序依次排列的，并且可能会进行字节对齐***。这意味着如果结构体的成员包含不同类型的数据，编译器**可能会在其间插入一些填充字节以保持对齐**。
-你可以使用Swift的`MemoryLayout`来获取结构体的大小。例如：
-```swift
-struct MyStruct {
-    var member1: Int
-    var member2: Double
-    var member3: Bool
-}
+  你可以使用[**Swift**](https://www.swift.org/) 的`MemoryLayout`来获取结构体的大小。例如：
 
-let size = MemoryLayout<MyStruct>.size
-print("MyStruct 占用的内存大小为 \(size) 字节")
-```
-这将输出结构体 `MyStruct` 占用的字节数。请注意，实际的大小可能因为对齐而有所不同。如果你需要详细的信息，你还可以使用 `MemoryLayout<MyStruct>.alignment` 和 `MemoryLayout<MyStruct>.stride` 来获取对齐和步幅的信息。
-```swift
-let alignment = MemoryLayout<MyStruct>.alignment
-let stride = MemoryLayout<MyStruct>.stride
+  ```swift
+  struct MyStruct {
+      var member1: Int
+      var member2: Double
+      var member3: Bool
+  }
+  
+  let size = MemoryLayout<MyStruct>.size
+  print("MyStruct 占用的内存大小为 \(size) 字节")
+  ```
 
-print("MyStruct 对齐方式为 \(alignment) 字节")
-print("MyStruct 步幅为 \(stride) 字节")
-```
-总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`。
+  > 这将输出结构体 `MyStruct` 占用的字节数。请注意，实际的大小可能因为对齐而有所不同。如果你需要详细的信息，你还可以使用 `MemoryLayout<MyStruct>.alignment` 和 `MemoryLayout<MyStruct>.stride` 来获取对齐和步幅的信息。
+
+  ```swift
+  let alignment = MemoryLayout<MyStruct>.alignment
+  let stride = MemoryLayout<MyStruct>.stride
+  
+  print("MyStruct 对齐方式为 \(alignment) 字节")
+  print("MyStruct 步幅为 \(stride) 字节")
+  ```
+
+  总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`
 ## <font color="red">***Copy-On-Write***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * **C**opy-**O**n-**W**rite（COW）是一种内存管理技术，通常**用于优化复杂数据结构的拷贝操作**。
@@ -294,8 +296,8 @@ print("MyStruct 步幅为 \(stride) 字节")
   * 这样，在修改数据之前，所有的变量都指向同一块内存，称为*共享状态*；
   * 而在修改数据后，修改发生的变量会拷贝一份数据到新的内存空间，然后修改新的内存空间中的数据，这样其他变量不受影响，仍然指向原来的内存空间。
 * **C**opy-**O**n-**W**rite 的优点是在**大部分情况下避免了不必要的数据拷贝**，节省了内存和运行时间。它通常用于处理复杂数据结构，如字符串、数组、字典等，这些数据结构在进行赋值操作时可能需要进行大量的数据拷贝，使用 **C**opy-**O**n-**W**rite技术可以显著提高性能。
-* 在实际应用中，**C**opy-**O**n-**W**rite 技术常见于编程语言的标准库中，如 Swift 中的<font color="red">***字符串和数组类型***</font>就采用了**C**opy-**O**n-**W**rite  
-## 【*Swift* vs *Java* vs *C/C++*】<font color="red">***static***</font> 和 <font color="red">***final***</font>的区别 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+* 在实际应用中，**C**opy-**O**n-**W**rite 技术常见于编程语言的标准库中，如 [**Swift**](https://www.swift.org/)  中的<font color="red">***字符串和数组类型***</font>就采用了**C**opy-**O**n-**W**rite  
+## [Swift](https://www.swift.org/) 🆚 *Java* 🆚 *C/C++*<font color="red">***static***</font> 和 <font color="red">***final***</font>的区别 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * ### <font color="red">***static***</font>
   
@@ -309,12 +311,12 @@ print("MyStruct 步幅为 \(stride) 字节")
     - 在 Java 中，<font color="red">***static***</font>关键字用于**声明静态成员**（静态变量和静态方法）。静态成员属于类而不是类的实例，可以通过类名直接访问，而不需要创建类的实例；
     - 静态成员**在整个程序的生命周期内保持其值**，并且可以被类的所有实例共享；
     - 存储在**方法区（Method Area）**中；
-  * #### *Swift*
+  * #### [Swift](https://www.swift.org/)
     
-    * 在 *Swift* 中，<font color="red">***static***</font>关键字用于定义类型范围的属性和方法。这些属性和方法属于类型本身，而不是类的实例或结构体的实例；
+    * 在 [**Swift**](https://www.swift.org/) 中，<font color="red">***static***</font>关键字用于定义类型范围的属性和方法。这些属性和方法属于类型本身，而不是类的实例或结构体的实例；
     * 这些属性和方法**在整个程序的生命周期内保持其值**，并且可以通过类型名来访问，而不需要创建实例；
-    * [***定义单例***](# Swift单例的写法和用法)
-    * 在 *Swift* 中，静态成员的存储位置**取决于具体的上下文**；
+    * [***定义单例***](# [Swift](https://www.swift.org/) 单例的写法和用法)
+    * 在 [**Swift**](https://www.swift.org/) 中，静态成员的存储位置**取决于具体的上下文**；
       * 在类中，静态属性和方法通常存储在类的元类型中，而元类型本身**存储在[*堆*](# 堆(Heap))上**；
       * 而在结构体或枚举中，静态属性和方法**存储在静态数据区**中；
 * ### <font color="red">***final***</font>
@@ -331,16 +333,16 @@ print("MyStruct 步幅为 \(stride) 字节")
     * 当一个方法被声明为<font color="red">***final***</font>时，它**不能被子类重写**；
     * 当一个变量被声明为<font color="red">***final***</font>时，它的**值不能被修改，相当于常量**（**内存分布：常量池**）；
     * 在内存中，<font color="red">***final***</font>类的对象和成员变量**存储在[***堆(Heap)***](# 堆(Heap))上**，和普通类的对象存储位置相同；
-  * #### Swift
+  * #### [Swift](https://www.swift.org/) 
     
-    - 在 Swift 中，<font color="red">***final***</font>关键字用于限制类、方法或者属性**不可被继承或者重写**；
+    - 在 [**Swift**](https://www.swift.org/)  中，<font color="red">***final***</font>关键字用于限制类、方法或者属性**不可被继承或者重写**；
     - 当一个类被声明为<font color="red">***final***</font> 时，它**不能被其他类继承**；
     - 当一个方法或者属性被声明为<font color="red">***final***</font>时，它**不能被子类重写**；
     - 在内存中，<font color="red">***final***</font>方法或属性的存储位置和普通方法或属性相同，取决于具体的上下文环境；
       * **堆（*Heap*）**：如果方法或属性属于类的实例，则它们通常**存储在[*堆*](# 堆(Heap))上**（ARC）；
       * **栈（*Stack*）**：如果方法或属性属于结构体的实例或是局部变量，则它们通常存储在[***栈***](# 栈(Stack))上（编译器自动）；
       * **常量池（*Constant Pool*）**：对于某些特定的常量或静态变量，它们可能被存储在常量池中，这取决于编译器的优化和实现方式；
-## *Swift*里面可否用*var*来接受一个*func*？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [Swift](https://www.swift.org/) 里面可否用*var*来接受一个<font color=red>func</font>？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 **不能直接使用<font color="red">*var*</font>关键字来声明一个变量来接受一个函数。但是可以变通处理（转变为类型）👇🏻**
 
@@ -357,36 +359,34 @@ myFunction = { (a, b) in
 let result = myFunction(2, 3)
 print(result)  // 输出: 5
 ````
-## 为什么在*Swift*里面新建一个*view*要用*struct*，而不用*class* <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 为什么在[Swift](https://www.swift.org/)里面新建一个view要用struct，而不用class <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-> 在 SwiftUI 中，视图（View）被建议使用结构体（struct）而不是类（class）。
-> 这是因为 SwiftUI 采用了声明式的编程范式，而结构体更符合声明式编程的特性。
+> 在 [**Swift**](https://www.swift.org/) UI 中，视图（View）被建议使用结构体（struct）而不是类（class）。
+> 这是因为 [**Swift**](https://www.swift.org/) UI 采用了声明式的编程范式，而结构体更符合声明式编程的特性。
 
 *下面是一些原因：*
 
 * 不可变性：结构体是值类型，而类是引用类型。值类型在传递和复制时会产生副本，这有助于保持不可变性；
-  * SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一致性和可预测性；
+  * [**Swift**](https://www.swift.org/) UI 的设计倾向于使用不可变的数据模型，以确保状态的一致性和可预测性；
 
 * 简单性和可预测性：结构体更简单，不涉及继承和引用计数等概念，使得代码更易于理解和维护。结构体通常更容易推导和预测其行为。
 * 值语义：结构体提供了值语义，这意味着它们的比较是基于值而不是引用的；
-  * 这有助于在 SwiftUI 中更容易管理视图层次结构和状态。
+  * 这有助于在 [**Swift**](https://www.swift.org/) UI 中更容易管理视图层次结构和状态。
 
 * 性能优势:结构体在一些情况下可能具有性能优势；
-  * 由于值语义和不可变性，*Swift* 编译器可以进行更多的优化，例如避免不必要的副本操作；
+  * 由于值语义和不可变性，[**Swift**](https://www.swift.org/) 编译器可以进行更多的优化，例如避免不必要的副本操作；
 
 *综上所述：*
 
-```swift
-在 SwiftUI 中，View 协议的实现通常要求是不可变的，因此使用结构体是一个自然的选择。
-在 SwiftUI 中创建的视图是根据数据模型的变化而自动更新的，这与结构体的值语义非常契合。
+* 在 [**Swift**](https://www.swift.org/) UI 中，View 协议的实现通常要求是不可变的，因此使用结构体是一个自然的选择
+* 在 [**Swift**](https://www.swift.org/) UI 中创建的视图是根据数据模型的变化而自动更新的，这与结构体的值语义非常契合
+* 尽管 [**Swift**](https://www.swift.org/) UI 偏向结构体，但在其他上下文中，仍然可能使用类，特别是在需要引用语义和共享可变状态的情况下
+* 在 [**Swift**](https://www.swift.org/) UI 中，这样的情况相对较少，因为 [**Swift**](https://www.swift.org/) UI 本身的设计目标是通过数据驱动界面
 
-尽管 SwiftUI 偏向结构体，但在其他上下文中，仍然可能使用类，特别是在需要引用语义和共享可变状态的情况下。
-在 SwiftUI 中，这样的情况相对较少，因为 SwiftUI 本身的设计目标是通过数据驱动界面。
-```
 ## 元组（***Tuples***）和结构体（***Struct***）<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * 都可以包含不同的数据类型；
-* 在 *Swift* 中，元组的内存结构并不一定是连续的，因为 *Swift* 元组的实现方式可以根据编译器的优化和其他因素而有所不同。而结构体的内存是连续的；
+* 在 *[Swift](https://www.swift.org/) * 中，元组的内存结构并不一定是连续的，因为 *[Swift](https://www.swift.org/) * 元组的实现方式可以根据编译器的优化和其他因素而有所不同。而结构体的内存是连续的；
 * 结构体是一种自定义数据类型，你需要在代码中明确定义它的结构，并为其提供属性和方法。结构体的成员可以是不同类型的数据；
 * 元组则是一种轻量级的数据结构，它不需要在代码中显式声明，而是通过在使用时直接定义。元组的主要用途是在**临时情况下组合**多个值，而不需要为其定义专门的结构；
 * 元组的比较需要遵循的规则
@@ -394,25 +394,25 @@ print(result)  // 输出: 5
   * 对应位置的元素类型必须相同，并且支持比较操作
   * 元组的元素个数实际上是没有硬性限制的。可以创建包含任意数量元素的元组
 
-## ***Swift.闭包（Closure）***<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## ***[Swift](https://www.swift.org/) .闭包（Closure）***<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 <font color="red">即，C语言中的***Block***</font>
 
-| 类型       | Objective-C Block      | Swift Closure       |
-| ---------- | ---------------------- | ------------------- |
-| 无参无返回 | `void (^)(void)`       | `() -> Void`        |
-| 有参无返回 | `void (^)(NSString *)` | `(String) -> Void`  |
-| 有参有返回 | `int (^)(int, int)`    | `(Int, Int) -> Int` |
-| 无参有返回 | `NSString * (^)(void)` | `() -> String`      |
+| 类型       | Objective-C Block      | [Swift](https://www.swift.org/)  Closure |
+| ---------- | ---------------------- | ---------------------------------------- |
+| 无参无返回 | `void (^)(void)`       | `() -> Void`                             |
+| 有参无返回 | `void (^)(NSString *)` | `(String) -> Void`                       |
+| 有参有返回 | `int (^)(int, int)`    | `(Int, Int) -> Int`                      |
+| 无参有返回 | `NSString * (^)(void)` | `() -> String`                           |
 
-| 类型       | Swift 关键字     | Swift 示例                                 | Objective-C 示例                      |
-| ---------- | ---------------- | ------------------------------------------ | ------------------------------------- |
-| 匿名闭包   | `{}`             | `{ name in ... }`                          | `^NSString *(NSString *name) { ... }` |
-| 尾随闭包   | `func f { ... }` | `someFunc { ... }`                         | `someFunc:^{};`                       |
-| 逃逸闭包   | `@escaping`      | `func f(@escaping ...)`                    | `block 保存为属性`                    |
-| 捕获值闭包 | `捕获变量`       | `var x = 0; return { x += 1 }`             | `__block int x = 0;`                  |
-| 自动闭包   | `@autoclosure`   | `func log(_ m: @autoclosure () -> String)` | 模拟实现，不能简写                    |
-| 泛型闭包   | `<T>`            | `func f<T>(_ x: T, using: (T) -> String)`  | `id + runtime 转换`                   |
+| 类型       | [Swift](https://www.swift.org/)  关键字 | [Swift](https://www.swift.org/)  示例      | Objective-C 示例                      |
+| ---------- | --------------------------------------- | ------------------------------------------ | ------------------------------------- |
+| 匿名闭包   | `{}`                                    | `{ name in ... }`                          | `^NSString *(NSString *name) { ... }` |
+| 尾随闭包   | `func f { ... }`                        | `someFunc { ... }`                         | `someFunc:^{};`                       |
+| 逃逸闭包   | `@escaping`                             | `func f(@escaping ...)`                    | `block 保存为属性`                    |
+| 捕获值闭包 | `捕获变量`                              | `var x = 0; return { x += 1 }`             | `__block int x = 0;`                  |
+| 自动闭包   | `@autoclosure`                          | `func log(_ m: @autoclosure () -> String)` | 模拟实现，不能简写                    |
+| 泛型闭包   | `<T>`                                   | `func f<T>(_ x: T, using: (T) -> String)`  | `id + runtime 转换`                   |
 
 * 匿名闭包（Anonymous Closure）：是指没有名字的闭包表达式，直接赋值或传参使用
 
@@ -434,7 +434,7 @@ print(result)  // 输出: 5
   NSLog(@"%d", result); // 输出 1（true）
   ```
 
-* 尾随闭包（Trailing Closure）：是[**Swift**](https://developer.apple.com/swift/) 语法糖，**适用于闭包是最后一个参数的情况**。
+* 尾随闭包（Trailing Closure）：是[**[Swift](https://www.swift.org/) **](https://developer.apple.com/swift/) 语法糖，**适用于闭包是最后一个参数的情况**。
 
   ```swift
   func sendMessage(to name: String, completion: (String) -> Void) {
@@ -466,8 +466,8 @@ print(result)  // 输出: 5
   * `completion`传进来以后被赋值给了`savedClosure`
   * `savedClosure` 是函数外部的变量
   * 所以这个闭包会**逃逸出函数作用域**
-  * 必须加 `@escaping`，否则编译报错 ❌**Escaping closure captures non-escaping parameter 'completion'**（你不能把一个非逃逸闭包保存在函数外面！）
-    * 因为 [**Swift**](https://developer.apple.com/swift/)  默认函数参数中的闭包是 **non-escaping（非逃逸）**，也就是说：它必须在函数体内被调用完，不能带出去！
+  * 必须加 <font color=red>**`@escaping`**</font>，否则编译报错 ❌**Escaping closure captures non-escaping parameter 'completion'**（你不能把一个非逃逸闭包保存在函数外面！）
+    * 因为 [**Swift**](https://www.swift.org/) 默认函数参数中的闭包是 **non-escaping（非逃逸）**，也就是说：它必须在函数体内被调用完，不能带出去！
 
   ```swift
   /// 逃逸闭包
@@ -507,7 +507,7 @@ print(result)  // 输出: 5
   }];
   ```
 
-* 捕获值闭包（Captured Values） ：***Swift*  中没有 `__block` 修饰符（自动捕获）**；***OC*** 则需要使用 `__block`（特有的）
+* 捕获值闭包（Captured Values） ：[**Swift**](https://www.swift.org/)   中没有 `__block` 修饰符（自动捕获）；***OC*** 则需要使用 `__block`（特有的）
 
   ```swift
   func makeCounter() -> () -> Int {
@@ -555,7 +555,7 @@ print(result)  // 输出: 5
   NSLog(@"%d", counter()); // 输出：1 ❗
   ```
 
-* 自动闭包（Autoclosure）：`@autoclosure` 可以让你传入表达式，*Swift* 自动包装成闭包。
+* 自动闭包（Autoclosure）：<font color=red>**`@autoclosure`**</font> 可以让你传入表达式，[**Swift**](https://www.swift.org/) 自动包装成闭包。 
 
   ```swift
   func log(_ message: @autoclosure () -> String) {
@@ -632,18 +632,18 @@ print(result)  // 输出: 5
   }];
   ```
 
-## ***Swift.简写*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://www.swift.org/).简写 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * 小口诀：闭包简写三步走
   * 能推断，就省类型
   * 只有一个参数，可用 `$0`
-  * 一行表达式，可以省 `return`
+  * 一行表达式，可以省 <font color=red>**return**</font>
 
-| 情况                                  | 原因                         |
-| ------------------------------------- | ---------------------------- |
-| 闭包有多行语句且需要 return           | 必须显式写 `return` 和参数名 |
-| 参数类型不能推断（如泛型过深）        | 必须显式写参数类型           |
-| 使用 `@escaping` 闭包参数传递复杂闭包 | 建议完整写法更清晰           |
+| 情况                                                         | 原因                                                  |
+| ------------------------------------------------------------ | ----------------------------------------------------- |
+| 闭包有多行语句且需要 <font color=red>**return**</font>       | 必须显式写 <font color=red>**return**</font> 和参数名 |
+| 参数类型不能推断（如泛型过深）                               | 必须显式写参数类型                                    |
+| 使用 <font color=red>**`@escaping`**</font> 闭包参数传递复杂闭包 | 建议完整写法更清晰                                    |
 
 * 最完整写法
 
@@ -669,7 +669,7 @@ print(result)  // 输出: 5
   }
   ```
 
-## 能看懂这个，[**Swift**](https://developer.apple.com/swift/)闭包简写天下无敌 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## 能看懂这个，[Swift](https://www.swift.org/) 闭包简写天下无敌 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 ```swift
 func transformAndSort<T>(_ input: [T], 
@@ -685,7 +685,7 @@ transformAndSort([true, false, true],
                  sorter: { $0 > $1 })
 ```
 
-## [**Swift**](https://developer.apple.com/swift/).初始化方法 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [Swift](https://www.swift.org/).初始化方法 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 初始化方法负责确保新创建的实例在使用之前完成所有必要的初始化工作。
 
@@ -708,74 +708,74 @@ transformAndSort([true, false, true],
 
   * 便捷初始化方法（*Convenience Initializers*）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<font color="red">***convenience***</font>
 
-  ```swift
-  class MyClass {
-      var property: Int
-      
-      init(property: Int) {
-          self.property = property
-      }
-      
-      convenience init() {
-          self.init(property: 0)
-      }
-  }
-  ```
+    ```swift
+    class MyClass {
+        var property: Int
+        
+        init(property: Int) {
+            self.property = property
+        }
+        
+        convenience init() {
+            self.init(property: 0)
+        }
+    }
+    ```
 
   * 必要初始化方法（*Required Initializers*）<font color="red">***required***</font>
 
+    ```swift
+    class MyClass {
+        var property: Int
+        
+        required init(property: Int) {
+            self.property = property
+        }
+    }
+    
+    class MySubclass: MyClass {
+        var additionalProperty: String
+        
+        init(property: Int, additionalProperty: String) {
+            self.additionalProperty = additionalProperty
+            super.init(property: property)
+        }
+        
+        required init(property: Int) {
+            self.additionalProperty = "default"
+            super.init(property: property)
+        }
+    }
+    ```
+
+* 结构体和枚举的初始化方法：因为没有继承的概念，因此无需考虑指定初始化方法和便捷初始化方法
+
   ```swift
-  class MyClass {
+  struct MyStruct {
       var property: Int
-      
-      required init(property: Int) {
+      init(property: Int) {
           self.property = property
       }
   }
   
-  class MySubclass: MyClass {
-      var additionalProperty: String
-      
-      init(property: Int, additionalProperty: String) {
-          self.additionalProperty = additionalProperty
-          super.init(property: property)
-      }
-      
-      required init(property: Int) {
-          self.additionalProperty = "default"
-          super.init(property: property)
+  enum MyEnum {
+      case case1, case2
+      init() {
+          self = .case1
       }
   }
   ```
 
-* 结构体和枚举的初始化方法：因为没有继承的概念，因此无需考虑指定初始化方法和便捷初始化方法。
+## [Swift](https://www.swift.org/).数组
 
-```swift
-struct MyStruct {
-    var property: Int
-    init(property: Int) {
-        self.property = property
-    }
-}
-
-enum MyEnum {
-    case case1, case2
-    init() {
-        self = .case1
-    }
-}
-```
-
-## [**Swift**](https://developer.apple.com/swift/) .数组
-
-| 特性                 | Objective-C                  | Swift                                   |
+| 特性                 | Objective-C                  | [Swift](https://www.swift.org/)         |
 | -------------------- | ---------------------------- | --------------------------------------- |
 | 数组是否能包含 `nil` | ❌ **不可以**，会崩溃或 crash | ✅ **可以**，前提是元素类型是 `Optional` |
 | 怎么解决             | 用 `NSNull` 占位（手动处理） | 用 `String?`、`Int?` 等可选类型直接放   |
 
-## ***Swift.`map` 和 Swift.`joined`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## **[Swift](https://www.swift.org/) .`map` 和 [Swift](https://www.swift.org/) .`joined`** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-在*Swift*中，`map` 和 `joined` 是两个不同的方法。
+在[**Swift**](https://www.swift.org/)中，`map` 和 `joined` 是两个不同的方法。
 * `map`方法： 它用于对集合中的每个元素应用一个转换，返回一个包含转换结果的新集合。例如：
 
   ```swift
@@ -810,7 +810,7 @@ enum MyEnum {
     ```
 
     ```swift
-    /// 字符串拆词 → 扁平化字符数组
+    /// 字符串拆词 ➤ 扁平化字符数组
     let words = ["hi", "hello"]
     
     // map 会保留结构：[[Character]]
@@ -837,7 +837,7 @@ enum MyEnum {
     let arr3 = Array(range) // [1, 2, 3, 4, 5]
     ```
   
-* 实用场景：<font color=red>嵌套结构（数组/字符串/可选） → 想过滤/展开/压平 → **`compactMap + flatMap + map` 是闭包链组合的王炸组合**</font>
+* 实用场景：<font color=red>嵌套结构（数组/字符串/可选） ➤ 想过滤/展开/压平 ➤ **`compactMap + flatMap + map` 是闭包链组合的王炸组合**</font>
 
   * 有一个` [String?] `的数组
   * 去掉为 `nil` 的项
@@ -872,9 +872,9 @@ enum MyEnum {
   // 输出：["hello", "world", "swift", "is", "fun"]  
   ```
 
-## [**Swift**](https://developer.apple.com/swift/).`where` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [Swift](https://www.swift.org/) .`where` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-* 在[**Swift**](https://developer.apple.com/swift/)中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
+* 在[**Swift**](https://www.swift.org/)中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
 
 * 它在泛型参数列表之后，可以用于指定一些条件，以限制泛型的类型。
 
@@ -887,7 +887,7 @@ enum MyEnum {
     }
     ```
 
-  * <font color="red">***where***</font> 子句也可以在[***扩展（extension）***](# Swift.extension)中使用，例如：
+  * <font color="red">***where***</font> 子句也可以在[***扩展（extension）***](# [Swift](https://www.swift.org/) .extension)中使用，例如：
 
     ```swift
     extension Array where Element: Equatable {
@@ -918,11 +918,13 @@ enum MyEnum {
   ```
   
 
-## ***Swift.`yield`*** (**一边运行，一边“产出值”**，而不是一次性返回所有结果)<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## **[Swift](https://www.swift.org/).`yield`** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-***yield***：
-*【v】产生（收益、效益等），产生（结果）；出产（天然产品，农产品，工业产品）；屈服，让步；放弃，让出；给（大路上的车辆）让路；（受压）活动，弯曲，折断；<正式>被……替代；请（某人）讲话；停止争论*
-*【n】产量；收益，利润，红利（或股息）率*
+> **yield**：
+> 【v】产生（收益、效益等），产生（结果）；出产（天然产品，农产品，工业产品）；屈服，让步；放弃，让出；给（大路上的车辆）让路；（受压）活动，弯曲，折断；<正式>被……替代；请（某人）讲话；停止争论
+> 【n】产量；收益，利润，红利（或股息）率
+
+* **一边运行，一边产出值**，而不是一次性返回所有结果
 
 * 在Dart中，<font color="red">***yield***</font> 关键字通常与`Iterable`相关的函数一起使用，例如`Iterable`或`Stream`；
 
@@ -952,7 +954,7 @@ enum MyEnum {
   ✅ 全部做完
   ```
 
-* **OC**模拟*Swift*.<font color="red">***yield***</font>
+* **OC**模拟[**Swift**](https://www.swift.org/).<font color="red">**yield**</font>
 
   ```objective-c
   @interface EvenGenerator : NSObject
@@ -969,8 +971,7 @@ enum MyEnum {
       if (self) {
           _current = 0;
           _max = max;
-      }
-      return self;
+      };return self;
   }
   
   - (NSNumber *)next {
@@ -980,13 +981,12 @@ enum MyEnum {
           if (val % 2 == 0) {
               return @(val);
           }
-      }
-      return nil; // 表示迭代结束
+      };return nil; // 表示迭代结束
   }
   
   @end
   ```
-
+  
   ```objective-c
   EvenGenerator *gen = [[EvenGenerator alloc] initWithMax:10];
   NSNumber *val;
@@ -994,7 +994,7 @@ enum MyEnum {
       NSLog(@"Even: %@", val);
   }
   ```
-
+  
 * 例1：使用<font color="red">***yield***</font>在Dart中创建一个生成器函数：
 
   ```swift
@@ -1026,7 +1026,7 @@ enum MyEnum {
   
 * 例2：自定义斐波那契数列生成器
 
-  <font color="red">***yield***</font> 是 *Swift* 5.9 的轻量级**生成器机制**，结合 `sequence` 使用，按需产出值，控制更精细，代码更优雅
+  <font color="red">***yield***</font> 是 [**Swift**](https://www.swift.org/)  5.9 的轻量级**生成器机制**，结合 `sequence` 使用，按需产出值，控制更精细，代码更优雅
 
   ```swift
   func fibonacci(upTo max: Int) -> some Sequence<Int> {
@@ -1044,16 +1044,16 @@ enum MyEnum {
   }
   ```
 
-[**Swift**](https://developer.apple.com/swift/) .<font color="red">*`mutating`*</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+[**Swift**](https://www.swift.org/) .<font color="red">*`mutating`*</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-***mutating***：
-
-*【vi.】突变，变异（mutate 的现在分词）*
-
-*【vt.】使突变（mutate 的现在分词）*
+> **mutating**：
+>
+> 【vi.】突变，变异（mutate 的现在分词）
+>
+> 【vt.】使突变（mutate 的现在分词）
 
 * 用于结构体（*struct*）和枚举（*enum*）中的**方法声明**中，*表示该方法可以修改该结构体或枚举的属性值*，即使该方法在实例被声明为常量（`let`）时调用也可以；
-* 对于类（*class*）中的方法，不需要使用<font color="red">*mutating*</font>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
+* 对于类（*class*）中的方法，不需要使用<font color="red">**mutating**</font>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
 ```swift
 struct Point {
     var x = 0.0
@@ -1071,11 +1071,11 @@ print("Before moving: \(point)")
 point.moveBy(x: 2.0, y: 3.0)
 print("After moving: \(point)")
 ```
-### 对比 [**Swift**](https://developer.apple.com/swift/) .<font color="red">*`mutating`*</font> 和 [**Swift**](https://developer.apple.com/swift/) .<font color="red">*`inout`*</font>
+### 对比  [Swift](https://www.swift.org/) .<font color="red">*`mutating`*</font> 和 [Swift](https://www.swift.org/) .<font color="red">*`inout`*</font>
 
 * <font color="red">***inout***</font>
   
-  *  <font color="red">*inout*</font>是*Swift*中**用于函数参数**的关键字。它**允许函数修改参数**的值，并且这种修改是在函数内部生效并影响到函数外部传入的实际参数；
+  *  <font color="red">*inout*</font>是[**Swift**](https://www.swift.org/)中**用于函数参数**的关键字。它**允许函数修改参数**的值，并且这种修改是在函数内部生效并影响到函数外部传入的实际参数；
   * 使用<font color="red">*inout*</font>时，传入函数的参数被当做可变的，因此函数可以对其进行修改。在函数内部对<font color="red">*inout*</font>参数的任何更改都会反映到调用该函数时传入的原始参数上；
   * <font color="red">*inout*</font>参数本质上是**传递参数的引用**，因此对参数的任何更改都会影响调用者的原始数据；
   * 定义函数的时候加<font color="red">*inout*</font>;
@@ -1099,10 +1099,28 @@ print("After moving: \(point)")
   Before increment: 5
   After increment: 6
   ```
+  
 * <font color="red">***mutating***</font>（***专修结构体和枚举***）
   
-  * <font color="red">*mutating*</font>是Swift中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<font color="red">*mutating*</font>；
+  * <font color="red">*mutating*</font>是[**Swift**](https://www.swift.org/) 中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<font color="red">*mutating*</font>；
   * <font color="red">*mutating*</font>关键字仅用于值类型（结构体和枚举）的方法声明。这样的方法可以修改调用该方法的实例的属性值；
+  
+  ```swift
+  struct Counter {
+      var value: Int = 0
+  
+      mutating func increment() {
+          value += 1
+      }
+  }
+  ```
+  
+  ```swift
+  var counter = Counter()
+  counter.increment()
+  print(counter.value) // 1
+  ```
+
 ## 语法
 
 * `\(表达式)`：运算完表达式，结果转成字符串，并插入字符串
@@ -1113,16 +1131,16 @@ print("After moving: \(point)")
 > 简单来说，内联是一种编译器优化技术，它将调用函数的地方直接替换为被调用函数的实际代码，而不是通过在执行时跳转到函数的位置。
 > 这样可以减少函数调用的开销，提高代码的执行效率。
 
-✅ 宏定义（Macro） vs 内联函数（Inlining）
+✅ 宏定义（Macro） 🆚 内联函数（Inlining）
 
-| 特性             | 宏定义（C/C++ 的 `#define`）         | 内联函数（C/C++/Swift 的 inline 优化）              |
-| ---------------- | ------------------------------------ | --------------------------------------------------- |
-| 是否在预处理阶段 | ✅ 是，编译前就展开                   | ❌ 不是，**在编译时由编译器决定是否内联**            |
-| 是否类型安全     | ❌ 否，完全文本替换，无类型检查       | ✅ 是，正常函数，有类型检查和作用域规则              |
-| 是否调试友好     | ❌ 不友好，调试时看不到真实调用关系   | ✅ 可调试，IDE 能识别函数调用                        |
-| 是否支持复杂逻辑 | ❌ 复杂宏容易出错，不支持控制结构等   | ✅ 可写任意语法合法的逻辑                            |
-| 编译器优化能力   | ❌ 宏仅文本展开，编译器无法做高级优化 | ✅ 可结合编译器做优化（如内联、死代码消除等）        |
-| 常见语言支持     | C、C++（通过 `#define`）             | Swift、C++（`inline` 关键字）等现代语言自动内联优化 |
+| 特性             | 宏定义（C/C++ 的 `#define`）         | 内联函数（C/C++/[Swift](https://www.swift.org/)  的 inline 优化） |
+| ---------------- | ------------------------------------ | ------------------------------------------------------------ |
+| 是否在预处理阶段 | ✅ 是，编译前就展开                   | ❌ 不是，**在编译时由编译器决定是否内联**                     |
+| 是否类型安全     | ❌ 否，完全文本替换，无类型检查       | ✅ 是，正常函数，有类型检查和作用域规则                       |
+| 是否调试友好     | ❌ 不友好，调试时看不到真实调用关系   | ✅ 可调试，IDE 能识别函数调用                                 |
+| 是否支持复杂逻辑 | ❌ 复杂宏容易出错，不支持控制结构等   | ✅ 可写任意语法合法的逻辑                                     |
+| 编译器优化能力   | ❌ 宏仅文本展开，编译器无法做高级优化 | ✅ 可结合编译器做优化（如内联、死代码消除等）                 |
+| 常见语言支持     | C、C++（通过 `#define`）             | [**Swift**](https://www.swift.org/) 、C++（`inline` 关键字）等现代语言自动内联优化 |
 
 *具体来说，理解内联函数涉及以下几个概念：*
 
@@ -1135,11 +1153,11 @@ print("After moving: \(point)")
   <font color="red">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</font>
   ***但并不是所有函数都适合内联，因为内联会增加代码的体积，可能导致代码膨胀。***
   ***@inlineable*** 和 ***@usableFromInline***
-* 在 Swift 中，可以使用***@inlineable*** 和 ***@usableFromInline*** 属性来影响编译器对函数的内联决策；
+* 在 [**Swift**](https://www.swift.org/)  中，可以使用***@inlineable*** 和 ***@usableFromInline*** 属性来影响编译器对函数的内联决策；
 * ***@inlineable*** 表示一个函数可以被内联，但具体是否内联取决于编译器的决策；
 * ***@usableFromInline*** 则用于指示一个函数可以在同一模块的其他地方内联使用；
-* 在 Swift 中，编译器会根据具体情况决定是否内联函数，而使用 ***@inlineable*** 和 ***@usableFromInline*** 可以影响这个决策；
-* 开发者通常无需过多关注内联，因为 Swift 的编译器会自动进行相应的优化；
+* 在 [**Swift**](https://www.swift.org/)  中，编译器会根据具体情况决定是否内联函数，而使用 ***@inlineable*** 和 ***@usableFromInline*** 可以影响这个决策；
+* 开发者通常无需过多关注内联，因为 [**Swift**](https://www.swift.org/)  的编译器会自动进行相应的优化；
 ## 当前函数的<font color="red">***上下文***</font>。这个<font color="red">***上下文***</font>是什么意思？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 在计算机科学中，函数的上下文（***Context***）通常指的是<font color="red">***函数执行时的运行环境，包括函数调用时的一些信息和状态***</font>。
 * 这个上下文包括但不限于以下内容：
@@ -1155,67 +1173,28 @@ print("After moving: \(point)")
   * 这些信息组成了函数的上下文，它在函数调用期间用于保持函数的执行状态；
   * 在函数执行完成后，这个上下文的信息通常被恢复或者销毁；
   * 函数的上下文是为了支持函数调用的正确执行而存在的，它确保了在函数调用期间可以正确地传递参数、保存执行状态，以及函数返回时恢复执行环境；
-## ***Swift.依赖注入*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
-***UserService 使用依赖注入的 Logger 对象来记录日志***
+## [Swift](https://www.swift.org/)UI.`UIHostingController` 和一般的控制器，有何特别之处？（向下兼容）<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-```swift
-import Foundation
-// 依赖注入的协议
-protocol Logger {
-    func log(message: String)
-}
-
-// 实现依赖注入协议的具体类
-class ConsoleLogger: Logger {
-    func log(message: String) {
-        print("ConsoleLogger: \(message)")
-    }
-}
-// 依赖注入的类
-class UserService {
-    let logger: Logger
-    
-    init(logger: Logger) {
-        self.logger = logger
-    }
-    
-    func doSomething() {
-        // 使用依赖注入的 Logger 对象记录日志
-        self.logger.log(message: "Something is done in UserService")
-    }
-}
-// 创建一个 ConsoleLogger 实例
-let consoleLogger = ConsoleLogger()
-// 创建 UserService 实例，并传入 ConsoleLogger 依赖
-let userService = UserService(logger: consoleLogger)
-// 调用 UserService 的方法
-userService.doSomething()
-```
-*  ***UserService*** 类，它依赖于 ***Logger*** 类型的对象来记录日志；
-* 在初始化 ***UserService***  实例时，我们通过构造函数将 ***ConsoleLogger*** 的实例传递给 ***UserService*** ，实现了依赖注入；
-
-## *SwiftUI.UIHostingController* 和一般的控制器，有何特别之处？（向下兼容）<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
-
-* SwiftUI 视图的承载：*UIHostingController*的主要功能是将 SwiftUI 的视图嵌入到 UIKit 中。你可以通过在*UIHostingController*中设置一个 SwiftUI 视图，将 SwiftUI 和 UIKit 进行无缝集成。<font color="red">**SwiftUI.view 👉🏻UIKit**</font>
+* [**Swift**](https://www.swift.org/) UI 视图的承载：*UIHostingController*的主要功能是将 [**Swift**](https://www.swift.org/) UI 的视图嵌入到 UIKit 中。你可以通过在*UIHostingController*中设置一个 [**Swift**](https://www.swift.org/) UI 视图，将 [**Swift**](https://www.swift.org/) UI 和 UIKit 进行无缝集成。<font color="red">**[Swift](https://www.swift.org/) UI.view 👉🏻UIKit**</font>
  ```swift
- let swiftUIView = MySwiftUIView()
+ let swiftUIView = My[Swift](https://www.swift.org/) UIView()
  let hostingController = UIHostingController(rootView: swiftUIView)
  ```
-* 动态视图更新：由于 SwiftUI 的特性，*UIHostingController*能够自动响应 SwiftUI 视图状态的变化，从而动态地更新其包含的 UIKit 视图。这使得在 SwiftUI 中定义的视图能够自动保持同步，而无需手动刷新
-* 声明式 UI 编程： 使用*UIHostingController*时，你可以继续使用 SwiftUI 的声明式 UI 编程范式，而不是传统的命令式 UI 编程方式。这使得 UI 的构建和维护更加简单和直观。
-* 跨平台兼容性：*UIHostingController*的使用不仅限于 iOS 平台，你也可以在 macOS 上使用*NSHostingController*，在 watchOS 上使用*WKHostingController*，以实现在不同平台上的 SwiftUI 视图承载。
+* 动态视图更新：由于 [**Swift**](https://www.swift.org/) UI 的特性，*UIHostingController*能够自动响应 [**Swift**](https://www.swift.org/) UI 视图状态的变化，从而动态地更新其包含的 UIKit 视图。这使得在 [**Swift**](https://www.swift.org/) UI 中定义的视图能够自动保持同步，而无需手动刷新
+* 声明式 UI 编程： 使用*UIHostingController*时，你可以继续使用 [**Swift**](https://www.swift.org/) UI 的声明式 UI 编程范式，而不是传统的命令式 UI 编程方式。这使得 UI 的构建和维护更加简单和直观。
+* 跨平台兼容性：*UIHostingController*的使用不仅限于 iOS 平台，你也可以在 macOS 上使用*NSHostingController*，在 watchOS 上使用*WKHostingController*，以实现在不同平台上的 [**Swift**](https://www.swift.org/) UI 视图承载。
 *总体而言*
-*UIHostingController*提供了一种方便的方式，将 SwiftUI 和 UIKit 结合使用，使得你可以逐步采用 SwiftUI，而无需立即完全迁移到 SwiftUI 构建整个应用程序。这种渐进性迁移对于那些已有的 UIKit 项目而言是非常有帮助的。
+*UIHostingController*提供了一种方便的方式，将 [**Swift**](https://www.swift.org/) UI 和 UIKit 结合使用，使得你可以逐步采用 [**Swift**](https://www.swift.org/) UI，而无需立即完全迁移到 [**Swift**](https://www.swift.org/) UI 构建整个应用程序。这种渐进性迁移对于那些已有的 UIKit 项目而言是非常有帮助的。
 ## *UIKit.UIViewRepresentable* 干嘛的？（向上兼容）🔼
 
-`UIViewRepresentable` 是SwiftUI中的一个协议，用于将 UIKit 中的 `UIView` 集成到 SwiftUI 视图层次结构中。当您想要在SwiftUI中使用一个基于*UIView*的自定义视图或控件时，可以通过遵循 `UIViewRepresentable` 协议来实现这个集成。<font color="red">**UIKit.UIView👉🏻SwiftUI**</font>
+`UIViewRepresentable` 是[**Swift**](https://www.swift.org/) UI中的一个协议，用于将 UIKit 中的 `UIView` 集成到 [**Swift**](https://www.swift.org/) UI 视图层次结构中。当您想要在[**Swift**](https://www.swift.org/) UI中使用一个基于*UIView*的自定义视图或控件时，可以通过遵循 `UIViewRepresentable` 协议来实现这个集成。<font color="red">**UIKit.UIView👉🏻[Swift](https://www.swift.org/) UI**</font>
 `UIViewRepresentable` 要求您实现两个必备的方法：
 
 1. `makeUIView(context:)`：该方法创建并返回一个*UIView*实例。您可以在这个方法中配置和初始化您的*UIView*。
-2. `updateUIView(_:context:)`：当视图需要更新时，系统调用此方法。您可以在这里更新您的*UIView*的状态或内容，以确保它与 SwiftUI 视图同步。
-通过实现这两个方法，您可以在 SwiftUI 中使用自定义的*UIView*类型，使其成为 SwiftUI 视图体系的一部分。这对于集成一些原生的 UIKit 控件、图形渲染或其他需要直接使用*UIView*的情况非常有用。
+2. `updateUIView(_:context:)`：当视图需要更新时，系统调用此方法。您可以在这里更新您的*UIView*的状态或内容，以确保它与 [**Swift**](https://www.swift.org/) UI 视图同步。
+通过实现这两个方法，可以在 [**Swift**](https://www.swift.org/) UI 中使用自定义的*UIView*类型，使其成为 [**Swift**](https://www.swift.org/) UI 视图体系的一部分。这对于集成一些原生的 UIKit 控件、图形渲染或其他需要直接使用*UIView*的情况非常有用。
 ```swift
-import SwiftUI
+import [Swift](https://www.swift.org/) UI
 
 struct TextFieldWrapper: UIViewRepresentable {
     @Binding var text: String
@@ -1256,34 +1235,16 @@ struct ContentView: View {
     }
 }
 /**
-  在这个例子中，TextFieldWrapper 结构体实现了 UIViewRepresentable 协议，将 UITextField 集成到 SwiftUI 中。
-  通过 @Binding 属性，它能够与 SwiftUI 视图的数据进行双向绑定。
+  在这个例子中，TextFieldWrapper 结构体实现了 UIViewRepresentable 协议，将 UITextField 集成到 [Swift](https://www.swift.org/) UI 中。
+  通过 @Binding 属性，它能够与 [Swift](https://www.swift.org/) UI 视图的数据进行双向绑定。
 */
 ```
-## 属性修饰符（*Property Attributes*）≠ 属性包装器（*Property Wrappers*）<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+### 属性包装器 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-属性修饰符用于**修饰属性的行为**，而属性包装器用于**提供属性的包装和自定义行为**。
-* ### 属性修饰符（*Property Attributes*）
-  
-  * 属性修饰符是一种用于在 Swift 中***附加额外信息或行为的语法元素***；
-    属性修饰符是一种用于***改变属性行为或特性的关键字***；
-  * 在 Swift 中，有一些属性修饰符可以用于声明属性。例如：
-    * <font color="red">***lazy***</font>： 延迟加载属性，只有在第一次访问时才会进行初始化。
-    * <font color="red">***weak***</font> 和 <font color="red">***unowned***</font>： 用于管理引用关系，避免循环引用。
-    * <font color="red">***public***</font>、<font color="red">***internal***</font>、<font color="red">***fileprivate***</font> 和 <font color="red">***private***</font>： 控制属性的访问级别。
-```swift
-class MyClass {
-    lazy var lazyProperty: Int = 42
-    weak var weakReference: MyClass?
-    private var privateProperty: String
-    // ...
-}
-```
-* ### 属性包装器（*Property Wrappers*）
+* 属性包装器是一种用于包装属性的特性，通过在属性定义前使用包装器来***提供一些额外的行为***；
+* 属性包装器通常***用于简化属性的代码***、***提供额外逻辑***或***封装属性存储***；
+* 类似于***OC.AssociatedObjects***（关联对象）；
 
-  * 属性包装器是一种用于包装属性的特性，通过在属性定义前使用包装器来***提供一些额外的行为***；
-  * 属性包装器通常***用于简化属性的代码***、***提供额外逻辑***或***封装属性存储***；
-  * 类似于***OC.AssociatedObjects***（关联对象）；
 ```swift
 @propertyWrapper
 struct MyWrapper {
@@ -1308,9 +1269,9 @@ struct MyStruct {
   属性包装器提供了一种可以自定义属性访问和修改的方式。
 */
 ```
-## ***Swift.泛型约束*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## ***[Swift](https://www.swift.org/) .泛型约束*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-> 在 Swift 中，**泛型约束（Generic Constraints）**允许你对泛型类型的使用施加限制，以确保类型满足某些协议或条件。这样可以在保留灵活性的同时增强类型安全性。
+> 在 [**Swift**](https://www.swift.org/)  中，**泛型约束（Generic Constraints）**允许你对泛型类型的使用施加限制，以确保类型满足某些协议或条件。这样可以在保留灵活性的同时增强类型安全性。
 
 | 写法形式              | 说明                      |
 | --------------------- | ------------------------- |
@@ -1320,9 +1281,9 @@ struct MyStruct {
 | `where T: Equatable`  | 在 `where` 子句中添加约束 |
 | `T.Element: Hashable` | 用于泛型集合内元素的约束  |
 
-## ***Swift.@标记*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## ***[Swift](https://www.swift.org/) .@标记*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-> Swift 中的标注是一种声明级“增强”，非侵入式地赋予额外能力，不破坏原有语义。
+> [**Swift**](https://www.swift.org/)  中的标注是一种声明级“增强”，非侵入式地赋予额外能力，不破坏原有语义。
 
 ### <font color="red">***`@frozen`***</font>
 
@@ -1395,8 +1356,8 @@ func newAPI() {
 
 * 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，它用于标记特定的属性、方法或函数在主线程上执行；
 
-* 这是为了确保在 Swift 的并发编程中遵循特定的并发模型；
-* 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <font color="red">***`async/await`***</font>  等新的并发编程特性；
+* 这是为了确保在 [**Swift**](https://www.swift.org/)  的并发编程中遵循特定的并发模型；
+* 具体来说，`@MainActor`是 [**Swift**](https://www.swift.org/)  Concurrency 中的一部分，引入了 <font color="red">***`async/await`***</font>  等新的并发编程特性；
 * 它的目的是将代码标记为在主线程上执行，以确保操作 UI 或其他需要在主线程上执行的任务时不会发生线程不安全的情况。
 
 ```swift
@@ -1416,18 +1377,18 @@ func fetchData() async {
 ### <font color="red">***`@objc`***</font>
 
 * <font color="red">***`@objc`***</font> 是一个 *Objective-C* 的修饰符；
-* 在 Swift 中用于标记特定的声明以便与 *Objective-C* 代码进行交互；
+* 在 [**Swift**](https://www.swift.org/)  中用于标记特定的声明以便与 *Objective-C* 代码进行交互；
 * 它可以应用于类、协议、方法、属性等；
-* 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <font color="red">***`@objc`***</font> 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
+* 兼容 *Objective-C* 代码： 当你需要在 [**Swift**](https://www.swift.org/)  中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <font color="red">***`@objc`***</font> 修饰符。*Objective-C* 使用动态消息传递，而 [**Swift**](https://www.swift.org/) 使用静态派发，因此在 [**Swift**](https://www.swift.org/)  中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
 
 ```swift
-@objc class MySwiftClass: NSObject {
-    @objc func mySwiftMethod() {
+@objc class My[Swift](https://www.swift.org/) Class: NSObject {
+    @objc func my[Swift](https://www.swift.org/) Method() {
         // 方法实现
     }
 }
 ```
-* 在 Selector 中使用：在 *Objective-C* 中，方法的名称被表示为一个 `Selector` 对象。在 *Swift* 中，通过 `#selector` 语法可以引用一个 *Objective-C* 的方法。
+* 在 Selector 中使用：在 *Objective-C* 中，方法的名称被表示为一个 `Selector` 对象。在 [**Swift**](https://www.swift.org/) 中，通过 `#selector` 语法可以引用一个 *Objective-C* 的方法。
 
 ```swift
 @objc func myObjectiveCMethod() {
@@ -1440,60 +1401,71 @@ let selector = #selector(myObjectiveCMethod)
 @objc dynamic var myProperty: Int = 0
 ```
 * 需要注意的是：
-  * 使用 <font color="red">***`@objc`***</font> 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 *Swift* 特性无法使用；
-  * 在新的 *Swift* 代码中，尽量避免不必要的 <font color="red">***`@objc`***</font> 标记，以便充分利用 *Swift* 的静态类型检查和性能优势；
+  * 使用 <font color="red">***`@objc`***</font> 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 [**Swift**](https://www.swift.org/)  特性无法使用；
+  * 在新的 [**Swift**](https://www.swift.org/)  代码中，尽量避免不必要的 <font color="red">***`@objc`***</font> 标记，以便充分利用 [**Swift**](https://www.swift.org/) 的静态类型检查和性能优势；
 
 ### <font color="red">***`@Binding`***</font>
 
-* <font color="red">***`@Binding`***</font> 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（*two-way binding*）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
+* <font color="red">***`@Binding`***</font> 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，用于在 [**Swift**](https://www.swift.org/) UI 中创建**双向绑定**（*two-way binding*）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
+  
   * 当你在一个视图中使用 <font color="red">***`@Binding`***</font> 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
   * 当被绑定的数据发生变化时，相关的视图会自动更新，并且对绑定属性的修改也会反映到原始数据上；
-
-```swift
-struct ContentView: View {
-    @State private var textValue = ""
-
-    var body: some View {
-        VStack {
-            Text("Entered Text: \(textValue)")
-            TextField("Enter text", text: $textValue)
-            Subview(bindingText: $textValue)
-        }
-    }
-}
-
-struct Subview: View {
-    @Binding var bindingText: String
-
-    var body: some View {
-        TextField("Enter text in Subview", text: $bindingText)
-    }
-}
-/**
-  在上述例子中，ContentView 包含一个 TextField 和一个名为 Subview 的子视图。
-  通过在 Subview 中使用 @Binding，bindingText 成为与 ContentView 中的 $textValue 双向绑定的属性。
-  因此，当用户在 Subview 中输入文本时，ContentView 中的相应文本字段也会自动更新。
-  @Binding 是 SwiftUI 中用于实现数据流动和双向绑定的关键属性包装器之一，它使得构建响应式、动态的用户界面变得更加简单。
-*/
-```
-* *拓展知识*：**Vue中的数据绑定**
-  **在Vue中，使用插值表达式实现单向绑定**
-```vue
-<div>{{ message }}</div>
-这里message是模型中的数据，它会动态地显示在页面上。
-```
-    * 单向绑定是指数据从模型（或视图模型）流向视图（DOM）的过程。
-    * 当模型的数据发生变化时，视图会相应地更新，但是反过来不成立。
-    * 在Vue中，常见的单向绑定方式是使用插值表达式（`{{}}`）或者指令（例如`v-bind`）将模型中的数据绑定到视图上。
-  **在Vue中，通常使用`v-model`指令来实现双向绑定**
-
-  * 双向绑定是指数据在模型和视图之间进行双向同步；
-  * 当模型中的数据发生变化时，视图会更新；
-  * 同时，当用户在视图中输入数据时，模型中的数据也会随之更新；
-  ```vue
-  <input type="text" v-model="message">
-  这里message是模型中的数据，用户在输入框中输入的值会动态地更新到模型中，并且模型中的数据变化也会反映到输入框中。
+  
+  ```swift
+  struct ContentView: View {
+      @State private var textValue = ""
+  
+      var body: some View {
+          VStack {
+              Text("Entered Text: \(textValue)")
+              TextField("Enter text", text: $textValue)
+              Subview(bindingText: $textValue)
+          }
+      }
+  }
+  
+  struct Subview: View {
+      @Binding var bindingText: String
+  
+      var body: some View {
+          TextField("Enter text in Subview", text: $bindingText)
+      }
+  }
+  /**
+    在上述例子中，ContentView 包含一个 TextField 和一个名为 Subview 的子视图。
+    通过在 Subview 中使用 @Binding，bindingText 成为与 ContentView 中的 $textValue 双向绑定的属性。
+    因此，当用户在 Subview 中输入文本时，ContentView 中的相应文本字段也会自动更新。
+    @Binding 是 [Swift](https://www.swift.org/) UI 中用于实现数据流动和双向绑定的关键属性包装器之一，它使得构建响应式、动态的用户界面变得更加简单。
+  */
   ```
+  
+* *拓展知识*：**Vue中的数据绑定**
+  
+  >**在Vue中，使用插值表达式实现单向绑定**
+  >
+  >```vue
+  ><div>{{ message }}</div>
+  >这里message是模型中的数据，它会动态地显示在页面上。
+  >```
+  
+  * 单向绑定是指数据从模型（或视图模型）流向视图（DOM）的过程
+  
+  * 当模型的数据发生变化时，视图会相应地更新，但是反过来不成立
+  
+  * 在Vue中，常见的单向绑定方式是使用插值表达式（`{{}}`）或者指令（例如`v-bind`）将模型中的数据绑定到视图上
+  
+  * **在Vue中，通常使用`v-model`指令来实现双向绑定**
+  
+    * 双向绑定是指数据在模型和视图之间进行双向同步；
+  
+      * 当模型中的数据发生变化时，视图会更新；
+  
+      * 同时，当用户在视图中输入数据时，模型中的数据也会随之更新；
+  
+        ```vue
+        <input type="text" v-model="message">
+        这里message是模型中的数据，用户在输入框中输入的值会动态地更新到模型中，并且模型中的数据变化也会反映到输入框中。
+        ```
 ### <font color="red">***`@escaping`***</font>
 
 * 用于标记函数或闭包参数，表示它们在函数返回后仍然可以被调用；
@@ -1536,7 +1508,7 @@ class MyViewController {
 
 * 用于标记函数，表示希望编译器尽可能地将函数内容内联到调用点，以提高性能；
 
-* 在大多数情况下，Swift 编译器会自动进行内联优化，但使用 <font color="red">***`@inline`***</font> 可以对编译器的行为进行更明确的指导；
+* 在大多数情况下，[**Swift**](https://www.swift.org/)  编译器会自动进行内联优化，但使用 <font color="red">***`@inline`***</font> 可以对编译器的行为进行更明确的指导；
 
 * <font color="red">***使用 `@inline` 需要慎重，因为过度的内联可能导致代码体积膨胀，反而影响性能***</font> ；
 
@@ -1560,11 +1532,11 @@ print(result)
 
 ### <font color="red">***`@Main`***</font>
 
-* 在Swift中，<font color="red">***`@Main`***</font> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（*main entry point*）；
-* 在Swift应用程序中，可以使用 <font color="red">***`@Main`***</font> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
+* 在[**Swift**](https://www.swift.org/) 中，<font color="red">***`@Main`***</font> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（*main entry point*）；
+* 在[**Swift**](https://www.swift.org/) 应用程序中，可以使用 <font color="red">***`@Main`***</font> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
 
 ```swift
-import SwiftUI
+import Swift UI
 
 @main
 struct MyApp: App {
@@ -1586,8 +1558,8 @@ struct MyApp: App {
 
 ### <font color="red">***`@UIApplicationMain`***</font>
 
-* 是 Swift 中的一个标记性的属性，通常用于标识应用程序的主要入口点；
-* 在 Swift 中，它通常用于标记 *AppDelegate* 类，以指定应用程序的主要运行类；
+* 是 [Swift](https://www.swift.org/)  中的一个标记性的属性，通常用于标识应用程序的主要入口点；
+* 在 [Swift](https://www.swift.org/)  中，它通常用于标记 *AppDelegate* 类，以指定应用程序的主要运行类；
 * 一个应用程序只能有一个使用 <font color="red">***`@UIApplicationMain`***</font> 标记的类；
 
 通过在 *AppDelegate* 类的声明前添加 <font color="red">***`@UIApplicationMain`***</font> 属性，可以省略编写 `main.swift` 文件来启动应用程序
@@ -1608,7 +1580,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ```
 ### <font color="red">***`@State`***</font>
 
-* 是 SwiftUI 中的一个[***属性包装器***（*Property Wrapper*）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
+* 是 [**Swift**](https://www.swift.org/) UI 中的一个[***属性包装器***（*Property Wrapper*）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
 * <font color="red">***`@State`***</font> 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
 
 ```swift
@@ -1632,14 +1604,14 @@ struct MyView: View {
   不保留历史值： @State 修饰的变量不保留历史值。当视图重新创建时，@State 变量会被重置为其初始值。
 */
 ```
-<font color="red">***总的来说，`@State` 是 SwiftUI 中用于处理视图状态的重要[属性包装器](# 属性包装器（Property Wrappers）)，它使得状态管理更加简单和直观。***</font> 
+<font color="red">总的来说，`@State` 是 [**Swift**](https://www.swift.org/) UI 中用于处理视图状态的重要[属性包装器](# 属性包装器（Property Wrappers）)，它使得状态管理更加简单和直观。</font> 
 
 ### <font color="red">***`@EnvironmentObject`***</font>
 
-*是 SwiftUI 中的一个[**属性包装器**（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于在视图之间传递和共享数据。它允许你在整个 SwiftUI 视图层次结构中传递一个共享的对象，并在需要的地方访问该对象的属性。*
+是 [**Swift**](https://www.swift.org/) UI 中的一个[**属性包装器**（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于在视图之间传递和共享数据。它允许你在整个 [**Swift**](https://www.swift.org/) UI 视图层次结构中传递一个共享的对象，并在需要的地方访问该对象的属性。
 
 ```swift
-import SwiftUI
+import [Swift](https://www.swift.org/) UI
 // 定义一个共享的数据模型
 class UserData: ObservableObject {
     @Published var username = "Guest"
@@ -1676,14 +1648,14 @@ struct ContentView: View {
 */
 ```
 **主要用途和特点：**
-* 传递共享数据： 通过使用 <font color="red">***`@EnvironmentObject`***</font>，你可以在整个 *SwiftUI* 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
-* 全局访问： 通过在 *SwiftUI* 的 **Environment** 中存储对象，你可以在整个应用程序中提供对该对象的全局访问。
+* 传递共享数据： 通过使用 <font color="red">***`@EnvironmentObject`***</font>，你可以在整个 [**Swift**](https://www.swift.org/) UI 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
+* 全局访问： 通过在 [**Swift**](https://www.swift.org/) UI 的 **Environment** 中存储对象，你可以在整个应用程序中提供对该对象的全局访问。
 * 数据更新时刷新视图： 当通过 <font color="red">***`@EnvironmentObject`***</font>引用的对象发生更改时，相关视图会自动刷新以反映最新的数据。
 * 典型用法是在 <font color="red">***`@main`***</font> 函数中设置环境对象，以便在整个应用程序中共享。
 
 ### <font color="red">***`@Environment`***</font>
 
-*在 Swift 中，<font color="red">**`@Environment`**</font> 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。*
+在 [**Swift**](https://www.swift.org/)  中，<font color="red">**`@Environment`**</font> 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。
 *环境值是一种在应用程序中传递数据的方式，通常用于在视图层次结构中传递全局设置或共享的数据。*
 *`@Environment` 允许您在视图中声明需要从环境中获取的值，并使其在整个视图层次结构中自动传递。*
 
@@ -1730,7 +1702,7 @@ struct MyApp: App {
 
 ### <font color="red">***`@ObservedObject`***</font>
 
-*是 SwiftUI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 <font color="red">**`@ObservedObject`**</font> 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，<font color="red">**`@ObservedObject`**</font> 用于关联可观察对象和视图，使得 SwiftUI 能够自动响应对象的变化并更新 UI。*
+是 [**Swift**](https://www.swift.org/) UI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 <font color="red">**`@ObservedObject`**</font> 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，<font color="red">**`@ObservedObject`**</font> 用于关联可观察对象和视图，使得 [**Swift**](https://www.swift.org/) UI 能够自动响应对象的变化并更新 UI。
 
 ```swift
 import SwiftUI
@@ -1765,11 +1737,11 @@ struct MyView: View {
 * 刷新视图： 当 <font color="red">***`@ObservedObject`***</font> 标记的对象的可发布属性发生变化时，相关视图将会自动刷新以反映最新的数据。
 * 局部订阅： <font color="red">***`@ObservedObject`***</font> 用于局部的、在视图层次结构中的某个特定位置进行数据绑定，而 <font color="red">***`@EnvironmentObject`***</font> 用于全局的、在整个应用程序范围内传递数据。
 
-<font color="red">***总的来说，`@ObservedObject` 是 SwiftUI 中用于观察对象变化并刷新视图的关键属性包装器。它通常用于将可观察对象与特定视图关联，以便在对象变化时更新相关 UI。***</font> 
+<font color="red">***总的来说，`@ObservedObject` 是 [Swift](https://www.swift.org/) UI 中用于观察对象变化并刷新视图的关键属性包装器。它通常用于将可观察对象与特定视图关联，以便在对象变化时更新相关 UI。***</font> 
 
 ### <font color="red">***`@Published`***</font>
 
-是 [**Swift**](https://developer.apple.com/swift/) 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<font color="red">**`@Published`**</font> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`
+是[**Swift**](https://www.swift.org/)中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 [**Swift**](https://www.swift.org/) UI 中，<font color="red">**`@Published`**</font> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`
 
 ```swift
 import SwiftUI
@@ -1798,37 +1770,32 @@ struct MyView: View {
   当按钮点击时，data 的值发生变化，@Published 将自动发布通知，@ObservedObject 的视图将会自动刷新。
 */
 ```
-<font color="red">***总的来说，`@Published` 是 SwiftUI 中用于简化可观察对象的属性变化通知的属性包装器。***</font> 
+<font color="red">总的来说，`@Published` 是 [**Swift**](https://www.swift.org/) UI 中用于简化可观察对象的属性变化通知的属性包装器。</font> 
 
-<font color="red">***它与 `ObservableObject` 协议一起使用，使得 SwiftUI 能够在数据发生变化时自动刷新相关的视图。***</font> 
+<font color="red">***它与 `ObservableObject` 协议一起使用，使得 [Swift](https://www.swift.org/) UI 能够在数据发生变化时自动刷新相关的视图。***</font> 
 
-## <font color="red">***`@main`***</font>和<font color="red">***`@UIApplicationMain`***</font>的区别 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## <font color="red">**`@main`**</font>和<font color="red">**`@UIApplicationMain`**</font>的区别 <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-<font color="red">**`@main`**</font> 和 <font color="red">**`@UIApplicationMain`**</font> 都是在 *Swift* 中用于标识应用程序入口的属性，但它们有一些不同之处：
+<font color="red">**`@main`**</font> 和 <font color="red">**`@UIApplicationMain`**</font> 都是在 [**Swift**](https://www.swift.org/) 中用于标识应用程序入口的属性，但它们有一些不同之处：
 
-1. **平台差异：**
-   
-   * <font color="red">***`@main`***</font>是 *Swift 5.3* 及更高版本引入的属性，用于iOS、macOS、tvOS等所有平台。它是一种通用的属性，用于标识应用程序的入口。
-   - <font color="red">***`@UIApplicationMain`***</font> 是在较早的Swift版本中引入的，主要用于iOS开发。它是在*AppDelegate*中标识应用程序的主入口。
-   
-2. **使用方式：**
-   
-   - <font color="red">***`@main`***</font> 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）；
-   - <font color="red">***`@UIApplicationMain`***</font> 用于标识一个包含 *UIApplication* 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 <font color="red">***`@UIApplicationMain`***</font> 属性标识的类的 `main` 方法提供。
-   
-3. **灵活性：**
-   
-   - <font color="red">***`@main`***</font>更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
-   - <font color="red">***`@UIApplicationMain`***</font> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
-   综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 <font color="red">***`@main`***</font>。如果您在较早的Swift版本上仅进行iOS开发，可以使用 <font color="red">***`@UIApplicationMain`***</font>。在实践中，大多数新的Swift项目会选择使用 <font color="red">***`@main`***</font>，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
+* **平台差异：**
+  * <font color="red">***`@main`***</font>是 [**Swift**](https://www.swift.org/)  5.3 及更高版本引入的属性，用于**iOS**、**macOS**、**tvOS**等所有平台。它是一种通用的属性，用于标识应用程序的入口
+  * <font color="red">***`@UIApplicationMain`***</font> 是在较早的[**Swift**](https://www.swift.org/) 版本中引入的，主要用于iOS开发。它是在`AppDelegate`中标识应用程序的主入口
+* **使用方式：**
+  * <font color="red">***`@main`***</font> 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）
+  * <font color="red">***`@UIApplicationMain`***</font> 用于标识一个包含 *UIApplication* 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 <font color="red">***`@UIApplicationMain`***</font> 属性标识的类的 `main` 方法提供
+* **灵活性：**
+  * <font color="red">***`@main`***</font>更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
+  * <font color="red">***`@UIApplicationMain`***</font> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
+    综上所述，如果您在[**Swift**](https://www.swift.org/) 5.3及更高版本上进行跨平台开发，推荐使用 <font color="red">***`@main`***</font>。如果您在较早的[**Swift**](https://www.swift.org/) 版本上仅进行iOS开发，可以使用 <font color="red">***`@UIApplicationMain`***</font>。在实践中，大多数新的 [**Swift**](https://www.swift.org/) 项目会选择使用 <font color="red">***`@main`***</font>，因为它提供更大的灵活性，并且在未来的[**Swift**](https://www.swift.org/) 版本中可能会成为标准的应用程序入口点标识方式。
 
-## [**Swift**](https://developer.apple.com/swift/) 中，***Any***和***Anyobject***的区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [Swift](https://www.swift.org/)中，<font color=red>**Any**</font>和<font color=red>**Anyobject**</font>的区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-***Any***：
+<font color=red>**Any**</font>
 
-- ***Any***可以表示任何类型，包括值类型（如结构体和枚举）和引用类型（如类）；
-- 使用***Any***可以存储任何类型的值，但在操作这些值时，你需要进行类型转换；
-- ***Any***是一个协议（*protocol*），所有类型都实现了 ***Any***。因此，可以使用***Any***来表示任何值，而不管是值类型还是引用类型；
+- <font color=red>**Any**</font>可以表示任何类型，包括值类型（如结构体和枚举）和引用类型（如类）；
+- 使用<font color=red>**Any**</font>可以存储任何类型的值，但在操作这些值时，你需要进行类型转换；
+- <font color=red>**Any**</font>是一个协议（*protocol*），所有类型都实现了<font color=red>**Any**</font>。因此，可以使用<font color=red>**Any**</font>来表示任何值，而不管是值类型还是引用类型；
 ```swift
 var value: Any
 value = 42
@@ -1839,11 +1806,11 @@ if let intValue = value as? Int {
     print("It's an Int: \(intValue)")
 }
 ```
-***AnyObject:***
+<font color=red>**Anyobject**</font>
 
-- ***Anyobject*** 是一个协议（*protocol*），用于表示类类型（*class types*）；
-- 只有类（*class*）可以遵循 ***Anyobject*** 协议，而值类型（*value types*）不能；
-- 对于使用 ***Anyobject*** 存储的值，你可以直接调用类的方法和属性，而无需进行类型转换；
+- <font color=red>**Anyobject**</font> 是一个协议（*protocol*），用于表示类类型（*class types*）；
+- 只有类（*class*）可以遵循<font color=red>**Anyobject**</font>协议，而值类型（*value types*）不能；
+- 对于使用<font color=red>**Anyobject**</font>存储的值，你可以直接调用类的方法和属性，而无需进行类型转换；
 ```swift
 var object: AnyObject
 object = NSString(string: "Hello, AnyObject!")
@@ -1852,31 +1819,31 @@ object = NSString(string: "Hello, AnyObject!")
 let length = object.length
 ```
 **综上所述：**
-1、主要区别在于 ***Any*** **可以表示任何类型**，而 ***Anyobject*** **仅表示类类型**。
-2、因此，当你需要处理混合类型的数据时，可以使用 ***Any***。当你知道你要处理的是类对象时，可以使用 ***Anyobject***。
-3、在实践中，尽量避免使用 ***Any*** 和 ***Anyobject***，而是使用具体的类型，因为这样有助于代码的可读性和类型安全。
+1、主要区别在于<font color=red>**Any**</font>**可以表示任何类型**，而 <font color=red>**Anyobject**</font> **仅表示类类型**
+2、因此，当你需要处理混合类型的数据时，可以使用 <font color=red>**Any**</font>。当你知道你要处理的是类对象时，可以使用 <font color=red>**Anyobject**</font>
+3、在实践中，尽量避免使用<font color=red>**Any**</font>和 <font color=red>**Anyobject**</font>，而是使用具体的类型，因为这样有助于代码的可读性和类型安全
 
 ## *var body: some View*  这里面的`some`是什么意思？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-* 这是 Swift 5.1 引入的一项功能，用于简化泛型代码中的类型表达；
-* 在 SwiftUI 中，***some View*** 是一个不透明类型（*opaque type*）；
-* 在 SwiftUI 中，***some View***  的主要作用是表示返回的视图类型是不透明的，即编译器知道它是一种 View 类型，但不需要具体指定是哪一种 View；
+* 这是 [**Swift**](https://www.swift.org/) 5.1 引入的一项功能，用于简化泛型代码中的类型表达；
+* 在 [**Swift**](https://www.swift.org/) UI 中，***some View*** 是一个不透明类型（*opaque type*）；
+* 在 [**Swift**](https://www.swift.org/) UI 中，***some View***  的主要作用是表示返回的视图类型是不透明的，即编译器知道它是一种 View 类型，但不需要具体指定是哪一种 View；
 * **不透明类型的优势在于它允许隐藏具体的实现细节，这在复杂的视图层次结构中非常有用**；
-* 在编写 SwiftUI 代码时，通常不需要知道具体的视图类型，只需要知道它们是 View 协议的实现即可；
-* 这使得 SwiftUI 的视图层次结构能够更加灵活，因为你可以在不暴露具体实现细节的情况下返回不同类型的视图；
+* 在编写 [**Swift**](https://www.swift.org/) UI 代码时，通常不需要知道具体的视图类型，只需要知道它们是 View 协议的实现即可；
+* 这使得 [**Swift**](https://www.swift.org/) UI 的视图层次结构能够更加灵活，因为你可以在不暴露具体实现细节的情况下返回不同类型的视图；
 
 *在这个例子中，some View 表示 body 属性返回的视图类型是不透明的，并且编译器知道它遵循 View 协议。*
 
 ```swift
 struct MyView: View {
     var body: some View {
-        Text("Hello, SwiftUI!")
+        Text("Hello, [Swift](https://www.swift.org/) UI!")
     }
 }
 ```
-## `#available` 和 <font color="red">***`@available`***</font>在[**Swift**](https://developer.apple.com/swift/) 中有什么区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## `#available` 和 <font color="red">***`@available `***</font>在 [**Swift**](https://www.swift.org/) 中有什么区别？<a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-*在Swift中，`#available`和 <font color="red">**`@available`**</font>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
+在**[Swift](https://www.swift.org/)** 中，`#available`和 <font color="red">**`@available`**</font>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。
 **`#available`：** 
 
 - `#available` 是一个条件编译指令，用于在编译时检查代码的可用性。
@@ -1903,7 +1870,7 @@ func myFunction() {
 
 2、在实际编码中，它们经常一起使用，以确保代码在编译和运行时都考虑到平台和版本的差异；
 
-##  [**Swift**](https://developer.apple.com/swift/) .<font color="red">***`extension`***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+##  [**Swift**](https://www.swift.org/).<font color="red">***`extension`***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 1、<font color="red">***类似于OC中的分类***</font>；
 2、***允许你在不修改原始类型定义的情况下，向已有的类（Class）、结构体（Struct）、枚举（enum）或协议（Protocol）添加新的功能。***；
@@ -1960,88 +1927,94 @@ print(value.description)  // 输出 "Value: 3.14"
 ```
 **请注意，<font color="red">*`extension`*</font> 中不能添加存储属性，只能添加计算属性。**
 
-## <font color="red">***在Swift中，有两种类型不允许定义存储属性***</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## <font color="red">在[**Swift**](https://www.swift.org/)中，有两种类型不允许定义存储属性</font> <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 * **协议（*Protocol*）：** 协议本身不能包含存储属性。协议可以定义计算属性，以及方法、下标等，但它不支持直接定义存储属性。**和OC一致**
-```
-protocol MyProtocol {
-    // 不允许在协议中定义存储属性
-    // var myProperty: Int { get set } // 错误的示例
 
-    // 可以定义计算属性
-    var myComputedProperty: Int { get }
-}
-```
+  ```swift
+  protocol MyProtocol {
+      // 不允许在协议中定义存储属性
+      // var myProperty: Int { get set } // 错误的示例
+  
+      // 可以定义计算属性
+      var myComputedProperty: Int { get }
+  }
+  ```
 * **扩展（*Extension*）中的存储属性：** 在使用扩展为现有类型添加新功能时，不允许添加存储属性。扩展只能添加计算属性，而不能添加存储属性。**和OC一致**
 
-```
-extension String {
-    // 不允许在扩展中添加存储属性
-    // var myProperty: Int // 错误的示例
+  ```swift
+  extension String {
+      // 不允许在扩展中添加存储属性
+      // var myProperty: Int // 错误的示例
+  
+      // 可以添加计算属性
+      var length: Int {
+          return count
+      }
+  }
+  ```
 
-    // 可以添加计算属性
-    var length: Int {
-        return count
-    }
-}
-```
-## ***Swift.`初始化方法`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://www.swift.org/).`初始化方法` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-*在Swift中，初始化方法是用于创建并初始化实例的特殊方法。*
-*Swift的初始化方法具有灵活性，可以包含多个参数、默认值、可选值，以及各种初始化阶段的操作。*
-*以下是一些关于Swift初始化方法的重要概念：*
+在 [**Swift**](https://www.swift.org/) 中，初始化方法是用于创建并初始化实例的特殊方法
+[**Swift**](https://www.swift.org/) 的初始化方法具有灵活性，可以包含多个参数、默认值、可选值，以及各种初始化阶段的操作
+以下是一些关于[**Swift**](https://www.swift.org/) 初始化方法的重要概念：
 
 * **指定初始化方法（*Designated Initializer*）**：是一个类中的主要初始化方法，用于初始化类的所有存储属性，并最终调用父类的初始化方法；
-```swift
-class MyClass {
-    var property: Int
-    
-    init(property: Int) {
-        self.property = property
-    }
-}
-```
-*  **便利初始化方法（*Convenience Initializer*）**：是一个辅助方法，用于在指定初始化方法内部调用其他初始化方法，提供更多的初始化选项；
-```swift
-class MyClass {
-    var property: Int
-    
-    init(property: Int) {
-        self.property = property
-    }
-    
-    convenience init() {
-        self.init(property: 0)
-    }
-}
-```
-* **初始化参数的默认值**：初始化方法可以为参数提供默认值，使得在创建实例时可以选择性地省略某些参数；
-```swift
-class Person {
-    var name: String
-    var age: Int
-    
-    init(name: String, age: Int = 25) {
-        self.name = name
-        self.age = age
-    }
-}
-```
-*  **可选初始化方法（*Failable Initializer*）**：允许初始化过程失败，返回一个可选值（初始化失败返回`nil`）；
 
-```swift
-class MyObject {
-    var value: Int
-    
-    init?(value: Int) {
-        guard value >= 0 else {
-            return nil
-        }
-        self.value = value
-    }
-}
-```
-## ***Swift.`单例`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+  ```swift
+  class MyClass {
+      var property: Int
+      
+      init(property: Int) {
+          self.property = property
+      }
+  }
+  ```
+* **便利初始化方法（*Convenience Initializer*）**：是一个辅助方法，用于在指定初始化方法内部调用其他初始化方法，提供更多的初始化选项；
+
+  ```swift
+  class MyClass {
+      var property: Int
+      
+      init(property: Int) {
+          self.property = property
+      }
+      
+      convenience init() {
+          self.init(property: 0)
+      }
+  }
+  ```
+* **初始化参数的默认值**：初始化方法可以为参数提供默认值，使得在创建实例时可以选择性地省略某些参数；
+
+  ```swift
+  class Person {
+      var name: String
+      var age: Int
+      
+      init(name: String, age: Int = 25) {
+          self.name = name
+          self.age = age
+      }
+  }
+  ```
+* **可选初始化方法（*Failable Initializer*）**：允许初始化过程失败，返回一个可选值（初始化失败返回`nil`）；
+
+  ```swift
+  class MyObject {
+      var value: Int
+      
+      init?(value: Int) {
+          guard value >= 0 else {
+              return nil
+          }
+          self.value = value
+      }
+  }
+  ```
+
+## [Swift](https://www.swift.org/).`单例` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
 ```swift
 class MySingleton {
@@ -2062,9 +2035,9 @@ class MySingleton {
 let myInstance = MySingleton.shared
 myInstance.doSomething()
 ```
-## ***Swift.`网络请求`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+## [**Swift**](https://www.swift.org/).`网络请求` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
 
-### 1、URLSession（原生的工具）
+### 1、`URLSession`（原生的工具）
 ```swift
 import Foundation
 // 定义请求的 URL
@@ -2101,50 +2074,54 @@ let task = session.dataTask(with: request) { (data, response, error) in
 // 启动任务
 task.resume()
 ```
-**需要特别指出的：** *发送请求*
+**需要特别指出的：** 发送请求
 
-* *一般的请求*
-```swift
-let url = "https://example.com/api"
-// 这里的URL可以为String类型，框架可以接受URLRequest类型和String
-let task = session.dataTask(with: url) { (data, response, error) in
-  // TODO
-}
-```
-```swift
-import Foundation
-// 如果不配置httpMethod（不创建URLRequest），则默认为httpMethod.GET方法 
-// 定义请求的 URL
-let url = URL(string: "https://example.com/api")!
-// 创建 URLSession 对象
-let session = URLSession.shared
-// 发送请求
-let task = session.dataTask(with: url) { (data, response, error) in
-    // 处理响应
-    if let error = error {
-        print("Error: \(error)")
-    } else if let data = data {
-        // 处理返回的数据
-        let responseString = String(data: data, encoding: .utf8)
-        print("Response: \(responseString ?? "")")
-    }
-}
-// 启动任务
-task.resume()
-```
-* *数据下载*
-```swift
-let task = session.downloadTask(with: request) { (data, response, error) in
-	// TODO
-}
-```
-* *数据上载*
-```swift
-let task = session.uploadTask(with: request) { (data, response, error) in
-	// TODO
-}
-```
-### 2、Alamofire
+* **一般的请求**
+
+  ```swift
+  let url = "https://example.com/api"
+  // 这里的URL可以为String类型，框架可以接受URLRequest类型和String
+  let task = session.dataTask(with: url) { (data, response, error) in
+    // TODO
+  }
+  ```
+
+  ```swift
+  import Foundation
+  // 如果不配置httpMethod（不创建URLRequest），则默认为httpMethod.GET方法 
+  // 定义请求的 URL
+  let url = URL(string: "https://example.com/api")!
+  // 创建 URLSession 对象
+  let session = URLSession.shared
+  // 发送请求
+  let task = session.dataTask(with: url) { (data, response, error) in
+      // 处理响应
+      if let error = error {
+          print("Error: \(error)")
+      } else if let data = data {
+          // 处理返回的数据
+          let responseString = String(data: data, encoding: .utf8)
+          print("Response: \(responseString ?? "")")
+      }
+  }
+  // 启动任务
+  task.resume()
+  ```
+* **数据下载**
+
+  ```swift
+  let task = session.downloadTask(with: request) { (data, response, error) in
+  	// TODO
+  }
+  ```
+* **数据上载**
+
+  ```swift
+  let task = session.uploadTask(with: request) { (data, response, error) in
+  	// TODO
+  }
+  ```
+### 2、[**Alamofire**](https://github.com/alamofire/alamofire)
 ```Ruby
 pod 'Alamofire'
 ```
@@ -2163,7 +2140,10 @@ AF.request(url, method: .get).responseJSON { response in
     }
 }
 ```
-### 3、Moya（基于Alamofire的二次封装）
+### 3、[**Moya**](https://github.com/moya/moya)
+
+> 基于[**Alamofire**](https://github.com/alamofire/alamofire)的二次封装
+
 ```ruby
 pod 'Moya'
 ```
@@ -2220,10 +2200,12 @@ provider.request(.getPosts) { result in
     }
 }
 ```
-## ***Swift.`Json数据解析`*** <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
-### 1、*Codable 协议*  <font color="red">***（原生.简洁.官方推荐首选）***</font>
+## [**Swift**](https://www.swift.org/).`Json数据解析` <a href="#资料来源" style="font-size:17px; color:green;"><b>🔼</b></a>
+### 1、<font color=red>Codable</font> 协议
 
-定义你的数据模型➕遵循 `Codable` 协议➕使用***JSONDecoder*** = 解码***JSON***数据
+> <font color="red">**原生.简洁.官方推荐首选）**</font>
+
+定义你的数据模型➕遵循 `Codable` 协议➕ 使用***JSONDecoder*** = 解码***JSON***数据
 
 ```swift
 struct Post: Codable {
@@ -2241,7 +2223,7 @@ do {
     print("Error decoding JSON: \(error)")
 }
 ```
-### 2、*SwiftyJSON*（第三方.流行）
+### 2、[**swiftyjson**](https://github.com/swiftyjson/swiftyjson)（第三方.流行）
 
 *更灵活➕链式语法*
 
@@ -2280,168 +2262,173 @@ class Post: Mappable {
 
 let post = Mapper<Post>().map(JSONString: jsonString)
 ```
-## <font color="red">***SwiftUI***</font>
+## <font color="red">[**Swift**](https://www.swift.org/) UI</font>
 
-* ***文本标签 Text**（类似于UIKit.UILabel）*
-```swift
-import SwiftUI
+* **文本标签 Text**（类似于`UIKit.UILabel`）
 
-struct ContentView: View {
-  var body: some View {
-      VStack {
-          Text("Hello, World!")
-              .font(.title) // 设置文本的字体大小
-              .foregroundColor(.blue) // 设置文本的颜色
-              .padding() // 添加内边距
-      }
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-      ContentView()
-  }
-}
-```
-* ***输入控件TextField**（类似于UIKit.UITextField）*
-```swift
-import SwiftUI
-
-struct ContentView: View {
-@State private var textInput: String = ""
-  var body: some View {
-      VStack {
-          TextField("Enter text", text: $textInput)
-              .padding()
-              .border(Color.gray, width: 1) // 添加边框
-              .textFieldStyle(RoundedBorderTextFieldStyle()) // 设置输入框样式
-              .padding() // 添加内边距
-
-          Text("You entered: \(textInput)")
-              .padding()
-      }
-      .padding()
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-      ContentView()
-  }
-}
-```
-* ***列表控件List**（类似于UIKit.UITableView）*
-```swift
-import SwiftUI
-
-struct ContentView: View {
-  let items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
-  var body: some View {
-      List(items, id: \.self) { item in
-          Text(item)
-      }
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-      ContentView()
-  }
-}
-```
-* ***LazyVGrid 或者 LazyHGrid** （类似于UIKit.UICollectionView）*
-  * 在 SwiftUI 中，*LazyVGrid* 和 *LazyHGrid* 并没有像 *UICollectionView* 那样直接提供委托或协议方法。
+  ```swift
+  import SwiftUI
   
-```swift
-import SwiftUI
-
-struct ContentView: View {
-    let items = Array(1...20)
-
+  struct ContentView: View {
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2), spacing: 10) {
-                ForEach(items, id: \.self) { item in
-                    Text("\(item)")
-                        .frame(width: 150, height: 150)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-            }
-            .padding()
+        VStack {
+            Text("Hello, World!")
+                .font(.title) // 设置文本的字体大小
+                .foregroundColor(.blue) // 设置文本的颜色
+                .padding() // 添加内边距
         }
     }
-}
-// 或者
-struct ContentView: View {
-    let items = [
-        Item(name: "Item 1"),
-        Item(name: "Item 2"),
-        Item(name: "Item 3"),
-        Item(name: "Item 4"),
-        Item(name: "Item 5"),
-        Item(name: "Item 6"),
-        Item(name: "Item 7"),
-        Item(name: "Item 8"),
-        Item(name: "Item 9"),
-        Item(name: "Item 10")
-    ]
-
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                ForEach(items) { item in
-                    Text(item.name)
-                        .frame(width: 100, height: 100)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-            }
-            .padding()
-        }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
+  }
+  
+  struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-```
-* ***按钮控件Button**（类似于UIKit.UIButton）*
-```swift
-import SwiftUI
+  }
+  ```
+* **输入控件TextField**（类似于`UIKit.UITextField`）
 
-struct ContentView: View {
+  ```swift
+  import SwiftUI
+  
+  struct ContentView: View {
+  @State private var textInput: String = ""
     var body: some View {
-        Button(action: {
-            // 按钮点击时执行的操作
-            print("Button tapped")
-        }) {
-            Text("Tap Me")
-                .font(.headline)
-                .foregroundColor(.white)
+        VStack {
+            TextField("Enter text", text: $textInput)
                 .padding()
-                .background(Color.blue)
-                .cornerRadius(10)
+                .border(Color.gray, width: 1) // 添加边框
+                .textFieldStyle(RoundedBorderTextFieldStyle()) // 设置输入框样式
+                .padding() // 添加内边距
+  
+            Text("You entered: \(textInput)")
+                .padding()
         }
         .padding()
     }
-}
-
-struct ContentView_Previews: PreviewProvider {
+  }
+  
+  struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-```
+  }
+  ```
+* **列表控件List**（类似于`UIKit.UITableView`）
 
+  ```swift
+  import SwiftUI
+  
+  struct ContentView: View {
+    let items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
+    var body: some View {
+        List(items, id: \.self) { item in
+            Text(item)
+        }
+    }
+  }
+  
+  struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+  }
+  ```
+* **LazyVGrid 或者 LazyHGrid** （类似于`UIKit.UICollectionView`）
+  
+  * 在 [**Swift**](https://www.swift.org/) UI 中，**LazyVGrid** 和 **LazyHGrid** 并没有像 **`UICollectionView`** 那样直接提供委托或协议方法
+  
+    ```swift
+    import SwiftUI
+    
+    struct ContentView: View {
+        let items = Array(1...20)
+    
+        var body: some View {
+            ScrollView {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2), spacing: 10) {
+                    ForEach(items, id: \.self) { item in
+                        Text("\(item)")
+                            .frame(width: 150, height: 150)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .padding()
+            }
+        }
+    }
+    // 或者
+    struct ContentView: View {
+        let items = [
+            Item(name: "Item 1"),
+            Item(name: "Item 2"),
+            Item(name: "Item 3"),
+            Item(name: "Item 4"),
+            Item(name: "Item 5"),
+            Item(name: "Item 6"),
+            Item(name: "Item 7"),
+            Item(name: "Item 8"),
+            Item(name: "Item 9"),
+            Item(name: "Item 10")
+        ]
+    
+        var body: some View {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                    ForEach(items) { item in
+                        Text(item.name)
+                            .frame(width: 100, height: 100)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .padding()
+            }
+        }
+    }
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
+        }
+    }
+    ```
+  
+* **按钮控件Button**（类似于`UIKit.UIButton`）
+
+  ```swift
+  import SwiftUI
+  
+  struct ContentView: View {
+      var body: some View {
+          Button(action: {
+              // 按钮点击时执行的操作
+              print("Button tapped")
+          }) {
+              Text("Tap Me")
+                  .font(.headline)
+                  .foregroundColor(.white)
+                  .padding()
+                  .background(Color.blue)
+                  .cornerRadius(10)
+          }
+          .padding()
+      }
+  }
+  
+  struct ContentView_Previews: PreviewProvider {
+      static var previews: some View {
+          ContentView()
+      }
+  }
+  ```
 ## 其他
 
-* <font color="red">***可选项的本质是枚举类型***</font>；
-* *Swift*的泛型应用字协议上的时候，需要使用***关联类型***；
+* <font color="red">**可选项的本质是枚举类型**</font>
+* [**Swift**](https://www.swift.org/) 的泛型应用字协议上的时候，需要使用**关联类型**
 
 ```swift
 protocol Container {
@@ -2475,7 +2462,7 @@ struct IntStack: Container {
 * 访问控制：<font color="red">***open***</font> > <font color="red">***public***</font> ><font color="red">***internal***</font>（默认） > <font color="red">***fileprivate***</font>（**在本文件内可见**） > <font color="red">***private***</font>（**在最近的一个定义域区间内可见**）
   * <font color="red">***open***</font>只针对模块化的文件（被打成二进制的`.a`、`.o`、`.framework`）。所以<font color="red">***对于源代码：open === public***</font>；
   * <font color="red">***open***</font> - <font color="red">***public***</font> = 允许类及其成员在其他模块中被继承和被重写；
-* *protocol*
-  * *Swift*中的*protocol*还可以对接口进行抽象；
-  * Swift中的*protocol*还可以实现面向协议；
-  * *Swift*中的*protocol*还可以用于值类型、结构体（*Struct*）、枚举（*enum*）；
+* <font color=red>**protocol**</font>
+  * [**Swift**](https://www.swift.org/)中的<font color=red>**protocol**</font>还可以对接口进行抽象；
+  * [**Swift**](https://www.swift.org/)中的<font color=red>**protocol**</font>还可以实现面向协议；
+  * [**Swift**](https://www.swift.org/)中<font color=red>**protocol**</font>的还可以用于值类型、结构体（<font color=red>**Struct**</font>）、枚举（<font color=red>**enum**</font>）； 
