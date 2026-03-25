@@ -1,5 +1,5 @@
 //
-//  DioMethodDemoItem.swift
+//  MethodDemoItem.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/16/25.
@@ -7,17 +7,17 @@
 
 import Foundation
 
-struct DioMethodDemoItem: Codable {
+struct MethodDemoItem: Codable {
     let title: String
     let subTitle: String
-    let methodType: DioMethodType
+    let methodType: MethodType
     let path: String
 }
 
 struct DioCatalogData: Codable {
     let title: String?
     let baseUrl: String?
-    let items: [DioMethodDemoItem]
+    let items: [MethodDemoItem]
 }
 
 struct DioCatalogResponse: Codable {

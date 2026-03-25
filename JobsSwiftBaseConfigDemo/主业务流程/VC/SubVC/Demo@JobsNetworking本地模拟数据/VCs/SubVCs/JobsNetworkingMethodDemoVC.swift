@@ -20,8 +20,8 @@ import JobsSwiftBaseDefines
 
 class JobsNetworkingMethodDemoVC: BaseVC {
 
-    let item: DioMethodDemoItem
-    let service = DioDemoService.shared
+    let item: MethodDemoItem
+    let service = DemoService.shared
 
     var requestPreviewText = "还没有请求内容" {
         didSet { requestPreviewTextView.byText(requestPreviewText) }
@@ -181,7 +181,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    init(item: DioMethodDemoItem) {
+    init(item: MethodDemoItem) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
     }

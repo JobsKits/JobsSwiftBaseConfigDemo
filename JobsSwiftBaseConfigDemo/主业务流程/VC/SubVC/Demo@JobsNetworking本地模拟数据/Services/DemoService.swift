@@ -1,5 +1,5 @@
 //
-//  DioDemoService.swift
+//  DemoService.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/16/25.
@@ -8,9 +8,9 @@
 import Foundation
 import JobsNetworking
 
-final class DioDemoService {
+final class DemoService {
 
-    static let shared = DioDemoService()
+    static let shared = DemoService()
 
     let agent: DefaultJobsAgent = .init(
         config: .init(
@@ -23,7 +23,7 @@ final class DioDemoService {
 
     private init() {}
 
-    func loadCatalog() async throws -> [DioMethodDemoItem] {
+    func loadCatalog() async throws -> [MethodDemoItem] {
         let req = JobsRequest(
             path: "/api/methods",
             method: .get,

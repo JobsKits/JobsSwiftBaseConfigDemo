@@ -1,5 +1,5 @@
 //
-//  DioMethodCell.swift
+//  MethodTBVCell.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/16/25.
@@ -13,10 +13,10 @@ import UIKit
 
 import JobsByUIKit
 
-final class DioMethodCell: UITableViewCell {
+final class MethodTBVCell: UITableViewCell {
 
     @discardableResult
-    func byData(_ item: DioMethodDemoItem) -> Self {
+    func byData(_ item: MethodDemoItem) -> Self {
         byText("\(item.methodType.title) Demo")
             .bySecondaryText("\(item.path)\n\(item.subTitle)")
             .byAccessoryType(.disclosureIndicator)

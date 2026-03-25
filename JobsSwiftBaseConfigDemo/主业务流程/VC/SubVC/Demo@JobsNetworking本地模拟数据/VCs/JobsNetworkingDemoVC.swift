@@ -23,8 +23,8 @@ import JobsSwiftBaseDefines
 
 final class JobsNetworkingDemoVC: BaseVC {
 
-    private var dataSources: [DioMethodDemoItem] = DioMethodType.allCases.map {
-        DioMethodDemoItem(
+    private var dataSources: [MethodDemoItem] = MethodType.allCases.map {
+        MethodDemoItem(
             title: $0.title,
             subTitle: $0.subTitle,
             methodType: $0,
@@ -34,7 +34,7 @@ final class JobsNetworkingDemoVC: BaseVC {
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
-            .byRegisterCell(DioMethodCell.self)
+            .byRegisterCell(MethodTBVCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
@@ -53,7 +53,7 @@ final class JobsNetworkingDemoVC: BaseVC {
             .cellForRowAt { [weak self] _, tv, indexPath in
                 guard let self else { return UITableViewCell() }
                 return tv
-                    .byDequeueReusableCell(withType: DioMethodCell.self, for: indexPath)
+                    .byDequeueReusableCell(withType: MethodTBVCell.self, for: indexPath)
                     .byData(self.dataSources[indexPath.row])
             }
             .didSelectRowAt { [weak self] _, tv, indexPath in
@@ -113,7 +113,7 @@ extension JobsNetworkingDemoVC {
     private func loadCatalog(isRefresh: Bool = false) {
         Task {
             do {
-                let items = try await DioDemoService.shared.loadCatalog()
+                let items = try await DemoService.shared.loadCatalog()
                 onMainSync { [weak self] in
                     guard let self else { return }
                     self.dataSources = items
@@ -136,7 +136,7 @@ extension JobsNetworkingDemoVC {
         tableView.switchRefreshFooter(to: .normal)
     }
 
-    private func makeDetailVC(with item: DioMethodDemoItem) -> UIViewController {
+    private func makeDetailVC(with item: MethodDemoItem) -> UIViewController {
         switch item.methodType {
         case .get: JobsNetworkingGetDemoVC(item: item)
         case .post: JobsNetworkingPostDemoVC(item: item)

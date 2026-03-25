@@ -1,5 +1,5 @@
 //
-//  DioMethodType.swift
+//  MethodType.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 12/16/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DioMethodType: String, CaseIterable, Codable {
+enum MethodType: String, CaseIterable, Codable {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
