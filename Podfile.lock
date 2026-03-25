@@ -35,7 +35,6 @@ PODS:
   - CoreXLSX (0.14.1):
     - XMLCoder (~> 0.11.1)
     - ZIPFoundation (~> 0.9.11)
-  - DatadogInternal (3.8.2)
   - Descriptors (0.2.1):
     - Descriptors/Core (= 0.2.1)
   - Descriptors/Core (0.2.1)
@@ -218,15 +217,12 @@ PODS:
     - JobsSwiftBlock
     - SnapKit
     - SwiftMessages
-  - JobsNetworking/AF5 (0.0.1):
-    - Alamofire
+  - JobsNetworking/AF5 (1.0.1):
     - JobsNetworking/Core
-  - JobsNetworking/Async (0.0.1):
+  - JobsNetworking/Async (1.0.1):
     - JobsNetworking/Core
-  - JobsNetworking/Core (0.0.1):
-    - Alamofire
-    - DatadogInternal
-    - JobsSwiftFoundation
+  - JobsNetworking/Core (1.0.1):
+    - Alamofire (~> 5.9)
   - JobsProgressBar (0.1.14):
     - JobsByUIKit
     - JobsSwiftBaseDefines
@@ -567,7 +563,6 @@ SPEC REPOS:
     - BMPlayer
     - CocoaLumberjack
     - CoreXLSX
-    - DatadogInternal
     - Descriptors
     - DeviceKit
     - Differentiator
@@ -728,7 +723,6 @@ SPEC CHECKSUMS:
   Cache: 11fe825910b467bf12931fc12624a2f380b3e09b
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   CoreXLSX: f9a7a70b509150ceb675b05877b7ac041a587030
-  DatadogInternal: a4640f67e249c9b4608e806cf1c8c10b17f66626
   Descriptors: 44f9f316368c2815048b1062e0be49be59c1c696
   DeviceKit: d1a956e25b957efb60a87bfe70be4e00ef36846d
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
@@ -770,7 +764,7 @@ SPEC CHECKSUMS:
   JobsLuckyEnvelopeRain: b3fc3e43fefcbd1d9c72aa074ddca7834c9e166f
   JobsMarqueeView: 6d42539ab81e65a7ced84679ff9b12985fb72f41
   JobsNavBar: aeeb44adc14113c1311f7232b8bdaa29aa7741b8
-  JobsNetworking: fb591bf7d3fdc90ef58f4f53306e888fdfb5c31b
+  JobsNetworking: 4fc229e4de2c2e23df9a89b03edc047104b88ded
   JobsProgressBar: 177e16b652b93886baba13bbfea455e560972280
   JobsRefresher: c9dbafc9ed96012b661f76d28d9543111851eb7d
   JobsScale: c067caa5a33cb452d8d137b448943fdbfab76a97

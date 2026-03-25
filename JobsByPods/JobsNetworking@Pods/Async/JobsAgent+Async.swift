@@ -1,26 +1,21 @@
-//
-//  JobsAgent+Async.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 #if canImport(_Concurrency)
 import Foundation
 
 @available(iOS 13.0, *)
 public extension JobsAgent {
-    func send<T: Decodable>(_ request: JobsRequest, as type: T.Type) async throws -> T {
+    func send<T: Decodable>(
+        _ request: JobsRequest,
+        as type: T.Type
+    ) async throws -> T {
         var token: JobsRequestToken?
-
         return try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { cont in
+            try await withCheckedThrowingContinuation { continuation in
                 token = send(request, as: type) { result in
                     switch result {
                     case .success(let value):
-                        cont.resume(returning: value)
+                        continuation.resume(returning: value)
                     case .failure(let error):
-                        cont.resume(throwing: error)
+                        continuation.resume(throwing: error)
                     }
                     token = nil
                 }
@@ -28,6 +23,32 @@ public extension JobsAgent {
         } onCancel: {
             token?.cancel()
             token = nil
+        }
+    }
+
+    func observe<T: Decodable>(
+        _ request: JobsRequest,
+        as type: T.Type
+    ) -> AsyncThrowingStream<(T, JobsResponseSource), Error> {
+        AsyncThrowingStream { continuation in
+            let token = observe(request, as: type, onEvent: { result in
+                switch result {
+                case .success(let tuple):
+                    continuation.yield(tuple)
+                case .failure(let error):
+                    continuation.finish(throwing: error)
+                }
+            }, completion: { result in
+                if case .failure(let error) = result {
+                    continuation.finish(throwing: error)
+                } else {
+                    continuation.finish()
+                }
+            })
+
+            continuation.onTermination = { _ in
+                token.cancel()
+            }
         }
     }
 }

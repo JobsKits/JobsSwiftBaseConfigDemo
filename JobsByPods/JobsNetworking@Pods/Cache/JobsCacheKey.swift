@@ -1,54 +1,35 @@
-//
-//  JobsCacheKey.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public struct JobsCacheKey: Hashable {
+public struct JobsCacheKey: Hashable, Sendable {
     public let raw: String
-    public init(raw: String) { self.raw = raw }
+
+    public init(raw: String) {
+        self.raw = raw
+    }
 
     public static func make(
         method: HTTPMethod,
         url: URL,
-        params: [String: AnySendable]?,
+        query: [String: JobsValue]?,
+        body: [String: JobsValue]?,
         version: String,
         userScope: String
     ) -> JobsCacheKey {
-        let sorted = (params ?? [:])
-            .map { ($0.key, Self.stringify($0.value.value)) }
-            .sorted { $0.0 < $1.0 }
-            .map { "\($0)=\($1)" }
+        let queryText = canonicalString(query)
+        let bodyText = canonicalString(body)
+        let raw = "\(method.rawValue)|\(url.absoluteString)|q=\(queryText)|b=\(bodyText)|v=\(version)|u=\(userScope)"
+        return .init(raw: raw)
+    }
+
+    private static func canonicalString(_ payload: [String: JobsValue]?) -> String {
+        guard let payload else { return "" }
+        return payload
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key)=\(stringify($0.value.raw))" }
             .joined(separator: "&")
-        let raw = "\(method.rawValue)|\(url.absoluteString)|\(sorted)|\(version)|\(userScope)"
-        return JobsCacheKey(raw: raw)
     }
 
     private static func stringify(_ value: Any?) -> String {
-        guard let value else { return "nil" }
-
-        switch value {
-        case let value as String:
-            return value
-        case let value as CustomStringConvertible:
-            return value.description
-        case let value as [String: Any]:
-            return value
-                .sorted { $0.key < $1.key }
-                .map { "\($0.key):\(stringify($0.value))" }
-                .joined(separator: ",")
-        case let value as [Any]:
-            return value.map { stringify($0) }.joined(separator: ",")
-        case let value as [String: AnySendable]:
-            return value
-                .sorted { $0.key < $1.key }
-                .map { "\($0.key):\(stringify($0.value.value))" }
-                .joined(separator: ",")
-        default:
-            return String(describing: value)
-        }
+        String(describing: JobsValueNormalizer.normalize(value))
     }
 }

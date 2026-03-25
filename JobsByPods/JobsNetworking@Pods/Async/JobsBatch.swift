@@ -1,35 +1,18 @@
-//
-//  JobsAgent+Async.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
+@available(iOS 13.0, *)
 public enum JobsBatch {
-    /// TaskGroup 并发批量请求
-    public static func concurrent<T: Sendable>(
-        _ tasks: [@Sendable () async throws -> T]
-    ) async throws -> [T] {
-        try await withThrowingTaskGroup(of: (Int, T).self) { group in
-            for (idx, task) in tasks.enumerated() {
-                group.addTask { (idx, try await task()) }
-            }
-            var result = Array<T?>(repeating: nil, count: tasks.count)
-            for try await (idx, value) in group {
-                result[idx] = value
-            };return result.compactMap { $0 }
-        }
+    public static func concurrent<Value: Sendable>(
+        _ tasks: [() async throws -> Value]
+    ) async throws -> [Value] {
+        let result = try await JobsWorkflow.concurrent(tasks)
+        return result.values
     }
-    /// 请求接力：顺序 await（退化为串行）
-    public static func chain<T: Sendable>(
-        _ tasks: [@Sendable () async throws -> T]
-    ) async throws -> [T] {
-        var out: [T] = []
-        out.reserveCapacity(tasks.count)
-        for task in tasks {
-            out.append(try await task())
-        };return out
+
+    public static func chain<Value>(
+        seed: Value,
+        _ steps: [(Value) async throws -> Value]
+    ) async throws -> Value {
+        try await JobsWorkflow.chain(initial: seed, steps: steps)
     }
 }

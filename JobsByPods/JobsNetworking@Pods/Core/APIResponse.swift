@@ -1,13 +1,8 @@
-//
-//  APIResponse.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public struct APIResponse<T: Decodable>: Decodable {
+public protocol JobsAPIResponseType {}
+
+public struct APIResponse<T: Decodable>: Decodable, JobsAPIResponseType {
     public let code: Int
     public let msg: String?
     public let data: T?
@@ -36,4 +31,11 @@ public struct APIResponse<T: Decodable>: Decodable {
             ?? container.decodeIfPresent(String.self, forKey: .message)
         data = try container.decodeIfPresent(T.self, forKey: .data)
     }
+}
+
+extension APIResponse: JobsEnvelopeDecodable {
+    public typealias Payload = T
+    public var jobsCode: Int { code }
+    public var jobsMessage: String? { msg }
+    public var jobsPayload: T? { data }
 }

@@ -1,19 +1,18 @@
-//
-//  JobsCachePolicy.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public enum JobsCachePolicy {
-    /// 不使用缓存
-    case none
-    /// 仅缓存（命中则直接返回；不发网络）
+public enum JobsCachePolicy: Sendable {
+    case disabled
+    case networkOnly
     case cacheOnly(ttl: TimeInterval)
-    /// 先 memory/disk 缓存，没命中再走网络并写入缓存
-    case cacheThenNetwork(ttl: TimeInterval)
-    /// 先返回缓存（若命中），同时再发网络更新（通过 onUpdate 回调通知）
-    case memoryThenNetwork(ttl: TimeInterval)
+    case cacheElseLoad(ttl: TimeInterval)
+    case staleWhileRevalidate(ttl: TimeInterval)
+
+    @available(*, deprecated, renamed: "disabled")
+    public static var none: JobsCachePolicy { .disabled }
+
+    @available(*, deprecated, renamed: "cacheElseLoad(ttl:)")
+    public static func cacheThenNetwork(ttl: TimeInterval) -> JobsCachePolicy { .cacheElseLoad(ttl: ttl) }
+
+    @available(*, deprecated, renamed: "staleWhileRevalidate(ttl:)")
+    public static func memoryThenNetwork(ttl: TimeInterval) -> JobsCachePolicy { .staleWhileRevalidate(ttl: ttl) }
 }

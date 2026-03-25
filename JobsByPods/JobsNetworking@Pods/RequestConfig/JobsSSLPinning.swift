@@ -1,15 +1,25 @@
-//
-//  JobsSSLPinning.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
-/// 可选 SSL Pinning 配置（演示用）。如需更严谨实现，可在 Agent 内替换 Alamofire 的 ServerTrustManager。
-public struct JobsSSLPinning {
-    public let pinnedHosts: [String]
-    public init(pinnedHosts: [String]) {
+
+public struct JobsSSLPinning: Sendable {
+    public enum Mode: Sendable {
+        case certificates
+        case publicKeys
+    }
+
+    public var mode: Mode
+    public var pinnedHosts: [String]
+    public var validatesHost: Bool
+    public var allowsSelfSigned: Bool
+
+    public init(
+        mode: Mode = .certificates,
+        pinnedHosts: [String],
+        validatesHost: Bool = true,
+        allowsSelfSigned: Bool = false
+    ) {
+        self.mode = mode
         self.pinnedHosts = pinnedHosts
+        self.validatesHost = validatesHost
+        self.allowsSelfSigned = allowsSelfSigned
     }
 }

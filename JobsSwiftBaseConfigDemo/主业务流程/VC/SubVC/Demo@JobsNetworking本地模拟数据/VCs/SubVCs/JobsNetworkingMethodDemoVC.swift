@@ -100,7 +100,6 @@ class JobsNetworkingMethodDemoVC: BaseVC {
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
-//                debugRequestByURLSession()
                 self.sendRequest(triggerError: false)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -179,8 +178,9 @@ class JobsNetworkingMethodDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(24)
             }
     }()
-    
+
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
     init(item: MethodDemoItem) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
@@ -196,7 +196,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
         renderTextView.byText(renderResultText)
         rawTextView.byText(rawResponseText)
     }
-    // MARK: 子类需要复写
+
     func performRequest(triggerError: Bool) async throws {
         fatalError("Subclasses must override performRequest(triggerError:)")
     }
@@ -207,7 +207,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 }
 
 extension JobsNetworkingMethodDemoVC {
-    
+
     func debugRequestByURLSession() {
         let url = URL(string: "http://127.0.0.1:18080/api/get/dashboard?tab=overview&client=swift-demo")!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
@@ -220,7 +220,7 @@ extension JobsNetworkingMethodDemoVC {
         }
         task.resume()
     }
-    
+
     func sendRequest(triggerError: Bool) {
         requestButton.isEnabled = false
         errorButton.isEnabled = false
@@ -238,7 +238,6 @@ extension JobsNetworkingMethodDemoVC {
                     message = """
                     JobsError.transport
                     underlying = \(underlying)
-                    localized = \(underlying.localizedDescription)
                     """
 
                 case let .http(statusCode, data):
@@ -264,7 +263,6 @@ extension JobsNetworkingMethodDemoVC {
                     message = """
                     JobsError.decode
                     underlying = \(underlying)
-                    localized = \(underlying.localizedDescription)
                     raw =
                     \(raw)
                     """
@@ -285,11 +283,19 @@ extension JobsNetworkingMethodDemoVC {
                 case .cancelled:
                     message = "JobsError.cancelled"
 
+                case let .invalidRequest(reason):
+                    message = """
+                    JobsError.invalidRequest
+                    reason = \(reason)
+                    """
+
+                case .emptyResponse:
+                    message = "JobsError.emptyResponse"
+
                 case let .unknown(underlying):
                     message = """
                     JobsError.unknown
                     underlying = \(underlying)
-                    localized = \(underlying.localizedDescription)
                     """
                 }
 

@@ -1,29 +1,24 @@
-//
-//  JobsUploadRequest.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public struct JobsUploadRequest {
+public struct JobsUploadRequest: Sendable {
     public var path: String
     public var method: HTTPMethod
     public var files: [JobsUploadFileSpec]
-    public var form: [String: AnySendable]
+    public var form: [String: JobsValue]
     public var headers: [String: String]
     public var timeout: TimeInterval?
     public var trace: JobsTrace
+    public var retryPolicy: JobsRetryPolicy?
 
     public init(
         path: String,
         method: HTTPMethod = .post,
         files: [JobsUploadFileSpec],
-        form: [String: AnySendable] = [:],
+        form: [String: JobsValue] = [:],
         headers: [String: String] = [:],
         timeout: TimeInterval? = nil,
-        trace: JobsTrace = JobsTrace()
+        trace: JobsTrace = JobsTrace(),
+        retryPolicy: JobsRetryPolicy? = nil
     ) {
         self.path = path
         self.method = method
@@ -32,52 +27,22 @@ public struct JobsUploadRequest {
         self.headers = headers
         self.timeout = timeout
         self.trace = trace
+        self.retryPolicy = retryPolicy
     }
 }
 
-public enum JobsUploadFileSpec {
-    case file(url: URL,
-              name: String,
-              fileName: String,
-              mimeType: String)
-    case data(data: Data,
-              name: String,
-              fileName: String,
-              mimeType: String)
-    // NOTE:
-    // Can't provide static factories named `file(...)` / `data(...)` because they collide with
-    // the enum case constructors in Swift ("Invalid redeclaration").
-    public static func fromFile(url: URL,
-                                name: String,
-                                fileName: String,
-                                mimeType: String) -> JobsUploadFileSpec {
-        .file(url: url,
-              name: name,
-              fileName: fileName,
-              mimeType: mimeType)
-    }
-
-    public static func fromData(_ data: Data,
-                                name: String,
-                                fileName: String,
-                                mimeType: String) -> JobsUploadFileSpec {
-        .data(data: data,
-              name: name,
-              fileName: fileName,
-              mimeType: mimeType)
-    }
+public enum JobsUploadFileSpec: Sendable {
+    case file(url: URL, name: String, fileName: String, mimeType: String)
+    case data(data: Data, name: String, fileName: String, mimeType: String)
 }
-/// 内核上传用的 multipart part（供 HTTPClient 使用）
-public struct JobsMultipartPart {
+
+public struct JobsMultipartPart: Sendable {
     public let name: String
     public let fileName: String
     public let mimeType: String
     public let data: Data
 
-    public init(name: String,
-                fileName: String,
-                mimeType: String,
-                data: Data) {
+    public init(name: String, fileName: String, mimeType: String, data: Data) {
         self.name = name
         self.fileName = fileName
         self.mimeType = mimeType

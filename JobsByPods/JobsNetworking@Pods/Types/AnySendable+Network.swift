@@ -1,15 +1,8 @@
-//
-//  AnySendable+Network.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-extension AnySendable {
+public extension JobsValue {
     func stringValueForNetwork() -> String {
-        Self.stringify(value)
+        Self.stringify(raw)
     }
 
     private static func stringify(_ value: Any?) -> String {
@@ -26,18 +19,18 @@ extension AnySendable {
             return ISO8601DateFormatter().string(from: value)
         case let value as Data:
             return value.base64EncodedString()
-        case let value as [String: AnySendable]:
+        case let value as [String: JobsValue]:
             return value
                 .sorted { $0.key < $1.key }
-                .map { "\($0.key):\(stringify($0.value.value))" }
+                .map { "\($0.key):\(stringify($0.value.raw))" }
                 .joined(separator: ",")
         case let value as [String: Any]:
             return value
                 .sorted { $0.key < $1.key }
                 .map { "\($0.key):\(stringify($0.value))" }
                 .joined(separator: ",")
-        case let value as [AnySendable]:
-            return value.map { stringify($0.value) }.joined(separator: ",")
+        case let value as [JobsValue]:
+            return value.map { stringify($0.raw) }.joined(separator: ",")
         case let value as [Any]:
             return value.map { stringify($0) }.joined(separator: ",")
         default:

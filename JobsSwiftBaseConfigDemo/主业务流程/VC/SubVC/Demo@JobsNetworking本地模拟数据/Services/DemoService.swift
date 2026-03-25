@@ -30,7 +30,7 @@ final class DemoService {
             headers: ["Content-Type": "application/json"],
             timeout: 10,
             encoding: .urlQuery,
-            cachePolicy: .none
+            cachePolicy: .disabled
         )
 
         let response = try await agent.send(req, as: DioCatalogResponse.self)
@@ -42,9 +42,10 @@ final class DemoService {
         path: String,
         query: [String: AnySendable]? = nil,
         body: [String: AnySendable]? = nil,
-        encoding: JobsParameterEncoding ) async throws -> Data {
-
-            try await agent.send(JobsRequest(
+        encoding: JobsParameterEncoding
+    ) async throws -> Data {
+        try await agent.send(
+            JobsRequest(
                 path: path,
                 method: method,
                 query: query,
@@ -52,36 +53,40 @@ final class DemoService {
                 headers: ["Content-Type": "application/json"],
                 timeout: 10,
                 encoding: encoding,
-                cachePolicy: .none
-            ), as: Data.self)
+                cachePolicy: .disabled
+            ),
+            as: Data.self
+        )
     }
 
     func uploadDemo(triggerError: Bool) async throws -> Data {
-
-        try await agent.upload(JobsUploadRequest(
-            path: "/api/upload/file",
-            method: .post,
-            files: triggerError ? [] : [
-                .fromData(
-                    Data("This is a demo upload from Swift.".utf8),
-                    name: "file",
-                    fileName: "swift_upload_demo.txt",
-                    mimeType: "text/plain"
-                )
-            ],
-            form: [
-                "description": .init(triggerError ? "触发错误" : "Swift 上传示例文件"),
-                "category": .init("demo")
-            ],
-            headers: ["Accept": "application/json"],
-            timeout: 10
-        ), as: Data.self)
+        try await agent.upload(
+            JobsUploadRequest(
+                path: "/api/upload/file",
+                method: .post,
+                files: triggerError ? [] : [
+                    .data(
+                        data: Data("This is a demo upload from Swift.".utf8),
+                        name: "file",
+                        fileName: "swift_upload_demo.txt",
+                        mimeType: "text/plain"
+                    )
+                ],
+                form: [
+                    "description": .init(triggerError ? "触发错误" : "Swift 上传示例文件"),
+                    "category": .init("demo")
+                ],
+                headers: ["Accept": "application/json"],
+                timeout: 10
+            ),
+            as: Data.self
+        )
     }
 
     func downloadDemo(fileName: String) async throws -> DioDownloadRenderData {
-        
         let safeName = fileName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? fileName
         let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+
         let request = JobsDownloadRequest(
             absoluteURL: URL(string: "http://127.0.0.1:18080/api/download/file?fileName=\(safeName)")!,
             destinationURL: destinationURL,
@@ -108,7 +113,8 @@ final class DemoService {
               let prettyData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]),
               let text = String(data: prettyData, encoding: .utf8) else {
             return String(data: data, encoding: .utf8) ?? "<empty>"
-        };return text
+        }
+        return text
     }
 
     func decode<T: Decodable>(_ type: T.Type, from data: Data) -> T? {

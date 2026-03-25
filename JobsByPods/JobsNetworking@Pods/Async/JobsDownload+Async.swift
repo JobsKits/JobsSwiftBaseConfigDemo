@@ -1,10 +1,3 @@
-//
-//  JobsDownload+Async.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 #if canImport(_Concurrency)
 import Foundation
 
@@ -12,15 +5,14 @@ import Foundation
 public extension JobsDownloadCapable {
     func download(_ request: JobsDownloadRequest) async throws -> URL {
         var token: JobsRequestToken?
-
         return try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { cont in
+            try await withCheckedThrowingContinuation { continuation in
                 token = download(request) { result in
                     switch result {
                     case .success(let value):
-                        cont.resume(returning: value)
+                        continuation.resume(returning: value)
                     case .failure(let error):
-                        cont.resume(throwing: error)
+                        continuation.resume(throwing: error)
                     }
                     token = nil
                 }

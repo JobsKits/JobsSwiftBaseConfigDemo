@@ -1,35 +1,30 @@
-//
-//  JobsRequest.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public struct JobsRequest {
+public struct JobsRequest: Sendable {
     public var path: String
     public var method: HTTPMethod
-    public var query: [String: AnySendable]?
-    public var body: [String: AnySendable]?
+    public var query: [String: JobsValue]?
+    public var body: [String: JobsValue]?
     public var headers: [String: String]
     public var timeout: TimeInterval?
     public var encoding: JobsParameterEncoding?
     public var cachePolicy: JobsCachePolicy
     public var retryPolicy: JobsRetryPolicy?
     public var trace: JobsTrace
+    public var allowsEmptyResponse: Bool
 
     public init(
         path: String,
         method: HTTPMethod,
-        query: [String: AnySendable]? = nil,
-        body: [String: AnySendable]? = nil,
+        query: [String: JobsValue]? = nil,
+        body: [String: JobsValue]? = nil,
         headers: [String: String] = [:],
         timeout: TimeInterval? = nil,
         encoding: JobsParameterEncoding? = nil,
-        cachePolicy: JobsCachePolicy = .none,
+        cachePolicy: JobsCachePolicy = .networkOnly,
         retryPolicy: JobsRetryPolicy? = nil,
-        trace: JobsTrace = JobsTrace()
+        trace: JobsTrace = JobsTrace(),
+        allowsEmptyResponse: Bool = false
     ) {
         self.path = path
         self.method = method
@@ -41,5 +36,6 @@ public struct JobsRequest {
         self.cachePolicy = cachePolicy
         self.retryPolicy = retryPolicy
         self.trace = trace
+        self.allowsEmptyResponse = allowsEmptyResponse
     }
 }

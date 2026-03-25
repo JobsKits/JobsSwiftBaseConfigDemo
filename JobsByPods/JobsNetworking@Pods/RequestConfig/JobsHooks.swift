@@ -1,18 +1,23 @@
-//
-//  JobsHooks.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public protocol JobsHeaderHook {
-    /// 注入鉴权/自定义 header。框架会统一注入 Accept/Content-Type 等通用 header。
+public protocol JobsHeaderHook: Sendable {
     func headers(for request: JobsRequest) -> [String: String]
 }
 
 public struct EmptyHeaderHook: JobsHeaderHook {
     public init() {}
     public func headers(for request: JobsRequest) -> [String: String] { [:] }
+}
+
+public protocol JobsEventObserver: Sendable {
+    func willSend(_ request: JobsRequest)
+    func didReceive(_ event: JobsResponseEvent)
+    func didFail(request: JobsRequest, error: JobsError)
+}
+
+public struct EmptyEventObserver: JobsEventObserver {
+    public init() {}
+    public func willSend(_ request: JobsRequest) {}
+    public func didReceive(_ event: JobsResponseEvent) {}
+    public func didFail(request: JobsRequest, error: JobsError) {}
 }

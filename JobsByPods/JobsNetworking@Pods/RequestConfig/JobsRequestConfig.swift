@@ -1,15 +1,11 @@
-//
-//  JobsRequestConfig.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
-import JobsSwiftFoundation
 
-public struct JobsRequestConfig {
-    
+public enum JobsEnvelopeStrategy: Sendable {
+    case none
+    case standard(successCodes: Set<Int>)
+}
+
+public struct JobsRequestConfig: Sendable {
     public var baseURL: URL
     public var timeout: TimeInterval
     public var version: String
@@ -18,17 +14,23 @@ public struct JobsRequestConfig {
     public var decoder: JSONDecoder
     public var logger: JobsLogger
     public var sslPinning: JobsSSLPinning?
+    public var traceHeaderKeys: (requestId: String, traceId: String, spanId: String)
+    public var envelopeStrategy: JobsEnvelopeStrategy
+    public var observer: JobsEventObserver
 
     public init(
         baseURL: URL,
         timeout: TimeInterval = 30,
-        version: String = "v1",
+        version: String = "v2",
         userScope: String = "default",
         defaultRetryPolicy: JobsRetryPolicy = .default,
         decoder: JSONDecoder = .jobsDefault,
         logger: JobsLogger = JobsLogger(),
-        sslPinning: JobsSSLPinning? = nil) {
-            
+        sslPinning: JobsSSLPinning? = nil,
+        traceHeaderKeys: (requestId: String, traceId: String, spanId: String) = ("X-Request-ID", "X-Trace-ID", "X-Span-ID"),
+        envelopeStrategy: JobsEnvelopeStrategy = .none,
+        observer: JobsEventObserver = EmptyEventObserver()
+    ) {
         self.baseURL = baseURL
         self.timeout = timeout
         self.version = version
@@ -37,13 +39,17 @@ public struct JobsRequestConfig {
         self.decoder = decoder
         self.logger = logger
         self.sslPinning = sslPinning
+        self.traceHeaderKeys = traceHeaderKeys
+        self.envelopeStrategy = envelopeStrategy
+        self.observer = observer
     }
 }
 
 public extension JSONDecoder {
     static var jobsDefault: JSONDecoder {
-        JSONDecoder()
-            .bykeyDecodingStrategy(.useDefaultKeys)
-            .byDateDecodingStrategy(.deferredToDate)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .useDefaultKeys
+        decoder.dateDecodingStrategy = .deferredToDate
+        return decoder
     }
 }

@@ -1,46 +1,39 @@
-//
-//  JobsCacheStore.swift
-//  JobsNetworking
-//
-//  Created by Jobs on 31/1/26.
-//
-
 import Foundation
 
-public protocol JobsCacheStore {
+public protocol JobsCacheStore: Sendable {
     func get(key: JobsCacheKey) -> JobsCachedValue?
     func set(key: JobsCacheKey, value: JobsCachedValue)
     func remove(key: JobsCacheKey)
     func removeAll()
 }
 
-public struct JobsCachedValue: Codable {
+public struct JobsCachedValue: Codable, Sendable {
     public let data: Data
     public let expiry: Date
-    public let meta: [String: String]
+    public let responseHeaders: [String: String]
 
-    public init(data: Data, expiry: Date, meta: [String: String] = [:]) {
+    public init(data: Data, expiry: Date, responseHeaders: [String: String] = [:]) {
         self.data = data
         self.expiry = expiry
-        self.meta = meta
+        self.responseHeaders = responseHeaders
     }
 
     public var isExpired: Bool { Date() >= expiry }
 }
 
-public final class JobsMemoryCache: JobsCacheStore {
-    private var store: [String: JobsCachedValue] = [:]
+public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
     private let lock = NSLock()
+    private var store: [String: JobsCachedValue] = [:]
 
     public init() {}
 
     public func get(key: JobsCacheKey) -> JobsCachedValue? {
         lock.lock(); defer { lock.unlock() }
-        let k = key.raw
-        guard let v = store[k], !v.isExpired else {
-            store[k] = nil
+        guard let value = store[key.raw], !value.isExpired else {
+            store[key.raw] = nil
             return nil
-        };return v
+        }
+        return value
     }
 
     public func set(key: JobsCacheKey, value: JobsCachedValue) {
@@ -59,7 +52,7 @@ public final class JobsMemoryCache: JobsCacheStore {
     }
 }
 
-public final class JobsDiskCache: JobsCacheStore {
+public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
     private let dir: URL
     private let lock = NSLock()
 
@@ -73,19 +66,20 @@ public final class JobsDiskCache: JobsCacheStore {
         lock.lock(); defer { lock.unlock() }
         let url = fileURL(for: key)
         guard let data = try? Data(contentsOf: url),
-              let wrapper = try? JSONDecoder().decode(DiskWrapper.self, from: data) else { return nil }
-        if Date() >= wrapper.expiry {
+              let wrapper = try? JSONDecoder().decode(JobsCachedValue.self, from: data) else {
+            return nil
+        }
+        if wrapper.isExpired {
             try? FileManager.default.removeItem(at: url)
             return nil
         }
-        return JobsCachedValue(data: wrapper.data, expiry: wrapper.expiry, meta: wrapper.meta)
+        return wrapper
     }
 
     public func set(key: JobsCacheKey, value: JobsCachedValue) {
         lock.lock(); defer { lock.unlock() }
         let url = fileURL(for: key)
-        let wrapper = DiskWrapper(data: value.data, expiry: value.expiry, meta: value.meta)
-        if let encoded = try? JSONEncoder().encode(wrapper) {
+        if let encoded = try? JSONEncoder().encode(value) {
             try? encoded.write(to: url, options: .atomic)
         }
     }
@@ -105,12 +99,6 @@ public final class JobsDiskCache: JobsCacheStore {
         let safe = key.raw.data(using: .utf8)!.base64EncodedString()
             .replacingOccurrences(of: "/", with: "_")
             .replacingOccurrences(of: "+", with: "-")
-        return dir.appendingPathComponent(safe).appendingPathExtension("json")
-    }
-
-    private struct DiskWrapper: Codable {
-        let data: Data
-        let expiry: Date
-        let meta: [String: String]
+        return dir.appendingPathComponent(safe).appendingPathExtension("cache")
     }
 }
