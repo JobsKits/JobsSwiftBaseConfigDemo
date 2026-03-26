@@ -75,47 +75,47 @@ def debugPods
 end
 # ============================== PodByJobs ==============================
 def byJobs
-    
-  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
-#  pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
-#  pod 'JobsNetworking/AF4',                 :path => 'JobsByPods/JobsNetworking@Pods'
-  pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个
-  pod 'JobsNetworking/AF5',                 :path => 'JobsByPods/JobsNetworking@Pods'
-  
-  pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
-  pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
-  pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'
-  pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
-  pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods'
-  pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
-  pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
-  pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
-  pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
-  pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
-  pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
-  pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
-  pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
-  pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
-  pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'
-  pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
-  pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
-  pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
-  pod 'JobsRefresher',                      :path => 'JobsByPods/JobsRefresher@Pods'
-  pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
-  pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
-  pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'
-  pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods'
-  pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods'
-  pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods'
-  pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods'
-  pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
-  pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
-  pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods'
-  pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-  pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods' # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
-  pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods' # https://github.com/JobsKits/JobsSwiftBlock
-  pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods' # https://github.com/JobsKits/JobsSwiftBaseDefines
-  pod 'JobsSwiftBaseTools',                 :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools
+    pod 'JobsSwiftWorker',                :path => 'JobsByPods/JobsSwiftWorker@Pods'
+    pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
+#    pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
+#    pod 'JobsNetworking/AF4',                 :path => 'JobsByPods/JobsNetworking@Pods'
+    pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个
+    pod 'JobsNetworking/AF5',                 :path => 'JobsByPods/JobsNetworking@Pods'
+      
+    pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
+    pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
+    pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'
+    pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
+    pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods'
+    pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
+    pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
+    pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
+    pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
+    pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
+    pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
+    pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
+    pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
+    pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
+    pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'
+    pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
+    pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
+    pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
+    pod 'JobsRefresher',                      :path => 'JobsByPods/JobsRefresher@Pods'
+    pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
+    pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
+    pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'
+    pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods'
+    pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods'
+    pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods'
+    pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods'
+    pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
+    pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
+    pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods'
+    pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+    pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods' # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+    pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods' # https://github.com/JobsKits/JobsSwiftBlock
+    pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods' # https://github.com/JobsKits/JobsSwiftBaseDefines
+    pod 'JobsSwiftBaseTools',                 :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools
 end
 # ============================== 目标工程（新工程记得改名） ==============================
 # ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字

@@ -305,6 +305,14 @@ PODS:
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsToast
+  - JobsSwiftWorker (0.1.0):
+    - JobsByUIKit
+    - Jobsl10n
+    - JobsRefresher
+    - JobsSwiftBaseDefines
+    - JobsSwiftTaskCenter
+    - JobsSwiftTimer
+    - SnapKit
   - JobsTextTools (0.1.14)
   - JobsToast (0.1.14):
     - JobsByUIKit
@@ -516,6 +524,7 @@ DEPENDENCIES:
   - "JobsSwiftTaskCenter (from `JobsByPods/JobsSwiftTaskCenter@Pods`)"
   - "JobsSwiftTimer (from `JobsByPods/JobsSwiftTimer@Pods`)"
   - "JobsSwiftTools (from `JobsByPods/JobsSwiftTools@Pods`)"
+  - "JobsSwiftWorker (from `JobsByPods/JobsSwiftWorker@Pods`)"
   - "JobsTextTools (from `JobsByPods/JobsTextTools@Pods`)"
   - "JobsToast (from `JobsByPods/JobsToast@Pods`)"
   - JXBanner
@@ -704,6 +713,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftTimer@Pods"
   JobsSwiftTools:
     :path: "JobsByPods/JobsSwiftTools@Pods"
+  JobsSwiftWorker:
+    :path: "JobsByPods/JobsSwiftWorker@Pods"
   JobsTextTools:
     :path: "JobsByPods/JobsTextTools@Pods"
   JobsToast:
@@ -779,6 +790,7 @@ SPEC CHECKSUMS:
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
   JobsSwiftTools: ba448de8a240c41b68927e5121affef2f429a6a6
+  JobsSwiftWorker: 6a2229a78f559aadc054f2f327977815094813dd
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
   JobsToast: 5fed48764301f708158b3ba6341fb5d052d282e9
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
