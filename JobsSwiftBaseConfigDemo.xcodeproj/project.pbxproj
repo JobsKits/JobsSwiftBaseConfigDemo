@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */; };
+		9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
+		34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "EntityInfo-JobsSwiftBaseConfigDemo.generated.swift"; sourceTree = "<group>"; };
 		7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,15 +62,11 @@
 		};
 		C59C65482F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = JobsSwiftBaseConfigDemoTests;
 			sourceTree = "<group>";
 		};
 		C59C65522F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = JobsSwiftBaseConfigDemoUITests;
 			sourceTree = "<group>";
 		};
@@ -117,6 +115,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		BE84CCA99B4FD97FE1349FAC /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
 		C59C652D2F1BFB190060EEAD = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +133,7 @@
 				C59C65372F1BFB1A0060EEAD /* Products */,
 				A015FC91762D3615F9A4CAC5 /* Pods */,
 				0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */,
+				BE84CCA99B4FD97FE1349FAC /* generated */,
 			);
 			sourceTree = "<group>";
 		};
@@ -150,6 +157,7 @@
 				9B30AAF4C5CEA41A0405A645 /* [CP] Check Pods Manifest.lock */,
 				C57D6A082F1DD7D00093F898 /* ShellScript */,
 				2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */,
+				0ED085630027AE69643CFADF /* [OBX] Update Sourcery Generated Files */,
 				C59C65322F1BFB1A0060EEAD /* Sources */,
 				C59C65332F1BFB1A0060EEAD /* Frameworks */,
 				C57D6A0A2F1DD7DD0093F898 /* ShellScript */,
@@ -157,6 +165,7 @@
 				C57D6C202F1DDCDB0093F898 /* ShellScript */,
 				6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */,
 				7F9C6F4C7E5585F935602E59 /* [CP-User] Embed Flutter Build my_flutter Script */,
+				D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -282,12 +291,35 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0ED085630027AE69643CFADF /* [OBX] Update Sourcery Generated Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[OBX] Update Sourcery Generated Files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/ObjectBox/generate_sources.sh\" -- --output \"$PROJECT_DIR/generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift\" --model-json \"$PROJECT_DIR/model-JobsSwiftBaseConfigDemo.json\"\n";
+		};
 		2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputPaths = (
+			);
 			name = "[CP-User] Run Flutter Build my_flutter Script";
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
@@ -299,8 +331,12 @@
 			);
 			inputFileListPaths = (
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -312,7 +348,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputPaths = (
+			);
 			name = "[CP-User] Embed Flutter Build my_flutter Script";
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
@@ -355,7 +395,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
 		};
 		C57D6A0A2F1DD7DD0093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -373,7 +414,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
 		};
 		C57D6C202F1DDCDB0093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -391,7 +433,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
+		};
+		D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -400,6 +462,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -386,6 +386,7 @@ PODS:
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
+  - ObjectBox (5.2.0)
   - PhoneNumberKit (4.2.3):
     - PhoneNumberKit/PhoneNumberKitCore (= 4.2.3)
     - PhoneNumberKit/UIKit (= 4.2.3)
@@ -541,6 +542,7 @@ DEPENDENCIES:
   - MJRefresh
   - Moya
   - "NSObject+Rx"
+  - ObjectBox
   - PhoneNumberKit
   - Plan
   - PromiseKit
@@ -611,6 +613,7 @@ SPEC REPOS:
     - Moya
     - "NSObject+Rx"
     - NVActivityIndicatorView
+    - ObjectBox
     - PhoneNumberKit
     - Plan
     - PromiseKit
@@ -790,7 +793,7 @@ SPEC CHECKSUMS:
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
   JobsSwiftTools: ba448de8a240c41b68927e5121affef2f429a6a6
-  JobsSwiftWorker: 6a2229a78f559aadc054f2f327977815094813dd
+  JobsSwiftWorker: d5980b1f9152ab7fb7d37cbd39f5a19dbd6905f4
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
   JobsToast: 5fed48764301f708158b3ba6341fb5d052d282e9
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
@@ -811,6 +814,7 @@ SPEC CHECKSUMS:
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   "NSObject+Rx": 61cf1f7306a73dcef8b36649198af0813ec18dfd
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
+  ObjectBox: 946c1e8586aaa61e21b6661bab4948d06fdd51c4
   PhoneNumberKit: d6b20eab1cdd77216e24f9b15878a78b69fb5a4d
   Plan: e0026af5b3cab93b9077b192911832665b762e44
   PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440

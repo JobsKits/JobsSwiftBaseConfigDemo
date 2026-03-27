@@ -71,6 +71,7 @@ final class RootListVC: BaseVC {
             ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
             ("📅 日历", LunarDemoVC.self),
             ("📊 Excel", XLSXDemoVC.self),
+//            ("🗃️ ObjectBox", ObjectBoxDemoVC.self),
             ("🪵 PDF", PDFDemoVC.self),
             ("😝 PromiseKit", PromiseKitDemoVC.self),
             ("🧒 Lottie动画", LottieDemoVC.self),
