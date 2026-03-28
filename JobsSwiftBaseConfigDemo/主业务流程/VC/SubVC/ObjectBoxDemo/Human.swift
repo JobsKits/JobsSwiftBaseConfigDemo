@@ -6,7 +6,8 @@
 //
 
 import ObjectBox
-/// pod 'ObjectBox'                          # https://github.com/objectbox/objectbox-swift        ❤️ 高性能的本地嵌入式NoSQL数据库,比 SQLite 更快、更简单、面向对象的本地数据库。
+// ruby ./Pods/ObjectBox/setup.rb
+// objectbox: entity
 final class Human: Entity {
     var id: Id = 0
     var name: String = ""
