@@ -6,7 +6,6 @@
 //
 
 import ObjectBox
-// ruby ./Pods/ObjectBox/setup.rb
 // objectbox: entity
 final class Human: Entity {
     var id: Id = 0
