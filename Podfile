@@ -134,6 +134,30 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
   end
 end
 
+
+# ===== PodspecDependencyReport: pod install 后自动生成 Podspec 依赖分析报告 =====
+# 路径：项目根目录/ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command
+# 风格与 OC 项目一致：先 chmod +x，再直接执行脚本；脚本工作目录为项目根目录。
+def run_podspec_dependency_report_script
+  script_path = File.expand_path(File.join(__dir__, 'ScriptsByPods', '【MacOS】🔍查询Xcode工程依赖关系.command'))
+
+  unless File.exist?(script_path)
+    raise "[PodspecDependencyReport] ❌ 找不到脚本：#{script_path}"
+  end
+
+  Pod::UI.puts "[PodspecDependencyReport] chmod +x #{script_path}"
+  unless system('/bin/chmod', '+x', script_path)
+    raise "[PodspecDependencyReport] ❌ chmod +x 执行失败：#{script_path}"
+  end
+
+  Pod::UI.puts "[PodspecDependencyReport] 执行 #{script_path}"
+  unless system(script_path, chdir: __dir__)
+    raise "[PodspecDependencyReport] ❌ 脚本执行失败：#{script_path}"
+  end
+
+  Pod::UI.puts "[PodspecDependencyReport] ✅ 依赖关系报告已生成"
+end
+
 # 统一写入 build settings（对某个 target 的所有 config）
 def jobs_apply_build_settings!(target, settings)
   target.build_configurations.each do |config|
@@ -296,4 +320,7 @@ post_install do |installer|
 
   # -------- 2、在 Pods 分组里展示 Podfile.deps（Ruby 高亮） --------
   jobs_show_deps_file_in_pods_group!(installer)
+
+  # -------- 3、pod install 完成后生成 Podspec 依赖分析报告 --------
+  run_podspec_dependency_report_script
 end
