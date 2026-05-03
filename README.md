@@ -62,27 +62,17 @@
 
 ### 1、开发周边支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-* [**JobsDocs**](https://github.com/JobsKits/JobsDocs)
+* [**Jobs的个人技术博客**](https://jobsdocs.ccwu.cc/)
 
-  * [**中国公民身份证校验规则**](https://github.com/JobsKits/JobsDocs/blob/main/中国大陆公民身份证校验规则.md/中国大陆公民身份证校验规则.md)
-  * [**iOS项目多环境配置**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS项目多环境配置.md/iOS项目多环境配置.md)
-  * [**制作(发布)Pods组件**](https://github.com/JobsKits/JobsDocs/blob/main/制作(发布)Pods组件.md/制作(发布)Pods组件.md)
-  * [**MacOS配置个人热点🛜**](https://github.com/JobsKits/JobsDocs/blob/main/MacOS配置个人热点🛜.md/MacOS配置个人热点🛜.md)
-  * [**SwiftPackageDependence使用指南🧭**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md)
-  * [**利用quicktype自动建立数据模型**](https://github.com/JobsKits/JobsDocs/blob/main/利用quicktype自动建立数据模型.md/利用quicktype自动建立数据模型.md)
-  * [**【MacOS】配置本地的直播服务器**](https://github.com/JobsKits/JobsDocs/tree/main/直播推流:拉流@Swift5x)
-  * [**iOS多语言环境设置**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS多语言环境设置.md/iOS多语言环境设置.md)
-  * [**iOS音视频**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS音视频.md/iOS音视频.md)
-  * [**iOS项目集成Unity**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS项目集成Unity.md/iOS项目集成Unity.md)
-  * [**YYKit调研**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/YYKit调研.md/YYKit调研.md)
-  * [**Apple生成`*.p12`文件**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/Apple生成*.p12文件.md/Apple生成*.p12文件.md)
-  * [**iOS项目集成Unity**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/iOS项目集成Unity.md/iOS项目集成Unity.md)
-  * [**Swift**➤**Flutter**](https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/Swift➤Flutter.md/Swift➤Flutter.md)
-  * [**Git的使用**](https://github.com/JobsKits/JobsDocs/tree/main/Git的使用.md)
-    * [**Github.workflow（工作流）的使用**](https://github.com/JobsKits/JobsDocs/blob/main/Git的使用.md/Github.workflow.md/Github.workflow.md)
-    * [**Git 子模块使用**](https://github.com/JobsKits/JobsDocs/blob/main/Git的使用.md/Git子模块使用.md/Git子模块使用.md)
-    * [**Git的一些使用说明**](https://github.com/JobsKits/JobsDocs/blob/main/Git的使用.md/Git的一些使用说明.md/Git的一些使用说明.md)
-    * [**通过SSH连接到GitHub**](https://github.com/JobsKits/JobsDocs/blob/main/Git的使用.md/通过SSH连接到GitHub/通过SSH连接到GitHub.md)
+* [**系统相关配置**](https://github.com/JobsKits/JobsConfigOS)
+
+  * `【MacOS】🆕新系统配置.command`
+  * [**系统环境变量配置**](https://github.com/JobsKits/JobsMacEnvVarConfig)
+  * [**SourceTree脚本配置**](https://github.com/JobsKits/SourceTree.sh)
+  * [**Xcode代码块配置**](https://github.com/JobsKits/JobsCodeSnippets)
+  * [**热键工具Hammerspoon配置**](https://github.com/JobsKits/JobsConfigHotKeyByHammerspoon)
+  * [**常用软件下载**](https://github.com/JobsKits/JobsSoftware.MacOS)
+  * [**🦞Openclaw配置**](https://github.com/JobsKits/JobsInstallOpenClaw)
 
 * [**JobsGenesis**](https://github.com/JobsKits/JobsGenesis)
 
@@ -93,263 +83,278 @@
   * [**其他配置脚本**](https://github.com/JobsKits/JobsCommand-Others)
     * [**文件分拆（合并）测试**](https://github.com/JobsKits/JobsCommand-Others/tree/main/【MacOS】文件分拆（合并）测试)
 
-* [**CocoaPods**](https://cocoapods.org/)
+* 工具网站
 
-* [**热键配置**](https://github.com/JobsKits/JobsConfigHotKeyByHammerspoon)
+  * [**CocoaPods**](https://cocoapods.org/)
 
-* iOS模拟器
+  * [**uuwallet@虚拟卡**](https://www.uuwallet.com/)
 
-  * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
+  * [**波测**](https://www.boce.com/)
 
-  * iOS模拟器下载@终端
+  * [**Mac破解软件**](https://mac.macxz.com/)
 
-    ```shell
-    rm -rf ~/Library/Caches/com.apple.dt.Xcode
-    rm -rf ~/Library/Developer/CoreSimulator/Caches
+  * [**图片占位符**](https://picsum.photos/)
+
+  * [**帮小忙@腾讯QQ浏览器在线工具箱**](https://tool.browser.qq.com/)
+
+  * [**quicktype**](https://app.quicktype.io/)：从 **JSON** / **GraphQL** /其它数据格式 自动生成对应语言的类型定义➤[**Github@quicktype**](https://github.com/glideapps/quicktype?utm_source=chatgpt.com)
+
+    * ```shell
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      ```
+
+    * ```shell
+      brew install npm
+      ```
+
+    * ```shell
+      npm install -g quicktype
+      ```
+
+* 其他工具
+
+  * [**苹果开发者账户续费**](https://account.apple.com/account/manage/section/payment)
+  
+  * [**Xcode资料下载**](https://developer.apple.com/download/more/)
+  
+  * iOS模拟器
+  
+        * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
+        
+        * iOS模拟器下载@终端
+        
+          ```shell
+          rm -rf ~/Library/Caches/com.apple.dt.Xcode
+          rm -rf ~/Library/Developer/CoreSimulator/Caches
+          
+          xcodebuild -downloadPlatform iOS --verbose
+          ```
     
-    xcodebuild -downloadPlatform iOS --verbose
-    ```
-
-* [**Xcode资料下载**](https://developer.apple.com/download/more/)
-
-* [**Xcode文件模版的配置和使用**](https://github.com/JobsKits/xctemplate)
-
-* [**苹果开发者账户续费**](https://account.apple.com/account/manage/section/payment)
-
-* [**在线演示**](https://appetize.io) ➤ 上传（支持**iOS**/**Android**）模拟器包，就能在线运行、演示、调试、自动化测试，还能嵌到网页或内部系统里给客服/销售/培训/QA 用
-
-* [**代码块**](https://github.com/JobsKits/JobsCodeSnippets)
-
-* [**图片占位符**](https://picsum.photos/)
-
-* [**snipaste**](https://www.snipaste.com/)：截图工具
-
-* [**Sip**](https://sipapp.io/)：取色器
-
-* [**帮小忙@腾讯QQ浏览器在线工具箱**](https://tool.browser.qq.com/)
-
-* [**Mac破解软件**](https://mac.macxz.com/)
-
-* [**波测**](https://www.boce.com/)
-
-* [**向附近设备分享文件**](https://localsend.org/download)
-
-* [**uuwallet@虚拟卡**](https://www.uuwallet.com/)
-
-* [<font id=UI界面调试工具>**UI界面调试工具**</font>](https://lookin.work/)（必须是有线连接，并且**`Lookin.app`**要先于项目文件启动）
-
-  > ```ruby
-  > pod 'LookinServer', :subspecs => ['Swift'], :configurations => ['Debug']
-  > ```
-
-* [**Fastlane**](https://fastlane.tools/)：自动化工具集
-
-  > 一个开源的 **移动应用（iOS / Android）自动化工具集**，目的是把那些繁琐、重复、容易出错的 App 构建 / 签名 / 发布 / 测试 / 上架 等流程，变成<u>写一个脚本、一键执行</u>的工作。
-
-* [**SwiftLint**](https://github.com/realm/SwiftLint)：[**Swift**](https://developer.apple.com/swift/) 代码静态检查工具。 **自动分析 Swift 源代码，帮助保持统一、规范、可维护的代码风格**。
-
-  > 原本要靠团队 Code Review 去发现的细节，[**SwiftLint**](https://github.com/realm/SwiftLint) 都能自动扫出来 ⚡️
-
-  ```shell
-  ➜  ~ brew install swiftlint
-  ```
-
-  * `.swiftlint.yml` 模板
-
-    ```yml
-    # =========================================
-    # SwiftLint 配置文件（标准模板，含中文注释）
-    # 放到仓库根目录，与 .gitignore 同级
-    # =========================================
+  * [**在线演示**](https://appetize.io) ➤ 上传你的（支持**iOS**/**Android**）包，就能在线运行、演示、调试、自动化测试，还能嵌到网页或内部系统里给客服/销售/培训/QA 用
+  
+  * [**屏幕分享工具**](https://github.com/mistweaverco/bananas)
+  
+  * [**Fastlane**](https://fastlane.tools/)：自动化工具集
+  
+        > 一个开源的 **移动应用（iOS / Android）自动化工具集**，目的是把那些繁琐、重复、容易出错的 App 构建 / 签名 / 发布 / 测试 / 上架 等流程，变成<u>写一个脚本、一键执行</u>的工作
     
-    # Swift 版本（有助于规则解析；不写也能跑）
-    swift_version: 5.9
-    
-    # 选择使用哪种报告器：
-    # - xcode（默认，警告出现在 Xcode Issues 面板）
-    # - json / markdown / emoji 等
-    reporter: xcode
-    
-    # 需要扫描的路径（相对仓库根；不填则扫描全仓库）
-    # 一般列出你的 App 源码根目录，避免扫 Pods
-    included:
-      - JobsSwiftBaseConfigDemo
-    
-    # 需要忽略的路径（优先级高于 included）
-    excluded:
-      - Pods
-      - Carthage
-      - .build
-      - DerivedData
-      - Generated
-      - Scripts
-      - fastlane
-      - **/*.generated.swift  # 忽略代码生成产物
-    
-    # 关闭的规则（团队共识下“不想看”的提示）
-    disabled_rules:
-      - trailing_whitespace           # 行尾空格
-      - file_header                   # 文件头注释
-      - redundant_objc_available      # 重复的 @available 提示（常与 #available 混用触发）
-      - nesting                       # 允许较深的类型/语句嵌套
-      - todo                          # 允许 TODO/FIXME 留存
-      # - force_cast                  # 如你仍需强转可以关掉，但更推荐保留
-      # - force_try                   # 如你仍需 try! 可以关掉
-    
-    # 选择性开启的“可选规则”（opt-in，不默认开启）
-    # 这些通常更严格/更主观；按需取舍
-    opt_in_rules:
-      - empty_count                   # 建议用 isEmpty 而不是 .count == 0
-      - operator_usage_whitespace     # 运算符两边空格
-      - closure_spacing               # 闭包内部空格
-      - explicit_init                 # 禁止冗余的 .init 调用
-      - vertical_parameter_alignment_on_call # 调用对齐
-      - discouraged_optional_boolean  # 不推荐 Optional<Bool>
-    
-    # -------------------- 基础阈值类规则 --------------------
-    # 每行最大长度（超过 warning 给黄，超过 error 给红）
-    line_length:
-      warning: 160
-      error: 200
-      ignores_urls: true
-      ignores_function_declarations: true
-      ignores_comments: true
-      ignores_interpolated_strings: true
-    
-    # 单文件最大行数
-    file_length:
-      warning: 600
-      error: 1200
-    
-    # 类型（class/struct/enum）体积限制
-    type_body_length:
-      warning: 300
-      error: 600
-    
-    # 函数体积限制（逻辑太多需要拆分）
-    function_body_length:
-      warning: 60
-      error: 120
-    
-    # 圈复杂度（分支过多建议拆解）
-    cyclomatic_complexity:
-      warning: 12
-      error: 20
-      ignores_case_statements: true
-    
-    # 参数过多（可以推动重构或对象封装）
-    function_parameter_count:
-      warning: 6
-      error: 8
-    
-    # 嵌套深度（if/for/switch/类型嵌套）
-    # 已在 disabled_rules 里关了 nesting，就无需此项；如要启用可放开：
-    # nesting:
-    #   type_level: 2
-    #   statement_level: 5
-    
-    # -------------------- 命名规范 --------------------
-    # 标识符命名长度（变量/常量/参数）
-    identifier_name:
-      min_length: 2
-      max_length: 50
-      allowed_symbols: ["_"]          # 允许下划线
-      excluded:                       # 以下短名不警告
-        - id
-        - x
-        - y
-        - i
-        - j
-        - w
-        - h
-        - rx
-    
-    # 类型命名（类/结构体/枚举/协议）
-    type_name:
-      min_length: 2
-      max_length: 60
-      excluded:
-        - T
-        - U
-        - V
-    
-    # 枚举 case 命名（如需允许大写或特殊前缀可在此配置）
-    enum_case_associated_values_count:
-      warning: 5
-      error: 8
-    
-    # -------------------- 风格/可读性 --------------------
-    # 空行数量（可避免过多空行）
-    vertical_whitespace:
-      max_empty_lines: 2
-    
-    trailing_newline: warning          # 文件末尾需要换行
-    
-    # 导入顺序（按字母排序，同类合并）
-    # 如你使用 Swift 5.9+ 的 import 子模块分组，可按需关闭
-    sorted_imports: true
-    
-    # 明确的访问控制（public/internal/private）可选启用
-    # explicit_acl: warning
-    
-    # 明确 self（仅在闭包中或歧义时要求 self）
-    # explicit_self: warning
-    
-    # -------------------- 分析器规则（需使用 Swift 语义信息，较慢） --------------------
-    # analyzer_rules 适合 CI 或本地全量检查，能发现更复杂问题
-    analyzer_rules:
-      - unused_declaration            # 未使用的声明（变量/函数/类型）
-      - unused_import                 # 未使用的 import
-    
-    # -------------------- 自定义规则（可用正则自定团队风格） --------------------
-    # 例如：禁止 print，统一用自家日志工具
-    custom_rules:
-      no_print:
-        included: ".*\\.swift"
-        name: "Avoid print"
-        regex: "\\bprint\\s*\\("
-        message: "请使用日志工具（如 JobsLog / os_log），不要直接使用 print。"
-        severity: warning
-    
-      no_todo_merge:
-        name: "No TODO in merge"
-        regex: "(TODO|FIXME)"
-        match_kinds:
-          - comment
-        severity: warning
-    
-    # -------------------- 规则严重级别统一提升/降低（可选） --------------------
-    # 自定义 severity 的集中调整（需要时再开）
-    # severity_configuration:
-    #   warning: error
-    
-    # =========================================
-    # 使用提示：
-    # - 运行：swiftlint            # 仅检查
-    # - 自动修复：swiftlint autocorrect
-    # - 指定文件：swiftlint lint --path path/to/File.swift
-    # - 在 Xcode Build Phases 添加 Run Script：swiftlint
-    # =========================================
-    ```
+  * **注入调试工具**
+  
+      * 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++ **的代码热重载工具！
+  
+        * [**InjectionIII**](https://github.com/johnno1962/InjectionIII)
+        * [**InjectionNext**](https://github.com/johnno1962/InjectionNext)
+  
+      * [**UI界面调试工具**](https://lookin.work/)（必须是有线连接，并且**`Lookin.app`**要先于项目文件启动）
+  
+        > ```ruby
+        > pod 'LookinServer', :configurations => ['Debug']
+        > ```
+  
+  * [**SwiftLint**](https://github.com/realm/SwiftLint)：[**Swift**](https://developer.apple.com/swift/) 代码静态检查工具。 **自动分析 Swift 源代码，帮助保持统一、规范、可维护的代码风格**。
+  
+      > 原本要靠团队 Code Review 去发现的细节，[**SwiftLint**](https://github.com/realm/SwiftLint) 都能自动扫出来 ⚡️
+  
+      ```
+      ➜  ~ brew install swiftlint
+      ```
+  
+      * `.swiftlint.yml` 模板
+  
+        ```yaml
+        # =========================================
+        # SwiftLint 配置文件（标准模板，含中文注释）
+        # 放到仓库根目录，与 .gitignore 同级
+        # =========================================
+        
+        # Swift 版本（有助于规则解析；不写也能跑）
+        swift_version: 5.9
+        
+        # 选择使用哪种报告器：
+        # - xcode（默认，警告出现在 Xcode Issues 面板）
+        # - json / markdown / emoji 等
+        reporter: xcode
+        
+        # 需要扫描的路径（相对仓库根；不填则扫描全仓库）
+        # 一般列出你的 App 源码根目录，避免扫 Pods
+        included:
+          - JobsSwiftBaseConfigDemo
+        
+        # 需要忽略的路径（优先级高于 included）
+        excluded:
+          - Pods
+          - Carthage
+          - .build
+          - DerivedData
+          - Generated
+          - Scripts
+          - fastlane
+          - **/*.generated.swift  # 忽略代码生成产物
+        
+        # 关闭的规则（团队共识下“不想看”的提示）
+        disabled_rules:
+          - trailing_whitespace           # 行尾空格
+          - file_header                   # 文件头注释
+          - redundant_objc_available      # 重复的 @available 提示（常与 #available 混用触发）
+          - nesting                       # 允许较深的类型/语句嵌套
+          - todo                          # 允许 TODO/FIXME 留存
+          # - force_cast                  # 如你仍需强转可以关掉，但更推荐保留
+          # - force_try                   # 如你仍需 try! 可以关掉
+        
+        # 选择性开启的“可选规则”（opt-in，不默认开启）
+        # 这些通常更严格/更主观；按需取舍
+        opt_in_rules:
+          - empty_count                   # 建议用 isEmpty 而不是 .count == 0
+          - operator_usage_whitespace     # 运算符两边空格
+          - closure_spacing               # 闭包内部空格
+          - explicit_init                 # 禁止冗余的 .init 调用
+          - vertical_parameter_alignment_on_call # 调用对齐
+          - discouraged_optional_boolean  # 不推荐 Optional<Bool>
+        
+        # -------------------- 基础阈值类规则 --------------------
+        # 每行最大长度（超过 warning 给黄，超过 error 给红）
+        line_length:
+          warning: 160
+          error: 200
+          ignores_urls: true
+          ignores_function_declarations: true
+          ignores_comments: true
+          ignores_interpolated_strings: true
+        
+        # 单文件最大行数
+        file_length:
+          warning: 600
+          error: 1200
+        
+        # 类型（class/struct/enum）体积限制
+        type_body_length:
+          warning: 300
+          error: 600
+        
+        # 函数体积限制（逻辑太多需要拆分）
+        function_body_length:
+          warning: 60
+          error: 120
+        
+        # 圈复杂度（分支过多建议拆解）
+        cyclomatic_complexity:
+          warning: 12
+          error: 20
+          ignores_case_statements: true
+        
+        # 参数过多（可以推动重构或对象封装）
+        function_parameter_count:
+          warning: 6
+          error: 8
+        
+        # 嵌套深度（if/for/switch/类型嵌套）
+        # 已在 disabled_rules 里关了 nesting，就无需此项；如要启用可放开：
+        # nesting:
+        #   type_level: 2
+        #   statement_level: 5
+        
+        # -------------------- 命名规范 --------------------
+        # 标识符命名长度（变量/常量/参数）
+        identifier_name:
+          min_length: 2
+          max_length: 50
+          allowed_symbols: ["_"]          # 允许下划线
+          excluded:                       # 以下短名不警告
+            - id
+            - x
+            - y
+            - i
+            - j
+            - w
+            - h
+            - rx
+        
+        # 类型命名（类/结构体/枚举/协议）
+        type_name:
+          min_length: 2
+          max_length: 60
+          excluded:
+            - T
+            - U
+            - V
+        
+        # 枚举 case 命名（如需允许大写或特殊前缀可在此配置）
+        enum_case_associated_values_count:
+          warning: 5
+          error: 8
+        
+        # -------------------- 风格/可读性 --------------------
+        # 空行数量（可避免过多空行）
+        vertical_whitespace:
+          max_empty_lines: 2
+        
+        trailing_newline: warning          # 文件末尾需要换行
+        
+        # 导入顺序（按字母排序，同类合并）
+        # 如你使用 Swift 5.9+ 的 import 子模块分组，可按需关闭
+        sorted_imports: true
+        
+        # 明确的访问控制（public/internal/private）可选启用
+        # explicit_acl: warning
+        
+        # 明确 self（仅在闭包中或歧义时要求 self）
+        # explicit_self: warning
+        
+        # -------------------- 分析器规则（需使用 Swift 语义信息，较慢） --------------------
+        # analyzer_rules 适合 CI 或本地全量检查，能发现更复杂问题
+        analyzer_rules:
+          - unused_declaration            # 未使用的声明（变量/函数/类型）
+          - unused_import                 # 未使用的 import
+        
+        # -------------------- 自定义规则（可用正则自定团队风格） --------------------
+        # 例如：禁止 print，统一用自家日志工具
+        custom_rules:
+          no_print:
+            included: ".*\\.swift"
+            name: "Avoid print"
+            regex: "\\bprint\\s*\\("
+            message: "请使用日志工具（如 JobsLog / os_log），不要直接使用 print。"
+            severity: warning
+        
+          no_todo_merge:
+            name: "No TODO in merge"
+            regex: "(TODO|FIXME)"
+            match_kinds:
+              - comment
+            severity: warning
+        
+        # -------------------- 规则严重级别统一提升/降低（可选） --------------------
+        # 自定义 severity 的集中调整（需要时再开）
+        # severity_configuration:
+        #   warning: error
+        
+        # =========================================
+        # 使用提示：
+        # - 运行：swiftlint            # 仅检查
+        # - 自动修复：swiftlint autocorrect
+        # - 指定文件：swiftlint lint --path path/to/File.swift
+        # - 在 Xcode Build Phases 添加 Run Script：swiftlint
+        # =========================================
+        ```
+  
+      * 工作原理（底层逻辑）
+  
+        * [**SwiftLint**](https://github.com/realm/SwiftLint) 读取你的项目源码
+        * 根据 `.swiftlint.yml` 配置文件中定义的规则集
+        * 使用 **SwiftSyntax / SourceKit** 分析 AST（抽象语法树）
+        * 检查每条规则对应的模式
+        * 把违反规则的地方以 <u>**warning / error**</u> 形式输出到控制台或 **Xcode**
+  
+      * 功能
 
-  * 工作原理（底层逻辑）
-
-    * [**SwiftLint**](https://github.com/realm/SwiftLint) 读取你的项目源码
-    * 根据 `.swiftlint.yml` 配置文件中定义的规则集
-    * 使用 **SwiftSyntax / SourceKit** 分析 AST（抽象语法树）
-    * 检查每条规则对应的模式
-    * 把违反规则的地方以 <u>**warning / error**</u> 形式输出到控制台或 **Xcode**
-
-  * 功能
-
-    | 功能            | 说明                                                         |
-    | --------------- | ------------------------------------------------------------ |
-    | 🔍 代码风格检测  | 自动检查代码是否符合 [**Swift**](https://www.swift.org/) 官方推荐或自定义规范 |
-    | 🚫 错误/警告提示 | 在 **Xcode**、终端显示黄色/红色提示                          |
-    | 🧠 自动修复      | 可自动修复部分简单问题（如空格、缩进、空行）                 |
-    | 🧩 可配置规则    | 通过 `.swiftlint.yml` 自定义规则、忽略目录、排除特例         |
-    | 🧱 CI 集成       | 能嵌入到 **Xcode Build**、[**Fastlane**](https://fastlane.tools/)、**GitHub Actions** 中 |
-    | 🔕 局部禁用      | 通过注释临时关闭规则，如：`// swiftlint:disable rule_name`   |
+        | 功能            | 说明                                                         |
+        | --------------- | ------------------------------------------------------------ |
+        | 🔍 代码风格检测  | 自动检查代码是否符合 [**Swift**](https://www.swift.org/) 官方推荐或自定义规范 |
+        | 🚫 错误/警告提示 | 在 **Xcode**、终端显示黄色/红色提示                          |
+        | 🧠 自动修复      | 可自动修复部分简单问题（如空格、缩进、空行）                 |
+        | 🧩 可配置规则    | 通过 `.swiftlint.yml` 自定义规则、忽略目录、排除特例         |
+        | 🧱 CI 集成       | 能嵌入到 **Xcode Build**、[**Fastlane**](https://fastlane.tools/)、**GitHub Actions** 中 |
+        | 🔕 局部禁用      | 通过注释临时关闭规则，如：`// swiftlint:disable rule_name`   |
 
 ### 2、系统环境配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
