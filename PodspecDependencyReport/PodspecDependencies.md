@@ -4,60 +4,61 @@
 
 ## 🔥 <font id=前言>前言</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-05-02 20:00:40`
+- 生成时间：`2026-05-04 17:43:50`
 - Podspec 数量：`39`
 - 0 依赖 Pod 数量：`9`
-- 全部依赖边数量：`144`
-- 仓库内 Pod 依赖边数量：`96`
+- 全部依赖边数量：`143`
+- 仓库内 Pod 依赖边数量：`95`
 - 外部依赖来源注释文件数量：`3`
-- 已识别外部依赖来源链接数量：`64`
+- 已识别外部依赖来源链接数量：`63`
 
 > 更易读的动态关系图见：`PodspecDependencies_interactive.html`。
 
 ## 一、总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-| Pod | Podspec | 依赖数量 | 依赖 |
-|---|---|---:|---|
-| [**BRPickerViewSwift**](#BRPickerViewSwift) | `JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec` | 2 | [JobsByUIKit](#JobsByUIKit), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**Flutter**](#Flutter) | `my_flutter/.ios/Flutter/Flutter.podspec` | 0 |  |
-| [**FlutterPluginRegistrant**](#FlutterPluginRegistrant) | `my_flutter/.ios/Flutter/FlutterPluginRegistrant/FlutterPluginRegistrant.podspec` | 1 | [Flutter](#Flutter) |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | `JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec` | 18 | [BMPlayer](https://github.com/BrikerMan/BMPlayer), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBaseTools](#JobsSwiftBaseTools), [JobsSwiftMetalKit](#JobsSwiftMetalKit), [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary), [JobsSwiftTools](#JobsSwiftTools), [JobsTextTools](#JobsTextTools), [Kingfisher](https://github.com/onevcat/Kingfisher), [MJRefresh](https://github.com/CoderMJLee/MJRefresh), [SDWebImage](https://github.com/SDWebImage/SDWebImage), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) |
-| [**JobsByPDFKit**](#JobsByPDFKit) | `JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec` | 0 |  |
-| [**JobsByPhotosUI**](#JobsByPhotosUI) | `JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec` | 0 |  |
-| [**JobsByQuartzCore**](#JobsByQuartzCore) | `JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec` | 2 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock) |
-| [**JobsByUIKit**](#JobsByUIKit) | `JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec` | 20 | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsByQuartzCore](#JobsByQuartzCore), [JobsImageTools](#JobsImageTools), [JobsNavBar](#JobsNavBar), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftTimer](#JobsSwiftTimer), [JobsTextTools](#JobsTextTools), [Jobsl10n](#Jobsl10n), [Kingfisher](https://github.com/onevcat/Kingfisher), [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxRelay](https://cocoapods.org/pods/RxRelay), [RxSwift](https://github.com/ReactiveX/RxSwift), [SVGKit](https://github.com/SVGKit/SVGKit), [SkeletonView](https://github.com/Juanpe/SkeletonView), [SnapKit](https://github.com/SnapKit/SnapKit), [lottie-ios](https://github.com/airbnb/lottie-ios) |
-| [**JobsByWebKit**](#JobsByWebKit) | `JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec` | 1 | [JobsByUIKit](#JobsByUIKit) |
-| [**JobsCountdownButton**](#JobsCountdownButton) | `JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer) |
-| [**JobsCryptoKit**](#JobsCryptoKit) | `JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit.podspec` | 0 |  |
-| [**JobsEmptyView**](#JobsEmptyView) | `JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsGestureUnlock**](#JobsGestureUnlock) | `JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsGetWindow**](#JobsGetWindow) | `JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec` | 0 |  |
-| [**JobsImageTools**](#JobsImageTools) | `JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec` | 4 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [Kingfisher](https://github.com/onevcat/Kingfisher), [SDWebImage](https://github.com/SDWebImage/SDWebImage) |
-| [**JobsInheritance**](#JobsInheritance) | `JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec` | 11 | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsByUIKit](#JobsByUIKit), [JobsByWebKit](#JobsByWebKit), [JobsNavBar](#JobsNavBar), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftDebugTools](#JobsSwiftDebugTools), [JobsSwiftFoundation](#JobsSwiftFoundation), [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary), [JobsToast](#JobsToast), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsLocalNotification**](#JobsLocalNotification) | `JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec` | 2 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftTools](#JobsSwiftTools) |
-| [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain) | `JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftTimer](#JobsSwiftTimer), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsMarqueeView**](#JobsMarqueeView) | `JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer) |
-| [**JobsNavBar**](#JobsNavBar) | `JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec` | 4 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) |
-| [**JobsNetworking**](#JobsNetworking) | `JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec` | 3 | [Alamofire](https://github.com/Alamofire/Alamofire), [JobsNetworking/Core](#JobsNetworking), [PromiseKit](https://github.com/mxcl/PromiseKit) |
-| [**JobsProgressBar**](#JobsProgressBar) | `JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsRefresher**](#JobsRefresher) | `JobsByPods/JobsRefresher@Pods/JobsRefresher.podspec` | 5 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit), [lottie-ios](https://github.com/airbnb/lottie-ios) |
-| [**JobsScale**](#JobsScale) | `JobsByPods/JobsScale@Pods/JobsScale.podspec` | 1 | [JobsGetWindow](#JobsGetWindow) |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | `JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec` | 11 | [JobsBy3rdTools](#JobsBy3rdTools), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBaseTools](#JobsSwiftBaseTools), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftTools](#JobsSwiftTools), [JobsTextTools](#JobsTextTools), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) |
-| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | `JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec` | 2 | [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools) |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | `JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec` | 8 | [Alamofire](https://github.com/Alamofire/Alamofire), [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxSwift](https://github.com/ReactiveX/RxSwift), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsSwiftBlock**](#JobsSwiftBlock) | `JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec` | 4 | [Kingfisher](https://github.com/onevcat/Kingfisher), [Moya](https://github.com/Moya/Moya), [SnapKit](https://github.com/SnapKit/SnapKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) |
-| [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | `JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsToast](#JobsToast) |
-| [**JobsSwiftFoundation**](#JobsSwiftFoundation) | `JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec` | 1 | [JobsByUIKit](#JobsByUIKit) |
-| [**JobsSwiftMetalKit**](#JobsSwiftMetalKit) | `JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec` | 0 |  |
-| [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary) | `JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec` | 1 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) |
-| [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter) | `JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec` | 1 | [JobsSwiftTimer](#JobsSwiftTimer) |
-| [**JobsSwiftTimer**](#JobsSwiftTimer) | `JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec` | 0 |  |
-| [**JobsSwiftTools**](#JobsSwiftTools) | `JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec` | 7 | [Flutter](#Flutter), [FlutterPluginRegistrant](#FlutterPluginRegistrant), [JobsByPhotosUI](#JobsByPhotosUI), [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsToast](#JobsToast) |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | `JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec` | 7 | [JobsByUIKit](#JobsByUIKit), [JobsRefresher](#JobsRefresher), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTaskCenter](#JobsSwiftTaskCenter), [JobsSwiftTimer](#JobsSwiftTimer), [Jobsl10n](#Jobsl10n), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**JobsTextTools**](#JobsTextTools) | `JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec` | 0 |  |
-| [**JobsToast**](#JobsToast) | `JobsByPods/JobsToast@Pods/JobsToast.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) |
-| [**Jobsl10n**](#Jobsl10n) | `JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec` | 0 |  |
+| Pod | Podspec | 依赖数量 | 依赖 | 被引用数量 | 引用方 |
+|---|---|---:|---|---:|---|
+| [**BRPickerViewSwift**](#BRPickerViewSwift) | `JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec` | 2 | [JobsByUIKit](#JobsByUIKit), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**Flutter**](#Flutter) | `my_flutter/.ios/Flutter/Flutter.podspec` | 0 |  | 2 | [**FlutterPluginRegistrant**](#FlutterPluginRegistrant), [**JobsSwiftTools**](#JobsSwiftTools) |
+| [**FlutterPluginRegistrant**](#FlutterPluginRegistrant) | `my_flutter/.ios/Flutter/FlutterPluginRegistrant/FlutterPluginRegistrant.podspec` | 1 | [Flutter](#Flutter) | 1 | [**JobsSwiftTools**](#JobsSwiftTools) |
+| [**JobsBy3rdTools**](#JobsBy3rdTools) | `JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec` | 18 | [BMPlayer](https://github.com/BrikerMan/BMPlayer), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBaseTools](#JobsSwiftBaseTools), [JobsSwiftMetalKit](#JobsSwiftMetalKit), [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary), [JobsSwiftTools](#JobsSwiftTools), [JobsTextTools](#JobsTextTools), [Kingfisher](https://github.com/onevcat/Kingfisher), [MJRefresh](https://github.com/CoderMJLee/MJRefresh), [SDWebImage](https://github.com/SDWebImage/SDWebImage), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 1 | [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
+| [**JobsByPDFKit**](#JobsByPDFKit) | `JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec` | 0 |  | 0 |  |
+| [**JobsByPhotosUI**](#JobsByPhotosUI) | `JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec` | 0 |  | 1 | [**JobsSwiftTools**](#JobsSwiftTools) |
+| [**JobsByQuartzCore**](#JobsByQuartzCore) | `JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec` | 2 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock) | 1 | [**JobsByUIKit**](#JobsByUIKit) |
+| [**JobsByUIKit**](#JobsByUIKit) | `JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec` | 20 | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsByQuartzCore](#JobsByQuartzCore), [JobsImageTools](#JobsImageTools), [JobsNavBar](#JobsNavBar), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftTimer](#JobsSwiftTimer), [JobsTextTools](#JobsTextTools), [Jobsl10n](#Jobsl10n), [Kingfisher](https://github.com/onevcat/Kingfisher), [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxRelay](https://cocoapods.org/pods/RxRelay), [RxSwift](https://github.com/ReactiveX/RxSwift), [SVGKit](https://github.com/SVGKit/SVGKit), [SkeletonView](https://github.com/Juanpe/SkeletonView), [SnapKit](https://github.com/SnapKit/SnapKit), [lottie-ios](https://github.com/airbnb/lottie-ios) | 19 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByWebKit**](#JobsByWebKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsInheritance**](#JobsInheritance), [**JobsLocalNotification**](#JobsLocalNotification), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsProgressBar**](#JobsProgressBar), [**JobsRefresher**](#JobsRefresher), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftFoundation**](#JobsSwiftFoundation), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast) |
+| [**JobsByWebKit**](#JobsByWebKit) | `JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec` | 1 | [JobsByUIKit](#JobsByUIKit) | 1 | [**JobsInheritance**](#JobsInheritance) |
+| [**JobsCountdownButton**](#JobsCountdownButton) | `JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer) | 0 |  |
+| [**JobsCryptoKit**](#JobsCryptoKit) | `JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit.podspec` | 0 |  | 0 |  |
+| [**JobsEmptyView**](#JobsEmptyView) | `JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**JobsGestureUnlock**](#JobsGestureUnlock) | `JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**JobsGetWindow**](#JobsGetWindow) | `JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec` | 0 |  | 1 | [**JobsScale**](#JobsScale) |
+| [**JobsImageTools**](#JobsImageTools) | `JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec` | 4 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [Kingfisher](https://github.com/onevcat/Kingfisher), [SDWebImage](https://github.com/SDWebImage/SDWebImage) | 1 | [**JobsByUIKit**](#JobsByUIKit) |
+| [**JobsInheritance**](#JobsInheritance) | `JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec` | 11 | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsByUIKit](#JobsByUIKit), [JobsByWebKit](#JobsByWebKit), [JobsNavBar](#JobsNavBar), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftDebugTools](#JobsSwiftDebugTools), [JobsSwiftFoundation](#JobsSwiftFoundation), [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary), [JobsToast](#JobsToast), [SnapKit](https://github.com/SnapKit/SnapKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
+| [**JobsLocalNotification**](#JobsLocalNotification) | `JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec` | 2 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftTools](#JobsSwiftTools) | 0 |  |
+| [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain) | `JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftTimer](#JobsSwiftTimer), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**JobsMarqueeView**](#JobsMarqueeView) | `JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer) | 0 |  |
+| [**JobsNavBar**](#JobsNavBar) | `JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec` | 4 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsInheritance**](#JobsInheritance) |
+| [**JobsNetworking**](#JobsNetworking) | `JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec` | 2 | [Alamofire](https://github.com/Alamofire/Alamofire), [PromiseKit](https://github.com/mxcl/PromiseKit) | 0 |  |
+| [**JobsProgressBar**](#JobsProgressBar) | `JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTimer](#JobsSwiftTimer), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**JobsRefresher**](#JobsRefresher) | `JobsByPods/JobsRefresher@Pods/JobsRefresher.podspec` | 5 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit), [lottie-ios](https://github.com/airbnb/lottie-ios) | 1 | [**JobsSwiftWorker**](#JobsSwiftWorker) |
+| [**JobsScale**](#JobsScale) | `JobsByPods/JobsScale@Pods/JobsScale.podspec` | 1 | [JobsGetWindow](#JobsGetWindow) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
+| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | `JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec` | 11 | [JobsBy3rdTools](#JobsBy3rdTools), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBaseTools](#JobsSwiftBaseTools), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftTools](#JobsSwiftTools), [JobsTextTools](#JobsTextTools), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | 0 |  |
+| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | `JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec` | 2 | [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools) | 19 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsRefresher**](#JobsRefresher), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast) |
+| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | `JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec` | 8 | [Alamofire](https://github.com/Alamofire/Alamofire), [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxSwift](https://github.com/ReactiveX/RxSwift), [SnapKit](https://github.com/SnapKit/SnapKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
+| [**JobsSwiftBlock**](#JobsSwiftBlock) | `JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec` | 4 | [Kingfisher](https://github.com/onevcat/Kingfisher), [Moya](https://github.com/Moya/Moya), [SnapKit](https://github.com/SnapKit/SnapKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 13 | [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsEmptyView**](#JobsEmptyView), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsNavBar**](#JobsNavBar), [**JobsRefresher**](#JobsRefresher), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsToast**](#JobsToast) |
+| [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | `JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsToast](#JobsToast) | 1 | [**JobsInheritance**](#JobsInheritance) |
+| [**JobsSwiftFoundation**](#JobsSwiftFoundation) | `JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec` | 1 | [JobsByUIKit](#JobsByUIKit) | 1 | [**JobsInheritance**](#JobsInheritance) |
+| [**JobsSwiftMetalKit**](#JobsSwiftMetalKit) | `JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec` | 0 |  | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) |
+| [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary) | `JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec` | 1 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsInheritance**](#JobsInheritance) |
+| [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter) | `JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec` | 1 | [JobsSwiftTimer](#JobsSwiftTimer) | 1 | [**JobsSwiftWorker**](#JobsSwiftWorker) |
+| [**JobsSwiftTimer**](#JobsSwiftTimer) | `JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec` | 0 |  | 7 | [**JobsByUIKit**](#JobsByUIKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsProgressBar**](#JobsProgressBar), [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter), [**JobsSwiftWorker**](#JobsSwiftWorker) |
+| [**JobsSwiftTools**](#JobsSwiftTools) | `JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec` | 7 | [Flutter](#Flutter), [FlutterPluginRegistrant](#FlutterPluginRegistrant), [JobsByPhotosUI](#JobsByPhotosUI), [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsToast](#JobsToast) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsLocalNotification**](#JobsLocalNotification), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
+| [**JobsSwiftWorker**](#JobsSwiftWorker) | `JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec` | 7 | [JobsByUIKit](#JobsByUIKit), [JobsRefresher](#JobsRefresher), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftTaskCenter](#JobsSwiftTaskCenter), [JobsSwiftTimer](#JobsSwiftTimer), [Jobsl10n](#Jobsl10n), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
+| [**JobsTextTools**](#JobsTextTools) | `JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec` | 0 |  | 4 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) |
+| [**JobsToast**](#JobsToast) | `JobsByPods/JobsToast@Pods/JobsToast.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) | 3 | [**JobsInheritance**](#JobsInheritance), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftTools**](#JobsSwiftTools) |
+| [**Jobsl10n**](#Jobsl10n) | `JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec` | 0 |  | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftWorker**](#JobsSwiftWorker) |
 
 ## 二、0 依赖 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -75,7 +76,7 @@
 
 ## 三、仓库内 Pod 相互依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系。
+只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系；所有 subspec 依赖已统一归一化为主 Pod 名。
 
 ```mermaid
 flowchart LR
@@ -131,7 +132,6 @@ flowchart LR
   N9e7dc84491e8["JobsMarqueeView"] --> Nfd94adb51598["JobsSwiftTimer"]
   Nd9dbfc611984["JobsNavBar"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   Nd9dbfc611984["JobsNavBar"] --> Nc7567108c45a["JobsSwiftBlock"]
-  Nf3793743ec40["JobsNetworking"] --> N29fac73ec90a["JobsNetworking/Core"]
   Na62a2c62f899["JobsProgressBar"] --> N32038075ad22["JobsByUIKit"]
   Na62a2c62f899["JobsProgressBar"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   Na62a2c62f899["JobsProgressBar"] --> Nfd94adb51598["JobsSwiftTimer"]
@@ -264,7 +264,6 @@ flowchart LR
   Nd9dbfc611984["JobsNavBar"] --> N1f6f7544eaea["SnapKit"]
   Nd9dbfc611984["JobsNavBar"] --> N3ee0366c374e["SwiftMessages"]
   Nf3793743ec40["JobsNetworking"] --> Nda208d9cbd49["Alamofire"]
-  Nf3793743ec40["JobsNetworking"] --> N29fac73ec90a["JobsNetworking/Core"]
   Nf3793743ec40["JobsNetworking"] --> Naf18e27d86f8["PromiseKit"]
   Na62a2c62f899["JobsProgressBar"] --> N32038075ad22["JobsByUIKit"]
   Na62a2c62f899["JobsProgressBar"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
@@ -327,421 +326,638 @@ flowchart LR
   N9817f6c3f4e6["JobsToast"] --> N1f6f7544eaea["SnapKit"]
 ```
 
-## 五、明细 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 五、外部依赖引用关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+这里统计本次扫描到的 `.podspec` 对外部 Pod 的引用；所有 subspec 依赖已统一归一化为主 Pod 名。外部来源链接匹配规则已放宽为：完全匹配 → base 名匹配 → 字符串包含匹配。
+
+| 外部依赖 | 被引用数量 | 引用方 | 引用声明 |
+|---|---:|---|---|
+| [Alamofire](https://github.com/Alamofire/Alamofire) | 2 | [**JobsNetworking**](#JobsNetworking), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [Alamofire](https://github.com/Alamofire/Alamofire) |
+| [BMPlayer](https://github.com/BrikerMan/BMPlayer) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [BMPlayer](https://github.com/BrikerMan/BMPlayer) |
+| [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh) |
+| [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsInheritance**](#JobsInheritance) | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) |
+| [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView) |
+| [Kingfisher](https://github.com/onevcat/Kingfisher) | 4 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsImageTools**](#JobsImageTools), [**JobsSwiftBlock**](#JobsSwiftBlock) | [Kingfisher](https://github.com/onevcat/Kingfisher) |
+| [MJRefresh](https://github.com/CoderMJLee/MJRefresh) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [MJRefresh](https://github.com/CoderMJLee/MJRefresh) |
+| [Moya](https://github.com/Moya/Moya) | 1 | [**JobsSwiftBlock**](#JobsSwiftBlock) | [Moya](https://github.com/Moya/Moya) |
+| [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) |
+| [PromiseKit](https://github.com/mxcl/PromiseKit) | 1 | [**JobsNetworking**](#JobsNetworking) | [PromiseKit](https://github.com/mxcl/PromiseKit) |
+| [RxCocoa](https://github.com/ReactiveX/RxSwift) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [RxCocoa](https://github.com/ReactiveX/RxSwift) |
+| [RxRelay](https://cocoapods.org/pods/RxRelay) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [RxRelay](https://cocoapods.org/pods/RxRelay) |
+| [RxSwift](https://github.com/ReactiveX/RxSwift) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [RxSwift](https://github.com/ReactiveX/RxSwift) |
+| [SDWebImage](https://github.com/SDWebImage/SDWebImage) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsImageTools**](#JobsImageTools) | [SDWebImage](https://github.com/SDWebImage/SDWebImage) |
+| [SVGKit](https://github.com/SVGKit/SVGKit) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [SVGKit](https://github.com/SVGKit/SVGKit) |
+| [SkeletonView](https://github.com/Juanpe/SkeletonView) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [SkeletonView](https://github.com/Juanpe/SkeletonView) |
+| [SnapKit](https://github.com/SnapKit/SnapKit) | 15 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsEmptyView**](#JobsEmptyView), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsRefresher**](#JobsRefresher), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftBlock**](#JobsSwiftBlock), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast) | [SnapKit](https://github.com/SnapKit/SnapKit) |
+| [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) |
+| [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) | 1 | [**JobsNavBar**](#JobsNavBar) | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) |
+| [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftBlock**](#JobsSwiftBlock) | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) |
+| [lottie-ios](https://github.com/airbnb/lottie-ios) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsRefresher**](#JobsRefresher) | [lottie-ios](https://github.com/airbnb/lottie-ios) |
+
+## 六、明细 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ### 1、<font id="BRPickerViewSwift">BRPickerViewSwift</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**BRPickerViewSwift**](#BRPickerViewSwift) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**BRPickerViewSwift**](#BRPickerViewSwift) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 2、<font id="Flutter">Flutter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`my_flutter/.ios/Flutter/Flutter.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**FlutterPluginRegistrant**](#FlutterPluginRegistrant)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+
 
 ### 3、<font id="FlutterPluginRegistrant">FlutterPluginRegistrant</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`my_flutter/.ios/Flutter/FlutterPluginRegistrant/FlutterPluginRegistrant.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**FlutterPluginRegistrant**](#FlutterPluginRegistrant) | [Flutter](#Flutter) | `` |
+- **上游依赖**
+
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+
+- **下游依赖**
+
+  - [**Flutter**](#Flutter)
+
 
 ### 4、<font id="JobsBy3rdTools">JobsBy3rdTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [BMPlayer](https://github.com/BrikerMan/BMPlayer) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsInheritance](#JobsInheritance) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsScale](#JobsScale) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsSwiftBaseTools](#JobsSwiftBaseTools) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsSwiftMetalKit](#JobsSwiftMetalKit) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsSwiftTools](#JobsSwiftTools) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [JobsTextTools](#JobsTextTools) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [Kingfisher](https://github.com/onevcat/Kingfisher) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [MJRefresh](https://github.com/CoderMJLee/MJRefresh) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [SDWebImage](https://github.com/SDWebImage/SDWebImage) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [SDWebImage](https://github.com/SDWebImage/SDWebImage) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | `` |
-| [**JobsBy3rdTools**](#JobsBy3rdTools) | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | `` |
+- **上游依赖**
+
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+
+- **下游依赖**
+
+  - [**BMPlayer**](https://github.com/BrikerMan/BMPlayer)
+  - [**GKNavigationBarSwift**](https://github.com/QuintGao/GKNavigationBarSwift)
+  - [**JXSegmentedView**](https://github.com/pujiaxin33/JXSegmentedView)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsScale**](#JobsScale)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBaseTools**](#JobsSwiftBaseTools)
+  - [**JobsSwiftMetalKit**](#JobsSwiftMetalKit)
+  - [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+  - [**JobsTextTools**](#JobsTextTools)
+  - [**Kingfisher**](https://github.com/onevcat/Kingfisher)
+  - [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)
+  - [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**SwiftEntryKit**](https://github.com/huri000/SwiftEntryKit)
+  - [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)
+
 
 ### 5、<font id="JobsByPDFKit">JobsByPDFKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec`
 
-未发现依赖。
 
 ### 6、<font id="JobsByPhotosUI">JobsByPhotosUI</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+
 
 ### 7、<font id="JobsByQuartzCore">JobsByQuartzCore</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsByQuartzCore**](#JobsByQuartzCore) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsByQuartzCore**](#JobsByQuartzCore) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
+- **上游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+
+- **下游依赖**
+
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+
 
 ### 8、<font id="JobsByUIKit">JobsByUIKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsByUIKit**](#JobsByUIKit) | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsByQuartzCore](#JobsByQuartzCore) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsImageTools](#JobsImageTools) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsNavBar](#JobsNavBar) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsScale](#JobsScale) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [JobsTextTools](#JobsTextTools) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [Jobsl10n](#Jobsl10n) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [Kingfisher](https://github.com/onevcat/Kingfisher) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [RxCocoa](https://github.com/ReactiveX/RxSwift) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [RxRelay](https://cocoapods.org/pods/RxRelay) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [RxSwift](https://github.com/ReactiveX/RxSwift) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [SVGKit](https://github.com/SVGKit/SVGKit) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [SkeletonView](https://github.com/Juanpe/SkeletonView) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsByUIKit**](#JobsByUIKit) | [lottie-ios](https://github.com/airbnb/lottie-ios) | `` |
+- **上游依赖**
+
+  - [**BRPickerViewSwift**](#BRPickerViewSwift)
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsByWebKit**](#JobsByWebKit)
+  - [**JobsCountdownButton**](#JobsCountdownButton)
+  - [**JobsEmptyView**](#JobsEmptyView)
+  - [**JobsGestureUnlock**](#JobsGestureUnlock)
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsLocalNotification**](#JobsLocalNotification)
+  - [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain)
+  - [**JobsMarqueeView**](#JobsMarqueeView)
+  - [**JobsProgressBar**](#JobsProgressBar)
+  - [**JobsRefresher**](#JobsRefresher)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+  - [**JobsSwiftBaseTools**](#JobsSwiftBaseTools)
+  - [**JobsSwiftDebugTools**](#JobsSwiftDebugTools)
+  - [**JobsSwiftFoundation**](#JobsSwiftFoundation)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+  - [**JobsToast**](#JobsToast)
+
+- **下游依赖**
+
+  - [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh)
+  - [**GKNavigationBarSwift**](https://github.com/QuintGao/GKNavigationBarSwift)
+  - [**JobsByQuartzCore**](#JobsByQuartzCore)
+  - [**JobsImageTools**](#JobsImageTools)
+  - [**JobsNavBar**](#JobsNavBar)
+  - [**JobsScale**](#JobsScale)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+  - [**JobsTextTools**](#JobsTextTools)
+  - [**Jobsl10n**](#Jobsl10n)
+  - [**Kingfisher**](https://github.com/onevcat/Kingfisher)
+  - [**NSObject+Rx**](https://github.com/RxSwiftCommunity/NSObject-Rx)
+  - [**RxCocoa**](https://github.com/ReactiveX/RxSwift)
+  - [**RxRelay**](https://cocoapods.org/pods/RxRelay)
+  - [**RxSwift**](https://github.com/ReactiveX/RxSwift)
+  - [**SVGKit**](https://github.com/SVGKit/SVGKit)
+  - [**SkeletonView**](https://github.com/Juanpe/SkeletonView)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
+
 
 ### 9、<font id="JobsByWebKit">JobsByWebKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsByWebKit**](#JobsByWebKit) | [JobsByUIKit](#JobsByUIKit) | `` |
+- **上游依赖**
+
+  - [**JobsInheritance**](#JobsInheritance)
+
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+
 
 ### 10、<font id="JobsCountdownButton">JobsCountdownButton</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsCountdownButton**](#JobsCountdownButton) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsCountdownButton**](#JobsCountdownButton) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsCountdownButton**](#JobsCountdownButton) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+
 
 ### 11、<font id="JobsCryptoKit">JobsCryptoKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit.podspec`
 
-未发现依赖。
 
 ### 12、<font id="JobsEmptyView">JobsEmptyView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsEmptyView**](#JobsEmptyView) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsEmptyView**](#JobsEmptyView) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsEmptyView**](#JobsEmptyView) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsEmptyView**](#JobsEmptyView) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 13、<font id="JobsGestureUnlock">JobsGestureUnlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsGestureUnlock**](#JobsGestureUnlock) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsGestureUnlock**](#JobsGestureUnlock) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsGestureUnlock**](#JobsGestureUnlock) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsGestureUnlock**](#JobsGestureUnlock) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 14、<font id="JobsGetWindow">JobsGetWindow</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**JobsScale**](#JobsScale)
+
 
 ### 15、<font id="JobsImageTools">JobsImageTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsImageTools**](#JobsImageTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsImageTools**](#JobsImageTools) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsImageTools**](#JobsImageTools) | [Kingfisher](https://github.com/onevcat/Kingfisher) | `` |
-| [**JobsImageTools**](#JobsImageTools) | [SDWebImage](https://github.com/SDWebImage/SDWebImage) | `` |
+- **上游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+
+- **下游依赖**
+
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**Kingfisher**](https://github.com/onevcat/Kingfisher)
+  - [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)
+
 
 ### 16、<font id="JobsInheritance">JobsInheritance</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsInheritance**](#JobsInheritance) | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsByWebKit](#JobsByWebKit) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsNavBar](#JobsNavBar) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsSwiftDebugTools](#JobsSwiftDebugTools) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsSwiftFoundation](#JobsSwiftFoundation) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsSwiftStandardLibrary](#JobsSwiftStandardLibrary) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [JobsToast](#JobsToast) | `` |
-| [**JobsInheritance**](#JobsInheritance) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+
+- **下游依赖**
+
+  - [**GKNavigationBarSwift**](https://github.com/QuintGao/GKNavigationBarSwift)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsByWebKit**](#JobsByWebKit)
+  - [**JobsNavBar**](#JobsNavBar)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**JobsSwiftDebugTools**](#JobsSwiftDebugTools)
+  - [**JobsSwiftFoundation**](#JobsSwiftFoundation)
+  - [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary)
+  - [**JobsToast**](#JobsToast)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 17、<font id="JobsLocalNotification">JobsLocalNotification</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsLocalNotification**](#JobsLocalNotification) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsLocalNotification**](#JobsLocalNotification) | [JobsSwiftTools](#JobsSwiftTools) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+
 
 ### 18、<font id="JobsLuckyEnvelopeRain">JobsLuckyEnvelopeRain</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
-| [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 19、<font id="JobsMarqueeView">JobsMarqueeView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsMarqueeView**](#JobsMarqueeView) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsMarqueeView**](#JobsMarqueeView) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsMarqueeView**](#JobsMarqueeView) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+
 
 ### 20、<font id="JobsNavBar">JobsNavBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsNavBar**](#JobsNavBar) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsNavBar**](#JobsNavBar) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsNavBar**](#JobsNavBar) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsNavBar**](#JobsNavBar) | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) | `` |
+- **上游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsInheritance**](#JobsInheritance)
+
+- **下游依赖**
+
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**SwiftMessages**](https://github.com/SwiftKickMobile/SwiftMessages)
+
 
 ### 21、<font id="JobsNetworking">JobsNetworking</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsNetworking/AF4**](#JobsNetworking) | [JobsNetworking/Core](#JobsNetworking) | `` |
-| [**JobsNetworking/AF5**](#JobsNetworking) | [JobsNetworking/Core](#JobsNetworking) | `` |
-| [**JobsNetworking/Async**](#JobsNetworking) | [JobsNetworking/Core](#JobsNetworking) | `` |
-| [**JobsNetworking/Core**](#JobsNetworking) | [Alamofire](https://github.com/Alamofire/Alamofire) | `'~> 5.9'` |
-| [**JobsNetworking/PromiseKit**](#JobsNetworking) | [JobsNetworking/Core](#JobsNetworking) | `` |
-| [**JobsNetworking/PromiseKit**](#JobsNetworking) | [PromiseKit](https://github.com/mxcl/PromiseKit) | `'~> 8.2'` |
+- **下游依赖**
+
+  - [**Alamofire**](https://github.com/Alamofire/Alamofire)
+  - [**PromiseKit**](https://github.com/mxcl/PromiseKit)
+
 
 ### 22、<font id="JobsProgressBar">JobsProgressBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsProgressBar**](#JobsProgressBar) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsProgressBar**](#JobsProgressBar) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsProgressBar**](#JobsProgressBar) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
-| [**JobsProgressBar**](#JobsProgressBar) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 23、<font id="JobsRefresher">JobsRefresher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsRefresher@Pods/JobsRefresher.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsRefresher**](#JobsRefresher) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsRefresher**](#JobsRefresher) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsRefresher**](#JobsRefresher) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsRefresher**](#JobsRefresher) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsRefresher**](#JobsRefresher) | [lottie-ios](https://github.com/airbnb/lottie-ios) | `` |
+- **上游依赖**
+
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
+
 
 ### 24、<font id="JobsScale">JobsScale</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsScale@Pods/JobsScale.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsScale**](#JobsScale) | [JobsGetWindow](#JobsGetWindow) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+
+- **下游依赖**
+
+  - [**JobsGetWindow**](#JobsGetWindow)
+
 
 ### 25、<font id="JobsSwiftAppTools">JobsSwiftAppTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsBy3rdTools](#JobsBy3rdTools) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsInheritance](#JobsInheritance) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsScale](#JobsScale) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsSwiftBaseTools](#JobsSwiftBaseTools) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsSwiftTools](#JobsSwiftTools) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [JobsTextTools](#JobsTextTools) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | `` |
+- **下游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsScale**](#JobsScale)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBaseTools**](#JobsSwiftBaseTools)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+  - [**JobsTextTools**](#JobsTextTools)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**SwiftEntryKit**](https://github.com/huri000/SwiftEntryKit)
+
 
 ### 26、<font id="JobsSwiftBaseDefines">JobsSwiftBaseDefines</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | [JobsTextTools](#JobsTextTools) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsByQuartzCore**](#JobsByQuartzCore)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsCountdownButton**](#JobsCountdownButton)
+  - [**JobsEmptyView**](#JobsEmptyView)
+  - [**JobsGestureUnlock**](#JobsGestureUnlock)
+  - [**JobsImageTools**](#JobsImageTools)
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsMarqueeView**](#JobsMarqueeView)
+  - [**JobsNavBar**](#JobsNavBar)
+  - [**JobsProgressBar**](#JobsProgressBar)
+  - [**JobsRefresher**](#JobsRefresher)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+  - [**JobsSwiftBaseTools**](#JobsSwiftBaseTools)
+  - [**JobsSwiftDebugTools**](#JobsSwiftDebugTools)
+  - [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+  - [**JobsToast**](#JobsToast)
+
+- **下游依赖**
+
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**JobsTextTools**](#JobsTextTools)
+
 
 ### 27、<font id="JobsSwiftBaseTools">JobsSwiftBaseTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [Alamofire](https://github.com/Alamofire/Alamofire) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [RxCocoa](https://github.com/ReactiveX/RxSwift) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [RxSwift](https://github.com/ReactiveX/RxSwift) | `` |
-| [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+
+- **下游依赖**
+
+  - [**Alamofire**](https://github.com/Alamofire/Alamofire)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**NSObject+Rx**](https://github.com/RxSwiftCommunity/NSObject-Rx)
+  - [**RxCocoa**](https://github.com/ReactiveX/RxSwift)
+  - [**RxSwift**](https://github.com/ReactiveX/RxSwift)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 28、<font id="JobsSwiftBlock">JobsSwiftBlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftBlock**](#JobsSwiftBlock) | [Kingfisher](https://github.com/onevcat/Kingfisher) | `` |
-| [**JobsSwiftBlock**](#JobsSwiftBlock) | [Moya](https://github.com/Moya/Moya) | `` |
-| [**JobsSwiftBlock**](#JobsSwiftBlock) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
-| [**JobsSwiftBlock**](#JobsSwiftBlock) | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | `` |
+- **上游依赖**
+
+  - [**JobsByQuartzCore**](#JobsByQuartzCore)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsEmptyView**](#JobsEmptyView)
+  - [**JobsGestureUnlock**](#JobsGestureUnlock)
+  - [**JobsImageTools**](#JobsImageTools)
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsNavBar**](#JobsNavBar)
+  - [**JobsRefresher**](#JobsRefresher)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBaseTools**](#JobsSwiftBaseTools)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+  - [**JobsToast**](#JobsToast)
+
+- **下游依赖**
+
+  - [**Kingfisher**](https://github.com/onevcat/Kingfisher)
+  - [**Moya**](https://github.com/Moya/Moya)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+  - [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)
+
 
 ### 29、<font id="JobsSwiftDebugTools">JobsSwiftDebugTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | [JobsToast](#JobsToast) | `` |
+- **上游依赖**
+
+  - [**JobsInheritance**](#JobsInheritance)
+
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsToast**](#JobsToast)
+
 
 ### 30、<font id="JobsSwiftFoundation">JobsSwiftFoundation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftFoundation**](#JobsSwiftFoundation) | [JobsByUIKit](#JobsByUIKit) | `` |
+- **上游依赖**
+
+  - [**JobsInheritance**](#JobsInheritance)
+
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+
 
 ### 31、<font id="JobsSwiftMetalKit">JobsSwiftMetalKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+
 
 ### 32、<font id="JobsSwiftStandardLibrary">JobsSwiftStandardLibrary</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsInheritance**](#JobsInheritance)
+
+- **下游依赖**
+
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+
 
 ### 33、<font id="JobsSwiftTaskCenter">JobsSwiftTaskCenter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
+- **上游依赖**
+
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+
+- **下游依赖**
+
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+
 
 ### 34、<font id="JobsSwiftTimer">JobsSwiftTimer</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsCountdownButton**](#JobsCountdownButton)
+  - [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain)
+  - [**JobsMarqueeView**](#JobsMarqueeView)
+  - [**JobsProgressBar**](#JobsProgressBar)
+  - [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter)
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+
 
 ### 35、<font id="JobsSwiftTools">JobsSwiftTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftTools**](#JobsSwiftTools) | [Flutter](#Flutter) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [FlutterPluginRegistrant](#FlutterPluginRegistrant) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [JobsByPhotosUI](#JobsByPhotosUI) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsSwiftTools**](#JobsSwiftTools) | [JobsToast](#JobsToast) | `` |
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsLocalNotification**](#JobsLocalNotification)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+
+- **下游依赖**
+
+  - [**Flutter**](#Flutter)
+  - [**FlutterPluginRegistrant**](#FlutterPluginRegistrant)
+  - [**JobsByPhotosUI**](#JobsByPhotosUI)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**JobsToast**](#JobsToast)
+
 
 ### 36、<font id="JobsSwiftWorker">JobsSwiftWorker</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [JobsRefresher](#JobsRefresher) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [JobsSwiftTaskCenter](#JobsSwiftTaskCenter) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [JobsSwiftTimer](#JobsSwiftTimer) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [Jobsl10n](#Jobsl10n) | `` |
-| [**JobsSwiftWorker**](#JobsSwiftWorker) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsRefresher**](#JobsRefresher)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftTaskCenter**](#JobsSwiftTaskCenter)
+  - [**JobsSwiftTimer**](#JobsSwiftTimer)
+  - [**Jobsl10n**](#Jobsl10n)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 37、<font id="JobsTextTools">JobsTextTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec`
 
-未发现依赖。
+- **上游依赖**
+
+  - [**JobsBy3rdTools**](#JobsBy3rdTools)
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftAppTools**](#JobsSwiftAppTools)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+
 
 ### 38、<font id="JobsToast">JobsToast</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsToast@Pods/JobsToast.podspec`
 
-| 声明位置 | 依赖 | 版本/参数 |
-|---|---|---|
-| [**JobsToast**](#JobsToast) | [JobsByUIKit](#JobsByUIKit) | `` |
-| [**JobsToast**](#JobsToast) | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines) | `` |
-| [**JobsToast**](#JobsToast) | [JobsSwiftBlock](#JobsSwiftBlock) | `` |
-| [**JobsToast**](#JobsToast) | [SnapKit](https://github.com/SnapKit/SnapKit) | `` |
+- **上游依赖**
+
+  - [**JobsInheritance**](#JobsInheritance)
+  - [**JobsSwiftDebugTools**](#JobsSwiftDebugTools)
+  - [**JobsSwiftTools**](#JobsSwiftTools)
+
+- **下游依赖**
+
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftBlock**](#JobsSwiftBlock)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
 
 ### 39、<font id="Jobsl10n">Jobsl10n</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
 
-未发现依赖。
+- **上游依赖**
 
-## 六、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+  - [**JobsByUIKit**](#JobsByUIKit)
+  - [**JobsSwiftWorker**](#JobsSwiftWorker)
+
+
+## 七、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图
 - `PodspecDependencies.md`：本报告

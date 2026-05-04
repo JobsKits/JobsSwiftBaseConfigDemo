@@ -37,9 +37,9 @@ print_readme() {
   note_echo "功能说明："
   color_echo "1. 优先检测脚本所在目录和上一层目录；若包含 Podfile，则直接作为分析目录。"
   color_echo "2. 若自动检测不到，再让你拖入一个包含 Podfile 的目录。支持普通文件夹、Unix symlink、Finder 替身。"
-  color_echo "3. 递归查找所有 *.podspec，并生成 Markdown 依赖报告，包含总览、0 依赖 Pod、明细和 Mermaid 图。"
+  color_echo "3. 递归查找所有 *.podspec，并生成 Markdown 依赖报告，包含总览、0 依赖 Pod、外部依赖引用关系、双向明细和 Mermaid 图。"
   color_echo "4. 生成可搜索、可缩放、可拖拽的动态 HTML 依赖图。"
-  color_echo "5. 会先自检 Homebrew；未安装时按芯片架构安装，再安装或升级 Graphviz 并尝试生成 PNG 图。"
+  color_echo "5. 会先自检 Homebrew；未安装时按芯片架构安装，再安装 Graphviz；已安装 Graphviz 时可选择是否升级，并尝试生成 PNG 图。"
   warm_echo ""
   warm_echo "输出目录会创建在工程目录下：PodspecDependencyReport，新报告会覆盖旧数据。"
   info_echo "日志文件：$LOG_FILE"
@@ -370,11 +370,18 @@ ensure_graphviz() {
 
   if command -v brew >/dev/null 2>&1; then
     if brew list --versions graphviz >/dev/null 2>&1; then
-      info_echo "检测到 Graphviz 已通过 Homebrew 安装，开始升级..."
-      brew upgrade graphviz 2>&1 | tee -a "$LOG_FILE" || true
+      info_echo "检测到 Graphviz 已通过 Homebrew 安装，是否开始升级？回车跳过，任意输入开始升级"
+      IFS= read -r graphviz_upgrade_input
+
+      if [[ -n "$graphviz_upgrade_input" ]]; then
+        note_echo "开始升级 Graphviz..."
+        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade graphviz 2>&1 | tee -a "$LOG_FILE" || true
+      else
+        note_echo "已跳过 Graphviz 升级"
+      fi
     else
       info_echo "未检测到 Homebrew 版 Graphviz，开始安装..."
-      brew install graphviz 2>&1 | tee -a "$LOG_FILE" || true
+      HOMEBREW_NO_AUTO_UPDATE=1 brew install graphviz 2>&1 | tee -a "$LOG_FILE" || true
     fi
   fi
 
@@ -473,22 +480,52 @@ rescue
 end
 
 def detail_anchor(pod_name)
-  pod_name.to_s
+  pod_owner_name(pod_name)
+end
+
+def pod_owner_name(value)
+  value.to_s.split('/').first.strip
+end
+
+def normalized_pod_key(value)
+  pod_owner_name(value).downcase.gsub(/[^a-z0-9]/, '')
+end
+
+def fuzzy_contains_match(name, candidates)
+  key = normalized_pod_key(name)
+  return nil if key.length < 4
+
+  exact = candidates.find { |candidate| normalized_pod_key(candidate) == key }
+  return exact if exact
+
+  matches = candidates.select do |candidate|
+    candidate_key = normalized_pod_key(candidate)
+    next false if candidate_key.length < 4
+
+    candidate_key.include?(key) || key.include?(candidate_key)
+  end
+
+  matches.min_by { |candidate| [(normalized_pod_key(candidate).length - key.length).abs, candidate.to_s.length, candidate.to_s] }
 end
 
 def local_pod_target(dep_name, pod_names)
-  dep = dep_name.to_s
-  return dep if pod_names.include?(dep)
-
-  base = dep.split('/').first
+  base = pod_owner_name(dep_name)
   return base if pod_names.include?(base)
 
-  nil
+  fuzzy_contains_match(base, pod_names)
+end
+
+def report_pod_name(label, pod_names = nil)
+  base = pod_owner_name(label)
+  return base unless pod_names
+
+  local_pod_target(base, pod_names) || base
 end
 
 def pod_detail_link(label, pod_names, bold: false)
-  target = local_pod_target(label, pod_names)
-  escaped = md_link_text_escape(label)
+  display_name = report_pod_name(label, pod_names)
+  target = local_pod_target(display_name, pod_names)
+  escaped = md_link_text_escape(display_name)
   escaped = "**#{escaped}**" if bold
 
   return escaped unless target
@@ -523,18 +560,15 @@ def collect_pod_source_urls(root)
   end
 
   podfile_paths.sort.each do |path|
-    File.readlines(path, invalid: :replace, undef: :replace, replace: '').each do |line|
+    File.read(path, mode: 'r:BOM|UTF-8', invalid: :replace, undef: :replace, replace: '').each_line do |line|
       pod_line = line.sub(/\A\s*#\s*/, '')
       next unless pod_line =~ /\bpod\s*\(?\s*['"]([^'"]+)['"]/
 
-      pod_name = Regexp.last_match(1).strip
+      pod_name = pod_owner_name(Regexp.last_match(1).strip)
       source_url = extract_first_source_url(line)
       next if source_url.nil? || source_url.empty?
 
       urls[pod_name] ||= source_url
-
-      base_name = pod_name.split('/').first
-      urls[base_name] ||= source_url
     end
   rescue => e
     warn "读取 Podfile 来源注释失败：#{path} #{e.message}"
@@ -543,14 +577,83 @@ def collect_pod_source_urls(root)
   [urls, podfile_paths]
 end
 
-def dependency_link(dep_name, pod_names, source_urls)
-  target = local_pod_target(dep_name, pod_names)
-  return pod_detail_link(dep_name, pod_names) if target
+def find_source_url_for_dependency(dep_name, source_urls)
+  base = pod_owner_name(dep_name)
 
-  source_url = source_urls[dep_name.to_s] || source_urls[dep_name.to_s.split('/').first]
-  return "[#{md_link_text_escape(dep_name)}](#{source_url})" if source_url && !source_url.empty?
+  return [base, source_urls[base]] if source_urls[base]
 
-  md_escape(dep_name)
+  matched_key = fuzzy_contains_match(base, source_urls.keys)
+  return [matched_key, source_urls[matched_key]] if matched_key && source_urls[matched_key]
+
+  [nil, nil]
+end
+
+def dependency_link(dep_name, pod_names, source_urls, bold: false)
+  display_name = report_pod_name(dep_name, pod_names)
+  target = local_pod_target(display_name, pod_names)
+  return pod_detail_link(display_name, pod_names, bold: bold) if target
+
+  escaped = md_link_text_escape(display_name)
+  escaped = "**#{escaped}**" if bold
+
+  _source_key, source_url = find_source_url_for_dependency(display_name, source_urls)
+  return "[#{escaped}](#{source_url})" if source_url && !source_url.empty?
+
+  escaped
+end
+
+def source_owner_name(edge)
+  pod_owner_name(edge[:from])
+end
+
+def target_owner_name(dep_name, pod_names)
+  local_pod_target(dep_name, pod_names) || pod_owner_name(dep_name)
+end
+
+def edge_targets_pod?(edge, pod_name, pod_names)
+  target = report_pod_name(pod_name, pod_names)
+  target_owner_name(edge[:to], pod_names) == target
+end
+
+def incoming_edges_for(pod_name, edges, pod_names, exclude_self: true)
+  pod_base = pod_owner_name(pod_name)
+
+  edges.select do |edge|
+    next false unless edge_targets_pod?(edge, pod_name, pod_names)
+    next false if exclude_self && source_owner_name(edge) == pod_base
+
+    true
+  end.uniq { |edge| [edge[:from], edge[:declared_in], edge[:to], edge[:line], edge[:file]] }
+end
+
+def external_dependency_key(dep_name, source_urls)
+  source_key, _source_url = find_source_url_for_dependency(dep_name, source_urls)
+  source_key || pod_owner_name(dep_name)
+end
+
+def external_dependency_groups(edges, pod_names, source_urls)
+  groups = Hash.new { |hash, key| hash[key] = [] }
+
+  edges.each do |edge|
+    next if local_pod_target(edge[:to], pod_names)
+
+    groups[external_dependency_key(edge[:to], source_urls)] << edge
+  end
+
+  groups
+end
+
+def external_dependency_link(name, source_urls)
+  display_name = pod_owner_name(name)
+  source_url = source_urls[display_name]
+
+  unless source_url
+    _source_key, source_url = find_source_url_for_dependency(display_name, source_urls)
+  end
+
+  return "[#{md_link_text_escape(display_name)}](#{source_url})" if source_url && !source_url.empty?
+
+  md_escape(display_name)
 end
 
 def mermaid_id(label)
@@ -616,7 +719,7 @@ def make_dot(edges, nodes = [])
 end
 
 def parse_podspec(path)
-  text = File.read(path, invalid: :replace, undef: :replace, replace: '')
+  text = File.read(path, mode: 'r:BOM|UTF-8', invalid: :replace, undef: :replace, replace: '')
   lines = text.lines
   basename = File.basename(path, '.podspec')
 
@@ -636,6 +739,7 @@ def parse_podspec(path)
   end
 
   pod_name ||= basename
+  pod_name = pod_owner_name(pod_name)
 
   deps = []
   depth = 0
@@ -671,11 +775,19 @@ def parse_podspec(path)
       requirement = requirement.sub(/\)\s*\z/, '').strip
       requirement = '' if requirement == ','
 
+      raw_dep_name = dep_name.strip
+      dep_owner = pod_owner_name(raw_dep_name)
+      declared_owner = pod_owner_name(declared_in)
+
+      next if dep_owner.empty? || dep_owner == pod_owner_name(pod_name)
+
       deps << {
-        dep: dep_name.strip,
+        dep: dep_owner,
+        raw_dep: raw_dep_name,
         requirement: requirement,
         line: index + 1,
-        declared_in: declared_in
+        declared_in: declared_owner,
+        raw_declared_in: declared_in
       }
     end
 
@@ -689,7 +801,7 @@ def parse_podspec(path)
     end
   end
 
-  deps.uniq! { |d| [d[:dep], d[:requirement], d[:declared_in], d[:line]] }
+  deps.uniq! { |d| d[:dep] }
 
   {
     name: pod_name,
@@ -913,6 +1025,14 @@ def make_interactive_html(data_json)
         updateDetail();
       }
 
+      function edgeTargetsName(edge, name) {
+        return edge.to === name || edge.to_base === name || edge.to_pod === name || edge.to_external === name;
+      }
+
+      function sourceOwner(edge) {
+        return edge.from || '';
+      }
+
       function updateDetail() {
         const box = document.getElementById('detail');
 
@@ -928,15 +1048,23 @@ def make_interactive_html(data_json)
           return;
         }
 
-        const deps = allEdges().filter(e => e.from === state.focus).map(e => e.to).sort();
-        const users = allEdges().filter(e => e.to === state.focus).map(e => e.from).sort();
+        const deps = [...new Set(allEdges().filter(e => e.from === state.focus).map(e => e.to))].sort();
+        const users = [...new Set(allEdges()
+          .filter(e => edgeTargetsName(e, state.focus) && sourceOwner(e) !== state.focus)
+          .map(e => e.from))].sort();
 
         box.innerHTML = `
           <h2>${state.focus}</h2>
-          <h3>它依赖了谁</h3>
-          <ul>${deps.length ? deps.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
-          <h3>谁依赖它</h3>
-          <ul>${users.length ? users.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
+          <ul class="direction-sections">
+            <li>
+              <strong>上游依赖</strong>
+              <ul>${users.length ? users.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
+            </li>
+            <li>
+              <strong>下游依赖</strong>
+              <ul>${deps.length ? deps.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
+            </li>
+          </ul>
         `;
       }
 
@@ -1036,30 +1164,42 @@ podspec_paths.each do |path|
 end
 
 pod_names = reports.map { |r| r[:name] }.to_set
+source_urls, source_podfile_paths = collect_pod_source_urls(root)
 all_edges = []
 internal_edges = []
 
 reports.each do |report|
   report[:deps].each do |dep|
+    dep_name = report_pod_name(dep[:dep], pod_names)
+    from_name = report_pod_name(report[:name], pod_names)
+    next if dep_name == from_name
+
+    local_target = local_pod_target(dep_name, pod_names)
+    external_target = local_target ? nil : external_dependency_key(dep_name, source_urls)
+
     edge = {
-      from: report[:name],
-      to: dep[:dep],
+      from: from_name,
+      to: local_target || external_target || dep_name,
+      to_base: dep_name,
+      to_pod: local_target,
+      to_external: external_target,
       requirement: dep[:requirement],
-      declared_in: dep[:declared_in],
+      declared_in: report_pod_name(dep[:declared_in], pod_names),
       line: dep[:line],
       file: rel_path(report[:path], root)
     }
 
     all_edges << edge
-
-    dep_base_name = dep[:dep].split('/').first
-    internal_edges << edge if pod_names.include?(dep_base_name)
+    internal_edges << edge if local_target
   end
 end
 
-all_nodes = reports.map { |r| r[:name] }
+all_edges.uniq! { |edge| [edge[:from], edge[:to]] }
+internal_edges.uniq! { |edge| [edge[:from], edge[:to]] }
+
+all_nodes = reports.map { |r| report_pod_name(r[:name], pod_names) }.uniq
 zero_dependency_reports = reports.select { |r| r[:deps].empty? }.sort_by { |r| r[:name] }
-source_urls, source_podfile_paths = collect_pod_source_urls(root)
+external_groups = external_dependency_groups(all_edges, pod_names, source_urls)
 
 md_path = File.join(out_dir, 'PodspecDependencies.md')
 html_path = File.join(out_dir, 'PodspecDependencies_interactive.html')
@@ -1081,7 +1221,7 @@ html_data = {
   generatedAt: Time.now.strftime('%Y-%m-%d %H:%M:%S'),
   pods: reports.sort_by { |r| r[:name] }.map do |r|
     {
-      name: r[:name],
+      name: report_pod_name(r[:name], pod_names),
       file: rel_path(r[:path], root),
       deps: r[:deps]
     }
@@ -1101,6 +1241,7 @@ File.open(md_path, 'w') do |md|
   md.puts
   md.puts "## 🔥 <font id=前言>前言</font> #{top_link}"
   md.puts
+  md.puts "- 此文件由脚本自动运行分析得出"
   md.puts "- 分析目录：`#{root}`"
   md.puts "- 生成时间：`#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}`"
   md.puts "- Podspec 数量：`#{reports.length}`"
@@ -1134,14 +1275,17 @@ File.open(md_path, 'w') do |md|
 
   md.puts "## 一、总览 #{top_link}"
   md.puts
-  md.puts '| Pod | Podspec | 依赖数量 | 依赖 |'
-  md.puts '|---|---|---:|---|'
+  md.puts '| Pod | Podspec | 依赖数量 | 依赖 | 被引用数量 | 引用方 |'
+  md.puts '|---|---|---:|---|---:|---|'
 
   reports.sort_by { |r| r[:name] }.each do |report|
     rel = rel_path(report[:path], root)
     deps = report[:deps].map { |d| d[:dep] }.uniq.sort
     dep_links = deps.map { |dep_name| dependency_link(dep_name, pod_names, source_urls) }.join(', ')
-    md.puts "| #{pod_detail_link(report[:name], pod_names, bold: true)} | `#{md_escape(rel)}` | #{deps.length} | #{dep_links} |"
+    incoming = incoming_edges_for(report[:name], all_edges, pod_names)
+    incoming_names = incoming.map { |edge| source_owner_name(edge) }.uniq.sort
+    incoming_links = incoming_names.map { |name| pod_detail_link(name, pod_names, bold: true) }.join(', ')
+    md.puts "| #{pod_detail_link(report[:name], pod_names, bold: true)} | `#{md_escape(rel)}` | #{deps.length} | #{dep_links} | #{incoming_names.length} | #{incoming_links} |"
   end
 
   md.puts
@@ -1162,7 +1306,7 @@ File.open(md_path, 'w') do |md|
   md.puts
   md.puts "## 三、仓库内 Pod 相互依赖图 Mermaid #{top_link}"
   md.puts
-  md.puts '只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系。'
+  md.puts '只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系；所有 subspec 依赖已统一归一化为主 Pod 名。'
   md.puts
   md.puts '```mermaid'
   md.puts internal_mermaid
@@ -1176,7 +1320,28 @@ File.open(md_path, 'w') do |md|
   md.puts '```'
   md.puts
 
-  md.puts "## 五、明细 #{top_link}"
+  md.puts "## 五、外部依赖引用关系 #{top_link}"
+  md.puts
+  md.puts '这里统计本次扫描到的 `.podspec` 对外部 Pod 的引用；所有 subspec 依赖已统一归一化为主 Pod 名。外部来源链接匹配规则已放宽为：完全匹配 → base 名匹配 → 字符串包含匹配。'
+  md.puts
+
+  if external_groups.empty?
+    md.puts '未发现外部依赖。'
+  else
+    md.puts '| 外部依赖 | 被引用数量 | 引用方 | 引用声明 |'
+    md.puts '|---|---:|---|---|'
+
+    external_groups.keys.sort.each do |dep_name|
+      edges = external_groups[dep_name]
+      callers = edges.map { |edge| source_owner_name(edge) }.uniq.sort
+      caller_links = callers.map { |name| pod_detail_link(name, pod_names, bold: true) }.join(', ')
+      declarations = edges.map { |edge| dependency_link(edge[:to], pod_names, source_urls) }.uniq.sort.join(', ')
+      md.puts "| #{external_dependency_link(dep_name, source_urls)} | #{callers.length} | #{caller_links} | #{declarations} |"
+    end
+  end
+
+  md.puts
+  md.puts "## 六、明细 #{top_link}"
 
   reports.sort_by { |r| r[:name] }.each_with_index do |report, index|
     rel = rel_path(report[:path], root)
@@ -1187,23 +1352,35 @@ File.open(md_path, 'w') do |md|
     md.puts "Podspec：`#{rel}`"
     md.puts
 
-    if report[:deps].empty?
-      md.puts '未发现依赖。'
-      next
+    incoming = incoming_edges_for(report[:name], all_edges, pod_names)
+
+    unless incoming.empty?
+      md.puts '- **上游依赖**'
+      md.puts
+
+      incoming_names = incoming.map { |edge| source_owner_name(edge) }.uniq.sort
+      incoming_names.each do |name|
+        md.puts "  - #{pod_detail_link(name, pod_names, bold: true)}"
+      end
+
+      md.puts
     end
 
-    md.puts '| 声明位置 | 依赖 | 版本/参数 |'
-    md.puts '|---|---|---|'
+    unless report[:deps].empty?
+      md.puts '- **下游依赖**'
+      md.puts
 
-    report[:deps].sort_by { |d| [d[:declared_in], d[:dep], d[:line]] }.each do |dep|
-      declared_link = pod_detail_link(dep[:declared_in], pod_names, bold: true)
-      dep_link = dependency_link(dep[:dep], pod_names, source_urls)
-      md.puts "| #{declared_link} | #{dep_link} | `#{md_escape(dep[:requirement])}` |"
+      downstream_names = report[:deps].map { |d| d[:dep] }.uniq.sort
+      downstream_names.each do |dep_name|
+        md.puts "  - #{dependency_link(dep_name, pod_names, source_urls, bold: true)}"
+      end
+
+      md.puts
     end
   end
 
   md.puts
-  md.puts "## 六、生成的文件 #{top_link}"
+  md.puts "## 七、生成的文件 #{top_link}"
   md.puts
   md.puts '- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图'
   md.puts '- `PodspecDependencies.md`：本报告'

@@ -27,7 +27,6 @@ digraph PodspecDependencies {
   "JobsMarqueeView";
   "JobsNavBar";
   "JobsNetworking";
-  "JobsNetworking/Core";
   "JobsProgressBar";
   "JobsRefresher";
   "JobsScale";
@@ -145,7 +144,6 @@ digraph PodspecDependencies {
   "JobsNavBar" -> "SnapKit";
   "JobsNavBar" -> "SwiftMessages";
   "JobsNetworking" -> "Alamofire";
-  "JobsNetworking" -> "JobsNetworking/Core";
   "JobsNetworking" -> "PromiseKit";
   "JobsProgressBar" -> "JobsByUIKit";
   "JobsProgressBar" -> "JobsSwiftBaseDefines";
