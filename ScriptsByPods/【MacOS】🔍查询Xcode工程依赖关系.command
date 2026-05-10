@@ -37,7 +37,7 @@ print_readme() {
   note_echo "功能说明："
   color_echo "1. 优先检测脚本所在目录和上一层目录；若包含 Podfile，则直接作为分析目录。"
   color_echo "2. 若自动检测不到，再让你拖入一个包含 Podfile 的目录。支持普通文件夹、Unix symlink、Finder 替身。"
-  color_echo "3. 递归查找所有 *.podspec，并生成 Markdown 依赖报告，包含总览、0 依赖 Pod、外部依赖引用关系、双向明细和 Mermaid 图。"
+  color_echo "3. 递归查找所有 *.podspec，并生成 Markdown 依赖报告，包含总览、0 上游依赖 Pod、外部依赖引用关系、双向明细和 Mermaid 图。"
   color_echo "4. 生成可搜索、可缩放、可拖拽的动态 HTML 依赖图。"
   color_echo "5. 会先自检 Homebrew；未安装时按芯片架构安装，再安装 Graphviz；已安装 Graphviz 时可选择是否升级，并尝试生成 PNG 图。"
   warm_echo ""
@@ -487,6 +487,16 @@ def pod_owner_name(value)
   value.to_s.split('/').first.strip
 end
 
+# ✅ Pod 级依赖图只关心 Pod 与 Pod 之间的依赖。
+# 同一个 Pod 内部的 subspec 依赖，例如：
+#   MJRefreshExtra/Core -> MJRefreshExtra/Support
+# 不应被归一化成：
+#   MJRefreshExtra -> MJRefreshExtra
+# 否则会污染“循环依赖”判断。
+def same_pod_internal_dependency?(pod_name, dep_name)
+  pod_owner_name(pod_name) == pod_owner_name(dep_name)
+end
+
 def normalized_pod_key(value)
   pod_owner_name(value).downcase.gsub(/[^a-z0-9]/, '')
 end
@@ -508,11 +518,14 @@ def fuzzy_contains_match(name, candidates)
   matches.min_by { |candidate| [(normalized_pod_key(candidate).length - key.length).abs, candidate.to_s.length, candidate.to_s] }
 end
 
+# ✅ 判断依赖目标是否为本次扫描到的仓库内 Pod。
+# 循环依赖分析必须严谨，不能用包含关系做模糊匹配。
+# 例如外部 Pod `MJRefresh` 不能被误判成本地 Pod `MJRefreshExtra`。
 def local_pod_target(dep_name, pod_names)
   base = pod_owner_name(dep_name)
   return base if pod_names.include?(base)
 
-  fuzzy_contains_match(base, pod_names)
+  nil
 end
 
 def report_pod_name(label, pod_names = nil)
@@ -718,7 +731,53 @@ def make_dot(edges, nodes = [])
   lines.join("\n")
 end
 
-def parse_podspec(path)
+def canonical_cycle_key(cycle)
+  nodes = cycle.dup
+  nodes.pop if nodes.length > 1 && nodes.first == nodes.last
+  return '' if nodes.empty?
+
+  forward = (0...nodes.length).map { |i| nodes.rotate(i) }
+  reversed = nodes.reverse
+  backward = (0...reversed.length).map { |i| reversed.rotate(i) }
+  (forward + backward).map { |candidate| candidate.join("\u0000") }.min
+end
+
+def find_internal_cycles(edges)
+  graph = Hash.new { |hash, key| hash[key] = Set.new }
+  nodes = Set.new
+
+  edges.each do |edge|
+    from = edge[:from].to_s
+    to = edge[:to].to_s
+    next if from.empty? || to.empty? || from == to
+
+    graph[from] << to
+    nodes << from
+    nodes << to
+  end
+
+  cycles = {}
+
+  nodes.to_a.sort.each do |start|
+    dfs = lambda do |current, path, seen|
+      graph[current].to_a.sort.each do |nxt|
+        if nxt == start && path.length > 1
+          cycle = path + [start]
+          cycles[canonical_cycle_key(cycle)] ||= cycle
+        elsif !seen.include?(nxt)
+          dfs.call(nxt, path + [nxt], seen + [nxt].to_set)
+        end
+      end
+    end
+
+    dfs.call(start, [start], [start].to_set)
+  end
+
+  cycles.values.sort_by { |cycle| [cycle.length, cycle.join(' -> ')] }
+end
+
+# ✅ 静态解析兜底：当某些 podspec 在 DSL 执行模式下因为读取缺失文件等原因失败时使用。
+def parse_podspec_static(path)
   text = File.read(path, mode: 'r:BOM|UTF-8', invalid: :replace, undef: :replace, replace: '')
   lines = text.lines
   basename = File.basename(path, '.podspec')
@@ -742,6 +801,7 @@ def parse_podspec(path)
   pod_name = pod_owner_name(pod_name)
 
   deps = []
+  ignored_internal_subspec_deps = []
   depth = 0
   contexts = {}
   stack = []
@@ -779,7 +839,19 @@ def parse_podspec(path)
       dep_owner = pod_owner_name(raw_dep_name)
       declared_owner = pod_owner_name(declared_in)
 
-      next if dep_owner.empty? || dep_owner == pod_owner_name(pod_name)
+      next if dep_owner.empty?
+
+      if same_pod_internal_dependency?(pod_name, raw_dep_name)
+        ignored_internal_subspec_deps << {
+          dep: dep_owner,
+          raw_dep: raw_dep_name,
+          requirement: requirement,
+          line: index + 1,
+          declared_in: declared_owner,
+          raw_declared_in: declared_in
+        }
+        next
+      end
 
       deps << {
         dep: dep_owner,
@@ -802,12 +874,259 @@ def parse_podspec(path)
   end
 
   deps.uniq! { |d| d[:dep] }
+  ignored_internal_subspec_deps.uniq! { |d| [d[:raw_declared_in], d[:raw_dep], d[:line]] }
 
   {
     name: pod_name,
     path: path,
-    deps: deps
+    deps: deps,
+    ignored_internal_subspec_deps: ignored_internal_subspec_deps,
+    parse_mode: 'static_fallback'
   }
+end
+
+# ✅ DSL 执行式解析器：不再只靠正则扫 `xx.dependency 'Pod'` 字面量。
+# 这样可以识别下面这类常见写法：
+#   deps = ['A', ['B', '~> 1.0']]
+#   add_deps = lambda { |ss| deps.each { |dep| ss.dependency dep } }
+#   spec.subspec 'Core' { |ss| add_deps.call(ss) }
+# JobsByOCPods 这次漏掉上游依赖，根因就是依赖被放进数组 + lambda 里，旧正则扫不到。
+class PodspecDependencyFakeValue
+  def initialize(value = nil)
+    @value = value
+    @children = {}
+  end
+
+  def method_missing(method_name, *args, &block)
+    key = method_name.to_s
+
+    if key.end_with?('=')
+      @children[key[0...-1]] = args.first
+      return args.first
+    end
+
+    child = (@children[key] ||= PodspecDependencyFakeValue.new)
+    block.call(child) if block
+    child
+  end
+
+  def respond_to_missing?(_method_name, _include_private = false)
+    true
+  end
+
+  def [](key)
+    @children[key.to_s] ||= PodspecDependencyFakeValue.new
+  end
+
+  def []= (key, value)
+    @children[key.to_s] = value
+  end
+
+  def to_s
+    @value.to_s
+  end
+
+  def to_str
+    to_s
+  end
+
+  def to_a
+    []
+  end
+
+  def to_h
+    {}
+  end
+
+  def nil?
+    false
+  end
+end
+
+module Pod
+  class Spec
+    @last_created = nil
+
+    class << self
+      attr_accessor :last_created
+
+      def new(*_args, &block)
+        object = allocate
+        object.__send__(:initialize, nil, nil)
+        self.last_created = object
+        block.call(object) if block
+        object
+      end
+    end
+
+    attr_reader :dependencies, :subspecs, :parent
+
+    def initialize(subspec_name = nil, parent = nil)
+      @subspec_name = subspec_name
+      @parent = parent
+      @name_value = nil
+      @attributes = {}
+      @dependencies = []
+      @subspecs = []
+    end
+
+    def name=(value)
+      @name_value = value.to_s
+      @attributes['name'] = @name_value
+    end
+
+    def name
+      @name_value || @attributes['name'] || PodspecDependencyFakeValue.new
+    end
+
+    def full_name
+      if @parent
+        parent_name = @parent.full_name.to_s
+        return @subspec_name.to_s if parent_name.empty?
+        "#{parent_name}/#{@subspec_name}"
+      else
+        @name_value.to_s
+      end
+    end
+
+    def subspec(name, &block)
+      child = self.class.allocate
+      child.__send__(:initialize, name.to_s, self)
+      @subspecs << child
+      block.call(child) if block
+      child
+    end
+
+    def dependency(name, *requirements)
+      location = caller_locations(1, 1).first
+
+      if name.is_a?(Array)
+        expanded = name.compact
+        raw_name = expanded.shift.to_s.strip
+        requirements = expanded + requirements
+      else
+        raw_name = name.to_s.strip
+      end
+
+      return self if raw_name.empty?
+
+      @dependencies << {
+        raw_dep: raw_name,
+        requirement: normalize_dependency_requirement(requirements),
+        line: location&.lineno || 0,
+        raw_declared_in: full_name
+      }
+
+      self
+    end
+
+    def all_dependencies
+      @dependencies + @subspecs.flat_map(&:all_dependencies)
+    end
+
+    def method_missing(method_name, *args, &block)
+      key = method_name.to_s
+
+      if key.end_with?('=')
+        @attributes[key[0...-1]] = args.first
+        return args.first
+      end
+
+      value = (@attributes[key] ||= PodspecDependencyFakeValue.new)
+      block.call(value) if block
+      value
+    end
+
+    def respond_to_missing?(_method_name, _include_private = false)
+      true
+    end
+
+    private
+
+    def normalize_dependency_requirement(requirements)
+      requirements.flatten.compact.map do |item|
+        case item
+        when Hash
+          item.map { |key, value| "#{key}: #{value}" }.join(', ')
+        else
+          item.to_s
+        end
+      end.reject(&:empty?).join(', ')
+    end
+  end
+
+  Specification = Spec unless const_defined?(:Specification)
+end
+
+def parse_podspec_dynamic(path)
+  Pod::Spec.last_created = nil
+
+  old_pwd = Dir.pwd
+  Dir.chdir(File.dirname(path)) do
+    load path
+  end
+ensure
+  Dir.chdir(old_pwd) if old_pwd && Dir.pwd != old_pwd
+end
+
+def build_report_from_dynamic_spec(path)
+  spec = Pod::Spec.last_created
+  raise 'Pod::Spec.new 没有返回 spec 对象' unless spec
+
+  basename = File.basename(path, '.podspec')
+  pod_name = spec.name.to_s.strip
+  pod_name = basename if pod_name.empty?
+  pod_name = pod_owner_name(pod_name)
+
+  deps = []
+  ignored_internal_subspec_deps = []
+
+  spec.all_dependencies.each do |raw|
+    raw_dep_name = raw[:raw_dep].to_s.strip
+    dep_owner = pod_owner_name(raw_dep_name)
+    next if dep_owner.empty?
+
+    raw_declared_in = raw[:raw_declared_in].to_s.strip
+    raw_declared_in = pod_name if raw_declared_in.empty?
+    declared_owner = pod_owner_name(raw_declared_in)
+
+    item = {
+      dep: dep_owner,
+      raw_dep: raw_dep_name,
+      requirement: raw[:requirement].to_s,
+      line: raw[:line].to_i,
+      declared_in: declared_owner,
+      raw_declared_in: raw_declared_in
+    }
+
+    if same_pod_internal_dependency?(pod_name, raw_dep_name)
+      ignored_internal_subspec_deps << item
+    else
+      deps << item
+    end
+  end
+
+  deps.uniq! { |d| d[:dep] }
+  ignored_internal_subspec_deps.uniq! { |d| [d[:raw_declared_in], d[:raw_dep], d[:line]] }
+
+  {
+    name: pod_name,
+    path: path,
+    deps: deps,
+    ignored_internal_subspec_deps: ignored_internal_subspec_deps,
+    parse_mode: 'dsl'
+  }
+end
+
+def parse_podspec(path)
+  begin
+    parse_podspec_dynamic(path)
+    build_report_from_dynamic_spec(path)
+  rescue Exception => e
+    report = parse_podspec_static(path)
+    report[:parse_error] = e.message
+    report
+  end
 end
 
 def make_interactive_html(data_json)
@@ -1042,7 +1361,7 @@ def make_interactive_html(data_json)
             <h2>总览</h2>
             <p><span class="badge">Pod ${data.pods.length}</span><span class="badge">边 ${allEdges().length}</span></p>
             <p class="muted">点击节点查看上下游依赖。</p>
-            <h3>0 依赖 Pod</h3>
+            <h3>0 上游依赖 Pod</h3>
             <ul>${zero.map(n => `<li>${n}</li>`).join('')}</ul>
           `;
           return;
@@ -1058,11 +1377,11 @@ def make_interactive_html(data_json)
           <ul class="direction-sections">
             <li>
               <strong>上游依赖</strong>
-              <ul>${users.length ? users.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
+              <ul>${deps.length ? deps.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
             </li>
             <li>
               <strong>下游依赖</strong>
-              <ul>${deps.length ? deps.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
+              <ul>${users.length ? users.map(n => `<li>${n}</li>`).join('') : '<li class="muted">无</li>'}</ul>
             </li>
           </ul>
         `;
@@ -1147,6 +1466,8 @@ podspec_paths = []
 Find.find(root) do |path|
   next unless File.file?(path)
   next if path.include?('/PodspecDependencyReport/')
+  next if path.include?('/__MACOSX/')
+  next if File.basename(path).start_with?('._')
   podspec_paths << path if path.end_with?('.podspec')
 end
 
@@ -1199,7 +1520,15 @@ internal_edges.uniq! { |edge| [edge[:from], edge[:to]] }
 
 all_nodes = reports.map { |r| report_pod_name(r[:name], pod_names) }.uniq
 zero_dependency_reports = reports.select { |r| r[:deps].empty? }.sort_by { |r| r[:name] }
+ignored_internal_subspec_deps = reports.flat_map do |report|
+  report.fetch(:ignored_internal_subspec_deps, []).map do |dep|
+    dep.merge(pod: report[:name], file: report[:path])
+  end
+end
 external_groups = external_dependency_groups(all_edges, pod_names, source_urls)
+parse_mode_counts = reports.group_by { |r| r[:parse_mode] || 'unknown' }.transform_values(&:length)
+fallback_reports = reports.select { |r| r[:parse_mode] == 'static_fallback' }
+internal_cycles = find_internal_cycles(internal_edges)
 
 md_path = File.join(out_dir, 'PodspecDependencies.md')
 html_path = File.join(out_dir, 'PodspecDependencies_interactive.html')
@@ -1227,7 +1556,9 @@ html_data = {
     }
   end,
   allEdges: all_edges,
-  internalEdges: internal_edges
+  internalEdges: internal_edges,
+  internalCycles: internal_cycles,
+  ignoredInternalSubspecDeps: ignored_internal_subspec_deps
 }
 
 File.write(html_path, make_interactive_html(JSON.generate(html_data)))
@@ -1245,11 +1576,15 @@ File.open(md_path, 'w') do |md|
   md.puts "- 分析目录：`#{root}`"
   md.puts "- 生成时间：`#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}`"
   md.puts "- Podspec 数量：`#{reports.length}`"
-  md.puts "- 0 依赖 Pod 数量：`#{zero_dependency_reports.length}`"
+  md.puts "- 0 下游依赖 Pod 数量：`#{zero_dependency_reports.length}`"
   md.puts "- 全部依赖边数量：`#{all_edges.map { |e| [e[:from], e[:to]] }.uniq.length}`"
   md.puts "- 仓库内 Pod 依赖边数量：`#{internal_edges.map { |e| [e[:from], e[:to]] }.uniq.length}`"
+  md.puts "- Pod 间循环依赖数量：`#{internal_cycles.length}`"
+  md.puts "- 已过滤同 Pod 内部 subspec 依赖数量：`#{ignored_internal_subspec_deps.length}`"
   md.puts "- 外部依赖来源注释文件数量：`#{source_podfile_paths.length}`"
   md.puts "- 已识别外部依赖来源链接数量：`#{source_urls.length}`"
+  md.puts "- DSL 执行式解析 Podspec 数量：`#{parse_mode_counts.fetch('dsl', 0)}`"
+  md.puts "- 静态兜底解析 Podspec 数量：`#{parse_mode_counts.fetch('static_fallback', 0)}`"
   md.puts
   md.puts "> 更易读的动态关系图见：`PodspecDependencies_interactive.html`。"
   md.puts
@@ -1273,9 +1608,23 @@ File.open(md_path, 'w') do |md|
     md.puts
   end
 
+  unless fallback_reports.empty?
+    md.puts '#### 使用静态兜底解析的文件'
+    md.puts
+    md.puts '这些文件无法通过 DSL 执行式解析完整展开，已自动回退到正则静态解析；若其中使用数组、lambda、helper 方法声明依赖，仍可能需要人工确认。'
+    md.puts
+    md.puts '| Pod | Podspec | DSL 解析失败原因 |'
+    md.puts '|---|---|---|'
+    fallback_reports.sort_by { |r| r[:name] }.each do |report|
+      rel = rel_path(report[:path], root)
+      md.puts "| #{pod_detail_link(report[:name], pod_names, bold: true)} | `#{md_escape(rel)}` | #{md_escape(report[:parse_error])} |"
+    end
+    md.puts
+  end
+
   md.puts "## 一、总览 #{top_link}"
   md.puts
-  md.puts '| Pod | Podspec | 依赖数量 | 依赖 | 被引用数量 | 引用方 |'
+  md.puts '| Pod | Podspec | 下游依赖数量 | 下游依赖 | 上游依赖数量 | 上游依赖方 |'
   md.puts '|---|---|---:|---|---:|---|'
 
   reports.sort_by { |r| r[:name] }.each do |report|
@@ -1289,11 +1638,11 @@ File.open(md_path, 'w') do |md|
   end
 
   md.puts
-  md.puts "## 二、0 依赖 Pod #{top_link}"
+  md.puts "## 二、0 下游依赖 Pod #{top_link}"
   md.puts
 
   if zero_dependency_reports.empty?
-    md.puts '没有 0 依赖 Pod。'
+    md.puts '没有 0 下游依赖 Pod。'
   else
     md.puts '| Pod | Podspec |'
     md.puts '|---|---|'
@@ -1304,25 +1653,55 @@ File.open(md_path, 'w') do |md|
   end
 
   md.puts
-  md.puts "## 三、仓库内 Pod 相互依赖图 Mermaid #{top_link}"
+  md.puts "## 三、已过滤的同 Pod 内部 subspec 依赖 #{top_link}"
   md.puts
-  md.puts '只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系；所有 subspec 依赖已统一归一化为主 Pod 名。'
+  md.puts '这些依赖只表达同一个 Pod 内部 subspec 的包含关系，不参与 Pod 与 Pod 之间的循环依赖判断。'
+  md.puts
+
+  if ignored_internal_subspec_deps.empty?
+    md.puts '> 未发现同 Pod 内部 subspec 依赖。'
+  else
+    md.puts '| Pod | 声明位置 | 内部依赖 | 行号 |'
+    md.puts '|---|---|---|---:|'
+    ignored_internal_subspec_deps.sort_by { |d| [d[:pod], d[:raw_declared_in], d[:raw_dep], d[:line]] }.each do |dep|
+      md.puts "| #{pod_detail_link(dep[:pod], pod_names, bold: true)} | `#{md_escape(dep[:raw_declared_in])}` | `#{md_escape(dep[:raw_dep])}` | `#{dep[:line]}` |"
+    end
+  end
+
+  md.puts
+  md.puts "## 四、Pod 间循环依赖检测 #{top_link}"
+  md.puts
+  if internal_cycles.empty?
+    md.puts '> 未发现仓库内 Pod 间循环依赖。'
+  else
+    md.puts '| 序号 | 循环链路 |'
+    md.puts '|---:|---|'
+    internal_cycles.each_with_index do |cycle, index|
+      links = cycle.map { |name| pod_detail_link(name, pod_names, bold: true) }.join(' → ')
+      md.puts "| #{index + 1} | #{links} |"
+    end
+  end
+
+  md.puts
+  md.puts "## 五、仓库内 Pod 相互依赖图 Mermaid #{top_link}"
+  md.puts
+  md.puts '只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系；同 Pod 内部 subspec 依赖已过滤，不计入 Pod 级依赖/循环分析；跨 Pod subspec 依赖显示为主 Pod 名；仓库内 Pod 匹配只采用精确名称，避免把 MJRefresh 误判为 MJRefreshExtra。'
   md.puts
   md.puts '```mermaid'
   md.puts internal_mermaid
   md.puts '```'
   md.puts
 
-  md.puts "## 四、全部依赖图 Mermaid #{top_link}"
+  md.puts "## 六、全部依赖图 Mermaid #{top_link}"
   md.puts
   md.puts '```mermaid'
   md.puts all_mermaid
   md.puts '```'
   md.puts
 
-  md.puts "## 五、外部依赖引用关系 #{top_link}"
+  md.puts "## 七、外部依赖引用关系 #{top_link}"
   md.puts
-  md.puts '这里统计本次扫描到的 `.podspec` 对外部 Pod 的引用；所有 subspec 依赖已统一归一化为主 Pod 名。外部来源链接匹配规则已放宽为：完全匹配 → base 名匹配 → 字符串包含匹配。'
+  md.puts '这里统计本次扫描到的 `.podspec` 对外部 Pod 的引用；同 Pod 内部 subspec 依赖已过滤；跨 Pod subspec 依赖显示为主 Pod 名；仓库内 Pod 匹配只采用精确名称，避免把 MJRefresh 误判为 MJRefreshExtra。外部来源链接匹配规则已放宽为：完全匹配 → base 名匹配 → 字符串包含匹配。'
   md.puts
 
   if external_groups.empty?
@@ -1341,7 +1720,7 @@ File.open(md_path, 'w') do |md|
   end
 
   md.puts
-  md.puts "## 六、明细 #{top_link}"
+  md.puts "## 八、明细 #{top_link}"
 
   reports.sort_by { |r| r[:name] }.each_with_index do |report, index|
     rel = rel_path(report[:path], root)
@@ -1380,7 +1759,7 @@ File.open(md_path, 'w') do |md|
   end
 
   md.puts
-  md.puts "## 七、生成的文件 #{top_link}"
+  md.puts "## 九、生成的文件 #{top_link}"
   md.puts
   md.puts '- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图'
   md.puts '- `PodspecDependencies.md`：本报告'
