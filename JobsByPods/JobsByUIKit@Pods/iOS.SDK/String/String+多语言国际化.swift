@@ -1,8 +1,9 @@
 //
 //  String+多语言国际化.swift
-//  Pods
+//  JobsByUIKit
 //
-//  Created by Jobs on 24/1/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

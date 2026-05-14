@@ -2,10 +2,8 @@
 //  Demo@UITableView.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/22/25.
-//
-//  演示：UITableView 空态按钮（UIScrollView 层统一实现）+ 下拉刷新/上拉加载文案 DSL
-//  依赖：SnapKit、UIScrollView+JobsEmptyButton.swift、JobsHeaderAnimator+DSL.swift、JobsFooterAnimator+DSL.swift
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -1,3 +1,11 @@
+//
+//  person.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
+
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //

@@ -1,10 +1,10 @@
 //
-//  仪表盘.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsInstrumentPanelView.swift
+//  JobsBy3rdTools
 //
-//  Created by Jobs on 12/20/25.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
-//  特别鸣谢：https://github.com/520coding/FTdashboad 
 
 #if os(OSX)
 import AppKit

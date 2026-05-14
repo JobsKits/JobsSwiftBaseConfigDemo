@@ -1,8 +1,9 @@
 //
 //  UIButton+字体颜色渐变.swift
-//  Pods
+//  JobsByUIKit
 //
-//  Created by Jobs on 23/1/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -1,11 +1,9 @@
 //
 //  BMPlayer+DSL.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsBy3rdTools
 //
-//  Created by Mac on 10/28/25.
-//
-//  链式/语义化 DSL for BMPlayer
-//  只依赖 BMPlayer 对外公开 API；不修改其内部实现。
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -1,3 +1,11 @@
+//
+//  Package.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
+
 // swift-tools-version: 5.9
 import PackageDescription
 import CompilerPluginSupport

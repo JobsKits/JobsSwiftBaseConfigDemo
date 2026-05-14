@@ -1,13 +1,9 @@
 //
 //  JobsRefreshDefaultSkins.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsRefresher
 //
-//  NOTE:
-//  - Lottie 动画“显示不出来”的核心原因通常是：AnimationView 没有被正确布局（frame=0 或没约束）
-//  - 这个版本把“菊花区域”封装成 JobsLoadingIndicator：
-//      * 有单独配置 / 全局配置 且能加载到动画 => 显示并播放 Lottie
-//      * 否则 => 回退 UIActivityIndicatorView
-//    并且在 layoutSubviews 里强制给 Lottie/菊花设置 frame，保证一定可见。
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

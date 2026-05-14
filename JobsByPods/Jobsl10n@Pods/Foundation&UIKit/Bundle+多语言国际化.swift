@@ -1,8 +1,9 @@
 //
 //  Bundle+多语言国际化.swift
-//  Pods
+//  Jobsl10n
 //
-//  Created by Jobs on 9/2/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation

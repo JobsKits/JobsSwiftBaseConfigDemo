@@ -1,3 +1,11 @@
+//
+//  EquatableBy.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
+
 /// 让类型按指定字段生成 Equatable + Hashable（适合 DiffableDataSource 只认 id）。
 ///
 /// 用法：

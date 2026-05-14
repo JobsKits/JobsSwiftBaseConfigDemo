@@ -1,8 +1,10 @@
 //
 //  UIColor.swift
-//  PlayYes
+//  JobsByUIKit
 //
-//  Created by yihui on 2023/6/22.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
 
 #if os(OSX)
 import AppKit

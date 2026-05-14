@@ -2,17 +2,9 @@
 //  JobsScale.swift
 //  JobsScale
 //
-//  Created by Jobs on 10/2/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
-//  目标：
-//  - UI 宽：33.w
-//  - UI 高：33.h
-//  - 字体：33.fz（字体独立比例尺：分档/连续 + clamp + 像素对齐）
-//
-//  关键点：
-//  - 不使用 connectedScenes 判方向，避免在某些编译环境/扩展环境下报错
-//  - 优先用 UIApplication.jobsKeyWindow(preferMainScreen:) 拿 window.bounds（自带横竖屏正确宽高）
-//  - SafeArea 不建议作为全局比例尺输入，但保留开关兼容
 
 #if os(OSX)
 import AppKit

@@ -1,21 +1,10 @@
 //
-//  TimerDemoVC.swift
+//  Demo@时间.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/4/25.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
-//  概要
-//  -----------------------------------------------------------------------------
-//  ✅ Swift 6 / 新版 JobsSwiftTimer 适配版（完整可编译）
-//  - 支持四种实现：Foundation.Timer / DispatchSourceTimer(GCD) / CADisplayLink / CFRunLoopTimer
-//  - 统一控制：start / pause / resume / fireOnce(手动触发一次逻辑+stop) / stop
-//  - 不再把 timer 挂在 UIButton 内部（旧扩展不再依赖）
-//  - ✅ Swift 6 并发“同等待遇”
-//    1) @Sendable tick 回调里：先冻结 weak self -> strongSelf
-//    2) 再 onMainAsync(self) { vc in ... } 安全触碰 UIKit
-//  - 输入 interval：结束编辑后若有活动 timer，按“当前模式”重建
-//  - 切换内核：若有活动 timer，按“当前模式”用新内核重建并延续
-// -----------------------------------------------------------------------------
 
 #if os(OSX)
 import AppKit

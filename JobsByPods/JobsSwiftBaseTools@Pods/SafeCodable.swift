@@ -1,6 +1,9 @@
 //
 //  SafeCodable.swift
-//  产线级：默认值协议 + 可配置宽松解码 + Date/URL 支持 + 告警上报 + Optional 版本
+//  JobsSwiftBaseTools
+//
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation

@@ -2,9 +2,9 @@
 //  Demo@球形特效（可拖动点选）.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Jobs on 12/17/25.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
-//  特别鸣谢：https://github.com/heroims/SphereView
 
 #if os(OSX)
 import AppKit

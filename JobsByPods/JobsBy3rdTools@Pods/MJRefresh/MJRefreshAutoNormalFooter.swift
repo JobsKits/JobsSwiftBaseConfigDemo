@@ -1,8 +1,9 @@
 //
-//  JXCustomFooter.swift
-//  JinXiIndonesia
+//  MJRefreshAutoNormalFooter.swift
+//  JobsBy3rdTools
 //
-//  Created by mac on 14/12/24.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

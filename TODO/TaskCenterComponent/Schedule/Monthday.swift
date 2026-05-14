@@ -1,3 +1,11 @@
+//
+//  Monthday.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
+
 import Foundation
 
 /// `Monthday` represents the combination of a month and day-of-month.

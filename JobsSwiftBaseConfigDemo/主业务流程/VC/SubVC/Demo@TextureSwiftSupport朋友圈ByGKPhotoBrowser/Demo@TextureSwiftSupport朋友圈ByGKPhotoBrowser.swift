@@ -2,8 +2,8 @@
 //  Demo@TextureSwiftSupport朋友圈ByGKPhotoBrowser.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Rewritten to use TextureSwiftSupport (Texture/AsyncDisplayKit) as list container,
-//  while keeping GKPhotoBrowser for media preview.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -2,11 +2,8 @@
 //  Demo@Alamofire.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/28/25.
-//
-//  只用 Alamofire，不用 Moya。
-//  功能：GET/POST、上传/下载进度、Combine（可选）、本地 Stub、日志回灌到 UI、async/await 按钮。
-//  依赖：Alamofire、Combine(可选)、SnapKit、GKNavigationBarSwift
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

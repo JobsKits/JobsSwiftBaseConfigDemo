@@ -1,11 +1,11 @@
 //
 //  SnowflakeSwift.swift
-//  Snowflake
+//  JobsSwiftBaseTools
 //
-//  Created by Damon on 2022/9/4.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 //  https://github.com/DamonHu/SnowflakeSwift
-
 import Foundation
 
 public typealias SnowflakeID = UInt64

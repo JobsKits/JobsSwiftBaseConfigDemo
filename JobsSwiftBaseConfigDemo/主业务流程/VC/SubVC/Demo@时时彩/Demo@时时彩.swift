@@ -1,11 +1,9 @@
 //
-//  JobsMultiTimerTableDemoVC.swift
+//  Demo@时时彩.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Jobs on 12/18/25.
-//
-//  TableView 每个 Cell 一个独立倒计时（多 Timer 同屏管理 + Cell 复用）
-//  ✅ Swift 6 + 新版 JobsSwiftTimer 适配版
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

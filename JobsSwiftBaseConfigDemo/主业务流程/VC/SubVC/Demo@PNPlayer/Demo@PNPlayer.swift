@@ -1,10 +1,9 @@
 //
-//  PNPlayerDemoVC.swift
+//  Demo@PNPlayer.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/30/25.
-//
-//  https://github.com/linghugoogle/PNPlayer
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

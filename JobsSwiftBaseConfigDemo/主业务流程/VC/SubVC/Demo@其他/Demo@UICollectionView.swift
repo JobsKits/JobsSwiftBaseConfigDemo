@@ -2,12 +2,8 @@
 //  Demo@UICollectionView.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 10/22/25.
-//
-//  演示：同一 VC 中放置两个 UICollectionView
-//  - 上：竖向滚动（.vertical）
-//  - 下：横向滚动（.horizontal，接入 JobsRefresher 水平刷新）
-//  依赖：SnapKit、UIScrollView+JobsEmptyButton.swift、JobsRefresher.swift（含 JobsHeader/JobsFooter Animator & DSL）
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

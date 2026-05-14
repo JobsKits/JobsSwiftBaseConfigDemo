@@ -1,15 +1,9 @@
 //
-//  Demo@JobsSwiftTimerManager.swift
+//  Demo@JobsTimerManager.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Jobs on 12/13/25.
-//
-//  ✅ 适配当前 JobsSwiftTimerManager.swift：仅依赖
-//  - JobsSwiftTimerManager.shared.create(kind:identifier:config:dedupPolicy:onTick:)
-//  - JobsSwiftTimerManager.shared.act(.start/.pause/.resume/.stop/.cancel, identifier:)
-//  - JobsSwiftTimerManager.shared.timer(for:)
-//  - JobsSwiftTimerManager.shared.removeAll(stopAll:)
-//  并统一用 VC 监听 App 前后台来执行策略（因为 Manager 内部将 autoManageAppState=false）
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

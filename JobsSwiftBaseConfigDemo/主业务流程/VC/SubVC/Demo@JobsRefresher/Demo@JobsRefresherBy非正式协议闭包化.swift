@@ -2,7 +2,8 @@
 //  Demo@JobsRefresherBy非正式协议闭包化.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Jobs on 28/1/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

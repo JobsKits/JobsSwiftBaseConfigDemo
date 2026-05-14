@@ -1,11 +1,11 @@
 //
 //  JobsSwiftTimerDefs.swift
-//  Pods
+//  JobsSwiftTimer
 //
-//  Created by Jobs on 21/1/26.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
-/// 统一结果态：用它来做日志和灰度
 public enum JobsOpenResult {
     case opened                 // 成功触发了系统打开
     case cannotOpen             // 系统认为不能打开（未安装/被限制）

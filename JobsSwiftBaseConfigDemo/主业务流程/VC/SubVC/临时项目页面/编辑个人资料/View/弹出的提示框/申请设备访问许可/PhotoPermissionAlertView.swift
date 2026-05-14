@@ -2,7 +2,9 @@
 //  PhotoPermissionAlertView.swift
 //  JobsSwiftBaseConfigDemo
 //
-// 「要允许“AC”访问此设备的照片和视频吗？」弹框 View
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
+//
 
 #if os(OSX)
 import AppKit

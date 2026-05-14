@@ -1,9 +1,11 @@
 //
-//  RedPacketRainConfig.swift
-//  JobsSwiftBaseConfigDemo
+//  红包雨配置.swift
+//  JobsLuckyEnvelopeRain
 //
-//  Created by Jobs on 12/10/25.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
+
 import Foundation
 // MARK: - 红包雨配置
 public struct RedPacketRainConfig {

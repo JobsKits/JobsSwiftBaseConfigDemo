@@ -1,8 +1,9 @@
 //
-//  CNIDDemoVC.swift
+//  Demo@中国大陆居民身份证验证.swift
 //  JobsSwiftBaseConfigDemo
 //
-//  Created by Mac on 2025/10/2.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -1,8 +1,9 @@
 //
 //  NSTextAttachment.swift
-//  JobsSwiftBaseConfigDemo
+//  JobsByUIKit
 //
-//  Created by Mac on 10/7/25.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)

@@ -1,9 +1,9 @@
 //
 //  ModelDefaultValue.swift
-//  BBSport
+//  JobsSwiftTools
 //
-//  Created by Wade Wang on 2022/11/24.
-//  Copyright © 2022 SEEKTOP. All rights reserved.
+//  Created by Jobs on 2026年5月13日，星期三.
+//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation

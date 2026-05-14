@@ -119,16 +119,16 @@
   
   * iOS模拟器
   
-        * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
-        
-        * iOS模拟器下载@终端
-        
-          ```shell
-          rm -rf ~/Library/Caches/com.apple.dt.Xcode
-          rm -rf ~/Library/Developer/CoreSimulator/Caches
-          
-          xcodebuild -downloadPlatform iOS --verbose
-          ```
+    * [**过期的模拟器配件**](https://github.com/JobsKits/Xcode_Sys_lib)
+    
+    * iOS模拟器下载@终端
+    
+      ```shell
+      rm -rf ~/Library/Caches/com.apple.dt.Xcode
+      rm -rf ~/Library/Developer/CoreSimulator/Caches
+      
+      xcodebuild -downloadPlatform iOS --verbose
+      ```
     
   * [**在线演示**](https://appetize.io) ➤ 上传你的（支持**iOS**/**Android**）包，就能在线运行、演示、调试、自动化测试，还能嵌到网页或内部系统里给客服/销售/培训/QA 用
   
