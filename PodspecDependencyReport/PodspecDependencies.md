@@ -6,7 +6,7 @@
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-05-06 21:03:05`
+- 生成时间：`2026-05-19 21:18:08`
 - Podspec 数量：`39`
 - 0 下游依赖 Pod 数量：`9`
 - 全部依赖边数量：`143`
@@ -18,7 +18,7 @@
 - DSL 执行式解析 Podspec 数量：`39`
 - 静态兜底解析 Podspec 数量：`0`
 
-> 更易读的动态关系图见：`PodspecDependencies_interactive.html`。
+> 更易读的动态关系图见：`PodspecDependencies_interactive.html`，其中默认保留 2D 关系图，并新增可拖动旋转的 3D 空间图。
 
 ## 一、总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -978,7 +978,7 @@ Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
 
 ## 九、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图
+- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图，内置 `2D 关系图` / `3D 空间图` 切换
 - `PodspecDependencies.md`：本报告
 - `PodspecDependencies_all.mmd`：全部依赖 Mermaid 图源码
 - `PodspecDependencies_internal.mmd`：仓库内 Pod 相互依赖 Mermaid 图源码

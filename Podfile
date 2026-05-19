@@ -14,6 +14,9 @@ JOBS_DEPLOYMENT_TARGET = '15.0'
 JOBS_DISABLE_SCRIPT_SANDBOXING = 'NO'
 # ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
 platform :ios, "#{JOBS_DEPLOYMENT_TARGET}"
+
+# ScriptsByPods 下脚本已升级为“脚本完整文件名/脚本本体”结构；Podfile 统一走解析器兼容新旧路径。
+JOBS_SCRIPTS_BY_PODS_DIR = File.expand_path('ScriptsByPods', __dir__)
 # 判断当前 iOS 工程是否集成了 Unity（或存在 Unity 导出的工程痕迹）
 #
 # 命中任一条件即可认为“有 Unity”：
@@ -81,12 +84,43 @@ end
 #
 # 用法：
 # jobs_run_external_script(
-#   'ScriptsByPods/xxx.sh',
+#   'ScriptsByPods/xxx.sh', # 兼容 ScriptsByPods/xxx.sh/xxx.sh
 #   desc: 'xxx',
 #   log_path: '/tmp/xxx.log',
 #   required: false,
 #   condition: -> { true }
 # )
+
+# 解析 ScriptsByPods 新目录结构：
+# - 旧结构：ScriptsByPods/xxx.sh
+# - 新结构：ScriptsByPods/xxx.sh/xxx.sh
+# 这样 Podfile 调用方仍传旧式相对路径，真正执行时自动落到同名文件夹里的脚本本体。
+def jobs_resolve_external_script_path(rel_path, base_dir: __dir__)
+  direct_path = File.expand_path(rel_path, base_dir)
+  return direct_path if File.file?(direct_path)
+
+  wrapped_path = File.join(File.dirname(direct_path), File.basename(direct_path), File.basename(direct_path))
+  return wrapped_path if File.file?(wrapped_path)
+
+  direct_path
+end
+
+# 按脚本 shebang 选择解释器，避免新版 zsh 脚本被 bash 强行执行。
+def jobs_external_script_command(script_path)
+  first_line = ''
+
+  begin
+    File.open(script_path, 'r:utf-8') { |file| first_line = file.readline.to_s.strip }
+  rescue
+    first_line = ''
+  end
+
+  return ['/bin/zsh', script_path] if first_line.include?('zsh') || File.extname(script_path) == '.command'
+  return ['/bin/bash', script_path] if first_line.include?('bash')
+
+  [script_path]
+end
+
 def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil)
   # === [MOD] 在脚本真正执行前统一拦截：回车执行 / 任意字符跳过 ==========
   unless jobs_confirm_pod_install_scripts?
@@ -95,9 +129,14 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
   end
   # ========================================================================
 
-  script = File.expand_path(rel_path, base_dir)
+  requested_script = File.expand_path(rel_path, base_dir)
+  script = jobs_resolve_external_script_path(rel_path, base_dir: base_dir)
 
-  unless File.exist?(script)
+  if script != requested_script
+    puts "📁 [Podfile] Resolved wrapped script: #{script}"
+  end
+
+  unless File.file?(script)
     msg = "[Podfile] ❌ 找不到脚本：#{script}（请确认脚本路径是否正确）"
     if required
       raise msg
@@ -116,8 +155,9 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
   puts "🔧 [Podfile] chmod +x: #{script}"
   system('chmod', '+x', script) || raise("[Podfile] ❌ chmod 失败：#{script}")
 
-  puts "🔧 [Podfile] Run: #{script}"
-  ok = system('bash', script)
+  command = jobs_external_script_command(script)
+  puts "🔧 [Podfile] Run: JOBS_SKIP_README=1 #{command.join(' ')}"
+  ok = system({ 'JOBS_SKIP_README' => '1' }, *command, chdir: base_dir)
 
   if ok
     puts "✅ [Podfile] Done: #{desc}"
@@ -136,12 +176,15 @@ end
 
 
 # ===== PodspecDependencyReport: pod install 后自动生成 Podspec 依赖分析报告 =====
-# 路径：项目根目录/ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command
+# 路径：项目根目录/ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/【MacOS】🔍查询Xcode工程依赖关系.command
 # 风格与 OC 项目一致：先 chmod +x，再直接执行脚本；脚本工作目录为项目根目录。
 def run_podspec_dependency_report_script
-  script_path = File.expand_path(File.join(__dir__, 'ScriptsByPods', '【MacOS】🔍查询Xcode工程依赖关系.command'))
+  script_path = jobs_resolve_external_script_path(
+    File.join('ScriptsByPods', '【MacOS】🔍查询Xcode工程依赖关系.command'),
+    base_dir: __dir__
+  )
 
-  unless File.exist?(script_path)
+  unless File.file?(script_path)
     raise "[PodspecDependencyReport] ❌ 找不到脚本：#{script_path}"
   end
 
@@ -150,8 +193,9 @@ def run_podspec_dependency_report_script
     raise "[PodspecDependencyReport] ❌ chmod +x 执行失败：#{script_path}"
   end
 
-  Pod::UI.puts "[PodspecDependencyReport] 执行 #{script_path}"
-  unless system(script_path, chdir: __dir__)
+  command = jobs_external_script_command(script_path)
+  Pod::UI.puts "[PodspecDependencyReport] 执行 JOBS_SKIP_README=1 #{command.join(' ')}"
+  unless system({ 'JOBS_SKIP_README' => '1' }, *command, chdir: __dir__)
     raise "[PodspecDependencyReport] ❌ 脚本执行失败：#{script_path}"
   end
 

@@ -38,7 +38,7 @@ print_readme() {
   color_echo "1. 优先检测脚本所在目录和上一层目录；若包含 Podfile，则直接作为分析目录。"
   color_echo "2. 若自动检测不到，再让你拖入一个包含 Podfile 的目录。支持普通文件夹、Unix symlink、Finder 替身。"
   color_echo "3. 递归查找所有 *.podspec，并生成 Markdown 依赖报告，包含总览、0 上游依赖 Pod、外部依赖引用关系、双向明细和 Mermaid 图。"
-  color_echo "4. 生成可搜索、可缩放、可拖拽的动态 HTML 依赖图。"
+  color_echo "4. 生成可搜索、可缩放、可拖拽的动态 HTML 依赖图，并内置 2D / 3D 视图切换。"
   color_echo "5. 会先自检 Homebrew；未安装时按芯片架构安装，再安装 Graphviz；已安装 Graphviz 时可选择是否升级，并尝试生成 PNG 图。"
   warm_echo ""
   warm_echo "输出目录会创建在工程目录下：PodspecDependencyReport，新报告会覆盖旧数据。"
@@ -1137,29 +1137,155 @@ def make_interactive_html(data_json)
     <meta charset="utf-8">
     <title>Podspec 依赖动态图</title>
     <style>
-      body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f6f7f9; color: #222; }
-      header { padding: 14px 18px; background: #111827; color: white; }
+      :root {
+        --bg: #f6f7f9;
+        --ink: #222;
+        --muted: #6b7280;
+        --panel: #ffffff;
+        --border: #ddd;
+        --nav: #111827;
+        --blue: #2563eb;
+        --blue-soft: rgba(37, 99, 235, .12);
+        --green: #059669;
+        --orange: #d97706;
+        --purple: #7c3aed;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+
+      header { padding: 14px 18px; background: var(--nav); color: white; }
       header h1 { margin: 0 0 8px; font-size: 20px; }
       header .meta { opacity: .8; font-size: 13px; }
-      .toolbar { display: flex; gap: 10px; align-items: center; padding: 12px 18px; background: white; border-bottom: 1px solid #ddd; }
+
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 12px 18px;
+        background: white;
+        border-bottom: 1px solid var(--border);
+      }
+
       input, select, button { height: 32px; font-size: 14px; }
       input { width: 260px; padding: 0 10px; }
       button { padding: 0 12px; cursor: pointer; }
+
+      .view-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px;
+        border: 1px solid #d1d5db;
+        border-radius: 999px;
+        background: #f3f4f6;
+      }
+
+      .view-switch button {
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: #374151;
+        font-weight: 700;
+      }
+
+      .view-switch button.active {
+        color: white;
+        background: #2563eb;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, .28);
+      }
+
       .layout { display: grid; grid-template-columns: 1fr 320px; height: calc(100vh - 112px); }
-      #stage { position: relative; overflow: hidden; background: linear-gradient(45deg, #fafafa, #f0f3f7); cursor: grab; }
+
+      #stage {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(45deg, #fafafa, #f0f3f7);
+        cursor: grab;
+      }
+
+      #stage:active { cursor: grabbing; }
+
       #canvas { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
       svg { overflow: visible; }
+
       .node { cursor: pointer; }
       .node rect { fill: white; stroke: #5b6b84; stroke-width: 1.4; rx: 8; }
       .node text { font-size: 12px; pointer-events: none; }
-      .node.focus rect { stroke-width: 3; }
+      .node.focus rect { stroke-width: 3; stroke: #2563eb; filter: drop-shadow(0 0 8px rgba(37, 99, 235, .24)); }
       .edge { stroke: #718096; stroke-width: 1.2; marker-end: url(#arrow); }
-      aside { overflow: auto; background: white; border-left: 1px solid #ddd; padding: 14px; }
+
+      #stage3d {
+        position: absolute;
+        inset: 0;
+        display: none;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 25% 20%, rgba(37, 99, 235, .24), transparent 28%),
+          radial-gradient(circle at 78% 68%, rgba(124, 58, 237, .18), transparent 32%),
+          radial-gradient(circle at 50% 50%, rgba(5, 150, 105, .10), transparent 36%),
+          #07111f;
+      }
+
+      #canvas3d {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .three-hint {
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+        max-width: 520px;
+        padding: 10px 12px;
+        border: 1px solid rgba(148, 163, 184, .28);
+        border-radius: 14px;
+        color: rgba(226, 232, 240, .86);
+        background: rgba(15, 23, 42, .62);
+        backdrop-filter: blur(12px);
+        font-size: 12px;
+        line-height: 1.7;
+        pointer-events: none;
+      }
+
+      .three-stats {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        padding: 8px 10px;
+        border: 1px solid rgba(148, 163, 184, .28);
+        border-radius: 999px;
+        color: rgba(226, 232, 240, .88);
+        background: rgba(15, 23, 42, .62);
+        backdrop-filter: blur(12px);
+        font-size: 12px;
+        pointer-events: none;
+      }
+
+      aside { overflow: auto; background: white; border-left: 1px solid var(--border); padding: 14px; }
       aside h2 { font-size: 16px; margin: 0 0 10px; }
       aside h3 { font-size: 14px; margin: 18px 0 8px; }
       aside ul { padding-left: 18px; }
-      .muted { color: #6b7280; font-size: 13px; }
+      .muted { color: var(--muted); font-size: 13px; }
       .badge { display: inline-block; padding: 2px 8px; background: #edf2f7; border-radius: 999px; margin-right: 6px; font-size: 12px; }
+
+      .direction-sections > li { margin-bottom: 12px; }
+
+      @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; height: calc(100vh - 160px); }
+        aside { height: 280px; border-left: 0; border-top: 1px solid var(--border); }
+        input { width: min(260px, 100%); }
+      }
     </style>
   </head>
   <body>
@@ -1169,6 +1295,10 @@ def make_interactive_html(data_json)
     </header>
 
     <div class="toolbar">
+      <div class="view-switch" aria-label="视图切换">
+        <button id="view2d" class="active" type="button">2D 关系图</button>
+        <button id="view3d" type="button">3D 空间图</button>
+      </div>
       <input id="search" placeholder="搜索 Pod / 依赖">
       <select id="mode">
         <option value="internal">只看仓库内 Pod 关联</option>
@@ -1196,6 +1326,11 @@ def make_interactive_html(data_json)
             <g id="nodes"></g>
           </svg>
         </div>
+        <div id="stage3d">
+          <canvas id="canvas3d"></canvas>
+          <div class="three-stats" id="threeStats"></div>
+          <div class="three-hint">3D 模式：拖动旋转，滚轮缩放，点击节点查看上下游；默认保留原 2D 图，方便你对照查看。</div>
+        </div>
       </div>
       <aside id="detail"></aside>
     </div>
@@ -1203,6 +1338,7 @@ def make_interactive_html(data_json)
     <script>
       const data = #{data_json};
       const state = {
+        view: '2d',
         mode: 'internal',
         search: '',
         focus: null,
@@ -1211,7 +1347,12 @@ def make_interactive_html(data_json)
         tx: 20,
         ty: 20,
         nodes: [],
-        edges: []
+        edges: [],
+        rotateX: -0.46,
+        rotateY: 0.78,
+        zoom3d: 1,
+        nodes3d: [],
+        hit3d: []
       };
 
       const stage = document.getElementById('stage');
@@ -1219,12 +1360,22 @@ def make_interactive_html(data_json)
       const svg = document.getElementById('svg');
       const edgesGroup = document.getElementById('edges');
       const nodesGroup = document.getElementById('nodes');
+      const stage3d = document.getElementById('stage3d');
+      const canvas3d = document.getElementById('canvas3d');
+      const ctx3d = canvas3d.getContext('2d');
+      const threeStats = document.getElementById('threeStats');
+      const view2dButton = document.getElementById('view2d');
+      const view3dButton = document.getElementById('view3d');
 
       document.getElementById('meta').textContent =
         `分析目录：${data.root} ｜ 生成时间：${data.generatedAt} ｜ Pod 数：${data.pods.length}`;
 
       function allEdges() {
         return state.mode === 'internal' ? data.internalEdges : data.allEdges;
+      }
+
+      function localPodNames() {
+        return new Set(data.pods.map(p => p.name));
       }
 
       function nodeNames() {
@@ -1295,6 +1446,18 @@ def make_interactive_html(data_json)
       }
 
       function render() {
+        updateViewVisibility();
+
+        if (state.view === '3d') {
+          render3d();
+        } else {
+          render2d();
+        }
+
+        updateDetail();
+      }
+
+      function render2d() {
         const visibleNames = collectVisibleNames();
         state.nodes = layout(visibleNames);
         const nodeMap = new Map(state.nodes.map(n => [n.name, n]));
@@ -1340,8 +1503,225 @@ def make_interactive_html(data_json)
 
           nodesGroup.appendChild(g);
         });
+      }
 
-        updateDetail();
+      function resize3dCanvas() {
+        const rect = stage3d.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(1, Math.floor(rect.width * dpr));
+        const height = Math.max(1, Math.floor(rect.height * dpr));
+
+        if (canvas3d.width !== width || canvas3d.height !== height) {
+          canvas3d.width = width;
+          canvas3d.height = height;
+          canvas3d.style.width = `${rect.width}px`;
+          canvas3d.style.height = `${rect.height}px`;
+        }
+
+        ctx3d.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return rect;
+      }
+
+      function layout3d(names) {
+        const arr = [...names].sort();
+        const degrees = new Map();
+
+        allEdges().forEach(edge => {
+          degrees.set(edge.from, (degrees.get(edge.from) || 0) + 1);
+          degrees.set(edge.to, (degrees.get(edge.to) || 0) + 1);
+        });
+
+        const count = Math.max(1, arr.length);
+        const radius = Math.min(520, Math.max(190, 90 + Math.sqrt(count) * 42));
+        const golden = Math.PI * (3 - Math.sqrt(5));
+
+        return arr.map((name, index) => {
+          const y = count === 1 ? 0 : 1 - (index / (count - 1)) * 2;
+          const r = Math.sqrt(Math.max(0, 1 - y * y));
+          const theta = index * golden;
+          const degree = degrees.get(name) || 0;
+
+          return {
+            name,
+            x: Math.cos(theta) * r * radius,
+            y: y * radius * 0.88,
+            z: Math.sin(theta) * r * radius,
+            weight: degree,
+            radius: Math.min(18, 7 + Math.sqrt(degree + 1) * 2.4)
+          };
+        });
+      }
+
+      function rotatePoint(point) {
+        const cosY = Math.cos(state.rotateY);
+        const sinY = Math.sin(state.rotateY);
+        const cosX = Math.cos(state.rotateX);
+        const sinX = Math.sin(state.rotateX);
+
+        const x1 = point.x * cosY - point.z * sinY;
+        const z1 = point.x * sinY + point.z * cosY;
+        const y1 = point.y * cosX - z1 * sinX;
+        const z2 = point.y * sinX + z1 * cosX;
+
+        return { x: x1, y: y1, z: z2 };
+      }
+
+      function projectPoint(point, rect) {
+        const rotated = rotatePoint(point);
+        const camera = 820;
+        const depth = camera + rotated.z;
+        const perspective = camera / Math.max(120, depth);
+        const scale = perspective * state.zoom3d;
+
+        return {
+          name: point.name,
+          x: rect.width / 2 + rotated.x * scale,
+          y: rect.height / 2 + rotated.y * scale,
+          z: rotated.z,
+          radius: point.radius * Math.max(.55, Math.min(1.7, scale)),
+          weight: point.weight,
+          source: point
+        };
+      }
+
+      function nodeColor(name, alpha = 1) {
+        const localNames = localPodNames();
+        const isLocal = localNames.has(name);
+        const isFocused = state.focus === name;
+        const users = allEdges().filter(edge => edgeTargetsName(edge, name) && sourceOwner(edge) !== name).length;
+        const deps = allEdges().filter(edge => edge.from === name).length;
+
+        if (isFocused) return `rgba(250, 204, 21, ${alpha})`;
+        if (!isLocal) return `rgba(249, 115, 22, ${alpha})`;
+        if (users > deps) return `rgba(59, 130, 246, ${alpha})`;
+        if (deps > users) return `rgba(16, 185, 129, ${alpha})`;
+        return `rgba(168, 85, 247, ${alpha})`;
+      }
+
+      function drawGrid3d(rect) {
+        ctx3d.save();
+        ctx3d.strokeStyle = 'rgba(148, 163, 184, .12)';
+        ctx3d.lineWidth = 1;
+
+        for (let i = -6; i <= 6; i++) {
+          const a = projectPoint({ x: -420, y: 220, z: i * 70, name: '' }, rect);
+          const b = projectPoint({ x: 420, y: 220, z: i * 70, name: '' }, rect);
+          const c = projectPoint({ x: i * 70, y: 220, z: -420, name: '' }, rect);
+          const d = projectPoint({ x: i * 70, y: 220, z: 420, name: '' }, rect);
+
+          ctx3d.beginPath();
+          ctx3d.moveTo(a.x, a.y);
+          ctx3d.lineTo(b.x, b.y);
+          ctx3d.stroke();
+
+          ctx3d.beginPath();
+          ctx3d.moveTo(c.x, c.y);
+          ctx3d.lineTo(d.x, d.y);
+          ctx3d.stroke();
+        }
+
+        ctx3d.restore();
+      }
+
+      function render3d() {
+        const rect = resize3dCanvas();
+        ctx3d.clearRect(0, 0, rect.width, rect.height);
+
+        const visibleNames = collectVisibleNames();
+        state.nodes3d = layout3d(visibleNames);
+        const rawMap = new Map(state.nodes3d.map(n => [n.name, n]));
+        const projected = new Map(state.nodes3d.map(n => [n.name, projectPoint(n, rect)]));
+        const edges = allEdges().filter(e => rawMap.has(e.from) && rawMap.has(e.to));
+
+        state.hit3d = [];
+        threeStats.textContent = `3D 节点 ${state.nodes3d.length} ｜ 边 ${edges.length}`;
+
+        drawGrid3d(rect);
+
+        edges
+          .map(edge => ({ edge, a: projected.get(edge.from), b: projected.get(edge.to) }))
+          .sort((one, two) => ((one.a.z + one.b.z) - (two.a.z + two.b.z)))
+          .forEach(item => {
+            const { edge, a, b } = item;
+            const related = !state.focus || edge.from === state.focus || edgeTargetsName(edge, state.focus);
+            const alpha = related ? .58 : .16;
+            const grad = ctx3d.createLinearGradient(a.x, a.y, b.x, b.y);
+            grad.addColorStop(0, nodeColor(edge.from, alpha));
+            grad.addColorStop(1, nodeColor(edge.to, alpha * .72));
+
+            ctx3d.save();
+            ctx3d.strokeStyle = grad;
+            ctx3d.lineWidth = related ? 1.55 : .85;
+            ctx3d.beginPath();
+            ctx3d.moveTo(a.x, a.y);
+            ctx3d.lineTo(b.x, b.y);
+            ctx3d.stroke();
+
+            const angle = Math.atan2(b.y - a.y, b.x - a.x);
+            const arrowSize = 7;
+            ctx3d.fillStyle = nodeColor(edge.to, alpha);
+            ctx3d.beginPath();
+            ctx3d.moveTo(b.x, b.y);
+            ctx3d.lineTo(b.x - Math.cos(angle - .45) * arrowSize, b.y - Math.sin(angle - .45) * arrowSize);
+            ctx3d.lineTo(b.x - Math.cos(angle + .45) * arrowSize, b.y - Math.sin(angle + .45) * arrowSize);
+            ctx3d.closePath();
+            ctx3d.fill();
+            ctx3d.restore();
+          });
+
+        const projectedNodes = [...projected.values()].sort((a, b) => a.z - b.z);
+
+        projectedNodes.forEach(point => {
+          const related = !state.focus || point.name === state.focus ||
+            allEdges().some(edge =>
+              (edge.from === state.focus && edgeTargetsName(edge, point.name)) ||
+              (edgeTargetsName(edge, state.focus) && edge.from === point.name)
+            );
+          const glow = point.name === state.focus ? 26 : 12;
+          const radius = point.radius;
+
+          ctx3d.save();
+          ctx3d.globalAlpha = related ? 1 : .38;
+          ctx3d.shadowColor = nodeColor(point.name, .72);
+          ctx3d.shadowBlur = glow;
+          ctx3d.fillStyle = nodeColor(point.name, .92);
+          ctx3d.beginPath();
+          ctx3d.arc(point.x, point.y, radius, 0, Math.PI * 2);
+          ctx3d.fill();
+
+          ctx3d.shadowBlur = 0;
+          ctx3d.lineWidth = point.name === state.focus ? 3 : 1;
+          ctx3d.strokeStyle = point.name === state.focus ? 'rgba(254, 240, 138, .95)' : 'rgba(226, 232, 240, .72)';
+          ctx3d.stroke();
+
+          if (radius > 9 || point.name === state.focus || state.nodes3d.length < 60) {
+            ctx3d.font = `${point.name === state.focus ? 700 : 600} 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx3d.textBaseline = 'middle';
+            ctx3d.fillStyle = 'rgba(241, 245, 249, .94)';
+            ctx3d.shadowColor = 'rgba(0,0,0,.9)';
+            ctx3d.shadowBlur = 4;
+            const label = point.name.length > 22 ? point.name.slice(0, 21) + '…' : point.name;
+            ctx3d.fillText(label, point.x + radius + 7, point.y);
+          }
+
+          state.hit3d.push({
+            name: point.name,
+            x: point.x,
+            y: point.y,
+            radius: Math.max(12, radius + 7)
+          });
+
+          ctx3d.restore();
+        });
+      }
+
+      function updateViewVisibility() {
+        const is3d = state.view === '3d';
+
+        canvas.style.display = is3d ? 'none' : 'block';
+        stage3d.style.display = is3d ? 'block' : 'none';
+        view2dButton.classList.toggle('active', !is3d);
+        view3dButton.classList.toggle('active', is3d);
       }
 
       function edgeTargetsName(edge, name) {
@@ -1359,8 +1739,8 @@ def make_interactive_html(data_json)
           const zero = data.pods.filter(p => !p.deps || p.deps.length === 0).map(p => p.name).sort();
           box.innerHTML = `
             <h2>总览</h2>
-            <p><span class="badge">Pod ${data.pods.length}</span><span class="badge">边 ${allEdges().length}</span></p>
-            <p class="muted">点击节点查看上下游依赖。</p>
+            <p><span class="badge">Pod ${data.pods.length}</span><span class="badge">边 ${allEdges().length}</span><span class="badge">${state.view === '3d' ? '3D 空间图' : '2D 关系图'}</span></p>
+            <p class="muted">点击节点查看上下游依赖。3D 模式下可以拖动旋转、滚轮缩放。</p>
             <h3>0 上游依赖 Pod</h3>
             <ul>${zero.map(n => `<li>${n}</li>`).join('')}</ul>
           `;
@@ -1388,11 +1768,44 @@ def make_interactive_html(data_json)
       }
 
       function fitView() {
+        if (state.view === '3d') {
+          state.rotateX = -0.46;
+          state.rotateY = 0.78;
+          state.zoom3d = 1;
+          render3d();
+          return;
+        }
+
         state.scale = 1;
         state.tx = 20;
         state.ty = 20;
         applyTransform();
       }
+
+      function resetAll() {
+        state.search = '';
+        state.focus = null;
+        state.depth = 1;
+        state.rotateX = -0.46;
+        state.rotateY = 0.78;
+        state.zoom3d = 1;
+        state.scale = 1;
+        state.tx = 20;
+        state.ty = 20;
+        document.getElementById('search').value = '';
+        document.getElementById('depth').value = '1';
+        render();
+        fitView();
+      }
+
+      function switchView(view) {
+        state.view = view;
+        render();
+        fitView();
+      }
+
+      view2dButton.addEventListener('click', () => switchView('2d'));
+      view3dButton.addEventListener('click', () => switchView('3d'));
 
       document.getElementById('mode').addEventListener('change', e => {
         state.mode = e.target.value;
@@ -1414,44 +1827,85 @@ def make_interactive_html(data_json)
       });
 
       document.getElementById('fit').addEventListener('click', fitView);
-
-      document.getElementById('reset').addEventListener('click', () => {
-        state.search = '';
-        state.focus = null;
-        state.depth = 1;
-        document.getElementById('search').value = '';
-        document.getElementById('depth').value = '1';
-        render();
-        fitView();
-      });
+      document.getElementById('reset').addEventListener('click', resetAll);
 
       let dragging = false;
+      let moved = false;
       let lastX = 0;
       let lastY = 0;
 
       stage.addEventListener('mousedown', e => {
         dragging = true;
+        moved = false;
         lastX = e.clientX;
         lastY = e.clientY;
       });
 
       window.addEventListener('mousemove', e => {
         if (!dragging) return;
-        state.tx += e.clientX - lastX;
-        state.ty += e.clientY - lastY;
+
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+
+        if (Math.abs(dx) + Math.abs(dy) > 2) {
+          moved = true;
+        }
+
+        if (state.view === '3d') {
+          state.rotateY += dx * 0.008;
+          state.rotateX += dy * 0.008;
+          state.rotateX = Math.max(-1.35, Math.min(1.35, state.rotateX));
+          render3d();
+        } else {
+          state.tx += dx;
+          state.ty += dy;
+          applyTransform();
+        }
+
         lastX = e.clientX;
         lastY = e.clientY;
-        applyTransform();
       });
 
       window.addEventListener('mouseup', () => dragging = false);
 
+      stage.addEventListener('click', e => {
+        if (state.view !== '3d' || moved) return;
+
+        const rect = canvas3d.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const hit = [...state.hit3d].reverse().find(item => {
+          const dx = item.x - x;
+          const dy = item.y - y;
+          return Math.sqrt(dx * dx + dy * dy) <= item.radius;
+        });
+
+        if (hit) {
+          state.focus = state.focus === hit.name ? null : hit.name;
+          render();
+        }
+      });
+
       stage.addEventListener('wheel', e => {
         e.preventDefault();
+
+        if (state.view === '3d') {
+          state.zoom3d *= e.deltaY > 0 ? .92 : 1.08;
+          state.zoom3d = Math.max(.35, Math.min(2.8, state.zoom3d));
+          render3d();
+          return;
+        }
+
         const delta = e.deltaY > 0 ? 0.9 : 1.1;
         state.scale = Math.max(0.2, Math.min(3, state.scale * delta));
         applyTransform();
       }, { passive: false });
+
+      window.addEventListener('resize', () => {
+        if (state.view === '3d') {
+          render3d();
+        }
+      });
 
       render();
       fitView();
@@ -1586,7 +2040,7 @@ File.open(md_path, 'w') do |md|
   md.puts "- DSL 执行式解析 Podspec 数量：`#{parse_mode_counts.fetch('dsl', 0)}`"
   md.puts "- 静态兜底解析 Podspec 数量：`#{parse_mode_counts.fetch('static_fallback', 0)}`"
   md.puts
-  md.puts "> 更易读的动态关系图见：`PodspecDependencies_interactive.html`。"
+  md.puts "> 更易读的动态关系图见：`PodspecDependencies_interactive.html`，其中默认保留 2D 关系图，并新增可拖动旋转的 3D 空间图。"
   md.puts
 
   if podspec_paths.empty?
@@ -1761,7 +2215,7 @@ File.open(md_path, 'w') do |md|
   md.puts
   md.puts "## 九、生成的文件 #{top_link}"
   md.puts
-  md.puts '- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图'
+  md.puts '- `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图，内置 `2D 关系图` / `3D 空间图` 切换'
   md.puts '- `PodspecDependencies.md`：本报告'
   md.puts '- `PodspecDependencies_all.mmd`：全部依赖 Mermaid 图源码'
   md.puts '- `PodspecDependencies_internal.mmd`：仓库内 Pod 相互依赖 Mermaid 图源码'
@@ -1834,7 +2288,7 @@ open_outputs() {
   warm_echo ""
   success_echo "报告已生成：$report_dir"
   warm_echo ""
-  note_echo "推荐先看动态 HTML：$html_file"
+  note_echo "推荐先看动态 HTML：$html_file（已内置 2D / 3D 视图切换）"
 }
 
 # ✅ 主流程
