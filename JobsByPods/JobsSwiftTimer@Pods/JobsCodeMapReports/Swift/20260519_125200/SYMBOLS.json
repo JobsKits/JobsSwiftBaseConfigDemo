@@ -1,0 +1,896 @@
+[
+  {
+    "id": "swift:class:JobsUnfairLock@JobsSwiftTimer.swift:18",
+    "name": "JobsUnfairLock",
+    "raw_name": "JobsUnfairLock",
+    "type": "class",
+    "file": "JobsSwiftTimer.swift",
+    "line": 18,
+    "inherits": [],
+    "parent": "",
+    "signature": "final class JobsUnfairLock {"
+  },
+  {
+    "id": "swift:func:JobsUnfairLock.jobs_withLock(...)@JobsSwiftTimer.swift:22",
+    "name": "JobsUnfairLock.jobs_withLock(...)",
+    "raw_name": "jobs_withLock",
+    "type": "function",
+    "container": "JobsUnfairLock",
+    "file": "JobsSwiftTimer.swift",
+    "line": 22,
+    "signature": "func jobs_withLock<T>(_ block: () throws -> T) rethrows -> T {"
+  },
+  {
+    "id": "swift:class:JobsTimer@JobsSwiftTimer.swift:37",
+    "name": "JobsTimer",
+    "raw_name": "JobsTimer",
+    "type": "class",
+    "file": "JobsSwiftTimer.swift",
+    "line": 37,
+    "inherits": [
+      "JobsSwiftTimerProtocol"
+    ],
+    "parent": "",
+    "signature": "public final class JobsTimer: JobsSwiftTimerProtocol {"
+  },
+  {
+    "id": "swift:enum:JobsTimer.State@JobsSwiftTimer.swift:39",
+    "name": "JobsTimer.State",
+    "raw_name": "State",
+    "type": "enum",
+    "file": "JobsSwiftTimer.swift",
+    "line": 39,
+    "inherits": [
+      "Equatable"
+    ],
+    "parent": "JobsTimer",
+    "signature": "private enum State: Equatable {"
+  },
+  {
+    "id": "swift:func:JobsTimer.requireMainThreadForRunLoopAPI(...)@JobsSwiftTimer.swift:73",
+    "name": "JobsTimer.requireMainThreadForRunLoopAPI(...)",
+    "raw_name": "requireMainThreadForRunLoopAPI",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 73,
+    "signature": "private func requireMainThreadForRunLoopAPI(_ reason: String) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.requireMainRunLoopForNonGCD(...)@JobsSwiftTimer.swift:81",
+    "name": "JobsTimer.requireMainRunLoopForNonGCD(...)",
+    "raw_name": "requireMainRunLoopForNonGCD",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 81,
+    "signature": "private func requireMainRunLoopForNonGCD() {"
+  },
+  {
+    "id": "swift:init:JobsTimer.init(...)@JobsSwiftTimer.swift:88",
+    "name": "JobsTimer.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 88,
+    "signature": "public init("
+  },
+  {
+    "id": "swift:deinit:JobsTimer.deinit@JobsSwiftTimer.swift:105",
+    "name": "JobsTimer.deinit",
+    "raw_name": "deinit",
+    "type": "deinitializer",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 105,
+    "signature": "deinit {"
+  },
+  {
+    "id": "swift:func:JobsTimer.start(...)@JobsSwiftTimer.swift:112",
+    "name": "JobsTimer.start(...)",
+    "raw_name": "start",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 112,
+    "signature": "public func start() -> Self {"
+  },
+  {
+    "id": "swift:func:JobsTimer.pause(...)@JobsSwiftTimer.swift:142",
+    "name": "JobsTimer.pause(...)",
+    "raw_name": "pause",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 142,
+    "signature": "public func pause() -> Self{"
+  },
+  {
+    "id": "swift:func:JobsTimer.resume(...)@JobsSwiftTimer.swift:171",
+    "name": "JobsTimer.resume(...)",
+    "raw_name": "resume",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 171,
+    "signature": "public func resume() -> Self{"
+  },
+  {
+    "id": "swift:func:JobsTimer.fireOnce(...)@JobsSwiftTimer.swift:195",
+    "name": "JobsTimer.fireOnce(...)",
+    "raw_name": "fireOnce",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 195,
+    "signature": "public func fireOnce() -> Self {"
+  },
+  {
+    "id": "swift:func:JobsTimer.stop(...)@JobsSwiftTimer.swift:220",
+    "name": "JobsTimer.stop(...)",
+    "raw_name": "stop",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 220,
+    "signature": "public func stop() -> Self{"
+  },
+  {
+    "id": "swift:func:JobsTimer.onTick(...)@JobsSwiftTimer.swift:238",
+    "name": "JobsTimer.onTick(...)",
+    "raw_name": "onTick",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 238,
+    "signature": "public func onTick(_ block: @escaping JobsTimerCallback) -> Self {"
+  },
+  {
+    "id": "swift:func:JobsTimer.onFinish(...)@JobsSwiftTimer.swift:244",
+    "name": "JobsTimer.onFinish(...)",
+    "raw_name": "onFinish",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 244,
+    "signature": "public func onFinish(_ block: @escaping JobsTimerCallback) -> Self {"
+  },
+  {
+    "id": "swift:func:JobsTimer.stopInternal(...)@JobsSwiftTimer.swift:249",
+    "name": "JobsTimer.stopInternal(...)",
+    "raw_name": "stopInternal",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 249,
+    "signature": "private func stopInternal() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.routeStopIfNeededFromCallback(...)@JobsSwiftTimer.swift:267",
+    "name": "JobsTimer.routeStopIfNeededFromCallback(...)",
+    "raw_name": "routeStopIfNeededFromCallback",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 267,
+    "signature": "private func routeStopIfNeededFromCallback() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.fireTickIfValid(...)@JobsSwiftTimer.swift:290",
+    "name": "JobsTimer.fireTickIfValid(...)",
+    "raw_name": "fireTickIfValid",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 290,
+    "signature": "private func fireTickIfValid(token: UInt64) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.startGCD(...)@JobsSwiftTimer.swift:318",
+    "name": "JobsTimer.startGCD(...)",
+    "raw_name": "startGCD",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 318,
+    "signature": "private func startGCD(token: UInt64) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.pauseGCD(...)@JobsSwiftTimer.swift:336",
+    "name": "JobsTimer.pauseGCD(...)",
+    "raw_name": "pauseGCD",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 336,
+    "signature": "private func pauseGCD() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.resumeGCD(...)@JobsSwiftTimer.swift:345",
+    "name": "JobsTimer.resumeGCD(...)",
+    "raw_name": "resumeGCD",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 345,
+    "signature": "private func resumeGCD() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.stopGCDSafely(...)@JobsSwiftTimer.swift:353",
+    "name": "JobsTimer.stopGCDSafely(...)",
+    "raw_name": "stopGCDSafely",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 353,
+    "signature": "private func stopGCDSafely() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.startFoundationTimer(...)@JobsSwiftTimer.swift:368",
+    "name": "JobsTimer.startFoundationTimer(...)",
+    "raw_name": "startFoundationTimer",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 368,
+    "signature": "private func startFoundationTimer(token: UInt64) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.startDisplayLink(...)@JobsSwiftTimer.swift:380",
+    "name": "JobsTimer.startDisplayLink(...)",
+    "raw_name": "startDisplayLink",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 380,
+    "signature": "private func startDisplayLink(token: UInt64) {"
+  },
+  {
+    "id": "swift:class:JobsTimer.DisplayLinkProxy@JobsSwiftTimer.swift:393",
+    "name": "JobsTimer.DisplayLinkProxy",
+    "raw_name": "DisplayLinkProxy",
+    "type": "class",
+    "file": "JobsSwiftTimer.swift",
+    "line": 393,
+    "inherits": [
+      "NSObject"
+    ],
+    "parent": "JobsTimer",
+    "signature": "private final class DisplayLinkProxy: NSObject {"
+  },
+  {
+    "id": "swift:init:JobsTimer.DisplayLinkProxy.init(...)@JobsSwiftTimer.swift:395",
+    "name": "JobsTimer.DisplayLinkProxy.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsTimer.DisplayLinkProxy",
+    "file": "JobsSwiftTimer.swift",
+    "line": 395,
+    "signature": "init(onTick: @escaping JobsTimerCallback) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.DisplayLinkProxy.tick(...)@JobsSwiftTimer.swift:398",
+    "name": "JobsTimer.DisplayLinkProxy.tick(...)",
+    "raw_name": "tick",
+    "type": "function",
+    "container": "JobsTimer.DisplayLinkProxy",
+    "file": "JobsSwiftTimer.swift",
+    "line": 398,
+    "signature": "@objc func tick() { onTick() }"
+  },
+  {
+    "id": "swift:func:JobsTimer.startRunLoopTimer(...)@JobsSwiftTimer.swift:401",
+    "name": "JobsTimer.startRunLoopTimer(...)",
+    "raw_name": "startRunLoopTimer",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 401,
+    "signature": "private func startRunLoopTimer(token: UInt64) {"
+  },
+  {
+    "id": "swift:func:JobsTimer.setupAppStateIfNeeded(...)@JobsSwiftTimer.swift:448",
+    "name": "JobsTimer.setupAppStateIfNeeded(...)",
+    "raw_name": "setupAppStateIfNeeded",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 448,
+    "signature": "private func setupAppStateIfNeeded() {"
+  },
+  {
+    "id": "swift:func:JobsTimer.teardownAppState(...)@JobsSwiftTimer.swift:466",
+    "name": "JobsTimer.teardownAppState(...)",
+    "raw_name": "teardownAppState",
+    "type": "function",
+    "container": "JobsTimer",
+    "file": "JobsSwiftTimer.swift",
+    "line": 466,
+    "signature": "private func teardownAppState() {"
+  },
+  {
+    "id": "swift:enum:JobsAppStateAction@JobsSwiftTimer.swift:473",
+    "name": "JobsAppStateAction",
+    "raw_name": "JobsAppStateAction",
+    "type": "enum",
+    "file": "JobsSwiftTimer.swift",
+    "line": 473,
+    "inherits": [],
+    "parent": "",
+    "signature": "private enum JobsAppStateAction {"
+  },
+  {
+    "id": "swift:class:JobsAppStateManager@JobsSwiftTimer.swift:479",
+    "name": "JobsAppStateManager",
+    "raw_name": "JobsAppStateManager",
+    "type": "class",
+    "file": "JobsSwiftTimer.swift",
+    "line": 479,
+    "inherits": [],
+    "parent": "",
+    "signature": "private final class JobsAppStateManager {"
+  },
+  {
+    "id": "swift:init:JobsAppStateManager.init(...)@JobsSwiftTimer.swift:483",
+    "name": "JobsAppStateManager.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 483,
+    "signature": "init("
+  },
+  {
+    "id": "swift:deinit:JobsAppStateManager.deinit@JobsSwiftTimer.swift:492",
+    "name": "JobsAppStateManager.deinit",
+    "raw_name": "deinit",
+    "type": "deinitializer",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 492,
+    "signature": "deinit { unregister() }"
+  },
+  {
+    "id": "swift:func:JobsAppStateManager.syncWithCurrentAppStateIfNeeded(...)@JobsSwiftTimer.swift:494",
+    "name": "JobsAppStateManager.syncWithCurrentAppStateIfNeeded(...)",
+    "raw_name": "syncWithCurrentAppStateIfNeeded",
+    "type": "function",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 494,
+    "signature": "func syncWithCurrentAppStateIfNeeded() {"
+  },
+  {
+    "id": "swift:func:JobsAppStateManager.register(...)@JobsSwiftTimer.swift:503",
+    "name": "JobsAppStateManager.register(...)",
+    "raw_name": "register",
+    "type": "function",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 503,
+    "signature": "private func register() {"
+  },
+  {
+    "id": "swift:func:JobsAppStateManager.unregister(...)@JobsSwiftTimer.swift:520",
+    "name": "JobsAppStateManager.unregister(...)",
+    "raw_name": "unregister",
+    "type": "function",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 520,
+    "signature": "private func unregister() {"
+  },
+  {
+    "id": "swift:func:JobsAppStateManager.onDidEnterBackground(...)@JobsSwiftTimer.swift:526",
+    "name": "JobsAppStateManager.onDidEnterBackground(...)",
+    "raw_name": "onDidEnterBackground",
+    "type": "function",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 526,
+    "signature": "@objc private func onDidEnterBackground() {"
+  },
+  {
+    "id": "swift:func:JobsAppStateManager.onWillEnterForeground(...)@JobsSwiftTimer.swift:530",
+    "name": "JobsAppStateManager.onWillEnterForeground(...)",
+    "raw_name": "onWillEnterForeground",
+    "type": "function",
+    "container": "JobsAppStateManager",
+    "file": "JobsSwiftTimer.swift",
+    "line": 530,
+    "signature": "@objc private func onWillEnterForeground() {"
+  },
+  {
+    "id": "swift:struct:JobsSwiftTimerConfig@JobsSwiftTimerConfig.swift:17",
+    "name": "JobsSwiftTimerConfig",
+    "raw_name": "JobsSwiftTimerConfig",
+    "type": "struct",
+    "file": "JobsSwiftTimerConfig.swift",
+    "line": 17,
+    "inherits": [],
+    "parent": "",
+    "signature": "public struct JobsSwiftTimerConfig {"
+  },
+  {
+    "id": "swift:init:JobsSwiftTimerConfig.init(...)@JobsSwiftTimerConfig.swift:29",
+    "name": "JobsSwiftTimerConfig.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsSwiftTimerConfig",
+    "file": "JobsSwiftTimerConfig.swift",
+    "line": 29,
+    "signature": "public init("
+  },
+  {
+    "id": "swift:class:JobsSwiftTimerCountdown@JobsSwiftTimerCountdown.swift:11",
+    "name": "JobsSwiftTimerCountdown",
+    "raw_name": "JobsSwiftTimerCountdown",
+    "type": "class",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 11,
+    "inherits": [],
+    "parent": "",
+    "signature": "public final class JobsSwiftTimerCountdown {"
+  },
+  {
+    "id": "swift:deinit:JobsSwiftTimerCountdown.deinit@JobsSwiftTimerCountdown.swift:12",
+    "name": "JobsSwiftTimerCountdown.deinit",
+    "raw_name": "deinit",
+    "type": "deinitializer",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 12,
+    "signature": "deinit {"
+  },
+  {
+    "id": "swift:struct:JobsSwiftTimerCountdown.Snapshot@JobsSwiftTimerCountdown.swift:21",
+    "name": "JobsSwiftTimerCountdown.Snapshot",
+    "raw_name": "Snapshot",
+    "type": "struct",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 21,
+    "inherits": [],
+    "parent": "JobsSwiftTimerCountdown",
+    "signature": "public struct Snapshot {"
+  },
+  {
+    "id": "swift:enum:JobsSwiftTimerCountdown.Snapshot.Mode@JobsSwiftTimerCountdown.swift:23",
+    "name": "JobsSwiftTimerCountdown.Snapshot.Mode",
+    "raw_name": "Mode",
+    "type": "enum",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 23,
+    "inherits": [],
+    "parent": "JobsSwiftTimerCountdown.Snapshot",
+    "signature": "public enum Mode {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerCountdown.Snapshot.progress(...)@JobsSwiftTimerCountdown.swift:55",
+    "name": "JobsSwiftTimerCountdown.Snapshot.progress(...)",
+    "raw_name": "progress",
+    "type": "function",
+    "container": "JobsSwiftTimerCountdown.Snapshot",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 55,
+    "signature": "public func progress(for mode: Mode) -> Double {"
+  },
+  {
+    "id": "swift:enum:JobsSwiftTimerCountdown.State@JobsSwiftTimerCountdown.swift:65",
+    "name": "JobsSwiftTimerCountdown.State",
+    "raw_name": "State",
+    "type": "enum",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 65,
+    "inherits": [],
+    "parent": "JobsSwiftTimerCountdown",
+    "signature": "public enum State {"
+  },
+  {
+    "id": "swift:init:JobsSwiftTimerCountdown.init(...)@JobsSwiftTimerCountdown.swift:98",
+    "name": "JobsSwiftTimerCountdown.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 98,
+    "signature": "public init(duration: TimeInterval,"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerCountdown.start(...)@JobsSwiftTimerCountdown.swift:113",
+    "name": "JobsSwiftTimerCountdown.start(...)",
+    "raw_name": "start",
+    "type": "function",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 113,
+    "signature": "public func start() -> JobsSwiftTimerCountdown {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerCountdown.cancel(...)@JobsSwiftTimerCountdown.swift:163",
+    "name": "JobsSwiftTimerCountdown.cancel(...)",
+    "raw_name": "cancel",
+    "type": "function",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 163,
+    "signature": "public func cancel() {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerCountdown.reset(...)@JobsSwiftTimerCountdown.swift:171",
+    "name": "JobsSwiftTimerCountdown.reset(...)",
+    "raw_name": "reset",
+    "type": "function",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 171,
+    "signature": "public func reset() {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerCountdown.resetInternal(...)@JobsSwiftTimerCountdown.swift:176",
+    "name": "JobsSwiftTimerCountdown.resetInternal(...)",
+    "raw_name": "resetInternal",
+    "type": "function",
+    "container": "JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 176,
+    "signature": "private func resetInternal() {"
+  },
+  {
+    "id": "swift:extension:extension JobsSwiftTimerCountdown@JobsSwiftTimerCountdown.swift:183",
+    "name": "extension JobsSwiftTimerCountdown",
+    "raw_name": "JobsSwiftTimerCountdown",
+    "type": "extension",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 183,
+    "inherits": [],
+    "parent": "",
+    "signature": "public extension JobsSwiftTimerCountdown {"
+  },
+  {
+    "id": "swift:func:extension JobsSwiftTimerCountdown.byProgress(...)@JobsSwiftTimerCountdown.swift:186",
+    "name": "extension JobsSwiftTimerCountdown.byProgress(...)",
+    "raw_name": "byProgress",
+    "type": "function",
+    "container": "extension JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 186,
+    "signature": "func byProgress(_ handler: @escaping (Snapshot) -> Void) -> Self {"
+  },
+  {
+    "id": "swift:func:extension JobsSwiftTimerCountdown.byFinished(...)@JobsSwiftTimerCountdown.swift:192",
+    "name": "extension JobsSwiftTimerCountdown.byFinished(...)",
+    "raw_name": "byFinished",
+    "type": "function",
+    "container": "extension JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 192,
+    "signature": "func byFinished(_ handler: @escaping (Snapshot) -> Void) -> Self {"
+  },
+  {
+    "id": "swift:func:extension JobsSwiftTimerCountdown.byStartRunning(...)@JobsSwiftTimerCountdown.swift:198",
+    "name": "extension JobsSwiftTimerCountdown.byStartRunning(...)",
+    "raw_name": "byStartRunning",
+    "type": "function",
+    "container": "extension JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 198,
+    "signature": "func byStartRunning() -> Self {"
+  },
+  {
+    "id": "swift:func:extension JobsSwiftTimerCountdown.byStart(...)@JobsSwiftTimerCountdown.swift:211",
+    "name": "extension JobsSwiftTimerCountdown.byStart(...)",
+    "raw_name": "byStart",
+    "type": "function",
+    "container": "extension JobsSwiftTimerCountdown",
+    "file": "JobsSwiftTimerCountdown.swift",
+    "line": 211,
+    "signature": "static func byStart(duration: TimeInterval,"
+  },
+  {
+    "id": "swift:enum:JobsOpenResult@JobsSwiftTimerDefs.swift:9",
+    "name": "JobsOpenResult",
+    "raw_name": "JobsOpenResult",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 9,
+    "inherits": [],
+    "parent": "",
+    "signature": "public enum JobsOpenResult {"
+  },
+  {
+    "id": "swift:enum:TimerState@JobsSwiftTimerDefs.swift:15",
+    "name": "TimerState",
+    "raw_name": "TimerState",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 15,
+    "inherits": [
+      "Int",
+      "Sendable"
+    ],
+    "parent": "",
+    "signature": "public enum TimerState: Int, Sendable {"
+  },
+  {
+    "id": "swift:enum:_TimerMode@JobsSwiftTimerDefs.swift:22",
+    "name": "_TimerMode",
+    "raw_name": "_TimerMode",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 22,
+    "inherits": [
+      "Sendable"
+    ],
+    "parent": "",
+    "signature": "public enum _TimerMode: Sendable {"
+  },
+  {
+    "id": "swift:enum:JobsSwiftTimerManagerError@JobsSwiftTimerDefs.swift:32",
+    "name": "JobsSwiftTimerManagerError",
+    "raw_name": "JobsSwiftTimerManagerError",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 32,
+    "inherits": [
+      "Error"
+    ],
+    "parent": "",
+    "signature": "public enum JobsSwiftTimerManagerError: Error,"
+  },
+  {
+    "id": "swift:enum:JobsSwiftTimerManagerAction@JobsSwiftTimerDefs.swift:51",
+    "name": "JobsSwiftTimerManagerAction",
+    "raw_name": "JobsSwiftTimerManagerAction",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 51,
+    "inherits": [
+      "Sendable"
+    ],
+    "parent": "",
+    "signature": "public enum JobsSwiftTimerManagerAction: Sendable {"
+  },
+  {
+    "id": "swift:enum:JobsTimerDedupPolicy@JobsSwiftTimerDefs.swift:60",
+    "name": "JobsTimerDedupPolicy",
+    "raw_name": "JobsTimerDedupPolicy",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 60,
+    "inherits": [
+      "Sendable"
+    ],
+    "parent": "",
+    "signature": "public enum JobsTimerDedupPolicy: Sendable {"
+  },
+  {
+    "id": "swift:enum:JobsTimerKind@JobsSwiftTimerDefs.swift:69",
+    "name": "JobsTimerKind",
+    "raw_name": "JobsTimerKind",
+    "type": "enum",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 69,
+    "inherits": [
+      "Sendable"
+    ],
+    "parent": "",
+    "signature": "public enum JobsTimerKind: Sendable {"
+  },
+  {
+    "id": "swift:extension:extension JobsTimerKind@JobsSwiftTimerDefs.swift:82",
+    "name": "extension JobsTimerKind",
+    "raw_name": "JobsTimerKind",
+    "type": "extension",
+    "file": "JobsSwiftTimerDefs.swift",
+    "line": 82,
+    "inherits": [],
+    "parent": "",
+    "signature": "public extension JobsTimerKind {"
+  },
+  {
+    "id": "swift:class:JobsSwiftTimerManager@JobsSwiftTimerManager.swift:15",
+    "name": "JobsSwiftTimerManager",
+    "raw_name": "JobsSwiftTimerManager",
+    "type": "class",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 15,
+    "inherits": [],
+    "parent": "",
+    "signature": "public final class JobsSwiftTimerManager {"
+  },
+  {
+    "id": "swift:init:JobsSwiftTimerManager.init(...)@JobsSwiftTimerManager.swift:20",
+    "name": "JobsSwiftTimerManager.init(...)",
+    "raw_name": "init",
+    "type": "initializer",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 20,
+    "signature": "private init() {}"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.setDedupPolicy(...)@JobsSwiftTimerManager.swift:22",
+    "name": "JobsSwiftTimerManager.setDedupPolicy(...)",
+    "raw_name": "setDedupPolicy",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 22,
+    "signature": "public func setDedupPolicy(_ policy: JobsTimerDedupPolicy) {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.create(...)@JobsSwiftTimerManager.swift:33",
+    "name": "JobsSwiftTimerManager.create(...)",
+    "raw_name": "create",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 33,
+    "signature": "public func create("
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.timer(...)@JobsSwiftTimerManager.swift:81",
+    "name": "JobsSwiftTimerManager.timer(...)",
+    "raw_name": "timer",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 81,
+    "signature": "public func timer(for identifier: String) -> JobsSwiftTimerProtocol? {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.act(...)@JobsSwiftTimerManager.swift:88",
+    "name": "JobsSwiftTimerManager.act(...)",
+    "raw_name": "act",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 88,
+    "signature": "public func act(_ action: JobsSwiftTimerManagerAction, identifier: String) throws -> JobsSwiftTimerProtocol {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.remove(...)@JobsSwiftTimerManager.swift:101",
+    "name": "JobsSwiftTimerManager.remove(...)",
+    "raw_name": "remove",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 101,
+    "signature": "public func remove(identifier: String) throws {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.removeAll(...)@JobsSwiftTimerManager.swift:109",
+    "name": "JobsSwiftTimerManager.removeAll(...)",
+    "raw_name": "removeAll",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 109,
+    "signature": "public func removeAll(stopAll: Bool = true) {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.stopAndRemove(...)@JobsSwiftTimerManager.swift:121",
+    "name": "JobsSwiftTimerManager.stopAndRemove(...)",
+    "raw_name": "stopAndRemove",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 121,
+    "signature": "public func stopAndRemove(identifier: String) {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.stopAndRemove(...)@JobsSwiftTimerManager.swift:130",
+    "name": "JobsSwiftTimerManager.stopAndRemove(...)",
+    "raw_name": "stopAndRemove",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 130,
+    "signature": "public func stopAndRemove(identifier: String) async {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerManager.register(...)@JobsSwiftTimerManager.swift:134",
+    "name": "JobsSwiftTimerManager.register(...)",
+    "raw_name": "register",
+    "type": "function",
+    "container": "JobsSwiftTimerManager",
+    "file": "JobsSwiftTimerManager.swift",
+    "line": 134,
+    "signature": "private func register("
+  },
+  {
+    "id": "swift:protocol:JobsSwiftTimerProtocol@JobsSwiftTimerProtocol.swift:24",
+    "name": "JobsSwiftTimerProtocol",
+    "raw_name": "JobsSwiftTimerProtocol",
+    "type": "protocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 24,
+    "inherits": [
+      "AnyObject"
+    ],
+    "parent": "",
+    "signature": "public protocol JobsSwiftTimerProtocol: AnyObject {"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.start(...)@JobsSwiftTimerProtocol.swift:29",
+    "name": "JobsSwiftTimerProtocol.start(...)",
+    "raw_name": "start",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 29,
+    "signature": "func start() -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.pause(...)@JobsSwiftTimerProtocol.swift:32",
+    "name": "JobsSwiftTimerProtocol.pause(...)",
+    "raw_name": "pause",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 32,
+    "signature": "func pause() -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.resume(...)@JobsSwiftTimerProtocol.swift:35",
+    "name": "JobsSwiftTimerProtocol.resume(...)",
+    "raw_name": "resume",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 35,
+    "signature": "func resume() -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.fireOnce(...)@JobsSwiftTimerProtocol.swift:38",
+    "name": "JobsSwiftTimerProtocol.fireOnce(...)",
+    "raw_name": "fireOnce",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 38,
+    "signature": "func fireOnce() -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.stop(...)@JobsSwiftTimerProtocol.swift:41",
+    "name": "JobsSwiftTimerProtocol.stop(...)",
+    "raw_name": "stop",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 41,
+    "signature": "func stop() -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.onTick(...)@JobsSwiftTimerProtocol.swift:44",
+    "name": "JobsSwiftTimerProtocol.onTick(...)",
+    "raw_name": "onTick",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 44,
+    "signature": "func onTick(_ block: @escaping JobsTimerCallback) -> Self"
+  },
+  {
+    "id": "swift:func:JobsSwiftTimerProtocol.onFinish(...)@JobsSwiftTimerProtocol.swift:47",
+    "name": "JobsSwiftTimerProtocol.onFinish(...)",
+    "raw_name": "onFinish",
+    "type": "function",
+    "container": "JobsSwiftTimerProtocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 47,
+    "signature": "func onFinish(_ block: @escaping JobsTimerCallback) -> Self"
+  },
+  {
+    "id": "swift:protocol:JobsSwiftTimerIdentifiable@JobsSwiftTimerProtocol.swift:50",
+    "name": "JobsSwiftTimerIdentifiable",
+    "raw_name": "JobsSwiftTimerIdentifiable",
+    "type": "protocol",
+    "file": "JobsSwiftTimerProtocol.swift",
+    "line": 50,
+    "inherits": [],
+    "parent": "",
+    "signature": "public protocol JobsSwiftTimerIdentifiable {"
+  }
+]
