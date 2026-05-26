@@ -1,6 +1,0 @@
-JobsSwiftTimer.swift
-JobsSwiftTimerConfig.swift
-JobsSwiftTimerCountdown.swift
-JobsSwiftTimerDefs.swift
-JobsSwiftTimerManager.swift
-JobsSwiftTimerProtocol.swift

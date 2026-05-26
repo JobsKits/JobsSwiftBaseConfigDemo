@@ -202,6 +202,30 @@ def run_podspec_dependency_report_script
   Pod::UI.puts "[PodspecDependencyReport] ✅ 依赖关系报告已生成"
 end
 
+# ===== CodeGraph: pod install 完成后按需生成 CodeGraph 索引 =====
+def run_codegraph_init_script
+  script_path = jobs_resolve_external_script_path(
+    File.join('ScriptsByPods', 'codegraph_init.command'),
+    base_dir: __dir__
+  )
+
+  unless File.file?(script_path)
+    Pod::UI.puts "[CodeGraph] skip, script not found: #{script_path}" if defined?(Pod::UI)
+    return
+  end
+
+  Pod::UI.puts "[CodeGraph] chmod +x #{script_path}"
+  unless system('/bin/chmod', '+x', script_path)
+    Pod::UI.puts "[CodeGraph] ⚠️ chmod +x 执行失败，已跳过：#{script_path}" if defined?(Pod::UI)
+    return
+  end
+
+  Pod::UI.puts "[CodeGraph] pod install 已进入收尾阶段，准备按需生成 CodeGraph"
+  unless system(script_path, chdir: __dir__)
+    Pod::UI.puts "[CodeGraph] ⚠️ CodeGraph 脚本执行失败或被中断；pod install 主流程已完成" if defined?(Pod::UI)
+  end
+end
+
 # 统一写入 build settings（对某个 target 的所有 config）
 def jobs_apply_build_settings!(target, settings)
   target.build_configurations.each do |config|
@@ -367,4 +391,8 @@ post_install do |installer|
 
   # -------- 3、pod install 完成后生成 Podspec 依赖分析报告 --------
   run_podspec_dependency_report_script
+end
+
+post_integrate do |_installer|
+  run_codegraph_init_script
 end
