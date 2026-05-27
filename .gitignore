@@ -110,3 +110,13 @@ tmp/
 # AI@Codex by openai
 ############################################################
 .codex-derived-data/
+.codegraph/
+.codex/
+.agents/
+
+############################################################
+# Graphify Generated Output
+############################################################
+
+# Graphify generated output files; can be regenerated locally.
+graphify-out/
