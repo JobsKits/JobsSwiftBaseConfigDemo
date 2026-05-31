@@ -1,3 +1,11 @@
+# `ScriptsByPods`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
+[toc]
+
+---
+
 * 此目录存放用于[**Cocopods**](https://cocoapods.org/)的脚本文件，当运行`pod install`的时候，顺带启动，以达到最小成本的配置的效果
 
 * 值得注意的是，运行脚本文件需要的授权操作，进一步放在了执行`pod install`期间
