@@ -279,6 +279,32 @@ def jobs_show_deps_file_in_pods_group!(installer)
   pods_project.save
 end
 
+# Xcode 26+ 会把 netinet6/in6.h 视作私有头，部分第三方库仍保留旧引用。
+def patch_private_netinet6_header_imports
+  patch_targets = {
+    'AFNetworking' => File.join(__dir__, 'Pods', 'AFNetworking', 'AFNetworking'),
+  }
+
+  patch_targets.each do |label, root|
+    next unless Dir.exist?(root)
+
+    changed_count = 0
+    Dir.glob(File.join(root, '**', '*.{h,m,mm,c,cpp}')).each do |path|
+      next unless File.file?(path)
+
+      text = File.read(path)
+      new_text = text.gsub(/^\s*#\s*import\s+<netinet6\/in6\.h>\s*\n/, '')
+      next if new_text == text
+
+      FileUtils.chmod('u+w', path) rescue nil
+      File.write(path, new_text)
+      changed_count += 1
+    end
+
+    Pod::UI.puts "[#{label}] removed netinet6/in6.h imports from #{changed_count} files" if defined?(Pod::UI) && changed_count.positive?
+  end
+end
+
 use_frameworks! :linkage => :static
 inhibit_all_warnings!
 
@@ -385,6 +411,7 @@ post_install do |installer|
   # -------- 1、统一工程 build settings（宿主工程 + Pods） --------
   jobs_patch_user_projects!(installer)
   jobs_patch_pods_project!(installer)
+  patch_private_netinet6_header_imports
 
   # -------- 2、在 Pods 分组里展示 Podfile.deps（Ruby 高亮） --------
   jobs_show_deps_file_in_pods_group!(installer)

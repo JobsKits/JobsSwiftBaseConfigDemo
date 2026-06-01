@@ -9,7 +9,7 @@ def swiftAppCommon
   pod 'GKPhotoBrowser'                     # https://github.com/QuintGao/GKPhotoBrowser         ❤️ 图片浏览器（仿微信、今日头条）
   pod 'GKNavigationBarSwift'               # https://github.com/QuintGao/GKNavigationBarSwift   ❤️
   pod 'YTKNetwork'                         # https://github.com/kanyun-inc/YTKNetwork           ❤️ 猿题库出品的网络请求框架@Objc
-  pod 'WCDB'                               # https://github.com/Tencent/wcdb                    ❤️ 腾讯出品的数据库。FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
+  pod 'WCDB', '2.1.16'                     # https://github.com/Tencent/wcdb                    ❤️ 腾讯出品的数据库。FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'FMDB'                               # https://github.com/ccgus/fmdb                     ❤️ FMDB 和 WCDB 如果没有做兼容性配置，则无法共存
 #  pod 'SVGAPlayer'                         # https://github.com/svga/SVGAPlayer-iOS             ❤️ 直播礼物动画播放器
   # --- Swift ---
@@ -54,7 +54,8 @@ def swiftAppCommon
   pod 'swift-collections'                  # https://github.com/apple/swift-collections#         ❤️ 有序字典
   pod 'IQKeyboardManagerSwift'             # https://github.com/hackiftekhar/IQKeyboardManager   ❤️
   pod 'HaishinKit'                         # https://github.com/HaishinKit/HaishinKit.swift      ❤️ 音视频采集编码
-  pod 'TextureSwiftSupport'                # https://github.com/FluidGroup/TextureSwiftSupport   ❤️ 由第三方/社区维护的 ➤ Facebook出品的一款UI框架
+  pod 'Texture/Core', :path => 'JobsByPods/ManualBySwiftPods@Pods/Texture' # 本地化 Texture 主体，沿用 JobsOCBaseConfigDemo 的 Manual Pod
+  pod 'TextureSwiftSupport', :path => 'JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport' # 本地化 Swift 扩展层，统一锁到本仓库管理
 #  pod 'ComponentKit'                       # https://github.com/facebook/componentkit            ❤️ Facebook出品的一款UI框架
 #  pod 'Texture'                            # https://github.com/texturegroup/texture             ❤️ Facebook出品的一款UI框架
 #  pod 'SwiftySVGAPlayer'                   # https://github.com/janlionly/SwiftySVGAPlayer       ❤️ SVGAPlayer的社区封装@framework

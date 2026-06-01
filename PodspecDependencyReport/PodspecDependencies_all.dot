@@ -4,10 +4,13 @@ digraph PodspecDependencies {
   "Alamofire";
   "BMPlayer";
   "BRPickerViewSwift";
+  "Descriptors";
   "ESPullToRefresh";
   "Flutter";
   "FlutterPluginRegistrant";
   "GKNavigationBarSwift";
+  "IGListDiffKit";
+  "IGListKit";
   "JXSegmentedView";
   "JobsBy3rdTools";
   "JobsByPDFKit";
@@ -49,6 +52,7 @@ digraph PodspecDependencies {
   "MJRefresh";
   "Moya";
   "NSObject+Rx";
+  "PINRemoteImage";
   "PromiseKit";
   "RxCocoa";
   "RxRelay";
@@ -59,7 +63,10 @@ digraph PodspecDependencies {
   "SnapKit";
   "SwiftEntryKit";
   "SwiftMessages";
+  "Texture";
+  "TextureSwiftSupport";
   "YTKNetwork";
+  "Yoga";
   "lottie-ios";
   "BRPickerViewSwift" -> "JobsByUIKit";
   "BRPickerViewSwift" -> "SnapKit";
@@ -204,4 +211,10 @@ digraph PodspecDependencies {
   "JobsToast" -> "JobsSwiftBaseDefines";
   "JobsToast" -> "JobsSwiftBlock";
   "JobsToast" -> "SnapKit";
+  "Texture" -> "IGListDiffKit";
+  "Texture" -> "IGListKit";
+  "Texture" -> "PINRemoteImage";
+  "Texture" -> "Yoga";
+  "TextureSwiftSupport" -> "Descriptors";
+  "TextureSwiftSupport" -> "Texture";
 }

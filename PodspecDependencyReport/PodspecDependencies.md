@@ -1,21 +1,21 @@
 # Podspec 依赖分析报告
-![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
 [toc]
 
 ## 🔥 <font id=前言>前言</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-05-26 23:52:56`
-- Podspec 数量：`39`
+- 生成时间：`2026-06-01 20:56:20`
+- Podspec 数量：`41`
 - 0 下游依赖 Pod 数量：`9`
-- 全部依赖边数量：`143`
-- 仓库内 Pod 依赖边数量：`95`
+- 全部依赖边数量：`149`
+- 仓库内 Pod 依赖边数量：`96`
 - Pod 间循环依赖数量：`0`
-- 已过滤同 Pod 内部 subspec 依赖数量：`4`
-- 外部依赖来源注释文件数量：`3`
-- 已识别外部依赖来源链接数量：`63`
-- DSL 执行式解析 Podspec 数量：`39`
+- 已过滤同 Pod 内部 subspec 依赖数量：`13`
+- 外部依赖来源注释文件数量：`41`
+- 已识别外部依赖来源链接数量：`64`
+- DSL 执行式解析 Podspec 数量：`41`
 - 静态兜底解析 Podspec 数量：`0`
 
 > 更易读的动态关系图见：`PodspecDependencies_interactive.html`，其中默认保留 2D 关系图，并新增可拖动旋转的 3D 空间图。
@@ -63,6 +63,8 @@
 | [**JobsTextTools**](#JobsTextTools) | `JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec` | 0 |  | 4 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) |
 | [**JobsToast**](#JobsToast) | `JobsByPods/JobsToast@Pods/JobsToast.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [SnapKit](https://github.com/SnapKit/SnapKit) | 3 | [**JobsInheritance**](#JobsInheritance), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftTools**](#JobsSwiftTools) |
 | [**Jobsl10n**](#Jobsl10n) | `JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec` | 0 |  | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftWorker**](#JobsSwiftWorker) |
+| [**Texture**](#Texture) | `JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec` | 4 | IGListDiffKit, IGListKit, PINRemoteImage, Yoga | 1 | [**TextureSwiftSupport**](#TextureSwiftSupport) |
+| [**TextureSwiftSupport**](#TextureSwiftSupport) | `JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSupport.podspec` | 2 | Descriptors, [Texture](#Texture) | 0 |  |
 
 ## 二、0 下游依赖 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -88,6 +90,15 @@
 | [**JobsNetworking**](#JobsNetworking) | `JobsNetworking/AF5` | `JobsNetworking/Core` | `51` |
 | [**JobsNetworking**](#JobsNetworking) | `JobsNetworking/Async` | `JobsNetworking/Core` | `64` |
 | [**JobsNetworking**](#JobsNetworking) | `JobsNetworking/PromiseKit` | `JobsNetworking/Core` | `70` |
+| [**Texture**](#Texture) | `Texture/AssetsLibrary` | `Texture/Core` | `109` |
+| [**Texture**](#Texture) | `Texture/IGListKit` | `Texture/Core` | `62` |
+| [**Texture**](#Texture) | `Texture/MapKit` | `Texture/Core` | `93` |
+| [**Texture**](#Texture) | `Texture/PINRemoteImage` | `Texture/Core` | `54` |
+| [**Texture**](#Texture) | `Texture/Photos` | `Texture/Core` | `101` |
+| [**Texture**](#Texture) | `Texture/TextNode2` | `Texture/Core` | `77` |
+| [**Texture**](#Texture) | `Texture/Video` | `Texture/Core` | `85` |
+| [**Texture**](#Texture) | `Texture/Yoga` | `Texture/Core` | `69` |
+| [**TextureSwiftSupport**](#TextureSwiftSupport) | `TextureSwiftSupport/Components` | `TextureSwiftSupport/LayoutSpecBuilders` | `23` |
 
 ## 四、Pod 间循环依赖检测 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -194,6 +205,7 @@ flowchart LR
   N9817f6c3f4e6["JobsToast"] --> N32038075ad22["JobsByUIKit"]
   N9817f6c3f4e6["JobsToast"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   N9817f6c3f4e6["JobsToast"] --> Nc7567108c45a["JobsSwiftBlock"]
+  N4b8597aa9c62["TextureSwiftSupport"] --> Na3e8ae43188a["Texture"]
 ```
 
 ## 六、全部依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -343,6 +355,12 @@ flowchart LR
   N9817f6c3f4e6["JobsToast"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   N9817f6c3f4e6["JobsToast"] --> Nc7567108c45a["JobsSwiftBlock"]
   N9817f6c3f4e6["JobsToast"] --> N1f6f7544eaea["SnapKit"]
+  Na3e8ae43188a["Texture"] --> N001d8e9e7a99["IGListDiffKit"]
+  Na3e8ae43188a["Texture"] --> N678cc0cad0b3["IGListKit"]
+  Na3e8ae43188a["Texture"] --> N356eef9f9fab["PINRemoteImage"]
+  Na3e8ae43188a["Texture"] --> N8be1c94fdc10["Yoga"]
+  N4b8597aa9c62["TextureSwiftSupport"] --> N4c9c79e39b53["Descriptors"]
+  N4b8597aa9c62["TextureSwiftSupport"] --> Na3e8ae43188a["Texture"]
 ```
 
 ## 七、外部依赖引用关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -353,13 +371,17 @@ flowchart LR
 |---|---:|---|---|
 | [Alamofire](https://github.com/Alamofire/Alamofire) | 2 | [**JobsNetworking**](#JobsNetworking), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [Alamofire](https://github.com/Alamofire/Alamofire) |
 | [BMPlayer](https://github.com/BrikerMan/BMPlayer) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [BMPlayer](https://github.com/BrikerMan/BMPlayer) |
+| Descriptors | 1 | [**TextureSwiftSupport**](#TextureSwiftSupport) | Descriptors |
 | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [ESPullToRefresh](https://github.com/eggswift/pull-to-refresh) |
 | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsInheritance**](#JobsInheritance) | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift) |
+| IGListDiffKit | 1 | [**Texture**](#Texture) | IGListDiffKit |
+| IGListKit | 1 | [**Texture**](#Texture) | IGListKit |
 | [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [JXSegmentedView](https://github.com/pujiaxin33/JXSegmentedView) |
 | [Kingfisher](https://github.com/onevcat/Kingfisher) | 4 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsImageTools**](#JobsImageTools), [**JobsSwiftBlock**](#JobsSwiftBlock) | [Kingfisher](https://github.com/onevcat/Kingfisher) |
 | [MJRefresh](https://github.com/CoderMJLee/MJRefresh) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) | [MJRefresh](https://github.com/CoderMJLee/MJRefresh) |
 | [Moya](https://github.com/Moya/Moya) | 1 | [**JobsSwiftBlock**](#JobsSwiftBlock) | [Moya](https://github.com/Moya/Moya) |
 | [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx) |
+| PINRemoteImage | 1 | [**Texture**](#Texture) | PINRemoteImage |
 | [PromiseKit](https://github.com/mxcl/PromiseKit) | 1 | [**JobsNetworking**](#JobsNetworking) | [PromiseKit](https://github.com/mxcl/PromiseKit) |
 | [RxCocoa](https://github.com/ReactiveX/RxSwift) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | [RxCocoa](https://github.com/ReactiveX/RxSwift) |
 | [RxRelay](https://cocoapods.org/pods/RxRelay) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [RxRelay](https://cocoapods.org/pods/RxRelay) |
@@ -371,6 +393,7 @@ flowchart LR
 | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) |
 | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) | 1 | [**JobsNavBar**](#JobsNavBar) | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) |
 | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftBlock**](#JobsSwiftBlock) | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) |
+| Yoga | 1 | [**Texture**](#Texture) | Yoga |
 | [lottie-ios](https://github.com/airbnb/lottie-ios) | 2 | [**JobsByUIKit**](#JobsByUIKit), [**JobsRefresher**](#JobsRefresher) | [lottie-ios](https://github.com/airbnb/lottie-ios) |
 
 ## 八、明细 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -974,6 +997,32 @@ Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
 
   - [**JobsByUIKit**](#JobsByUIKit)
   - [**JobsSwiftWorker**](#JobsSwiftWorker)
+
+
+### 40、<font id="Texture">Texture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+Podspec：`JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec`
+
+- **上游依赖**
+
+  - [**TextureSwiftSupport**](#TextureSwiftSupport)
+
+- **下游依赖**
+
+  - **IGListDiffKit**
+  - **IGListKit**
+  - **PINRemoteImage**
+  - **Yoga**
+
+
+### 41、<font id="TextureSwiftSupport">TextureSwiftSupport</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+Podspec：`JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSupport.podspec`
+
+- **下游依赖**
+
+  - **Descriptors**
+  - [**Texture**](#Texture)
 
 
 ## 九、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

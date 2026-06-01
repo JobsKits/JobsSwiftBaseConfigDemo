@@ -448,23 +448,22 @@ PODS:
   - SwiftProtobuf (1.33.3)
   - Texture/Core (3.2.0)
   - TextureSwiftSupport (3.19.0):
-    - Texture/Core (>= 3)
     - TextureSwiftSupport/Components (= 3.19.0)
     - TextureSwiftSupport/Experiments (= 3.19.0)
     - TextureSwiftSupport/Extensions (= 3.19.0)
     - TextureSwiftSupport/LayoutSpecBuilders (= 3.19.0)
   - TextureSwiftSupport/Components (3.19.0):
     - Descriptors (>= 0.2.1)
-    - Texture/Core (>= 3)
+    - Texture/Core
     - TextureSwiftSupport/LayoutSpecBuilders
   - TextureSwiftSupport/Experiments (3.19.0):
-    - Texture/Core (>= 3)
+    - Texture/Core
   - TextureSwiftSupport/Extensions (3.19.0):
-    - Texture/Core (>= 3)
+    - Texture/Core
   - TextureSwiftSupport/LayoutSpecBuilders (3.19.0):
-    - Texture/Core (>= 3)
+    - Texture/Core
   - Then (3.0.0)
-  - WCDB (2.1.15):
+  - WCDB (2.1.16):
     - WCDBOptimizedSQLCipher (= 1.4.8)
   - WCDBOptimizedSQLCipher (1.4.8)
   - XMLCoder (0.11.1)
@@ -561,9 +560,10 @@ DEPENDENCIES:
   - SwiftEntryKit
   - SwiftMessages
   - SwiftProtobuf
-  - TextureSwiftSupport
+  - "Texture/Core (from `JobsByPods/ManualBySwiftPods@Pods/Texture`)"
+  - "TextureSwiftSupport (from `JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport`)"
   - Then
-  - WCDB
+  - WCDB (= 2.1.16)
   - YTKNetwork
 
 SPEC REPOS:
@@ -632,8 +632,6 @@ SPEC REPOS:
     - SwiftEntryKit
     - SwiftMessages
     - SwiftProtobuf
-    - Texture
-    - TextureSwiftSupport
     - Then
     - WCDB
     - WCDBOptimizedSQLCipher
@@ -722,6 +720,10 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsTextTools@Pods"
   JobsToast:
     :path: "JobsByPods/JobsToast@Pods"
+  Texture:
+    :path: "JobsByPods/ManualBySwiftPods@Pods/Texture"
+  TextureSwiftSupport:
+    :path: "JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport"
 
 CHECKOUT OPTIONS:
   Cache:
@@ -815,7 +817,7 @@ SPEC CHECKSUMS:
   "NSObject+Rx": 61cf1f7306a73dcef8b36649198af0813ec18dfd
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   ObjectBox: 946c1e8586aaa61e21b6661bab4948d06fdd51c4
-  PhoneNumberKit: d6b20eab1cdd77216e24f9b15878a78b69fb5a4d
+  PhoneNumberKit: e45e3911e4389571fec6784738992cf099d3fda2
   Plan: e0026af5b3cab93b9077b192911832665b762e44
   PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440
   ReactiveSwift: 4dfa83fbdc2392d1112050411641705412c0c705
@@ -833,15 +835,15 @@ SPEC CHECKSUMS:
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   SwiftMessages: bfefe945bc05ce7cd328303d53d0d1849e29109d
   SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
-  Texture: 61e86ea2ee124f545be40293b54b5b8986006da2
-  TextureSwiftSupport: 2de508abb74363be84f02721c5f0c273439963ee
+  Texture: 56006b5c8a9ab4b6391e9aa412c49c71ab37bd2f
+  TextureSwiftSupport: 84e28da240f0b0c28a3ec4fce4dd51d639201d2c
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
-  WCDB: 86b8267c5c7ed14a7d94d456000d4df1892877ae
+  WCDB: d42e5e10cfe39e1e45759eaf660425ec635abfe7
   WCDBOptimizedSQLCipher: 871994f7f620302fdf87a2729c099a1efa2223da
   XMLCoder: c4638336674de7ba279cd23f2005817d69f538e0
   YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: 62d0dc9bea3e5a4c1a4f0bede15ef601e9184523
+PODFILE CHECKSUM: 3e00e1a63fcf50a73aed0d9a994742e749511634
 
 COCOAPODS: 1.16.2

@@ -40,6 +40,8 @@ digraph PodspecDependencies {
   "JobsTextTools";
   "JobsToast";
   "Jobsl10n";
+  "Texture";
+  "TextureSwiftSupport";
   "BRPickerViewSwift" -> "JobsByUIKit";
   "FlutterPluginRegistrant" -> "Flutter";
   "JobsBy3rdTools" -> "JobsByUIKit";
@@ -135,4 +137,5 @@ digraph PodspecDependencies {
   "JobsToast" -> "JobsByUIKit";
   "JobsToast" -> "JobsSwiftBaseDefines";
   "JobsToast" -> "JobsSwiftBlock";
+  "TextureSwiftSupport" -> "Texture";
 }

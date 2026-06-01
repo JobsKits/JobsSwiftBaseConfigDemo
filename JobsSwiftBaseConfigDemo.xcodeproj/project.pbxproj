@@ -304,15 +304,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(PROJECT_DIR)/model-JobsSwiftBaseConfigDemo.json",
 			);
 			name = "[OBX] Update Sourcery Generated Files";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(PROJECT_DIR)/generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/ObjectBox/generate_sources.sh\" -- --output \"$PROJECT_DIR/generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift\" --model-json \"$PROJECT_DIR/model-JobsSwiftBaseConfigDemo.json\"\n";
+			shellScript = "set -e\n\"$PODS_ROOT/ObjectBox/Mac/OBXCodeGen.framework/Versions/A/Resources/Sourcery.app/Contents/MacOS/Sourcery\" --sources \"$PROJECT_DIR/JobsSwiftBaseConfigDemo\" --output \"$PROJECT_DIR/generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift\" --model-json \"$PROJECT_DIR/model-JobsSwiftBaseConfigDemo.json\" --xcode-module \"$PRODUCT_MODULE_NAME\"\n";
 		};
 		2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */ = {
 			isa = PBXShellScriptBuildPhase;

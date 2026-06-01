@@ -2021,7 +2021,7 @@ File.open(md_path, 'w') do |md|
   top_link = '<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>'
 
   md.puts '# Podspec 依赖分析报告'
-  md.puts '![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")'
+  md.puts '![Jobs出品，必属精品](https://picsum.photos/1500/400)'
   md.puts '[toc]'
   md.puts
   md.puts "## 🔥 <font id=前言>前言</font> #{top_link}"
