@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T1["method:JobsMarqueeView::updatePageControlPages<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:813"]
+  S1["function:setup_header<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:232"]
+  T1["function:GC_clear_hdr_marks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:145"]
   S1 -->|calls| T1
-  S2["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T2["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
+  S2["function:GC_remove_from_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:327"]
+  T2["function:GC_remove_from_fl_at<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:303"]
   S2 -->|calls| T2
-  S3["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T3["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
+  S3["function:GC_remove_from_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:327"]
+  T3["function:GC_hblk_fl_from_blocks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:90"]
   S3 -->|calls| T3
-  S4["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T4["method:JobsMarqueeView::computeMinButtonSize<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:535"]
+  S4["function:GC_free_block_ending_at<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:333"]
+  T4["function:GC_prev_block<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:394"]
   S4 -->|calls| T4
-  S5["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T5["method:JobsMarqueeView::buildButtons<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:546"]
+  S5["function:GC_add_to_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:362"]
+  T5["function:GC_hblk_fl_from_blocks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:90"]
   S5 -->|calls| T5
-  S6["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T6["method:JobsMarqueeView::updatePageControlPages<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:813"]
+  S6["function:GC_add_to_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:362"]
+  T6["function:GC_free_block_ending_at<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:333"]
   S6 -->|calls| T6
-  S7["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T7["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
+  S7["function:GC_unmap_old<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:403"]
+  T7["function:GC_unmap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2539"]
   S7 -->|calls| T7
-  S8["method:JobsMarqueeView::rebuildContent<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:199"]
-  T8["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
+  S8["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T8["function:GC_remap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2605"]
   S8 -->|calls| T8
-  S9["method:JobsMarqueeView::applyManualScrollConfig<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:291"]
-  T9["method:JXSegmentedIndicatorBaseView::byScrollEnabled<br/>JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedIndicator/JXSegmentedIndicatorBaseView.swift:62"]
+  S9["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T9["function:GC_unmap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2539"]
   S9 -->|calls| T9
-  S10["method:JobsMarqueeView::applyManualScrollConfig<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:291"]
-  T10["method:UIScrollView::byPagingEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+DSL.swift:55"]
+  S10["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T10["function:GC_unmap_gap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2677"]
   S10 -->|calls| T10
-  S11["method:JobsMarqueeView::snapToNearestPageIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:297"]
-  T11["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
+  S11["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T11["function:GC_unmap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2539"]
   S11 -->|calls| T11
-  S12["method:JobsMarqueeView::snapToNearestPageIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:297"]
-  T12["method:Decimal::round<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:57"]
+  S12["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T12["function:GC_unmap_gap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2677"]
   S12 -->|calls| T12
-  S13["method:JobsMarqueeView::snapToNearestPageIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:297"]
-  T13["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
+  S13["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T13["function:GC_remap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2605"]
   S13 -->|calls| T13
-  S14["method:JobsMarqueeView::start<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:335"]
-  T14["method:JobsMarqueeView::createTimer<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:383"]
+  S14["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T14["function:GC_unmap_gap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:2677"]
   S14 -->|calls| T14
-  S15["method:JobsMarqueeView::start<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:335"]
-  T15["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  S15["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T15["function:GC_remove_from_fl_at<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:303"]
   S15 -->|calls| T15
-  S16["method:JobsMarqueeView::pause<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:341"]
-  T16["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
+  S16["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T16["function:GC_remove_from_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:327"]
   S16 -->|calls| T16
-  S17["method:JobsMarqueeView::resume<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:345"]
-  T17["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  S17["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T17["function:GC_remove_header<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:307"]
   S17 -->|calls| T17
-  S18["method:JobsMarqueeView::ensureAutoScrollRunning<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:352"]
-  T18["method:JobsMarqueeView::createTimer<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:383"]
+  S18["function:GC_merge_unmapped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:463"]
+  T18["function:GC_add_to_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:362"]
   S18 -->|calls| T18
-  S19["method:JobsMarqueeView::ensureAutoScrollRunning<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:352"]
-  T19["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  S19["function:GC_get_first_part<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:536"]
+  T19["function:GC_remove_from_fl_at<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:303"]
   S19 -->|calls| T19
-  S20["method:JobsMarqueeView::ensureAutoScrollRunning<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:352"]
-  T20["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  S20["function:GC_get_first_part<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:536"]
+  T20["function:GC_install_header<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:274"]
   S20 -->|calls| T20
-  S21["method:JobsMarqueeView::stop<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:363"]
-  T21["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S21["function:GC_get_first_part<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:536"]
+  T21["function:GC_add_to_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:362"]
   S21 -->|calls| T21
-  S22["method:JobsMarqueeView::resetTimerIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:368"]
-  T22["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S22["function:GC_split_block<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:577"]
+  T22["function:GC_add_to_fl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:362"]
   S22 -->|calls| T22
-  S23["method:JobsMarqueeView::handleScrollModeChanged<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:373"]
-  T23["method:JobsMarqueeView::resetTimerIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:368"]
+  S23["function:GC_allochblk<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:622"]
+  T23["function:GC_hblk_fl_from_blocks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:90"]
   S23 -->|calls| T23
-  S24["method:JobsMarqueeView::createTimer<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:383"]
-  T24["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S24["function:GC_allochblk<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:622"]
+  T24["function:GC_allochblk_nth<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:686"]
   S24 -->|calls| T24
-  S25["method:JobsMarqueeView::createTimer<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:383"]
-  T25["method:JobsMarqueeView::tickFrequency<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:420"]
+  S25["function:GC_allochblk<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:622"]
+  T25["function:GC_enough_large_bytes_left<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/allchblk.c:76"]
   S25 -->|calls| T25
 ```
 

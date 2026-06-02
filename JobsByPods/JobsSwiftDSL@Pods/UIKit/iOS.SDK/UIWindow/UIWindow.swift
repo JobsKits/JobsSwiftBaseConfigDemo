@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 extension UIWindow {
     /// 返回一个“保证非空”的 UIWindow
     /// - 优先 jobsKeyWindow（真实窗口）

@@ -33,5 +33,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'lottie-ios'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

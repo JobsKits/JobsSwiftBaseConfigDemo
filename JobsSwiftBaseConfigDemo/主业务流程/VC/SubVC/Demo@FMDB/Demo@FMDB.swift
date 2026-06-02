@@ -14,6 +14,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsInheritance
 
 #if canImport(FMDB) && !canImport(WCDB)

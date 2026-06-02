@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import WebKit
 import JobsSwiftBlock
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 public class JobsNavBar: UIView {

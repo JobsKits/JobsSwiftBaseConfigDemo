@@ -15,6 +15,7 @@ import UIKit
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
+import JobsSwiftDSL
 
 import Jobsl10n
 import JobsScale

@@ -14,6 +14,7 @@ import UIKit
 
 import YTKNetwork
 import SnapKit
+import JobsSwiftDSL
 
 import GKNavigationBarSwift
 import JobsScale

@@ -18,6 +18,7 @@ import HaishinKit      // HaishinKit / RTMPHaishinKit
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseTools
 import JobsSwiftAppTools
 import JobsBy3rdTools

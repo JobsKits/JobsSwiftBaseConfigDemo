@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:916"]
-  T1["method:UITapGestureRecognizer::byTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:121"]
+  S1["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  T1["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S1 -->|calls| T1
-  S2["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:916"]
-  T2["method:UISwipeGestureRecognizer::byDirection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:166"]
+  S2["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  T2["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S2 -->|calls| T2
-  S3["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:916"]
-  T3["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S3["function:UnityDisplayManager_DisplayCount<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:580"]
+  T3["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S3 -->|calls| T3
-  S4["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:916"]
-  T4["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S4["function:UnityDisplayManager_DisplayAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:585"]
+  T4["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S4 -->|calls| T4
-  S5["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:916"]
-  T5["method:UIView::_setGrMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:729"]
+  S5["function:UnityDisplayManager_DisplayActive<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:597"]
+  T5["function:UnityDisplayManager_DisplayAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:585"]
   S5 -->|calls| T5
-  S6["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:944"]
-  T6["method:UIView::addSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:944"]
+  S6["function:UnityDisplayManager_DisplaySystemResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:606"]
+  T6["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S6 -->|calls| T6
-  S7["method:UIView::removeSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:958"]
-  T7["method:UIView::_grMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:726"]
+  S7["function:UnityDisplayManager_DisplaySystemResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:606"]
+  T7["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
   S7 -->|calls| T7
-  S8["method:UIView::removeSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:958"]
-  T8["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S8["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
+  T8["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S8 -->|calls| T8
-  S9["method:UIView::removeSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:958"]
-  T9["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S9["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
+  T9["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S9 -->|calls| T9
-  S10["method:UIView::removeSwipeActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:958"]
-  T10["method:UIView::_setGrMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:729"]
+  S10["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
+  T10["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
   S10 -->|calls| T10
-  S11["method:UIView::removeAllSwipeActionsMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:966"]
-  T11["method:UIView::_grMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:726"]
+  S11["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
+  T11["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S11 -->|calls| T11
-  S12["method:UIView::removeAllSwipeActionsMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:966"]
-  T12["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S12["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
+  T12["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S12 -->|calls| T12
-  S13["method:UIView::removeAllSwipeActionsMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:966"]
-  T13["method:UIView::_setGrMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:729"]
+  S13["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
+  T13["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
   S13 -->|calls| T13
-  S14["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T14["method:UIView::_grMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:726"]
+  S14["function:UnityDisplayManager_SetRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:666"]
+  T14["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S14 -->|calls| T14
-  S15["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T15["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S15["function:UnityDisplayManager_SetRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:666"]
+  T15["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
   S15 -->|calls| T15
-  S16["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T16["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S16["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
+  T16["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S16 -->|calls| T16
-  S17["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T17["method:UIPinchGestureRecognizer::byOnScaleChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:230"]
+  S17["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
+  T17["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S17 -->|calls| T17
-  S18["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T18["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S18["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
+  T18["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
   S18 -->|calls| T18
-  S19["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T19["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S19["function:UnityStartFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:737"]
+  T19["method:DisplayManager::startFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:409"]
   S19 -->|calls| T19
-  S20["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:972"]
-  T20["method:UIView::_setGrMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:729"]
+  S20["function:UnityStartFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:737"]
+  T20["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S20 -->|calls| T20
-  S21["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:998"]
-  T21["method:UIView::addPinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:998"]
+  S21["function:UnityDestroyUnityRenderSurfaces<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:742"]
+  T21["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S21 -->|calls| T21
-  S22["method:UIView::removePinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:1003"]
-  T22["method:UIView::_grMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:726"]
+  S22["function:UnityDestroyUnityRenderSurfaces<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:742"]
+  T22["method:DisplayConnection::destroySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:231"]
   S22 -->|calls| T22
-  S23["method:UIView::removePinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:1003"]
-  T23["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S23["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
+  T23["property:DisplayConnection::screen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:28"]
   S23 -->|calls| T23
-  S24["method:UIView::removePinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:1003"]
-  T24["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S24["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
+  T24["property:DisplayManager::mainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:57"]
   S24 -->|calls| T24
-  S25["method:UIView::removePinchActionMulti<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:1003"]
-  T25["method:UIView::_setGrMap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:729"]
+  S25["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
+  T25["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S25 -->|calls| T25
 ```
 

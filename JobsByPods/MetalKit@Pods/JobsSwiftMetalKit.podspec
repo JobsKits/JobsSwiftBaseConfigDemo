@@ -23,5 +23,6 @@ Pod::Spec.new do |s|
     'icon.png',
     'LICENSE',
   ]
+  s.dependency 'JobsSwiftDSL'
 
 end

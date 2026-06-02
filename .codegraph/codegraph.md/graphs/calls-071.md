@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T1["method:_InsetLabel::drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+右上角角标.swift:312"]
+  S1["method:JobsWorkerScheduler::schedule<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:21"]
+  T1["method:JobsTaskCenter::add<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:34"]
   S1 -->|calls| T1
-  S2["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T2["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
+  S2["method:JobsWorkerScheduler::schedule<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:21"]
+  T2["method:JobsTaskManager::tasks<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:233"]
   S2 -->|calls| T2
-  S3["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T3["function:_jobs_swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:92"]
+  S3["method:JobsWorkerScheduler::scheduleRepeating<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:36"]
+  T3["method:JobsWorkerScheduler::cancel<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:51"]
   S3 -->|calls| T3
-  S4["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T4["method:_InsetLabel::textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+右上角角标.swift:322"]
+  S4["method:JobsWorkerScheduler::scheduleRepeating<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:36"]
+  T4["method:JobsPlan::every<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:87"]
   S4 -->|calls| T4
-  S5["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T5["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
+  S5["method:JobsWorkerScheduler::scheduleRepeating<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:36"]
+  T5["method:JobsTaskCenter::add<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:34"]
   S5 -->|calls| T5
-  S6["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
-  T6["function:_jobs_swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:92"]
+  S6["method:JobsWorkerScheduler::scheduleRepeating<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:36"]
+  T6["method:JobsTaskManager::tasks<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:233"]
   S6 -->|calls| T6
-  S7["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
-  T7["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
+  S7["method:JobsWorkerScheduler::cancel<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:51"]
+  T7["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S7 -->|calls| T7
-  S8["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
-  T8["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
+  S8["method:JobsWorkerScheduler::cancel<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:51"]
+  T8["method:JobsTaskCenter::remove<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:41"]
   S8 -->|calls| T8
-  S9["method:_JobsAnimatedNumberStore::byTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:36"]
-  T9["method:JobsLottieConfig::configure<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshEnums.swift:115"]
+  S9["method:JobsWorkerScheduler::cancelAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:61"]
+  T9["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
   S9 -->|calls| T9
-  S10["method:UILabel::byAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:94"]
-  T10["method:_JobsAnimatedNumberStore::byCompletion<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:66"]
+  S10["method:JobsWorkerScheduler::cancelAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerScheduler.swift:61"]
+  T10["method:JobsTaskCenter::remove<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:41"]
   S10 -->|calls| T10
-  S11["method:UILabel::byAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:94"]
-  T11["method:_JobsAnimatedNumberStore::byFPS<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:60"]
+  S11["method:JobsText::applying<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:108"]
+  T11["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
   S11 -->|calls| T11
-  S12["method:UILabel::byAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:94"]
-  T12["method:_JobsAnimatedNumberStore::byDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:54"]
+  S12["method:JobsText::+<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:133"]
+  T12["method:JobsText::asAttributedString<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:89"]
   S12 -->|calls| T12
-  S13["method:UILabel::byAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:94"]
-  T13["method:_JobsAnimatedNumberStore::byStep<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:42"]
+  S13["method:JobsText::+<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:133"]
+  T13["method:JobsText::asAttributedString<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:89"]
   S13 -->|calls| T13
-  S14["method:UILabel::byAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:94"]
-  T14["method:_JobsAnimatedNumberStore::byStart<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:48"]
+  S14["method:JobsText::==<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:146"]
+  T14["method:JobsText::asAttributedString<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:89"]
   S14 -->|calls| T14
-  S15["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T15["method:UILabel::_jobsStopAnimatedNumberTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:180"]
+  S15["method:JobsText::==<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:146"]
+  T15["method:JobsText::asAttributedString<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:89"]
   S15 -->|calls| T15
-  S16["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T16["method:UILabel::_jobsParseNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:219"]
+  S16["method:JobsText::rtfData<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:158"]
+  T16["method:JobsText::asAttributedString<br/>JobsByPods/JobsTextTools@Pods/JobsText.swift:89"]
   S16 -->|calls| T16
-  S17["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T17["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S17["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:14"]
+  T17["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:14"]
   S17 -->|calls| T17
-  S18["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T18["method:UILabel::_jobsParseNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:219"]
+  S18["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:14"]
+  T18["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:14"]
   S18 -->|calls| T18
-  S19["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T19["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S19["class:String<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:11"]
+  T19["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
   S19 -->|calls| T19
-  S20["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T20["method:UILabel::_jobsDecimalPlaces<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:225"]
+  S20["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
+  T20["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S20 -->|calls| T20
-  S21["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T21["method:UIImage::rounded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:115"]
+  S21["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
+  T21["enum_member:TextFormatStrategy::lowercased<br/>JobsByPods/JobsSwiftBaseTools@Pods/TextInputStrategies.swift:17"]
   S21 -->|calls| T21
-  S22["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T22["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S22["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
+  T22["variable:parts<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_EventSemaphore_SemaphoreBased.inl.h:20"]
   S22 -->|calls| T22
-  S23["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T23["method:UILabel::_jobsFormatNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:233"]
+  S23["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
+  T23["variable:parts<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_EventSemaphore_SemaphoreBased.inl.h:20"]
   S23 -->|calls| T23
-  S24["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T24["method:UILabel::_jobsTickAnimatedNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:186"]
+  S24["function:String::normalizeToSupportedLproj::pick<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:53"]
+  T24["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S24 -->|calls| T24
-  S25["method:UILabel::byStartAnimatedTextNumber<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+动效数字.swift:109"]
-  T25["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  S25["method:String::normalizeToSupportedLproj<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:27"]
+  T25["function:String::normalizeToSupportedLproj::pick<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/String+多语言国际化.swift:53"]
   S25 -->|calls| T25
 ```
 

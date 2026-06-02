@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import GKNavigationBarSwift
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsRefresher
 import JobsInheritance
 import JobsSwiftBaseDefines

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIScrollView::bySideRefresh<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:171"]
-  T1["method:JobsSlot::attach<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:100"]
+  S1["function:GC_marked_for_finalization<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:102"]
+  T1["function:GC_store_back_pointer<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:90"]
   S1 -->|calls| T1
-  S2["method:UIScrollView::switchSideRefresh<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:194"]
-  T2["method:JobsSlot::beginRefreshing<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:185"]
+  S2["function:GC_get_back_ptr_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:113"]
+  T2["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S2 -->|calls| T2
-  S3["method:UIScrollView::switchSideRefresh<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:194"]
-  T3["method:JobsSlot::detach<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:107"]
+  S3["function:GC_get_back_ptr_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:113"]
+  T3["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S3 -->|calls| T3
-  S4["method:UIScrollView::byRefreshFeedback<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:215"]
-  T4["method:UIScrollView::jobs_playHapticImpact<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:233"]
+  S4["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:193"]
+  T4["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S4 -->|calls| T4
-  S5["method:UIScrollView::byRefreshFeedback<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:215"]
-  T5["method:UIScrollView::jobs_playSound<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:243"]
+  S5["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:193"]
+  T5["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S5 -->|calls| T5
-  S6["method:UIScrollView::jobs_playSound<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:243"]
-  T6["method:UIScrollView::jobs_resolveSoundURL<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:269"]
+  S6["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T6["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S6 -->|calls| T6
-  S7["method:UIScrollView::jobs_playSound<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:243"]
-  T7["method:UIScrollView::jobs_playSystemSound<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:287"]
+  S7["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T7["function:GC_get_back_ptr_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:113"]
   S7 -->|calls| T7
-  S8["method:UIScrollView::jobs_resolveSoundURL<br/>JobsByPods/JobsRefresher@Pods/UIScrollView+JobsRefresher.swift:269"]
-  T8["enum_member:JobsImageSource::url<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:20"]
+  S8["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T8["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S8 -->|calls| T8
-  S9["enum:JobsScale<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:32"]
-  T9["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S9["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T9["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S9 -->|calls| T9
-  S10["enum:JobsScale<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:32"]
-  T10["method:JobsScale::scaleFromBreakpoints<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:119"]
+  S10["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T10["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S10 -->|calls| T10
-  S11["enum:JobsScale<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:32"]
-  T11["method:JobsScale::clamp<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:134"]
+  S11["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T11["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S11 -->|calls| T11
-  S12["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
-  T12["method:UIImage::rounded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:115"]
+  S12["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T12["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S12 -->|calls| T12
-  S13["class:BinaryInteger<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:141"]
-  T13["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S13["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T13["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S13 -->|calls| T13
-  S14["class:BinaryInteger<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:141"]
-  T14["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S14["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T14["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S14 -->|calls| T14
-  S15["class:BinaryInteger<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:141"]
-  T15["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S15["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T15["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S15 -->|calls| T15
-  S16["class:BinaryFloatingPoint<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:150"]
-  T16["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S16["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
+  T16["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S16 -->|calls| T16
-  S17["class:BinaryFloatingPoint<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:150"]
-  T17["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S17["function:GC_generate_random_backtrace_no_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:252"]
+  T17["function:GC_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1791"]
   S17 -->|calls| T17
-  S18["class:BinaryFloatingPoint<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:150"]
-  T18["method:JobsScale::pixelAlign<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:125"]
+  S18["function:GC_generate_random_backtrace_no_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:252"]
+  T18["function:GC_print_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:205"]
   S18 -->|calls| T18
-  S19["enum:Screen<br/>JobsByPods/JobsScale@Pods/JobsScale.swift:157"]
-  T19["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S19["function:GC_generate_random_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:260"]
+  T19["function:GC_try_to_collect<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1215"]
   S19 -->|calls| T19
-  S20["function:presentAlert<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:27"]
-  T20["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S20["function:GC_generate_random_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:260"]
+  T20["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S20 -->|calls| T20
-  S21["function:presentAlert<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:27"]
-  T21["method:UIAlertController::byAddOK<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:91"]
+  S21["function:GC_generate_random_backtrace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:260"]
+  T21["function:GC_generate_random_backtrace_no_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:252"]
   S21 -->|calls| T21
-  S22["function:presentAlert<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:27"]
-  T22["method:UIAlertController::makeAlert<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:35"]
+  S22["function:GC_store_debug_info_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:275"]
+  T22["function:GC_size<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:466"]
   S22 -->|calls| T22
-  S23["method:AppLaunchManager::handleLaunch<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:46"]
-  T23["method:LaunchChecker::markAndClassifyThisLaunch<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:77"]
+  S23["function:GC_store_debug_info_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:275"]
+  T23["function:GC_size<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:466"]
   S23 -->|calls| T23
-  S24["method:AppLaunchManager::handleLaunch<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:46"]
-  T24["enum_member:GestureNodeView::State::normal<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:14"]
+  S24["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
+  T24["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S24 -->|calls| T24
-  S25["method:LaunchChecker::markAndClassifyThisLaunch<br/>JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift:77"]
-  T25["method:UserDefaults::uint8<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:59"]
+  S25["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
+  T25["function:GC_start_debugging_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:479"]
   S25 -->|calls| T25
 ```
 

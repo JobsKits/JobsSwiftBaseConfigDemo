@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIView::lottieReplace<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Lottie.swift:132"]
-  T1["method:VideoPlayer::playToView:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:201"]
+  S1["method:KeyboardDelegate::textField:shouldChangeCharactersInRange:replacementString:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:748"]
+  T1["function:StringContainsEmoji<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:1018"]
   S1 -->|calls| T1
-  S2["class:Reactive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Rx.swift:21"]
-  T2["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S2["method:KeyboardDelegate::textField:shouldChangeCharactersInRange:replacementString:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:748"]
+  T2["method:KeyboardDelegate::currentText:shouldChangeInRange:replacementText:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:776"]
   S2 -->|calls| T2
-  S3["class:Reactive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Rx.swift:21"]
-  T3["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S3["method:KeyboardDelegate::textView:shouldChangeTextInRange:replacementText:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:762"]
+  T3["function:StringContainsEmoji<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:1018"]
   S3 -->|calls| T3
-  S4["class:Reactive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Rx.swift:21"]
-  T4["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
+  S4["method:KeyboardDelegate::textView:shouldChangeTextInRange:replacementText:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:762"]
+  T4["method:KeyboardDelegate::currentText:shouldChangeInRange:replacementText:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:776"]
   S4 -->|calls| T4
-  S5["class:Reactive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Rx.swift:21"]
-  T5["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
+  S5["method:KeyboardDelegate::currentText:shouldChangeInRange:replacementText:<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:776"]
+  T5["function:StringContainsEmoji<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:1018"]
   S5 -->|calls| T5
-  S6["class:Reactive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Rx.swift:21"]
-  T6["method:Plan::merge<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:223"]
+  S6["function:UnityKeyboard_Create<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:844"]
+  T6["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S6 -->|calls| T6
-  S7["method:UIView::byAdd<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:45"]
-  T7["method:UIView::byAddConstraintsClosure<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:38"]
+  S7["function:UnityKeyboard_Show<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:905"]
+  T7["method:KeyboardDelegate::show<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:555"]
   S7 -->|calls| T7
-  S8["method:UIView::byMakeConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:104"]
-  T8["method:UIView::byAddConstraintsClosure<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:38"]
+  S8["function:UnityKeyboard_Show<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:905"]
+  T8["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S8 -->|calls| T8
-  S9["method:UIView::byRemakeConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:111"]
-  T9["method:UIView::byAddConstraintsClosure<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:38"]
+  S9["function:UnityKeyboard_Hide<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:915"]
+  T9["method:KeyboardDelegate::textInputLostFocus<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:134"]
   S9 -->|calls| T9
-  S10["method:UIView::byUpdateConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:118"]
-  T10["method:UIView::byAddConstraintsClosure<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:38"]
+  S10["function:UnityKeyboard_Hide<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:915"]
+  T10["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S10 -->|calls| T10
-  S11["method:UIView::byRemoveConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:125"]
-  T11["method:UIView::byAddConstraintsClosure<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:38"]
+  S11["function:UnityKeyboard_SetText<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:925"]
+  T11["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S11 -->|calls| T11
-  S12["method:Array::addTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:290"]
-  T12["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S12["function:UnityKeyboard_GetText<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:930"]
+  T12["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S12 -->|calls| T12
-  S13["method:Array::snapDistribute<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:297"]
-  T13["method:UIView::snap_distribute<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:177"]
+  S13["function:UnityKeyboard_SetInputHidden<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:945"]
+  T13["method:KeyboardDelegate::updateInputHidden<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:565"]
   S13 -->|calls| T13
-  S14["method:Array::addDistributeTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:303"]
-  T14["method:Array::addTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:290"]
+  S14["function:UnityKeyboard_GetRect<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:960"]
+  T14["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S14 -->|calls| T14
-  S15["method:Array::addDistributeTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:303"]
-  T15["method:Array::snapDistribute<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:297"]
+  S15["function:UnityKeyboard_GetRect<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:960"]
+  T15["function:UnityGetGLView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:606"]
   S15 -->|calls| T15
-  S16["method:UIView::_firstSubview<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Subview.swift:22"]
-  T16["method:UIView::_firstSubview<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Subview.swift:22"]
+  S16["function:UnityKeyboard_GetRect<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:960"]
+  T16["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S16 -->|calls| T16
-  S17["method:UIView::_recursiveSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Subview.swift:28"]
-  T17["method:UIView::_recursiveSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Subview.swift:28"]
+  S17["function:UnityKeyboard_GetRect<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:960"]
+  T17["function:UnityGetGLView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:606"]
   S17 -->|calls| T17
-  S18["method:UIView::height<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:40"]
-  T18["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S18["function:UnityKeyboard_SetCharacterLimit<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:975"]
+  T18["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S18 -->|calls| T18
-  S19["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T19["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S19["function:TransformBetweenOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:18"]
+  T19["function:TransformForOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:4"]
   S19 -->|calls| T19
-  S20["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T20["method:Plan::merge<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:223"]
+  S20["function:TransformBetweenOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:18"]
+  T20["function:TransformForOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:4"]
   S20 -->|calls| T20
-  S21["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T21["method:UIView::height<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:40"]
+  S21["function:UIViewControllerOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:93"]
+  T21["function:ConvertToUnityScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:46"]
   S21 -->|calls| T21
-  S22["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T22["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
+  S22["function:UIViewControllerOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:93"]
+  T22["function:UIViewControllerInterfaceOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:67"]
   S22 -->|calls| T22
-  S23["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T23["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
+  S23["function:OrientView<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:151"]
+  T23["function:UIViewControllerOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:93"]
   S23 -->|calls| T23
-  S24["class:UIView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+keyboard.swift:23"]
-  T24["method:Plan::merge<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:223"]
+  S24["function:OrientView<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:151"]
+  T24["function:TransformBetweenOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:18"]
   S24 -->|calls| T24
-  S25["method:UIView::bySize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+修改位置大小.swift:341"]
-  T25["method:JobsSkeletonPulse::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SkeletonView.swift:126"]
+  S25["method:UnityAppController::updateAppOrientation:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityAppController+ViewHandling.mm:28"]
+  T25["method:UnityView::didRotate<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityView+iOS.mm:30"]
   S25 -->|calls| T25
 ```
 

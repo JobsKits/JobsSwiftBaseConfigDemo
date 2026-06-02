@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsCallbackable::jobsCallSelfKey<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:111"]
-  T1["method:JobsCallbackable::jobsCall<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:83"]
+  S1["function:GC_make_disappearing_links_disappear<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:991"]
+  T1["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S1 -->|calls| T1
-  S2["method:JobsCallbackable::jobsCallSelfKey<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:111"]
-  T2["method:JobsCallbackable::jobs_normalizeFunctionKey<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:98"]
+  S2["function:GC_make_disappearing_links_disappear<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:991"]
+  T2["function:GC_clear_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:212"]
   S2 -->|calls| T2
-  S3["method:JobsDebugDeinitAutoLoad::load<br/>JobsByPods/JobsSwiftDebugTools@Pods/JobsDebugDeinitAutoLoad.m:18"]
-  T3["method:CameraCaptureController::start<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:356"]
+  S3["function:GC_remove_dangling_disappearing_links<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1008"]
+  T3["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S3 -->|calls| T3
-  S4["method:VCDebugDeallocDebug::install<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:35"]
-  T4["method:UIViewController::_vcDebug_swizzleViewDidLoadOnce<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:78"]
+  S4["function:GC_remove_dangling_disappearing_links<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1008"]
+  T4["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S4 -->|calls| T4
-  S5["method:UIViewController::_vcDebug_viewDidLoad<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:96"]
-  T5["method:UIViewController::_vcDebug_attachDeinitObserverIfNeeded<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:43"]
+  S5["function:GC_remove_dangling_disappearing_links<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1008"]
+  T5["function:GC_clear_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:212"]
   S5 -->|calls| T5
-  S6["method:UIViewController::_vcDebug_viewDidLoad<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:96"]
-  T6["method:UIViewController::_vcDebug_viewDidLoad<br/>JobsByPods/JobsSwiftDebugTools@Pods/UIViewController+DebugDeallocSwizzle.swift:96"]
+  S6["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T6["function:GC_mark_togglerefs<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:390"]
   S6 -->|calls| T6
-  S7["method:Decimal::rounded<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:50"]
-  T7["method:Decimal::_nsMode<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:76"]
+  S7["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T7["function:GC_make_disappearing_links_disappear<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:991"]
   S7 -->|calls| T7
-  S8["method:Decimal::round<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:57"]
-  T8["method:Decimal::_nsMode<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:76"]
+  S8["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T8["function:GC_size<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:466"]
   S8 -->|calls| T8
-  S9["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T9["method:Decimal::rounded<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:50"]
+  S9["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T9["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S9 -->|calls| T9
-  S10["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T10["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:52"]
+  S10["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T10["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S10 -->|calls| T10
-  S11["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T11["method:NumberFormatter::byMaximumFractionDigits<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:159"]
+  S11["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T11["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S11 -->|calls| T11
-  S12["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T12["method:NumberFormatter::byMinimumFractionDigits<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:153"]
+  S12["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T12["function:GC_set_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:200"]
   S12 -->|calls| T12
-  S13["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T13["method:NumberFormatter::byUsesGroupingSeparator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:103"]
+  S13["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T13["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S13 -->|calls| T13
-  S14["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T14["method:NumberFormatter::byNumberStyle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:67"]
+  S14["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T14["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S14 -->|calls| T14
-  S15["method:Decimal::formatted<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:62"]
-  T15["method:BRSystemDatePicker::byLocale<br/>JobsByPods/BRPickerViewSwift@Pods/Picker/BRSystemDatePickers.swift:25"]
+  S15["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T15["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S15 -->|calls| T15
-  S16["method:Decimal::>=<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:93"]
-  T16["method:Interval::compare<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:75"]
+  S16["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T16["function:GC_set_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:200"]
   S16 -->|calls| T16
-  S17["method:JSONDecoder::byUserInfo<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:134"]
-  T17["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S17["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T17["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S17 -->|calls| T17
-  S18["method:JSONDecoder::jobsRESTDecoder<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:163"]
-  T18["method:JSONDecoder::byDateISO8601<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:38"]
+  S18["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T18["function:GC_set_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:200"]
   S18 -->|calls| T18
-  S19["method:JSONDecoder::jobsRESTDecoder<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:163"]
-  T19["method:JSONDecoder::byKeyConvertFromSnakeCase<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:121"]
+  S19["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T19["function:GC_remove_dangling_disappearing_links<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1008"]
   S19 -->|calls| T19
-  S20["method:JSONDecoder::jobsJSON5ConfigDecoder<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:170"]
-  T20["method:JSONDecoder::byAssumesTopLevelDictionary<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:155"]
+  S20["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T20["function:GC_clear_togglerefs<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:406"]
   S20 -->|calls| T20
-  S21["method:JSONDecoder::jobsJSON5ConfigDecoder<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:170"]
-  T21["method:JSONDecoder::byAllowsJSON5<br/>JobsByPods/JobsSwiftFoundation@Pods/JSONDecoder.swift:148"]
+  S21["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T21["function:GC_make_disappearing_links_disappear<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:991"]
   S21 -->|calls| T21
-  S22["method:NSMutableAttributedString::byInsert<br/>JobsByPods/JobsSwiftFoundation@Pods/NSMutableAttributedString.swift:46"]
-  T22["method:JobsWorkerBag::insert<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorker.swift:69"]
+  S22["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T22["function:GC_remove_dangling_disappearing_links<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1008"]
   S22 -->|calls| T22
-  S23["method:NSMutableAttributedString::byAdd<br/>JobsByPods/JobsSwiftFoundation@Pods/NSMutableAttributedString.swift:52"]
-  T23["method:CrashLogCenter::append<br/>JobsByPods/JobsSwiftTools@Pods/CrashLogCenter.swift:104"]
+  S23["function:GC_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1027"]
+  T23["function:GC_reset_finalizer_nested<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:661"]
   S23 -->|calls| T23
-  S24["method:UserDefaults::setBool<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:17"]
-  T24["method:JobsMemoryCache::set<br/>JobsByPods/JobsNetworking@Pods/Cache/JobsCacheStore.swift:47"]
+  S24["function:GC_enqueue_all_finalizers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1195"]
+  T24["function:GC_set_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:200"]
   S24 -->|calls| T24
-  S25["method:UserDefaults::bool<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:20"]
-  T25["enum_member:JSONValue::object<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:964"]
+  S25["function:GC_finalize_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1247"]
+  T25["function:GC_enqueue_all_finalizers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:1195"]
   S25 -->|calls| T25
 ```
 

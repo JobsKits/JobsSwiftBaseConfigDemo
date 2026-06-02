@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import SkeletonView
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 final class SkeletonUserCell: UITableViewCell {

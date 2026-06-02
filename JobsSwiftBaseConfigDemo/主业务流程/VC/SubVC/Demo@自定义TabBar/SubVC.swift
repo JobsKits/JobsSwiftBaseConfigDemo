@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import GKNavigationBarSwift
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsInheritance
 // MARK: - 示例子页（简化）
 final class HomeVC: BaseVC {

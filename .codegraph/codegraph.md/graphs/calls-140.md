@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:RedPacketRainView::stop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:98"]
-  T1["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S1["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:189"]
+  T1["method:invalid_utf16::invalid_utf16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:61"]
   S1 -->|calls| T1
-  S2["method:RedPacketRainView::stop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:98"]
-  T2["method:RedPacketRainView::clearAllPackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:301"]
+  S2["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:189"]
+  T2["method:invalid_utf16::invalid_utf16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:61"]
   S2 -->|calls| T2
-  S3["method:RedPacketRainView::stop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:98"]
-  T3["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S3["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
+  T3["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
   S3 -->|calls| T3
-  S4["method:RedPacketRainView::reset<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:116"]
-  T4["method:RedPacketRainView::stop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:98"]
+  S4["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
+  T4["type_alias:uint32_t<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/core.h:57"]
   S4 -->|calls| T4
-  S5["method:RedPacketRainView::buildTimerIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:121"]
-  T5["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S5["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:42"]
+  T5["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:42"]
   S5 -->|calls| T5
-  S6["method:RedPacketRainView::buildTimerIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:121"]
-  T6["method:RedPacketRainView::spawnPacketIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:169"]
+  S6["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:49"]
+  T6["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:49"]
   S6 -->|calls| T6
-  S7["method:RedPacketRainView::buildTimerIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:121"]
-  T7["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S7["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:56"]
+  T7["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:56"]
   S7 -->|calls| T7
-  S8["method:RedPacketRainView::buildTimerIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:121"]
-  T8["method:RedPacketRainView::updatePackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:255"]
+  S8["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:63"]
+  T8["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:63"]
   S8 -->|calls| T8
-  S9["method:RedPacketRainView::spawnPacketIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:169"]
-  T9["method:UIButton::sys<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+Init.swift:29"]
+  S9["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:70"]
+  T9["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:70"]
   S9 -->|calls| T9
-  S10["method:RedPacketRainView::spawnPacketIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:169"]
-  T10["function:makeDefaultIconImage<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨配置.swift:54"]
+  S10["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:76"]
+  T10["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:76"]
   S10 -->|calls| T10
-  S11["method:RedPacketRainView::spawnPacketIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:169"]
-  T11["method:UIView::playTapBounce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+动画.swift:102"]
+  S11["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:81"]
+  T11["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:81"]
   S11 -->|calls| T11
-  S12["method:RedPacketRainView::spawnPacketIfNeeded<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:169"]
-  T12["method:RedPacketRainView::removePacket<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:307"]
+  S12["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:88"]
+  T12["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:88"]
   S12 -->|calls| T12
-  S13["method:RedPacketRainView::updatePackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:255"]
-  T13["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S13["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:95"]
+  T13["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:95"]
   S13 -->|calls| T13
-  S14["method:RedPacketRainView::updatePackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:255"]
-  T14["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S14["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
+  T14["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
   S14 -->|calls| T14
-  S15["method:RedPacketRainView::updatePackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:255"]
-  T15["method:RedPacketRainView::removePacket<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:307"]
+  S15["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
+  T15["type_alias:uint32_t<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/core.h:57"]
   S15 -->|calls| T15
-  S16["method:RedPacketRainView::updatePackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:255"]
-  T16["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S16["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:42"]
+  T16["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:42"]
   S16 -->|calls| T16
-  S17["method:RedPacketRainView::clearAllPackets<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:301"]
-  T17["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S17["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:49"]
+  T17["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:49"]
   S17 -->|calls| T17
-  S18["method:RedPacketRainView::removePacket<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:307"]
-  T18["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S18["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:56"]
+  T18["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:56"]
   S18 -->|calls| T18
-  S19["method:RedPacketRainView::byStart<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:338"]
-  T19["method:RedPacketRainView::start<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:75"]
+  S19["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:63"]
+  T19["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:63"]
   S19 -->|calls| T19
-  S20["method:RedPacketRainView::byPause<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:344"]
-  T20["method:RedPacketRainView::pause<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:83"]
+  S20["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:70"]
+  T20["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:70"]
   S20 -->|calls| T20
-  S21["method:RedPacketRainView::byResume<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:350"]
-  T21["method:RedPacketRainView::resume<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:90"]
+  S21["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:76"]
+  T21["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:76"]
   S21 -->|calls| T21
-  S22["method:RedPacketRainView::byStop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:356"]
-  T22["method:RedPacketRainView::stop<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:98"]
+  S22["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:81"]
+  T22["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:81"]
   S22 -->|calls| T22
-  S23["method:RedPacketRainView::byReset<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:362"]
-  T23["method:RedPacketRainView::reset<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨视图.swift:116"]
+  S23["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:88"]
+  T23["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:88"]
   S23 -->|calls| T23
-  S24["function:makeDefaultIconImage<br/>JobsByPods/JobsLuckyEnvelopeRain@Pods/红包雨配置.swift:54"]
-  T24["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S24["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:95"]
+  T24["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:95"]
   S24 -->|calls| T24
-  S25["class:JobsMarqueeView<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:32"]
-  T25["method:JobsMarqueeView::handleScrollModeChanged<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:373"]
+  S25["function:Baselib_TLS_Set<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Platforms/IOS/Include/C/Baselib_ThreadLocalStorage.inl.h:42"]
+  T25["function:Baselib_TLS_Darwin_SlotTable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Platforms/IOS/Include/C/Baselib_ThreadLocalStorage.inl.h:24"]
   S25 -->|calls| T25
 ```
 

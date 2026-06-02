@@ -25,6 +25,7 @@ PODS:
     - SnapKit (~> 5.0.0)
   - BRPickerViewSwift (0.0.1):
     - JobsByUIKit
+    - JobsSwiftDSL
     - SnapKit
   - Cache (7.4.0)
   - CocoaLumberjack (3.9.0):
@@ -128,6 +129,7 @@ PODS:
     - JobsScale
     - JobsSwiftBaseDefines
     - JobsSwiftBaseTools
+    - JobsSwiftDSL
     - JobsSwiftMetalKit
     - JobsSwiftStandardLibrary
     - JobsSwiftTools
@@ -139,11 +141,14 @@ PODS:
     - SnapKit
     - SwiftEntryKit
     - YTKNetwork
-  - JobsByPDFKit (0.0.1)
-  - JobsByPhotosUI (0.0.1)
+  - JobsByPDFKit (0.0.1):
+    - JobsSwiftDSL
+  - JobsByPhotosUI (0.0.1):
+    - JobsSwiftDSL
   - JobsByQuartzCore (0.0.1):
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
   - JobsByUIKit (0.0.1):
     - ESPullToRefresh
     - GKNavigationBarSwift
@@ -154,6 +159,7 @@ PODS:
     - JobsScale
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - JobsSwiftTimer
     - JobsTextTools
     - Kingfisher
@@ -167,25 +173,30 @@ PODS:
     - SVGKit
   - JobsByWebKit (0.0.1):
     - JobsByUIKit
+    - JobsSwiftDSL
   - JobsCountdownButton (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
+    - JobsSwiftDSL
     - JobsSwiftTimer
   - JobsCryptoKit (0.0.1)
   - JobsEmptyView (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - SnapKit
   - JobsGestureUnlock (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - SnapKit
   - JobsGetWindow (0.1.14)
   - JobsImageTools (0.1.14):
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - Kingfisher
     - SDWebImage
   - JobsInheritance (0.0.1):
@@ -196,6 +207,7 @@ PODS:
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsSwiftDebugTools
+    - JobsSwiftDSL
     - JobsSwiftFoundation
     - JobsSwiftStandardLibrary
     - JobsToast
@@ -206,15 +218,18 @@ PODS:
     - JobsSwiftTools
   - JobsLuckyEnvelopeRain (0.0.1):
     - JobsByUIKit
+    - JobsSwiftDSL
     - JobsSwiftTimer
     - SnapKit
   - JobsMarqueeView (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
+    - JobsSwiftDSL
     - JobsSwiftTimer
   - JobsNavBar (0.1.14):
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - SnapKit
     - SwiftMessages
   - JobsNetworking/AF5 (1.0.1):
@@ -226,12 +241,14 @@ PODS:
   - JobsProgressBar (0.1.14):
     - JobsByUIKit
     - JobsSwiftBaseDefines
+    - JobsSwiftDSL
     - JobsSwiftTimer
     - SnapKit
   - JobsRefresher (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - lottie-ios
     - SnapKit
   - JobsScale (0.1.14):
@@ -244,6 +261,7 @@ PODS:
     - JobsSwiftBaseDefines
     - JobsSwiftBaseTools
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - JobsSwiftTools
     - JobsTextTools
     - SnapKit
@@ -258,6 +276,7 @@ PODS:
     - JobsSwiftBaseTools/JobsSwiftTimer (= 0.1.14)
     - "JobsSwiftBaseTools/🛜网络流量监控 (= 0.1.14)"
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
@@ -267,6 +286,7 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
@@ -276,6 +296,7 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
@@ -289,9 +310,22 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsToast
+  - JobsSwiftDSL (0.1.0):
+    - AFNetworking
+    - BMPlayer
+    - GKNavigationBarSwift
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsTextTools
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+    - YTKNetwork
   - JobsSwiftFoundation (0.1.1):
     - JobsByUIKit
-  - JobsSwiftMetalKit (0.1.0)
+    - JobsSwiftDSL
+  - JobsSwiftMetalKit (0.1.0):
+    - JobsSwiftDSL
   - JobsSwiftStandardLibrary (0.0.1):
     - JobsSwiftBaseDefines
   - JobsSwiftTaskCenter (0.0.1):
@@ -304,6 +338,7 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - JobsToast
   - JobsSwiftWorker (0.1.0):
     - JobsByUIKit
@@ -318,6 +353,7 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
+    - JobsSwiftDSL
     - SnapKit
   - JXBanner (0.3.6):
     - JXBanner/Banner (= 0.3.6)
@@ -518,6 +554,7 @@ DEPENDENCIES:
   - "JobsSwiftBaseTools (from `JobsByPods/JobsSwiftBaseTools@Pods`)"
   - "JobsSwiftBlock (from `JobsByPods/JobsSwiftBlock@Pods`)"
   - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
+  - "JobsSwiftDSL (from `JobsByPods/JobsSwiftDSL@Pods`)"
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
@@ -702,6 +739,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftBlock@Pods"
   JobsSwiftDebugTools:
     :path: "JobsByPods/JobsSwiftDebugTools@Pods"
+  JobsSwiftDSL:
+    :path: "JobsByPods/JobsSwiftDSL@Pods"
   JobsSwiftFoundation:
     :path: "JobsByPods/JobsSwiftFoundation@Pods"
   JobsSwiftMetalKit:
@@ -735,7 +774,7 @@ SPEC CHECKSUMS:
   Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
   AMPopTip: cf89d8690aa6e59ddc86bf46c0ccabb3e7d148a1
   BMPlayer: e4b241bd088644d7b89d991a1a65d1b1615d19b3
-  BRPickerViewSwift: 206adc24e1719663255ea075fb432a2647a73210
+  BRPickerViewSwift: 7d4a869dd37a096696d8c2cf44e80d6106394ac6
   Cache: 11fe825910b467bf12931fc12624a2f380b3e09b
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   CoreXLSX: f9a7a70b509150ceb675b05877b7ac041a587030
@@ -762,42 +801,43 @@ SPEC CHECKSUMS:
   IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
   IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
-  JobsBy3rdTools: 826696e7a63d0c963ae90e0b4d8474cf30b75354
-  JobsByPDFKit: 56d3656161a201d1e33f1218d0d201267e668b10
-  JobsByPhotosUI: 41a5057bbbac15a9d021a1ffd6f884982f0e4ec4
-  JobsByQuartzCore: 5db2d93a1d350e98287c7c6c3184cca84b617824
-  JobsByUIKit: 2cb8694846231c7891ceb1934e16e4ea53ef3ed9
-  JobsByWebKit: 96a7a3fd8638470d05eb76e73496452325dc4808
-  JobsCountdownButton: 51a91c52f3d3cc69d8da8d1faa82d5d9984f8925
+  JobsBy3rdTools: ccd24f50beee712075980ac64654a894869cdea6
+  JobsByPDFKit: 26daf711a18d487431bd2f9ca5cbf8cc38195ca4
+  JobsByPhotosUI: e7d272d801978785a15bf18d725b7af028485391
+  JobsByQuartzCore: 5659f6ed364a6003df352f81a714b3e6fe54b419
+  JobsByUIKit: 17894bc30af52354f6d2008989e742f902067d3e
+  JobsByWebKit: 0d01da3bba25ffb73afb169f34dfe2ab958d7432
+  JobsCountdownButton: 08eec6b09a85300435af3c7d5725a065a0e04c07
   JobsCryptoKit: f9d2b6f7d11c0cf76f57ecc0c6690e0603f63b19
-  JobsEmptyView: 2bed790a55c3ab5292e0012b4c973631b63c51eb
-  JobsGestureUnlock: 91a2746f062909e7cc3c2809a1d6f238b169e3ce
+  JobsEmptyView: b7bb5626e94ccf3390e46a260c51b79d44af58bd
+  JobsGestureUnlock: e4052af5f2785cbf52102375b0c45a20d65caf74
   JobsGetWindow: f562b91ed3812946e4b944c04ebbf4cd1ef8b212
-  JobsImageTools: ee5983885b38b418799da8b6903ea893fee7ad5b
-  JobsInheritance: f0dea962792507d69f51c7cd7ce3dc36c6d3263f
+  JobsImageTools: 753dd7b92cf1cf351b588b604751d5cc015c90d5
+  JobsInheritance: 94af2194854f8e3757df30272bbca6a55d96bf10
   Jobsl10n: 17e47e87e949bd102afdbed0c7f1c20020d61637
   JobsLocalNotification: 274bdba6e8d8d33bdf0c1e8b5d3911951e161408
-  JobsLuckyEnvelopeRain: b3fc3e43fefcbd1d9c72aa074ddca7834c9e166f
-  JobsMarqueeView: 6d42539ab81e65a7ced84679ff9b12985fb72f41
-  JobsNavBar: aeeb44adc14113c1311f7232b8bdaa29aa7741b8
+  JobsLuckyEnvelopeRain: 57eca004e1e9eea080fbbd2d7a167057dd05ec0b
+  JobsMarqueeView: 632cfd248cfedbbdf4db1ffa89e2f2365f609b7b
+  JobsNavBar: ca24eee509415edd8d95edc3934063b24f67b8b8
   JobsNetworking: 4fc229e4de2c2e23df9a89b03edc047104b88ded
-  JobsProgressBar: 177e16b652b93886baba13bbfea455e560972280
-  JobsRefresher: c9dbafc9ed96012b661f76d28d9543111851eb7d
+  JobsProgressBar: 9022157e59312babbc71bc9896793d7959235e61
+  JobsRefresher: a55d8c9df415a53ce0bc2c0c269c4e778ec029cc
   JobsScale: c067caa5a33cb452d8d137b448943fdbfab76a97
-  JobsSwiftAppTools: f29b2a5378e95e36df01971a856333bc66544dfb
+  JobsSwiftAppTools: 9fd9b7af9e739b20d2b29426a46a6269369946f5
   JobsSwiftBaseDefines: 3e9ae1bad099951551f26035339256ee1b363409
-  JobsSwiftBaseTools: 6fe63de3454bf137a2360bfdcf24fb628bb714f9
+  JobsSwiftBaseTools: fbeb42344eaf62338bf512f90a09bbdc05d4ae8b
   JobsSwiftBlock: 601027c8df5e0d7be3e7cea2bb81b6235f8964fd
   JobsSwiftDebugTools: 260c8c3d8e5eaa705fb1e73864e131ce30fdab39
-  JobsSwiftFoundation: 0fedf6339ca90fd090ab635cc54536b9646ecb38
-  JobsSwiftMetalKit: e8ef2417cb94a794372f4c249d74f7686a559e16
+  JobsSwiftDSL: c2ffb7cabff69adc7657b1caf055f11634599008
+  JobsSwiftFoundation: 6d3c8dfbb540c605576c5a163e64cdf4d1bac827
+  JobsSwiftMetalKit: ddf474c92a2af9b536d6559c673f2b87a515fecd
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
-  JobsSwiftTools: ba448de8a240c41b68927e5121affef2f429a6a6
+  JobsSwiftTools: 39c0d90a6778344b11240cafe73aa05f713689d7
   JobsSwiftWorker: d5980b1f9152ab7fb7d37cbd39f5a19dbd6905f4
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
-  JobsToast: 5fed48764301f708158b3ba6341fb5d052d282e9
+  JobsToast: 4153bc40a9f9b8ccbb3864173a079495fdb5b520
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
   JXPageControl: e9487b39e2e58fc17790833214f3b8e935bef98b
   JXSegmentedView: cd73555ce2134d1656db2cb383ba9c2f36fb5078

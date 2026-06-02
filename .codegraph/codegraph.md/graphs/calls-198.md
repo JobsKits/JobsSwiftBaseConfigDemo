@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:LegacyLibraryProxy::imagePickerControllerDidCancel<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:216"]
-  T1["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:119"]
+  S1["function:has_inactive_helpers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1066"]
+  T1["function:GC_acquire_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2212"]
   S1 -->|calls| T1
-  S2["method:VideoCameraProxy::imagePickerController<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:229"]
-  T2["enum_member:JobsLogLevel::info<br/>JobsByPods/JobsNetworking@Pods/Support/JobsLogger.swift:13"]
+  S2["function:has_inactive_helpers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1066"]
+  T2["function:GC_release_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2221"]
   S2 -->|calls| T2
-  S3["method:VideoCameraProxy::imagePickerController<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:229"]
-  T3["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
+  S3["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T3["function:GC_mark_from<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:659"]
   S3 -->|calls| T3
-  S4["method:VideoCameraProxy::imagePickerController<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:229"]
-  T4["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:119"]
+  S4["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T4["function:GC_return_mark_stack<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1031"]
   S4 -->|calls| T4
-  S5["method:VideoCameraProxy::imagePickerControllerDidCancel<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:235"]
-  T5["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:119"]
+  S5["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T5["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S5 -->|calls| T5
-  S6["method:NSObject::pickFromCamera<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:250"]
-  T6["method:MediaPickerService::pickFromCamera<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:29"]
+  S6["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T6["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S6 -->|calls| T6
-  S7["method:NSObject::pickFromCamera<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:250"]
-  T7["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S7["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T7["function:has_inactive_helpers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1066"]
   S7 -->|calls| T7
-  S8["method:NSObject::pickFromPhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:257"]
-  T8["method:MediaPickerService::pickFromPhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:49"]
+  S8["function:GC_do_local_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1081"]
+  T8["function:GC_return_mark_stack<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1031"]
   S8 -->|calls| T8
-  S9["method:NSObject::pickFromPhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:257"]
-  T9["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S9["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T9["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S9 -->|calls| T9
-  S10["method:NSObject::recordVideo<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:266"]
-  T10["method:MediaPickerService::recordVideo<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:77"]
+  S10["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T10["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S10 -->|calls| T10
-  S11["method:NSObject::recordVideo<br/>JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:266"]
-  T11["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S11["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T11["function:GC_release_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2221"]
   S11 -->|calls| T11
-  S12["class:DecodableDefault.Wrapper<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:33"]
-  T12["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S12["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T12["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S12 -->|calls| T12
-  S13["method:PermissionCenter::ensure<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:42"]
-  T13["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
+  S13["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T13["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S13 -->|calls| T13
-  S14["method:PermissionCenter::ensure<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:42"]
-  T14["method:PermissionCenter::ensurePhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:70"]
+  S14["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T14["function:AO_compare_and_swap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_atomic_ops.h:83"]
   S14 -->|calls| T14
-  S15["method:PermissionCenter::ensure<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:42"]
-  T15["method:PermissionCenter::ensureMicrophone<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:103"]
+  S15["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T15["function:AO_load_acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1840"]
   S15 -->|calls| T15
-  S16["method:PermissionCenter::ensure<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:42"]
-  T16["method:PermissionCenter::ensureLocationWhenInUse<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:136"]
+  S16["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T16["function:GC_acquire_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2212"]
   S16 -->|calls| T16
-  S17["method:PermissionCenter::ensure<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:42"]
-  T17["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  S17["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T17["function:GC_notify_all_marker<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2274"]
   S17 -->|calls| T17
-  S18["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
-  T18["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S18["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T18["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S18 -->|calls| T18
-  S19["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
-  T19["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S19["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T19["function:GC_wait_marker<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2262"]
   S19 -->|calls| T19
-  S20["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
-  T20["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
+  S20["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T20["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S20 -->|calls| T20
-  S21["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
-  T21["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
+  S21["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T21["function:GC_notify_all_marker<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2274"]
   S21 -->|calls| T21
-  S22["method:PermissionCenter::ensureCamera<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:54"]
-  T22["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
+  S22["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T22["function:GC_release_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2221"]
   S22 -->|calls| T22
-  S23["method:PermissionCenter::ensurePhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:70"]
-  T23["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S23["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T23["function:GC_release_mark_lock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2221"]
   S23 -->|calls| T23
-  S24["method:PermissionCenter::ensurePhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:70"]
-  T24["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S24["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T24["function:GC_steal_mark_stack<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:993"]
   S24 -->|calls| T24
-  S25["method:PermissionCenter::ensurePhotoLibrary<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:70"]
-  T25["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
+  S25["function:GC_mark_local<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:1126"]
+  T25["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S25 -->|calls| T25
 ```
 

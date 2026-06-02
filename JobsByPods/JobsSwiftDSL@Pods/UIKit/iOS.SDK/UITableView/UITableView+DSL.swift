@@ -13,7 +13,6 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
-import JobsByQuartzCore
 import JobsSwiftBaseDefines
 // MARK: - 直接赋值@单参数
 extension UITableView {

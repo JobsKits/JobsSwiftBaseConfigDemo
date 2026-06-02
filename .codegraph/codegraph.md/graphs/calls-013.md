@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T1["method:UIAlertAction::onTap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertAction.swift:32"]
+  S1["method:UIButton::sd_imageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:117"]
+  T1["method:UIButton::_sd_setImageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:56"]
   S1 -->|calls| T1
-  S2["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T2["method:UIAlertController::byTintColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:60"]
+  S2["method:UIButton::sd_imageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:117"]
+  T2["method:UIButton::_sd_setImageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:56"]
   S2 -->|calls| T2
-  S3["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T3["method:JXSegmentedView::byContentEdgeInsets<br/>JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedView.swift:79"]
+  S3["method:UIButton::sd_placeholderImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:125"]
+  T3["method:UIButton::_sd_setPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:62"]
   S3 -->|calls| T3
-  S4["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T4["method:JXSegmentedIndicatorImageView::byImage<br/>JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedIndicator/JXSegmentedIndicatorImageView.swift:19"]
+  S4["method:UIButton::sd_placeholderBgImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:130"]
+  T4["method:UIButton::_sd_setBgPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:68"]
   S4 -->|calls| T4
-  S5["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T5["method:UIButton::sys<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+Init.swift:29"]
+  S5["method:UIButton::sd_options<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:135"]
+  T5["method:UIButton::_sd_setOptions<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:74"]
   S5 -->|calls| T5
-  S6["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T6["method:PNPlayerDemoVC::didTapPlayPause<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@PNPlayer/Demo@PNPlayer.swift:152"]
+  S6["method:UIButton::sd_context<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:140"]
+  T6["method:UIButton::_sd_setContext<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:80"]
   S6 -->|calls| T6
-  S7["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T7["method:UISlider::byMaximumTrackTintColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:46"]
+  S7["method:UIButton::sd_progress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:145"]
+  T7["method:UIButton::_sd_setProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:85"]
   S7 -->|calls| T7
-  S8["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T8["method:UISlider::byMinimumTrackTintColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:40"]
+  S8["method:UIButton::sd_completed<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:150"]
+  T8["method:UIButton::_sd_setCompleted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:91"]
   S8 -->|calls| T8
-  S9["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T9["method:UISlider::byThumbTintColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:52"]
+  S9["method:UIButton::sd_targetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:155"]
+  T9["method:UIButton::_sd_setTargetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:97"]
   S9 -->|calls| T9
-  S10["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T10["method:UISlider::byValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:22"]
+  S10["method:UIButton::sd_bgTargetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:160"]
+  T10["method:UIButton::_sd_setBgTargetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:103"]
   S10 -->|calls| T10
-  S11["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T11["method:UISlider::byMaximumValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:34"]
+  S11["method:UIButton::sd_normalLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:165"]
+  T11["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S11 -->|calls| T11
-  S12["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T12["method:UISlider::byMinimumValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISlider.swift:28"]
+  S12["method:UIButton::sd_highlightedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:171"]
+  T12["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S12 -->|calls| T12
-  S13["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T13["method:PlayerControlsView::updateCurrentTimeLabel<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:196"]
+  S13["method:UIButton::sd_disabledLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:177"]
+  T13["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S13 -->|calls| T13
-  S14["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T14["method:PNPlayerDemoVC::didSeekToTime<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@PNPlayer/Demo@PNPlayer.swift:157"]
+  S14["method:UIButton::sd_selectedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:183"]
+  T14["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S14 -->|calls| T14
-  S15["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T15["method:UILabel::byCompressionResistance<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:122"]
+  S15["method:UIButton::sd_focusedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:189"]
+  T15["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S15 -->|calls| T15
-  S16["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T16["method:UILabel::byHugging<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:107"]
+  S16["method:UIButton::sd_applicationLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:196"]
+  T16["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S16 -->|calls| T16
-  S17["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T17["method:UIListContentConfiguration::byTextAlignment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:188"]
+  S17["method:UIButton::sd_reservedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:202"]
+  T17["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S17 -->|calls| T17
-  S18["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T18["method:CATextLayer::byFont<br/>JobsByPods/JobsByQuartzCore@Pods/CATextLayer.swift:26"]
+  S18["method:UIButton::sd_bgNormalLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:208"]
+  T18["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S18 -->|calls| T18
-  S19["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T19["method:UIListContentConfiguration::byTextColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:178"]
+  S19["method:UIButton::sd_bgHighlightedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:214"]
+  T19["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S19 -->|calls| T19
-  S20["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T20["method:UIListContentConfiguration::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:97"]
+  S20["method:UIButton::sd_bgDisabledLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:220"]
+  T20["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S20 -->|calls| T20
-  S21["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T21["method:UILabel::byCompressionResistance<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:122"]
+  S21["method:UIButton::sd_bgSelectedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:226"]
+  T21["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S21 -->|calls| T21
-  S22["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T22["method:UILabel::byHugging<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:107"]
+  S22["method:UIButton::sd_bgFocusedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:232"]
+  T22["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S22 -->|calls| T22
-  S23["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T23["method:UIListContentConfiguration::byTextAlignment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:188"]
+  S23["method:UIButton::sd_bgApplicationLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:239"]
+  T23["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S23 -->|calls| T23
-  S24["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T24["method:CATextLayer::byFont<br/>JobsByPods/JobsByQuartzCore@Pods/CATextLayer.swift:26"]
+  S24["method:UIButton::sd_bgReservedLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:245"]
+  T24["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S24 -->|calls| T24
-  S25["class:PlayerControlsView<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/PlayerControlsView.swift:23"]
-  T25["method:UIListContentConfiguration::byTextColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:178"]
+  S25["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
+  T25["method:UIButton::_jobs_nextToken<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:37"]
   S25 -->|calls| T25
 ```
 

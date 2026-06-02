@@ -31,5 +31,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

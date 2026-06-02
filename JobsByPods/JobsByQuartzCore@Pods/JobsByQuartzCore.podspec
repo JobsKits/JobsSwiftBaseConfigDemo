@@ -29,5 +29,6 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.{swift,h,m,mm}'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'JobsSwiftDSL'
   
 end

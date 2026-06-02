@@ -39,5 +39,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsScale'
   s.dependency 'JobsSwiftTools'
   s.dependency 'JobsBy3rdTools'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 //  ================================== 语义统一 ==================================
 //  这里的 placeholder 统一为「兜底图(Fallback)」：

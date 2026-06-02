@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsMarqueeView::cloneButton<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:558"]
-  T1["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S1["function:min_bytes_allocd<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:267"]
+  T1["function:GC_approx_sp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:484"]
   S1 -->|calls| T1
-  S2["method:JobsMarqueeView::cloneButton<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:558"]
-  T2["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
+  S2["function:GC_start_incremental_collection<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:377"]
+  T2["function:GC_collect_a_little<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:712"]
   S2 -->|calls| T2
-  S3["method:JobsMarqueeView::scrollViewWillBeginDragging<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:701"]
-  T3["method:JobsMarqueeView::pause<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:341"]
+  S3["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:387"]
+  T3["function:min_bytes_allocd<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:267"]
   S3 -->|calls| T3
-  S4["method:JobsMarqueeView::scrollViewDidScroll<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:710"]
-  T4["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
+  S4["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:387"]
+  T4["function:GC_adj_bytes_allocd<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:316"]
   S4 -->|calls| T4
-  S5["method:JobsMarqueeView::scrollViewDidEndDragging<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:717"]
-  T5["method:JobsMarqueeView::finishUserInteraction<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:730"]
+  S5["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T5["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
   S5 -->|calls| T5
-  S6["method:JobsMarqueeView::scrollViewDidEndDecelerating<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:725"]
-  T6["method:JobsMarqueeView::finishUserInteraction<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:730"]
+  S6["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T6["function:GC_wait_for_reclaim<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2245"]
   S6 -->|calls| T6
-  S7["method:JobsMarqueeView::finishUserInteraction<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:730"]
-  T7["method:JobsMarqueeView::snapToNearestPageIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:297"]
+  S7["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T7["function:GC_promote_black_lists<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/blacklst.c:137"]
   S7 -->|calls| T7
-  S8["method:JobsMarqueeView::finishUserInteraction<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:730"]
-  T8["method:JobsMarqueeView::ensureAutoScrollRunning<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:352"]
+  S8["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T8["function:GC_reclaim_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/reclaim.c:713"]
   S8 -->|calls| T8
-  S9["method:JobsMarqueeView::installDefaultPageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:777"]
-  T9["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
+  S9["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T9["function:GC_notify_full_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:429"]
   S9 -->|calls| T9
-  S10["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T10["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S10["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T10["function:GC_clear_marks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:250"]
   S10 -->|calls| T10
-  S11["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T11["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S11["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T11["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
   S11 -->|calls| T11
-  S12["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T12["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S12["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T12["function:GC_save_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4677"]
   S12 -->|calls| T12
-  S13["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T13["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S13["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
+  T13["function:GC_finish_collection<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1033"]
   S13 -->|calls| T13
-  S14["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T14["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S14["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T14["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
   S14 -->|calls| T14
-  S15["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T15["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S15["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T15["function:GC_notify_full_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:429"]
   S15 -->|calls| T15
-  S16["method:JobsMarqueeView::updatePageControlConstraintsIfNeeded<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:781"]
-  T16["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S16["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T16["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S16 -->|calls| T16
-  S17["method:JobsMarqueeView::updatePageControlPages<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:813"]
-  T17["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
+  S17["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T17["function:GC_promote_black_lists<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/blacklst.c:137"]
   S17 -->|calls| T17
-  S18["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
-  T18["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
+  S18["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T18["function:GC_wait_for_reclaim<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2245"]
   S18 -->|calls| T18
-  S19["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
-  T19["method:Decimal::round<br/>JobsByPods/JobsSwiftFoundation@Pods/Decimal.swift:57"]
+  S19["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T19["function:GC_reclaim_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/reclaim.c:713"]
   S19 -->|calls| T19
-  S20["method:JobsMarqueeView::updatePageControlCurrentPage<br/>JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.swift:822"]
-  T20["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
+  S20["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T20["function:GC_invalidate_mark_state<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:621"]
   S20 -->|calls| T20
-  S21["class:JobsNavBar<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:20"]
-  T21["method:JobsNavBar::_jobsMakeTitleAttr<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:145"]
+  S21["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T21["function:GC_clear_marks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:250"]
   S21 -->|calls| T21
-  S22["class:JobsNavBar<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:20"]
-  T22["method:JobsNavBar::rebuildBackButton<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:218"]
+  S22["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T22["function:GC_save_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4677"]
   S22 -->|calls| T22
-  S23["method:JobsNavBar::showLoadingTitle<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:42"]
-  T23["method:JobsNavBar::_jobsMakeTitleAttr<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:145"]
+  S23["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T23["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
   S23 -->|calls| T23
-  S24["method:JobsNavBar::showLoadingTitle<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:42"]
-  T24["method:UILabel::byAttributedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:85"]
+  S24["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T24["function:GC_invalidate_mark_state<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:621"]
   S24 -->|calls| T24
-  S25["class:JobsNavBar<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:20"]
-  T25["method:JobsNavBar::applyStyle<br/>JobsByPods/JobsNavBar@Pods/JobsNavBar.swift:185"]
+  S25["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T25["function:GC_unpromote_black_lists<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/blacklst.c:170"]
   S25 -->|calls| T25
 ```
 

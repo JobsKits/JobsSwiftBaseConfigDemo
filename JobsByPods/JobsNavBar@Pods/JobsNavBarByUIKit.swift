@@ -16,6 +16,7 @@ import SnapKit
 import WebKit
 import SwiftMessages
 import JobsSwiftBlock
+import JobsSwiftDSL
 
 extension UILabel {
     @discardableResult

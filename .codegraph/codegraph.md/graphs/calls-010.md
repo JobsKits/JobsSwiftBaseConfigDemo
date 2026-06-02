@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T1["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S1["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
+  T1["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
   S1 -->|calls| T1
-  S2["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T2["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S2["method:String::isRegionalIndicator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:83"]
+  T2["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
   S2 -->|calls| T2
-  S3["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T3["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:83"]
+  S3["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
+  T3["method:String::isRegionalIndicator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:83"]
   S3 -->|calls| T3
-  S4["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T4["method:CAShapeLayer::byStrokeColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:35"]
+  S4["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
+  T4["method:String::isLikelyStrongEmojiScalar<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:70"]
   S4 -->|calls| T4
-  S5["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T5["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S5["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T5["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
   S5 -->|calls| T5
-  S6["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T6["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S6["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T6["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S6 -->|calls| T6
-  S7["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T7["method:CAShapeLayer::byStrokeEnd<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:59"]
+  S7["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T7["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
   S7 -->|calls| T7
-  S8["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T8["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:83"]
+  S8["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T8["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S8 -->|calls| T8
-  S9["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T9["method:CAShapeLayer::byStrokeColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:35"]
+  S9["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T9["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S9 -->|calls| T9
-  S10["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T10["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S10["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T10["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S10 -->|calls| T10
-  S11["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T11["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S11["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T11["method:JobsTaskExecutionSequence::filter<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:79"]
   S11 -->|calls| T11
-  S12["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T12["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:83"]
+  S12["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T12["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S12 -->|calls| T12
-  S13["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T13["method:CAShapeLayer::byStrokeColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:35"]
+  S13["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T13["method:JobsTaskExecutionSequence::filter<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:79"]
   S13 -->|calls| T13
-  S14["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T14["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S14["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:60"]
+  T14["method:String::emojiStrength<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:88"]
   S14 -->|calls| T14
-  S15["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T15["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S15["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+SVG.swift:17"]
+  T15["method:String::svgImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+SVG.swift:37"]
   S15 -->|calls| T15
-  S16["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T16["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S16["method:String::svg<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+SVG.swift:28"]
+  T16["method:String::svgImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+SVG.swift:37"]
   S16 -->|calls| T16
-  S17["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T17["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:83"]
+  S17["method:String::qrcodeImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+二维码.swift:21"]
+  T17["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
   S17 -->|calls| T17
-  S18["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T18["method:CAShapeLayer::byStrokeColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:35"]
+  S18["method:String::qrcodeImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+二维码.swift:43"]
+  T18["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
   S18 -->|calls| T18
-  S19["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T19["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S19["method:String::qrcodeImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+二维码.swift:83"]
+  T19["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
   S19 -->|calls| T19
-  S20["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T20["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S20["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:26"]
+  T20["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
   S20 -->|calls| T20
-  S21["class:FTDashboardView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:20"]
-  T21["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S21["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:26"]
+  T21["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
   S21 -->|calls| T21
-  S22["method:FTDashboardView::setProgress<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:105"]
-  T22["method:FTDashboardView::needleAngle<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:251"]
+  S22["method:String::cor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:46"]
+  T22["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
   S22 -->|calls| T22
-  S23["method:FTDashboardView::layoutLayers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:145"]
-  T23["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S23["method:String::cor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:54"]
+  T23["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
   S23 -->|calls| T23
-  S24["method:FTDashboardView::layoutLayers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:145"]
-  T24["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S24["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
+  T24["enum_member:TextFormatStrategy::lowercased<br/>JobsByPods/JobsSwiftBaseTools@Pods/TextInputStrategies.swift:17"]
   S24 -->|calls| T24
-  S25["method:FTDashboardView::layoutLayers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:145"]
-  T25["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S25["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
+  T25["method:JobsTaskExecutionSequence::prefix<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:75"]
   S25 -->|calls| T25
 ```
 

@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import ObjectiveC.runtime
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsSwiftBlock
 

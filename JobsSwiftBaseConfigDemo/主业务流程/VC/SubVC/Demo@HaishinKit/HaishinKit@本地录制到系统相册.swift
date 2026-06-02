@@ -18,6 +18,7 @@ import SnapKit
 import HaishinKit      // HaishinKit / RTMPHaishinKit
 import JobsInheritance
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 final class HKLocalRecordVC: BaseVC {

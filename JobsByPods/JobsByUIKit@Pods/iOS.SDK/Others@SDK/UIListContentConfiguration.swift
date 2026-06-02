@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+import JobsSwiftDSL
 // ================================== 示例 ==================================
 // cell.byListConfig {
 //     $0.byText("主标题")

@@ -43,5 +43,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsByPhotosUI'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsToast'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

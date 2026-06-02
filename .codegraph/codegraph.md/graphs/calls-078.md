@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T1["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S1["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
+  T1["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
   S1 -->|calls| T1
-  S2["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T2["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S2["method:CurlLoggerPlugin::willSend<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:20"]
+  T2["method:URLRequest::cURLDescription<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:31"]
   S2 -->|calls| T2
-  S3["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T3["method:UIActivityIndicatorView::byHidesWhenStopped<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIActivityIndicatorView/UIActivityIndicatorView+DSL.swift:29"]
+  S3["method:URLRequest::cURLDescription<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:31"]
+  T3["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
   S3 -->|calls| T3
-  S4["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T4["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S4["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T4["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S4 -->|calls| T4
-  S5["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T5["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:207"]
+  S5["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T5["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S5 -->|calls| T5
-  S6["class:JobsHeaderAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:156"]
-  T6["method:UIBarAppearance::byBackgroundColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIBarAppearance.swift:46"]
+  S6["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T6["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S6 -->|calls| T6
-  S7["method:JobsHeaderAnimator::layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:213"]
-  T7["method:JobsHeaderAnimator::layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:213"]
+  S7["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T7["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S7 -->|calls| T7
-  S8["method:JobsHeaderAnimator::layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:213"]
-  T8["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S8["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T8["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S8 -->|calls| T8
-  S9["method:JobsHeaderAnimator::refresh<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:225"]
-  T9["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S9["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T9["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S9 -->|calls| T9
-  S10["method:JobsHeaderAnimator::refresh<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:225"]
-  T10["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S10["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T10["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S10 -->|calls| T10
-  S11["method:JobsHeaderAnimator::refresh<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:225"]
-  T11["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S11["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T11["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S11 -->|calls| T11
-  S12["method:JobsHeaderAnimator::refresh<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:225"]
-  T12["method:UILabel::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:33"]
+  S12["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T12["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S12 -->|calls| T12
-  S13["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T13["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S13["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
+  T13["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
   S13 -->|calls| T13
-  S14["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T14["method:UIBarAppearance::byBackgroundColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIBarAppearance.swift:46"]
+  S14["class:KitchenSinkNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:218"]
+  T14["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
   S14 -->|calls| T14
-  S15["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T15["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S15["method:KitchenSinkNode::didLoad<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:235"]
+  T15["method:KitchenSinkNode::didLoad<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:235"]
   S15 -->|calls| T15
-  S16["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T16["method:UILabel::byCompressionResistance<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:122"]
+  S16["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
+  T16["method:KitchenSinkNode::update<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:266"]
   S16 -->|calls| T16
-  S17["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T17["method:UILabel::byHugging<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:107"]
+  S17["method:KitchenSinkNode::update<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:266"]
+  T17["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
   S17 -->|calls| T17
-  S18["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T18["method:UIListContentConfiguration::byTextAlignment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:188"]
+  S18["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T18["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S18 -->|calls| T18
-  S19["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T19["method:UIListContentConfiguration::byTextColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:178"]
+  S19["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T19["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S19 -->|calls| T19
-  S20["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T20["method:AttributeContainer::byFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIKitAttributes.swift:18"]
+  S20["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T20["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S20 -->|calls| T20
-  S21["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T21["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S21["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T21["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S21 -->|calls| T21
-  S22["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T22["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S22["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T22["method:JobsTaskExecutionSequence::prefix<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:75"]
   S22 -->|calls| T22
-  S23["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T23["method:UIActivityIndicatorView::byHidesWhenStopped<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIActivityIndicatorView/UIActivityIndicatorView+DSL.swift:29"]
+  S23["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T23["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S23 -->|calls| T23
-  S24["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T24["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S24["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T24["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S24 -->|calls| T24
-  S25["class:JobsFooterAnimator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift:244"]
-  T25["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S25["class:DemoDB<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@WCDB/DemoDB.swift:13"]
+  T25["method:JobsSwiftTimerManager::create<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:33"]
   S25 -->|calls| T25
 ```
 

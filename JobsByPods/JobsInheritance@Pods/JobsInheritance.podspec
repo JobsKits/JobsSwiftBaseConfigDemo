@@ -37,5 +37,6 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftFoundation'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftStandardLibrary'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

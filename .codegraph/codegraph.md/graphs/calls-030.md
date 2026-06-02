@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIProgressView::byProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIProgressView.swift:31"]
-  T1["method:FTDashboardView::setProgress<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:105"]
+  S1["method:JobsChaCha20Poly1305Box::encrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:15"]
+  T1["function:aesCBCEncrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:84"]
   S1 -->|calls| T1
-  S2["method:UIProgressView::byProgressByAnimated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIProgressView.swift:37"]
-  T2["method:FTDashboardView::setProgress<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:105"]
+  S2["method:JobsChaCha20Poly1305Box::decrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:43"]
+  T2["method:String::open<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+系统功能调用.swift:44"]
   S2 -->|calls| T2
-  S3["method:UIResponder::jobsCurrentFirstResponder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIResponder.swift:20"]
-  T3["method:UIResponder::_jobsTrapFindFirstResponder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIResponder.swift:19"]
+  S3["method:JobsChaCha20Poly1305Box::decrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:43"]
+  T3["function:aesCBCDecrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:116"]
   S3 -->|calls| T3
-  S4["method:UIResponder::jobsNearestVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIResponder.swift:30"]
-  T4["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S4["function:aesCBCEncrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:84"]
+  T4["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
   S4 -->|calls| T4
-  S5["method:UISegmentedControl::insertSegmentByAnimated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:34"]
-  T5["method:UISegmentedControl::insertSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:40"]
+  S5["function:aesCBCDecrypt<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/ChaChaPoly.swift:116"]
+  T5["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
   S5 -->|calls| T5
-  S6["method:UISegmentedControl::insertSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:40"]
-  T6["method:UISegmentedControl::insertSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:40"]
+  S6["class:String<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@摘要/MD5.swift:12"]
+  T6["method:String::md5<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@摘要/MD5.swift:21"]
   S6 -->|calls| T6
-  S7["method:UISegmentedControl::removeSegmentByAnimated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:46"]
-  T7["method:UISegmentedControl::removeSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:52"]
+  S7["class:Digest<br/>JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@摘要/SHA.swift:60"]
+  T7["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S7 -->|calls| T7
-  S8["method:UISegmentedControl::removeSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:52"]
-  T8["method:UISegmentedControl::removeSegment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UISegmentedControl.swift:52"]
+  S8["class:GestureNodeView<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:11"]
+  T8["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S8 -->|calls| T8
-  S9["method:UIStackView::addArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:48"]
-  T9["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S9["method:GestureNodeView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:45"]
+  T9["method:GestureNodeView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:45"]
   S9 -->|calls| T9
-  S10["method:UIStackView::byRemoveAllArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:91"]
-  T10["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S10["class:GestureUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:16"]
+  T10["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:95"]
   S10 -->|calls| T10
-  S11["method:UIStackView::byAddArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:100"]
-  T11["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S11["class:GestureUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:16"]
+  T11["method:GestureUnlockView::commonInit<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:52"]
   S11 -->|calls| T11
-  S12["method:UIStackView::byResetArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:106"]
-  T12["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S12["class:GestureUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:16"]
+  T12["method:GestureUnlockView::commonInit<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:52"]
   S12 -->|calls| T12
-  S13["method:UIStackView::byResetArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:106"]
-  T13["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S13["method:GestureUnlockView::commonInit<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:52"]
+  T13["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:95"]
   S13 -->|calls| T13
-  S14["method:UIStackView::byResetArrangedSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:106"]
-  T14["method:NumberFormatter::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter.swift:14"]
+  S14["method:GestureUnlockView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:64"]
+  T14["method:GestureUnlockView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:64"]
   S14 -->|calls| T14
-  S15["class:UIWindowScene<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIWindowScene.swift:15"]
-  T15["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
+  S15["method:GestureUnlockView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:64"]
+  T15["method:GestureUnlockView::layoutNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:111"]
   S15 -->|calls| T15
-  S16["method:PHPickerViewController::byTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:20"]
-  T16["method:PHPickerViewController::jobs_phpickerBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:52"]
+  S16["method:GestureUnlockView::layoutSubviews<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:64"]
+  T16["method:GestureUnlockView::updateLinePath<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:252"]
   S16 -->|calls| T16
-  S17["method:PHPickerViewController::didFinishPicking<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:28"]
-  T17["method:PHPickerViewController::jobs_phpickerBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:52"]
+  S17["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:72"]
+  T17["method:GestureUnlockView::setVisualState<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:278"]
   S17 -->|calls| T17
-  S18["method:JobsPHPickerBlocksProxy::picker<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:43"]
-  T18["method:PHPickerViewController::didFinishPicking<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/PHPickerViewController/PHPickerViewController.swift:28"]
+  S18["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:72"]
+  T18["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S18 -->|calls| T18
-  S19["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
-  T19["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
+  S19["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:72"]
+  T19["method:GestureUnlockView::updateLinePath<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:252"]
   S19 -->|calls| T19
-  S20["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T20["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
+  S20["method:GestureUnlockView::showError<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:85"]
+  T20["method:GestureUnlockView::setVisualState<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:278"]
   S20 -->|calls| T20
-  S21["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T21["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
+  S21["method:GestureUnlockView::showSelected<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:89"]
+  T21["method:GestureUnlockView::setVisualState<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:278"]
   S21 -->|calls| T21
-  S22["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T22["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
+  S22["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:95"]
+  T22["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
   S22 -->|calls| T22
-  S23["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T23["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
+  S23["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:95"]
+  T23["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S23 -->|calls| T23
-  S24["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T24["method:String::isEmoji<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:22"]
+  S24["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:135"]
+  T24["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:72"]
   S24 -->|calls| T24
-  S25["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+Emoji.swift:19"]
-  T25["method:JobsTaskExecutionSequence::filter<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:79"]
+  S25["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:135"]
+  T25["method:GestureUnlockView::trySelectNode<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:170"]
   S25 -->|calls| T25
 ```
 

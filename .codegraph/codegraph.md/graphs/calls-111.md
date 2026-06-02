@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UITestVC::viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:71"]
-  T1["method:UITestVC::viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:71"]
+  S1["function:UnityReplayKitPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:107"]
+  T1["method:UnityReplayKit::showPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:218"]
   S1 -->|calls| T1
-  S2["method:UITestVC::viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:71"]
-  T2["method:UITestView::hostViewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:29"]
+  S2["function:UnityReplayKitPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:107"]
+  T2["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S2 -->|calls| T2
-  S3["method:UITestVC::viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:76"]
-  T3["method:UITestVC::viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:76"]
+  S3["function:UnityReplayKitBroadcastingAPIAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:112"]
+  T3["method:UnityReplayKit::broadcastingApiAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:282"]
   S3 -->|calls| T3
-  S4["method:UITestVC::viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:76"]
-  T4["method:UITestView::hostViewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:32"]
+  S4["function:UnityReplayKitBroadcastingAPIAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:112"]
+  T4["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S4 -->|calls| T4
-  S5["method:UITestVC::viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:81"]
-  T5["method:UITestVC::viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:81"]
+  S5["function:UnityReplayKitStartBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:117"]
+  T5["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S5 -->|calls| T5
-  S6["method:UITestVC::viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:81"]
-  T6["method:UITestView::hostViewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:35"]
+  S6["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T6["function:UnityReplayKitHideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:88"]
   S6 -->|calls| T6
-  S7["method:UITestVC::viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:86"]
-  T7["method:UITestVC::viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:86"]
+  S7["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T7["method:UnityReplayKit::stopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:416"]
   S7 -->|calls| T7
-  S8["method:UITestVC::viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:86"]
-  T8["method:UITestView::hostViewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:38"]
+  S8["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T8["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S8 -->|calls| T8
-  S9["method:UITestVC::viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:91"]
-  T9["method:UITestVC::viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:91"]
+  S9["function:UnityReplayKitPauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:130"]
+  T9["method:UnityReplayKit::pauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:435"]
   S9 -->|calls| T9
-  S10["method:UITestVC::viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:91"]
-  T10["method:UITestView::hostViewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:41"]
+  S10["function:UnityReplayKitPauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:130"]
+  T10["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S10 -->|calls| T10
-  S11["method:UITestVC::viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:96"]
-  T11["method:UITestVC::viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:96"]
+  S11["function:UnityReplayKitResumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:135"]
+  T11["method:UnityReplayKit::resumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:445"]
   S11 -->|calls| T11
-  S12["method:UITestVC::viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:96"]
-  T12["method:UITestView::hostViewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:44"]
+  S12["function:UnityReplayKitResumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:135"]
+  T12["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S12 -->|calls| T12
-  S13["method:UIViewController::bindVCLifecycleListener<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:133"]
-  T13["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
+  S13["function:UnityReplayKitIsBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:140"]
+  T13["method:UnityReplayKit::isBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:297"]
   S13 -->|calls| T13
-  S14["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T14["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S14["function:UnityReplayKitIsBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:140"]
+  T14["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S14 -->|calls| T14
-  S15["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T15["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S15["function:UnityReplayKitIsBroadcastingPaused<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:145"]
+  T15["method:UnityReplayKit::isBroadcastingPaused<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:306"]
   S15 -->|calls| T15
-  S16["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T16["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S16["function:UnityReplayKitIsBroadcastingPaused<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:145"]
+  T16["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S16 -->|calls| T16
-  S17["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T17["method:UITestVC::viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:66"]
+  S17["function:UnityReplayKitIsPreviewControllerActive<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:150"]
+  T17["method:UnityReplayKit::isPreviewControllerActive<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:273"]
   S17 -->|calls| T17
-  S18["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T18["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:222"]
+  S18["function:UnityReplayKitIsPreviewControllerActive<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:150"]
+  T18["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S18 -->|calls| T18
-  S19["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T19["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S19["function:UnityReplayKitGetBroadcastURL<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:155"]
+  T19["method:UnityReplayKit::broadcastURL<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:288"]
   S19 -->|calls| T19
-  S20["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T20["method:UITestVC::viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:71"]
+  S20["function:UnityReplayKitGetBroadcastURL<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:155"]
+  T20["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S20 -->|calls| T20
-  S21["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T21["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:226"]
+  S21["function:UnityReplayKitCreateOverlayWindow<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:165"]
+  T21["method:UnityReplayKit::createOverlayWindow<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:115"]
   S21 -->|calls| T21
-  S22["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T22["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S22["function:UnityReplayKitCreateOverlayWindow<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:165"]
+  T22["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S22 -->|calls| T22
-  S23["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T23["method:UITestVC::viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:76"]
+  S23["method:UnityURLRequest::init:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:64"]
+  T23["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S23 -->|calls| T23
-  S24["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T24["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:230"]
+  S24["method:UnityWebRequestDelegate::URLSession:dataTask:didReceiveResponse:completionHandler:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:120"]
+  T24["method:UnityWebRequestDelegate::handleResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:126"]
   S24 -->|calls| T24
-  S25["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T25["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S25["method:UnityWebRequestDelegate::handleResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:126"]
+  T25["method:UnityWebRequestDelegate::handleHTTPResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:145"]
   S25 -->|calls| T25
 ```
 

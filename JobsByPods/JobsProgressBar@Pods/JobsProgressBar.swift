@@ -14,6 +14,7 @@ import ObjectiveC
 #endif
 
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
 // MARK: - Progress Label Placement

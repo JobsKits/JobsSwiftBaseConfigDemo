@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 @MainActor
 public extension ViewDataProtocol where Self: UITableViewCell {

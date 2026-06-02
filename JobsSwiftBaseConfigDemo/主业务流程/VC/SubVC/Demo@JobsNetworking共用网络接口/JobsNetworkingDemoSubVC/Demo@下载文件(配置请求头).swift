@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 // MARK: - 下载文件到本地
 final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {

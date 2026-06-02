@@ -11,9 +11,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import AVFoundation
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 
 public protocol PlayerControlsDelegate: AnyObject {
     func didTapPlayPause()

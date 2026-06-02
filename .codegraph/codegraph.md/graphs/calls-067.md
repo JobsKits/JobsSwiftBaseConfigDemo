@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIImage::filled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage+Cor.swift:47"]
-  T1["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S1["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T1["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S1 -->|calls| T1
-  S2["method:UIImage::filled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage+Cor.swift:47"]
-  T2["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S2["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T2["method:BluetoothProxy::request<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:231"]
   S2 -->|calls| T2
-  S3["method:UIImage::rotated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage+Cor.swift:66"]
-  T3["method:UIButton::StateProxy::image<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1030"]
+  S3["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T3["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S3 -->|calls| T3
-  S4["method:UIImage::rotated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage+Cor.swift:66"]
-  T4["method:SphereTagCloudView::rotate<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:278"]
+  S4["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T4["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
   S4 -->|calls| T4
-  S5["method:UIImage::rotated<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage+Cor.swift:66"]
-  T5["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S5["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T5["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
   S5 -->|calls| T5
-  S6["class:UIImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:17"]
-  T6["method:UIButton::StateProxy::image<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1030"]
+  S6["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T6["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
   S6 -->|calls| T6
-  S7["method:UIImage::grayScale<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:71"]
-  T7["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S7["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T7["method:BluetoothProxy::request<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:231"]
   S7 -->|calls| T7
-  S8["method:UIImage::rounded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:115"]
-  T8["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S8["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T8["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S8 -->|calls| T8
-  S9["method:UIImage::overlayed<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:168"]
-  T9["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S9["method:PermissionCenter::ensureBluetooth<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:159"]
+  T9["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
   S9 -->|calls| T9
-  S10["method:UIImage::overlayed<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:168"]
-  T10["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S10["method:PermissionCenter::showNoPermissionToast<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:181"]
+  T10["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S10 -->|calls| T10
-  S11["method:UIImage::compressed<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:192"]
-  T11["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S11["method:LocationProxy::locationManagerDidChangeAuthorization<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:200"]
+  T11["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
   S11 -->|calls| T11
-  S12["method:UIImagePickerController::byTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:21"]
-  T12["method:UIImagePickerController::jobs_imagePickerBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:71"]
+  S12["method:LocationProxy::locationManagerDidChangeAuthorization<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:200"]
+  T12["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
   S12 -->|calls| T12
-  S13["method:UIImagePickerController::didFinishPickingMediaWithInfo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:29"]
-  T13["method:UIImagePickerController::jobs_imagePickerBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:71"]
+  S13["method:LocationProxy::locationManager<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:208"]
+  T13["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
   S13 -->|calls| T13
-  S14["method:UIImagePickerController::didCancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:37"]
-  T14["method:UIImagePickerController::jobs_imagePickerBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:71"]
+  S14["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
+  T14["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
   S14 -->|calls| T14
-  S15["method:JobsImagePickerBlocksProxy::imagePickerController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:53"]
-  T15["method:UIImagePickerController::didFinishPickingMediaWithInfo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:29"]
+  S15["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
+  T15["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
   S15 -->|calls| T15
-  S16["method:JobsImagePickerBlocksProxy::imagePickerControllerDidCancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:59"]
-  T16["method:UIImagePickerController::didCancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImagePickerController/UIImagePickerController+Proxy.swift:37"]
+  S16["method:LocationProxy::handle<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:214"]
+  T16["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
   S16 -->|calls| T16
-  S17["method:UIImageView::byHighlighted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+DSL.swift:107"]
-  T17["method:NSObject::_byApplyValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+Builder.swift:23"]
+  S17["method:BluetoothProxy::centralManagerDidUpdateState<br/>JobsByPods/JobsSwiftTools@Pods/PermissionCenter.swift:237"]
+  T17["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
   S17 -->|calls| T17
-  S18["method:UIImageView::byAnimationDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+DSL.swift:127"]
-  T18["method:NSObject::_byApplyValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+Builder.swift:23"]
+  S18["method:UnityManager::loadUnityFramework<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:40"]
+  T18["method:UnityFramework::getInstance<br/>TODO/Unity/xcode_effectTest/Classes/main.mm:27"]
   S18 -->|calls| T18
-  S19["method:UIImageView::byAnimationRepeatCount<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+DSL.swift:135"]
-  T19["method:NSObject::_byApplyValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+Builder.swift:23"]
+  S19["method:UnityManager::loadUnityFramework<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:40"]
+  T19["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
   S19 -->|calls| T19
-  S20["method:UIImageView::byPreferredImageDynamicRange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+DSL.swift:156"]
-  T20["method:NSObject::_byApplyValue<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+Builder.swift:23"]
+  S20["method:UnityManager::showUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:100"]
+  T20["method:UnityManager::loadUnityFramework<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:40"]
   S20 -->|calls| T20
-  S21["method:UIImageView::byShimmeringAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:62"]
-  T21["method:UIImageView::kf_setImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:27"]
+  S21["method:UnityManager::showUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:100"]
+  T21["method:UnityManager::setupAutoCloseTimer<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:141"]
   S21 -->|calls| T21
-  S22["method:UIImageView::byShimmeringAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:76"]
-  T22["method:UIImageView::kf_setImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:27"]
+  S22["method:UnityManager::showUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:115"]
+  T22["method:UnityManager::showUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:115"]
   S22 -->|calls| T22
-  S23["method:UIImageView::byShimmeringAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:76"]
-  T23["enum_member:PromiseKitDemoVC::Row::fallback<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@PromiseKit/PromiseKitDemoVC.swift:30"]
+  S23["method:UnityManager::hideUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:123"]
+  T23["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
   S23 -->|calls| T23
-  S24["method:UIImageView::byShimmeringAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:91"]
-  T24["method:UIImageView::byShimmeringAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:91"]
+  S24["method:UnityManager::unloadUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:133"]
+  T24["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
   S24 -->|calls| T24
-  S25["method:UIImageView::byAsyncImageKF<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+Kingfisher.swift:103"]
-  T25["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S25["method:UnityManager::setupAutoCloseTimer<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:141"]
+  T25["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
   S25 -->|calls| T25
 ```
 

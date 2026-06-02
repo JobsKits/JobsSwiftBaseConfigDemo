@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsNavigationControllerBlocksProxy::navigationController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:124"]
-  T1["method:UINavigationController::didShow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:57"]
+  S1["class:ManDB<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@FMDB/ManDB.swift:12"]
+  T1["method:ManDB::createTableIfNeeded<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@FMDB/ManDB.swift:23"]
   S1 -->|calls| T1
-  S2["method:JobsNavigationControllerBlocksProxy::navigationControllerPreferredInterfaceOrientationForPresentation<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:133"]
-  T2["method:UINavigationController::preferredInterfaceOrientationForPresentation<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:66"]
+  S2["method:ManDB::fetchAll<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@FMDB/ManDB.swift:51"]
+  T2["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:52"]
   S2 -->|calls| T2
-  S3["method:JobsNavigationControllerBlocksProxy::navigationControllerSupportedInterfaceOrientations<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:139"]
-  T3["method:UINavigationController::supportedInterfaceOrientations<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:74"]
+  S3["method:ManDB::fetchAll<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@FMDB/ManDB.swift:51"]
+  T3["method:UserDefaults::int<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:28"]
   S3 -->|calls| T3
-  S4["method:UIPageControl::jobs_setIndicatorImages<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:39"]
-  T4["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
+  S4["method:ManDB::fetchAll<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@FMDB/ManDB.swift:51"]
+  T4["method:UIButton::close<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+Init.swift:38"]
   S4 -->|calls| T4
-  S5["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
-  T5["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
+  S5["enum:MethodType<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Models/MethodType.swift:11"]
+  T5["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
   S5 -->|calls| T5
-  S6["method:UIPageControl::jobs_applyIndicatorImagesIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:88"]
-  T6["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
+  S6["method:DemoService::loadCatalog<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:27"]
+  T6["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:46"]
   S6 -->|calls| T6
-  S7["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T7["method:UIPageControl::jobs_setIndicatorImages<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:39"]
+  S7["method:DemoService::requestData<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:41"]
+  T7["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:46"]
   S7 -->|calls| T7
-  S8["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T8["method:UIPageControl::jobs_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:251"]
+  S8["method:DemoService::uploadDemo<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:63"]
+  T8["method:JobsDefaultAgent::upload<br/>JobsByPods/JobsNetworking@Pods/Upload/JobsDefaultAgent+Upload.swift:13"]
   S8 -->|calls| T8
-  S9["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T9["method:UIPageControl::jobs_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:251"]
+  S9["method:DemoService::downloadDemo<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:87"]
+  T9["method:JobsDefaultAgent::download<br/>JobsByPods/JobsNetworking@Pods/Download/JobsDefaultAgent+Download.swift:13"]
   S9 -->|calls| T9
-  S10["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T10["method:UIPageControl::jobs_circleDotImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:241"]
+  S10["method:DemoService::downloadDemo<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:87"]
+  T10["method:DemoService::mimeTypeByFileName<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:125"]
   S10 -->|calls| T10
-  S11["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T11["method:UIPageControl::jobs_circleDotImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:241"]
+  S11["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
+  T11["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
   S11 -->|calls| T11
-  S12["method:UIPageControl::jobs_setIndicatorImageURLs<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:103"]
-  T12["method:UIPageControl::jobs_setIndicatorImages<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:39"]
+  S12["method:DemoService::mimeTypeByFileName<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:125"]
+  T12["enum_member:TextFormatStrategy::lowercased<br/>JobsByPods/JobsSwiftBaseTools@Pods/TextInputStrategies.swift:17"]
   S12 -->|calls| T12
-  S13["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T13["method:UIBarAppearance::byBackgroundColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIBarAppearance.swift:46"]
+  S13["method:JobsNetworkingDeleteDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDeleteDemoVC.swift:21"]
+  T13["method:DemoService::requestData<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:41"]
   S13 -->|calls| T13
-  S14["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T14["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:207"]
+  S14["method:JobsNetworkingDeleteDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDeleteDemoVC.swift:21"]
+  T14["method:DemoService::prettyJSONString<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:112"]
   S14 -->|calls| T14
-  S15["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T15["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S15["method:JobsNetworkingDeleteDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDeleteDemoVC.swift:21"]
+  T15["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
   S15 -->|calls| T15
-  S16["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T16["method:UIBarAppearance::byBackgroundColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIBarAppearance.swift:46"]
+  S16["method:JobsNetworkingDeleteDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDeleteDemoVC.swift:21"]
+  T16["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
   S16 -->|calls| T16
-  S17["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T17["method:UIStackView::byDistribution<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:24"]
+  S17["method:JobsNetworkingDeleteDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDeleteDemoVC.swift:21"]
+  T17["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
   S17 -->|calls| T17
-  S18["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T18["method:UIStackView::byAlignment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:30"]
+  S18["method:JobsNetworkingDownloadDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDownloadDemoVC.swift:20"]
+  T18["method:DemoService::downloadDemo<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:87"]
   S18 -->|calls| T18
-  S19["method:UIPageControl::jobs_ensureOverlay<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:148"]
-  T19["method:UIStackView::byAxis<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIStackView.swift:18"]
+  S19["method:JobsNetworkingDownloadDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDownloadDemoVC.swift:20"]
+  T19["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
   S19 -->|calls| T19
-  S20["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T20["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S20["method:JobsNetworkingDownloadDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingDownloadDemoVC.swift:20"]
+  T20["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
   S20 -->|calls| T20
-  S21["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T21["method:UIView::byContentMode<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:195"]
+  S21["method:JobsNetworkingGetDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingGetDemoVC.swift:21"]
+  T21["method:DemoService::requestData<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:41"]
   S21 -->|calls| T21
-  S22["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T22["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:207"]
+  S22["method:JobsNetworkingGetDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingGetDemoVC.swift:21"]
+  T22["method:DemoService::prettyJSONString<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:112"]
   S22 -->|calls| T22
-  S23["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T23["method:UIView::byRemakeConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:111"]
+  S23["method:JobsNetworkingGetDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingGetDemoVC.swift:21"]
+  T23["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
   S23 -->|calls| T23
-  S24["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T24["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S24["method:JobsNetworkingGetDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingGetDemoVC.swift:21"]
+  T24["method:DemoService::decode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/Services/DemoService.swift:121"]
   S24 -->|calls| T24
-  S25["method:UIPageControl::jobs_renderOverlayDots<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIPageControl/UIPageControl+网络背景图.swift:187"]
-  T25["enum_member:JobsTaskType::priority<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:285"]
+  S25["method:JobsNetworkingGetDemoVC::performRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/SubVCs/JobsNetworkingGetDemoVC.swift:21"]
+  T25["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
   S25 -->|calls| T25
 ```
 

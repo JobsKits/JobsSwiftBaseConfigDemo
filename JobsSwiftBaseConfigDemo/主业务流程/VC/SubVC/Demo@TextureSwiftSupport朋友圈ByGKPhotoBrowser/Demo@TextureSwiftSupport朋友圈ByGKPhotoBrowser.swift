@@ -18,6 +18,7 @@ import GKPhotoBrowser
 import GKNavigationBarSwift
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
 import JobsRefresher

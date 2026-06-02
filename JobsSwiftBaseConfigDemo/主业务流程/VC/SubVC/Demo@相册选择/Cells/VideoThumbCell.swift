@@ -14,6 +14,7 @@ import UIKit
 
 import AVFoundation
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import SnapKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）

@@ -17,6 +17,7 @@ import IQKeyboardManagerSwift
 import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
 

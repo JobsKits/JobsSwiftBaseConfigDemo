@@ -14,6 +14,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
 
@@ -204,7 +205,6 @@ public class SlideToUnlockView: UIView {
             arrow.byImage(UIImage(named: symbolName) ?? symbolName.img)
         }
     }
-
 
     private func updateLayoutForProgress(animated: Bool) {
         guard bounds.width > 0 else { return }

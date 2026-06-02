@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import JobsInheritance
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 /// 示例模型，用于演示传参
 struct DemoModel {

@@ -18,6 +18,7 @@ import JobsInheritance
 import JXSegmentedView
 import JobsBy3rdTools
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
 import JobsSwiftTools

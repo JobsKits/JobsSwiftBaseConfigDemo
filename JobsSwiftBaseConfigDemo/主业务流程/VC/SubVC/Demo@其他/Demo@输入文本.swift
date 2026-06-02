@@ -14,6 +14,7 @@ import UIKit
 
 import SnapKit
 import GKNavigationBarSwift
+import JobsSwiftDSL
 
 import JobsToast
 import JobsByUIKit

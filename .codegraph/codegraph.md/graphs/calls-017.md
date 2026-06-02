@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:YTKBatchRequest::byAccessories<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:34"]
-  T1["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S1["method:UIButton::pauseJobsTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:342"]
+  T1["method:UIButton::pauseTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:235"]
   S1 -->|calls| T1
-  S2["method:YTKBatchRequest::byCompletion<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:55"]
-  T2["function:BRDatePicker::makeDate::s<br/>JobsByPods/BRPickerViewSwift@Pods/Picker/BRDatePicker.swift:117"]
+  S2["method:UIButton::resumeJobsTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:345"]
+  T2["method:UIButton::resumeTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:242"]
   S2 -->|calls| T2
-  S3["method:YTKBatchRequest::byStart<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:67"]
-  T3["enum_member:HTTPResponseCode::success<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:297"]
+  S3["method:UIButton::fireJobsTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:348"]
+  T3["method:UIButton::fireTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:249"]
   S3 -->|calls| T3
-  S4["method:YTKBatchRequest::byStart<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:67"]
-  T4["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
+  S4["method:UIButton::stopJobsTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:351"]
+  T4["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
   S4 -->|calls| T4
-  S5["method:JobsChainDelegateProxy::chainRequestFinished<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:20"]
-  T5["method:JobsChainDelegateProxy::chainRequestFinished<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:20"]
+  S5["method:UIButton::startJobsCountdown<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:354"]
+  T5["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
   S5 -->|calls| T5
-  S6["method:JobsChainDelegateProxy::chainRequestFailed<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:26"]
-  T6["method:JobsChainDelegateProxy::chainRequestFailed<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:26"]
+  S6["method:UIButton::stopJobsCountdown<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:361"]
+  T6["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
   S6 -->|calls| T6
-  S7["method:YTKChainRequest::byAddAccessory<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:62"]
-  T7["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S7["method:UIButton::_jobs_runOnMain<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:31"]
+  T7["function:onMainImmediateOrAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:245"]
   S7 -->|calls| T7
-  S8["method:YTKChainRequest::byAccessories<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:68"]
-  T8["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S8["method:UIButton::_jobs_nextToken<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:37"]
+  T8["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S8 -->|calls| T8
-  S9["method:YTKChainRequest::byAccessories<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:68"]
-  T9["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S9["method:UIButton::_jobs_nextToken<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:37"]
+  T9["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S9 -->|calls| T9
-  S10["method:YTKChainRequest::byAdd<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:75"]
-  T10["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S10["method:UIButton::_jobs_isCurrentToken<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:53"]
+  T10["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S10 -->|calls| T10
-  S11["method:YTKChainRequest::byAdd<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:75"]
-  T11["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S11["method:UIButton::_jobs_loadingPlaceholderImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:146"]
+  T11["method:UIImage::_jobs_transparentPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+呼吸占位效果.swift:154"]
   S11 -->|calls| T11
-  S12["method:YTKChainRequest::byAdd<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:87"]
-  T12["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S12["method:UIButton::byTapSound<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:44"]
+  T12["method:UIButton::_jobs_unbindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:154"]
   S12 -->|calls| T12
-  S13["method:YTKChainRequest::byAdd<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:87"]
-  T13["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S13["method:UIButton::byTapSound<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:44"]
+  T13["method:UIButton::_jobs_bindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:130"]
   S13 -->|calls| T13
-  S14["method:YTKChainRequest::byStart<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKChainRequest+DSL.swift:121"]
-  T14["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
+  S14["method:UIButton::byRemoveTapSound<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:84"]
+  T14["method:UIButton::_jobs_unbindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:154"]
   S14 -->|calls| T14
-  S15["class:IrregularButton<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:15"]
-  T15["method:IrregularButton::setup<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:34"]
+  S15["method:UIButton::_jobs_onTapPlaySound<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:101"]
+  T15["method:VideoPlayer::playToView:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:201"]
   S15 -->|calls| T15
-  S16["class:IrregularButton<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:15"]
-  T16["method:IrregularButton::setup<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:34"]
+  S16["method:UIButton::_jobs_bindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:130"]
+  T16["method:JobsTask::removeAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:134"]
   S16 -->|calls| T16
-  S17["method:IrregularButton::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:50"]
-  T17["method:IrregularButton::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:50"]
+  S17["method:UIButton::_jobs_bindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:130"]
+  T17["method:UIButton::_jobs_onTapPlaySound<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:101"]
   S17 -->|calls| T17
-  S18["method:IrregularButton::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:50"]
-  T18["method:IrregularButton::buildPath<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:68"]
+  S18["method:UIButton::_jobs_bindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:130"]
+  T18["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
   S18 -->|calls| T18
-  S19["method:IrregularButton::point<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:63"]
-  T19["method:IrregularButton::point<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:63"]
+  S19["method:UIButton::_jobs_unbindTapHandler<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+声音.swift:154"]
+  T19["method:JobsTask::removeAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:134"]
   S19 -->|calls| T19
-  S20["method:IrregularButton::buildPath<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:68"]
-  T20["method:IrregularButton::scaled<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:79"]
+  S20["method:_JobsButtonTapSleeve::invoke<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:29"]
+  T20["method:UIButton::jobs_invokeTapBlocks<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:77"]
   S20 -->|calls| T20
-  S21["method:IrregularButton::buildPath<br/>JobsByPods/JobsBy3rdTools@Pods/不规则形状的按钮.swift:68"]
-  T21["method:UIButton::close<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+Init.swift:38"]
+  S21["method:_JobsButtonLongPressSleeve::invoke<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:40"]
+  T21["method:UIButton::jobs_invokeLongPressBlocks<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:83"]
   S21 -->|calls| T21
-  S22["method:PDFView::byGoBack<br/>JobsByPods/JobsByPDFKit@Pods/PDFView.swift:145"]
-  T22["method:UIViewController::goBack<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+传值回调.swift:48"]
+  S22["method:UIButton::jobs_ensureTapHandlerInstalled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:87"]
+  T22["method:UIButton::jobs_invokeTapBlocks<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:77"]
   S22 -->|calls| T22
-  S23["method:PDFView::byGoTo<br/>JobsByPods/JobsByPDFKit@Pods/PDFView.swift:155"]
-  T23["method:FeedModel::page<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@BMPlayer/Model/FeedModel.swift:56"]
+  S23["method:UIButton::jobs_ensureTapHandlerInstalled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:87"]
+  T23["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
   S23 -->|calls| T23
-  S24["method:PHPickerViewController::byAddTo<br/>JobsByPods/JobsByPhotosUI@Pods/PHPickerViewController.swift:96"]
-  T24["method:JobsSlot::layout<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:113"]
+  S24["method:UIButton::jobs_ensureTapHandlerInstalled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:87"]
+  T24["method:_JobsButtonTapSleeve::invoke<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:29"]
   S24 -->|calls| T24
-  S25["method:PHPickerViewController::byPresent<br/>JobsByPods/JobsByPhotosUI@Pods/PHPickerViewController.swift:109"]
-  T25["method:BRPickerPanel::present<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:90"]
+  S25["method:UIButton::jobs_ensureLongPressRecognizer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:120"]
+  T25["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
   S25 -->|calls| T25
 ```
 

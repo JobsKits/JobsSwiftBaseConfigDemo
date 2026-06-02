@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC.runtime
 import JobsSwiftBlock
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 private enum JobsAssocKey {
@@ -117,12 +118,5 @@ extension UIViewController {
     private func jobs_viewDidAppear_swizzled(_ animated: Bool) {
         self.jobs_viewDidAppear_swizzled(animated) // 原实现
         self.jobs_fireAppearCompletionIfNeeded(reason: "viewDidAppear")
-    }
-}
-
-extension UIViewController: @retroactive JobsRouteComparable {
-    @inline(__always)
-    public func jobs_isSameDestination(as other: UIViewController) -> Bool {
-        type(of: self) == type(of: other)
     }
 }

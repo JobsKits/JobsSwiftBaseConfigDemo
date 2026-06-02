@@ -18,6 +18,7 @@ import JobsInheritance
 import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 import JobsBy3rdTools
 #if canImport(BMPlayer)

@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 // MARK: - 同步并发请求
 final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {

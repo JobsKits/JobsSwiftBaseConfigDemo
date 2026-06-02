@@ -14,6 +14,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsByQuartzCore
 import JobsSwiftBaseDefines
 // MARK: - 普通银行卡 Cell（懒加载 + byAddTo）
@@ -50,7 +51,6 @@ final class WalletCardCell: UICollectionViewCell {
                 make.centerY.equalTo(self.logoView.snp.centerY)
             }
     }()
-
 
     private lazy var numberLabel: UILabel = {
       UILabel()

@@ -15,6 +15,7 @@ import UIKit
 import SnapKit
 import JobsNetworking
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 // MARK: - 一般数据请求
 final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {

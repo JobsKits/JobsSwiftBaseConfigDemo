@@ -16,6 +16,7 @@ import WebKit
 import SnapKit
 import JobsNavBar
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsByWebKit
 import JobsSwiftBlock
 import JobsSwiftBaseDefines

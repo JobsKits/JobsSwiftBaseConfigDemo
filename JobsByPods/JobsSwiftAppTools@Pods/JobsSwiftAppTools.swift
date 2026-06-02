@@ -17,6 +17,7 @@ import SnapKit
 import JobsInheritance
 import JobsScale
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
 import JobsSwiftTools

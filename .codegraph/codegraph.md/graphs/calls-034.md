@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:String::sysImg<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:104"]
-  T1["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S1["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::walk<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:242"]
+  T1["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisherBackground<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:154"]
   S1 -->|calls| T1
-  S2["method:String::sysImg<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:104"]
-  T2["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S2["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::walk<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:242"]
+  T2["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
   S2 -->|calls| T2
-  S3["method:String::kfLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:166"]
-  T3["method:String::kfLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:166"]
+  S3["method:JobsImageCacheCleaner::_forceRedownloadImagesMain<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:72"]
+  T3["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::walk<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:242"]
   S3 -->|calls| T3
-  S4["method:String::kfLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:166"]
-  T4["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S4["method:JobsImageCacheCleaner::clearAllCachesAndForceRedownload<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:331"]
+  T4["method:JobsImageCacheCleaner::clearSDWebImageCache<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:43"]
   S4 -->|calls| T4
-  S5["method:String::kfLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:172"]
-  T5["method:String::kfLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:172"]
+  S5["method:JobsImageCacheCleaner::clearAllCachesAndForceRedownload<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:331"]
+  T5["method:JobsImageCacheCleaner::clearKingfisherCache<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:30"]
   S5 -->|calls| T5
-  S6["method:String::sdLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:224"]
-  T6["method:String::sdLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:224"]
+  S6["method:JobsImageCacheCleaner::clearAllCachesAndForceRedownload<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:331"]
+  T6["method:JobsImageCacheCleaner::forceRedownloadImages<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:58"]
   S6 -->|calls| T6
-  S7["method:String::sdLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:224"]
-  T7["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S7["class:UIView<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:351"]
+  T7["enum:JobsImageLoaderKind<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:22"]
   S7 -->|calls| T7
-  S8["method:String::sdLoadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+获取资源.swift:235"]
-  T8["function:jobsSolidBlue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseDebug.swift:63"]
+  S8["method:UIButton::jobsResetBtnImage<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleanerByUIKit.swift:43"]
+  T8["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleanerByUIKit.swift:35"]
   S8 -->|calls| T8
-  S9["method:String::addInPlace<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:26"]
-  T9["method:CrashLogCenter::append<br/>JobsByPods/JobsSwiftTools@Pods/CrashLogCenter.swift:104"]
+  S9["method:JobsSimpleImageLoader::load<br/>JobsByPods/JobsImageTools@Pods/JobsSimpleImageLoader.swift:22"]
+  T9["method:JobsTask::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:178"]
   S9 -->|calls| T9
-  S10["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:15"]
-  T10["method:chunked_allocator_stats::block_stat::index<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/chunked_allocator.h:254"]
+  S10["method:JobsPaddedLabel::drawText<br/>JobsByPods/JobsInheritance@Pods/UILabel/JobsPaddedLabel.swift:24"]
+  T10["method:JobsPaddedLabel::drawText<br/>JobsByPods/JobsInheritance@Pods/UILabel/JobsPaddedLabel.swift:24"]
   S10 -->|calls| T10
-  S11["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:49"]
-  T11["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S11["method:JobsPaddedLabel::sizeThatFits<br/>JobsByPods/JobsInheritance@Pods/UILabel/JobsPaddedLabel.swift:35"]
+  T11["method:JobsPaddedLabel::sizeThatFits<br/>JobsByPods/JobsInheritance@Pods/UILabel/JobsPaddedLabel.swift:35"]
   S11 -->|calls| T11
-  S12["method:String::makeURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:82"]
-  T12["method:String::percentEncodedURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:96"]
+  S12["method:BaseVC::viewDidLoad<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:26"]
+  T12["method:BaseVC::viewDidLoad<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:26"]
   S12 -->|calls| T12
-  S13["method:String::makeURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:82"]
-  T13["method:String::percentEncodedURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:96"]
+  S13["method:BaseVC::viewDidAppear<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:32"]
+  T13["method:BaseVC::viewDidAppear<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:32"]
   S13 -->|calls| T13
-  S14["method:String::_parseEmails<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:119"]
-  T14["method:JobsTaskExecutionSequence::filter<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:79"]
+  S14["method:BaseWebView::userContentController<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:20"]
+  T14["method:BaseWebView::handleScriptMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:42"]
   S14 -->|calls| T14
-  S15["method:String::_parseEmails<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:119"]
-  T15["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S15["method:BaseWebView::userContentController<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:31"]
+  T15["method:BaseWebView::handleScriptMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:42"]
   S15 -->|calls| T15
-  S16["method:String::_parseEmails<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:119"]
-  T16["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
+  S16["method:BaseWebView::handleScriptMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:42"]
+  T16["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
   S16 -->|calls| T16
-  S17["method:UIBarButtonItem::onTap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:23"]
-  T17["method:UIBarButtonItem::_jobs_handleAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:43"]
+  S17["method:BaseWebView::handleScriptMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:42"]
+  T17["method:BaseWebView::jsReturn<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:96"]
   S17 -->|calls| T17
-  S18["method:UIBarButtonItem::fixed<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:82"]
-  T18["method:UIBarButtonItem::byWidth<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:100"]
+  S18["method:BaseWebView::handleScriptMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:42"]
+  T18["method:BaseWebView::jsReturn<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:96"]
   S18 -->|calls| T18
-  S19["method:UIButton::byContentInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:71"]
-  T19["method:UIButton::byContentInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:71"]
+  S19["method:BaseWebView::jsReturn<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:96"]
+  T19["method:BaseWebView::toJSONLiteral<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:27"]
   S19 -->|calls| T19
-  S20["method:UIButton::byContentInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:71"]
-  T20["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S20["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
+  T20["method:BaseWebView::quote<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:19"]
   S20 -->|calls| T20
-  S21["method:UIButton::byContentInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:71"]
-  T21["method:UIButton::_jobsSyncLegacyInsetsIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:674"]
+  S21["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
+  T21["method:BaseWebView::toJSONLiteral<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:27"]
   S21 -->|calls| T21
-  S22["method:UIButton::byContentEdgeInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:87"]
-  T22["method:UIButton::byContentInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:71"]
+  S22["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
+  T22["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S22 -->|calls| T22
-  S23["method:UIButton::byContentEdgeInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:87"]
-  T23["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S23["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
+  T23["method:BaseWebView::quote<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:19"]
   S23 -->|calls| T23
-  S24["method:UIButton::byContentEdgeInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:87"]
-  T24["method:UIButton::_jobsSyncLegacyInsetsIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:674"]
+  S24["method:BaseWebView::handleIOSBridgeMessage<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:106"]
+  T24["method:BaseWebView::quote<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:19"]
   S24 -->|calls| T24
-  S25["method:UIButton::byImageEdgeInsets<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:105"]
-  T25["method:UIButton.Configuration::byImagePadding<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButtonConfiguration/UIButtonConfiguration.swift:182"]
+  S25["method:BaseWebView::byInjectDarkStylePatch<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+ConfigDSL.swift:38"]
+  T25["method:BaseWebView::injectDarkCSS<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Scripts.swift:130"]
   S25 -->|calls| T25
 ```
 

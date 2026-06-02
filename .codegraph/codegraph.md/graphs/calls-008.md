@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T1["method:JobsDialogBoxBuilder::byCornerRadius<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:69"]
+  S1["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
+  T1["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S1 -->|calls| T1
-  S2["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T2["method:PDFThumbnailView::byBackgroundColor<br/>JobsByPods/JobsByPDFKit@Pods/PDFThumbnailView.swift:33"]
+  S2["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
+  T2["method:NSObject::jobs_store<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:130"]
   S2 -->|calls| T2
-  S3["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T3["method:BMPlayer::byAddTo<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:83"]
+  S3["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:179"]
+  T3["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S3 -->|calls| T3
-  S4["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T4["method:JobsDialogBoxBuilder::byCornerRadius<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:69"]
+  S4["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:179"]
+  T4["method:NSObject::jobs_store<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:130"]
   S4 -->|calls| T4
-  S5["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T5["method:PDFThumbnailView::byBackgroundColor<br/>JobsByPods/JobsByPDFKit@Pods/PDFThumbnailView.swift:33"]
+  S5["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:219"]
+  T5["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:219"]
   S5 -->|calls| T5
-  S6["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T6["method:JobsClockView::commonInit<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:109"]
+  S6["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:224"]
+  T6["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:224"]
   S6 -->|calls| T6
-  S7["class:JobsClockView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:24"]
-  T7["method:JobsClockView::commonInit<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:109"]
+  S7["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:229"]
+  T7["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:229"]
   S7 -->|calls| T7
-  S8["method:JobsClockView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:100"]
-  T8["method:JobsClockView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:100"]
+  S8["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:234"]
+  T8["function:onMainImmediateOrAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:245"]
   S8 -->|calls| T8
-  S9["method:JobsClockView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:100"]
-  T9["method:JobsClockView::layoutDialAndNumbers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:116"]
+  S9["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:234"]
+  T9["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:234"]
   S9 -->|calls| T9
-  S10["method:JobsClockView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:100"]
-  T10["method:JobsClockView::layoutHandLayers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:182"]
+  S10["method:NSObject::onObject<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:253"]
+  T10["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
   S10 -->|calls| T10
-  S11["method:JobsClockView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:100"]
-  T11["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
+  S11["method:NSObject::onObject<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:265"]
+  T11["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
   S11 -->|calls| T11
-  S12["method:JobsClockView::commonInit<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:109"]
-  T12["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S12["method:NSObject::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:277"]
+  T12["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
   S12 -->|calls| T12
-  S13["method:JobsClockView::commonInit<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:109"]
-  T13["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S13["method:NSObject::onNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:289"]
+  T13["method:NotificationCenter::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:166"]
   S13 -->|calls| T13
-  S14["method:JobsClockView::commonInit<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:109"]
-  T14["method:CALayer::byHidden<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:65"]
+  S14["method:NSObject::onObject<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:300"]
+  T14["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S14 -->|calls| T14
-  S15["method:JobsClockView::layoutHandLayers<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:182"]
-  T15["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S15["method:NSObject::onObject<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:312"]
+  T15["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S15 -->|calls| T15
-  S16["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
-  T16["method:JobsClockView::stop<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:230"]
+  S16["method:NSObject::on<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:324"]
+  T16["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S16 -->|calls| T16
-  S17["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
-  T17["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
+  S17["method:NSObject::onNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:336"]
+  T17["method:NotificationCenter::_onBase<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:146"]
   S17 -->|calls| T17
-  S18["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
-  T18["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S18["method:NSObject::removeAllNotifications<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:368"]
+  T18["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
   S18 -->|calls| T18
-  S19["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
-  T19["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
+  S19["method:NSObject::removeAllNotifications<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:368"]
+  T19["method:NSObject::jobs_cancelAllTokens<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:134"]
   S19 -->|calls| T19
-  S20["method:JobsClockView::stop<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:230"]
-  T20["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S20["method:NSObject::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:375"]
+  T20["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
   S20 -->|calls| T20
-  S21["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
-  T21["method:JobsPressFuseDriver::begin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+长按外圈Layer自增UI效果.swift:42"]
+  S21["method:NSObject::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:375"]
+  T21["method:NSObject::jobs_cancelTokens<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:138"]
   S21 -->|calls| T21
-  S22["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
-  T22["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
+  S22["method:String::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:386"]
+  T22["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
   S22 -->|calls| T22
-  S23["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
-  T23["method:JobsPressFuseDriver::begin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+长按外圈Layer自增UI效果.swift:42"]
+  S23["method:String::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:386"]
+  T23["method:Notification.Name::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:400"]
   S23 -->|calls| T23
-  S24["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:236"]
-  T24["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
+  S24["method:Notification.Name::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:400"]
+  T24["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
   S24 -->|calls| T24
-  S25["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:95"]
-  T25["method:JobsDirection::resolved<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:365"]
+  S25["method:Notification.Name::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:400"]
+  T25["method:JobsNotificationToken::removeNotification<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:413"]
   S25 -->|calls| T25
 ```
 

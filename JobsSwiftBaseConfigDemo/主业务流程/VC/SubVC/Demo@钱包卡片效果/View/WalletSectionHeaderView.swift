@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftDSL
 import SnapKit
 import JobsSwiftBaseDefines
 

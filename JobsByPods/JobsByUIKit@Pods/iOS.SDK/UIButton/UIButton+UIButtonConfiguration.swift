@@ -11,6 +11,8 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
+import JobsSwiftDSL
 // MARK: - 把按钮切到 configuration 模式
 extension UIButton {
     /// 禁用系统 configuration

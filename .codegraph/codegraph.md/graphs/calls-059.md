@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UICollectionView::byRegisterSupplementaryView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:86"]
-  T1["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S1["method:JobsTaskManagerExecutionStream::AsyncIterator::next<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:44"]
+  T1["method:JobsDropFirstTaskExecutionSequence::AsyncIterator::next<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsDropFirstTaskExecutionSequence.swift:39"]
   S1 -->|calls| T1
-  S2["method:UICollectionView::byRegisterSupplementaryNib<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:100"]
-  T2["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S2["struct:JobsTaskManagerStatusStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerStatusStream.swift:28"]
+  T2["method:JobsTaskManager::addStatusObserver<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:314"]
   S2 -->|calls| T2
-  S3["method:UICollectionView::byRegisterHeaderView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:111"]
-  T3["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S3["struct:JobsTaskManagerStatusStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerStatusStream.swift:28"]
+  T3["method:JobsTaskManager::removeStatusObserver<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:323"]
   S3 -->|calls| T3
-  S4["method:UICollectionView::byRegisterHeaderView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:122"]
-  T4["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S4["struct:JobsTaskManagerStatusStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerStatusStream.swift:28"]
+  T4["method:JobsTaskManagerExecutionStream::makeAsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:26"]
   S4 -->|calls| T4
-  S5["method:UICollectionView::byRegisterFooterView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:133"]
-  T5["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S5["method:JobsTaskManagerStatusStream::AsyncIterator::next<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerStatusStream.swift:44"]
+  T5["method:JobsDropFirstTaskExecutionSequence::AsyncIterator::next<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsDropFirstTaskExecutionSequence.swift:39"]
   S5 -->|calls| T5
-  S6["method:UICollectionView::byRegisterFooterView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+Register.swift:144"]
-  T6["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S6["class:JobsTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:37"]
+  T6["method:JobsUnfairLock::jobs_withLock<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:21"]
   S6 -->|calls| T6
-  S7["class:UICollectionView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+校验.swift:15"]
-  T7["method:UICollectionView::isValid<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+校验.swift:17"]
+  S7["class:JobsTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:37"]
+  T7["method:JobsTimer::requireMainRunLoopForNonGCD<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:80"]
   S7 -->|calls| T7
-  S8["method:UICollectionView::jobs_swizzled_reloadData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:20"]
-  T8["method:UICollectionView::jobs_swizzled_reloadData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:20"]
+  S8["class:JobsTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:37"]
+  T8["method:JobsTimer::setupAppStateIfNeeded<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:448"]
   S8 -->|calls| T8
-  S9["method:UICollectionView::jobs_swizzled_reloadData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:20"]
-  T9["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
+  S9["class:JobsTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:37"]
+  T9["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
   S9 -->|calls| T9
-  S10["method:UICollectionView::jobs_swizzled_reloadData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:20"]
-  T10["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
+  S10["class:JobsTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:37"]
+  T10["method:JobsTimer::teardownAppState<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:466"]
   S10 -->|calls| T10
-  S11["method:UICollectionView::jobs_swizzled_performBatchUpdates<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:30"]
-  T11["method:UICollectionView::jobs_swizzled_performBatchUpdates<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:30"]
+  S11["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T11["method:JobsTimer::requireMainThreadForRunLoopAPI<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:72"]
   S11 -->|calls| T11
-  S12["method:UICollectionView::jobs_swizzled_performBatchUpdates<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:30"]
-  T12["function:onMainSync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:336"]
+  S12["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T12["method:JobsUnfairLock::jobs_withLock<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:21"]
   S12 -->|calls| T12
-  S13["method:UICollectionView::jobs_swizzled_performBatchUpdates<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:30"]
-  T13["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
+  S13["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T13["method:JobsTimer::startGCD<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:318"]
   S13 -->|calls| T13
-  S14["method:UICollectionView::byTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:18"]
-  T14["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S14["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T14["method:JobsTimer::startFoundationTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:368"]
   S14 -->|calls| T14
-  S15["method:UICollectionView::byTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:18"]
-  T15["method:UIScrollView::byScrollTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView.swift:27"]
+  S15["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T15["method:JobsTimer::startDisplayLink<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:380"]
   S15 -->|calls| T15
-  S16["method:UICollectionView::byTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:18"]
-  T16["method:UICollectionView::jobs_setDelegateMuxIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:441"]
+  S16["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  T16["method:JobsTimer::startRunLoopTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:401"]
   S16 -->|calls| T16
-  S17["method:UICollectionView::numberOfSections<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:29"]
-  T17["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S17["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
+  T17["method:JobsTimer::requireMainThreadForRunLoopAPI<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:72"]
   S17 -->|calls| T17
-  S18["method:UICollectionView::numberOfItemsInSection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:35"]
-  T18["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S18["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
+  T18["method:JobsUnfairLock::jobs_withLock<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:21"]
   S18 -->|calls| T18
-  S19["method:UICollectionView::cellForItemAt<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:43"]
-  T19["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S19["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
+  T19["method:JobsTimer::pauseGCD<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:336"]
   S19 -->|calls| T19
-  S20["method:UICollectionView::viewForSupplementaryElementOfKind<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:51"]
-  T20["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S20["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T20["method:JobsTimer::requireMainThreadForRunLoopAPI<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:72"]
   S20 -->|calls| T20
-  S21["method:UICollectionView::didSelectItemAt<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:60"]
-  T21["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S21["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T21["method:JobsUnfairLock::jobs_withLock<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:21"]
   S21 -->|calls| T21
-  S22["method:UICollectionView::didDeselectItemAt<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:68"]
-  T22["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S22["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T22["method:JobsTimer::resumeGCD<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:345"]
   S22 -->|calls| T22
-  S23["method:UICollectionView::willDisplayCell<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:76"]
-  T23["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S23["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T23["method:JobsTimer::startFoundationTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:368"]
   S23 -->|calls| T23
-  S24["method:UICollectionView::didEndDisplayingCell<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:85"]
-  T24["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S24["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T24["method:JobsTimer::startDisplayLink<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:380"]
   S24 -->|calls| T24
-  S25["method:UICollectionView::didEndDisplayingCell<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:85"]
-  T25["method:UICollectionView::jobs_blocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView.swift:365"]
+  S25["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  T25["method:JobsTimer::startRunLoopTimer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:401"]
   S25 -->|calls| T25
 ```
 

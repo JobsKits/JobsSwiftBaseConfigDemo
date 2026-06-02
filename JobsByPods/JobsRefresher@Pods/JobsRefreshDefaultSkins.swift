@@ -12,12 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import JobsByUIKit
-import JobsSwiftBaseDefines
-
 #if canImport(Lottie)
 import Lottie
 #endif
+
+import JobsByUIKit
+import JobsSwiftDSL
+import JobsSwiftBaseDefines
 // MARK: - 文案配置
 @MainActor
 public enum JobsRefreshConfig {

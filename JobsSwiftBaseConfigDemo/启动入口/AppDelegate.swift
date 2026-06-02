@@ -19,6 +19,7 @@ import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
 import CocoaLumberjack
 import BRPickerViewSwift
+import JobsSwiftDSL
 
 import Jobsl10n
 import JobsScale

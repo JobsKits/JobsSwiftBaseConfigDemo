@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIFont::Montserrat::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:32"]
-  T1["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S1["method:JobsLog::render<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:184"]
+  T1["method:JobsLog::toJSONString<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:272"]
   S1 -->|calls| T1
-  S2["method:UIFont::Montserrat::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:32"]
-  T2["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S2["method:JobsLog::render<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:184"]
+  T2["method:JobsLog::tryJSONFromContainers<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:295"]
   S2 -->|calls| T2
-  S3["method:UIFont::Montserrat::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:32"]
-  T3["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S3["method:JobsLog::render<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:184"]
+  T3["method:JobsLog::toJSONStringFromObject<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:313"]
   S3 -->|calls| T3
-  S4["method:UIFont::Montserrat::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:32"]
-  T4["method:UIFont::Montserrat::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:71"]
+  S4["method:JobsLog::render<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:184"]
+  T4["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S4 -->|calls| T4
-  S5["method:UIFont::Montserrat::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:45"]
-  T5["method:Bundle::lang<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:62"]
+  S5["method:JobsLog::timeNow<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:207"]
+  T5["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:52"]
   S5 -->|calls| T5
-  S6["method:UIFont::Montserrat::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:45"]
-  T6["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S6["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T6["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S6 -->|calls| T6
-  S7["method:UIFont::Montserrat::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:45"]
-  T7["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S7["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T7["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S7 -->|calls| T7
-  S8["method:UIFont::Montserrat::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:45"]
-  T8["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S8["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T8["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S8 -->|calls| T8
-  S9["method:UIFont::Montserrat::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:45"]
-  T9["method:UIFont::Montserrat::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:71"]
+  S9["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T9["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S9 -->|calls| T9
-  S10["method:UIFont::Montserrat::SemiboldItalic<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:58"]
-  T10["method:Bundle::lang<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:62"]
+  S10["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T10["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S10 -->|calls| T10
-  S11["method:UIFont::Montserrat::SemiboldItalic<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:58"]
-  T11["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S11["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T11["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S11 -->|calls| T11
-  S12["method:UIFont::Montserrat::SemiboldItalic<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:58"]
-  T12["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S12["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T12["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S12 -->|calls| T12
-  S13["method:UIFont::Montserrat::SemiboldItalic<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:58"]
-  T13["method:UIFont::Montserrat::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:19"]
+  S13["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T13["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
   S13 -->|calls| T13
-  S14["method:UIFont::Montserrat::SemiboldItalic<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:58"]
-  T14["method:UIFont::Montserrat::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Montserrat.swift:71"]
+  S14["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T14["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S14 -->|calls| T14
-  S15["method:UIFont::PingFangSC::Ultralight<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:19"]
-  T15["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S15["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T15["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S15 -->|calls| T15
-  S16["method:UIFont::PingFangSC::Thin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:23"]
-  T16["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S16["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T16["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S16 -->|calls| T16
-  S17["method:UIFont::PingFangSC::Light<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:27"]
-  T17["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S17["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T17["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S17 -->|calls| T17
-  S18["method:UIFont::PingFangSC::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:31"]
-  T18["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S18["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T18["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S18 -->|calls| T18
-  S19["method:UIFont::PingFangSC::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:35"]
-  T19["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S19["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T19["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S19 -->|calls| T19
-  S20["method:UIFont::PingFangSC::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:39"]
-  T20["method:UIFont::PingFangSC::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+PingFangSC.swift:62"]
+  S20["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T20["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
   S20 -->|calls| T20
-  S21["method:UIFont::Roboto::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:18"]
-  T21["method:UIFont::Roboto::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:30"]
+  S21["method:JobsLog::stringify<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:212"]
+  T21["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S21 -->|calls| T21
-  S22["method:UIFont::Roboto::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:22"]
-  T22["method:UIFont::Roboto::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:30"]
+  S22["method:JobsLog::toJSONString<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:272"]
+  T22["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S22 -->|calls| T22
-  S23["method:UIFont::Roboto::Semibold<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:26"]
-  T23["method:UIFont::Roboto::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+Roboto.swift:30"]
+  S23["method:JobsLog::toJSONString<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:272"]
+  T23["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S23 -->|calls| T23
-  S24["method:UIFont::SFArabic::Regular<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+SFArabic.swift:18"]
-  T24["method:UIFont::SFArabic::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+SFArabic.swift:30"]
+  S24["method:JobsLog::tryJSONFromContainers<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:295"]
+  T24["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S24 -->|calls| T24
-  S25["method:UIFont::SFArabic::Medium<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+SFArabic.swift:22"]
-  T25["method:UIFont::SFArabic::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIFont/UIFont+SFArabic.swift:30"]
+  S25["method:JobsLog::tryJSONFromContainers<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:295"]
+  T25["method:JobsLog::decodeUnicodeEscapes<br/>JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.swift:259"]
   S25 -->|calls| T25
 ```
 

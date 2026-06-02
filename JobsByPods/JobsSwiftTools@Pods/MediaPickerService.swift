@@ -21,6 +21,7 @@ import PhotosUI
 import AVFoundation
 import ObjectiveC
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsByPhotosUI
 import JobsSwiftBaseDefines
 

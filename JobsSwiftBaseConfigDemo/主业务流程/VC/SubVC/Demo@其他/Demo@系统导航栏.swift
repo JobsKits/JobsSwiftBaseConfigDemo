@@ -14,6 +14,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import JobsSwiftDSL
 
 import Jobsl10n
 import JobsToast

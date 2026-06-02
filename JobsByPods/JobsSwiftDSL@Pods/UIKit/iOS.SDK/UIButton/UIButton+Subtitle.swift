@@ -15,14 +15,14 @@ import UIKit
 private extension UIControl.State { var raw: UInt { rawValue } }
 // MARK: - Subtitle（无富文本）
 public struct _JobsSubPackNoAttr {
-    var text: String = ""
-    var font: UIFont?
-    var color: UIColor?
+    public var text: String = ""
+    public var font: UIFont?
+    public var color: UIColor?
 }
 public var _jobsSubDictKey_noAttr: UInt8 = 0
 // MARK: - Subtitle（富文本）
 public struct _JobsSubPackAttr {
-    var attr: NSAttributedString?
+    public var attr: NSAttributedString?
 }
 public var _jobsSubDictKey_attr: UInt8 = 0
 public var _jobsSubtitleHandlerInstalledKey: UInt8 = 0

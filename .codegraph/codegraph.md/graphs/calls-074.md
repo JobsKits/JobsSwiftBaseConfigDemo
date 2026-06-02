@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UILabel::onTap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:17"]
-  T1["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S1["function:loadLanguageMode<br/>JobsByPods/Jobsl10n@Pods/Jobsl10n.swift:27"]
+  T1["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:52"]
   S1 -->|calls| T1
-  S2["method:UILabel::onTap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:17"]
-  T2["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S2["class:LanguageManager<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:11"]
+  T2["function:resolveLanguageCode<br/>JobsByPods/Jobsl10n@Pods/Jobsl10n.swift:18"]
   S2 -->|calls| T2
-  S3["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T3["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S3["method:LanguageManager::switchTo<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:33"]
+  T3["method:Bundle::setLanguageBundle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:33"]
   S3 -->|calls| T3
-  S4["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T4["method:UIGestureRecognizer::byName<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:84"]
+  S4["method:LanguageManager::switchTo<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:33"]
+  T4["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:196"]
   S4 -->|calls| T4
-  S5["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T5["method:UILabel::byEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:157"]
+  S5["method:LanguageManager::followSystemLanguage<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:47"]
+  T5["method:NSObject::post<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:196"]
   S5 -->|calls| T5
-  S6["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T6["method:UIGestureRecognizer::byCancelsTouchesInView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:45"]
+  S6["method:TRAutoRefresh::Marker::pack<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:24"]
+  T6["variable:threadDictionary<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/utils/mono-threads-mach-helper.c:32"]
   S6 -->|calls| T6
-  S7["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T7["method:UITapGestureRecognizer::byTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:121"]
+  S7["method:TRAutoRefresh::ensureObserver<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:75"]
+  T7["method:TRAutoRefresh::refreshAll<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:107"]
   S7 -->|calls| T7
-  S8["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T8["method:UILongPressGestureRecognizer::byMovement<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:136"]
+  S8["method:TRAutoRefresh::register<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:87"]
+  T8["method:TRAutoRefresh::ensureObserver<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:75"]
   S8 -->|calls| T8
-  S9["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T9["method:UILongPressGestureRecognizer::byMinDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:130"]
+  S9["method:TRAutoRefresh::register<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:87"]
+  T9["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S9 -->|calls| T9
-  S10["method:UILabel::onLongPress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+点击事件.swift:41"]
-  T10["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S10["method:TRAutoRefresh::refreshAll<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:107"]
+  T10["method:TRLang::bundle<br/>JobsByPods/Jobsl10n@Pods/TRLang.swift:16"]
   S10 -->|calls| T10
-  S11["method:UINavigationBar::byLegacyTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:220"]
-  T11["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S11["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  T11["method:TRAutoRefresh::Marker::consume<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:33"]
   S11 -->|calls| T11
-  S12["method:UINavigationBar::byLegacyTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:231"]
-  T12["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S12["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  T12["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S12 -->|calls| T12
-  S13["method:UINavigationBar::byLegacyLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:242"]
-  T13["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S13["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  T13["method:TRAutoRefresh::register<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:87"]
   S13 -->|calls| T13
-  S14["method:UINavigationBar::byLegacyLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:254"]
-  T14["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S14["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  T14["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:54"]
   S14 -->|calls| T14
-  S15["method:UINavigationBar::byItems<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:355"]
-  T15["method:SphereTagCloudView::setItems<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:81"]
+  S15["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  T15["method:TRAutoRefresh::Marker::consume<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:33"]
   S15 -->|calls| T15
-  S16["method:UINavigationBarAppearance::byTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:20"]
-  T16["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S16["method:AFLogger::requestDidResume<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFLogger.swift:30"]
+  T16["method:URLRequest::cURLDescription<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:31"]
   S16 -->|calls| T16
-  S17["method:UINavigationBarAppearance::byTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:29"]
-  T17["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S17["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
+  T17["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
   S17 -->|calls| T17
-  S18["method:UINavigationBarAppearance::byLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:50"]
-  T18["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S18["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
+  T18["variable:obj<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/il2cpp-api-functions.h:206"]
   S18 -->|calls| T18
-  S19["method:UINavigationBarAppearance::byLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:59"]
-  T19["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S19["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
+  T19["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
   S19 -->|calls| T19
-  S20["method:UINavigationBarAppearance::bySubtitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:80"]
-  T20["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S20["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
+  T20["variable:obj<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/il2cpp-api-functions.h:206"]
   S20 -->|calls| T20
-  S21["method:UINavigationBarAppearance::bySubtitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:89"]
-  T21["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S21["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
+  T21["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
   S21 -->|calls| T21
-  S22["method:UINavigationBarAppearance::byTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:110"]
-  T22["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S22["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
+  T22["function:jobs_jsonValue<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:34"]
   S22 -->|calls| T22
-  S23["method:UINavigationBarAppearance::byTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:120"]
-  T23["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S23["function:asURLRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:124"]
+  T23["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
   S23 -->|calls| T23
-  S24["method:UINavigationBarAppearance::byLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:142"]
-  T24["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S24["function:asURLRequest<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:124"]
+  T24["function:jobs_encodeJSONObject<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFRoute.swift:12"]
   S24 -->|calls| T24
-  S25["method:UINavigationBarAppearance::byLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:152"]
-  T25["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S25["class:AFService<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFService.swift:13"]
+  T25["method:AFService::uploadAvatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFService.swift:63"]
   S25 -->|calls| T25
 ```
 

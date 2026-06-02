@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+import JobsSwiftDSL
 #if canImport(SnapKit) && canImport(Lottie)
 import SnapKit
 import Lottie

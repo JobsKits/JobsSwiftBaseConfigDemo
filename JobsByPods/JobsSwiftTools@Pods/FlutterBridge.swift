@@ -18,6 +18,7 @@ import FlutterPluginRegistrant
 #endif
 
 import JobsByUIKit
+import JobsSwiftDSL
 /// https://github.com/JobsKits/JobsDocs/blob/main/iOS相关的文档和资料.md/Swift ➤ Flutter.md/Swift ➤ Flutter.md
 /// 需要安装Flutter环境
 /// 必须进入Flutter目录中执行flutter pub get  生成中间产物podhelper.rb 才能跑通 pod install

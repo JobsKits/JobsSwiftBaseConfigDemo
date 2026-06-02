@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import JobsImageTools
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 //  ================================== 设计意图 ==================================
 //  统一「Shimmer Loading」与「兜底图(Fallback)」语义，避免与 Kingfisher/SDWebImage 自带 placeholder 重复：

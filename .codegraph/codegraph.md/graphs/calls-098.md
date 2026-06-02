@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T1["method:UIView::byAddSublayer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:445"]
+  S1["method:UnityDefaultViewController::viewWillAppear:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:146"]
+  T1["function:ConvertToIosScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:27"]
   S1 -->|calls| T1
-  S2["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T2["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:83"]
+  S2["method:UnityDefaultViewController::viewDidAppear:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:153"]
+  T2["function:UIViewControllerOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:93"]
   S2 -->|calls| T2
-  S3["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T3["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:23"]
+  S3["method:UnityDefaultViewController::viewDidAppear:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:153"]
+  T3["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S3 -->|calls| T3
-  S4["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T4["method:AttributeContainer::byStrokeColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIKitAttributes.swift:90"]
+  S4["method:UnityDefaultViewController::viewDidAppear:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:153"]
+  T4["function:ConvertToIosScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:27"]
   S4 -->|calls| T4
-  S5["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T5["method:FTDashboardView::byLineWidth<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:314"]
+  S5["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T5["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S5 -->|calls| T5
-  S6["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T6["method:CAKeyframeAnimation::byPath<br/>JobsByPods/JobsByQuartzCore@Pods/CAKeyframeAnimation.swift:20"]
+  S6["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T6["function:OrientationAfterTransform<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:104"]
   S6 -->|calls| T6
-  S7["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T7["method:CALayer::byFrame<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:23"]
+  S7["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T7["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S7 -->|calls| T7
-  S8["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
-  T8["method:JobsPressFuseDriver::begin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+长按外圈Layer自增UI效果.swift:42"]
+  S8["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T8["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S8 -->|calls| T8
-  S9["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T9["method:UIView::jobs_prepareFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:240"]
+  S9["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T9["function:ConvertToIosScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:27"]
   S9 -->|calls| T9
-  S10["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T10["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
+  S10["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T10["method:UnityDefaultViewController::supportedInterfaceOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:141"]
   S10 -->|calls| T10
-  S11["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T11["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
+  S11["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T11["method:KeyboardDelegate::StartReorientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:667"]
   S11 -->|calls| T11
-  S12["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T12["method:JobsPressFuseDriver::begin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+长按外圈Layer自增UI效果.swift:42"]
+  S12["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T12["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S12 -->|calls| T12
-  S13["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T13["method:CAShapeLayer::byStrokeEnd<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:59"]
+  S13["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T13["function:ConvertToIosScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:27"]
   S13 -->|calls| T13
-  S14["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T14["method:CAShapeLayer::byStrokeStart<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:53"]
+  S14["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T14["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S14 -->|calls| T14
-  S15["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T15["method:CAShapeLayer::byStrokeEnd<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:59"]
+  S15["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T15["function:ConvertToIosScreenOrientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/OrientationSupport.mm:27"]
   S15 -->|calls| T15
-  S16["method:UIView::jobs_updateFuseProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:281"]
-  T16["method:CAShapeLayer::byStrokeStart<br/>JobsByPods/JobsByQuartzCore@Pods/CAShapeLayer.swift:53"]
+  S16["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T16["method:KeyboardDelegate::FinishReorientation<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:673"]
   S16 -->|calls| T16
-  S17["method:UIView.SuspendConfig::dsl<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:66"]
-  T17["method:Array::build<br/>JobsByPods/JobsSwiftStandardLibrary@Pods/容器/Array.swift:51"]
+  S17["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T17["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S17 -->|calls| T17
-  S18["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T18["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S18["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
+  T18["method:UnityDefaultViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:160"]
   S18 -->|calls| T18
-  S19["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T19["method:UIView::_fallbackWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:410"]
+  S19["method:UnityFixedOrientationViewController::initWithOrientation:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:207"]
+  T19["method:UnityPortraitOnlyViewController::init<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:250"]
   S19 -->|calls| T19
-  S20["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T20["method:UIView::_availableBounds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:404"]
+  S20["method:UnityFixedOrientationViewController::viewWillAppear:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:226"]
+  T20["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S20 -->|calls| T20
-  S21["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T21["method:UIView::_origin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:311"]
+  S21["method:UnityFixedOrientationViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:232"]
+  T21["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S21 -->|calls| T21
-  S22["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T22["method:UIView::_origin<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:311"]
+  S22["method:UnityFixedOrientationViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:232"]
+  T22["method:UnityFixedOrientationViewController::viewWillTransitionToSize:withTransitionCoordinator:<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:232"]
   S22 -->|calls| T22
-  S23["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T23["method:UIView::_clampFrameWithinContainer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:395"]
+  S23["function:EnabledAutorotationInterfaceOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:288"]
+  T23["function:UnityDeviceSupportsUpsideDown<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:444"]
   S23 -->|calls| T23
-  S24["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T24["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S24["function:EnabledAutorotationInterfaceOrientations<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase+iOS.mm:288"]
+  T24["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S24 -->|calls| T24
-  S25["method:UIView::suspend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+悬浮.swift:165"]
-  T25["method:UIGestureRecognizer::byCancelsTouchesInView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:45"]
+  S25["method:UnityViewControllerBase::init<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase.mm:12"]
+  T25["method:UnityViewControllerBase::init<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase.mm:12"]
   S25 -->|calls| T25
 ```
 

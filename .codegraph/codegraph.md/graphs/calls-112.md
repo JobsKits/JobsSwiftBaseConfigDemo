@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T1["method:UITestVC::viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:81"]
+  S1["method:UnityWebRequestDelegate::handleResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:126"]
+  T1["method:UnityWebRequestDelegate::handleResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:155"]
   S1 -->|calls| T1
-  S2["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T2["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:234"]
+  S2["method:UnityWebRequestDelegate::handleHTTPResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:137"]
+  T2["method:UnityWebRequestDelegate::handleHTTPResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:145"]
   S2 -->|calls| T2
-  S3["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T3["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S3["method:UnityWebRequestDelegate::handleHTTPResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:145"]
+  T3["method:UnityWebRequestDelegate::handleResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:155"]
   S3 -->|calls| T3
-  S4["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T4["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S4["method:UnityWebRequestDelegate::URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:172"]
+  T4["method:UnityWebRequestDelegate::handleHTTPResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:137"]
   S4 -->|calls| T4
-  S5["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:171"]
-  T5["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:204"]
+  S5["method:UnityWebRequestDelegate::URLSession:task:didCompleteWithError:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:256"]
+  T5["method:UnityURLRequest::markDone<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:90"]
   S5 -->|calls| T5
-  S6["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:214"]
-  T6["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:214"]
+  S6["method:UnityWebRequestUploadStream::createForRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:288"]
+  T6["method:UnityWebRequestUploadStream::initWithRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:293"]
   S6 -->|calls| T6
-  S7["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:214"]
-  T7["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S7["method:UnityWebRequestUploadStream::initWithRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:293"]
+  T7["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S7 -->|calls| T7
-  S8["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:218"]
-  T8["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:218"]
+  S8["function:UnityWebRequestAddCustomHeader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:369"]
+  T8["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S8 -->|calls| T8
-  S9["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:218"]
-  T9["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S9["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
+  T9["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S9 -->|calls| T9
-  S10["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:222"]
-  T10["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:222"]
+  S10["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
+  T10["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S10 -->|calls| T10
-  S11["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:222"]
-  T11["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S11["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
+  T11["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S11 -->|calls| T11
-  S12["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:226"]
-  T12["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:226"]
+  S12["function:UnitySendWebRequest<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:426"]
+  T12["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S12 -->|calls| T12
-  S13["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:226"]
-  T13["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S13["function:UnitySendWebRequest<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:426"]
+  T13["method:VideoPlayer::resume<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:228"]
   S13 -->|calls| T13
-  S14["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:230"]
-  T14["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:230"]
+  S14["function:UnityWebRequestClearCookieCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:521"]
+  T14["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S14 -->|calls| T14
-  S15["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:230"]
-  T15["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S15["method:VideoPlayer::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:113"]
+  T15["method:VideoPlayer::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:113"]
   S15 -->|calls| T15
-  S16["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:234"]
-  T16["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:234"]
+  S16["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
+  T16["function:CMVideoSampling_Uninitialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:14"]
   S16 -->|calls| T16
-  S17["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:234"]
-  T17["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S17["method:VideoPlayer::cleanupPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:142"]
+  T17["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
   S17 -->|calls| T17
-  S18["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:238"]
-  T18["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:238"]
+  S18["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
+  T18["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
   S18 -->|calls| T18
-  S19["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:238"]
-  T19["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S19["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
+  T19["method:VideoPlayer::cleanupAssetReader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:133"]
   S19 -->|calls| T19
-  S20["method:UIViewController::__probe_viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:242"]
-  T20["method:UIViewController::__probe_viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:242"]
+  S20["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
+  T20["method:VideoPlayer::cleanupPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:142"]
   S20 -->|calls| T20
-  S21["method:UIViewController::__probe_viewDidLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:242"]
-  T21["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S21["method:VideoPlayer::loadVideo:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:173"]
+  T21["method:VideoPlayer::prepareAsset:withKeys:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:381"]
   S21 -->|calls| T21
-  S22["method:UIViewController::__probe_viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:246"]
-  T22["method:UIViewController::__probe_viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:246"]
+  S22["method:VideoPlayer::playToTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:209"]
+  T22["method:VideoPlayer::prepareReader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:444"]
   S22 -->|calls| T22
-  S23["method:UIViewController::__probe_viewSafeAreaInsetsDidChange<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:246"]
-  T23["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S23["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
+  T23["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
   S23 -->|calls| T23
-  S24["method:UIViewController::jobsForceHideSystemNavBar<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:31"]
-  T24["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S24["method:VideoPlayer::curFrameTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:245"]
+  T24["function:CMVideoSampling_LastSampledTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:76"]
   S24 -->|calls| T24
-  S25["method:UIViewController::byNavBarHiddenLifecycle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:54"]
-  T25["method:UIViewController::_nb_swizzleOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:68"]
+  S25["method:VideoPlayer::curFrameTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:245"]
+  T25["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
   S25 -->|calls| T25
 ```
 

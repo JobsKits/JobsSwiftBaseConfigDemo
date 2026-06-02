@@ -20,6 +20,7 @@ import WebKit
 import SafariServices
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 
 extension BaseWebView: WKUIDelegate {
 

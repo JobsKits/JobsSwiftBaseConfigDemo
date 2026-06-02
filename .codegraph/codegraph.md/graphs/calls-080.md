@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["enum:JobsEmptyAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:21"]
-  T1["method:JobsEmptyAuto::_swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:59"]
+  S1["method:JobsSwiftBaseConfigDemoUITestsLaunchTests::testLaunch<br/>JobsSwiftBaseConfigDemoUITests/JobsSwiftBaseConfigDemoUITestsLaunchTests.swift:20"]
+  T1["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
   S1 -->|calls| T1
-  S2["enum:JobsEmptyAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:21"]
-  T2["method:UICollectionView::jobs_swizzled_performBatchUpdates<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UICollectionView/UICollectionView+空态数据占位按钮.swift:30"]
+  S2["file:TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacros/EquatableBy.swift<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacros/EquatableBy.swift:1"]
+  T2["method:STTask::hash<br/>TODO/TaskCenterComponent/Schedule/Task.swift:286"]
   S2 -->|calls| T2
-  S3["enum:_JobsEmptyAutoBootstrap<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:69"]
-  T3["method:JobsEmptyAuto::enable<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:58"]
+  S3["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:16"]
+  T3["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S3 -->|calls| T3
-  S4["method:UIScrollView::byEmptyButtonLayout<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:128"]
-  T4["method:JobsSlot::layout<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:113"]
+  S4["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:16"]
+  T4["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S4 -->|calls| T4
-  S5["method:UIScrollView::byClearEmptyButtonLayout<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:145"]
-  T5["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
+  S5["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:16"]
+  T5["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S5 -->|calls| T5
-  S6["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T6["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
+  S6["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:44"]
+  T6["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S6 -->|calls| T6
-  S7["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T7["method:UIScrollView::_jobs_isEmpty<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:341"]
+  S7["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:44"]
+  T7["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S7 -->|calls| T7
-  S8["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T8["method:UIScrollView::_jobs_isEmpty<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:341"]
+  S8["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:44"]
+  T8["method:DeclGroupSyntax::isDecl<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:100"]
   S8 -->|calls| T8
-  S9["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T9["method:UIView::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:23"]
+  S9["method:EquatableByMacro::expansion<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:44"]
+  T9["function:parseSingleStringArgument<br/>TODO/JobsBySwiftPackageManager/MyMacros/Sources/MyMacrosMacros/EquatableByMacro.swift:87"]
   S9 -->|calls| T9
-  S10["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T10["method:UIView::byHidden<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:17"]
+  S10["method:Atomic::read<br/>TODO/TaskCenterComponent/Schedule/Atomic.swift:24"]
+  T10["method:NSLocking::withLock<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:56"]
   S10 -->|calls| T10
-  S11["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T11["method:UIView::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:23"]
+  S11["method:Atomic::readVoid<br/>TODO/TaskCenterComponent/Schedule/Atomic.swift:30"]
+  T11["method:NSLocking::withLockVoid<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:63"]
   S11 -->|calls| T11
-  S12["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T12["method:UIView::byHidden<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:17"]
+  S12["method:Atomic::write<br/>TODO/TaskCenterComponent/Schedule/Atomic.swift:36"]
+  T12["method:NSLocking::withLock<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:56"]
   S12 -->|calls| T12
-  S13["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T13["method:UIView::byVisible<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:451"]
+  S13["method:Atomic::writeVoid<br/>TODO/TaskCenterComponent/Schedule/Atomic.swift:42"]
+  T13["method:NSLocking::withLockVoid<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:63"]
   S13 -->|calls| T13
-  S14["method:UIScrollView::byReloadEmptyViewAuto<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:186"]
-  T14["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:207"]
+  S14["method:Bag::append<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:59"]
+  T14["method:BagKeyGenerator::next<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:33"]
   S14 -->|calls| T14
-  S15["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T15["method:UIView::byVisible<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:451"]
+  S15["method:Bag::makeIterator<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:97"]
+  T15["method:JobsDropFirstTaskExecutionSequence::AsyncIterator::next<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsDropFirstTaskExecutionSequence.swift:39"]
   S15 -->|calls| T15
-  S16["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T16["method:UIScrollView::_jobs_attachEmptyView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位视图.swift:117"]
+  S16["method:Int::clampedAdding<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:25"]
+  T16["method:Double::clampedToInt<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:14"]
   S16 -->|calls| T16
-  S17["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T17["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:60"]
+  S17["method:NSLocking::withLock<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:56"]
+  T17["function:unlock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops.c:120"]
   S17 -->|calls| T17
-  S18["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T18["method:UIView::byVisible<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:451"]
+  S18["method:NSLocking::withLockVoid<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:63"]
+  T18["function:unlock<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops.c:120"]
   S18 -->|calls| T18
-  S19["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T19["method:JobsSlot::layout<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshProxy.swift:113"]
+  S19["class:Interval<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:47"]
+  T19["method:Double::clampedToInt<br/>TODO/TaskCenterComponent/Schedule/Extensions.swift:14"]
   S19 -->|calls| T19
-  S20["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T20["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
+  S20["method:Interval::<<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:87"]
+  T20["method:Interval::compare<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:75"]
   S20 -->|calls| T20
-  S21["method:UIScrollView::_jobs_ensureEmptyButtonIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:225"]
-  T21["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
+  S21["method:Interval::*<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:129"]
+  T21["method:Interval::multiplying<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:111"]
   S21 -->|calls| T21
-  S22["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
-  T22["method:UIView::byMakeConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:104"]
+  S22["method:Interval::asMinutes<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:183"]
+  T22["method:Interval::asSeconds<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:178"]
   S22 -->|calls| T22
-  S23["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
-  T23["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S23["method:Interval::asHours<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:188"]
+  T23["method:Interval::asMinutes<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:183"]
   S23 -->|calls| T23
-  S24["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
-  T24["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S24["method:Interval::asDays<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:193"]
+  T24["method:Interval::asHours<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:188"]
   S24 -->|calls| T24
-  S25["method:UIScrollView::_jobs_defaultEmptyButtonConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+空态数据占位按钮.swift:260"]
-  T25["method:Plan::offset<br/>TODO/TaskCenterComponent/Schedule/Plan.swift:507"]
+  S25["method:Interval::asWeeks<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:198"]
+  T25["method:Interval::asDays<br/>TODO/TaskCenterComponent/Schedule/Interval.swift:193"]
   S25 -->|calls| T25
 ```
 

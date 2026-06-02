@@ -8,6 +8,7 @@
 
 import Foundation
 import JobsSwiftBlock
+import JobsSwiftDSL
 
 extension NumberFormatter {
     /// 统一入口：NumberFormatter.make { $0.byNumberStyle(...).byLocale(...) }

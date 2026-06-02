@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T1["method:BMPlayer::byDelegate<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:25"]
+  S1["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
+  T1["method:UIButton::_sd_setOptions<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:74"]
   S1 -->|calls| T1
-  S2["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T2["method:UIGestureRecognizer::byDelaysTouchesBegan<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:51"]
+  S2["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
+  T2["method:UIButton::_sd_setContext<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:80"]
   S2 -->|calls| T2
-  S3["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T3["method:UIGestureRecognizer::byCancelsTouchesInView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:45"]
+  S3["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
+  T3["method:UIButton::_sd_setProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:85"]
   S3 -->|calls| T3
-  S4["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T4["method:UIPanGestureRecognizer::byMaxTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:157"]
+  S4["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
+  T4["method:UIButton::_sd_setCompleted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:91"]
   S4 -->|calls| T4
-  S5["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T5["method:UIPanGestureRecognizer::byMinTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:151"]
+  S5["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
+  T5["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
   S5 -->|calls| T5
-  S6["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T6["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S6["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T6["method:UIButton::_sd_setImageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:56"]
   S6 -->|calls| T6
-  S7["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T7["method:SphereTagCloudView::onPan<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:173"]
+  S7["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T7["method:UIButton::_sd_setPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:62"]
   S7 -->|calls| T7
-  S8["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T8["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S8["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T8["method:UIButton::_sd_setOptions<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:74"]
   S8 -->|calls| T8
-  S9["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T9["method:BMPlayer::byDelegate<br/>JobsByPods/JobsBy3rdTools@Pods/BMPlayer+DSL.swift:25"]
+  S9["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T9["method:UIButton::_sd_setContext<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:80"]
   S9 -->|calls| T9
-  S10["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T10["method:UIGestureRecognizer::byCancelsTouchesInView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:45"]
+  S10["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T10["method:UIButton::_sd_setProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:85"]
   S10 -->|calls| T10
-  S11["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T11["method:GKNavigationBarConfigure::byScale<br/>JobsByPods/JobsBy3rdTools@Pods/GKNavigationBarSwift+DSL.swift:235"]
+  S11["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T11["method:UIButton::_sd_setCompleted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:91"]
   S11 -->|calls| T11
-  S12["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T12["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S12["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T12["method:UIButton::_sd_setTargetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:97"]
   S12 -->|calls| T12
-  S13["method:SphereTagCloudView::setupGestures<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:138"]
-  T13["method:SphereTagCloudView::onPinch<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:211"]
+  S13["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
+  T13["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
   S13 -->|calls| T13
-  S14["method:SphereTagCloudView::onPan<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:173"]
-  T14["method:SphereTagCloudView::rotate<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:278"]
+  S14["class:UIButton<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:32"]
+  T14["method:UIButton::applyDefaultTimerUI<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:72"]
   S14 -->|calls| T14
-  S15["method:SphereTagCloudView::onPan<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:173"]
-  T15["method:SphereTagCloudView::renderAll<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:305"]
+  S15["method:UIButton::onCountdownTick<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:110"]
+  T15["method:UIButton::onTimerTick<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:86"]
   S15 -->|calls| T15
-  S16["method:SphereTagCloudView::onPinch<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:211"]
-  T16["method:SphereTagCloudView::renderAll<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:305"]
+  S16["method:UIButton::onCountdownFinish<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:120"]
+  T16["method:UIButton::onTimerFinish<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:99"]
   S16 -->|calls| T16
-  S17["method:SphereTagCloudView::tick<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:224"]
-  T17["method:SphereTagCloudView::rotate<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:278"]
+  S17["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
+  T17["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
   S17 -->|calls| T17
-  S18["method:SphereTagCloudView::tick<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:224"]
-  T18["method:SphereTagCloudView::rotate<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:278"]
+  S18["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
+  T18["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S18 -->|calls| T18
-  S19["method:SphereTagCloudView::tick<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:224"]
-  T19["method:SphereTagCloudView::renderAll<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:305"]
+  S19["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
+  T19["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
   S19 -->|calls| T19
-  S20["method:SphereTagCloudView::byItems<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:409"]
-  T20["method:SphereTagCloudView::setItems<br/>JobsByPods/JobsBy3rdTools@Pods/SphereTagCloudView.swift:81"]
+  S20["method:UIButton::pauseTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:235"]
+  T20["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
   S20 -->|calls| T20
-  S21["method:YTKBaseRequest::byCompletion<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBaseRequest+DSL.swift:83"]
-  T21["function:BRDatePicker::makeDate::s<br/>JobsByPods/BRPickerViewSwift@Pods/Picker/BRDatePicker.swift:117"]
+  S21["method:UIButton::resumeTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:242"]
+  T21["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
   S21 -->|calls| T21
-  S22["method:YTKBaseRequest::byStart<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBaseRequest+DSL.swift:114"]
-  T22["enum_member:HTTPResponseCode::success<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:297"]
+  S22["method:UIButton::fireTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:249"]
+  T22["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S22 -->|calls| T22
-  S23["method:YTKBaseRequest::byStart<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBaseRequest+DSL.swift:114"]
-  T23["method:JobsClockView::start<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:205"]
+  S23["method:UIButton::fireTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:249"]
+  T23["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
   S23 -->|calls| T23
-  S24["method:YTKBatchRequest::byAddAccessory<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:28"]
-  T24["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S24["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
+  T24["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
   S24 -->|calls| T24
-  S25["method:YTKBatchRequest::byAccessories<br/>JobsByPods/JobsBy3rdTools@Pods/YTKNetwork/YTKBatchRequest+DSL.swift:34"]
-  T25["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S25["method:UIButton::startJobsTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:335"]
+  T25["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
   S25 -->|calls| T25
 ```
 

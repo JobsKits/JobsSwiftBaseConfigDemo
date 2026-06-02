@@ -16,6 +16,7 @@ import SnapKit
 import NSObject_Rx
 import SDWebImage
 import Kingfisher
+import JobsSwiftDSL
 
 #if canImport(RxSwift) && canImport(RxCocoa)
 import RxSwift

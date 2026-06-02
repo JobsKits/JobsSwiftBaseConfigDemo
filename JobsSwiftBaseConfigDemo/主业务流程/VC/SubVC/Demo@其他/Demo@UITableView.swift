@@ -16,6 +16,7 @@ import SnapKit
 import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 
 final class EmptyTableViewDemoVC: BaseVC {
@@ -60,7 +61,6 @@ final class EmptyTableViewDemoVC: BaseVC {
 //                bottom: 0,
 //                right: 0
 //            ))
-
 
             .byAddTo(view) {[unowned self] make in
                 if view.jobs_hasVisibleTopBar() {

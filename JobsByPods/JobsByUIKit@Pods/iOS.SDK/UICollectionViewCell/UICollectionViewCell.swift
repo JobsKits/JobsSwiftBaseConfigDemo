@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBlock
+import JobsSwiftDSL
 // MARK: - 直接赋值@单参数
 extension UICollectionViewCell {
     // MARK: - autoUpdate@Configuration (iOS 14+)

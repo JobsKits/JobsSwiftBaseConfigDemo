@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftDSL
 // MARK: - 给任意 UIView 增加悬浮能力（可拖拽、吸附、尊重安全区），默认挂在活动窗口。
 // 风格：链式 DSL（.suspend / .bySuspend），主线程 API 使用 @MainActor 保障。
 // 注意：悬浮 view 使用 frame 驱动，勿再对其添加 AutoLayout 约束。

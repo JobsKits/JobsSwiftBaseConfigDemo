@@ -59,4 +59,7 @@ Pod::Spec.new do |s|
   s.subspec 'JobsSwiftTimer' do |ss|
     ss.source_files = 'JobsSwiftTimer/**/*.swift'
   end
+
+  s.dependency 'JobsSwiftDSL'
+
 end

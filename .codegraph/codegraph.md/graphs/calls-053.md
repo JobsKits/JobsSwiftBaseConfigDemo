@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T1["method:CALayer::byContentsScale<br/>JobsByPods/JobsByQuartzCore@Pods/CALayer.swift:162"]
+  S1["method:JobsTaskCenterComponent::createOneShotTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:98"]
+  T1["method:JobsPlan::after<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:116"]
   S1 -->|calls| T1
-  S2["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T2["method:CATextLayer::byAlignmentMode<br/>JobsByPods/JobsByQuartzCore@Pods/CATextLayer.swift:63"]
+  S2["method:JobsTaskCenterComponent::createOneShotTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:98"]
+  T2["method:JobsTaskCenterComponent::makeTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:264"]
   S2 -->|calls| T2
-  S3["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T3["method:CATextLayer::byFontSize<br/>JobsByPods/JobsByQuartzCore@Pods/CATextLayer.swift:39"]
+  S3["method:JobsTaskCenterComponent::createOneShotTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:122"]
+  T3["method:JobsTaskCenterComponent::createOneShotTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:122"]
   S3 -->|calls| T3
-  S4["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T4["method:AttributeContainer::byFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIKitAttributes.swift:18"]
+  S4["method:JobsTaskCenterComponent::createRunLoopTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:137"]
+  T4["method:JobsTaskCenterComponent::schedule<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:79"]
   S4 -->|calls| T4
-  S5["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T5["method:CATextLayer::byString<br/>JobsByPods/JobsByQuartzCore@Pods/CATextLayer.swift:20"]
+  S5["method:JobsTaskCenterComponent::createRunLoopTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:155"]
+  T5["method:JobsTaskCenterComponent::createRunLoopTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:155"]
   S5 -->|calls| T5
-  S6["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T6["method:UIView::byAddSublayer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:445"]
+  S6["method:JobsTaskCenterComponent::createTimerTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:173"]
+  T6["method:JobsTaskCenterComponent::schedule<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:79"]
   S6 -->|calls| T6
-  S7["method:UIButton::_jobs_applyGradient<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift:236"]
-  T7["method:UILabel::byTextColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:39"]
+  S7["method:JobsTaskCenterComponent::createTimerTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:192"]
+  T7["method:JobsTaskCenterComponent::createTimerTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:192"]
   S7 -->|calls| T7
-  S8["method:UIButton::byRichTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:16"]
-  T8["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S8["method:JobsTaskCenterComponent::appendTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:210"]
+  T8["method:JobsTask::addAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:125"]
   S8 -->|calls| T8
-  S9["method:UIButton::byRichTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:16"]
-  T9["method:UIButton::_setLegacyRichTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:96"]
+  S9["method:JobsTaskCenterComponent::removeAppendedTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:215"]
+  T9["method:JobsTask::removeAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:134"]
   S9 -->|calls| T9
-  S10["method:UIButton::byRichTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:16"]
-  T10["method:UIButton::_applyLegacyComposite<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:110"]
+  S10["method:JobsTaskCenterComponent::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:221"]
+  T10["method:JobsTask::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:178"]
   S10 -->|calls| T10
-  S11["method:UIButton::byRichSubTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:29"]
-  T11["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S11["method:JobsTaskCenterComponent::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:227"]
+  T11["method:JobsTask::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:166"]
   S11 -->|calls| T11
-  S12["method:UIButton::byRichSubTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:29"]
-  T12["method:UIButton::_setLegacyRichSubTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:103"]
+  S12["method:JobsTaskCenterComponent::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:233"]
+  T12["method:JobsTask::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:202"]
   S12 -->|calls| T12
-  S13["method:UIButton::byRichSubTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:29"]
-  T13["method:UIButton::_applyLegacyComposite<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:110"]
+  S13["method:JobsTaskCenterComponent::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:239"]
+  T13["method:JobsTask::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:232"]
   S13 -->|calls| T13
-  S14["method:UIButton::_setLegacyRichTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:96"]
-  T14["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S14["method:JobsTaskCenterComponent::attach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:245"]
+  T14["method:JobsTaskManager::addTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:64"]
   S14 -->|calls| T14
-  S15["method:UIButton::_setLegacyRichSubTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:103"]
-  T15["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S15["method:JobsTaskCenterComponent::attach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:245"]
+  T15["method:JobsTaskManager::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:130"]
   S15 -->|calls| T15
-  S16["method:UIButton::_applyLegacyComposite<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:110"]
-  T16["method:UIListContentConfiguration::byTextAlignment<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:188"]
+  S16["method:JobsTaskCenterComponent::attach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:245"]
+  T16["method:JobsTaskManager::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:148"]
   S16 -->|calls| T16
-  S17["method:UIButton::_applyLegacyComposite<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:110"]
-  T17["method:UILabel::byNumberOfLines<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+DSL.swift:67"]
+  S17["method:JobsTaskCenterComponent::byAppendTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:293"]
+  T17["method:JobsTaskCenterComponent::appendTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:210"]
   S17 -->|calls| T17
-  S18["method:UIButton::_applyLegacyComposite<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+富文本.swift:110"]
-  T18["method:UIButton::byAttributedTitle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:719"]
+  S18["method:JobsTaskCenterComponent::byResume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:300"]
+  T18["method:JobsTaskCenterComponent::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:221"]
   S18 -->|calls| T18
-  S19["method:UIButton::byBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:56"]
-  T19["enum_member:JSONValue::object<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:964"]
+  S19["method:JobsTaskCenterComponent::bySuspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:307"]
+  T19["method:JobsTaskCenterComponent::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:227"]
   S19 -->|calls| T19
-  S20["method:UIButton::byBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:56"]
-  T20["method:JobsLiveFloatPlayer::resume<br/>JobsByPods/JobsBy3rdTools@Pods/JobsLiveFloatPlayer.swift:81"]
+  S20["method:JobsTaskCenterComponent::byCancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:314"]
+  T20["method:JobsTaskCenterComponent::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:233"]
   S20 -->|calls| T20
-  S21["method:UIButton::byBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:56"]
-  T21["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S21["method:JobsTaskCenterComponent::byExecuteNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:321"]
+  T21["method:JobsTaskCenterComponent::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:239"]
   S21 -->|calls| T21
-  S22["method:UIButton::jobsResetBtnImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:94"]
-  T22["method:UIButton::byImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:823"]
+  S22["method:JobsTaskCenterComponent::byAttach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:333"]
+  T22["method:JobsTaskCenterComponent::attach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:245"]
   S22 -->|calls| T22
-  S23["method:UIButton::jobsResetBtnImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:94"]
-  T23["method:UIButton::byUpdateConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:854"]
+  S23["method:JobsTaskCenterComponent::createAsyncTimerTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:358"]
+  T23["method:JobsPlan::doAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:177"]
   S23 -->|calls| T23
-  S24["method:UIButton::_applySubtitleToConfigurationNow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:134"]
-  T24["method:UIButton::StateProxy::backgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1055"]
+  S24["method:JobsTaskCenterComponent::createAsyncTimerTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:358"]
+  T24["method:JobsPlan::every<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:87"]
   S24 -->|calls| T24
-  S25["method:UIButton::_applySubtitleToConfigurationNow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+按钮（背景）图.swift:134"]
-  T25["method:UIButton::StateProxy::backgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1055"]
+  S25["method:JobsTaskCenterComponent::createAsyncOneShotTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:391"]
+  T25["method:JobsPlan::doAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:177"]
   S25 -->|calls| T25
 ```
 

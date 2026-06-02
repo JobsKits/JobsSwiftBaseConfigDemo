@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 // MARK: - 内部：CATransition 的方向映射（含上下互换修正）
 public extension JobsPushDirection {

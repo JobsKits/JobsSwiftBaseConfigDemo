@@ -6,8 +6,8 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-
 import UIKit
+import JobsSwiftDSL
 
 open class BRBasePicker<Result>: NSObject {
 
@@ -20,7 +20,6 @@ open class BRBasePicker<Result>: NSObject {
     internal var cancelText: String = "Cancel"
     internal var confirmText: String = "Done"
 
-    
     // MARK: - Toolbar convenience (sugar)
     /// Shortcut for setting toolbar title without using byToolbar block.
     @discardableResult

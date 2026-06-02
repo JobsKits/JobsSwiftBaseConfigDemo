@@ -16,6 +16,7 @@ import SnapKit
 import RxSwift
 import NSObject_Rx          // 自动提供 disposeBag
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftTools

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:177"]
-  T1["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S1["function:CreateReadableRTFromCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:77"]
+  T1["function:CreateTextureFromCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:29"]
   S1 -->|calls| T1
-  S2["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:217"]
-  T2["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:254"]
+  S2["function:IsCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:83"]
+  T2["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S2 -->|calls| T2
-  S3["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:254"]
-  T3["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:254"]
+  S3["function:CreatePixelBufferForCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:94"]
+  T3["function:CreatePixelBufferForCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:64"]
   S3 -->|calls| T3
-  S4["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:260"]
-  T4["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:260"]
+  S4["function:CreateReadableRTFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:99"]
+  T4["function:CreatePixelBufferForCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:64"]
   S4 -->|calls| T4
-  S5["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:270"]
-  T5["method:UIView::addTapAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:270"]
+  S5["function:CreateReadableRTFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:99"]
+  T5["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
   S5 -->|calls| T5
-  S6["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:278"]
-  T6["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:278"]
+  S6["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
+  T6["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S6 -->|calls| T6
-  S7["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:283"]
-  T7["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:283"]
+  S7["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
+  T7["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S7 -->|calls| T7
-  S8["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:293"]
-  T8["method:UIView::addTapActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:293"]
+  S8["function:CreateHalfFloatTextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:126"]
+  T8["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S8 -->|calls| T8
-  S9["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:311"]
-  T9["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S9["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
+  T9["function:UnityGetAVCapturePermission<br/>TODO/Unity/xcode_effectTest/Classes/Unity/AVCapture.mm:15"]
   S9 -->|calls| T9
-  S10["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:311"]
-  T10["method:UILongPressGestureRecognizer::byMinDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:130"]
+  S10["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
+  T10["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S10 -->|calls| T10
-  S11["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:311"]
-  T11["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S11["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
+  T11["function:CMVideoSampling_Initialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:8"]
   S11 -->|calls| T11
-  S12["method:UIView::addLongPressActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:346"]
-  T12["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:381"]
+  S12["method:CameraCaptureController::initCapture:preset:fps:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:95"]
+  T12["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S12 -->|calls| T12
-  S13["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:381"]
-  T13["method:UIView::addLongPressAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:381"]
+  S13["method:CameraCaptureController::captureOutput:didOutputSampleBuffer:fromConnection:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:122"]
+  T13["function:CMVideoSampling_SampleBuffer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:71"]
   S13 -->|calls| T13
-  S14["method:UIView::addLongPressActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:386"]
-  T14["method:UIView::addLongPressActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:386"]
+  S14["method:CameraCaptureController::capturePixelBufferToMemBuffer:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:128"]
+  T14["function:malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:447"]
   S14 -->|calls| T14
-  S15["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:401"]
-  T15["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S15["method:CameraCaptureController::isCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:170"]
+  T15["function:IsCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:83"]
   S15 -->|calls| T15
-  S16["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:401"]
-  T16["method:UIGestureRecognizer::byCancelsTouchesInView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:45"]
+  S16["method:CameraCaptureController::setFocusPointWithX:Y:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:182"]
+  T16["method:CameraCaptureController::setFocusPoint<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:199"]
   S16 -->|calls| T16
-  S17["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:401"]
-  T17["method:UIPanGestureRecognizer::byMaxTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:157"]
+  S17["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
+  T17["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S17 -->|calls| T17
-  S18["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:401"]
-  T18["method:UIPanGestureRecognizer::byMinTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:151"]
+  S18["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
+  T18["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
   S18 -->|calls| T18
-  S19["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:401"]
-  T19["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
+  S19["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
+  T19["method:CameraCaptureController::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:373"]
   S19 -->|calls| T19
-  S20["method:UIView::addPanActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:433"]
-  T20["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:461"]
+  S20["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
+  T20["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
   S20 -->|calls| T20
-  S21["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:461"]
-  T21["method:UIView::addPanAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:461"]
+  S21["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
+  T21["method:CameraCaptureController::clearColorAndDepthCameraCaptureSession<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:318"]
   S21 -->|calls| T21
-  S22["method:UIView::addPanActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:466"]
-  T22["method:UIView::addPanActionAppend<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:466"]
+  S22["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
+  T22["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
   S22 -->|calls| T22
-  S23["method:UIView::addSwipeAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:481"]
-  T23["method:UIView::jobs_addGesture<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+DSL.swift:599"]
+  S23["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
+  T23["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
   S23 -->|calls| T23
-  S24["method:UIView::addSwipeAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:481"]
-  T24["method:UITapGestureRecognizer::byTouches<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:121"]
+  S24["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
+  T24["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
   S24 -->|calls| T24
-  S25["method:UIView::addSwipeAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+手势（支持叠加不覆盖）.swift:481"]
-  T25["method:UISwipeGestureRecognizer::byDirection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+DSL.swift:166"]
+  S25["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
+  T25["method:CameraCaptureController::initColorAndDepthCameraCaptureSession<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:305"]
   S25 -->|calls| T25
 ```
 

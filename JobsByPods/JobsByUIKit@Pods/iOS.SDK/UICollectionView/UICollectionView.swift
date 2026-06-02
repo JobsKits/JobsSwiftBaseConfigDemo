@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftDSL
 // MARK: - DSL
 extension UICollectionView {
     @discardableResult

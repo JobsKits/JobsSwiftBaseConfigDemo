@@ -15,6 +15,7 @@ import UIKit
 import AVFoundation
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 /// 单个视频：自动播放，结束后出现「播放按钮」可重播
 public final class VideoCell: UICollectionViewCell {
     private var playerLayer: AVPlayerLayer?
@@ -128,7 +129,6 @@ public final class VideoCell: UICollectionViewCell {
         setNeedsLayout(); layoutIfNeeded()
         playerLayer?.frame = contentView.bounds
     }
-
 
     @objc private func onReplay() {
         playOverlay.isHidden = true

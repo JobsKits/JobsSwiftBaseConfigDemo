@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 @available(iOS 15.0, tvOS 15.0, *)
 public extension UIButton.Configuration {
     // MARK: - Convenience style factories (static styles)

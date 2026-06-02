@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T1["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S1["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
+  T1["method:DisplayManager::Initialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:451"]
   S1 -->|calls| T1
-  S2["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T2["method:UIViewController::jobs_isSameDestination<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+传值回调.swift:124"]
+  S2["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
+  T2["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S2 -->|calls| T2
-  S3["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T3["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:55"]
+  S3["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
+  T3["method:UnityAppController::createUI<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityAppController+ViewHandling.mm:134"]
   S3 -->|calls| T3
-  S4["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T4["method:BRPickerPanel::present<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:90"]
+  S4["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
+  T4["method:UnityAppController::preStartUnity<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:115"]
   S4 -->|calls| T4
-  S5["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T5["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
+  S5["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
+  T5["method:KeyboardDelegate::Initialize<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:258"]
   S5 -->|calls| T5
-  S6["method:UIViewController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:240"]
-  T6["method:UIViewController::jobs_fireAppearCompletionIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+传值回调.swift:79"]
+  S6["method:UnityAppController::observeValueForKeyPath:ofObject:change:context:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:416"]
+  T6["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S6 -->|calls| T6
-  S7["method:UIWindow::byAttach<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:20"]
-  T7["method:UIWindow::byAttach<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:20"]
+  S7["method:UnityAppController::applicationWillEnterForeground:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:429"]
+  T7["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S7 -->|calls| T7
-  S8["method:UIWindow::byScreen<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:50"]
-  T8["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
+  S8["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
+  T8["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
   S8 -->|calls| T8
-  S9["method:UIWindow::byAttach<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:67"]
-  T9["method:UIWindow::byAttach<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:67"]
+  S9["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
+  T9["function:UnityIsFullScreenPlaying<br/>TODO/Unity/xcode_effectTest/Classes/Unity/FullScreenVideoPlayer.mm:259"]
   S9 -->|calls| T9
-  S10["method:UIWindow::byScreen<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:97"]
-  T10["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
+  S10["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
+  T10["function:TryResumeFullScreenVideo<br/>TODO/Unity/xcode_effectTest/Classes/Unity/FullScreenVideoPlayer.mm:264"]
   S10 -->|calls| T10
-  S11["method:UIWindow::snapshotImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:134"]
-  T11["method:UIButton::StateProxy::image<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1030"]
+  S11["method:UnityAppController::updateUnityAudioOutput<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:471"]
+  T11["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S11 -->|calls| T11
-  S12["method:UIWindow::presentOnTop<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:140"]
-  T12["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
+  S12["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
+  T12["method:UnityAppController::createSnapshotView<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityAppController+ViewHandling.mm:127"]
   S12 -->|calls| T12
-  S13["method:UIWindow::presentOnTop<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:140"]
-  T13["method:BRPickerPanel::present<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:90"]
+  S13["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
+  T13["function:AllocUnityViewController<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase.mm:79"]
   S13 -->|calls| T13
-  S14["class:UIWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:15"]
-  T14["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIApplication.swift:33"]
+  S14["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
+  T14["method:KeyboardDelegate::becomeFirstResponder<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:119"]
   S14 -->|calls| T14
-  S15["class:UIWindow<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:15"]
-  T15["method:UIWindow::byWindowLevel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:44"]
+  S15["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
+  T15["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
   S15 -->|calls| T15
-  S16["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:30"]
-  T16["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:30"]
+  S16["method:UnityAppController::applicationWillResignActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:519"]
+  T16["method:UnityAppController::repaint<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:47"]
   S16 -->|calls| T16
-  S17["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:30"]
-  T17["method:UIWindow::_makeIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:86"]
+  S17["method:UnityAppController::applicationWillResignActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:519"]
+  T17["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
   S17 -->|calls| T17
-  S18["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:30"]
-  T18["method:UIWindow::byWindowLevel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:44"]
+  S18["method:UnityAppController::applicationWillTerminate:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:560"]
+  T18["function:UnityAppController::UnityCleanupTrampoline<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:176"]
   S18 -->|calls| T18
-  S19["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:30"]
-  T19["method:UIWindow::byRootViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:38"]
+  S19["method:UnityAppController::application:handleEventsForBackgroundURLSession:completionHandler:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:579"]
+  T19["function:AppController_SendNotificationWithArg<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:593"]
   S19 -->|calls| T19
-  S20["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:48"]
-  T20["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
+  S20["function:AppController_SendNotification<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:588"]
+  T20["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S20 -->|calls| T20
-  S21["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:48"]
-  T21["method:UIWindow::_makeIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:86"]
+  S21["function:AppController_SendNotificationWithArg<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:593"]
+  T21["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S21 -->|calls| T21
-  S22["method:UIWindow::jobsMake<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:48"]
-  T22["method:UIWindow::byWindowLevel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow+DSL.swift:44"]
+  S22["function:AppController_SendUnityViewControllerNotification<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:598"]
+  T22["function:UnityGetGLViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:604"]
   S22 -->|calls| T22
-  S23["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
-  T23["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
+  S23["function:UnityGetMainWindow<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:603"]
+  T23["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S23 -->|calls| T23
-  S24["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
-  T24["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
+  S24["function:UnityGetGLViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:604"]
+  T24["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S24 -->|calls| T24
-  S25["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
-  T25["method:UIWindow::jobsTopMost<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIWindow/UIWindow.swift:73"]
+  S25["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
+  T25["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S25 -->|calls| T25
 ```
 

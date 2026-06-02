@@ -32,30 +32,12 @@ extension PHPickerViewController {
         return self
     }
     // MARK: - Presentation
-    /// 设置 `modalPresentationStyle`
-    @discardableResult
-    public func byModalPresentationStyle(_ style: UIModalPresentationStyle) -> Self {
-        modalPresentationStyle = style
-        return self
-    }
-    /// 设置 `modalTransitionStyle`
-    @discardableResult
-    public func byModalTransitionStyle(_ style: UIModalTransitionStyle) -> Self {
-        modalTransitionStyle = style
-        return self
-    }
     /// 设置 `isModalInPresentation`
     ///
     /// `true` 时通常表示禁止下拉关闭。
     @discardableResult
     public func byIsModalInPresentation(_ value: Bool) -> Self {
         isModalInPresentation = value
-        return self
-    }
-    /// 设置 `overrideUserInterfaceStyle`
-    @discardableResult
-    public func byOverrideUserInterfaceStyle(_ style: UIUserInterfaceStyle) -> Self {
-        overrideUserInterfaceStyle = style
         return self
     }
     /// 设置 `presentationController.delegate`

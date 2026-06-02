@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import SnapKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 #if canImport(SDWebImage)

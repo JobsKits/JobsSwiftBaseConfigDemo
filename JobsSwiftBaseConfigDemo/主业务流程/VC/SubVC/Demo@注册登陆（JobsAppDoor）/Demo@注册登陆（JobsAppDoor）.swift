@@ -16,6 +16,7 @@ import AVFoundation
 import SnapKit
 import JobsInheritance
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
 #if canImport(BMPlayer)

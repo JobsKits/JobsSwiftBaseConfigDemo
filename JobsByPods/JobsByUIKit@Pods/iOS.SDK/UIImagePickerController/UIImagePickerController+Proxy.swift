@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftDSL
 
 extension UIImagePickerController {
     /// 只负责 UIImagePickerControllerDelegate 回调（nav 的闭包能力在 UINavigationController+Blocks.swift 里）

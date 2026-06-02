@@ -84,6 +84,7 @@ def byJobs
     pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个
     pod 'JobsNetworking/AF5',                 :path => 'JobsByPods/JobsNetworking@Pods'
       
+    pod 'JobsSwiftDSL',                       :path => 'JobsByPods/JobsSwiftDSL@Pods'
     pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
     pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
     pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'

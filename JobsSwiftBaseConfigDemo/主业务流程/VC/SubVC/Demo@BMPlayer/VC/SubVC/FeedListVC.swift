@@ -17,6 +17,7 @@ import JobsInheritance
 import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 
 final class FeedListVC: BaseVC,

@@ -32,5 +32,6 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'
-  
+    s.dependency 'JobsSwiftDSL'
+
 end

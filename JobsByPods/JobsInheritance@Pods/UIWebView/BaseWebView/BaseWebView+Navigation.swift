@@ -14,6 +14,7 @@ import UIKit
 
 import SafariServices
 import WebKit
+import JobsSwiftDSL
 
 extension BaseWebView: WKNavigationDelegate {
 

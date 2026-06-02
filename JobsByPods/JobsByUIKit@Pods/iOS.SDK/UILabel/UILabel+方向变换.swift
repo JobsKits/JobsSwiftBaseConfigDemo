@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 extension UILabel {

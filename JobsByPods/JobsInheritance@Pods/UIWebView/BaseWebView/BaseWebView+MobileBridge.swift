@@ -14,6 +14,7 @@ import UIKit
 
 import WebKit
 import JobsSwiftBlock
+import JobsSwiftDSL
 
 public extension BaseWebView {
     // ===== 通用 MobileBridge（H5 的 iOSBridge 约定）=====

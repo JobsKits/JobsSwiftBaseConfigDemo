@@ -14,6 +14,7 @@ import UIKit
 
 import SnapKit
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 final class MessageCell: UITableViewCell {

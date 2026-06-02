@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:NumberFormatter::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter.swift:14"]
-  T1["method:JobsLottieConfig::configure<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshEnums.swift:115"]
+  S1["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
+  T1["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
   S1 -->|calls| T1
-  S2["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:66"]
-  T2["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
+  S2["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
+  T2["function:_jobs_swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:92"]
   S2 -->|calls| T2
-  S3["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:77"]
-  T3["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
+  S3["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
+  T3["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
   S3 -->|calls| T3
-  S4["method:UIAlertController::byAddOK<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:91"]
-  T4["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:77"]
+  S4["class:UILabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:38"]
+  T4["function:_jobs_swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:92"]
   S4 -->|calls| T4
-  S5["method:UIAlertController::byAddOK<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:98"]
-  T5["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:77"]
+  S5["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
+  T5["method:UILabel::_jobs_drawText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:64"]
   S5 -->|calls| T5
-  S6["method:UIAlertController::byAddCancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:105"]
-  T6["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
+  S6["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
+  T6["method:UILabel::_jobs_textRect<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+内边距.swift:71"]
   S6 -->|calls| T6
-  S7["method:UIAlertController::byAddCancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:114"]
-  T7["method:UIButton::addAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+点按事件.swift:170"]
+  S7["method:UILabel::richTextBy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UILabel/UILabel+富文本.swift:19"]
+  T7["method:JobsRichText::make<br/>JobsByPods/JobsTextTools@Pods/JobsRichText.swift:65"]
   S7 -->|calls| T7
-  S8["method:UIAlertController::byAddDestructive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:126"]
-  T8["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:77"]
+  S8["method:UINavigationBar::byLegacyTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:220"]
+  T8["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S8 -->|calls| T8
-  S9["method:UIAlertController::byAddDestructive<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:132"]
-  T9["method:UIAlertController::byAddAction<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:77"]
+  S9["method:UINavigationBar::byLegacyTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:231"]
+  T9["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S9 -->|calls| T9
-  S10["method:UIAlertController::textField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:150"]
-  T10["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
+  S10["method:UINavigationBar::byLegacyLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:242"]
+  T10["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S10 -->|calls| T10
-  S11["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:155"]
-  T11["method:JobsLottieConfig::configure<br/>JobsByPods/JobsRefresher@Pods/JobsRefreshEnums.swift:115"]
+  S11["method:UINavigationBar::byLegacyLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBar.swift:254"]
+  T11["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S11 -->|calls| T11
-  S12["method:JobsTextFieldDelegateProxy::registerKnownImplementations<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:176"]
-  T12["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
+  S12["method:UINavigationBarAppearance::byTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:20"]
+  T12["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S12 -->|calls| T12
-  S13["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T13["method:UITextField::byTextContentType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:202"]
+  S13["method:UINavigationBarAppearance::byTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:29"]
+  T13["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S13 -->|calls| T13
-  S14["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T14["method:UITextField::byAutocapitalizationType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:141"]
+  S14["method:UINavigationBarAppearance::byLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:50"]
+  T14["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S14 -->|calls| T14
-  S15["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T15["method:UITextField::byAutocorrectionType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:147"]
+  S15["method:UINavigationBarAppearance::byLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:59"]
+  T15["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S15 -->|calls| T15
-  S16["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T16["method:UITextField::byKeyboardType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:117"]
+  S16["method:UINavigationBarAppearance::bySubtitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:80"]
+  T16["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S16 -->|calls| T16
-  S17["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T17["method:UITextField::bySecureTextEntry<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:111"]
+  S17["method:UINavigationBarAppearance::bySubtitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:89"]
+  T17["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S17 -->|calls| T17
-  S18["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T18["method:UITextField::byRightView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:511"]
+  S18["method:UINavigationBarAppearance::byTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:110"]
+  T18["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S18 -->|calls| T18
-  S19["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T19["method:UITextField::byLeftView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:504"]
+  S19["method:UINavigationBarAppearance::byTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:120"]
+  T19["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S19 -->|calls| T19
-  S20["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T20["method:UITextField::byTextContentType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:202"]
+  S20["method:UINavigationBarAppearance::byLargeTitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:142"]
+  T20["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S20 -->|calls| T20
-  S21["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T21["method:UITextField::byReturnKeyType<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+DSL.swift:129"]
+  S21["method:UINavigationBarAppearance::byLargeTitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:152"]
+  T21["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S21 -->|calls| T21
-  S22["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T22["method:UIListContentConfiguration::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:97"]
+  S22["method:UINavigationBarAppearance::bySubtitleFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:175"]
+  T22["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S22 -->|calls| T22
-  S23["method:UIAlertController::byAddTextField<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:185"]
-  T23["method:JobsTaskExecutionSequence::dropFirst<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:91"]
+  S23["method:UINavigationBarAppearance::bySubtitleColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationBar/UINavigationBarAppearance.swift:186"]
+  T23["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
   S23 -->|calls| T23
-  S24["method:UIAlertController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:286"]
-  T24["method:UIAlertController::byAnchor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:261"]
+  S24["method:UINavigationController::byNavTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:20"]
+  T24["method:UINavigationController::jobs_navBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:147"]
   S24 -->|calls| T24
-  S25["method:UIAlertController::byPresent<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:286"]
-  T25["method:UIAlertController::_installLocalBGIfPending<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift:629"]
+  S25["method:UINavigationController::animationControllerForOperation<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:28"]
+  T25["method:UINavigationController::jobs_navBlocksProxy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UINavigationController/UINavigationController.swift:147"]
   S25 -->|calls| T25
 ```
 

@@ -17,6 +17,7 @@ import PromiseKit
 import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsEmptyView
 import JobsRefresher
 import JobsInheritance

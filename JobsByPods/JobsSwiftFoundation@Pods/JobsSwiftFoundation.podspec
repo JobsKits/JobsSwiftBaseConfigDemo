@@ -28,5 +28,6 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.{swift,h,m,mm}'
 
   s.dependency 'JobsByUIKit'
+  s.dependency 'JobsSwiftDSL'
 
 end

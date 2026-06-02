@@ -15,6 +15,7 @@ import UIKit
 import Jobsl10n
 import JobsScale
 import JobsTextTools
+import JobsSwiftDSL
 import JobsSwiftBaseDefines
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:26"]
-  T1["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
+  S1["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:55"]
+  T1["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:137"]
   S1 -->|calls| T1
-  S2["method:String::cor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:46"]
-  T2["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
+  S2["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:55"]
+  T2["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:173"]
   S2 -->|calls| T2
-  S3["method:String::cor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:54"]
-  T3["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
+  S3["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:55"]
+  T3["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S3 -->|calls| T3
-  S4["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
-  T4["enum_member:TextFormatStrategy::lowercased<br/>JobsByPods/JobsSwiftBaseTools@Pods/TextInputStrategies.swift:17"]
+  S4["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:71"]
+  T4["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:137"]
   S4 -->|calls| T4
-  S5["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
-  T5["method:UIColor::hex<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIColor.swift:254"]
+  S5["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:71"]
+  T5["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:173"]
   S5 -->|calls| T5
-  S6["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
-  T6["method:UIColor::hex<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIColor.swift:254"]
+  S6["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:71"]
+  T6["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S6 -->|calls| T6
-  S7["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
-  T7["method:UIColor::hex<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIColor.swift:254"]
+  S7["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
+  T7["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S7 -->|calls| T7
-  S8["function:jobsParseHexColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+取色.swift:62"]
-  T8["method:JobsTaskExecutionSequence::prefix<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:75"]
+  S8["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
+  T8["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S8 -->|calls| T8
-  S9["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+多语言国际化.swift:17"]
-  T9["method:TRAutoRefresh::Marker::pack<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:24"]
+  S9["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
+  T9["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S9 -->|calls| T9
-  S10["class:String<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+多语言国际化.swift:17"]
-  T10["method:TRLang::bundle<br/>JobsByPods/Jobsl10n@Pods/TRLang.swift:16"]
+  S10["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
+  T10["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S10 -->|calls| T10
-  S11["method:String::code128BarcodeImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:20"]
-  T11["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
+  S11["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
+  T11["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:86"]
   S11 -->|calls| T11
-  S12["method:String::code128BarcodeImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:20"]
-  T12["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
+  S12["class:UIApplication<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:27"]
+  T12["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:42"]
   S12 -->|calls| T12
-  S13["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T13["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
+  S13["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:137"]
+  T13["function:UIApplication::bestWindowScene::rank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:138"]
   S13 -->|calls| T13
-  S14["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T14["enum_member:APIResponse::CodingKeys::data<br/>JobsByPods/JobsNetworking@Pods/Core/APIResponse.swift:26"]
+  S14["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:137"]
+  T14["function:UIApplication::bestWindowScene::rank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:138"]
   S14 -->|calls| T14
-  S15["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T15["function:contains<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/w32file-unix-glob.c:214"]
+  S15["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:151"]
+  T15["function:UIApplication::bestWindow::windowRank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:159"]
   S15 -->|calls| T15
-  S16["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T16["method:UIButton::StateProxy::image<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+DSL.swift:1030"]
+  S16["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:151"]
+  T16["function:UIApplication::bestWindow::windowRank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:159"]
   S16 -->|calls| T16
-  S17["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T17["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S17["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:173"]
+  T17["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:151"]
   S17 -->|calls| T17
-  S18["method:String::code128ByText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+条形码.swift:51"]
-  T18["method:MetalRenderer::draw<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift:169"]
+  S18["class:UIWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIWindowScene.swift:15"]
+  T18["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:121"]
   S18 -->|calls| T18
-  S19["method:String::toDouble<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+格式转换.swift:33"]
-  T19["method:NumberFormatter::byGroupingSeparator<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:109"]
+  S19["method:JobsImageCacheCleaner::forceRedownloadImages<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:58"]
+  T19["method:JobsImageCacheCleaner::_forceRedownloadImagesMain<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:72"]
   S19 -->|calls| T19
-  S20["method:String::toDouble<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+格式转换.swift:33"]
-  T20["method:DateFormatter::byLocale<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/DateFormatter/DateFormatter+DSL.swift:57"]
+  S20["method:JobsImageCacheCleaner::forceRedownloadImages<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:58"]
+  T20["method:JobsImageCacheCleaner::_forceRedownloadImagesMain<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:72"]
   S20 -->|calls| T20
-  S21["method:String::toDouble<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+格式转换.swift:42"]
-  T21["method:NumberFormatter::byMinimumFractionDigits<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:153"]
+  S21["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisher<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:118"]
+  T21["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_guessImageViewTargetSize<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:90"]
   S21 -->|calls| T21
-  S22["method:String::toDouble<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+格式转换.swift:42"]
-  T22["method:NumberFormatter::byMaximumFractionDigits<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NumberFormatter/NumberFormatter+DSL.swift:159"]
+  S22["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisher<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:131"]
+  T22["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_guessButtonForegroundTargetSize<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:96"]
   S22 -->|calls| T22
-  S23["method:String::toBool<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+格式转换.swift:57"]
-  T23["enum_member:TextFormatStrategy::lowercased<br/>JobsByPods/JobsSwiftBaseTools@Pods/TextInputStrategies.swift:17"]
+  S23["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisher<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:131"]
+  T23["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S23 -->|calls| T23
-  S24["method:String::open<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+系统功能调用.swift:44"]
-  T24["method:String::makeURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:82"]
+  S24["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisherBackground<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:154"]
+  T24["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_guessButtonBackgroundTargetSize<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:110"]
   S24 -->|calls| T24
-  S25["method:String::open<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+系统功能调用.swift:44"]
-  T25["type_alias:jobsByVoidBlock<br/>JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBaseBlock.swift:19"]
+  S25["function:JobsImageCacheCleaner::_forceRedownloadImagesMain::_reloadWithKingfisherBackground<br/>JobsByPods/JobsImageTools@Pods/JobsImageCacheCleaner.swift:154"]
+  T25["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
   S25 -->|calls| T25
 ```
 

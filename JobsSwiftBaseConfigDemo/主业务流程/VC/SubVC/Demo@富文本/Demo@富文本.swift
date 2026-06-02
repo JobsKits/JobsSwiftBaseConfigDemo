@@ -19,6 +19,7 @@ import NSObject_Rx          // 自动提供 disposeBag
 import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 // MARK: - 仅两个 cell：1) Delegate 方案  2) RAC 方案

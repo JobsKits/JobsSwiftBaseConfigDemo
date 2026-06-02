@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UINavigationController::_jobs_popViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:127"]
-  T1["method:UINavigationController::_jobs_popViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:127"]
+  S1["method:UnityAppController::callbackPresent:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:75"]
+  T1["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S1 -->|calls| T1
-  S2["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T2["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
+  S2["method:UnityAppController::callbackPresent:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:75"]
+  T2["function:PreparePresentNonMainScreenMTL<br/>TODO/Unity/xcode_effectTest/Classes/Unity/MetalHelper.mm:452"]
   S2 -->|calls| T2
-  S3["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T3["method:JobsButtonNumberAnimConfig::Title::byDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+动效数字标题.swift:375"]
+  S3["method:UnityAppController::callbackPresent:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:75"]
+  T3["method:DisplayConnection::present<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:260"]
   S3 -->|calls| T3
-  S4["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T4["method:CATransition::bySubtype<br/>JobsByPods/JobsByQuartzCore@Pods/CATransition.swift:29"]
+  S4["method:UnityAppController::callbackPresent:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:75"]
+  T4["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S4 -->|calls| T4
-  S5["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T5["method:CAGradientLayer::byType<br/>JobsByPods/JobsByQuartzCore@Pods/CAGradientLayer.swift:69"]
+  S5["method:UnityAppController::callbackPresent:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:75"]
+  T5["function:Profiler_FramePresent<br/>TODO/Unity/xcode_effectTest/Classes/Unity/InternalProfiler.cpp:142"]
   S5 -->|calls| T5
-  S6["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T6["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S6["method:UnityAppController::callbackFramerateChange:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:98"]
+  T6["function:UnityDeviceCPUCount<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:208"]
   S6 -->|calls| T6
-  S7["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T7["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
+  S7["method:UnityAppController::selectRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:128"]
+  T7["function:SelectRenderingAPIImpl<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:176"]
   S7 -->|calls| T7
-  S8["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
-  T8["method:UINavigationController::_jobs_popToViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:148"]
+  S8["function:UnityGfxInitedCallback<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:143"]
+  T8["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S8 -->|calls| T8
-  S9["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T9["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
+  S9["function:UnityPresentContextCallback<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:148"]
+  T9["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S9 -->|calls| T9
-  S10["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T10["method:CAAnimation::byTimingFunction<br/>JobsByPods/JobsByQuartzCore@Pods/CAAnimation.swift:13"]
+  S10["function:UnityFramerateChangeCallback<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:153"]
+  T10["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
   S10 -->|calls| T10
-  S11["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T11["method:JobsButtonNumberAnimConfig::Title::byDuration<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+动效数字标题.swift:375"]
+  S11["function:SelectRenderingAPIImpl<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:176"]
+  T11["function:IsMetalSupported<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:161"]
   S11 -->|calls| T11
-  S12["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T12["method:CATransition::bySubtype<br/>JobsByPods/JobsByQuartzCore@Pods/CATransition.swift:29"]
+  S12["function:UnityGetMetalCommandQueue<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:194"]
+  T12["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S12 -->|calls| T12
-  S13["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T13["method:CAGradientLayer::byType<br/>JobsByPods/JobsByQuartzCore@Pods/CAGradientLayer.swift:69"]
+  S13["function:UnityGetMetalDrawableCommandQueue<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:198"]
+  T13["function:UnityGetMetalCommandQueue<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:194"]
   S13 -->|calls| T13
-  S14["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T14["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S14["function:UnityBackbufferColor<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:201"]
+  T14["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S14 -->|calls| T14
-  S15["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T15["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
+  S15["function:UnityBackbufferDepth<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:202"]
+  T15["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S15 -->|calls| T15
-  S16["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
-  T16["method:UINavigationController::_jobs_popToRootViewController_swizzled<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:168"]
+  S16["function:DisplayManagerEndFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:204"]
+  T16["method:DisplayManager::endFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:416"]
   S16 -->|calls| T16
-  S17["method:UIViewController::_consumeDirection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:94"]
-  T17["method:UIViewController::byDirectionReset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:88"]
+  S17["function:DisplayManagerEndFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:204"]
+  T17["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S17 -->|calls| T17
-  S18["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:104"]
-  T18["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:104"]
+  S18["function:UnityPrepareScreenshot<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:206"]
+  T18["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S18 -->|calls| T18
-  S19["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:110"]
-  T19["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:110"]
+  S19["function:UnityPrepareScreenshot<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:206"]
+  T19["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
   S19 -->|calls| T19
-  S20["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:110"]
-  T20["method:UIViewController::byDirection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:82"]
+  S20["function:UnityRepaint<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:208"]
+  T20["function:Profiler_FrameStart<br/>TODO/Unity/xcode_effectTest/Classes/Unity/InternalProfiler.cpp:125"]
   S20 -->|calls| T20
-  S21["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:120"]
-  T21["method:UIViewController::_consumeDirection<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:94"]
+  S21["function:UnityRepaint<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:208"]
+  T21["function:Profiler_FrameEnd<br/>TODO/Unity/xcode_effectTest/Classes/Unity/InternalProfiler.cpp:137"]
   S21 -->|calls| T21
-  S22["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:120"]
-  T22["method:UIResponder::jobsNearestVC<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIResponder.swift:30"]
+  S22["method:UnityAppController::init<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:90"]
+  T22["method:UnityAppController::init<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:90"]
   S22 -->|calls| T22
-  S23["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:120"]
-  T23["method:UIViewController::jobs_findMainNavFromAncestors<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+侧滑抽屉容器.swift:255"]
+  S23["method:UnityAppController::startUnity:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:118"]
+  T23["method:DisplayManager::updateDisplayListCacheInUnity<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:363"]
   S23 -->|calls| T23
-  S24["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:120"]
-  T24["method:UINavigationController::_jobs_lockPushing<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+系统导航栏设置.swift:244"]
+  S24["method:UnityAppController::startUnity:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:118"]
+  T24["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S24 -->|calls| T24
-  S25["method:UIViewController::byPush<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift:120"]
-  T25["method:String::add<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+通用工具.swift:21"]
+  S25["method:UnityAppController::startUnity:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:118"]
+  T25["function:Profiler_InitProfiler<br/>TODO/Unity/xcode_effectTest/Classes/Unity/InternalProfiler.cpp:111"]
   S25 -->|calls| T25
 ```
 
