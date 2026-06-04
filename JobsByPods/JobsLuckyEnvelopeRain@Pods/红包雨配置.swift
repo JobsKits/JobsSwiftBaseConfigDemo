@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - 红包雨配置
 public struct RedPacketRainConfig {
     /// 每次生成红包的间隔

@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class LuckyWheelDemoVC: BaseVC {
     

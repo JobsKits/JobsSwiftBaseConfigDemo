@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsTextTools
+
 // MARK: - 直接赋值@单参数
 extension UILabel {
     

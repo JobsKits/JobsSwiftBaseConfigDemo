@@ -12,24 +12,23 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 import SnapKit
 import NSObject_Rx
 import SDWebImage
 import Kingfisher
-import JobsSwiftDSL
 
+#if canImport(JobsSwiftBlock)
+import JobsSwiftBlock
+#endif
+#if canImport(JobsSwiftBaseDefines)
+import JobsSwiftBaseDefines
+#endif
 #if canImport(RxSwift) && canImport(RxCocoa)
 import RxSwift
 import RxCocoa
 #endif
 
-#if canImport(JobsSwiftBlock)
-import JobsSwiftBlock
-#endif
-
-#if canImport(JobsSwiftBaseDefines)
-import JobsSwiftBaseDefines
-#endif
 // ================================== 构建 & 配置 ==================================
 extension UIAlertController {
     // MARK: 工厂

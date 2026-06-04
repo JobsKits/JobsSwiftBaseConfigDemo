@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsByQuartzCore
 import JobsSwiftBaseDefines
+import SnapKit
 /// 扇形圆盘 + 中央按钮（按钮用 Jobs 封装 API）
 /// 旋转动画用 JobsSwiftTimer（displayLink 内核） + ScrollDecelerator 实现 UIScrollView 式减速
 /// 支持:
@@ -26,6 +26,7 @@ import JobsSwiftBaseDefines
 /// 3. 手势拖动旋转 + 松手后减速
 /// 4. 每个扇形文字整体对准圆心
 /// 5. 每个扇形文字外侧有一个圆形 ImageView（用 placeholderImage 渲染）
+
 final class LuckyWheelView: UIView {
     enum PointerDirection {
         case up

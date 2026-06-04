@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import Alamofire
 import Combine
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import Alamofire
+import SnapKit
+import GKNavigationBarSwift
 
 final class AFDemoVC: UIViewController {
     // live 或 stubbed；live 演示真实请求

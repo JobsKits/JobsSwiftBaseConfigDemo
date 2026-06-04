@@ -12,7 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
@@ -20,6 +19,7 @@ import JobsSwiftTimer
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class ClockDemoVC: BaseVC {
     

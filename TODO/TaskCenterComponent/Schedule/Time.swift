@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// `Time` represents a time without a date.
+
 public struct Time {
 
     /// Hour of day.

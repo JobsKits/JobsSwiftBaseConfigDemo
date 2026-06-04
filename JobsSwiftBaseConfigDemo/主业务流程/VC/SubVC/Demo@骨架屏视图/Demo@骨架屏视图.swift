@@ -12,14 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import SkeletonView
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
+import SkeletonView
+import GKNavigationBarSwift
+
 // MARK: - 数据模型
 struct User {
     let name: String

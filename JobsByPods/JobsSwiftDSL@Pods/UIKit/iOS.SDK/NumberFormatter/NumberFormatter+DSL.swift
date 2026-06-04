@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - 链式 DSL
 extension NumberFormatter {
     // MARK: Context & Behavior

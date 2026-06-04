@@ -12,14 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
+import SnapKit
 
 #if canImport(FMDB) && !canImport(WCDB)
 import FMDB
-
 final class FMDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
     private var data: [Man] = []

@@ -6,12 +6,10 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-import Foundation
 #if os(OSX)
-    import AppKit
-#endif
-#if os(iOS) || os(tvOS)
-    import UIKit
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
 #endif
 
 #if canImport(GKNavigationBarSwift)

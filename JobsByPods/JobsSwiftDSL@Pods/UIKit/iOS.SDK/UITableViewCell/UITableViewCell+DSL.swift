@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
+import JobsTextTools
+
 #if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
 #endif
 
-import JobsTextTools
 // MARK: - UITableViewCell · 基础状态 & 选择/高亮/编辑
 extension UITableViewCell {
     /// selectionStyle

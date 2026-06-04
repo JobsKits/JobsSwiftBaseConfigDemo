@@ -13,14 +13,13 @@ import UIKit
 #endif
 
 import ObjectiveC
-import SnapKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
 
 #if canImport(SDWebImage)
 import SDWebImage
 #endif
-
 #if canImport(Kingfisher)
 import Kingfisher
 #endif

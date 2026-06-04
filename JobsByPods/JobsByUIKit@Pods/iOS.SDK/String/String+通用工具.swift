@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: 一 其他通用工具
 extension String {
     /// 复制当前字符串到系统剪切板

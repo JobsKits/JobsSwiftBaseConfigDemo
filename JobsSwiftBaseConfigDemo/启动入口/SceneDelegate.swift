@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import LiveChat
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftTools
+import LiveChat
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?

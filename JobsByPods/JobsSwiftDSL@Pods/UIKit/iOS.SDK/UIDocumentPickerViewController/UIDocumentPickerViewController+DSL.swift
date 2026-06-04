@@ -11,7 +11,6 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers // iOS 14+
 #endif

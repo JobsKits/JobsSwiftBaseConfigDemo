@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // ================================== SafeDefault：类型级默认值 ==================================
 public protocol SafeDefault {
     static var defaultValue: Self { get }

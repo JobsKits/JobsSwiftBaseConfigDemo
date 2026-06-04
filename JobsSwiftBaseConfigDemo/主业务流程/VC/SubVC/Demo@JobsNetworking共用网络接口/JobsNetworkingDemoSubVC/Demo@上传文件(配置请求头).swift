@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsNetworking
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - 上传文件
 final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
 

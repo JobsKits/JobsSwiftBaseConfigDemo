@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - 示例子页（简化）
 final class HomeVC: BaseVC {
     override func viewDidLoad() {

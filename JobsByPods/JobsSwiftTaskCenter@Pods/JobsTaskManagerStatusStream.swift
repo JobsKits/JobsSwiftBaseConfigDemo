@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - JobsTaskManagerStatusStream
 /// 任务管理器状态变化流
 public struct JobsTaskManagerStatusStream: AsyncSequence {

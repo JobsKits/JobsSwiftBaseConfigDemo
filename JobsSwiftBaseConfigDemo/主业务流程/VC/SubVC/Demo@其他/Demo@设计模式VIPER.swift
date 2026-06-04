@@ -7,12 +7,15 @@
 //
 
 // MARK: - VIPERDemo.swift
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import JobsByUIKit
+
 // ========== Entity ==========
 struct VIPERUser: Decodable { let id: String; let name: String }
 

@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import LiveChat
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
+import LiveChat
 
 final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 

@@ -13,14 +13,7 @@ import UIKit
 #endif
 
 import UserNotifications
-import GKNavigationBarSwift
-import LiveChat
-import IQKeyboardManagerSwift
-import IQKeyboardToolbarManager
-import CocoaLumberjack
-import BRPickerViewSwift
 import JobsSwiftDSL
-
 import Jobsl10n
 import JobsScale
 import JobsByUIKit
@@ -32,10 +25,19 @@ import JobsSwiftBaseTools
 import JobsSwiftFoundation
 import JobsSwiftBaseDefines
 import JobsSwiftStandardLibrary
+
 #if DEBUG
 import JobsSwiftDebugTools
 #endif
+
+import GKNavigationBarSwift
+import LiveChat
+import IQKeyboardManagerSwift
+import IQKeyboardToolbarManager
+import CocoaLumberjack
+import BRPickerViewSwift
 /// https://github.com/apple/swift-collections#
+
 #if canImport(Collections)
 import Collections          // ✅ Pod 或 SPM 直接接 apple/swift-collections
 #elseif canImport(OrderedCollections)

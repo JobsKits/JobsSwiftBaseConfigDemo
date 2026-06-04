@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsSwiftStandardLibrary
+import SnapKit
 
 public final class FTDashboardView: UIView {
     /// 0.0 ~ 1.0

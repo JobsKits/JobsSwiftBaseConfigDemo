@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - High frequency UI one-liners (small set, big coverage)
 // ===== UILabel =====
 extension UILabel {

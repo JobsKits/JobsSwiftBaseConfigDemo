@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// `Monthday` represents the combination of a month and day-of-month.
+
 public enum Monthday {
 
     case january(Int)

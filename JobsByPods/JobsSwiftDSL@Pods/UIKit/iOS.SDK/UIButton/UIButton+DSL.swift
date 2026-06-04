@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBaseDefines
+
 // MARK: - 基础链式
 private var _jobsTitleFontDictKey: UInt8 = 0
 private var _jobsTitleColorDictKey: UInt8 = 0

@@ -11,9 +11,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// JobsTaskManager - Jobs 系列任务管理器
 /// 提供任务的集中管理、生命周期控制和应用状态监听
 /// 线程安全：使用 NSLock 保护内部状态
+
 public final class JobsTaskManager: @unchecked Sendable {
 
     public static let `default` = JobsTaskManager()

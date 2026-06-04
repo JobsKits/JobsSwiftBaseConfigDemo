@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+
 // MARK: - 工厂：按样式创建（便于老系统 detailTextLabel 显示）
 extension UITableViewCell {
     /// 便捷工厂：指定 CellStyle 与复用 ID

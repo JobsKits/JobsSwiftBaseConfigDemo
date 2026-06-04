@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // ================================== NSTextAttachment 链式封装 ==================================
 extension NSTextAttachment {
     // MARK: - 初始化（便捷）

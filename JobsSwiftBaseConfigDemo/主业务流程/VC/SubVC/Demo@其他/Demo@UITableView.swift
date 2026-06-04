@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
+import SnapKit
+import GKNavigationBarSwift
 
 final class EmptyTableViewDemoVC: BaseVC {
     // ================================== 数据源 & 状态 ==================================

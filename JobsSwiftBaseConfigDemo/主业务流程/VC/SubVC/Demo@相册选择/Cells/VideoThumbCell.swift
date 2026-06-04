@@ -18,6 +18,7 @@ import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import SnapKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）
+
 public final class VideoThumbCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {
         UIImageView()

@@ -12,9 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import GKPhotoBrowser
-import GKNavigationBarSwift
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +19,9 @@ import JobsBy3rdTools
 import JobsTextTools
 import JobsSwiftBaseDefines
 import JobsRefresher
+import GKPhotoBrowser
+import GKNavigationBarSwift
+import SnapKit
 
 final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
     private let layoutMode: TimelineLayoutMode = .estimated_autoDimension

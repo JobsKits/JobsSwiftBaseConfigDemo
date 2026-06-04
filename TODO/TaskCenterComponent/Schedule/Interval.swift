@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// Type used to represent a time-based amount of time, such as '34.5 seconds'.
+
 public struct Interval {
 
     ///  The length of this interval in nanoseconds.

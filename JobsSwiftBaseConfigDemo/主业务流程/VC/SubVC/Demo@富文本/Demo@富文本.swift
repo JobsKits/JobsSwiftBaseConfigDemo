@@ -12,16 +12,17 @@ import AppKit
 import UIKit
 #endif
 
-import RxSwift
-import RxCocoa
-import SnapKit
-import NSObject_Rx          // 自动提供 disposeBag
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
+import RxSwift
+import RxCocoa
+import SnapKit
+import NSObject_Rx          // 自动提供 disposeBag
+import GKNavigationBarSwift
+
 // MARK: - 仅两个 cell：1) Delegate 方案  2) RAC 方案
 //  - “专属客服”使用系统默认蓝色（.link）
 //  - “400-123-4567” 可点击拨号，样式=红字+蓝色下划线（自定义）

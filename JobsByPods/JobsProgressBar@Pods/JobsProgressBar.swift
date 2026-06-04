@@ -10,6 +10,11 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
 import ObjectiveC
 #endif
 
@@ -17,6 +22,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
+
 // MARK: - Progress Label Placement
 public enum JobsProgressLabelPlacement {
     case top

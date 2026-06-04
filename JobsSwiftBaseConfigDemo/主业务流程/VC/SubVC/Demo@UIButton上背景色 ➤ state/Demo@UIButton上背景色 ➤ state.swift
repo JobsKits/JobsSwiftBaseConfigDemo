@@ -12,18 +12,19 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 /// Demo：演示 byBackgroundColor 在不同 state 下的效果（通过 isEnabled 切换 disabled）
 /// - 重点：给 .normal / .disabled / .highlighted / .selected 分别设置背景色
 /// - 交互：
 ///   1) “切换 isEnabled” 按钮：控制主按钮 enabled/disabled（看 disabled 背景色）
 ///   2) 点主按钮：切换 selected（看 selected 背景色）
 ///   3) 长按主按钮：进入 highlighted（看 highlighted 背景色）
+
 final class UIButtonBackgroundColorDemoVC: BaseVC {
     // MARK: - UI
     private lazy var exampleButton: UIButton = {

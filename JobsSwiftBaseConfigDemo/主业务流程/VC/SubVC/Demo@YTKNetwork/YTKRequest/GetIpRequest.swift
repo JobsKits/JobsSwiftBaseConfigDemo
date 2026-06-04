@@ -11,8 +11,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import YTKNetwork
 /// GET /ip => {"origin": "x.x.x.x"}
+
 final class GetIpRequest: YTKRequest {
     override func requestUrl() -> String {
         return "/ip"

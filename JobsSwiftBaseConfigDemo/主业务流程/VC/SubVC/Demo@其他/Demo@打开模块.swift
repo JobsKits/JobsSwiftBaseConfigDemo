@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
 import JobsTextTools
+import SnapKit
 
 final class JobsOpenDemoVC: BaseVC {
     // ================================== UI ==================================

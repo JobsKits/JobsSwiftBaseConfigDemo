@@ -12,13 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 #if !canImport(FMDB) && canImport(WCDB)
 final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16

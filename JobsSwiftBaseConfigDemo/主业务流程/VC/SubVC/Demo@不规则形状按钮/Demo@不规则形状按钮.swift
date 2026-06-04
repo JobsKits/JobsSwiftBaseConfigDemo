@@ -12,14 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
+import SnapKit
+import GKNavigationBarSwift
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
+
 final class IrregularButtonDemoVC: BaseVC {
     
     private enum Layout {

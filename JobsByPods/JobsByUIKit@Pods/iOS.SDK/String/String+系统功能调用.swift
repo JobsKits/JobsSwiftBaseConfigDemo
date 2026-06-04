@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import MessageUI
 import CoreImage
 import JobsSwiftBaseDefines
 import JobsSwiftBlock
 import JobsSwiftTimer
+import MessageUI
+
 // MARK: 一行打开：网址(任何支持的 URL scheme) 、一行拨号、发邮件
 @MainActor
 extension String {

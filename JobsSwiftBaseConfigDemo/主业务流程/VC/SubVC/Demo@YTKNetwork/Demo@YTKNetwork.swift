@@ -12,17 +12,16 @@ import AppKit
 import UIKit
 #endif
 
-import YTKNetwork
-import SnapKit
 import JobsSwiftDSL
-
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import YTKNetwork
+import SnapKit
+import GKNavigationBarSwift
 
 final class YTKNetworkDemoVC: BaseVC {
     

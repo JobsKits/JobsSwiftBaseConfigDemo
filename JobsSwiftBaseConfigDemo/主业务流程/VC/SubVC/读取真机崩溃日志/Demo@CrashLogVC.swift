@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +20,8 @@ import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsToast
 import JobsSwiftTools
+import SnapKit
+import GKNavigationBarSwift
 
 final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 12

@@ -12,13 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsRefresher
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - 外层入口：TableView + SnapKit
 final class JobsNetworkingListDemoVC : BaseVC {
      

@@ -12,10 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - Cell
 public final class HCell: UICollectionViewCell {
     private lazy var label: UILabel = {

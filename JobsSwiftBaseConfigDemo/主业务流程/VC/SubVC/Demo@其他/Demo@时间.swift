@@ -12,10 +12,7 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsSwiftDSL
-
 import JobsByUIKit
 import JobsTextTools
 import JobsBy3rdTools
@@ -23,6 +20,8 @@ import JobsSwiftTimer
 import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class TimerDemoVC: BaseVC {
     // MARK: - Layout 常量

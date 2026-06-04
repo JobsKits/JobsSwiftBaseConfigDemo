@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - 屏幕常亮
 extension NSObject {
     /// 屏幕是否保持常亮

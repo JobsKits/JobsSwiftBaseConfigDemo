@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +20,8 @@ import JobsSwiftTimer
 import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsLuckyEnvelopeRain
+import SnapKit
+import GKNavigationBarSwift
 
 final class RedPacketRainDemoVC: BaseVC {
     private var isRaining = false

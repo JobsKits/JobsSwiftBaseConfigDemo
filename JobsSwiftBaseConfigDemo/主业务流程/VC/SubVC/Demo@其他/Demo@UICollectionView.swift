@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,6 +19,8 @@ import JobsEmptyView
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class EmptyCollectionViewDemoVC: BaseVC {
     // ============================== 数据源 & 状态 ==============================

@@ -8,6 +8,7 @@
 
 import Foundation
 import CommonCrypto
+
 // MARK: 属性
 public extension String {
     /// 字符串的MD5值

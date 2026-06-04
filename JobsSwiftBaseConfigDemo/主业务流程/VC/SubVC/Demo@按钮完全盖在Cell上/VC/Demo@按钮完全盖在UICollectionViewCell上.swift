@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import GKNavigationBarSwift
-import SnapKit
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +20,8 @@ import JobsRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import GKNavigationBarSwift
+import SnapKit
 
 final class BtnFullOnCVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []

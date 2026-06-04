@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class MomentMediaView: UIView {
     struct Metrics {

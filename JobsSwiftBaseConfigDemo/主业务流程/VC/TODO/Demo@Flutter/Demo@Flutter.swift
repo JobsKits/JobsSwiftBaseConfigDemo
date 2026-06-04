@@ -12,7 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,6 +20,7 @@ import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsScale
 import JobsSwiftTools
+import SnapKit
 
 final class FlutterDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {

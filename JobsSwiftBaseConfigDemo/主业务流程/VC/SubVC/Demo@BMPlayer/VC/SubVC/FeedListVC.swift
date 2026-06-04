@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
-import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
+import SnapKit
+import GKNavigationBarSwift
 
 final class FeedListVC: BaseVC,
                         UITableViewDataSource,

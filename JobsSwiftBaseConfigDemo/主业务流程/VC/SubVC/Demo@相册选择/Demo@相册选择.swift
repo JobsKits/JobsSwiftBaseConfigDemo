@@ -20,8 +20,6 @@ import UIKit
 import AVFoundation
 import Photos
 import PhotosUI   // 视频选择（PHPicker）
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -30,6 +28,9 @@ import JobsSwiftBaseDefines
 import JobsBy3rdTools
 import JobsTextTools
 import JobsSwiftTools
+import SnapKit
+import GKNavigationBarSwift
+
 @MainActor
 final class PhotoAlbumDemoVC: BaseVC {
     private enum SourceMode { case none, cameraPhoto, albumImages, cameraVideo, albumVideos }

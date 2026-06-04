@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import JobsToast
+
 // MARK: - 可选协议
 /// 如果你想自定义 toast 里展示的 tag，让你的 VC 遵循这个协议即可。
 @objc public protocol UIViewControllerDebugDeinitProtocol {

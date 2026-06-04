@@ -15,9 +15,11 @@
 /// 使用场景示例：
 /// - 在页面/模块中创建多个可取消的异步任务（如网络请求、下载、定时器任务等），统一交给 `JobsTaskCenter` 管理，页面销毁时统一 `removeAll()`。
 /// - 为任务打上业务标签，如 "login"、"imageDownload"，便于统计与查询。
+
 import Foundation
 /// JobsTaskCenterComponent - Jobs 系列任务中心组件
 /// 提供便捷的任务创建、配置和管理接口
+
 public final class JobsTaskCenterComponent: @unchecked Sendable {
     
     public let task: JobsTask

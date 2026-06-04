@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - 输入模式
 public enum JobsTextInputMode: Int {
     case space      /// 点按：空格按键

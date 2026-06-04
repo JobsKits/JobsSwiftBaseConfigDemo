@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import ObjectiveC
 import JobsByQuartzCore
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - Associated Object Keys (NO WARNING)
 private enum _JobsBtnGradientKey {
     /// 使用静态 UInt8 做 key，避免 “UnsafeRawPointer + String” 的黄色警告

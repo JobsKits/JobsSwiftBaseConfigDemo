@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class FTDashboadDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 20

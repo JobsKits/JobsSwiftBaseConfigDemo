@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBlock
 import JobsInheritance
+import SnapKit
+import GKNavigationBarSwift
 
 final class ToastDemoVC: BaseVC {
 

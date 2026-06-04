@@ -13,14 +13,15 @@ import UIKit
 #endif
 
 import WebKit
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsByWebKit
 import JobsSwiftFoundation
 import JobsSwiftBaseDefines
 import JobsSwiftStandardLibrary
+import SnapKit
+import GKNavigationBarSwift
+
 /**
      BaseWebVC()
          .byData("https://www.baidu.com")

@@ -15,10 +15,11 @@ import UIKit
 import JobsSwiftBlock
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+
 // MARK: - SnapKit
+
 #if canImport(SnapKit)
 import SnapKit
-
 private var addClosureKey: UInt8 = 0
 extension UIView {
     public var jobsAddConstraintsClosure: jobsByConstraintMakerBlock? {
@@ -285,6 +286,7 @@ extension UIView {
         };return self
     }
 }
+
 // MARK: - ✅ btnArr 链式：addSubview + distribute
 extension Array where Element: UIView {
     /// 把数组里的 view 全部 add 到 superView（链式返回 self）

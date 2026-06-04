@@ -6,7 +6,11 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 
 /// 任务状态
 ///
@@ -15,6 +19,7 @@ import UIKit
 /// - prepare: 预备，将要执行
 /// - excute: 执行中
 /// - ended: 结束
+
 public enum TaskStatus {
 
     case expire

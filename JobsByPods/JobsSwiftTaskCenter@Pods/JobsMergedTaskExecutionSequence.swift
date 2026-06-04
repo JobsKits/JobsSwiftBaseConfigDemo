@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - 组合多个任务的执行流
 /// 合并多个任务的执行流
 public struct JobsMergedTaskExecutionSequence: AsyncSequence {

@@ -12,16 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(Kingfisher)
-import Kingfisher
-#endif
-
-#if canImport(SDWebImage)
-import SDWebImage
-#endif
-
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -30,7 +20,18 @@ import JobsScale
 import JobsSwiftBaseDefines
 import JobsImageTools
 import JobsTextTools
+import SnapKit
+import GKNavigationBarSwift
+
+#if canImport(Kingfisher)
+import Kingfisher
+#endif
+#if canImport(SDWebImage)
+import SDWebImage
+#endif
+
 /// UIImageView、UIButton网络图@请求时呼吸占位只有请求失败或者解析失败才执行兜底图
+
 final class PicLoadDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
         UIScrollView()

@@ -11,7 +11,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// UICollectionView、UICollectionViewCell、UICollectionReusableView@注册
+
 extension UICollectionView {
     // MARK: - register@Cell（Nib）
     /// 按类名从 Nib 注册 Cell

@@ -22,6 +22,7 @@ import JobsSwiftBaseDefines
 /// Swift 6 注意点：JobsSwiftTimer 的 handler 是 @Sendable
 /// - 不要在 @Sendable 闭包里直接触碰 UIKit/Layer
 /// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 onMainAsync(self)）
+
 open class JobsClockView: UIView {
     
     deinit {

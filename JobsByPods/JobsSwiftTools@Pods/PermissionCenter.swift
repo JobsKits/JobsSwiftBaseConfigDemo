@@ -14,12 +14,13 @@ import UIKit
 
 import Photos
 import AVFoundation
-import AVFAudio
 import CoreLocation
-import CoreBluetooth
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
 import JobsToast
+import AVFAudio
+import CoreBluetooth
+
 // ================================== 权限中心：声明 ==================================
 public enum SystemPermission {
     case camera

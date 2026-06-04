@@ -12,10 +12,7 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsSwiftDSL
-
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsTextTools
@@ -23,7 +20,10 @@ import JobsRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 /// UITableView是不支持在Section内部直接定义Cell之间的距离的
+
 final class BtnFullOnTBVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []
     private lazy var tableView: UITableView = {

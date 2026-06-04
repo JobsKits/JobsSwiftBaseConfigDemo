@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsScale
 import JobsToast
+import SnapKit
+import GKNavigationBarSwift
 
 final class JobsButtonDemoVC: BaseVC {
 

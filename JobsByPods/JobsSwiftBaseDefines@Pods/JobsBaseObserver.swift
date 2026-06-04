@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+
 // MARK: - 核心观察者（同时服务 UITextField / UITextView）
 public final class JobsTextInputObserver: NSObject,
                                           UITextFieldDelegate,

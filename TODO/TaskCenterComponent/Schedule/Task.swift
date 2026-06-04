@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// `ActionKey` represents a token that can be used to remove the action.
+
 public struct ActionKey {
 
     fileprivate let bagKey: BagKey

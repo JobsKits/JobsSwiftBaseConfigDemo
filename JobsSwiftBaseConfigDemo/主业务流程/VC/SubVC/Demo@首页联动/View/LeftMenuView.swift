@@ -12,9 +12,9 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
+import SnapKit
 
 struct LeftMenuItem { let icon: String; let title: String }
 

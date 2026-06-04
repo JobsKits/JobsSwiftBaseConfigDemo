@@ -14,6 +14,7 @@ import UIKit
 
 import JobsNavBar
 import JobsSwiftBlock
+
 // MARK: - 关联对象 Key（用 UInt8 的地址唯一标识）
 private enum _JobsNavBarAO {
     static var bar:  UInt8 = 0

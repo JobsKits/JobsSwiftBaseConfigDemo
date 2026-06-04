@@ -8,6 +8,7 @@
 
 import Foundation
 /// 可以进行升级
+
 public final class JobsSimpleImageLoader {
 
     public static let shared = JobsSimpleImageLoader()

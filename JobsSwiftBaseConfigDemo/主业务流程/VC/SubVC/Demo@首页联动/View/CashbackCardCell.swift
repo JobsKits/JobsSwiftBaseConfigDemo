@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsByQuartzCore
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class CashbackCardCell: UITableViewCell {
     private let corner: CGFloat = 22

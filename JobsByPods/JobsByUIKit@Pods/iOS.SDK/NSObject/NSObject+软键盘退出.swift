@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - NSObject 层：只退键盘，按需退 accessory
 extension NSObject {
     /// 收起键盘；`hideAccessory = true` 时连 `inputAccessoryView` 一并收起

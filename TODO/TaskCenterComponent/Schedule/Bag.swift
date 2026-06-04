@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// A unique key for removing an element from a bag.
+
 struct BagKey: Equatable {
 
     fileprivate let i: UInt64

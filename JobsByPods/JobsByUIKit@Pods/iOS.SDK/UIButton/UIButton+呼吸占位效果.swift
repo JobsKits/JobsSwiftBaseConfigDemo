@@ -15,6 +15,7 @@ import UIKit
 import ObjectiveC
 import JobsSwiftBaseDefines
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
+
 internal enum JobsButtonImageLoader: UInt8 {
     case sd = 1
     case kf = 2

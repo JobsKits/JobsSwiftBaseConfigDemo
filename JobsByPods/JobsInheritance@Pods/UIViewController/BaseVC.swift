@@ -12,8 +12,8 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsSwiftDebugTools
+import SnapKit
 
 open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
     // 可选：自定义 tag

@@ -12,9 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import FSPopoverView
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,11 +19,15 @@ import JobsTextTools
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import FSPopoverView
+import GKNavigationBarSwift
 /// FSPopoverView Demo（链式 by-DSL 写法 + 约束写在懒加载里的 byAddTo）
 /// - 展示：
 ///   1) 列表弹窗（FSPopoverListView）
 ///   2) 自定义内容（FSPopoverViewDataSource）
 ///   3) 从 UIBarButtonItem 与 任意 view 的 rect 弹出
+
 final class FSPopoverDemoVC: BaseVC {
     // MARK: - UI（by-DSL + 约束在 byAddTo 内）
     private lazy var exampleButton: UIButton = {

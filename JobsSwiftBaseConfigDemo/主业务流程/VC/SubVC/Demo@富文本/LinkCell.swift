@@ -12,16 +12,17 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import RxSwift
-import NSObject_Rx          // 自动提供 disposeBag
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftTools
 import JobsSwiftBaseDefines
+import SnapKit
+import RxSwift
+import NSObject_Rx          // 自动提供 disposeBag
 /// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
+
 public extension NSAttributedString.Key {
     static let jobsAction = NSAttributedString.Key("jobsAction")
 }

@@ -12,6 +12,7 @@ import Alamofire
 /// - Swift 6 说明:
 ///   1) EventMonitor 要求 queue 至少 internal；不能 private
 ///   2) 本类通过 @unchecked Sendable 声明手动承诺线程安全；并把 emit 包装成 @Sendable 闭包
+
 final class AFLogger: EventMonitor {
     // 必须至少 internal，满足 EventMonitor 协议要求
     let queue = DispatchQueue(label: "af.logger.queue")

@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsToast
 import JobsByUIKit
@@ -21,6 +19,9 @@ import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - 数据模型
 struct WalletCard {
     let bankName: String

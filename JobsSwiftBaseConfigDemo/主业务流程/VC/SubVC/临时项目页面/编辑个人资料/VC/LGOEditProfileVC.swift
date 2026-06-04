@@ -12,10 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import SwiftEntryKit
-import GKNavigationBarSwift
-import BRPickerViewSwift
 import JobsToast
 import JobsScale
 import JobsByUIKit
@@ -25,6 +21,11 @@ import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
+import SnapKit
+import SwiftEntryKit
+import GKNavigationBarSwift
+import BRPickerViewSwift
+
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
     

@@ -12,15 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import ObjectiveC
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class UITextFieldDemoVC: BaseVC {
 

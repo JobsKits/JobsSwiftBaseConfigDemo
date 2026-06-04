@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - Model
 public struct JobsCountdownItem: Hashable, Sendable {
     public let id: String

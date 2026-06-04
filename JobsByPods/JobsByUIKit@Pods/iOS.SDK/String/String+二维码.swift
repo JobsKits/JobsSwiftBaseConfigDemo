@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: 二维码
 extension String {
     /// 由当前字符串生成二维码 UIImage（无插值放大，清晰）

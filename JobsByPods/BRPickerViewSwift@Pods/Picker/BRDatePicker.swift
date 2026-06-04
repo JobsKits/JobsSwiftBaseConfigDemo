@@ -6,8 +6,11 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
-import Foundation
+#endif
 
 public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
 

@@ -13,13 +13,14 @@ import UIKit
 #endif
 
 import WebKit
-import SnapKit
 import JobsNavBar
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsByWebKit
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
+import SnapKit
+
 /**
  在 Info.plist 添加👇（更通用的 ATS 配置，避免为某域名单独开洞）
      <key>NSAppTransportSecurity</key>

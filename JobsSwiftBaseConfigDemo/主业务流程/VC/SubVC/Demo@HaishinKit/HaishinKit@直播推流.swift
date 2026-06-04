@@ -13,8 +13,6 @@ import UIKit
 #endif
 
 import AVFoundation
-import SnapKit
-import HaishinKit      // HaishinKit / RTMPHaishinKit
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
@@ -22,6 +20,8 @@ import JobsSwiftDSL
 import JobsSwiftBaseTools
 import JobsSwiftAppTools
 import JobsBy3rdTools
+import SnapKit
+import HaishinKit      // HaishinKit / RTMPHaishinKit
 
 final class HKLiveVC: BaseVC {
     deinit {

@@ -11,7 +11,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// Model
+
 struct JobsBtnCellModel {
     // MARK: - 主标题
     let title: String?

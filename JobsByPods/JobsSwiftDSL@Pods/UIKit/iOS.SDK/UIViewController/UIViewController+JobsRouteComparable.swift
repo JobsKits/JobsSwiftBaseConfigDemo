@@ -1,4 +1,10 @@
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
 import JobsSwiftBaseDefines
 
 extension UIViewController: @retroactive JobsRouteComparable {

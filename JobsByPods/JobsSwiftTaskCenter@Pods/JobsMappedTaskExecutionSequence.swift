@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - JobsMappedTaskExecutionSequence
 public struct JobsMappedTaskExecutionSequence<T>: AsyncSequence where T: Sendable {
     

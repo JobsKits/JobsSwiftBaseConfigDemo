@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsNetworking
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - 下载文件到本地
 final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {
 

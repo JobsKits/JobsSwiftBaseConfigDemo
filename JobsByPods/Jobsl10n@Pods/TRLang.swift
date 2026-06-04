@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - 统一语言桥（无兼容分支，仅此一套）
 public enum TRLang {
     // 原来是: public static var bundleProvider: (() -> Bundle)?

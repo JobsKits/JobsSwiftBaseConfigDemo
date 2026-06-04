@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsNetworking
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - 请求接口(配置请求头)
 final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
     

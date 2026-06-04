@@ -15,6 +15,7 @@ import UIKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+
 @MainActor
 public protocol JobsAnimatable: AnyObject {
     func apply(state: JobsState)

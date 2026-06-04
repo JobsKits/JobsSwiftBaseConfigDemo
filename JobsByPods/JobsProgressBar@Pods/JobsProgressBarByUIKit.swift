@@ -12,8 +12,8 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsSwiftDSL
+import SnapKit
 
 extension UIView {
     @discardableResult

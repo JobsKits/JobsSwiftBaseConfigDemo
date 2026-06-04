@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import WebKit
-import SwiftMessages
 import JobsSwiftBlock
 import JobsSwiftDSL
+import SnapKit
+import SwiftMessages
 
 extension UILabel {
     @discardableResult

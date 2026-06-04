@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 //
 //  语言切换自动刷新引擎（无兼容分支）
 //  依赖：Notification.Name.JobsLanguageDidChange、TRLang.bundleProvider()

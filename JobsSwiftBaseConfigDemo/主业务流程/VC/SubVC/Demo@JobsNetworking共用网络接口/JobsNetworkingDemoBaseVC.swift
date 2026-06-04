@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,6 +19,9 @@ import JobsBy3rdTools
 import JobsNetworking
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - 统一的 UI 骨架：TextView + Button（SnapKit）
 class JobsNetworkingDemoBaseVC: BaseVC {
     

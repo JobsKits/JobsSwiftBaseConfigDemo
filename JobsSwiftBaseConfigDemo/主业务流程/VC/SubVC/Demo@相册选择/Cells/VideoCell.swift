@@ -13,10 +13,11 @@ import UIKit
 #endif
 
 import AVFoundation
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
+import SnapKit
 /// 单个视频：自动播放，结束后出现「播放按钮」可重播
+
 public final class VideoCell: UICollectionViewCell {
     private var playerLayer: AVPlayerLayer?
     private var player: AVPlayer?

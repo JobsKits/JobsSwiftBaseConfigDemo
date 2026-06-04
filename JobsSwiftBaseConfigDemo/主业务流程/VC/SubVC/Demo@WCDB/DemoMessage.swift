@@ -8,6 +8,7 @@
 
 import Foundation
 import JobsByUIKit
+
 #if !canImport(FMDB) && canImport(WCDB)
 import WCDB
 final class DemoMessage: Codable, TableCodable {

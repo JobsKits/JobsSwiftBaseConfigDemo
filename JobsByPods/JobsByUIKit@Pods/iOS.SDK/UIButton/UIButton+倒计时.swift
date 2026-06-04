@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import Foundation
 import ObjectiveC
 import JobsSwiftBlock
 import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
+
 // MARK: - Associated Keys
 private var _timerTickAnyKey: UInt8 = 0
 private var _timerFinishAnyKey: UInt8 = 0

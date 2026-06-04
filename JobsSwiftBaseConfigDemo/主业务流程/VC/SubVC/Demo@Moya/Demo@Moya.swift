@@ -19,15 +19,15 @@ import AppKit
 import UIKit
 #endif
 
-import Moya
 import Combine
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import Moya
+import SnapKit
+import GKNavigationBarSwift
 
 final class MoyaDemoVC: BaseVC {
     // ✅ 改为 lazy，并把 Moya 日志重定向到 UI

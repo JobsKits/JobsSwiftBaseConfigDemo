@@ -13,9 +13,7 @@ import UIKit
 #endif
 
 import AVFoundation
-import SnapKit
 import JobsInheritance
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
@@ -23,6 +21,9 @@ import JobsTextTools
 import JobsBy3rdTools
 import JobsSwiftBaseTools
 import JobsSwiftAppTools
+import SnapKit
+import GKNavigationBarSwift
+
 #if canImport(BMPlayer)
 import BMPlayer
 /**

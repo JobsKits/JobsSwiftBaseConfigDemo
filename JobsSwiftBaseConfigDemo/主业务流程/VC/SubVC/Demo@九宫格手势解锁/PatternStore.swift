@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsGestureUnlock
+
 // MARK: - Demo Store（示例用 UserDefaults + SHA256）
 final class PatternStore {
     

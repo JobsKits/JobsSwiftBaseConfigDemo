@@ -12,14 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import QuartzCore
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - Demo VC（iOS 17+ 使用 UITraitChangeObservable + 内置调试按钮）
 final class TraitChangeDemoVC: BaseVC {
     // MARK: UI（全部懒加载，byAddTo + SnapKit）

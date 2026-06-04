@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsByQuartzCore
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - 普通银行卡 Cell（懒加载 + byAddTo）
 final class WalletCardCell: UICollectionViewCell {
     private let horizontalInset: CGFloat = 16

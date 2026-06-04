@@ -12,15 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import Foundation
-import SnapKit
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseTools
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class SafeCodableDemoVC: BaseVC {
     // MARK: - Model

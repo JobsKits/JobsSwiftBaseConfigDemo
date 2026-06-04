@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - 🍬语法糖@注册：UITableViewCell、HeaderFooterView、HeaderFooterView
 extension UITableView {
     /// 通用注册@类名（类名自己为🆔）

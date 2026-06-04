@@ -6,8 +6,11 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-import Foundation
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 
 public typealias InternalTaskCenter = TaskCenter
 

@@ -11,7 +11,9 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// 通知分类
+
 extension Notification.Name {
     /// 用户登陆
     static let userDidLogin = Notification.Name("userDidLogin")

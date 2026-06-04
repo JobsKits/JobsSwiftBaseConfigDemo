@@ -8,6 +8,7 @@
 
 import JobsSwiftBaseDefines
 /// 一些用结构体定义的小工具
+
 public struct JobsValidators {
     // MARK: - 非空验证
     public static func nonEmpty(_ s: String) -> Bool {

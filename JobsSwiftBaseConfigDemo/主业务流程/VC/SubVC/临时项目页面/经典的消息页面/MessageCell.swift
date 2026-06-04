@@ -12,10 +12,10 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class MessageCell: UITableViewCell {
 

@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,8 +19,11 @@ import JobsRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
+
 final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18

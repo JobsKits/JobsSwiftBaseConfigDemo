@@ -12,16 +12,17 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsRefresher
+import SnapKit
 import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
+
 final class JobsRefresherDemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18              // 顶部横向卡片数量
@@ -172,4 +173,3 @@ extension JobsRefresherDemoVC: UICollectionViewDataSource {
 }
 // MARK: - UICollectionViewDelegateFlowLayout (可选扩展)
 extension JobsRefresherDemoVC: UICollectionViewDelegateFlowLayout { }
-

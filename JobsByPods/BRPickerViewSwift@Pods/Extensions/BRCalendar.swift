@@ -6,7 +6,6 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-
 import Foundation
 
 enum BRCalendar {

@@ -6,6 +6,7 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 //  https://github.com/DamonHu/SnowflakeSwift
+
 import Foundation
 
 public typealias SnowflakeID = UInt64

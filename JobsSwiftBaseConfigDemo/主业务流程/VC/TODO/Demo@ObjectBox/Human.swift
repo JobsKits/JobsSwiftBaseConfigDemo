@@ -7,6 +7,7 @@
 //
 
 import ObjectBox
+
 // objectbox: entity
 final class Human: Entity {
     var id: Id = 0

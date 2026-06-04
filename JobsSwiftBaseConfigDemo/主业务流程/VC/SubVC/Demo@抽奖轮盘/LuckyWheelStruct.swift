@@ -16,6 +16,7 @@ import JobsByUIKit
 /// 模拟 UIScrollView 的减速曲线
 /// velocity：当前速度（可以是角速度 rad/s）
 /// decelerationRate：UIScrollView.DecelerationRate.normal.rawValue 之类
+
 struct ScrollDecelerator {
     var velocity: CGFloat              // 当前速度（比如角速度）
     let decelerationRate: CGFloat      // 例如 0.998（.normal）

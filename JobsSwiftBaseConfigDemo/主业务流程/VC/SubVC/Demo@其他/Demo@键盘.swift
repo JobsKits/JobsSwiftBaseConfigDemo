@@ -12,16 +12,16 @@ import AppKit
 import UIKit
 #endif
 
-import RxSwift
-import RxCocoa
-import SnapKit
-import NSObject_Rx
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
+import RxSwift
+import RxCocoa
+import SnapKit
+import NSObject_Rx
+import GKNavigationBarSwift
 
 final class KeyboardDemoVC: BaseVC {
     private let bag = DisposeBag()

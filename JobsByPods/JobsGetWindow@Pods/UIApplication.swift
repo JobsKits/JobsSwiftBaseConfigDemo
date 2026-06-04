@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /**
      // 取 keyWindow
      let win = UIApplication.jobsKeyWindow()

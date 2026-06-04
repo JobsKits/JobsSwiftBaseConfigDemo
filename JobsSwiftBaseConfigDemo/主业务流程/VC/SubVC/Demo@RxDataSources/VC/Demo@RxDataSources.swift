@@ -12,11 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import RxSwift
-import RxCocoa
-import RxDataSources
-import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -24,6 +19,11 @@ import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
 import JobsRefresher
+import SnapKit
+import RxSwift
+import RxCocoa
+import RxDataSources
+import GKNavigationBarSwift
 
 final class RxDataSourcesDemoVC: BaseVC {
     // MARK: - Data

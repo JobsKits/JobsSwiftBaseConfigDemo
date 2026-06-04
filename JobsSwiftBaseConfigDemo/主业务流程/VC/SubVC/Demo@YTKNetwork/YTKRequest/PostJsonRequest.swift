@@ -11,8 +11,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import YTKNetwork
 /// POST /post => 回显发出去的 JSON
+
 final class PostJsonRequest: YTKRequest {
     private let payload: [String: Any]
     init(payload: [String: Any]) {

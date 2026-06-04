@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import IQKeyboardManagerSwift
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
+import IQKeyboardManagerSwift
+import GKNavigationBarSwift
 
 final class LiveCommentDemoVC: BaseVC {
     // Data

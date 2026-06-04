@@ -12,10 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // ============================== 自定义“需确认”中心 Toast 视图 ==============================
 final class ConfirmToastView: UIView {
 

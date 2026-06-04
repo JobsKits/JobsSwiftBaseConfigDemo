@@ -15,6 +15,7 @@ import UIKit
 import JobsImageTools
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+
 //  ================================== 语义统一 ==================================
 //  这里的 placeholder 统一为「兜底图(Fallback)」：
 //  - URL 无效 / 本地找不到 / 请求失败：展示 placeholder

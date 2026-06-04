@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // MARK: - Int Extension
 /// 针对 `Int` 的便捷扩展：以毫秒/秒创建 `JobsPeriod`。
 extension Int {

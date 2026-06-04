@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,7 +19,10 @@ import JobsTextTools
 import JobsSwiftBaseTools
 import JobsSwiftBaseDefines
 import JobsToast
+import SnapKit
+import GKNavigationBarSwift
 /// 如果项目有 BaseVC，则可改为继承 BaseVC
+
 final class JobsTextDemoVC: BaseVC {
     // MARK: - 模型
     private var current: JobsText = "Hello, JobsText!"

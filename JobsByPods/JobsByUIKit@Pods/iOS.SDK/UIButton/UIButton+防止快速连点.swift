@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
+
 // MARK: - 防止快速连点
 extension UIButton {
     public func disableAfterClick(interval: TimeInterval = 1.0) {

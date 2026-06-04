@@ -6,7 +6,6 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-
 import Foundation
 
 public struct BRAreaNode: Codable, Equatable {

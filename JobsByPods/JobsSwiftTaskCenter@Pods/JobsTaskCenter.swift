@@ -8,6 +8,7 @@
 
 import Foundation
 /// 任务中心：集中管理 `JobsTask` 实例的生命周期与标签。
+
 public typealias InternalTaskCenter = JobsTaskCenter
 public final class JobsTaskCenter: @unchecked Sendable {
     /// 单例实例，便于全局访问。

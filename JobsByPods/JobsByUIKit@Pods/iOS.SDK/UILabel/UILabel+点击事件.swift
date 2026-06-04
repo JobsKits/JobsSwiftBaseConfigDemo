@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
+
 extension UILabel {
     /// 点语法：给 UILabel 加点击事件，返回自己
     @discardableResult

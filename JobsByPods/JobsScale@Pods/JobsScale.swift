@@ -11,10 +11,10 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
-
 #if canImport(JobsGetWindow)
 import JobsGetWindow
 #endif
+
 // MARK: - 快捷屏幕宽高（保持你原来接口）
 @inline(__always)
 public func ScreenWidth(_ rate: CGFloat = 1) -> CGFloat { Screen.width * rate }

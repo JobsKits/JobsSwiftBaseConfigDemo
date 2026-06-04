@@ -12,9 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import SwiftEntryKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +19,10 @@ import JobsSwiftBaseDefines
 import JobsScale
 import JobsTextTools
 import JobsBy3rdTools
+import SnapKit
+import SwiftEntryKit
+import GKNavigationBarSwift
+
 // MARK: - 内置消息工厂（颜色用 EKColor 包装）
 private func makeMessageView(title: String, desc: String, systemImage: String) -> UIView {
     let titleLabel = EKProperty.LabelContent(

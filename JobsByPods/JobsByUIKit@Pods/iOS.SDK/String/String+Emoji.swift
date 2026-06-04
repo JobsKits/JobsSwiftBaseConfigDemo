@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 /**
   用法示例
      let s = "Hi 👨‍👩‍👧‍👦! 🌈🇹🇭 ok?"

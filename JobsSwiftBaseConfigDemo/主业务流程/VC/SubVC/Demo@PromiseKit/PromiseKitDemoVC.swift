@@ -12,9 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import PromiseKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +19,9 @@ import JobsEmptyView
 import JobsRefresher
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import PromiseKit
+import GKNavigationBarSwift
 
 final class PromiseKitDemoVC: BaseVC {
     // MARK: - Row

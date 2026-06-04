@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
+import SnapKit
+import GKNavigationBarSwift
 
 final class UIButtonDemoVC: BaseVC {
     // 滚动容器

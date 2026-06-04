@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// An atomic box that can read and write the underlying value atomically.
+
 final class Atomic<T> {
 
     private var val: T

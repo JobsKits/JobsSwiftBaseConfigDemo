@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 // ============================== Model ==============================
 struct LiveMsg: Hashable {
     let id = UUID()

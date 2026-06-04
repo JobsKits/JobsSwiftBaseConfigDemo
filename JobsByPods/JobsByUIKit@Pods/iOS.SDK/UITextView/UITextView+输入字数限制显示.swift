@@ -12,10 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import ObjectiveC
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - UITextView + HintLimit (charCount/limit)
 extension UITextView {
     /// 右下角计数提示：`当前字数/限制字数`，如 `3/200`

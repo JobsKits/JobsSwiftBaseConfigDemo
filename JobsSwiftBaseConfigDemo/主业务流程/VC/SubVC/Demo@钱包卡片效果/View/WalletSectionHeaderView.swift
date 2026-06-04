@@ -14,8 +14,8 @@ import UIKit
 
 import JobsByUIKit
 import JobsSwiftDSL
-import SnapKit
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class WalletSectionHeaderView: UICollectionReusableView {
     private let horizontalInset: CGFloat = 20

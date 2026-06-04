@@ -12,16 +12,16 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsSwiftBlock
+
 #if canImport(Kingfisher)
 import Kingfisher
 #endif
-
 #if canImport(SDWebImage)
 import SDWebImage
 #endif
 
-import JobsSwiftBaseDefines
-import JobsSwiftBlock
 // MARK: 字符串转换成资源
 extension String {
     // MARK: - 字符串@Bundle

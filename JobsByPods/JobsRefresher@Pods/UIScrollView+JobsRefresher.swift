@@ -13,12 +13,13 @@ import UIKit
 #endif
 
 import ObjectiveC
-import JobsSwiftBlock
 
 #if os(iOS) || os(tvOS)
 import AudioToolbox
 import AVFoundation
 #endif
+
+import JobsSwiftBlock
 
 @MainActor
 private struct JobsAssocKeys {

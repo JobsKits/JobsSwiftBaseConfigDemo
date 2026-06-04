@@ -11,9 +11,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// JobsTaskItem - Jobs 系列任务项
 /// 封装了任务实例、标签和状态信息
 /// 线程安全：使用 NSLock 保护状态修改
+
 public final class JobsTaskItem {
     
     var task: JobsTask

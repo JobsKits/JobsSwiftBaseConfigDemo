@@ -6,13 +6,14 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-#if os(macOS)
+#if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 
 import JobsSwiftBlock
+
 // MARK: - 文件设计总览
 /**
  `JobsBaseMain.swift`

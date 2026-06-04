@@ -10,6 +10,7 @@ import Foundation
 import CommonCrypto
 /// 兼容老后端：AES-CBC + PKCS7（可解密，但要注意“必须另做认证”）
 /// CBC 不带完整性校验，如果用于网络传输/安全场景，最好“CBC + HMAC”（或直接换 AES-GCM）。
+
 public struct AESCBC {
     public static func encrypt(plaintext: String, key: Data, iv: Data) throws -> Data {
         try crypt(data: plaintext.utf8Data, key: key, iv: iv, operation: CCOperation(kCCEncrypt))
@@ -53,4 +54,3 @@ public struct AESCBC {
         return out
     }
 }
-

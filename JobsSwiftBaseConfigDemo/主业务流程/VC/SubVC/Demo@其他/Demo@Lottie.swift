@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import Lottie
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
+import SnapKit
+import Lottie
 
 final class LottieDemoVC: BaseVC {
     // MARK: - Config

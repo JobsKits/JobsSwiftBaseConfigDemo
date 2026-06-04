@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - JobsSwiftTaskCenter@结构体
 ///
 /// 定义了一个轻量的时间段类型 `JobsPeriod`，以秒为单位封装 `TimeInterval`，

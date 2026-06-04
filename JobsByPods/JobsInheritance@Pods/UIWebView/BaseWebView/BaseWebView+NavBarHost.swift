@@ -12,8 +12,9 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsNavBar
+import SnapKit
+
 // ===== BaseWebView 作为 NavBar 宿主：根据显隐重排内部约束 =====
 extension BaseWebView: JobsNavBarHost {
 

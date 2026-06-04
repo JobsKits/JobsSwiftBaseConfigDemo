@@ -8,15 +8,20 @@
 
 #if os(OSX)
 import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import SnapKit
+
+#if os(OSX)
 public typealias MASView = NSView
 public typealias MASGuide = NSLayoutGuide
 #elseif os(iOS) || os(tvOS)
-import UIKit
 public typealias MASView = UIView
 public typealias MASGuide = UILayoutGuide
 #endif
 
-import SnapKit
 // MARK: - View Masonry-style entry
 extension MASView {
     public func mas_makeConstraints(_ closure: (ConstraintMaker) -> Void) { snp.makeConstraints(closure) }

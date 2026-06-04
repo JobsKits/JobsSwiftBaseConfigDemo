@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import WebKit
 import JobsSwiftBlock
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
 
 public class JobsNavBar: UIView {
     // MARK: - Style

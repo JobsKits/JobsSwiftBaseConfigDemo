@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -23,6 +21,8 @@ import JobsToast
 import JobsTextTools
 import JobsScale
 import JobsGestureUnlock
+import SnapKit
+import GKNavigationBarSwift
 
 final class GestureUnlockDemoVC: BaseVC {
 

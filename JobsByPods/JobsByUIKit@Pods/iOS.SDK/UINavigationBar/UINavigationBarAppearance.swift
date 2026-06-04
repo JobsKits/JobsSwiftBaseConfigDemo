@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+
 // MARK: - 直接赋值@单参数
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {

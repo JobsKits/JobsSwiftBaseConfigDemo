@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 /// Type used to represent a date-based amount of time in the ISO-8601 calendar system,
 /// such as '2 years, 3 months and 4 days'.
 ///
@@ -21,6 +20,7 @@ import Foundation
 ///
 /// But the intervals(`31.days` in case 1, `28.days` or `29.days` in case 2)
 /// in these two cases are quite different.
+
 public struct Period {
 
     public private(set) var years: Int

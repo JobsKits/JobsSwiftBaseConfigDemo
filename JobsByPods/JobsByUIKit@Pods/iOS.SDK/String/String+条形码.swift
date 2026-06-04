@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: 条形码
 extension String {
     /// Code128 条形码（可指定目标尺寸；自动无插值放大）

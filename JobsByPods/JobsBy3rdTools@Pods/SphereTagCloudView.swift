@@ -6,20 +6,22 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 //  特别鸣谢：https://github.com/heroims/SphereView
+
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
 
-import simd
 import JobsSwiftDSL
+import simd
 /// UIKit Swift 版 SphereView：3D 球形标签云
 /// - Features:
 ///   - Auto rotate (CADisplayLink)
 ///   - Pan to rotate (inertia supported)
 ///   - Pinch to zoom (radius scale)
 ///   - Tap items: use the item's own target-action or gesture
+
 public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     deinit {
         stop()

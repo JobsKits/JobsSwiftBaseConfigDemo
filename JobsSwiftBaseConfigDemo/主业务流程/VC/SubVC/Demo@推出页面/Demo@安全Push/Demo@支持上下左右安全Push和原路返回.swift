@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
 
 final class SafetyPushDemoVC: BaseVC {
     // MARK: - Buttons（逐个老老实实创建，链式 + 就地约束）

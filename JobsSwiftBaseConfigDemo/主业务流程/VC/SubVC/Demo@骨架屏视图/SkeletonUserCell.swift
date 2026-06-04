@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import SkeletonView
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+import SkeletonView
 
 final class SkeletonUserCell: UITableViewCell {
     // MARK: - UI（lazy）

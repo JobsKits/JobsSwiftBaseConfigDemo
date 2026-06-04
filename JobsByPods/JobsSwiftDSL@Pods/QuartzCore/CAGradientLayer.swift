@@ -14,6 +14,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBaseDefines
+
 // MARK: - CAGradientLayer DSL
 extension CAGradientLayer {
     

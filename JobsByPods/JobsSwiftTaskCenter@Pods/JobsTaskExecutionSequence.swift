@@ -8,6 +8,7 @@
 
 import Foundation
 /// 任务执行的异步序列
+
 public struct JobsTaskExecutionSequence: AsyncSequence {
 
     public typealias Element = TaskExecution

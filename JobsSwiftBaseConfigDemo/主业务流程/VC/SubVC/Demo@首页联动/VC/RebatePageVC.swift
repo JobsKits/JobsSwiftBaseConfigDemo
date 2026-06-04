@@ -12,15 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
-import JXSegmentedView
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
 import JobsRefresher
+import SnapKit
+import GKNavigationBarSwift
+import JXSegmentedView
 
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     // 左侧菜单数据（与截图一致顺序，默认选中“棋牌.5”）

@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -23,6 +21,8 @@ import JobsSwiftBaseTools
 import JobsScale
 import JobsTextTools
 import JobsSwiftTools
+import SnapKit
+import GKNavigationBarSwift
 
 final class CNIDDemoVC: BaseVC {
 

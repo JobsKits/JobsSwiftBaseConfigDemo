@@ -8,6 +8,7 @@
 
 import WebKit
 /// iOS < 14 的弱代理封装
+
 final class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
     weak var target: WKScriptMessageHandler?
 

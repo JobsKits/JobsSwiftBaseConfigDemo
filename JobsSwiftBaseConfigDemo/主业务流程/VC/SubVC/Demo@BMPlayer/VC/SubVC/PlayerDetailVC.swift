@@ -13,14 +13,15 @@ import UIKit
 #endif
 
 import AVFoundation
-import GKNavigationBarSwift
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
 import JobsTextTools
+import GKNavigationBarSwift
+import SnapKit
+
 #if canImport(BMPlayer)
 import BMPlayer
 final class PlayerDetailVC: BaseVC {

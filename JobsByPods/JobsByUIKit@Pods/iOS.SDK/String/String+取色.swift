@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: - 字符串取颜色@校验成功后取色
 /**
  "#353a3e".cor          // OK → 正常色

@@ -12,12 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
-import GKNavigationBarSwift
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 //import JobsBy3rdTools
 import JobsSwiftBaseTools
 import JobsTextTools

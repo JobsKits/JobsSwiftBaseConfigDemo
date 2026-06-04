@@ -6,8 +6,11 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
-import Foundation
+#endif
 
 // MARK: - System UIDatePicker wrappers (iOS 12+)
 public final class BRSystemDatePicker: BRBasePicker<Date> {

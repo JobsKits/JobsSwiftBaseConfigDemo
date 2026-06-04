@@ -8,6 +8,7 @@
 
 import Foundation
 /// Hex/Base64、Data 转换
+
 public enum CryptoError: Error {
     case invalidHex
     case invalidBase64

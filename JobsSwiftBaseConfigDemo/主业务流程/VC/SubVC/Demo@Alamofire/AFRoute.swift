@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+
 // MARK: - JSON body helper (avoid Encodable MainActor isolation issues)
 private func jobs_encodeJSONObject(_ value: Any) throws -> Data {
     // Prefer [String: Any] directly

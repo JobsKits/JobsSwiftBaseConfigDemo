@@ -12,6 +12,7 @@
 //   let person = try Person(json)
 
 import Foundation
+
 // MARK: - 根对象
 struct Person: Codable {
     let headers: Headers

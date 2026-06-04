@@ -16,7 +16,9 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
+
 // MARK: - iOS 14 及以下 UIButton 状态快照（用于 stop(resetUI: true) 复原）
+
 #if os(iOS) || os(tvOS)
 private struct JobsLegacyButtonState {
     // 只抓最常用且不会破坏你逻辑的字段；你后续如果需要更多（背景图、富文本等）可以继续往里加
@@ -85,6 +87,7 @@ private struct JobsLegacyButtonState {
     func restore(to button: UIButton) { }
 }
 #endif
+
 // MARK: - 内部控制器
 public final class JobsCountdownBtnCtrl {
 

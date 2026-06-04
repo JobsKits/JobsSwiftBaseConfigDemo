@@ -12,7 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBlock
@@ -20,6 +19,7 @@ import JobsSwiftBaseDefines
 import JobsScale
 import JobsBy3rdTools
 import JobsSwiftAppTools
+import SnapKit
 
 final class PhotoPermissionAlertView: UIView {
     // MARK: - Callbacks Storage

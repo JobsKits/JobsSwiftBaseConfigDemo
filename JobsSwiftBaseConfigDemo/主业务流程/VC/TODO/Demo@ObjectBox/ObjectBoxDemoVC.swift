@@ -12,14 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import ObjectBox
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
 import JobsSwiftBaseDefines
+import ObjectBox
+import SnapKit
+import GKNavigationBarSwift
 
 final class ObjectBoxDemoVC: BaseVC {
     // MARK: - Data

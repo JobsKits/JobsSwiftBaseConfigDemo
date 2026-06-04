@@ -12,13 +12,14 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsScale
+import SnapKit
+
 // MARK: - Demo@安全Present
 final class SafetyPresentDemoVC: BaseVC {
     /// 半屏高度（可按需改）

@@ -12,9 +12,9 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
 
 #if canImport(Kingfisher)
 import Kingfisher

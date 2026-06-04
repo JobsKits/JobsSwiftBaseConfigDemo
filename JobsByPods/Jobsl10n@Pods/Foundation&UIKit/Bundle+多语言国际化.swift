@@ -8,6 +8,7 @@
 
 import Foundation
 import ObjectiveC
+
 // 用于把 Bundle.main 的 localizedString 重定向到我们指定的 language bundle
 private var jobs_languageBundleKey: UInt8 = 0
 private final class JobsLanguageOverrideBundle: Bundle {

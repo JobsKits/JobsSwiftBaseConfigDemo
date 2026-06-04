@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
+
 // MARK: - 公共类型@右上角角标
 public enum RTBadgeContent {
     case text(String)

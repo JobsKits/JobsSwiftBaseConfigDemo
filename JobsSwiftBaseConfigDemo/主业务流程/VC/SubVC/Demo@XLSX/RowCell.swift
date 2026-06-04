@@ -12,10 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import SnapKit
+
 // MARK: - RowCell（SnapKit 布局）
 final class RowCell: UITableViewCell {
     // MARK: - UI

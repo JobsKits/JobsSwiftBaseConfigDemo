@@ -12,13 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(GKNavigationBar)
-import GKNavigationBar
-#endif
-
-import LunarSwift
-import SnapKit
-import GKNavigationBarSwift
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -26,7 +19,16 @@ import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
 import JobsRefresher
+import LunarSwift
+import SnapKit
+import GKNavigationBarSwift
+
+#if canImport(GKNavigationBar)
+import GKNavigationBar
+#endif
+
 /// 农历 <-> 公历 Demo
+
 final class LunarDemoVC: BaseVC {
     // MARK: - Sections & Rows
     private enum Section: Int, CaseIterable {

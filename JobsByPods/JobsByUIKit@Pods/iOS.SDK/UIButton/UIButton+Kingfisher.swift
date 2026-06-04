@@ -16,7 +16,9 @@ import ObjectiveC
 import JobsSwiftBlock
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+
 // MARK: - Kingfisher
+
 #if canImport(Kingfisher)
 import Kingfisher
 public struct KFButtonLoadConfig {
@@ -228,6 +230,7 @@ extension UIButton {
         return self
     }
 }
+
 // MARK: - internal helpers
 extension UIButton {
     private func _jobs_kfUpsertDownsampleOptions(_ options: KingfisherOptionsInfo,

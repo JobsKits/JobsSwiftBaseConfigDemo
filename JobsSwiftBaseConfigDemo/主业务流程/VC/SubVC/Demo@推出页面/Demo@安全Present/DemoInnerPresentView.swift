@@ -12,10 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+
 // MARK: - UIResponder 内触发 presentVC 示例（保持不变）
 final class DemoInnerPresentView: UIView {
     private lazy var label : UILabel = {

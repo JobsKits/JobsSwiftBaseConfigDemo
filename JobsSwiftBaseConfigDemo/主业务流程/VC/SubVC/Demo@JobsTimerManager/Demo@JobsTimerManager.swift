@@ -12,7 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,7 +20,9 @@ import JobsSwiftBaseTools
 import JobsSwiftTimer
 import JobsTextTools
 import JobsSwiftBaseDefines
+import SnapKit
 import GKNavigationBarSwift
+
 // MARK: - Demo Timer ID
 private enum JobsTimerManagerDemoID: String, JobsSwiftTimerIdentifiable {
     case A_pauseResume

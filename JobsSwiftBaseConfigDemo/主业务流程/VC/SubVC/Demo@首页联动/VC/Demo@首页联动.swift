@@ -12,16 +12,16 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
-import JXSegmentedView
 import JobsBy3rdTools
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
 import JobsSwiftTools
+import SnapKit
+import GKNavigationBarSwift
+import JXSegmentedView
 
 final class CashbackRootVC: BaseVC {
     // MARK: - Data

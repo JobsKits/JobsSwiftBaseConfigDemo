@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsToast
 import JobsByUIKit
@@ -22,6 +20,8 @@ import JobsRefresher
 import JobsEmptyView
 import JobsInheritance
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class JobsNetworkingDemoVC: BaseVC {
 

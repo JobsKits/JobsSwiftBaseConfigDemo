@@ -12,15 +12,16 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
 import JobsTextTools
+import SnapKit
+import GKNavigationBarSwift
 /// Demo@任意UIView
+
 final class JobsCountdownLayerDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 40
     private let defaultTotalSeconds: Int = 10

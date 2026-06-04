@@ -12,17 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-#if canImport(Kingfisher)
-import Kingfisher
-#endif
-
-#if canImport(SDWebImage)
-import SDWebImage
-#endif
-
-import Then
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsScale
 import JobsByUIKit
@@ -33,6 +22,17 @@ import JobsInheritance
 import JobsMarqueeView
 import JobsSwiftFoundation
 import JobsSwiftBaseDefines
+import Then
+import SnapKit
+import GKNavigationBarSwift
+
+#if canImport(Kingfisher)
+import Kingfisher
+#endif
+#if canImport(SDWebImage)
+import SDWebImage
+#endif
+
 /// Demo：13 组 JobsMarqueeView
 /// 1. 向上连续滚动
 /// 2. 向下连续滚动
@@ -47,6 +47,7 @@ import JobsSwiftBaseDefines
 /// 11. 本地背景图
 /// 12. SDWebImage@背景图
 /// 13. Kingfisher@背景图
+
 final class JobsMarqueeDemoVC: BaseVC {
     
     private let horizontalInset: CGFloat = 16

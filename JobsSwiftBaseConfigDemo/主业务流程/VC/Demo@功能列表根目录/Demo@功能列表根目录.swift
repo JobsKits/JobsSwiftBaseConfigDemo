@@ -12,11 +12,7 @@ import AppKit
 import UIKit
 #endif
 
-import GKNavigationBarSwift
-import SnapKit
-import MJRefresh
 import JobsSwiftDSL
-
 import Jobsl10n
 import JobsScale
 import JobsToast
@@ -28,6 +24,9 @@ import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
+import GKNavigationBarSwift
+import SnapKit
+import MJRefresh
 
 final class RootListVC: BaseVC {
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================

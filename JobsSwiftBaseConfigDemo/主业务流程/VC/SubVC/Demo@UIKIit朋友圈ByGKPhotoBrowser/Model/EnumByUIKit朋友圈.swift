@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
+
 enum TextKitMeasure {
     static func fits(_ attr: NSAttributedString, width: CGFloat, maxLines: Int) -> Bool {
         guard width > 0, maxLines > 0 else { return true }

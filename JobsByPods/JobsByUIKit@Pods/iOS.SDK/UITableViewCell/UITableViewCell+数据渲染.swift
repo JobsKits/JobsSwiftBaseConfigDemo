@@ -14,6 +14,7 @@ import UIKit
 
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+
 @MainActor
 public extension ViewDataProtocol where Self: UITableViewCell {
     @discardableResult

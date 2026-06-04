@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 /// `Weekday` represents a day of a week.
+
 public enum Weekday: Int {
 
     case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday

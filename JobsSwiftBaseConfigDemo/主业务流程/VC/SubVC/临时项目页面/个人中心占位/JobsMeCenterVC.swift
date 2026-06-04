@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsToast
+import SnapKit
+import GKNavigationBarSwift
 
 final class JobsMeCenterVC: BaseVC {
     

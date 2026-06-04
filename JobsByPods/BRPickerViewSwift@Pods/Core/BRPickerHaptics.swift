@@ -6,8 +6,11 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
 
 enum BRPickerHaptics {
     static func successIfNeeded(_ enabled: Bool) {

@@ -9,6 +9,7 @@
 import Foundation
 import CommonCrypto
 /// PBKDF2（口令派生密钥，适合“用户密码 -> AES key”）
+
 public struct PBKDF2 {
     public static func deriveKey(
         password: String,
@@ -35,5 +36,3 @@ public struct PBKDF2 {
         return derived
     }
 }
-
-

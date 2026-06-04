@@ -12,13 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
+import SnapKit
+import GKNavigationBarSwift
 
 final class JobsControlEventsDemoVC: BaseVC {
     // 统一用一个垂直栈承载所有 Demo

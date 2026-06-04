@@ -13,9 +13,9 @@ import UIKit
 #endif
 
 import ObjectiveC
-import SnapKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
 
 private var byPlaceholderLabelKey: UInt8 = 0
 private var byPlaceholderObserverKey: UInt8 = 0

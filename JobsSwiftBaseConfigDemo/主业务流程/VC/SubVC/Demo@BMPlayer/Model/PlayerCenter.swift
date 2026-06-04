@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import SnapKit
+
 enum PlayerCenter { static let shared = PlayerCenterImpl() }
 #if canImport(BMPlayer)
 import BMPlayer

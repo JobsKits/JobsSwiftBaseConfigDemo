@@ -6,10 +6,13 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
-import Foundation
+#endif
 
+#if os(iOS) || os(tvOS)
 public enum JobsWorkerBinder {
     @discardableResult
     public static func bindText(_ source: JobsObservable<String>,

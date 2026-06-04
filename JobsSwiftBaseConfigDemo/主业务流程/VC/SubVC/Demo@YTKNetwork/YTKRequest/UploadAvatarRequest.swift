@@ -11,9 +11,11 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 import YTKNetwork
 import AFNetworking
 /// 上传图片：POST /post，httpbin 会把表单字段回显在 "files"/"form"
+
 final class UploadAvatarRequest: YTKRequest {
 
     private let image: UIImage

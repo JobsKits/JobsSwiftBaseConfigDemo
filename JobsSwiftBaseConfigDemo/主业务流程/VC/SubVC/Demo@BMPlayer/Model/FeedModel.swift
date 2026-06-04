@@ -8,6 +8,7 @@
 
 import Foundation
 /// 解析 CommentData.json
+
 struct FeedItem: Decodable {
     let id: String
     let nickname: String

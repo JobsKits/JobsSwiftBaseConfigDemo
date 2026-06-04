@@ -12,12 +12,13 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
+
 // MARK: - UITableViewCellCornerDemoVC
 final class UITableViewCellCornerDemoVC: UIViewController {
 

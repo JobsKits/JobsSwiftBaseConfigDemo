@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsScale
 import JobsSwiftBaseDefines
+import SnapKit
+
 // ============================== InputBar（inputAccessoryView） ==============================
 final class LiveInputBar: UIView {
     /// 对外回调：点击发送按钮或在键盘上按“发送/回车”时触发

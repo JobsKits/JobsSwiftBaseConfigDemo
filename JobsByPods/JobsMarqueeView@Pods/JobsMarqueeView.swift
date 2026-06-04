@@ -13,23 +13,23 @@ import UIKit
 #endif
 
 import ObjectiveC
-import SnapKit
 import JobsSwiftDSL
+import JobsByUIKit
+import JobsSwiftTimer
+import JobsSwiftBaseDefines
+import SnapKit
 
 #if canImport(SDWebImage)
 import SDWebImage
 #endif
-
 #if canImport(Kingfisher)
 import Kingfisher
 #endif
 
-import JobsByUIKit
-import JobsSwiftTimer
-import JobsSwiftBaseDefines
 /// 统一「跑马灯」&「轮播图」的视图组件
 /// 数据源：`[UIButton]`
 /// 滚动载体：内部 `UIScrollView` + 若干个按钮副本
+
 public final class JobsMarqueeView: UIView {
     // ================================== ScrollMode ==================================
     /// 滚动模式

@@ -12,15 +12,15 @@ import AppKit
 import UIKit
 #endif
 
+import WebKit
+import SafariServices
+import JobsByUIKit
+import JobsSwiftDSL
+import SnapKit
+
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
 #endif
-
-import WebKit
-import SafariServices
-import SnapKit
-import JobsByUIKit
-import JobsSwiftDSL
 
 extension BaseWebView: WKUIDelegate {
 

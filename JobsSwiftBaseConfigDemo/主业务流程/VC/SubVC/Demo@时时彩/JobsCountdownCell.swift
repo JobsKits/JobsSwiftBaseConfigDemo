@@ -12,11 +12,11 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsSwiftBaseDefines
+import SnapKit
 
 public final class JobsCountdownCell: UITableViewCell {
     private var currentItem: JobsCountdownItem?

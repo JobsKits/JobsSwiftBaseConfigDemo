@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SwiftEntryKit
-import SnapKit
 import JobsInheritance
 import JobsScale
 import JobsByUIKit
@@ -24,6 +22,9 @@ import JobsSwiftTools
 import JobsSwiftBaseTools
 import JobsTextTools
 import JobsBy3rdTools
+import SwiftEntryKit
+import SnapKit
+
 // MARK: 🔔 通用弹窗提示
 public func presentAlert(for urlString: String, on textView: UITextView) {
     // 💡 iOS17+：delegate 不一定是当前 VC，用原来的兜底逻辑

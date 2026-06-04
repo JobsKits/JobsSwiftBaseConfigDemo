@@ -12,16 +12,15 @@ import AppKit
 import UIKit
 #endif
 
-import RxSwift
-import RxCocoa
 import JobsSwiftDSL
-
 import Jobsl10n
 import JobsToast
 import JobsByUIKit
 import JobsTextTools
 import JobsInheritance
 import JobsSwiftBaseDefines
+import RxSwift
+import RxCocoa
 
 final class JobsNavigationDemoVC: BaseVC {
     // MARK: - 左侧：自定义返回按钮

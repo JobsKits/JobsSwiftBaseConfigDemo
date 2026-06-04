@@ -12,9 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
-import BRPickerViewSwift
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
@@ -23,6 +20,9 @@ import JobsToast
 import JobsTextTools
 import JobsSwiftAppTools
 import JobsBy3rdTools
+import SnapKit
+import GKNavigationBarSwift
+import BRPickerViewSwift
 
 final class BRPickerDemoVC: BaseVC {
     /// 文本：单列（学历）

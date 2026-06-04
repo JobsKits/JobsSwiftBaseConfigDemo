@@ -12,11 +12,12 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
+import SnapKit
+
 // ================================== Toast ==================================
 @MainActor
 public final class JobsToast: UIView {

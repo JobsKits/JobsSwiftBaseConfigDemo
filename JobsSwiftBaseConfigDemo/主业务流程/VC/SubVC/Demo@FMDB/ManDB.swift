@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 #if canImport(FMDB) && !canImport(WCDB)
 import FMDB
 final class ManDB {

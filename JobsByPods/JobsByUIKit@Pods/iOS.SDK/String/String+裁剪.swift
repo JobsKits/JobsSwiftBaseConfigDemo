@@ -11,6 +11,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 // MARK: String 扩展：点语法裁剪 / 校验
 extension String {
     /// 去掉首尾空白+换行

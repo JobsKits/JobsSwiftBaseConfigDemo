@@ -14,7 +14,6 @@ import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 #endif
-
 #if canImport(SDWebImage)
 import SDWebImage
 #endif

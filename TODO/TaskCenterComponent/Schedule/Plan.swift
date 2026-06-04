@@ -7,11 +7,11 @@
 //
 
 import Foundation
-
 /// `Plan` represents a sequence of times at which a task should be
 /// executed.
 ///
 /// `Plan` is `Interval` based.
+
 public struct Plan: Sequence {
 
     private var seq: AnySequence<Interval>

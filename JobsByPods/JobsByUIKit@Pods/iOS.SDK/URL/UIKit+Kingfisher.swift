@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsSwiftBaseDefines
+
 #if canImport(Kingfisher)
 import Kingfisher
 extension URL {

@@ -14,6 +14,7 @@ import UIKit
 
 import JobsTextTools
 import JobsSwiftBaseDefines
+
 // MARK: 设置富文本
 extension UITextView {
     public func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {

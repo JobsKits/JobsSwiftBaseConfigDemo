@@ -6,13 +6,14 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-import Foundation
 #if os(OSX)
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 #endif
+
 /// 定义于 Swift 标准库
+
 public extension Double {
     // MARK: - 把 Double 转换成 金额字符串，始终保留 两位小数
     public func toAmount() -> String? {

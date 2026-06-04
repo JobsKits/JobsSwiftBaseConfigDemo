@@ -6,8 +6,13 @@
 //  Copyright © 2026 Jobs. All rights reserved.
 //
 
-import simd
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
 import UIKit
+#endif
+
+import simd
 
 class CameraController {
     private var rotationX: Float = 0.0

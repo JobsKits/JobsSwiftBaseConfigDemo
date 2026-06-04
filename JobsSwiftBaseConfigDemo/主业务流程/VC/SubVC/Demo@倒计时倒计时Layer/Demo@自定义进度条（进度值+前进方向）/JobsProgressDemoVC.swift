@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
@@ -21,7 +19,10 @@ import JobsTextTools
 import JobsInheritance
 import JobsProgressBar
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 /// Demo@自定义进度条（进度值+前进方向+拖动）
+
 final class JobsProgressDemoVC: BaseVC {
     deinit {
         progressView.stopAutoProgress()

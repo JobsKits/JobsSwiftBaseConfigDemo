@@ -12,8 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import SnapKit
-import GKNavigationBarSwift
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -22,6 +20,8 @@ import JobsBy3rdTools
 import JobsInheritance
 import JobsCountdownButton
 import JobsSwiftBaseDefines
+import SnapKit
+import GKNavigationBarSwift
 
 final class JobsCountdownDemoVC: BaseVC {
     /// 是否正在倒计时这个状态除了本页使用以外，也要防止App闪退，所以需要实时记录在UserDefaults

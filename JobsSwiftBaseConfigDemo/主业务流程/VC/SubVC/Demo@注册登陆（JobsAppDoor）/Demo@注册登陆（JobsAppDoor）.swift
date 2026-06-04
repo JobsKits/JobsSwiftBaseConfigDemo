@@ -13,16 +13,18 @@ import UIKit
 #endif
 
 import AVFoundation
-import SnapKit
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import JobsBy3rdTools
+import SnapKit
+
 #if canImport(BMPlayer)
 import BMPlayer
 import JobsToast
 #endif
+
 // MARK: 模型
 private enum PanelKind { case login, register }
 private enum EntranceStyle {
