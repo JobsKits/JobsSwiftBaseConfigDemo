@@ -68,8 +68,7 @@ public final class VideoThumbCell: UICollectionViewCell {
             } else {
                 currentURL = nil
                 iv.image = nil
-            }
-            return self
+            };return self
         }
 
         currentURL = nil

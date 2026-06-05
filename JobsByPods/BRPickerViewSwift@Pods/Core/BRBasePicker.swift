@@ -66,8 +66,7 @@ open class BRBasePicker<Result>: NSObject {
         case .spring: animator = BRSpringAnimation()
         case .fade: animator = BRFadeAnimation()
         case .custom(let a): animator = a
-        }
-        return self
+        };return self
     }
 
     public final class ToolbarConfig {

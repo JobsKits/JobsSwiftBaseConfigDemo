@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:BaseWebView::makeNoCache<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:113"]
-  T1["method:EmptyHeaderHook::headers<br/>JobsByPods/JobsNetworking@Pods/RequestConfig/JobsHooks.swift:17"]
+  S1["function:UnityDeviceSupportsUpsideDown<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:444"]
+  T1["function:UnityDeviceHasCutout<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:426"]
   S1 -->|calls| T1
-  S2["method:BaseWebView::makeNoCache<br/>JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Utils.swift:113"]
-  T2["method:EmptyHeaderHook::headers<br/>JobsByPods/JobsNetworking@Pods/RequestConfig/JobsHooks.swift:17"]
+  S2["function:UnityDeviceSupportedOrientations<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:449"]
+  T2["function:UnityDeviceSupportsUpsideDown<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:444"]
   S2 -->|calls| T2
-  S3["method:JobsMakeLocalNotification::triggerLocalNotification<br/>JobsByPods/JobsLocalNotification@Pods/JobsMakeLocalNotification.swift:14"]
-  T3["method:JobsTaskCenter::add<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:34"]
+  S3["function:UnityDeviceIsForceTouchSupported<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:458"]
+  T3["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
   S3 -->|calls| T3
-  S4["method:JobsMakeLocalNotification::triggerLocalNotification<br/>JobsByPods/JobsLocalNotification@Pods/JobsMakeLocalNotification.swift:14"]
-  T4["method:JobsLogger::log<br/>JobsByPods/JobsNetworking@Pods/Support/JobsLogger.swift:37"]
+  S4["function:UnityDeviceIsStylusTouchSupported<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:463"]
+  T4["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
   S4 -->|calls| T4
-  S5["method:JobsMakeLocalNotification::triggerLocalNotification<br/>JobsByPods/JobsLocalNotification@Pods/JobsMakeLocalNotification.swift:14"]
-  T5["method:JobsLogger::log<br/>JobsByPods/JobsNetworking@Pods/Support/JobsLogger.swift:37"]
+  S5["function:UnityDeviceCanShowWideColor<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:475"]
+  T5["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
   S5 -->|calls| T5
-  S6["method:JobsSwiftMessageToast::show<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarTools.swift:18"]
-  T6["method:JobsSwiftMessageToast::show<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarTools.swift:18"]
+  S6["function:UnityDeviceDPI<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:480"]
+  T6["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
   S6 -->|calls| T6
-  S7["method:JobsAgent::promise<br/>JobsByPods/JobsNetworking@Pods/Adapters/PromiseKit/JobsAgent+PromiseKit.swift:14"]
-  T7["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:46"]
+  S7["function:UnityDeviceUniqueIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:608"]
+  T7["function:UnityVendorIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:146"]
   S7 -->|calls| T7
-  S8["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:76"]
-  T8["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S8["function:GetMainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:63"]
+  T8["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
   S8 -->|calls| T8
-  S9["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:76"]
-  T9["method:UnityURLRequest::requestForTask:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:39"]
+  S9["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
+  T9["function:GetMainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:63"]
   S9 -->|calls| T9
-  S10["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:76"]
-  T10["method:UnityURLRequest::requestForTask:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:39"]
+  S10["method:DisplayConnection::init:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:49"]
+  T10["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S10 -->|calls| T10
-  S11["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:76"]
-  T11["method:AlamofireClient::remember<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:229"]
+  S11["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  T11["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S11 -->|calls| T11
-  S12["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:76"]
-  T12["method:AlamofireClient::forget<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:235"]
+  S12["method:DisplayConnection::createView:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:93"]
+  T12["method:DisplayConnection::createView:showRightAway:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:98"]
   S12 -->|calls| T12
-  S13["method:AlamofireClient::download<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:127"]
-  T13["method:AlamofireClient::remember<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:229"]
+  S13["method:DisplayConnection::createView:showRightAway:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:98"]
+  T13["function:UnityScreenScaleFactor<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:706"]
   S13 -->|calls| T13
-  S14["method:AlamofireClient::download<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:127"]
-  T14["method:AlamofireClient::forget<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:235"]
+  S14["method:DisplayConnection::createView:showRightAway:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:98"]
+  T14["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
   S14 -->|calls| T14
-  S15["method:AlamofireClient::uploadMultipart<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:170"]
-  T15["method:JobsValueNormalizer::normalize<br/>JobsByPods/JobsNetworking@Pods/Request/JobsValue.swift:31"]
+  S15["method:DisplayConnection::createView:showRightAway:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:98"]
+  T15["method:DisplayConnection::createWithWindow:andView:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:84"]
   S15 -->|calls| T15
-  S16["method:AlamofireClient::uploadMultipart<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:170"]
-  T16["method:AlamofireClient::remember<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:229"]
+  S16["method:DisplayConnection::initRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:134"]
+  T16["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S16 -->|calls| T16
-  S17["method:AlamofireClient::uploadMultipart<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:170"]
-  T17["method:AlamofireClient::forget<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:235"]
+  S17["method:DisplayConnection::initRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:134"]
+  T17["function:UnityGetMetalDevice<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:193"]
   S17 -->|calls| T17
-  S18["method:AlamofireClient::cancel<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:222"]
-  T18["method:JobsRequestToken::cancel<br/>JobsByPods/JobsNetworking@Pods/Support/JobsRequestToken.swift:24"]
+  S18["method:DisplayConnection::initRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:134"]
+  T18["function:UnityCommandQueueMaxCommandBufferCountMTL<br/>TODO/Unity/xcode_effectTest/Classes/Unity/MetalHelper.mm:390"]
   S18 -->|calls| T18
-  S19["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:46"]
-  T19["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
+  S19["method:DisplayConnection::recreateSurface:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:156"]
+  T19["method:DisplayConnection::initRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:134"]
   S19 -->|calls| T19
-  S20["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
-  T20["method:JobsRequestToken::setCancel<br/>JobsByPods/JobsNetworking@Pods/Support/JobsRequestToken.swift:18"]
+  S20["method:DisplayConnection::recreateSurface:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:156"]
+  T20["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S20 -->|calls| T20
-  S21["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
-  T21["method:AlamofireClient::cancel<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:222"]
+  S21["method:DisplayConnection::recreateSurface:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:156"]
+  T21["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S21 -->|calls| T21
-  S22["method:JobsDefaultAgent::observe<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:55"]
-  T22["method:JobsDefaultAgent::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:71"]
+  S22["method:DisplayConnection::destroySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:231"]
+  T22["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
   S22 -->|calls| T22
-  S23["method:JobsDefaultAgent::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:71"]
-  T23["method:JobsDefaultAgent::prepareRequest<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:204"]
+  S23["method:DisplayManager::registerScreen:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:308"]
+  T23["method:DisplayManager::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:313"]
   S23 -->|calls| T23
-  S24["method:JobsDefaultAgent::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:71"]
-  T24["method:JobsDefaultAgent::makeCacheKey<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:271"]
+  S24["method:DisplayManager::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:313"]
+  T24["method:DisplayManager::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:313"]
   S24 -->|calls| T24
-  S25["method:JobsDefaultAgent::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:71"]
-  T25["method:JobsDefaultAgent::fetchNetwork<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:116"]
+  S25["method:DisplayManager::dealloc<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:342"]
+  T25["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
   S25 -->|calls| T25
 ```
 

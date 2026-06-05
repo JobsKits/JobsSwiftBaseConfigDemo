@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T1["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S1["function:UnityReplayKitShowCameraPreviewAt<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:77"]
+  T1["method:UnityReplayKit::showCameraPreviewAt:width:height:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:519"]
   S1 -->|calls| T1
-  S2["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T2["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S2["function:UnityReplayKitShowCameraPreviewAt<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:77"]
+  T2["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S2 -->|calls| T2
-  S3["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T3["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S3["function:UnityReplayKitHideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:88"]
+  T3["method:UnityReplayKit::hideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:551"]
   S3 -->|calls| T3
-  S4["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T4["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S4["function:UnityReplayKitHideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:88"]
+  T4["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S4 -->|calls| T4
-  S5["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T5["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S5["function:UnityReplayKitStopRecording<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:93"]
+  T5["function:UnityReplayKitHideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:88"]
   S5 -->|calls| T5
-  S6["enum:JSONValue<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:958"]
-  T6["method:KeyedDecodingContainer::decode<br/>JobsByPods/JobsSwiftTools@Pods/ModelDefaultValue.swift:41"]
+  S6["function:UnityReplayKitStopRecording<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:93"]
+  T6["function:UnityReplayKitSetCameraEnabled<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:27"]
   S6 -->|calls| T6
-  S7["method:JobsTextInputObserver::textFieldShouldBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:31"]
-  T7["method:JobsTextInputObserver::textFieldShouldBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:31"]
+  S7["function:UnityReplayKitStopRecording<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:93"]
+  T7["method:UnityReplayKit::stopRecording<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:180"]
   S7 -->|calls| T7
-  S8["method:JobsTextInputObserver::textFieldDidBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:36"]
-  T8["method:JobsTextInputObserver::textFieldDidBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:36"]
+  S8["function:UnityReplayKitStopRecording<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:93"]
+  T8["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S8 -->|calls| T8
-  S9["method:JobsTextInputObserver::textFieldDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:41"]
-  T9["method:JobsTextInputObserver::textFieldDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:41"]
+  S9["function:UnityReplayKitDiscard<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:102"]
+  T9["method:UnityReplayKit::discardPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:237"]
   S9 -->|calls| T9
-  S10["method:JobsTextInputObserver::textFieldDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:46"]
-  T10["method:JobsTextInputObserver::textFieldDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:41"]
+  S10["function:UnityReplayKitDiscard<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:102"]
+  T10["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S10 -->|calls| T10
-  S11["method:JobsTextInputObserver::textFieldShouldReturn<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:51"]
-  T11["method:JobsTextInputObserver::textFieldShouldReturn<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:51"]
+  S11["function:UnityReplayKitPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:107"]
+  T11["method:UnityReplayKit::showPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:218"]
   S11 -->|calls| T11
-  S12["method:JobsTextInputObserver::textField<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:56"]
-  T12["function:JobsTextInputObserver::textField::limitedFlag<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:71"]
+  S12["function:UnityReplayKitPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:107"]
+  T12["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S12 -->|calls| T12
-  S13["method:JobsTextInputObserver::textField<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:56"]
-  T13["function:JobsTextInputObserver::textField::limitedFlag<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:71"]
+  S13["function:UnityReplayKitBroadcastingAPIAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:112"]
+  T13["method:UnityReplayKit::broadcastingApiAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:282"]
   S13 -->|calls| T13
-  S14["method:JobsTextInputObserver::textField<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:56"]
-  T14["function:JobsTextInputObserver::textField::limitedFlag<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:71"]
+  S14["function:UnityReplayKitBroadcastingAPIAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:112"]
+  T14["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S14 -->|calls| T14
-  S15["method:JobsTextInputObserver::textViewShouldBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:94"]
-  T15["method:JobsTextInputObserver::textViewShouldBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:94"]
+  S15["function:UnityReplayKitStartBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:117"]
+  T15["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S15 -->|calls| T15
-  S16["method:JobsTextInputObserver::textViewDidBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:99"]
-  T16["method:JobsTextInputObserver::textViewDidBeginEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:99"]
+  S16["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T16["function:UnityReplayKitHideCameraPreview<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:88"]
   S16 -->|calls| T16
-  S17["method:JobsTextInputObserver::textViewDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:104"]
-  T17["method:JobsTextInputObserver::textViewDidEndEditing<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:104"]
+  S17["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T17["method:UnityReplayKit::stopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:416"]
   S17 -->|calls| T17
-  S18["method:JobsTextInputObserver::textView<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:109"]
-  T18["method:JobsTextInputObserver::textView<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:109"]
+  S18["function:UnityReplayKitStopBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:122"]
+  T18["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S18 -->|calls| T18
-  S19["method:JobsTextInputObserver::textView<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:109"]
-  T19["method:JobsTextInputObserver::textView<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:109"]
+  S19["function:UnityReplayKitPauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:130"]
+  T19["method:UnityReplayKit::pauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:435"]
   S19 -->|calls| T19
-  S20["method:ViewDataProtocol::byData<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:76"]
-  T20["method:ViewDataProtocol::byData<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:76"]
+  S20["function:UnityReplayKitPauseBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:130"]
+  T20["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S20 -->|calls| T20
-  S21["method:ViewDataProtocol::byData<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:76"]
-  T21["method:ViewDataProtocol::byData<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:76"]
+  S21["function:UnityReplayKitResumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:135"]
+  T21["method:UnityReplayKit::resumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:445"]
   S21 -->|calls| T21
-  S22["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:82"]
-  T22["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:82"]
+  S22["function:UnityReplayKitResumeBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:135"]
+  T22["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S22 -->|calls| T22
-  S23["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:82"]
-  T23["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:82"]
+  S23["function:UnityReplayKitIsBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:140"]
+  T23["method:UnityReplayKit::isBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:297"]
   S23 -->|calls| T23
-  S24["method:ViewDataProtocol::onResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:88"]
-  T24["method:ViewDataProtocol::onResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:88"]
+  S24["function:UnityReplayKitIsBroadcasting<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:140"]
+  T24["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
   S24 -->|calls| T24
-  S25["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:114"]
-  T25["method:ViewDataProtocol::sendResult<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseProtocolDefs.swift:114"]
+  S25["function:UnityReplayKitIsBroadcastingPaused<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit_Scripting.mm:145"]
+  T25["method:UnityReplayKit::isBroadcastingPaused<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:306"]
   S25 -->|calls| T25
 ```
 

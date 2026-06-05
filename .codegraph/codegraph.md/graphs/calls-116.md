@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
-  T1["method:DisplayManager::Initialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:451"]
+  S1["method:single_client_traceable_alloc_template::ptr_free_deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:294"]
+  T1["function:GC_round_up_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:110"]
   S1 -->|calls| T1
-  S2["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
-  T2["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S2["method:gc_alloc_template::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:315"]
+  T2["function:GC_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrierValidation.cpp:154"]
   S2 -->|calls| T2
-  S3["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
-  T3["method:UnityAppController::createUI<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityAppController+ViewHandling.mm:134"]
+  S3["method:gc_alloc_template::ptr_free_allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:316"]
+  T3["function:GC_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrierValidation.cpp:178"]
   S3 -->|calls| T3
-  S4["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
-  T4["method:UnityAppController::preStartUnity<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:115"]
+  S4["method:traceable_alloc_template::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:327"]
+  T4["function:GC_malloc_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrierValidation.cpp:173"]
   S4 -->|calls| T4
-  S5["method:UnityAppController::initUnityWithApplication:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:374"]
-  T5["method:KeyboardDelegate::Initialize<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:258"]
+  S5["method:traceable_alloc_template::ptr_free_allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:328"]
+  T5["function:GC_malloc_atomic_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:422"]
   S5 -->|calls| T5
-  S6["method:UnityAppController::observeValueForKeyPath:ofObject:change:context:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:416"]
-  T6["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
+  S6["method:traceable_alloc_template::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:330"]
+  T6["function:GC_free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrierValidation.cpp:150"]
   S6 -->|calls| T6
-  S7["method:UnityAppController::applicationWillEnterForeground:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:429"]
-  T7["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S7["method:traceable_alloc_template::ptr_free_deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/new_gc_alloc.h:331"]
+  T7["function:GC_free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrierValidation.cpp:150"]
   S7 -->|calls| T7
-  S8["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
-  T8["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
+  S8["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/darwin_stop_world.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/darwin_stop_world.h:1"]
+  T8["function:GC_is_mach_marker<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:327"]
   S8 -->|calls| T8
-  S9["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
-  T9["function:UnityIsFullScreenPlaying<br/>TODO/Unity/xcode_effectTest/Classes/Unity/FullScreenVideoPlayer.mm:259"]
+  S9["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T9["function:AO_char_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:378"]
   S9 -->|calls| T9
-  S10["method:UnityAppController::applicationDidBecomeActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:441"]
-  T10["function:TryResumeFullScreenVideo<br/>TODO/Unity/xcode_effectTest/Classes/Unity/FullScreenVideoPlayer.mm:264"]
+  S10["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T10["function:AO_char_store<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:479"]
   S10 -->|calls| T10
-  S11["method:UnityAppController::updateUnityAudioOutput<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:471"]
-  T11["method:UnityReplayKit::sharedInstance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityReplayKit.mm:127"]
+  S11["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T11["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
   S11 -->|calls| T11
-  S12["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
-  T12["method:UnityAppController::createSnapshotView<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityAppController+ViewHandling.mm:127"]
+  S12["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T12["function:AO_or<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/sysdeps/gcc/arm.h:353"]
   S12 -->|calls| T12
-  S13["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
-  T13["function:AllocUnityViewController<br/>TODO/Unity/xcode_effectTest/Classes/UI/UnityViewControllerBase.mm:79"]
+  S13["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T13["function:AO_or<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/sysdeps/gcc/arm.h:353"]
   S13 -->|calls| T13
-  S14["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
-  T14["method:KeyboardDelegate::becomeFirstResponder<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:119"]
+  S14["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T14["function:GC_find_header<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:42"]
   S14 -->|calls| T14
-  S15["method:UnityAppController::removeSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:496"]
-  T15["method:KeyboardDelegate::Instance<br/>TODO/Unity/xcode_effectTest/Classes/UI/Keyboard.mm:265"]
+  S15["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T15["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S15 -->|calls| T15
-  S16["method:UnityAppController::applicationWillResignActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:519"]
-  T16["method:UnityAppController::repaint<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:47"]
+  S16["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T16["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S16 -->|calls| T16
-  S17["method:UnityAppController::applicationWillResignActive:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:519"]
-  T17["method:UnityAppController::addSnapshotViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:476"]
+  S17["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T17["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S17 -->|calls| T17
-  S18["method:UnityAppController::applicationWillTerminate:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:560"]
-  T18["function:UnityAppController::UnityCleanupTrampoline<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:176"]
+  S18["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T18["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S18 -->|calls| T18
-  S19["method:UnityAppController::application:handleEventsForBackgroundURLSession:completionHandler:<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:579"]
-  T19["function:AppController_SendNotificationWithArg<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:593"]
+  S19["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T19["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S19 -->|calls| T19
-  S20["function:AppController_SendNotification<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:588"]
-  T20["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S20["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h:1"]
+  T20["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S20 -->|calls| T20
-  S21["function:AppController_SendNotificationWithArg<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:593"]
-  T21["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S21["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h:1"]
+  T21["function:GC_is_heap_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:1863"]
   S21 -->|calls| T21
-  S22["function:AppController_SendUnityViewControllerNotification<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:598"]
-  T22["function:UnityGetGLViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:604"]
+  S22["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h:1"]
+  T22["function:GC_approx_sp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:484"]
   S22 -->|calls| T22
-  S23["function:UnityGetMainWindow<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:603"]
-  T23["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S23["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h:1"]
+  T23["function:GC_is_static_root<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:80"]
   S23 -->|calls| T23
-  S24["function:UnityGetGLViewController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:604"]
-  T24["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S24["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h:1"]
+  T24["function:GC_block_empty<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/reclaim.c:131"]
   S24 -->|calls| T24
-  S25["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
-  T25["function:GetAppController<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:38"]
+  S25["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_priv.h:1"]
+  T25["function:AO_test_and_set_acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize.h:136"]
   S25 -->|calls| T25
 ```
 

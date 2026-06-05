@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsTaskManager::byRemoveTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:411"]
-  T1["method:JobsTaskManager::removeTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:88"]
+  S1["function:Baselib_Semaphore_TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:75"]
+  T1["function:Detail_Baselib_Semaphore_ConsumeWakeup<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:41"]
   S1 -->|calls| T1
-  S2["method:JobsTaskManager::byRemoveAllTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:417"]
-  T2["method:JobsTaskManager::removeAllTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:109"]
+  S2["function:Baselib_Semaphore_TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:75"]
+  T2["function:Baselib_CountdownTimer_GetTimeLeftInMilliseconds<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Baselib_CountdownTimer.h:51"]
   S2 -->|calls| T2
-  S3["method:JobsTaskManager::byResume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:423"]
-  T3["method:JobsTaskManager::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:130"]
+  S3["function:Baselib_Semaphore_TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:75"]
+  T3["function:Detail_Baselib_Semaphore_ConsumeWakeup<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:41"]
   S3 -->|calls| T3
-  S4["method:JobsTaskManager::byResume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:429"]
-  T4["method:JobsTaskManager::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:130"]
+  S4["function:Baselib_Semaphore_FreeInplace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:161"]
+  T4["function:Baselib_Semaphore_Free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:153"]
   S4 -->|calls| T4
-  S5["method:JobsTaskManager::byExecuteNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:435"]
-  T5["method:JobsTaskManager::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:148"]
+  S5["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T5["function:HighestBit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/Compiler/ClangOrGcc/AlgorithmClangOrGcc.inl.h:28"]
   S5 -->|calls| T5
-  S6["method:JobsTaskManager::byExecuteNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:441"]
-  T6["method:JobsTaskManager::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:148"]
+  S6["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T6["function:BitsInMask<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/Compiler/ClangOrGcc/AlgorithmClangOrGcc.inl.h:57"]
   S6 -->|calls| T6
-  S7["method:JobsTaskManager::bySuspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:447"]
-  T7["method:JobsTaskManager::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:166"]
+  S7["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T7["function:BitsInMask<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/Compiler/ClangOrGcc/AlgorithmClangOrGcc.inl.h:57"]
   S7 -->|calls| T7
-  S8["method:JobsTaskManager::bySuspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:453"]
-  T8["method:JobsTaskManager::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:166"]
+  S8["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T8["function:BitsInMask<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/Compiler/ClangOrGcc/AlgorithmClangOrGcc.inl.h:57"]
   S8 -->|calls| T8
-  S9["method:JobsTaskManager::byCancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:459"]
-  T9["method:JobsTaskManager::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:184"]
+  S9["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T9["function:BitsInMask<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/Compiler/ClangOrGcc/AlgorithmClangOrGcc.inl.h:57"]
   S9 -->|calls| T9
-  S10["method:JobsTaskManager::byCancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:465"]
-  T10["method:JobsTaskManager::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:184"]
+  S10["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:138"]
+  T10["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:138"]
   S10 -->|calls| T10
-  S11["method:JobsTaskManager::byAddTaskAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:471"]
-  T11["method:JobsTaskManager::addTaskAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:250"]
+  S11["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
+  T11["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
   S11 -->|calls| T11
-  S12["method:JobsTaskManager::byRemoveTaskAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:477"]
-  T12["method:JobsTaskManager::removeTaskAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:257"]
+  S12["function:RoundPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:162"]
+  T12["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
   S12 -->|calls| T12
-  S13["method:JobsTaskManager::byExecuteNowAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:483"]
-  T13["method:JobsTaskManager::executeNowAsync<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:286"]
+  S13["function:RoundPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:162"]
+  T13["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
   S13 -->|calls| T13
-  S14["method:JobsTaskManager::backgroundState<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:492"]
-  T14["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
+  S14["function:RoundPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:162"]
+  T14["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
   S14 -->|calls| T14
-  S15["method:JobsTaskManager::activeState<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:496"]
-  T15["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
+  S15["function:RoundPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:162"]
+  T15["function:CeilPowerOfTwo<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:158"]
   S15 -->|calls| T15
-  S16["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T16["method:JobsTaskManager::tasksSnapshot<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:329"]
+  S16["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:1"]
+  T16["function:Clamp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:234"]
   S16 -->|calls| T16
-  S17["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T17["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S17["function:Clamp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:234"]
+  T17["function:Clamp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:234"]
   S17 -->|calls| T17
-  S18["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T18["method:JobsTaskManager::resume<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:130"]
+  S18["function:ClampToType<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:251"]
+  T18["function:Clamp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:234"]
   S18 -->|calls| T18
-  S19["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T19["method:JobsTaskManager::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:148"]
+  S19["function:ClampToType<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:265"]
+  T19["function:Clamp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Algorithm.h:234"]
   S19 -->|calls| T19
-  S20["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T20["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S20["function:atomic_fetch_sub_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:186"]
+  T20["function:atomic_fetch_add_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:206"]
   S20 -->|calls| T20
-  S21["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T21["method:JobsTaskManager::suspend<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:166"]
+  S21["function:atomic_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:260"]
+  T21["function:atomic_load_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:194"]
   S21 -->|calls| T21
-  S22["method:JobsTaskManager::applicationStatusDidChanged<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:500"]
-  T22["method:JobsTaskManager::updateStatus<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:346"]
+  S22["function:atomic_store<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:266"]
+  T22["function:atomic_store_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:200"]
   S22 -->|calls| T22
-  S23["struct:JobsTaskManagerExecutionStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:30"]
-  T23["method:JobsTaskManager::task<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:57"]
+  S23["function:atomic_fetch_add<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:272"]
+  T23["function:atomic_fetch_add_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:206"]
   S23 -->|calls| T23
-  S24["struct:JobsTaskManagerExecutionStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:30"]
-  T24["method:JobsTaskManagerExecutionStream::makeAsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:26"]
+  S24["function:atomic_fetch_sub<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:278"]
+  T24["function:atomic_fetch_sub_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:186"]
   S24 -->|calls| T24
-  S25["struct:JobsTaskManagerExecutionStream::AsyncIterator<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManagerExecutionStream.swift:30"]
-  T25["method:JobsTask::executions<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:450"]
+  S25["function:atomic_fetch_and<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:284"]
+  T25["function:atomic_fetch_and_explicit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Atomic.h:212"]
   S25 -->|calls| T25
 ```
 

@@ -422,8 +422,7 @@ extension UIView {
             jobs_startShimmer(config: config)
         } else {
             jobs_stopShimmer()
-        }
-        return self
+        };return self
     }
     /// DSL：修改呼吸颜色（不改变开关状态）
     @discardableResult

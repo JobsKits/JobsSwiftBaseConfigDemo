@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
-  T1["method:JobsTask::removeLifecycleObserver<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:149"]
+  S1["function:ReportJoystickMicro<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:501"]
+  T1["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S1 -->|calls| T1
-  S2["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
-  T2["method:JobsTaskContinuationBox::markResumed<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:17"]
+  S2["function:ReportJoystickMicro<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:501"]
+  T2["function:SelectPreferedButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:493"]
   S2 -->|calls| T2
-  S3["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
-  T3["method:JobsTask::removeLifecycleObserver<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:149"]
+  S3["function:ReportJoystickMicro<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:501"]
+  T3["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S3 -->|calls| T3
-  S4["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
-  T4["method:JobsTaskContinuationBox::markResumed<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:17"]
+  S4["function:ReportJoystickMicro<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:501"]
+  T4["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S4 -->|calls| T4
-  S5["method:JobsTask::executeAndWait<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:441"]
-  T5["method:JobsTask::executeNow<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:232"]
+  S5["function:ReportJoystickMicro<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:501"]
+  T5["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S5 -->|calls| T5
-  S6["method:JobsTask::executeAndWait<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:441"]
-  T6["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
+  S6["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T6["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S6 -->|calls| T6
-  S7["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
-  T7["method:JobsTask::addAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:125"]
+  S7["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T7["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S7 -->|calls| T7
-  S8["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
-  T8["method:JobsTask::removeAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:134"]
+  S8["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T8["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S8 -->|calls| T8
-  S9["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
-  T9["method:JobsTaskContinuationBox::markResumed<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:17"]
+  S9["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T9["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S9 -->|calls| T9
-  S10["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
-  T10["method:JobsTask::removeAction<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:134"]
+  S10["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T10["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S10 -->|calls| T10
-  S11["method:JobsTask::waitForExecutionCount<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:454"]
-  T11["method:JobsTaskContinuationBox::markResumed<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:17"]
+  S11["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T11["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S11 -->|calls| T11
-  S12["method:JobsTask::waitAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:481"]
-  T12["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
+  S12["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T12["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S12 -->|calls| T12
-  S13["method:JobsTask::waitAny<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:496"]
-  T13["method:JobsTask::waitUntilFinished<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:422"]
+  S13["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T13["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S13 -->|calls| T13
-  S14["method:JobsTask::cancelAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:515"]
-  T14["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S14["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T14["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S14 -->|calls| T14
-  S15["method:JobsTask::suspendAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:521"]
-  T15["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S15["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T15["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S15 -->|calls| T15
-  S16["method:JobsTask::resumeAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:527"]
-  T16["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S16["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T16["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S16 -->|calls| T16
-  S17["method:JobsTaskCenter::add<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:34"]
-  T17["method:JobsTaskManager::tasks<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskManager.swift:233"]
+  S17["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T17["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S17 -->|calls| T17
-  S18["method:JobsTaskCenter::remove<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:41"]
-  T18["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S18["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T18["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S18 -->|calls| T18
-  S19["method:JobsTaskCenter::remove<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:41"]
-  T19["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S19["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T19["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S19 -->|calls| T19
-  S20["method:JobsTaskCenter::remove<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:41"]
-  T20["method:JobsTask::cancel<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:202"]
+  S20["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T20["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S20 -->|calls| T20
-  S21["method:JobsTaskCenter::removeAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:50"]
-  T21["method:JobsTaskCenter::removeAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:50"]
+  S21["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T21["function:ReportJoystickButton<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:460"]
   S21 -->|calls| T21
-  S22["method:JobsTaskCenter::removeAll<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:50"]
-  T22["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S22["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T22["function:GetAxisValue<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:381"]
   S22 -->|calls| T22
-  S23["method:JobsTaskCenter::addTag<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenter.swift:62"]
-  T23["method:JobsWorkerBag::insert<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorker.swift:69"]
+  S23["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T23["function:GetAxisValue<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:381"]
   S23 -->|calls| T23
-  S24["method:JobsTaskCenterComponent::schedule<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:79"]
-  T24["method:JobsTaskCenterComponent::makeTask<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:264"]
+  S24["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T24["function:GetAxisValue<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:381"]
   S24 -->|calls| T24
-  S25["method:JobsTaskCenterComponent::schedule<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterComponent.swift:79"]
-  T25["method:JobsPlan::every<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskCenterDefine.swift:87"]
+  S25["function:ReportJoystickExtended<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:543"]
+  T25["function:GetAxisValue<br/>TODO/Unity/xcode_effectTest/Classes/iPhone_Sensors.mm:381"]
   S25 -->|calls| T25
 ```
 

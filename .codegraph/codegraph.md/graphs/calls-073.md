@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UITextView::tr_setAttributedText<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:87"]
-  T1["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S1["function:batch_deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:157"]
+  T1["method:tlsf_allocator::batch_deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/tlsf_allocator.inl.h:226"]
   S1 -->|calls| T1
-  S2["method:UIBarButtonItem::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:96"]
-  T2["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S2["function:batch_deallocate_link<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:169"]
+  T2["method:tlsf_allocator::batch_deallocate_link<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/tlsf_allocator.inl.h:231"]
   S2 -->|calls| T2
-  S3["method:UINavigationItem::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:106"]
-  T3["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S3["function:reserve<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:189"]
+  T3["function:owns<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:213"]
   S3 -->|calls| T3
-  S4["method:UINavigationItem::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:106"]
-  T4["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S4["function:capacity<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:195"]
+  T4["function:owns<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:213"]
   S4 -->|calls| T4
-  S5["method:UINavigationItem::tr_setPrompt<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:118"]
-  T5["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S5["function:optimal_size<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:203"]
+  T5["function:owns<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/tlsf_allocator.h:213"]
   S5 -->|calls| T5
-  S6["method:UINavigationItem::tr_setPrompt<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:118"]
-  T6["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S6["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:74"]
+  T6["method:invalid_code_point::invalid_code_point<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:44"]
   S6 -->|calls| T6
-  S7["method:UINavigationItem::tr_setBackButtonTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:130"]
-  T7["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S7["function:next<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:123"]
+  T7["method:invalid_utf8::invalid_utf8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:53"]
   S7 -->|calls| T7
-  S8["method:UINavigationItem::tr_setBackButtonTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:130"]
-  T8["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S8["function:next<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:123"]
+  T8["method:invalid_code_point::invalid_code_point<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:44"]
   S8 -->|calls| T8
-  S9["method:UITabBarItem::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:144"]
-  T9["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S9["function:prior<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:149"]
+  T9["method:invalid_utf8::invalid_utf8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:53"]
   S9 -->|calls| T9
-  S10["method:UITabBarItem::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:144"]
-  T10["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S10["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:189"]
+  T10["method:invalid_utf16::invalid_utf16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:61"]
   S10 -->|calls| T10
-  S11["method:UISegmentedControl::tr_setTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:158"]
-  T11["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S11["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:189"]
+  T11["method:invalid_utf16::invalid_utf16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:61"]
   S11 -->|calls| T11
-  S12["method:UISearchBar::tr_setPlaceholder<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:167"]
-  T12["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S12["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:189"]
+  T12["method:invalid_utf16::invalid_utf16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/checked.h:61"]
   S12 -->|calls| T12
-  S13["method:UISearchBar::tr_setPlaceholder<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:167"]
-  T13["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S13["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
+  T13["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
   S13 -->|calls| T13
-  S14["method:UISearchBar::tr_setPrompt<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:179"]
-  T14["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S14["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:37"]
+  T14["type_alias:uint32_t<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/core.h:57"]
   S14 -->|calls| T14
-  S15["method:UISearchBar::tr_setPrompt<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:179"]
-  T15["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S15["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:42"]
+  T15["function:utf16to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:42"]
   S15 -->|calls| T15
-  S16["method:UIAlertController::tr_setAlertTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:194"]
-  T16["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S16["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:49"]
+  T16["function:utf8to16<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:49"]
   S16 -->|calls| T16
-  S17["method:UIAlertController::tr_setAlertTitle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:194"]
-  T17["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S17["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:56"]
+  T17["function:utf32to8<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:56"]
   S17 -->|calls| T17
-  S18["method:UIAlertController::tr_setMessage<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:206"]
-  T18["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S18["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:63"]
+  T18["function:utf8to32<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:63"]
   S18 -->|calls| T18
-  S19["method:UIAlertController::tr_setMessage<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:206"]
-  T19["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S19["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:70"]
+  T19["function:find_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:70"]
   S19 -->|calls| T19
-  S20["method:UIView::tr_setA11yLabel<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:221"]
-  T20["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S20["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:76"]
+  T20["function:is_valid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:76"]
   S20 -->|calls| T20
-  S21["method:UIView::tr_setA11yLabel<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:221"]
-  T21["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S21["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:81"]
+  T21["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:81"]
   S21 -->|calls| T21
-  S22["method:UIView::tr_setA11yHint<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:233"]
-  T22["method:TRBind::consumeMarkerIfNeeded<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:152"]
+  S22["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:88"]
+  T22["function:replace_invalid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:88"]
   S22 -->|calls| T22
-  S23["method:UIView::tr_setA11yHint<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/UIKit+多语言国际化.swift:233"]
-  T23["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:135"]
+  S23["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:95"]
+  T23["function:starts_with_bom<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp11.h:95"]
   S23 -->|calls| T23
-  S24["function:resolveLanguageCode<br/>JobsByPods/Jobsl10n@Pods/Jobsl10n.swift:18"]
-  T24["function:loadLanguageMode<br/>JobsByPods/Jobsl10n@Pods/Jobsl10n.swift:27"]
+  S24["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
+  T24["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
   S24 -->|calls| T24
-  S25["function:loadLanguageMode<br/>JobsByPods/Jobsl10n@Pods/Jobsl10n.swift:27"]
-  T25["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:52"]
+  S25["function:append<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/cpp17.h:37"]
+  T25["type_alias:uint32_t<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/External/utfcpp/source/utf8/core.h:57"]
   S25 -->|calls| T25
 ```
 

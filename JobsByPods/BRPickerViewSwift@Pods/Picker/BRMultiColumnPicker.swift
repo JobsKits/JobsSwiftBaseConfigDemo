@@ -34,8 +34,7 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
         selectedRows = rows.enumerated().map { idx, v in
             let maxRow = max(0, columns[idx].count - 1)
             return max(0, min(v, maxRow))
-        }
-        return self
+        };return self
     }
 
     public override func buildContentView() -> UIView {

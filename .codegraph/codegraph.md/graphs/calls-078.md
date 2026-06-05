@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
-  T1["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
+  S1["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T1["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S1 -->|calls| T1
-  S2["method:CurlLoggerPlugin::willSend<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:20"]
-  T2["method:URLRequest::cURLDescription<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:31"]
+  S2["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T2["function:GC_promote_black_lists<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/blacklst.c:137"]
   S2 -->|calls| T2
-  S3["method:URLRequest::cURLDescription<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Plugins.swift:31"]
-  T3["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:115"]
+  S3["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T3["function:GC_wait_for_reclaim<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2245"]
   S3 -->|calls| T3
-  S4["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T4["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S4["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T4["function:GC_reclaim_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/reclaim.c:713"]
   S4 -->|calls| T4
-  S5["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T5["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S5["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T5["function:GC_invalidate_mark_state<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:621"]
   S5 -->|calls| T5
-  S6["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T6["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S6["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T6["function:GC_clear_marks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:250"]
   S6 -->|calls| T6
-  S7["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T7["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S7["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T7["function:GC_save_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4677"]
   S7 -->|calls| T7
-  S8["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T8["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S8["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T8["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
   S8 -->|calls| T8
-  S9["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T9["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S9["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T9["function:GC_invalidate_mark_state<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:621"]
   S9 -->|calls| T9
-  S10["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T10["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S10["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T10["function:GC_unpromote_black_lists<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/blacklst.c:170"]
   S10 -->|calls| T10
-  S11["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T11["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S11["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T11["function:GC_finish_collection<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1033"]
   S11 -->|calls| T11
-  S12["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T12["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S12["function:GC_try_to_collect_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:524"]
+  T12["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
   S12 -->|calls| T12
-  S13["class:CardNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:20"]
-  T13["method:CardNode::textNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:189"]
+  S13["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T13["function:GC_mark_some<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:493"]
   S13 -->|calls| T13
-  S14["class:KitchenSinkNode<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:218"]
-  T14["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
+  S14["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T14["function:GC_save_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4677"]
   S14 -->|calls| T14
-  S15["method:KitchenSinkNode::didLoad<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:235"]
-  T15["method:KitchenSinkNode::didLoad<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:235"]
+  S15["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T15["function:GC_wait_for_reclaim<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:2245"]
   S15 -->|calls| T15
-  S16["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
-  T16["method:KitchenSinkNode::update<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:266"]
+  S16["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T16["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
   S16 -->|calls| T16
-  S17["method:KitchenSinkNode::update<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:266"]
-  T17["method:KitchenSinkNode::buildsCards<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift:253"]
+  S17["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T17["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
   S17 -->|calls| T17
-  S18["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T18["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
+  S18["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T18["function:GC_finish_collection<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1033"]
   S18 -->|calls| T18
-  S19["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T19["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
+  S19["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
+  T19["function:GC_maybe_gc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:446"]
   S19 -->|calls| T19
-  S20["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T20["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S20["function:GC_collect_a_little<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:712"]
+  T20["function:GC_collect_a_little_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:659"]
   S20 -->|calls| T20
-  S21["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T21["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
+  S21["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
+  T21["function:GC_add_current_malloc_heap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:1823"]
   S21 -->|calls| T21
-  S22["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T22["method:JobsTaskExecutionSequence::prefix<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:75"]
+  S22["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
+  T22["function:GC_cond_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:848"]
   S22 -->|calls| T22
-  S23["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T23["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
+  S23["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
+  T23["function:GC_process_togglerefs<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:333"]
   S23 -->|calls| T23
-  S24["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
-  T24["method:JobsTaskExecutionSequence::map<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:85"]
+  S24["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
+  T24["function:GC_build_back_graph<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/backgraph.c:358"]
   S24 -->|calls| T24
-  S25["class:DemoDB<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@WCDB/DemoDB.swift:13"]
-  T25["method:JobsSwiftTimerManager::create<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:33"]
+  S25["function:GC_stopped_mark<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:754"]
+  T25["function:GC_clear_a_few_frames<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:357"]
   S25 -->|calls| T25
 ```
 

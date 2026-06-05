@@ -82,8 +82,7 @@ public struct TaskManager {
             lock.lock()
             self.tasks.append(item)
             lock.unlock()
-        }
-        return self
+        };return self
     }
 
     // MARK: - 删除任务
@@ -119,8 +118,7 @@ public struct TaskManager {
         self.tasks.filter {$0.tag == tag}.forEach {
             $0.task.resume()
             $0.status = .excute
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -130,8 +128,7 @@ public struct TaskManager {
                 $0.task.resume()
                 $0.status = .excute
             }
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -139,8 +136,7 @@ public struct TaskManager {
         self.tasks.filter {$0.tag == tag}.forEach {
             $0.task.executeNow()
             $0.status = .excute
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -150,8 +146,7 @@ public struct TaskManager {
                 $0.task.executeNow()
                 $0.status = .excute
             }
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -161,8 +156,7 @@ public struct TaskManager {
                 $0.task.suspend()
                 $0.status = .suspend
             }
-        }
-        return self
+        };return self
     }
 
     @discardableResult
@@ -172,8 +166,7 @@ public struct TaskManager {
                 $0.task.suspend()
                 $0.status = .suspend
             }
-        }
-        return self
+        };return self
     }
 
     @discardableResult

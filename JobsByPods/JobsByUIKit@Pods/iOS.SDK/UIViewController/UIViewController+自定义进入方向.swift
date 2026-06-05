@@ -151,8 +151,7 @@ extension UIViewController {
                 mainNav.pushViewController(self, animated: false)
                 DispatchQueue.main.async { [weak self] in
                     self?.jobs_fireAppearCompletionIfNeeded(reason: "pushCATransition(mainNav)")
-                }
-                return self
+                };return self
             } else {
                 self._jobs_entryDirection = nil
                 mainNav.pushViewController(self, animated: true)

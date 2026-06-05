@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:UnityAdIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:70"]
-  T1["function:QueryASIdentifierManager<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:12"]
+  S1["function:GC_debug_realloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:821"]
+  T1["function:GC_debug_malloc_atomic_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:715"]
   S1 -->|calls| T1
-  S2["function:UnityAdIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:70"]
-  T2["function:free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:682"]
+  S2["function:GC_debug_realloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:821"]
+  T2["function:GC_size<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:466"]
   S2 -->|calls| T2
-  S3["function:UnityAdIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:70"]
-  T3["function:AllocCString<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityInterface.h:411"]
+  S3["function:GC_debug_realloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:821"]
+  T3["function:GC_debug_free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:735"]
   S3 -->|calls| T3
-  S4["function:UnityAdTrackingEnabled<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:125"]
-  T4["function:QueryAttTrackingAuthorization<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:32"]
+  S4["function:GC_debug_generic_or_special_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:884"]
+  T4["function:GC_debug_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:633"]
   S4 -->|calls| T4
-  S5["function:UnityAdTrackingEnabled<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:125"]
-  T5["function:QueryASIdentifierManager<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:12"]
+  S5["function:GC_debug_generic_or_special_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:884"]
+  T5["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
   S5 -->|calls| T5
-  S6["function:UnityVendorIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:146"]
-  T6["function:AllocCString<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityInterface.h:411"]
+  S6["function:GC_debug_generic_or_special_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:884"]
+  T6["function:GC_debug_malloc_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:704"]
   S6 -->|calls| T6
-  S7["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
-  T7["function:malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:447"]
+  S7["function:GC_debug_generic_or_special_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:884"]
+  T7["function:GC_debug_malloc_atomic_uncollectable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:715"]
   S7 -->|calls| T7
-  S8["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
-  T8["function:AllocCString<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityInterface.h:411"]
+  S8["function:GC_debug_generic_or_special_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:884"]
+  T8["function:GC_debug_generic_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:564"]
   S8 -->|calls| T8
-  S9["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
-  T9["function:free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:682"]
+  S9["function:GC_add_smashed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:915"]
+  T9["function:GC_is_marked<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:236"]
   S9 -->|calls| T9
-  S10["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
-  T10["function:AllocCString<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityInterface.h:411"]
+  S10["function:GC_add_smashed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:915"]
+  T10["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S10 -->|calls| T10
-  S11["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
-  T11["function:free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:682"]
+  S11["function:GC_print_all_smashed_proc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:927"]
+  T11["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S11 -->|calls| T11
-  S12["function:UnitySystemLanguage<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:229"]
-  T12["function:AllocCString<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityInterface.h:411"]
+  S12["function:GC_print_all_smashed_proc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:927"]
+  T12["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S12 -->|calls| T12
-  S13["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
-  T13["function:UnityDeviceModel<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:175"]
+  S13["function:GC_print_all_smashed_proc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:927"]
+  T13["function:GC_print_smashed_obj<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:447"]
   S13 -->|calls| T13
-  S14["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
-  T14["function:ParseDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:360"]
+  S14["function:GC_check_heap_block<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:949"]
+  T14["function:GC_check_annotated_obj<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:326"]
   S14 -->|calls| T14
-  S15["function:UnityDeviceHasCutout<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:426"]
-  T15["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
+  S15["function:GC_check_heap_block<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:949"]
+  T15["function:GC_add_smashed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:915"]
   S15 -->|calls| T15
-  S16["function:UnityDeviceSupportsUpsideDown<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:444"]
-  T16["function:UnityDeviceHasCutout<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:426"]
+  S16["function:GC_check_heap_proc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:975"]
+  T16["function:GC_apply_to_all_blocks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:328"]
   S16 -->|calls| T16
-  S17["function:UnityDeviceSupportedOrientations<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:449"]
-  T17["function:UnityDeviceSupportsUpsideDown<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:444"]
+  S17["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1"]
+  T17["function:GC_has_other_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:36"]
   S17 -->|calls| T17
-  S18["function:UnityDeviceIsForceTouchSupported<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:458"]
-  T18["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
+  S18["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1"]
+  T18["function:GC_set_mark_bit<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark.c:200"]
   S18 -->|calls| T18
-  S19["function:UnityDeviceIsStylusTouchSupported<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:463"]
-  T19["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
+  S19["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1"]
+  T19["function:GC_add_smashed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:915"]
   S19 -->|calls| T19
-  S20["function:UnityDeviceCanShowWideColor<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:475"]
-  T20["function:UnityGetUnityView<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController.mm:605"]
+  S20["function:GC_make_closure<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1017"]
+  T20["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
   S20 -->|calls| T20
-  S21["function:UnityDeviceDPI<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:480"]
-  T21["function:UnityDeviceGeneration<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:413"]
+  S21["function:GC_make_closure<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1017"]
+  T21["function:GC_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:345"]
   S21 -->|calls| T21
-  S22["function:UnityDeviceUniqueIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:608"]
-  T22["function:UnityVendorIdentifier<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DeviceSettings.mm:146"]
+  S22["function:store_old<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1045"]
+  T22["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S22 -->|calls| T22
-  S23["function:GetMainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:63"]
-  T23["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S23["function:GC_debug_register_finalizer<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1068"]
+  T23["function:GC_base<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:414"]
   S23 -->|calls| T23
-  S24["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
-  T24["function:GetMainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:63"]
+  S24["function:GC_debug_register_finalizer<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1068"]
+  T24["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S24 -->|calls| T24
-  S25["method:DisplayConnection::init:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:49"]
-  T25["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S25["function:GC_debug_register_finalizer<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:1068"]
+  T25["function:GC_register_finalizer<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/finalize.c:835"]
   S25 -->|calls| T25
 ```
 

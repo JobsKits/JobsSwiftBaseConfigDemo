@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
-  T1["method:UIButton::_sd_setOptions<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:74"]
+  S1["method:JobsSwiftTimerCountdown::reset<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerCountdown.swift:171"]
+  T1["method:JobsSwiftTimerCountdown::resetInternal<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerCountdown.swift:176"]
   S1 -->|calls| T1
-  S2["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
-  T2["method:UIButton::_sd_setContext<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:80"]
+  S2["method:JobsSwiftTimerCountdown::byStartRunning<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerCountdown.swift:197"]
+  T2["method:JobsSwiftTimerCountdown::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerCountdown.swift:112"]
   S2 -->|calls| T2
-  S3["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
-  T3["method:UIButton::_sd_setProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:85"]
+  S3["method:JobsSwiftTimerManager::create<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:33"]
+  T3["method:JobsSwiftTimerManager::remove<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:101"]
   S3 -->|calls| T3
-  S4["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
-  T4["method:UIButton::_sd_setCompleted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:91"]
+  S4["method:JobsSwiftTimerManager::create<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:33"]
+  T4["method:JobsSwiftTimerManager::register<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:134"]
   S4 -->|calls| T4
-  S5["method:UIButton::sd_cloneBackground<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:437"]
-  T5["method:UIButton::_sd_loadBackgroundImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:363"]
+  S5["method:JobsSwiftTimerManager::act<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:87"]
+  T5["method:JobsSwiftTimerManager::timer<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:81"]
   S5 -->|calls| T5
-  S6["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T6["method:UIButton::_sd_setImageURL<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:56"]
+  S6["method:JobsSwiftTimerManager::act<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:87"]
+  T6["method:JobsSwiftTimerManager::remove<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:101"]
   S6 -->|calls| T6
-  S7["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T7["method:UIButton::_sd_setPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:62"]
+  S7["method:JobsSwiftTimerManager::stopAndRemove<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:121"]
+  T7["method:JobsSwiftTimerManager::act<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:87"]
   S7 -->|calls| T7
-  S8["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T8["method:UIButton::_sd_setOptions<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:74"]
+  S8["method:JobsSwiftTimerManager::stopAndRemove<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:129"]
+  T8["method:JobsSwiftTimerManager::stopAndRemove<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerManager.swift:129"]
   S8 -->|calls| T8
-  S9["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T9["method:UIButton::_sd_setContext<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:80"]
+  S9["method:JobsObservable::combineLatest<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Combine.swift:12"]
+  T9["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
   S9 -->|calls| T9
-  S10["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T10["method:UIButton::_sd_setProgress<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:85"]
+  S10["method:JobsObservable::combineLatest<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Combine.swift:12"]
+  T10["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
   S10 -->|calls| T10
-  S11["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T11["method:UIButton::_sd_setCompleted<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:91"]
+  S11["method:JobsObservable::map<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:12"]
+  T11["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
   S11 -->|calls| T11
-  S12["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T12["method:UIButton::_sd_setTargetSize<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:97"]
+  S12["method:JobsObservable::map<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:12"]
+  T12["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
   S12 -->|calls| T12
-  S13["method:UIButton::sd_cloneImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:505"]
-  T13["method:UIButton::_sd_loadImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+SDWebImage.swift:271"]
+  S13["method:JobsObservable::filter<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:21"]
+  T13["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
   S13 -->|calls| T13
-  S14["class:UIButton<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:32"]
-  T14["method:UIButton::applyDefaultTimerUI<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:72"]
+  S14["method:JobsObservable::filter<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:21"]
+  T14["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
   S14 -->|calls| T14
-  S15["method:UIButton::onCountdownTick<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:110"]
-  T15["method:UIButton::onTimerTick<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:86"]
+  S15["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
+  T15["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
   S15 -->|calls| T15
-  S16["method:UIButton::onCountdownFinish<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:120"]
-  T16["method:UIButton::onTimerFinish<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:99"]
+  S16["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
+  T16["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
   S16 -->|calls| T16
-  S17["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
-  T17["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
+  S17["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:44"]
+  T17["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:44"]
   S17 -->|calls| T17
-  S18["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
-  T18["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S18["method:JobsValueListenable::ever<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:13"]
+  T18["method:JobsWorkerFactory::ever<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:13"]
   S18 -->|calls| T18
-  S19["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
-  T19["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
+  S19["method:JobsValueListenable::once<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:25"]
+  T19["method:JobsWorkerFactory::once<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:31"]
   S19 -->|calls| T19
-  S20["method:UIButton::pauseTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:235"]
-  T20["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:141"]
+  S20["method:JobsValueListenable::debounce<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:37"]
+  T20["method:JobsWorkerFactory::debounce<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:56"]
   S20 -->|calls| T20
-  S21["method:UIButton::resumeTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:242"]
-  T21["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
+  S21["method:JobsValueListenable::interval<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:53"]
+  T21["method:JobsWorkerFactory::interval<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:81"]
   S21 -->|calls| T21
-  S22["method:UIButton::fireTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:249"]
-  T22["function:onMainAsync<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseMain.swift:124"]
+  S22["method:JobsValueListenable::skip<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:67"]
+  T22["method:JobsWorkerFactory::skip<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:111"]
   S22 -->|calls| T22
-  S23["method:UIButton::fireTimerOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:249"]
-  T23["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
+  S23["method:JobsValueListenable::take<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:79"]
+  T23["method:JobsWorkerFactory::take<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:137"]
   S23 -->|calls| T23
-  S24["method:UIButton::stopTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:311"]
-  T24["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S24["method:Array::everAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:93"]
+  T24["method:JobsWorkerFactory::everAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:176"]
   S24 -->|calls| T24
-  S25["method:UIButton::startJobsTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:335"]
-  T25["method:UIButton::startTimer<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift:126"]
+  S25["class:JobsObservable<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:11"]
+  T25["method:JobsObservable::_setValue<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:101"]
   S25 -->|calls| T25
 ```
 

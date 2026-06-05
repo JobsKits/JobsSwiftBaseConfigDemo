@@ -438,8 +438,7 @@ extension MomentPostUIKitCellNode {
         onTapMedia = { [weak self] index in
             guard let self else { return }
             block?(self, index)
-        }
-        return self
+        };return self
     }
 
     @discardableResult

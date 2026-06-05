@@ -197,8 +197,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
         if kind != .gcd, !Thread.isMainThread {
             DispatchQueue.main.async { [weak self] in
                 _ = self?.fireOnce()
-            }
-            return self
+            };return self
         }
 
         let (shouldStop, finish) = stateLock.jobs_withLock { () -> (Bool, JobsTimerCallback?) in

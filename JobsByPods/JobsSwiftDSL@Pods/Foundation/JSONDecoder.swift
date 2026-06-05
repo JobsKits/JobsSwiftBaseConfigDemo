@@ -135,8 +135,7 @@ public extension JSONDecoder {
     func byUserInfo(_ dict: [CodingUserInfoKey: any Sendable]) -> Self {
         dict.forEach { key, value in
             userInfo[key] = value
-        }
-        return self
+        };return self
     }
     /// 设置单个 userInfo
     @discardableResult

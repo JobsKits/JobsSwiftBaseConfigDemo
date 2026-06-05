@@ -81,8 +81,7 @@ extension UIButton {
                                         right: insets.trailing)
             self.contentEdgeInsets = newInset
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -99,8 +98,7 @@ extension UIButton {
         } else {
             self.contentEdgeInsets = inset
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -110,8 +108,7 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.imageEdgeInsets = insets
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -127,8 +124,7 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.titleEdgeInsets = insets
-        }
-        return self
+        };return self
     }
     
     @available(iOS 14.0, *)
@@ -263,8 +259,7 @@ extension UIButton {
                                         right: insets.trailing)
             self.contentEdgeInsets = newInset
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -281,8 +276,7 @@ extension UIButton {
         } else {
             self.contentEdgeInsets = inset
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -293,8 +287,7 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.imageEdgeInsets = insets
-        }
-        return self
+        };return self
     }
     
     @discardableResult
@@ -311,8 +304,7 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.titleEdgeInsets = insets
-        }
-        return self
+        };return self
     }
     
     @available(iOS 14.0, *)

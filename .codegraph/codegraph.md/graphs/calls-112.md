@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UnityWebRequestDelegate::handleResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:126"]
-  T1["method:UnityWebRequestDelegate::handleResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:155"]
+  S1["function:WRAP_DLFUNC(dlopen)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gc_dlopen.c:70"]
+  T1["function:disable_gc_for_dlopen<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gc_dlopen.c:44"]
   S1 -->|calls| T1
-  S2["method:UnityWebRequestDelegate::handleHTTPResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:137"]
-  T2["method:UnityWebRequestDelegate::handleHTTPResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:145"]
+  S2["function:WRAP_DLFUNC(dlopen)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gc_dlopen.c:70"]
+  T2["function:GC_enable<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1977"]
   S2 -->|calls| T2
-  S3["method:UnityWebRequestDelegate::handleHTTPResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:145"]
-  T3["method:UnityWebRequestDelegate::handleResponse:urequest:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:155"]
+  S3["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T3["function:GC_init<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:879"]
   S3 -->|calls| T3
-  S4["method:UnityWebRequestDelegate::URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:172"]
-  T4["method:UnityWebRequestDelegate::handleHTTPResponse:task:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:137"]
+  S4["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T4["function:GC_new_free_list_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:2001"]
   S4 -->|calls| T4
-  S5["method:UnityWebRequestDelegate::URLSession:task:didCompleteWithError:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:256"]
-  T5["method:UnityURLRequest::markDone<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:90"]
+  S5["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T5["function:GC_new_kind_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:2022"]
   S5 -->|calls| T5
-  S6["method:UnityWebRequestUploadStream::createForRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:288"]
-  T6["method:UnityWebRequestUploadStream::initWithRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:293"]
+  S6["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T6["function:GC_new_kind_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:2022"]
   S6 -->|calls| T6
-  S7["method:UnityWebRequestUploadStream::initWithRequest:totalBytes:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:293"]
-  T7["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S7["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T7["function:GC_new_kind_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:2022"]
   S7 -->|calls| T7
-  S8["function:UnityWebRequestAddCustomHeader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:369"]
-  T8["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S8["function:GC_init_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:67"]
+  T8["function:GC_new_free_list_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:2001"]
   S8 -->|calls| T8
-  S9["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
-  T9["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S9["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:1"]
+  T9["function:maybe_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:137"]
   S9 -->|calls| T9
-  S10["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
-  T10["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S10["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:1"]
+  T10["function:maybe_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:137"]
   S10 -->|calls| T10
-  S11["function:UnityCreateWebRequestBackend<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:384"]
-  T11["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S11["function:GC_debug_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:205"]
+  T11["function:maybe_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:137"]
   S11 -->|calls| T11
-  S12["function:UnitySendWebRequest<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:426"]
-  T12["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S12["function:GC_debug_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:205"]
+  T12["function:GC_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:157"]
   S12 -->|calls| T12
-  S13["function:UnitySendWebRequest<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:426"]
-  T13["method:VideoPlayer::resume<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:228"]
+  S13["function:GC_debug_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:205"]
+  T13["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S13 -->|calls| T13
-  S14["function:UnityWebRequestClearCookieCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:521"]
-  T14["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S14["function:GC_debug_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:205"]
+  T14["function:GC_start_debugging_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:479"]
   S14 -->|calls| T14
-  S15["method:VideoPlayer::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:113"]
-  T15["method:VideoPlayer::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:113"]
+  S15["function:GC_debug_gcj_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:205"]
+  T15["function:GC_store_debug_info_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:275"]
   S15 -->|calls| T15
-  S16["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
-  T16["function:CMVideoSampling_Uninitialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:14"]
+  S16["function:GC_gcj_malloc_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:236"]
+  T16["function:maybe_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:137"]
   S16 -->|calls| T16
-  S17["method:VideoPlayer::cleanupPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:142"]
-  T17["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
+  S17["function:GC_gcj_malloc_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:236"]
+  T17["function:maybe_finalize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/gcj_mlc.c:137"]
   S17 -->|calls| T17
-  S18["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
-  T18["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
+  S18["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
+  T18["function:GC_add_to_our_memory<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1251"]
   S18 -->|calls| T18
-  S19["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
-  T19["method:VideoPlayer::cleanupAssetReader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:133"]
+  S19["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
+  T19["function:GC_add_to_our_memory<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1251"]
   S19 -->|calls| T19
-  S20["method:VideoPlayer::unloadPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:160"]
-  T20["method:VideoPlayer::cleanupPlayer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:142"]
+  S20["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
+  T20["function:GC_add_to_our_memory<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/alloc.c:1251"]
   S20 -->|calls| T20
-  S21["method:VideoPlayer::loadVideo:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:173"]
-  T21["method:VideoPlayer::prepareAsset:withKeys:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:381"]
+  S21["function:alloc_hdr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:174"]
+  T21["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
   S21 -->|calls| T21
-  S22["method:VideoPlayer::playToTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:209"]
-  T22["method:VideoPlayer::prepareReader<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:444"]
+  S22["function:GC_init_headers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:199"]
+  T22["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
   S22 -->|calls| T22
-  S23["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
-  T23["method:VideoPlayer::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:222"]
+  S23["function:GC_init_headers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:199"]
+  T23["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S23 -->|calls| T23
-  S24["method:VideoPlayer::curFrameTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:245"]
-  T24["function:CMVideoSampling_LastSampledTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:76"]
+  S24["function:get_index<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:219"]
+  T24["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
   S24 -->|calls| T24
-  S25["method:VideoPlayer::curFrameTexture<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:245"]
-  T25["method:VideoPlayer::cleanupCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/VideoPlayer.mm:123"]
+  S25["function:GC_install_header<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:274"]
+  T25["function:get_index<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:219"]
   S25 -->|calls| T25
 ```
 

@@ -83,8 +83,7 @@ public final class VideoCell: UICollectionViewCell {
                 render(url)
             } else {
                 tearDownPlayer()
-            }
-            return self
+            };return self
         }
 
         tearDownPlayer()

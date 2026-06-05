@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:UnityManager::setupAutoCloseTimer<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:141"]
-  T1["method:UnityManager::unloadUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:133"]
+  S1["function:TryTimedAcquireScoped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Lock.h:149"]
+  T1["function:TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Lock.h:74"]
   S1 -->|calls| T1
-  S2["method:UnityManager::setupAutoCloseTimer<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:141"]
-  T2["method:UnityManager::hideUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:123"]
+  S2["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Lock.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Lock.h:1"]
+  T2["method:WaitObject::ReleaseOnDestroy::ReleaseOnDestroy<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/os/Generic/WaitObject.h:33"]
   S2 -->|calls| T2
-  S3["method:UnityManager::setupAutoCloseTimer<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:141"]
-  T3["method:JobsTimer::start<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:111"]
+  S3["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:1"]
+  T3["function:Baselib_ReentrantLock_CreateInplace<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_ReentrantLock.inl.h:24"]
   S3 -->|calls| T3
-  S4["method:UnityManager::attachUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:173"]
-  T4["method:UnityManager::showUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:221"]
+  S4["function:TryAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:67"]
+  T4["function:Baselib_ReentrantLock_TryAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_ReentrantLock.inl.h:32"]
   S4 -->|calls| T4
-  S5["method:UnityManager::detachUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:182"]
-  T5["method:UnityManager::unloadUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:230"]
+  S5["function:TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:87"]
+  T5["function:Baselib_ReentrantLock_TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_ReentrantLock.inl.h:63"]
   S5 -->|calls| T5
-  S6["method:UnityManager::detachUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:182"]
-  T6["method:UnityManager::hideUnity<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:229"]
+  S6["function:Release<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:100"]
+  T6["function:Baselib_ReentrantLock_Release<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_ReentrantLock.inl.h:79"]
   S6 -->|calls| T6
-  S7["method:UnityManager::unityDidUnload<br/>JobsByPods/JobsSwiftTools@Pods/UnityManager.swift:196"]
-  T7["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:219"]
+  S7["function:AcquireScoped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:115"]
+  T7["function:Acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/CappedSemaphore.h:54"]
   S7 -->|calls| T7
-  S8["method:JobsObservable::combineLatest<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Combine.swift:12"]
-  T8["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
+  S8["function:TryAcquireScoped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:135"]
+  T8["function:TryAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:67"]
   S8 -->|calls| T8
-  S9["method:JobsObservable::combineLatest<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Combine.swift:12"]
-  T9["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
+  S9["function:TryTimedAcquireScoped<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:163"]
+  T9["function:TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:87"]
   S9 -->|calls| T9
-  S10["method:JobsObservable::map<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:12"]
-  T10["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
+  S10["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ReentrantLock.h:1"]
+  T10["method:WaitObject::ReleaseOnDestroy::ReleaseOnDestroy<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/os/Generic/WaitObject.h:33"]
   S10 -->|calls| T10
-  S11["method:JobsObservable::map<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:12"]
-  T11["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
+  S11["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:1"]
+  T11["function:Semaphore<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/System/System.Threading/Semaphore.h:15"]
   S11 -->|calls| T11
-  S12["method:JobsObservable::filter<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:21"]
-  T12["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
+  S12["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:1"]
+  T12["function:Semaphore<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/System/System.Threading/Semaphore.h:15"]
   S12 -->|calls| T12
-  S13["method:JobsObservable::filter<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:21"]
-  T13["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
+  S13["function:Acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:57"]
+  T13["function:Baselib_Semaphore_Acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:63"]
   S13 -->|calls| T13
-  S14["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
-  T14["method:JobsObservable::observe<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:42"]
+  S14["function:TryAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:67"]
+  T14["function:Baselib_Semaphore_TryAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:52"]
   S14 -->|calls| T14
-  S15["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:32"]
-  T15["method:JobsObservable::accept<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:57"]
+  S15["function:TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:86"]
+  T15["function:Baselib_Semaphore_TryTimedAcquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:75"]
   S15 -->|calls| T15
-  S16["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:44"]
-  T16["method:JobsObservable::distinctUntilChanged<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:44"]
+  S16["function:Release<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:97"]
+  T16["function:Baselib_Semaphore_Release<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:113"]
   S16 -->|calls| T16
-  S17["method:JobsValueListenable::ever<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:13"]
-  T17["method:JobsWorkerFactory::ever<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:13"]
+  S17["function:ResetAndReleaseWaitingThreads<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Semaphore.h:107"]
+  T17["function:Baselib_Semaphore_ResetAndReleaseWaitingThreads<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Internal/Baselib_Semaphore_FutexBased.inl.h:142"]
   S17 -->|calls| T17
-  S18["method:JobsValueListenable::once<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:25"]
-  T18["method:JobsWorkerFactory::once<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:31"]
+  S18["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h:1"]
+  T18["method:high_precision_clock::now_in_ticks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Time.h:28"]
   S18 -->|calls| T18
-  S19["method:JobsValueListenable::debounce<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:37"]
-  T19["method:JobsWorkerFactory::debounce<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:56"]
+  S19["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h:1"]
+  T19["method:high_precision_clock::now_in_ticks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Time.h:28"]
   S19 -->|calls| T19
-  S20["method:JobsValueListenable::interval<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:53"]
-  T20["method:JobsWorkerFactory::interval<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:81"]
+  S20["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h:1"]
+  T20["function:Stopwatch<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/System/System.Diagnostics/Stopwatch.h:16"]
   S20 -->|calls| T20
-  S21["method:JobsValueListenable::skip<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:67"]
-  T21["method:JobsWorkerFactory::skip<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:111"]
+  S21["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Stopwatch.h:1"]
+  T21["method:high_precision_clock::now_in_ticks<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Time.h:28"]
   S21 -->|calls| T21
-  S22["method:JobsValueListenable::take<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:79"]
-  T22["method:JobsWorkerFactory::take<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:137"]
+  S22["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Thread.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Thread.h:1"]
+  T22["function:Thread<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Thread.h:83"]
   S22 -->|calls| T22
-  S23["method:Array::everAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift:93"]
-  T23["method:JobsWorkerFactory::everAll<br/>JobsByPods/JobsSwiftWorker@Pods/JobsWorkerFactory.swift:176"]
+  S23["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:1"]
+  T23["function:ThreadLocalStorage<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:38"]
   S23 -->|calls| T23
-  S24["class:JobsObservable<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:11"]
-  T24["method:JobsObservable::_setValue<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:101"]
+  S24["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:1"]
+  T24["function:ThreadLocalStorage<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:38"]
   S24 -->|calls| T24
-  S25["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
-  T25["method:Bag::removeValue<br/>TODO/TaskCenterComponent/Schedule/Bag.swift:75"]
+  S25["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:1"]
+  T25["function:IsValid<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/ThreadLocalStorage.h:49"]
   S25 -->|calls| T25
 ```
 

@@ -42,8 +42,7 @@ extension UIBarItem {
             self.image = UIImage(systemName: systemName, withConfiguration: cfg)
         } else {
             self.image = systemName.sysImg
-        }
-        return self
+        };return self
     }
 
     @discardableResult

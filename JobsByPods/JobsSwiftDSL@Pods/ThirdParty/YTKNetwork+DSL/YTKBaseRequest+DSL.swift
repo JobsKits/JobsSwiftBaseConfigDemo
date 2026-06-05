@@ -48,8 +48,7 @@ public extension YTKBaseRequest {
     func byDownloadProgress(_ block: @escaping JobsYTKProgress) -> Self {
         self.resumableDownloadProgressBlock = { progress in
             block(progress)
-        }
-        return self
+        };return self
     }
     /// 上传进度
     @discardableResult

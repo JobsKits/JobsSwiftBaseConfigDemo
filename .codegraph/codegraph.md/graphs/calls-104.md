@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
-  T1["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
+  S1["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:229"]
+  T1["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S1 -->|calls| T1
-  S2["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
-  T2["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S2["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T2["function:sort_heap_sects<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:283"]
   S2 -->|calls| T2
-  S3["function:UnityDisplayManager_DisplayCount<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:580"]
-  T3["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S3["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T3["function:GC_parse_map_entry<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:273"]
   S3 -->|calls| T3
-  S4["function:UnityDisplayManager_DisplayAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:585"]
-  T4["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S4["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T4["function:GC_segment_is_thread_stack<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:822"]
   S4 -->|calls| T4
-  S5["function:UnityDisplayManager_DisplayActive<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:597"]
-  T5["function:UnityDisplayManager_DisplayAvailable<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:585"]
+  S5["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T5["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S5 -->|calls| T5
-  S6["function:UnityDisplayManager_DisplaySystemResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:606"]
-  T6["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S6["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T6["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S6 -->|calls| T6
-  S7["function:UnityDisplayManager_DisplaySystemResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:606"]
-  T7["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  S7["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T7["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S7 -->|calls| T7
-  S8["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
-  T8["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S8["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
+  T8["function:GC_remove_roots_subregion<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:385"]
   S8 -->|calls| T8
-  S9["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
-  T9["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S9["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:400"]
+  T9["function:GC_get_maps<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:171"]
   S9 -->|calls| T9
-  S10["function:UnityDisplayManager_DisplayRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:632"]
-  T10["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  S10["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:400"]
+  T10["function:GC_register_map_entries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:308"]
   S10 -->|calls| T10
-  S11["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
-  T11["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S11["function:GC_register_dynlib_callback<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:481"]
+  T11["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S11 -->|calls| T11
-  S12["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
-  T12["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S12["function:GC_register_dynlib_callback<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:481"]
+  T12["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S12 -->|calls| T12
-  S13["function:UnityDisplayManager_DisplayRenderingBuffers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:648"]
-  T13["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  S13["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:585"]
+  T13["function:GC_exclude_static_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:544"]
   S13 -->|calls| T13
-  S14["function:UnityDisplayManager_SetRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:666"]
-  T14["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S14["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:585"]
+  T14["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S14 -->|calls| T14
-  S15["function:UnityDisplayManager_SetRenderingResolution<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:666"]
-  T15["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  S15["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:585"]
+  T15["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S15 -->|calls| T15
-  S16["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
-  T16["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S16["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:585"]
+  T16["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S16 -->|calls| T16
-  S17["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
-  T17["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S17["function:(void)<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:585"]
+  T17["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S17 -->|calls| T17
-  S18["function:UnityActivateScreenForRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:690"]
-  T18["function:EnsureDisplayIsInited<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:538"]
+  S18["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:753"]
+  T18["function:GC_FirstDLOpenedLinkMap<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:706"]
   S18 -->|calls| T18
-  S19["function:UnityStartFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:737"]
-  T19["method:DisplayManager::startFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:409"]
+  S19["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:753"]
+  T19["function:ElfW<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:167"]
   S19 -->|calls| T19
-  S20["function:UnityStartFrameRendering<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:737"]
-  T20["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S20["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:753"]
+  T20["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S20 -->|calls| T20
-  S21["function:UnityDestroyUnityRenderSurfaces<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:742"]
-  T21["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S21["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:812"]
+  T21["function:GC_scratch_alloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/headers.c:124"]
   S21 -->|calls| T21
-  S22["function:UnityDestroyUnityRenderSurfaces<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:742"]
-  T22["method:DisplayConnection::destroySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:231"]
+  S22["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:812"]
+  T22["function:GC_roots_present<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:128"]
   S22 -->|calls| T22
-  S23["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
-  T23["property:DisplayConnection::screen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:28"]
+  S23["function:GC_register_dynamic_libraries<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:812"]
+  T23["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S23 -->|calls| T23
-  S24["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
-  T24["property:DisplayManager::mainDisplay<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:57"]
+  S24["function:GC_cond_add_roots<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:935"]
+  T24["function:GC_get_next_stack<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/win32_threads.c:1774"]
   S24 -->|calls| T24
-  S25["function:UnityIsFullscreen<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:768"]
-  T25["method:DisplayManager::Instance<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:458"]
+  S25["function:GC_cond_add_roots<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dyn_load.c:935"]
+  T25["function:GC_add_roots_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:169"]
   S25 -->|calls| T25
 ```
 

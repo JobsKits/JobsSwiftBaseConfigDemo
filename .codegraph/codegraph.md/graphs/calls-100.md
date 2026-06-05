@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:CreateReadableRTFromCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:77"]
-  T1["function:CreateTextureFromCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:29"]
+  S1["function:GC_debug_register_displacement<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:496"]
+  T1["function:GC_register_displacement_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/obj_map.c:36"]
   S1 -->|calls| T1
-  S2["function:IsCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:83"]
-  T2["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
+  S2["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
+  T2["function:GC_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:345"]
   S2 -->|calls| T2
-  S3["function:CreatePixelBufferForCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:94"]
-  T3["function:CreatePixelBufferForCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:64"]
+  S3["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
+  T3["function:GC_caller_func_offset<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:510"]
   S3 -->|calls| T3
-  S4["function:CreateReadableRTFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:99"]
-  T4["function:CreatePixelBufferForCVTextureCache2<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:64"]
+  S4["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
+  T4["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
   S4 -->|calls| T4
-  S5["function:CreateReadableRTFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:99"]
-  T5["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
+  S5["function:GC_debug_malloc_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:544"]
+  T5["function:GC_malloc_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mallocx.c:245"]
   S5 -->|calls| T5
-  S6["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
-  T6["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
+  S6["function:GC_debug_malloc_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:544"]
+  T6["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
   S6 -->|calls| T6
-  S7["function:CreateBGRA32TextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:105"]
-  T7["function:GetMainDisplaySurface<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.h:68"]
+  S7["function:GC_debug_malloc_atomic_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:553"]
+  T7["function:GC_malloc_atomic_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mallocx.c:250"]
   S7 -->|calls| T7
-  S8["function:CreateHalfFloatTextureFromCVTextureCache<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:126"]
-  T8["function:UnitySelectedRenderingAPI<br/>TODO/Unity/xcode_effectTest/Classes/UnityAppController+Rendering.mm:195"]
+  S8["function:GC_debug_malloc_atomic_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:553"]
+  T8["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
   S8 -->|calls| T8
-  S9["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
-  T9["function:UnityGetAVCapturePermission<br/>TODO/Unity/xcode_effectTest/Classes/Unity/AVCapture.mm:15"]
+  S9["function:GC_debug_generic_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:564"]
+  T9["function:GC_generic_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:239"]
   S9 -->|calls| T9
-  S10["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
-  T10["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S10["function:GC_debug_generic_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:564"]
+  T10["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
   S10 -->|calls| T10
-  S11["method:CameraCaptureController::initCapture:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:38"]
-  T11["function:CMVideoSampling_Initialize<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:8"]
+  S11["function:GC_debug_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:576"]
+  T11["function:GC_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:157"]
   S11 -->|calls| T11
-  S12["method:CameraCaptureController::initCapture:preset:fps:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:95"]
-  T12["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S12["function:GC_debug_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:576"]
+  T12["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S12 -->|calls| T12
-  S13["method:CameraCaptureController::captureOutput:didOutputSampleBuffer:fromConnection:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:122"]
-  T13["function:CMVideoSampling_SampleBuffer<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CMVideoSampling.mm:71"]
+  S13["function:GC_debug_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:576"]
+  T13["function:GC_start_debugging_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:479"]
   S13 -->|calls| T13
-  S14["method:CameraCaptureController::capturePixelBufferToMemBuffer:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:128"]
-  T14["function:malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:447"]
+  S14["function:GC_debug_generic_malloc_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:576"]
+  T14["function:GC_store_debug_info_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:275"]
   S14 -->|calls| T14
-  S15["method:CameraCaptureController::isCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:170"]
-  T15["function:IsCVTextureFlipped<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CVTextureCache.mm:83"]
+  S15["function:GC_debug_generic_malloc_inner_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:594"]
+  T15["function:GC_generic_malloc_inner_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:212"]
   S15 -->|calls| T15
-  S16["method:CameraCaptureController::setFocusPointWithX:Y:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:182"]
-  T16["method:CameraCaptureController::setFocusPoint<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:199"]
+  S16["function:GC_debug_generic_malloc_inner_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:594"]
+  T16["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S16 -->|calls| T16
-  S17["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
-  T17["method:DisplayConnection::init<br/>TODO/Unity/xcode_effectTest/Classes/Unity/DisplayManager.mm:71"]
+  S17["function:GC_debug_generic_malloc_inner_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:594"]
+  T17["function:GC_start_debugging_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:479"]
   S17 -->|calls| T17
-  S18["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
-  T18["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
+  S18["function:GC_debug_generic_malloc_inner_ignore_off_page<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:594"]
+  T18["function:GC_store_debug_info_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:275"]
   S18 -->|calls| T18
-  S19["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
-  T19["method:CameraCaptureController::pause<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:373"]
+  S19["function:GC_debug_malloc_stubborn<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:615"]
+  T19["function:GC_debug_malloc<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:527"]
   S19 -->|calls| T19
-  S20["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
-  T20["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
+  S20["function:GC_debug_end_stubborn_change<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:623"]
+  T20["function:GC_end_stubborn_change<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mallocx.c:614"]
   S20 -->|calls| T20
-  S21["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
-  T21["method:CameraCaptureController::clearColorAndDepthCameraCaptureSession<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:318"]
+  S21["function:GC_debug_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:633"]
+  T21["function:GC_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:339"]
   S21 -->|calls| T21
-  S22["method:CameraCaptureController::addColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:225"]
-  T22["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
+  S22["function:GC_debug_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:633"]
+  T22["function:store_debug_info<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:302"]
   S22 -->|calls| T22
-  S23["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
-  T23["method:CameraCaptureController::getActiveColorAndDepthCameraControllers<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:216"]
+  S23["function:GC_debug_strdup<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:642"]
+  T23["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
   S23 -->|calls| T23
-  S24["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
-  T24["method:CameraCaptureController::findColorAndDepthCameraController:isDepth:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:266"]
+  S24["function:GC_debug_strdup<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:642"]
+  T24["function:GC_debug_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:633"]
   S24 -->|calls| T24
-  S25["method:CameraCaptureController::removeColorAndDepthCameraController:<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:239"]
-  T25["method:CameraCaptureController::initColorAndDepthCameraCaptureSession<br/>TODO/Unity/xcode_effectTest/Classes/Unity/CameraCapture.mm:305"]
+  S25["function:GC_debug_strndup<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:665"]
+  T25["function:GC_debug_malloc_atomic<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/dbg_mlc.c:633"]
   S25 -->|calls| T25
 ```
 
