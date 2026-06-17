@@ -6,14 +6,14 @@
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-06-05 09:08:30`
+- 生成时间：`2026-06-16 15:56:36`
 - Podspec 数量：`43`
 - 0 下游依赖 Pod 数量：`6`
 - 全部依赖边数量：`187`
 - 仓库内 Pod 依赖边数量：`123`
 - Pod 间循环依赖数量：`0`
 - 已过滤同 Pod 内部 subspec 依赖数量：`13`
-- 外部依赖来源注释文件数量：`41`
+- 外部依赖来源注释文件数量：`79`
 - 已识别外部依赖来源链接数量：`64`
 - DSL 执行式解析 Podspec 数量：`42`
 - 静态兜底解析 Podspec 数量：`1`

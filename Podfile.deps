@@ -1,4 +1,5 @@
 # pod install --repo-update
+# 外部脚本统一放在 Podfile 中安全调用；Podfile.deps 只维护 pod 依赖，不直接执行脚本。
 # ============================== 几乎每个 App 都会用到 ==============================
 def swiftAppCommon
   # --- OC/C++/C ---
@@ -128,8 +129,13 @@ target 'JobsSwiftBaseConfigDemo' do
 #    use_frameworks! :linkage => :dynamic
 
     flutter_application_path = File.join(__dir__, 'my_flutter')
-    load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
-    install_all_flutter_pods(flutter_application_path)
+    flutter_podhelper = File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+    if File.exist?(flutter_podhelper)
+        load flutter_podhelper
+        install_all_flutter_pods(flutter_application_path)
+    else
+        puts "⚠️  [Podfile.deps] 找不到 #{flutter_podhelper}，已跳过 Flutter Pods 集成"
+    end
 
     debugPods
     testPods

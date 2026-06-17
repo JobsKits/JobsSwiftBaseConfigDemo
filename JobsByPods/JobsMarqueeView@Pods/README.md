@@ -106,14 +106,14 @@ public enum ItemSizeMode {
               .byItemSizeMode(.fitContent)   // 典型公告跑马灯
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上连续 · 公告 1", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byTitle("向上连续 · 公告 1")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("更多内容 1", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("更多内容 1")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("megaphone.fill".sysImg, for: .normal)
+                      .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -131,14 +131,14 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上连续 · 公告 2", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byTitle("向上连续 · 公告 2")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("更多内容 2", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("更多内容 2")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("megaphone.fill".sysImg, for: .normal)
+                      .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -156,14 +156,14 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上连续 · 公告 3", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byTitle("向上连续 · 公告 3")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("更多内容 3", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("更多内容 3")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("megaphone.fill".sysImg, for: .normal)
+                      .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -207,14 +207,14 @@ public enum ItemSizeMode {
               .byItemSizeMode(.fillBounds)   // 每页 1 行
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上间隔 · 公告 1", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byTitle("向上间隔 · 公告 1")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("每 1 秒翻页", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("每 1 秒翻页")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("arrow.up.square.fill".sysImg, for: .normal)
+                      .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -232,14 +232,14 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上间隔 · 公告 2", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byTitle("向上间隔 · 公告 2")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("每 1 秒翻页", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("每 1 秒翻页")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("arrow.up.square.fill".sysImg, for: .normal)
+                      .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -257,14 +257,14 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                      .byTitle("向上间隔 · 公告 3", for: .normal)
-                      .byTitleColor(.label, for: .normal)
+                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byTitle("向上间隔 · 公告 3")
+                      .byTitleColor(.label)
                       .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                      .bySubTitle("每 1 秒翻页", for: .normal)
-                      .bySubTitleColor(.secondaryLabel, for: .normal)
+                      .bySubTitle("每 1 秒翻页")
+                      .bySubTitleColor(.secondaryLabel)
                       .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                      .byImage("arrow.up.square.fill".sysImg, for: .normal)
+                      .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
@@ -303,7 +303,7 @@ public enum ItemSizeMode {
               .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byImage("唐老鸭".img, for: .normal)
+                      .byImage("唐老鸭".img)
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
@@ -320,7 +320,7 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byImage("米老鼠".img, for: .normal)
+                      .byImage("米老鼠".img)
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
@@ -337,7 +337,7 @@ public enum ItemSizeMode {
                           }
                       },
                   UIButton.sys()
-                      .byImage("迪斯尼".img, for: .normal)
+                      .byImage("迪斯尼".img)
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in

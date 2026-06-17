@@ -1,0 +1,30 @@
+PODS:
+  - IGListDiffKit (4.0.0)
+  - IGListKit (4.0.0):
+    - IGListDiffKit (= 4.0.0)
+  - Texture/Core (3.2.0)
+  - Texture/IGListKit (3.2.0):
+    - IGListDiffKit (~> 4.0)
+    - IGListKit (~> 4.0)
+    - Texture/Core
+
+DEPENDENCIES:
+  - Texture/IGListKit (from `../..`)
+
+SPEC REPOS:
+  trunk:
+    - IGListDiffKit
+    - IGListKit
+
+EXTERNAL SOURCES:
+  Texture:
+    :path: "../.."
+
+SPEC CHECKSUMS:
+  IGListDiffKit: 665d6cf43ce726e676013db9c7d6c4294259b6b2
+  IGListKit: fd5a5d21935298f5849fa49d426843cff97b77c7
+  Texture: 56006b5c8a9ab4b6391e9aa412c49c71ab37bd2f
+
+PODFILE CHECKSUM: 2cfd8b14f984da5d20969d9ea399c6e3458090a6
+
+COCOAPODS: 1.16.2

@@ -1807,7 +1807,7 @@ private lazy var exampleButton: UIButton = {
         /// 只锁 Border（边框色不随状态变，iOS 15+）
         .byLockBorderColor(.red)
         /// 背景色@按照不同的状态
-        .byBackgroundColor(.systemGreen, for: .normal)
+        .byBackgroundColor(.systemGreen)
         .byBackgroundColor("#2F2F2F".cor, for: .disabled) // 对应按钮不可点击的状态
         /// 背景图片
         .byBackgroundImage("背景图片".img, for: .normal)
@@ -1818,16 +1818,16 @@ private lazy var exampleButton: UIButton = {
         /// 字体颜色渐变@主副一致
         .byGradientTitlesSame(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
         /// 普通字符串@设置主标题
-        .byTitle("显示", for: .normal)
+        .byTitle("显示")
         .byTitle("隐藏", for: .selected)
         /// 字体颜色@按照不同的状态
-        .byTitleColor("#2F2F2F".cor, for: .normal)
+        .byTitleColor("#2F2F2F".cor)
         .byTitleColor("#BBBBBB".cor, for: .disabled) // 对应按钮不可点击的状态
         .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
         /// 普通字符串@设置副标题
-        .bySubTitle("显示", for: .normal)
+        .bySubTitle("显示")
         .bySubTitle("隐藏", for: .selected)
-        .bySubTitleColor(.systemBlue, for: .normal)
+        .bySubTitleColor(.systemBlue)
         .bySubTitleColor(.systemRed, for: .selected)
         .bySubTitleFont(.systemFont(ofSize: 16, weight: .medium))
         /// 富文本字@设置主标题
@@ -1843,7 +1843,7 @@ private lazy var exampleButton: UIButton = {
         /// 主标题和副标题之间的距离（兼容 iOS12+）
         .byTitlePadding(4.h)
         /// 按钮图片@图文关系
-        .byImage("eye.slash".sysImg, for: .normal)                // 未选中图标
+        .byImage("eye.slash".sysImg)                // 未选中图标
         .byImage("eye".sysImg, for: .selected)                    // 选中图标
         /// iOS15专用@清除偏移
         .byClearConfigurationBackground() 
@@ -1875,7 +1875,7 @@ private lazy var exampleButton: UIButton = {
         .byCornerBadgeText("NEW") { cfg in
             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                .byBgColor(.systemRed)
+                .byBackgroundColor(.systemRed)
                 .byFont(.systemFont(ofSize: 11, weight: .bold))
                 .byShadow(color: UIColor.black.withAlphaComponent(0.25),
                           radius: 2,
@@ -1917,10 +1917,10 @@ private lazy var exampleButton: UIButton = {
                     .byImagePadding(8)
             }
         } else {
-            b.byTitle("背景图：Base64 / URL", for: .normal)
-                .byTitleColor(.white, for: .normal)
+            b.byTitle("背景图：Base64 / URL")
+                .byTitleColor(.white)
                 .byContentEdgeInsets(.init(top: 16, left: 16, bottom: 16, right: 16))
-                .byBgColor(.systemBlue)
+                .byBackgroundColor(.systemBlue)
         }
 }()
 ```
@@ -1960,16 +1960,16 @@ private lazy var exampleButton: UIButton = {
     private lazy var btn_1: UIButton = {
         UIButton()
             .byLockBackgroundColor(.clear)
-            .byTitle("\(Int(defaultStart))", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("\(Int(defaultStart))")
+            .byTitleColor(.white)
             .byTitleFont(.DINPro.Bold(14.fz))
-            .byImage("钱".img, for: .normal)
+            .byImage("钱".img)
             .byImagePlacement(.right ,padding: 5.w)        // 通用（向下兼容）
             /// 数字动效按钮@关键配置
             .byAnimationTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Int(0))") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Int(1000))") // 如果这个地方没有配置，则从按钮的主标题取值
@@ -2004,8 +2004,8 @@ private lazy var exampleButton: UIButton = {
                 JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
                 JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
             ]))
-            .byTitleColor(.white, for: .normal)
-            .byImage("star.fill".sysImg, for: .normal)
+            .byTitleColor(.white)
+            .byImage("star.fill".sysImg)
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemGreen)
             /// 数字动效按钮@关键配置➤主标题富文本Builder
@@ -2018,7 +2018,7 @@ private lazy var exampleButton: UIButton = {
                     .bySeparate(",")
                     .byDecimals(2)
                     // 如果仍然希望 plain/fallback 的字体颜色也一致，可以保留
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byTitleDecimalsCor(.red)
                     .byTitleDecimalsFont(.DINPro.Bold(12.fz))
@@ -2075,11 +2075,11 @@ private lazy var exampleButton: UIButton = {
     /// 数字动效按钮@副标题（普通文本）
     private lazy var btn_3: UIButton = {
         UIButton.sys()
-            .byTitle("会员价格", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("会员价格")
+            .byTitleColor(.white)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .bySubTitle("原价 ¥199 /月", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitle("原价 ¥199 /月")
+            .bySubTitleColor(.white.withAlphaComponent(0.85))
             .bySubTitleFont(.systemFont(ofSize: 13))
             .byBackgroundColor("#2F2F2F".cor)
             /// 数字动效按钮@关键配置
@@ -2118,14 +2118,14 @@ private lazy var exampleButton: UIButton = {
     /// 数字动效按钮@副标题（富文本）
     private lazy var btn_4: UIButton = {
         UIButton.sys()
-            .byTitle("限时折扣", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("限时折扣")
+            .byTitleColor(.white)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             // 初始展示：先给一个普通副标题（首次显示用）
-            .bySubTitle("倒计时 199 秒", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitle("倒计时 199 秒")
+            .bySubTitleColor(.white.withAlphaComponent(0.85))
             .bySubTitleFont(.systemFont(ofSize: 13))
-            .byImage("clock".sysImg, for: .normal)
+            .byImage("clock".sysImg)
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemPurple)
             .byCornerRadius(10)
@@ -2142,7 +2142,7 @@ private lazy var exampleButton: UIButton = {
                     .byShowsDecimals(false)
     
                     // 可选：给副标题的基础样式（非 builder 场景兜底）
-                    .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+                    .bySubTitleColor(.white.withAlphaComponent(0.85))
                     .bySubTitleFont(.systemFont(ofSize: 13))
     
                     // ✅ 副标题整体富文本： "倒计时 199 秒"
@@ -2214,10 +2214,10 @@ import JobsByUIKit
 
 private lazy var startButton: UIButton = {
     UIButton(type: .system)
-        .byTitle("开始", for: .normal)
+        .byTitle("开始")
         .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
-        .byTitleColor(.white, for: .normal)
-        .byBackgroundColor(.systemBlue, for: .normal)
+        .byTitleColor(.white)
+        .byBackgroundColor(.systemBlue)
         .byCornerRadius(10)
         .byMasksToBounds(true)
         // 每 tick：更新时间 & 最近触发时间
@@ -2417,10 +2417,10 @@ private lazy var countdownButton: UIButton = {
 ```swift
 private lazy var suspendSpinBtn: UIButton = {
     UIButton(type: .system)
-        .byTitle("0", for: .normal) // 中间数字：秒
+        .byTitle("0") // 中间数字：秒
         .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
-        .byTitleColor(.white, for: .normal)
-        .byBackgroundColor(.systemOrange, for: .normal)
+        .byTitleColor(.white)
+        .byBackgroundColor(.systemOrange)
         .byCornerRadius(25)
         .byMasksToBounds(true)
 
@@ -2433,7 +2433,7 @@ private lazy var suspendSpinBtn: UIButton = {
             let sec = Int(elapsed)             // 累计秒
             // 只有变化时才刷新，避免不必要的重绘
             if btn.title(for: .normal) != "\(sec)" {
-                btn.byTitle("\(sec)", for: .normal)
+                btn.byTitle("\(sec)")
                     .bySetNeedsUpdateConfiguration()
             }
         }
@@ -2442,7 +2442,7 @@ private lazy var suspendSpinBtn: UIButton = {
             JobsToast.show(
                 text: "长按了悬浮按钮",
                 config: JobsToast.Config()
-                    .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                     .byCornerRadius(12)
             )
         }
@@ -2458,7 +2458,7 @@ private lazy var suspendSpinBtn: UIButton = {
                 // 如果你有封装方法，则用：btn.pauseTimer()
                 JobsToast.show(
                     text: "已暂停旋转 & 计时",
-                    config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                    config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
                 )
             } else {
                 // 恢复旋转
@@ -2468,7 +2468,7 @@ private lazy var suspendSpinBtn: UIButton = {
                 // 如果你有封装方法，则用：btn.resumeTimer()
                 JobsToast.show(
                     text: "继续旋转 & 计时",
-                    config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                    config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
                 )
             }
         }
@@ -2584,9 +2584,9 @@ private lazy var tableView: UITableView = {
          // 空态按钮
         .byEmptyButtonProvider { [unowned self] in
             UIButton(type: .system)
-                .byTitle("暂无数据", for: .normal)
-                .bySubTitle("点我填充示例数据", for: .normal)
-                .byImage("tray".sysImg, for: .normal)
+                .byTitle("暂无数据")
+                .bySubTitle("点我填充示例数据")
+                .byImage("tray".sysImg)
                 .byImagePlacement(.top)
                 .onTap { [weak self] _ in
                     guard let self else { return }
@@ -2709,9 +2709,9 @@ private lazy var tableView: UITableView = {
           // 空态按钮
           .byEmptyButtonProvider { [unowned self] in
               UIButton.sys()
-                  .byTitle("暂无数据", for: .normal)
-                  .bySubTitle("点我填充示例数据", for: .normal)
-                  .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+                  .byTitle("暂无数据")
+                  .bySubTitle("点我填充示例数据")
+                  .byImage(UIImage(systemName: "square.grid.2x2"))
                   .byImagePlacement(.top)
                   .onTap { [weak self] _ in
                       guard let self else { return }
@@ -3136,10 +3136,10 @@ private lazy var web: BaseWebView = { [unowned self] in
         .byNavBarBackButtonProvider {
             UIButton(type: .system)
                 .byBackgroundColor(.clear)
-                .byImage(UIImage(systemName: "chevron.left"), for: .normal)
-                .byTitle("返回".tr, for: .normal)
+                .byImage(UIImage(systemName: "chevron.left"))
+                .byTitle("返回".tr)
                 .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                .byTitleColor(.label, for: .normal)
+                .byTitleColor(.label)
                 .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                 .byTapSound("Sound.wav")
         }
@@ -3369,16 +3369,16 @@ private lazy var web: BaseWebView = { [unowned self] in
                       leading: 12, spacing: 8)
           .byRightView(UIButton(type: .system)
                        // 普通文字：未选中状态标题
-                       .byTitle("显示", for: .normal)
+                       .byTitle("显示")
                        // 选中状态标题
                        .byTitle("隐藏", for: .selected)
                        // 文字颜色：区分状态
-                       .byTitleColor(.systemBlue, for: .normal)
+                       .byTitleColor(.systemBlue)
                        .byTitleColor(.systemRed, for: .selected)
                        // 字体统一
                        .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
                        // 图标（SF Symbol）
-                       .byImage(UIImage(systemName: "eye.slash"), for: .normal)   // 未选中图标
+                       .byImage(UIImage(systemName: "eye.slash"))   // 未选中图标
                        .byImage(UIImage(systemName: "eye"), for: .selected)       // 选中图标
                        // 图文内边距
                        .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
@@ -3597,7 +3597,7 @@ jobsSetupGKNav(
     leftButton:UIButton.sys()
         .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
         /// 按钮图片@图文关系
-        .byImage("list.bullet".sysImg, for: .normal)
+        .byImage("list.bullet".sysImg)
         .byImage("list.bullet".sysImg, for: .selected)
         /// 事件触发@点按
         .onTap { [weak self] sender in
@@ -3607,7 +3607,7 @@ jobsSetupGKNav(
                 JobsToast.show(
                     text: "点按了列表按钮",
                     config: JobsToast.Config()
-                        .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                        .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                         .byCornerRadius(12)
                 )
             }
@@ -3625,7 +3625,7 @@ jobsSetupGKNav(
     rightButtons: [
         UIButton.sys()
             /// 按钮图片@图文关系
-            .byImage("moon.circle.fill".sysImg, for: .normal)
+            .byImage("moon.circle.fill".sysImg)
             .byImage("moon.circle.fill".sysImg, for: .selected)
             /// 事件触发@点按
             .onTap { [weak self] sender in
@@ -3639,7 +3639,7 @@ jobsSetupGKNav(
             },
         UIButton.sys()
             /// 按钮图片@图文关系
-            .byImage("globe".sysImg, for: .normal)
+            .byImage("globe".sysImg)
             .byImage("globe".sysImg, for: .selected)
             /// 事件触发@点按
             .onTap { [weak self] sender in
@@ -3649,7 +3649,7 @@ jobsSetupGKNav(
             },
         UIButton.sys()
             /// 按钮图片@图文关系
-            .byImage("stop.circle.fill".sysImg, for: .normal)
+            .byImage("stop.circle.fill".sysImg)
             .byImage("stop.circle.fill".sysImg, for: .selected)
             /// 事件触发@点按
             .onTap { [weak self] sender in
@@ -5070,7 +5070,7 @@ required init?(coder: NSCoder) {
               leftButton:UIButton.sys()
                   .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
                   /// 按钮图片@图文关系
-                  .byImage(UIImage(systemName: "list.bullet"), for: .normal)
+                  .byImage(UIImage(systemName: "list.bullet"))
                   .byImage(UIImage(systemName: "list.bullet"), for: .selected)
                   /// 事件触发@点按
                   .onTap { [weak self] sender in
@@ -5080,7 +5080,7 @@ required init?(coder: NSCoder) {
                           JobsToast.show(
                               text: "点按了列表按钮",
                               config: JobsToast.Config()
-                                  .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                                  .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                                   .byCornerRadius(12)
                           )
                       }
@@ -5098,7 +5098,7 @@ required init?(coder: NSCoder) {
               rightButtons: [
                   UIButton.sys()
                       /// 按钮图片@图文关系
-                      .byImage(UIImage(systemName: "moon.circle.fill"), for: .normal)
+                      .byImage(UIImage(systemName: "moon.circle.fill"))
                       .byImage(UIImage(systemName: "moon.circle.fill"), for: .selected)
                       /// 事件触发@点按
                       .onTap { [weak self] sender in
@@ -5108,7 +5108,7 @@ required init?(coder: NSCoder) {
                       },
                   UIButton.sys()
                       /// 按钮图片@图文关系
-                      .byImage(UIImage(systemName: "globe"), for: .normal)
+                      .byImage(UIImage(systemName: "globe"))
                       .byImage(UIImage(systemName: "globe"), for: .selected)
                       /// 事件触发@点按
                       .onTap { [weak self] sender in
@@ -5118,7 +5118,7 @@ required init?(coder: NSCoder) {
                       },
                   UIButton.sys()
                       /// 按钮图片@图文关系
-                      .byImage(UIImage(systemName: "stop.circle.fill"), for: .normal)
+                      .byImage(UIImage(systemName: "stop.circle.fill"))
                       .byImage(UIImage(systemName: "stop.circle.fill"), for: .selected)
                       /// 事件触发@点按
                       .onTap { [weak self] sender in
@@ -5145,10 +5145,10 @@ UIView().byNavBarEnabled(true)
     .byNavBarBackButtonProvider {
         UIButton(type: .system)
             .byBackgroundColor(.clear)
-            .byImage(UIImage(systemName: "chevron.left"), for: .normal)
-            .byTitle("返回", for: .normal)
+            .byImage(UIImage(systemName: "chevron.left"))
+            .byTitle("返回")
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.label, for: .normal)
+            .byTitleColor(.label)
             .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
             .byTapSound("Sound.wav")
     }
@@ -5741,14 +5741,14 @@ t.start()
           .byItemSizeMode(.fitContent)   // 典型公告跑马灯
           .byDataSourceButtons([
               UIButton.sys()
-                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                  .byTitle("向上连续 · 公告 1", for: .normal)
-                  .byTitleColor(.label, for: .normal)
+                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                  .byTitle("向上连续 · 公告 1")
+                  .byTitleColor(.label)
                   .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                  .bySubTitle("更多内容 1", for: .normal)
-                  .bySubTitleColor(.secondaryLabel, for: .normal)
+                  .bySubTitle("更多内容 1")
+                  .bySubTitleColor(.secondaryLabel)
                   .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                  .byImage("megaphone.fill".sysImg, for: .normal)
+                  .byImage("megaphone.fill".sysImg)
                   .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                   .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                   .byTapSound("Sound.wav")
@@ -5766,14 +5766,14 @@ t.start()
                       }
                   },
               UIButton.sys()
-                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                  .byTitle("向上连续 · 公告 2", for: .normal)
-                  .byTitleColor(.label, for: .normal)
+                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                  .byTitle("向上连续 · 公告 2")
+                  .byTitleColor(.label)
                   .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                  .bySubTitle("更多内容 2", for: .normal)
-                  .bySubTitleColor(.secondaryLabel, for: .normal)
+                  .bySubTitle("更多内容 2")
+                  .bySubTitleColor(.secondaryLabel)
                   .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                  .byImage("megaphone.fill".sysImg, for: .normal)
+                  .byImage("megaphone.fill".sysImg)
                   .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                   .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                   .byTapSound("Sound.wav")
@@ -5791,14 +5791,14 @@ t.start()
                       }
                   },
               UIButton.sys()
-                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                  .byTitle("向上连续 · 公告 3", for: .normal)
-                  .byTitleColor(.label, for: .normal)
+                  .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                  .byTitle("向上连续 · 公告 3")
+                  .byTitleColor(.label)
                   .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                  .bySubTitle("更多内容 3", for: .normal)
-                  .bySubTitleColor(.secondaryLabel, for: .normal)
+                  .bySubTitle("更多内容 3")
+                  .bySubTitleColor(.secondaryLabel)
                   .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                  .byImage("megaphone.fill".sysImg, for: .normal)
+                  .byImage("megaphone.fill".sysImg)
                   .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                   .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                   .byTapSound("Sound.wav")
@@ -5816,7 +5816,7 @@ t.start()
                       }
                   }
           ])
-          .byBgColor(.randomColor)
+          .byBackgroundColor(.randomColor)
           .byAddTo(self.scrollView) { [unowned self] make in
               if #available(iOS 11.0, *) {
                   make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
@@ -5924,7 +5924,7 @@ t.start()
                       }
                   },
           ])
-          .byBgColor(.randomColor)
+          .byBackgroundColor(.randomColor)
           .byAddTo(self.scrollView) { [unowned self] make in
               make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
               make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -6134,7 +6134,7 @@ deinit {
   JobsToast.show(
       text: "当前控制器销毁成功",
       config: JobsToast.Config()
-          .byBgColor(.systemGreen.withAlphaComponent(0.9))
+          .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
           .byCornerRadius(12)
           .duration = 2.5       // ⬅️ 停留 2.5s
   )
@@ -6412,7 +6412,7 @@ btn.onTap { [weak self] btn in
            // 如果你有封装方法，则用：btn.pauseTimer()
            JobsToast.show(
                text: "已暂停旋转 & 计时",
-               config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+               config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
            )
        } else {
            // 恢复旋转
@@ -6422,7 +6422,7 @@ btn.onTap { [weak self] btn in
            // 如果你有封装方法，则用：btn.resumeTimer()
            JobsToast.show(
                text: "继续旋转 & 计时",
-               config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+               config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
            )
        }
 }
@@ -6438,7 +6438,7 @@ btn.onTap { [weak self] btn in
     UIView().byCornerBadgeText("NEW") { cfg in
                 cfg.byOffset(.init(horizontal: -6, vertical: 6))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBgColor(.systemRed)
+                    .byBackgroundColor(.systemRed)
                     .byFont(.systemFont(ofSize: 11, weight: .bold))
                     .byShadow(color: UIColor.black.withAlphaComponent(0.25),
                               radius: 2,
@@ -6469,7 +6469,7 @@ btn.onTap { [weak self] btn in
           JobsToast.show(
               text: "优惠@点按事件",
               config: JobsToast.Config()
-                  .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                  .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                   .byCornerRadius(12)
           )
       }
@@ -6498,7 +6498,7 @@ btn.onTap { [weak self] btn in
       JobsToast.show(
           text: "当前控制器销毁成功",
           config: JobsToast.Config()
-              .byBgColor(.systemGreen.withAlphaComponent(0.9))
+              .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
               .byCornerRadius(12)
       )
   }
@@ -7143,7 +7143,7 @@ private lazy var pdfView: PDFView = {
         .byAutoScales(NO) // 交给我们手动控制
         .byDisplayMode(.singlePageContinuous)
         .byDisplayDirection(.vertical)
-        .byBgColor(.secondarySystemBackground)
+        .byBackgroundColor(.secondarySystemBackground)
         .byAddTo(view) { [unowned self] make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -7155,7 +7155,7 @@ private lazy var thumbnailView: PDFThumbnailView = { [unowned self] in
     PDFThumbnailView()
         .byLayoutMode(.horizontal)
         .byThumbnailSize(CGSize(width: 60, height: 80))
-        .byBgColor(.tertiarySystemBackground)
+        .byBackgroundColor(.tertiarySystemBackground)
         .byContentInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
         .byAddTo(view) { [unowned self] make in
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -7268,7 +7268,7 @@ jobsDismissKeyboard()
               .byContentMode(.scaleAspectFill)
               .byClipsToBounds(true)
               .byCornerRadius(22)
-              .byBgColor(.systemGray5)
+              .byBackgroundColor(.systemGray5)
               .byAddTo(contentView) { [unowned self] make in
                   make.size.equalTo(CGSize(width: 44, height: 44))
                   make.centerY.equalToSuperview()
@@ -10740,7 +10740,7 @@ for x in xs {
       JobsToast.show(
           text: string,
           config: JobsToast.Config()
-              .byBgColor(.systemGreen.withAlphaComponent(0.9))
+              .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
               .byCornerRadius(12)
       )
   }
@@ -10754,7 +10754,7 @@ for x in xs {
           JobsToast.show(
               text: string,
               config: JobsToast.Config()
-                  .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                  .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                   .byCornerRadius(12)
           )
       }

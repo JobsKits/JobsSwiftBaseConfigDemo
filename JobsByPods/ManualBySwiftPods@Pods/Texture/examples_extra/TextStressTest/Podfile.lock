@@ -1,0 +1,25 @@
+PODS:
+  - Texture/Core (3.2.0)
+  - Texture/Yoga (3.2.0):
+    - Texture/Core
+    - Yoga (~> 2.0)
+  - Yoga (2.0.1)
+
+DEPENDENCIES:
+  - Texture/Yoga (from `../..`)
+
+SPEC REPOS:
+  trunk:
+    - Yoga
+
+EXTERNAL SOURCES:
+  Texture:
+    :path: "../.."
+
+SPEC CHECKSUMS:
+  Texture: 56006b5c8a9ab4b6391e9aa412c49c71ab37bd2f
+  Yoga: 7ac7f65e2d7120bf97e75fd66436ed4c7bf8e37e
+
+PODFILE CHECKSUM: 28fc134cbdcb5ed318ae788131328a3c39f54852
+
+COCOAPODS: 1.16.2

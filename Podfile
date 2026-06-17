@@ -153,7 +153,15 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
 
   puts "🔧 [Podfile] #{desc}"
   puts "🔧 [Podfile] chmod +x: #{script}"
-  system('chmod', '+x', script) || raise("[Podfile] ❌ chmod 失败：#{script}")
+  unless system('chmod', '+x', script)
+    msg = "[Podfile] ⚠️ #{desc} chmod 失败，已跳过：#{script}"
+    if required
+      raise msg
+    else
+      puts msg
+      return false
+    end
+  end
 
   command = jobs_external_script_command(script)
   puts "🔧 [Podfile] Run: JOBS_SKIP_README=1 #{command.join(' ')}"
@@ -185,18 +193,21 @@ def run_podspec_dependency_report_script
   )
 
   unless File.file?(script_path)
-    raise "[PodspecDependencyReport] ❌ 找不到脚本：#{script_path}"
+    Pod::UI.puts "[PodspecDependencyReport] skip, script not found: #{script_path}" if defined?(Pod::UI)
+    return
   end
 
   Pod::UI.puts "[PodspecDependencyReport] chmod +x #{script_path}"
   unless system('/bin/chmod', '+x', script_path)
-    raise "[PodspecDependencyReport] ❌ chmod +x 执行失败：#{script_path}"
+    Pod::UI.puts "[PodspecDependencyReport] ⚠️ chmod +x 执行失败，已跳过：#{script_path}" if defined?(Pod::UI)
+    return
   end
 
   command = jobs_external_script_command(script_path)
   Pod::UI.puts "[PodspecDependencyReport] 执行 JOBS_SKIP_README=1 #{command.join(' ')}"
   unless system({ 'JOBS_SKIP_README' => '1' }, *command, chdir: __dir__)
-    raise "[PodspecDependencyReport] ❌ 脚本执行失败：#{script_path}"
+    Pod::UI.puts "[PodspecDependencyReport] ⚠️ 脚本执行失败或被中断；pod install 主流程已完成" if defined?(Pod::UI)
+    return
   end
 
   Pod::UI.puts "[PodspecDependencyReport] ✅ 依赖关系报告已生成"

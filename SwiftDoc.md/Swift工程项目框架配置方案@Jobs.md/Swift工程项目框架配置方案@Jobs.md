@@ -171,7 +171,7 @@
              // 如果你有封装方法，则用：btn.pauseTimer()
              JobsToast.show(
                  text: "已暂停旋转 & 计时",
-                 config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                 config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
              )
          } else {
              // 恢复旋转
@@ -181,7 +181,7 @@
              // 如果你有封装方法，则用：btn.resumeTimer()
              JobsToast.show(
                  text: "继续旋转 & 计时",
-                 config: .init().byBgColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                 config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
              )
          }
   }
@@ -221,7 +221,7 @@
       UIView().byCornerBadgeText("NEW") { cfg in
                   cfg.byOffset(.init(horizontal: -6, vertical: 6))
                       .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                      .byBgColor(.systemRed)
+                      .byBackgroundColor(.systemRed)
                       .byFont(.systemFont(ofSize: 11, weight: .bold))
                       .byShadow(color: UIColor.black.withAlphaComponent(0.25),
                                 radius: 2,
@@ -252,7 +252,7 @@
             JobsToast.show(
                 text: "优惠@点按事件",
                 config: JobsToast.Config()
-                    .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                     .byCornerRadius(12)
             )
         }
@@ -276,7 +276,7 @@ private lazy var exampleButton: UIButton = {
         /// 只锁 Border（边框色不随状态变，iOS 15+）
         .byLockBorderColor(.red)
         /// 背景色@按照不同的状态
-        .byBackgroundColor(.systemGreen, for: .normal)
+        .byBackgroundColor(.systemGreen)
         .byBackgroundColor("#2F2F2F".cor, for: .disabled) // 对应按钮不可点击的状态
         /// 背景图片
         .byBackgroundImage("背景图片".img, for: .normal)
@@ -287,16 +287,16 @@ private lazy var exampleButton: UIButton = {
         /// 字体颜色渐变@主副一致
         .byGradientTitlesSame(colors: [UIColor(r: 221, g: 221, b: 221), UIColor(r: 127, g: 126, b: 126)], direction: .leftToRight)
         /// 普通字符串@设置主标题
-        .byTitle("显示", for: .normal)
+        .byTitle("显示")
         .byTitle("隐藏", for: .selected)
         /// 字体颜色@按照不同的状态
-        .byTitleColor("#2F2F2F".cor, for: .normal)
+        .byTitleColor("#2F2F2F".cor)
         .byTitleColor("#BBBBBB".cor, for: .disabled) // 对应按钮不可点击的状态
         .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
         /// 普通字符串@设置副标题
-        .bySubTitle("显示", for: .normal)
+        .bySubTitle("显示")
         .bySubTitle("隐藏", for: .selected)
-        .bySubTitleColor(.systemBlue, for: .normal)
+        .bySubTitleColor(.systemBlue)
         .bySubTitleColor(.systemRed, for: .selected)
         .bySubTitleFont(.systemFont(ofSize: 16, weight: .medium))
         /// 富文本字@设置主标题
@@ -312,7 +312,7 @@ private lazy var exampleButton: UIButton = {
         /// 主标题和副标题之间的距离（兼容 iOS12+）
         .byTitlePadding(4.h)
         /// 按钮图片@图文关系
-        .byImage("eye.slash".sysImg, for: .normal)                // 未选中图标
+        .byImage("eye.slash".sysImg)                // 未选中图标
         .byImage("eye".sysImg, for: .selected)                    // 选中图标
         /// iOS15专用@清除偏移
         .byClearConfigurationBackground() 
@@ -344,7 +344,7 @@ private lazy var exampleButton: UIButton = {
         .byCornerBadgeText("NEW") { cfg in
             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                .byBgColor(.systemRed)
+                .byBackgroundColor(.systemRed)
                 .byFont(.systemFont(ofSize: 11, weight: .bold))
                 .byShadow(color: UIColor.black.withAlphaComponent(0.25),
                           radius: 2,
@@ -386,10 +386,10 @@ private lazy var exampleButton: UIButton = {
                     .byImagePadding(8)
             }
         } else {
-            b.byTitle("背景图：Base64 / URL", for: .normal)
-                .byTitleColor(.white, for: .normal)
+            b.byTitle("背景图：Base64 / URL")
+                .byTitleColor(.white)
                 .byContentEdgeInsets(.init(top: 16, left: 16, bottom: 16, right: 16))
-                .byBgColor(.systemBlue)
+                .byBackgroundColor(.systemBlue)
         }
 }()
 ```
@@ -429,16 +429,16 @@ private lazy var exampleButton: UIButton = {
     private lazy var btn_1: UIButton = {
         UIButton()
             .byLockBackgroundColor(.clear)
-            .byTitle("\(Int(defaultStart))", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("\(Int(defaultStart))")
+            .byTitleColor(.white)
             .byTitleFont(.DINPro.Bold(14.fz))
-            .byImage("钱".img, for: .normal)
+            .byImage("钱".img)
             .byImagePlacement(.right ,padding: 5.w)        // 通用（向下兼容）
             /// 数字动效按钮@关键配置
             .byAnimationTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Int(0))") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Int(1000))") // 如果这个地方没有配置，则从按钮的主标题取值
@@ -473,8 +473,8 @@ private lazy var exampleButton: UIButton = {
                 JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
                 JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
             ]))
-            .byTitleColor(.white, for: .normal)
-            .byImage("star.fill".sysImg, for: .normal)
+            .byTitleColor(.white)
+            .byImage("star.fill".sysImg)
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemGreen)
             /// 数字动效按钮@关键配置➤主标题富文本Builder
@@ -487,7 +487,7 @@ private lazy var exampleButton: UIButton = {
                     .bySeparate(",")
                     .byDecimals(2)
                     // 如果仍然希望 plain/fallback 的字体颜色也一致，可以保留
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byTitleDecimalsCor(.red)
                     .byTitleDecimalsFont(.DINPro.Bold(12.fz))
@@ -544,11 +544,11 @@ private lazy var exampleButton: UIButton = {
     /// 数字动效按钮@副标题（普通文本）
     private lazy var btn_3: UIButton = {
         UIButton.sys()
-            .byTitle("会员价格", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("会员价格")
+            .byTitleColor(.white)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .bySubTitle("原价 ¥199 /月", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitle("原价 ¥199 /月")
+            .bySubTitleColor(.white.withAlphaComponent(0.85))
             .bySubTitleFont(.systemFont(ofSize: 13))
             .byBackgroundColor("#2F2F2F".cor)
             /// 数字动效按钮@关键配置
@@ -587,14 +587,14 @@ private lazy var exampleButton: UIButton = {
     /// 数字动效按钮@副标题（富文本）
     private lazy var btn_4: UIButton = {
         UIButton.sys()
-            .byTitle("限时折扣", for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitle("限时折扣")
+            .byTitleColor(.white)
             .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
             // 初始展示：先给一个普通副标题（首次显示用）
-            .bySubTitle("倒计时 199 秒", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitle("倒计时 199 秒")
+            .bySubTitleColor(.white.withAlphaComponent(0.85))
             .bySubTitleFont(.systemFont(ofSize: 13))
-            .byImage("clock".sysImg, for: .normal)
+            .byImage("clock".sysImg)
             .byImagePlacement(.leading, padding: 8)
             .byBackgroundColor(.systemPurple)
             .byCornerRadius(10)
@@ -611,7 +611,7 @@ private lazy var exampleButton: UIButton = {
                     .byShowsDecimals(false)
     
                     // 可选：给副标题的基础样式（非 builder 场景兜底）
-                    .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
+                    .bySubTitleColor(.white.withAlphaComponent(0.85))
                     .bySubTitleFont(.systemFont(ofSize: 13))
     
                     // ✅ 副标题整体富文本： "倒计时 199 秒"
@@ -1248,9 +1248,9 @@ private lazy var collectionView: UICollectionView = {
         // 空态按钮
         .byEmptyButtonProvider { [unowned self] in
             UIButton.sys()
-                .byTitle("暂无数据", for: .normal)
-                .bySubTitle("点我填充示例数据", for: .normal)
-                .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+                .byTitle("暂无数据")
+                .bySubTitle("点我填充示例数据")
+                .byImage(UIImage(systemName: "square.grid.2x2"))
                 .byImagePlacement(.top)
                 .onTap { [weak self] _ in
                     guard let self else { return }
@@ -1367,7 +1367,7 @@ func collectionView(_ collectionView: UICollectionView,
             }
 
         // 背景 & 圆角（只需设一次）
-        cell.contentView.byBgColor(.secondarySystemBackground)
+        cell.contentView.byBackgroundColor(.secondarySystemBackground)
             .byCornerRadius(10)
             .byMasksToBounds(true)
     }
@@ -1444,9 +1444,9 @@ private lazy var tableView: UITableView = {
          // 空态按钮
         .byEmptyButtonProvider { [unowned self] in
             UIButton(type: .system)
-                .byTitle("暂无数据", for: .normal)
-                .bySubTitle("点我填充示例数据", for: .normal)
-                .byImage("tray".sysImg, for: .normal)
+                .byTitle("暂无数据")
+                .bySubTitle("点我填充示例数据")
+                .byImage("tray".sysImg)
                 .byImagePlacement(.top)
                 .onTap { [weak self] _ in
                     guard let self else { return }
@@ -1693,7 +1693,7 @@ self.valueLabel
   ```swift
   private lazy var web: BaseWebView = { [unowned self] in
           return BaseWebView()
-              .byBgColor(.clear)
+              .byBackgroundColor(.clear)
               .byAllowedHosts([])                  // 不限域
               .byOpenBlankInPlace(true)
               .byDisableSelectionAndCallout(false)
@@ -1727,10 +1727,10 @@ self.valueLabel
               .byNavBarBackButtonProvider {
                   UIButton(type: .system)
                       .byBackgroundColor(.clear)
-                      .byImage(UIImage(systemName: "chevron.left"), for: .normal)
-                      .byTitle("返回", for: .normal)
+                      .byImage(UIImage(systemName: "chevron.left"))
+                      .byTitle("返回")
                       .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                      .byTitleColor(.label, for: .normal)
+                      .byTitleColor(.label)
                       .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                       .byTapSound("Sound.wav")
               }
@@ -1773,7 +1773,7 @@ self.valueLabel
                   JobsToast.show(
                       text: body.stringValue(for: "message") ?? "",
                       config: JobsToast.Config()
-                          .byBgColor(.systemGreen.withAlphaComponent(0.9))
+                          .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
                           .byCornerRadius(12)
                   )
                   reply(nil)
@@ -1908,10 +1908,10 @@ UIView().byDialogBoxContent { dialogBoxView in
   
   private lazy var startButton: UIButton = {
       UIButton(type: .system)
-          .byTitle("开始", for: .normal)
+          .byTitle("开始")
           .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
-          .byTitleColor(.white, for: .normal)
-          .byBackgroundColor(.systemBlue, for: .normal)
+          .byTitleColor(.white)
+          .byBackgroundColor(.systemBlue)
           .byCornerRadius(10)
           .byMasksToBounds(true)
           // 每 tick：更新时间 & 最近触发时间
@@ -2011,14 +2011,14 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
             .byItemSizeMode(.fitContent)   // 典型公告跑马灯
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
+                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byTitle("向上连续 · 公告 1")
+                    .byTitleColor(.label)
                     .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 1", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
+                    .bySubTitle("更多内容 1")
+                    .bySubTitleColor(.secondaryLabel)
                     .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                    .byImage("megaphone.fill".sysImg, for: .normal)
+                    .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                     .byTapSound("Sound.wav")
@@ -2036,14 +2036,14 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
+                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byTitle("向上连续 · 公告 2")
+                    .byTitleColor(.label)
                     .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 2", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
+                    .bySubTitle("更多内容 2")
+                    .bySubTitleColor(.secondaryLabel)
                     .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                    .byImage("megaphone.fill".sysImg, for: .normal)
+                    .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                     .byTapSound("Sound.wav")
@@ -2061,14 +2061,14 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
+                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byTitle("向上连续 · 公告 3")
+                    .byTitleColor(.label)
                     .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 3", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
+                    .bySubTitle("更多内容 3")
+                    .bySubTitleColor(.secondaryLabel)
                     .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
-                    .byImage("megaphone.fill".sysImg, for: .normal)
+                    .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                     .byTapSound("Sound.wav")
@@ -2086,7 +2086,7 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                         }
                     }
             ])
-            .byBgColor(.randomColor)
+            .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
                 if #available(iOS 11.0, *) {
                     make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
@@ -2194,7 +2194,7 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
                     }
                 },
         ])
-        .byBgColor(.randomColor)
+        .byBackgroundColor(.randomColor)
         .byAddTo(self.scrollView) { [unowned self] make in
             make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
             make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -3182,7 +3182,7 @@ let button = UIButton(type: .system)
     JobsToast.show(
         text: "当前控制器销毁成功",
         config: JobsToast.Config()
-            .byBgColor(.systemGreen.withAlphaComponent(0.9))
+            .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
             .byCornerRadius(12)
             .duration = 2.5       // ⬅️ 停留 2.5s
     )
@@ -3405,8 +3405,173 @@ end
   * 自检环节，之前亚博是控制在10～15秒
 * 全局的**BaseURL**是浮动的，内部需要有一个实时监控机制，如果在使用过程中BaseURL变的不可达，那么就需要在这一组**BaseURL**去找可用的**BaseURL**顶上
 
-<a id="🔚" href="#一些基本的原则" style="font-size:17px; color:green; font-weight:bold;">我是有底线的👉点我回到首页</a>
+## 五、快速 UI DSL 全配置
 
+### 1、书写约定
+
+- 所有 UI 配置优先使用 JobsSwiftDSL 点语法链式写法。
+- 点语法以行为最小单位提行书写，方便复制后按行删除或注释。
+- 跟在某一行 DSL 后面的说明统一用两根双斜杠 `//`；单独成行的说明统一用三根双斜杠 `///`。
+- 颗粒度要细：标题、颜色、字体、图片、状态、事件、装配、约束分别独立成行，不合并表达。
+- 同一 DSL 同时存在单参数和二参数写法时，默认首选单参数写法；二参数写法只用于 `.selected`、`.disabled`、`.highlighted` 等非默认状态差异。
+- 调用顺序固定为：当前 UI 类型本层 DSL、父类公共 DSL、事件 DSL、`byAddTo` + SnapKit 约束。
+
+### 2、`UILabel`
+
+```swift
+private lazy var titleLab: UILabel = { [unowned self] in
+    UILabel()
+        .byText("标题") // 设置文本
+        .byFont(.boldSystemFont(ofSize: 16)) // 设置字体
+        .byTextColor(.label) // 设置文字颜色
+        .byTextAlignment(.center) // 设置对齐方式
+        .byNumberOfLines(1) // 设置行数
+        .byLineBreakMode(.byTruncatingTail) // 设置截断方式
+        .byBackgroundColor(.clear) // 设置背景色
+        .byCornerRadius(8) // 设置圆角
+        .byClipsToBounds(true) // 裁剪圆角
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(24)
+        }
+}()
+```
+
+### 3、`UIButton`
+
+```swift
+private lazy var submitBtn: UIButton = { [unowned self] in
+    UIButton(type: .custom)
+        .byTitle("确认") // 设置标题
+        .byTitleColor(.white) // 设置标题颜色
+        .byTitleFont(.boldSystemFont(ofSize: 16)) // 设置标题字体
+        .byImage("icon_submit".img) // 设置图片
+        .byImage("icon_submit_selected".img, for: .selected) // 设置选中图片
+        .byBackgroundColor(.systemBlue) // 设置背景色
+        .byContentEdgeInsets(.init(top: 0, left: 16, bottom: 0, right: 16)) // 设置内容边距
+        .byCornerRadius(10) // 设置圆角
+        .byClipsToBounds(true) // 裁剪圆角
+        .onTap { btn in // 设置点按事件
+            btn.isSelected.toggle()
+        }
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(48)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-16)
+        }
+}()
+```
+
+### 4、`UITextField`
+
+```swift
+private lazy var nameTextField: UITextField = { [unowned self] in
+    UITextField()
+        .byText("") // 设置文本
+        .byFont(.systemFont(ofSize: 15)) // 设置字体
+        .byTextColor(.label) // 设置文字颜色
+        .byTextAlignment(.left) // 设置对齐方式
+        .byPlaceholder("请输入名称") // 设置占位文字
+        .byKeyboardType(.default) // 设置键盘类型
+        .byReturnKeyType(.done) // 设置返回键
+        .byClearButtonMode(.whileEditing) // 设置清除按钮
+        .byDelegate(self) // 设置代理
+        .byBackgroundColor(.secondarySystemBackground) // 设置背景色
+        .byCornerRadius(8) // 设置圆角
+        .byClipsToBounds(true) // 裁剪圆角
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.top.equalTo(self.titleLab.snp.bottom).offset(12)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(44)
+        }
+}()
+```
+
+### 5、`UITextView`
+
+```swift
+private lazy var remarkTextView: UITextView = { [unowned self] in
+    UITextView()
+        .byText("备注") // 设置文本
+        .byFont(.systemFont(ofSize: 15)) // 设置字体
+        .byTextColor(.label) // 设置文字颜色
+        .byTextAlignment(.left) // 设置对齐方式
+        .byEditable(true) // 允许编辑
+        .bySelectable(true) // 允许选择
+        .byDataDetectorTypes([]) // 设置数据识别
+        .byKeyboardType(.default) // 设置键盘类型
+        .byDelegate(self) // 设置代理
+        .byBackgroundColor(.secondarySystemBackground) // 设置背景色
+        .byCornerRadius(8) // 设置圆角
+        .byClipsToBounds(true) // 裁剪圆角
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.top.equalTo(self.nameTextField.snp.bottom).offset(12)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(120)
+        }
+}()
+```
+
+### 6、`UIImageView`
+
+```swift
+private lazy var avatarImgView: UIImageView = { [unowned self] in
+    UIImageView()
+        .byImage("avatar_placeholder".img) // 设置图片
+        .byHighlightedImage("avatar_selected".img) // 设置高亮图片
+        .byContentMode(.scaleAspectFill) // 设置填充模式
+        .byUserInteractionEnabled(true) // 开启交互
+        .byBackgroundColor(.tertiarySystemBackground) // 设置背景色
+        .byCornerRadius(32) // 设置圆角
+        .byClipsToBounds(true) // 裁剪圆角
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.top.equalTo(self.remarkTextView.snp.bottom).offset(12)
+            make.left.equalToSuperview().offset(16)
+            make.size.equalTo(CGSize(width: 64, height: 64))
+        }
+}()
+```
+
+### 7、`UITableView`
+
+```swift
+private lazy var tableView: UITableView = { [unowned self] in
+    UITableView(frame: .zero, style: .plain)
+        .byRowHeight(56) // 设置行高
+        .byEstimatedRowHeight(56) // 设置预估行高
+        .bySeparatorStyle(.singleLine) // 设置分割线
+        .byKeyboardDismissMode(.onDrag) // 拖拽收键盘
+        .byShowsVerticalScrollIndicator(true) // 显示纵向滚动条
+        .byAlwaysBounceVertical(true) // 允许纵向回弹
+        .byDelegate(self) // 设置代理
+        .byDataSource(self) // 设置数据源
+        .byBackgroundColor(.systemBackground) // 设置背景色
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.edges.equalToSuperview()
+        }
+}()
+```
+
+### 8、`UICollectionView`
+
+```swift
+private lazy var collectionView: UICollectionView = { [unowned self] in
+    UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
+        .byCollectionViewLayout(self.flowLayout) // 设置布局对象
+        .byShowsVerticalScrollIndicator(false) // 隐藏纵向滚动条
+        .byAlwaysBounceVertical(true) // 允许纵向回弹
+        .byKeyboardDismissMode(.onDrag) // 拖拽收键盘
+        .byDelegate(self) // 设置代理
+        .byDataSource(self) // 设置数据源
+        .byBackgroundColor(.systemBackground) // 设置背景色
+        .byAddTo(self.view) { make in // 加入父视图并部署约束
+            make.edges.equalToSuperview()
+        }
+}()
+```
+
+<a id="🔚" href="#一些基本的原则" style="font-size:17px; color:green; font-weight:bold;">我是有底线的👉点我回到首页</a>
 
 
 
