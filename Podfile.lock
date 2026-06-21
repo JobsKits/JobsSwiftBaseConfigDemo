@@ -331,6 +331,8 @@ PODS:
   - JobsSwiftTaskCenter (0.0.1):
     - JobsSwiftTimer
   - JobsSwiftTimer (0.1.0)
+  - JobsSwiftTimerMgr (0.1.0):
+    - JobsSwiftTimer
   - JobsSwiftTools (0.1.1):
     - Flutter
     - FlutterPluginRegistrant
@@ -560,6 +562,7 @@ DEPENDENCIES:
   - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
   - "JobsSwiftTaskCenter (from `JobsByPods/JobsSwiftTaskCenter@Pods`)"
   - "JobsSwiftTimer (from `JobsByPods/JobsSwiftTimer@Pods`)"
+  - "JobsSwiftTimerMgr (from `JobsByPods/JobsSwiftTimerMgr@Pods`)"
   - "JobsSwiftTools (from `JobsByPods/JobsSwiftTools@Pods`)"
   - "JobsSwiftWorker (from `JobsByPods/JobsSwiftWorker@Pods`)"
   - "JobsTextTools (from `JobsByPods/JobsTextTools@Pods`)"
@@ -751,6 +754,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftTaskCenter@Pods"
   JobsSwiftTimer:
     :path: "JobsByPods/JobsSwiftTimer@Pods"
+  JobsSwiftTimerMgr:
+    :path: "JobsByPods/JobsSwiftTimerMgr@Pods"
   JobsSwiftTools:
     :path: "JobsByPods/JobsSwiftTools@Pods"
   JobsSwiftWorker:
@@ -834,6 +839,7 @@ SPEC CHECKSUMS:
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
+  JobsSwiftTimerMgr: fc7acf4184f9d73f5ce4d564b5800e9c9f3321f0
   JobsSwiftTools: 39c0d90a6778344b11240cafe73aa05f713689d7
   JobsSwiftWorker: d5980b1f9152ab7fb7d37cbd39f5a19dbd6905f4
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a

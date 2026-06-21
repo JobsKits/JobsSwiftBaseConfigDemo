@@ -46,7 +46,3 @@ public protocol JobsSwiftTimerProtocol: AnyObject {
     @discardableResult
     func onFinish(_ block: @escaping JobsTimerCallback) -> Self
 }
-// MARK: - 标识协议（建议用于 Manager ID 管理）
-public protocol JobsSwiftTimerIdentifiable {
-    var identifier: String? { get }
-}

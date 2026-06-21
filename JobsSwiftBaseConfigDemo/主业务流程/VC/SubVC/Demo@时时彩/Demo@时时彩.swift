@@ -16,6 +16,7 @@ import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
+import JobsSwiftTimerMgr
 import JobsTextTools
 import JobsSwiftBaseDefines
 import SnapKit
@@ -27,7 +28,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
         let ids = data.map { $0.timerIdentifier }
         Task {
             for id in ids {
-                await JobsSwiftTimerManager.shared.stopAndRemove(identifier: id)
+                await JobsSwiftTimerMgr.shared.stopAndRemove(identifier: id)
             }
         }
     }

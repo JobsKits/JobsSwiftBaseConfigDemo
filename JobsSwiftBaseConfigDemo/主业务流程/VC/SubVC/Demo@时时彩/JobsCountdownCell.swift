@@ -15,6 +15,7 @@ import UIKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
+import JobsSwiftTimerMgr
 import JobsSwiftBaseDefines
 import SnapKit
 
@@ -100,7 +101,7 @@ public final class JobsCountdownCell: UITableViewCell {
         // 再 cancel manager（stop + remove）
         Task {
             do {
-                _ = try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
+                _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
             } catch {
                 // Demo：忽略（可能已被 cancel）
             }
@@ -130,7 +131,7 @@ public final class JobsCountdownCell: UITableViewCell {
         )
 
         do {
-            let t = try JobsSwiftTimerManager.shared.create(
+            let t = try JobsSwiftTimerMgr.shared.create(
                 kind: .gcd,
                 identifier: id,
                 config: cfg,

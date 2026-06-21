@@ -49,6 +49,7 @@ digraph PodspecDependencies {
   "JobsSwiftStandardLibrary";
   "JobsSwiftTaskCenter";
   "JobsSwiftTimer";
+  "JobsSwiftTimerMgr";
   "JobsSwiftTools";
   "JobsSwiftWorker";
   "JobsTextTools";
@@ -235,6 +236,7 @@ digraph PodspecDependencies {
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
   "JobsSwiftStandardLibrary" -> "JobsSwiftBaseDefines";
   "JobsSwiftTaskCenter" -> "JobsSwiftTimer";
+  "JobsSwiftTimerMgr" -> "JobsSwiftTimer";
   "JobsSwiftTools" -> "Flutter";
   "JobsSwiftTools" -> "FlutterPluginRegistrant";
   "JobsSwiftTools" -> "JobsByPhotosUI";

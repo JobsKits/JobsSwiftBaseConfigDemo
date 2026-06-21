@@ -20,6 +20,7 @@ import JobsByUIKit
 import JobsRefresher
 import JobsTextTools
 import JobsSwiftTimer
+import JobsSwiftTimerMgr
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftAppTools
@@ -30,7 +31,7 @@ import MJRefresh
 
 final class RootListVC: BaseVC {
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
-    private let timerMgr = JobsSwiftTimerManager.shared
+    private let timerMgr = JobsSwiftTimerMgr.shared
     private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
     private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
 
@@ -107,7 +108,7 @@ final class RootListVC: BaseVC {
                 ("🐯 节流防抖", JobsWorkerDemoVC.self),
                 ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
-                ("🛠️ Jobs时间管理大师", JobsTimerManagerDemoVC.self),
+                ("🛠️ Jobs时间管理大师", JobsTimerMgrDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
                 ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
                 ("🏷️ 动效数字按钮", AnimatedButtonNumberDemoVC.self),

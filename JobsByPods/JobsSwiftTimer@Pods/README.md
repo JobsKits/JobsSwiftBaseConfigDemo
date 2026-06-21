@@ -97,7 +97,7 @@
     }
     ```
 
-* 在**`JobsSwiftTimer`**之上再封装一层，用 [**JobsSwiftTimerManager**](#JobsSwiftTimerManager) 管理多个 `JobsSwiftTimer`（带 **identifier**）
+* 在**`JobsSwiftTimer`**之上再封装一层，用 [**JobsSwiftTimerMgr**](#JobsSwiftTimerMgr) 管理多个 `JobsSwiftTimer`（带 **identifier**）
 
   * 用 `identifier` 管理 **timer** 生命周期（列表 cell / 页面复用特别实用）
     * 有**去重策略** `JobsTimerDedupPolicy` ➤  `keepExisting` / `replace` / `error` 
@@ -167,7 +167,7 @@ t.onFinish {
 }.start()
 ```
 
-## 三、<font id=JobsSwiftTimerManager>`JobsSwiftTimerManager` 的使用</font>
+## 三、<font id=JobsSwiftTimerMgr>`JobsSwiftTimerMgr` 的使用</font>
 
 ### 1、创建并注册（🌟最推荐用法🌟）
 
@@ -175,7 +175,7 @@ t.onFinish {
 /// 同 id 已存在时，默认策略是 .replace（Manager 内部默认）
 let id = "home.countdown"
 var config = JobsSwiftTimerConfig(interval: 1.0, repeats: true, queue: .main)
-let timer = try JobsSwiftTimerManager.shared.create(
+let timer = try JobsSwiftTimerMgr.shared.create(
     kind: .foundation,
     identifier: id,// 不能为空，否则抛 identifierRequired
     config: config,
@@ -192,18 +192,18 @@ timer.start()
 > 不需要持有 **JobsSwiftTimer** 引用
 
 ```swift
-try JobsSwiftTimerManager.shared.act(.start, identifier: id)
-try JobsSwiftTimerManager.shared.act(.pause, identifier: id)
-try JobsSwiftTimerManager.shared.act(.resume, identifier: id)
-try JobsSwiftTimerManager.shared.act(.stop, identifier: id)
+try JobsSwiftTimerMgr.shared.act(.start, identifier: id)
+try JobsSwiftTimerMgr.shared.act(.pause, identifier: id)
+try JobsSwiftTimerMgr.shared.act(.resume, identifier: id)
+try JobsSwiftTimerMgr.shared.act(.stop, identifier: id)
 ```
 
 ```swift
 /// cancel ➤ 停止并移除
 /// 最适合 cell reuse / deinit
-/// JobsSwiftTimerManager 的 .cancel 会先 stop() 再 remove()
+/// JobsSwiftTimerMgr 的 .cancel 会先 stop() 再 remove()
 
-try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
+try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
 ```
 
 ### 3、停止并移除
@@ -214,7 +214,7 @@ try JobsSwiftTimerManager.shared.act(.cancel, identifier: id)
 
 ```swift
 Task {
-    await JobsSwiftTimerManager.shared.stopAndRemove(identifier: id)
+    await JobsSwiftTimerMgr.shared.stopAndRemove(identifier: id)
 }
 ```
 
@@ -229,12 +229,12 @@ Task {
 let id = "cell.\(model.id)"
 let config = JobsSwiftTimerConfig(interval: 1, repeats: true, queue: .main)
 
-try? JobsSwiftTimerManager.shared.create(kind: .foundation, identifier: id, config: config) {
+try? JobsSwiftTimerMgr.shared.create(kind: .foundation, identifier: id, config: config) {
     // 更新 label
 }.start()
 
 // 在 prepareForReuse / didEndDisplaying / deinit:
-Task { await JobsSwiftTimerManager.shared.stopAndRemove(identifier: id) }
+Task { await JobsSwiftTimerMgr.shared.stopAndRemove(identifier: id) }
 ```
 
 ### 2、后台轮询 ➤ 不阻塞主线程
