@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:GC_print_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4765"]
-  T1["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T1["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
   S1 -->|calls| T1
-  S2["function:GC_print_callers<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4765"]
-  T2["function:free<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/malloc.c:682"]
+  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T2["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S2 -->|calls| T2
-  S3["function:GC_print_address_map<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4930"]
-  T3["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
+  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T3["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S3 -->|calls| T3
-  S4["function:GC_print_address_map<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4930"]
-  T4["function:GC_get_maps<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:171"]
+  S4["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:723"]
+  T4["function:ASHierarchyChangeTypeIsFinal<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:35"]
   S4 -->|calls| T4
-  S5["function:GC_print_address_map<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4930"]
-  T5["function:GC_err_puts<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1860"]
+  S5["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:723"]
+  T5["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S5 -->|calls| T5
-  S6["function:GC_print_address_map<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/os_dep.c:4930"]
-  T6["function:GC_err_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1807"]
+  S6["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:723"]
+  T6["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S6 -->|calls| T6
-  S7["function:GC_inner_start_routine<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_start.c:45"]
-  T7["function:GC_start_rtn_prepare_thread<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_support.c:1764"]
+  S7["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:723"]
+  T7["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S7 -->|calls| T7
-  S8["function:GC_inner_start_routine<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_start.c:45"]
-  T8["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
+  S8["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:791"]
+  T8["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S8 -->|calls| T8
-  S9["file:TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:1"]
-  T9["function:suspend_self_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:571"]
+  S9["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:802"]
+  T9["method:NSIndexSet::as_smallDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/NSIndexSet+ASHelpers.mm:68"]
   S9 -->|calls| T9
-  S10["function:GC_print_sig_mask<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:77"]
-  T10["function:GC_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1791"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T10["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S10 -->|calls| T10
-  S11["function:GC_suspend_handler<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:216"]
-  T11["function:GC_with_callee_saves_pushed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mach_dep.c:227"]
+  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T11["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
   S11 -->|calls| T11
-  S12["function:GC_suspend_handler<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:216"]
-  T12["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
+  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T12["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S12 -->|calls| T12
-  S13["function:GC_store_stack_ptr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:268"]
-  T13["function:AO_store<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:2039"]
+  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T13["method:ASCellNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:324"]
   S13 -->|calls| T13
-  S14["function:GC_store_stack_ptr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:268"]
-  T14["function:AO_store<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:2039"]
+  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T14["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S14 -->|calls| T14
-  S15["function:GC_store_stack_ptr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:268"]
-  T15["function:GC_approx_sp<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/mark_rts.c:484"]
+  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T15["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S15 -->|calls| T15
-  S16["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T16["function:AO_load_acquire<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1840"]
+  S16["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:866"]
+  T16["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
   S16 -->|calls| T16
-  S17["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T17["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
+  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T17["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S17 -->|calls| T17
-  S18["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T18["function:GC_lookup_thread_async<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:255"]
+  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T18["function:ASHierarchyChangeTypeIsFinal<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:35"]
   S18 -->|calls| T18
-  S19["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T19["function:AO_load<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/libatomic_ops/src/atomic_ops/generalize-small.h:1938"]
+  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T19["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S19 -->|calls| T19
-  S20["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T20["function:GC_store_stack_ptr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:268"]
+  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T20["method:ASWeakSet::removeAllObjects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASWeakSet.mm:37"]
   S20 -->|calls| T20
-  S21["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T21["function:sem_post<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/darwin_semaphore.h:55"]
+  S21["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:972"]
+  T21["method:NSIndexSet::as_smallDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/NSIndexSet+ASHelpers.mm:68"]
   S21 -->|calls| T21
-  S22["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T22["function:suspend_self_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:571"]
+  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T22["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S22 -->|calls| T22
-  S23["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T23["function:GC_log_printf<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/misc.c:1815"]
+  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T23["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
   S23 -->|calls| T23
-  S24["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T24["function:GC_store_stack_ptr<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:268"]
+  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T24["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S24 -->|calls| T24
-  S25["function:GC_suspend_handler_inner<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/pthread_stop_world.c:288"]
-  T25["function:sem_post<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/darwin_semaphore.h:55"]
+  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T25["method:ASCellNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:324"]
   S25 -->|calls| T25
 ```
 

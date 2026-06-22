@@ -1617,28 +1617,21 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
   > Target: arm64-apple-macosx26.0
   > ```
 
-* 依据系统模版，手动创建`swift package`
+* 本工程的本地 Package 位于：
+
+  ```text
+  JobsBySwiftPackageManager/JobsSPMDemoPackage
+  ```
+
+* 完整验证（解析、构建、测试并运行命令行 Client）：
 
   ```shell
-  swift package init --type macro --name MyMacros
+  JOBS_SKIP_README=1 './JobsBySwiftPackageManager/【MacOS】🧠编译通过方可集成进SPM.command'
   ```
 
-* 构建（成功后方可通过Xcode添加进 [**Swift**](https://developer.apple.com/swift/)项目中）
+  该脚本也由 `pod install` 的 `pre_install` 阶段可选唤起：直接回车执行，输入任意字符后回车跳过。脚本缺失或主动跳过不影响 Pods 安装；一旦选择执行，验证失败会停止集成。
 
-  ```
-  swift build
-  ```
-
-  > ```shell
-  > ➜  MyMacrosClean swift build                             
-  > [1/1] Planning build
-  > Building for debugging...
-  > [17/17] Applying MyMacrosClient
-  > Build complete! (2.56s)
-  > ```
-
-
-* 系统包可以用Git进行统一管理，最后再手动引入工程。例如：[**swift-syntax**](https://github.com/swiftlang/swift-syntax)
+* 宏依赖 [**swift-syntax**](https://github.com/swiftlang/swift-syntax) 由 SwiftPM 锁定官方精确版本，不再依赖容易丢失的同级本地源码目录。完整说明见 [`SwiftPackageDependence使用指南🧭.md`](./SwiftDoc.md/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md)。
 
 * 通过Xcode添加进 [**Swift**](https://developer.apple.com/swift/)项目中👇
 

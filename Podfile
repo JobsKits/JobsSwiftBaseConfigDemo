@@ -121,9 +121,9 @@ def jobs_external_script_command(script_path)
   [script_path]
 end
 
-def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil)
+def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil, confirm: true)
   # === [MOD] 在脚本真正执行前统一拦截：回车执行 / 任意字符跳过 ==========
-  unless jobs_confirm_pod_install_scripts?
+  if confirm && !jobs_confirm_pod_install_scripts?
     puts "⏭️  [Podfile] Skip script: #{desc}"
     return false
   end
@@ -182,6 +182,45 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
   end
 end
 
+# 按用户选择执行 SPM 编译门禁；脚本缺失或主动跳过时不阻塞 pod install。
+def run_spm_validation_script
+  relative_path = File.join(
+    'JobsBySwiftPackageManager',
+    '【MacOS】🧠编译通过方可集成进SPM.command'
+  )
+  script_path = File.expand_path(relative_path, __dir__)
+
+  unless File.file?(script_path)
+    puts "⚠️  [SPMValidation] 脚本不存在，已跳过，pod install 继续：#{script_path}"
+    return false
+  end
+
+  should_run = true
+  if STDIN.tty?
+    puts
+    puts "🧠 [SPMValidation] 是否执行本地 Swift Package 编译、测试与 Client 验证？"
+    print "👉 直接回车执行；输入任意字符后回车跳过："
+    input = STDIN.gets
+    should_run = input.nil? || input.strip.empty?
+  else
+    puts "ℹ️  [SPMValidation] 当前为非交互环境，按默认选项执行。"
+  end
+
+  unless should_run
+    puts "⏭️  [SPMValidation] 用户选择跳过，pod install 继续。"
+    return false
+  end
+
+  jobs_run_external_script(
+    relative_path,
+    desc: 'Validate local Swift Package (optional)',
+    base_dir: __dir__,
+    log_path: '/tmp/【MacOS】🧠编译通过方可集成进SPM.log',
+    required: true,
+    confirm: false
+  )
+end
+
 
 # ===== PodspecDependencyReport: pod install 后自动生成 Podspec 依赖分析报告 =====
 # 路径：项目根目录/ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/【MacOS】🔍查询Xcode工程依赖关系.command
@@ -213,7 +252,7 @@ def run_podspec_dependency_report_script
   Pod::UI.puts "[PodspecDependencyReport] ✅ 依赖关系报告已生成"
 end
 
-# ===== CodeGraph: pod install 完成后按需生成 CodeGraph 索引 =====
+# ===== CodeGraph: pod install 完成后在后台生成 CodeGraph 索引 =====
 def run_codegraph_init_script
   script_path = jobs_resolve_external_script_path(
     File.join('ScriptsByPods', 'codegraph_init.command'),
@@ -231,10 +270,43 @@ def run_codegraph_init_script
     return
   end
 
-  Pod::UI.puts "[CodeGraph] pod install 已进入收尾阶段，准备按需生成 CodeGraph"
-  unless system(script_path, chdir: __dir__)
-    Pod::UI.puts "[CodeGraph] ⚠️ CodeGraph 脚本执行失败或被中断；pod install 主流程已完成" if defined?(Pod::UI)
+  async_log = '/tmp/codegraph_init.async.log'
+  pid_dir = File.join(__dir__, '.codegraph')
+  pid_path = File.join(pid_dir, 'codegraph_init.pid')
+  existing_pid = Integer(File.read(pid_path).strip, exception: false) if File.file?(pid_path)
+
+  if existing_pid
+    begin
+      Process.kill(0, existing_pid)
+      Pod::UI.puts "[CodeGraph] 后台同步已在运行，PID=#{existing_pid}；pod install 直接结束" if defined?(Pod::UI)
+      return
+    rescue Errno::ESRCH
+      # PID 文件可以留存，进程不存在时直接启动新任务。
+    rescue Errno::EPERM
+      Pod::UI.puts "[CodeGraph] 后台同步已在运行，PID=#{existing_pid}；pod install 直接结束" if defined?(Pod::UI)
+      return
+    end
   end
+
+  FileUtils.mkdir_p(pid_dir)
+  log_io = File.open(async_log, 'w')
+  pid = Process.spawn(
+    { 'CODEGRAPH_AUTO_INIT' => '1', 'CODEGRAPH_EXPORT_ASYNC' => '0' },
+    script_path,
+    chdir: __dir__,
+    in: File::NULL,
+    out: log_io,
+    err: log_io,
+    pgroup: true
+  )
+  Process.detach(pid)
+  File.write(pid_path, "#{pid}\n")
+  Pod::UI.puts "[CodeGraph] 后台同步已启动，PID=#{pid}，日志=#{async_log}" if defined?(Pod::UI)
+  Pod::UI.puts '[CodeGraph] pod install 主流程已完成，无需等待 CodeGraph' if defined?(Pod::UI)
+rescue => e
+  Pod::UI.puts "[CodeGraph] ⚠️ 后台任务启动失败，已跳过：#{e.message}" if defined?(Pod::UI)
+ensure
+  log_io&.close
 end
 
 # 统一写入 build settings（对某个 target 的所有 config）
@@ -393,6 +465,9 @@ end
 # pre_install：修复 Unity Bee/Tundra 缓存路径问题（否则此工程项目代码迁移到其他机器会无法编译通过）
 # 官方给的 workaround 就是删掉 Library/Il2cppBuildCache（Unity 2022.1+ 已修，Unity 2021 系列不打算修）
 pre_install do |installer|
+  # CocoaPods 集成前可选触发本地 SPM 门禁；一旦执行，验证失败将停止集成。
+  run_spm_validation_script
+
   jobs_clean_unity_build_artifacts!(__dir__) if jobs_unity_integrated?(__dir__)
 
   jobs_run_external_script(

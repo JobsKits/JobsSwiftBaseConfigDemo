@@ -32,6 +32,18 @@ final class JobsSwiftBaseConfigDemoUITests: XCTestCase {
     }
 
     @MainActor
+    func testSuspendFuseButtonLongPressDoesNotCrash() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let button = app.buttons["RootListVC.suspendFuseBtn"]
+        XCTAssertTrue(button.waitForExistence(timeout: 10))
+
+        button.press(forDuration: 5.0)
+        XCTAssertEqual(app.state, .runningForeground)
+    }
+
+    @MainActor
     func testLaunchPerformance() throws {
         // This measures how long it takes to launch your application.
         measure(metrics: [XCTApplicationLaunchMetric()]) {

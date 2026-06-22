@@ -17,7 +17,7 @@ import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsInheritance
 import SnapKit
-import MyMacros   // ⬅️ 导入本地包导出的宏（模块名即导出层 target）
+import JobsSPMDemoMacros   // ⬅️ TODO 文件未加入 App Target；宏由 Package 测试与 Client 演示
 
 @EquatableBy("id")
 private struct UserInfo {

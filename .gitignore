@@ -35,6 +35,10 @@ DerivedData/
 *.dSYM
 *.dSYM.zip
 
+# Unity 分卷合并后的本地派生库，由 pod install 或合并脚本重建。
+Unity/xcode_effectTest/Libraries/libiPhone-lib.a
+Unity/xcode_effectTest/Libraries/libil2cpp.a
+
 ############################################################
 # Xcode Workspace
 ############################################################

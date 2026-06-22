@@ -210,38 +210,15 @@ extension UIButton {
     }
     /// 长按方法@普通
     @discardableResult
-    public func onLongPress(minimumPressDuration: TimeInterval = 0.5,
-                            _ handler: @escaping JobsButtonLongPressBlock) -> Self {
-         let gr = UILongPressGestureRecognizer(target: nil, action: nil)
-         class _GRSleeve<T: UIGestureRecognizer> {
-             let closure: (T) -> Void
-             init(_ c: @escaping (T) -> Void) { closure = c }
-             @objc func invoke(_ g: UIGestureRecognizer) {
-                 if let gg = g as? T { closure(gg) }
-             }
-         }
-         gr.minimumPressDuration = minimumPressDuration
-         // ✅ 关键：优先用 g.view 作为按钮，这样 clone 的 button 也能拿到自己
-         let sleeve = _GRSleeve<UILongPressGestureRecognizer> { [weak self] g in
-             // g.view 是当前这个手势挂在哪个 view 上（模板按钮 or clone）
-             guard let btn = (g.view as? UIButton) ?? self else { return }
-             handler(btn, g)
-         }
-         gr.addTarget(
-             sleeve,
-             action: #selector(_GRSleeve<UILongPressGestureRecognizer>.invoke(_:))
-         )
-         // ✅ 不再用字符串当 key，用全局指针，clone 那边才能取得到
-         objc_setAssociatedObject(
-             gr,
-             &kJobsUIButtonLongPressSleeveKey,
-             sleeve,
-             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-         )
-         addGestureRecognizer(gr)
-         isUserInteractionEnabled = true
-         return self
-     }
+    public func onLongPress(
+        minimumPressDuration: TimeInterval = 0.5,
+        _ handler: @escaping JobsButtonLongPressBlock
+    ) -> Self {
+        jobsLongPressBlock = handler
+        return jobs_ensureLongPressRecognizer(
+            minimumPressDuration: minimumPressDuration
+        )
+    }
     /// 长按方法@叠加
     @discardableResult
     public func onLongPressAppend(

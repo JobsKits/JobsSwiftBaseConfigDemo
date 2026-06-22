@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */; };
 		9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */; };
+		A10C00012F20000100C0DE01 /* JobsSPMDemoKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10C00042F20000100C0DE01 /* JobsSPMDemoKit */; };
+		A20C00012F21000100C0DE01 /* UnityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C00022F21000100C0DE01 /* UnityManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +35,7 @@
 		34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "EntityInfo-JobsSwiftBaseConfigDemo.generated.swift"; sourceTree = "<group>"; };
 		7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20C00022F21000100C0DE01 /* UnityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JobsByPods/JobsSwiftTools@Pods/UnityManager.swift"; sourceTree = SOURCE_ROOT; };
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,7 +47,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"主业务流程/VC/TODO/Demo@自定义注解.swift",
-				"主业务流程/VC/TODO/Demo@Unity/Demo@Unity.swift",
 				Info.plist,
 			);
 			target = C59C65352F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */;
@@ -81,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10C00012F20000100C0DE01 /* JobsSPMDemoKit in Frameworks */,
 				76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +122,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		A20C00032F21000100C0DE01 /* Unity Host Support */ = {
+			isa = PBXGroup;
+			children = (
+				A20C00022F21000100C0DE01 /* UnityManager.swift */,
+			);
+			name = "Unity Host Support";
+			sourceTree = "<group>";
+		};
 		BE84CCA99B4FD97FE1349FAC /* generated */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +148,7 @@
 				C59C65372F1BFB1A0060EEAD /* Products */,
 				A015FC91762D3615F9A4CAC5 /* Pods */,
 				0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */,
+				A20C00032F21000100C0DE01 /* Unity Host Support */,
 				BE84CCA99B4FD97FE1349FAC /* generated */,
 			);
 			sourceTree = "<group>";
@@ -159,12 +171,12 @@
 			buildConfigurationList = C59C65592F1BFB1A0060EEAD /* Build configuration list for PBXNativeTarget "JobsSwiftBaseConfigDemo" */;
 			buildPhases = (
 				9B30AAF4C5CEA41A0405A645 /* [CP] Check Pods Manifest.lock */,
-				C57D6A082F1DD7D00093F898 /* ShellScript */,
+				C57D6A082F1DD7D00093F898 /* Build UnityFramework (Device Only) */,
 				2B0FE6CCEE62CF1871E51C17 /* [CP-User] Run Flutter Build my_flutter Script */,
 				0ED085630027AE69643CFADF /* [OBX] Update Sourcery Generated Files */,
 				C59C65322F1BFB1A0060EEAD /* Sources */,
 				C59C65332F1BFB1A0060EEAD /* Frameworks */,
-				C57D6A0A2F1DD7DD0093F898 /* ShellScript */,
+				C57D6A0A2F1DD7DD0093F898 /* Embed UnityFramework (Device Only) */,
 				C59C65342F1BFB1A0060EEAD /* Resources */,
 				C57D6C202F1DDCDB0093F898 /* ShellScript */,
 				6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */,
@@ -179,6 +191,9 @@
 				C59C65382F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */,
 			);
 			name = JobsSwiftBaseConfigDemo;
+			packageProductDependencies = (
+				A10C00042F20000100C0DE01 /* JobsSPMDemoKit */,
+			);
 			productName = JobsSwiftBaseConfigDemo;
 			productReference = C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -258,6 +273,9 @@
 			);
 			mainGroup = C59C652D2F1BFB190060EEAD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C59C65372F1BFB1A0060EEAD /* Products */;
 			projectDirPath = "";
@@ -373,7 +391,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C57D6A082F1DD7D00093F898 /* ShellScript */ = {
+		C57D6A082F1DD7D00093F898 /* Build UnityFramework (Device Only) */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -383,15 +401,16 @@
 			);
 			inputPaths = (
 			);
+			name = "Build UnityFramework (Device Only)";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellPath = /bin/zsh;
+			shellScript = "\nset -euo pipefail\nif [[ \"${PLATFORM_NAME:-}\" == \"iphonesimulator\" ]]; then\n  echo \"▶︎ Unity: simulator build -> skip\"\n  exit 0\nfi\nUNITY_PROJ=\"${SRCROOT}/Unity/xcode_effectTest/Unity-iPhone.xcodeproj\"\nif [[ ! -f \"${UNITY_PROJ}/project.pbxproj\" ]]; then\n  echo \"error: Unity project not found: ${UNITY_PROJ}\"\n  exit 1\nfi\nUNITY_CONF=\"${CONFIGURATION}\"\n[[ \"${UNITY_CONF}\" == \"Debug\" ]] && UNITY_CONF=\"Release\"\nDD_ROOT=\"${SRCROOT}/.DerivedDataUnity\"\nSYMROOT=\"${DD_ROOT}/Build/Products\"\nOBJROOT=\"${DD_ROOT}/Build/Intermediates\"\nmkdir -p \"${SYMROOT}\" \"${OBJROOT}\"\nDEV_DIR=\"${DEVELOPER_DIR:-$(/usr/bin/xcode-select -p)}\"\n/usr/bin/env -i PATH=\"${PATH}\" HOME=\"${HOME}\" USER=\"${USER}\" LANG=\"${LANG:-en_US.UTF-8}\" TMPDIR=\"${TMPDIR:-/tmp}\" DEVELOPER_DIR=\"${DEV_DIR}\" /usr/bin/xcodebuild -project \"${UNITY_PROJ}\" -target UnityFramework -configuration \"${UNITY_CONF}\" -sdk iphoneos -destination \"generic/platform=iOS\" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=\"\" ENABLE_DEBUG_DYLIB=NO SYMROOT=\"${SYMROOT}\" OBJROOT=\"${OBJROOT}\" build\nSRC_FW=\"${SYMROOT}/${UNITY_CONF}-iphoneos/UnityFramework.framework\"\nDST_FW=\"${BUILT_PRODUCTS_DIR}/UnityFramework.framework\"\nif [[ ! -d \"${SRC_FW}\" ]]; then\n  echo \"error: UnityFramework.framework not produced: ${SRC_FW}\"\n  exit 1\nfi\nrm -rf \"${DST_FW}\"\n/usr/bin/ditto \"${SRC_FW}\" \"${DST_FW}\"\necho \"✅ UnityFramework staged: ${DST_FW}\"\n";
 		};
-		C57D6A0A2F1DD7DD0093F898 /* ShellScript */ = {
+		C57D6A0A2F1DD7DD0093F898 /* Embed UnityFramework (Device Only) */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -401,13 +420,14 @@
 			);
 			inputPaths = (
 			);
+			name = "Embed UnityFramework (Device Only)";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellPath = /bin/zsh;
+			shellScript = "\nset -euo pipefail\nif [[ \"${PLATFORM_NAME:-}\" == \"iphonesimulator\" ]]; then\n  echo \"▶︎ Unity: simulator build -> skip embed\"\n  exit 0\nfi\nSRC_FW=\"${BUILT_PRODUCTS_DIR}/UnityFramework.framework\"\nDST_FW=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UnityFramework.framework\"\nif [[ ! -d \"${SRC_FW}\" ]]; then\n  echo \"error: Missing ${SRC_FW}; check Build UnityFramework phase\"\n  exit 1\nfi\nmkdir -p \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nrm -rf \"${DST_FW}\"\n/usr/bin/ditto \"${SRC_FW}\" \"${DST_FW}\"\nif [[ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" && \"${CODE_SIGNING_ALLOWED:-YES}\" != \"NO\" ]]; then\n  /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --preserve-metadata=identifier,entitlements \"${DST_FW}\"\nfi\necho \"✅ UnityFramework embedded: ${DST_FW}\"\n";
 		};
 		C57D6C202F1DDCDB0093F898 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -450,6 +470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */,
+				A20C00012F21000100C0DE01 /* UnityManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +835,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = JobsBySwiftPackageManager/JobsSPMDemoPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10C00042F20000100C0DE01 /* JobsSPMDemoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */;
+			productName = JobsSPMDemoKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C59C652E2F1BFB190060EEAD /* Project object */;
 }

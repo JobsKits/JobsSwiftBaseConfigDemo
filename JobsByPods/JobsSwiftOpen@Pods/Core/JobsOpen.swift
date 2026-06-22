@@ -1,0 +1,66 @@
+//
+//  JobsOpen.swift
+//  JobsSwiftOpen
+//
+
+#if os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import JobsByUIKit
+
+public final class JobsOpen: NSObject {
+
+    public static let shared = JobsOpen()
+
+    @MainActor
+    public func open(
+        _ configuration: JobsOpenConfiguration = JobsOpenConfiguration(),
+        from sourceViewController: UIViewController? = nil
+    ) {
+        switch configuration.mode {
+        case .inApp:
+            openInsideApp(configuration, from: sourceViewController)
+        case .externalBrowser:
+            openInExternalBrowser(configuration)
+        }
+    }
+
+    @MainActor
+    private func openInsideApp(
+        _ configuration: JobsOpenConfiguration,
+        from sourceViewController: UIViewController?
+    ) {
+        let source = sourceViewController ?? topViewController()
+        guard let source else {
+            configuration.completion?(false)
+            return
+        }
+
+        let webViewController = JobsOpenWebViewController(
+            url: configuration.url,
+            pageTitle: configuration.title
+        )
+        if let navigationController = source.navigationController {
+            navigationController.pushViewController(webViewController, animated: configuration.animated)
+        } else {
+            let navigationController = UINavigationController(rootViewController: webViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            source.present(navigationController, animated: configuration.animated)
+        }
+        configuration.completion?(true)
+    }
+
+    @MainActor
+    private func openInExternalBrowser(_ configuration: JobsOpenConfiguration) {
+        guard UIApplication.shared.canOpenURL(configuration.url) else {
+            configuration.completion?(false)
+            return
+        }
+        UIApplication.shared.open(
+            configuration.url,
+            options: [:],
+            completionHandler: configuration.completion
+        )
+    }
+}

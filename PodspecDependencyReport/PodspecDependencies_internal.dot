@@ -13,6 +13,7 @@ digraph PodspecDependencies {
   "JobsCountdownButton";
   "JobsCryptoKit";
   "JobsEmptyView";
+  "JobsFuseAnimation";
   "JobsGestureUnlock";
   "JobsGetWindow";
   "JobsImageTools";
@@ -34,6 +35,8 @@ digraph PodspecDependencies {
   "JobsSwiftDebugTools";
   "JobsSwiftFoundation";
   "JobsSwiftMetalKit";
+  "JobsSwiftOpen";
+  "JobsSwiftSplash";
   "JobsSwiftStandardLibrary";
   "JobsSwiftTaskCenter";
   "JobsSwiftTimer";
@@ -42,6 +45,7 @@ digraph PodspecDependencies {
   "JobsSwiftWorker";
   "JobsTextTools";
   "JobsToast";
+  "JobsViewPush";
   "Jobsl10n";
   "Texture";
   "TextureSwiftSupport";
@@ -83,6 +87,8 @@ digraph PodspecDependencies {
   "JobsEmptyView" -> "JobsSwiftBaseDefines";
   "JobsEmptyView" -> "JobsSwiftBlock";
   "JobsEmptyView" -> "JobsSwiftDSL";
+  "JobsFuseAnimation" -> "JobsSwiftDSL";
+  "JobsFuseAnimation" -> "JobsSwiftTimer";
   "JobsGestureUnlock" -> "JobsByUIKit";
   "JobsGestureUnlock" -> "JobsSwiftBaseDefines";
   "JobsGestureUnlock" -> "JobsSwiftBlock";
@@ -147,6 +153,12 @@ digraph PodspecDependencies {
   "JobsSwiftFoundation" -> "JobsByUIKit";
   "JobsSwiftFoundation" -> "JobsSwiftDSL";
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
+  "JobsSwiftOpen" -> "JobsByUIKit";
+  "JobsSwiftOpen" -> "JobsInheritance";
+  "JobsSwiftSplash" -> "JobsByUIKit";
+  "JobsSwiftSplash" -> "JobsInheritance";
+  "JobsSwiftSplash" -> "JobsSwiftDSL";
+  "JobsSwiftSplash" -> "JobsSwiftOpen";
   "JobsSwiftStandardLibrary" -> "JobsSwiftBaseDefines";
   "JobsSwiftTaskCenter" -> "JobsSwiftTimer";
   "JobsSwiftTimerMgr" -> "JobsSwiftTimer";

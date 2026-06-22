@@ -94,11 +94,15 @@ def byJobs
     pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
     pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
     pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
+    pod 'JobsSwiftOpen',                      :path => 'JobsByPods/JobsSwiftOpen@Pods'
+    pod 'JobsSwiftSplash',                    :path => 'JobsByPods/JobsSwiftSplash@Pods'
+    pod 'JobsFuseAnimation',                  :path => 'JobsByPods/JobsFuseAnimation@Pods'
     pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
     pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
     pod 'JobsSwiftTimerMgr',                  :path => 'JobsByPods/JobsSwiftTimerMgr@Pods'             # https://github.com/JobsKits/JobsSwiftTimerMgr
     pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
     pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
+    pod 'JobsViewPush',                       :path => 'JobsByPods/JobsViewPush@Pods'
     pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
     pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
     pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'

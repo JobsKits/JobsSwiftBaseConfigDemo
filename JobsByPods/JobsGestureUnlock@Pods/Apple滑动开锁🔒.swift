@@ -69,14 +69,15 @@ public class SlideToUnlockView: UIView {
     }()
     /// 轨道内部的“骨架屏效果”闪动条（覆盖整个父视图）
     private lazy var shimmerView: UIView = { [unowned self] in
-        UIView()
+        let view = UIView()
             .byShimmerColors(
                 base: JobsCor.systemGray5,                 // 与轨道底色一致
                 highlight: UIColor.white.withAlphaComponent(0.9)
             )
-            .byAddTo(trackView) { make in
-                make.edges.equalToSuperview()   // 全覆盖，无缝隙
-            }
+        trackView.addSubview(view)
+        view.frame = trackView.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return view
     }()
     /// 中间文字：“滑动以解锁”
     private lazy var titleLabel: UILabel = {
@@ -243,15 +244,17 @@ public class SlideToUnlockView: UIView {
     /// 右->左：到“圆心”为止左侧有呼吸屏
     private func updateShimmerMask() {
         guard isSkeletonEnabled else {
-            shimmerView.layer.mask = nil
+            shimmerView.jobs_setShimmerMask(nil)
             return
         }
 
         layoutIfNeeded()
+        shimmerView.frame = trackView.bounds
+        shimmerView.jobs_updateShimmerLayout()
 
         let trackBounds = trackView.bounds
         guard trackBounds.width > 0, trackBounds.height > 0 else {
-            shimmerView.layer.mask = nil
+            shimmerView.jobs_setShimmerMask(nil)
             return
         }
 
@@ -265,7 +268,7 @@ public class SlideToUnlockView: UIView {
             startX = min(max(startX, 0), trackBounds.width)
             let width = max(trackBounds.width - startX, 0)
             guard width > 0 else {
-                shimmerView.layer.mask = nil
+                shimmerView.jobs_setShimmerMask(nil)
                 return
             };maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
 
@@ -275,7 +278,7 @@ public class SlideToUnlockView: UIView {
             endX = min(max(endX, 0), trackBounds.width)
             let width = max(endX, 0)
             guard width > 0 else {
-                shimmerView.layer.mask = nil
+                shimmerView.jobs_setShimmerMask(nil)
                 return
             };maskRect = CGRect(x: 0, y: 0, width: width, height: trackBounds.height)
         }
@@ -284,7 +287,7 @@ public class SlideToUnlockView: UIView {
         let maskLayer = CAShapeLayer()
         maskLayer.frame = shimmerView.bounds
         maskLayer.path  = path.cgPath
-        shimmerView.layer.mask = maskLayer
+        shimmerView.jobs_setShimmerMask(maskLayer)
     }
 
     private func completeUnlock() {

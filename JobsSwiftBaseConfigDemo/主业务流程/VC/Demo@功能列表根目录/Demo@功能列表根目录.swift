@@ -21,10 +21,12 @@ import JobsRefresher
 import JobsTextTools
 import JobsSwiftTimer
 import JobsSwiftTimerMgr
+import JobsFuseAnimation
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
+import JobsSwiftSplash
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
@@ -37,6 +39,12 @@ final class RootListVC: BaseVC {
 
     private var suspendBtnTimer: JobsSwiftTimerProtocol?
     private var suspendSpinBtnTimer: JobsSwiftTimerProtocol?
+    private var suspendFuseTimer: JobsSwiftTimerProtocol?
+    private var suspendFuseStartTS: CFTimeInterval = 0
+    private var suspendFuseProgress: CGFloat = 0
+
+    /// 长按后吞掉随后可能冒出来的一次 touchUpInside，避免长按结束后误触发短按音效
+    private var suspendFuseLongPressConsumed = false
 
     /// 旧版 onTimerTick 给 elapsed；新版不再给，自己计数即可
     private var spinSeconds: Int = 0
@@ -44,6 +52,7 @@ final class RootListVC: BaseVC {
     deinit {
         suspendBtnTimer?.stop()
         suspendSpinBtnTimer?.stop()
+        suspendFuseTimer?.stop()
         try? timerMgr.remove(identifier: suspendBtnTimerID)
         try? timerMgr.remove(identifier: suspendSpinBtnTimerID)
 
@@ -96,7 +105,7 @@ final class RootListVC: BaseVC {
             ("🐦 Swift ➤ Flutter", FlutterDemoVC.self),
         ]
         #if !targetEnvironment(simulator)
-//        temp.insert(("🚀 Unity", UnityDemoVC.self), at: 0) // 或 append
+        temp.insert(("🚀 Unity", UnityDemoVC.self), at: 0) // 或 append
         #endif
         return temp
     }()
@@ -104,6 +113,9 @@ final class RootListVC: BaseVC {
     private var demo2D: [DemoGroup] = []
     private func makeDemo2D() -> [DemoGroup] {
         return [
+            (title: "Swift Package Manager 集成示例", items: [
+                ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self)
+            ]),
             (title: "JobsSwiftTimer系列衍生产品", items: [
                 ("🐯 节流防抖", JobsWorkerDemoVC.self),
                 ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
@@ -187,6 +199,7 @@ final class RootListVC: BaseVC {
                 ("🌋 普通文本和富文本的融合数据类型", JobsTextDemoVC.self),
             ]),
             (title: "安全推页面（高度自定义）", items: [
+                ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
                 ("⛑️ 支持上下左右安全Push和原路返回", SafetyPushDemoVC.self),
                 ("⛑️ 安全Present", SafetyPresentDemoVC.self),
             ]),
@@ -266,26 +279,47 @@ final class RootListVC: BaseVC {
             .byBackgroundColor(.systemPurple, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
-            // ✅ 长按不松手：外圈一直增长（正计时）——计时用 JobsSwiftTimer
-            .jobs_enablePressFuseCountUp(
-                tickInterval: 1.0 / 60.0,
-                durationToFull: 2.0,          // 2s 走满一圈（想更快/更慢就改这里）
-                loopWhenFull: true,           // 满了继续从 0 再增长
-                config: JobsFuseConfig(
-                    lineWidth: 2,
-                    color: .white,
-                    inset: 0,
-                    removeOnFinish: false,
-                    direction: .clockwise
-                ),
-                onTick: { btn, elapsed, _ in
-                    // 想展示“正计时”就更新标题（可删）
-                    btn.byTitle(String(format: "%.1f", elapsed), for: .normal)
-                },
-                onEnd: { btn, _, _ in
-                    btn.byTitle("按", for: .normal)
+            .byPointerInteractionEnabled(false)
+            .byAccessibilityIdentifier("RootListVC.suspendFuseBtn")
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                // 短按：只播放声音；长按结束后可能冒出来的 tap 直接吞掉
+                guard !self.suspendFuseLongPressConsumed else { return }
+                sender.byFusePlaySystemSound()
+            }
+            .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
+                guard let self else { return }
+                switch gr.state {
+                case .began:
+                    self.suspendFuseLongPressConsumed = true
+                    btn.byFusePressStart(
+                        ringConfig: JobsFuseOuterRingConfig(
+                            lineWidth: 4,
+                            strokeColor: .white,
+                            trackColor: UIColor.white.withAlphaComponent(0.22),
+                            fromOpacity: 1.0,
+                            toOpacity: 1.0,
+                            growDuration: 1.2,
+                            timerInterval: 1.0 / 60.0,
+                            repeatsWhileHolding: false,
+                            fadeOutDuration: 0.18,
+                            inset: 1,
+                            startsFromTop: true
+                        ),
+                        scale: 1.18
+                    )
+
+                case .ended, .cancelled, .failed:
+                    btn.byFusePressStop()
+                    // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
+                        self?.suspendFuseLongPressConsumed = false
+                    }
+
+                default:
+                    break
                 }
-            )
+            }
             // ✅ 悬浮：复用 RootListVC 这套 bySuspend 写法
             .bySuspend { cfg in
                 cfg
@@ -386,6 +420,15 @@ final class RootListVC: BaseVC {
                     print("追加的长按事件")
                 },
             rightButtons: [
+                UIButton.sys()
+                    .bySelected(JobsSplashPreferences.isEnabledForNextLaunch)
+                    .byImage("eye.slash".sysImg, for: .normal)
+                    .byImage("eye".sysImg, for: .selected)
+                    .onTap { sender in
+                        sender.isSelected = JobsSplashPreferences.toggleForNextLaunch()
+                        let message = sender.isSelected ? "下次启动展示开屏" : "下次启动不展示开屏"
+                        message.toast
+                    },
                 UIButton.sys()
                     .byImage("bell".svg(size: CGSize(width: 38, height: 38))?.filled(by: UIColor.red), for: .normal)
                     .byImage("moon.circle.fill".sysImg, for: .selected)

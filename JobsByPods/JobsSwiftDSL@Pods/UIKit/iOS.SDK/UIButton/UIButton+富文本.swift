@@ -13,7 +13,6 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
-
 // MARK: - UIButton@富文本
 extension UIButton {
     @discardableResult

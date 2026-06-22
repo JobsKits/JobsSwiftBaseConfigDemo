@@ -105,7 +105,8 @@ find_brew_bin() {
   fi
 }
 
-ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+# 当前脚本位于 `ScriptsByPods/脚本名/脚本本体`，上溯两级才是工程根目录。
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UNITY_ROOT="${ROOT_DIR}/Unity"
 TARGET_REL="xcode_effectTest/Libraries/【MacOS】🧩子卷➤合而为一源文件.command"
 TARGET_PATH="${UNITY_ROOT}/${TARGET_REL}"

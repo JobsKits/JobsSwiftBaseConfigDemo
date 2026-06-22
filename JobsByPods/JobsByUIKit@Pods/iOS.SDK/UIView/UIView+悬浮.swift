@@ -254,7 +254,7 @@ extension UIView {
                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                 )
             }
-            // ✅ 关键：解决 “悬浮 pan” 与 “外圈长按 longPress(min=0)” 的冲突
+            // 悬浮模块只管理自己的 Pan，不接管外部手势的 delegate。
             _enableSimultaneousPanWithLongPress(pan)
         }
         // 8) 标记
@@ -298,16 +298,9 @@ extension UIView {
 
     private func _enableSimultaneousPanWithLongPress(_ pan: UIPanGestureRecognizer) {
         let d = _suspendGestureDelegate()
-        // pan 自己挂 delegate（允许与 longPress 同时识别）
+        // 任一手势的 delegate 返回 true 即可允许同时识别。
         pan.delegate = d
         pan.cancelsTouchesInView = false
-        // 同一个 view 上如果已经存在 longPress（比如你 fuse 的 longPress），且 delegate 为空，就也挂上同一个 delegate
-        // 这样系统在询问 “是否允许同时识别” 时，两边都会返回 true，拖拽就不会被 longPress 抢死。
-        gestureRecognizers?.forEach { gr in
-            if let lp = gr as? UILongPressGestureRecognizer, lp.delegate == nil {
-                lp.delegate = d
-            }
-        }
     }
     /// 根据 start & 可用区域推导初始 origin
     private func _origin(for start: Start, size: CGSize, in bounds: CGRect) -> CGPoint {

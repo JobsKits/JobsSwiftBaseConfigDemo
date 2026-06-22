@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T1["method:chunked_allocator::DecodeBlockIndex<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:491"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMainThreadDeallocation.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMainThreadDeallocation.mm:1"]
+  T1["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S1 -->|calls| T1
-  S2["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T2["method:chunked_allocator::SetBlockUsed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:524"]
+  S2["method:ASMapNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:40"]
+  T2["method:ASMapNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:40"]
   S2 -->|calls| T2
-  S3["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T3["method:chunked_allocator::DecodeBlockPosition<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:492"]
+  S3["method:ASMapNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:40"]
+  T3["function:ASDisplayNodeDefaultPlaceholderColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:305"]
   S3 -->|calls| T3
-  S4["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T4["method:chunked_allocator::DecodeBlockIndex<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:491"]
+  S4["method:ASMapNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:56"]
+  T4["method:ASMapNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:56"]
   S4 -->|calls| T4
-  S5["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T5["method:chunked_allocator::DecodeBlockIndex<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:491"]
+  S5["method:ASMapNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:56"]
+  T5["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
   S5 -->|calls| T5
-  S6["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
-  T6["method:chunked_allocator::DeallocImpl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:607"]
+  S6["method:ASMapNode::dealloc<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:64"]
+  T6["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
   S6 -->|calls| T6
-  S7["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:352"]
-  T7["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
+  S7["method:ASMapNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:75"]
+  T7["method:ASMapNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:75"]
   S7 -->|calls| T7
-  S8["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:352"]
-  T8["method:<anonymous>::block_index_of<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:187"]
+  S8["method:ASMapNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:75"]
+  T8["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S8 -->|calls| T8
-  S9["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T9["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
+  S9["method:ASMapNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:75"]
+  T9["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
   S9 -->|calls| T9
-  S10["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T10["method:chunked_allocator::AlignSize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:620"]
+  S10["method:ASMapNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:75"]
+  T10["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S10 -->|calls| T10
-  S11["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T11["method:chunked_allocator::AlignSize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:620"]
+  S11["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
+  T11["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
   S11 -->|calls| T11
-  S12["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T12["method:chunked_allocator::DeallocImpl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:607"]
+  S12["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
+  T12["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S12 -->|calls| T12
-  S13["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T13["method:chunked_allocator::allocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:271"]
+  S13["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
+  T13["method:ASMapNode::removeLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:316"]
   S13 -->|calls| T13
-  S14["method:chunked_allocator::reallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:359"]
-  T14["method:chunked_allocator::DeallocImpl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:607"]
+  S14["method:ASMapNode::setLiveMap:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:105"]
+  T14["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
   S14 -->|calls| T14
-  S15["method:chunked_allocator::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:384"]
-  T15["method:chunked_allocator::DeallocImpl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:607"]
+  S15["method:ASMapNode::setLiveMap:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:105"]
+  T15["method:ASMapNode::removeLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:316"]
   S15 -->|calls| T15
-  S16["method:chunked_allocator::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:384"]
-  T16["method:<anonymous>::block_index_of<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:187"]
+  S16["method:ASMapNode::options<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:130"]
+  T16["method:ASMapNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:40"]
   S16 -->|calls| T16
-  S17["method:chunked_allocator::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:384"]
-  T17["method:chunked_allocator::AlignSize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:620"]
+  S17["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
+  T17["method:ASMapNode::applySnapshotOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:285"]
   S17 -->|calls| T17
-  S18["method:chunked_allocator::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:392"]
-  T18["method:chunked_allocator::DeallocImpl<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:607"]
+  S18["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
+  T18["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
   S18 -->|calls| T18
-  S19["method:chunked_allocator::deallocate<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:392"]
-  T19["method:chunked_allocator::AlignSize<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:620"]
+  S19["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
+  T19["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S19 -->|calls| T19
-  S20["method:chunked_allocator::deallocate_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:400"]
-  T20["method:chunked_allocator::capacity<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:459"]
+  S20["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  T20["method:ASMapNode::setUpSnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:274"]
   S20 -->|calls| T20
-  S21["method:chunked_allocator::deallocate_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:400"]
-  T21["method:chunked_allocator::IsBlockUsed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:523"]
+  S21["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  T21["function:ASGraphicsCreateImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASGraphicsContext.mm:35"]
   S21 -->|calls| T21
-  S22["method:chunked_allocator::deallocate_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:400"]
-  T22["method:chunked_allocator::IsBlockReserved<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:526"]
+  S22["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
+  T22["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S22 -->|calls| T22
-  S23["method:chunked_allocator::deallocate_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:400"]
-  T23["method:<anonymous>::deallocate_block<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:175"]
+  S23["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
+  T23["method:ASMapNode::applySnapshotOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:285"]
   S23 -->|calls| T23
-  S24["method:chunked_allocator::deallocate_all<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:400"]
-  T24["method:chunked_allocator::EncodeBlockIndex<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:490"]
+  S24["method:ASMapNode::setAnnotations:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:328"]
+  T24["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S24 -->|calls| T24
-  S25["method:chunked_allocator::reserve<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:417"]
-  T25["method:chunked_allocator::IsBlockUsed<br/>TODO/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Cpp/Internal/chunked_allocator.inl.h:523"]
+  S25["method:ASMapNode::setSnapshotSizeWithReloadIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:386"]
+  T25["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
   S25 -->|calls| T25
 ```
 

@@ -1,0 +1,35 @@
+{
+  "title": "Swift Package Manager 综合演示",
+  "features": [
+    {
+      "id": "library",
+      "title": "Library Product",
+      "detail": "把可复用 Swift API 作为独立 Library Product 接入 App。"
+    },
+    {
+      "id": "resource",
+      "title": "Resource Bundle",
+      "detail": "使用 Bundle.module 读取 Package 内 JSON 资源。"
+    },
+    {
+      "id": "concurrency",
+      "title": "Swift Concurrency",
+      "detail": "通过 actor 隔离可变状态并执行异步查询。"
+    },
+    {
+      "id": "generic",
+      "title": "Generic API",
+      "detail": "用泛型格式化器处理不同 Collection。"
+    },
+    {
+      "id": "macro",
+      "title": "Swift Macro",
+      "detail": "使用 @EquatableBy 自动生成 Equatable 与 Hashable。"
+    },
+    {
+      "id": "testing",
+      "title": "Swift Testing",
+      "detail": "通过 swift test 验证资源、并发与宏行为。"
+    }
+  ]
+}

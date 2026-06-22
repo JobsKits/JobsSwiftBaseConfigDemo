@@ -1,0 +1,488 @@
+{
+
+"Instructions Readme": "1) Open Chrome or Edge, 2) go to chrome://tracing, 3) click Load, 4) navigate to this file.",
+"processInfo": {
+    "os": "Unix 26.5.1",
+    "cpuCount": "10",
+    "mappedPhysicalMemory": "145mb",
+    "commandLine": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/build/deploy_arm64/il2cpp.dll --compile-cpp --platform=iOS --baselib-directory=/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Libraries --additional-defines=IL2CPP_DEBUG=0 --incremental-g-c-time-slice=3 --dotnetprofile=unityaot-macos --profiler-report --print-command-line --external-lib-il2-cpp=/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Libraries/libil2cpp.a --generatedcppdir=Il2CppOutputProject/Source/il2cppOutput --architecture=arm64 --outputpath=/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Products/Release-iphoneos/libGameAssembly.a --cachedirectory=/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Intermediates/Unity-iPhone.build/Release-iphoneos/artifacts/arm64 --configuration=Release"
+},
+
+"traceEvents":[
+{ "pid": 47968, "tid": -1, "ph": "M", "name": "process_name", "args": { "name": "il2cpp_outer" } },
+{ "pid": 47968, "tid": -1, "ph": "M", "name": "process_sort_index", "args": { "sort_index": "-1" } },
+{ "pid": 47968, "tid": 12884901888, "ph": "M", "name": "thread_name", "args": { "name": "GC - Gen2" } },
+{ "pid": 47968, "tid": 12884901888, "ts": 1782049592412285, "dur": 7316, "ph": "X", "name": "GC - Gen 2", "args": {"Reason": "LOH allocation", "Type": "Blocking GC"} },
+{ "pid": 47968, "tid": 12884901888, "ts": 1782049598904678, "dur": 17881, "ph": "X", "name": "GC - Gen 2", "args": {"Reason": "LOH allocation", "Type": "Background GC"} },
+{ "pid": 47968, "tid": 8589934592, "ph": "M", "name": "thread_name", "args": { "name": "GC - Gen1" } },
+{ "pid": 47968, "tid": 4294967296, "ph": "M", "name": "thread_name", "args": { "name": "GC - Gen0" } },
+{ "pid": 47968, "tid": 1, "ph": "M", "name": "thread_name", "args": { "name": "Main thread" } },
+{ "pid": 47968, "tid": 1, "ts": 1782049585994633, "dur": 13901157, "ph": "X", "name": "il2cpp.exe", "args": {"analytics": "1"} },
+{ "pid": 47968, "tid": 1, "ts": 1782049585995516, "dur": 27659, "ph": "X", "name": "ParseArguments", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586023178, "dur": 3864, "ph": "X", "name": "RegisterRuntimeEventListeners", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586035255, "dur": 13825043, "ph": "X", "name": "BeeDriverRunner.ExecuteIl2Cpp", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599862134, "dur": 32797, "ph": "X", "name": "Write Analytics", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599895791, "dur": 10936, "ph": "X", "name": "UnregisterRuntimeEventListeners", "args": {} },
+{ "pid": 47968, "tid": -1, "ph": "M", "name": "process_name", "args": { "name": "BeeDriver" } },
+{ "pid": 47968, "tid": -1, "ph": "M", "name": "process_sort_index", "args": { "sort_index": "-2" } },
+{ "pid": 47968, "tid": 1, "ph": "M", "name": "thread_name", "args": { "name": "Main thread" } },
+{ "pid": 47968, "tid": 1, "ts": 1782049586082325, "dur": 13772923, "ph": "X", "name": "Build FinalProgram", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586083299, "dur": 4719, "ph": "X", "name": "Writing build program input data", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586088027, "dur": 35564, "ph": "X", "name": "Running build system backend", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586123603, "dur": 533622, "ph": "X", "name": "Running build program", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049586657228, "dur": 13197975, "ph": "X", "name": "Running build system backend", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599855220, "dur": 28, "ph": "X", "name": "Finishing", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599858786, "dur": 774, "ph": "X", "name": "Main thread", "args": {} },
+{ "pid": 35942, "tid": -1, "ph": "M", "name": "process_name", "args": { "name": "il2cpp.dll" } },
+{ "pid": 35942, "tid": -1, "ph": "M", "name": "process_sort_index", "args": { "sort_index": "-1" } },
+{ "pid": 35942, "tid": 1, "ph": "M", "name": "thread_name", "args": { "name": "Main thread" } },
+{ "pid": 35942, "tid": 1, "ts": 1782049586137015, "dur": 514582, "ph": "X", "name": "BuildProgram", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586137018, "dur": 53308, "ph": "X", "name": "BuildProgramContextConstructor", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586247641, "dur": 4870, "ph": "X", "name": "SetupConversion", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586546690, "dur": 87096, "ph": "X", "name": "AppPackage.Setup", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586548018, "dur": 79435, "ph": "X", "name": "GeneratedCode.SetupSpecificConfiguration", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586548489, "dur": 78849, "ph": "X", "name": "SetupSpecificConfigImpl libGameAssembly", "args": {"info": "release_iOS_arm64"} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586638691, "dur": 2250, "ph": "X", "name": "OutputData.Write", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586640942, "dur": 10655, "ph": "X", "name": "Backend.Write", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586641798, "dur": 9451, "ph": "X", "name": "JsonToString", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586654822, "dur": 1283, "ph": "X", "name": "Main thread", "args": {} },
+{ "pid": 35942, "tid": 1, "ts": 1782049586654577, "dur": 1656, "ph": "X", "name": "Write chrome-trace events", "args": {} },
+{ "cat":"", "pid":12345, "tid":0, "ts":0, "ph":"M", "name":"process_name", "args": { "name":"bee_backend" } }
+,{ "pid":12345, "tid":0, "ts":1782049586686331, "dur":8036, "ph":"X", "name": "DriverInitData",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":0, "ts":1782049586694382, "dur":63, "ph":"X", "name": "BuildQueueInit",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":0, "ts":1782049586694449, "dur":51, "ph":"X", "name": "EnqueueRequestedNodes",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":0, "ts":1782049586694500, "dur":13123873, "ph":"X", "name": "WaitForBuildFinished", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":0, "ts":1782049599818423, "dur":4122, "ph":"X", "name": "Tundra",  "args": { "detail":"Write AllBuiltNodes" }}
+,{ "pid":12345, "tid":0, "ts":1782049599822545, "dur":145, "ph":"X", "name": "Tundra",  "args": { "detail":"SaveScanCache" }}
+,{ "pid":12345, "tid":1, "ts":1782049586694397, "dur":107, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049586694504, "dur":5699, "ph":"X", "name": "CheckDagSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049586700439, "dur":156, "ph":"X", "name": "WriteText",  "args": { "detail":"z7ln/_dummy_for_header_discovery" }}
+,{ "pid":12345, "tid":1, "ts":1782049586700597, "dur":253, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/GenericMethods.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049586700850, "dur":43057, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/GenericMethods.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049586743936, "dur":224804, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":1, "ts":1782049586968749, "dur":113, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/utils/NonCopyable.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586969726, "dur":580, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/metadata/Il2CppGenericInstCompare.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586970308, "dur":332, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Baselib_ErrorCode.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586970641, "dur":106, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/google/sparsehash/sparsetable.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586970781, "dur":89, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/vm/Thread.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586970871, "dur":50, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/gc/WriteBarrier.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586972236, "dur":1074, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/os/Event.h" }}
+,{ "pid":12345, "tid":1, "ts":1782049586968747, "dur":4868, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049586700596, "dur":273020, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/c0ga3kl39o7k.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049586973632, "dur":2892286, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/c0ga3kl39o7k.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049589865983, "dur":1806, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__2.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049589867790, "dur":1018, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__2.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049589868815, "dur":210, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049589865981, "dur":3044, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/2pzphl571fz8.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049589869045, "dur":2382928, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/2pzphl571fz8.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049592252050, "dur":1767, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__10.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049592253818, "dur":4669, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__10.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049592258492, "dur":266, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049592252048, "dur":6710, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/577njvp0r5hk.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049592258772, "dur":3812274, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/577njvp0r5hk.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049596071107, "dur":2088, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049596073196, "dur":1402, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics.cpp" }}
+,{ "pid":12345, "tid":1, "ts":1782049596074604, "dur":208, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":1, "ts":1782049596071105, "dur":3707, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/5t7grwfew8w5.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049596074832, "dur":3618096, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/5t7grwfew8w5.o" }}
+,{ "pid":12345, "tid":1, "ts":1782049599692975, "dur":140, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"Lib_iOS_arm64 z7ln/libGameAssembly.a" }}
+,{ "pid":12345, "tid":1, "ts":1782049599693124, "dur":124916, "ph":"X", "name": "Lib_iOS_arm64",  "args": { "detail":"z7ln/libGameAssembly.a" }}
+,{ "pid":12345, "tid":1, "ts":1782049599818080, "dur":221, "ph":"X", "name": "CopyFiles",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Products/Release-iphoneos/libGameAssembly.a" }}
+,{ "pid":12345, "tid":2, "ts":1782049586694401, "dur":106, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049586694538, "dur":5668, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049586700486, "dur":128, "ph":"X", "name": "WriteText",  "args": { "detail":"z7ln/libGameAssembly.objectfiles" }}
+,{ "pid":12345, "tid":2, "ts":1782049586700615, "dur":109, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System_CodeGen.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049586700724, "dur":7664, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System_CodeGen.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049586708408, "dur":265638, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":2, "ts":1782049586700614, "dur":273445, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/0gn985r99z6x.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049586974066, "dur":71784, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/0gn985r99z6x.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587045929, "dur":638, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppRgctxTable.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049587046567, "dur":103, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppRgctxTable.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049587045928, "dur":763, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/x4byn78a46sb.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587046697, "dur":86354, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/x4byn78a46sb.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587133098, "dur":2045, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericAdjustorThunkTable.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049587135144, "dur":97, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericAdjustorThunkTable.c" }}
+,{ "pid":12345, "tid":2, "ts":1782049587133096, "dur":2162, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/elew6qsx95a7.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587135268, "dur":88852, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/elew6qsx95a7.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587224161, "dur":381, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.ParticleSystemModule.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049587224542, "dur":1518, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.ParticleSystemModule.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049587226066, "dur":203, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049587224159, "dur":2111, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/9f8zc99bbn0z.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587226286, "dur":693925, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/9f8zc99bbn0z.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587920263, "dur":535, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Core.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049587920798, "dur":341, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Core.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049587921144, "dur":197, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049587920261, "dur":1080, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/zmpq1pb37lyi.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049587921359, "dur":682939, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/zmpq1pb37lyi.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049588604381, "dur":4039, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__6.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049588608420, "dur":1634, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__6.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049588610059, "dur":286, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049588604379, "dur":5966, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/a1azhzuzfwk6.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049588610358, "dur":2803396, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/a1azhzuzfwk6.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049591413830, "dur":2071, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__14.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049591415902, "dur":1721, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__14.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049591417628, "dur":275, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049591413828, "dur":4075, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/xq24e3cr47xl.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049591417918, "dur":3317275, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/xq24e3cr47xl.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049594735251, "dur":6261, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCFieldValuesTable.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049594741513, "dur":280, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCFieldValuesTable.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049594741798, "dur":173, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049594735249, "dur":6722, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/ztz76nm4zp4f.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049594741986, "dur":855316, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/ztz76nm4zp4f.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049595597388, "dur":11314, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__4.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049595608703, "dur":1027, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__4.cpp" }}
+,{ "pid":12345, "tid":2, "ts":1782049595609736, "dur":181, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":2, "ts":1782049595597386, "dur":12532, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/5zx1gw8b40ub.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049595609933, "dur":3196816, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/5zx1gw8b40ub.o" }}
+,{ "pid":12345, "tid":2, "ts":1782049598806802, "dur":1011560, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049586694408, "dur":103, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049586694511, "dur":5744, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049586700256, "dur":234, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule_CodeGen.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049586700491, "dur":7713, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule_CodeGen.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049586708205, "dur":105259, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":3, "ts":1782049586813466, "dur":802, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool" }}
+,{ "pid":12345, "tid":3, "ts":1782049586814271, "dur":262, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049586700256, "dur":114278, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/bnw9q6iw9mfi.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049586814543, "dur":240401, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/bnw9q6iw9mfi.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587054971, "dur":119, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppMetadataRegistration.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049587055091, "dur":50, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppMetadataRegistration.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049587054970, "dur":187, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/5lonxqvfxtcv.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587055176, "dur":61743, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/5lonxqvfxtcv.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587117030, "dur":864, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericClassTable.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049587117894, "dur":117, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericClassTable.c" }}
+,{ "pid":12345, "tid":3, "ts":1782049587117028, "dur":1001, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/ixq5e1hajo0f.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587118037, "dur":75460, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/ixq5e1hajo0f.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587193526, "dur":286, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/__Generated.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049587193812, "dur":166, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/__Generated.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049587193981, "dur":112, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049587193524, "dur":569, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/s4uzvm4qa9b1.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587194100, "dur":579313, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/s4uzvm4qa9b1.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587773903, "dur":254, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityClassRegistration.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049587773901, "dur":306, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/5l0mnvbg4oyd.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587774219, "dur":55442, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/5l0mnvbg4oyd.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587829719, "dur":4456, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System__1.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049587834176, "dur":993, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System__1.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049587835174, "dur":208, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049587829717, "dur":5666, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/r1wj1puqwq7z.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049587835393, "dur":1867174, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/r1wj1puqwq7z.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049589702649, "dur":2104, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__3.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049589704753, "dur":1569, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__3.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049589706328, "dur":256, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049589702648, "dur":3936, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/3xj610l65hgo.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049589706615, "dur":4003895, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/3xj610l65hgo.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049593710587, "dur":1098, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppUnresolvedIndirectCallStubs.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049593711686, "dur":333, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppUnresolvedIndirectCallStubs.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049593712024, "dur":184, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049593710585, "dur":1623, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/52p7uskmss17.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049593712224, "dur":1194762, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/52p7uskmss17.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049594907045, "dur":1673, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCalculateTypeValues.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049594908718, "dur":737, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCalculateTypeValues.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049594909460, "dur":184, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049594907043, "dur":2602, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/k0fz4ap7pzmk.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049594909658, "dur":778704, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/k0fz4ap7pzmk.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049595688420, "dur":1920, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__3.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049595690341, "dur":1093, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__3.cpp" }}
+,{ "pid":12345, "tid":3, "ts":1782049595691440, "dur":209, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":3, "ts":1782049595688418, "dur":3232, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/kkud1mue1cjs.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049595698863, "dur":3118319, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/kkud1mue1cjs.o" }}
+,{ "pid":12345, "tid":3, "ts":1782049598817240, "dur":1001090, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049586694410, "dur":105, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049586694515, "dur":5718, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049586700244, "dur":95, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.PropertiesModule_CodeGen.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049586700339, "dur":8131, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.PropertiesModule_CodeGen.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049586708471, "dur":204710, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":4, "ts":1782049586700243, "dur":212958, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/b8ocyng7o43u.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049586913214, "dur":125917, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/b8ocyng7o43u.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587039335, "dur":103, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Mono.Security_CodeGen.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049587039438, "dur":89, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Mono.Security_CodeGen.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049587039334, "dur":218, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/s4dspvf7so4z.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587039559, "dur":60777, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/s4dspvf7so4z.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587100354, "dur":2351, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodPointerTable.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049587102705, "dur":380, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodPointerTable.c" }}
+,{ "pid":12345, "tid":4, "ts":1782049587100353, "dur":2760, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/ysm221ug2tkt.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587103123, "dur":140145, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/ysm221ug2tkt.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587243297, "dur":917, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.GameCenterModule.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049587244214, "dur":280, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.GameCenterModule.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049587244638, "dur":165, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/C/Baselib_Timer.h" }}
+,{ "pid":12345, "tid":4, "ts":1782049587244497, "dur":320, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049587243296, "dur":1521, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/b00q89sv1tng.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049587244828, "dur":997286, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/b00q89sv1tng.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049588242174, "dur":1937, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__9.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049588244112, "dur":1984, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__9.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049588246100, "dur":316, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049588242172, "dur":4244, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/h41rxx3spapo.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049588246428, "dur":3584870, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/h41rxx3spapo.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049591831350, "dur":6432, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__11.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049591837783, "dur":1265, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__11.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049591839061, "dur":210, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049591831348, "dur":7923, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/qnbcz43xutt3.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049591839291, "dur":2734404, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/qnbcz43xutt3.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049594573761, "dur":1848, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCTypeValuesTable.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049594575610, "dur":277, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCTypeValuesTable.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049594575892, "dur":183, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049594573759, "dur":2317, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/78ixh3feojwt.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049594576092, "dur":671401, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/78ixh3feojwt.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049595247548, "dur":1873, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__5.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049595249421, "dur":1103, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__5.cpp" }}
+,{ "pid":12345, "tid":4, "ts":1782049595250530, "dur":206, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":4, "ts":1782049595247546, "dur":3190, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/67hi1bpa82br.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049595250753, "dur":3992560, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/67hi1bpa82br.o" }}
+,{ "pid":12345, "tid":4, "ts":1782049599243374, "dur":574994, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049586694420, "dur":96, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049586694516, "dur":5719, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049586700245, "dur":186, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.ParticleSystemModule_CodeGen.c" }}
+,{ "pid":12345, "tid":5, "ts":1782049586700431, "dur":7782, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.ParticleSystemModule_CodeGen.c" }}
+,{ "pid":12345, "tid":5, "ts":1782049586708214, "dur":265497, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":5, "ts":1782049586700244, "dur":273487, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/pxj5oze6tnd8.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049586973742, "dur":72086, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/pxj5oze6tnd8.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587046037, "dur":1220, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppMetadataUsage.c" }}
+,{ "pid":12345, "tid":5, "ts":1782049587047257, "dur":351, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppMetadataUsage.c" }}
+,{ "pid":12345, "tid":5, "ts":1782049587046036, "dur":1599, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/7486i4tfi7hj.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587047646, "dur":197037, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/7486i4tfi7hj.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587244723, "dur":163, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049587244886, "dur":123, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049587245012, "dur":100, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049587244721, "dur":391, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/syhfrd0bs4zc.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587245120, "dur":626992, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/syhfrd0bs4zc.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587872173, "dur":1651, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049587873825, "dur":835, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049587874664, "dur":158, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049587872172, "dur":2651, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/85qmzvaj1fz1.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049587874837, "dur":2600070, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/85qmzvaj1fz1.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049590474990, "dur":1475, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__17.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049590476465, "dur":1314, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__17.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049590477784, "dur":254, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049590474989, "dur":3050, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/4ttxu1lkem23.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049590478050, "dur":1861819, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/4ttxu1lkem23.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049592339921, "dur":1715, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049592341637, "dur":2169, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049592343813, "dur":449, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049592339919, "dur":4343, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/y5anw4bm33jx.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049592344276, "dur":3402251, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/y5anw4bm33jx.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049595746572, "dur":11765, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__1.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049595758338, "dur":6897, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__1.cpp" }}
+,{ "pid":12345, "tid":5, "ts":1782049595765241, "dur":229, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":5, "ts":1782049595746570, "dur":18901, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/yw680xziumqt.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049595765496, "dur":2954122, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/yw680xziumqt.o" }}
+,{ "pid":12345, "tid":5, "ts":1782049598719680, "dur":1098674, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049586694422, "dur":96, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049586694518, "dur":5704, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049586700240, "dur":196, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.SharedInternalsModule_CodeGen.c" }}
+,{ "pid":12345, "tid":6, "ts":1782049586700436, "dur":7932, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.SharedInternalsModule_CodeGen.c" }}
+,{ "pid":12345, "tid":6, "ts":1782049586708369, "dur":265611, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":6, "ts":1782049586700236, "dur":273759, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/7z7awm422gee.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049586974003, "dur":71819, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/7z7awm422gee.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049587045869, "dur":1862, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppTypeDefinitions.c" }}
+,{ "pid":12345, "tid":6, "ts":1782049587047732, "dur":808, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppTypeDefinitions.c" }}
+,{ "pid":12345, "tid":6, "ts":1782049587045868, "dur":2699, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/71oh78oc9gma.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049587048580, "dur":316919, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/71oh78oc9gma.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049587365561, "dur":540, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.AudioModule.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049587366101, "dur":202, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.AudioModule.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049587366306, "dur":142, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049587365559, "dur":889, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/wustraateffd.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049587366470, "dur":646613, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/wustraateffd.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049588013133, "dur":374, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Configuration.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049588013507, "dur":235, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Configuration.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049588013747, "dur":163, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049588013131, "dur":779, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/oka9bl1boe6h.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049588013921, "dur":591855, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/oka9bl1boe6h.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049588605838, "dur":4059, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__5.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049588609897, "dur":4569, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__5.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049588614471, "dur":426, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049588605836, "dur":9061, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/9sqixje1bu3q.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049588614908, "dur":3003656, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/9sqixje1bu3q.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049591618627, "dur":2149, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__13.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049591620777, "dur":4257, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__13.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049591625343, "dur":3420, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/os/c-api/WaitStatus-c-api.h" }}
+,{ "pid":12345, "tid":6, "ts":1782049591628812, "dur":96, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/mscorlib/System.Reflection/RuntimeMethodInfo.h" }}
+,{ "pid":12345, "tid":6, "ts":1782049591625040, "dur":4040, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049591618625, "dur":10456, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/cbzgztyt1jm2.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049591629103, "dur":3287770, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/cbzgztyt1jm2.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049594916933, "dur":1730, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCalculateFieldValues.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049594918664, "dur":655, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCCalculateFieldValues.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049594919324, "dur":171, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049594916931, "dur":2564, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/6ehlxjrwbtif.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049594919509, "dur":779130, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/6ehlxjrwbtif.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049595698702, "dur":1902, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__2.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049595700605, "dur":1049, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__2.cpp" }}
+,{ "pid":12345, "tid":6, "ts":1782049595701659, "dur":170, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":6, "ts":1782049595698700, "dur":3130, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/z4qpldghyo78.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049595701843, "dur":3026183, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/z4qpldghyo78.o" }}
+,{ "pid":12345, "tid":6, "ts":1782049598728081, "dur":1090303, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049586694430, "dur":115, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049586694546, "dur":5670, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049586700226, "dur":182, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine_CodeGen.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049586700409, "dur":7894, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine_CodeGen.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049586708305, "dur":198576, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":7, "ts":1782049586700223, "dur":206680, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/kx87rkojysdg.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049586906918, "dur":131537, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/kx87rkojysdg.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587038485, "dur":784, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Core_CodeGen.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049587039269, "dur":149, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Core_CodeGen.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049587038483, "dur":964, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/r5dfiekaj791.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587039457, "dur":60580, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/r5dfiekaj791.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587100095, "dur":651, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodTable.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049587100746, "dur":540, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodTable.c" }}
+,{ "pid":12345, "tid":7, "ts":1782049587100093, "dur":1211, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/31hwx3vxrh52.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587101312, "dur":110826, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/31hwx3vxrh52.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587212173, "dur":392, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.SharedInternalsModule.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049587212566, "dur":183, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.SharedInternalsModule.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049587212752, "dur":109, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049587212171, "dur":690, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/7a5g9gngh3xv.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587212870, "dur":631212, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/7a5g9gngh3xv.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587844166, "dur":238, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Xml.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049587844404, "dur":208, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Xml.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049587844616, "dur":163, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049587844164, "dur":615, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/l51ju6bwuhwa.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049587844790, "dur":622956, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/l51ju6bwuhwa.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049588467807, "dur":1702, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__7.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049588469509, "dur":4618, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__7.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049588474133, "dur":686, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049588467805, "dur":7015, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/vgenx88wikwp.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049588474832, "dur":3291558, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/vgenx88wikwp.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049591766464, "dur":1958, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__12.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049591768422, "dur":1398, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__12.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049591769826, "dur":268, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049591766462, "dur":3633, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/b3e0eeivxh5m.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049591770106, "dur":2773551, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/b3e0eeivxh5m.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049594543732, "dur":393, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCodeRegistration.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049594544125, "dur":246, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppCodeRegistration.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049594544376, "dur":183, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049594543730, "dur":830, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/rsna1651jijs.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049594544574, "dur":682841, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/rsna1651jijs.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049595227469, "dur":1691, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__6.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049595229161, "dur":810, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__6.cpp" }}
+,{ "pid":12345, "tid":7, "ts":1782049595229976, "dur":185, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":7, "ts":1782049595227467, "dur":2695, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/rnl6gl37arna.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049595230176, "dur":3784182, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/rnl6gl37arna.o" }}
+,{ "pid":12345, "tid":7, "ts":1782049599014421, "dur":803959, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049586694438, "dur":105, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049586694543, "dur":5709, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049586700253, "dur":113, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.GameCenterModule_CodeGen.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049586700366, "dur":7861, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.GameCenterModule_CodeGen.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049586708228, "dur":150430, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":8, "ts":1782049586700252, "dur":158429, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/7px14z0q8kdy.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049586858697, "dur":179552, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/7px14z0q8kdy.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587038299, "dur":225, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Xml_CodeGen.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049587038524, "dur":54, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Xml_CodeGen.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049587038297, "dur":297, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/dsh12s4m5anb.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587038601, "dur":64781, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/dsh12s4m5anb.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587103406, "dur":570, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodDefinitions.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049587103976, "dur":193, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericMethodDefinitions.c" }}
+,{ "pid":12345, "tid":8, "ts":1782049587103405, "dur":789, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/xj2ji0ecldaz.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587104202, "dur":91708, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/xj2ji0ecldaz.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587195953, "dur":336, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityICallRegistration.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049587195952, "dur":380, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/8os98bqe8veo.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587196352, "dur":57179, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/8os98bqe8veo.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587253577, "dur":2132, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049587255709, "dur":485, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049587256199, "dur":195, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049587253575, "dur":2819, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/o9oj8q1wvtiy.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049587256405, "dur":1684123, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/o9oj8q1wvtiy.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049588940592, "dur":2087, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__4.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049588942680, "dur":1692, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__4.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049588944402, "dur":56, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/mscorlib/System/Array.h" }}
+,{ "pid":12345, "tid":8, "ts":1782049588944378, "dur":294, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049588940591, "dur":4082, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/odnuha0385r7.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049588944686, "dur":3353322, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/odnuha0385r7.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049592298069, "dur":1966, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049592300035, "dur":1530, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049592301571, "dur":241, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049592298067, "dur":3745, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/haw11brazrnp.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049592301824, "dur":3790469, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/haw11brazrnp.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049596092344, "dur":2791, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/GenericMethods__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049596095135, "dur":1066, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/GenericMethods__1.cpp" }}
+,{ "pid":12345, "tid":8, "ts":1782049596096284, "dur":2349, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/baselib/Include/Internal/VerifyPlatformEnvironment.h" }}
+,{ "pid":12345, "tid":8, "ts":1782049596096207, "dur":2545, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":8, "ts":1782049596092342, "dur":6411, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/buwotpy3gpjs.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049596098769, "dur":3202070, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/buwotpy3gpjs.o" }}
+,{ "pid":12345, "tid":8, "ts":1782049599300893, "dur":517483, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049586694440, "dur":109, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049586694549, "dur":5664, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049586700260, "dur":7969, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/__Generated_CodeGen.c" }}
+,{ "pid":12345, "tid":9, "ts":1782049586708248, "dur":122696, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":9, "ts":1782049586700220, "dur":130767, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/0ng6z549liiu.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049586831005, "dur":207662, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/0ng6z549liiu.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587038684, "dur":367, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/System.Configuration_CodeGen.c" }}
+,{ "pid":12345, "tid":9, "ts":1782049587039098, "dur":66, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049587038683, "dur":482, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/c8h66p4ig5km.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587039166, "dur":96, "ph":"X", "name": "StoreTimestampsOfNonGeneratedInputFiles",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049587039274, "dur":69244, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/c8h66p4ig5km.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587108566, "dur":1916, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericInstDefinitions.c" }}
+,{ "pid":12345, "tid":9, "ts":1782049587110482, "dur":221, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppGenericInstDefinitions.c" }}
+,{ "pid":12345, "tid":9, "ts":1782049587108564, "dur":2169, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/sztmh4j5rins.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587110752, "dur":111170, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/sztmh4j5rins.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587221982, "dur":1040, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.PropertiesModule.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049587223022, "dur":268, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.PropertiesModule.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049587223293, "dur":112, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049587221980, "dur":1426, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/ztu48og239e5.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049587223414, "dur":1218472, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/ztu48og239e5.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049588441959, "dur":4341, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__8.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049588446301, "dur":1000, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__8.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049588447306, "dur":186, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049588441957, "dur":5535, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/woy3hopvmmd5.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049588447506, "dur":2524223, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/woy3hopvmmd5.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049590971781, "dur":1927, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__15.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049590973709, "dur":1118, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__15.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049590974832, "dur":221, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049590971779, "dur":3275, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/yymlzitp89e1.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049590975070, "dur":2776153, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/yymlzitp89e1.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049593751301, "dur":1509, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppReversePInvokeWrapperTable.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049593752811, "dur":217, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppReversePInvokeWrapperTable.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049593753032, "dur":148, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049593751299, "dur":1881, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/2ohzvhmpd7h0.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049593753196, "dur":732225, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/2ohzvhmpd7h0.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049594485501, "dur":715, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppInteropDataTable.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049594486216, "dur":262, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppInteropDataTable.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049594486484, "dur":172, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049594485499, "dur":1157, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/0a5kzso688g0.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049594486673, "dur":700376, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/0a5kzso688g0.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049595187120, "dur":1476, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__7.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049595188596, "dur":634, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Generics__7.cpp" }}
+,{ "pid":12345, "tid":9, "ts":1782049595189236, "dur":210, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":9, "ts":1782049595187118, "dur":2329, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/sv5m10j6et4p.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049595189463, "dur":2209606, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/sv5m10j6et4p.o" }}
+,{ "pid":12345, "tid":9, "ts":1782049597399153, "dur":2419200, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049586694449, "dur":101, "ph":"X", "name": "FirstLock",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049586694550, "dur":5707, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049586700258, "dur":174, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.AudioModule_CodeGen.c" }}
+,{ "pid":12345, "tid":10, "ts":1782049586700432, "dur":7936, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.AudioModule_CodeGen.c" }}
+,{ "pid":12345, "tid":10, "ts":1782049586708369, "dur":154832, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++" }}
+,{ "pid":12345, "tid":10, "ts":1782049586700257, "dur":162966, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/gvfcgimwxblx.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049586863235, "dur":175861, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/gvfcgimwxblx.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049587039214, "dur":1476, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib_CodeGen.c" }}
+,{ "pid":12345, "tid":10, "ts":1782049587040690, "dur":503, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib_CodeGen.c" }}
+,{ "pid":12345, "tid":10, "ts":1782049587039213, "dur":1995, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/6cbwd6fe6rxa.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049587041216, "dur":212897, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/6cbwd6fe6rxa.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049587254137, "dur":2226, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049587256363, "dur":1399, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/UnityEngine.CoreModule.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049587257767, "dur":183, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049587254136, "dur":3814, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/37riemhkkjup.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049587257966, "dur":3591200, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/37riemhkkjup.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049590849227, "dur":4067, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__16.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049590853294, "dur":1120, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/mscorlib__16.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049590854439, "dur":51, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/libil2cpp/icalls/mscorlib/System.Globalization/CultureInfo.h" }}
+,{ "pid":12345, "tid":10, "ts":1782049590854420, "dur":289, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049590849226, "dur":5483, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/jeq9es7mbyqk.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049590854724, "dur":2190505, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/jeq9es7mbyqk.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049593045364, "dur":854, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Mono.Security.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049593046219, "dur":314, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Mono.Security.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049593046538, "dur":185, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049593045362, "dur":1362, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/8rxuym77ppgd.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049593046739, "dur":880943, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/8rxuym77ppgd.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049593927760, "dur":1993, "ph":"X", "name": "ComputeFileSignatureSha1",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppInvokerTable.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049593929754, "dur":778, "ph":"X", "name": "ScanImplicitDeps",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Unity/xcode_effectTest/Il2CppOutputProject/Source/il2cppOutput/Il2CppInvokerTable.cpp" }}
+,{ "pid":12345, "tid":10, "ts":1782049593930537, "dur":174, "ph":"X", "name": "ImplicitDepsSignatures",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":10, "ts":1782049593927758, "dur":2954, "ph":"X", "name": "CheckInputSignature",  "args": { "detail":"C_iOS_arm64 z7ln/153337xypbon.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049593930726, "dur":2791678, "ph":"X", "name": "C_iOS_arm64",  "args": { "detail":"z7ln/153337xypbon.o" }}
+,{ "pid":12345, "tid":10, "ts":1782049596722532, "dur":416, "ph":"X", "name": "CopyFiles",  "args": { "detail":"/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.DerivedDataUnity/Build/Products/Release-iphoneos/libil2cpp.a" }}
+,{ "pid":12345, "tid":10, "ts":1782049596722954, "dur":3095405, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
+,{ "pid":12345, "tid":0, "ts":1782049599822875, "dur":207, "ph":"X", "name": "ProfilerWriteOutput" }
+,{ "pid": 47968, "tid": 1, "ts": 1782049599859663, "dur": 333, "ph": "X", "name": "Wait for external events", "args": {"First to finish": "buildprogram0.traceevents"} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599862892, "dur": 131, "ph": "X", "name": "Wait for external events", "args": {"First to finish": "backend_profiler1.traceevents"} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599860009, "dur": 2882, "ph": "X", "name": "buildprogram0.traceevents", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599863028, "dur": 135, "ph": "X", "name": "backend_profiler1.traceevents", "args": {} },
+{ "pid": 47968, "tid": 1, "ts": 1782049599858549, "dur": 4859, "ph": "X", "name": "Write chrome-trace events", "args": {} },
+{}
+
+]
+}
