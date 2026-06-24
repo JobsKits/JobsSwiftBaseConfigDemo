@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -40,8 +39,7 @@ extension String {
                                  scale: CGFloat) -> UIImage? {
 
         let fileName: String = {
-            if name.lowercased().hasSuffix(".svg") { return name }
-            return name + ".svg"
+            if name.lowercased().hasSuffix(".svg") { return name };return name + ".svg"
         }()
 
         let cacheKey = "\(bundle.bundleIdentifier ?? "main")|\(fileName)|\(size?.width ?? -1)x\(size?.height ?? -1)|\(scale)" as NSString

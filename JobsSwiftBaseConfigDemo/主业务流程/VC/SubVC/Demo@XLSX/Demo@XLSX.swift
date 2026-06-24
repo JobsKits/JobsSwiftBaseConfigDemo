@@ -212,8 +212,7 @@ final class XLSXDemoVC: BaseVC {
                 displayRow.append(render(cell))
             }
             result.append(displayRow)
-        }
-        return result
+        };return result
     }
     /// 单元格文本渲染：SharedStrings -> inlineString -> dateValue -> value
     private func render(_ cell: Cell) -> String {
@@ -272,8 +271,7 @@ extension XLSXDemoVC: UIDocumentPickerDelegate {
 extension XLSXDemoVC: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 1 }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard allSheets.indices.contains(currentSheetIndex) else { return 0 }
-        return allSheets[currentSheetIndex].rows.count
+        guard allSheets.indices.contains(currentSheetIndex) else { return 0 };return allSheets[currentSheetIndex].rows.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

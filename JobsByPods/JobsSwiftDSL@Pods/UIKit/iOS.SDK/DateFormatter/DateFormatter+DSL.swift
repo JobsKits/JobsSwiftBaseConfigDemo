@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -33,15 +32,13 @@ extension DateFormatter {
     @discardableResult
     public func byDateStyle(_ style: DateFormatter.Style) -> Self {
         self.dateStyle = style
-        if style != .none { self.dateFormat = nil }
-        return self
+        if style != .none { self.dateFormat = nil };return self
     }
     /// 单独设置 timeStyle；当启用样式（!= .none）时会清掉自定义 dateFormat
     @discardableResult
     public func byTimeStyle(_ style: DateFormatter.Style) -> Self {
         self.timeStyle = style
-        if style != .none { self.dateFormat = nil }
-        return self
+        if style != .none { self.dateFormat = nil };return self
     }
     /// 仍保留一个组合便捷写法（内部逻辑与单独写一致）
     @discardableResult
@@ -50,8 +47,7 @@ extension DateFormatter {
         self.dateStyle = date
         self.timeStyle = time
         // ⚠️ 只有启用样式时才清掉自定义 format
-        if date != .none || time != .none { self.dateFormat = nil }
-        return self
+        if date != .none || time != .none { self.dateFormat = nil };return self
     }
     // MARK: - Locale / Calendar / TimeZone
     @discardableResult

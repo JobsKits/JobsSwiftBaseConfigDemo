@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -157,8 +156,7 @@ extension UIPanGestureRecognizer {
     
     @discardableResult
     public func byMaxTouches(_ n: Int) -> Self {
-        if maximumNumberOfTouches != Int.max {maximumNumberOfTouches = n;}
-        return self
+        if maximumNumberOfTouches != Int.max {maximumNumberOfTouches = n;};return self
     }
 }
 // MARK: 子类专属链式扩展@UISwipeGestureRecognizer

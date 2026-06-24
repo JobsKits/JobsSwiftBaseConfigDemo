@@ -56,8 +56,7 @@ final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
                             }
 
                             var list: [String] = []
-                            for try await r in group { list.append(r) }
-                            return list
+                            for try await r in group { list.append(r) };return list
                         }
 
                         let cost = Date().timeIntervalSince(start)

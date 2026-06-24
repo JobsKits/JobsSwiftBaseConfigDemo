@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -161,8 +160,7 @@ extension UIButton {
         cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var a = incoming
             if let f { a.font = f }
-            if let c { a.foregroundColor = c }
-            return a
+            if let c { a.foregroundColor = c };return a
         }
         // 5) 关键：把背景图回填回去，并粘到 AO，防止后续 update 时丢失
         if let bgImg = currentBgImage {

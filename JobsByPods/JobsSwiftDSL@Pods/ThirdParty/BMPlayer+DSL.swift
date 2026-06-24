@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -69,8 +68,7 @@ extension BMPlayer {
                            definitionIndex: Int = 0,
                            autoPlay: Bool = BMPlayerConf.shouldAutoPlay) -> Self {
         self.setVideo(resource: resource, definitionIndex: definitionIndex)
-        if autoPlay { self.autoPlay() }
-        return self
+        if autoPlay { self.autoPlay() };return self
     }
     // 仅设置资源，不自动播放
     @discardableResult
@@ -84,8 +82,7 @@ extension BMPlayer {
     public func byAddTo(_ container: UIView,
                  make: (_ make: ConstraintMaker) -> Void) -> Self {
         container.addSubview(self)
-        self.snp.makeConstraints { make($0) }
-        return self
+        self.snp.makeConstraints { make($0) };return self
     }
 }
 // MARK: - 行为（byX）与控制（onX）

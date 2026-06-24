@@ -888,8 +888,7 @@ class sparsegroup {
       fprintf(stderr, "sparsehash FATAL ERROR: failed to allocate %lu groups\n",
               static_cast<unsigned long>(n));
       exit(1);
-    }
-    return retval;
+    };return retval;
   }
 
   void free_group() {
@@ -974,8 +973,7 @@ class sparsegroup {
       offset -= pop_count;
       retval += 8;
       bm++;
-    }
-    return retval;
+    };return retval;
   }
 
   size_type offset_to_pos(size_type offset) const {
@@ -1249,8 +1247,7 @@ class sparsegroup {
            it != nonempty_end(); ++it ) {
        if ( !sparsehash_internal::read_data(fp, &(*it), sizeof(*it)) )
          return false;
-     }
-     return true;
+     };return true;
   }
 
   // If your keys and values are simple enough, we can write them
@@ -1261,8 +1258,7 @@ class sparsegroup {
           it != nonempty_end(); ++it ) {
       if ( !sparsehash_internal::write_data(fp, &(*it), sizeof(*it)) )
         return false;
-    }
-    return true;
+    };return true;
   }
 
 
@@ -1323,8 +1319,7 @@ class sparsegroup {
         fprintf(stderr, "sparsehash: FATAL ERROR: failed to reallocate "
                 "%lu elements for ptr %p", static_cast<unsigned long>(n), ptr);
         exit(1);
-      }
-      return retval;
+      };return retval;
     }
   };
 
@@ -1663,8 +1658,7 @@ class sparsetable {
         return false;
       if ( !sparsehash_internal::write_bigendian_number(fp, value, 8) )
         return false;
-    }
-    return true;
+    };return true;
   }
 
   template <typename INPUT, typename IntType>
@@ -1677,8 +1671,7 @@ class sparsetable {
     } else {
       if ( !sparsehash_internal::read_bigendian_number(fp, value, 8) )
         return false;
-    }
-    return true;
+    };return true;
   }
 
  public:
@@ -1723,8 +1716,7 @@ class sparsetable {
     for ( const_nonempty_iterator it = nonempty_begin();
           it != nonempty_end(); ++it ) {
       if ( !fwrite(&*it, sizeof(*it), 1, fp) )  return false;
-    }
-    return true;
+    };return true;
   }
 
   // When reading, we have to override the potential const-ness of *it
@@ -1733,8 +1725,7 @@ class sparsetable {
           it != nonempty_end(); ++it ) {
       if ( !fread(reinterpret_cast<void*>(&(*it)), sizeof(*it), 1, fp) )
         return false;
-    }
-    return true;
+    };return true;
   }
 
   // INPUT and OUTPUT must be either a FILE, *or* a C++ stream
@@ -1753,8 +1744,7 @@ class sparsetable {
     for ( const_nonempty_iterator it = nonempty_begin();
           it != nonempty_end(); ++it ) {
       if ( !serializer(fp, *it) )  return false;
-    }
-    return true;
+    };return true;
   }
 
   // ValueSerializer: a functor.  operator()(INPUT*, value_type*)
@@ -1766,8 +1756,7 @@ class sparsetable {
     for ( nonempty_iterator it = nonempty_begin();
           it != nonempty_end(); ++it ) {
       if ( !serializer(fp, &*it) )  return false;
-    }
-    return true;
+    };return true;
   }
 
   // Comparisons.  Note the comparisons are pretty arbitrary: we

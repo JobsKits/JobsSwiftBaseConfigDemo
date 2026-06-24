@@ -44,8 +44,7 @@ public struct TimeoutPlugin: PluginType {
     public init() {}
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
         var r = request
-        if let api = target as? DemoAPI { r.timeoutInterval = api.timeout }
-        return r
+        if let api = target as? DemoAPI { r.timeoutInterval = api.timeout };return r
     }
 }
 

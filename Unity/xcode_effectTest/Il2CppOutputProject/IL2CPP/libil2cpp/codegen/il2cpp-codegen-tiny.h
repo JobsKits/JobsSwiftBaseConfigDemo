@@ -242,8 +242,7 @@ inline bool IsAssignableFrom(const TinyType* klass, const TinyType* oklass)
     {
         if (interfaces[i] == klass)
             return true;
-    }
-    return false;
+    };return false;
 }
 
 inline Il2CppObject* IsInst(Il2CppObject* obj, TinyType* klass)

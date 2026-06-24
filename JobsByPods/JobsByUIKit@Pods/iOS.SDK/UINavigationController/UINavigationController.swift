@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -94,8 +93,7 @@ private final class JobsNavigationControllerBlocksProxy: NSObject, UINavigationC
                               animationControllerFor operation: UINavigationController.Operation,
                               from fromVC: UIViewController,
                               to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let t = target else { return nil }
-        return animationControllerForOperation?(t,
+        guard let t = target else { return nil };return animationControllerForOperation?(t,
                                                 navigationController,
                                                 operation,
                                                 fromVC,
@@ -109,8 +107,7 @@ private final class JobsNavigationControllerBlocksProxy: NSObject, UINavigationC
 
     func navigationController(_ navigationController: UINavigationController,
                               interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let t = target else { return nil }
-        return interactionControllerForAnimationController?(t, navigationController, animationController)
+        guard let t = target else { return nil };return interactionControllerForAnimationController?(t, navigationController, animationController)
     }
     // MARK: 显示回调
     var willShow: ((AnyObject, UINavigationController, UIViewController, Bool) -> Void)?
@@ -132,14 +129,12 @@ private final class JobsNavigationControllerBlocksProxy: NSObject, UINavigationC
     // MARK: 方向
     var preferredInterfaceOrientationForPresentation: ((AnyObject, UINavigationController) -> UIInterfaceOrientation)?
     func navigationControllerPreferredInterfaceOrientationForPresentation(_ navigationController: UINavigationController) -> UIInterfaceOrientation {
-        guard let t = target else { return .portrait }
-        return preferredInterfaceOrientationForPresentation?(t, navigationController) ?? .portrait
+        guard let t = target else { return .portrait };return preferredInterfaceOrientationForPresentation?(t, navigationController) ?? .portrait
     }
 
     var supportedInterfaceOrientations: ((AnyObject, UINavigationController) -> UIInterfaceOrientationMask)?
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
-        guard let t = target else { return .all }
-        return supportedInterfaceOrientations?(t, navigationController) ?? .all
+        guard let t = target else { return .all };return supportedInterfaceOrientations?(t, navigationController) ?? .all
     }
 }
 

@@ -18,8 +18,7 @@ extern "C" const char* UnityDataBundleDir()
             dir = AllocCString([[NSBundle mainBundle] bundlePath]);
         else
             dir = AllocCString([[NSBundle bundleWithIdentifier: bundleIdWithData] bundlePath]);
-    }
-    return dir;
+    };return dir;
 }
 
 #define RETURN_SPECIAL_DIR(dir)             \
@@ -58,8 +57,7 @@ extern "C" int UnityUpdateNoBackupFlag(const char* path, int setFlag)
     else
     {
         result = ::removexattr(path, "com.apple.MobileBackup", 0);
-    }
-    return result == 0 ? 1 : 0;
+    };return result == 0 ? 1 : 0;
 }
 
 extern "C" const char* const* UnityFontFallbacks()
@@ -136,6 +134,5 @@ extern "C" const char* const* UnityFontFallbacks()
         }
 
         cachedFonts = defaultFonts;
-    }
-    return cachedFonts;
+    };return cachedFonts;
 }

@@ -216,8 +216,7 @@ extern "C" int UnityDeviceCPUCount()
         size_t  dataLen     = sizeof(_DeviceCPUCount);
 
         ::sysctl(ctlName, 2, &_DeviceCPUCount, &dataLen, NULL, 0);
-    }
-    return _DeviceCPUCount;
+    };return _DeviceCPUCount;
 }
 
 extern "C" int UnityGetPhysicalMemory()
@@ -418,8 +417,7 @@ extern "C" int UnityDeviceGeneration()
     {
         const char* model = UnityDeviceModel();
         _DeviceGeneration = ParseDeviceGeneration(model);
-    }
-    return _DeviceGeneration;
+    };return _DeviceGeneration;
 }
 
 // Currently a manual process to add devices that have a cutout (notch). If you add one here you need to also update UnityView GetCutoutToScreenRatio()

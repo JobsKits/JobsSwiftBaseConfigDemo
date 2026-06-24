@@ -3,7 +3,6 @@
 //  JobsSwiftTimerMgr
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -86,8 +85,7 @@ public final class JobsSwiftTimerMgr {
         // 先读 existing，避免锁内做 stop/remove 这种可能引发回调的重操作
         let existing: JobsSwiftTimerProtocol? = {
             lock.lock()
-            defer { lock.unlock() }
-            return entries[identifier]?.timer
+            defer { lock.unlock() };return entries[identifier]?.timer
         }()
 
         if let existing {
@@ -124,8 +122,7 @@ public final class JobsSwiftTimerMgr {
     /// 获取 timer
     public func timer(for identifier: String) -> JobsSwiftTimerProtocol? {
         lock.lock()
-        defer { lock.unlock() }
-        return entries[identifier]?.timer
+        defer { lock.unlock() };return entries[identifier]?.timer
     }
     /// 对某个 timer 执行动作
     @discardableResult

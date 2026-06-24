@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -161,8 +160,7 @@ extension UIControl {
     public func byContentAlignment(horizontal: UIControl.ContentHorizontalAlignment? = nil,
                                    vertical: UIControl.ContentVerticalAlignment? = nil) -> Self {
         if let h = horizontal { self.contentHorizontalAlignment = h }
-        if let v = vertical { self.contentVerticalAlignment = v }
-        return self
+        if let v = vertical { self.contentVerticalAlignment = v };return self
     }
     /// effectiveContentHorizontalAlignment 是只读属性：这里只能提供读取（无法 DSL set）
     @discardableResult

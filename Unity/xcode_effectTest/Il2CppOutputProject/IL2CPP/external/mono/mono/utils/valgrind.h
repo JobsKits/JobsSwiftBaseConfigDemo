@@ -352,8 +352,7 @@ valgrind_do_client_request_expr(uintptr_t _zzq_default, uintptr_t _zzq_request,
             /* %EDX = client_request ( %EAX ) */
             __asm xchg ebx,ebx
             __asm mov _zzq_result, edx
-    }
-    return _zzq_result;
+    };return _zzq_result;
 }
 
 #define VALGRIND_GET_NR_CONTEXT(_zzq_rlval)                       \

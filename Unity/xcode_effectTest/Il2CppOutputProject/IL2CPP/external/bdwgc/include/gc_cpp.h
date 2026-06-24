@@ -460,8 +460,7 @@ inline void* operator new(size_t size, GC_NS_QUALIFY(GCPlacement) gcp,
     obj = GC_MALLOC(size);
     if (cleanup != 0) {
       GC_REGISTER_FINALIZER_IGNORE_SELF(obj, cleanup, clientData, 0, 0);
-    }
-    return obj;
+    };return obj;
   case GC_NS_QUALIFY(PointerFreeGC):
     return GC_MALLOC_ATOMIC(size);
 # ifdef GC_ATOMIC_UNCOLLECTABLE

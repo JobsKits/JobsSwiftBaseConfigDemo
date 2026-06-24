@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -47,8 +46,7 @@ extension UIStackView {
 
     @discardableResult
     public func addArrangedSubviews(_ views: UIView...) -> Self {
-        views.forEach { self.addArrangedSubview($0) }
-        return self
+        views.forEach { self.addArrangedSubview($0) };return self
     }
     // MARK: - iOS 11.0+ 设置自定义间距（在指定子视图后）
     @available(iOS 11.0, *)
@@ -90,8 +88,7 @@ extension UIStackView {
     // MARK: - 移除所有子视图
     @discardableResult
     public func byRemoveAllArrangedSubviews() -> Self {
-        self.arrangedSubviews.forEach { self.removeArrangedSubview($0); $0.removeFromSuperview() }
-        return self
+        self.arrangedSubviews.forEach { self.removeArrangedSubview($0); $0.removeFromSuperview() };return self
     }
 }
 
@@ -99,15 +96,13 @@ extension UIStackView {
     // 批量添加（数组版）
     @discardableResult
     public func byAddArrangedSubviews(_ views: [UIView]) -> Self {
-        views.forEach { self.addArrangedSubview($0) }
-        return self
+        views.forEach { self.addArrangedSubview($0) };return self
     }
     // 语义化“清空重建”
     @discardableResult
     public func byResetArrangedSubviews(_ make: JobsRetViewsByVoidBlock) -> Self {
         self.arrangedSubviews.forEach { self.removeArrangedSubview($0); $0.removeFromSuperview() }
-        make().forEach { self.addArrangedSubview($0) }
-        return self
+        make().forEach { self.addArrangedSubview($0) };return self
     }
     // 开启 layoutMarginsRelative + 设置边距（更好用的安全间距）
     @discardableResult

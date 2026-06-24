@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -372,8 +371,7 @@ public extension JobsHeaderAnimator {
         if let v = idle { self.idleDescription = v }
         if let v = releaseToRefresh { self.releaseToRefreshDescription = v }
         if let v = loading { self.loadingDescription = v }
-        if let v = noMoreData { self.noMoreDataDescription = v }
-        return self
+        if let v = noMoreData { self.noMoreDataDescription = v };return self
     }
 }
 public extension JobsFooterAnimator {
@@ -412,8 +410,7 @@ public extension JobsFooterAnimator {
         if let v = idle { self.idleDescription = v }
         if let v = releaseToRefresh { self.releaseToRefreshDescription = v }
         if let v = loadingMore { self.loadingMoreDescription = v }
-        if let v = noMoreData { self.noMoreDataDescription = v }
-        return self
+        if let v = noMoreData { self.noMoreDataDescription = v };return self
     }
 }
 // MARK: - 轻量的“最近刷新时间”缓存，替代 ESRefreshDataManager（避免跨模块 internal 访问问题）
@@ -447,8 +444,7 @@ public enum JobsRefreshCache {
     /// 可选：是否已过期（模仿 ES 行为）
     public static func isExpired(forKey key: String) -> Bool {
         guard let last = date(forKey: key),
-              let interval = expiredInterval(forKey: key) else { return false }
-        return Date().timeIntervalSince(last) >= interval
+              let interval = expiredInterval(forKey: key) else { return false };return Date().timeIntervalSince(last) >= interval
     }
 }
 #endif

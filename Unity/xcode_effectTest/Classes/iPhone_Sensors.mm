@@ -101,8 +101,7 @@ inline Vector3f UnityReorientVector3(float x, float y, float z)
             break;
             default:
             { res = (Vector3f) {x, y, z}; }
-        }
-        return res;
+        };return res;
     }
     else
     {
@@ -128,8 +127,7 @@ inline Quaternion4f UnityReorientQuaternion(float x, float y, float z, float w)
                 break;
             default:
                 res = inp;
-        }
-        return res;
+        };return res;
     }
     else
     {

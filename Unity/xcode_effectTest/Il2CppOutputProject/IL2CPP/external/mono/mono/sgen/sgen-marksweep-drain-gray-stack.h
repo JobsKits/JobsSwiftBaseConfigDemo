@@ -98,8 +98,7 @@ COPY_OR_MARK_FUNCTION_NAME (GCObject **ptr, GCObject *obj, SgenGrayQueue *queue)
 				evacuate_block_obj_sizes [size_index] = FALSE;
 				MS_MARK_OBJECT_AND_ENQUEUE (obj, sgen_obj_get_descriptor (obj), block, queue);
 				return FALSE;
-			}
-			return TRUE;
+			};return TRUE;
 		}
 		HEAVY_STAT (++stat_objects_copied_major);
 		SGEN_UPDATE_REFERENCE (ptr, obj);
@@ -212,8 +211,7 @@ COPY_OR_MARK_FUNCTION_NAME (GCObject **ptr, GCObject *obj, SgenGrayQueue *queue)
 					GRAY_OBJECT_ENQUEUE_SERIAL (queue, obj, desc);
 #endif
 			}
-		}
-		return FALSE;
+		};return FALSE;
 	}
 
 	return TRUE;
@@ -345,8 +343,7 @@ DRAIN_GRAY_STACK_FUNCTION_NAME (SgenGrayQueue *queue)
 			return TRUE;
 
 		SCAN_OBJECT_FUNCTION_NAME (obj, desc, queue);
-	}
-	return FALSE;
+	};return FALSE;
 }
 
 #undef COPY_OR_MARK_PARALLEL

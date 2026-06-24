@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -561,8 +560,7 @@ extension UIView {
     /// 移除所有子视图（便捷）
     @discardableResult
     public func byRemoveAllSubviews() -> Self {
-        subviews.forEach { $0.removeFromSuperview() }
-        return self
+        subviews.forEach { $0.removeFromSuperview() };return self
     }
     // MARK: - UIView · Layout Triggers
     /// 标记需要布局

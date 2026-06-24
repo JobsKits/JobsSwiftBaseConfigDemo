@@ -3,7 +3,6 @@
 //  JobsSwiftWorker
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -27,8 +26,7 @@ public enum JobsWorkerBinder {
         }
         if let bag {
             worker.store(in: bag)
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -39,8 +37,7 @@ public enum JobsWorkerBinder {
         TextFieldTarget.shared.register(textField: textField, observable: source, worker: worker)
         worker.setDisposer {
             TextFieldTarget.shared.unregister(textField: textField)
-        }
-        return worker
+        };return worker
     }
 }
 

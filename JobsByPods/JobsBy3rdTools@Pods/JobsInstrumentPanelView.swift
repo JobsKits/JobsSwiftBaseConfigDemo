@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -453,8 +452,7 @@ public extension FTDashboardView {
         if let v = centerDotRadius { self.centerDotRadius = v }
         if let v = valueTextColor { self.valueTextColor = v }
         if let v = valueFont { self.valueFont = v }
-        if let v = valueFormatter { self.valueFormatter = v }
-        return self
+        if let v = valueFormatter { self.valueFormatter = v };return self
     }
 }
 

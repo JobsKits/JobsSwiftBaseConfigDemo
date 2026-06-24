@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -469,8 +468,7 @@ extension UIScrollView {
     @discardableResult
     public func byShowsIndicators(vertical: Bool? = nil, horizontal: Bool? = nil) -> Self {
         if let v = vertical { self.showsVerticalScrollIndicator = v }
-        if let h = horizontal { self.showsHorizontalScrollIndicator = h }
-        return self
+        if let h = horizontal { self.showsHorizontalScrollIndicator = h };return self
     }
 
     @discardableResult

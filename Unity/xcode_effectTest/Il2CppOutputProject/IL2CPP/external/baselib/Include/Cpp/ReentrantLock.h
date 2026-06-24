@@ -139,8 +139,7 @@ namespace baselib
                     ReleaseOnDestroy releaseScope(*this);
                     func();
                     return true;
-                }
-                return false;
+                };return false;
             }
 
             // Try to acquire lock and invoke user defined function.
@@ -167,8 +166,7 @@ namespace baselib
                     ReleaseOnDestroy releaseScope(*this);
                     func();
                     return true;
-                }
-                return false;
+                };return false;
             }
 
         private:

@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -382,8 +381,7 @@ extension UITextView {
             .byBorderWidth(width)
             .byCornerRadius(radius)
             .byMasksToBounds(true)
-        if let bg = background { backgroundColor = bg }
-        return self
+        if let bg = background { backgroundColor = bg };return self
     }
     // MARK: 类似“bezel”的外观（简易版）
     @discardableResult

@@ -152,8 +152,7 @@ final class WalletLayout: UICollectionViewLayout {
     }
 
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        guard let collectionView = collectionView else { return true }
-        return abs(newBounds.width - collectionView.bounds.width) > 0.5
+        guard let collectionView = collectionView else { return true };return abs(newBounds.width - collectionView.bounds.width) > 0.5
     }
 }
 

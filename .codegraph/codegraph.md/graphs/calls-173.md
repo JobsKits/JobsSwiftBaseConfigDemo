@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:TiledLayerView::hitTest<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/OnAppearNode.swift:156"]
-  T1["method:TiledLayerView::hitTest<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/OnAppearNode.swift:156"]
+  S1["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
+  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["class:OverlayNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/OverlayNode.swift:26"]
-  T2["method:_ASLayoutElementType::overlay<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/Modifiers.swift:146"]
+  S2["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
+  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S2 -->|calls| T2
-  S3["class:PaddingNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/PaddingNode.swift:28"]
-  T3["method:ASBackgroundLayoutSpec::setChild:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASBackgroundLayoutSpec.mm:69"]
+  S3["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
+  T3["method:ASCollectionViewTestDelegate::collectionView:layout:referenceSizeForHeaderInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:120"]
   S3 -->|calls| T3
-  S4["class:ShapeDrawingNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeDrawingNode.swift:30"]
-  T4["method:ASImageNode::setNeedsDisplayWithCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASImageNode.mm:590"]
+  S4["method:ASCollectionViewTests::testThatNodeCalculatedSizesAreUpdatedBeforeFirstPrepareLayoutAfterRotation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:743"]
+  T4["method:ASPagerFlowLayout::prepareLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:29"]
   S4 -->|calls| T4
-  S5["method:ShapeDrawingNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeDrawingNode.swift:89"]
-  T5["method:ShapeDrawingNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeDrawingNode.swift:89"]
+  S5["method:ASCollectionViewTests::testThatNodeCalculatedSizesAreUpdatedBeforeFirstPrepareLayoutAfterRotation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:743"]
+  T5["method:ASDisplayNode::bounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:299"]
   S5 -->|calls| T5
-  S6["class:ShapeLayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:29"]
-  T6["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
+  S6["method:ASCollectionViewTests::testThatNestedBatchCompletionsAreCalledInOrder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:784"]
+  T6["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S6 -->|calls| T6
-  S7["class:ShapeLayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:29"]
-  T7["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S7["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterTheInitialLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:820"]
+  T7["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S7 -->|calls| T7
-  S8["class:ShapeLayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:29"]
-  T8["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
+  S8["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterSectionMove<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:832"]
+  T8["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S8 -->|calls| T8
-  S9["class:ShapeLayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:29"]
-  T9["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S9["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterReloadData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:861"]
+  T9["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S9 -->|calls| T9
-  S10["method:ShapeLayerNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:89"]
-  T10["method:ShapeLayerNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:89"]
+  S10["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterReloadASection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:878"]
+  T10["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S10 -->|calls| T10
-  S11["class:ShapeLayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/ShapeLayerNode.swift:29"]
-  T11["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S11["method:ASCollectionViewTests::testThatIssuingAnUpdateBeforeInitialReloadIsAcceptable<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:897"]
+  T11["method:ASCollectionViewTestDelegate::initWithNumberOfSections:numberOfItemsInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:77"]
   S11 -->|calls| T11
-  S12["class:StyledEdgeNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:54"]
-  T12["method:StyledEdgeNode::updateBorder<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:205"]
+  S12["method:ASCollectionViewTests::testThatNodeAtIndexPathIsCorrectImmediatelyAfterSubmittingUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:912"]
+  T12["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S12 -->|calls| T12
-  S13["class:StyledEdgeNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:54"]
-  T13["method:StyledEdgeNode::updateStrategy<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:227"]
+  S13["method:ASCollectionViewTests::testThatNodeAtIndexPathIsCorrectImmediatelyAfterSubmittingUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:912"]
+  T13["method:ASTextDebugOption::clear<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.mm:103"]
   S13 -->|calls| T13
-  S14["class:StyledEdgeNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:54"]
-  T14["method:StyledEdgeNode::updateBorder<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:205"]
+  S14["method:ASCollectionViewTests::testThatNilBatchUpdatesCanBeSubmitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:947"]
+  T14["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S14 -->|calls| T14
-  S15["class:StyledEdgeNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:54"]
-  T15["method:StyledEdgeNode::updateStrategy<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:227"]
+  S15["method:ASCollectionViewTests::testThatDeletedItemsAreMarkedInvisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:957"]
+  T15["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S15 -->|calls| T15
-  S16["method:StyledEdgeNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:195"]
-  T16["method:StyledEdgeNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:195"]
+  S16["method:ASCollectionViewTests::testThatDeletedItemsAreMarkedInvisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:957"]
+  T16["function:ASCATransactionQueueWait<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:57"]
   S16 -->|calls| T16
-  S17["method:StyledEdgeNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:195"]
-  T17["method:StyledEdgeNode::updateBorder<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:205"]
+  S17["method:ASCollectionViewTests::disabled_testThatMultipleBatchFetchesDontHappenUnnecessarily<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:980"]
+  T17["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S17 -->|calls| T17
-  S18["method:StyledEdgeNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:195"]
-  T18["method:StyledEdgeNode::updateStrategy<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:227"]
+  S18["method:ASCollectionViewTests::testThatBatchFetchHappensForEmptyCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1028"]
+  T18["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S18 -->|calls| T18
-  S19["method:StyledEdgeNode::updateBorder<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:205"]
-  T19["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S19["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Animated<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1055"]
+  T19["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
   S19 -->|calls| T19
-  S20["method:StyledEdgeNode::updateStrategy<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:227"]
-  T20["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S20["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Nonanimated<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1060"]
+  T20["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
   S20 -->|calls| T20
-  S21["method:StyledEdgeNode::layoutDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:255"]
-  T21["method:StyledEdgeNode::layoutDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/StyledEdgeNode.swift:255"]
+  S21["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Invisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1065"]
+  T21["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
   S21 -->|calls| T21
-  S22["class:WrapperCellNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/WrapperCellNode.swift:26"]
-  T22["method:ASBackgroundLayoutSpec::setChild:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASBackgroundLayoutSpec.mm:69"]
+  S22["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
+  T22["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S22 -->|calls| T22
-  S23["class:WrapperNode<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Compositions/WrapperNode.swift:26"]
-  T23["method:ASBackgroundLayoutSpec::setChild:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASBackgroundLayoutSpec.mm:69"]
+  S23["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
+  T23["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
   S23 -->|calls| T23
-  S24["method:StackScrollNode::append<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Containers/StackScrollNode.swift:67"]
-  T24["method:ASCollectionNode::reloadData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:1063"]
+  S24["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
+  T24["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
   S24 -->|calls| T24
-  S25["method:StackScrollNode::append<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/Components/Containers/StackScrollNode.swift:67"]
-  T25["method:ASCollectionNode::waitUntilAllUpdatesAreProcessed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:1031"]
+  S25["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  T25["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
   S25 -->|calls| T25
 ```
 

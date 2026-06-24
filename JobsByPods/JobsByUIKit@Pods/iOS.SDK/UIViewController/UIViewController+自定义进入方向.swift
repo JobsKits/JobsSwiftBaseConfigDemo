@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -57,8 +56,7 @@ public var _jobsEntryTimingKey: UInt8 = 0
 extension UIViewController {
     public var _jobs_entryDirection: JobsPushDirection? {
         get {
-            guard let n = objc_getAssociatedObject(self, &_jobsEntryDirKey) as? NSNumber else { return nil }
-            return JobsPushDirection(rawValue: n.intValue)
+            guard let n = objc_getAssociatedObject(self, &_jobsEntryDirKey) as? NSNumber else { return nil };return JobsPushDirection(rawValue: n.intValue)
         }
         set {
             if let d = newValue {
@@ -259,8 +257,7 @@ extension UIViewController {
         switch policy {
         case .ignoreIfBusy:
             if let presented = host.presentedViewController, presented.isBeingDismissed == false {
-                if jobs_isSameDestination(as: presented) { return self }
-                return self
+                if jobs_isSameDestination(as: presented) { return self };return self
             }
         case .presentOnTopMost:
             while let top = UIApplication.jobsTopMostVC(from: host, ignoreAlert: true),

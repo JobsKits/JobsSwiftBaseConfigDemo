@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -258,8 +257,7 @@ public struct JobsTaskMetrics: Sendable {
     
     /// 计算平均执行频率（次/秒）
     public var executionRate: Double? {
-        guard totalExecutions > 0, totalDuration > 0 else { return nil }
-        return Double(totalExecutions) / totalDuration
+        guard totalExecutions > 0, totalDuration > 0 else { return nil };return Double(totalExecutions) / totalDuration
     }
 }
 /// 任务状态变化

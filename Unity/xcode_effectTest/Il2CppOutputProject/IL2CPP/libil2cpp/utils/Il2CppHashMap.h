@@ -95,8 +95,7 @@ public:
         {
             *value = iter->second;
             return true;
-        }
-        return false;
+        };return false;
     }
 
     bool Add(const key_type& key, const T& value)

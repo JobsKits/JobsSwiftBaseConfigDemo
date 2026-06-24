@@ -3,7 +3,6 @@
 //  JobsNetworking
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -187,8 +186,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             DispatchQueue.global().asyncAfter(deadline: .now() + decision.delay) { [weak self] in
                 guard let self else { return }
                 self.fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt + 1, onEvent: onEvent, completion: completion)
-            }
-            return
+            };return
         }
 
         config.observer.didFail(request: request, error: error)
@@ -365,8 +363,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             }
             guard let payload = envelope.data else {
                 throw JobsError.emptyResponse
-            }
-            return payload
+            };return payload
         } catch let error as JobsError {
             throw error
         } catch {

@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -90,8 +89,7 @@ public final class JobsDialogBoxBuilder {
         if let v = shadowColor { self.shadowColor = v }
         if let v = shadowOpacity { self.shadowOpacity = v }
         if let v = shadowRadius { self.shadowRadius = v }
-        if let v = shadowOffset { self.shadowOffset = v }
-        return self
+        if let v = shadowOffset { self.shadowOffset = v };return self
     }
     // MARK: show
     @discardableResult

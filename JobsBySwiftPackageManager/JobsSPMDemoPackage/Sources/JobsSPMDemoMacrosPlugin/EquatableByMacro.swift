@@ -17,8 +17,7 @@ public struct EquatableByMacro: ExtensionMacro, MemberMacro {
         let declaration: DeclSyntax = "extension \(type): Equatable, Hashable {}"
         guard let extensionDeclaration = declaration.as(ExtensionDeclSyntax.self) else {
             throw MacroError.message("生成 Equatable、Hashable 扩展失败")
-        }
-        return [extensionDeclaration]
+        };return [extensionDeclaration]
     }
 
     public static func expansion(
@@ -67,8 +66,7 @@ private func parseProperty(from node: AttributeSyntax) throws -> String {
         !segment.content.text.isEmpty
     else {
         throw MacroError.message("@EquatableBy 需要一个属性名，例如 @EquatableBy(\"id\")")
-    }
-    return segment.content.text
+    };return segment.content.text
 }
 
 extension DeclGroupSyntax {

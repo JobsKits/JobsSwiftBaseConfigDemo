@@ -3,7 +3,6 @@
 //  JobsSwiftMetalKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -33,8 +32,7 @@ public extension MTKView {
     /// 如果没设置 device，就自动注入系统默认 GPU
     @discardableResult @MainActor
     func byDefaultDevice() -> Self {
-        if self.device == nil { self.device = MTLCreateSystemDefaultDevice() }
-        return self
+        if self.device == nil { self.device = MTLCreateSystemDefaultDevice() };return self
     }
 
     @discardableResult @MainActor

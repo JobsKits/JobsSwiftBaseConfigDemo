@@ -3,7 +3,6 @@
 //  JobsNetworking
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if canImport(_Concurrency)
@@ -41,10 +40,8 @@ public enum JobsWorkflow {
                 var output = Array<Value?>(repeating: nil, count: tasks.count)
                 for try await (index, value) in group {
                     output[index] = value
-                }
-                return output.compactMap { $0 }
-            }
-            return .init(values: values, errors: [])
+                };return output.compactMap { $0 }
+            };return .init(values: values, errors: [])
         case .collect:
             return await withTaskGroup(of: Result<(Int, Value), JobsError>.self) { group in
                 for (index, task) in tasks.enumerated() {
@@ -68,8 +65,7 @@ public enum JobsWorkflow {
                     case .failure(let error):
                         errors.append(error)
                     }
-                }
-                return .init(values: values.compactMap { $0 }, errors: errors)
+                };return .init(values: values.compactMap { $0 }, errors: errors)
             }
         }
     }
@@ -81,8 +77,7 @@ public enum JobsWorkflow {
         var state = initial
         for step in steps {
             state = try await step(state)
-        }
-        return state
+        };return state
     }
 
 

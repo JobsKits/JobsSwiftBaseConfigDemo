@@ -3,7 +3,6 @@
 //  JobsByWebKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -75,8 +74,7 @@ extension WKUserContentController {
         name: String
     ) -> Self {
         removeScriptMessageHandler(forName: name)
-        if let handler { add(handler, name: name) }
-        return self
+        if let handler { add(handler, name: name) };return self
     }
     /// iOS 14+ 重载：带 contentWorld
     @available(iOS 14.0, *)
@@ -87,8 +85,7 @@ extension WKUserContentController {
         in world: WKContentWorld
     ) -> Self {
         removeScriptMessageHandler(forName: name, contentWorld: world)
-        if let handler { add(handler, contentWorld: world, name: name) }
-        return self
+        if let handler { add(handler, contentWorld: world, name: name) };return self
     }
     /// 基础版：直接添加（不先移除）
     @discardableResult
@@ -138,8 +135,7 @@ extension WKUserContentController {
     ) -> Self {
         let w = world ?? .page
         removeScriptMessageHandler(forName: name, contentWorld: w)
-        if let h = handler { addScriptMessageHandler(h, contentWorld: w, name: name) }
-        return self
+        if let h = handler { addScriptMessageHandler(h, contentWorld: w, name: name) };return self
     }
 
     @available(iOS 14.0, *)

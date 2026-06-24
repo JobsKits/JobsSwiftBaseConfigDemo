@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:JXSegmentedView::byDelegateProxy<br/>JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedView.swift:148"]
-  T1["method:Array::build<br/>JobsByPods/JobsSwiftStandardLibrary@Pods/容器/Array.swift:51"]
+  S1["class:AFService<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFService.swift:13"]
+  T1["method:AFService::uploadAvatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Alamofire/AFService.swift:63"]
   S1 -->|calls| T1
-  S2["class:SphereGeometry<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/SphereGeometry.swift:17"]
-  T2["method:SphereGeometry::generateSphere<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/SphereGeometry.swift:28"]
+  S2["method:APIService::requestWithAutoRefresh<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/APIService.swift:83"]
+  T2["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
   S2 -->|calls| T2
-  S3["method:VideoTextureManager::loadVideo<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:54"]
-  T3["method:VideoTextureManager::setupDisplayLink<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:72"]
+  S3["method:APIService::requestWithAutoRefresh<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/APIService.swift:83"]
+  T3["method:APIService::refreshToken<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/APIService.swift:100"]
   S3 -->|calls| T3
-  S4["method:VideoTextureManager::loadVideo<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:54"]
-  T4["method:VideoTextureManager::setupTimeObserver<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:78"]
+  S4["method:APIService::requestWithAutoRefresh<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/APIService.swift:83"]
+  T4["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
   S4 -->|calls| T4
-  S5["method:VideoTextureManager::loadVideo<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:54"]
-  T5["method:VideoTextureManager::setupNotifications<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:88"]
+  S5["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
+  T5["method:MoyaProvider::request<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift:14"]
   S5 -->|calls| T5
-  S6["method:VideoTextureManager::updateTexture<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:101"]
-  T6["method:VideoTextureManager::createTexture<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:114"]
+  S6["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T6["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S6 -->|calls| T6
-  S7["method:VideoTextureManager::togglePlayPause<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:148"]
-  T7["method:VideoTextureManager::pause<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:143"]
+  S7["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T7["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S7 -->|calls| T7
-  S8["method:VideoTextureManager::togglePlayPause<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:148"]
-  T8["method:VideoTextureManager::play<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:138"]
+  S8["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T8["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S8 -->|calls| T8
-  S9["method:VideoTextureManager::seek<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:156"]
-  T9["method:VideoTextureManager::seek<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:156"]
+  S9["method:MomentPost::makeSample<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:42"]
+  T9["function:MomentPost::makeSample::avatar<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@UIKIit朋友圈ByGKPhotoBrowser/Model/ModelByUIKit朋友圈.swift:45"]
   S9 -->|calls| T9
-  S10["class:VideoTextureManager<br/>JobsByPods/JobsBy3rdTools@Pods/PNPlayer/VideoTextureManager.swift:18"]
-  T10["method:JobsObservable::removeObserver<br/>JobsByPods/JobsSwiftWorker@Pods/JobsObservable.swift:51"]
+  S10["struct:UserDefault<br/>TODO/UserDefault.swift:47"]
+  T10["method:UserDefaults::isPlistSafeType<br/>TODO/UserDefault.swift:111"]
   S10 -->|calls| T10
-  S11["method:Bundle::jobs_enableLanguageHook<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:20"]
-  T11["method:Bundle::jobs_localizedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:28"]
+  S11["function:install_all_flutter_pods<br/>my_flutter/.ios/Flutter/podhelper.rb:17"]
+  T11["function:install_flutter_engine_pod<br/>my_flutter/.ios/Flutter/podhelper.rb:43"]
   S11 -->|calls| T11
-  S12["method:Bundle::jobs_localizedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:28"]
-  T12["method:Bundle::jobs_localizedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:28"]
+  S12["function:install_all_flutter_pods<br/>my_flutter/.ios/Flutter/podhelper.rb:17"]
+  T12["function:install_flutter_plugin_pods<br/>my_flutter/.ios/Flutter/podhelper.rb:60"]
   S12 -->|calls| T12
-  S13["method:Bundle::jobs_localizedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:28"]
-  T13["method:Bundle::jobs_localizedString<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:28"]
+  S13["function:install_all_flutter_pods<br/>my_flutter/.ios/Flutter/podhelper.rb:17"]
+  T13["function:install_flutter_application_pod<br/>my_flutter/.ios/Flutter/podhelper.rb:80"]
   S13 -->|calls| T13
-  S14["method:Bundle::lang<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:62"]
-  T14["method:Bundle::mapLanguageIdentifier<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift:67"]
+  S14["method:AppDelegate::application<br/>my_flutter/ios/Runner/AppDelegate.swift:6"]
+  T14["method:GeneratedPluginRegistrant::registerWithRegistry:<br/>my_flutter/.ios/Flutter/FlutterPluginRegistrant/Classes/GeneratedPluginRegistrant.m:11"]
   S14 -->|calls| T14
-  S15["method:NSObject::activeRootViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:18"]
-  T15["function:NSObject::activeRootViewController::rank<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:24"]
+  S15["method:AppDelegate::application<br/>my_flutter/ios/Runner/AppDelegate.swift:6"]
+  T15["method:AppDelegate::application<br/>my_flutter/ios/Runner/AppDelegate.swift:6"]
   S15 -->|calls| T15
-  S16["method:NSObject::activeRootViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:18"]
-  T16["function:NSObject::activeRootViewController::rank<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:24"]
+  S16["function:main<br/>my_flutter/lib/main.dart:8"]
+  T16["function:_argsFromInitialRoute<br/>my_flutter/lib/main.dart:80"]
   S16 -->|calls| T16
-  S17["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T17["method:NSObject::activeRootViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:18"]
+  S17["function:main<br/>my_flutter/lib/main.dart:8"]
+  T17["function:_asMap<br/>my_flutter/lib/main.dart:73"]
   S17 -->|calls| T17
-  S18["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T18["function:NSObject::topViewController::next<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:53"]
+  S18["method:_FlutterPageState::initState<br/>my_flutter/lib/main.dart:108"]
+  T18["method:_FlutterPageState::initState<br/>my_flutter/lib/main.dart:108"]
   S18 -->|calls| T18
-  S19["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T19["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
+  S19["method:_FlutterPageState::dispose<br/>my_flutter/lib/main.dart:116"]
+  T19["method:_FlutterPageState::dispose<br/>my_flutter/lib/main.dart:116"]
   S19 -->|calls| T19
-  S20["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T20["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
+  S20["method:_FlutterPageState::dispose<br/>my_flutter/lib/main.dart:116"]
+  T20["method:_FlutterPageState::dispose<br/>my_flutter/lib/main.dart:116"]
   S20 -->|calls| T20
-  S21["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T21["function:NSObject::topViewController::next<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:53"]
+  S21["function:main<br/>my_flutter/linux/runner/main.cc:3"]
+  T21["function:my_application_new<br/>my_flutter/linux/runner/my_application.cc:138"]
   S21 -->|calls| T21
-  S22["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T22["function:NSObject::topViewController::next<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:53"]
+  S22["function:my_application_activate<br/>my_flutter/linux/runner/my_application.cc:23"]
+  T22["function:fl_register_plugins<br/>my_flutter/linux/flutter/generated_plugin_registrant.cc:10"]
   S22 -->|calls| T22
-  S23["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T23["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
+  S23["method:MainFlutterWindow::awakeFromNib<br/>my_flutter/macos/Runner/MainFlutterWindow.swift:5"]
+  T23["function:RegisterGeneratedPlugins<br/>my_flutter/macos/Flutter/GeneratedPluginRegistrant.swift:9"]
   S23 -->|calls| T23
-  S24["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T24["function:NSObject::topViewController::next<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:53"]
+  S24["method:MainFlutterWindow::awakeFromNib<br/>my_flutter/macos/Runner/MainFlutterWindow.swift:5"]
+  T24["method:MainFlutterWindow::awakeFromNib<br/>my_flutter/macos/Runner/MainFlutterWindow.swift:5"]
   S24 -->|calls| T24
-  S25["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
-  T25["method:NSObject::topViewController<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+UI.swift:46"]
+  S25["function:FlutterWindow::OnCreate<br/>my_flutter/windows/runner/flutter_window.cpp:12"]
+  T25["function:Win32Window::OnCreate<br/>my_flutter/windows/runner/win32_window.cpp:266"]
   S25 -->|calls| T25
 ```
 

@@ -87,8 +87,7 @@ static BROTLI_INLINE int ComputeLgBlock(const BrotliEncoderParams* params) {
   } else {
     lgblock = BROTLI_MIN(int, BROTLI_MAX_INPUT_BLOCK_BITS,
         BROTLI_MAX(int, BROTLI_MIN_INPUT_BLOCK_BITS, lgblock));
-  }
-  return lgblock;
+  };return lgblock;
 }
 
 /* Returns log2 of the size of main ring buffer area.

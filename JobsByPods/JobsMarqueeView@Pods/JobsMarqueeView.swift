@@ -3,7 +3,6 @@
 //  JobsMarqueeView
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -210,8 +209,7 @@ public final class JobsMarqueeView: UIView {
                 updatePageControlConstraintsIfNeeded()
                 updatePageControlCurrentPage()
                 pageControl.isHidden = false
-            }
-            return
+            };return
         }
         let isHorizontal = direction.isHorizontal
         minButtonSize = JobsMarqueeView.computeMinButtonSize()

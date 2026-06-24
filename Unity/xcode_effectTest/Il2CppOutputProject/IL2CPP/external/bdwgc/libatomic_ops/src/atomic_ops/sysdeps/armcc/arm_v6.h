@@ -190,8 +190,7 @@ __asm {
       strexeq result, new_val, [addr]
       teq     result, #1
       beq     retry
-    }
-    return !(result&2);
+    };return !(result&2);
   }
 # define AO_HAVE_compare_and_swap
 #endif /* !AO_GENERALIZE_ASM_BOOL_CAS */
@@ -212,8 +211,7 @@ __asm__ {
         strexeq tmp, new_val, [addr]
         teq     tmp, #1
         beq     retry
-        }
-        return fetched_val;
+        };return fetched_val;
 }
 #define AO_HAVE_fetch_compare_and_swap
 

@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -139,8 +138,7 @@ extension UIButton {
     internal func _jobs_guessBackgroundTargetSize() -> CGSize {
         if let s = self.jobs_bgImageTargetSize, s.width > 1, s.height > 1 { return s }
         let s = self.bounds.size
-        if s.width > 1, s.height > 1 { return s }
-        return CGSize(width: 320, height: 64)
+        if s.width > 1, s.height > 1 { return s };return CGSize(width: 320, height: 64)
     }
     // MARK: - Loading placeholder
     /// 用于撑开 imageView frame，便于 overlay 精准覆盖

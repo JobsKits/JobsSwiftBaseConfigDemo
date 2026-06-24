@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -37,8 +36,7 @@ extension String {
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
 
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() }
-        return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cgImage)
     }
     /// 可选：着色版（前景/背景色）
     @MainActor
@@ -68,8 +66,7 @@ extension String {
         let scaled = colored.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
 
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() }
-        return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cgImage)
     }
     /// 生成带中心 Logo 的二维码
     /// - Parameters:

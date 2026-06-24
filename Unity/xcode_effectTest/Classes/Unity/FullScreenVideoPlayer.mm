@@ -78,8 +78,7 @@ static bool prefersStatusBarHidden_DefaultImpl(id self_, SEL _cmd)
         cancelOnTouch   = cot;
 
         [self performSelector: @selector(actuallyStartTheMovie:) withObject: url afterDelay: 0];
-    }
-    return self;
+    };return self;
 }
 
 - (void)dealloc

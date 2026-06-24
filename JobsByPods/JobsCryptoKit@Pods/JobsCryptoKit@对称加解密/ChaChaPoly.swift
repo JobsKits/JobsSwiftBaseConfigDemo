@@ -3,7 +3,6 @@
 //  JobsCryptoKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -150,6 +149,5 @@ private func randomBytes(count: Int) throws -> Data {
     let status = data.withUnsafeMutableBytes { buf in
         SecRandomCopyBytes(kSecRandomDefault, count, buf.baseAddress!)
     }
-    guard status == errSecSuccess else { throw CryptoError.encryptionFailed }
-    return data
+    guard status == errSecSuccess else { throw CryptoError.encryptionFailed };return data
 }

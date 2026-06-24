@@ -60,8 +60,7 @@ extern "C"
         if (error != NULL)
         {
             error = strdup(error);
-        }
-        return error;
+        };return error;
     }
 
     int UnityReplayKitStartRecording()
@@ -158,8 +157,7 @@ extern "C"
         if (url != nil)
         {
             return [[url absoluteString] UTF8String];
-        }
-        return nullptr;
+        };return nullptr;
     }
 
     void UnityReplayKitCreateOverlayWindow()

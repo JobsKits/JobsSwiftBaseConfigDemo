@@ -11,8 +11,7 @@ CGAffineTransform TransformForOrientation(ScreenOrientation orient)
         case landscapeRight:        return CGAffineTransformMakeRotation(-M_PI_2);
 
         default:                    return CGAffineTransformIdentity;
-    }
-    return CGAffineTransformIdentity;
+    };return CGAffineTransformIdentity;
 }
 
 CGAffineTransform TransformBetweenOrientations(ScreenOrientation fromOrient, ScreenOrientation toOrient)

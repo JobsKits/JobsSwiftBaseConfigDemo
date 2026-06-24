@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -89,8 +88,7 @@ extension UIImage {
         }
 
         ctx.draw(cgImg, in: CGRect(x: 0, y: 0, width: width, height: height))
-        guard let out = ctx.makeImage() else { return nil }
-        return UIImage(cgImage: out, scale: scale, orientation: .up)
+        guard let out = ctx.makeImage() else { return nil };return UIImage(cgImage: out, scale: scale, orientation: .up)
     }
     // MARK: - 用颜色生成图片（默认 1x1）
     static func fromColor(_ color: UIColor,

@@ -61,8 +61,7 @@ static FORCE_INLINE uint32_t Detail_Baselib_EventSemaphore_TransitionFrom_ResetN
     {
         if (Baselib_atomic_compare_exchange_weak_32_relaxed_relaxed(&semaphore->state, &state, resetState))
             return resetState;
-    }
-    return state;
+    };return state;
 }
 
 BASELIB_INLINE_API void Baselib_EventSemaphore_CreateInplace(Baselib_EventSemaphore* semaphoreData)

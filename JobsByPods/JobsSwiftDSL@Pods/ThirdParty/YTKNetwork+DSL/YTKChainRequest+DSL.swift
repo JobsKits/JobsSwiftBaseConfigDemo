@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import ObjectiveC
@@ -68,8 +67,7 @@ public extension YTKChainRequest {
     /// 一次性加一批 accessory
     @discardableResult
     func byAccessories(_ accessories: [YTKRequestAccessory]) -> Self {
-        accessories.forEach { self.add($0) }
-        return self
+        accessories.forEach { self.add($0) };return self
     }
     // MARK: - 链步骤
     /// 添加一步请求 + 可选回调
@@ -87,8 +85,7 @@ public extension YTKChainRequest {
     /// 批量添加步骤（全部不需要 step 回调）
     @discardableResult
     func byAdd(_ requests: [YTKBaseRequest]) -> Self {
-        requests.forEach { self.add($0, callback: nil) }
-        return self
+        requests.forEach { self.add($0, callback: nil) };return self
     }
     // MARK: - 全局成功 / 失败回调
     /// 整条链成功

@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -133,8 +132,7 @@ extension UIBarItem {
     public func byCopyTitleTextAttributes(from src: UIControl.State = .normal,
                                    to targets: [UIControl.State] = [.highlighted, .disabled, .focused, .selected]) -> Self {
         let attrs = self.titleTextAttributes(for: src)
-        targets.forEach { self.setTitleTextAttributes(attrs, for: $0) }
-        return self
+        targets.forEach { self.setTitleTextAttributes(attrs, for: $0) };return self
     }
 }
 // MARK: - 使用示例

@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -685,8 +684,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     private func subTitleBaseColor(button: UIButton) -> UIColor {
-        if button.isSelected, let c = snapshot.subTitleColorSelected { return c }
-        return snapshot.subTitleColorNormal
+        if button.isSelected, let c = snapshot.subTitleColorSelected { return c };return snapshot.subTitleColorNormal
         ?? Self.findSubTitleLabel(from: button)?.textColor
         ?? JobsCor.label
     }
@@ -811,8 +809,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
         if let v = button.value(forKey: "subTitleLab") as? UILabel { return v }
         if let v = button.value(forKey: "subTitleLabel") as? UILabel { return v }
         if let v = button.value(forKey: "subtitleLabel") as? UILabel { return v }
-        if #available(iOS 15.0, *), let v = button.subtitleLabel { return v }
-        return nil
+        if #available(iOS 15.0, *), let v = button.subtitleLabel { return v };return nil
     }
 }
 // MARK: - Formatter

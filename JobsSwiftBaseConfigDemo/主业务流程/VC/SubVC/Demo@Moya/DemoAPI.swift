@@ -72,8 +72,7 @@ extension DemoAPI: TargetType {
             return .requestPlain
         case let .ghSearchUsers(q, page):
             var params = ["q": q]
-            if let p = page { params["page"] = "\(p)" }
-            return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+            if let p = page { params["page"] = "\(p)" };return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
 
         // ReqRes
         case let .login(email, password):
@@ -118,8 +117,7 @@ extension DemoAPI: TargetType {
             // multipart 自带 boundary Content-Type
         } else {
             h["Content-Type"] = "application/json; charset=utf-8"
-        }
-        return h
+        };return h
     }
 
     public var sampleData: Data {

@@ -3,7 +3,6 @@
 //  JobsSwiftTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -61,8 +60,7 @@ public final class CrashLogCenter {
     /// - 规则：上次没有写到安全退出点 => 认为“异常退出”
     public func didCrashLastRun() -> Bool {
         // 如果从未写过 key（第一次安装），认为没有崩溃
-        if UserDefaults.standard.object(forKey: safeExitKey) == nil { return false }
-        return UserDefaults.standard.bool(forKey: safeExitKey) == false
+        if UserDefaults.standard.object(forKey: safeExitKey) == nil { return false };return UserDefaults.standard.bool(forKey: safeExitKey) == false
     }
     // ================================== File Info ==================================
     public struct FileInfo {

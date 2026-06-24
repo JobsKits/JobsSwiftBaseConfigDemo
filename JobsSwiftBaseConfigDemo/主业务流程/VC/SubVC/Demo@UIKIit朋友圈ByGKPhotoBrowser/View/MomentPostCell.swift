@@ -342,8 +342,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }
 
     private func makeBaseText(post: MomentPost) -> NSAttributedString {
-        if let rich = post.richText { return rich }
-        return NSAttributedString(string: post.text, attributes: [
+        if let rich = post.richText { return rich };return NSAttributedString(string: post.text, attributes: [
             .font: UIFont.systemFont(ofSize: 14),
             .foregroundColor: UIColor.label
         ])
@@ -451,8 +450,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
                 let h = post.text.boundingHeight(width: contentW, font: .systemFont(ofSize: 14))
                 if likelyNeedsMore && !post.isExpanded {
                     return min(h, ceil(UIFont.systemFont(ofSize: 14).lineHeight * 3))
-                }
-                return h + (likelyNeedsMore ? ceil(UIFont.systemFont(ofSize: 14).lineHeight) : 0)
+                };return h + (likelyNeedsMore ? ceil(UIFont.systemFont(ofSize: 14).lineHeight) : 0)
             }
         }()
         heights.append(textH)

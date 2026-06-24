@@ -12,79 +12,79 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASConfigurationTests::testMappingFlagsFromNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:116"]
-  T1["method:ASConfigurationTests::names<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:44"]
+  S1["method:ASDisplayNodeTests::testSubnodeAddedAfterLoadingExternalView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1905"]
+  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["method:ASConfigurationTests::testMappingFlagsFromNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:116"]
-  T2["method:ASConfigurationTests::allFeatures<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:62"]
+  S2["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
+  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S2 -->|calls| T2
-  S3["method:ASConfigurationTests::testMappingFlagsFromNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:116"]
-  T3["function:ASExperimentalFeaturesFromArray<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASExperimentalFeatures.mm:46"]
+  S3["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1961"]
+  T3["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
   S3 -->|calls| T3
-  S4["method:ASConfigurationTests::testFlagMatchName<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:125"]
-  T4["method:ASConfigurationTests::names<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:44"]
+  S4["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1966"]
+  T4["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
   S4 -->|calls| T4
-  S5["method:ASConfigurationTests::testFlagMatchName<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:125"]
-  T5["function:ASExperimentalFeaturesFromArray<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASExperimentalFeatures.mm:46"]
+  S5["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipNoView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1971"]
+  T5["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
   S5 -->|calls| T5
-  S6["method:ASConfigurationTests::testNameMatchFlag<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:133"]
-  T6["method:ASConfigurationTests::names<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:44"]
+  S6["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipNoLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1976"]
+  T6["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
   S6 -->|calls| T6
-  S7["method:ASConfigurationTests::testNameMatchFlag<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:133"]
-  T7["function:ASExperimentalFeaturesGetNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASExperimentalFeatures.mm:13"]
+  S7["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T7["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S7 -->|calls| T7
-  S8["method:ASControlNodeTests::testActionWithoutParameters<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:60"]
+  S8["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
   T8["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S8 -->|calls| T8
-  S9["method:ASControlNodeTests::testActionWithoutParameters<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:60"]
+  S9["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
   T9["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S9 -->|calls| T9
-  S10["method:ASControlNodeTests::testActionAndSender<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:69"]
+  S10["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
   T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S10 -->|calls| T10
-  S11["method:ASControlNodeTests::testActionAndSender<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:69"]
-  T11["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S11["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T11["method:ASDisplayNode::displayNodeRecursiveDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm:3701"]
   S11 -->|calls| T11
-  S12["method:ASControlNodeTests::testActionAndSenderAndEvent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:78"]
-  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S12["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T12["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S12 -->|calls| T12
-  S13["method:ASControlNodeTests::testActionAndSenderAndEvent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:78"]
-  T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S13["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T13["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S13 -->|calls| T13
-  S14["method:ASControlNodeTests::testActionWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:87"]
-  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S14["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T14["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S14 -->|calls| T14
-  S15["method:ASControlNodeTests::testActionWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:87"]
-  T15["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S15["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T15["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S15 -->|calls| T15
-  S16["method:ASControlNodeTests::testActionAndSenderWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:96"]
-  T16["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S16["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T16["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S16 -->|calls| T16
-  S17["method:ASControlNodeTests::testActionAndSenderWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:96"]
-  T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S17["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T17["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S17 -->|calls| T17
-  S18["method:ASControlNodeTests::testActionAndSenderAndEventWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:105"]
-  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S18["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T18["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S18 -->|calls| T18
-  S19["method:ASControlNodeTests::testActionAndSenderAndEventWithoutTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:105"]
-  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S19["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T19["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S19 -->|calls| T19
-  S20["method:ASControlNodeTests::testRemoveWithoutTargetRemovesTargetlessAction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:114"]
+  S20["method:ASDisplayNodeTests::checkNameInDescriptionIsLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2123"]
   T20["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S20 -->|calls| T20
-  S21["method:ASControlNodeTests::testRemoveWithoutTargetRemovesTargetlessAction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:114"]
+  S21["method:ASDisplayNodeTests::testBounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2146"]
   T21["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S21 -->|calls| T21
-  S22["method:ASControlNodeTests::testRemoveWithTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:124"]
+  S22["method:ASDisplayNodeTests::testDidEnterDisplayIsCalledWhenNodesEnterDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2158"]
   T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S22 -->|calls| T22
-  S23["method:ASControlNodeTests::testRemoveWithTarget<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:124"]
+  S23["method:ASDisplayNodeTests::testDidExitDisplayIsCalledWhenNodesExitDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2167"]
   T23["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S23 -->|calls| T23
-  S24["method:ASControlNodeTests::testRemoveWithTargetRemovesAction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:134"]
+  S24["method:ASDisplayNodeTests::testDidEnterPreloadIsCalledWhenNodesEnterPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2177"]
   T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S24 -->|calls| T24
-  S25["method:ASControlNodeTests::testRemoveWithTargetRemovesAction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASControlNodeTests.mm:134"]
+  S25["method:ASDisplayNodeTests::testDidExitPreloadIsCalledWhenNodesExitPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2186"]
   T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S25 -->|calls| T25
 ```

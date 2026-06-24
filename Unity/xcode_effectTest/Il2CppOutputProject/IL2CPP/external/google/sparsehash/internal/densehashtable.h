@@ -1078,8 +1078,7 @@ class dense_hashtable {
         if ((it2 == ht.end()) || (*it != *it2)) {
           return false;
         }
-      }
-      return true;
+      };return true;
     }
   }
   bool operator!=(const dense_hashtable& ht) const {
@@ -1131,8 +1130,7 @@ class dense_hashtable {
           if ( !serializer(fp, table[i + bit]) ) return false;
         }
       }
-    }
-    return true;
+    };return true;
   }
 
   // INPUT: anything we've written an overload of read_data() for.
@@ -1165,8 +1163,7 @@ class dense_hashtable {
           if ( !serializer(fp, &table[i + bit]) ) return false;
         }
       }
-    }
-    return true;
+    };return true;
   }
 
  private:
@@ -1209,8 +1206,7 @@ class dense_hashtable {
                 "%lu elements for ptr %p",
                 static_cast<unsigned long>(n), static_cast<void*>(ptr));
         exit(1);
-      }
-      return retval;
+      };return retval;
     }
   };
 

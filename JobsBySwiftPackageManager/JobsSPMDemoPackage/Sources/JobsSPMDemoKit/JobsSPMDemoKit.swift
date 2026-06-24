@@ -36,8 +36,7 @@ public struct JobsSPMDemoCatalog: Codable, Sendable {
     public static func loadBundled() throws -> JobsSPMDemoCatalog {
         guard let url = Bundle.module.url(forResource: "DemoFeatures", withExtension: "json") else {
             throw JobsSPMDemoError.resourceNotFound("DemoFeatures.json")
-        }
-        return try JSONDecoder().decode(JobsSPMDemoCatalog.self, from: Data(contentsOf: url))
+        };return try JSONDecoder().decode(JobsSPMDemoCatalog.self, from: Data(contentsOf: url))
     }
 }
 
@@ -52,8 +51,7 @@ public actor JobsSPMDemoRepository {
     public func search(_ keyword: String) -> [JobsSPMDemoFeature] {
         searchCount += 1
         let normalized = keyword.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !normalized.isEmpty else { return catalog.features }
-        return catalog.features.filter {
+        guard !normalized.isEmpty else { return catalog.features };return catalog.features.filter {
             $0.title.lowercased().contains(normalized)
                 || $0.detail.lowercased().contains(normalized)
         }

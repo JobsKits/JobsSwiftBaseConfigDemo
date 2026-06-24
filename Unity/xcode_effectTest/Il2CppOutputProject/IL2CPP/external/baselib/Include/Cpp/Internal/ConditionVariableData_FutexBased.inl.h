@@ -29,8 +29,7 @@ namespace baselib
                         {
                             return true;
                         }
-                    }
-                    return false;
+                    };return false;
                 }
             };
         }

@@ -3,7 +3,6 @@
 //  JobsScale
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -163,8 +162,7 @@ public enum Screen {
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.bounds.size != .zero {
             return window.bounds.size
-        }
-        return UIScreen.main.bounds.size
+        };return UIScreen.main.bounds.size
         #else
         return .zero
         #endif

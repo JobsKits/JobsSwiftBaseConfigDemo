@@ -41,8 +41,7 @@ BASELIB_INLINE_API bool Detail_Baselib_HighCapacitySemaphore_ConsumeWakeup(Basel
     {
         if (Baselib_atomic_compare_exchange_weak_32_acquire_relaxed(&semaphore->wakeups, &previousCount, previousCount - 1))
             return true;
-    }
-    return false;
+    };return false;
 }
 
 BASELIB_INLINE_API bool Baselib_HighCapacitySemaphore_TryAcquire(Baselib_HighCapacitySemaphore* semaphore)
@@ -52,8 +51,7 @@ BASELIB_INLINE_API bool Baselib_HighCapacitySemaphore_TryAcquire(Baselib_HighCap
     {
         if (Baselib_atomic_compare_exchange_weak_64_acquire_relaxed(&semaphore->count, &previousCount, previousCount - 1))
             return true;
-    }
-    return false;
+    };return false;
 }
 
 BASELIB_INLINE_API void Baselib_HighCapacitySemaphore_Acquire(Baselib_HighCapacitySemaphore* semaphore)

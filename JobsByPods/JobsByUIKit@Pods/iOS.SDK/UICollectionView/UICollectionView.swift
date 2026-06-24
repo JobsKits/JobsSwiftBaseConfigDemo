@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -90,8 +89,7 @@ extension UICollectionView {
                                                          UICollectionViewCell,
                                                          IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didEndDisplayingCell = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
     // MARK: - UICollectionViewDelegateFlowLayout
     @discardableResult
@@ -100,8 +98,7 @@ extension UICollectionView {
                                                   UICollectionViewLayout,
                                                   IndexPath) -> CGSize) -> Self {
         jobs_blocksProxy()?.sizeForItemAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -110,8 +107,7 @@ extension UICollectionView {
                                                       UICollectionViewLayout,
                                                       Int) -> UIEdgeInsets) -> Self {
         jobs_blocksProxy()?.insetForSectionAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -120,8 +116,7 @@ extension UICollectionView {
                                                                    UICollectionViewLayout,
                                                                    Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.minimumLineSpacingForSectionAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -130,8 +125,7 @@ extension UICollectionView {
                                                                         UICollectionViewLayout,
                                                                         Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.minimumInteritemSpacingForSectionAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -140,8 +134,7 @@ extension UICollectionView {
                                                                     UICollectionViewLayout,
                                                                     Int) -> CGSize) -> Self {
         jobs_blocksProxy()?.referenceSizeForHeaderInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -150,8 +143,7 @@ extension UICollectionView {
                                                                     UICollectionViewLayout,
                                                                     Int) -> CGSize) -> Self {
         jobs_blocksProxy()?.referenceSizeForFooterInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_setDelegateMuxIfNeeded(primary: p) };return self
     }
     // MARK: - UICollectionViewDataSourcePrefetching
     @discardableResult
@@ -195,26 +187,22 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
                                              IndexPath) -> UICollectionReusableView)?
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let t = target else { return 1 }
-        return numberOfSections?(t, collectionView) ?? 1
+        guard let t = target else { return 1 };return numberOfSections?(t, collectionView) ?? 1
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let t = target else { return 0 }
-        return numberOfItemsInSection?(t, collectionView, section) ?? 0
+        guard let t = target else { return 0 };return numberOfItemsInSection?(t, collectionView, section) ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let t = target else { return UICollectionViewCell() }
-        return cellForItemAt?(t, collectionView, indexPath) ?? UICollectionViewCell()
+        guard let t = target else { return UICollectionViewCell() };return cellForItemAt?(t, collectionView, indexPath) ?? UICollectionViewCell()
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let t = target else { return UICollectionReusableView() }
-        return viewForSupplementaryElementOfKind?(t,
+        guard let t = target else { return UICollectionReusableView() };return viewForSupplementaryElementOfKind?(t,
                                                   collectionView,
                                                   kind,
                                                   indexPath) ?? UICollectionReusableView()
@@ -289,8 +277,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero }
-        return sizeForItemAt?(t, collectionView, collectionViewLayout, indexPath)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero };return sizeForItemAt?(t, collectionView, collectionViewLayout, indexPath)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize
         ?? .zero
     }
@@ -298,8 +285,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset ?? .zero }
-        return insetForSectionAt?(t, collectionView, collectionViewLayout, section)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset ?? .zero };return insetForSectionAt?(t, collectionView, collectionViewLayout, section)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset
         ?? .zero
     }
@@ -307,8 +293,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0 }
-        return minimumLineSpacingForSectionAt?(t, collectionView, collectionViewLayout, section)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0 };return minimumLineSpacingForSectionAt?(t, collectionView, collectionViewLayout, section)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing
         ?? 0
     }
@@ -316,8 +301,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0 }
-        return minimumInteritemSpacingForSectionAt?(t, collectionView, collectionViewLayout, section)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0 };return minimumInteritemSpacingForSectionAt?(t, collectionView, collectionViewLayout, section)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing
         ?? 0
     }
@@ -325,8 +309,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? .zero }
-        return referenceSizeForHeaderInSection?(t, collectionView, collectionViewLayout, section)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? .zero };return referenceSizeForHeaderInSection?(t, collectionView, collectionViewLayout, section)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize
         ?? .zero
     }
@@ -334,8 +317,7 @@ private final class JobsCollectionViewBlocksProxy: NSObject,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForFooterInSection section: Int) -> CGSize {
-        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize ?? .zero }
-        return referenceSizeForFooterInSection?(t, collectionView, collectionViewLayout, section)
+        guard let t = target else { return (collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize ?? .zero };return referenceSizeForFooterInSection?(t, collectionView, collectionViewLayout, section)
         ?? (collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize
         ?? .zero
     }
@@ -389,21 +371,18 @@ final class JobsCollectionViewDelegateMux: NSObject,
     override func responds(to aSelector: Selector!) -> Bool {
         if super.responds(to: aSelector) { return true }
         if let p = primary, (p as AnyObject).responds(to: aSelector) { return true }
-        if let s = secondary, (s as AnyObject).responds(to: aSelector) { return true }
-        return false
+        if let s = secondary, (s as AnyObject).responds(to: aSelector) { return true };return false
     }
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {
         if let p = primary, (p as AnyObject).responds(to: aSelector) { return p }
-        if let s = secondary, (s as AnyObject).responds(to: aSelector) { return s }
-        return super.forwardingTarget(for: aSelector)
+        if let s = secondary, (s as AnyObject).responds(to: aSelector) { return s };return super.forwardingTarget(for: aSelector)
     }
 
     override func conforms(to aProtocol: Protocol) -> Bool {
         if super.conforms(to: aProtocol) { return true }
         if let p = primary, (p as AnyObject).conforms(to: aProtocol) { return true }
-        if let s = secondary, (s as AnyObject).conforms(to: aProtocol) { return true }
-        return false
+        if let s = secondary, (s as AnyObject).conforms(to: aProtocol) { return true };return false
     }
 }
 

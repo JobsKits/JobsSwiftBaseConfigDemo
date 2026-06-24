@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T1["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S1["method:ModifiedContent::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:44"]
+  T1["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T2["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S2["method:ModifiedContent::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:44"]
+  T2["method:ModifiedContent::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:44"]
   S2 -->|calls| T2
-  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T3["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S3["method:ModifiedContent::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:44"]
+  T3["method:Modifier::modify<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:72"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T4["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S4["method:Optional::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:150"]
+  T4["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T5["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S5["class:LayoutSpec<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:158"]
+  T5["method:Optional::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:150"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T6["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S6["class:AnyLayoutSpec<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:170"]
+  T6["method:Optional::tss_make<br/>JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/Sources/LayoutSpecBuilders/SpecBuilder.swift:150"]
   S6 -->|calls| T6
-  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T7["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S7["method:ASListKitTestAdapterDataSource::listAdapter:sectionControllerForObject:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListKitTestAdapterDataSource.m:18"]
+  T7["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
   S7 -->|calls| T7
-  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T8["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S8["function:setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListKitTests.m:29"]
+  T8["function:setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListKitTests.m:29"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T9["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListKitTests.m<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListKitTests.m:1"]
+  T9["method:ASCollectionModernDataSourceTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:73"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.h:1"]
   T10["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
+  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.h:1"]
   T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S12["method:ASListTestObject::initWithKey:value:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.m:12"]
+  T12["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S13["method:ASListTestObject::copyWithZone:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.m:21"]
+  T13["method:ASListTestObject::initWithKey:value:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestObject.m:12"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S14["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
+  T14["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
   S14 -->|calls| T14
-  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T15["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S15["method:ASListTestSection::nodeBlockForItemAtIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:50"]
+  T15["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
   S15 -->|calls| T15
-  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T16["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S16["method:ASListTestSupplementarySource::nodeBlockForSupplementaryElementOfKind:atIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSupplementarySource.m:23"]
+  T16["method:ASListTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/SubspecWorkspaces/ASDKListKit/ASDKListKitTests/ASListTestSection.m:13"]
   S16 -->|calls| T16
-  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T17["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S17["method:ASAbsoluteLayoutSpecSnapshotTests::testSizingBehaviour<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:20"]
+  T17["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
   S17 -->|calls| T17
-  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T18["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S18["method:ASAbsoluteLayoutSpecSnapshotTests::testSizingBehaviour<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:20"]
+  T18["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T19["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S19["method:ASAbsoluteLayoutSpecSnapshotTests::testSizingBehaviour<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:20"]
+  T19["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T20["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S20["method:ASAbsoluteLayoutSpecSnapshotTests::testChildrenMeasuredWithAutoMaxSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:31"]
+  T20["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T21["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S21["method:ASAbsoluteLayoutSpecSnapshotTests::testChildrenMeasuredWithAutoMaxSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:31"]
+  T21["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T22["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S22["method:ASAbsoluteLayoutSpecSnapshotTests::testChildrenMeasuredWithAutoMaxSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:31"]
+  T22["method:ASAbsoluteLayoutSpecSnapshotTests::testWithChildren:sizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:54"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S23["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
+  T23["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T24["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S24["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
+  T24["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:1"]
-  T25["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S25["method:ASAbsoluteLayoutSpecSnapshotTests::testWithSizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:43"]
+  T25["method:ASAbsoluteLayoutSpecSnapshotTests::testWithChildren:sizeRange:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASAbsoluteLayoutSpecSnapshotTests.mm:54"]
   S25 -->|calls| T25
 ```
 

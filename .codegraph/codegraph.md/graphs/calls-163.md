@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:NSMutableAttributedString::setAs_strikethroughStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:712"]
-  T1["method:NSMutableAttributedString::as_setStrikethroughStyle:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:892"]
+  S1["method:ASBatchFetchingTests::testHorizontalScrollToExactLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:140"]
+  T1["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S1 -->|calls| T1
-  S2["method:NSMutableAttributedString::setAs_strikethroughColor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:716"]
-  T2["method:NSMutableAttributedString::as_setStrikethroughColor:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:897"]
+  S2["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S2 -->|calls| T2
-  S3["method:NSMutableAttributedString::setAs_underlineStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:720"]
-  T3["method:NSMutableAttributedString::as_setUnderlineStyle:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:901"]
+  S3["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  T3["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S3 -->|calls| T3
-  S4["method:NSMutableAttributedString::setAs_underlineColor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:724"]
-  T4["method:NSMutableAttributedString::as_setUnderlineColor:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:906"]
+  S4["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  T4["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S4 -->|calls| T4
-  S5["method:NSMutableAttributedString::setAs_ligature:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:728"]
-  T5["method:NSMutableAttributedString::as_setLigature:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:911"]
+  S5["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  T5["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S5 -->|calls| T5
-  S6["method:NSMutableAttributedString::setAs_textEffect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:732"]
-  T6["method:NSMutableAttributedString::as_setTextEffect:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:915"]
+  S6["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  T6["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S6 -->|calls| T6
-  S7["method:NSMutableAttributedString::setAs_obliqueness:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:736"]
-  T7["method:NSMutableAttributedString::as_setObliqueness:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:919"]
+  S7["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  T7["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S7 -->|calls| T7
-  S8["method:NSMutableAttributedString::setAs_expansion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:740"]
-  T8["method:NSMutableAttributedString::as_setExpansion:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:923"]
+  S8["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  T8["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S8 -->|calls| T8
-  S9["method:NSMutableAttributedString::setAs_baselineOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:744"]
-  T9["method:NSMutableAttributedString::as_setBaselineOffset:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:927"]
+  S9["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  T9["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S9 -->|calls| T9
-  S10["method:NSMutableAttributedString::setAs_verticalGlyphForm:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:748"]
-  T10["method:NSMutableAttributedString::as_setVerticalGlyphForm:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:931"]
+  S10["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S10 -->|calls| T10
-  S11["method:NSMutableAttributedString::setAs_language:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:752"]
-  T11["method:NSMutableAttributedString::as_setLanguage:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:936"]
+  S11["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T11["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S11 -->|calls| T11
-  S12["method:NSMutableAttributedString::setAs_writingDirection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:756"]
-  T12["method:NSMutableAttributedString::as_setWritingDirection:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:940"]
+  S12["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T12["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S12 -->|calls| T12
-  S13["method:NSMutableAttributedString::setAs_paragraphStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:760"]
-  T13["method:NSMutableAttributedString::as_setParagraphStyle:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:944"]
+  S13["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T13["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S13 -->|calls| T13
-  S14["method:NSMutableAttributedString::setAs_alignment:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:772"]
-  T14["method:NSMutableAttributedString::as_setAlignment:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:980"]
+  S14["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S14 -->|calls| T14
-  S15["method:NSMutableAttributedString::setAs_baseWritingDirection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:776"]
-  T15["method:NSMutableAttributedString::as_setBaseWritingDirection:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:984"]
+  S15["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T15["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S15 -->|calls| T15
-  S16["method:NSMutableAttributedString::setAs_lineSpacing:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:780"]
-  T16["method:NSMutableAttributedString::as_setLineSpacing:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:988"]
+  S16["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T16["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S16 -->|calls| T16
-  S17["method:NSMutableAttributedString::setAs_paragraphSpacing:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:784"]
-  T17["method:NSMutableAttributedString::as_setParagraphSpacing:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:992"]
+  S17["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T17["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S17 -->|calls| T17
-  S18["method:NSMutableAttributedString::setAs_paragraphSpacingBefore:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:788"]
-  T18["method:NSMutableAttributedString::as_setParagraphSpacing:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:992"]
+  S18["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
+  T18["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
   S18 -->|calls| T18
-  S19["method:NSMutableAttributedString::setAs_firstLineHeadIndent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:792"]
-  T19["method:NSMutableAttributedString::as_setFirstLineHeadIndent:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1000"]
+  S19["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
+  T19["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
   S19 -->|calls| T19
-  S20["method:NSMutableAttributedString::setAs_headIndent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:796"]
-  T20["method:NSMutableAttributedString::as_setHeadIndent:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1004"]
+  S20["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  T20["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
   S20 -->|calls| T20
-  S21["method:NSMutableAttributedString::setAs_tailIndent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:800"]
-  T21["method:NSMutableAttributedString::as_setTailIndent:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1008"]
+  S21["method:ASBridgedPropertiesTests::testTheresASharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:75"]
+  T21["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
   S21 -->|calls| T21
-  S22["method:NSMutableAttributedString::setAs_lineBreakMode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:804"]
-  T22["method:NSMutableAttributedString::as_setLineBreakMode:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1012"]
+  S22["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T22["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
   S22 -->|calls| T22
-  S23["method:NSMutableAttributedString::setAs_minimumLineHeight:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:808"]
-  T23["method:NSMutableAttributedString::as_setMinimumLineHeight:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1016"]
+  S23["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T23["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S23 -->|calls| T23
-  S24["method:NSMutableAttributedString::setAs_maximumLineHeight:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:812"]
-  T24["method:NSMutableAttributedString::as_setMaximumLineHeight:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1020"]
+  S24["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T24["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
   S24 -->|calls| T24
-  S25["method:NSMutableAttributedString::setAs_lineHeightMultiple:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:816"]
-  T25["method:NSMutableAttributedString::as_setLineHeightMultiple:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1024"]
+  S25["method:ASBridgedPropertiesTests::testThatSettingABridgedViewPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:104"]
+  T25["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S25 -->|calls| T25
 ```
 

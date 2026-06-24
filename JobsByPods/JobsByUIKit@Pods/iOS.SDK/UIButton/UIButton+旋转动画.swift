@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -32,8 +31,7 @@ extension UIButton {
     @discardableResult
     public func isRotating(scope: RotationScope = .imageView,
                            key: String = UIButton.rotationKey) -> Bool {
-        guard let tl = targetLayer(for: scope) else { return false }
-        return tl.animation(forKey: key) != nil
+        guard let tl = targetLayer(for: scope) else { return false };return tl.animation(forKey: key) != nil
     }
 
     @discardableResult

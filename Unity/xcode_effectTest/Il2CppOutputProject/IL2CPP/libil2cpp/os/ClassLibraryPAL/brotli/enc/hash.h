@@ -413,8 +413,7 @@ static BROTLI_INLINE size_t HasherSize(const BrotliEncoderParams* params,
 #undef SIZE_
     default:
       break;
-  }
-  return 0;  /* Default case. */
+  };return 0;  /* Default case. */
 }
 
 static BROTLI_INLINE void HasherSetup(MemoryManager* m, Hasher* hasher,

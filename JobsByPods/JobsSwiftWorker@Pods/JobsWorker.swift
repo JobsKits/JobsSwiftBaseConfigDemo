@@ -3,7 +3,6 @@
 //  JobsSwiftWorker
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -62,8 +61,7 @@ public final class JobsWorkerBag {
 
     public var count: Int {
         lock.lock()
-        defer { lock.unlock() }
-        return workers.count
+        defer { lock.unlock() };return workers.count
     }
 
     public func insert(_ worker: JobsWorkerDisposable) {

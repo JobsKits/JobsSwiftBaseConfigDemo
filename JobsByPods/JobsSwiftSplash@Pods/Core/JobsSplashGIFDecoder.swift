@@ -2,6 +2,8 @@
 //  JobsSplashGIFDecoder.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 #if os(iOS) || os(tvOS)
 import UIKit
@@ -15,8 +17,7 @@ enum JobsSplashGIFDecoder {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(source)
         guard frameCount > 1 else {
-            guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
-            return UIImage(cgImage: image)
+            guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil };return UIImage(cgImage: image)
         }
 
         var frames: [UIImage] = []
@@ -26,8 +27,7 @@ enum JobsSplashGIFDecoder {
             frames.append(UIImage(cgImage: cgImage))
             duration += frameDuration(source: source, index: index)
         }
-        guard !frames.isEmpty else { return nil }
-        return UIImage.animatedImage(with: frames, duration: max(duration, 0.1))
+        guard !frames.isEmpty else { return nil };return UIImage.animatedImage(with: frames, duration: max(duration, 0.1))
     }
 
     private static func frameDuration(source: CGImageSource, index: Int) -> TimeInterval {

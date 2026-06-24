@@ -89,8 +89,7 @@ public:
         {
             *value = *iter;
             return true;
-        }
-        return false;
+        };return false;
     }
 
     bool Add(const Value& value)

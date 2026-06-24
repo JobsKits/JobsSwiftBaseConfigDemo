@@ -3,7 +3,6 @@
 //  JobsSwiftWorker
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -14,8 +13,7 @@ public extension JobsObservable {
         let mapped = JobsObservable<Mapped>(transform(currentValue), name: name)
         _ = observe { change in
             mapped.accept(transform(change.newValue))
-        }
-        return mapped
+        };return mapped
     }
 
     func filter(_ isIncluded: @escaping @Sendable (Value) -> Bool,
@@ -25,8 +23,7 @@ public extension JobsObservable {
         _ = observe { change in
             guard isIncluded(change.newValue) else { return }
             filtered.accept(change.newValue)
-        }
-        return filtered
+        };return filtered
     }
 
     func distinctUntilChanged(_ comparator: @escaping @Sendable (Value, Value) -> Bool,
@@ -35,8 +32,7 @@ public extension JobsObservable {
         _ = observe { change in
             guard !comparator(change.oldValue, change.newValue) else { return }
             derived.accept(change.newValue)
-        }
-        return derived
+        };return derived
     }
 }
 

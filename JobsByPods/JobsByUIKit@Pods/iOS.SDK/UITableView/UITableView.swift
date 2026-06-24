@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -141,8 +140,7 @@ extension UITableView {
                                                 UITableViewCell,
                                                 IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.willDisplay = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -150,8 +148,7 @@ extension UITableView {
                                                    UITableView,
                                                    IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didSelectRowAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -159,8 +156,7 @@ extension UITableView {
                                                      UITableView,
                                                      IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.didDeselectRowAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -168,8 +164,7 @@ extension UITableView {
                                                    UITableView,
                                                    IndexPath) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForRowAt = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -177,8 +172,7 @@ extension UITableView {
                                                              UITableView,
                                                              Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForHeaderInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -186,8 +180,7 @@ extension UITableView {
                                                              UITableView,
                                                              Int) -> CGFloat) -> Self {
         jobs_blocksProxy()?.heightForFooterInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -195,8 +188,7 @@ extension UITableView {
                                                            UITableView,
                                                            Int) -> UIView?) -> Self {
         jobs_blocksProxy()?.viewForHeaderInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -204,8 +196,7 @@ extension UITableView {
                                                            UITableView,
                                                            Int) -> UIView?) -> Self {
         jobs_blocksProxy()?.viewForFooterInSection = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
 
     @discardableResult
@@ -213,8 +204,7 @@ extension UITableView {
                                                                     UITableView,
                                                                     IndexPath) -> Void) -> Self {
         jobs_blocksProxy()?.accessoryButtonTappedForRowWith = block
-        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) }
-        return self
+        if let p = jobs_blocksProxy(createIfNeeded: false) { jobs_installDelegateMuxIfNeeded(primary: p) };return self
     }
     // MARK: - Private
     private func jobs_blocksProxy(createIfNeeded: Bool = true) -> JobsTableViewBlocksProxy? {
@@ -413,14 +403,12 @@ class JobsTableViewDelegateMux: NSObject,
     override func responds(to aSelector: Selector!) -> Bool {
         // 必须让 UIKit 认为我们“能响应”被转发对象的 selector
         if (primary as AnyObject?)?.responds(to: aSelector) == true { return true }
-        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return true }
-        return super.responds(to: aSelector)
+        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return true };return super.responds(to: aSelector)
     }
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {
         // 选择性转发：优先 primary（确保 didSelect 走你的闭包）
         if (primary as AnyObject?)?.responds(to: aSelector) == true { return primary }
-        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return secondary }
-        return super.forwardingTarget(for: aSelector)
+        if (secondary as AnyObject?)?.responds(to: aSelector) == true { return secondary };return super.forwardingTarget(for: aSelector)
     }
 }

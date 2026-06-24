@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -67,8 +66,7 @@ extension JXSegmentedTitleImageDataSource {
     @discardableResult
     public func byImageZoom(enabled: Bool = true, selectedScale: CGFloat? = nil) -> Self {
         isImageZoomEnabled = enabled
-        if let s = selectedScale { imageSelectedZoomScale = s }
-        return self
+        if let s = selectedScale { imageSelectedZoomScale = s };return self
     }
     // MARK: - presets
     /// 上图下文：常用预设
@@ -76,23 +74,20 @@ extension JXSegmentedTitleImageDataSource {
     public func byTopImage(bottomTitle spacing: CGFloat = 6, imageSize: CGSize? = nil) -> Self {
         titleImageType = .topImage
         titleImageSpacing = spacing
-        if let s = imageSize { self.imageSize = s }
-        return self
+        if let s = imageSize { self.imageSize = s };return self
     }
     /// 左图右文：常用预设
     @discardableResult
     public func byLeftImage(rightTitle spacing: CGFloat = 6, imageSize: CGSize? = nil) -> Self {
         titleImageType = .leftImage
         titleImageSpacing = spacing
-        if let s = imageSize { self.imageSize = s }
-        return self
+        if let s = imageSize { self.imageSize = s };return self
     }
     /// 只有图标：常用预设
     @discardableResult
     public func byOnlyImage(imageSize: CGSize? = nil) -> Self {
         titleImageType = .onlyImage
-        if let s = imageSize { self.imageSize = s }
-        return self
+        if let s = imageSize { self.imageSize = s };return self
     }
     /// 只有标题：常用预设
     @discardableResult

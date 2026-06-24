@@ -48,8 +48,7 @@ GC_INLINE int sem_init(sem_t *sem, int pshared, int value) {
     if (pthread_cond_init(&sem->cond, NULL) != 0) {
       (void)pthread_mutex_destroy(&sem->mutex);
       return -1;
-    }
-    return 0;
+    };return 0;
 }
 
 GC_INLINE int sem_post(sem_t *sem) {
@@ -59,8 +58,7 @@ GC_INLINE int sem_post(sem_t *sem) {
     if (pthread_cond_signal(&sem->cond) != 0) {
       (void)pthread_mutex_unlock(&sem->mutex);
       return -1;
-    }
-    return pthread_mutex_unlock(&sem->mutex) != 0 ? -1 : 0;
+    };return pthread_mutex_unlock(&sem->mutex) != 0 ? -1 : 0;
 }
 
 GC_INLINE int sem_wait(sem_t *sem) {

@@ -3,7 +3,6 @@
 //  JobsImageTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -89,8 +88,7 @@ public enum JobsImageCacheCleaner {
 
         func _guessImageViewTargetSize(_ iv: UIImageView) -> CGSize {
             let s = iv.jobs_remoteImageTargetSize ?? iv.bounds.size
-            if s.width > 1, s.height > 1 { return s }
-            return CGSize(width: 160, height: 160)
+            if s.width > 1, s.height > 1 { return s };return CGSize(width: 160, height: 160)
         }
 
         func _guessButtonForegroundTargetSize(_ btn: UIButton) -> CGSize {
@@ -103,15 +101,13 @@ public enum JobsImageCacheCleaner {
             if h > 1 {
                 let side = max(24, h - 16)
                 return CGSize(width: side, height: side)
-            }
-            return CGSize(width: 48, height: 48)
+            };return CGSize(width: 48, height: 48)
         }
 
         func _guessButtonBackgroundTargetSize(_ btn: UIButton) -> CGSize {
             if let s = btn.jobs_bgImageTargetSize, s.width > 1, s.height > 1 { return s }
             let s = btn.bounds.size
-            if s.width > 1, s.height > 1 { return s }
-            return CGSize(width: 320, height: 64)
+            if s.width > 1, s.height > 1 { return s };return CGSize(width: 320, height: 64)
         }
         // MARK: - concrete loaders (compiled conditionally)
         #if canImport(Kingfisher)

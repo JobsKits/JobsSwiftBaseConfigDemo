@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -37,8 +36,7 @@ extension UIButton {
     public var jobs_effectiveState: UIControl.State {
         if !isEnabled { return .disabled }
         if isHighlighted { return .highlighted }
-        if isSelected { return .selected }
-        return .normal
+        if isSelected { return .selected };return .normal
     }
     // MARK: Title（String / Attributed）
     /// 当前业务视角下的主标题：
@@ -51,8 +49,7 @@ extension UIButton {
         if #available(iOS 15.0, *), let cfg = configuration {
             if let att = cfg.attributedTitle { return String(att.characters) }
             if let t = cfg.title { return t }
-        }
-        return self.title(for: state)
+        };return self.title(for: state)
             ?? self.attributedTitle(for: state)?.string
             ?? self.title(for: .normal)
             ?? self.attributedTitle(for: .normal)?.string
@@ -249,8 +246,7 @@ extension UIButton {
     /// 用 KVC 读取 UIEdgeInsets，避免直接触达 iOS15+ deprecated 的属性导致编译 warning。
     /// - Note: 在使用 UIButton.Configuration 时，这些 legacy 值「可能存在但不会生效」。
     fileprivate func jobs_kvcEdgeInsets(_ key: String) -> UIEdgeInsets {
-        guard let v = self.value(forKey: key) as? NSValue else { return .zero }
-        return v.uiEdgeInsetsValue
+        guard let v = self.value(forKey: key) as? NSValue else { return .zero };return v.uiEdgeInsetsValue
     }
 
     @available(iOS 15.0, tvOS 15.0, *)

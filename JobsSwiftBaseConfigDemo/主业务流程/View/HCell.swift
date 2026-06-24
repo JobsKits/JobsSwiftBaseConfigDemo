@@ -50,8 +50,7 @@ extension HCell {
         // varargs 糖进来会是 [Any?]
         if let items = payload as? [Any?] {
             let index = items.first as? Int
-            if let index { label.byText("Card \(index)") }
-            return self
+            if let index { label.byText("Card \(index)") };return self
         };return self
     }
     /// ② varargs 版本（保持两个 byData）

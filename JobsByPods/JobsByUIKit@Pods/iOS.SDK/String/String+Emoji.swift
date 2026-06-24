@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -32,8 +31,7 @@ extension String {
     /// 是否全部都是 emoji（忽略空白与换行）
     public var isAllEmoji: Bool {
         let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
-        return trimmed.allSatisfy { Self.isEmoji($0) }
+        guard !trimmed.isEmpty else { return false };return trimmed.allSatisfy { Self.isEmoji($0) }
     }
     /// 提取字符串中的所有 emoji（按 Character 粒度）
     public var emojis: [String] {

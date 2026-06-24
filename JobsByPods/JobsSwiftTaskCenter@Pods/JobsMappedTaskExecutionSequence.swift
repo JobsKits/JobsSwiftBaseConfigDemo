@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -38,8 +37,7 @@ extension JobsMappedTaskExecutionSequence {
         }
         
         public mutating func next() async -> T? {
-            guard let execution = await base.next() else { return nil }
-            return transform(execution)
+            guard let execution = await base.next() else { return nil };return transform(execution)
         }
     }
 }

@@ -3,7 +3,6 @@
 //  BRPickerViewSwift
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -175,8 +174,7 @@ public final class BRPickerPanel: UIView {
                 if let win = scene.windows.first(where: { $0.isKeyWindow }) {
                     return win
                 }
-            }
-            return scenes.first?.windows.first
+            };return scenes.first?.windows.first
         } else {
             return UIApplication.shared.keyWindow
         }

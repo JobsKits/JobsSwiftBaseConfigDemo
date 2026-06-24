@@ -95,8 +95,7 @@ static BROTLI_INLINE void SortHuffmanTreeItems(HuffmanTree* items,
         if (!j--) break;
       }
       items[k] = tmp;
-    }
-    return;
+    };return;
   } else {
     /* Shell sort. */
     int g = n < 57 ? 2 : 0;

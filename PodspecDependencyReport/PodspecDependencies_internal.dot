@@ -87,7 +87,6 @@ digraph PodspecDependencies {
   "JobsEmptyView" -> "JobsSwiftBaseDefines";
   "JobsEmptyView" -> "JobsSwiftBlock";
   "JobsEmptyView" -> "JobsSwiftDSL";
-  "JobsFuseAnimation" -> "JobsSwiftDSL";
   "JobsFuseAnimation" -> "JobsSwiftTimer";
   "JobsGestureUnlock" -> "JobsByUIKit";
   "JobsGestureUnlock" -> "JobsSwiftBaseDefines";
@@ -156,6 +155,7 @@ digraph PodspecDependencies {
   "JobsSwiftOpen" -> "JobsByUIKit";
   "JobsSwiftOpen" -> "JobsInheritance";
   "JobsSwiftSplash" -> "JobsByUIKit";
+  "JobsSwiftSplash" -> "JobsCountdownButton";
   "JobsSwiftSplash" -> "JobsInheritance";
   "JobsSwiftSplash" -> "JobsSwiftDSL";
   "JobsSwiftSplash" -> "JobsSwiftOpen";

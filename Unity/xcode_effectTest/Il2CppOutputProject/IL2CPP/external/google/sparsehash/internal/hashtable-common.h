@@ -168,8 +168,7 @@ bool read_bigendian_number(INPUT* fp, IntType* value, size_t length) {
   for (size_t i = 0; i < length; ++i) {
     if (!read_data(fp, &byte, sizeof(byte))) return false;
     *value |= static_cast<IntType>(byte) << ((length - 1 - i) * 8);
-  }
-  return true;
+  };return true;
 }
 
 template <typename OUTPUT, typename IntType>
@@ -182,8 +181,7 @@ bool write_bigendian_number(OUTPUT* fp, IntType value, size_t length) {
     byte = (sizeof(value) <= length-1 - i)
         ? 0 : static_cast<unsigned char>((value >> ((length-1 - i) * 8)) & 255);
     if (!write_data(fp, &byte, sizeof(byte))) return false;
-  }
-  return true;
+  };return true;
 }
 
 // If your keys and values are simple enough, you can pass this
@@ -337,8 +335,7 @@ class sh_hashtable_settings : public HashFunc {
         assert(false && "resize overflow");  // protect against overflow
       }
       sz *= 2;
-    }
-    return sz;
+    };return sz;
   }
 
  private:

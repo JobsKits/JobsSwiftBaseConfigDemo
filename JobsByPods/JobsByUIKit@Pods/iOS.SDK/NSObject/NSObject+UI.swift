@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -51,8 +50,7 @@ extension NSObject {
         guard let base else { return nil }
         // 防止自引用死循环
         func next(_ candidate: UIViewController?) -> UIViewController? {
-            guard let vc = candidate, vc !== base else { return nil }
-            return vc
+            guard let vc = candidate, vc !== base else { return nil };return vc
         }
         // 1) 优先穿透 present
         if let presented = next(base.presentedViewController) {
@@ -95,8 +93,7 @@ extension NSObject {
                 if #available(iOS 15.0, *), let key = scene.keyWindow { return key }
                 if let key = scene.windows.first(where: { $0.isKeyWindow }) { return key }
                 if let visible = scene.windows.first(where: { !$0.isHidden && $0.alpha > 0 }) { return visible }
-            }
-            return nil
+            };return nil
         } else {
             // < iOS13 用老API
             return legacyKeyWindowPreiOS13()
@@ -116,14 +113,12 @@ extension NSObject {
         if let nav = topVC.navigationController { return nav }
         // 3) 顶部是 TabBar 且选中项为导航
         if let tab = topVC as? UITabBarController,
-           let sel = tab.selectedViewController as? UINavigationController { return sel }
-        return nil
+           let sel = tab.selectedViewController as? UINavigationController { return sel };return nil
     }
     // MARK: - 获取顶部控制器
     public func topViewController() -> UIViewController? {
         guard Thread.isMainThread else { return DispatchQueue.main.sync { topViewController() } }
-        guard let rootVC = activeKeyWindow()?.rootViewController else { return nil }
-        return visibleViewController(from: rootVC)
+        guard let rootVC = activeKeyWindow()?.rootViewController else { return nil };return visibleViewController(from: rootVC)
     }
     // MARK: - 核心：寻找“可见 VC”（容器全面覆盖）
     public func visibleViewController(from root: UIViewController?, depth: Int = 0) -> UIViewController? {

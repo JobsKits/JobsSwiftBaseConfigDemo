@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
-  T1["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T1["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S1 -->|calls| T1
-  S2["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
-  T2["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
+  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T2["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S2 -->|calls| T2
-  S3["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
-  T3["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
+  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T3["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S3 -->|calls| T3
-  S4["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
-  T4["method:ASRangeController::layoutDebugOverlayIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:254"]
+  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T4["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S4 -->|calls| T4
-  S5["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
-  T5["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
+  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T5["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S5 -->|calls| T5
-  S6["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
-  T6["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
+  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T6["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S6 -->|calls| T6
-  S7["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
-  T7["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
+  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T7["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S7 -->|calls| T7
-  S8["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
-  T8["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
+  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T8["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S8 -->|calls| T8
-  S9["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
-  T9["method:ASTableNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:127"]
+  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T9["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S9 -->|calls| T9
-  S10["method:ASTableNode::setInverted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:262"]
-  T10["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
+  T10["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S10 -->|calls| T10
-  S11["method:ASTableNode::inverted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:273"]
-  T11["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S11["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
+  T11["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
   S11 -->|calls| T11
-  S12["method:ASTableNode::setContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:324"]
-  T12["method:ASTableNode::setContentOffset:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:329"]
+  S12["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
+  T12["method:ASControlNode::addTarget:action:forControlEvents:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:283"]
   S12 -->|calls| T12
-  S13["method:ASTableNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:396"]
-  T13["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S13["method:ASVideoNode::constructPlayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:114"]
+  T13["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S13 -->|calls| T13
-  S14["method:ASTableNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:396"]
-  T14["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S14["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
+  T14["method:ASVideoPlayerNode::asset<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:191"]
   S14 -->|calls| T14
-  S15["method:ASTableNode::delegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:414"]
-  T15["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S15["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
+  T15["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
   S15 -->|calls| T15
-  S16["method:ASTableNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:423"]
-  T16["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S16["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
+  T16["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
   S16 -->|calls| T16
-  S17["method:ASTableNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:423"]
-  T17["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S17["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
+  T17["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
   S17 -->|calls| T17
-  S18["method:ASTableNode::dataSource<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:441"]
-  T18["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S18["method:ASVideoNode::calculateSizeThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:254"]
+  T18["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
   S18 -->|calls| T18
-  S19["method:ASTableNode::setAllowsSelection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:451"]
-  T19["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S19["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T19["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
   S19 -->|calls| T19
-  S20["method:ASTableNode::allowsSelection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:461"]
-  T20["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S20["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T20["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S20 -->|calls| T20
-  S21["method:ASTableNode::setAllowsSelectionDuringEditing:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:470"]
-  T21["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S21["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T21["function:ASAssetIsEqual<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:21"]
   S21 -->|calls| T21
-  S22["method:ASTableNode::allowsSelectionDuringEditing<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:480"]
-  T22["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S22["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
+  T22["function:ASPerformBlockOnBackgroundThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:145"]
   S22 -->|calls| T22
-  S23["method:ASTableNode::setAllowsMultipleSelection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:489"]
-  T23["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S23["method:ASVideoNode::setVideoPlaceholderImage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:315"]
+  T23["function:ASContentModeFromVideoGravity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:28"]
   S23 -->|calls| T23
-  S24["method:ASTableNode::allowsMultipleSelection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:499"]
-  T24["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S24["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T24["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
   S24 -->|calls| T24
-  S25["method:ASTableNode::setAllowsMultipleSelectionDuringEditing:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:508"]
-  T25["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S25["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T25["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S25 -->|calls| T25
 ```
 

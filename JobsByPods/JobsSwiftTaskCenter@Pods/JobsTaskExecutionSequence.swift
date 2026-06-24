@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -101,16 +100,14 @@ extension JobsTaskExecutionSequence {
         var results: [TaskExecution] = []
         for await execution in self {
             results.append(execution)
-        }
-        return results
+        };return results
     }
 
     public func collect(_ count: Int) async -> [TaskExecution] {
         var results: [TaskExecution] = []
         for await execution in self.prefix(count) {
             results.append(execution)
-        }
-        return results
+        };return results
     }
 
     public func forEach(_ action: @escaping @Sendable (TaskExecution) async -> Void) async {
@@ -126,7 +123,6 @@ extension JobsTaskExecutionSequence {
             if predicate(execution) {
                 return execution
             }
-        }
-        return nil
+        };return nil
     }
 }

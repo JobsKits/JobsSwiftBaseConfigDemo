@@ -3,7 +3,6 @@
 //  JobsSwiftStandardLibrary
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 // MARK: - BinaryInteger 是所有整数类型的“父协议”
@@ -23,8 +22,7 @@ extension BinaryInteger {
         let total = max(0, Int(self))
         let m = total / 60
         let s = total % 60
-        if m > 0 { return "\(m)分\(String(format: "%02d", s))秒" }
-        return "\(s)秒"
+        if m > 0 { return "\(m)分\(String(format: "%02d", s))秒" };return "\(s)秒"
     }
     /// 分/秒（需要时显示小时）；分钟“不补 0”，秒补 2 位
     /// - 与 jobsMinuteSecondCN2 的区别：
@@ -44,8 +42,7 @@ extension BinaryInteger {
         let s = total % 60
 
         if h > 0 { return "\(h)时\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" }
-        if m > 0 { return "\(m)分\(String(format: "%02d", s))秒" }
-        return "\(s)秒"
+        if m > 0 { return "\(m)分\(String(format: "%02d", s))秒" };return "\(s)秒"
     }
     /// 分/秒（需要时显示小时）；分钟“补 2 位”，秒补 2 位
     /// - 与 jobsMinuteSecondCN 的区别：
@@ -65,8 +62,7 @@ extension BinaryInteger {
         let s = total % 60
 
         if h > 0 { return "\(h)时\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" }
-        if m > 0 { return "\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" }
-        return "\(s)秒"
+        if m > 0 { return "\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" };return "\(s)秒"
     }
 }
 

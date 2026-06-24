@@ -3,7 +3,6 @@
 //  JobsSwiftBaseTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -57,8 +56,7 @@ public enum TextFormatStrategy {
             if scale >= 0, let dot = filtered.firstIndex(of: ".") {
                 let end = filtered.index(dot, offsetBy: scale + 1, limitedBy: filtered.endIndex) ?? filtered.endIndex
                 filtered = String(filtered[..<end])
-            }
-            return filtered
+            };return filtered
         case .phoneCNGrouped:
             // 展示分组：3-4-4；内部可以在回写 VM 时去空格
             let digits = s.filter { $0.isNumber }.prefix(11)
@@ -76,8 +74,7 @@ public enum TextFormatStrategy {
                 return "\(a) \(b) \(c)"
             }
         case .bankCardGrouped:
-            let digits = s.filter { $0.isNumber }
-            return stride(from: 0, to: digits.count, by: 4)
+            let digits = s.filter { $0.isNumber };return stride(from: 0, to: digits.count, by: 4)
                 .map { i -> String in
                     let start = digits.index(digits.startIndex, offsetBy: i)
                     let end = digits.index(start, offsetBy: 4, limitedBy: digits.endIndex) ?? digits.endIndex
@@ -118,11 +115,9 @@ public enum TextValidateStrategy {
             let pattern = #"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$"#
             return s.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
         case .phoneCN:
-            let digits = s.filter { $0.isNumber }
-            return digits.count == 11
+            let digits = s.filter { $0.isNumber };return digits.count == 11
         case .bankCard(let min):
-            let digits = s.filter { $0.isNumber }
-            return digits.count >= min
+            let digits = s.filter { $0.isNumber };return digits.count >= min
         case .decimal(let maxScale):
             if let dot = s.firstIndex(of: ".") {
                 let scale = s.distance(from: dot, to: s.endIndex) - 1
@@ -167,8 +162,7 @@ public struct TextInputStrategyFactory {
     public struct Digits {
         public static func formatter(maxLength: Int? = nil) -> (String) -> String {
             let base = TextFormatStrategy.digitsOnly.apply
-            if let m = maxLength { return { String(base($0).prefix(m)) } }
-            return base
+            if let m = maxLength { return { String(base($0).prefix(m)) } };return base
         }
         public static func validator(minLength: Int = 1) -> (String) -> Bool {
             { s in s.filter(\.isNumber).count >= minLength }

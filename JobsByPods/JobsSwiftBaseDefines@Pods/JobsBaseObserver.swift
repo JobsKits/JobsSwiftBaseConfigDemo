@@ -3,7 +3,6 @@
 //  JobsSwiftBaseDefines
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -63,15 +62,13 @@ public final class JobsTextInputObserver: NSObject,
         let mode: JobsTextInputMode = {
             if string == " " { return .space }
             if string == "\n" { return .return }
-            if string.isEmpty, range.length > 0 { return .delete }
-            return .normal
+            if string.isEmpty, range.length > 0 { return .delete };return .normal
         }()
         // char 规则：删除/回车 -> ""
         let char: String = (mode == .delete || mode == .return) ? "" : string
         // isLimited 语义：只有当“达到限制(==limit)”时才 true；未设置 limit 恒 false
         func limitedFlag(_ text: String) -> Bool {
-            guard let limit else { return false }
-            return text.count >= limit
+            guard let limit else { return false };return text.count >= limit
         }
         // 1) 彻底禁用“空格按键”输入（空格不会进入文本）
         if mode == .space {
@@ -115,8 +112,7 @@ public final class JobsTextInputObserver: NSObject,
         let mode: JobsTextInputMode = {
             if text == " " { return .space }
             if text == "\n" { return .return }
-            if text.isEmpty, range.length > 0 { return .delete }
-            return .normal
+            if text.isEmpty, range.length > 0 { return .delete };return .normal
         }()
         
         if let limit, new.count > limit {

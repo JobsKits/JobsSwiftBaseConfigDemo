@@ -2,6 +2,8 @@
 //  JobsSplashLocalization.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 import Foundation
 
@@ -38,8 +40,7 @@ enum JobsSplashLocalization {
                let bundle = Bundle(path: path) {
                 return bundle
             }
-        }
-        return resourceBundle
+        };return resourceBundle
     }
 
     private static func jobsResourceBundle() -> Bundle {
@@ -47,8 +48,7 @@ enum JobsSplashLocalization {
         guard let url = sourceBundle.url(forResource: "JobsSwiftSplashResources", withExtension: "bundle"),
               let bundle = Bundle(url: url) else {
             return sourceBundle
-        }
-        return bundle
+        };return bundle
     }
 
     private static func languageCandidates(_ rawCode: String) -> [String] {

@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -49,8 +48,7 @@ extension JXSegmentedBaseDataSource {
     @discardableResult
     public func bySelectedAnimable(_ on: Bool = true, duration: TimeInterval? = nil) -> Self {
         isSelectedAnimable = on
-        if let d = duration { selectedAnimationDuration = d }
-        return self
+        if let d = duration { selectedAnimationDuration = d };return self
     }
 
     @discardableResult
@@ -65,8 +63,7 @@ extension JXSegmentedBaseDataSource {
                                 animable: Bool? = nil) -> Self {
         isItemWidthZoomEnabled = enabled
         if let s = scale { itemWidthSelectedZoomScale = s }
-        if let a = animable { isItemWidthZoomAnimable = a }
-        return self
+        if let a = animable { isItemWidthZoomAnimable = a };return self
     }
     /// 一把梭：把自己挂到 segmentedView，并可设置指示器 + 选中索引
     @discardableResult

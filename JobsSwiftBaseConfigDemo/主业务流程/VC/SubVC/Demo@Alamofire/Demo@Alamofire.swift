@@ -395,7 +395,6 @@ final class AFDemoVC: UIViewController {
             let obj = try? JSONSerialization.jsonObject(with: data),
             let pretty = try? JSONSerialization.data(withJSONObject: obj, options: [.prettyPrinted]),
             let s = String(data: pretty, encoding: .utf8)
-        else { return String(data: data, encoding: .utf8) ?? "(\(data.count) bytes)" }
-        return s
+        else { return String(data: data, encoding: .utf8) ?? "(\(data.count) bytes)" };return s
     }
 }

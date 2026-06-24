@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -51,16 +50,14 @@ extension JobsTaskManager {
     @discardableResult
     public func mergedExecutions(for tags: [String]) -> JobsMergedTaskExecutionSequence {
         let sequences = tags.compactMap { tag -> (String, JobsTaskExecutionSequence)? in
-            guard let item = task(by: tag) else { return nil }
-            return (tag, item.task.executions())
+            guard let item = task(by: tag) else { return nil };return (tag, item.task.executions())
         };return JobsMergedTaskExecutionSequence(sequences)
     }
 
     @discardableResult
     public func task(by tag: String) -> JobsTaskItem? {
         lock.lock()
-        defer { lock.unlock() }
-        return tasks.first { $0.tag == tag }
+        defer { lock.unlock() };return tasks.first { $0.tag == tag }
     }
 
     @discardableResult
@@ -242,8 +239,7 @@ extension JobsTaskManager {
 
     public var taskCount: Int {
         lock.lock()
-        defer { lock.unlock() }
-        return tasks.count
+        defer { lock.unlock() };return tasks.count
     }
 }
 
@@ -265,8 +261,7 @@ extension JobsTaskManager {
 
     @discardableResult
     public func executeNowAsync(by tag: String) async -> Bool {
-        guard let item = task(by: tag) else { return false }
-        return await item.task.executeAndWait()
+        guard let item = task(by: tag) else { return false };return await item.task.executeAndWait()
     }
 
     public func waitForAllTasks() async {
@@ -330,8 +325,7 @@ extension JobsTaskManager {
 
     private func tasksSnapshot() -> [JobsTaskItem] {
         lock.lock()
-        defer { lock.unlock() }
-        return tasks
+        defer { lock.unlock() };return tasks
     }
 
     private func bindLifecycle(for item: JobsTaskItem) {

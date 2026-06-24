@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -100,8 +99,7 @@ extension GKNavigationBarConfigure {
         self.lineImage = image
         self.darkLineImage = dark
         if let color { self.lineColor = color }
-        if let hidden { self.lineHidden = hidden }
-        return self
+        if let hidden { self.lineHidden = hidden };return self
     }
 
     @discardableResult
@@ -160,8 +158,7 @@ extension GKNavigationBarConfigure {
         if let dark { self.darkBackImage = dark }
         if let black { self.blackBackImage = black }
         if let white { self.whiteBackImage = white }
-        if let style { self.backStyle = style }
-        return self
+        if let style { self.backStyle = style };return self
     }
     // MARK: - Item 间距修复
     /// 开关 + 左右间距（外部配置位）
@@ -173,16 +170,14 @@ extension GKNavigationBarConfigure {
         if let disable { self.gk_disableFixSpace = disable }
         if let openSystemFixSpace { self.gk_openSystemFixSpace = openSystemFixSpace }
         if let left { self.gk_navItemLeftSpace = left }
-        if let right { self.gk_navItemRightSpace = right }
-        return self
+        if let right { self.gk_navItemRightSpace = right };return self
     }
     /// 仅设置左右间距（外部配置位）
     @discardableResult
     public func byNavItemSpacing(left: CGFloat? = nil,
                                  right: CGFloat? = nil) -> Self {
         if let left { self.gk_navItemLeftSpace = left }
-        if let right { self.gk_navItemRightSpace = right }
-        return self
+        if let right { self.gk_navItemRightSpace = right };return self
     }
     // MARK: - 状态栏
     @discardableResult
@@ -226,16 +221,14 @@ extension GKNavigationBarConfigure {
     public func byTransitionCritical(push: CGFloat? = nil,
                                      pop: CGFloat? = nil) -> Self {
         if let push { self.gk_pushTransitionCriticalValue = push }
-        if let pop { self.gk_popTransitionCriticalValue = pop }
-        return self
+        if let pop { self.gk_popTransitionCriticalValue = pop };return self
     }
     /// x/y 轴缩放（转场时）
     @discardableResult
     public func byScale(x: CGFloat? = nil,
                         y: CGFloat? = nil) -> Self {
         if let x { self.gk_scaleX = x }
-        if let y { self.gk_scaleY = y }
-        return self
+        if let y { self.gk_scaleY = y };return self
     }
     // MARK: - 便捷组合（背景 + 标题 + 返回）
     /// 一把梭：背景（图/色）、标题（色/字重）、返回（图/样式）
@@ -251,8 +244,7 @@ extension GKNavigationBarConfigure {
         if let darkBackgroundImage { self.darkBackgroundImage = darkBackgroundImage }
         if let titleColor { self.titleColor = titleColor }
         if let titleFont { self.titleFont = titleFont }
-        if let backStyle { self.backStyle = backStyle }
-        return self
+        if let backStyle { self.backStyle = backStyle };return self
     }
 }
 #endif

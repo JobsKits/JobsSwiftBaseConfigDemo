@@ -111,8 +111,7 @@ namespace baselib
                 {
                     ptr = OffsetPtr(ptr, m_PrefixAlignedSize);
                     memcpy(suffix(ptr, new_size), tmpSuffix, m_SuffixSize);
-                }
-                return ptr;
+                };return ptr;
             }
 
             static constexpr ptrdiff_t m_PrefixAlignedSize = AlignSize(prefix_size);

@@ -3,7 +3,6 @@
 //  JobsInheritance
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -49,8 +48,7 @@ extension BaseWebView {
                let data = try? JSONSerialization.data(withJSONObject: value, options: []),
                let s = String(data: data, encoding: .utf8) {
                 return s
-            }
-            return quote("\(value)")
+            };return quote("\(value)")
         }
     }
 
@@ -98,8 +96,7 @@ extension BaseWebView {
 extension BaseWebView {
 
     func normalizeSuffix(_ s: String?) -> String? {
-        guard let t = s?.trimmingCharacters(in: .whitespacesAndNewlines), !t.isEmpty else { return nil }
-        return t
+        guard let t = s?.trimmingCharacters(in: .whitespacesAndNewlines), !t.isEmpty else { return nil };return t
     }
 
     func nearestViewController() -> UIViewController? {

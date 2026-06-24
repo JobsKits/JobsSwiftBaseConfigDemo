@@ -96,8 +96,7 @@ final class CardNode: ASDisplayNode {
                 row.spacing = 6
                 row.alignItems = .center
                 row.justifyContent = .spaceBetween
-                row.children = [a, b, c].compactMap { $0 }
-                return row
+                row.children = [a, b, c].compactMap { $0 };return row
             }
 
         case .flexColumn:
@@ -109,8 +108,7 @@ final class CardNode: ASDisplayNode {
             self._customContentLayout = { [weak t1, weak t2, weak t3] in
                 let col = ASStackLayoutSpec.vertical()
                 col.spacing = 4
-                col.children = [t1, t2, t3].compactMap { $0 }
-                return col
+                col.children = [t1, t2, t3].compactMap { $0 };return col
             }
 
         case .insetCard:
@@ -147,8 +145,7 @@ final class CardNode: ASDisplayNode {
             addSubnode(inner)
             contentNode = ASDisplayNode()
             self._customContentLayout = { [weak inner] in
-                guard let inner = inner else { return ASLayoutSpec() }
-                return ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: inner)
+                guard let inner = inner else { return ASLayoutSpec() };return ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: inner)
             }
 
         case .ratio:
@@ -160,8 +157,7 @@ final class CardNode: ASDisplayNode {
             addSubnode(img)
             contentNode = ASDisplayNode()
             self._customContentLayout = { [weak img] in
-                guard let img = img else { return ASLayoutSpec() }
-                return ASRatioLayoutSpec(ratio: 16.0 / 9.0, child: img)
+                guard let img = img else { return ASLayoutSpec() };return ASRatioLayoutSpec(ratio: 16.0 / 9.0, child: img)
             }
 
         case .zstack:

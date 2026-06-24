@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -54,8 +53,7 @@ extension UIWindow {
                                 level: UIWindow.Level = .normal,
                                 makeKeyVisible: Bool = true) -> UIWindow {
         let targetScene: UIWindowScene? = {
-            if let scene { return scene }
-            return UIApplication.shared.connectedScenes
+            if let scene { return scene };return UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
                 .first { $0.activationState == .foregroundActive }
                 ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
@@ -87,7 +85,6 @@ extension UIWindow {
     // 私有小工具：是否 makeKeyAndVisible
     @discardableResult
     private func _makeIfNeeded(_ flag: Bool) -> Self {
-        if flag { self.makeKeyAndVisible() }
-        return self
+        if flag { self.makeKeyAndVisible() };return self
     }
 }

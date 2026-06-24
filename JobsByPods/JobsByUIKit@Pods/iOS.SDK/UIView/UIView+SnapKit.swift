@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -292,8 +291,7 @@ extension Array where Element: UIView {
     /// 把数组里的 view 全部 add 到 superView（链式返回 self）
     @discardableResult
     public func addTo(_ superView: UIView) -> Self {
-        forEach { superView.addSubview($0) }
-        return self
+        forEach { superView.addSubview($0) };return self
     }
     /// 在 superView 内对数组 view 做均分分布（链式返回 self）
     /// 注意：默认要求已经 addSubview 进 superView（可配合 jobs_addTo）

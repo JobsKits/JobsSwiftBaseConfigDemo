@@ -3,7 +3,6 @@
 //  JobsCryptoKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Security
@@ -19,8 +18,7 @@ public struct RSA {
             &error
         ) else {
             throw error?.takeRetainedValue() ?? CryptoError.encryptionFailed
-        }
-        return out as Data
+        };return out as Data
     }
 
     public static func decrypt(data: Data, privateKey: SecKey) throws -> Data {
@@ -32,7 +30,6 @@ public struct RSA {
             &error
         ) else {
             throw error?.takeRetainedValue() ?? CryptoError.decryptionFailed
-        }
-        return out as Data
+        };return out as Data
     }
 }

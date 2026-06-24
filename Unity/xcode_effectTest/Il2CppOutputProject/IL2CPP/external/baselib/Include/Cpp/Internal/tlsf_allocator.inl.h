@@ -354,8 +354,7 @@ namespace baselib
                     {
                         std::memcpy(newPtr, ptr, std::min(new_size, old_size));
                         oldAllocator.deallocate(ptr);
-                    }
-                    return newPtr;
+                    };return newPtr;
                 }
 
                 BlockAllocator m_Allocators[m_AllocatorCount][linear_subdivisions];

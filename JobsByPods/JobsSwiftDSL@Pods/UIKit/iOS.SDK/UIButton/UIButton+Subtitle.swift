@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -142,8 +141,7 @@ extension UIButton {
                 cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                     var a = incoming
                     if let f { a.font = f }
-                    if let c { a.foregroundColor = c }
-                    return a
+                    if let c { a.foregroundColor = c };return a
                 }
             }
             // ---------- 背景图：优先“粘住”的，再兜底 legacy ----------
@@ -186,8 +184,7 @@ extension UIButton {
         ?? self.attributedTitle(for: .normal)
         ?? {
             let t = self.title(for: state) ?? self.title(for: .normal) ?? ""
-            if t.isEmpty { return nil }
-            return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? UIFont.systemFont(ofSize: 15)])
+            if t.isEmpty { return nil };return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? UIFont.systemFont(ofSize: 15)])
         }()
 
         let sub = subAttr

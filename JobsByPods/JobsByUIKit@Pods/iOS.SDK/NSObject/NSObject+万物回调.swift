@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -201,8 +200,7 @@ extension NSObject {
     @discardableResult
     public func jobsByTransformCallback<T>(_ block: @escaping (T) -> T) -> Self {
         let wrapped: jobsByAnyTransformBlock = { value in
-            guard let typedValue = value as? T else { return value }
-            return block(typedValue)
+            guard let typedValue = value as? T else { return value };return block(typedValue)
         }
 
         objc_setAssociatedObject(
@@ -215,8 +213,7 @@ extension NSObject {
     /// 执行统一泛型转换回调（入参1个，类型T；出参1个，类型T）
     public func jobsValueTransformCallback<T>(_ value: T) -> T {
         guard let block = jobsTransformCallback else { return value }
-        guard let result = block(value) as? T else { return value }
-        return result
+        guard let result = block(value) as? T else { return value };return result
     }
     /// 清空统一泛型转换回调
     @discardableResult

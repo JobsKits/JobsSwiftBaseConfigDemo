@@ -100,8 +100,7 @@ sweep_up (struct sort_info *si, list_node *list, int upto)
 	for (i = si->min_rank; i < upto; ++i) {
 		list = merge_lists (si->ranks [i], list, si->func);
 		si->ranks [i] = NULL;
-	}
-	return list;
+	};return list;
 
 #if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 406)
 #pragma GCC diagnostic pop

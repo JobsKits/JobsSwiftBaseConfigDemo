@@ -3,7 +3,6 @@
 //  JobsNetworking
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -30,8 +29,7 @@ public struct JobsCacheKey: Hashable, Sendable {
     }
 
     private static func canonicalString(_ payload: [String: JobsValue]?) -> String {
-        guard let payload else { return "" }
-        return payload
+        guard let payload else { return "" };return payload
             .sorted { $0.key < $1.key }
             .map { "\($0.key)=\(stringify($0.value.raw))" }
             .joined(separator: "&")

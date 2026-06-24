@@ -218,8 +218,7 @@ static NSMutableArray<CameraCaptureController*> *activeColorAndDepthCameraContro
     if (activeColorAndDepthCameraControllers == nil)
     {
         activeColorAndDepthCameraControllers = [[NSMutableArray alloc] init];
-    }
-    return activeColorAndDepthCameraControllers;
+    };return activeColorAndDepthCameraControllers;
 }
 
 + (void)addColorAndDepthCameraController:(CameraCaptureController*)controller
@@ -269,8 +268,7 @@ static NSMutableArray<CameraCaptureController*> *activeColorAndDepthCameraContro
     {
         if (controller.captureDevice == device && controller->_isDepth == isDepth)
             return controller;
-    }
-    return nil;
+    };return nil;
 }
 
 - (bool)initColorAndDepthCameraCapture:(AVCaptureDevice*)device preset:(NSString*)preset fps:(float)fps isDepth:(bool)isDepth
@@ -434,8 +432,7 @@ static NSMutableArray<CameraCaptureController*> *activeColorAndDepthCameraContro
                 bestRange = rate;
             }
         }
-    }
-    return fps > bestRange.maxFrameRate ? bestRange.maxFrameRate : bestRange.minFrameRate;
+    };return fps > bestRange.maxFrameRate ? bestRange.maxFrameRate : bestRange.minFrameRate;
 }
 
 @synthesize captureDevice   = _captureDevice;
@@ -650,8 +647,7 @@ static NSMutableArray<CameraCaptureDevice*> *videoCaptureDevices = nil;
     {
         assert(!isDepth);
         initResult = [controller initCapture: self->_device preset: preset fps: fps];
-    }
-    return initResult;
+    };return initResult;
 }
 
 + (bool)initialized
@@ -736,8 +732,7 @@ extern "C" void* UnityInitCameraCapture(int deviceIndex, int w, int h, int fps, 
             return (__bridge_retained void*)controller;
         }
         controller = nil;
-    }
-    return 0;
+    };return 0;
 }
 
 extern "C" void UnityStartCameraCapture(void* capture)
@@ -790,8 +785,7 @@ extern "C" int UnityCameraCaptureVideoRotationDeg(void* capture)
         case landscapeRight:        return controller.captureDevice.position == AVCaptureDevicePositionFront ? 0 : 180;
 
         default:                    assert(false && "bad orientation returned from UnityCurrentOrientation()"); break;
-    }
-    return 0;
+    };return 0;
 }
 
 extern "C" int UnityCameraCaptureVerticallyMirrored(void* capture)

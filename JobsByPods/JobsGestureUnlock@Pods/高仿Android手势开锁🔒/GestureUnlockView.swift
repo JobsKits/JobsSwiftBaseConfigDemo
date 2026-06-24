@@ -3,7 +3,6 @@
 //  JobsGestureUnlock
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -183,8 +182,7 @@ public final class GestureUnlockView: UIView {
             if bigger.contains(point) {
                 return node.index
             }
-        }
-        return nil
+        };return nil
     }
 
     private func appendNodeIndexWithInterpolation(_ newIndex: Int) {
@@ -237,8 +235,7 @@ public final class GestureUnlockView: UIView {
             if rr >= 0, rr < n, cc >= 0, cc < n {
                 result.append(rr * n + cc)
             }
-        }
-        return result
+        };return result
     }
 
     private func gcd(_ a: Int, _ b: Int) -> Int {
@@ -247,8 +244,7 @@ public final class GestureUnlockView: UIView {
             let t = x % y
             x = y
             y = t
-        }
-        return max(1, x)
+        };return max(1, x)
     }
 
     // MARK: - Line
@@ -256,8 +252,7 @@ public final class GestureUnlockView: UIView {
     private func updateLinePath() {
         let path = UIBezierPath()
         let points = selected.compactMap { idx -> CGPoint? in
-            guard idx >= 0, idx < nodes.count else { return nil }
-            return nodes[idx].center
+            guard idx >= 0, idx < nodes.count else { return nil };return nodes[idx].center
         }
 
         if let first = points.first {

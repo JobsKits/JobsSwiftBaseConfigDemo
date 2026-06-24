@@ -3,7 +3,6 @@
 //  JobsSwiftBaseDefines
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -408,8 +407,7 @@ public func onMainTask(
 public func onMainTask<Object: AnyObject>(
     _ object: Object?,
     _ block: @MainActor @escaping (Object) async -> Void) -> Task<Void, Never>? {
-    guard let object else { return nil }
-    return Task { @MainActor [weak object] in
+    guard let object else { return nil };return Task { @MainActor [weak object] in
         guard let object else { return }
         await block(object)
     }
@@ -525,8 +523,7 @@ public func observeOnMain<Object: AnyObject, S: AsyncSequence>(
     _ object: Object?,
     sequence: S,
     _ handler: @MainActor @escaping (Object, S.Element) -> Void) -> Task<Void, Never>? {
-    guard object != nil else { return nil }
-    return Task { @MainActor [weak object] in
+    guard object != nil else { return nil };return Task { @MainActor [weak object] in
         do {
             for try await value in sequence {
                 guard let object else { return }
@@ -576,8 +573,7 @@ public func observeOnMainThrowing<Object: AnyObject, S: AsyncSequence>(
     _ object: Object?,
     sequence: S,
     _ handler: @MainActor @escaping (Object, S.Element) throws -> Void) -> Task<Void, Error>? {
-    guard object != nil else { return nil }
-    return Task { @MainActor [weak object] in
+    guard object != nil else { return nil };return Task { @MainActor [weak object] in
         for try await value in sequence {
             guard let object else { return }
             try handler(object, value)

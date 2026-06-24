@@ -3,7 +3,6 @@
 //  JobsSwiftTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -17,8 +16,7 @@ import JobsSwiftBaseDefines
 
 // MARK: - 扩展 Int 与 JXAuthCode 的比较
 public func ==(lhs: Int?, rhs: JXAuthCode) -> Bool {
-    guard let lhs = lhs else { return false }
-    return lhs == Int(rhs.rawValue)
+    guard let lhs = lhs else { return false };return lhs == Int(rhs.rawValue)
 }
 
 public func ==(lhs: Int, rhs: JXAuthCode) -> Bool {
@@ -26,8 +24,7 @@ public func ==(lhs: Int, rhs: JXAuthCode) -> Bool {
 }
 
 public func ==(lhs: JXAuthCode, rhs: Int?) -> Bool {
-    guard let rhs = rhs else { return false }
-    return Int(lhs.rawValue) == rhs
+    guard let rhs = rhs else { return false };return Int(lhs.rawValue) == rhs
 }
 
 public func ==(lhs: JXAuthCode, rhs: Int) -> Bool {
@@ -81,8 +78,7 @@ public enum JobsFormatters {
             if str.hasPrefix("00") {
                 // 粗暴去多零
                 let trimmed = str.drop(while: { $0 == "0" })
-                if trimmed.first == "." { return "0" + trimmed }
-                return trimmed.isEmpty ? "0" : String(trimmed)
+                if trimmed.first == "." { return "0" + trimmed };return trimmed.isEmpty ? "0" : String(trimmed)
             };return str.isEmpty ? "" : str
         }
     }

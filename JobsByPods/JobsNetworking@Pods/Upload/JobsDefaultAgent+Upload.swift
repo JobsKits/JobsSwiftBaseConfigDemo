@@ -3,7 +3,6 @@
 //  JobsNetworking
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -47,8 +46,7 @@ extension JobsDefaultAgent: JobsUploadCapable {
         let parts = request.files.compactMap { spec -> JobsMultipartPart? in
             switch spec {
             case let .file(fileURL, name, fileName, mimeType):
-                guard let data = try? Data(contentsOf: fileURL) else { return nil }
-                return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
+                guard let data = try? Data(contentsOf: fileURL) else { return nil };return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
             case let .data(data, name, fileName, mimeType):
                 return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
             }

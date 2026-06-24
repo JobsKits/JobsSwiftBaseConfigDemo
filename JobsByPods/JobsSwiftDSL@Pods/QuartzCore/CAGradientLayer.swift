@@ -3,7 +3,6 @@
 //  JobsByQuartzCore
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -20,8 +19,7 @@ extension CAGradientLayer {
     
     @discardableResult
     public func byColors(_ uiColors: [UIColor]) -> Self {
-        self.colors = uiColors.map { $0.cgColor }
-        return self
+        self.colors = uiColors.map { $0.cgColor };return self
     }
 
     @discardableResult
@@ -38,8 +36,7 @@ extension CAGradientLayer {
 
     @discardableResult
     public func byLocations(_ locs: [CGFloat]) -> Self {
-        self.locations = locs.map { NSNumber(value: Double($0)) }
-        return self
+        self.locations = locs.map { NSNumber(value: Double($0)) };return self
     }
     
     @discardableResult

@@ -3,7 +3,6 @@
 //  BRPickerViewSwift
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -132,8 +131,7 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
             comps.year = years[s(0)]
             comps.month = 1
             comps.day = 1
-        }
-        return cal.date(from: comps)
+        };return cal.date(from: comps)
     }
 
     // MARK: - UIPicker DataSource

@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -51,20 +50,17 @@ public final class JobsTask: @unchecked Sendable {
 
     public var lifecycle: JobsTaskLifecycle {
         lock.lock()
-        defer { lock.unlock() }
-        return state
+        defer { lock.unlock() };return state
     }
 
     public var executionCount: Int {
         lock.lock()
-        defer { lock.unlock() }
-        return _executionCount
+        defer { lock.unlock() };return _executionCount
     }
 
     public var estimatedNextExecutionDate: Date? {
         lock.lock()
-        defer { lock.unlock() }
-        return _estimatedNextExecutionDate
+        defer { lock.unlock() };return _estimatedNextExecutionDate
     }
 
     public var isRunning: Bool { lifecycle == .running }
@@ -74,8 +70,7 @@ public final class JobsTask: @unchecked Sendable {
 
     public var actionCount: Int {
         lock.lock()
-        defer { lock.unlock() }
-        return actions.count
+        defer { lock.unlock() };return actions.count
     }
     
     /// 获取任务的性能指标
@@ -262,8 +257,7 @@ extension JobsTask {
             state = .finished
             let observers = Array(lifecycleObservers.values)
             lock.unlock()
-            observers.forEach { $0(.finished) }
-            return
+            observers.forEach { $0(.finished) };return
         }
         state = .running
         generation &+= 1
@@ -291,8 +285,7 @@ extension JobsTask {
             let observers = Array(lifecycleObservers.values)
             lock.unlock()
             oldTimer?.stop()
-            observers.forEach { $0(.finished) }
-            return
+            observers.forEach { $0(.finished) };return
         }
         generation &+= 1
         let generation = self.generation
@@ -368,8 +361,7 @@ extension JobsTask {
         }
         observers = Array(lifecycleObservers.values)
         lock.unlock()
-        observers.forEach { $0(newState) }
-        return true
+        observers.forEach { $0(newState) };return true
     }
 }
 
@@ -454,8 +446,7 @@ extension JobsTask {
     private func waitForExecutionCount(greaterThan initialCount: Int) async -> Int {
         if executionCount > initialCount {
             return executionCount
-        }
-        return await withCheckedContinuation { continuation in
+        };return await withCheckedContinuation { continuation in
             let box = JobsTaskContinuationBox()
             let token = self.addAction { task in
                 let current = task.executionCount
@@ -505,8 +496,7 @@ extension JobsTask {
             if let first = await group.next() {
                 group.cancelAll()
                 return first
-            }
-            return nil
+            };return nil
         }
     }
     

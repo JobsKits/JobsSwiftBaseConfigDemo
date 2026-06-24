@@ -63,8 +63,7 @@ static DisplayManager* _DisplayManager = nil;
 
         self->_needRecreateSurface = NO;
         self->_requestedRenderingSize = CGSizeMake(-1, -1);
-    }
-    return self;
+    };return self;
 }
 
 #else
@@ -75,8 +74,7 @@ static DisplayManager* _DisplayManager = nil;
         self->_screenSize = CGSizeMake(1920, 1080);
         self->_needRecreateSurface = NO;
         self->_requestedRenderingSize = CGSizeMake(-1, -1);
-    }
-    return self;
+    };return self;
 }
 
 #endif
@@ -335,8 +333,7 @@ static DisplayManager* _DisplayManager = nil;
             [self registerScreen: screen];
 
         _mainDisplay = self[[UIScreen mainScreen]];
-    }
-    return self;
+    };return self;
 }
 
 - (void)dealloc
@@ -490,8 +487,7 @@ static DisplayManager* _DisplayManager = nil;
         const int screenCount = 1;
         void* screens[screenCount] = {(void*)0x1};
         UnityUpdateDisplayListCache(screens, screenCount);
-    }
-    return self;
+    };return self;
 }
 
 - (void)dealloc

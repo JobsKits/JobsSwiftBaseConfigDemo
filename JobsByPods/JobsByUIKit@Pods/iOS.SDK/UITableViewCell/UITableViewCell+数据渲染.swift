@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -28,8 +27,7 @@ public extension ViewDataProtocol where Self: UITableViewCell {
         } else {
             if let title = cfg.title { textLabel?.byJobsAttributedText(title) }
             if let detail = cfg.detail { detailTextLabel?.byJobsAttributedText(detail) }
-            if let image = cfg.image { imageView?.byImage(image) }
-            return self
+            if let image = cfg.image { imageView?.byImage(image) };return self
         }
     }
 }

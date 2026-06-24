@@ -3,7 +3,6 @@
 //  JobsSwiftTimer
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -21,8 +20,7 @@ final class JobsUnfairLock {
     @inline(__always)
     func jobs_withLock<T>(_ block: () throws -> T) rethrows -> T {
         os_unfair_lock_lock(&lock)
-        defer { os_unfair_lock_unlock(&lock) }
-        return try block()
+        defer { os_unfair_lock_unlock(&lock) };return try block()
     }
 }
 // MARK: - JobsSwiftTimer
@@ -235,14 +233,12 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     /// 注册回调（每 tick 执行一次）
     @discardableResult
     public func onTick(_ block: @escaping JobsTimerCallback) -> Self {
-        stateLock.jobs_withLock { tickBlock = block }
-        return self
+        stateLock.jobs_withLock { tickBlock = block };return self
     }
     /// 注册完成回调（用于一次性定时器或倒计时）
     @discardableResult
     public func onFinish(_ block: @escaping JobsTimerCallback) -> Self {
-        stateLock.jobs_withLock { finishBlock = block }
-        return self
+        stateLock.jobs_withLock { finishBlock = block };return self
     }
     // MARK: - Stop internals
     private func stopInternal() {
@@ -293,8 +289,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
                                                         repeats: Bool) in
             guard state == .running, token == generation else {
                 return (false, {}, nil, config.repeats)
-            }
-            return (true, tickBlock, finishBlock, config.repeats)
+            };return (true, tickBlock, finishBlock, config.repeats)
         }
 
         guard snapshot.shouldFire else { return }

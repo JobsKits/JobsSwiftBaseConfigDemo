@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASLayoutSpec::setChild:atIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:52"]
-  T1["method:ASNullLayoutSpec::null<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:23"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T1["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S1 -->|calls| T1
-  S2["method:ASLayoutSpec::setChild:atIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:52"]
-  T2["method:ASNullLayoutSpec::null<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:23"]
+  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T2["function:ASHierarchyChangeTypeIsFinal<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:35"]
   S2 -->|calls| T2
-  S3["method:ASLayoutSpec::childAtIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:73"]
-  T3["method:ASNullLayoutSpec::null<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:23"]
+  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T3["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h:1"]
-  T4["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T4["method:ASWeakSet::removeAllObjects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASWeakSet.mm:37"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h:1"]
-  T5["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S5["function:changes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:972"]
+  T5["method:NSIndexSet::as_smallDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/NSIndexSet+ASHelpers.mm:68"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.h:1"]
-  T6["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
+  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T6["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S6 -->|calls| T6
-  S7["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
-  T7["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
+  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T7["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
   S7 -->|calls| T7
-  S8["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
-  T8["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
+  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T8["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
   S8 -->|calls| T8
-  S9["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
-  T9["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
+  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T9["method:ASCellNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:324"]
   S9 -->|calls| T9
-  S10["method:ASLayoutSpec::style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:57"]
-  T10["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
+  T10["function:NSStringFromASHierarchyChangeType<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:45"]
   S10 -->|calls| T10
-  S11["method:ASLayoutSpec::description<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:172"]
-  T11["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
+  S11["function:_ASPendingState::ASPendingStateApplyMetricsToLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:178"]
+  T11["function:ASBoundsAndPositionForFrame<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.h:83"]
   S11 -->|calls| T11
-  S12["method:ASLayoutSpec::description<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:172"]
-  T12["method:ASLayoutSpec::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:161"]
+  S12["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
+  T12["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
   S12 -->|calls| T12
-  S13["method:ASLayoutSpec::findDuplicatedElementsInSubtree<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:180"]
-  T13["method:ASLayoutSpec::_findDuplicatedElementsInSubtreeWithWorkingSet:workingCount:result:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:195"]
+  S13["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
+  T13["function:ASDefaultAllowsGroupOpacity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:20"]
   S13 -->|calls| T13
-  S14["method:ASLayoutSpec::asciiArtString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:242"]
-  T14["method:ASLayoutSpec::asciiArtName<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:248"]
+  S14["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
+  T14["function:ASDefaultAllowsEdgeAntialiasing<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:31"]
   S14 -->|calls| T14
-  S15["method:ASWrapperLayoutSpec::initWithLayoutElement:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:270"]
-  T15["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
+  S15["method:_ASPendingState::applyToLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:932"]
+  T15["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
   S15 -->|calls| T15
-  S16["method:ASWrapperLayoutSpec::initWithLayoutElements:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:284"]
-  T16["method:ASLayoutSpec::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:27"]
+  S16["method:_ASPendingState::applyToLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:932"]
+  T16["function:ASDisplayNodeCAContentsGravityFromUIContentMode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:133"]
   S16 -->|calls| T16
-  S17["method:ASLayoutSpec::asciiArtStringForChildren:parentName:direction:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:322"]
-  T17["method:ASLayoutSpec::asciiArtString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:242"]
+  S17["method:_ASPendingState::applyToLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:932"]
+  T17["function:_ASPendingState::ASPendingStateApplyMetricsToLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:178"]
   S17 -->|calls| T17
-  S18["method:ASLayoutSpec::asciiArtStringForChildren:parentName:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:337"]
-  T18["method:ASLayoutSpec::asciiArtStringForChildren:parentName:direction:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec.mm:322"]
+  S18["method:_ASPendingState::applyToLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:932"]
+  T18["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
   S18 -->|calls| T18
-  S19["method:ASOverlayLayoutSpec::overlayLayoutSpecWithChild:overlay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:21"]
-  T19["method:ASOverlayLayoutSpec::initWithChild:overlay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:28"]
+  S19["method:_ASPendingState::applyToView:withSpecialPropertiesHandling:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:1043"]
+  T19["method:_ASDisplayView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayView.mm:253"]
   S19 -->|calls| T19
-  S20["method:ASOverlayLayoutSpec::initWithChild:overlay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:28"]
-  T20["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASAbsoluteLayoutSpec.mm:35"]
+  S20["method:_ASPendingState::applyToView:withSpecialPropertiesHandling:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:1043"]
+  T20["function:_ASPendingState::ASPendingStateApplyMetricsToLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:178"]
   S20 -->|calls| T20
-  S21["method:ASOverlayLayoutSpec::setChild:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:40"]
-  T21["method:ASLayoutSpec::setChild:atIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:52"]
+  S21["method:_ASPendingState::pendingViewStateFromLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:1271"]
+  T21["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
   S21 -->|calls| T21
-  S22["method:ASOverlayLayoutSpec::setOverlay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:51"]
-  T22["method:ASLayoutSpec::setChild:atIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.mm:52"]
+  S22["method:_ASPendingState::pendingViewStateFromLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:1271"]
+  T22["function:ASDisplayNodeUIContentModeFromCAContentsGravity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:148"]
   S22 -->|calls| T22
-  S23["method:ASOverlayLayoutSpec::calculateLayoutThatFits:restrictedToSize:relativeToParentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASOverlayLayoutSpec.mm:67"]
-  T23["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S23["method:_ASPendingState::pendingViewStateFromView:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:1310"]
+  T23["method:_ASPendingState::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:232"]
   S23 -->|calls| T23
-  S24["method:ASRatioLayoutSpec::ratioLayoutSpecWithRatio:child:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASRatioLayoutSpec.mm:29"]
-  T24["method:ASRatioLayoutSpec::initWithRatio:child:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASRatioLayoutSpec.mm:34"]
+  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.h:1"]
+  T24["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S24 -->|calls| T24
-  S25["method:ASRatioLayoutSpec::initWithRatio:child:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASRatioLayoutSpec.mm:34"]
-  T25["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASAbsoluteLayoutSpec.mm:35"]
+  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.h:1"]
+  T25["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S25 -->|calls| T25
 ```
 

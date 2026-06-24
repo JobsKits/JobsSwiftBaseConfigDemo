@@ -108,8 +108,7 @@ namespace utf8
                         ++start;
                     break;
             }
-        }
-        return out;
+        };return out;
     }
 
     template <typename octet_iterator, typename output_iterator>
@@ -135,8 +134,7 @@ namespace utf8
                 throw invalid_utf8(static_cast<uint8_t>(*it));
             case internal::INVALID_CODE_POINT :
                 throw invalid_code_point(cp);
-        }
-        return cp;
+        };return cp;
     }
 
     template <typename octet_iterator>
@@ -208,8 +206,7 @@ namespace utf8
                 throw invalid_utf16(static_cast<uint16_t>(cp));
 
             result = utf8::append(cp, result);
-        }
-        return result;
+        };return result;
     }
 
     template <typename u16bit_iterator, typename octet_iterator>
@@ -223,8 +220,7 @@ namespace utf8
             }
             else
                 *result++ = static_cast<uint16_t>(cp);
-        }
-        return result;
+        };return result;
     }
 
     template <typename octet_iterator, typename u32bit_iterator>

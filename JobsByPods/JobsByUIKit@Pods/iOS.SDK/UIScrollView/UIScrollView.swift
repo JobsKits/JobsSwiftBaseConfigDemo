@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -114,8 +113,7 @@ private final class JobsScrollViewBlocksProxy: NSObject, UIScrollViewDelegate {
     }
 
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        guard let t = target else { return true }
-        return scrollViewShouldScrollToTop?(t, scrollView) ?? true
+        guard let t = target else { return true };return scrollViewShouldScrollToTop?(t, scrollView) ?? true
     }
 
     func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
@@ -137,14 +135,12 @@ private final class JobsScrollDelegateMux: NSObject {
 
     override func responds(to aSelector: Selector!) -> Bool {
         if let s = scroll, s.responds(to: aSelector) { return true }
-        if let p = primary, p.responds(to: aSelector) { return true }
-        return super.responds(to: aSelector)
+        if let p = primary, p.responds(to: aSelector) { return true };return super.responds(to: aSelector)
     }
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {
         if let s = scroll, s.responds(to: aSelector) { return s }
-        if let p = primary, p.responds(to: aSelector) { return p }
-        return super.forwardingTarget(for: aSelector)
+        if let p = primary, p.responds(to: aSelector) { return p };return super.forwardingTarget(for: aSelector)
     }
 }
 // MARK: - Associated

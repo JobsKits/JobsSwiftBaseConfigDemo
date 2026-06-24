@@ -96,8 +96,7 @@ GC_INLINE void * GC_getspecific(tsd * key)
     if (EXPECT(entry -> qtid == qtid, TRUE)) {
       GC_ASSERT(entry -> thread == pthread_self());
       return entry -> value;
-    }
-    return GC_slow_getspecific(key, qtid, entry_ptr);
+    };return GC_slow_getspecific(key, qtid, entry_ptr);
 }
 
 EXTERN_C_END

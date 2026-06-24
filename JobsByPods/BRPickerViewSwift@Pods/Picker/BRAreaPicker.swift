@@ -3,7 +3,6 @@
 //  BRPickerViewSwift
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -55,8 +54,7 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         // Default state: no highlight until user scrolls.
         for c in 0..<3 {
             lastSelectedRow[c] = picker.selectedRow(inComponent: c)
-        }
-        return picker
+        };return picker
     }
 
     public override func confirmSelection() {
@@ -102,8 +100,7 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         case 0: label.text = provinces[row].name
         case 1: label.text = cities[row].name
         default: label.text = districts[row].name
-        }
-        return label
+        };return label
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

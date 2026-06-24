@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -87,8 +86,7 @@ public class JobsSideDrawerVC: UIViewController {
 
                 case .ended, .cancelled, .failed:
                     let shouldOpen: Bool = {
-                        if abs(velocity.x) > 600 { return velocity.x > 0 }
-                        return self.currentOffset > self.menuWidth * 0.5
+                        if abs(velocity.x) > 600 { return velocity.x > 0 };return self.currentOffset > self.menuWidth * 0.5
                     }()
                     setDrawer(open: shouldOpen, animated: true)
 
@@ -228,8 +226,7 @@ extension JobsSideDrawerVC: JobsMainPushProviding {
     var jobs_mainNavForPush: UINavigationController? {
         // mainVC 传进来的就是 jobsNavContainer（大概率是 UINavigationController）
         if let nav = mainVC as? UINavigationController { return nav }
-        if let nav = mainVC.navigationController { return nav }
-        return (mainVC as UIViewController).jobs_findNavController
+        if let nav = mainVC.navigationController { return nav };return (mainVC as UIViewController).jobs_findNavController
     }
 }
 // MARK: - 主内容 push 提供者（抽屉体系专用）
@@ -265,8 +262,7 @@ extension UIViewController {
         var cur: UIViewController? = self
         while let vc = cur {
             if let provider = vc as? JobsMainPushProviding {
-                if closeDrawer { provider.jobs_prepareForMainPush(animated: animated) }
-                return provider.jobs_mainNavForPush
+                if closeDrawer { provider.jobs_prepareForMainPush(animated: animated) };return provider.jobs_mainNavForPush
             };cur = vc.parent
         };return nil
     }

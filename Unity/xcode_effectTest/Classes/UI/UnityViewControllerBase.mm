@@ -70,8 +70,7 @@ UnityViewControllerBase* AllocUnitySingleOrientationViewController(UIInterfaceOr
         case UIInterfaceOrientationLandscapeRight:      return [UnityLandscapeRightOnlyViewController alloc];
 
         default:                                        assert(false && "bad UIInterfaceOrientation provided");
-    }
-    return nil;
+    };return nil;
 }
 
 #endif

@@ -3,7 +3,6 @@
 //  JobsSwiftTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -111,8 +110,7 @@ public final class MediaPickerService: NSObject {
                     }
 
                     if supportsVideo(.rear)  { return .rear }
-                    if supportsVideo(.front) { return .front }
-                    return nil
+                    if supportsVideo(.front) { return .front };return nil
                 }()
                 guard let device = chooseDevice else {
                     onMainAsync {

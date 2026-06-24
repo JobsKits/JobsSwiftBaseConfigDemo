@@ -3,18 +3,7 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
-/// JobsTaskCenter - Jobs 系列任务中心
-///
-/// 该类用于集中管理一组符合 `JobsTask` 类型的任务：
-/// - 线程安全：内部使用 `NSLock` 保证并发访问安全。
-/// - 任务增删：支持添加、移除单个任务，或移除全部任务（并在移除时取消任务）。
-/// - 标签管理：可为任务添加字符串标签，便于分类与筛选；同时提供 `allTags` 获取目前所有标签的并集。
-///
-/// 使用场景示例：
-/// - 在页面/模块中创建多个可取消的异步任务（如网络请求、下载、定时器任务等），统一交给 `JobsTaskCenter` 管理，页面销毁时统一 `removeAll()`。
-/// - 为任务打上业务标签，如 "login"、"imageDownload"，便于统计与查询。
 
 import Foundation
 /// JobsTaskCenterComponent - Jobs 系列任务中心组件
@@ -273,8 +262,7 @@ extension JobsTaskCenterComponent {
             return plan.do(queue: queue) {
                 action()
             }
-        }
-        return plan.do(mode: mode) {
+        };return plan.do(mode: mode) {
             action()
         }
     }

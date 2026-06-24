@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -100,8 +99,7 @@ extension String {
         }
         UIApplication.shared.open(url, options: [:]) { ok in
             jobsByVoidBlock?(ok ? .opened : .cannotOpen)
-        }
-        return .opened
+        };return .opened
         #endif
     }
     /// 一行发邮件（优先原生 Mail VC；不可用时回退 mailto://）

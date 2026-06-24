@@ -38,8 +38,7 @@ final class JobsNetworkingGetDemoVC: JobsNetworkingMethodDemoVC {
                 "方法：\(error.method ?? "--")",
                 "路径：\(error.path ?? "--")"
             ])
-            await MainActor.run { self.handleFailure(render + "\n\n" + raw) }
-            return
+            await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
 
         let resp = service.decode(DioGETResponse.self, from: data)

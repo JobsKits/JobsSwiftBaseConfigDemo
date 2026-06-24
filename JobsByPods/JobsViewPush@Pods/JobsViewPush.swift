@@ -2,7 +2,7 @@
 //  JobsViewPush.swift
 //  JobsViewPush
 //
-//  Created by Jobs on 2026/6/21.
+//  Created by Jobs on 2026年6月21日，星期日.
 //
 
 #if os(iOS) || os(tvOS)
@@ -238,8 +238,7 @@ private extension JobsViewPushPresentation {
             hiddenFrame.origin.x = -visibleFrame.width
         case .right:
             hiddenFrame.origin.x = transitionView.bounds.maxX
-        }
-        return hiddenFrame
+        };return hiddenFrame
     }
 
     func interactiveDistance() -> CGFloat {
@@ -352,8 +351,7 @@ extension JobsViewPushPresentation: UIGestureRecognizerDelegate {
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         guard gestureRecognizer === backgroundTapGesture, let presentedView else { return true }
-        guard let touchedView = touch.view else { return true }
-        return !touchedView.isDescendant(of: presentedView)
+        guard let touchedView = touch.view else { return true };return !touchedView.isDescendant(of: presentedView)
     }
 }
 

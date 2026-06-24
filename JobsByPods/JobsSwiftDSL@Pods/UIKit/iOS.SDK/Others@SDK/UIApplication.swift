@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -33,8 +32,7 @@ extension UIApplication {
     /// 通用版本：iOS 12 及以下也能编译
     public static func jobsKeyWindow(preferMainScreen: Bool = true) -> UIWindow? {
         if #available(iOS 13.0, *) {
-            guard let ws = bestWindowScene() else { return nil }
-            return bestWindow(in: ws, preferMainScreen: preferMainScreen)
+            guard let ws = bestWindowScene() else { return nil };return bestWindow(in: ws, preferMainScreen: preferMainScreen)
         } else {
             return UIApplication.shared.keyWindow
         }
@@ -44,8 +42,7 @@ extension UIApplication {
     public static func jobsKeyWindow(in scene: UIScene?,
                                      preferMainScreen: Bool = true) -> UIWindow? {
         let ws = (scene as? UIWindowScene) ?? bestWindowScene()
-        guard let ws else { return nil }
-        return bestWindow(in: ws, preferMainScreen: preferMainScreen)
+        guard let ws else { return nil };return bestWindow(in: ws, preferMainScreen: preferMainScreen)
     }
     /// ② 顶层“可见 VC”（支持 Nav/Tab/Split/Page/Presented；可选忽略 Alert）
     /// - Parameters:
@@ -61,8 +58,7 @@ extension UIApplication {
             if let root { return root }
             if #available(iOS 13.0, *) {
                 guard let ws = bestWindowScene(),
-                      let r = bestRootViewController(in: ws) else { return nil }
-                return r
+                      let r = bestRootViewController(in: ws) else { return nil };return r
             } else {
                 return UIApplication.shared.keyWindow?.rootViewController
             }
@@ -79,8 +75,7 @@ extension UIApplication {
             if let root { return root }
             let ws = (scene as? UIWindowScene) ?? bestWindowScene()
             guard let ws,
-                  let r = bestRootViewController(in: ws) else { return nil }
-            return r
+                  let r = bestRootViewController(in: ws) else { return nil };return r
         }();return _jobsVisibleVC(from: rootVC, ignoreAlert: ignoreAlert)
     }
     /// 递归下钻逻辑提取成私有方法，两个重载共用
@@ -158,8 +153,7 @@ extension UIApplication {
         func windowRank(_ w: UIWindow) -> (Int, Int, Int) {
             // 可见性：0(可见且normal) < 1(可见且非normal) < 2(不可见)
             let visibilityGroup: Int = {
-                guard !w.isHidden, w.alpha > 0.01 else { return 2 }
-                return (w.windowLevel == .normal) ? 0 : 1
+                guard !w.isHidden, w.alpha > 0.01 else { return 2 };return (w.windowLevel == .normal) ? 0 : 1
             }()
             // 主屏优先
             let screenGroup = (preferMainScreen && w.screen != UIScreen.main) ? 1 : 0

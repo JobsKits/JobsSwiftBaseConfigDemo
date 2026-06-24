@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -102,8 +101,7 @@ public extension UIView {
         }
         configure?(lottieView)
         self.jobs_lottieView = lottieView
-        if autoPlay { lottieView.play() }
-        return lottieView
+        if autoPlay { lottieView.play() };return lottieView
     }
     // MARK: - UIView 层便捷控制（保持语义链式）
     @discardableResult
@@ -121,8 +119,7 @@ public extension UIView {
     @discardableResult
     public func lottieStop(resetToBeginning: Bool = false) -> Self {
         jobs_lottieView?.stop()
-        if resetToBeginning { jobs_lottieView?.currentProgress = 0 }
-        return self
+        if resetToBeginning { jobs_lottieView?.currentProgress = 0 };return self
     }
     /// 设置进度（0~1）
     @discardableResult
@@ -135,8 +132,7 @@ public extension UIView {
     public func lottieReplace(name: String, bundle: Bundle = .main, autoPlay: Bool = false) -> Self {
         guard let v = jobs_lottieView else { return self }
         v.animation = LottieAnimation.named(name, bundle: bundle)
-        if autoPlay { v.play() }
-        return self
+        if autoPlay { v.play() };return self
     }
     /// 卸载当前挂载的 Lottie 视图
     @discardableResult

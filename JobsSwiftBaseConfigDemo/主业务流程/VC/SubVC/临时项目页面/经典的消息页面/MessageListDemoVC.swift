@@ -394,8 +394,7 @@ extension MessageListDemoVC {
         let sorted = selected.sorted { $0.row > $1.row }
 
         let idsToRemove: [UUID] = sorted.compactMap { ip in
-            guard items.indices.contains(ip.row) else { return nil }
-            return items[ip.row].id
+            guard items.indices.contains(ip.row) else { return nil };return items[ip.row].id
         }
 
         for ip in sorted {

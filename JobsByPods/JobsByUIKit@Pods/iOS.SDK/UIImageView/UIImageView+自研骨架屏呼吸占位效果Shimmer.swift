@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -58,8 +57,7 @@ extension UIImageView {
     private func jobs_targetSizeForImageLoading(_ override: CGSize?) -> CGSize? {
         if let override, override.width > 1, override.height > 1 { return override }
         if let size = jobs_remoteImageTargetSize, size.width > 1, size.height > 1 { return size }
-        if bounds.width > 1, bounds.height > 1 { return bounds.size }
-        return nil
+        if bounds.width > 1, bounds.height > 1 { return bounds.size };return nil
     }
 }
 
@@ -144,8 +142,7 @@ public extension UIImageView {
                     iv.jobs_handleImageLoadFailure(mode: mode, shimmerConfig: shimmerConfig)
                 }
             }
-        }
-        return self
+        };return self
     }
 
     @inline(__always)

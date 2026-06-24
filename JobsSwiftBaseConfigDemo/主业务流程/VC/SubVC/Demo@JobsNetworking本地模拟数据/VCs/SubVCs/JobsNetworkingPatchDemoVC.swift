@@ -47,8 +47,7 @@ final class JobsNetworkingPatchDemoVC: JobsNetworkingMethodDemoVC {
                 "错误码：\(error.errorCode ?? "--")",
                 "消息：\(error.message ?? "--")"
             ])
-            await MainActor.run { self.handleFailure(render + "\n\n" + raw) }
-            return
+            await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
 
         let response = service.decode(DioPATCHResponse.self, from: data)

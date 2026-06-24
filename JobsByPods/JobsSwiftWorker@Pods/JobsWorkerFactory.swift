@@ -3,7 +3,6 @@
 //  JobsSwiftWorker
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -24,8 +23,7 @@ public enum JobsWorkerFactory {
         }
         worker.setDisposer {
             source.removeObserver(token)
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -49,8 +47,7 @@ public enum JobsWorkerFactory {
             if let token {
                 source.removeObserver(token)
             }
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -74,8 +71,7 @@ public enum JobsWorkerFactory {
         worker.setDisposer {
             source.removeObserver(token)
             scheduler.cancel(key)
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -104,8 +100,7 @@ public enum JobsWorkerFactory {
 
         worker.setDisposer {
             source.removeObserver(token)
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -130,8 +125,7 @@ public enum JobsWorkerFactory {
         }
         worker.setDisposer {
             source.removeObserver(token)
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -169,8 +163,7 @@ public enum JobsWorkerFactory {
             if let token {
                 source.removeObserver(token)
             }
-        }
-        return worker
+        };return worker
     }
 
     @discardableResult
@@ -183,22 +176,19 @@ public enum JobsWorkerFactory {
         let tokens: [(JobsAnyValueListenable, UUID)] = sources.map { source in
             let token = source.observeAny { change in
                 onChange(change)
-            }
-            return (source, token)
+            };return (source, token)
         }
         worker.setDisposer {
             tokens.forEach { pair in
                 pair.0.removeObserver(pair.1)
             }
-        }
-        return worker
+        };return worker
     }
 }
 
 private extension NSLock {
     func jobs_sync<T>(_ action: () -> T) -> T {
         lock()
-        defer { unlock() }
-        return action()
+        defer { unlock() };return action()
     }
 }

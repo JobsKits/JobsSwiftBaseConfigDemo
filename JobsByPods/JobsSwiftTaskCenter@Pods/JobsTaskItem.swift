@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -26,8 +25,7 @@ public final class JobsTaskItem {
     public var status: JobsTaskStatus {
         get {
             lock.lock()
-            defer { lock.unlock() }
-            return _status
+            defer { lock.unlock() };return _status
         }
         set {
             lock.lock()

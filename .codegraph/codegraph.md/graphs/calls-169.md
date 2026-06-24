@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTextKitRenderer::_calculateSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:108"]
-  T1["method:ASTextKitRenderer::isScaled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:162"]
+  S1["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:155"]
+  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["method:ASTextKitRenderer::_calculateSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:108"]
-  T2["method:ASCollectionLayoutState::context<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASCollectionLayoutState.mm:114"]
+  S2["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:155"]
+  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S2 -->|calls| T2
-  S3["method:ASTextKitRenderer::_calculateSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:108"]
-  T3["method:ASTextKitTailTruncater::truncate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:151"]
+  S3["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:155"]
+  T3["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S3 -->|calls| T3
-  S4["method:ASTextKitRenderer::_calculateSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:108"]
-  T4["property:ASTextKitRenderer::truncater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.h:49"]
+  S4["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:179"]
+  T4["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S4 -->|calls| T4
-  S5["method:ASTextKitRenderer::_calculateSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:108"]
-  T5["method:ASCollectionLayoutState::context<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASCollectionLayoutState.mm:114"]
+  S5["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:179"]
+  T5["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S5 -->|calls| T5
-  S6["method:ASTextKitRenderer::drawInContext:bounds:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:193"]
-  T6["property:ASTextKitRenderer::shadower<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.h:53"]
+  S6["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:179"]
+  T6["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S6 -->|calls| T6
-  S7["method:ASTextKitRenderer::drawInContext:bounds:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:193"]
-  T7["property:ASTextKitRenderer::shadower<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.h:53"]
+  S7["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:200"]
+  T7["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S7 -->|calls| T7
-  S8["method:ASTextKitRenderer::drawInContext:bounds:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:193"]
-  T8["method:ASTextKitRenderer::isScaled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:162"]
+  S8["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:200"]
+  T8["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S8 -->|calls| T8
-  S9["method:ASTextKitRenderer::drawInContext:bounds:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:193"]
-  T9["method:ASCollectionLayoutState::context<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASCollectionLayoutState.mm:114"]
+  S9["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAVerticalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:200"]
+  T9["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S9 -->|calls| T9
-  S10["method:ASTextKitRenderer::lineCount<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitRenderer.mm:250"]
-  T10["method:ASCollectionLayoutState::context<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASCollectionLayoutState.mm:114"]
+  S10["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
+  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h:1"]
-  T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S11["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
+  T11["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h:1"]
-  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S12["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
+  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h:1"]
-  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S13["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
+  T13["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.h:1"]
-  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S14["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
+  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S14 -->|calls| T14
-  S15["method:ASTextKitShadower::shadowerWithShadowOffset:shadowColor:shadowOpacity:shadowRadius:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:37"]
-  T15["method:ASTextKitShadower::initWithShadowOffset:shadowColor:shadowOpacity:shadowRadius:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:59"]
+  S15["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
+  T15["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S15 -->|calls| T15
-  S16["method:ASTextKitShadower::shadowerWithShadowOffset:shadowColor:shadowOpacity:shadowRadius:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:37"]
-  T16["method:ASTextKitShadower::initWithShadowOffset:shadowColor:shadowOpacity:shadowRadius:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:59"]
+  S16["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
+  T16["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S16 -->|calls| T16
-  S17["method:ASTextKitShadower::initWithShadowOffset:shadowColor:shadowOpacity:shadowRadius:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:59"]
-  T17["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S17["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
+  T17["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S17 -->|calls| T17
-  S18["method:ASTextKitShadower::setShadowInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:83"]
-  T18["method:ASTextKitShadower::_shouldDrawShadow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:78"]
+  S18["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
+  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S18 -->|calls| T18
-  S19["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
-  T19["method:ASTextKitShadower::_shouldDrawShadow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:78"]
+  S19["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
+  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S19 -->|calls| T19
-  S20["method:ASTextKitShadower::insetSizeWithConstrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:129"]
-  T20["function:_insetSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:16"]
+  S20["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
+  T20["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S20 -->|calls| T20
-  S21["method:ASTextKitShadower::insetSizeWithConstrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:129"]
-  T21["function:_invertInsets<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:23"]
+  S21["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
+  T21["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S21 -->|calls| T21
-  S22["method:ASTextKitShadower::insetSizeWithConstrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:129"]
-  T22["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
+  S22["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
+  T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S22 -->|calls| T22
-  S23["method:ASTextKitShadower::insetRectWithConstrainedRect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:134"]
-  T23["function:_invertInsets<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:23"]
+  S23["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
+  T23["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
   S23 -->|calls| T23
-  S24["method:ASTextKitShadower::insetRectWithConstrainedRect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:134"]
-  T24["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
+  S24["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
+  T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S24 -->|calls| T24
-  S25["method:ASTextKitShadower::outsetSizeWithInsetSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:139"]
-  T25["function:_insetSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:16"]
+  S25["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
+  T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S25 -->|calls| T25
 ```
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T1["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S1["method:ASVideoPlayerNode::setAsset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:170"]
+  T1["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T2["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S2["method:ASVideoPlayerNode::setAsset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:170"]
+  T2["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S2 -->|calls| T2
-  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T3["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S3["method:ASVideoPlayerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:198"]
+  T3["method:ASVideoPlayerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:198"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T4["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S4["method:ASVideoPlayerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:198"]
+  T4["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T5["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S5["method:ASVideoPlayerNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:205"]
+  T5["method:ASVideoPlayerNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:205"]
   S5 -->|calls| T5
-  S6["method:_ASTableViewCell::layoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:86"]
-  T6["method:_ASTableViewCell::layoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:86"]
+  S6["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T6["method:ASVideoPlayerNode::createDefaultControlElementArray<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:299"]
   S6 -->|calls| T6
-  S7["method:_ASTableViewCell::didTransitionToState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:92"]
-  T7["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S7["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T7["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S7 -->|calls| T7
-  S8["method:_ASTableViewCell::didTransitionToState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:92"]
-  T8["method:ASDisplayNode::layoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:481"]
+  S8["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T8["method:ASVideoPlayerNode::_locked_createPlaybackButton<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:338"]
   S8 -->|calls| T8
-  S9["method:_ASTableViewCell::consumesCellNodeVisibilityEvents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:134"]
-  T9["function:ASSubclassOverridesSelector<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:98"]
+  S9["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T9["method:ASVideoPlayerNode::_locked_createElapsedTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:388"]
   S9 -->|calls| T9
-  S10["method:_ASTableViewCell::setSelected:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:143"]
-  T10["method:_ASTableViewCell::setSelected:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:143"]
+  S10["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T10["method:ASVideoPlayerNode::_locked_createDurationTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:406"]
   S10 -->|calls| T10
-  S11["method:_ASTableViewCell::setHighlighted:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:149"]
-  T11["method:_ASTableViewCell::setHighlighted:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:149"]
+  S11["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T11["method:ASVideoPlayerNode::_locked_createScrubber<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:425"]
   S11 -->|calls| T11
-  S12["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
-  T12["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
+  S12["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T12["method:ASVideoPlayerNode::_locked_createFullScreenButton<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:366"]
   S12 -->|calls| T12
-  S13["method:ASTableView::initWithFrame:style:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:308"]
-  T13["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
+  S13["method:ASVideoPlayerNode::createControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:229"]
+  T13["method:ASVideoPlayerNode::_locked_createControlFlexGrowSpacer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:473"]
   S13 -->|calls| T13
-  S14["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T14["method:ASTableView::initWithFrame:style:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:308"]
+  S14["method:ASVideoPlayerNode::removeControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:311"]
+  T14["method:ASVideoPlayerNode::_locked_cleanCachedControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:327"]
   S14 -->|calls| T14
-  S15["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T15["method:ASTableView::dataControllerClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:300"]
+  S15["method:ASVideoPlayerNode::_locked_cleanCachedControls<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:327"]
+  T15["method:ASWeakSet::removeAllObjects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASWeakSet.mm:37"]
   S15 -->|calls| T15
-  S16["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T16["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S16["method:ASVideoPlayerNode::_locked_createPlaybackButton<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:338"]
+  T16["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S16 -->|calls| T16
-  S17["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T17["method:ASDataController::initWithDataSource:node:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDataController.mm:83"]
+  S17["method:ASVideoPlayerNode::_locked_createFullScreenButton<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:366"]
+  T17["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S17 -->|calls| T17
-  S18["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T18["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S18["method:ASVideoPlayerNode::_locked_createElapsedTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:388"]
+  T18["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S18 -->|calls| T18
-  S19["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T19["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S19["method:ASVideoPlayerNode::_locked_createElapsedTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:388"]
+  T19["method:ASVideoPlayerNode::timeLabelAttributedStringForString:forControlType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:503"]
   S19 -->|calls| T19
-  S20["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T20["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S20["method:ASVideoPlayerNode::_locked_createDurationTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:406"]
+  T20["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S20 -->|calls| T20
-  S21["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T21["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S21["method:ASVideoPlayerNode::_locked_createDurationTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:406"]
+  T21["method:ASVideoPlayerNode::timeLabelAttributedStringForString:forControlType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:503"]
   S21 -->|calls| T21
-  S22["method:ASTableView::initWithCoder:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:358"]
-  T22["method:ASTableView::initWithFrame:style:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:308"]
+  S22["method:ASVideoPlayerNode::_locked_createDurationTextField<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:406"]
+  T22["method:ASVideoPlayerNode::updateDurationTimeLabel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:485"]
   S22 -->|calls| T22
-  S23["method:ASTableView::setAsyncDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:397"]
-  T23["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S23["method:ASVideoPlayerNode::_locked_createControlFlexGrowSpacer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:473"]
+  T23["method:ASVideoPlayerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:99"]
   S23 -->|calls| T23
-  S24["method:ASTableView::setAsyncDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:397"]
-  T24["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S24["method:ASVideoPlayerNode::updateDurationTimeLabel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:485"]
+  T24["method:ASVideoPlayerNode::timeStringForCMTime:forTimeLabelType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:989"]
   S24 -->|calls| T24
-  S25["method:ASTableView::setAsyncDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:397"]
-  T25["method:ASTableView::_asyncDelegateOrDataSourceDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:513"]
+  S25["method:ASVideoPlayerNode::updateDurationTimeLabel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:485"]
+  T25["method:ASVideoPlayerNode::timeLabelAttributedStringForString:forControlType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:503"]
   S25 -->|calls| T25
 ```
 

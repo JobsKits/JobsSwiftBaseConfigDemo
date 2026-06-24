@@ -93,8 +93,7 @@ final class HollowOverlayView: UIView {
     }
     // 关键：只在“洞附近”吃掉触摸，其它区域放行给下面的 scrollView 等
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard enableDrag else { return false }
-        return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(point)
+        guard enableDrag else { return false };return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(point)
     }
 }
 

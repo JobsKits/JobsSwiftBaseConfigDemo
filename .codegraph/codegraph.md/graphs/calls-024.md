@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTextCellNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:407"]
-  T1["method:ASTextCellNode::defaultTextInsets<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:434"]
+  S1["method:ASDisplayNode::transitionLayoutWithSizeRange:animated:shouldMeasureAsync:measurementCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:611"]
+  T1["method:ASCellNode::_layoutTransitionMeasurementDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:121"]
   S1 -->|calls| T1
-  S2["method:ASTextCellNode::initWithAttributes:insets:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:412"]
-  T2["method:ASTextCellNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:407"]
+  S2["method:ASDisplayNode::transitionLayoutWithSizeRange:animated:shouldMeasureAsync:measurementCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:611"]
+  T2["variable:completion<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode+Beta.h:73"]
   S2 -->|calls| T2
-  S3["method:ASTextCellNode::initWithAttributes:insets:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:412"]
-  T3["method:ASTextCellNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:407"]
+  S3["method:ASDisplayNode::transitionLayoutWithSizeRange:animated:shouldMeasureAsync:measurementCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:611"]
+  T3["method:ASLayoutTransition::applySubnodeInsertionsAndMoves<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASLayoutTransition.mm:93"]
   S3 -->|calls| T3
-  S4["method:ASTextCellNode::setTextAttributes:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:444"]
-  T4["method:ASTextCellNode::locked_updateAttributedText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:478"]
+  S4["method:ASDisplayNode::transitionLayoutWithSizeRange:animated:shouldMeasureAsync:measurementCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:611"]
+  T4["method:ASDisplayNode::_finishOrCancelTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:592"]
   S4 -->|calls| T4
-  S5["method:ASTextCellNode::setTextInsets:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:458"]
-  T5["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S5["method:ASDisplayNode::transitionLayoutWithSizeRange:animated:shouldMeasureAsync:measurementCompletion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:611"]
+  T5["function:ASPerformBlockOnBackgroundThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:145"]
   S5 -->|calls| T5
-  S6["method:ASTextCellNode::setText:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:470"]
-  T6["method:ASTextCellNode::locked_updateAttributedText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:478"]
+  S6["method:ASDisplayNode::cancelLayoutTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:768"]
+  T6["method:ASDisplayNode::_finishOrCancelTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:592"]
   S6 -->|calls| T6
-  S7["method:ASTextCellNode::locked_updateAttributedText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:478"]
-  T7["method:ASMutableAttributedStringBuilder::initWithString:attributes:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:39"]
+  S7["method:ASDisplayNode::cancelLayoutTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:768"]
+  T7["function:ASDisplayNodePerformBlockOnEverySubnode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:132"]
   S7 -->|calls| T7
-  S8["method:ASTextCellNode::locked_updateAttributedText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:478"]
-  T8["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S8["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T8["method:ASDisplayNode::_layoutSublayouts<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:510"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode+Beta.h:1"]
-  T9["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S9["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T9["method:_ASTransitionContext::removedSubnodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/_ASTransitionContext.mm:76"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T10["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S10["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T10["method:_ASTransitionContext::insertedSubnodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/_ASTransitionContext.mm:71"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S11["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T11["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S12["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T12["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S13["method:ASDisplayNode::animateLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:820"]
+  T13["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S14["method:ASDisplayNode::didCompleteLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:911"]
+  T14["method:ASNodeController::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:112"]
   S14 -->|calls| T14
-  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T15["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S15["method:ASDisplayNode::didCompleteLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:911"]
+  T15["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S15 -->|calls| T15
-  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T16["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S16["method:ASDisplayNode::_completePendingLayoutTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:925"]
+  T16["method:ASNodeController::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:112"]
   S16 -->|calls| T16
-  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T17["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S17["method:ASDisplayNode::_completePendingLayoutTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:925"]
+  T17["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S17 -->|calls| T17
-  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T18["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S18["method:ASDisplayNode::_completePendingLayoutTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:925"]
+  T18["method:ASDisplayNode::_pendingLayoutTransitionDidComplete<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:1009"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T19["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S19["method:ASDisplayNode::_completeLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:942"]
+  T19["function:ASDisplayNodeThreadIsMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:21"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T20["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S20["method:ASDisplayNode::_completeLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:942"]
+  T20["method:ASLayoutTransition::commitTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASLayoutTransition.mm:87"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T21["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S21["method:ASDisplayNode::_completeLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:942"]
+  T21["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T22["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S22["method:ASDisplayNode::_completeLayoutTransition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:942"]
+  T22["method:ASLayoutTransition::commitTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASLayoutTransition.mm:87"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S23["method:ASDisplayNode::_pendingLayoutTransitionDidComplete<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:1009"]
+  T23["method:ASDisplayNode::_assertSubnodeState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:963"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T24["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S24["method:ASDisplayNode::_pendingLayoutTransitionDidComplete<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:1009"]
+  T24["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.h:1"]
-  T25["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S25["method:ASDisplayNode::_pendingLayoutTransitionDidComplete<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:1009"]
+  T25["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S25 -->|calls| T25
 ```
 

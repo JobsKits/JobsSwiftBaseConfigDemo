@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -228,8 +227,7 @@ extension UILabel {
         guard let dotRange = str.range(of: ".") else { return 0 }
         let fraction = str[dotRange.upperBound...]
         // 过滤掉可能的尾部空格
-        let digits = fraction.prefix { $0.isNumber }
-        return digits.count
+        let digits = fraction.prefix { $0.isNumber };return digits.count
     }
 
     private func _jobsFormatNumber(_ value: Double, decimals: Int) -> String {

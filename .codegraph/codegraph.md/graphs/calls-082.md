@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTableView::dataController:constrainedSizeForNodeAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1801"]
-  T1["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S1["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
+  T1["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S1 -->|calls| T1
-  S2["method:ASTableView::dataController:presentedSizeForElement:matchesSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1855"]
-  T2["function:ASScreenScale<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:179"]
+  S2["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
+  T2["method:ASAbstractLayoutController::defaultTuningParameters<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:90"]
   S2 -->|calls| T2
-  S3["method:ASTableView::didLayoutSubviewsOfTableViewCell:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1879"]
-  T3["method:ASTableView::beginUpdates<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:686"]
+  S3["method:ASAbstractLayoutController::tuningParametersForRangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:150"]
+  T3["method:ASAbstractLayoutController::tuningParametersForRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:160"]
   S3 -->|calls| T3
-  S4["method:ASTableView::didLayoutSubviewsOfTableViewCell:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1879"]
-  T4["method:ASTableView::endUpdatesAnimated:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:709"]
+  S4["method:ASAbstractLayoutController::setTuningParameters:forRangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:155"]
+  T4["method:ASAbstractLayoutController::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:166"]
   S4 -->|calls| T4
-  S5["method:ASTableView::didLayoutSubviewsOfTableViewCell:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1879"]
-  T5["function:ASDisplayNodeLayerHasAnimations<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:183"]
+  S5["method:ASAbstractLayoutController::tuningParametersForRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:160"]
+  T5["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S5 -->|calls| T5
-  S6["method:ASTableView::nodeSelectedStateDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1920"]
-  T6["method:ASTableNode::selectRowAtIndexPath:animated:scrollPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:585"]
+  S6["method:ASAbstractLayoutController::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:166"]
+  T6["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
   S6 -->|calls| T6
-  S7["method:ASTableView::nodeSelectedStateDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1920"]
-  T7["method:ASTableNode::deselectRowAtIndexPath:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:599"]
+  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.h:1"]
+  T7["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S7 -->|calls| T7
-  S8["method:ASTableView::nodeDidInvalidateSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1940"]
-  T8["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S8["method:ASBasicImageDownloaderContext::currentRequestLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:56"]
+  T8["method:Mutex::Mutex<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:118"]
   S8 -->|calls| T8
-  S9["method:ASTableView::requeryNodeHeights<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1947"]
-  T9["method:ASTableView::beginUpdates<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:686"]
+  S9["method:ASBasicImageDownloaderContext::contextForURL:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:66"]
+  T9["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S9 -->|calls| T9
-  S10["method:ASTableView::requeryNodeHeights<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1947"]
-  T10["method:ASTableView::endUpdates<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:698"]
+  S10["method:ASBasicImageDownloaderContext::initWithURL:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:88"]
+  T10["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S10 -->|calls| T10
-  S11["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T11["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S11["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  T11["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S11 -->|calls| T11
-  S12["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T12["method:ASControlNode::__exitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:114"]
+  S12["method:ASBasicImageDownloaderContext::completeWithImage:error:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:138"]
+  T12["property:_ASAsyncTransaction::completionBlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.h:68"]
   S12 -->|calls| T12
-  S13["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T13["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S13["method:NSURLRequest::setAsyncdisplaykit_context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:205"]
+  T13["function:NSURLRequest::ContextKey<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:201"]
   S13 -->|calls| T13
-  S14["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T14["method:ASTableView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1480"]
+  S14["method:NSURLRequest::asyncdisplaykit_context<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:209"]
+  T14["function:NSURLRequest::ContextKey<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:201"]
   S14 -->|calls| T14
-  S15["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
-  T15["method:ASTableView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:739"]
+  S15["method:ASBasicImageDownloader::sharedImageDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:227"]
+  T15["method:ASBasicImageDownloader::_init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:239"]
   S15 -->|calls| T15
-  S16["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
-  T16["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
+  S16["method:ASBasicImageDownloader::_init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:239"]
+  T16["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S16 -->|calls| T16
-  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T17["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S17["method:ASBasicImageDownloader::_init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:239"]
+  T17["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S17 -->|calls| T17
-  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T18["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S18["method:ASBasicImageDownloader::downloadImageWithURL:shouldRetry:callbackQueue:downloadProgress:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:255"]
+  T18["method:ASBasicImageDownloader::downloadImageWithURL:shouldRetry:priority:callbackQueue:downloadProgress:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:269"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T19["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S19["method:ASBasicImageDownloader::downloadImageWithURL:shouldRetry:priority:callbackQueue:downloadProgress:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:269"]
+  T19["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T20["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S20["method:ASBasicImageDownloader::downloadImageWithURL:shouldRetry:priority:callbackQueue:downloadProgress:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:269"]
+  T20["function:NSURLSessionTaskPriorityWithImageDownloaderPriority<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:29"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T21["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S21["method:ASBasicImageDownloader::cancelImageDownloadForIdentifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:310"]
+  T21["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T22["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S22["method:ASBasicImageDownloader::URLSession:downloadTask:didFinishDownloadingToURL:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:331"]
+  T22["method:ASBasicImageDownloaderContext::isCancelled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:111"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T23["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S23["method:ASBatchContext::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBatchContext.mm:25"]
+  T23["method:ASBatchContext::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBatchContext.mm:25"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T24["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S24["method:ASBatchContext::completeBatchFetching:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBatchContext.mm:48"]
+  T24["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T25["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S25["method:ASCollectionElement::initWithNodeModel:nodeBlock:supplementaryElementKind:constrainedSize:owningNode:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASCollectionElement.mm:26"]
+  T25["method:ASAbstractLayoutController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASAbstractLayoutController.mm:136"]
   S25 -->|calls| T25
 ```
 

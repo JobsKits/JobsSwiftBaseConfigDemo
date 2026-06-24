@@ -167,8 +167,7 @@ extension SkeletonViewDemoVC {
         func randColor() -> UIColor {
             let all: [UIColor] = [.systemBlue, .systemTeal, .systemPink, .systemOrange, .systemPurple, .systemGreen, .systemIndigo, .systemRed]
             return all.randomElement() ?? .systemGray
-        }
-        return (0..<count).map { i in
+        };return (0..<count).map { i in
             .init(
                 name: names[i % names.count],
                 detail: descs[i % descs.count],

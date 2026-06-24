@@ -103,8 +103,7 @@ NSInteger _forceInterfaceOrientationMask = 0;
         NSAssert(![self respondsToSelector: @selector(createViewHierarchy)],
             @"createViewHierarchy is deprecated and will not be implemented. Use createUI"
         );
-    }
-    return self;
+    };return self;
 }
 
 - (void)setWindow:(id)object        {}
@@ -290,8 +289,7 @@ extern "C" void UnityCleanupTrampoline()
     {
         [self initUnityApplicationNoGraphics];
         UnitySetAbsoluteURL(url.absoluteString.UTF8String);
-    }
-    return YES;
+    };return YES;
 }
 
 // Helper method to extract URL from launch options

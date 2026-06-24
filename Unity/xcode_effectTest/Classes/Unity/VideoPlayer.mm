@@ -116,8 +116,7 @@ static void* _ObservePlayerItemContext = (void*)0x2;
     {
         _duration = _curTime = kCMTimeZero;
         _curFrameTimestamp = _lastFrameTimestamp = kCMTimeZero;
-    }
-    return self;
+    };return self;
 }
 
 - (void)cleanupCVTextureCache

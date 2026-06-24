@@ -49,12 +49,10 @@ final class JobsNetworkingDemoVC: BaseVC {
             )
             .byTarget(self)
             .numberOfRowsInSection { [weak self] (_, _, _) -> Int in
-                guard let self else { return 0 }
-                return self.dataSources.count
+                guard let self else { return 0 };return self.dataSources.count
             }
             .cellForRowAt { [weak self] _, tv, indexPath in
-                guard let self else { return UITableViewCell() }
-                return tv
+                guard let self else { return UITableViewCell() };return tv
                     .byDequeueReusableCell(withType: MethodTBVCell.self, for: indexPath)
                     .byData(self.dataSources[indexPath.row])
             }

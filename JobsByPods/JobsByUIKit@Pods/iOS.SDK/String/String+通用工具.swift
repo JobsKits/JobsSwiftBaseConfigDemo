@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -37,8 +36,7 @@ extension String {
     }
     
     public func boundingHeight(width: CGFloat, font: UIFont) -> CGFloat {
-        guard width > 0 else { return 0 }
-        return ceil((self as NSString).boundingRect(
+        guard width > 0 else { return 0 };return ceil((self as NSString).boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading],
             attributes: [.font: font],
@@ -71,8 +69,7 @@ extension String {
     }
     /// 将字符串竖排化：每字符一行（Emoji/空格也原样拆分）
     public var verticalized: String {
-        guard !isEmpty else { return self }
-        return self.map { String($0) }.joined(separator: "\n")
+        guard !isEmpty else { return self };return self.map { String($0) }.joined(separator: "\n")
     }
 }
 // MARK: 一 路径相关
@@ -153,20 +150,17 @@ extension String {
     }
     /// 是否为纯英文大写（A-Z），且非空
     public var isPureUppercaseEnglish: Bool {
-        guard !isEmpty else { return false }
-        return unicodeScalars.allSatisfy { $0.value >= 65 && $0.value <= 90 } // 'A'...'Z'
+        guard !isEmpty else { return false };return unicodeScalars.allSatisfy { $0.value >= 65 && $0.value <= 90 } // 'A'...'Z'
     }
     /// 是否为纯英文小写（a-z），且非空
     public var isPureLowercaseEnglish: Bool {
-        guard !isEmpty else { return false }
-        return unicodeScalars.allSatisfy { $0.value >= 97 && $0.value <= 122 } // 'a'...'z'
+        guard !isEmpty else { return false };return unicodeScalars.allSatisfy { $0.value >= 97 && $0.value <= 122 } // 'a'...'z'
     }
     // MARK: - Chinese
     /// 是否全是汉字（含简体/繁体/同形字），且非空
     /// 覆盖：CJK Unified Ideographs + Extension A（常用）
     public var isPureChineseHan: Bool {
-        guard !isEmpty else { return false }
-        return unicodeScalars.allSatisfy { scalar in
+        guard !isEmpty else { return false };return unicodeScalars.allSatisfy { scalar in
             switch scalar.value {
             case 0x4E00...0x9FFF: return true        // CJK Unified Ideographs
             case 0x3400...0x4DBF: return true        // CJK Unified Ideographs Extension A

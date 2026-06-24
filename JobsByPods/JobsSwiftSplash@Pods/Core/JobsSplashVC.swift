@@ -2,6 +2,8 @@
 //  JobsSplashVC.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 #if os(iOS) || os(tvOS)
 import UIKit
@@ -247,8 +249,7 @@ public final class JobsSplashVC: BaseVC {
     private func image(from data: Data, url: URL) -> UIImage? {
         if url.pathExtension.lowercased() == "gif" {
             return JobsSplashGIFDecoder.image(data: data)
-        }
-        return UIImage(data: data)
+        };return UIImage(data: data)
     }
 
     private func resourceURL(name: String, defaultExtension: String?, bundle: Bundle) -> URL? {
@@ -258,8 +259,7 @@ public final class JobsSplashVC: BaseVC {
                 forResource: (name as NSString).deletingPathExtension,
                 withExtension: nameExtension
             )
-        }
-        return bundle.url(forResource: name, withExtension: defaultExtension)
+        };return bundle.url(forResource: name, withExtension: defaultExtension)
     }
 
     private func startCountdownIfNeeded() {
@@ -268,8 +268,7 @@ public final class JobsSplashVC: BaseVC {
         guard seconds > 0 else {
             DispatchQueue.main.async { [weak self] in
                 self?.finish()
-            }
-            return
+            };return
         }
         isCountdownTime = true
         countdownTime = seconds

@@ -2,6 +2,8 @@
 //  JobsSplashPresenter.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 #if os(iOS) || os(tvOS)
 import UIKit

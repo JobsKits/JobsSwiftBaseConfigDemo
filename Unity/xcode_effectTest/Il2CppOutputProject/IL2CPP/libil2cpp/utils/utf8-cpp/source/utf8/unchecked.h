@@ -53,8 +53,7 @@ namespace utf8
                 *(result++) = static_cast<uint8_t>(((cp >> 12) & 0x3f)| 0x80);
                 *(result++) = static_cast<uint8_t>(((cp >> 6) & 0x3f) | 0x80);
                 *(result++) = static_cast<uint8_t>((cp & 0x3f)        | 0x80);
-            }
-            return result;
+            };return result;
         }
 
         template <typename octet_iterator>
@@ -150,8 +149,7 @@ namespace utf8
                     cp = replacement_marker;
 
                 result = utf8::unchecked::append(cp, result);
-            }
-            return result;         
+            };return result;         
         }
 
         template <typename u16bit_iterator, typename octet_iterator>
@@ -165,8 +163,7 @@ namespace utf8
                 }
                 else
                     *result++ = static_cast<uint16_t>(cp);
-            }
-            return result;
+            };return result;
         }
 
         template <typename octet_iterator, typename u32bit_iterator>

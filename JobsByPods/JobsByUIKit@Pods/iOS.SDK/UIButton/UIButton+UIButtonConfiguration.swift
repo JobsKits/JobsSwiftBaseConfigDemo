@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -50,8 +49,7 @@ extension UIButton {
             cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                 var a = incoming
                 if let f = pack.font { a.font = f }
-                if let c = pack.color { a.foregroundColor = c }
-                return a
+                if let c = pack.color { a.foregroundColor = c };return a
             }
         }
         self.configuration = cfg

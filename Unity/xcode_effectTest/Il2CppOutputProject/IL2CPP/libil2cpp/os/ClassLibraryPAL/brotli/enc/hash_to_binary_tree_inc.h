@@ -84,8 +84,7 @@ static BROTLI_INLINE size_t FN(HashMemAllocInBytes)(
   size_t num_nodes = (size_t)1 << params->lgwin;
   if (one_shot && input_size < num_nodes) {
     num_nodes = input_size;
-  }
-  return sizeof(uint32_t) * BUCKET_SIZE + 2 * sizeof(uint32_t) * num_nodes;
+  };return sizeof(uint32_t) * BUCKET_SIZE + 2 * sizeof(uint32_t) * num_nodes;
 }
 
 static BROTLI_INLINE size_t FN(LeftChildIndex)(
@@ -187,8 +186,7 @@ static BROTLI_INLINE BackwardMatch* FN(StoreAndFindMatches)(
         prev_ix = forest[node_right];
       }
     }
-  }
-  return matches;
+  };return matches;
 }
 
 /* Finds all backward matches of &data[cur_ix & ring_buffer_mask] up to the
@@ -260,8 +258,7 @@ static BROTLI_INLINE size_t FN(FindAllMatches)(
         }
       }
     }
-  }
-  return (size_t)(matches - orig_matches);
+  };return (size_t)(matches - orig_matches);
 }
 
 /* Stores the hash of the next 4 bytes and re-roots the binary tree at the

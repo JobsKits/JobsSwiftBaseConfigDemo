@@ -300,8 +300,7 @@ extension AnimationEffectLabelDemoVC {
 
     private func parseValue(_ text: String?, fallback: Double) -> Double {
         let t = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if t.isEmpty { return fallback }
-        return Double(t) ?? fallback
+        if t.isEmpty { return fallback };return Double(t) ?? fallback
     }
     /// 终点展示：整数不带小数；小数保留 2 位（你想保留“输入的原始小数位数”也能做）
     private func formatTargetText(_ value: Double) -> String {

@@ -3,7 +3,6 @@
 //  JobsSwiftBaseTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import JobsSwiftBaseDefines
@@ -19,8 +18,7 @@ public struct JobsValidators {
         return { s in
             guard let v = Double(s) else { return false }
             if let min = min, v < min { return false }
-            if let max = max, v > max { return false }
-            return true
+            if let max = max, v > max { return false };return true
         }
     }
     // MARK: - 手机号验证（中国大陆）

@@ -302,8 +302,7 @@ dyn_array_ptr_pop (DynPtrArray *da)
 		dyn_array_ensure_independent (&da->array, sizeof (void*));
 		p = dyn_array_ptr_get (da, size - 1);
 		--da->array.size;
-	}
-	return p;
+	};return p;
 }
 
 static void

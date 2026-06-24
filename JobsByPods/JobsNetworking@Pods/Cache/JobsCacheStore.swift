@@ -3,7 +3,6 @@
 //  JobsNetworking
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -40,8 +39,7 @@ public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
         guard let value = store[key.raw], !value.isExpired else {
             store[key.raw] = nil
             return nil
-        }
-        return value
+        };return value
     }
 
     public func set(key: JobsCacheKey, value: JobsCachedValue) {
@@ -80,8 +78,7 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
         if wrapper.isExpired {
             try? FileManager.default.removeItem(at: url)
             return nil
-        }
-        return wrapper
+        };return wrapper
     }
 
     public func set(key: JobsCacheKey, value: JobsCachedValue) {

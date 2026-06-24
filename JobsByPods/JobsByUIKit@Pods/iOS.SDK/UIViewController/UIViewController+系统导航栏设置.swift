@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -218,8 +217,7 @@ extension UIViewController {
             || (objc_getAssociatedObject(self, &_JobsNavKey.wrapper) != nil)
 
         let nav = jobsNavContainer
-        if !alreadyHad { onWrap(nav) }
-        return self
+        if !alreadyHad { onWrap(nav) };return self
     }
 }
 // ================================== 链式导航（去重） ==================================

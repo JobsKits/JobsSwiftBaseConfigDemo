@@ -159,8 +159,7 @@ extension WalletCardCell {
         if let items = payload as? [Any?] {
             let card = items.first as? WalletCard
             let highlight = (items.count > 1 ? items[1] : nil) as? Bool ?? false
-            if let card { render(card: card, highlight: highlight) }
-            return self
+            if let card { render(card: card, highlight: highlight) };return self
         };return self
     }
     /// ② varargs：坚持要的第二个 byData（注意：这里不要用 any，用 items）

@@ -149,8 +149,7 @@ BROTLI_INTERNAL size_t FN(BrotliHistogramCombine)(HistogramType* out,
       FN(BrotliCompareAndPushToQueue)(out, cluster_size, best_idx1, clusters[i],
                                       max_num_pairs, &pairs[0], &num_pairs);
     }
-  }
-  return num_clusters;
+  };return num_clusters;
 })
 
 /* What is the bit cost of moving histogram from cur_symbol to candidate. */

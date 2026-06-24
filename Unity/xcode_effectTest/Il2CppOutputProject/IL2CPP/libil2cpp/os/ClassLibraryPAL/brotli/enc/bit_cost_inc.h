@@ -120,8 +120,7 @@ double FN(BrotliPopulationCost)(const HistogramType* histogram) {
     bits += (double)(18 + 2 * max_depth);
     /* Add the entropy of the code length code histogram. */
     bits += BitsEntropy(depth_histo, BROTLI_CODE_LENGTH_CODES);
-  }
-  return bits;
+  };return bits;
 }
 
 #undef HistogramType

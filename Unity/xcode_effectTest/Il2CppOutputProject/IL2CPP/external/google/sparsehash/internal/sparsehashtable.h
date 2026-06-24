@@ -1084,8 +1084,7 @@ class sparse_hashtable {
         if ((it2 == ht.end()) || (*it != *it2)) {
           return false;
         }
-      }
-      return true;
+      };return true;
     }
   }
   bool operator!=(const sparse_hashtable& ht) const {

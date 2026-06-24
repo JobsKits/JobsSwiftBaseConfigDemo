@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -36,8 +35,7 @@ extension String {
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
 
         let ctx = CIContext()
-        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage() }
-        return UIImage(cgImage: cg)
+        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cg)
     }
     /// 生成带底部文字的人类可读 Code128 条形码
     /// - Parameters:

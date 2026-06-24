@@ -1110,8 +1110,7 @@ TDest il2cpp_codegen_conv(const RuntimeClass* srcType, void* src, const RuntimeM
             return il2cpp_codegen_conv<TDest, double, double, checkOverflow, inputUnsigned>(il2cpp_codegen_read_to_aligned_value<double>(src), method);
         default:
             IL2CPP_RAISE_MANAGED_EXCEPTION(il2cpp_codegen_get_invalid_operation_exception("Unsupported conv opcode"), method);
-    }
-    return 0;
+    };return 0;
 }
 
 // objBuffer is a pointer to the obj, either a pointer to a struct's data or a pointer to a reference type pointer

@@ -76,8 +76,7 @@ sgen_clz (guint32 x)
 	while (x) {
 		++count;
 		x >>= 1;
-	}
-	return 32 - count;
+	};return 32 - count;
 }
 #endif
 

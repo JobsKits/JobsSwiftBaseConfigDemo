@@ -3,7 +3,6 @@
 //  JobsCryptoKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -87,8 +86,7 @@ public struct JobsAES {
 @available(iOS 13.0, *)
 private func makeSymmetricKey(_ key: Data) throws -> SymmetricKey {
     // AES key 必须是 16/24/32 bytes
-    guard [16, 24, 32].contains(key.count) else { throw CryptoError.invalidKey }
-    return SymmetricKey(data: key)
+    guard [16, 24, 32].contains(key.count) else { throw CryptoError.invalidKey };return SymmetricKey(data: key)
 }
 
 // MARK: - iOS12- helpers (CommonCrypto AES-CBC)
@@ -163,6 +161,5 @@ private func randomBytes(count: Int) throws -> Data {
     let status = data.withUnsafeMutableBytes { buf in
         SecRandomCopyBytes(kSecRandomDefault, count, buf.baseAddress!)
     }
-    guard status == errSecSuccess else { throw CryptoError.encryptionFailed }
-    return data
+    guard status == errSecSuccess else { throw CryptoError.encryptionFailed };return data
 }

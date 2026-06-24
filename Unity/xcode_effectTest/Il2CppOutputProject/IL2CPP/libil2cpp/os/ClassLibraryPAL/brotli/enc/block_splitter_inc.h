@@ -80,8 +80,7 @@ static size_t FN(FindBlocks)(const DataType* data, const size_t length,
   if (num_histograms <= 1) {
     for (i = 0; i < length; ++i) {
       block_id[i] = 0;
-    }
-    return 1;
+    };return 1;
   }
   memset(insert_cost, 0, sizeof(insert_cost[0]) * data_size * num_histograms);
   for (i = 0; i < num_histograms; ++i) {
@@ -148,8 +147,7 @@ static size_t FN(FindBlocks)(const DataType* data, const size_t length,
       }
       block_id[byte_ix] = cur_id;
     }
-  }
-  return num_blocks;
+  };return num_blocks;
 }
 
 static size_t FN(RemapBlockIds)(uint8_t* block_ids, const size_t length,

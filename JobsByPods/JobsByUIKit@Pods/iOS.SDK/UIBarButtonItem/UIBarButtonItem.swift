@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -113,27 +112,23 @@ extension UIBarButtonItem {
     /// iOS16+ 控制隐藏
     @discardableResult
     public func byHidden(_ hidden: Bool) -> Self {
-        if #available(iOS 16.0, *) { self.isHidden = hidden }
-        return self
+        if #available(iOS 16.0, *) { self.isHidden = hidden };return self
     }
     /// iOS15+ 选择态主行为
     @discardableResult
     public func byChangesSelectionAsPrimaryAction(_ enable: Bool) -> Self {
-        if #available(iOS 15.0, *) { self.changesSelectionAsPrimaryAction = enable }
-        return self
+        if #available(iOS 15.0, *) { self.changesSelectionAsPrimaryAction = enable };return self
     }
     /// iOS15+ 选择态
     @discardableResult
     public func bySelected(_ selected: Bool) -> Self {
-        if #available(iOS 15.0, *) { self.isSelected = selected }
-        return self
+        if #available(iOS 15.0, *) { self.isSelected = selected };return self
     }
     /// iOS14+ 直接挂菜单
     @available(iOS 13.0, *)
     @discardableResult
     public func byMenu(_ menu: UIMenu?) -> Self {
-        if #available(iOS 14.0, *) { self.menu = menu }
-        return self
+        if #available(iOS 14.0, *) { self.menu = menu };return self
     }
     /// iOS16+ 优先级
     @discardableResult

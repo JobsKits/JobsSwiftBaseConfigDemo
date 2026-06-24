@@ -3,7 +3,6 @@
 //  JobsSwiftWorker
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -27,8 +26,7 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
     public var value: Value {
         get {
             lock.lock()
-            defer { lock.unlock() }
-            return storage
+            defer { lock.unlock() };return storage
         }
         set {
             _setValue(newValue, shouldNotify: true)
@@ -82,8 +80,7 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         lock.unlock()
 
         let change = JobsWorkerChange(oldValue: oldValue, newValue: newValue)
-        snapshot.forEach { $0(change) }
-        return self
+        snapshot.forEach { $0(change) };return self
     }
 
     @discardableResult
@@ -94,8 +91,7 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         snapshot = Array(observers.values)
         lock.unlock()
         let change = JobsWorkerChange(oldValue: current, newValue: current)
-        snapshot.forEach { $0(change) }
-        return self
+        snapshot.forEach { $0(change) };return self
     }
 
     private func _setValue(_ newValue: Value,

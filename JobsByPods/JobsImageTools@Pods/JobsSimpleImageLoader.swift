@@ -1,9 +1,8 @@
 //
-//  JobsImageLoader.swift
+//  JobsSimpleImageLoader.swift
 //  JobsImageTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -137,8 +136,7 @@ public final class JobsImageLoader {
         completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void
     ) -> JobsImageLoadToken {
         guard let source else {
-            DispatchQueue.main.async { completion(.failure(.invalidSource)) }
-            return JobsImageLoadToken()
+            DispatchQueue.main.async { completion(.failure(.invalidSource)) };return JobsImageLoadToken()
         }
 
         switch source {
@@ -171,8 +169,7 @@ private extension JobsImageLoader {
             DispatchQueue.main.async { completion(.success(result)) }
         } else {
             DispatchQueue.main.async { completion(.failure(.localImageMissing(name))) }
-        }
-        return JobsImageLoadToken()
+        };return JobsImageLoadToken()
     }
 
     func loadRemoteImage(
@@ -245,8 +242,7 @@ private extension JobsImageLoader {
                     completion(.failure(.failed(url, error)))
                 }
             }
-        }
-        return JobsImageLoadToken { task?.cancel() }
+        };return JobsImageLoadToken { task?.cancel() }
     }
     #else
     func loadWithKingfisher(
@@ -293,8 +289,7 @@ private extension JobsImageLoader {
                     completion(.failure(.badData(url)))
                 }
             }
-        }
-        return JobsImageLoadToken { operation?.cancel() }
+        };return JobsImageLoadToken { operation?.cancel() }
     }
     #else
     func loadWithSDWebImage(
@@ -314,25 +309,21 @@ private extension JobsImageLoader {
         if options.forceRefresh == false, let image = fallbackCache.object(forKey: url as NSURL) {
             DispatchQueue.main.async {
                 completion(.success(.init(image: image, url: url, loaderKind: .urlSession, isCacheHit: true)))
-            }
-            return JobsImageLoadToken()
+            };return JobsImageLoadToken()
         }
 
         let task = fallbackSession.dataTask(with: url) { [weak self] data, _, error in
             guard let self else { return }
             if let error {
-                DispatchQueue.main.async { completion(.failure(.failed(url, error))) }
-                return
+                DispatchQueue.main.async { completion(.failure(.failed(url, error))) };return
             }
 
             guard let data else {
-                DispatchQueue.main.async { completion(.failure(.badData(url))) }
-                return
+                DispatchQueue.main.async { completion(.failure(.badData(url))) };return
             }
 
             guard let image = self.image(from: data, targetSize: options.targetSize, scale: options.scale) else {
-                DispatchQueue.main.async { completion(.failure(.badData(url))) }
-                return
+                DispatchQueue.main.async { completion(.failure(.badData(url))) };return
             }
 
             self.fallbackCache.setObject(image, forKey: url as NSURL, cost: data.count)
@@ -361,7 +352,6 @@ private extension JobsImageLoader {
 
         guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else {
             return UIImage(data: data)
-        }
-        return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
+        };return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
     }
 }

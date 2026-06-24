@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -926,8 +925,7 @@ extension UIButton {
                 if !btn.isEnabled, let t = btn.title(for: .disabled), !t.isEmpty { return t }
                 if btn.isSelected, let t = btn.title(for: .selected), !t.isEmpty { return t }
                 if btn.isHighlighted, let t = btn.title(for: .highlighted), !t.isEmpty { return t }
-                if let t = btn.title(for: .normal), !t.isEmpty { return t }
-                return nil
+                if let t = btn.title(for: .normal), !t.isEmpty { return t };return nil
             }
             if let t = pickTitle() {
                 cfg.title = t
@@ -937,8 +935,7 @@ extension UIButton {
             func pickImage() -> UIImage? {
                 if !btn.isEnabled, let i = btn.image(for: .disabled) { return i }
                 if btn.isSelected, let i = btn.image(for: .selected) { return i }
-                if btn.isHighlighted, let i = btn.image(for: .highlighted) { return i }
-                return btn.image(for: .normal)
+                if btn.isHighlighted, let i = btn.image(for: .highlighted) { return i };return btn.image(for: .normal)
             }
             if let img = pickImage() {
                 cfg.image = img
@@ -971,8 +968,7 @@ extension UIButton {
                         UIConfigurationTextAttributesTransformer { incoming in
                             var a = incoming
                             if let font { a.font = font }
-                            if let color { a.foregroundColor = color }
-                            return a
+                            if let color { a.foregroundColor = color };return a
                         }
                     )
             };btn.configuration = cfg

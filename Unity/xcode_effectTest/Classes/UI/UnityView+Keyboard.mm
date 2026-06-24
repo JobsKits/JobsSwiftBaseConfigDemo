@@ -103,8 +103,7 @@ static double GetTimeInSeconds()
     if (keyboardCommands == nil)
     {
         [self createKeyboard];
-    }
-    return keyboardCommands;
+    };return keyboardCommands;
 }
 
 - (bool)hasFirstResponderInHeirachy:(UIView*)view

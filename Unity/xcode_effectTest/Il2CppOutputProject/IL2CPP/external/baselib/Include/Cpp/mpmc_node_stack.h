@@ -130,8 +130,7 @@ namespace baselib
                         newtop.idx = top.idx + 1;
                     }
                     while (!m_Top.compare_exchange_strong(top, newtop, memory_order_acquire, memory_order_relaxed));
-                }
-                return node;
+                };return node;
             }
 
             // Try to pop all nodes from the stack.
@@ -164,8 +163,7 @@ namespace baselib
                         newtop.idx = top.idx + 1;
                     }
                     while (!m_Top.compare_exchange_strong(top, newtop, memory_order_acquire, memory_order_relaxed));
-                }
-                return node;
+                };return node;
             }
 
         private:

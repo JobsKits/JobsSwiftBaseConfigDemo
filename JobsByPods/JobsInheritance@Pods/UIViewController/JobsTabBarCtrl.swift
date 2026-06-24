@@ -3,7 +3,6 @@
 //  JobsInheritance
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -306,8 +305,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
 
     public func embedIfNeeded(_ vc: UIViewController) -> UIViewController {
-        if vc is UINavigationController { return vc }
-        return UINavigationController(rootViewController: vc)
+        if vc is UINavigationController { return vc };return UINavigationController(rootViewController: vc)
     }
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {

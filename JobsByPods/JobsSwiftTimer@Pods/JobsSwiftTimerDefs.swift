@@ -3,7 +3,6 @@
 //  JobsSwiftTimer
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 public enum JobsOpenResult {
@@ -24,8 +23,7 @@ public enum _TimerMode: Sendable {
     case countdown(remain: Int, total: Int)
 
     public var isCountdown: Bool {
-        if case .countdown = self { return true }
-        return false
+        if case .countdown = self { return true };return false
     }
 }
 // MARK: - Timer Kind

@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -63,8 +62,7 @@ public class IrregularButton: UIButton {
     }
     // ✅ 点击区域也按不规则形状来
     public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard let path = cachedPath else { return super.point(inside: point, with: event) }
-        return path.contains(point)
+        guard let path = cachedPath else { return super.point(inside: point, with: event) };return path.contains(point)
     }
 
     private func buildPath() -> UIBezierPath {

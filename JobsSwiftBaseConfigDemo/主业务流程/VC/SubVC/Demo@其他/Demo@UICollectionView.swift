@@ -191,8 +191,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if collectionView === collectionViewV { return itemsV.count }
-        return itemsH.count
+        if collectionView === collectionViewV { return itemsV.count };return itemsH.count
     }
 
     func collectionView(_ collectionView: UICollectionView,

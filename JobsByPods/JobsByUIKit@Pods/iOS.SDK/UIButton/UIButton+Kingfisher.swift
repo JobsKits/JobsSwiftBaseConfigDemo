@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -147,44 +146,38 @@ extension UIButton {
     public func kf_highlightedLoad() -> Self {
         _kf_loadImage(for: .highlighted)
         if #available(iOS 15.0, *) {
-            self.byAdoptConfigurationIfAvailable() }
-        return self
+            self.byAdoptConfigurationIfAvailable() };return self
     }
     
     @discardableResult
     public func kf_disabledLoad() -> Self {
         _kf_loadImage(for: .disabled)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
-        return self
+        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() };return self
     }
     
     @discardableResult
     public func kf_selectedLoad() -> Self {
         _kf_loadImage(for: .selected)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
-        return self
+        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() };return self
     }
     
     @available(iOS 9.0, *)
     @discardableResult
     public func kf_focusedLoad() -> Self {
         _kf_loadImage(for: .focused)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
-        return self
+        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() };return self
     }
     
     @discardableResult
     public func kf_applicationLoad() -> Self {
         _kf_loadImage(for: .application)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
-        return self
+        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() };return self
     }
     
     @discardableResult
     public func kf_reservedLoad() -> Self {
         _kf_loadImage(for: .reserved)
-        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() }
-        return self
+        if #available(iOS 15.0, *) { self.byAdoptConfigurationIfAvailable() };return self
     }
     // MARK: - 背景图加载
     @discardableResult
@@ -405,12 +398,10 @@ extension UIButton {
         // 1) 只有“纯本地背景图”（没有 url）时，才直接复用现成位图，不走缓存/网络
         if snapCfg.url == nil, self.kf_bgURL == nil, self.jobs_bgURL == nil {
             if #available(iOS 15.0, *), let img = self.configuration?.background.image {
-                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
-                return
+                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) };return
             }
             if let img = self.backgroundImage(for: state) {
-                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) }
-                return
+                onMainAsync(self) { vc in target.jobsResetBtnBgImage(img, for: state) };return
             }
         }
         // 2) 先把占位图顶上，保证克隆按钮立刻有图

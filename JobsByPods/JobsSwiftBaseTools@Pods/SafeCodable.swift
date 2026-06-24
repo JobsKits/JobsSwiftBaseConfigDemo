@@ -3,7 +3,6 @@
 //  JobsSwiftBaseTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -218,8 +217,7 @@ private func coerce<T: Codable>(
        let v: T = fromDouble(d, cfg: cfg, codingPath: codingPath) { return v }
 
     if let b = try? container.decode(Bool.self),
-       let v: T = fromBool(b, cfg: cfg, codingPath: codingPath) { return v }
-    return nil
+       let v: T = fromBool(b, cfg: cfg, codingPath: codingPath) { return v };return nil
 }
 
 private func fromString<T: SafeDefault & Codable>(

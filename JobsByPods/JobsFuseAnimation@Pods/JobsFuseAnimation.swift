@@ -196,8 +196,7 @@ extension UIView {
             timer.start()
         }
 
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } }
-        return self
+        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
     /// 停止：松手后外圈先按 strokeEnd 倒退回 0，再淡出并移除。
@@ -300,16 +299,14 @@ extension UIView {
             retreatTimer.start()
         }
 
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } }
-        return self
+        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
     /// 手动刷新导火索外圈布局。按钮 bounds 或 cornerRadius 变化后可调用。
     @discardableResult
     public func byFuseOuterRingLayoutIfNeeded() -> Self {
         let work = { [weak self] in self?.jobs_layoutFuseOuterRingLayers() }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } }
-        return self
+        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
     private func jobs_layoutFuseOuterRingLayers() {
@@ -412,8 +409,7 @@ extension UIView {
             }
         }
 
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } }
-        return self
+        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
     /// 松手/取消时：按钮恢复原大小。
@@ -446,8 +442,7 @@ extension UIView {
             }
         }
 
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } }
-        return self
+        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 }
 

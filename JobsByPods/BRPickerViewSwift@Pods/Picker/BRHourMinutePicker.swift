@@ -3,7 +3,6 @@
 //  BRPickerViewSwift
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -74,8 +73,7 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
 
     public func numberOfComponents(in pickerView: UIPickerView) -> Int { 2 }
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if component == 0 { return hours.count }
-        return max(1, minutes.count / minuteInterval)
+        if component == 0 { return hours.count };return max(1, minutes.count / minuteInterval)
     }
 
     public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -93,8 +91,7 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
         } else {
             let step = minuteInterval
             label.text = String(format: "%02d分", row * step)
-        }
-        return label
+        };return label
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

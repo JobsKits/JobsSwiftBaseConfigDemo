@@ -3,7 +3,6 @@
 //  JobsSwiftBaseTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -28,8 +27,7 @@ private extension UINavigationController {
     @inline(__always) func _endPushGate()   { _isPushing = false }
     @inline(__always) func _canPushNow() -> Bool {
         // 系统正在做转场，或我们标记在 push → 都拦掉
-        if transitionCoordinator != nil { return false }
-        return !_isPushing
+        if transitionCoordinator != nil { return false };return !_isPushing
     }
 }
 

@@ -2,6 +2,8 @@
 //  JobsSplashMediaCache.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 import Foundation
 
@@ -36,8 +38,7 @@ final class JobsSplashMediaCache {
         let task = URLSession.shared.downloadTask(with: remoteURL) { [weak self] temporaryURL, _, error in
             guard let self else { return }
             if let error {
-                DispatchQueue.main.async { completion(.failure(error)) }
-                return
+                DispatchQueue.main.async { completion(.failure(error)) };return
             }
             guard let temporaryURL else {
                 let error = NSError(
@@ -45,8 +46,7 @@ final class JobsSplashMediaCache {
                     code: -1,
                     userInfo: [NSLocalizedDescriptionKey: "Remote media download returned no file."]
                 )
-                DispatchQueue.main.async { completion(.failure(error)) }
-                return
+                DispatchQueue.main.async { completion(.failure(error)) };return
             }
 
             let destinationURL = self.localFileURL(for: remoteURL)
@@ -76,7 +76,6 @@ final class JobsSplashMediaCache {
         for byte in value.utf8 {
             hash ^= UInt64(byte)
             hash &*= 1_099_511_628_211
-        }
-        return String(hash, radix: 16)
+        };return String(hash, radix: 16)
     }
 }

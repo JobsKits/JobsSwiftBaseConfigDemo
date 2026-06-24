@@ -3,7 +3,6 @@
 //  Jobsl10n
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -71,23 +70,18 @@ extension String {
                 if preferHantRegions.contains(r), let hit = pick("zh-Hant") { return hit }
             };return pick("zh-Hans") ?? fallback// 默认给简体（按你项目常见诉求）
         case "en":
-            if region == "PH", let hit = pick("en-PH") { return hit }
-            return pick("en") ?? fallback
+            if region == "PH", let hit = pick("en-PH") { return hit };return pick("en") ?? fallback
         case "ar":
-            if region == "EG", let hit = pick("ar-EG") { return hit }
-            return pick("ar") ?? fallback
+            if region == "EG", let hit = pick("ar-EG") { return hit };return pick("ar") ?? fallback
         case "pt":
-            if region == "BR", let hit = pick("pt-BR") { return hit }
-            return pick("pt") ?? fallback
+            if region == "BR", let hit = pick("pt-BR") { return hit };return pick("pt") ?? fallback
         case "es":
-            if region == "MX", let hit = pick("es-MX") { return hit }
-            return pick("es") ?? fallback
+            if region == "MX", let hit = pick("es-MX") { return hit };return pick("es") ?? fallback
 
         default:
             break
         }
         // 3) 最后：只按 language 匹配（vi/th/tr/ja…）
-        if let hit = pick(language) { return hit }
-        return fallback
+        if let hit = pick(language) { return hit };return fallback
     }
 }

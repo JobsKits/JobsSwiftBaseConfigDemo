@@ -3,7 +3,6 @@
 //  JobsSwiftBaseDefines
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -20,8 +19,7 @@ public enum JobsCor {
         guard UIColor.responds(to: sel),
               let any = UIColor.perform(sel)?.takeUnretainedValue(),
               let color = any as? UIColor
-        else { return nil }
-        return color
+        else { return nil };return color
     }
 
     private static func dynamic13(_ selectorName: String,

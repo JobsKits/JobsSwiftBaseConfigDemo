@@ -48,8 +48,7 @@ static BROTLI_INLINE double BitsEntropy(
   if (retval < sum) {
     /* At least one bit per literal is needed. */
     retval = (double)sum;
-  }
-  return retval;
+  };return retval;
 }
 
 BROTLI_INTERNAL double BrotliPopulationCostLiteral(const HistogramLiteral*);

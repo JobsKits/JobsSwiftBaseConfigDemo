@@ -200,8 +200,7 @@ extension LinkCell {
            let url = URL(string: action) { return url }
 
         if let v = attrs[.link] as? URL { return v }
-        if let s = attrs[.link] as? String, let url = URL(string: s) { return url }
-        return nil
+        if let s = attrs[.link] as? String, let url = URL(string: s) { return url };return nil
     }
     // ============================== URL 处理 ==============================
     private func handle(url: URL,

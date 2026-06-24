@@ -324,8 +324,7 @@ static BROTLI_INLINE BROTLI_BOOL BrotliJumpToByteBoundary(BrotliBitReader* br) {
   uint32_t pad_bits = 0;
   if (pad_bits_count != 0) {
     BrotliTakeBits(br, pad_bits_count, &pad_bits);
-  }
-  return TO_BROTLI_BOOL(pad_bits == 0);
+  };return TO_BROTLI_BOOL(pad_bits == 0);
 }
 
 /* Copies remaining input bytes stored in the bit reader to the output. Value

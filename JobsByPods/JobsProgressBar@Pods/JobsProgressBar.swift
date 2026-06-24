@@ -3,7 +3,6 @@
 //  JobsProgressBar
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -503,8 +502,7 @@ open class JobsProgressBar: UIView {
                                   animated: Bool = true,
                                   duration: TimeInterval = 0.25) -> CGFloat? {
         let t = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let v = Double(t) else { return nil }
-        return setDisplayPercent(CGFloat(v), animated: animated, duration: duration)
+        guard let v = Double(t) else { return nil };return setDisplayPercent(CGFloat(v), animated: animated, duration: duration)
     }
 
     @discardableResult

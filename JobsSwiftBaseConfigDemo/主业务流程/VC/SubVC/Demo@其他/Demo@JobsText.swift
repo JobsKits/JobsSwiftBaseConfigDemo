@@ -266,7 +266,6 @@ final class JobsTextDemoVC: BaseVC {
         lines.append("attributes:")
         a.enumerateAttributes(in: NSRange(location: 0, length: a.length), options: []) { attrs, range, _ in
             lines.append("  - range: \(range.location)..<\(range.location + range.length), attrs: \(attrs)")
-        }
-        return lines.joined(separator: "\n")
+        };return lines.joined(separator: "\n")
     }
 }

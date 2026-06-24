@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import JobsSwiftBlock
@@ -34,8 +33,7 @@ public extension YTKBatchRequest {
     /// 一次性设置一批 accessory
     @discardableResult
     func byAccessories(_ accessories: [YTKRequestAccessory]) -> Self {
-        accessories.forEach { self.add($0) }
-        return self
+        accessories.forEach { self.add($0) };return self
     }
     // MARK: - 回调配置
     /// 成功回调

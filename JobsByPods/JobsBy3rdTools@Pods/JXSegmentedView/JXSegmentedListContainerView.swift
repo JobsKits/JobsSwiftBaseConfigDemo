@@ -3,7 +3,6 @@
 //  JobsBy3rdTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -73,8 +72,7 @@ extension JXSegmentedListContainerView {
 
     @discardableResult
     public func byNeverAdjustContentInset() -> Self {
-        if #available(iOS 11.0, *) { self.scrollView.contentInsetAdjustmentBehavior = .never }
-        return self
+        if #available(iOS 11.0, *) { self.scrollView.contentInsetAdjustmentBehavior = .never };return self
     }
     // MARK: 绑定 / 刷新
     /// 绑定到 SegmentedView（等价于 `segmentedView.listContainer = self`）
@@ -187,8 +185,7 @@ private final class _JXScrollDelegateProxy: NSObject, UIScrollViewDelegate {
     }
     // 关键：把未实现的方法都转发给 forwardTo（也就是 pod 内部的 listContainerView self）
     override func responds(to aSelector: Selector!) -> Bool {
-        if super.responds(to: aSelector) { return true }
-        return (forwardTo?.responds(to: aSelector) ?? false)
+        if super.responds(to: aSelector) { return true };return (forwardTo?.responds(to: aSelector) ?? false)
     }
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {

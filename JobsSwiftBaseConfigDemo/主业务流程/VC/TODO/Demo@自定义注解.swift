@@ -199,8 +199,7 @@ extension 自定义注解DemoVC: UITableViewDataSource {
         if indexPath.row < display.count {
             let u = display[indexPath.row]
             cell.byText("ID=\(u.id)").bySecondaryText(u.name).bySelectionStyle(.none)
-        }
-        return cell
+        };return cell
     }
 }
 

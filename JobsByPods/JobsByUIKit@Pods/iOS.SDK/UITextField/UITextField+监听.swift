@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -76,20 +75,17 @@ public final class UITextFieldDelegateProxy: NSObject, UITextFieldDelegate {
     var shouldClear: ((UITextField) -> Bool)?
     // 关键：把没实现的 delegate 方法全转发给 forward
     public override func forwardingTarget(for aSelector: Selector!) -> Any? {
-        if let forward, forward.responds(to: aSelector) { return forward }
-        return super.forwardingTarget(for: aSelector)
+        if let forward, forward.responds(to: aSelector) { return forward };return super.forwardingTarget(for: aSelector)
     }
 
     public override func responds(to aSelector: Selector!) -> Bool {
         if super.responds(to: aSelector) { return true }
-        if let forward, forward.responds(to: aSelector) { return true }
-        return false
+        if let forward, forward.responds(to: aSelector) { return true };return false
     }
 
     // 我们只拦截 clear
     public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        if let shouldClear { return shouldClear(textField) }
-        return forward?.textFieldShouldClear?(textField)
+        if let shouldClear { return shouldClear(textField) };return forward?.textFieldShouldClear?(textField)
             ?? original?.textFieldShouldClear?(textField)
             ?? true
     }

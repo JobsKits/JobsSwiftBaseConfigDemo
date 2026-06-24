@@ -3,7 +3,6 @@
 //  JobsCryptoKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -49,8 +48,7 @@ public extension Data {
         let result = data.withUnsafeMutableBytes { ptr in
             SecRandomCopyBytes(kSecRandomDefault, count, ptr.baseAddress!)
         }
-        guard result == errSecSuccess else { throw CryptoError.keyGenerationFailed }
-        return data
+        guard result == errSecSuccess else { throw CryptoError.keyGenerationFailed };return data
     }
 }
 
@@ -59,7 +57,6 @@ public extension String {
 
     func base64Encoded() -> String { utf8Data.base64EncodedString() }
     func base64DecodedString() throws -> String {
-        guard let data = Data(base64Encoded: self) else { throw CryptoError.invalidBase64 }
-        return String(data: data, encoding: .utf8) ?? ""
+        guard let data = Data(base64Encoded: self) else { throw CryptoError.invalidBase64 };return String(data: data, encoding: .utf8) ?? ""
     }
 }

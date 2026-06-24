@@ -16,8 +16,7 @@ void* CreateCVTextureCache()
     {
         ::printf("Error at CVMetalTextureCacheCreate: %d", err);
         ret = 0;
-    }
-    return ret;
+    };return ret;
 }
 
 void FlushCVTextureCache(void* cache)
@@ -119,8 +118,7 @@ void* CreateBGRA32TextureFromCVTextureCache(void* cache, void* image, size_t w, 
     {
         ::printf("Error at CVMetalTextureCacheCreateTextureFromImage: %d\n", err);
         texture = 0;
-    }
-    return texture;
+    };return texture;
 }
 
 void* CreateHalfFloatTextureFromCVTextureCache(void* cache, void* image, size_t w, size_t h)
@@ -140,6 +138,5 @@ void* CreateHalfFloatTextureFromCVTextureCache(void* cache, void* image, size_t 
     {
         ::printf("Error at CVMetalTextureCacheCreateTextureFromImage: %d\n", err);
         texture = 0;
-    }
-    return texture;
+    };return texture;
 }

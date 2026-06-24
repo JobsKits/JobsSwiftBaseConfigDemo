@@ -3,7 +3,6 @@
 //  JobsSwiftTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -79,8 +78,7 @@ public final class FlutterBridge {
 
         DispatchQueue.main.async {
             flutterVC.byPresent(host, animated: animated, policy: policy, jobsByVoidBlock: nil)
-        }
-        return requestId
+        };return requestId
     }
     // MARK: - Push
     @discardableResult
@@ -110,8 +108,7 @@ public final class FlutterBridge {
 
         DispatchQueue.main.async {
             flutterVC.byPush(host, duration: duration, timing: timing)
-        }
-        return requestId
+        };return requestId
     }
 
     // MARK: - Private

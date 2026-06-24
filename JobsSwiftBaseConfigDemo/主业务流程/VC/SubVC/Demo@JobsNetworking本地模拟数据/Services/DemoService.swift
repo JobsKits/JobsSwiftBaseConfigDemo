@@ -114,8 +114,7 @@ final class DemoService {
               let prettyData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]),
               let text = String(data: prettyData, encoding: .utf8) else {
             return String(data: data, encoding: .utf8) ?? "<empty>"
-        }
-        return text
+        };return text
     }
 
     func decode<T: Decodable>(_ type: T.Type, from data: Data) -> T? {

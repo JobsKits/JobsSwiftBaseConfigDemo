@@ -3,7 +3,6 @@
 //  JobsSwiftTaskCenter
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -27,8 +26,7 @@ extension JobsTaskCenter {
     /// 当前所有任务的标签并集（去重后返回数组）。
     public var allTags: [String] {
         lock.lock()
-        defer { lock.unlock() }
-        return Array(Set(taskTags.values.flatMap { $0 }))
+        defer { lock.unlock() };return Array(Set(taskTags.values.flatMap { $0 }))
     }
     /// 添加任务到中心。
     /// - Parameter task: 要管理的任务。

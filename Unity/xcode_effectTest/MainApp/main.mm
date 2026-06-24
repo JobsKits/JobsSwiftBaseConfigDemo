@@ -14,8 +14,7 @@ UnityFramework* UnityFrameworkLoad()
     {
         // unity is not initialized
         [ufw setExecuteHeader: &_mh_execute_header];
-    }
-    return ufw;
+    };return ufw;
 }
 
 int main(int argc, char* argv[])

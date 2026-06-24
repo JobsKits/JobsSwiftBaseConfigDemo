@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -53,8 +52,7 @@ extension UIView {
         self.isSkeletonable = enabled
         if let r = cornerRadius { self.skeletonCornerRadius = Float(r) }
         if let h = hiddenWhenActive { self.isHiddenWhenSkeletonIsActive = h }
-        if let d = disableInteractionWhenActive { self.isUserInteractionDisabledWhenSkeletonIsActive = d }
-        return self
+        if let d = disableInteractionWhenActive { self.isUserInteractionDisabledWhenSkeletonIsActive = d };return self
     }
     /// 纯色“脉冲”骨架（可传自定义动画，不传则用内置 pulse）
     @discardableResult

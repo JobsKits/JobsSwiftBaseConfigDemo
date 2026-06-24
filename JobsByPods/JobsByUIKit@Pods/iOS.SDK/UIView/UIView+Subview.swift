@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -21,8 +20,7 @@ extension UIView {
     }
     public func _firstSubview<T: UIView>(of type: T.Type) -> T? {
         if let s = self as? T { return s }
-        for v in subviews { if let hit = v._firstSubview(of: type) { return hit } }
-        return nil
+        for v in subviews { if let hit = v._firstSubview(of: type) { return hit } };return nil
     }
     /// 递归收集指定类型的所有子视图（避免与已有 `_allSubviews()` 重名）
     public func _recursiveSubviews<T: UIView>(of type: T.Type) -> [T] {

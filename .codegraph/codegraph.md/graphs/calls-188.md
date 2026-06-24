@@ -12,79 +12,79 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
+  S1["method:ASDisplayNodeTests::testNodeCreatedWithLazyAsyncView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:444"]
   T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
-  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S2["method:ASDisplayNodeTests::testNodeCreatedWithLazyAsyncView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:444"]
+  T2["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
   S2 -->|calls| T2
-  S3["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
-  T3["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S3["method:ASDisplayNodeTests::testNodeCreatedWithLazyAsyncView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:444"]
+  T3["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S3 -->|calls| T3
-  S4["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:223"]
-  T4["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S4["method:ASDisplayNodeTests::checkDefaultPropertyValuesWithLayerBacking:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:530"]
+  T4["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S4 -->|calls| T4
-  S5["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
-  T5["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S5["method:ASDisplayNodeTests::checkDefaultPropertyValuesWithLayerBacking:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:530"]
+  T5["method:ASDisplayNodeTests::checkValuesMatchDefaults:isLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:455"]
   S5 -->|calls| T5
-  S6["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
-  T6["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S6["method:ASDisplayNodeTests::checkDefaultPropertyValuesWithLayerBacking:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:530"]
+  T6["method:ASDisplayNodeTests::checkValuesMatchDefaults:isLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:455"]
   S6 -->|calls| T6
-  S7["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
-  T7["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S7["method:ASDisplayNodeTests::checkValuesMatchSetValues:isLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:576"]
+  T7["method:ASDisplayNodeTests::bogusImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:558"]
   S7 -->|calls| T7
-  S8["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterDelegateImplementation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:245"]
-  T8["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S8["method:ASDisplayNodeTests::checkSimpleBridgePropertiesSetPropagate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:647"]
+  T8["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S8 -->|calls| T8
-  S9["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
-  T9["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S9["method:ASDisplayNodeTests::checkSimpleBridgePropertiesSetPropagate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:647"]
+  T9["method:ASDisplayNodeTests::bogusImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:558"]
   S9 -->|calls| T9
-  S10["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
-  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S10["method:ASDisplayNodeTests::checkSimpleBridgePropertiesSetPropagate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:647"]
+  T10["method:ASDisplayNodeTests::checkValuesMatchSetValues:isLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:576"]
   S10 -->|calls| T10
-  S11["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheHeaderProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:269"]
-  T11["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S11["method:ASDisplayNodeTests::checkSimpleBridgePropertiesSetPropagate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:647"]
+  T11["method:ASDisplayNodeTests::checkValuesMatchSetValues:isLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:576"]
   S11 -->|calls| T11
-  S12["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
+  S12["method:ASDisplayNodeTests::testPropertiesSetOffThreadBeforeLoadingExternalView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:750"]
   T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S12 -->|calls| T12
-  S13["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
+  S13["method:ASDisplayNodeTests::testPropertiesSetOnThreadAfterLoadingExternalView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:769"]
   T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S13 -->|calls| T13
-  S14["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsAHorizontalConstrainedSizeFromTheFooterProperty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:290"]
-  T14["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S14["method:ASDisplayNodeTests::testPropertiesSetOnThreadAfterLoadingExternalView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:769"]
+  T14["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S14 -->|calls| T14
-  S15["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
+  S15["method:ASDisplayNodeTests::testPropertiesSetOffThreadBeforeLoadingExternalLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:799"]
   T15["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S15 -->|calls| T15
-  S16["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
+  S16["method:ASDisplayNodeTests::testPropertiesSetOnThreadAfterLoadingExternalLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:815"]
   T16["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S16 -->|calls| T16
-  S17["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
+  S17["method:ASDisplayNodeTests::testDeriveFrameFromBoundsPositionAnchorPoint<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:841"]
   T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S17 -->|calls| T17
-  S18["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsZeroSizeWhenNoReferenceSizeIsImplemented<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:311"]
-  T18["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S18["method:ASDisplayNodeTests::testSetFrameSetsBoundsPosition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:861"]
+  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S18 -->|calls| T18
-  S19["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheDelegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:330"]
+  S19["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
   T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S19 -->|calls| T19
-  S20["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheDelegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:330"]
+  S20["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
   T20["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S20 -->|calls| T20
-  S21["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheDelegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:330"]
-  T21["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S21["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
+  T21["method:ASDisplayNodeTests::checkConvertPoint:fromNode:selfNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1208"]
   S21 -->|calls| T21
-  S22["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheDelegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:330"]
-  T22["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S22["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
+  T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S22 -->|calls| T22
-  S23["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:346"]
+  S23["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
   T23["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S23 -->|calls| T23
-  S24["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:346"]
-  T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S24["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
+  T24["method:ASDisplayNodeTests::checkConvertPoint:fromNode:selfNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1208"]
   S24 -->|calls| T24
-  S25["method:ASCollectionViewFlowLayoutInspectorTests::testThatItReturnsOneWhenAValidSizeIsImplementedOnTheLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewFlowLayoutInspectorTests.mm:346"]
+  S25["method:ASDisplayNodeTests::testDisplayNodePointConversionWithFrames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:880"]
   T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S25 -->|calls| T25
 ```

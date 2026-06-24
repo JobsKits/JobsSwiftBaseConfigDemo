@@ -3,7 +3,6 @@
 //  BRPickerViewSwift
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -24,8 +23,7 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     @discardableResult
     public func byColumns(_ cols: [[String]]) -> Self {
         columns = cols
-        selectedRows = cols.map { _ in 0 }
-        return self
+        selectedRows = cols.map { _ in 0 };return self
     }
 
     @discardableResult
@@ -46,8 +44,7 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
         // Default state: no highlight until user scrolls.
         for c in 0..<numberOfComponents(in: picker) {
             lastSelectedRow[c] = picker.selectedRow(inComponent: c)
-        }
-        return picker
+        };return picker
     }
 
     public override func confirmSelection() {

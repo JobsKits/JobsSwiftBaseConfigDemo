@@ -3,7 +3,6 @@
 //  JobsByQuartzCore
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -113,8 +112,7 @@ extension CATransform3D {
     public var jobs_isIdentity: Bool { CATransform3DIsIdentity(self) }
     /// 与单位矩阵的“近似相等”判断（容差可调）
     public func jobs_isAlmostEqual(to other: CATransform3D, epsilon: CGFloat = 1e-6) -> Bool {
-        func eq(_ a: CGFloat, _ b: CGFloat) -> Bool { abs(a - b) <= epsilon }
-        return eq(m11, other.m11) && eq(m12, other.m12) && eq(m13, other.m13) && eq(m14, other.m14) &&
+        func eq(_ a: CGFloat, _ b: CGFloat) -> Bool { abs(a - b) <= epsilon };return eq(m11, other.m11) && eq(m12, other.m12) && eq(m13, other.m13) && eq(m14, other.m14) &&
                eq(m21, other.m21) && eq(m22, other.m22) && eq(m23, other.m23) && eq(m24, other.m24) &&
                eq(m31, other.m31) && eq(m32, other.m32) && eq(m33, other.m33) && eq(m34, other.m34) &&
                eq(m41, other.m41) && eq(m42, other.m42) && eq(m43, other.m43) && eq(m44, other.m44)

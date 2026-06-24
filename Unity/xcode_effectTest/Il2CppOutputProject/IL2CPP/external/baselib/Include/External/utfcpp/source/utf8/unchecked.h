@@ -75,8 +75,7 @@ namespace utf8
                             ++start;
                         break;
                 }
-            }
-            return out;
+            };return out;
         }
 
         template <typename octet_iterator, typename output_iterator>
@@ -179,8 +178,7 @@ namespace utf8
                     cp = replacement_marker;
 
                 result = utf8::unchecked::append(cp, result);
-            }
-            return result;
+            };return result;
         }
 
         template <typename u16bit_iterator, typename octet_iterator>
@@ -194,8 +192,7 @@ namespace utf8
                 }
                 else
                     *result++ = static_cast<uint16_t>(cp);
-            }
-            return result;
+            };return result;
         }
 
         template <typename octet_iterator, typename u32bit_iterator>

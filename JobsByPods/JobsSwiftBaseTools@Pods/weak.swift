@@ -3,7 +3,6 @@
 //  JobsSwiftBaseTools
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 import Foundation
@@ -37,8 +36,7 @@ public func jobs_weakify<Owner: AnyObject, R>(
     _ block: @escaping jobsByOwnerRetBlock<Owner, R>
 ) -> JobsRetOptionalTByVoidBlock<R> {
     { [weak owner] in
-        guard let owner else { return nil }
-        return block(owner)
+        guard let owner else { return nil };return block(owner)
     }
 }
 // ✅ 有返回值（带参）→ 返回值可选
@@ -48,8 +46,7 @@ public func jobs_weakify<Owner: AnyObject, Arg, R>(
     _ block: @escaping jobsByOwnerArgRetBlock<Owner, Arg, R>
 ) -> JobsRetOptionalTByArgBlock<Arg, R> {
     { [weak owner] arg in
-        guard let owner else { return nil }
-        return block(owner, arg)
+        guard let owner else { return nil };return block(owner, arg)
     }
 }
 // MARK: - weak + 柯里化
@@ -59,8 +56,7 @@ public func jobs_weakify<Owner: AnyObject, R>(
     _ function: @escaping jobsByCurriedOwnerRetBlock<Owner, R>
 ) -> JobsRetOptionalTByVoidBlock<R> {
     { [weak owner] in
-        guard let owner else { return nil }
-        return function(owner)()
+        guard let owner else { return nil };return function(owner)()
     }
 }
 
@@ -70,8 +66,7 @@ public func jobs_weakify<Owner: AnyObject, Arg, R>(
     _ function: @escaping jobsByCurriedOwnerArgRetBlock<Owner, Arg, R>
 ) -> JobsRetOptionalTByArgBlock<Arg, R> {
     { [weak owner] arg in
-        guard let owner else { return nil }
-        return function(owner)(arg)
+        guard let owner else { return nil };return function(owner)(arg)
     }
 }
 // MARK: - Unowned

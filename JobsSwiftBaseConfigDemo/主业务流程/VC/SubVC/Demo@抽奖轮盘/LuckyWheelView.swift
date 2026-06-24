@@ -333,8 +333,7 @@ extension LuckyWheelView {
         }
         guard let text = segment.text, !text.isEmpty else {
             return nil
-        }
-        return NSAttributedString(
+        };return NSAttributedString(
             string: text,
             attributes: [
                 .font: segment.textFont ?? .systemFont(ofSize: 12, weight: .medium),

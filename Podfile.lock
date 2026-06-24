@@ -186,8 +186,7 @@ PODS:
     - JobsSwiftBlock
     - JobsSwiftDSL
     - SnapKit
-  - JobsFuseAnimation (0.1.0):
-    - JobsSwiftDSL
+  - JobsFuseAnimation (0.1.1):
     - JobsSwiftTimer
   - JobsGestureUnlock (0.0.1):
     - JobsByUIKit
@@ -334,6 +333,7 @@ PODS:
     - JobsInheritance
   - JobsSwiftSplash (0.0.1):
     - JobsByUIKit
+    - JobsCountdownButton
     - JobsInheritance
     - JobsSwiftDSL
     - JobsSwiftOpen
@@ -839,7 +839,7 @@ SPEC CHECKSUMS:
   JobsCountdownButton: 08eec6b09a85300435af3c7d5725a065a0e04c07
   JobsCryptoKit: f9d2b6f7d11c0cf76f57ecc0c6690e0603f63b19
   JobsEmptyView: b7bb5626e94ccf3390e46a260c51b79d44af58bd
-  JobsFuseAnimation: f0ed1a2b163fbcd2468bd8019a69b2b54bf75255
+  JobsFuseAnimation: 32fcb2ef4c353f9ba765a53584d8b4cfb4c531cc
   JobsGestureUnlock: e4052af5f2785cbf52102375b0c45a20d65caf74
   JobsGetWindow: f562b91ed3812946e4b944c04ebbf4cd1ef8b212
   JobsImageTools: 753dd7b92cf1cf351b588b604751d5cc015c90d5
@@ -862,7 +862,7 @@ SPEC CHECKSUMS:
   JobsSwiftFoundation: 6d3c8dfbb540c605576c5a163e64cdf4d1bac827
   JobsSwiftMetalKit: ddf474c92a2af9b536d6559c673f2b87a515fecd
   JobsSwiftOpen: 1885cbecbaacf2a50dcd2bb2d37f09397049cf77
-  JobsSwiftSplash: b56e2be61d55f84abc7d4ccb1aa4eddca6856883
+  JobsSwiftSplash: 4677a2a2a34f132e3d2abec17618ed7e7c8b4928
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274

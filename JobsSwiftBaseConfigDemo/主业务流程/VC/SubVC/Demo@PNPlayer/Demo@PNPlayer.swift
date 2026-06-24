@@ -44,8 +44,7 @@ class PNPlayerDemoVC: BaseVC {
     private lazy var metalView: MTKView = {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
-        }
-        return MTKView(frame: .zero, device: device)
+        };return MTKView(frame: .zero, device: device)
             .byClearColor(MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1))
             .byDepthStencilPixelFormat(.depth32Float)
             .byColorPixelFormat(.bgra8Unorm)

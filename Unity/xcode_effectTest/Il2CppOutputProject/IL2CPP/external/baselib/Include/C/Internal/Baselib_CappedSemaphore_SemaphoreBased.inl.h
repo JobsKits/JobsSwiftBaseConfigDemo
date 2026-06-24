@@ -51,8 +51,7 @@ BASELIB_INLINE_API bool Baselib_CappedSemaphore_TryAcquire(Baselib_CappedSemapho
     {
         if (Baselib_atomic_compare_exchange_weak_32_acquire_relaxed(&semaphore->count, &previousCount, previousCount - 1))
             return true;
-    }
-    return false;
+    };return false;
 }
 
 BASELIB_INLINE_API bool Baselib_CappedSemaphore_TryTimedAcquire(Baselib_CappedSemaphore* semaphore, const uint32_t timeoutInMilliseconds)
@@ -104,8 +103,7 @@ BASELIB_INLINE_API uint16_t Baselib_CappedSemaphore_Release(Baselib_CappedSemaph
         const int32_t waitingThreads = -previousCount;
         const int32_t threadsToWakeup = count < waitingThreads ? count : waitingThreads;
         Baselib_SystemSemaphore_Release(semaphore->handle, threadsToWakeup);
-    }
-    return count;
+    };return count;
 }
 
 BASELIB_INLINE_API uint32_t Baselib_CappedSemaphore_ResetAndReleaseWaitingThreads(Baselib_CappedSemaphore* semaphore)

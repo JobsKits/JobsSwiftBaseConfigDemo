@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -206,8 +205,7 @@ extension UIColor {
     /// - Returns: 0 ~ 255 的整数值
     public var redComponent: Int {
         var r: CGFloat = 0
-        guard getRed(&r, green: nil, blue: nil, alpha: nil) else { return 0 }
-        return Int(r * 255)
+        guard getRed(&r, green: nil, blue: nil, alpha: nil) else { return 0 };return Int(r * 255)
     }
     /// UIColor 的绿色分量（只读）
     ///
@@ -219,8 +217,7 @@ extension UIColor {
     /// - Returns: 0 ~ 255 的整数值
     public var greenComponent: Int {
         var g: CGFloat = 0
-        guard getRed(nil, green: &g, blue: nil, alpha: nil) else { return 0 }
-        return Int(g * 255)
+        guard getRed(nil, green: &g, blue: nil, alpha: nil) else { return 0 };return Int(g * 255)
     }
 
     /// UIColor 的蓝色分量（只读）
@@ -233,8 +230,7 @@ extension UIColor {
     /// - Returns: 0 ~ 255 的整数值
     public var blueComponent: Int {
         var b: CGFloat = 0
-        guard getRed(nil, green: nil, blue: &b, alpha: nil) else { return 0 }
-        return Int(b * 255)
+        guard getRed(nil, green: nil, blue: &b, alpha: nil) else { return 0 };return Int(b * 255)
     }
 
     /// UIColor 的透明度 Alpha（只读）
@@ -247,8 +243,7 @@ extension UIColor {
     /// - Returns: 0 ~ 1 的浮点值
     public var alpha: CGFloat {
         var a: CGFloat = 0
-        guard getRed(nil, green: nil, blue: nil, alpha: &a) else { return 1.0 }
-        return a
+        guard getRed(nil, green: nil, blue: nil, alpha: &a) else { return 1.0 };return a
     }
     /// 16 进制颜色
     class func hex(_ hex: UInt) -> UIColor {

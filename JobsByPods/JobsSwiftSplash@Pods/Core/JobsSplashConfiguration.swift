@@ -2,6 +2,8 @@
 //  JobsSplashConfiguration.swift
 //  JobsSwiftSplash
 //
+//  Created by Jobs on 2026年6月24日，星期三.
+//
 
 #if os(iOS) || os(tvOS)
 import UIKit
@@ -59,8 +61,7 @@ public final class JobsSplashConfiguration {
 
     @discardableResult
     public func byCountdownSeconds(_ seconds: Int?) -> Self {
-        countdownSeconds = seconds.map { max(0, $0) }
-        return self
+        countdownSeconds = seconds.map { max(0, $0) };return self
     }
 
     @discardableResult

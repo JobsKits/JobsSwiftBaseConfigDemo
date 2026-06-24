@@ -44,8 +44,7 @@ const NSTimeInterval REORIENTATION_RENDERING_PAUSE = 0.15;
         _PrefersStatusBarHidden = hidden ? [hidden boolValue] : YES;
 
         _PrefersStatusBarHiddenInited = true;
-    }
-    return _PrefersStatusBarHidden;
+    };return _PrefersStatusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -126,8 +125,7 @@ const NSTimeInterval REORIENTATION_RENDERING_PAUSE = 0.15;
             @"UnityDefaultViewController should be used either if unity is set to autorotate, or if asked explicitly to handle fixed orientation");
 
         [self readOrientationFromUnity];
-    }
-    return self;
+    };return self;
 }
 
 - (void)updateSupportedOrientations
@@ -209,8 +207,7 @@ const NSTimeInterval REORIENTATION_RENDERING_PAUSE = 0.15;
     self = [super init];
     if (self) {
         _fixedOrientation = interfaceOrientation;
-    }
-    return self;
+    };return self;
 }
 
 - (NSUInteger)supportedInterfaceOrientations

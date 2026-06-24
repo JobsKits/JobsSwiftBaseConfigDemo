@@ -3,7 +3,6 @@
 //  JobsSwiftStandardLibrary
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -24,7 +23,6 @@ extension Dictionary where Key == String {
         guard let v = self[key] else { return def }
         if let s = v as? String { return s }
         if let n = v as? NSNumber { return n.stringValue }
-        if v is NSNull { return def }
-        return String(describing: v)
+        if v is NSNull { return def };return String(describing: v)
     }
 }

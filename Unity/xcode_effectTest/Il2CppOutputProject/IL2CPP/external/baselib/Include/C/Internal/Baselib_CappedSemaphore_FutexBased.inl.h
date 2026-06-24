@@ -48,8 +48,7 @@ BASELIB_INLINE_API bool Detail_Baselib_CappedSemaphore_ConsumeWakeup(Baselib_Cap
     {
         if (Baselib_atomic_compare_exchange_weak_32_acquire_relaxed(&semaphore->wakeups, &previousCount, previousCount - 1))
             return true;
-    }
-    return false;
+    };return false;
 }
 
 BASELIB_INLINE_API bool Baselib_CappedSemaphore_TryAcquire(Baselib_CappedSemaphore* semaphore)
@@ -59,8 +58,7 @@ BASELIB_INLINE_API bool Baselib_CappedSemaphore_TryAcquire(Baselib_CappedSemapho
     {
         if (Baselib_atomic_compare_exchange_weak_32_acquire_relaxed(&semaphore->count, &previousCount, previousCount - 1))
             return true;
-    }
-    return false;
+    };return false;
 }
 
 BASELIB_INLINE_API void Baselib_CappedSemaphore_Acquire(Baselib_CappedSemaphore* semaphore)
@@ -136,8 +134,7 @@ BASELIB_INLINE_API uint16_t Baselib_CappedSemaphore_Release(Baselib_CappedSemaph
         const int32_t threadsToWakeup = count < waitingThreads ? count : waitingThreads;
         Baselib_atomic_fetch_add_32_relaxed(&semaphore->wakeups, threadsToWakeup);
         Baselib_SystemFutex_Notify(&semaphore->wakeups, threadsToWakeup, Baselib_WakeupFallbackStrategy_OneByOne);
-    }
-    return count;
+    };return count;
 }
 
 BASELIB_INLINE_API uint32_t Baselib_CappedSemaphore_ResetAndReleaseWaitingThreads(Baselib_CappedSemaphore* semaphore)

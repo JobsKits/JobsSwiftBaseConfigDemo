@@ -88,8 +88,7 @@ static UnityReplayKit* _replayKit = nil;
             case landscapeLeft:         ret = (1 << UIInterfaceOrientationLandscapeRight);      break;
             case landscapeRight:        ret = (1 << UIInterfaceOrientationLandscapeLeft);       break;
         }
-    }
-    return ret;
+    };return ret;
 }
 
 @end
@@ -173,8 +172,7 @@ static UnityReplayKit* _replayKit = nil;
     {
         _lastError = [NSString stringWithUTF8String: "Failed to get Screen Recorder"];
         return NO;
-    }
-    return recorder.isRecording;
+    };return recorder.isRecording;
 }
 
 - (BOOL)stopRecording
@@ -290,8 +288,7 @@ static UnityReplayKit* _replayKit = nil;
     if (broadcastController == nil)
     {
         return nil;
-    }
-    return [broadcastController broadcastURL];
+    };return [broadcastController broadcastURL];
 }
 
 - (BOOL)isBroadcasting
@@ -299,8 +296,7 @@ static UnityReplayKit* _replayKit = nil;
     if (broadcastController == nil)
     {
         return NO;
-    }
-    return [broadcastController isBroadcasting];
+    };return [broadcastController isBroadcasting];
 }
 
 - (BOOL)isBroadcastingPaused
@@ -308,8 +304,7 @@ static UnityReplayKit* _replayKit = nil;
     if (broadcastController == nil)
     {
         return NO;
-    }
-    return [broadcastController isBroadcastingPaused];
+    };return [broadcastController isBroadcastingPaused];
 }
 
 - (void)broadcastActivityViewController:(UnityReplayKit_RPBroadcastActivityViewController *)sBroadcastActivityViewController

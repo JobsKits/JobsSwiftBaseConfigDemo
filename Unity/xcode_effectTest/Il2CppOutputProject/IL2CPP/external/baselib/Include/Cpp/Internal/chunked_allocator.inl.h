@@ -84,8 +84,7 @@ namespace baselib
                     {
                         if (!allocator.set_page_state(memory_address_of(block_index, new_size), old_size - new_size, baselib::Memory_PageState_Reserved))
                             return false;
-                    }
-                    return true;
+                    };return true;
                 }
 
                 bool deallocate_block(uint32_t block_index,  size_t size)
@@ -156,8 +155,7 @@ namespace baselib
                     {
                         m_Block[block_index] = { ptr, size };
                         return true;
-                    }
-                    return false;
+                    };return false;
                 }
 
                 bool resize_block(uint32_t block_index, size_t old_size, size_t new_size)
@@ -168,8 +166,7 @@ namespace baselib
                             allocator.deallocate((void*)m_Block[block_index].ptr, old_size);
                         m_Block[block_index] = { ptr, new_size };
                         return true;
-                    }
-                    return false;
+                    };return false;
                 }
 
                 bool deallocate_block(uint32_t block_index, size_t size)
@@ -193,8 +190,7 @@ namespace baselib
                             continue;
                         if (ptrInt - m_Block[i].ptr < m_Block[i].size)
                             return i;
-                    }
-                    return UINT32_MAX;
+                    };return UINT32_MAX;
                 }
 
                 constexpr FORCE_INLINE size_t optimal_size(size_t size) const
@@ -377,8 +373,7 @@ namespace baselib
                         std::memcpy(newPtr, ptr, old_size);
                         DeallocImpl(old_block_index, old_size);
                         return newPtr;
-                    }
-                    return nullptr;
+                    };return nullptr;
                 }
 
                 bool deallocate(void* ptr, size_t size)
@@ -695,8 +690,7 @@ namespace baselib
                         block_stat[blocks].m_Index = i;
                         block_stat[blocks].m_GenerationId = allocator.m_BlockGenerationIdArray[i];
                         ++blocks;
-                    }
-                    return blocks;
+                    };return blocks;
                 }
 
                 template<class Allocator>

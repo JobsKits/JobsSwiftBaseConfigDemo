@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -19,11 +18,9 @@ public enum JobsIndicatorStyle {
     var uiStyle: UIActivityIndicatorView.Style {
         switch self {
         case .medium:
-            if #available(iOS 13.0, *) { return .medium }
-            return .gray
+            if #available(iOS 13.0, *) { return .medium };return .gray
         case .large:
-            if #available(iOS 13.0, *) { return .large }
-            return .whiteLarge
+            if #available(iOS 13.0, *) { return .large };return .whiteLarge
         }
     }
 }

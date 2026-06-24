@@ -233,8 +233,7 @@ final class MomentPostUIKitCellNode: ASCellNode {
         }
         if h < 1 {
             h = MomentPostCell.heightFormula(for: post, tableWidth: w)
-        }
-        return ceil(h + 0.5)
+        };return ceil(h + 0.5)
     }
 
     /// 初次展示的“安全最小高度”：尽量小，但不能小到把 UIKit 约束挤爆

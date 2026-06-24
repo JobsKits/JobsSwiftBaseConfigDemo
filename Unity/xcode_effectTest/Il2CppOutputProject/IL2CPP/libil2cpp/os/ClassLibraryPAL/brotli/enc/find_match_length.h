@@ -44,8 +44,7 @@ static BROTLI_INLINE size_t FindMatchLengthWithLimit(const uint8_t* s1,
     } else {
       return matched;
     }
-  }
-  return matched;
+  };return matched;
 }
 #else
 static BROTLI_INLINE size_t FindMatchLengthWithLimit(const uint8_t* s1,
@@ -67,8 +66,7 @@ static BROTLI_INLINE size_t FindMatchLengthWithLimit(const uint8_t* s1,
   while ((s2_ptr < s2_limit) && (s1[matched] == *s2_ptr)) {
     ++s2_ptr;
     ++matched;
-  }
-  return matched;
+  };return matched;
 }
 #endif
 

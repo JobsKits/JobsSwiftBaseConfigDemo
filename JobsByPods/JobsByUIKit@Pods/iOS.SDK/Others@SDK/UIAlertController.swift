@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -59,8 +58,7 @@ extension UIAlertController {
 
     @discardableResult
     public func byTintColor(_ color: UIColor?) -> Self {
-        if let color { self.view.tintColor = color }
-        return self
+        if let color { self.view.tintColor = color };return self
     }
     // MARK: Actions
     @discardableResult
@@ -70,8 +68,7 @@ extension UIAlertController {
                      handler: ((UIAlertAction) -> Void)? = nil) -> Self {
         let action = UIAlertAction(title: title, style: style, handler: handler)
         self.addAction(action)
-        if isPreferred { self.preferredAction = action }
-        return self
+        if isPreferred { self.preferredAction = action };return self
     }
 
     @discardableResult
@@ -84,8 +81,7 @@ extension UIAlertController {
             handler(alert, act)
         }
         self.addAction(action)
-        if isPreferred { self.preferredAction = action }
-        return self
+        if isPreferred { self.preferredAction = action };return self
     }
 
     @discardableResult
@@ -107,8 +103,7 @@ extension UIAlertController {
                      _ handler: ((UIAlertAction) -> Void)? = nil) -> Self {
         let action = UIAlertAction(title: title, style: _effectiveCancelStyle, handler: handler)
         self.addAction(action)
-        if _effectiveCancelStyle == .cancel { self.preferredAction = action }
-        return self
+        if _effectiveCancelStyle == .cancel { self.preferredAction = action };return self
     }
 
     @discardableResult
@@ -119,8 +114,7 @@ extension UIAlertController {
             handler(alert, act)
         }
         self.addAction(action)
-        if _effectiveCancelStyle == .cancel { self.preferredAction = action }
-        return self
+        if _effectiveCancelStyle == .cancel { self.preferredAction = action };return self
     }
 
     @discardableResult
@@ -143,13 +137,11 @@ extension UIAlertController {
 
     @discardableResult
     public func byPreferredActionTitle(_ title: String) -> Self {
-        if let hit = actions.first(where: { $0.title == title }) { self.preferredAction = hit }
-        return self
+        if let hit = actions.first(where: { $0.title == title }) { self.preferredAction = hit };return self
     }
     // MARK: TextFields（基础）
     public func textField(at index: Int) -> UITextField? {
-        guard let tfs = self.textFields, (0..<tfs.count).contains(index) else { return nil }
-        return tfs[index]
+        guard let tfs = self.textFields, (0..<tfs.count).contains(index) else { return nil };return tfs[index]
     }
 
     @discardableResult
@@ -544,8 +536,7 @@ extension UIAlertController {
         // A) 直接匹配 Action 标题的 UILabel
         let actionTitles = Set(actions.compactMap { $0.title })
         if let label = all.compactMap({ $0 as? UILabel }).first(where: { l in
-            guard let t = l.text else { return false }
-            return actionTitles.contains(t)
+            guard let t = l.text else { return false };return actionTitles.contains(t)
         }) {
             return label
         }
@@ -583,8 +574,7 @@ extension UIAlertController {
         // 3) LCA：同时找到两端锚点 → 用最低公共祖先；若不是圆角容器，向上找圆角
         if let a = titleAnchor, let b = actionAnchor, let lca = _lowestCommonAncestor(a, b) {
             if lca.layer.cornerRadius > 0 { return lca }
-            if let roundedUp = lca._firstAncestor(where: { $0.layer.cornerRadius > 0 }) { return roundedUp }
-            return lca
+            if let roundedUp = lca._firstAncestor(where: { $0.layer.cornerRadius > 0 }) { return roundedUp };return lca
         }
         // 4) 退路：面积最大的“可见圆角容器”
         let rounded = all.filter {
@@ -704,8 +694,7 @@ extension UIAlertController {
             if v === tf { return false }
             if v.layer.cornerRadius > 0 { return true }
             if (v.backgroundColor?.cgColor.alpha ?? 0) > 0.01 { return true }
-            if v is UIVisualEffectView { return true }
-            return false
+            if v is UIVisualEffectView { return true };return false
         }
 
         if let s1 = tf.superview, looksLikeBox(s1) { return s1 }
@@ -721,8 +710,7 @@ extension UIAlertController {
     fileprivate func _lowestCommonAncestor(_ a: UIView, _ b: UIView) -> UIView? {
         func chain(_ v: UIView) -> [UIView] {
             var arr: [UIView] = []; var p: UIView? = v
-            while let cur = p { arr.append(cur); p = cur.superview }
-            return arr
+            while let cur = p { arr.append(cur); p = cur.superview };return arr
         }
         let aChain = chain(a).map { ObjectIdentifier($0) }
         let aSet   = Set(aChain)

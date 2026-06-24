@@ -318,8 +318,7 @@ namespace internal
             *(result++) = static_cast<octet_type>(((cp >> 12) & 0x3f)| 0x80);
             *(result++) = static_cast<octet_type>(((cp >> 6) & 0x3f) | 0x80);
             *(result++) = static_cast<octet_type>((cp & 0x3f)        | 0x80);
-        }
-        return result;
+        };return result;
     }
     
     // One of the following overloads will be invoked from the API calls
@@ -361,8 +360,7 @@ namespace internal
             utf8::internal::utf_error err_code = utf8::internal::validate_next(result, end);
             if (err_code != internal::UTF8_OK)
                 return result;
-        }
-        return result;
+        };return result;
     }
 
     template <typename octet_iterator>

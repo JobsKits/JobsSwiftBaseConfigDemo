@@ -29,8 +29,7 @@ UnityFramework* _gUnityFramework = nil;
     if (_gUnityFramework == nil)
     {
         _gUnityFramework = [[UnityFramework alloc] init];
-    }
-    return _gUnityFramework;
+    };return _gUnityFramework;
 }
 
 - (UnityAppController*)appController

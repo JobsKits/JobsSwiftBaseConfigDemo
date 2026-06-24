@@ -32,8 +32,7 @@ final class JobsNetworkingDeleteDemoVC: JobsNetworkingMethodDemoVC {
                 "错误码：\(error.errorCode ?? "--")",
                 "消息：\(error.message ?? "--")"
             ])
-            await MainActor.run { self.handleFailure(render + "\n\n" + raw) }
-            return
+            await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
 
         let response = service.decode(DioDELETEResponse.self, from: data)

@@ -292,8 +292,7 @@ namespace internal
             utf8::internal::utf_error err_code = utf8::internal::validate_next(result, end);
             if (err_code != internal::UTF8_OK)
                 return result;
-        }
-        return result;
+        };return result;
     }
 
     template <typename octet_iterator>

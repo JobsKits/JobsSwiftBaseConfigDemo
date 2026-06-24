@@ -3,7 +3,6 @@
 //  JobsByUIKit
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
 //
 
 #if os(OSX)
@@ -64,8 +63,7 @@ private enum JobsShimmerRuntime {
     private static var _activeCount: Int = 0
     static var activeCount: Int {
         os_unfair_lock_lock(&lock)
-        defer { os_unfair_lock_unlock(&lock) }
-        return _activeCount
+        defer { os_unfair_lock_unlock(&lock) };return _activeCount
     }
     static func inc() {
         os_unfair_lock_lock(&lock)
