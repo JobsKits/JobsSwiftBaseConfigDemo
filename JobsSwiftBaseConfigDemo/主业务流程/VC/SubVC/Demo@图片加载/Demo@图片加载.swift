@@ -92,7 +92,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var asyncImgLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（呼吸请求、失败兜底）@Kingfisher")
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -102,12 +102,12 @@ final class PicLoadDemoVC: BaseVC {
                 make.right.equalTo(scrollView.frameLayoutGuide.snp.right).inset(20.w)
             }
     }()
-    /// UIImageView字符串网络图@Kingfisher
+    /// UIImageView字符串网络图@自动加载
     private lazy var asyncImgView: UIImageView = {
         UIImageView()
             /// 如果图片URL为空 ==> 执行兜底图
             /// 如果图片URL不为空，请求阶段是呼吸效果，请求失败 ==> 执行兜底图
-            .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
+            .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
             .addTapAction {[weak self] (iv: UIImageView) in
@@ -135,7 +135,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var asyncImgSDLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（呼吸请求、失败兜底）@SDWebImage")
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -145,11 +145,10 @@ final class PicLoadDemoVC: BaseVC {
                 make.right.equalTo(scrollView.frameLayoutGuide.snp.right).inset(20.w)
             }
     }()
-    /// UIImageView字符串网络图@SDWebImage
+    /// UIImageView字符串网络图@指定 SDWebImage
     private lazy var asyncImgViewSD: UIImageView = {
         UIImageView()
-            // .sd_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
+            .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, preferredLoader: .sdwebimage)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
             .addTapAction {[weak self] (iv: UIImageView) in
@@ -177,7 +176,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var wrapperImgKFLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（不带呼吸效果、失败兜底）@Kingfisher")
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -187,14 +186,12 @@ final class PicLoadDemoVC: BaseVC {
                 make.right.equalTo(scrollView.frameLayoutGuide.snp.right).inset(20.w)
             }
     }()
-    /// UIImageView网络图（不带呼吸效果、失败兜底）@Kingfisher
+    /// UIImageView网络图（不带呼吸效果、失败兜底）@指定 Kingfisher
     private lazy var wrapperImgView: UIImageView = {
         UIImageView()
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-//            .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .kf_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .byShimmeringAsyncImageKF(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
+            .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, shimmerConfig: nil, preferredLoader: .kingfisher)
             .addTapAction {[weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
             }
@@ -220,7 +217,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var wrapperImgSDLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（不带呼吸效果、失败兜底）@SDWebImage")
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -230,13 +227,12 @@ final class PicLoadDemoVC: BaseVC {
                 make.right.equalTo(scrollView.frameLayoutGuide.snp.right).inset(20.w)
             }
     }()
-    /// UIImageView网络图（不带呼吸效果、失败兜底）@SDWebImage
+    /// UIImageView网络图（不带呼吸效果、失败兜底）@指定 URLSession
     private lazy var wrapperImgViewSD: UIImageView = {
         UIImageView()
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
-//            .byShimmeringAsyncImageSD(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
-            .sd_setImage(JobsDemoImageURLProvider.common_400x300, placeholder: "Ani".img)
+            .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, shimmerConfig: nil, preferredLoader: .urlSession)
             .addTapAction {[weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
             }
@@ -306,7 +302,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var btnImageLabel: UILabel = {
         UILabel()
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（不带呼吸效果、失败兜底）@SDWebImage")
+            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -405,7 +401,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var btnImageKFLabel: UILabel = {
         UILabel()
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（不带呼吸效果、失败兜底）@Kingfisher")
+            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher")
             .byTextColor(.secondaryLabel)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)

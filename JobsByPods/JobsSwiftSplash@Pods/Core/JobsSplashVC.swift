@@ -10,19 +10,48 @@ import UIKit
 import AVFoundation
 import JobsInheritance
 import JobsByUIKit
+import JobsCountdownButton
 import JobsSwiftDSL
 import JobsSwiftOpen
 
 public final class JobsSplashVC: BaseVC {
 
+    private let countdownTimeKey = "com.BSports.countdownTimeKey"
+    private let isCountdownTimeKey = "com.BSports.isCountdownTimeKey"
+    private let defaultCountdownTime = 15 * 60
+
     public let configuration: JobsSplashConfiguration
 
-    private var countdownTimer: Timer?
-    private var remainingSeconds: Int?
     private var mediaTask: URLSessionTask?
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     private var hasFinished = false
+
+    private var isCountdownTime: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: isCountdownTimeKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: isCountdownTimeKey)
+        }
+    }
+
+    private var countdownTime: Int {
+        get {
+            guard isCountdownTime else {
+                return effectiveCountdownSeconds
+            }
+            let value = UserDefaults.standard.integer(forKey: countdownTimeKey)
+            return value > 0 ? value : effectiveCountdownSeconds
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: countdownTimeKey)
+        }
+    }
+
+    private var effectiveCountdownSeconds: Int {
+        max(0, configuration.countdownSeconds ?? defaultCountdownTime)
+    }
 
     private lazy var imageView: UIImageView = {
         UIImageView()
@@ -41,8 +70,41 @@ public final class JobsSplashVC: BaseVC {
             .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(18)
             .byMasksToBounds(true)
+            .byCountdown { [weak self] cfg in
+                guard let self else { return }
+                cfg.mode = .down(from: self.countdownTime)
+                cfg.clickableWhileRunning = true
+                cfg.onTapWhileRunning = { [weak self] _, _ in
+                    self?.finish()
+                }
+                cfg.renderLegacy = { [weak self] sec, button in
+                    self?.renderSkipButtonTitle(button, remainingSeconds: sec)
+                }
+                if #available(iOS 15.0, *) {
+                    cfg.renderConfiguration = { [weak self] sec, base in
+                        guard let self else { return base }
+                        var config = base
+                        config.title = self.skipButtonTitle(remainingSeconds: sec)
+                        return config
+                    }
+                }
+                cfg.onTick = { [weak self] _, _, sec in
+                    guard let self else { return }
+                    self.isCountdownTime = true
+                    self.countdownTime = sec
+                }
+                cfg.onFinish = { [weak self] _, _ in
+                    self?.finish()
+                }
+            }
             .onTap { [weak self] _ in
-                self?.finish()
+                guard let self else { return }
+                if let ctrl = self.skipButton.jobsCountdownController,
+                   ctrl.isRunning {
+                    ctrl.config.onTapWhileRunning?(self.skipButton, ctrl.config)
+                } else {
+                    self.finish()
+                }
             }
     }()
 
@@ -102,7 +164,7 @@ public final class JobsSplashVC: BaseVC {
     }
 
     deinit {
-        countdownTimer?.invalidate()
+        skipButton.countdownStop(resetUI: false)
         mediaTask?.cancel()
         player?.pause()
     }
@@ -111,8 +173,9 @@ public final class JobsSplashVC: BaseVC {
     public func finish() {
         guard !hasFinished else { return }
         hasFinished = true
-        countdownTimer?.invalidate()
-        countdownTimer = nil
+        isCountdownTime = false
+        countdownTime = 0
+        skipButton.countdownStop(resetUI: false)
         mediaTask?.cancel()
         player?.pause()
         configuration.onSkip?(self)
@@ -200,37 +263,37 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private func startCountdownIfNeeded() {
-        guard let seconds = configuration.countdownSeconds else { return }
-        remainingSeconds = seconds
+        guard configuration.countdownSeconds != nil || isCountdownTime else { return }
+        let seconds = countdownTime
         guard seconds > 0 else {
             DispatchQueue.main.async { [weak self] in
                 self?.finish()
             }
             return
         }
-        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            guard let self else {
-                timer.invalidate()
-                return
-            }
-            let nextValue = max(0, (self.remainingSeconds ?? 1) - 1)
-            self.remainingSeconds = nextValue
-            self.refreshSkipButtonTitle()
-            if nextValue == 0 {
-                timer.invalidate()
-                self.finish()
-            }
-        }
+        isCountdownTime = true
+        countdownTime = seconds
+        skipButton.countdownStart()
     }
 
     private func refreshSkipButtonTitle() {
-        skipButton.byTitle(
-            JobsSplashLocalization.skipTitle(
-                language: configuration.language,
-                remainingSeconds: remainingSeconds
-            )
-        )
+        renderSkipButtonTitle(skipButton, remainingSeconds: configuredRemainingSeconds)
         view.bySetNeedsLayout()
+    }
+
+    private var configuredRemainingSeconds: Int? {
+        configuration.countdownSeconds == nil && !isCountdownTime ? nil : countdownTime
+    }
+
+    private func skipButtonTitle(remainingSeconds: Int?) -> String {
+        JobsSplashLocalization.skipTitle(
+            language: configuration.language,
+            remainingSeconds: remainingSeconds
+        )
+    }
+
+    private func renderSkipButtonTitle(_ button: UIButton, remainingSeconds: Int?) {
+        button.byTitle(skipButtonTitle(remainingSeconds: remainingSeconds))
     }
 
     private func perform(_ action: JobsSplashAction?) {

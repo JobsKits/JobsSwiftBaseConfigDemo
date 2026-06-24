@@ -19,6 +19,7 @@ Pod::Spec.new do |spec|
 
   spec.dependency 'JobsInheritance'
   spec.dependency 'JobsByUIKit'
+  spec.dependency 'JobsCountdownButton'
   spec.dependency 'JobsSwiftDSL'
   spec.dependency 'JobsSwiftOpen'
 end

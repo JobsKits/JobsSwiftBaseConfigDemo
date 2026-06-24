@@ -298,7 +298,11 @@ extension LuckyWheelView {
                 )
                 let imageSize = radius * 0.22
                 UIImageView()
-                    .kf_setImage(url, placeholder: placeholder)
+                    .jobs_setImage(url,
+                                   fallback: placeholder,
+                                   shimmerConfig: nil,
+                                   preferredLoader: .automatic,
+                                   targetSize: CGSize(width: imageSize, height: imageSize))
                     .byContentMode(.scaleAspectFill)
                     .byClipsToBounds(YES)
                     .byBounds(CGRect(x: 0, y: 0, width: imageSize, height: imageSize))

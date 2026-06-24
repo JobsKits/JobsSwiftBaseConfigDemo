@@ -49,10 +49,6 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     private var lastTextWidth: CGFloat = 0
     // constraints
     private var mediaHeightConstraint: Constraint?
-    // avatar loading
-    private var avatarTask: URLSessionDataTask?
-    private var currentAvatarURL: URL?
-
     private lazy var card: UIView = {
         UIView()
             .byBackgroundColor(.secondarySystemGroupedBackground)
@@ -233,9 +229,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         needsToggle = false
         lastTextWidth = 0
 
-        avatarTask?.cancel()
-        avatarTask = nil
-        currentAvatarURL = nil
+        avatar.jobs_cancelImageLoad()
         avatar.image = nil
 
         nameLabel.text = nil
@@ -268,9 +262,10 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         self.currentPost = post
         nameLabel.byText(post.name)
         // avatar
-        if let urlStr = post.avatarURL, let url = URL(string: urlStr) {
-            setAvatar(url)
+        if let urlStr = post.avatarURL {
+            setAvatar(urlStr)
         } else {
+            avatar.jobs_cancelImageLoad()
             avatar.image = nil
         }
         // 文本先生成（如果当前宽度还没出来，layoutSubviews 会再补一次）
@@ -421,18 +416,12 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         }
     }
     // ============================== Avatar ==============================
-    private func setAvatar(_ url: URL) {
-        currentAvatarURL = url
-        if let cached = JobsSimpleImageLoader.shared.cachedImage(for: url) {
-            avatar.image = cached
-            return
-        }
-        avatarTask?.cancel()
-        avatarTask = JobsSimpleImageLoader.shared.load(url) { [weak self] img in
-            guard let self else { return }
-            guard self.currentAvatarURL == url else { return }
-            self.avatar.image = img
-        }
+    private func setAvatar(_ urlString: String) {
+        avatar.jobs_setImage(
+            urlString,
+            shimmerConfig: nil,
+            targetSize: CGSize(width: 40, height: 40)
+        )
     }
     // ============================== Utils ==============================
     private func estimatedRightWidth() -> CGFloat {

@@ -322,7 +322,10 @@ public final class AvatarCell: UITableViewCell {
         UIImageView()
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds()
-            .kf_setImage("https://picsum.photos/200", placeholder: "Ani".img)
+            .jobs_setImage("https://picsum.photos/200",
+                           fallback: "Ani".img,
+                           shimmerConfig: nil,
+                           targetSize: CGSize(width: 44, height: 44))
             .byClipsToBounds(true)
             .byCornerRadius(22)
             .byBackgroundColor(.systemGray5)

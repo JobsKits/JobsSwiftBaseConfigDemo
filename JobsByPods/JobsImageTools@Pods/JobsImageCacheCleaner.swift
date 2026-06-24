@@ -22,6 +22,7 @@ public enum JobsImageLoaderKind: Int {
     case unknown = 0
     case sdwebimage = 1
     case kingfisher = 2
+    case urlSession = 3
 }
 
 public enum JobsImageCacheCleaner {
@@ -237,6 +238,26 @@ public enum JobsImageCacheCleaner {
             }
         }
         #endif
+        func _reloadWithJobsImageLoader(imageView iv: UIImageView, url: URL) {
+            let target = _guessImageViewTargetSize(iv)
+            group.enter()
+            JobsImageLoader.shared.load(
+                .remote(url),
+                options: .init(preferredLoader: .urlSession,
+                               targetSize: target,
+                               forceRefresh: true)
+            ) { result in
+                switch result {
+                case .success(let value):
+                    iv.image = value.image
+                    iv.jobs_remoteURL = value.url
+                    iv.jobs_imageLoaderKind = value.loaderKind
+                case .failure:
+                    iv.image = placeholder
+                }
+                group.leave()
+            }
+        }
         // MARK: - walker
         func walk(_ view: UIView) {
             // MARK: - UIImageView（前景图）
@@ -244,6 +265,8 @@ public enum JobsImageCacheCleaner {
                 let kind = iv.jobs_imageLoaderKind
                 // 先按标记框架走；标记缺失时：优先 SD（因为项目里 SD + KF 同时存在时，之前的 #elseif 会误伤 SD）
                 switch kind {
+                case .urlSession:
+                    _reloadWithJobsImageLoader(imageView: iv, url: url)
                 case .sdwebimage:
                     #if canImport(SDWebImage)
                     _reloadWithSDWebImage(imageView: iv, url: url)
@@ -271,7 +294,13 @@ public enum JobsImageCacheCleaner {
                     let state = btn.jobs_remoteState
                     let kind = btn.jobs_imageLoaderKind
 
-                    switch kind {
+                switch kind {
+                    case .urlSession:
+                        #if canImport(SDWebImage)
+                        _reloadWithSDWebImage(button: btn, url: url, state: state)
+                        #elseif canImport(Kingfisher)
+                        _reloadWithKingfisher(button: btn, url: url, state: state)
+                        #endif
                     case .sdwebimage:
                         #if canImport(SDWebImage)
                         _reloadWithSDWebImage(button: btn, url: url, state: state)
@@ -297,7 +326,13 @@ public enum JobsImageCacheCleaner {
                     let state = btn.jobs_bgState
                     let kind = btn.jobs_imageLoaderKind
 
-                    switch kind {
+                switch kind {
+                    case .urlSession:
+                        #if canImport(SDWebImage)
+                        _reloadWithSDWebImageBackground(button: btn, url: url, state: state)
+                        #elseif canImport(Kingfisher)
+                        _reloadWithKingfisherBackground(button: btn, url: url, state: state)
+                        #endif
                     case .sdwebimage:
                         #if canImport(SDWebImage)
                         _reloadWithSDWebImageBackground(button: btn, url: url, state: state)

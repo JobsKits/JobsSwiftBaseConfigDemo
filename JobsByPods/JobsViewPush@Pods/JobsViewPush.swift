@@ -56,6 +56,7 @@ public final class JobsViewPushPresentation: NSObject {
     private let transitionView = JobsViewPushTransitionView()
     private var panGesture: UIPanGestureRecognizer?
     private var backgroundTapGesture: UITapGestureRecognizer?
+    private var isAnimatingTransition = false
 
     fileprivate init(
         sourceView: UIView,
@@ -76,16 +77,23 @@ public final class JobsViewPushPresentation: NSObject {
         }
 
         isPresented = false
+        isAnimatingTransition = true
         presentedView.layer.removeAllAnimations()
         transitionView.layer.removeAllAnimations()
+        let visibleFrame = visibleFrameForTransitionBounds()
+        presentedView.transform = .identity
+        presentedView.frame = visibleFrame
+        presentedView.superview?.layoutIfNeeded()
 
         let animations = { [weak self] in
             guard let self else { return }
-            presentedView.transform = self.dismissTransform(for: presentedView.bounds.size)
+            presentedView.frame = self.hiddenFrame(for: visibleFrame)
             self.transitionView.backgroundColor = .clear
+            presentedView.layoutIfNeeded()
         }
         let finish: (Bool) -> Void = { [weak self] _ in
             guard let self else { return }
+            self.isAnimatingTransition = false
             presentedView.removeFromSuperview()
             self.transitionView.removeFromSuperview()
             self.releaseFromSourceView()
@@ -172,7 +180,10 @@ private extension JobsViewPushPresentation {
     func present(completion: (() -> Void)?) {
         guard let presentedView else { return }
         isPresented = true
-        presentedView.transform = dismissTransform(for: presentedView.bounds.size)
+        isAnimatingTransition = true
+        let visibleFrame = visibleFrameForTransitionBounds()
+        presentedView.transform = .identity
+        presentedView.frame = hiddenFrame(for: visibleFrame)
 
         UIView.animate(
             withDuration: configuration.animationDuration,
@@ -180,42 +191,64 @@ private extension JobsViewPushPresentation {
             options: [.curveEaseInOut, .beginFromCurrentState],
             animations: { [weak self] in
                 guard let self else { return }
-                presentedView.transform = .identity
+                presentedView.frame = visibleFrame
                 self.transitionView.backgroundColor = self.configuration.backgroundColor
+                presentedView.layoutIfNeeded()
             },
-            completion: { _ in completion?() }
+            completion: { [weak self] _ in
+                self?.isAnimatingTransition = false
+                completion?()
+            }
         )
     }
 
     func layoutPresentedView() {
         guard let presentedView else { return }
+        guard !isAnimatingTransition else { return }
+        let visibleFrame = visibleFrameForTransitionBounds()
+        presentedView.transform = .identity
+        presentedView.frame = isPresented ? visibleFrame : hiddenFrame(for: visibleFrame)
+    }
 
+    func visibleFrameForTransitionBounds() -> CGRect {
         let bounds = transitionView.bounds
         let ratio = configuration.presentedRatio
         switch configuration.direction {
         case .top:
-            presentedView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height * ratio)
+            return CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height * ratio)
         case .bottom:
             let height = bounds.height * ratio
-            presentedView.frame = CGRect(x: 0, y: bounds.height - height, width: bounds.width, height: height)
+            return CGRect(x: 0, y: bounds.height - height, width: bounds.width, height: height)
         case .left:
-            presentedView.frame = CGRect(x: 0, y: 0, width: bounds.width * ratio, height: bounds.height)
+            return CGRect(x: 0, y: 0, width: bounds.width * ratio, height: bounds.height)
         case .right:
             let width = bounds.width * ratio
-            presentedView.frame = CGRect(x: bounds.width - width, y: 0, width: width, height: bounds.height)
+            return CGRect(x: bounds.width - width, y: 0, width: width, height: bounds.height)
         }
     }
 
-    func dismissTransform(for size: CGSize) -> CGAffineTransform {
+    func hiddenFrame(for visibleFrame: CGRect) -> CGRect {
+        var hiddenFrame = visibleFrame
         switch configuration.direction {
         case .top:
-            return CGAffineTransform(translationX: 0, y: -size.height)
+            hiddenFrame.origin.y = -visibleFrame.height
         case .bottom:
-            return CGAffineTransform(translationX: 0, y: size.height)
+            hiddenFrame.origin.y = transitionView.bounds.maxY
         case .left:
-            return CGAffineTransform(translationX: -size.width, y: 0)
+            hiddenFrame.origin.x = -visibleFrame.width
         case .right:
-            return CGAffineTransform(translationX: size.width, y: 0)
+            hiddenFrame.origin.x = transitionView.bounds.maxX
+        }
+        return hiddenFrame
+    }
+
+    func interactiveDistance() -> CGFloat {
+        guard let presentedView else { return 1 }
+        switch configuration.direction {
+        case .top, .bottom:
+            return max(presentedView.bounds.height, 1)
+        case .left, .right:
+            return max(presentedView.bounds.width, 1)
         }
     }
 
@@ -247,18 +280,23 @@ private extension JobsViewPushPresentation {
 
     func applyInteractiveOffset(_ offset: CGFloat) {
         guard let presentedView else { return }
-        let distance: CGFloat
+        let visibleFrame = visibleFrameForTransitionBounds()
+        let distance = interactiveDistance()
+        let progress = min(abs(offset) / distance, 1)
+        let limitedOffset = distance * progress
         switch configuration.direction {
-        case .top, .bottom:
-            distance = max(presentedView.bounds.height, 1)
-            presentedView.transform = CGAffineTransform(translationX: 0, y: offset)
-        case .left, .right:
-            distance = max(presentedView.bounds.width, 1)
-            presentedView.transform = CGAffineTransform(translationX: offset, y: 0)
+        case .top:
+            presentedView.frame = visibleFrame.offsetBy(dx: 0, dy: -limitedOffset)
+        case .bottom:
+            presentedView.frame = visibleFrame.offsetBy(dx: 0, dy: limitedOffset)
+        case .left:
+            presentedView.frame = visibleFrame.offsetBy(dx: -limitedOffset, dy: 0)
+        case .right:
+            presentedView.frame = visibleFrame.offsetBy(dx: limitedOffset, dy: 0)
         }
 
         transitionView.backgroundColor = configuration.backgroundColor.withAlphaComponent(
-            configuration.backgroundColor.cgColor.alpha * (1 - min(abs(offset) / distance, 1))
+            configuration.backgroundColor.cgColor.alpha * (1 - progress)
         )
     }
 
@@ -271,7 +309,9 @@ private extension JobsViewPushPresentation {
             animations: { [weak self] in
                 guard let self else { return }
                 presentedView.transform = .identity
+                presentedView.frame = self.visibleFrameForTransitionBounds()
                 self.transitionView.backgroundColor = self.configuration.backgroundColor
+                presentedView.layoutIfNeeded()
             }
         )
     }
@@ -287,21 +327,14 @@ private extension JobsViewPushPresentation {
     }
 
     @objc func panned(_ gesture: UIPanGestureRecognizer) {
-        guard let presentedView else { return }
+        guard presentedView != nil else { return }
         let offset = interactiveOffset(for: gesture.translation(in: transitionView))
 
         switch gesture.state {
         case .began, .changed:
             applyInteractiveOffset(offset)
         case .ended, .cancelled, .failed:
-            let distance: CGFloat
-            switch configuration.direction {
-            case .top, .bottom:
-                distance = max(presentedView.bounds.height, 1)
-            case .left, .right:
-                distance = max(presentedView.bounds.width, 1)
-            }
-            let progress = min(abs(offset) / distance, 1)
+            let progress = min(abs(offset) / interactiveDistance(), 1)
             let velocity = interactiveVelocity(for: gesture.velocity(in: transitionView))
             let shouldDismiss = gesture.state == .ended && (progress >= 0.35 || velocity >= 500)
             if shouldDismiss {
