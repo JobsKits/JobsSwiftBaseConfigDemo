@@ -1210,7 +1210,7 @@ private lazy var titleTF: JobsTextField = {
 ![image-20251206153328096](./assets/image-20251206153328096.png)
 
 * 没数据时，自动显示空态图（是一个按钮）
-* 封装了**拉新/刷新** 功能 ➤ 基于[**JobsRefresher**](https://github.com/JobsKits/JobsRefresher)
+* 封装了**拉新/刷新** 功能 ➤ 基于[**JobsSwiftRefresher**](https://github.com/JobsKits/JobsSwiftRefresher)
 
 ```swift
 private lazy var flowLayout: UICollectionViewFlowLayout = {
@@ -1406,7 +1406,7 @@ func collectionView(_ collectionView: UICollectionView,
 #### 2.9、对`UITableView`的封装
 
 * 没数据时，自动显示空态图（是一个按钮）
-* 封装了**拉新/刷新** 功能 ➤ 基于[**JobsRefresher**](https://github.com/JobsKits/JobsRefresher)
+* 封装了**拉新/刷新** 功能 ➤ 基于[**JobsSwiftRefresher**](https://github.com/JobsKits/JobsSwiftRefresher)
 
 ```swift
 private lazy var tableView: UITableView = {
@@ -3373,7 +3373,7 @@ def byJobs
   pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
   pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
   pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
-  pod 'JobsRefresher',                      :path => 'JobsByPods/JobsRefresher@Pods'
+  pod 'JobsSwiftRefresher',                      :path => 'JobsByPods/JobsSwiftRefresher@Pods'
   pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
   pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
   pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'

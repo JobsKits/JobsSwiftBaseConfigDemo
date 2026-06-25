@@ -16,7 +16,7 @@ import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
-import JobsRefresher
+import JobsSwiftRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines

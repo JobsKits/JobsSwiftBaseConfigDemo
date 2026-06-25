@@ -1,6 +1,6 @@
 //
 //  JobsRefreshProxy.swift
-//  JobsRefresher
+//  JobsSwiftRefresher
 //
 //  Created by Jobs on 2026年5月13日，星期三.
 //
@@ -27,11 +27,17 @@ final class JobsProxy: NSObject {
     // Info visibility
     var showsHeaderInfo: Bool = true
     var showsFooterInfo: Bool = true
+    var horizontalMode: JobsRefreshHorizontalMode = .refreshRightLoadLeft
     // Per-slot lottie preference (instance-level default)
     var headerLottiePref: JobsLottiePreference = .inherit
     var footerLottiePref: JobsLottiePreference = .inherit
     var leftLottiePref: JobsLottiePreference = .inherit
     var rightLottiePref: JobsLottiePreference = .inherit
+    // Per-slot image preference (instance-level default)
+    var headerImagePref: JobsRefreshImagePreference = .inherit
+    var footerImagePref: JobsRefreshImagePreference = .inherit
+    var leftImagePref: JobsRefreshImagePreference = .inherit
+    var rightImagePref: JobsRefreshImagePreference = .inherit
     // MARK: - Human interaction feedback
     /// Whether to perform haptic feedback when refresh/load is triggered by reaching threshold.
     var enablesHaptics: Bool = false
@@ -62,11 +68,16 @@ final class JobsProxy: NSObject {
         left?.handle(with: sv)
         right?.handle(with: sv)
     }
+
+    func role(for position: JobsPosition) -> JobsRefreshRole {
+        horizontalMode.role(for: position)
+    }
 }
 
 @MainActor
 final class JobsSlot {
     let position: JobsPosition
+    let role: JobsRefreshRole
     let view: (UIView & JobsAnimatable)
     let trigger: CGFloat
     var action: (jobsByVoidBlock)?
@@ -86,11 +97,13 @@ final class JobsSlot {
     }
 
     init(position: JobsPosition,
+         role: JobsRefreshRole,
          view: (UIView & JobsAnimatable),
          trigger: CGFloat,
          container: AnyObject?,
          action: @escaping jobsByVoidBlock) {
         self.position = position
+        self.role = role
         self.view = view
         self.trigger = trigger
         self.container = container
@@ -113,7 +126,7 @@ final class JobsSlot {
     func layout(in sv: UIScrollView) {
         let h = view.heightOrWidth
         var baseInset = sv.contentInset
-        if case .refreshing = state {
+        if state == .refreshing || state == .ending {
             switch position {
             case .header: baseInset.top    = max(0, baseInset.top - h)
             case .footer: baseInset.bottom = max(0, baseInset.bottom - h)
@@ -169,7 +182,10 @@ final class JobsSlot {
                           isDragging: Bool,
                           sv: UIScrollView,
                           isFooter: Bool = false) {
-        guard state != .refreshing && state != .noMore else { return }
+        guard state != .refreshing,
+              state != .ending,
+              state != .noMore,
+              state != .disabled else { return }
         let p = max(0, min(1, distance / trigger))
         if isDragging {
             state = (p >= 1) ? .ready : .pulling(progress: p)
@@ -183,7 +199,11 @@ final class JobsSlot {
     }
 
     func beginRefreshing(on sv: UIScrollView, isFooter: Bool = false) {
-        guard state != .refreshing else { return }
+        guard state != .refreshing,
+              state != .ending,
+              state != .disabled,
+              state != .removed,
+              state != .noMore else { return }
         // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
         sv.byRefreshFeedback(for: position)
 
@@ -225,10 +245,12 @@ final class JobsSlot {
         if container == nil { endRefreshing(on: sv) }
     }
 
-    func endRefreshing(on sv: UIScrollView, backTo targetInsetOpt: UIEdgeInsets? = nil) {
+    func endRefreshing(on sv: UIScrollView,
+                       backTo targetInsetOpt: UIEdgeInsets? = nil,
+                       finalState: JobsState = .idle) {
         guard case .refreshing = state else { return }
         // mark refresh time for header/left
-        if position == .header || position == .left {
+        if role == .refresh {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
         }
 
@@ -236,7 +258,7 @@ final class JobsSlot {
 
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
         isEndingAnimation = true
-        state = .idle
+        state = .ending
 
         UIView.animate(withDuration: restoreInsetDuration,
                        delay: 0,
@@ -245,13 +267,47 @@ final class JobsSlot {
             self.layout(in: sv)
         } completion: { _ in
             self.layout(in: sv)
+            self.state = finalState
             self.isEndingAnimation = false
         }
     }
 
+    func reset(on sv: UIScrollView) {
+        if case .refreshing = state {
+            endRefreshing(on: sv)
+            return
+        }
+        isEndingAnimation = false
+        state = .idle
+        view.isHidden = !showsInfo
+        layout(in: sv)
+    }
+
+    func fail(on sv: UIScrollView) {
+        if case .refreshing = state {
+            endRefreshing(on: sv, finalState: .failed)
+            return
+        }
+        state = .failed
+        view.isHidden = !showsInfo
+        layout(in: sv)
+    }
+
+    func disable(on sv: UIScrollView) {
+        if case .refreshing = state {
+            endRefreshing(on: sv, finalState: .disabled)
+            return
+        }
+        state = .disabled
+        view.isHidden = !showsInfo
+        layout(in: sv)
+    }
+
     func noticeNoMoreData(on sv: UIScrollView) {
-        guard position == .footer else { return }
+        guard role == .loadMore else { return }
         state = .noMore
+        view.isHidden = !showsInfo
+        layout(in: sv)
     }
 
     private func resetInset(from current: UIEdgeInsets) -> UIEdgeInsets {

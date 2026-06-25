@@ -17,7 +17,7 @@ flowchart LR
   M3["Unity"]
   M4["my_flutter"]
   M5["JobsBySwiftPackageManager"]
-  M1 -->|calls:695| M2
+  M1 -->|calls:609| M2
   M3 -->|calls:49| M2
   M2 -->|calls:1| M4
   M5 -->|calls:1| M2

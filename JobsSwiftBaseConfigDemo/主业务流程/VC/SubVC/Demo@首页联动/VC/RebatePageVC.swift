@@ -17,7 +17,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
-import JobsRefresher
+import JobsSwiftRefresher
 import SnapKit
 import GKNavigationBarSwift
 import JXSegmentedView

@@ -127,7 +127,8 @@ internal final class HumanBinding: ObjectBox.EntityBinding, Sendable {
 
 /// Helper function that allows calling Enum(rawValue: value) with a nil value, which will return nil.
 fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.RawValue?) -> T? {
-    guard let rawValue = rawValue else { return nil };return T(rawValue: rawValue)
+    guard let rawValue = rawValue else { return nil }
+    return T(rawValue: rawValue)
 }
 
 // MARK: - Store setup

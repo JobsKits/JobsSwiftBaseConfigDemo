@@ -67,7 +67,7 @@ final class CrashLogDemoVC: BaseVC {
                     },
                 // 刷新
                 UIButton.sys()
-                    .byImage("trash.fill".sysImg, for: .normal)
+                    .byImage("arrow.clockwise".sysImg, for: .normal)
                     .onTap { [unowned self] _ in
                         reloadLog()
                     }

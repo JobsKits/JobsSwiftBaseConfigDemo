@@ -1,6 +1,6 @@
 //
-//  UIScrollView+JobsRefresher.swift
-//  JobsRefresher
+//  UIScrollView+JobsSwiftRefresher.swift
+//  JobsSwiftRefresher
 //
 //  Created by Jobs on 2026年5月13日，星期三.
 //
@@ -56,6 +56,14 @@ extension UIScrollView {
         mrk_proxy.right?.showsInfo = show
         return self
     }
+    /// 横向语义模式：默认右拉刷新、左拉加载；可切换为右拉加载、左拉刷新。
+    @discardableResult
+    public func setHorizontalRefreshMode(_ mode: JobsRefreshHorizontalMode) -> Self {
+        mrk_proxy.horizontalMode = mode
+        (mrk_proxy.left?.view as? JobsRefreshRoleConfigurable)?.refreshRole = mode.role(for: .left)
+        (mrk_proxy.right?.view as? JobsRefreshRoleConfigurable)?.refreshRole = mode.role(for: .right)
+        return self
+    }
     // MARK: - Lottie per-slot (instance override > global)
     @discardableResult
     public func setHeaderLottie(_ pref: JobsLottiePreference) -> Self {
@@ -84,6 +92,34 @@ extension UIScrollView {
         (mrk_proxy.right?.view as? JobsLottieConfigurable)?.lottiePreference = pref
         return self
     }
+    // MARK: - Image / GIF / frame / network image per-slot
+    @discardableResult
+    public func setHeaderImage(_ pref: JobsRefreshImagePreference) -> Self {
+        mrk_proxy.headerImagePref = pref
+        (mrk_proxy.header?.view as? JobsRefreshImageConfigurable)?.imagePreference = pref
+        return self
+    }
+
+    @discardableResult
+    public func setFooterImage(_ pref: JobsRefreshImagePreference) -> Self {
+        mrk_proxy.footerImagePref = pref
+        (mrk_proxy.footer?.view as? JobsRefreshImageConfigurable)?.imagePreference = pref
+        return self
+    }
+
+    @discardableResult
+    public func setLeftImage(_ pref: JobsRefreshImagePreference) -> Self {
+        mrk_proxy.leftImagePref = pref
+        (mrk_proxy.left?.view as? JobsRefreshImageConfigurable)?.imagePreference = pref
+        return self
+    }
+
+    @discardableResult
+    public func setRightImage(_ pref: JobsRefreshImagePreference) -> Self {
+        mrk_proxy.rightImagePref = pref
+        (mrk_proxy.right?.view as? JobsRefreshImageConfigurable)?.imagePreference = pref
+        return self
+    }
     // MARK: - Human interaction feedback (haptic + sound)
     /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
     @discardableResult
@@ -110,7 +146,11 @@ extension UIScrollView {
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.headerLottiePref
         }
+        if let v = c as? JobsRefreshImageConfigurable {
+            v.imagePreference = mrk_proxy.headerImagePref
+        }
         let slot = JobsSlot(position: .header,
+                            role: .refresh,
                             view: c,
                             trigger: trigger,
                             container: container,
@@ -126,7 +166,9 @@ extension UIScrollView {
         guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
         switch state {
         case .refreshing: slot.beginRefreshing(on: sv)
-        case .normal:     slot.endRefreshing(on: sv)
+        case .normal:     slot.reset(on: sv)
+        case .failed:     slot.fail(on: sv)
+        case .disabled:   slot.disable(on: sv)
         case .removed:
             slot.detach()
             mrk_proxy.header = nil
@@ -144,7 +186,11 @@ extension UIScrollView {
         if let v = c as? JobsLottieConfigurable {
             v.lottiePreference = mrk_proxy.footerLottiePref
         }
+        if let v = c as? JobsRefreshImageConfigurable {
+            v.imagePreference = mrk_proxy.footerImagePref
+        }
         let slot = JobsSlot(position: .footer,
+                            role: .loadMore,
                             view: c,
                             trigger: trigger,
                             container: container,
@@ -160,7 +206,9 @@ extension UIScrollView {
         guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
         switch state {
         case .refreshing: slot.beginRefreshing(on: sv, isFooter: true)
-        case .normal:     slot.endRefreshing(on: sv)
+        case .normal:     slot.reset(on: sv)
+        case .failed:     slot.fail(on: sv)
+        case .disabled:   slot.disable(on: sv)
         case .removed:
             slot.detach()
             mrk_proxy.footer = nil
@@ -179,8 +227,16 @@ extension UIScrollView {
         if let v = component as? JobsLottieConfigurable {
             v.lottiePreference = (position == .left) ? mrk_proxy.leftLottiePref : mrk_proxy.rightLottiePref
         }
+        if let v = component as? JobsRefreshImageConfigurable {
+            v.imagePreference = (position == .left) ? mrk_proxy.leftImagePref : mrk_proxy.rightImagePref
+        }
+        let role = mrk_proxy.role(for: position)
+        if let v = component as? JobsRefreshRoleConfigurable {
+            v.refreshRole = role
+        }
 
         let slot = JobsSlot(position: position,
+                            role: role,
                             view: component,
                             trigger: trigger,
                             container: container,
@@ -199,12 +255,13 @@ extension UIScrollView {
         guard let s = slot else { return self }
         switch state {
         case .refreshing: s.beginRefreshing(on: sv)
-        case .normal:     s.endRefreshing(on: sv)
+        case .normal:     s.reset(on: sv)
+        case .failed:     s.fail(on: sv)
+        case .disabled:   s.disable(on: sv)
         case .removed:
             s.detach()
             if position == .left { mrk_proxy.left = nil } else { mrk_proxy.right = nil }
-        case .noMoreData:
-            break
+        case .noMoreData: s.noticeNoMoreData(on: sv)
         };return self
     }
 }

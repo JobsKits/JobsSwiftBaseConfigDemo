@@ -1,6 +1,6 @@
 //
 //  JobsRefreshDefaultSkins.swift
-//  JobsRefresher
+//  JobsSwiftRefresher
 //
 //  Created by Jobs on 2026年5月13日，星期三.
 //
@@ -11,12 +11,17 @@ import AppKit
 import UIKit
 #endif
 
+import ImageIO
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 #if canImport(Lottie)
 import Lottie
+#endif
+
+#if canImport(SDWebImage)
+import SDWebImage
 #endif
 
 // MARK: - 文案配置
@@ -32,6 +37,8 @@ public enum JobsRefreshConfig {
         public static let loadingMore = "正在加载更多的数据...".tr
 
         public static let noMore = "没有更多了".tr
+        public static let failed = "加载失败，松手重试".tr
+        public static let disabled = "刷新已关闭".tr
         public static let lastRefreshPrefix = "最后更新：".tr
         public static let updatePrefixVertical = "更新：".tr // 横向拆列用
     }
@@ -48,6 +55,18 @@ public enum JobsRefreshConfig {
     }
 
     public enum h {
+        public enum left {
+            public static let refreshIdle = "右拉可以刷新".tr
+            public static let refreshGoOn = "继续右拉".tr
+            public static let loadMoreIdle = "右拉可以加载更多".tr
+            public static let loadMoreGoOn = "继续右拉".tr
+        }
+        public enum right {
+            public static let refreshIdle = "左拉可以刷新".tr
+            public static let refreshGoOn = "继续左拉".tr
+            public static let loadMoreIdle = "左拉可以加载更多".tr
+            public static let loadMoreGoOn = "继续左拉".tr
+        }
         public enum header {
             public static let idle = "右拉可以刷新".tr
             public static let goOn = "继续右拉".tr
@@ -58,60 +77,20 @@ public enum JobsRefreshConfig {
         }
     }
 }
-// MARK: - Lottie 配置（全局 + 单独优先级）
-// 你可以继续用你现有的 DSL（setHeaderLottie / setRightLottie ...）给 view 注入 per-slot 配置。
-// 这里提供一个“兜底全局配置”（可选）：没单独配才会用它。
-@MainActor
-public struct JobsRefreshLottieSetting: Equatable {
-    public var animationName: String
-    public var bundle: Bundle
-    public var loopMode: JobsRefreshLottieLoopMode
-    public var speed: CGFloat
-    public init(animationName: String,
-                bundle: Bundle = .main,
-                loopMode: JobsRefreshLottieLoopMode = .loop,
-                speed: CGFloat = 1) {
-        self.animationName = animationName
-        self.bundle = bundle
-        self.loopMode = loopMode
-        self.speed = speed
-    }
-}
-
-@MainActor
-public enum JobsRefreshLottieLoopMode: Equatable {
-    case playOnce
-    case loop
-    case autoReverse
-}
-
-@MainActor
-public enum JobsRefreshLottiePreference: Equatable {
-    /// 继承：优先用全局；没有全局就回退菊花
-    case inherit
-    /// 强制禁用：无论全局怎么配，都回退菊花
-    case disabled
-    /// 自定义：该 slot 单独用这个动画（优先级最高）
-    case custom(JobsRefreshLottieSetting)
-}
-// 让“外部/DSL”可以把 per-slot 配置注入到皮肤 view 上
-@MainActor
-public protocol JobsRefreshLottieConfigurable: AnyObject {
-    func setLottiePreference(_ pref: JobsRefreshLottiePreference?)
-}
 // MARK: - Loading 指示器（Lottie 优先 / 回退菊花）
 // 重点：无论 AutoLayout 与否，都会在 layoutSubviews 里设置子视图 frame，保证显示。
 @MainActor
 final class JobsLoadingIndicator: UIView {
-    // public
     var preferredSize: CGFloat = 18 {
         didSet { setNeedsLayout() }
     }
-    /// per-slot 配置：nil 等价于 `.inherit`
     var lottiePreference: JobsLottiePreference? {
         didSet { rebuildIfNeeded() }
     }
-    // subviews
+    var imagePreference: JobsRefreshImagePreference? {
+        didSet { rebuildIfNeeded() }
+    }
+
     private let spinner: UIActivityIndicatorView = {
         let v: UIActivityIndicatorView
         if #available(iOS 13.0, *) {
@@ -119,6 +98,14 @@ final class JobsLoadingIndicator: UIView {
         } else {
             v = UIActivityIndicatorView(style: .gray)
         };return v.byHidesWhenStopped(YES)
+    }()
+
+    private let imageView: UIImageView = {
+        let v = UIImageView()
+        v.contentMode = .scaleAspectFit
+        v.clipsToBounds = true
+        v.isHidden = true
+        return v
     }()
 
     #if canImport(Lottie) && JOBS_MODERN_LOTTIE
@@ -133,13 +120,16 @@ final class JobsLoadingIndicator: UIView {
         isUserInteractionEnabled = false
         backgroundColor = .clear
         addSubview(spinner)
+        addSubview(imageView)
         spinner.stopAnimating()
     }
     // MARK: - State
     func showRefreshing() {
         isRefreshing = true
         rebuildIfNeeded()
-        if usesLottie {
+        if usesCustomImage {
+            spinner.stopAnimating()
+        } else if usesLottie {
             #if canImport(Lottie) && JOBS_MODERN_LOTTIE
             lottieView?.isHidden = false
             lottieView?.play()
@@ -156,8 +146,14 @@ final class JobsLoadingIndicator: UIView {
         lottieView?.stop()
         lottieView?.isHidden = true
         #endif
+        imageView.stopAnimating()
+        imageView.isHidden = true
         spinner.stopAnimating()
         isHidden = true
+    }
+
+    var usesCustomImage: Bool {
+        imageView.isHidden == false
     }
 
     var usesLottie: Bool {
@@ -175,7 +171,21 @@ final class JobsLoadingIndicator: UIView {
             return
         }
 
-        let resolved = resolveSetting()
+        if let setting = resolveImageSetting(), applyImage(setting) {
+            hideLottieIfNeeded()
+            spinner.stopAnimating()
+            spinner.isHidden = true
+            imageView.isHidden = false
+            setNeedsLayout()
+            return
+        }
+
+        imageView.stopAnimating()
+        imageView.animationImages = nil
+        imageView.image = nil
+        imageView.isHidden = true
+
+        let resolved = resolveLottieSetting()
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         if let setting = resolved, let anim = loadAnimation(setting) {
             // 需要 Lottie
@@ -208,7 +218,7 @@ final class JobsLoadingIndicator: UIView {
         setNeedsLayout()
     }
 
-    private func resolveSetting() -> JobsLottieSetting? {
+    private func resolveLottieSetting() -> JobsLottieSetting? {
         // 单独（slot） > 全局（JobsLottieConfig） > nil
         let pref = lottiePreference ?? .inherit
         switch pref {
@@ -224,6 +234,96 @@ final class JobsLoadingIndicator: UIView {
                 return nil
             }
         }
+    }
+
+    private func resolveImageSetting() -> JobsRefreshImageSetting? {
+        let pref = imagePreference ?? .inherit
+        switch pref {
+        case .disabled:
+            return nil
+        case .custom(let setting):
+            return setting
+        case .inherit:
+            switch JobsRefreshImageConfig.global {
+            case .custom(let setting):
+                return setting
+            case .disabled, .inherit:
+                return nil
+            }
+        }
+    }
+
+    private func applyImage(_ setting: JobsRefreshImageSetting) -> Bool {
+        imageView.stopAnimating()
+        imageView.animationImages = nil
+        switch setting.source {
+        case .gif(let name, let bundle):
+            guard let image = loadGIF(named: name, bundle: bundle) else { return false }
+            imageView.image = image
+            imageView.startAnimating()
+            return true
+        case .frames(let names, let bundle, let interval):
+            let images = names.compactMap {
+                UIImage(named: $0, in: bundle, compatibleWith: nil)
+            }
+            guard !images.isEmpty else { return false }
+            imageView.animationImages = images
+            imageView.animationDuration = max(0.02, interval) * Double(images.count)
+            imageView.animationRepeatCount = 0
+            imageView.image = images.first
+            imageView.startAnimating()
+            return true
+        case .network(let url, let placeholderName):
+            let placeholder = placeholderName.flatMap {
+                UIImage(named: $0, in: .main, compatibleWith: nil)
+            }
+            #if canImport(SDWebImage)
+            imageView.sd_setImage(with: url, placeholderImage: placeholder)
+            return true
+            #else
+            guard let placeholder else { return false }
+            imageView.image = placeholder
+            return true
+            #endif
+        }
+    }
+
+    private func loadGIF(named name: String, bundle: Bundle) -> UIImage? {
+        let trimmed = name.replacingOccurrences(of: ".gif", with: "")
+        guard let url = bundle.url(forResource: trimmed, withExtension: "gif"),
+              let data = try? Data(contentsOf: url) else { return nil };return animatedGIFImage(data: data)
+    }
+
+    private func animatedGIFImage(data: Data) -> UIImage? {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+        let count = CGImageSourceGetCount(source)
+        guard count > 0 else { return nil }
+        var images: [UIImage] = []
+        var duration: TimeInterval = 0
+        for index in 0..<count {
+            guard let cgImage = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
+            duration += gifDelay(source: source, index: index)
+            images.append(UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: .up))
+        }
+        guard !images.isEmpty else { return nil };return UIImage.animatedImage(with: images, duration: max(duration, 0.08 * Double(images.count)))
+    }
+
+    private func gifDelay(source: CGImageSource, index: Int) -> TimeInterval {
+        let defaultDelay = 0.08
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
+              let gif = properties[kCGImagePropertyGIFDictionary] as? [CFString: Any] else {
+            return defaultDelay
+        }
+        let unclamped = gif[kCGImagePropertyGIFUnclampedDelayTime] as? TimeInterval
+        let clamped = gif[kCGImagePropertyGIFDelayTime] as? TimeInterval
+        return max(0.02, unclamped ?? clamped ?? defaultDelay)
+    }
+
+    private func hideLottieIfNeeded() {
+        #if canImport(Lottie) && JOBS_MODERN_LOTTIE
+        lottieView?.stop()
+        lottieView?.isHidden = true
+        #endif
     }
 
     #if canImport(Lottie) && JOBS_MODERN_LOTTIE
@@ -259,6 +359,7 @@ final class JobsLoadingIndicator: UIView {
         let y = (bounds.height - side) * 0.5
         let r = CGRect(x: x, y: y, width: side, height: side)
         spinner.frame = r
+        imageView.frame = r
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         lottieView?.frame = r
         #endif
@@ -269,7 +370,8 @@ final class JobsLoadingIndicator: UIView {
 public class JobsArrowIndicatorView: UIView,
                                      JobsAnimatable,
                                      JobsRefreshTimeTrackable,
-                                     JobsLottieConfigurable {
+                                     JobsLottieConfigurable,
+                                     JobsRefreshImageConfigurable {
     public enum Style { case header, footer }
     private enum ArrowDirection { case up, down }
     
@@ -282,6 +384,9 @@ public class JobsArrowIndicatorView: UIView,
     // per-slot Lottie 配置（由外部注入）；nil 表示继承全局
     public var lottiePreference: JobsLottiePreference = .inherit {
         didSet { loading.lottiePreference = lottiePreference }
+    }
+    public var imagePreference: JobsRefreshImagePreference = .inherit {
+        didSet { loading.imagePreference = imagePreference }
     }
 
     private lazy var arrow: UIImageView = {
@@ -298,6 +403,7 @@ public class JobsArrowIndicatorView: UIView,
         v.preferredSize = 18
         v.isHidden = true
         v.lottiePreference = lottiePreference
+        v.imagePreference = imagePreference
         return self.byAddSubviewRetSub(v)
     }()
 
@@ -363,8 +469,22 @@ public class JobsArrowIndicatorView: UIView,
         case .refreshing:
             arrow.isHidden = true
             loading.lottiePreference = lottiePreference
+            loading.imagePreference = imagePreference
             loading.showRefreshing()
             displayText(refreshingText())
+        case .ending:
+            arrow.isHidden = true
+            loading.hideRefreshing()
+            displayText(refreshingText())
+        case .failed:
+            loading.hideRefreshing()
+            arrow.isHidden = false
+            applyArrow(direction: idleArrowDirection(), animated: true)
+            displayText(JobsRefreshConfig.common.failed)
+        case .disabled:
+            loading.hideRefreshing()
+            arrow.isHidden = true
+            displayText(JobsRefreshConfig.common.disabled)
         case .noMore:
             loading.hideRefreshing()
             arrow.isHidden = true
@@ -505,16 +625,22 @@ public final class JobsDefaultFooter: JobsArrowIndicatorView {
 public class JobsSideIndicatorView: UIView,
                                     JobsAnimatable,
                                     JobsRefreshTimeTrackable,
-                                    JobsLottieConfigurable {
+                                    JobsLottieConfigurable,
+                                    JobsRefreshImageConfigurable,
+                                    JobsRefreshRoleConfigurable {
     public enum SideStyle { case left, right } // left=右拉刷新（头部组），right=左拉加载（尾部组）
     private enum ArrowDirection { case left, right }
     
     public var style: SideStyle = .left { didSet { setNeedsLayout() } }
+    public var refreshRole: JobsRefreshRole = .refresh { didSet { setNeedsLayout() } }
     public var heightOrWidth: CGFloat = 60
 
     private var lastRefreshedAt: Date?
     public var lottiePreference: JobsLottiePreference = .inherit {
         didSet { loading.lottiePreference = lottiePreference }
+    }
+    public var imagePreference: JobsRefreshImagePreference = .inherit {
+        didSet { loading.imagePreference = imagePreference }
     }
     public func markRefreshed(at date: Date) { lastRefreshedAt = date }
 
@@ -531,6 +657,7 @@ public class JobsSideIndicatorView: UIView,
         let v = JobsLoadingIndicator()
         v.preferredSize = 18
         v.lottiePreference = lottiePreference
+        v.imagePreference = imagePreference
         v.isHidden = true
         return self.byAddSubviewRetSub(v)
     }()
@@ -619,11 +746,28 @@ public class JobsSideIndicatorView: UIView,
         case .refreshing:
             arrow.isHidden = true
             loading.lottiePreference = lottiePreference
+            loading.imagePreference = imagePreference
             loading.showRefreshing()
             setVertical(statusLabel, text: refreshingText())
             // left（头部组）才显示“更新：时间”（仿你图1）
-            setUpdateInfoVisible(style == .left)
-            if style == .left { updateLabelsFromDate(lastRefreshedAt) }
+            setUpdateInfoVisible(refreshRole == .refresh)
+            if refreshRole == .refresh { updateLabelsFromDate(lastRefreshedAt) }
+        case .ending:
+            arrow.isHidden = true
+            loading.hideRefreshing()
+            setVertical(statusLabel, text: refreshingText())
+            setUpdateInfoVisible(false)
+        case .failed:
+            loading.hideRefreshing()
+            arrow.isHidden = false
+            applyArrow(direction: idleArrowDirection(), animated: true)
+            setVertical(statusLabel, text: JobsRefreshConfig.common.failed)
+            setUpdateInfoVisible(false)
+        case .disabled:
+            loading.hideRefreshing()
+            arrow.isHidden = true
+            setVertical(statusLabel, text: JobsRefreshConfig.common.disabled)
+            setUpdateInfoVisible(false)
         case .noMore:
             loading.hideRefreshing()
             arrow.isHidden = true
@@ -721,30 +865,34 @@ public class JobsSideIndicatorView: UIView,
     }
 
     private func idleText() -> String {
-        switch style {
-        case .left:  return JobsRefreshConfig.h.header.idle
-        case .right: return JobsRefreshConfig.h.footer.idle
+        switch (style, refreshRole) {
+        case (.left, .refresh):   return JobsRefreshConfig.h.left.refreshIdle
+        case (.left, .loadMore):  return JobsRefreshConfig.h.left.loadMoreIdle
+        case (.right, .refresh):  return JobsRefreshConfig.h.right.refreshIdle
+        case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreIdle
         }
     }
     
     private func goOnText() -> String {
-        switch style {
-        case .left:  return JobsRefreshConfig.h.header.goOn
-        case .right: return JobsRefreshConfig.h.footer.goOn
+        switch (style, refreshRole) {
+        case (.left, .refresh):   return JobsRefreshConfig.h.left.refreshGoOn
+        case (.left, .loadMore):  return JobsRefreshConfig.h.left.loadMoreGoOn
+        case (.right, .refresh):  return JobsRefreshConfig.h.right.refreshGoOn
+        case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreGoOn
         }
     }
     
     private func readyText() -> String {
-        switch style {
-        case .left:  return JobsRefreshConfig.common.readyRefresh
-        case .right: return JobsRefreshConfig.common.readyLoadingMore
+        switch refreshRole {
+        case .refresh:  return JobsRefreshConfig.common.readyRefresh
+        case .loadMore: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
     
     private func refreshingText() -> String {
-        switch style {
-        case .left:  return JobsRefreshConfig.common.refreshing
-        case .right: return JobsRefreshConfig.common.loadingMore
+        switch refreshRole {
+        case .refresh:  return JobsRefreshConfig.common.refreshing
+        case .loadMore: return JobsRefreshConfig.common.loadingMore
         }
     }
     // MARK: - Arrow rotate
@@ -793,6 +941,7 @@ public final class JobsDefaultRightRefresher: JobsSideIndicatorView {
         super.init(frame: frame)
         heightOrWidth = 60
         style = .right
+        refreshRole = .loadMore
     }
 }
 
@@ -803,5 +952,6 @@ public final class JobsDefaultLeftRefresher: JobsSideIndicatorView {
         super.init(frame: frame)
         heightOrWidth = 60
         style = .left
+        refreshRole = .refresh
     }
 }

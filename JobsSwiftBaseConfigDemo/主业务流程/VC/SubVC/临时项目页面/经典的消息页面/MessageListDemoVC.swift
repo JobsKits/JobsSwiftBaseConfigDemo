@@ -15,7 +15,7 @@ import UIKit
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
-import JobsRefresher
+import JobsSwiftRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
@@ -52,12 +52,17 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - Nav Buttons
     private lazy var rightEditButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 64, height: 32))
             .byTitle("编辑".tr, for: .normal)
             .byTitle("完成".tr, for: .selected)
             .byTitleColor(.label, for: .normal)
             .byTitleColor(.label, for: .selected)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byNumberOfLines(1)
+            .byLineBreakMode(.byClipping)
+            .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 18))
+            .byAdd { make in
+                make.size.equalTo(CGSize(width: 76, height: 44))
+            }
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.isEditingMode.toggle()
@@ -115,9 +120,7 @@ final class MessageListDemoVC: BaseVC {
             make.right.equalToSuperview().inset(16)
             make.centerY.equalTo(v.safeAreaLayoutGuide.snp.centerY)
             make.height.equalTo(44)
-        }
-
-        return v
+        };return v
     }()
     // MARK: - TableView
     private lazy var tableView: UITableView = {

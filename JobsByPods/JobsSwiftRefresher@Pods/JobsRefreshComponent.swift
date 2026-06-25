@@ -1,6 +1,6 @@
 //
 //  JobsRefreshComponent.swift
-//  JobsRefresher
+//  JobsSwiftRefresher
 //
 //  Created by Jobs on 2026年5月13日，星期三.
 //
@@ -196,6 +196,15 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
         case .refreshing:
             indicator.startAnimating()
             displayText(decorate(refreshingText()))
+        case .ending:
+            indicator.stopAnimating()
+            displayText(decorate(refreshingText()))
+        case .failed:
+            indicator.stopAnimating()
+            displayText(JobsRefreshConfig.common.failed)
+        case .disabled:
+            indicator.stopAnimating()
+            displayText(JobsRefreshConfig.common.disabled)
         case .noMore:
             indicator.stopAnimating()
             displayText(decorate(noMoreText()))

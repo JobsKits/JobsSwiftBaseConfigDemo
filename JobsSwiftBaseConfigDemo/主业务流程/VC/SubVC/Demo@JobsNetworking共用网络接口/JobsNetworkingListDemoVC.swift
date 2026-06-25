@@ -14,7 +14,7 @@ import UIKit
 
 import JobsByUIKit
 import JobsSwiftDSL
-import JobsRefresher
+import JobsSwiftRefresher
 import JobsInheritance
 import JobsSwiftBaseDefines
 import SnapKit

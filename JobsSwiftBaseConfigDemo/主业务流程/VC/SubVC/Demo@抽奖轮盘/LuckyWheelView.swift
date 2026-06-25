@@ -16,6 +16,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
 import JobsByQuartzCore
+import JobsImageTools
 import JobsSwiftBaseDefines
 import SnapKit
 /// 扇形圆盘 + 中央按钮（按钮用 Jobs 封装 API）

@@ -246,13 +246,6 @@ PODS:
     - JobsSwiftDSL
     - JobsSwiftTimer
     - SnapKit
-  - JobsRefresher (0.0.1):
-    - JobsByUIKit
-    - JobsSwiftBaseDefines
-    - JobsSwiftBlock
-    - JobsSwiftDSL
-    - lottie-ios
-    - SnapKit
   - JobsScale (0.1.14):
     - JobsGetWindow
   - JobsSwiftAppTools (0.0.1):
@@ -308,6 +301,11 @@ PODS:
     - Moya
     - SnapKit
     - YTKNetwork
+  - JobsSwiftCountryCodeCtrl (0.0.1):
+    - JobsByUIKit
+    - Jobsl10n
+    - JobsSwiftDSL
+    - SnapKit
   - JobsSwiftDebugTools (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
@@ -331,6 +329,21 @@ PODS:
   - JobsSwiftOpen (0.0.1):
     - JobsByUIKit
     - JobsInheritance
+  - JobsSwiftPatch (0.0.1)
+  - JobsSwiftRefresher (0.0.1):
+    - JobsSwiftRefresher/Core (= 0.0.1)
+  - JobsSwiftRefresher/Core (0.0.1):
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsSwiftDSL
+    - SnapKit
+  - JobsSwiftRefresher/Lottie (0.0.1):
+    - JobsSwiftRefresher/Core
+    - lottie-ios
+  - JobsSwiftRefresher/SDWebImage (0.0.1):
+    - JobsSwiftRefresher/Core
+    - SDWebImage
   - JobsSwiftSplash (0.0.1):
     - JobsByUIKit
     - JobsCountdownButton
@@ -356,8 +369,8 @@ PODS:
   - JobsSwiftWorker (0.1.0):
     - JobsByUIKit
     - Jobsl10n
-    - JobsRefresher
     - JobsSwiftBaseDefines
+    - JobsSwiftRefresher
     - JobsSwiftTaskCenter
     - JobsSwiftTimer
     - SnapKit
@@ -562,17 +575,20 @@ DEPENDENCIES:
   - "JobsNetworking/AF5 (from `JobsByPods/JobsNetworking@Pods`)"
   - "JobsNetworking/Async (from `JobsByPods/JobsNetworking@Pods`)"
   - "JobsProgressBar (from `JobsByPods/JobsProgressBar@Pods`)"
-  - "JobsRefresher (from `JobsByPods/JobsRefresher@Pods`)"
   - "JobsScale (from `JobsByPods/JobsScale@Pods`)"
   - "JobsSwiftAppTools (from `JobsByPods/JobsSwiftAppTools@Pods`)"
   - "JobsSwiftBaseDefines (from `JobsByPods/JobsSwiftBaseDefines@Pods`)"
   - "JobsSwiftBaseTools (from `JobsByPods/JobsSwiftBaseTools@Pods`)"
   - "JobsSwiftBlock (from `JobsByPods/JobsSwiftBlock@Pods`)"
+  - "JobsSwiftCountryCodeCtrl (from `JobsByPods/JobsSwiftCountryCodeCtrl@Pods`)"
   - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
   - "JobsSwiftDSL (from `JobsByPods/JobsSwiftDSL@Pods`)"
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftOpen (from `JobsByPods/JobsSwiftOpen@Pods`)"
+  - "JobsSwiftPatch (from `JobsByPods/JobsSwiftPatch@Pods`)"
+  - "JobsSwiftRefresher/Lottie (from `JobsByPods/JobsSwiftRefresher@Pods`)"
+  - "JobsSwiftRefresher/SDWebImage (from `JobsByPods/JobsSwiftRefresher@Pods`)"
   - "JobsSwiftSplash (from `JobsByPods/JobsSwiftSplash@Pods`)"
   - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
   - "JobsSwiftTaskCenter (from `JobsByPods/JobsSwiftTaskCenter@Pods`)"
@@ -746,8 +762,6 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsNetworking@Pods"
   JobsProgressBar:
     :path: "JobsByPods/JobsProgressBar@Pods"
-  JobsRefresher:
-    :path: "JobsByPods/JobsRefresher@Pods"
   JobsScale:
     :path: "JobsByPods/JobsScale@Pods"
   JobsSwiftAppTools:
@@ -758,6 +772,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftBaseTools@Pods"
   JobsSwiftBlock:
     :path: "JobsByPods/JobsSwiftBlock@Pods"
+  JobsSwiftCountryCodeCtrl:
+    :path: "JobsByPods/JobsSwiftCountryCodeCtrl@Pods"
   JobsSwiftDebugTools:
     :path: "JobsByPods/JobsSwiftDebugTools@Pods"
   JobsSwiftDSL:
@@ -768,6 +784,10 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/MetalKit@Pods"
   JobsSwiftOpen:
     :path: "JobsByPods/JobsSwiftOpen@Pods"
+  JobsSwiftPatch:
+    :path: "JobsByPods/JobsSwiftPatch@Pods"
+  JobsSwiftRefresher:
+    :path: "JobsByPods/JobsSwiftRefresher@Pods"
   JobsSwiftSplash:
     :path: "JobsByPods/JobsSwiftSplash@Pods"
   JobsSwiftStandardLibrary:
@@ -851,24 +871,26 @@ SPEC CHECKSUMS:
   JobsNavBar: ca24eee509415edd8d95edc3934063b24f67b8b8
   JobsNetworking: 4fc229e4de2c2e23df9a89b03edc047104b88ded
   JobsProgressBar: 9022157e59312babbc71bc9896793d7959235e61
-  JobsRefresher: a55d8c9df415a53ce0bc2c0c269c4e778ec029cc
   JobsScale: c067caa5a33cb452d8d137b448943fdbfab76a97
   JobsSwiftAppTools: 9fd9b7af9e739b20d2b29426a46a6269369946f5
   JobsSwiftBaseDefines: 3e9ae1bad099951551f26035339256ee1b363409
   JobsSwiftBaseTools: fbeb42344eaf62338bf512f90a09bbdc05d4ae8b
   JobsSwiftBlock: 601027c8df5e0d7be3e7cea2bb81b6235f8964fd
+  JobsSwiftCountryCodeCtrl: eeece097d2d7d872c6229518148b5a5c4c3ef690
   JobsSwiftDebugTools: 260c8c3d8e5eaa705fb1e73864e131ce30fdab39
   JobsSwiftDSL: c2ffb7cabff69adc7657b1caf055f11634599008
   JobsSwiftFoundation: 6d3c8dfbb540c605576c5a163e64cdf4d1bac827
   JobsSwiftMetalKit: ddf474c92a2af9b536d6559c673f2b87a515fecd
   JobsSwiftOpen: 1885cbecbaacf2a50dcd2bb2d37f09397049cf77
+  JobsSwiftPatch: 99e4abe4866100b972356fe9d4a428bf5721345f
+  JobsSwiftRefresher: 5b94d2a7c9f9b6201ac4824de5b8ea2f4e1ddeb9
   JobsSwiftSplash: 4677a2a2a34f132e3d2abec17618ed7e7c8b4928
   JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
   JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
   JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
   JobsSwiftTimerMgr: fc7acf4184f9d73f5ce4d564b5800e9c9f3321f0
   JobsSwiftTools: 39c0d90a6778344b11240cafe73aa05f713689d7
-  JobsSwiftWorker: d5980b1f9152ab7fb7d37cbd39f5a19dbd6905f4
+  JobsSwiftWorker: 034bc147b49db5fb60d31473fcf5e33a5886d19d
   JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
   JobsToast: 4153bc40a9f9b8ccbb3864173a079495fdb5b520
   JobsViewPush: f6b9d0775b8075e05f34dc7d53c7d9db66ce1ebd

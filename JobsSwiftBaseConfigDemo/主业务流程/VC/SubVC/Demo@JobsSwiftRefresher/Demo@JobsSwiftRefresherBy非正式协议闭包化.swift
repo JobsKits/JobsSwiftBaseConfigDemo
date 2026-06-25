@@ -1,5 +1,5 @@
 //
-//  Demo@JobsRefresherBy非正式协议闭包化.swift
+//  Demo@JobsSwiftRefresherBy非正式协议闭包化.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 2026年5月13日，星期三.
@@ -15,7 +15,7 @@ import UIKit
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
-import JobsRefresher
+import JobsSwiftRefresher
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftBaseDefines
@@ -24,7 +24,7 @@ import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 
-final class JobsRefresherBy非正式协议闭包化DemoVC: BaseVC {
+final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18
     private var rows = 20

@@ -1,5 +1,5 @@
 //
-//  Demo@JobsRefresher.swift
+//  Demo@JobsSwiftRefresher.swift
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 2026年5月13日，星期三.
@@ -17,13 +17,13 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftBaseDefines
-import JobsRefresher
+import JobsSwiftRefresher
 import SnapKit
 import GKNavigationBarSwift
 /// 上：横向侧拉（Left/Right）
 /// 下：纵向下拉/上拉（Header/Footer）
 
-final class JobsRefresherDemoVC: BaseVC {
+final class JobsSwiftRefresherDemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18              // 顶部横向卡片数量
     private var rows = 20                // 底部纵向行数
@@ -137,7 +137,7 @@ final class JobsRefresherDemoVC: BaseVC {
     }()
 }
 // MARK: - Life Cycle
-extension JobsRefresherDemoVC {
+extension JobsSwiftRefresherDemoVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "刷新控件".tr)
@@ -147,7 +147,7 @@ extension JobsRefresherDemoVC {
     }
 }
 // MARK: - UITableViewDataSource
-extension JobsRefresherDemoVC: UITableViewDataSource {
+extension JobsSwiftRefresherDemoVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { rows }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -160,7 +160,7 @@ extension JobsRefresherDemoVC: UITableViewDataSource {
     }
 }
 // MARK: - UICollectionViewDataSource
-extension JobsRefresherDemoVC: UICollectionViewDataSource {
+extension JobsSwiftRefresherDemoVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,numberOfItemsInSection section: Int) -> Int { hItems }
     func collectionView(_ collectionView: UICollectionView,cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView
@@ -172,4 +172,4 @@ extension JobsRefresherDemoVC: UICollectionViewDataSource {
     }
 }
 // MARK: - UICollectionViewDelegateFlowLayout (可选扩展)
-extension JobsRefresherDemoVC: UICollectionViewDelegateFlowLayout { }
+extension JobsSwiftRefresherDemoVC: UICollectionViewDelegateFlowLayout { }

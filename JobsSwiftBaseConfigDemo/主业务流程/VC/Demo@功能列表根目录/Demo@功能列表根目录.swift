@@ -17,21 +17,30 @@ import Jobsl10n
 import JobsScale
 import JobsToast
 import JobsByUIKit
-import JobsRefresher
+import JobsSwiftRefresher
 import JobsTextTools
 import JobsSwiftTimer
 import JobsSwiftTimerMgr
+import JobsSwiftPatch
 import JobsFuseAnimation
 import JobsBy3rdTools
 import JobsInheritance
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 import JobsSwiftSplash
+import JobsSwiftCountryCodeCtrl
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
 
 final class RootListVC: BaseVC {
+    private enum FunctionMenuAction: CaseIterable {
+        case search
+        case splash
+        case theme
+        case language
+        case stopRefresh
+    }
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
     private let timerMgr = JobsSwiftTimerMgr.shared
     private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
@@ -71,6 +80,7 @@ final class RootListVC: BaseVC {
     // ================================== 数据源（唯一） ==================================
     private typealias DemoItem  = (title: String, vcType: UIViewController.Type)
     private typealias DemoGroup = (title: String, items: [DemoItem])
+    private var demoSearchKeyword = ""
     /// ✅ 唯一数据源：外层=一级目录；内层=二级目录列表
     private lazy var g0 : [DemoItem] = {
         var temp: [DemoItem] = [
@@ -110,6 +120,7 @@ final class RootListVC: BaseVC {
         return temp
     }()
     /// ✅ 懒加载，数组配置写在这里
+    private var allDemo2D: [DemoGroup] = []
     private var demo2D: [DemoGroup] = []
     private func makeDemo2D() -> [DemoGroup] {
         return [
@@ -175,10 +186,12 @@ final class RootListVC: BaseVC {
             ]),
             (title: "实用工具集", items: [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
-                ("🧹 支持左右上下刷新", JobsRefresherDemoVC.self),
-                ("🧹 支持左右上下刷新（非正式协议闭包化）", JobsRefresherBy非正式协议闭包化DemoVC.self),
+                ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
+                ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),
                 ("⌨️ 键盘", KeyboardDemoVC.self),
                 ("📷 鉴权后调用相机/相册", PhotoAlbumDemoVC.self),
+                ("🌍 JobsSwiftCountryCodeCtrl", JobsSwiftCountryCodeCtrlDemoVC.self),
+                ("🔥 JobsSwiftPatch", JobsSwiftPatchDemoVC.self),
                 ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
                 ("🌍 JobsTabBarCtrl", TabBarDemoVC.self),
                 ("🏷️ Toast", ToastDemoVC.self),
@@ -331,6 +344,51 @@ final class RootListVC: BaseVC {
             }
     }()
     // ================================== TableView（一级目录） ==================================
+    private lazy var functionMenuButton: UIButton = {
+        UIButton.sys()
+            .byImage("ellipsis.circle".sysImg, for: .normal)
+            .byImage("ellipsis.circle.fill".sysImg, for: .selected)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                sender.isSelected.toggle()
+                toggleFunctionMenu(sender.isSelected)
+            }
+    }()
+
+    private lazy var functionMenuTableView: UITableView = {
+        UITableView(frame: .zero, style: .plain)
+            .byDataSource(self)
+            .byDelegate(self)
+            .byRegisterCell(UITableViewCell.self)
+            .byScrollEnabled(false)
+            .bySeparatorStyle(.singleLine)
+            .byCornerRadius(8)
+            .byMasksToBounds(true)
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(6)
+                make.right.equalToSuperview().inset(12)
+                make.width.equalTo(210)
+                make.height.equalTo(FunctionMenuAction.allCases.count * 44)
+            }
+    }()
+
+    private lazy var demoSearchBar: UISearchBar = {
+        UISearchBar()
+            .byPlaceholder("输入关键词搜索 Demo".tr)
+            .byDelegate(self)
+            .byShowsCancelButton(true)
+            .byBarTintColor(.systemBackground)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalToSuperview()
+                make.height.equalTo(52)
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(6)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
+            }
+    }()
+
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             // ✅ 关键：禁用预估高度，避免首次布局“画错一遍”
@@ -379,12 +437,14 @@ final class RootListVC: BaseVC {
     override func loadView() {
         super.loadView()
 //        OCCls().string("q", image: "".img)
-        demo2D = makeDemo2D()
+        allDemo2D = makeDemo2D()
+        demo2D = allDemo2D
         langToken = NotificationCenter.default.addObserver(
             forName: .JobsLanguageDidChange, object: nil, queue: .main
         ) { [weak self] _ in
             guard let self else { return }
-            self.demo2D = self.makeDemo2D()
+            self.allDemo2D = self.makeDemo2D()
+            self.applySearchKeyword(self.demoSearchKeyword)
             self.tableView.reloadData()
         }
     }
@@ -419,50 +479,11 @@ final class RootListVC: BaseVC {
                 .onLongPressAppend(minimumPressDuration: 0.8) { _, _ in
                     print("追加的长按事件")
                 },
-            rightButtons: [
-                UIButton.sys()
-                    .bySelected(JobsSplashPreferences.isEnabledForNextLaunch)
-                    .byImage("eye.slash".sysImg, for: .normal)
-                    .byImage("eye".sysImg, for: .selected)
-                    .onTap { sender in
-                        sender.isSelected = JobsSplashPreferences.toggleForNextLaunch()
-                        let message = sender.isSelected ? "下次启动展示开屏" : "下次启动不展示开屏"
-                        message.toast
-                    },
-                UIButton.sys()
-                    .byImage("bell".svg(size: CGSize(width: 38, height: 38))?.filled(by: UIColor.red), for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
-                    .onTap { sender in
-                        sender.isSelected.toggle()
-                        guard let ws = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                              let win = ws.windows.first else { return }
-                        win.overrideUserInterfaceStyle =
-                            (win.overrideUserInterfaceStyle == .dark) ? .light : .dark
-                        print("🌓 主题已切换 -> \(win.overrideUserInterfaceStyle == .dark ? "Dark" : "Light")")
-                    },
-                UIButton.sys()
-                    .byImage("globe".sysImg, for: .normal)
-                    .byImage("globe".sysImg, for: .selected)
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.isSelected.toggle()
-                        let to = (LanguageManager.shared.currentLanguageCode == "zh-Hans") ? "en" : "zh-Hans"
-                        LanguageManager.shared.switchTo(to)// zh-Hans、en
-                        print("🌐 切换语言 tapped（占位）")
-                    },
-                UIButton.sys()
-                    .byImage("stop.circle.fill".sysImg, for: .normal)
-                    .byImage("stop.circle.fill".sysImg, for: .selected)
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.isSelected.toggle()
-                        print("🛑 手动停止刷新")
-                        isPullRefreshing = false
-                        isLoadingMore    = false
-                    }
-            ]
+            rightButtons: [functionMenuButton]
         )
+        demoSearchBar.byVisible(NO)
         tableView.byVisible(YES)
+        functionMenuTableView.byVisible(NO)
         updateFooterAvailability()
 
         suspendSpinBtn.bySpinStart()
@@ -539,6 +560,127 @@ extension RootListVC{
             print("❌ create suspendSpinBtnTimer failed: \(error)")
         }
     }
+
+    private func applySearchKeyword(_ keyword: String) {
+        demoSearchKeyword = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !demoSearchKeyword.isEmpty else {
+            demo2D = allDemo2D
+            expandedGroups.removeAll()
+            return
+        }
+        demo2D = allDemo2D.compactMap { group in
+            let matchedItems = group.items.filter {
+                $0.title.localizedCaseInsensitiveContains(demoSearchKeyword)
+                    || String(describing: $0.vcType).localizedCaseInsensitiveContains(demoSearchKeyword)
+            }
+            if group.title.localizedCaseInsensitiveContains(demoSearchKeyword) {
+                return group
+            };return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
+        }
+        expandedGroups = Set(demo2D.indices)
+    }
+
+    private func menuTitle(for action: FunctionMenuAction) -> String {
+        switch action {
+        case .search:
+            return "搜索 Demo".tr
+        case .splash:
+            return JobsSplashPreferences.isEnabledForNextLaunch ? "下次关闭开屏".tr : "下次打开开屏".tr
+        case .theme:
+            return "切换深浅色".tr
+        case .language:
+            return "切换语言".tr
+        case .stopRefresh:
+            return "停止刷新".tr
+        }
+    }
+
+    private func toggleFunctionMenu(_ visible: Bool) {
+        functionMenuButton.isSelected = visible
+        functionMenuTableView.byVisible(visible)
+        if visible {
+            functionMenuTableView.reloadData()
+            view.bringSubviewToFront(functionMenuTableView)
+        }
+    }
+
+    private func searchCancelButton(in view: UIView) -> UIButton? {
+        if let button = view as? UIButton {
+            return button
+        }
+        for subview in view.subviews {
+            if let button = searchCancelButton(in: subview) {
+                return button
+            }
+        };return nil
+    }
+
+    private func updateSearchCancelButtonStyle() {
+        demoSearchBar.tintColor = .systemBlue
+        demoSearchBar.layoutIfNeeded()
+        guard let button = searchCancelButton(in: demoSearchBar) else { return }
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor.white.withAlphaComponent(0.75), for: .highlighted)
+        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 6
+        button.layer.masksToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+    }
+
+    private func handleMenuAction(_ action: FunctionMenuAction) {
+        toggleFunctionMenu(false)
+        switch action {
+        case .search:
+            setSearchEnabled(true)
+        case .splash:
+            let enabled = JobsSplashPreferences.toggleForNextLaunch()
+            let message = enabled ? "下次启动展示开屏" : "下次启动不展示开屏"
+            message.toast
+        case .theme:
+            guard let ws = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let win = ws.windows.first else { return }
+            win.overrideUserInterfaceStyle =
+                (win.overrideUserInterfaceStyle == .dark) ? .light : .dark
+            print("🌓 主题已切换 -> \(win.overrideUserInterfaceStyle == .dark ? "Dark" : "Light")")
+        case .language:
+            let to = (LanguageManager.shared.currentLanguageCode == "zh-Hans") ? "en" : "zh-Hans"
+            LanguageManager.shared.switchTo(to)
+            print("🌐 切换语言 tapped（占位）")
+        case .stopRefresh:
+            print("🛑 手动停止刷新")
+            isPullRefreshing = false
+            isLoadingMore = false
+        }
+    }
+
+    private func setSearchEnabled(_ enabled: Bool) {
+        demoSearchBar.byVisible(enabled)
+        tableView.snp.remakeConstraints { [unowned self] make in
+            make.left.bottom.right.equalToSuperview()
+            if enabled {
+                make.top.equalTo(demoSearchBar.snp.bottom).offset(6)
+            } else if view.jobs_hasVisibleTopBar() {
+                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+            } else {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            }
+        }
+        if enabled {
+            demoSearchBar.becomeFirstResponder()
+            updateSearchCancelButtonStyle()
+            DispatchQueue.main.async { [weak self] in
+                self?.updateSearchCancelButtonStyle()
+            }
+        } else {
+            demoSearchBar.byText("")
+            applySearchKeyword("")
+            demoSearchBar.resignFirstResponder()
+            tableView.reloadData()
+            updateFooterAvailability()
+        }
+    }
+
     // MARK: - Footer 自动显隐逻辑（原逻辑不动）
     private func updateFooterAvailability() {
         tableView.layoutIfNeeded()
@@ -553,12 +695,39 @@ extension RootListVC{
         }
     }
 }
+// MARK: —— UISearchBarDelegate
+extension RootListVC: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        applySearchKeyword(searchText)
+        tableView.reloadData()
+        updateFooterAvailability()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        setSearchEnabled(false)
+    }
+}
 // MARK: —— UITableViewDataSource & UITableViewDelegate
 extension RootListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        demo2D.count
+        if tableView === functionMenuTableView {
+            return FunctionMenuAction.allCases.count
+        };return demo2D.count
     }
     func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView === functionMenuTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
+            let action = FunctionMenuAction.allCases[indexPath.row]
+            cell.textLabel?.text = menuTitle(for: action)
+            cell.textLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+            cell.accessoryType = .none
+            cell.selectionStyle = .default
+            return cell
+        }
         let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
         let row = indexPath.row
         let g = demo2D[row]
@@ -573,6 +742,7 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         };return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableView === functionMenuTableView { return 44 }
         let row = indexPath.row
         return expandedGroups.contains(row)
         ? RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
@@ -580,6 +750,10 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if tableView === functionMenuTableView {
+            handleMenuAction(FunctionMenuAction.allCases[indexPath.row])
+            return
+        }
         let row = indexPath.row
         if expandedGroups.contains(row) {
             expandedGroups.remove(row)
@@ -599,6 +773,7 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
 // MARK: —— UIScrollViewDelegate
 extension RootListVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView === tableView else { return }
         updateFooterAvailability()
     }
 }

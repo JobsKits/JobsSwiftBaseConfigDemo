@@ -1,5 +1,5 @@
 source_module	target_module	edge_kind	weight
-JobsSwiftBaseConfigDemo	JobsByPods/ManualBySwiftPods@Pods	calls	695
+JobsSwiftBaseConfigDemo	JobsByPods/ManualBySwiftPods@Pods	calls	609
 Unity	JobsByPods/ManualBySwiftPods@Pods	calls	49
 JobsByPods/ManualBySwiftPods@Pods	my_flutter	calls	1
 JobsBySwiftPackageManager	JobsByPods/ManualBySwiftPods@Pods	calls	1

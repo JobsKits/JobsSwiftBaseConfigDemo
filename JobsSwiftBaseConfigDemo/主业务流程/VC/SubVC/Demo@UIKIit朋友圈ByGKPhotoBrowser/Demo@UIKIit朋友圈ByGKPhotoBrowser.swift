@@ -18,7 +18,7 @@ import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsTextTools
 import JobsSwiftBaseDefines
-import JobsRefresher
+import JobsSwiftRefresher
 import GKPhotoBrowser
 import GKNavigationBarSwift
 import SnapKit
