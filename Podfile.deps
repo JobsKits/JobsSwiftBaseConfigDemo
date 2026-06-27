@@ -104,6 +104,7 @@ def byJobs
     pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
     pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
     pod 'JobsViewPush',                       :path => 'JobsByPods/JobsViewPush@Pods'
+    pod 'JobsSwiftLinkageMenuView',           :path => 'JobsByPods/JobsSwiftLinkageMenuView@Pods'
     pod 'JobsSwiftCountryCodeCtrl',           :path => 'JobsByPods/JobsSwiftCountryCodeCtrl@Pods'
     pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
     pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'

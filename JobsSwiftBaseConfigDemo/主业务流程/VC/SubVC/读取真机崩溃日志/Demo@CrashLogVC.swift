@@ -20,6 +20,7 @@ import JobsSwiftBaseDefines
 import JobsTextTools
 import JobsToast
 import JobsSwiftTools
+import Jobsl10n
 import SnapKit
 import GKNavigationBarSwift
 
@@ -90,7 +91,7 @@ extension CrashLogDemoVC {
         } else {
             let filtered = content
                 .components(separatedBy: "\n")
-                .filter { $0.localizedCaseInsensitiveContains(keyword) }
+                .filter { keyword.inStr($0) }
                 .joined(separator: "\n")
             tv.text = headerText(keyword: keyword) + filtered
         }

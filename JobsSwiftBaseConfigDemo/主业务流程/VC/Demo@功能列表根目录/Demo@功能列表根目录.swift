@@ -205,6 +205,7 @@ final class RootListVC: BaseVC {
                 ("📮 经典的消息页面", MessageListDemoVC.self),
                 ("🔥 编辑个人资料", LGOEditProfileVC.self),
                 ("🏠 首页联动", CashbackRootVC.self),
+                ("🧭 首页联动切换子页面@Pod", JobsSwiftLinkageMenuViewDemoVC.self),
                 ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
             (title: "富文本/普通文本处理", items: [
@@ -570,10 +571,10 @@ extension RootListVC{
         }
         demo2D = allDemo2D.compactMap { group in
             let matchedItems = group.items.filter {
-                $0.title.localizedCaseInsensitiveContains(demoSearchKeyword)
-                    || String(describing: $0.vcType).localizedCaseInsensitiveContains(demoSearchKeyword)
+                demoSearchKeyword.inStr($0.title)
+                    || demoSearchKeyword.inStr(String(describing: $0.vcType))
             }
-            if group.title.localizedCaseInsensitiveContains(demoSearchKeyword) {
+            if demoSearchKeyword.inStr(group.title) {
                 return group
             };return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
         }

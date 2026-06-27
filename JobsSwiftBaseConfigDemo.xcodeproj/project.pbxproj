@@ -40,6 +40,7 @@
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65732F1BFC1C0060EEAD /* 未尽事宜.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "未尽事宜.md"; sourceTree = "<group>"; };
+		F47AD0EC0F98FA24BDB4EE3B /* JobsSwiftLinkageMenuViewDemoVC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JobsSwiftLinkageMenuViewDemoVC.swift; path = "JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@首页联动切换子页面/JobsSwiftLinkageMenuViewDemoVC.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -150,6 +151,7 @@
 				0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */,
 				A20C00032F21000100C0DE01 /* Unity Host Support */,
 				BE84CCA99B4FD97FE1349FAC /* generated */,
+				F47AD0EC0F98FA24BDB4EE3B /* JobsSwiftLinkageMenuViewDemoVC.swift */,
 			);
 			sourceTree = "<group>";
 		};

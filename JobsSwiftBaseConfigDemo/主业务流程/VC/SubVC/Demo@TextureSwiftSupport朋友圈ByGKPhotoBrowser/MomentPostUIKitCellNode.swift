@@ -283,8 +283,8 @@ final class MomentPostUIKitCellNode: ASCellNode {
             cv.collectionViewLayout.invalidateLayout()
         }
 
-        cv.isScrollEnabled = false
-        cv.contentInset = .zero
+        cv.byScrollEnabled(false)
+            .byContentInset(.zero)
         cv.reloadData()
         cv.layoutIfNeeded()
 

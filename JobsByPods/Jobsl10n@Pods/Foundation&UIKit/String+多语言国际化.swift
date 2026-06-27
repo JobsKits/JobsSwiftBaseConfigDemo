@@ -8,6 +8,11 @@
 import Foundation
 
 extension String {
+    /// 当前字符串是否被目标字符串以本地化、忽略大小写方式包含
+    public func inStr(_ data: String?) -> Bool {
+        guard let data = data else { return false };return data.localizedCaseInsensitiveContains(self)
+    }
+
     // 项目实际存在的 lproj（大小写按文件夹名写）
     private static let jobsSupportedLproj: [String] = [
         "en", "en-PH",

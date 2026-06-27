@@ -42,6 +42,14 @@
   print(s)
   ```
 
+* 【基础】短写本地化忽略大小写包含判断
+
+  ```swift
+  if "AppIcon".inStr(key) {
+      print("hit")
+  }
+  ```
+
 * 自动刷新**UI** ➤ 必须满足 2 个条件（否则不会自动在当前页面刷新**UI**）
 
   * **语言变化能触发刷新**（通知）且 **翻译来源 bundle 正确**（`TRLang.bundleProvider` 指向当前语言 bundle）
@@ -229,7 +237,6 @@ TRBind.bind(self, translated: "KEY".tr) { vc, text in
     UIViewController().title = text
 }
 ```
-
 
 
 

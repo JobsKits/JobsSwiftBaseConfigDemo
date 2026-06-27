@@ -324,6 +324,7 @@ PODS:
   - JobsSwiftFoundation (0.1.1):
     - JobsByUIKit
     - JobsSwiftDSL
+  - JobsSwiftLinkageMenuView (0.0.1)
   - JobsSwiftMetalKit (0.1.0):
     - JobsSwiftDSL
   - JobsSwiftOpen (0.0.1):
@@ -584,6 +585,7 @@ DEPENDENCIES:
   - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
   - "JobsSwiftDSL (from `JobsByPods/JobsSwiftDSL@Pods`)"
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
+  - "JobsSwiftLinkageMenuView (from `JobsByPods/JobsSwiftLinkageMenuView@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftOpen (from `JobsByPods/JobsSwiftOpen@Pods`)"
   - "JobsSwiftPatch (from `JobsByPods/JobsSwiftPatch@Pods`)"
@@ -780,6 +782,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftDSL@Pods"
   JobsSwiftFoundation:
     :path: "JobsByPods/JobsSwiftFoundation@Pods"
+  JobsSwiftLinkageMenuView:
+    :path: "JobsByPods/JobsSwiftLinkageMenuView@Pods"
   JobsSwiftMetalKit:
     :path: "JobsByPods/MetalKit@Pods"
   JobsSwiftOpen:
@@ -880,6 +884,7 @@ SPEC CHECKSUMS:
   JobsSwiftDebugTools: 260c8c3d8e5eaa705fb1e73864e131ce30fdab39
   JobsSwiftDSL: c2ffb7cabff69adc7657b1caf055f11634599008
   JobsSwiftFoundation: 6d3c8dfbb540c605576c5a163e64cdf4d1bac827
+  JobsSwiftLinkageMenuView: 7657fdcfa47eed376902bf9fe8bd6c51e2ebfc5e
   JobsSwiftMetalKit: ddf474c92a2af9b536d6559c673f2b87a515fecd
   JobsSwiftOpen: 1885cbecbaacf2a50dcd2bb2d37f09397049cf77
   JobsSwiftPatch: 99e4abe4866100b972356fe9d4a428bf5721345f

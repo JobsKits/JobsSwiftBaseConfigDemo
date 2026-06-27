@@ -34,6 +34,7 @@ digraph PodspecDependencies {
   "JobsSwiftDSL";
   "JobsSwiftDebugTools";
   "JobsSwiftFoundation";
+  "JobsSwiftLinkageMenuView";
   "JobsSwiftMetalKit";
   "JobsSwiftOpen";
   "JobsSwiftPatch";

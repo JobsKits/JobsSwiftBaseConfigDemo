@@ -242,7 +242,7 @@ final class MessageListDemoVC: BaseVC {
 
         var inset = baseContentInset
         inset.bottom = baseContentInset.bottom + extra
-        tableView.contentInset = inset
+        tableView.byContentInset(inset)
 
         if #available(iOS 13.0, *) {
             var v = baseVerticalIndicatorInsets
@@ -255,7 +255,7 @@ final class MessageListDemoVC: BaseVC {
         } else {
             var s = baseIndicatorInsetsLegacy
             s.bottom = baseIndicatorInsetsLegacy.bottom + extra
-            tableView.scrollIndicatorInsets = s
+            tableView.byScrollIndicatorInsets(s)
         }
     }
 }
