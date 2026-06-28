@@ -75,7 +75,7 @@
 - 日志会同步写入：
 
   ```text
-  /tmp/拉取Flutter侧三方资源.log
+  $TMPDIR/拉取Flutter侧三方资源.log
   ```
 
 ## 七、未执行声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

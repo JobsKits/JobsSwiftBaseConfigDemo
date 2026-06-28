@@ -75,7 +75,7 @@
 - 日志会同步写入：
 
   ```text
-  /tmp/解压Unity大资源.log
+  $TMPDIR/解压Unity大资源.log
   ```
 
 ## 七、未执行声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

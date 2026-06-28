@@ -74,7 +74,7 @@
 - 日志会同步写入：
 
   ```text
-  /tmp/配置Flutter环境.log
+  $TMPDIR/配置Flutter环境.log
   ```
 
 ## 七、未执行声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

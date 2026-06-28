@@ -26,7 +26,7 @@
   
     puts "🔧 [Podfile] Run: #{script}"
     ok = system('bash', script)
-    raise "[Podfile] ❌ 修复脚本执行失败，请查看日志：/tmp/fix_unity_bee_cache.log" unless ok
+    raise "[Podfile] ❌ 修复脚本执行失败，请查看日志：$TMPDIR/fix_unity_bee_cache.log" unless ok
   end
   ```
 

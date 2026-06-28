@@ -100,7 +100,7 @@
   * [**quicktype**](https://app.quicktype.io/)：从 **JSON** / **GraphQL** /其它数据格式 自动生成对应语言的类型定义➤[**Github@quicktype**](https://github.com/glideapps/quicktype?utm_source=chatgpt.com)
 
     * ```shell
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      $SYSTEM_BIN_DIR/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       ```
 
     * ```shell
@@ -450,7 +450,7 @@
   * 或者，[**脚本处理**](./【MacOS】⚙️双击禁用沙盒保证Cocoapods构建流程.command)
   
     ```shell
-    #!/bin/zsh
+    # shell: zsh
     
     print_green()  { echo "\033[0;32m$1\033[0m"; }
     print_red()    { echo "\033[0;31m$1\033[0m"; }
@@ -924,7 +924,7 @@
       ```swift
       AF.upload(multipartFormData: { formData in
           formData.append(Data("jobs".utf8), withName: "username")
-          formData.append(URL(fileURLWithPath: "/path/to/file.png"), withName: "file")
+          formData.append(URL(fileURLWithPath: "<path-to>/file.png"), withName: "file")
       }, to: "https://api.example.com/upload")
       .responseJSON { response in
           print(response)
@@ -1702,21 +1702,21 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
   * 卸载
   
     ```shell
-    sudo rm -rf /Library/Developer/CommandLineTools
+    sudo rm -rf $SYSTEM_LIBRARY_DIR/Developer/CommandLineTools
     xcode-select --install
     ```
   
   * 切换
   
     ```shell
-    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+    sudo xcode-select -s $APPLICATIONS_DIR/Xcode.app/Contents/Developer
     ```
   
   * 验证命令
   
     ```shell
     ➜  ~ xcode-select -p
-    /Applications/Xcode.app/Contents/Developer
+    $APPLICATIONS_DIR/Xcode.app/Contents/Developer
     ```
   
   * 查看<font color=red>**C**</font>ommand <font color=red>**L**</font>ine <font color=red>**T**</font>ools版本
@@ -10620,7 +10620,7 @@ for x in xs {
   > 2️⃣ [**Swift**](https://developer.apple.com/swift/) 标准库默认`SystemRandomNumberGenerator`。系统级 CSPRNG（加密强度足够，**对大多数场景足够安全**，一般不可复现）
 
   * ```swift
-    /// Swift/Misc/SystemRandomNumberGenerator
+    /// Swift/Misc$SYSTEM_DIRRandomNumberGenerator
     @frozen public struct SystemRandomNumberGenerator : RandomNumberGenerator, Sendable {
         @inlinable public init()
         @inlinable public mutating func next() -> UInt64
@@ -11612,7 +11612,7 @@ struct Point {
 > `x86_64.swiftinterface`
 
 ```url
-Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Modules/UIKit.swiftmodule/
+Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk$SYSTEM_DIR/Library/Frameworks/UIKit.framework/Modules/UIKit.swiftmodule/
 ```
 
 #### 18.2、介绍 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

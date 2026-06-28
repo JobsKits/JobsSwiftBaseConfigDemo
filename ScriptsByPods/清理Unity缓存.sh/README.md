@@ -78,7 +78,7 @@
 - 日志会同步写入：
 
   ```text
-  /tmp/清理Unity缓存.log
+  $TMPDIR/清理Unity缓存.log
   ```
 
 ## 七、未执行声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
