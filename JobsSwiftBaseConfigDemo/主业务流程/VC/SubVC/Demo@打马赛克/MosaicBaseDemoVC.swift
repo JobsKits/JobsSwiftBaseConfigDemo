@@ -1,0 +1,204 @@
+//
+//  MosaicBaseDemoVC.swift
+//  JobsSwiftBaseConfigDemo
+//
+//  Created by Jobs on 2026年6月30日，星期二.
+//
+
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import JobsByUIKit
+import JobsSwiftDSL
+import JobsScale
+import JobsToast
+import JobsImageTools
+import JobsInheritance
+import SnapKit
+import GKNavigationBarSwift
+
+class MosaicBaseDemoVC: BaseVC {
+    var pageTitle: String { "打马赛克" }
+    var preferredLoader: JobsImageLoaderPreference { .automatic }
+    var imageForSaving: UIImage? { imageView.image }
+
+    var originalImage: UIImage?
+    var hasEdited = false
+
+    private var imageLoadToken: JobsImageLoadToken?
+    private var isExitAlertShowing = false
+    private var previousInteractivePopEnabled: Bool?
+
+    lazy var imageContainerView: UIView = {
+        UIView()
+            .byBackgroundColor(.black)
+            .byAddTo(view) { [unowned self] make in
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(gk_navigationBar.snp.bottom)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
+                make.left.right.bottom.equalToSuperview()
+            }
+    }()
+
+    lazy var imageView: MosaicBrushImageView = {
+        MosaicBrushImageView()
+            .byContentMode(.scaleAspectFit)
+            .byClipsToBounds()
+            .byUserInteractionEnabled(true)
+            .byAddTo(imageContainerView) { make in
+                make.edges.equalToSuperview().inset(12)
+            }
+    }()
+
+    lazy var loadingLabel: UILabel = {
+        UILabel()
+            .byText("图片加载中...")
+            .byTextColor(.white)
+            .byFont(.systemFont(ofSize: 15, weight: .medium))
+            .byTextAlignment(.center)
+            .byNumberOfLines(0)
+            .byAddTo(imageContainerView) { make in
+                make.center.equalToSuperview()
+                make.left.right.equalToSuperview().inset(24.w)
+            }
+    }()
+
+    deinit {
+        imageLoadToken?.cancel()
+        restoreInteractivePopGesture()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        jobsSetupGKNav(
+            title: pageTitle,
+            leftButton: makeBackButton(),
+            rightButtons: makeRightButtons()
+        )
+        imageContainerView.byVisible(true)
+        imageView.byVisible(true)
+        loadingLabel.byVisible(true)
+        loadRemoteImage()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        lockInteractivePopGesture()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isMovingFromParent || isBeingDismissed || navigationController == nil {
+            restoreInteractivePopGesture()
+        }
+    }
+
+    func makeRightButtons() -> [UIButton] { [] }
+
+    func onImageLoaded(_ image: UIImage) {}
+
+    func requestLeavePage() {
+        guard hasEdited, let image = imageForSaving else {
+            leavePage()
+            return
+        }
+        guard isExitAlertShowing == false else { return }
+        isExitAlertShowing = true
+
+        let alert = UIAlertController(
+            title: "是否保存修改后的照片？",
+            message: "保存后会写入系统相册。",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel) { [weak self] _ in
+            self?.isExitAlertShowing = false
+        })
+        alert.addAction(UIAlertAction(title: "不保存", style: .destructive) { [weak self] _ in
+            self?.isExitAlertShowing = false
+            self?.leavePage()
+        })
+        alert.addAction(UIAlertAction(title: "保存并退出", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.saveImageAndLeave(image)
+        })
+        present(alert, animated: true)
+    }
+
+    func makeBackButton() -> UIButton {
+        UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
+            .byImage("chevron.left".sysImg, for: .normal)
+            .onTap { [weak self] _ in
+                self?.requestLeavePage()
+            }
+    }
+
+    private func loadRemoteImage() {
+        guard let url = URL(string: MosaicDemoImageURLProvider.sampleImage) else {
+            loadingLabel.byText("图片地址无效")
+            return
+        }
+
+        imageView.image = "Ani".img
+        loadingLabel.byText("图片加载中...").byHidden(false)
+        imageLoadToken = JobsImageLoader.shared.load(
+            .remote(url),
+            options: JobsImageLoadOptions(preferredLoader: preferredLoader)
+        ) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let value):
+                let image = value.image.jobs_mosaicNormalized()
+                self.originalImage = image
+                self.imageView.image = image
+                self.loadingLabel.byHidden(true)
+                self.onImageLoaded(image)
+            case .failure(let error):
+                self.loadingLabel.byText("图片加载失败")
+                "图片加载失败：\(error)".toast
+            }
+        }
+    }
+
+    private func saveImageAndLeave(_ image: UIImage) {
+        loadingLabel.byText("正在保存到系统相册...").byHidden(false)
+        MosaicPhotoAlbumSaver.save(image) { [weak self] result in
+            guard let self else { return }
+            self.loadingLabel.byHidden(true)
+            self.isExitAlertShowing = false
+            switch result {
+            case .success:
+                "已保存到系统相册".toast
+                self.leavePage()
+            case .failure(let error):
+                "保存失败：\(error.localizedDescription)".toast
+            }
+        }
+    }
+
+    private func leavePage() {
+        restoreInteractivePopGesture()
+        goBack(nil)
+    }
+
+    private func lockInteractivePopGesture() {
+        guard let gesture = navigationController?.interactivePopGestureRecognizer else { return }
+        if previousInteractivePopEnabled == nil {
+            previousInteractivePopEnabled = gesture.isEnabled
+        }
+        gesture.isEnabled = false
+    }
+
+    private func restoreInteractivePopGesture() {
+        guard let gesture = navigationController?.interactivePopGestureRecognizer,
+              let previousInteractivePopEnabled else { return }
+        gesture.isEnabled = previousInteractivePopEnabled
+        self.previousInteractivePopEnabled = nil
+    }
+}

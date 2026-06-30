@@ -31,16 +31,17 @@
 
 ## 三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 确认脚本目录位于工程根目录的下一层：
+- 确认脚本目录位于工程根目录的 `ScriptsByPods` 下：
 
   ```text
   工程根目录/
-  └── 拉取Flutter侧三方资源.sh/
-      ├── 拉取Flutter侧三方资源.sh
-      └── README.md
+  └── ScriptsByPods/
+      └── 拉取Flutter侧三方资源.sh/
+          ├── 拉取Flutter侧三方资源.sh
+          └── README.md
   ```
 
-- 脚本会把 `拉取Flutter侧三方资源.sh/..` 识别为工程根目录。
+- 脚本会兼容包裹目录：当上级目录是 `ScriptsByPods` 时，把 `ScriptsByPods/..` 识别为工程根目录。
 - 如需跳过启动时的 `README.md` 展示，可临时设置：
 
   ```shell

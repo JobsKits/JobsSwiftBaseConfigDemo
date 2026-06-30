@@ -49,9 +49,14 @@ show_readme_and_wait() {
 
 ask_any_to_run() {
   local message="$1"
+  local noninteractive_default="${2:-skip}"
   local answer=""
 
   if [[ ! -t 0 ]]; then
+    if [[ "$noninteractive_default" == "run" ]]; then
+      note_echo "非交互环境：${message} -> 默认执行。"
+      return 0
+    fi
     note_echo "非交互环境：${message} -> 默认跳过。"
     return 1
   fi
@@ -93,6 +98,20 @@ get_cpu_arch() {
   [[ "$(uname -m)" == "arm64" ]] && echo "arm64" || echo "x86_64"
 }
 
+resolve_project_root() {
+  local parent_dir="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+  if [[ "$(basename "$parent_dir")" == "ScriptsByPods" ]]; then
+    cd "${parent_dir}/.." && pwd
+  else
+    echo "$parent_dir"
+  fi
+}
+
+flutter_auto_prompt_default() {
+  [[ "${JOBS_FLUTTER_AUTO_SETUP:-}" == "1" ]] && echo "run" || echo "skip"
+}
+
 find_brew_bin() {
   if command -v brew >/dev/null 2>&1; then
     command -v brew
@@ -105,7 +124,7 @@ find_brew_bin() {
   fi
 }
 
-ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ROOT_DIR="$(resolve_project_root)"
 MY_FLUTTER_DIR="${ROOT_DIR}/my_flutter"
 BREW_BIN=""
 FVM_BIN=""
@@ -188,7 +207,7 @@ ensure_homebrew() {
   fi
 
   warn_echo "未检测到 Homebrew。"
-  if ! ask_any_to_run "是否安装 Homebrew（架构：${arch}）"; then
+  if ! ask_any_to_run "是否安装 Homebrew（架构：${arch}）" "$(flutter_auto_prompt_default)"; then
     warn_echo "Homebrew 不可用，后续 FVM 安装/升级无法继续。"
     return 1
   fi
@@ -236,7 +255,7 @@ ensure_fvm() {
   fi
 
   warn_echo "未检测到 FVM。"
-  if ! ask_any_to_run "是否通过 Homebrew 安装 FVM"; then
+  if ! ask_any_to_run "是否通过 Homebrew 安装 FVM" "$(flutter_auto_prompt_default)"; then
     warn_echo "已跳过 FVM 安装，无法继续自动安装 Flutter。"
     return 1
   fi
@@ -286,7 +305,7 @@ ensure_flutter_stable() {
     fi
   else
     warn_echo "未找到 Flutter stable 可执行文件：${FLUTTER_BIN}"
-    if ! ask_any_to_run "是否通过 FVM 安装并绑定 Flutter stable"; then
+    if ! ask_any_to_run "是否通过 FVM 安装并绑定 Flutter stable" "$(flutter_auto_prompt_default)"; then
       warn_echo "已跳过 Flutter 安装。"
       return 1
     fi
@@ -311,7 +330,7 @@ precache_flutter_ios() {
     return 0
   fi
 
-  if ! ask_any_to_run "是否执行 flutter precache --ios"; then
+  if ! ask_any_to_run "是否执行 flutter precache --ios" "$(flutter_auto_prompt_default)"; then
     warn_echo "已跳过 iOS 引擎预缓存；后续 pod install 可能找不到 Flutter.xcframework。"
     return 0
   fi
@@ -336,7 +355,7 @@ flutter_pub_get_in_my_flutter() {
     return 0
   fi
 
-  if ! ask_any_to_run "是否在 my_flutter 执行 flutter pub get"; then
+  if ! ask_any_to_run "是否在 my_flutter 执行 flutter pub get" "$(flutter_auto_prompt_default)"; then
     note_echo "已跳过 flutter pub get。"
     return 0
   fi

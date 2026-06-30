@@ -93,6 +93,16 @@ get_cpu_arch() {
   [[ "$(uname -m)" == "arm64" ]] && echo "arm64" || echo "x86_64"
 }
 
+resolve_project_root() {
+  local parent_dir="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+  if [[ "$(basename "$parent_dir")" == "ScriptsByPods" ]]; then
+    cd "${parent_dir}/.." && pwd
+  else
+    echo "$parent_dir"
+  fi
+}
+
 find_brew_bin() {
   if command -v brew >/dev/null 2>&1; then
     command -v brew
@@ -105,7 +115,7 @@ find_brew_bin() {
   fi
 }
 
-ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ROOT_DIR="$(resolve_project_root)"
 DEFAULT_FLUTTER_DIR="${ROOT_DIR}/my_flutter"
 DEFAULT_PODHELPER="${DEFAULT_FLUTTER_DIR}/.ios/Flutter/podhelper.rb"
 FLUTTER_CMD=()

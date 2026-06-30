@@ -62,6 +62,8 @@ jobs:
           pod --version
 
       - name: Install CocoaPods dependencies
+        env:
+          JOBS_FLUTTER_AUTO_SETUP: "1"
         run: |
           pod install --no-repo-update || pod install --repo-update
 

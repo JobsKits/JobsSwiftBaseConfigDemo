@@ -2,6 +2,7 @@
 # ================================== Podfile ==================================
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 require 'fileutils'
+require 'tmpdir'
 source 'https://github.com/CocoaPods/Specs.git'
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
@@ -180,6 +181,99 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
       false
     end
   end
+end
+
+# Flutter 生成文件里可能残留本机绝对路径；加载前先确认根 podhelper 可用。
+def jobs_flutter_generated_xcconfig_path(flutter_application_path)
+  File.join(flutter_application_path, '.ios', 'Flutter', 'Generated.xcconfig')
+end
+
+def jobs_flutter_module_podhelper_path(flutter_application_path)
+  File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+end
+
+def jobs_flutter_root_from_generated_xcconfig(flutter_application_path)
+  generated_xcconfig = jobs_flutter_generated_xcconfig_path(flutter_application_path)
+  return nil unless File.file?(generated_xcconfig)
+
+  File.foreach(generated_xcconfig) do |line|
+    match = line.match(/\A\s*FLUTTER_ROOT\s*=\s*(.+?)\s*\z/)
+    next unless match
+
+    flutter_root = match[1].to_s.strip
+    return nil if flutter_root.empty?
+    return File.expand_path(flutter_root, File.dirname(generated_xcconfig))
+  end
+
+  nil
+rescue => e
+  puts "⚠️  [Podfile] 读取 Flutter Generated.xcconfig 失败：#{e}"
+  nil
+end
+
+def jobs_flutter_root_podhelper_path(flutter_root)
+  File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
+end
+
+def jobs_flutter_podhelper_ready?(flutter_application_path)
+  flutter_podhelper = jobs_flutter_module_podhelper_path(flutter_application_path)
+  unless File.file?(flutter_podhelper)
+    puts "⚠️  [Podfile] 找不到 Flutter module podhelper：#{flutter_podhelper}"
+    return false
+  end
+
+  flutter_root = jobs_flutter_root_from_generated_xcconfig(flutter_application_path)
+  unless flutter_root
+    puts "⚠️  [Podfile] 找不到 Generated.xcconfig 里的 FLUTTER_ROOT，需重新执行 flutter pub get"
+    return false
+  end
+
+  root_podhelper = jobs_flutter_root_podhelper_path(flutter_root)
+  return true if File.file?(root_podhelper)
+
+  puts "⚠️  [Podfile] Flutter 根 podhelper 不存在：#{root_podhelper}"
+  false
+end
+
+def jobs_write_flutter_placeholder_podhelper
+  placeholder = File.join(Dir.tmpdir, 'jobs_swift_base_config_demo_flutter_podhelper_placeholder.rb')
+  File.write(
+    placeholder,
+    <<~'RUBY'
+      # Auto-generated placeholder podhelper.rb (non-blocking)
+      def install_all_flutter_pods(flutter_application_path = nil)
+        puts "⚠️  [podhelper.rb] Placeholder: skip install_all_flutter_pods(#{flutter_application_path})"
+      end
+
+      def flutter_post_install(installer, skip: false)
+        puts "⚠️  [podhelper.rb] Placeholder: skip flutter_post_install"
+      end
+    RUBY
+  )
+  placeholder
+rescue => e
+  puts "⚠️  [Podfile] 创建 Flutter 占位 podhelper 失败：#{e}"
+  nil
+end
+
+def jobs_resolve_flutter_podhelper(flutter_application_path)
+  flutter_podhelper = jobs_flutter_module_podhelper_path(flutter_application_path)
+  return flutter_podhelper if jobs_flutter_podhelper_ready?(flutter_application_path)
+
+  puts "⚠️  [Podfile] Flutter 生成文件不可用，将加载占位 podhelper，跳过 Flutter Pods 集成"
+  jobs_write_flutter_placeholder_podhelper
+end
+
+def jobs_load_flutter_podhelper(flutter_application_path)
+  flutter_podhelper = jobs_resolve_flutter_podhelper(flutter_application_path)
+  unless flutter_podhelper && File.file?(flutter_podhelper)
+    puts "⚠️  [Podfile] 没有可加载的 Flutter podhelper，已跳过"
+    return false
+  end
+
+  puts "📦 [Podfile] Load Flutter podhelper: #{flutter_podhelper}"
+  load flutter_podhelper
+  true
 end
 
 # 按用户选择执行 SPM 编译门禁；脚本缺失或主动跳过时不阻塞 pod install。
@@ -405,10 +499,8 @@ jobs_run_external_script(
   required: false
 )
 
-flutter_podhelper = File.join(FLUTTER_APPLICATION_PATH, '.ios', 'Flutter', 'podhelper.rb')
-
-unless File.exist?(flutter_podhelper)
-  # 你上传的脚本：遍历工程找到 Flutter 目录，执行 flutter pub get，生成 podhelper.rb
+unless jobs_flutter_podhelper_ready?(FLUTTER_APPLICATION_PATH)
+  # 遍历工程找到 Flutter 目录，执行 flutter pub get，刷新 podhelper.rb / Generated.xcconfig
   jobs_run_external_script(
     'ScriptsByPods/拉取Flutter侧三方资源.sh',
     desc: 'Ensure Flutter podhelper.rb (flutter pub get)',
@@ -418,30 +510,7 @@ unless File.exist?(flutter_podhelper)
   )
 end
 
-unless File.exist?(flutter_podhelper)
-  # 兜底：不阻塞 pod install。写一个最小 podhelper.rb，让 Podfile.deps 的 load / install_all_flutter_pods 不报错
-  puts "⚠️  [Podfile] 仍然找不到 #{flutter_podhelper}（将创建占位文件，跳过 Flutter Pods 集成；pod install 主流程不受影响）"
-  begin
-    FileUtils.mkdir_p(File.dirname(flutter_podhelper))
-    File.write(
-      flutter_podhelper,
-      <<~'RUBY'
-        # Auto-generated placeholder podhelper.rb (non-blocking)
-        def install_all_flutter_pods(flutter_application_path)
-          puts "⚠️  [podhelper.rb] Placeholder: skip install_all_flutter_pods(#{flutter_application_path})"
-        end
-
-        def flutter_post_install(installer)
-          # no-op
-        end
-      RUBY
-    )
-  rescue => e
-    puts "⚠️  [Podfile] 创建占位 podhelper.rb 失败：#{e}"
-  end
-end
-
-load flutter_podhelper
+jobs_load_flutter_podhelper(FLUTTER_APPLICATION_PATH)
 
 # 预留钩子，给 Podfile.deps 调用
 def cocoPodsConfig

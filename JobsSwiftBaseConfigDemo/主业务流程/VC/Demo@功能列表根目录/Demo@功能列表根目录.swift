@@ -164,6 +164,7 @@ final class RootListVC: BaseVC {
                 ("🗜️ UITableViewCell的折叠效果", FoldTableDemoVC.self),
                 ("👛 钱包卡片效果", JobsWalletDemoVC.self),
                 ("☁️ 镂空特效", TransparentRegionVC.self),
+                ("🧩 打马赛克", MosaicDemoListVC.self),
                 ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
                 ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
                 ("🧭 苹果滑动开锁@带骨架屏的呼吸效果", SlideToUnlockDemoVC.self),

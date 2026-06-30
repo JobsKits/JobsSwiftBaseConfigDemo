@@ -27,24 +27,31 @@
   ```
 
 - 交互环境下，脚本会先展示本 `README.md`，按回车继续，按 `Ctrl+C` 取消。
-- 非交互环境下，脚本会跳过 `README.md` 阻塞展示，避免影响自动化流程。
+- 非交互环境下，脚本会跳过 `README.md` 阻塞展示；设置 `JOBS_FLUTTER_AUTO_SETUP=1` 后，会自动执行缺失环境的必要安装、`flutter precache --ios` 和 `flutter pub get`。
 
 ## 三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 确认脚本目录位于工程根目录的下一层：
+- 确认脚本目录位于工程根目录的 `ScriptsByPods` 下：
 
   ```text
   工程根目录/
-  └── 配置Flutter环境.sh/
-      ├── 配置Flutter环境.sh
-      └── README.md
+  └── ScriptsByPods/
+      └── 配置Flutter环境.sh/
+          ├── 配置Flutter环境.sh
+          └── README.md
   ```
 
-- 脚本会把 `配置Flutter环境.sh/..` 识别为工程根目录。
+- 脚本会兼容包裹目录：当上级目录是 `ScriptsByPods` 时，把 `ScriptsByPods/..` 识别为工程根目录。
 - 如需跳过启动时的 `README.md` 展示，可临时设置：
 
   ```shell
   JOBS_SKIP_README=1 zsh './配置Flutter环境.sh'
+  ```
+
+- [**GitHub**](https://github.com) Actions 等非交互环境需要自动补齐 [**Flutter**](https://flutter.dev/) 环境时，可显式设置：
+
+  ```shell
+  JOBS_SKIP_README=1 JOBS_FLUTTER_AUTO_SETUP=1 zsh './配置Flutter环境.sh'
   ```
 
 ## 四、流程图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -65,7 +72,8 @@
 
 ## 五、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 脚本涉及安装、升级、网络下载和写入 shell profile；所有安装 / 更新 / 升级动作默认回车跳过，输入任意字符后才执行。
+- 脚本涉及安装、升级、网络下载和写入 shell profile；交互环境所有安装 / 更新 / 升级动作默认回车跳过，输入任意字符后才执行。
+- 非交互环境默认跳过安装动作；只有显式设置 `JOBS_FLUTTER_AUTO_SETUP=1` 时，才会自动执行缺失 [**Homebrew**](https://brew.sh/) / [**fvm**](https://fvm.app) / [**Flutter**](https://flutter.dev/) 的必要补齐步骤，`brew update && brew upgrade` 仍默认跳过。
 - 涉及安装、更新、升级类动作时，交互统一为“直接回车跳过；输入任意字符后回车执行”。
 - 涉及危险删除动作时，必须输入 `YES` 才会继续。
 

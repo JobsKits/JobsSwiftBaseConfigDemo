@@ -139,9 +139,11 @@ target 'JobsSwiftBaseConfigDemo' do
 
     flutter_application_path = File.join(__dir__, 'my_flutter')
     flutter_podhelper = File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
-    if File.exist?(flutter_podhelper)
+    if defined?(jobs_load_flutter_podhelper) && jobs_load_flutter_podhelper(flutter_application_path)
+        install_all_flutter_pods(flutter_application_path) if defined?(install_all_flutter_pods)
+    elsif File.exist?(flutter_podhelper)
         load flutter_podhelper
-        install_all_flutter_pods(flutter_application_path)
+        install_all_flutter_pods(flutter_application_path) if defined?(install_all_flutter_pods)
     else
         puts "⚠️  [Podfile.deps] 找不到 #{flutter_podhelper}，已跳过 Flutter Pods 集成"
     end
