@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   # 全局排除脚本 / 图标
   s.exclude_files = [
     '【MacOS】🫘JobsPublishPods.command',
-    'icon.png',
+    'Resource/icon.png',
     'LICENSE',
     'JobsDebugDeinitAutoLoad.m'
   ]

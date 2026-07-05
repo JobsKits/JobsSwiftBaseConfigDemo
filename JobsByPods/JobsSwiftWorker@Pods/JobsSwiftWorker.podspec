@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   s.exclude_files = [
     '【MacOS】🫘JobsPublishPods.command',
-    'icon.png',
+    'Resource/icon.png',
     'LICENSE'
   ]
 

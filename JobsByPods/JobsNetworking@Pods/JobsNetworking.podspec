@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/JobsKits/JobsNetworking.git', :tag => s.version.to_s }
 
   s.exclude_files = [
-    'icon.png',
+    'Resource/icon.png',
     'Examples/**/*',
     'Docs/**/*'
   ]

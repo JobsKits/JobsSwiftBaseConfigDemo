@@ -22,7 +22,7 @@
 
 * 工程项目的`Info.plist`文件是对整个工程的配置说明，系统固定读取，所以必须在工程项目根目录的同名文件夹下。否则项目启动会出问题
 
-  ![image-20240706113027884](./assets/image-20240706113027884.png)
+  ![image-20240706113027884](../Resource/iOS多语言环境设置.md/assets/image-20240706113027884.png)
 
 ## 四、配置流程
 
@@ -31,18 +31,18 @@
 * 选中 **project** ➤ **Info** ➤ **Localizations**，然后点击"+"，添加需要国际化 / 本地化的语言
 
   * 默认勾选`Use Base Internationalization`
-    ![image-20240701112537304](./assets/image-20240701112537304.png)
+    ![image-20240701112537304](../Resource/iOS多语言环境设置.md/assets/image-20240701112537304.png)
     
   * 如果不勾选`Use Base Internationalization`
-    ![image-20240701112613068](./assets/image-20240701112613068.png)
+    ![image-20240701112613068](../Resource/iOS多语言环境设置.md/assets/image-20240701112613068.png)
     
   * 添加语言：简体中文 / 标准英语 / 菲律宾他加禄语言
-    ![image-20240701114202890](./assets/image-20240701114202890.png)
+    ![image-20240701114202890](../Resource/iOS多语言环境设置.md/assets/image-20240701114202890.png)
 
   * `zh-Hans`和`zh-Hant`是简体中文和繁体中文的缩写。这是标准的缩写。**H可大写也可小写**。
     
   * 如果弹出如下对话框，直接点击finish
-    ![image-20240701112459992](./assets/image-20240701112459992.png)
+    ![image-20240701112459992](../Resource/iOS多语言环境设置.md/assets/image-20240701112459992.png)
 
 ### 2、语言代码
 
@@ -104,24 +104,24 @@
   比如，微信在简体中文环境下**App**名称显示为**微信**，在英语环境下显示为**weChat**
   
   * <font id=创建StringsFile>新建 **`Strings File`** 文件</font>
-    ![image-20240701124321212](./assets/image-20240701124321212.png)
+    ![image-20240701124321212](../Resource/iOS多语言环境设置.md/assets/image-20240701124321212.png)
   * <font color=red>**保存的文件名`InfoPlist.strings`为系统所需，不可更改**</font>
-    ![image-20240701124832755](./assets/image-20240701124832755.png)
+    ![image-20240701124832755](../Resource/iOS多语言环境设置.md/assets/image-20240701124832755.png)
   * 新生成的`InfoPlist.strings`在<u>当前电脑上的实际路径</u>，其实是在`en.lproj`文件夹下。其中`en.lproj`和此工程项目的`Info.plist `处于同一文件层级；
-    ![image-20240701132729019](./assets/image-20240701132729019.png)
+    ![image-20240701132729019](../Resource/iOS多语言环境设置.md/assets/image-20240701132729019.png)
   * 当删除磁盘上的语言包`*.lproj`文件夹，项目工程**Xcode**目录索引还有引用，也需要一并删除。在**Xcode**右侧的文件选项卡中，移除勾选。弹出框选择`Remove`
-   ![image-20240701141622517](./assets/image-20240701141622517.png)
+   ![image-20240701141622517](../Resource/iOS多语言环境设置.md/assets/image-20240701141622517.png)
   * <font id=Localize color=blue>**Localize流程**</font>：选中新生成的`InfoPlist.strings`，在**Xcode**的File inspection（**Xcode**右侧文件检查器）中点击Localize，目的是选择我们需要本地化的语言
   * 点击Localize后，会弹出一个对话框，展开对话框列表，发现下拉列表所展示的语言正是我们在上面配置的需要国际化的语言，选择我们需要本地化的语言，然后点击对话框的Localize按钮
-    ![image-20240701125902632](./assets/image-20240701125902632.png)
-    ![image-20240701125953191](./assets/image-20240701125953191.png)
+    ![image-20240701125902632](../Resource/iOS多语言环境设置.md/assets/image-20240701125902632.png)
+    ![image-20240701125953191](../Resource/iOS多语言环境设置.md/assets/image-20240701125953191.png)
   * <font color=red>注意：如果我们没有在 PROJECT 中配置需要国际化的语言（**project** ➤ **Info** ➤ **Localizations**，然后点击"+"），上图下拉列表中将只会出现`Base`和`English`选项，English语言是系统默认的语言，其他需要国际化的语言（例如中文简体、法语）必须通过上面的**配置本地化语言**那一步手动添加。</font>
   * 添加了`InfoPlist.strings`在 **project** ➤ **Info** ➤ **Localizations** 下可以看到有文件被检测到关联：
-    ![image-20240701130958012](./assets/image-20240701130958012.png)
+    ![image-20240701130958012](../Resource/iOS多语言环境设置.md/assets/image-20240701130958012.png)
   * <font color=red>**如果项目曾经有做过过多语言化的处理，则右侧选项卡不会`Localize`按钮，也不会弹出`Do you want to localize this file`对话框**</font>
   * <font id=在xcode右侧选项卡进行点选>**对`InfoPlist.strings`在 Xcode 右侧选项卡进行点选**</font>：
     `InfoPlist.strings`会化身为一个大的文件夹，下面包含各种语言包的子`InfoPlist.strings`     <font color=red>点一个加入一个</font>
-    ![image-20240701133346486](./assets/image-20240701133346486.png)
+    ![image-20240701133346486](../Resource/iOS多语言环境设置.md/assets/image-20240701133346486.png)
   
 * 对`Info.plist`的修改：
 
@@ -143,7 +143,7 @@
     <string>en</string>
     ```
     
-    ![image-20240701133957265](./assets/image-20240701133957265.png)
+    ![image-20240701133957265](../Resource/iOS多语言环境设置.md/assets/image-20240701133957265.png)
 
 ### 4、代码中字符串的本地化（`Localizable.strings`）
 
@@ -154,7 +154,7 @@
 * [**像创建 `InfoPlist.strings` 一样**](#创建StringsFile)，新建 `Localizable.strings` 文件，包括[**Localize流程**](#Localize)；
 
 * 新生成的`Localizable.strings`文件，位于`en.lproj`文件夹之下，和`InfoPlist.strings`平行；
-  ![image-20240701135711515](./assets/image-20240701135711515.png)
+  ![image-20240701135711515](../Resource/iOS多语言环境设置.md/assets/image-20240701135711515.png)
   
 * 对新生成的`Localizable.strings`文件，在Xcode右侧选项卡进行点选，[**和`InfoPlist.strings`的操作一样**](#在xcode右侧选项卡进行点选)；
 
