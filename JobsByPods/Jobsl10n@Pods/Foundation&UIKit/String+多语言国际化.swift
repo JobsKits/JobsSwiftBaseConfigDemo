@@ -16,6 +16,7 @@ extension String {
     // 项目实际存在的 lproj（大小写按文件夹名写）
     private static let jobsSupportedLproj: [String] = [
         "en", "en-PH",
+        "tl",
         "zh-Hans", "zh-Hant",
         "vi", "th", "tr", "ja",
         "pt-BR", "es-MX",
@@ -76,6 +77,8 @@ extension String {
             };return pick("zh-Hans") ?? fallback// 默认给简体（按你项目常见诉求）
         case "en":
             if region == "PH", let hit = pick("en-PH") { return hit };return pick("en") ?? fallback
+        case "fil", "tl":
+            return pick("tl") ?? fallback
         case "ar":
             if region == "EG", let hit = pick("ar-EG") { return hit };return pick("ar") ?? fallback
         case "pt":

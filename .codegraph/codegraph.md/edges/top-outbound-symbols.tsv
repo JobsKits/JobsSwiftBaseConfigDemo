@@ -2,7 +2,7 @@ node_kind	node_name	file_path	start_line	outbound_count	edge_kinds
 file	JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm	JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm	1	229	calls
 function	run_one_test	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/tests/test.c	1269	124	calls
 function	mono_init_internal	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/domain.c	516	103	calls
-class	MoyaDemoVC	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Demo@Moya.swift	32	63	calls
+class	MoyaDemoVC	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/Demo@Moya.swift	32	62	calls
 function	mono_type_get_name_recurse	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/class.c	357	57	calls
 function	load_cattr_value	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/custom-attrs.c	277	53	calls
 function	check_heap_stats	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/tests/test.c	1578	49	calls
@@ -65,7 +65,6 @@ method	ASLayoutFlatteningTests::testThatFlattenedLayoutContainsOnlyDirectSubnode
 method	ASLayoutFlatteningTests::testThatLayoutWithNullPositionAndUnflattenedSublayoutsIsNotReused	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutFlatteningTests.mm	136	25	calls
 function	g_spawn_async_with_pipes	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/eglib/gspawn.c	340	25	calls
 function	ves_icall_System_Reflection_Assembly_InternalGetAssemblyName	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/icall.c	6162	25	calls
-method	AppDelegate::SA	JobsSwiftBaseConfigDemo/启动入口/AppDelegate.swift	223	24	calls
 class	JobsProgressDemoVC	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@倒计时倒计时Layer/Demo@自定义进度条（进度值+前进方向）/JobsProgressDemoVC.swift	26	24	calls
 method	PostNode::initWithPost:	JobsByPods/ManualBySwiftPods@Pods/Texture/examples/SocialAppLayout/Sample/PostNode.m	37	24	calls
 method	PostNode::initWithPost:	JobsByPods/ManualBySwiftPods@Pods/Texture/examples/SocialAppLayout-Inverted/Sample/PostNode.m	37	24	calls
@@ -79,3 +78,4 @@ class	ObjectBoxDemoVC	JobsSwiftBaseConfigDemo/主业务流程/VC/TODO/Demo@Objec
 class	TimerDemoVC	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@时间.swift	26	23	calls
 function	mono_assembly_load_from_gac	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/assembly.c	4667	23	calls
 function	mono_debug_symfile_get_seq_points	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/debug-mono-symfile.c	520	23	calls
+function	mono_domain_create	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/domain.c	417	23	calls

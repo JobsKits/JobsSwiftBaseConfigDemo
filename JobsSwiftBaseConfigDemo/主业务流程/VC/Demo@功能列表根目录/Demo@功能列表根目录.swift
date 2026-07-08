@@ -29,17 +29,19 @@ import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 import JobsSwiftSplash
 import JobsSwiftCountryCodeCtrl
+import JobsSwiftCalendar
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
 
 final class RootListVC: BaseVC {
+    private static let demoSectionOrderUserDefaultsKey = "com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey"
+    private static let pinnedDemoUserDefaultsKey = "com.BSports.JobsSwiftPinnedDemoUserDefaultsKey"
+
     private enum FunctionMenuAction: CaseIterable {
         case search
-        case splash
-        case theme
-        case language
-        case stopRefresh
+        case demoFold
+        case settings
     }
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
     private let timerMgr = JobsSwiftTimerMgr.shared
@@ -73,9 +75,14 @@ final class RootListVC: BaseVC {
     private var langToken: NSObjectProtocol?
     /// 展开状态（一级目录展开行）
     private var expandedGroups = Set<Int>()
+    private var pinnedDemoItems: [DemoItem] = []
+    private var demoGroupDragSnapshotView: UIView?
+    private var demoGroupDragIndexPath: IndexPath?
+    private var demoGroupDragTouchOffsetY: CGFloat = 0
     /// 防抖标记（原逻辑不动）
     private var isPullRefreshing = false
     private var isLoadingMore    = false
+    private var demoListHasAppeared = false
 
     // ================================== 数据源（唯一） ==================================
     private typealias DemoItem  = (title: String, vcType: UIViewController.Type)
@@ -181,6 +188,8 @@ final class RootListVC: BaseVC {
                 ("🗄️ UITableView", EmptyTableViewDemoVC.self),
                 ("🗄️ UITableView设置圆角和边距", UITableViewCellCornerDemoVC.self),
                 ("🗄️ UICollectionView", EmptyCollectionViewDemoVC.self),
+                ("💬 JobsSwiftComment", JobsSwiftCommentDemoVC.self),
+                ("🔍 JobsSwiftSearcher", JobsSwiftSearcherDemoVC.self),
                 ("😂 按钮完全覆盖在UICollectionViewCell上", BtnFullOnCVCellDemoVC.self),
                 ("😂 按钮完全覆盖在UITableViewCell上", BtnFullOnTBVCellDemoVC.self),
                 ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
@@ -192,8 +201,10 @@ final class RootListVC: BaseVC {
                 ("⌨️ 键盘", KeyboardDemoVC.self),
                 ("📷 鉴权后调用相机/相册", PhotoAlbumDemoVC.self),
                 ("🌍 JobsSwiftCountryCodeCtrl", JobsSwiftCountryCodeCtrlDemoVC.self),
+                ("📅 JobsSwiftCalendar", JobsSwiftCalendarDemoVC.self),
                 ("🔥 JobsSwiftPatch", JobsSwiftPatchDemoVC.self),
                 ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
+                ("图形验证码", JobsSwiftGraphicCaptchaDemoVC.self),
                 ("🌍 JobsTabBarCtrl", TabBarDemoVC.self),
                 ("🏷️ Toast", ToastDemoVC.self),
                 ("⚠️ 系统的弹出框", UIAlertDemoVC.self),
@@ -205,8 +216,7 @@ final class RootListVC: BaseVC {
             (title: "一些常见功能模块页面", items: [
                 ("📮 经典的消息页面", MessageListDemoVC.self),
                 ("🔥 编辑个人资料", LGOEditProfileVC.self),
-                ("🏠 首页联动", CashbackRootVC.self),
-                ("🧭 首页联动切换子页面@Pod", JobsSwiftLinkageMenuViewDemoVC.self),
+                ("🏠 首页联动", HomeLinkageDemoListVC.self),
                 ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
             (title: "富文本/普通文本处理", items: [
@@ -357,6 +367,19 @@ final class RootListVC: BaseVC {
             }
     }()
 
+    private lazy var functionMenuDismissTapGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleFunctionMenuDismissTap(_:)))
+        gesture.cancelsTouchesInView = false
+        return gesture
+    }()
+
+    private lazy var demoGroupReorderLongPressGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleDemoGroupReorderLongPress(_:)))
+        gesture.minimumPressDuration = 0.45
+        gesture.cancelsTouchesInView = false
+        return gesture
+    }()
+
     private lazy var functionMenuTableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
@@ -434,26 +457,32 @@ final class RootListVC: BaseVC {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
             }
+            .onResult { [weak self] tableView in
+                guard let self,
+                      let tableView = tableView as? UITableView else { return }
+                tableView.addGestureRecognizer(self.demoGroupReorderLongPressGesture)
+            }
     }()
     // MARK: - Lifecycle
     override func loadView() {
         super.loadView()
 //        OCCls().string("q", image: "".img)
-        allDemo2D = makeDemo2D()
-        demo2D = allDemo2D
+        reloadDemoDataFromSource()
         langToken = NotificationCenter.default.addObserver(
             forName: .JobsLanguageDidChange, object: nil, queue: .main
         ) { [weak self] _ in
             guard let self else { return }
-            self.allDemo2D = self.makeDemo2D()
-            self.applySearchKeyword(self.demoSearchKeyword)
+            self.reloadDemoDataFromSource()
+            self.gk_navTitle = "演武堂".tr
             self.tableView.reloadData()
+            self.functionMenuTableView.reloadData()
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        RootListPreferences.applyPreferredInterfaceStyle()
         jobsSetupGKNav(
             title: "演武堂".tr,
             leftButton: UIButton.sys()
@@ -486,6 +515,7 @@ final class RootListVC: BaseVC {
         demoSearchBar.byVisible(NO)
         tableView.byVisible(YES)
         functionMenuTableView.byVisible(NO)
+        view.addGestureRecognizer(functionMenuDismissTapGesture)
         updateFooterAvailability()
 
         suspendSpinBtn.bySpinStart()
@@ -499,6 +529,10 @@ final class RootListVC: BaseVC {
         super.viewDidAppear(animated)
         tableView.beginUpdates()
         tableView.endUpdates()
+        if demoListHasAppeared && RootListPreferences.returnToTopAndRefreshEnabled {
+            reloadDemoListToTopAndRefresh()
+        }
+        demoListHasAppeared = true
 
         suspendBtnTimer?.resume()
         suspendSpinBtnTimer?.resume()
@@ -563,38 +597,296 @@ extension RootListVC{
         }
     }
 
+    private var hasPinnedDemoSection: Bool {
+        !pinnedDemoItems.isEmpty
+    }
+
+    private var demoGroupTableSection: Int {
+        hasPinnedDemoSection ? 1 : 0
+    }
+
+    private var demoSearchEnabled: Bool {
+        !demoSearchBar.isHidden
+    }
+
+    private func reloadDemoDataFromSource() {
+        allDemo2D = makeDemo2D()
+        applySavedDemoSectionOrderIfNeeded()
+        applySavedPinnedDemosIfNeeded()
+        applySearchKeyword(demoSearchKeyword)
+    }
+
+    private func demoPersistentKey(for item: DemoItem) -> String {
+        "cls:\(String(reflecting: item.vcType))"
+    }
+
+    private func isPinnedDemoItem(_ item: DemoItem) -> Bool {
+        let key = demoPersistentKey(for: item)
+        return pinnedDemoItems.contains { demoPersistentKey(for: $0) == key }
+    }
+
+    private func savedPinnedDemoKeys() -> [String] {
+        guard let keys = UserDefaults.standard.array(forKey: Self.pinnedDemoUserDefaultsKey) as? [String] else { return [] }
+        var result: [String] = []
+        for key in keys where !key.isEmpty && !result.contains(key) {
+            result.append(key)
+        };return result
+    }
+
+    private func applySavedPinnedDemosIfNeeded() {
+        let savedKeys = savedPinnedDemoKeys()
+        guard !savedKeys.isEmpty else {
+            pinnedDemoItems.removeAll()
+            return
+        }
+        let allItems = allDemo2D.flatMap { $0.items }
+        pinnedDemoItems = savedKeys.compactMap { key in
+            allItems.first { demoPersistentKey(for: $0) == key }
+        }
+        if pinnedDemoItems.count != savedKeys.count {
+            savePinnedDemos()
+        }
+    }
+
+    private func savePinnedDemos() {
+        let keys = pinnedDemoItems.map { demoPersistentKey(for: $0) }
+        if keys.isEmpty {
+            UserDefaults.standard.removeObject(forKey: Self.pinnedDemoUserDefaultsKey)
+        } else {
+            UserDefaults.standard.set(keys, forKey: Self.pinnedDemoUserDefaultsKey)
+        }
+        UserDefaults.standard.synchronize()
+    }
+
+    private func pinDemoItem(_ item: DemoItem) {
+        guard !isPinnedDemoItem(item) else { return }
+        pinnedDemoItems.append(item)
+        savePinnedDemos()
+        applySearchKeyword(demoSearchKeyword)
+        tableView.reloadData()
+        tableView.layoutIfNeeded()
+        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: true)
+    }
+
+    private func unpinPinnedDemo(at index: Int) {
+        guard pinnedDemoItems.indices.contains(index) else { return }
+        let item = pinnedDemoItems.remove(at: index)
+        let key = demoPersistentKey(for: item)
+        savePinnedDemos()
+        applySearchKeyword(demoSearchKeyword)
+        if let row = demo2D.firstIndex(where: { group in
+            group.items.contains { demoPersistentKey(for: $0) == key }
+        }) {
+            expandedGroups.insert(row)
+        }
+        tableView.reloadData()
+    }
+
+    private func savedDemoSectionOrder() -> [String] {
+        guard let titles = UserDefaults.standard.array(forKey: Self.demoSectionOrderUserDefaultsKey) as? [String] else { return [] };return titles.filter { !$0.isEmpty }
+    }
+
+    private func applySavedDemoSectionOrderIfNeeded() {
+        let titles = savedDemoSectionOrder()
+        guard !titles.isEmpty, allDemo2D.count > 1 else { return }
+        var unorderedGroups = allDemo2D
+        var orderedGroups: [DemoGroup] = []
+        for title in titles {
+            guard let index = unorderedGroups.firstIndex(where: { $0.title == title }) else { continue }
+            orderedGroups.append(unorderedGroups.remove(at: index))
+        }
+        orderedGroups.append(contentsOf: unorderedGroups)
+        if orderedGroups.count == allDemo2D.count {
+            allDemo2D = orderedGroups
+        }
+    }
+
+    private func saveDemoSectionOrder() {
+        UserDefaults.standard.set(allDemo2D.map { $0.title }, forKey: Self.demoSectionOrderUserDefaultsKey)
+        UserDefaults.standard.synchronize()
+    }
+
     private func applySearchKeyword(_ keyword: String) {
         demoSearchKeyword = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !demoSearchKeyword.isEmpty else {
-            demo2D = allDemo2D
+            demo2D = allDemo2D.compactMap { group in
+                let items = group.items.filter { !isPinnedDemoItem($0) };return items.isEmpty ? nil : (title: group.title, items: items)
+            }
             expandedGroups.removeAll()
             return
         }
         demo2D = allDemo2D.compactMap { group in
-            let matchedItems = group.items.filter {
+            let unpinnedItems = group.items.filter { !isPinnedDemoItem($0) }
+            let matchedItems = unpinnedItems.filter {
                 demoSearchKeyword.inStr($0.title)
                     || demoSearchKeyword.inStr(String(describing: $0.vcType))
             }
             if demoSearchKeyword.inStr(group.title) {
-                return group
+                return unpinnedItems.isEmpty ? nil : (title: group.title, items: unpinnedItems)
             };return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
         }
         expandedGroups = Set(demo2D.indices)
+    }
+
+    @objc private func handleFunctionMenuDismissTap(_ gesture: UITapGestureRecognizer) {
+        guard !functionMenuTableView.isHidden else { return }
+        let point = gesture.location(in: view)
+        let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds, to: view)
+        if functionMenuTableView.frame.contains(point) || buttonFrame.contains(point) {
+            return
+        }
+        toggleFunctionMenu(false)
+    }
+
+    @objc private func handleDemoGroupReorderLongPress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.view === tableView else { return }
+        if demoSearchEnabled {
+            if gesture.state == .began {
+                "搜索状态下不可排序".tr.toast
+            }
+            finishDemoGroupDrag()
+            return
+        }
+        let point = gesture.location(in: tableView)
+        switch gesture.state {
+        case .began:
+            guard let indexPath = tableView.indexPathForRow(at: point),
+                  canDragDemoGroup(at: indexPath),
+                  let cell = tableView.cellForRow(at: indexPath),
+                  let snapshotView = cell.snapshotView(afterScreenUpdates: false) else { return }
+            snapshotView.frame = cell.frame
+            snapshotView.layer.shadowColor = UIColor.black.cgColor
+            snapshotView.layer.shadowOpacity = 0.18
+            snapshotView.layer.shadowRadius = 10
+            snapshotView.layer.shadowOffset = CGSize(width: 0, height: 6)
+            tableView.addSubview(snapshotView)
+            demoGroupDragSnapshotView = snapshotView
+            demoGroupDragIndexPath = indexPath
+            demoGroupDragTouchOffsetY = point.y - cell.frame.midY
+            cell.isHidden = true
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+        case .changed:
+            guard let snapshotView = demoGroupDragSnapshotView,
+                  let sourceIndexPath = demoGroupDragIndexPath else { return }
+            var center = snapshotView.center
+            center.y = point.y - demoGroupDragTouchOffsetY
+            snapshotView.center = center
+            guard let destinationIndexPath = tableView.indexPathForRow(at: center),
+                  canDragDemoGroup(at: destinationIndexPath),
+                  destinationIndexPath != sourceIndexPath else { return }
+            moveDemoGroup(from: sourceIndexPath, to: destinationIndexPath)
+            tableView.beginUpdates()
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            tableView.endUpdates()
+            demoGroupDragIndexPath = destinationIndexPath
+            tableView.visibleCells.forEach { $0.isHidden = false }
+            tableView.cellForRow(at: destinationIndexPath)?.isHidden = true
+
+        case .ended, .cancelled, .failed:
+            finishDemoGroupDrag()
+
+        default:
+            break
+        }
+    }
+
+    private func canDragDemoGroup(at indexPath: IndexPath) -> Bool {
+        indexPath.section == demoGroupTableSection &&
+        demo2D.indices.contains(indexPath.row) &&
+        demo2D.count > 1
+    }
+
+    private func moveDemoGroup(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let sourceRow = sourceIndexPath.row
+        let destinationRow = destinationIndexPath.row
+        guard sourceRow != destinationRow,
+              demo2D.indices.contains(sourceRow),
+              demo2D.indices.contains(destinationRow) else { return }
+        let sourceTitle = demo2D[sourceRow].title
+        let destinationTitle = demo2D[destinationRow].title
+        guard let sourceIndex = allDemo2D.firstIndex(where: { $0.title == sourceTitle }),
+              let destinationIndex = allDemo2D.firstIndex(where: { $0.title == destinationTitle }) else { return }
+        let visibleGroup = demo2D.remove(at: sourceRow)
+        demo2D.insert(visibleGroup, at: destinationRow)
+        let group = allDemo2D.remove(at: sourceIndex)
+        allDemo2D.insert(group, at: min(destinationIndex, allDemo2D.count))
+        moveExpandedDemoGroupState(from: sourceRow, to: destinationRow)
+    }
+
+    private func moveExpandedDemoGroupState(from sourceRow: Int, to destinationRow: Int) {
+        guard sourceRow != destinationRow else { return }
+        var next = Set<Int>()
+        for row in expandedGroups {
+            if row == sourceRow {
+                next.insert(destinationRow)
+            } else if sourceRow < destinationRow && row > sourceRow && row <= destinationRow {
+                next.insert(row - 1)
+            } else if destinationRow < sourceRow && row >= destinationRow && row < sourceRow {
+                next.insert(row + 1)
+            } else {
+                next.insert(row)
+            }
+        }
+        expandedGroups = next
+    }
+
+    private func finishDemoGroupDrag() {
+        guard let snapshotView = demoGroupDragSnapshotView else { return }
+        let indexPath = demoGroupDragIndexPath
+        let cell = indexPath.flatMap { tableView.cellForRow(at: $0) }
+        let clearState = { [weak self, weak cell, weak snapshotView] in
+            cell?.isHidden = false
+            snapshotView?.removeFromSuperview()
+            self?.demoGroupDragSnapshotView = nil
+            self?.demoGroupDragIndexPath = nil
+            self?.demoGroupDragTouchOffsetY = 0
+            self?.saveDemoSectionOrder()
+        }
+        guard let cell else {
+            clearState()
+            return
+        }
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: [.curveEaseOut, .allowUserInteraction]) {
+            snapshotView.frame = cell.frame
+        } completion: { _ in
+            clearState()
+        }
     }
 
     private func menuTitle(for action: FunctionMenuAction) -> String {
         switch action {
         case .search:
             return "搜索 Demo".tr
-        case .splash:
-            return JobsSplashPreferences.isEnabledForNextLaunch ? "下次关闭开屏".tr : "下次打开开屏".tr
-        case .theme:
-            return "切换深浅色".tr
-        case .language:
-            return "切换语言".tr
-        case .stopRefresh:
-            return "停止刷新".tr
+        case .demoFold:
+            return demoFoldSwitchTitle()
+        case .settings:
+            return "设置".tr
         }
+    }
+
+    private func demoFoldSwitchTitle() -> String {
+        anyVisibleDemoGroupExpanded() ? "全部收缩".tr : "全部展开".tr
+    }
+
+    private func anyVisibleDemoGroupExpanded() -> Bool {
+        !expandedGroups.isEmpty
+    }
+
+    private func setAllDemoGroupsExpanded(_ expanded: Bool) {
+        expandedGroups = expanded ? Set(demo2D.indices) : []
+        tableView.reloadData()
+        updateFooterAvailability()
+    }
+
+    private func reloadDemoListToTopAndRefresh() {
+        reloadDemoDataFromSource()
+        tableView.reloadData()
+        tableView.layoutIfNeeded()
+        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: false)
+        tableView.mj_header?.beginRefreshing()
     }
 
     private func toggleFunctionMenu(_ visible: Bool) {
@@ -635,24 +927,10 @@ extension RootListVC{
         switch action {
         case .search:
             setSearchEnabled(true)
-        case .splash:
-            let enabled = JobsSplashPreferences.toggleForNextLaunch()
-            let message = enabled ? "下次启动展示开屏" : "下次启动不展示开屏"
-            message.toast
-        case .theme:
-            guard let ws = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                  let win = ws.windows.first else { return }
-            win.overrideUserInterfaceStyle =
-                (win.overrideUserInterfaceStyle == .dark) ? .light : .dark
-            print("🌓 主题已切换 -> \(win.overrideUserInterfaceStyle == .dark ? "Dark" : "Light")")
-        case .language:
-            let to = (LanguageManager.shared.currentLanguageCode == "zh-Hans") ? "en" : "zh-Hans"
-            LanguageManager.shared.switchTo(to)
-            print("🌐 切换语言 tapped（占位）")
-        case .stopRefresh:
-            print("🛑 手动停止刷新")
-            isPullRefreshing = false
-            isLoadingMore = false
+        case .demoFold:
+            setAllDemoGroupsExpanded(!anyVisibleDemoGroupExpanded())
+        case .settings:
+            RootListSettingsVC().byPush(self)
         }
     }
 
@@ -715,10 +993,17 @@ extension RootListVC: UISearchBarDelegate {
 }
 // MARK: —— UITableViewDataSource & UITableViewDelegate
 extension RootListVC: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if tableView === functionMenuTableView { return 1 };return hasPinnedDemoSection ? 2 : 1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView === functionMenuTableView {
             return FunctionMenuAction.allCases.count
-        };return demo2D.count
+        }
+        if hasPinnedDemoSection && section == 0 {
+            return 1
+        };return section == demoGroupTableSection ? demo2D.count : 0
     }
     func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView === functionMenuTableView {
@@ -730,6 +1015,19 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
             cell.selectionStyle = .default
             return cell
         }
+        if hasPinnedDemoSection && indexPath.section == 0 {
+            let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
+            cell.configurePinned(groupTitle: "置顶".tr,
+                                 items: pinnedDemoItems) { [weak self] itemIndex in
+                guard let self,
+                      self.pinnedDemoItems.indices.contains(itemIndex) else { return }
+                self.pinnedDemoItems[itemIndex].vcType.init().byPush(self)
+            } unpinItem: { [weak self] itemIndex in
+                self?.unpinPinnedDemo(at: itemIndex)
+            };return cell
+        }
+        guard indexPath.section == demoGroupTableSection,
+              demo2D.indices.contains(indexPath.row) else { return UITableViewCell() }
         let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
         let row = indexPath.row
         let g = demo2D[row]
@@ -738,13 +1036,22 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
                        items: g.items,
                        expanded: expanded) { [weak self] itemIndex in
             guard let self else { return }
-            let vcType = self.demo2D[row].items[itemIndex].vcType
+            let vcType = g.items[itemIndex].vcType
             /// 这里推入控制器
             vcType.init().byPush(self)
+        } pinItem: { [weak self] itemIndex in
+            guard let self,
+                  g.items.indices.contains(itemIndex) else { return }
+            self.pinDemoItem(g.items[itemIndex])
         };return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView === functionMenuTableView { return 44 }
+        if hasPinnedDemoSection && indexPath.section == 0 {
+            return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count)
+        }
+        guard indexPath.section == demoGroupTableSection,
+              demo2D.indices.contains(indexPath.row) else { return .leastNonzeroMagnitude }
         let row = indexPath.row
         return expandedGroups.contains(row)
         ? RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
@@ -756,6 +1063,9 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
             handleMenuAction(FunctionMenuAction.allCases[indexPath.row])
             return
         }
+        if hasPinnedDemoSection && indexPath.section == 0 { return }
+        guard indexPath.section == demoGroupTableSection,
+              demo2D.indices.contains(indexPath.row) else { return }
         let row = indexPath.row
         if expandedGroups.contains(row) {
             expandedGroups.remove(row)
@@ -774,6 +1084,11 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
 }
 // MARK: —— UIScrollViewDelegate
 extension RootListVC: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard scrollView === tableView else { return }
+        toggleFunctionMenu(false)
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView === tableView else { return }
         updateFooterAvailability()

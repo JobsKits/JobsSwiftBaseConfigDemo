@@ -1,0 +1,30 @@
+/*
+  Localizable.strings
+  JobsSwiftBaseConfigDemo
+
+  Created by Jobs on 2026年7月8日，星期三.
+*/
+
+"🔑 注册登录" = "🔑 Mag-sign in / Magparehistro";
+"演武堂" = "Demo Hall";
+"搜索 Demo" = "Maghanap ng Demo";
+"全部收缩" = "I-collapse lahat";
+"全部展开" = "I-expand lahat";
+"设置" = "Mga Setting";
+"输入关键词搜索 Demo" = "Maglagay ng keyword para maghanap ng Demo";
+"下次开屏：开" = "Susunod na splash: Bukas";
+"下次开屏：关" = "Susunod na splash: Sarado";
+"返回：回顶部并刷新" = "Bumalik: itaas at i-refresh";
+"返回：保持原样" = "Bumalik: panatilihin";
+"主题切换：白天" = "Tema: Maliwanag";
+"主题切换：黑夜" = "Tema: Madilim";
+"应用语言" = "Wika ng App";
+"中文" = "Chinese";
+"英文" = "English";
+"他加禄语" = "Tagalog";
+"下次启动展示开屏" = "Ipapakita ang splash sa susunod na bukas";
+"下次启动不展示开屏" = "Hindi ipapakita ang splash sa susunod na bukas";
+"返回主列表：回顶部并刷新" = "Listahan: itaas at i-refresh";
+"返回主列表：保持原样" = "Listahan: panatilihin";
+"主题已切换：白天" = "Napalitan ang tema: Maliwanag";
+"主题已切换：黑夜" = "Napalitan ang tema: Madilim";

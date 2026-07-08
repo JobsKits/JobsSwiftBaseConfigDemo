@@ -17,11 +17,10 @@ flowchart LR
   M3["Unity"]
   M4["my_flutter"]
   M5["JobsBySwiftPackageManager"]
-  M1 -->|calls:609| M2
+  M1 -->|calls:592| M2
   M3 -->|calls:49| M2
   M2 -->|calls:1| M4
   M5 -->|calls:1| M2
-  M1 -->|calls:1| M4
 ```
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import QuartzCore
+import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
@@ -25,12 +26,24 @@ import GKNavigationBarSwift
 final class TraitChangeDemoVC: BaseVC {
     // MARK: UI（全部懒加载，byAddTo + SnapKit）
     private lazy var titleLabel : UILabel = {
-        UILabel().byText("UITraitChangeObservable · Demo")
+        UILabel().byText("Trait 变化监听 Demo")
             .byFont(.boldSystemFont(ofSize: 18))
             .byTextAlignment(.natural)              // ✅ 新增
             .byTextColor(.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
+                make.leading.trailing.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var subtitleLabel : UILabel = {
+        UILabel()
+            .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。")
+            .byNumberOfLines(0)
+            .byTextColor(.secondaryLabel)
+            .byTextAlignment(.natural)
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(self.titleLabel.snp.bottom).offset(6)
                 make.leading.trailing.equalToSuperview().inset(16)
             }
     }()
@@ -42,7 +55,7 @@ final class TraitChangeDemoVC: BaseVC {
             .byFont(.systemFont(ofSize: 13))
             .byTextAlignment(.natural)              // ✅ 新增
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(self.titleLabel.snp.bottom).offset(8)
+                make.top.equalTo(self.subtitleLabel.snp.bottom).offset(12)
                 make.leading.trailing.equalToSuperview().inset(16)
             }
     }()
@@ -86,7 +99,8 @@ final class TraitChangeDemoVC: BaseVC {
 
     private lazy var dynamicText :UILabel = {
         UILabel()
-            .byText("Dynamic Type 预览")
+            .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。")
+            .byNumberOfLines(0)
             .byTextColor(.label)
             .byTextAlignment(.natural)              // ✅ 新增
             .byAddTo(view) { [unowned self] make in
@@ -121,6 +135,18 @@ final class TraitChangeDemoVC: BaseVC {
         view.backgroundColor = .systemBackground
         jobsSetupGKNav(
             title: "Traits (iOS 17+)",
+            leftButton: UIButton.sys()
+                .byFrame(CGRect(x: 0, y: 0, width: 74.w, height: 36.h))
+                .byBackgroundColor(UIColor.systemBlue.withAlphaComponent(0.18))
+                .byCornerRadius(18)
+                .byTintColor(.systemBlue)
+                .byImage("chevron.left".sysImg, for: .normal)
+                .byTitle("返回", for: .normal)
+                .byTitleColor(.systemBlue, for: .normal)
+                .onTap { [weak self] _ in
+                    guard let self else { return }
+                    self.goBack("")
+                },
             rightButtons: [
                 UIButton(type: .system)
                     /// 按钮图片@图文关系
@@ -169,6 +195,7 @@ final class TraitChangeDemoVC: BaseVC {
 
         // 唤起（显式渲染）—— Jobs 链式 DSL 约定
         titleLabel.byAlpha(1)
+        subtitleLabel.byAlpha(1)
         infoLabel.byAlpha(1)
         swatch.byAlpha(1)
         leftBox.byAlpha(1)
@@ -219,6 +246,7 @@ extension TraitChangeDemoVC {
         gradientLayer.colors = [c1.cgColor, c2.cgColor]
 
         infoLabel.byText("""
+        当前 Traits
         Style: \(style == .dark ? "Dark" : "Light")
         Scale: \(Int(traitCollection.displayScale))x
         Gamut: \(gamutString(traitCollection.displayGamut))
@@ -233,6 +261,10 @@ extension TraitChangeDemoVC {
     private func applyDynamicType() {
         titleLabel
             .byFont(.preferredFont(forTextStyle: .title2))
+            .byAdjustsFontForContentSizeCategory(true)
+
+        subtitleLabel
+            .byFont(.preferredFont(forTextStyle: .footnote))
             .byAdjustsFontForContentSizeCategory(true)
 
         infoLabel

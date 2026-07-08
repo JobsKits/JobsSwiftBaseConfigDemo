@@ -293,15 +293,8 @@ extension AppDelegate {
     }
     
     func App显示语言环境配置(){
-        // MARK: - 语言跟随系统
-        LanguageManager.shared.followSystemLanguage()
-      
-        // MARK: - 语言切换成固定的
-//        Bundle.enableLanguageOverride()
-//        /// 先切语言（会更新 localizedBundle）
-//        LanguageManager.shared.switchTo("vi")
-//        /// 再把 Bundle.main 指到你的语言 bundle（让 storyboard/xib 也变）
-//        Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
+        Bundle.enableLanguageOverride()
+        Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
     }
 
     func 日志框架接入() {

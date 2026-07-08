@@ -7,3 +7,25 @@
 */
 
 "🔑 注册登录" = "🔑 Sign in / Register";
+"演武堂" = "Demo Hall";
+"搜索 Demo" = "Search Demo";
+"全部收缩" = "Collapse All";
+"全部展开" = "Expand All";
+"设置" = "Settings";
+"输入关键词搜索 Demo" = "Enter keywords to search Demo";
+"下次开屏：开" = "Next splash: On";
+"下次开屏：关" = "Next splash: Off";
+"返回：回顶部并刷新" = "Return: Top & Refresh";
+"返回：保持原样" = "Return: Keep Position";
+"主题切换：白天" = "Theme: Light";
+"主题切换：黑夜" = "Theme: Dark";
+"应用语言" = "App Language";
+"中文" = "Chinese";
+"英文" = "English";
+"他加禄语" = "Tagalog";
+"下次启动展示开屏" = "Splash will show next launch";
+"下次启动不展示开屏" = "Splash will not show next launch";
+"返回主列表：回顶部并刷新" = "Demo list: top & refresh";
+"返回主列表：保持原样" = "Demo list: keep position";
+"主题已切换：白天" = "Theme switched: Light";
+"主题已切换：黑夜" = "Theme switched: Dark";

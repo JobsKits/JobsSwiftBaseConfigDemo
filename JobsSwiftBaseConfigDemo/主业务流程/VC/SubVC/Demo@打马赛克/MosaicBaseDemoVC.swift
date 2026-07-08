@@ -46,7 +46,7 @@ class MosaicBaseDemoVC: BaseVC {
     }()
 
     lazy var imageView: MosaicBrushImageView = {
-        MosaicBrushImageView()
+        MosaicBrushImageView(frame: .zero)
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .byUserInteractionEnabled(true)

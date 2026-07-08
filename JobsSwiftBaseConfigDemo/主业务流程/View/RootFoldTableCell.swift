@@ -34,6 +34,9 @@ final class RootFoldTableCell: UITableViewCell,
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
+    private var onPinItem: ((Int) -> Void)?
+    private var pinAccessoryIndex: Int?
+    private var pinnedSectionStyle = false
     private var isExpanded: Bool = false
     private var innerTableHeight: Constraint?
     // MARK: - Lazy UI
@@ -120,6 +123,13 @@ final class RootFoldTableCell: UITableViewCell,
             }
     }()
 
+    private lazy var innerCellLongPressGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleInnerCellLongPress(_:)))
+        gesture.minimumPressDuration = 0.45
+        gesture.cancelsTouchesInView = false
+        return gesture
+    }()
+
     private lazy var shadow: UIView = {
         UIView()
             .byBackgroundColor(.black)
@@ -145,6 +155,7 @@ final class RootFoldTableCell: UITableViewCell,
         detailContent.byVisible(YES)
         innerTableView.byVisible(YES)
         shadow.byVisible(YES)
+        innerTableView.addGestureRecognizer(innerCellLongPressGesture)
 
         setExpanded(false, animated: false)
     }
@@ -153,6 +164,10 @@ final class RootFoldTableCell: UITableViewCell,
         super.prepareForReuse()
         items = []
         onSelectItem = nil
+        onPinItem = nil
+        pinAccessoryIndex = nil
+        pinnedSectionStyle = false
+        chevron.byVisible(YES)
         setExpanded(false, animated: false)
     }
     
@@ -179,23 +194,45 @@ extension RootFoldTableCell{
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
-                   onSelectItem: @escaping (Int) -> Void) {
+                   onSelectItem: @escaping (Int) -> Void,
+                   pinItem: @escaping (Int) -> Void) {
+        pinnedSectionStyle = false
         self.items = items
         self.onSelectItem = onSelectItem
+        self.onPinItem = pinItem
+        pinAccessoryIndex = nil
         titleLab.byText("\(groupTitle)  (\(items.count))")
+        chevron.byVisible(YES)
         innerTableView.reloadData()
         setExpanded(expanded, animated: false)
     }
+
+    func configurePinned(groupTitle: String,
+                         items: [DemoItem],
+                         selectItem: @escaping (Int) -> Void,
+                         unpinItem: @escaping (Int) -> Void) {
+        pinnedSectionStyle = true
+        self.items = items
+        self.onSelectItem = selectItem
+        self.onPinItem = unpinItem
+        pinAccessoryIndex = nil
+        titleLab.byText("\(groupTitle)  (\(items.count))")
+        chevron.byVisible(NO)
+        innerTableView.reloadData()
+        setExpanded(true, animated: false)
+    }
+
     /// 展开/收起的核心方法
     func setExpanded(_ expanded: Bool, animated: Bool) {
-        isExpanded = expanded
-        let targetH: CGFloat = expanded ? CGFloat(items.count) * Self.innerRowH : 0
+        let targetExpanded = pinnedSectionStyle ? true : expanded
+        isExpanded = targetExpanded
+        let targetH: CGFloat = targetExpanded ? CGFloat(items.count) * Self.innerRowH : 0
         innerTableHeight?.update(offset: targetH)
         // ✅ 展开前先把容器露出来（折叠完成后会隐藏回去）
-        if expanded || animated {
+        if targetExpanded || animated {
             detailClip.byVisible(YES)
         }
-        if expanded {
+        if targetExpanded {
             detailContent.byVisible(YES)
         } else if animated {
             // ✅ 如果是“从展开 -> 折叠”的动画，内容此时本来就是可见的；这里兜底保证可见以便折页动画能演
@@ -204,9 +241,9 @@ extension RootFoldTableCell{
 
         detailContent.layoutIfNeeded()
 
-        let targetTransform = expanded ? CATransform3DIdentity : foldedTransform()
-        let targetAlpha: CGFloat = expanded ? 1.0 : 0.0
-        let targetChevron = expanded ? CGAffineTransform(rotationAngle: .pi) : .identity
+        let targetTransform = targetExpanded ? CATransform3DIdentity : foldedTransform()
+        let targetAlpha: CGFloat = targetExpanded ? 1.0 : 0.0
+        let targetChevron = targetExpanded ? CGAffineTransform(rotationAngle: .pi) : .identity
 
         let apply = { [self] in
             detailContent.layer.transform = targetTransform
@@ -226,18 +263,48 @@ extension RootFoldTableCell{
                 apply()
             } completion: { [weak self] _ in
                 guard let self else { return }
-                if !expanded {
+                if !targetExpanded {
                     self.detailContent.byVisible(NO)
                     self.detailClip.byVisible(NO) // ✅ 折叠完成：连容器一起藏掉，彻底无残影
                 }
             }
         } else {
             UIView.performWithoutAnimation { apply() }
-            if !expanded {
+            if !targetExpanded {
                 detailContent.byVisible(NO)
                 detailClip.byVisible(NO) // ✅ 非动画折叠：直接隐藏
             }
         }
+    }
+
+    @objc private func handleInnerCellLongPress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+        let point = gesture.location(in: innerTableView)
+        guard let indexPath = innerTableView.indexPathForRow(at: point),
+              items.indices.contains(indexPath.row) else { return }
+        pinAccessoryIndex = indexPath.row
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        innerTableView.reloadData()
+    }
+
+    @objc private func handlePinAccessoryButtonTap(_ sender: UIButton) {
+        pinAccessoryIndex = nil
+        onPinItem?(sender.tag)
+        innerTableView.reloadData()
+    }
+
+    private func pinAccessoryButton(index: Int) -> UIButton {
+        let button = UIButton(type: .system)
+        let imageName = pinnedSectionStyle ? "minus.circle.fill" : "pin.fill"
+        let image = imageName.sysImg.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.setImage(image, for: .highlighted)
+        button.tintColor = .systemRed
+        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        button.imageEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        button.tag = index
+        button.addTarget(self, action: #selector(handlePinAccessoryButtonTap(_:)), for: .touchUpInside)
+        return button
     }
     // MARK: - Fold
     private func foldedTransform() -> CATransform3D {
@@ -259,10 +326,16 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView
+        let cell = tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(items[indexPath.row].title)
-            .byAccessoryType(.disclosureIndicator)
+        cell.accessoryView = nil
+        if pinAccessoryIndex == indexPath.row {
+            cell.byAccessoryType(.none)
+            cell.accessoryView = pinAccessoryButton(index: indexPath.row)
+        } else {
+            cell.byAccessoryType(.disclosureIndicator)
+        };return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

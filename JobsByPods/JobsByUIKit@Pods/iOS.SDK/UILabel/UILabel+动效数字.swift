@@ -60,7 +60,13 @@ extension _JobsAnimatedNumberStore {
     /// DSL: .byFPS(60)
     @discardableResult
     func byFPS(_ fps: Double) -> Self {
-        self.minimumInterval = 1.0 / fps
+        self.minimumInterval = 1.0 / max(0.000_001, fps)
+        return self
+    }
+    /// DSL: .byMinimumInterval(1.0 / 60.0)
+    @discardableResult
+    func byMinimumInterval(_ value: TimeInterval) -> Self {
+        self.minimumInterval = max(0.000_001, value)
         return self
     }
     /// DSL: .byCompletion { }
@@ -102,7 +108,7 @@ extension UILabel {
             .byStart(start)
             .byStep(step)
             .byDuration(max(0, duration))
-            .byFPS(max(0.000_001, minimumInterval))
+            .byMinimumInterval(minimumInterval)
             .byCompletion(completion)
         return self
     }

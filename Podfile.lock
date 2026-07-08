@@ -301,6 +301,8 @@ PODS:
     - Moya
     - SnapKit
     - YTKNetwork
+  - JobsSwiftCalendar (0.0.1)
+  - JobsSwiftComment (0.0.1)
   - JobsSwiftCountryCodeCtrl (0.0.1):
     - JobsByUIKit
     - Jobsl10n
@@ -324,6 +326,7 @@ PODS:
   - JobsSwiftFoundation (0.1.1):
     - JobsByUIKit
     - JobsSwiftDSL
+  - JobsSwiftGraphicCaptcha (1.0.0)
   - JobsSwiftLinkageMenuView (0.0.1)
   - JobsSwiftMetalKit (0.1.0):
     - JobsSwiftDSL
@@ -345,6 +348,7 @@ PODS:
   - JobsSwiftRefresher/SDWebImage (0.0.1):
     - JobsSwiftRefresher/Core
     - SDWebImage
+  - JobsSwiftSearcher (0.0.1)
   - JobsSwiftSplash (0.0.1):
     - JobsByUIKit
     - JobsCountdownButton
@@ -581,16 +585,20 @@ DEPENDENCIES:
   - "JobsSwiftBaseDefines (from `JobsByPods/JobsSwiftBaseDefines@Pods`)"
   - "JobsSwiftBaseTools (from `JobsByPods/JobsSwiftBaseTools@Pods`)"
   - "JobsSwiftBlock (from `JobsByPods/JobsSwiftBlock@Pods`)"
+  - "JobsSwiftCalendar (from `JobsByPods/JobsSwiftCalendar@Pods`)"
+  - "JobsSwiftComment (from `JobsByPods/JobsSwiftComment@Pods`)"
   - "JobsSwiftCountryCodeCtrl (from `JobsByPods/JobsSwiftCountryCodeCtrl@Pods`)"
   - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
   - "JobsSwiftDSL (from `JobsByPods/JobsSwiftDSL@Pods`)"
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
+  - "JobsSwiftGraphicCaptcha (from `JobsByPods/JobsSwiftGraphicCaptcha@Pods`)"
   - "JobsSwiftLinkageMenuView (from `JobsByPods/JobsSwiftLinkageMenuView@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftOpen (from `JobsByPods/JobsSwiftOpen@Pods`)"
   - "JobsSwiftPatch (from `JobsByPods/JobsSwiftPatch@Pods`)"
   - "JobsSwiftRefresher/Lottie (from `JobsByPods/JobsSwiftRefresher@Pods`)"
   - "JobsSwiftRefresher/SDWebImage (from `JobsByPods/JobsSwiftRefresher@Pods`)"
+  - "JobsSwiftSearcher (from `JobsByPods/JobsSwiftSearcher@Pods`)"
   - "JobsSwiftSplash (from `JobsByPods/JobsSwiftSplash@Pods`)"
   - "JobsSwiftStandardLibrary (from `JobsByPods/JobsSwiftStandardLibrary@Pods`)"
   - "JobsSwiftTaskCenter (from `JobsByPods/JobsSwiftTaskCenter@Pods`)"
@@ -774,6 +782,10 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftBaseTools@Pods"
   JobsSwiftBlock:
     :path: "JobsByPods/JobsSwiftBlock@Pods"
+  JobsSwiftCalendar:
+    :path: "JobsByPods/JobsSwiftCalendar@Pods"
+  JobsSwiftComment:
+    :path: "JobsByPods/JobsSwiftComment@Pods"
   JobsSwiftCountryCodeCtrl:
     :path: "JobsByPods/JobsSwiftCountryCodeCtrl@Pods"
   JobsSwiftDebugTools:
@@ -782,6 +794,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftDSL@Pods"
   JobsSwiftFoundation:
     :path: "JobsByPods/JobsSwiftFoundation@Pods"
+  JobsSwiftGraphicCaptcha:
+    :path: "JobsByPods/JobsSwiftGraphicCaptcha@Pods"
   JobsSwiftLinkageMenuView:
     :path: "JobsByPods/JobsSwiftLinkageMenuView@Pods"
   JobsSwiftMetalKit:
@@ -792,6 +806,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftPatch@Pods"
   JobsSwiftRefresher:
     :path: "JobsByPods/JobsSwiftRefresher@Pods"
+  JobsSwiftSearcher:
+    :path: "JobsByPods/JobsSwiftSearcher@Pods"
   JobsSwiftSplash:
     :path: "JobsByPods/JobsSwiftSplash@Pods"
   JobsSwiftStandardLibrary:
@@ -827,7 +843,7 @@ SPEC CHECKSUMS:
   Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
   AMPopTip: cf89d8690aa6e59ddc86bf46c0ccabb3e7d148a1
   BMPlayer: e4b241bd088644d7b89d991a1a65d1b1615d19b3
-  BRPickerViewSwift: 7d4a869dd37a096696d8c2cf44e80d6106394ac6
+  BRPickerViewSwift: 754a1043e981aaeff302fcba986ce76c5c8b99fb
   Cache: 11fe825910b467bf12931fc12624a2f380b3e09b
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   CoreXLSX: f9a7a70b509150ceb675b05877b7ac041a587030
@@ -854,50 +870,54 @@ SPEC CHECKSUMS:
   IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
   IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
-  JobsBy3rdTools: ccd24f50beee712075980ac64654a894869cdea6
+  JobsBy3rdTools: 6ec5c901d29cc06770a1a733e4ff3e8d1ab39893
   JobsByPDFKit: 26daf711a18d487431bd2f9ca5cbf8cc38195ca4
-  JobsByPhotosUI: e7d272d801978785a15bf18d725b7af028485391
-  JobsByQuartzCore: 5659f6ed364a6003df352f81a714b3e6fe54b419
-  JobsByUIKit: 17894bc30af52354f6d2008989e742f902067d3e
-  JobsByWebKit: 0d01da3bba25ffb73afb169f34dfe2ab958d7432
-  JobsCountdownButton: 08eec6b09a85300435af3c7d5725a065a0e04c07
-  JobsCryptoKit: f9d2b6f7d11c0cf76f57ecc0c6690e0603f63b19
-  JobsEmptyView: b7bb5626e94ccf3390e46a260c51b79d44af58bd
+  JobsByPhotosUI: 0719a40d8a729999e856d845df0013c4222c968f
+  JobsByQuartzCore: 983447f27427f3db5c757d3138be9ec3a880512a
+  JobsByUIKit: 3bf523664468b9475f99b4d8fe83d5780d54ae07
+  JobsByWebKit: b6fec1f5591c5255a3af8a87414af8a28e4f0b57
+  JobsCountdownButton: bdaa0a35d4fc729506bc61f4f1063c545a713054
+  JobsCryptoKit: d43e6e44d8868a9f3b2b5f299377452afc4b8459
+  JobsEmptyView: b791272f6fdb650c86a04070390851ba9507b110
   JobsFuseAnimation: 32fcb2ef4c353f9ba765a53584d8b4cfb4c531cc
-  JobsGestureUnlock: e4052af5f2785cbf52102375b0c45a20d65caf74
-  JobsGetWindow: f562b91ed3812946e4b944c04ebbf4cd1ef8b212
-  JobsImageTools: 753dd7b92cf1cf351b588b604751d5cc015c90d5
-  JobsInheritance: 94af2194854f8e3757df30272bbca6a55d96bf10
-  Jobsl10n: 17e47e87e949bd102afdbed0c7f1c20020d61637
-  JobsLocalNotification: 274bdba6e8d8d33bdf0c1e8b5d3911951e161408
-  JobsLuckyEnvelopeRain: 57eca004e1e9eea080fbbd2d7a167057dd05ec0b
-  JobsMarqueeView: 632cfd248cfedbbdf4db1ffa89e2f2365f609b7b
-  JobsNavBar: ca24eee509415edd8d95edc3934063b24f67b8b8
-  JobsNetworking: 4fc229e4de2c2e23df9a89b03edc047104b88ded
-  JobsProgressBar: 9022157e59312babbc71bc9896793d7959235e61
-  JobsScale: c067caa5a33cb452d8d137b448943fdbfab76a97
-  JobsSwiftAppTools: 9fd9b7af9e739b20d2b29426a46a6269369946f5
-  JobsSwiftBaseDefines: 3e9ae1bad099951551f26035339256ee1b363409
-  JobsSwiftBaseTools: fbeb42344eaf62338bf512f90a09bbdc05d4ae8b
-  JobsSwiftBlock: 601027c8df5e0d7be3e7cea2bb81b6235f8964fd
+  JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
+  JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
+  JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
+  JobsInheritance: 2a48bc8e2d7dae3643ad2668803c8a1b773dbba0
+  Jobsl10n: 7dcc6eee8ebefe092b65bd16350bbb9a29460aa6
+  JobsLocalNotification: 18d38925f61b8e4cff4dc5fad504bf84a827a484
+  JobsLuckyEnvelopeRain: f5906bbf98dabe144bd6795d172d41e5d6a88af7
+  JobsMarqueeView: 95859566c8fc1da04f7d9366cdbbe5080ce0d53a
+  JobsNavBar: 8e2d20df7de3e739edb457278920c44e72507047
+  JobsNetworking: 4dcb85f830623ba9105a3a2a73707a5eea41fec1
+  JobsProgressBar: 18efb6cdb4d0f77739f12eed45ec6cc5d454f2c9
+  JobsScale: 0455fa25096eae822c98ecb443122e6125053231
+  JobsSwiftAppTools: e2d672d26bde70330c836809395058c76d9b28dc
+  JobsSwiftBaseDefines: f75d5587dfe99fb44479aa4b23294d9484313884
+  JobsSwiftBaseTools: 3f54c8cb79c9d84902deb474265d1c462a990dba
+  JobsSwiftBlock: ad1994f4adf1832dc6c526d7e870bb38a3945da2
+  JobsSwiftCalendar: fbdd0645e69fb6b72b3197ecefdfd439b0641b70
+  JobsSwiftComment: e7c864c29bfd9fdf785543bd6044b80262d7777f
   JobsSwiftCountryCodeCtrl: eeece097d2d7d872c6229518148b5a5c4c3ef690
-  JobsSwiftDebugTools: 260c8c3d8e5eaa705fb1e73864e131ce30fdab39
+  JobsSwiftDebugTools: 0b091cc71765ad995323dde20f5017f42ee34819
   JobsSwiftDSL: c2ffb7cabff69adc7657b1caf055f11634599008
-  JobsSwiftFoundation: 6d3c8dfbb540c605576c5a163e64cdf4d1bac827
+  JobsSwiftFoundation: 7850038734cf7f5b2154ca9ced57ae7d8bb6f618
+  JobsSwiftGraphicCaptcha: 49dfc2b88701f67f2d17ca71a2acac0612207a5e
   JobsSwiftLinkageMenuView: 7657fdcfa47eed376902bf9fe8bd6c51e2ebfc5e
-  JobsSwiftMetalKit: ddf474c92a2af9b536d6559c673f2b87a515fecd
+  JobsSwiftMetalKit: e406ede5c7672e570e16a8dfb22d629c37bd2bb8
   JobsSwiftOpen: 1885cbecbaacf2a50dcd2bb2d37f09397049cf77
   JobsSwiftPatch: 99e4abe4866100b972356fe9d4a428bf5721345f
-  JobsSwiftRefresher: 5b94d2a7c9f9b6201ac4824de5b8ea2f4e1ddeb9
+  JobsSwiftRefresher: 2e4999e225a099a40500307eee6e4250e08a2031
+  JobsSwiftSearcher: e1a1698231b65209b1ac6efd1e2701426ba4b882
   JobsSwiftSplash: 4677a2a2a34f132e3d2abec17618ed7e7c8b4928
-  JobsSwiftStandardLibrary: 476ed5d872bd691ad9c67211104a66a7e24db2bb
-  JobsSwiftTaskCenter: 980710c5d52267f1bccd58e2db14dc4f82ccb664
-  JobsSwiftTimer: e16094d47de683d810ccfa2cb1e042a984018274
+  JobsSwiftStandardLibrary: 0fde927b7b6f8d83daf3818cbe5094ddd35bbe8b
+  JobsSwiftTaskCenter: ecc03d5d502b9e64eb6ced127e8a95c25cb196b7
+  JobsSwiftTimer: ac6dd48743dfa856639f05f312e1e5a5f2b251fa
   JobsSwiftTimerMgr: fc7acf4184f9d73f5ce4d564b5800e9c9f3321f0
-  JobsSwiftTools: 39c0d90a6778344b11240cafe73aa05f713689d7
-  JobsSwiftWorker: 034bc147b49db5fb60d31473fcf5e33a5886d19d
-  JobsTextTools: ece1103df60c468811c5f6d7bcc89c5a69a2e54a
-  JobsToast: 4153bc40a9f9b8ccbb3864173a079495fdb5b520
+  JobsSwiftTools: c2f4c873f7baf90b02cdd34a06f7c79e22a401de
+  JobsSwiftWorker: e918b2fa5d6beb6f3bb1d587a40fd19b567eabdf
+  JobsTextTools: 492006e86820df999a4b6e450c27148c829b4239
+  JobsToast: 950f1562ce5c058bca1415c76f090371883c5b14
   JobsViewPush: f6b9d0775b8075e05f34dc7d53c7d9db66ce1ebd
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
   JXPageControl: e9487b39e2e58fc17790833214f3b8e935bef98b
@@ -947,4 +967,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2863388e9f3416324bae28a2693eade6a0610ea7
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0
