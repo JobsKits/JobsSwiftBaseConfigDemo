@@ -9,6 +9,7 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+import JobsSwiftDSL
 #endif
 
 public final class JobsSwiftCalendar: UIView {
@@ -84,25 +85,25 @@ public final class JobsSwiftCalendar: UIView {
         let gridY = headerHeight + weekdayHeight
         let rowHeight = rowCount > 0 ? max(0, (height - gridY) / rowCount) : 0
         let columnWidth = width / 7
-        headerLabel.frame = CGRect(x: 0,
+        headerLabel.byFrame(CGRect(x: 0,
                                    y: 0,
                                    width: width,
                                    height: headerHeight).offsetBy(dx: appearance.headerTitleOffset.x,
-                                                                  dy: appearance.headerTitleOffset.y)
+                                                                  dy: appearance.headerTitleOffset.y))
         weekdayLabels.enumerated().forEach { index, label in
-            label.frame = CGRect(x: columnWidth * CGFloat(index),
+            label.byFrame(CGRect(x: columnWidth * CGFloat(index),
                                  y: headerHeight,
                                  width: columnWidth,
-                                 height: weekdayHeight)
+                                 height: weekdayHeight))
         }
         dayCells.enumerated().forEach { index, cell in
             let row = index / 7
             let column = index % 7
-            cell.isHidden = CGFloat(row) >= rowCount
-            cell.frame = CGRect(x: columnWidth * CGFloat(column),
+            cell.byHidden(CGFloat(row) >= rowCount)
+            cell.byFrame(CGRect(x: columnWidth * CGFloat(column),
                                 y: gridY + rowHeight * CGFloat(row),
                                 width: columnWidth,
-                                height: rowHeight)
+                                height: rowHeight))
         }
         if jobsAutomaticallyInvalidateLayoutOnBoundsChange && sizeChanged {
             jobsLastStableBoundsSize = boundsSize
@@ -131,11 +132,11 @@ public final class JobsSwiftCalendar: UIView {
             self?.reloadData()
         }
         if animated {
-            UIView.transition(with: self,
-                              duration: 0.2,
-                              options: .transitionCrossDissolve,
-                              animations: updates,
-                              completion: nil)
+            UIView.jobsTransition(with: self,
+                                  duration: 0.2,
+                                  options: .transitionCrossDissolve,
+                                  animations: updates,
+                                  completion: nil)
         } else {
             updates()
         }
@@ -209,19 +210,19 @@ private extension JobsSwiftCalendar {
     }
 
     func jobsInstallSubviews() {
-        headerLabel.textAlignment = .center
-        addSubview(headerLabel)
+        headerLabel.byTextAlignment(.center)
+        headerLabel.byAddTo(self)
         for _ in 0..<7 {
             let label = UILabel()
-            label.textAlignment = .center
+            label.byTextAlignment(.center)
             weekdayLabels.append(label)
-            addSubview(label)
+            label.byAddTo(self)
         }
         for _ in 0..<42 {
             let cell = JobsSwiftCalendarDayCell(frame: .zero)
-            cell.addTarget(self, action: #selector(jobsCellClickEvent(_:)), for: .touchUpInside)
+            cell.byAddTarget(self, action: #selector(jobsCellClickEvent(_:)), for: .touchUpInside)
             dayCells.append(cell)
-            addSubview(cell)
+            cell.byAddTo(self)
         }
     }
 
@@ -272,10 +273,10 @@ private extension JobsSwiftCalendar {
         if appearance.caseOptions.contains(.headerUsesUpperCase) {
             title = title.uppercased()
         }
-        headerLabel.text = title
-        headerLabel.font = appearance.headerTitleFont
-        headerLabel.textColor = appearance.headerTitleColor
-        headerLabel.textAlignment = appearance.headerTitleAlignment
+        headerLabel.byText(title)
+        headerLabel.byFont(appearance.headerTitleFont)
+        headerLabel.byTextColor(appearance.headerTitleColor)
+        headerLabel.byTextAlignment(appearance.headerTitleAlignment)
     }
 
     func jobsReloadWeekdayLabels() {
@@ -294,9 +295,9 @@ private extension JobsSwiftCalendar {
             };return symbol
         }
         weekdayLabels.enumerated().forEach { index, label in
-            label.text = orderedSymbols[index]
-            label.font = appearance.weekdayFont
-            label.textColor = appearance.weekdayTextColor
+            label.byText(orderedSymbols[index])
+            label.byFont(appearance.weekdayFont)
+            label.byTextColor(appearance.weekdayTextColor)
         }
     }
 

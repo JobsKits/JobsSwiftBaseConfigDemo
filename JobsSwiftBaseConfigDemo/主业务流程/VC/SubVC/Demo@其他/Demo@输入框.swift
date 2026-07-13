@@ -26,9 +26,9 @@ final class UITextFieldDemoVC: BaseVC {
 
     private lazy var emailTF: UITextField = {
         UITextField()
-            .byPlaceholder("请输入邮箱（去空格 / 最长 8）")
-            .byFont(.systemFont(ofSize: 16))
-            .byTextColor(.label)
+            .byPlaceholder("请输入邮箱（去空格 / 最长 8）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
             .byKeyboardType(.emailAddress)
             .byReturnKeyType(.next)
             .byClearButtonMode(.whileEditing)
@@ -49,7 +49,7 @@ final class UITextFieldDemoVC: BaseVC {
                 guard let self else { return }
                 let trimmed = value.trimmingCharacters(in: .whitespaces)
                 if trimmed != value {
-                    self.emailTF.text = trimmed
+                    self.emailTF.byText(trimmed)
                 }
                 let current = self.emailTF.text ?? trimmed
                 let ok = current.count >= 3 && current.contains("@")
@@ -68,7 +68,7 @@ final class UITextFieldDemoVC: BaseVC {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -77,9 +77,9 @@ final class UITextFieldDemoVC: BaseVC {
 
     private lazy var passwordTF: UITextField = {
         UITextField()
-            .byPlaceholder("请输入密码（最长 5）")
-            .byFont(.systemFont(ofSize: 16))
-            .byTextColor(.label)
+            .byPlaceholder("请输入密码（最长 5）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
             .byKeyboardType(.default)
             .byReturnKeyType(.done)
             .byClearButtonMode(.whileEditing)
@@ -109,7 +109,7 @@ final class UITextFieldDemoVC: BaseVC {
                 make.top.equalTo(emailTF.snp.bottom).offset(16)
                 make.left.right.height.equalTo(emailTF)
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -129,9 +129,9 @@ final class UITextFieldDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "UITextField 全量演示"
+            title: "UITextField 全量演示".tr
         )
         emailTF.byVisible(YES)
         passwordTF.byVisible(YES)

@@ -69,6 +69,10 @@ extension UIBarButtonItem {
                         target: nil,
                         action: nil)
     }
+    /// 用自定义视图创建系统导航条项。
+    public static func make(customView: UIView) -> UIBarButtonItem {
+        UIBarButtonItem(customView: customView)
+    }
     /// 弹性空白（兼容 iOS14-）
     public static func flexible() -> UIBarButtonItem {
         if #available(iOS 14.0, *) {

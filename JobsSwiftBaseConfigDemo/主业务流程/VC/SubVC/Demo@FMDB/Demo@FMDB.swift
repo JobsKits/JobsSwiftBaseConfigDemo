@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsInheritance
 import SnapKit
@@ -25,10 +26,10 @@ final class FMDBDemoVC: BaseVC {
     // MARK: - UI (Lazy)
     private lazy var hintLabel: UILabel = {
         UILabel()
-            .byText("FMDB Demo：新增 / 查询 / 更新首条 / 删除末条 / 清空")
+            .byText("FMDB Demo：新增 / 查询 / 更新首条 / 删除末条 / 清空".tr)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.darkGray)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.darkGray)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(horizontalInset)
                 make.right.equalToSuperview().inset(horizontalInset)
@@ -42,7 +43,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var nameField: UITextField = {
         UITextField()
-            .byPlaceholder("姓名（例如：Jobs）")
+            .byPlaceholder("姓名（例如：Jobs）".tr)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
                 make.left.equalToSuperview().offset(horizontalInset)
@@ -53,7 +54,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var ageField: UITextField = {
         UITextField()
-            .byPlaceholder("年龄（例如：18）")
+            .byPlaceholder("年龄（例如：18）".tr)
             .byKeyboardType(.numberPad)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.nameField.snp.bottom).offset(10)
@@ -62,16 +63,16 @@ final class FMDBDemoVC: BaseVC {
     }()
 
     private lazy var addButton: UIButton = {
-        UIButton()
-            .byTitle("新增")
-            .byTitleColor(.systemBlue, for: .normal)
+        UIButton.custom()
+            .byTitle("新增".tr)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .onTap { [weak self] sender in
                 guard let self else { return }
                 let name = (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                 let age = Int((ageField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
 
                 guard !name.isEmpty, age > 0 else {
-                    hintLabel.byText("❗️请输入有效姓名和年龄")
+                    hintLabel.byText("❗️请输入有效姓名和年龄".tr)
                     return
                 }
 
@@ -82,9 +83,9 @@ final class FMDBDemoVC: BaseVC {
     }()
 
     private lazy var queryButton: UIButton = {
-        UIButton()
-            .byTitle("查询全部")
-            .byTitleColor(.systemBlue, for: .normal)
+        UIButton.custom()
+            .byTitle("查询全部".tr)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .onTap { [weak self] sender in
                 guard let self else { return }
                 onQueryAll()
@@ -92,13 +93,13 @@ final class FMDBDemoVC: BaseVC {
     }()
 
     private lazy var updateButton: UIButton = {
-        UIButton()
-            .byTitle("更新首条")
-            .byTitleColor(.systemBlue, for: .normal)
+        UIButton.custom()
+            .byTitle("更新首条".tr)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .onTap { [weak self] sender in
                 guard let self else { return }
                 guard var first = data.first else {
-                    hintLabel.byText("ℹ️ 没有数据可更新")
+                    hintLabel.byText("ℹ️ 没有数据可更新".tr)
                     return
                 }
 
@@ -112,13 +113,13 @@ final class FMDBDemoVC: BaseVC {
     }()
 
     private lazy var deleteButton: UIButton = {
-        UIButton()
-            .byTitle("删除末条")
-            .byTitleColor(.systemBlue, for: .normal)
+        UIButton.custom()
+            .byTitle("删除末条".tr)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .onTap { [weak self] sender in
                 guard let self else { return }
                 guard let last = data.last else {
-                    hintLabel.byText("ℹ️ 没有数据可删除")
+                    hintLabel.byText("ℹ️ 没有数据可删除".tr)
                     return
                 }
 
@@ -129,9 +130,9 @@ final class FMDBDemoVC: BaseVC {
     }()
 
     private lazy var clearButton: UIButton = {
-        UIButton()
-            .byTitle("清空")
-            .byTitleColor(.systemBlue, for: .normal)
+        UIButton.custom()
+            .byTitle("清空".tr)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .onTap { [weak self] sender in
                 guard let self else { return }
                 let ok = ManDB.shared.clearAll()
@@ -180,7 +181,7 @@ final class FMDBDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.byBackgroundColor(JobsCor.white)
         jobsSetupGKNav(title: "FMDB@Demo")
 
         hintLabel.byVisible(YES)
@@ -196,7 +197,7 @@ final class FMDBDemoVC: BaseVC {
         tableView.reloadData()
         tableView.byVisible(data.isEmpty ? NO : YES)
         if data.isEmpty {
-            hintLabel.byText("ℹ️ 当前无数据，先新增一条试试")
+            hintLabel.byText("ℹ️ 当前无数据，先新增一条试试".tr)
         }
     }
 }

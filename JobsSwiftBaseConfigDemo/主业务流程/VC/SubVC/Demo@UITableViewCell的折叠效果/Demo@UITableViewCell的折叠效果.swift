@@ -39,7 +39,7 @@ final class FoldTableDemoVC: BaseVC {
     }
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .bySeparatorStyle(.none)
             .byContentInset(UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0))
             .byRegisterCell(FoldCell.self)
@@ -57,8 +57,8 @@ final class FoldTableDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "UITableViewCell的折叠效果")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "UITableViewCell的折叠效果".tr)
         tableView.byVisible(YES)
     }
 }

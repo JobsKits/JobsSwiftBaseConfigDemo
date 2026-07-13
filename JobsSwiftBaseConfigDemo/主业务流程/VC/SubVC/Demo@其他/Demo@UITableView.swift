@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -35,9 +36,9 @@ final class EmptyTableViewDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
         
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -74,13 +75,13 @@ final class EmptyTableViewDemoVC: BaseVC {
     // ================================== 生命周期 ==================================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .cyan
+        view.byBackgroundColor(JobsCor.cyan)
         jobsSetupGKNav(
-            title: "UITableView@空态刷新",
+            title: "UITableView@空态刷新".tr,
             rightButtons: [
                 UIButton.sys()
-                    .byTitle("空数据刷新", for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 8, weight: .medium))
+                    .byTitle("空数据刷新".tr, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                     /// 按钮图片@图文关系
                     .byImagePlacement(.top)
                     .byImage("moon.circle.fill".sysImg, for: .normal)
@@ -88,7 +89,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         print("🛑 手动停止刷新")
                         items.removeAll()
                         tableView.byReloadData()
@@ -99,8 +100,8 @@ final class EmptyTableViewDemoVC: BaseVC {
                         make.size.equalTo(CGSize(width: 70, height: 44))
                     }),
                 UIButton.sys()
-                    .byTitle("数据刷新", for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 8, weight: .medium))
+                    .byTitle("数据刷新".tr, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                     /// 按钮图片@图文关系
                     .byImagePlacement(.top)
                     .byImage("globe".sysImg, for: .normal)
@@ -108,7 +109,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         if items.isEmpty {
                             items = (1...12).map { "Row \($0)" }
                         } else {

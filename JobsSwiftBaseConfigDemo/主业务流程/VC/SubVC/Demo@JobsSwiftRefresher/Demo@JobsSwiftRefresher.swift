@@ -141,7 +141,7 @@ extension JobsSwiftRefresherDemoVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "刷新控件".tr)
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         collectionView.byVisible(YES)
         tableView.byVisible(YES)
     }

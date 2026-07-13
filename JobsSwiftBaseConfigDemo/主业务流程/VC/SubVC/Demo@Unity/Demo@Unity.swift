@@ -34,7 +34,7 @@ final class UnityDemoVC: BaseVC {
     /// 中间用来放 Unity 的容器（现在只是占位，如果以后要全屏可以不用它）
     private lazy var unityContainerView: UIView = {
         UIView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byCornerRadius(8)
             .byAddTo(view) { make in
                 make.center.equalToSuperview()
@@ -44,9 +44,9 @@ final class UnityDemoVC: BaseVC {
     /// 顶部提示 Unity 真机集成边界。
     private lazy var tipLabel: UILabel = {
         UILabel()
-            .byText("Unity 仅在真机运行；编译时会自动构建并嵌入 UnityFramework")
-            .byTextColor(.systemRed)
-            .byFont(.systemFont(ofSize: 13))
+            .byText("Unity 仅在真机运行；编译时会自动构建并嵌入 UnityFramework".tr)
+            .byTextColor(JobsCor.systemRed)
+            .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -60,7 +60,7 @@ final class UnityDemoVC: BaseVC {
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.decimalPad)
             .byTextAlignment(.center)
-            .byPlaceholder("自动关闭时间（秒）默认 3")
+            .byPlaceholder("自动关闭时间（秒）默认 3".tr)
             .byText("3")
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()
@@ -72,10 +72,10 @@ final class UnityDemoVC: BaseVC {
     /// 开始 Unity
     private lazy var startUnityButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemRed, for: .normal)
-            .byTitle("开始 Unity", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byBackgroundColor(JobsCor.systemRed, for: .normal)
+            .byTitle("开始 Unity".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -92,7 +92,7 @@ final class UnityDemoVC: BaseVC {
                 } else {
                     // 输入非法就回退到默认 3 秒
                     self.unityAutoCloseSeconds = 3
-                    self.closeTimeTextField.text = "3"
+                    self.closeTimeTextField.byText("3")
                 }
 #if canImport(UnityFramework)
                 // 先清理可能存在的 JobsSwiftTimer

@@ -45,9 +45,9 @@ final class MoyaDemoVC: BaseVC {
             .byEditable(false)
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byTextColor(.label)
-            .byBackgroundColor(UIColor.secondarySystemBackground)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(true)
             .byAddTo(view) { [unowned self] make in
@@ -61,13 +61,13 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnZen: UIButton = {
         UIButton.sys()
             .byTitle("GET /zen", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBlue)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] sender in
                 guard let self else { return }
                 clear()
-                show(title: "GET /zen → 请求中…")
+                show(title: "GET /zen → 请求中…".tr)
                 api.provider.request(.ghZen) { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -95,13 +95,13 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnUser: UIButton = {
         UIButton.sys()
             .byTitle("GET /users/apple", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemIndigo)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "GET /users/apple → 请求中…")
+                show(title: "GET /users/apple → 请求中…".tr)
                 api.provider.request(.ghUser(username: "apple")) { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -111,7 +111,7 @@ final class MoyaDemoVC: BaseVC {
                             show(title: "GET /users/apple ✅",
                                  body: "login=\(user.login), id=\(user.id)\navatar=\(user.avatar_url)")
                         } catch {
-                            show(title: "解析失败 ❌",
+                            show(title: "解析失败 ❌".tr,
                                  body: "\(error)")
                         }
                     case .failure(let e):
@@ -130,13 +130,13 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnLogin: UIButton = {
         UIButton.sys()
             .byTitle("POST /login (ReqRes)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemGreen)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "POST /api/login → 请求中…")
+                show(title: "POST /api/login → 请求中…".tr)
                 api.requestWithAutoRefresh(.login(email: "eve.holt@reqres.in", password: "cityslicka")) { [weak self] res in
                     guard let self else { return }
                     switch res {
@@ -159,17 +159,17 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnUpload: UIButton = {
         UIButton.sys()
             .byTitle("UPLOAD /post (httpbin)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemOrange)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "UPLOAD /post → 上传中…（看进度）")
+                show(title: "UPLOAD /post → 上传中…（看进度）".tr)
                 let fake = Data(repeating: 0xFF, count: 200_000)
                 api.provider.request(.uploadAvatar(imageData: fake), progress: { [weak self] prog in
                     guard let self else { return }
-                    self.show(title: "⬆️ 上传进度",
+                    self.show(title: "⬆️ 上传进度".tr,
                               body: String(format: "%.1f%%", prog.progress * 100))
                 }, completion: { [weak self] result in
                     guard let self else { return }
@@ -193,16 +193,16 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnDownloadPNG: UIButton = {
         UIButton.sys()
             .byTitle("DOWNLOAD /image/png", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPink)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPink)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "DOWNLOAD /image/png → 下载中…")
+                show(title: "DOWNLOAD /image/png → 下载中…".tr)
                 api.provider.request(.downloadPNG, progress: { [weak self] prog in
                     guard let self else { return }
-                    show(title: "⬇️ PNG 进度",
+                    show(title: "⬇️ PNG 进度".tr,
                          body: String(format: "%.1f%%", prog.progress * 100))
                 }) { [weak self] result in
                     guard let self else { return }
@@ -226,15 +226,15 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnDownloadBytes: UIButton = {
         UIButton.sys()
             .byTitle("DOWNLOAD /bytes/524288", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemTeal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                show(title: "DOWNLOAD /bytes/524288 → 下载中…")
+                show(title: "DOWNLOAD /bytes/524288 → 下载中…".tr)
                 api.provider.request(.downloadBytes(size: 524_288), progress: { [weak self] prog in
                     guard let self else { return }
-                    show(title: "⬇️ BYTES 进度",
+                    show(title: "⬇️ BYTES 进度".tr,
                          body: String(format: "%.1f%%", prog.progress * 100))
                 }) { [weak self] result in
                     guard let self else { return }
@@ -258,14 +258,14 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnCombineZen: UIButton = {
         UIButton.sys()
             .byTitle("Combine GET /zen", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPurple)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
                 #if canImport(CombineMoya)
-                show(title: "Combine GET /zen → 请求中…")
+                show(title: "Combine GET /zen → 请求中…".tr)
                 api.provider.requestPublisher(.ghZen)
                     .tryMap { response -> String in
                         guard (200..<300).contains(response.statusCode) else {
@@ -284,7 +284,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                     .store(in: &bag)
                 #else
-                show(title: "CombineMoya 未集成，跳过 Combine 示例")
+                show(title: "CombineMoya 未集成，跳过 Combine 示例".tr)
                 #endif
             }
             .byAddTo(view) { [unowned self] make in
@@ -297,13 +297,13 @@ final class MoyaDemoVC: BaseVC {
     private lazy var btnStub: UIButton = {
         UIButton.sys()
             .byTitle("Stub: sampleData", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.darkGray)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.darkGray)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "Stub 示例 → 使用 sampleData")
+                show(title: "Stub 示例 → 使用 sampleData".tr)
                 let stubAPI = APIService.stubbed { [weak self] text in
                     guard let self else { return }
                     self.appendRawLog(text ?? "")
@@ -329,9 +329,9 @@ final class MoyaDemoVC: BaseVC {
     /// 清空输出按钮（就地约束，位于 resultView 之上右侧）
     private lazy var btnClear: UIButton = {
         UIButton.sys()
-            .byTitle("清空输出", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemRed)
+            .byTitle("清空输出".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemRed)
             .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -346,8 +346,8 @@ final class MoyaDemoVC: BaseVC {
     // =============== 生命周期 ===============
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "Moya 全量用法 Demo")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "Moya 全量用法 Demo".tr)
 
         // 触发懒加载 + 就地布局（按顺序确保依赖关系）
         btnZen.byVisible(YES)
@@ -361,7 +361,7 @@ final class MoyaDemoVC: BaseVC {
         btnClear.byVisible(YES)
         resultView.byVisible(YES)
 
-        show(title: "准备就绪 ✅", body: "点上面的按钮触发网络示例，结果会回显到这里。")
+        show(title: "准备就绪 ✅".tr, body: "点上面的按钮触发网络示例，结果会回显到这里。")
     }
 }
 

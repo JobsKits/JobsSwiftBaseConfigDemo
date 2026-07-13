@@ -26,14 +26,14 @@ final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate 
     private lazy var tipLabel: UILabel = {
         UILabel()
             .byText("这里是「\(titleText)」示例页面")
-            .byFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { make in make.center.equalToSuperview() }
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         tipLabel.byVisible(YES)
     }
 

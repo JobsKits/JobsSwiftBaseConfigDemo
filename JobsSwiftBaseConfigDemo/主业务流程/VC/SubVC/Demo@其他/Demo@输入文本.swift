@@ -57,8 +57,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title1: UILabel = {
         UILabel()
             .byText("1️⃣ 输入监听（byOnInput）".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalToSuperview().offset(16)
                 make.right.equalToSuperview().offset(-16)
@@ -68,18 +68,18 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tv1: UITextView = {
         UITextView()
-            .byFont(.systemFont(ofSize: 16))
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byKeyboardType(.default)
             .byEditable(true)
             .bySelectable(true)
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
             .byPlaceHolder("哈哈哈哈".tr)
-            .byPlaceHolderCor(.blue)
-            .byPlaceHolderFont(.boldSystemFont(ofSize: 15))
+            .byPlaceHolderCor(JobsCor.blue)
+            .byPlaceHolderFont(JobsFont.boldSystemFont(ofSize: 15))
             .byHintLimit(12) { lb in
-                lb.byFont(.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
-                    .byTextColor(.red)
+                lb.byFont(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
+                    .byTextColor(JobsCor.red)
             }
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
             .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
@@ -108,8 +108,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title2: UILabel = {
         UILabel()
             .byText("2️⃣ 金额输入（formatter + validator + maxLength）".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tv1.snp.bottom).offset(16)
                 make.left.right.equalTo(tv1)
@@ -118,10 +118,10 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tvMoney: UITextView = {
         UITextView()
-            .byFont(.monospacedDigitSystemFont(ofSize: 16, weight: .regular))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .regular))
             .byKeyboardType(.decimalPad)
             .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
             .byText("123.45")
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
             .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
@@ -132,9 +132,9 @@ final class UITextViewDemoVC: BaseVC {
                 // mode：space/delete/return/normal
                 // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.decimal(scale: 2)(value)
-                if text != formatted { tv.text = formatted }
+                if text != formatted { tv.byText(formatted) }
                 let ok = JobsValidators.decimal(min: 0, max: 999_999)(formatted)
-                tv.byBorderColor(ok ? UIColor.systemGreen : UIColor.systemRed)
+                tv.byBorderColor(ok ? JobsCor.systemGreen : JobsCor.systemRed)
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
             .byBeginEditing { value in
@@ -153,8 +153,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title3: UILabel = {
         UILabel()
             .byText("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvMoney.snp.bottom).offset(16)
                 make.left.right.equalTo(tv1)
@@ -163,9 +163,9 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tvPhone: UITextView = {
         UITextView()
-            .byFont(.systemFont(ofSize: 16))
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byKeyboardType(.numberPad)
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
             .byText("13800138000")
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
             .byOnInput(limit: 13) { [weak self] char, value, mode, isLimited ,text ,tv in
@@ -176,9 +176,9 @@ final class UITextViewDemoVC: BaseVC {
                 // mode：space/delete/return/normal
                 // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.phoneCN()(value)
-                if tv.text != formatted { tv.text = formatted }
+                if tv.text != formatted { tv.byText(formatted) }
                 let ok = JobsValidators.phoneCN()(formatted)
-                tv.layer.borderColor = (ok ? UIColor.systemGreen : UIColor.systemOrange).cgColor
+                tv.byBorderColor(ok ? JobsCor.systemGreen : JobsCor.systemOrange)
                 print("📱 char='\(char)' value='\(formatted)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
             }
             .byBeginEditing { value in
@@ -197,8 +197,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title4: UILabel = {
         UILabel()
             .byText("4️⃣ 富文本 + 链接样式 + DataDetector".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvPhone.snp.bottom).offset(16)
                 make.left.right.equalTo(tv1)
@@ -209,21 +209,21 @@ final class UITextViewDemoVC: BaseVC {
         UITextView()
             .byAttributedText(NSMutableAttributedString(
                 string: "🔗 默认蓝色链接（系统样式）：",
-                attributes: [.font: UIFont.systemFont(ofSize: 15),
-                             .foregroundColor: UIColor.secondaryLabel]
+                attributes: [.font: JobsFont.systemFont(ofSize: 15),
+                             .foregroundColor: JobsCor.secondaryLabel]
             ).byAdd(NSAttributedString(
                 string: " Apple 官网",
                 attributes: [.link: URL(string: "https://www.apple.com")!,
-                             .font: UIFont.boldSystemFont(ofSize: 16)]
+                             .font: JobsFont.boldSystemFont(ofSize: 16)]
             )).byAdd(NSAttributedString(
                 string: "\n客服电话：400-123-4567",
-                attributes: [.font: UIFont.systemFont(ofSize: 15)]
+                attributes: [.font: JobsFont.systemFont(ofSize: 15)]
             )))
             .byEditable(false)
             .bySelectable(true)
             .byDataDetectorTypes([.link, .phoneNumber])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
             .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
@@ -241,25 +241,25 @@ final class UITextViewDemoVC: BaseVC {
         UITextView()
             .byAttributedText(NSMutableAttributedString(
                 string: "🔴 自定义红色链接：",
-                attributes: [.font: UIFont.systemFont(ofSize: 15),
-                             .foregroundColor: UIColor.secondaryLabel]
+                attributes: [.font: JobsFont.systemFont(ofSize: 15),
+                             .foregroundColor: JobsCor.secondaryLabel]
             ).byAdd(NSAttributedString(
                 string: " Jobs 官网",
                 attributes: [.link: URL(string: "https://www.google.com")!,
-                             .font: UIFont.boldSystemFont(ofSize: 16)]
+                             .font: JobsFont.boldSystemFont(ofSize: 16)]
             )).byAdd(NSAttributedString(
                 string: "\n客服电话：400-123-4567",
-                attributes: [.font: UIFont.systemFont(ofSize: 15)]
+                attributes: [.font: JobsFont.systemFont(ofSize: 15)]
             )))
             .byEditable(false)
             .bySelectable(true)
             .byDataDetectorTypes([.link, .phoneNumber])
             .byLinkTextAttributes([
-                .foregroundColor: UIColor.systemRed,
+                .foregroundColor: JobsCor.systemRed,
                 .underlineStyle: NSUnderlineStyle.single.rawValue
             ])
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
             .byBeginEditing { value in
                 print("✍️ begin:", value)
             }
@@ -276,8 +276,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title6: UILabel = {
         UILabel()
             .byText("6️⃣ 双向绑定示例：A ⇄ B ⇄ Value".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvRed.snp.bottom).offset(16)
                 make.left.right.equalTo(tv1)
@@ -286,8 +286,8 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tvA: UITextView = {
         UITextView()
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .byFont(.systemFont(ofSize: 16))
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byText(relayValue)
             // A -> B
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
@@ -315,8 +315,8 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tvB: UITextView = {
         UITextView()
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .byFont(.systemFont(ofSize: 16))
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byText(relayValue)
             // B -> A
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
@@ -344,8 +344,8 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var valueLab: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13))
+            .byTextColor(JobsCor.secondaryLabel)
             .byText("Value: \(relayValue)")
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvB.snp.bottom).offset(8)
@@ -356,8 +356,8 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title7: UILabel = {
         UILabel()
             .byText("7️⃣ 删除键监听".tr)
-            .byFont(.boldSystemFont(ofSize: 15))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.boldSystemFont(ofSize: 15))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(valueLab.snp.bottom).offset(16)
                 make.left.right.equalTo(tv1)
@@ -366,9 +366,9 @@ final class UITextViewDemoVC: BaseVC {
 
     private lazy var tvDelete: UITextView = {
         UITextView()
-            .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
-            .byFont(.systemFont(ofSize: 16))
-            .byText("删除我试试看 👇")
+            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byText("删除我试试看 👇".tr)
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
             .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
                 guard let self else { return }
@@ -396,7 +396,7 @@ final class UITextViewDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "UITextView 全量演示".tr)
 
         title1.byVisible(YES)
@@ -424,7 +424,7 @@ extension UITextViewDemoVC {
         isSyncing = true
         relayValue = value
         valueLab.byText("Value: \(relayValue)")
-        if target.text != value { target.text = value }
+        if target.text != value { target.byText(value) }
         isSyncing = false
     }
 }

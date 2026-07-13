@@ -27,11 +27,11 @@ import GKNavigationBarSwift
 private func makeMessageView(title: String, desc: String, systemImage: String) -> UIView {
     let titleLabel = EKProperty.LabelContent(
         text: title,
-        style: .init(font: .boldSystemFont(ofSize: 16), color: EKColor(.label))
+        style: .init(font: JobsFont.boldSystemFont(ofSize: 16), color: EKColor(JobsCor.label))
     )
     let descLabel = EKProperty.LabelContent(
         text: desc,
-        style: .init(font: .systemFont(ofSize: 14), color: EKColor(.secondaryLabel))
+        style: .init(font: JobsFont.systemFont(ofSize: 14), color: EKColor(JobsCor.secondaryLabel))
     )
     let image = EKProperty.ImageContent(image: UIImage(systemName: systemImage)!)
     let simple = EKSimpleMessage(image: image, title: titleLabel, description: descLabel)
@@ -59,14 +59,14 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnTopBanner: UIButton = {
         UIButton.sys()
-            .byTitle("顶部 Banner（2s 自动消失）")
+            .byTitle("顶部 Banner（2s 自动消失）".tr)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animTranslationInOut
                 var attr = EKAttributes()
                     .byPosition(.top)
                     .byDuration(2)
                     .byBackground(.visualEffect(style: .dark))
-                    .byScreen(.color(color: EKColor(.clear)))
+                    .byScreen(.color(color: EKColor(JobsCor.clear)))
                     .byCorner(radius: 14)
                     .byShadow()
                     .byHaptic(.success)
@@ -76,7 +76,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byWindow(level: .normal)
                     .byEntrance(anim.entrance)
                     .byExit(anim.exit)
-                SwiftEntryKit.display(entry: makeMessageView(title: "已完成",
+                SwiftEntryKit.display(entry: makeMessageView(title: "已完成".tr,
                                                              desc: "数据保存成功",
                                                              systemImage: "checkmark.circle.fill"),
                                       using: attr)
@@ -85,15 +85,15 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnCenterToast: UIButton = {
         UIButton.sys()
-            .byTitle("中心 Toast（缩放进入）")
+            .byTitle("中心 Toast（缩放进入）".tr)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animScaleInFadeOut
                 var attr = EKAttributes()
                     .bySize(width: .constant(value: 340.w), height: .constant(value: 270.h))
                     .byPosition(.center)
                     .byDuration(1.6)
-                    .byBackground(.color(color: EKColor(.label)))
-                    .byScreen(.color(color: EKColor(.clear)))
+                    .byBackground(.color(color: EKColor(JobsCor.label)))
+                    .byScreen(.color(color: EKColor(JobsCor.clear)))
                     .byCorner(radius: 12)
                     .byHaptic(.warning)
                     .byAbsorbTouches(false)
@@ -101,7 +101,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byStatusBar(.inferred)
                     .byEntrance(anim.entrance)
                     .byExit(anim.exit)
-                SwiftEntryKit.display(entry: makeMessageView(title: "提示",
+                SwiftEntryKit.display(entry: makeMessageView(title: "提示".tr,
                                                              desc: "中心 Toast",
                                                              systemImage: "bolt.fill"),
                                       using: attr)
@@ -110,14 +110,14 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnBottomSheet: UIButton = {
         UIButton.sys()
-            .byTitle("底部半高 Sheet（可拖动&键盘避让）")
+            .byTitle("底部半高 Sheet（可拖动&键盘避让）".tr)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animTranslationInOut
                 var attr = EKAttributes()
                     .byPosition(.bottom)
                     .byDuration(.infinity)
-                    .byBackground(.color(color: EKColor(.secondarySystemBackground)))
-                    .byScreen(.color(color: EKColor(UIColor(white: 0, alpha: 0.35))))
+                    .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
+                    .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.35))))
                     .byCorner(radius: 18, edges: .top(radius: 18))
                     .byShadow()
                     .byAbsorbTouches(true)       // 点击遮罩关闭
@@ -138,7 +138,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnFullscreen: UIButton = {
         UIButton.sys()
-            .byTitle("全屏公告（点遮罩关闭）")
+            .byTitle("全屏公告（点遮罩关闭）".tr)
             .onTap { [weak self] (_: UIButton) in
                 guard let self else { return }
                 label.byVisible(YES)
@@ -146,8 +146,8 @@ final class SwiftEntryKitDemoVC: BaseVC {
                 var attr = EKAttributes()
                     .byPosition(.center)
                     .byDuration(.infinity)
-                    .byBackground(.color(color: EKColor(.clear)))
-                    .byScreen(.color(color: EKColor(UIColor(white: 0, alpha: 0.6))))
+                    .byBackground(.color(color: EKColor(JobsCor.clear)))
+                    .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.6))))
                     .byEntryInteraction(.dismiss)     // 已有的 DSL
                     .byScreenInteraction(.dismiss)    // 已有的 DSL
                     .byDisplayMode(.dark)
@@ -168,7 +168,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnCenterConfirmToast: UIButton = {
         UIButton.sys()
-            .byTitle("中心 Toast（确认按钮关闭）")
+            .byTitle("中心 Toast（确认按钮关闭）".tr)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animScaleInFadeOut
                 var attr = EKAttributes()
@@ -176,14 +176,14 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byPosition(.center)
                     .byDuration(.infinity)  // 交互型：不自动消失
                     // 统一交给 EK 控制外观
-                    .byBackground(.color(color: EKColor(.secondarySystemBackground)))
+                    .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
                     .byCorner(radius: 14)
                     .byShadow()
                     // 外部点击无效，必须点按钮
                     .byEntryInteraction(.absorbTouches)
                     .byScreenInteraction(.forward)
                     // 给一点儿半透明遮罩增强聚焦，但不响应关闭
-                    .byScreen(.color(color: EKColor(UIColor(white: 0, alpha: 0.15))))
+                    .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.15))))
                     .byDisplayMode(.inferred)
                     .byStatusBar(.inferred)
                     .byEntrance(anim.entrance)
@@ -196,7 +196,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnQueue: UIButton = {
         UIButton.sys()
-            .byTitle("队列与优先级（先排队，再插队）")
+            .byTitle("队列与优先级（先排队，再插队）".tr)
             .onTap { [weak self] (_: UIButton) in
                 func enqueue(_ title: String, priority: EKAttributes.Precedence.Priority = .normal) {
                     let anim = EKAttributes.animTranslationInOut
@@ -223,12 +223,12 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     var a = EKAttributes()
                         .byPosition(.top)
                         .byDuration(1.8)
-                        .byBackground(.color(color: EKColor(.systemYellow)))
+                        .byBackground(.color(color: EKColor(JobsCor.systemYellow)))
                         .byCorner(radius: 12)
                         .byQueue(priority: .max, dropEnqueuedEntries: false)
                         .byHaptic(.success)
                         .byEntrance(anim.entrance).byExit(anim.exit)
-                    SwiftEntryKit.display(entry: makeMessageView(title: "⚡️ 高优先级覆盖", desc: "precedence.override", systemImage: "bolt.fill"),
+                    SwiftEntryKit.display(entry: makeMessageView(title: "⚡️ 高优先级覆盖".tr, desc: "precedence.override", systemImage: "bolt.fill"),
                                           using: a)
                 }
             }
@@ -236,20 +236,20 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnStatusBar: UIButton = {
         UIButton.sys()
-            .byTitle("状态栏样式切换（light/dark）")
+            .byTitle("状态栏样式切换（light/dark）".tr)
             .onTap { [weak self] (_: UIButton) in
                 let t = EKAttributes.animTranslationInOut
                 var a1 = EKAttributes()
                     .byPosition(.top)
                     .byDuration(1.4)
-                    .byBackground(.color(color: EKColor(.systemBlue)))
+                    .byBackground(.color(color: EKColor(JobsCor.systemBlue)))
                     .byCorner(radius: 12)
                     .byStatusBar(.light)
                     .byHaptic(.success)
                     .byEntrance(t.entrance)
                     .byExit(t.exit)
 
-                SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Light", desc: "statusBar = .light", systemImage: "sun.max.fill"),
+                SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Light".tr, desc: "statusBar = .light", systemImage: "sun.max.fill"),
                                       using: a1)
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -257,14 +257,14 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     var a2 = EKAttributes()
                         .byPosition(.top)
                         .byDuration(1.4)
-                        .byBackground(.color(color: EKColor(.systemGray6)))
+                        .byBackground(.color(color: EKColor(JobsCor.systemGray6)))
                         .byCorner(radius: 12)
                         .byStatusBar(.dark)
                         .byHaptic(.warning)
                         .byEntrance(tt.entrance)
                         .byExit(tt.exit)
 
-                    SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Dark", desc: "statusBar = .dark", systemImage: "moon.fill"),
+                    SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Dark".tr, desc: "statusBar = .dark", systemImage: "moon.fill"),
                                           using: a2)
                 }
             }
@@ -272,23 +272,23 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnDismissAll: UIButton = {
         UIButton.sys()
-            .byTitle("手动关闭所有")
+            .byTitle("手动关闭所有".tr)
             .onTap { (_: UIButton) in
                 SwiftEntryKit.dismiss(.all, with: nil)
             }
     }()
 
     private lazy var container: UIView = {
-        UIView().byBackgroundColor(UIColor.black.withAlphaComponent(0.88))
+        UIView().byBackgroundColor(JobsCor.black.withAlphaComponent(0.88))
     }()
 
     private lazy var label: UILabel = {
         UILabel()
-            .byText("📢 这是一则全屏公告\n点空白可关闭")
+            .byText("📢 这是一则全屏公告\n点空白可关闭".tr)
             .byTextAlignment(.center)
-            .byFont(.boldSystemFont(ofSize: 22))
+            .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byNumberOfLines(0)
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byAddTo(container) { make in
                 make.center.equalToSuperview()
                 make.left.right.equalToSuperview().inset(24)
@@ -297,8 +297,8 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "SwiftEntryKit 全展示")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "SwiftEntryKit 全展示".tr)
         [btnTopBanner,
          btnCenterToast,
          btnBottomSheet,

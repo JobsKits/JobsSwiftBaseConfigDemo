@@ -26,13 +26,13 @@ final class FlutterDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
             /// 背景色
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             /// 普通字符串@设置主标题
-            .byTitle("显示", for: .normal)
-            .byTitle("隐藏", for: .selected)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleColor(.systemRed, for: .selected)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("显示".tr, for: .normal)
+            .byTitle("隐藏".tr, for: .selected)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleColor(JobsCor.systemRed, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             /// 普通@点按事件触发（这里按要求：弹出 Flutter + 双向传值）
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -71,7 +71,7 @@ final class FlutterDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Swift ➤ Flutter@Demo")
         exampleButton.byVisible(YES)
     }

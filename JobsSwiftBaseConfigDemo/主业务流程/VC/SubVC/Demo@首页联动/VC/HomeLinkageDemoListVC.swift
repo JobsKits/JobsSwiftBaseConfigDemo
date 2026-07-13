@@ -64,8 +64,8 @@ final class HomeLinkageDemoListVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "首页联动")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "首页联动".tr)
         tableView.byVisible(YES)
     }
 }
@@ -84,8 +84,8 @@ extension HomeLinkageDemoListVC: UITableViewDataSource, UITableViewDelegate {
         var config = cell.defaultContentConfiguration()
         config.text = row.title
         config.secondaryText = row.subtitle
-        config.textProperties.font = .systemFont(ofSize: 17, weight: .semibold)
-        config.secondaryTextProperties.font = .systemFont(ofSize: 13, weight: .regular)
+        config.textProperties.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
+        config.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
         config.secondaryTextProperties.numberOfLines = 0
         cell.contentConfiguration = config
         return cell

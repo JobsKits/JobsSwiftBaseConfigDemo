@@ -11,6 +11,8 @@ Pod::Spec.new do |spec|
   spec.platform      = :ios, '12.0'
   spec.swift_version = '5.0'
   spec.source        = { :path => '.' }
-  spec.source_files  = '*.swift'
+  spec.source_files  = ['JobsViewPush.swift', 'Core/**/*.swift']
   spec.frameworks    = ['UIKit']
+  spec.dependency 'JobsSwiftDSL'
+  spec.dependency 'JobsSwiftBaseDefines'
 end

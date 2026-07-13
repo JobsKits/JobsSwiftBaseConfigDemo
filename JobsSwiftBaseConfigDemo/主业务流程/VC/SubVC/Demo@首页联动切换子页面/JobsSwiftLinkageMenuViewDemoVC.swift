@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -32,29 +33,29 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private lazy var modeControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["菜单固定", "内容固定", "比例"])
         control.selectedSegmentIndex = LayoutMode.fixedMenu.rawValue
-        control.addTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
+        control.byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
         return control
     }()
 
     private lazy var callbackLabel: UILabel = {
         UILabel()
-            .byText("当前菜单：日常.1")
-            .byTextColor(.darkGray)
-            .byFont(.systemFont(ofSize: 13))
+            .byText("当前菜单：日常.1".tr)
+            .byTextColor(JobsCor.darkGray)
+            .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(1)
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        jobsSetupGKNav(title: "首页联动切换子页面")
+        view.byBackgroundColor(JobsCor.white)
+        jobsSetupGKNav(title: "首页联动切换子页面".tr)
         mountControls()
         rebuildLinkageView()
     }
 
     private func mountControls() {
-        view.addSubview(modeControl)
-        view.addSubview(callbackLabel)
+        modeControl.byAddTo(view)
+        callbackLabel.byAddTo(view)
         modeControl.snp.makeConstraints { [unowned self] make in
             make.left.right.equalToSuperview().inset(16)
             if view.jobs_hasVisibleTopBar() {
@@ -79,10 +80,10 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         config.menuItemHeightMap = [4: 96]
         config.indicatorWidth = 4
         config.indicatorHeight = 56
-        config.menuBackgroundColor = UIColor(white: 0.96, alpha: 1)
-        config.contentBackgroundColor = .white
-        config.selectedTintColor = UIColor(red: 1, green: 0.55, blue: 0, alpha: 1)
-        config.selectedBackgroundColor = UIColor(red: 1, green: 0.55, blue: 0, alpha: 0.18)
+        config.menuBackgroundColor = UIColor(gray: 0.96 * 255)
+        config.contentBackgroundColor = JobsCor.white
+        config.selectedTintColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
+        config.selectedBackgroundColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
 
         switch LayoutMode(rawValue: modeControl.selectedSegmentIndex) ?? .fixedMenu {
         case .fixedMenu:
@@ -106,7 +107,7 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
                                             contentViews: makeContentViews(),
                                             config: config)
         self.linkageView = view
-        self.view.addSubview(view)
+        view.byAddTo(self.view)
         view.snp.makeConstraints { [unowned self] make in
             make.left.right.bottom.equalToSuperview()
             make.top.equalTo(callbackLabel.snp.bottom).offset(8)
@@ -116,8 +117,8 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private func makeMenuItems() -> [JobsSwiftLinkageMenuItem] {
         menuTitles.map {
             JobsSwiftLinkageMenuItem(title: $0,
-                                     image: iconImage(color: .gray),
-                                     selectedImage: iconImage(color: UIColor(red: 1, green: 0.55, blue: 0, alpha: 1)))
+                                     image: iconImage(color: JobsCor.gray),
+                                     selectedImage: iconImage(color: UIColor(r: 255, g: 0.55 * 255, b: 0)))
         }
     }
 
@@ -130,19 +131,23 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private func iconImage(color: UIColor) -> UIImage {
         let size = CGSize(width: 26, height: 26)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        let path = UIBezierPath()
+        let path = UIBezierPath.make()
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         for i in 0..<10 {
             let radius: CGFloat = i.isMultiple(of: 2) ? 12 : 5
             let angle = CGFloat(i) * .pi / 5 - .pi / 2
             let point = CGPoint(x: center.x + cos(angle) * radius,
                                 y: center.y + sin(angle) * radius)
-            i == 0 ? path.move(to: point) : path.addLine(to: point)
+            if i == 0 {
+                path.byMove(to: point)
+            } else {
+                path.byAddLine(to: point)
+            }
         }
-        path.close()
+        path.byClose()
         color.setFill()
-        path.fill()
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        path.byFill()
+        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make()
         UIGraphicsEndImageContext()
         return image
     }
@@ -161,11 +166,11 @@ private final class ActivityListView: UIView {
         self.sectionTitle = sectionTitle
         self.menuTitle = menuTitle
         super.init(frame: .zero)
-        backgroundColor = .white
+        self.byBackgroundColor(JobsCor.white)
         for index in 0..<5 {
             let card = makeCard(index: index)
             cards.append(card)
-            addSubview(card)
+            card.byAddTo(self)
         }
     }
 
@@ -179,43 +184,43 @@ private final class ActivityListView: UIView {
         let width = max(0, bounds.width - x * 2)
         var y: CGFloat = 16
         for card in cards {
-            card.frame = CGRect(x: x, y: y, width: width, height: 96)
+            card.byFrame(CGRect(x: x, y: y, width: width, height: 96))
             y += 112
         }
     }
 
     private func makeCard(index: Int) -> UIView {
         let card = UIView()
-        card.backgroundColor = UIColor(red: 0.86, green: 0.72, blue: 0.91, alpha: 1)
-        card.layer.cornerRadius = 12
-        card.layer.shadowColor = UIColor.black.cgColor
+        card.byBackgroundColor(UIColor(r: 0.86 * 255, g: 0.72 * 255, b: 0.91 * 255))
+        card.byCornerRadius(12)
+        card.layer.shadowColor = JobsCor.black.cgColor
         card.layer.shadowOpacity = 0.15
         card.layer.shadowOffset = CGSize(width: 0, height: 3)
         card.layer.shadowRadius = 6
 
         let iconLabel = UILabel()
-        iconLabel.text = "✉"
-        iconLabel.textAlignment = .center
-        iconLabel.textColor = .white
-        iconLabel.font = .boldSystemFont(ofSize: 34)
-        iconLabel.backgroundColor = UIColor(red: 1, green: 0.32, blue: 0.13, alpha: 1)
-        iconLabel.layer.cornerRadius = 8
-        iconLabel.layer.masksToBounds = true
+        iconLabel.byText("✉")
+        iconLabel.byTextAlignment(.center)
+        iconLabel.byTextColor(JobsCor.white)
+        iconLabel.byFont(JobsFont.boldSystemFont(ofSize: 34))
+        iconLabel.byBackgroundColor(UIColor(r: 255, g: 0.32 * 255, b: 0.13 * 255))
+        iconLabel.byCornerRadius(8)
+        iconLabel.byMasksToBounds(true)
 
         let titleLabel = UILabel()
-        titleLabel.text = "\(sectionTitle) - \(menuTitle) 活动 \(index + 1)"
-        titleLabel.textColor = .label
-        titleLabel.font = .boldSystemFont(ofSize: 18)
-        titleLabel.numberOfLines = 2
+        titleLabel.byText("\(sectionTitle) - \(menuTitle) 活动 \(index + 1)")
+        titleLabel.byTextColor(JobsCor.label)
+        titleLabel.byFont(JobsFont.boldSystemFont(ofSize: 18))
+        titleLabel.byNumberOfLines(2)
 
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "神秘彩金等你来拿"
-        subtitleLabel.textColor = .darkGray
-        subtitleLabel.font = .systemFont(ofSize: 15)
+        subtitleLabel.byText("神秘彩金等你来拿".tr)
+        subtitleLabel.byTextColor(JobsCor.darkGray)
+        subtitleLabel.byFont(JobsFont.systemFont(ofSize: 15))
 
-        card.addSubview(iconLabel)
-        card.addSubview(titleLabel)
-        card.addSubview(subtitleLabel)
+        iconLabel.byAddTo(card)
+        titleLabel.byAddTo(card)
+        subtitleLabel.byAddTo(card)
 
         iconLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(16)

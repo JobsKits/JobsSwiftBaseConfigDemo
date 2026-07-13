@@ -51,7 +51,7 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byContentInsetTop(8)
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
+                UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
@@ -121,8 +121,8 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byContentInsetTop(8)
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -197,7 +197,7 @@ final class RxDataSourcesDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "RxDataSources Demo")
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         seg.byAddTo(view) { [unowned self] make in
             if view.jobs_hasVisibleTopBar() {
                 make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)

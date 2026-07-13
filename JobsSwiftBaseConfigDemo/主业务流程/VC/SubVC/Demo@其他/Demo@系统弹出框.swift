@@ -23,9 +23,9 @@ import GKNavigationBarSwift
 final class UIAlertDemoVC: BaseVC {
     // MARK: 最简单的 Alert：主/副标题 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
     private lazy var simpleAlertBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("① 简单 Alert")
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        UIButton.sys()
+            .byTitle("① 简单 Alert".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 UIAlertController
@@ -46,9 +46,9 @@ final class UIAlertDemoVC: BaseVC {
     }()
     // MARK: 主/副标题 + 设置背景图（本地/网络）+ 输入框@监听（输入_删除）回调 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
     private lazy var textFieldAlertBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("② 输入框 Alert（读取文本）")
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        UIButton.sys()
+            .byTitle("② 输入框 Alert（读取文本）".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
 
@@ -61,15 +61,15 @@ final class UIAlertDemoVC: BaseVC {
 //                                     image: "唐老鸭".img,
 //                                     hideSystemBackdrop: true)
                     .byBgImage("唐老鸭".img)                      // 本地图背景（同步阶段，无动画）
-                    .byCardBorder(width: 1, color: .systemBlue)   // 外层卡片描边
+                    .byCardBorder(width: 1, color: JobsCor.systemBlue)   // 外层卡片描边
                     .byAddTextField(placeholder: "新名称",
                                     borderWidth: nil,             // ← 不给 tf 自身描边
                                     borderColor: nil,
                                     cornerRadius: 8) { alert, tf, input, oldText, isDeleting in
                         let ok = alert.actions.first { $0.title == "确定" }
-                        ok?.isEnabled = !(tf.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        ok?.byEnabled(!(tf.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
-                    .byTextFieldOuterBorder(at: 0, width: 1, color: .systemBlue, cornerRadius: 10, insets: .init(top: 6, left: 12, bottom: 6, right: 12)) // ← 给灰色容器描边
+                    .byTextFieldOuterBorder(at: 0, width: 1, color: JobsCor.systemBlue, cornerRadius: 10, insets: .init(top: 6, left: 12, bottom: 6, right: 12)) // ← 给灰色容器描边
                     .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
                         print("Cancel tapped")
                     }
@@ -77,7 +77,7 @@ final class UIAlertDemoVC: BaseVC {
                         let name = alert.textField(at: 0)?.text ?? ""
                         print("new name =", name)
                     }
-                    .byTintColor(.systemBlue)
+                    .byTintColor(JobsCor.systemBlue)
                     .byPresent(self)
             }
             .byAddTo(view) { [unowned self] make in
@@ -87,17 +87,17 @@ final class UIAlertDemoVC: BaseVC {
     }()
     // MARK: 主标题 + 相机_相册_取消@按钮行为监听 + 屏幕底部弹出 + 点击空白区域可取消
     private lazy var actionSheetAutoBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("③ ActionSheet（自动锚点）")
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        UIButton.sys()
+            .byTitle("③ ActionSheet（自动锚点）".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 UIAlertController
                     .makeActionSheet("选择来源", nil)
-                    .byAddAction(title: "相机") { _ in
+                    .byAddAction(title: "相机".tr) { _ in
                         print("camera")
                     }
-                    .byAddAction(title: "相册") { _ in
+                    .byAddAction(title: "相册".tr) { _ in
                         print("photos")
                     }
                     .byAddCancel { _ in
@@ -112,9 +112,9 @@ final class UIAlertDemoVC: BaseVC {
     }()
     // MARK: 主标题 + 删除_取消@按钮行为监听 + 从按钮自身位置（锚点）弹出 + 点击空白区域可取消
     private lazy var actionSheetFromButtonBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("④ 从当前按钮处弹出")
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        UIButton.sys()
+            .byTitle("④ 从当前按钮处弹出".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] sender in
                 guard let self else { return }
                 UIAlertController
@@ -134,9 +134,9 @@ final class UIAlertDemoVC: BaseVC {
     }()
     /// 5) iOS16+ 严重程度 + 首选按钮
     private lazy var severityAlertBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("⑤ Critical Alert（iOS16+）")
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 if #available(iOS 16.0, *) {
@@ -165,8 +165,8 @@ final class UIAlertDemoVC: BaseVC {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "系统的弹出框")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "系统的弹出框".tr)
 
         simpleAlertBtn.byVisible(YES)
         textFieldAlertBtn.byVisible(YES)

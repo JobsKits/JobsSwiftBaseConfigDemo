@@ -88,13 +88,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fitContent)   // 典型公告跑马灯
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 1", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上连续 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 1".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -105,21 +105,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 2", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上连续 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 2".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -130,21 +130,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上连续 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 3", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上连续 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 3".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -155,10 +155,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -185,13 +185,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fitContent)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下连续 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 1", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下连续 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 1".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -202,21 +202,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下连续 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 2", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下连续 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 2".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -227,21 +227,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下连续 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 3", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下连续 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 3".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -252,10 +252,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -274,13 +274,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fitContent)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemOrange.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左连续 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 1", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左连续 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 1".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.left.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -291,21 +291,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemOrange.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左连续 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 2", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左连续 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 2".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.left.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -316,21 +316,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemOrange.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左连续 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 3", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左连续 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 3".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.left.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -341,10 +341,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -363,13 +363,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fitContent)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemPink.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右连续 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 1", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右连续 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 1".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.right.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -380,21 +380,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemPink.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右连续 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 2", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右连续 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 2".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.right.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -405,21 +405,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemPink.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右连续 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("更多内容 3", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右连续 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("更多内容 3".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.right.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -430,10 +430,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -452,13 +452,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)   // 每页 1 行
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上间隔 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上间隔 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.up.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -469,21 +469,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上间隔 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上间隔 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.up.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -494,21 +494,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemBlue.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向上间隔 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向上间隔 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.up.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -519,10 +519,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -541,13 +541,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemTeal.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下间隔 · 公告 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下间隔 · 公告 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -558,21 +558,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemTeal.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下间隔 · 公告 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下间隔 · 公告 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -583,21 +583,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemTeal.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向下间隔 · 公告 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("每 1 秒翻页", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向下间隔 · 公告 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("每 1 秒翻页".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("arrow.down.square.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -608,10 +608,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -630,13 +630,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)   // 轮播图：一页一个按钮
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemPurple.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左间隔 · Banner 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图左滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左间隔 · Banner 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图左滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -647,21 +647,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemPurple.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左间隔 · Banner 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图左滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左间隔 · Banner 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图左滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -672,21 +672,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemPurple.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向左间隔 · Banner 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图左滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向左间隔 · Banner 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图左滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -697,10 +697,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -719,13 +719,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemIndigo.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右间隔 · Banner 1", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图右滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右间隔 · Banner 1".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图右滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -736,21 +736,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemIndigo.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右间隔 · Banner 2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图右滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右间隔 · Banner 2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图右滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -761,21 +761,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemIndigo.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("向右间隔 · Banner 3", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("轮播图右滑", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("向右间隔 · Banner 3".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("轮播图右滑".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("rectangle.portrait.on.rectangle.portrait".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -786,10 +786,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -808,13 +808,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)   // 视图宽度 == 按钮宽度，内部会复制到至少 3 个
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemRed.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("极端 · 只有 1 个按钮", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("测试少量数据源", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("极端 · 只有 1 个按钮".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("测试少量数据源".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("1.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -825,10 +825,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -847,13 +847,13 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byItemSizeMode(.fillBounds)
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemRed.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("极端 · 按钮 1/2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("测试 2 个按钮", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("极端 · 按钮 1/2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("测试 2 个按钮".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("2.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -863,13 +863,13 @@ final class JobsMarqueeDemoVC: BaseVC {
                         sender.title?.toast
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemRed.withAlphaComponent(0.2), for: .normal)
-                    .byTitle("极端 · 按钮 2/2", for: .normal)
-                    .byTitleColor(.label, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
-                    .bySubTitle("测试 2 个按钮", for: .normal)
-                    .bySubTitleColor(.secondaryLabel, for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2), for: .normal)
+                    .byTitle("极端 · 按钮 2/2".tr, for: .normal)
+                    .byTitleColor(JobsCor.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+                    .bySubTitle("测试 2 个按钮".tr, for: .normal)
+                    .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("2.circle.fill".sysImg, for: .normal)
                     .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8))
@@ -880,10 +880,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -908,14 +908,14 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 极端 本地图 · 唐老鸭 tapped, selected=\(sender.isSelected)")
-                        "点击了唐老鸭".toast
+                        "点击了唐老鸭".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
@@ -925,14 +925,14 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 极端 本地图 · 米老鼠 tapped, selected=\(sender.isSelected)")
-                        "点击了米老鼠".toast
+                        "点击了米老鼠".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
@@ -942,14 +942,14 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 极端 本地图 · 迪斯尼 tapped, selected=\(sender.isSelected)")
-                        "点击了迪斯尼".toast
+                        "点击了迪斯尼".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -981,9 +981,9 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBorderColor(UIColor.systemGray3)
-                    .byTitle("我是UIButton主标题@SDWebImage")
-                    .bySubTitle("我是UIButton副标题@SDWebImage")
+                    .byBorderColor(JobsCor.systemGray3)
+                    .byTitle("我是UIButton主标题@SDWebImage".tr)
+                    .bySubTitle("我是UIButton副标题@SDWebImage".tr)
                     .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .sd_placeholderImage(nil)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
@@ -991,21 +991,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 SDWebImage@背景图 1 tapped, selected=\(sender.isSelected)")
-                        "点击了SDWebImage@背景图".toast
+                        "点击了SDWebImage@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBorderColor(UIColor.systemGray3)
-                    .byTitle("我是UIButton主标题@SDWebImage")
-                    .bySubTitle("我是UIButton副标题@SDWebImage")
+                    .byBorderColor(JobsCor.systemGray3)
+                    .byTitle("我是UIButton主标题@SDWebImage".tr)
+                    .bySubTitle("我是UIButton副标题@SDWebImage".tr)
                     .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .sd_placeholderImage(nil)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
@@ -1013,21 +1013,21 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 SDWebImage@背景图 2 tapped, selected=\(sender.isSelected)")
-                        "点击了SDWebImage@背景图".toast
+                        "点击了SDWebImage@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBorderColor(UIColor.systemGray3)
-                    .byTitle("我是UIButton主标题@SDWebImage")
-                    .bySubTitle("我是UIButton副标题@SDWebImage")
+                    .byBorderColor(JobsCor.systemGray3)
+                    .byTitle("我是UIButton主标题@SDWebImage".tr)
+                    .bySubTitle("我是UIButton副标题@SDWebImage".tr)
                     .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .sd_placeholderImage(nil)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
@@ -1035,14 +1035,14 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 SDWebImage@背景图 3 tapped, selected=\(sender.isSelected)")
-                        "点击了SDWebImage@背景图".toast
+                        "点击了SDWebImage@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
@@ -1074,8 +1074,8 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
             .byDataSourceButtons ([
                 UIButton.sys()
-                    .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                    .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                    .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
+                    .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
                     .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
@@ -1089,20 +1089,20 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 Kingfisher@背景图 1 tapped, selected=\(sender.isSelected)")
-                        "点击了Kingfisher@背景图".toast
+                        "点击了Kingfisher@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                    .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                    .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
+                    .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
                     .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
@@ -1116,20 +1116,20 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
-                        "点击了Kingfisher@背景图".toast
+                        "点击了Kingfisher@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                    .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                    .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
+                    .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
                     .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
@@ -1143,14 +1143,14 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byTapSound("Sound.wav")
                     .onTap { sender in
                         print("🔴 Kingfisher@背景图 3 tapped, selected=\(sender.isSelected)")
-                        "点击了Kingfisher@背景图".toast
+                        "点击了Kingfisher@背景图".tr.toast
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
@@ -1190,7 +1190,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byImage("play.circle.fill".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self = self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         self.allMarquees.forEach { $0.resume() }
                     },
                 UIButton.sys()
@@ -1198,7 +1198,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byImage("pause.circle.fill".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self = self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         self.allMarquees.forEach { $0.pause() }
                     }
             ]

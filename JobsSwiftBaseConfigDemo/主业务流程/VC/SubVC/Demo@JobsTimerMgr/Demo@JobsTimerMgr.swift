@@ -47,15 +47,15 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         aCount = 0
         bCount = 0
         Task { @MainActor [weak vc] in
-            vc?.countALabel.text = "A ticks: 0"
-            vc?.countBLabel.text = "B ticks: 0"
-            vc?.oneShotLabel.text = "OneShot: not started"
+            vc?.countALabel.byText("A ticks: 0")
+            vc?.countBLabel.byText("B ticks: 0")
+            vc?.oneShotLabel.byText("OneShot: not started")
         }
     }
 
     func setStatus(_ s: String) {
         Task { @MainActor [weak vc] in
-            vc?.statusLabel.text = s
+            vc?.statusLabel.byText(s)
         }
     }
 
@@ -63,7 +63,7 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         aCount += 1
         let v = aCount
         Task { @MainActor [weak vc] in
-            vc?.countALabel.text = "A ticks: \(v)"
+            vc?.countALabel.byText("A ticks: \(v)")
         }
     }
 
@@ -71,13 +71,13 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         bCount += 1
         let v = bCount
         Task { @MainActor [weak vc] in
-            vc?.countBLabel.text = "B ticks: \(v)"
+            vc?.countBLabel.byText("B ticks: \(v)")
         }
     }
 
     func setOneShot(_ s: String) {
         Task { @MainActor [weak vc] in
-            vc?.oneShotLabel.text = s
+            vc?.oneShotLabel.byText(s)
         }
     }
 
@@ -104,8 +104,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byText(
                 """
                 特点演示（基于你当前 JobsSwiftTimerMgr API 实现）：
@@ -140,8 +140,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     public lazy var statusLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byText("Ready")
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(kindSegment.snp.bottom).offset(12)
@@ -152,8 +152,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     public lazy var countALabel: UILabel = {
         UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.label)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.label)
             .byText("A ticks: 0")
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(statusLabel.snp.bottom).offset(12)
@@ -164,8 +164,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     public lazy var countBLabel: UILabel = {
         UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.label)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.label)
             .byText("B ticks: 0")
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(countALabel.snp.bottom).offset(8)
@@ -176,8 +176,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     public lazy var oneShotLabel: UILabel = {
         UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.label)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.label)
             .byText("OneShot: not started")
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(countBLabel.snp.bottom).offset(8)
@@ -188,10 +188,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var createBtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             .byTitle("Create Timers", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -208,10 +208,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var replaceABtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
             .byTitle("Replace A (Same ID)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -226,10 +226,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var pauseABtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemOrange, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
             .byTitle("Pause A (Manual)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -244,10 +244,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var resumeABtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal, for: .normal)
+            .byBackgroundColor(JobsCor.systemTeal, for: .normal)
             .byTitle("Resume A", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -262,10 +262,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var oneShotBtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo, for: .normal)
+            .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
             .byTitle("Start OneShot (2s)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -280,10 +280,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var cancelOneShotBtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemPurple, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
             .byTitle("Cancel + Remove OneShot", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -298,10 +298,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var dumpIdsBtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGray, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .normal)
             .byTitle("Dump IDs", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -316,10 +316,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var stopAllBtn: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemRed, for: .normal)
+            .byBackgroundColor(JobsCor.systemRed, for: .normal)
             .byTitle("Stop All", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
@@ -335,8 +335,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var logView: UITextView = {
         UITextView()
             .byEditable(NO)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBackgroundColor(.secondarySystemBackground)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byTextContainerInset(.init(top: 10, left: 10, bottom: 10, right: 10))
             .byText("")
@@ -351,8 +351,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "在JobsSwiftTimer基础上进行的二次封装")
-        view.backgroundColor = .systemBackground
+        jobsSetupGKNav(title: "在JobsSwiftTimer基础上进行的二次封装".tr)
+        view.byBackgroundColor(JobsCor.systemBackground)
 
         hintLabel.byVisible(YES)
         kindSegment.byVisible(YES)
@@ -730,7 +730,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     fileprivate func appendLog(_ s: String) {
         let t = ISO8601DateFormatter().string(from: Date())
         let line = "[\(t)] \(s)\n"
-        logView.text = (logView.text ?? "") + line
+        logView.byText((logView.text ?? "") + line)
         let bottom = NSRange(location: max(0, (logView.text as NSString).length - 1), length: 1)
         logView.scrollRangeToVisible(bottom)
     }

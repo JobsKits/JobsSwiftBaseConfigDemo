@@ -11,6 +11,9 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
+
 public final class JobsSwiftCalendarDayCell: UIControl {
     public var date: Date?
     public var monthPosition = JobsSwiftCalendarMonthPosition.notFound
@@ -39,16 +42,16 @@ public final class JobsSwiftCalendarDayCell: UIControl {
         let titleHeight: CGFloat = 24
         let hasSubtitle = !(subtitleLabel.text ?? "").isEmpty
         let titleY = hasSubtitle ? max(2, (height - 42) * 0.34) : max(2, (height - titleHeight) * 0.42)
-        selectionView.frame = CGRect(x: (width - circleSide) / 2,
+        selectionView.byFrame(CGRect(x: (width - circleSide) / 2,
                                      y: titleY + (titleHeight - circleSide) / 2,
                                      width: circleSide,
-                                     height: circleSide)
-        selectionView.layer.cornerRadius = circleSide / 2
-        titleLabel.frame = CGRect(x: 0, y: titleY, width: width, height: titleHeight)
-        subtitleLabel.frame = CGRect(x: 0, y: titleLabel.frame.maxY - 1, width: width, height: 15)
-        imageView.frame = CGRect(x: (width - 14) / 2, y: subtitleLabel.frame.maxY, width: 14, height: 14)
-        eventDotView.frame = CGRect(x: (width - 5) / 2, y: height - 8, width: 5, height: 5)
-        eventDotView.layer.cornerRadius = 2.5
+                                     height: circleSide))
+        selectionView.byCornerRadius(circleSide / 2)
+        titleLabel.byFrame(CGRect(x: 0, y: titleY, width: width, height: titleHeight))
+        subtitleLabel.byFrame(CGRect(x: 0, y: titleLabel.frame.maxY - 1, width: width, height: 15))
+        imageView.byFrame(CGRect(x: (width - 14) / 2, y: subtitleLabel.frame.maxY, width: 14, height: 14))
+        eventDotView.byFrame(CGRect(x: (width - 5) / 2, y: height - 8, width: 5, height: 5))
+        eventDotView.byCornerRadius(2.5)
     }
 
     public func jobsConfigure(title: String?,
@@ -65,43 +68,43 @@ public final class JobsSwiftCalendarDayCell: UIControl {
                               subtitleDefaultColor: UIColor? = nil,
                               selectionColor: UIColor? = nil) {
         self.monthPosition = monthPosition
-        self.isEnabled = enabled
-        self.isSelected = selected
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
-        imageView.image = image
-        imageView.isHidden = image == nil
-        titleLabel.font = appearance.titleFont
-        subtitleLabel.font = appearance.subtitleFont
+        self.byEnabled(enabled)
+        self.bySelected(selected)
+        titleLabel.byText(title)
+        subtitleLabel.byText(subtitle)
+        imageView.byImage(image)
+        imageView.byHidden(image == nil)
+        titleLabel.byFont(appearance.titleFont)
+        subtitleLabel.byFont(appearance.subtitleFont)
         let placeholder = monthPosition != .current
-        selectionView.isHidden = !(selected || today)
-        selectionView.backgroundColor = selected ? (selectionColor ?? appearance.selectionColor) : appearance.todayColor
-        titleLabel.textColor = selected ? (titleSelectionColor ?? appearance.titleSelectionColor) : (today ? appearance.titleTodayColor : (placeholder ? appearance.titlePlaceholderColor : (titleDefaultColor ?? appearance.titleDefaultColor)))
-        subtitleLabel.textColor = selected ? appearance.subtitleSelectionColor : (placeholder ? appearance.subtitlePlaceholderColor : (subtitleDefaultColor ?? appearance.subtitleDefaultColor))
-        eventDotView.isHidden = eventsCount <= 0
-        eventDotView.backgroundColor = selected ? appearance.eventSelectionColor : appearance.eventDefaultColor
-        alpha = enabled ? 1 : 0.35
+        selectionView.byHidden(!(selected || today))
+        selectionView.byBackgroundColor(selected ? (selectionColor ?? appearance.selectionColor) : appearance.todayColor)
+        titleLabel.byTextColor(selected ? (titleSelectionColor ?? appearance.titleSelectionColor) : (today ? appearance.titleTodayColor : (placeholder ? appearance.titlePlaceholderColor : (titleDefaultColor ?? appearance.titleDefaultColor))))
+        subtitleLabel.byTextColor(selected ? appearance.subtitleSelectionColor : (placeholder ? appearance.subtitlePlaceholderColor : (subtitleDefaultColor ?? appearance.subtitleDefaultColor)))
+        eventDotView.byHidden(eventsCount <= 0)
+        eventDotView.byBackgroundColor(selected ? appearance.eventSelectionColor : appearance.eventDefaultColor)
+        self.byAlpha(enabled ? 1 : 0.35)
         setNeedsLayout()
     }
 }
 
 private extension JobsSwiftCalendarDayCell {
     func jobsCommonInit() {
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         selectionView.isUserInteractionEnabled = false
-        selectionView.isHidden = true
-        addSubview(selectionView)
-        titleLabel.textAlignment = .center
+        selectionView.byHidden(true)
+        selectionView.byAddTo(self)
+        titleLabel.byTextAlignment(.center)
         titleLabel.isUserInteractionEnabled = false
-        addSubview(titleLabel)
-        subtitleLabel.textAlignment = .center
+        titleLabel.byAddTo(self)
+        subtitleLabel.byTextAlignment(.center)
         subtitleLabel.isUserInteractionEnabled = false
-        addSubview(subtitleLabel)
-        imageView.contentMode = .scaleAspectFit
+        subtitleLabel.byAddTo(self)
+        imageView.byContentMode(.scaleAspectFit)
         imageView.isUserInteractionEnabled = false
-        addSubview(imageView)
+        imageView.byAddTo(self)
         eventDotView.isUserInteractionEnabled = false
-        eventDotView.isHidden = true
-        addSubview(eventDotView)
+        eventDotView.byHidden(true)
+        eventDotView.byAddTo(self)
     }
 }

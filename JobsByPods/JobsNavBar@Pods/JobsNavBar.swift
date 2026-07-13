@@ -146,7 +146,7 @@ public class JobsNavBar: UIView {
         return NSAttributedString(
             string: text,
             attributes: [
-                .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
+                .font: JobsFont.systemFont(ofSize: 17, weight: .semibold),
                 .foregroundColor: JobsCor.label
             ]
         )
@@ -230,9 +230,9 @@ public class JobsNavBar: UIView {
         if leftButton !== providedBtn {
             leftButton?.removeFromSuperview()
             leftButton = providedBtn
-            leftContainer.addSubview(providedBtn)
+            providedBtn.byAddTo(leftContainer)
             // 基础属性（不涉及布局）
-            providedBtn.contentVerticalAlignment = .center
+            providedBtn.byContentVerticalAlignment(.center)
             providedBtn.setContentHuggingPriority(.required, for: .vertical)
             providedBtn.setContentCompressionResistancePriority(.required, for: .vertical)
             // 事件（避免重复加 target：先移除旧引用已 removeFromSuperview，这里安全）

@@ -32,7 +32,7 @@ final class DemoInsetRoundTableViewCell: UITableViewCell,
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // MARK: - Base appearance
         // 建议：cell 背景透明，让 tableView 背景作为“间距露出来的底色”
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor("#f9dcba".cor)
         // MARK: - Selected background（避免选中态露底）
         let sbg = UIView()
@@ -53,9 +53,9 @@ final class DemoInsetRoundTableViewCell: UITableViewCell,
     override func prepareForReuse() {
         super.prepareForReuse()
         // 防止复用时视觉残留（尤其是 middle <-> first/last）
-        contentView.layer.cornerRadius = 0
+        contentView.byCornerRadius(0)
         contentView.layer.maskedCorners = []
-        selectedBackgroundView?.layer.cornerRadius = 0
+        selectedBackgroundView?.byCornerRadius(0)
         selectedBackgroundView?.layer.maskedCorners = []
     }
 }

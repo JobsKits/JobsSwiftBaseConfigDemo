@@ -71,10 +71,10 @@ public class SlideToUnlockView: UIView {
         let view = UIView()
             .byShimmerColors(
                 base: JobsCor.systemGray5,                 // 与轨道底色一致
-                highlight: UIColor.white.withAlphaComponent(0.9)
+                highlight: JobsCor.white.withAlphaComponent(0.9)
             )
-        trackView.addSubview(view)
-        view.frame = trackView.bounds
+        view.byAddTo(trackView)
+        view.byFrame(trackView.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return view
     }()
@@ -82,8 +82,8 @@ public class SlideToUnlockView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("滑动以解锁".tr)
-            .byTextColor(.darkGray)
-            .byFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTextColor(JobsCor.darkGray)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview().inset(16)
@@ -92,11 +92,11 @@ public class SlideToUnlockView: UIView {
     /// 滑块视图
     private lazy var thumbView: UIView = { [unowned self] in
         UIView()
-            .byBackgroundColor(.white)
+            .byBackgroundColor(JobsCor.white)
             .byCornerRadius(thumbSize.height / 2)
             .byMasksToBounds(YES)
             .byShadowOpacity(0.15)
-            .byShadowColor(.black)
+            .byShadowColor(JobsCor.black)
             .byShadowRadius(4)
             .byShadowOffset(CGSize(width: 0, height: 2))
             .jobs_addGestureRetView(
@@ -156,7 +156,7 @@ public class SlideToUnlockView: UIView {
 
     private lazy var arrow: UIImageView = { [unowned self] in
         UIImageView()
-            .byTintColor(.systemBlue)
+            .byTintColor(JobsCor.systemBlue)
             .byAddTo(thumbView) { [unowned self] make in
                 make.center.equalToSuperview()
             }
@@ -173,7 +173,7 @@ public class SlideToUnlockView: UIView {
     }
 
     private func setup() {
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         trackView.byVisible(YES)
         shimmerView.byVisible(YES)
         titleLabel.byVisible(YES)
@@ -222,10 +222,10 @@ public class SlideToUnlockView: UIView {
         let offset = thumbInset + maxOffset * positionFactor
         thumbLeadingConstraint?.update(offset: offset)
 
-        titleLabel.alpha = 1 - _progress * 0.8
+        titleLabel.byAlpha(1 - _progress * 0.8)
 
         if animated {
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.jobsAnimate(0.2, animations: {
                 self.layoutIfNeeded()
                 self.updateShimmerMask()
             })
@@ -234,7 +234,7 @@ public class SlideToUnlockView: UIView {
 
     private func updateSkeletonState() {
         shimmerView.jobs_isShimmering = isSkeletonEnabled
-        shimmerView.isHidden = !isSkeletonEnabled
+        shimmerView.byHidden(!isSkeletonEnabled)
         updateShimmerMask()
     }
 
@@ -248,7 +248,7 @@ public class SlideToUnlockView: UIView {
         }
 
         layoutIfNeeded()
-        shimmerView.frame = trackView.bounds
+        shimmerView.byFrame(trackView.bounds)
         shimmerView.jobs_updateShimmerLayout()
 
         let trackBounds = trackView.bounds
@@ -282,9 +282,9 @@ public class SlideToUnlockView: UIView {
             };maskRect = CGRect(x: 0, y: 0, width: width, height: trackBounds.height)
         }
         // 纯矩形遮罩，靠近滑块是笔直的直角边
-        let path = UIBezierPath(rect: maskRect)
+        let path = UIBezierPath.make(rect: maskRect)
         let maskLayer = CAShapeLayer()
-        maskLayer.frame = shimmerView.bounds
+        maskLayer.byFrame(shimmerView.bounds)
         maskLayer.path  = path.cgPath
         shimmerView.jobs_setShimmerMask(maskLayer)
     }

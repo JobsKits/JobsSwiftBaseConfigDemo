@@ -26,11 +26,11 @@ public final class JobsToast: UIView {
     private var tapHandler: ((UIButton) -> Void)?
     // ✅ 懒加载按钮，使用已有链式 API
     private lazy var contentButton: UIButton = {
-        UIButton(type: .system)
-            .byNormalBgColor(.clear)
+        UIButton.sys()
+            .byNormalBgColor(JobsCor.clear)
             .byTitle(" ", for: .normal) // 占位；真正文案在 show/链式里设
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -49,7 +49,7 @@ public final class JobsToast: UIView {
         public var horizontalPadding: CGFloat = 16
         public var verticalPadding: CGFloat = 10
         public var cornerRadius: CGFloat = 10
-        public var backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.85)
+        public var backgroundColor: UIColor = JobsCor.black.withAlphaComponent(0.85)
 
         public init() {}
         // MARK: - 链式配置
@@ -98,9 +98,9 @@ public extension JobsToast {
     @discardableResult
     func byApply(_ config: Config) -> Self {
         // 容器外观
-        backgroundColor = config.backgroundColor
-        layer.cornerRadius = config.cornerRadius
-        layer.masksToBounds = true
+        self.byBackgroundColor(config.backgroundColor)
+        byCornerRadius(config.cornerRadius)
+        byMasksToBounds(true)
         // 内容内边距
         _ = contentButton
         contentButton.byContentEdgeInsets(UIEdgeInsets(
@@ -143,10 +143,15 @@ public extension JobsToast {
                 make.width.lessThanOrEqualTo(targetWindow.bounds.width - 40)
             }
         // 入场动画（使用参数化时长/延迟/曲线）
-        UIView.animate(withDuration: showDuration, delay: showDelay, options: showOptions) {
-            toast.byAlpha(1)
-            toast.byTransform(.identity)
-        }
+        UIView.jobsAnimateWithOptions(
+            showDuration,
+            delay: showDelay,
+            options: showOptions,
+            animations: {
+                toast.byAlpha(1)
+                toast.byTransform(.identity)
+            }
+        )
         // 记录引用：每窗只保留一个
         objc_setAssociatedObject(targetWindow, &currentToastKey, toast, .OBJC_ASSOCIATION_ASSIGN)
         // 定时消失（仍用 config.duration 控制停留时长）
@@ -164,14 +169,20 @@ public extension JobsToast {
     func dismiss(from window: UIWindow) {
         guard superview != nil else { return }
 
-        UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseIn]) {
-            self.alpha = 0
-            self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97).translatedBy(x: 0, y: 6)
-        } completion: { [weak self, weak window] _ in
-            self?.removeFromSuperview()
-            if let window { Self.clearAssociatedToast(from: window) }
-            self?.completion?()
-        }
+        UIView.jobsAnimateWithOptions(
+            0.18,
+            delay: 0,
+            options: [.curveEaseIn],
+            animations: {
+                self.byAlpha(0)
+                self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97).translatedBy(x: 0, y: 6)
+            },
+            completion: { [weak self, weak window] _ in
+                self?.removeFromSuperview()
+                if let window { Self.clearAssociatedToast(from: window) }
+                self?.completion?()
+            }
+        )
     }
 }
 // MARK: - 辅助
@@ -193,7 +204,7 @@ public func toastBy(_ string: String) {
         JobsToast.show(
             text: string,
             config: JobsToast.Config()
-                .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
+                .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9))
                 .byCornerRadius(12)
         )
     }

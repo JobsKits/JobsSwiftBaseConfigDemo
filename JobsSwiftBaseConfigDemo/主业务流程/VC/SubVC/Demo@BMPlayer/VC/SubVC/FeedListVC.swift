@@ -41,9 +41,9 @@ final class FeedListVC: BaseVC,
             .byNoSectionHeaderTopPadding()
             // 空态按钮（点击加载首屏）
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我加载本地示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我加载本地示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in self?.reloadFromJSON() }
@@ -67,9 +67,9 @@ final class FeedListVC: BaseVC,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "信息流预览"
+            title: "信息流预览".tr
         )
         tableView.byVisible(YES)
     }

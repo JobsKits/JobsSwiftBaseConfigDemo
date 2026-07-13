@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftComment
 import JobsSwiftDSL
@@ -35,7 +36,7 @@ final class JobsSwiftCommentDemoVC: BaseVC {
             .bySectionHeaderTopPadding(0)
             .byContentInset(UIEdgeInsets(top: 12.h, left: 0, bottom: 0, right: 0))
             .byContentInsetAdjustmentBehavior(.never)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -48,7 +49,7 @@ final class JobsSwiftCommentDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF6F7FB)
+        view.byBackgroundColor(UIColor(hex: 0xF6F7FB))
         jobsSetupGKNav(title: "JobsSwiftComment")
         tableView.byVisible(true)
     }
@@ -66,15 +67,15 @@ extension JobsSwiftCommentDemoVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
         let mode = modeArr[indexPath.row]
-        cell.textLabel?.text = JobsSwiftCommentConfig.title(by: mode)
-        cell.textLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-        cell.textLabel?.textColor = UIColor(hex: 0x2D3642)
-        cell.detailTextLabel?.text = JobsSwiftCommentConfig.subtitle(by: mode)
-        cell.detailTextLabel?.font = .systemFont(ofSize: 13, weight: .regular)
-        cell.detailTextLabel?.textColor = UIColor(hex: 0x7A8491)
+        cell.textLabel?.byText(JobsSwiftCommentConfig.title(by: mode))
+        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+        cell.textLabel?.byTextColor(UIColor(hex: 0x2D3642))
+        cell.detailTextLabel?.byText(JobsSwiftCommentConfig.subtitle(by: mode))
+        cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+        cell.detailTextLabel?.byTextColor(UIColor(hex: 0x7A8491))
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .default
-        cell.backgroundColor = .white
+        cell.byBackgroundColor(JobsCor.white)
         return cell
     }
 

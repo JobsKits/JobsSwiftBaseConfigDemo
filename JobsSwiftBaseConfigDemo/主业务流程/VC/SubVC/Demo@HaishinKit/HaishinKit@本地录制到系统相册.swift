@@ -47,9 +47,9 @@ final class HKLocalRecordVC: BaseVC {
     /// 状态文案
     private lazy var statusLabel: UILabel = {
         UILabel()
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextAlignment(.center)
             .byText("准备就绪".tr)
             .byAddTo(view) { [unowned self] make in
@@ -60,12 +60,12 @@ final class HKLocalRecordVC: BaseVC {
     /// 开始/停止录制按钮（形态对齐给的 exampleButton）
     private lazy var recordButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemRed, for: .normal)
-            .byBackgroundColor(.systemGray, for: .disabled)
+            .byBackgroundColor(JobsCor.systemRed, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .disabled)
             .byTitle("开始录制".tr, for: .normal)
             .byTitle("停止录制".tr, for: .selected)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 20, bottom: 10, right: 20))
             .byCornerDot(diameter: 10, offset: .init(horizontal: -6, vertical: 6)) // 红点提示
             .onTap { [weak self] btn in
@@ -80,7 +80,7 @@ final class HKLocalRecordVC: BaseVC {
     /// 切换前后摄像头按钮
     private lazy var switchCameraButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(UIColor.black.withAlphaComponent(0.4), for: .normal)
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.4), for: .normal)
             .byImage("camera.rotate".sysImg, for: .normal)
             .byCornerRadius(20)
             .onTap { [weak self] _ in
@@ -115,7 +115,7 @@ final class HKLocalRecordVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.byBackgroundColor(JobsCor.black)
         // 触发懒加载
         previewView.byVisible(YES)
         recordButton.byVisible(YES)
@@ -172,7 +172,7 @@ final class HKLocalRecordVC: BaseVC {
             ),
             let audioDevice = AVCaptureDevice.default(for: .audio)
         else {
-            statusLabel.byText("❌ 找不到摄像头或麦克风")
+            statusLabel.byText("❌ 找不到摄像头或麦克风".tr)
             return
         }
         // 2. 把设备 attach 到 MediaMixer
@@ -226,7 +226,7 @@ final class HKLocalRecordVC: BaseVC {
         do {
             try await recorder.startRecording()
             isRecording = true
-            recordButton.isSelected = true
+            recordButton.bySelected(true)
             statusLabel.byText("⏺ 正在录制中...".tr)
         } catch {
             statusLabel.byText("❌ 开始录制失败：\(error.localizedDescription)")
@@ -240,7 +240,7 @@ final class HKLocalRecordVC: BaseVC {
             statusLabel.byText("⏹ 正在停止录制...".tr)
             let outputURL = try await recorder.stopRecording()
             isRecording = false
-            recordButton.isSelected = false
+            recordButton.bySelected(false)
             statusLabel.byText("✅ 已停止录制，正在保存到相册...".tr)
 
             saveToPhotoLibrary(outputURL)

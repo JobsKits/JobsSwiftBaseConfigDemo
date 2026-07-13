@@ -55,12 +55,6 @@ extension UISearchBar {
     }
 
     @discardableResult
-    public func byTintColor(_ color: UIColor?) -> Self {
-        self.tintColor = color
-        return self
-    }
-
-    @discardableResult
     public func byBarTintColor(_ color: UIColor?) -> Self {
         self.barTintColor = color
         return self

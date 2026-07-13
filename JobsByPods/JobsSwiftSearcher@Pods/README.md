@@ -8,6 +8,13 @@ Swift 本地 Pod，用于在 Swift 侧承接 OC `JobsOCSearcher` 的搜索功能
 - `JobsSwiftSearcherView` 提供搜索框、搜索按钮、推荐词标签、历史列表、删除和清空历史。
 - 历史记录使用 `UserDefaults` 持久化，同关键词会自动去重并置顶。
 - 搜索输入变化、提交、推荐词点击、历史变化都通过闭包回调给业务层。
+- 按钮创建、配置和事件统一使用 `JobsByUIKit` / `JobsSwiftDSL`。
+
+## 依赖
+
+- `JobsByUIKit`（按钮工厂和 UIKit 扩展）。
+- `JobsSwiftDSL`（视图、控件和按钮链式 API）。
+- `JobsSwiftBaseDefines`（使用 `JobsCor`、`JobsFont` 和 `UIColor(r:g:b:a:)`）。
 
 ## 目录
 
@@ -19,4 +26,3 @@ Swift 本地 Pod，用于在 Swift 侧承接 OC `JobsOCSearcher` 的搜索功能
 ```shell
 pod lib lint JobsSwiftSearcher.podspec --allow-warnings --verbose
 ```
-

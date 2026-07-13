@@ -30,9 +30,9 @@ final class JobsButtonDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byText("JobsButton Demo：4种模式 + 点击/长按（叠加不覆盖）\n\n• 点击：会依次触发多段回调（叠加）\n• 长按：同样支持叠加\n• 图片：前景图/背景图都用 Kingfisher 链式加载")
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byText("JobsButton Demo：4种模式 + 点击/长按（叠加不覆盖）\n\n• 点击：会依次触发多段回调（叠加）\n• 长按：同样支持叠加\n• 图片：前景图/背景图都用 Kingfisher 链式加载".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.left)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(horizontalInset)
@@ -49,12 +49,12 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.imageTopTextBottom)
             .byTitleLabel { lab in
-                lab.byText("上图下文")
-                    .byTextColor(.red)
+                lab.byText("上图下文".tr)
+                    .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
                 lab.byText("image -> title -> subtitle")
-                    .byTextColor(.blue)
+                    .byTextColor(JobsCor.blue)
             }
             // 前景图：内部 foregroundImageView（链式不丢 self）
             .byForegroundImageView { iv in
@@ -74,23 +74,23 @@ final class JobsButtonDemoVC: BaseVC {
                            targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
             .addTapActionAppend { _ in
                 print("btn1 tap #1")
-                "点击了悬浮按钮：上图下文（tap #1）".toast
+                "点击了悬浮按钮：上图下文（tap #1）".tr.toast
             }
             .addTapActionAppend { _ in
                 print("btn1 tap #2 (append)")
-                "点击了悬浮按钮：上图下文（tap #2 叠加）".toast
+                "点击了悬浮按钮：上图下文（tap #2 叠加）".tr.toast
             }
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn1 longPress #1 began")
-                "长按了悬浮按钮：上图下文（longPress #1）".toast
+                "长按了悬浮按钮：上图下文（longPress #1）".tr.toast
             }
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn1 longPress #2 began (append)")
-                "长按了悬浮按钮：上图下文（longPress #2 叠加）".toast
+                "长按了悬浮按钮：上图下文（longPress #2 叠加）".tr.toast
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -107,12 +107,12 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.textTopImageBottom)
             .byTitleLabel { lab in
-                lab.byText("上文下图")
-                    .byTextColor(.red)
+                lab.byText("上文下图".tr)
+                    .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
                 lab.byText("title -> subtitle -> image")
-                    .byTextColor(.blue)
+                    .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
                 iv.byContentMode(.scaleAspectFill)
@@ -130,13 +130,13 @@ final class JobsButtonDemoVC: BaseVC {
                            targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
             .addTapActionAppend { _ in
                 print("btn2 tap #1")
-                "点击了悬浮按钮：上文下图（tap #1）".toast
+                "点击了悬浮按钮：上文下图（tap #1）".tr.toast
             }
             .addTapActionAppend { _ in
                 print("btn2 tap #2 (append)")
-                "点击了悬浮按钮：上文下图（tap #2 叠加）".toast
+                "点击了悬浮按钮：上文下图（tap #2 叠加）".tr.toast
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -153,12 +153,12 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.imageLeftTextRight)
             .byTitleLabel { lab in
-                lab.byText("左图右文")
-                    .byTextColor(.red)
+                lab.byText("左图右文".tr)
+                    .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
                 lab.byText("image -> title -> subtitle")
-                    .byTextColor(.blue)
+                    .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
                 iv.byContentMode(.scaleAspectFill)
@@ -177,14 +177,14 @@ final class JobsButtonDemoVC: BaseVC {
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn3 longPress #1 began")
-                "长按了悬浮按钮：左图右文（longPress #1）".toast
+                "长按了悬浮按钮：左图右文（longPress #1）".tr.toast
             }
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn3 longPress #2 began (append)")
-                "长按了悬浮按钮：左图右文（longPress #2 叠加）".toast
+                "长按了悬浮按钮：左图右文（longPress #2 叠加）".tr.toast
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -201,12 +201,12 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.textLeftImageRight)
             .byTitleLabel { lab in
-                lab.byText("左文右图")
-                    .byTextColor(.red)
+                lab.byText("左文右图".tr)
+                    .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
                 lab.byText("title -> subtitle -> image")
-                    .byTextColor(.blue)
+                    .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
                 iv.byContentMode(.scaleAspectFill)
@@ -224,14 +224,14 @@ final class JobsButtonDemoVC: BaseVC {
                            targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
             .addTapActionAppend { _ in
                 print("btn4 tap")
-                "点击了悬浮按钮：左文右图".toast
+                "点击了悬浮按钮：左文右图".tr.toast
             }
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn4 longPress began")
-                "长按了悬浮按钮：左文右图".toast
+                "长按了悬浮按钮：左文右图".tr.toast
             }
-            .byBorderColor(.cyan)
+            .byBorderColor(JobsCor.cyan)
             .byBorderWidth(0.5)
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
@@ -247,7 +247,7 @@ final class JobsButtonDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsButton")
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         hintLabel.byVisible(YES)
         btn1.byVisible(YES)
         btn2.byVisible(YES)

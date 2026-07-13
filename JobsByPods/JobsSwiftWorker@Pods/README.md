@@ -22,6 +22,7 @@
 ### UI Binder
 - `UILabel` 文本绑定
 - `UITextField` 输入绑定
+- UI 写入与事件绑定统一经由 `JobsByUIKit` / `JobsSwiftDSL`，不在 Binder 中裸调系统 API。
 
 ## 设计目标
 

@@ -26,10 +26,10 @@ import GKNavigationBarSwift
 final class TraitChangeDemoVC: BaseVC {
     // MARK: UI（全部懒加载，byAddTo + SnapKit）
     private lazy var titleLabel : UILabel = {
-        UILabel().byText("Trait 变化监听 Demo")
-            .byFont(.boldSystemFont(ofSize: 18))
+        UILabel().byText("Trait 变化监听 Demo".tr)
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.natural)              // ✅ 新增
-            .byTextColor(.label)
+            .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
                 make.leading.trailing.equalToSuperview().inset(16)
@@ -38,9 +38,9 @@ final class TraitChangeDemoVC: BaseVC {
 
     private lazy var subtitleLabel : UILabel = {
         UILabel()
-            .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。")
+            .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。".tr)
             .byNumberOfLines(0)
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.natural)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(6)
@@ -51,8 +51,8 @@ final class TraitChangeDemoVC: BaseVC {
     private lazy var infoLabel :UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextAlignment(.natural)              // ✅ 新增
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.subtitleLabel.snp.bottom).offset(12)
@@ -99,9 +99,9 @@ final class TraitChangeDemoVC: BaseVC {
 
     private lazy var dynamicText :UILabel = {
         UILabel()
-            .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。")
+            .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。".tr)
             .byNumberOfLines(0)
-            .byTextColor(.label)
+            .byTextColor(JobsCor.label)
             .byTextAlignment(.natural)              // ✅ 新增
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.stack.snp.bottom).offset(16)
@@ -132,30 +132,30 @@ final class TraitChangeDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Traits (iOS 17+)",
             leftButton: UIButton.sys()
                 .byFrame(CGRect(x: 0, y: 0, width: 74.w, height: 36.h))
-                .byBackgroundColor(UIColor.systemBlue.withAlphaComponent(0.18))
+                .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.18))
                 .byCornerRadius(18)
-                .byTintColor(.systemBlue)
+                .byTintColor(JobsCor.systemBlue)
                 .byImage("chevron.left".sysImg, for: .normal)
-                .byTitle("返回", for: .normal)
-                .byTitleColor(.systemBlue, for: .normal)
+                .byTitle("返回".tr, for: .normal)
+                .byTitleColor(JobsCor.systemBlue, for: .normal)
                 .onTap { [weak self] _ in
                     guard let self else { return }
                     self.goBack("")
                 },
             rightButtons: [
-                UIButton(type: .system)
+                UIButton.sys()
                     /// 按钮图片@图文关系
                     .byImage("moon.circle.fill".sysImg, for: .normal)
                     .byImage("moon.circle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         self.forceDark.toggle()
                         // 触发外观相关 trait 变化 —— 注意前缀 self.
                         self.overrideUserInterfaceStyle = self.forceDark ? .dark : .unspecified
@@ -211,7 +211,7 @@ final class TraitChangeDemoVC: BaseVC {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        gradientLayer.frame = swatch.bounds // 旋转/分屏后需更新
+        gradientLayer.byFrame(swatch.bounds) // 旋转/分屏后需更新
     }
 }
 
@@ -227,21 +227,21 @@ extension TraitChangeDemoVC {
 
     private func updateColors() {
         let style = traitCollection.userInterfaceStyle
-        view.backgroundColor = (style == .dark) ? .secondarySystemBackground : .systemBackground
+        view.byBackgroundColor((style == .dark) ? JobsCor.secondarySystemBackground : JobsCor.systemBackground)
 
         // 手动刷新不会自动变化的 CGColor（Layer）
         let c1: UIColor
         let c2: UIColor
         if style == .dark {
-            c1 = UIColor(white: 1, alpha: 0.12)
-            c2 = UIColor(white: 1, alpha: 0.28)
-            leftBox.backgroundColor  = .tertiarySystemFill
-            rightBox.backgroundColor = .quaternarySystemFill
+            c1 = UIColor(gray: 255, alpha: 0.12)
+            c2 = UIColor(gray: 255, alpha: 0.28)
+            leftBox.byBackgroundColor(JobsCor.tertiarySystemFill)
+            rightBox.byBackgroundColor(JobsCor.quaternarySystemFill)
         } else {
-            c1 = UIColor(red: 0.95, green: 0.95, blue: 1.0, alpha: 1.0)
-            c2 = UIColor(red: 0.85, green: 0.90, blue: 1.0, alpha: 1.0)
-            leftBox.backgroundColor  = .systemFill
-            rightBox.backgroundColor = .secondarySystemFill
+            c1 = UIColor(r: 0.95 * 255, g: 0.95 * 255, b: 255)
+            c2 = UIColor(r: 0.85 * 255, g: 0.90 * 255, b: 255)
+            leftBox.byBackgroundColor(JobsCor.systemFill)
+            rightBox.byBackgroundColor(JobsCor.secondarySystemFill)
         }
         gradientLayer.colors = [c1.cgColor, c2.cgColor]
 
@@ -260,19 +260,19 @@ extension TraitChangeDemoVC {
 
     private func applyDynamicType() {
         titleLabel
-            .byFont(.preferredFont(forTextStyle: .title2))
+            .byFont(JobsFont.preferredFont(forTextStyle: .title2))
             .byAdjustsFontForContentSizeCategory(true)
 
         subtitleLabel
-            .byFont(.preferredFont(forTextStyle: .footnote))
+            .byFont(JobsFont.preferredFont(forTextStyle: .footnote))
             .byAdjustsFontForContentSizeCategory(true)
 
         infoLabel
-            .byFont(.preferredFont(forTextStyle: .footnote))
+            .byFont(JobsFont.preferredFont(forTextStyle: .footnote))
             .byAdjustsFontForContentSizeCategory(true)
 
         dynamicText
-            .byFont(.preferredFont(forTextStyle: .body))
+            .byFont(JobsFont.preferredFont(forTextStyle: .body))
             .byAdjustsFontForContentSizeCategory(true)
     }
 

@@ -36,7 +36,7 @@ private struct JobsLegacyButtonState {
     let backgroundImageSelected: UIImage?
 
     init(_ button: UIButton) {
-        self.isEnabled = button.isEnabled
+        self.isEnabled = button.jobs_effectiveState != .disabled
 
         self.titleNormal = button.jobs_title(for: .normal)
         self.titleSelected = button.jobs_title(for: .selected)
@@ -54,7 +54,7 @@ private struct JobsLegacyButtonState {
     }
 
     func restore(to button: UIButton) {
-        button.isEnabled = isEnabled
+        button.byEnabled(isEnabled)
 
         // 使用你自己的「DSL」API 做复原（避免直接 setXxx 导致 iOS15+ configuration 打架）
         if let attrTitleNormal {
@@ -142,7 +142,7 @@ extension JobsCountdownBtnCtrl {
         }
         // 不允许点击就直接禁用按钮
         if !config.clickableWhileRunning {
-            btn.isEnabled = false
+            btn.byEnabled(false)
         }
 
         let tConfig = JobsSwiftTimerConfig(
@@ -174,11 +174,11 @@ extension JobsCountdownBtnCtrl {
         timer = nil
 
         guard let btn = button else { return }
-        btn.isEnabled = true
+        btn.byEnabled(true)
         if resetUI {
             if #available(iOS 15.0, *) {
                 if let base = baseConfiguration_iOS15 as? UIButton.Configuration {
-                    btn.configuration = base
+                    btn.byConfiguration(base)
                 }
             } else {
                 baseLegacyState.restore(to: btn)
@@ -238,7 +238,7 @@ extension JobsCountdownBtnCtrl {
             if let renderer = config.renderConfiguration {
                 cfg = renderer(sec, cfg)
             }
-            btn.configuration = cfg
+            btn.byConfiguration(cfg)
             return
         }
 

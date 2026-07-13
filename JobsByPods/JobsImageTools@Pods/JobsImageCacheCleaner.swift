@@ -9,6 +9,7 @@ import Foundation
 import ObjectiveC
 import JobsSwiftBlock
 import JobsSwiftBaseDefines
+import JobsSwiftDSL
 
 #if canImport(Kingfisher)
 import Kingfisher
@@ -245,11 +246,11 @@ public enum JobsImageCacheCleaner {
             ) { result in
                 switch result {
                 case .success(let value):
-                    iv.image = value.image
+                    iv.byImage(value.image)
                     iv.jobs_remoteURL = value.url
                     iv.jobs_imageLoaderKind = value.loaderKind
                 case .failure:
-                    iv.image = placeholder
+                    iv.byImage(placeholder)
                 }
                 group.leave()
             }

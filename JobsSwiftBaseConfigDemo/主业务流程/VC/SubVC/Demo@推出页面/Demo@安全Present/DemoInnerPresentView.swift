@@ -21,10 +21,10 @@ import SnapKit
 final class DemoInnerPresentView: UIView {
     private lazy var label : UILabel = {
         UILabel()
-            .byText("👉 点我 (View 内触发 presentSafely)")
+            .byText("👉 点我 (View 内触发 presentSafely)".tr)
             .byTextAlignment(.center)
-            .byTextColor(.systemGreen)
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
+            .byTextColor(JobsCor.systemGreen)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview()
             }

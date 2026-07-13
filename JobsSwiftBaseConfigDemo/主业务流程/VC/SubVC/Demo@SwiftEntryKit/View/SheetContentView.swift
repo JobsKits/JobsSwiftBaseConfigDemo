@@ -22,9 +22,9 @@ import SwiftEntryKit
 final class SheetContentView: UIView, UITextFieldDelegate {
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byText("底部表单（键盘联动）")
-            .byFont(.boldSystemFont(ofSize: 18))
-            .byTextColor(.label)
+            .byText("底部表单（键盘联动）".tr)
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
+            .byTextColor(JobsCor.label)
             .byAddTo(self) { make in
                 make.top.equalToSuperview().inset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -32,7 +32,7 @@ final class SheetContentView: UIView, UITextFieldDelegate {
     }()
     private lazy var textField: UITextField = {
         UITextField()
-            .byPlaceholder("输入点什么…")
+            .byPlaceholder("输入点什么…".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(self) { [unowned self] make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(12)
@@ -42,7 +42,7 @@ final class SheetContentView: UIView, UITextFieldDelegate {
     }()
     private lazy var confirmBtn: UIButton = {
         UIButton.sys()
-            .byTitle("确定")
+            .byTitle("确定".tr)
             .onTap { [weak self] (_: UIButton) in
                 self?.endEditing(true)
                 SwiftEntryKit.dismiss()
@@ -56,7 +56,7 @@ final class SheetContentView: UIView, UITextFieldDelegate {
     }()
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .secondarySystemBackground
+        self.byBackgroundColor(JobsCor.secondarySystemBackground)
         titleLabel.byVisible(YES)
         textField.byVisible(YES)
         confirmBtn.byVisible(YES)

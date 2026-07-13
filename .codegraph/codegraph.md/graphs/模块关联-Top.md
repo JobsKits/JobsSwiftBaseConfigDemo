@@ -12,13 +12,13 @@
 
 ```mermaid
 flowchart LR
-  M1["JobsSwiftBaseConfigDemo"]
+  M1["Unity"]
   M2["JobsByPods/ManualBySwiftPods@Pods"]
-  M3["Unity"]
+  M3["JobsSwiftBaseConfigDemo"]
   M4["my_flutter"]
   M5["JobsBySwiftPackageManager"]
-  M1 -->|calls:592| M2
-  M3 -->|calls:49| M2
+  M1 -->|calls:49| M2
+  M3 -->|calls:10| M2
   M2 -->|calls:1| M4
   M5 -->|calls:1| M2
 ```

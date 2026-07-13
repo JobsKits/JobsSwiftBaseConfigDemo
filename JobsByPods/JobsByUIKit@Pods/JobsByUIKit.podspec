@@ -58,6 +58,7 @@ Pod::Spec.new do |s|
   s.dependency 'JobsImageTools'
   s.dependency 'JobsByQuartzCore'
   s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'JobsViewPush'
   s.dependency 'JobsSwiftDSL'
 
 end

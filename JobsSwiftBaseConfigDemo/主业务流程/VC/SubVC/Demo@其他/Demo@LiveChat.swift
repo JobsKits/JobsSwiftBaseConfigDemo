@@ -25,10 +25,10 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("默认展示（presentChat）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBackgroundColor(.systemBlue) // ≈ Configuration.filled 的视觉
+            .byBackgroundColor(JobsCor.systemBlue) // ≈ Configuration.filled 的视觉
             .onTap { [weak self] _ in
                 self?.onDefault()    // ✅ 保留原有触发逻辑
             }
@@ -42,10 +42,10 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
     private lazy var btnCustom: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("自定义展示（半屏）".tr, for: .normal)
-            .byTitleColor(.label, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.label, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBackgroundColor(.secondarySystemBackground) // ≈ Configuration.gray 的视觉
+            .byBackgroundColor(JobsCor.secondarySystemBackground) // ≈ Configuration.gray 的视觉
             .onTap { [weak self] _ in
                 self?.onCustom()     // ✅ 保留原有触发逻辑
             }
@@ -58,7 +58,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "LiveChat Demo")
         btnDefault.byVisible(YES)
         btnCustom.byVisible(YES)

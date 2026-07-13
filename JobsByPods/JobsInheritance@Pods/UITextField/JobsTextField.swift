@@ -73,17 +73,17 @@ extension JobsTextField {
     
     public var text: String? {
         get { textField.text }
-        set { textField.text = newValue }
+        set { textField.byText(newValue) }
     }
 
     public var placeholder: String? {
         get { textField.placeholder }
-        set { textField.placeholder = newValue }
+        set { textField.byPlaceholder(newValue) }
     }
 
     public var delegate: UITextFieldDelegate? {
         get { textField.delegate }
-        set { textField.delegate = newValue }
+        set { textField.byDelegate(newValue) }
     }
 }
 // MARK: - DSL
@@ -91,19 +91,19 @@ extension JobsTextField {
     /// 设置 text（链式）
     @discardableResult
     public func byText(_ text: String?) -> Self {
-        textField.text = text
+        textField.byText(text)
         return self
     }
     /// 设置 placeholder（链式）
     @discardableResult
     public func byPlaceholder(_ placeholder: String?) -> Self {
-        textField.placeholder = placeholder
+        textField.byPlaceholder(placeholder)
         return self
     }
     /// 设置 delegate（链式）
     @discardableResult
     public func byDelegate(_ delegate: UITextFieldDelegate?) -> Self {
-        textField.delegate = delegate
+        textField.byDelegate(delegate)
         return self
     }
     /// 用回调配置内部 textField（链式）

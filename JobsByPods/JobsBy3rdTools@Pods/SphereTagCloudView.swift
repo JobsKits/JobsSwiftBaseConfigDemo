@@ -93,7 +93,7 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     }
     /// 添加一个标签
     public func addItem(_ view: UIView) {
-        addSubview(view)
+        view.byAddTo(self)
 
         // 如果 view 没尺寸，用 intrinsic 做一次兜底
         if view.bounds.size == .zero {
@@ -335,7 +335,7 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
             v.center = CGPoint(x: x2d, y: y2d)
             v.bounds = CGRect(origin: .zero, size: size)
 
-            v.alpha = alpha
+            v.byAlpha(alpha)
             v.transform = CGAffineTransform(scaleX: scale, y: scale)
 
             // 让更靠前的更容易点到（也可不要）

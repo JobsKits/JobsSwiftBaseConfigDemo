@@ -74,7 +74,7 @@ final class JobsNetworkingListDemoVC : BaseVC {
                 guard let self else { return cell }
                 var cfg = cell.defaultContentConfiguration()
                 cfg.text = self.items[indexPath.row].title
-                cfg.textProperties.font = .systemFont(ofSize: 16, weight: .medium)
+                cfg.textProperties.font = JobsFont.systemFont(ofSize: 16, weight: .medium)
                 cell.contentConfiguration = cfg
                 cell.accessoryType = .disclosureIndicator
                 return cell
@@ -117,7 +117,7 @@ final class JobsNetworkingListDemoVC : BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "JobsNetworking@共用网络接口".tr)
         tableView.byVisible(YES)
     }

@@ -59,12 +59,12 @@ private enum EditProfileRow: CaseIterable {
             return JobsText(JobsRichText.make([
                 JobsRichRun(
                     .text("等级达到2级才能修改昵称"))
-                    .font(.systemFont(ofSize: 14))
-                    .color(.systemRed),
+                    .font(JobsFont.systemFont(ofSize: 14))
+                    .color(JobsCor.systemRed),
                 JobsRichRun(
                     .text("Eric"))
-                    .font(.systemFont(ofSize: 14, weight: .semibold))
-                    .color(.secondaryLabel)
+                    .font(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+                    .color(JobsCor.secondaryLabel)
             ]))
         case .gender:
             return "female"
@@ -147,7 +147,7 @@ final class LGOEditProfileVC: BaseVC {
     /// 日期：系统 Date（年月日）
     private lazy var dateSysDatePicker: BRSystemDatePicker = { [unowned self] in
         BRSystemDatePicker()
-            .byTitle("出生日")
+            .byTitle("出生日".tr)
             .bySelectDate(Date())
             .byMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
             .byMaxDate(Date())
@@ -156,7 +156,7 @@ final class LGOEditProfileVC: BaseVC {
                 theme.byAutoSelect(false)
             }
             .byToolbar { cfg in
-                cfg.byTitle("出生日")
+                cfg.byTitle("出生日".tr)
                    .byCancelText("取消")
                    .byConfirmText("完成")
             }
@@ -196,8 +196,8 @@ extension LGOEditProfileVC: UITableViewDataSource {
             ).byData(JobsBaseCellConfig(title: row.title))
         default:
             return tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
-                .byTitleFont(.systemFont(ofSize: 16))
-                .byDetailTitleFont((.systemFont(ofSize: 14)))
+                .byTitleFont(JobsFont.systemFont(ofSize: 16))
+                .byDetailTitleFont((JobsFont.systemFont(ofSize: 14)))
                 .bySelectionStyle(.none)
                 .byAccessoryType(.disclosureIndicator)
                 .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
@@ -221,7 +221,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
-        UIView().byBackgroundColor(.clear)
+        UIView().byBackgroundColor(JobsCor.clear)
     }
 
     func tipsGrantPermission(){
@@ -295,7 +295,7 @@ extension LGOEditProfileVC: UITableViewDelegate {
         case .emotion:
             eduPicker.byPresent(in: self.view)
         case .hometown:
-            "可能这个最后要被取消".toast
+            "可能这个最后要被取消".tr.toast
         case .profession:
             SwiftEntryKit.display(
                 entry: PhotoPermissionAlertView()
@@ -328,7 +328,7 @@ public final class AvatarCell: UITableViewCell {
                            targetSize: CGSize(width: 44, height: 44))
             .byClipsToBounds(true)
             .byCornerRadius(22)
-            .byBackgroundColor(.systemGray5)
+            .byBackgroundColor(JobsCor.systemGray5)
             .byAddTo(contentView) { [unowned self] make in
                 make.size.equalTo(CGSize(width: 44, height: 44))
                 make.centerY.equalToSuperview()
@@ -343,8 +343,8 @@ public final class AvatarCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        textLabel?.byFont(.systemFont(ofSize: 16)).byTextColor(.label)
-        detailTextLabel?.byFont(.systemFont(ofSize: 14)).byTextColor(.secondaryLabel)
+        textLabel?.byFont(JobsFont.systemFont(ofSize: 16)).byTextColor(JobsCor.label)
+        detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 14)).byTextColor(JobsCor.secondaryLabel)
         avatarView.byVisible(YES)
     }
 

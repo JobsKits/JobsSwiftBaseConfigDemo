@@ -33,11 +33,11 @@ extension UIViewController {
             // 避免上游用 JobsText("xxx".tr) 这种写法时 marker 串台
             TRBind.consumeMarkerIfNeeded()
             let btn = leftButton ?? makeDefaultBackButton()
-            gk_navLeftBarButtonItem = UIBarButtonItem(customView: btn)
+            gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: btn)
             if let items = rightButtons, !items.isEmpty {
                 items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
                 /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
-                gk_navRightBarButtonItems = [UIBarButtonItem(customView: UIStackView(arrangedSubviews: items)
+                gk_navRightBarButtonItems = [UIBarButtonItem.make(customView: UIStackView(arrangedSubviews: items)
                     .byAxis(.horizontal)
                     .byAlignment(.center)
                     .byDistribution(.fill)
@@ -57,11 +57,11 @@ extension UIViewController {
             // 让 GK 标题也具备自动刷新能力
             tr_setGKNavTitle(title)
             let btn = leftButton ?? makeDefaultBackButton()
-            gk_navLeftBarButtonItem = UIBarButtonItem(customView: btn)
+            gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: btn)
             if let items = rightButtons, !items.isEmpty {
                 items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
                 /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
-                gk_navRightBarButtonItems = [UIBarButtonItem(customView: UIStackView(arrangedSubviews: items)
+                gk_navRightBarButtonItems = [UIBarButtonItem.make(customView: UIStackView(arrangedSubviews: items)
                     .byAxis(.horizontal)
                     .byAlignment(.center)
                     .byDistribution(.fill)
@@ -100,9 +100,9 @@ extension UIViewController {
     }
     // MARK: - 内置：默认“< 返回”按钮（SF Symbol: chevron.left）
     private func makeDefaultBackButton() -> UIButton {
-        UIButton(type: .system)
+        UIButton.sys()
             .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-            .byTintColor(.black)
+            .byTintColor(JobsCor.black)
             .byImage("chevron.left".sysImg, for: .normal)
             .byContentEdgeInsets(.zero)
             .byTitleEdgeInsets(.zero)

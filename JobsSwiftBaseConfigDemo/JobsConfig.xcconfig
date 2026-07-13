@@ -25,6 +25,9 @@ INFOPLIST_KEY_CFBundleDisplayName = $(APP_DISPLAY_NAME)
 // 写入 Info.plist 的 CFBundleName：Bundle 名称（系统内部/某些场景显示用）
 // 通常不建议频繁改动；一般让它跟 PRODUCT_NAME 保持一致即可
 INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
+// 当前工程根文件夹名：仅注入 basename，供 Demo 入口导航栏展示
+JOBS_PROJECT_FOLDER_NAME = $(PROJECT_DIR:base)
+INFOPLIST_KEY_JobsProjectFolderName = $(JOBS_PROJECT_FOLDER_NAME)
 // ================= Flutter (FVM) =================
 FLUTTER_ROOT = $(SRCROOT)/my_flutter/.fvm/flutter_sdk
 FLUTTER_APPLICATION_PATH = $(SRCROOT)

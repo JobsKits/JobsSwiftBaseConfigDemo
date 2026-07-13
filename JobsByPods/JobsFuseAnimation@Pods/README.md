@@ -8,6 +8,9 @@
 - 即使按钮设置了 `byMasksToBounds(true)`，导火索外圈也不会被裁剪。
 - 默认线圈颜色改成白色，并增加浅色底圈，避免和紫色按钮背景混在一起看不见。
 - 进度增长由 `JobsSwiftTimer` 驱动。
+- 视图和 `CALayer` 属性通过 `JobsSwiftDSL` 链式配置。
+- 引火索路径通过 `JobsByUIKit.UIBezierPath.make(...)` 创建。
+- UIKit 基础色通过 `JobsSwiftBaseDefines.JobsCor` 统一提供。
 
 ## 用法
 
@@ -15,8 +18,8 @@
 btn.byFusePressStart(
     ringConfig: JobsFuseOuterRingConfig(
         lineWidth: 4,
-        strokeColor: .white,
-        trackColor: UIColor.white.withAlphaComponent(0.22),
+        strokeColor: JobsCor.white,
+        trackColor: JobsCor.white.withAlphaComponent(0.22),
         growDuration: 1.2,
         repeatsWhileHolding: false
     ),

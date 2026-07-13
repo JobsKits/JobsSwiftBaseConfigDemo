@@ -264,7 +264,7 @@ extension UIButton {
                     .byContentsScale(UIScreen.main.scale)
                     .byFrame(b))
 
-        label.byTextColor(.clear).byAddSublayer(g)
+        label.byTextColor(JobsCor.clear).byAddSublayer(g)
         
         objc_setAssociatedObject(
             self,

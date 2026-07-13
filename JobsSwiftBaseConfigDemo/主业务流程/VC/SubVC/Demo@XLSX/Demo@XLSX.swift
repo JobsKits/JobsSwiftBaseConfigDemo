@@ -31,8 +31,8 @@ final class XLSXDemoVC: BaseVC {
     private lazy var openButton: UIButton = {
         UIButton.sys()
             .byTitle("打开 .xlsx".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .byImage("doc.badge.plus".sysImg, for: .normal)
             .byImagePlacement(.leading)
             .byCornerRadius(10)
@@ -53,8 +53,8 @@ final class XLSXDemoVC: BaseVC {
     private lazy var localButton: UIButton = {
         UIButton.sys()
             .byTitle("加载本地".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             .byImage("internaldrive".sysImg, for: .normal)
             .byImagePlacement(.leading)
             .byCornerRadius(10)
@@ -117,7 +117,7 @@ final class XLSXDemoVC: BaseVC {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "CoreXLSX"
         )
@@ -152,7 +152,7 @@ final class XLSXDemoVC: BaseVC {
             if let xlsx = UTType(filenameExtension: "xlsx") {
                 let picker = UIDocumentPickerViewController(forOpeningContentTypes: [xlsx], asCopy: true)
                 picker.allowsMultipleSelection = false
-                picker.delegate = self
+                picker.byDelegate(self)
                 present(picker, animated: true)
                 return
             }

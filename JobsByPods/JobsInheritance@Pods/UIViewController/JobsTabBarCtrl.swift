@@ -42,11 +42,11 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
 
     public var barBackgroundColor: UIColor = JobsCor.systemBackground {
-        didSet { TabBar.backgroundColor = barBackgroundColor }
+        didSet { TabBar.byBackgroundColor(barBackgroundColor) }
     }
 
     public var barBackgroundImage: UIImage? {
-        didSet { bgImageView.image = barBackgroundImage }
+        didSet { bgImageView.byImage(barBackgroundImage) }
     }
     /// TabBar 内边距（用于 1/2~5 规则与 >5 的参考宽度计算）
     public var contentInset: UIEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
@@ -87,7 +87,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             .byShowsHorizontalScrollIndicator(NO)
             .byShowsVerticalScrollIndicator(NO)
             .byDelegate(self)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byScrollEnabled(isSwipeEnabled)
             .byAlwaysBounceVertical(!horizontalOnly)
             .byDirectionalLockEnabled(YES)
@@ -124,18 +124,18 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         self.controllers = controllers
         // 配按钮
         for (i, b) in buttons.enumerated() {
-            b.tag = i
+            b.byTag(i)
             b.onTap { [weak self] _ in
                 self?.handleTap(at: i)
             }
-            TabBar.addSubview(b)
+            b.byAddTo(TabBar)
         }
         // 配子控制器：仅取前 N（N = min(btns, ctrls)）
         let pageCount = min(buttons.count, controllers.count)
         for i in 0..<pageCount {
             let vc = embedIfNeeded(controllers[i])
             addChild(vc)
-            contentScrollView.addSubview(vc.view)
+            vc.view.byAddTo(contentScrollView)
             vc.didMove(toParent: self)
 
             // 可选：对子 VC 内纵向滚动控件做限制
@@ -169,30 +169,30 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
     // MARK: - UI
     private func setupUI() {
-        view.backgroundColor = JobsCor.systemBackground
-        view.addSubview(contentScrollView)
-        TabBar.addSubview(bgImageView)
-        view.addSubview(TabBar)
+        view.byBackgroundColor(JobsCor.systemBackground)
+        contentScrollView.byAddTo(view)
+        bgImageView.byAddTo(TabBar)
+        TabBar.byAddTo(view)
     }
 
     private func layoutUI() {
         let safeBottom = view.safeAreaInsets.bottom
         let barH = (customBarHeight ?? (49 + safeBottom))
 
-        TabBar.frame = CGRect(
+        TabBar.byFrame(CGRect(
             x: 0,
             y: view.bounds.height - barH - barBottomOffset,
             width: view.bounds.width,
             height: barH
-        )
-        bgImageView.frame = TabBar.bounds
+        ))
+        bgImageView.byFrame(TabBar.bounds)
 
-        contentScrollView.frame = CGRect(
+        contentScrollView.byFrame(CGRect(
             x: 0,
             y: 0,
             width: view.bounds.width,
             height: view.bounds.height - barH - barBottomOffset
-        )
+        ))
         // 按钮布局
         if autoRelayoutForBoundsChange || !builtOnce {
             layoutButtonsByRule()
@@ -248,7 +248,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
 
         // 应用 frame
         for (i, f) in frames.enumerated() {
-            buttons[i].frame = f
+            buttons[i].byFrame(f)
         }
 
         // contentSize
@@ -273,7 +273,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         let pageH = contentScrollView.bounds.height
         for i in 0..<pageCount {
             let vc = children[i]
-            vc.view.frame = CGRect(x: CGFloat(i) * pageW, y: 0, width: pageW, height: pageH)
+            vc.view.byFrame(CGRect(x: CGFloat(i) * pageW, y: 0, width: pageW, height: pageH))
         }
         contentScrollView.contentSize = CGSize(width: pageW * CGFloat(pageCount), height: pageH)
     }
@@ -287,7 +287,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
 
     public func applySelectionState(animated: Bool) {
-        for (i, b) in buttons.enumerated() { b.isSelected = (i == selectedIndex) }
+        for (i, b) in buttons.enumerated() { b.bySelected(i == selectedIndex) }
         syncContentOffset(animated: animated)
         scrollTabBarToVisible(index: selectedIndex, animated: animated)
     }

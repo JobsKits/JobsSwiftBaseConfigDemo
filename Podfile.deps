@@ -128,6 +128,7 @@ def byJobs
     pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
     pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
     pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods'
+    pod 'JobsBluetooth',                      :path => 'JobsByPods/JobsBluetooth@Pods'
     pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
     pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods' # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
     pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods' # https://github.com/JobsKits/JobsSwiftBlock

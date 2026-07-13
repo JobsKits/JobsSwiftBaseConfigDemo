@@ -26,7 +26,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
 
     private lazy var patchCardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(false)
             .byAddTo(view) { [unowned self] make in
@@ -39,8 +39,8 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("Swift 热更新 Demo".tr)
-            .byFont(.systemFont(ofSize: 24, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 24, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { make in
                 make.top.equalToSuperview().offset(24)
@@ -52,8 +52,8 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var subtitleLabel: UILabel = {
         UILabel()
             .byText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { [unowned self] make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(12)
@@ -64,8 +64,8 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel()
             .byText("等待开始".tr)
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.tertiaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.tertiaryLabel)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { [unowned self] make in
                 make.top.equalTo(subtitleLabel.snp.bottom).offset(22)
@@ -76,8 +76,8 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var progressView: UIProgressView = {
         UIProgressView(progressViewStyle: .default)
             .byProgress(0)
-            .byProgressTintColor(.systemBlue)
-            .byTrackTintColor(.systemGray5)
+            .byProgressTintColor(JobsCor.systemBlue)
+            .byTrackTintColor(JobsCor.systemGray5)
             .byHidden(true)
             .byAddTo(patchCardView) { [unowned self] make in
                 make.top.equalTo(statusLabel.snp.bottom).offset(18)
@@ -87,11 +87,11 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var hotRefreshButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("开始热更新演示".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBackgroundColor(.label)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.label)
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 self?.startPatchDemo()
@@ -107,7 +107,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "Swift 热更新演示".tr)
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
         buildDemoUI()
         resetDemoUI()
     }
@@ -148,13 +148,17 @@ private extension JobsSwiftPatchDemoVC {
             .byProgress(0)
             .byHidden(false)
 
-        UIView.animate(withDuration: 1.2, animations: {
-            self.progressView.byProgress(1, animated: true)
-        }, completion: { [weak self] _ in
-            guard let self else { return }
-            self.installLocalRuntimePatch()
-            self.applyPatchPayload(self.hotRefreshPatchPayload())
-        })
+        UIView.jobsAnimateWithCompletion(
+            1.2,
+            animations: {
+                self.progressView.byProgress(1, animated: true)
+            },
+            completion: { [weak self] _ in
+                guard let self else { return }
+                self.installLocalRuntimePatch()
+                self.applyPatchPayload(self.hotRefreshPatchPayload())
+            }
+        )
     }
 
     func installLocalRuntimePatch() {
@@ -184,43 +188,43 @@ private extension JobsSwiftPatchDemoVC {
     func applyPatchPayload(_ payload: NSDictionary) {
         guard payload.count > 0 else { return }
         view.byBackgroundColor(color(hex: payload["backgroundHex"] as? String,
-                                     defaultColor: .systemBackground))
+                                     defaultColor: JobsCor.systemBackground))
         patchCardView.byBackgroundColor(color(hex: payload["cardHex"] as? String,
-                                              defaultColor: .secondarySystemBackground))
+                                              defaultColor: JobsCor.secondarySystemBackground))
         titleLabel
             .byText((payload["title"] as? String) ?? "")
             .byTextColor(color(hex: payload["titleHex"] as? String,
-                               defaultColor: .label))
+                               defaultColor: JobsCor.label))
         subtitleLabel
             .byText((payload["subTitle"] as? String) ?? "")
             .byTextColor(color(hex: payload["subTitleHex"] as? String,
-                               defaultColor: .secondaryLabel))
+                               defaultColor: JobsCor.secondaryLabel))
         statusLabel
             .byText((payload["status"] as? String) ?? "")
             .byTextColor(color(hex: payload["titleHex"] as? String,
-                               defaultColor: .label))
+                               defaultColor: JobsCor.label))
         progressView.byProgressTintColor(color(hex: payload["progressHex"] as? String,
-                                               defaultColor: .systemGreen))
+                                               defaultColor: JobsCor.systemGreen))
         hotRefreshButton
             .byTitle((payload["buttonTitle"] as? String) ?? "", for: .normal)
             .byEnabled(true)
     }
 
     func resetDemoUI() {
-        view.byBackgroundColor(.systemBackground)
-        patchCardView.byBackgroundColor(.secondarySystemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
+        patchCardView.byBackgroundColor(JobsCor.secondarySystemBackground)
         titleLabel
             .byText("Swift 热更新 Demo".tr)
-            .byTextColor(.label)
+            .byTextColor(JobsCor.label)
         subtitleLabel
             .byText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
         statusLabel
             .byText("等待开始".tr)
-            .byTextColor(.tertiaryLabel)
+            .byTextColor(JobsCor.tertiaryLabel)
         progressView
             .byProgress(0)
-            .byProgressTintColor(.systemBlue)
+            .byProgressTintColor(JobsCor.systemBlue)
             .byHidden(true)
         hotRefreshButton
             .byTitle("开始热更新演示".tr, for: .normal)

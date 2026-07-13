@@ -24,11 +24,11 @@ public enum JobsEmptyAuto {
     public enum Config {
         /// 全局默认按钮提供器（你可在 App 任何位置重写）
         public static var defaultProvider: () -> UIButton = {
-            UIButton(type: .system)
+            UIButton.sys()
                 .byTitle("暂无数据".tr, for: .normal)
                 .bySubTitle("下拉刷新或点我试试".tr, for: .normal)
-                .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
-                .bySubTitleFont(.systemFont(ofSize: 13))
+                .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
+                .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
                 .byTitleColor(JobsCor.label, for: .normal)
                 .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
                 .byImage("tray".sysImg, for: .normal)

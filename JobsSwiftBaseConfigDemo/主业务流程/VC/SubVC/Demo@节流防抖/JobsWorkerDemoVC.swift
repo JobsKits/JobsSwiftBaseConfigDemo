@@ -62,9 +62,9 @@ public final class JobsWorkerDemoVC: BaseVC {
     /// 页面自述
     private lazy var introTextView: UITextView = {
         UITextView()
-            .byFont(.systemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.label)
-            .byBackgroundColor(.secondarySystemBackground)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
             .byTextContainerInset(
@@ -86,7 +86,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     /// 演示区容器
     private lazy var demoCardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
             .byAddTo(contentView) { [unowned self] make in
@@ -97,9 +97,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var demoTitleLabel: UILabel = {
         UILabel()
-            .byText("交互演示区")
-            .byFont(.systemFont(ofSize: 20, weight: .bold))
-            .byTextColor(.label)
+            .byText("交互演示区".tr)
+            .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
+            .byTextColor(JobsCor.label)
             .byAddTo(demoCardView) { make in
                 make.top.equalToSuperview().offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -108,9 +108,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var demoDescLabel: UILabel = {
         UILabel()
-            .byText("这里不是功能列表页，而是行为演示页。你只需要点按钮、输入文字，然后观察最下面的日志输出。")
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byText("这里不是功能列表页，而是行为演示页。你只需要点按钮、输入文字，然后观察最下面的日志输出。".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(demoCardView) { [unowned self] make in
                 make.top.equalTo(demoTitleLabel.snp.bottom).offset(8)
@@ -120,9 +120,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var summaryLabel: UILabel = {
         UILabel()
-            .byText("当前状态：count = 0，keyword = <empty>")
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
-            .byTextColor(.systemBlue)
+            .byText("当前状态：count = 0，keyword = <empty>".tr)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTextColor(JobsCor.systemBlue)
             .byNumberOfLines(0)
             .byAddTo(demoCardView) { [unowned self] make in
                 make.top.equalTo(demoDescLabel.snp.bottom).offset(14)
@@ -132,9 +132,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var inputTitleLabel: UILabel = {
         UILabel()
-            .byText("关键词输入（观察 debounce / distinctUntilChanged / combineLatest）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
-            .byTextColor(.label)
+            .byText("关键词输入（观察 debounce / distinctUntilChanged / combineLatest）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(demoCardView) { [unowned self] make in
                 make.top.equalTo(summaryLabel.snp.bottom).offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -143,7 +143,7 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var inputViewField: UITextField = {
         UITextField()
-            .byPlaceholder("请输入搜索词，例如：会员、折扣、年卡")
+            .byPlaceholder("请输入搜索词，例如：会员、折扣、年卡".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
             .byOnInput { [weak self] _, value, _, _, _, _ in
@@ -159,9 +159,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var countTitleLabel: UILabel = {
         UILabel()
-            .byText("计数操作（观察 ever / once / interval / skip / take / everAll / combineLatest）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
-            .byTextColor(.label)
+            .byText("计数操作（观察 ever / once / interval / skip / take / everAll / combineLatest）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(demoCardView) { [unowned self] make in
                 make.top.equalTo(inputViewField.snp.bottom).offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -169,7 +169,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var increaseButton: UIButton = {
-        makeActionButton(title: "计数 +1")
+        makeActionButton(title: "计数 +1".tr)
             .byAddAction(for: .touchUpInside) { [weak self] (_: UIButton) in
                 guard let self else { return }
                 didTapIncrease()
@@ -183,7 +183,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var burstButton: UIButton = {
-        makeActionButton(title: "连续触发")
+        makeActionButton(title: "连续触发".tr)
             .byAddAction(for: .touchUpInside) { [weak self] (_: UIButton) in
                 guard let self else { return }
                 didTapBurst()
@@ -197,7 +197,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var replayButton: UIButton = {
-        makeActionButton(title: "回放输入")
+        makeActionButton(title: "回放输入".tr)
             .byAddAction(for: .touchUpInside) { [weak self] (_: UIButton) in
                 guard let self else { return }
                 didTapReplayKeyword()
@@ -212,7 +212,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var resetButton: UIButton = {
-        makeActionButton(title: "重置演示")
+        makeActionButton(title: "重置演示".tr)
             .byAddAction(for: .touchUpInside) { [weak self] (_: UIButton) in
                 guard let self else { return }
                 didTapReset()
@@ -229,7 +229,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     /// 重点说明区
     private lazy var capabilityCardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
             .byAddTo(contentView) { [unowned self] make in
@@ -240,9 +240,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var capabilityTitleLabel: UILabel = {
         UILabel()
-            .byText("本页重点")
-            .byFont(.systemFont(ofSize: 20, weight: .bold))
-            .byTextColor(.label)
+            .byText("本页重点".tr)
+            .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
+            .byTextColor(JobsCor.label)
             .byAddTo(capabilityCardView) { make in
                 make.top.equalToSuperview().offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -251,9 +251,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var capabilityTextView: UITextView = {
         UITextView()
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byTextColor(.label)
-            .byBackgroundColor(.clear)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.clear)
             .byTextContainerInset(
                 UIEdgeInsets(
                     top: 8,
@@ -274,7 +274,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     /// 日志结果区
     private lazy var logCardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
             .byAddTo(contentView) { [unowned self] make in
@@ -286,9 +286,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var logTitleLabel: UILabel = {
         UILabel()
-            .byText("实时日志")
-            .byFont(.systemFont(ofSize: 20, weight: .bold))
-            .byTextColor(.label)
+            .byText("实时日志".tr)
+            .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
+            .byTextColor(JobsCor.label)
             .byAddTo(logCardView) { make in
                 make.top.equalToSuperview().offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -297,9 +297,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var logDescLabel: UILabel = {
         UILabel()
-            .byText("这里会倒序输出 Worker 的实际触发结果。看这里，比看代码更直观。")
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byText("这里会倒序输出 Worker 的实际触发结果。看这里，比看代码更直观。".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(logCardView) { [unowned self] make in
                 make.top.equalTo(logTitleLabel.snp.bottom).offset(8)
@@ -309,9 +309,9 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     private lazy var logTextView: UITextView = {
         UITextView()
-            .byFont(.monospacedSystemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.label)
-            .byBackgroundColor(.systemBackground)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(true)
             .byTextContainerInset(
@@ -335,7 +335,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     public override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsSwiftWorker Demo".tr)
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
 
         setupUI()
         setupStaticTexts()
@@ -376,7 +376,7 @@ private extension JobsWorkerDemoVC {
     }
 
     func setupStaticTexts() {
-        introTextView.text =
+        introTextView.byText(
         """
         这是一个 JobsSwiftWorker 的行为演示页，不是功能列表页。
 
@@ -389,8 +389,9 @@ private extension JobsWorkerDemoVC {
 
         结论不是看按钮名字，而是看最下面的“实时日志”。
         """
+        )
 
-        capabilityTextView.text =
+        capabilityTextView.byText(
         """
         ever：每次变化都响应
         once：只响应第一次变化
@@ -404,6 +405,7 @@ private extension JobsWorkerDemoVC {
 
         这个 Demo 的重点不是 UI，而是让你肉眼看清“同一组输入，在不同 Worker 策略下，输出为什么不一样”。
         """
+        )
     }
 
     func bindWorkers() {
@@ -495,10 +497,10 @@ private extension JobsWorkerDemoVC {
     }
 
     func makeActionButton(title: String) -> UIButton {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle(title, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold), for: .normal)
-            .byBackgroundColor(.systemBlue.withAlphaComponent(0.1))
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold), for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.1))
             .byCornerRadius(10)
             .byMasksToBounds(true)
     }
@@ -513,11 +515,13 @@ private extension JobsWorkerDemoVC {
 
     func reloadLogs() {
         if logs.isEmpty {
-            logTextView.text = "暂无日志。\n\n请点击上方按钮或输入文字开始演示。"
+            logTextView.byText("暂无日志。\n\n请点击上方按钮或输入文字开始演示。".tr)
         } else {
-            logTextView.text = logs.enumerated().map { index, message in
-                "[\(index + 1)] \(message)"
-            }.joined(separator: "\n")
+            logTextView.byText(
+                logs.enumerated().map { index, message in
+                    "[\(index + 1)] \(message)"
+                }.joined(separator: "\n")
+            )
         }
     }
 

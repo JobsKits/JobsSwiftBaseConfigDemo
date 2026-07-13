@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
@@ -39,7 +40,7 @@ final class KeyboardDemoVC: BaseVC {
     // 底部工具栏（跟随键盘上移）
     private lazy var bottomBar: UIView = {
         UIView()
-            .byBackgroundColor(.systemGray6)
+            .byBackgroundColor(JobsCor.systemGray6)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
                 make.height.equalTo(60)
@@ -50,7 +51,7 @@ final class KeyboardDemoVC: BaseVC {
     private lazy var label: UILabel = {
         UILabel()
             .byText("我是底部栏，会跟随键盘上移".tr)
-            .byTextColor(.darkGray)
+            .byTextColor(JobsCor.darkGray)
             .byTextAlignment(.center)
             .byAddTo(bottomBar) { make in
                 make.edges.equalToSuperview()
@@ -59,7 +60,7 @@ final class KeyboardDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Keyboard Height Demo"
         )
@@ -79,7 +80,7 @@ final class KeyboardDemoVC: BaseVC {
                 self.bottomBar.snp.updateConstraints { make in
                     make.bottom.equalToSuperview().inset(height)
                 }
-                UIView.animate(withDuration: 0.25) {
+                UIView.jobsAnimate(0.25) {
                     self.view.layoutIfNeeded()
                 }
             })

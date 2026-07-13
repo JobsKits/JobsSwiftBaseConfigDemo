@@ -25,8 +25,8 @@ final class RowCell: UITableViewCell {
             .byTextAlignment(.left)
             .byHugging(.required)
             .byCompressionResistance(.required)
-            .byFont(.monospacedDigitSystemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(8)
                 make.left.equalToSuperview().offset(12)
@@ -73,7 +73,7 @@ final class RowCell: UITableViewCell {
                 stack.addArrangedSubview(
                     UILabel()
                         .byNumberOfLines(1)
-                        .byFont(.systemFont(ofSize: 15))
+                        .byFont(JobsFont.systemFont(ofSize: 15))
                         .byText(text)
                         .byCompressionResistance(.defaultLow)
                 )

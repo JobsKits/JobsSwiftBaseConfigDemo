@@ -55,7 +55,7 @@ public extension UITextView {
         UITextView.by_swizzleLayoutSubviewsOnce()
         let label = UILabel()
             .byNumberOfLines(0)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byFont(font)
             .byTextColor(JobsCor.placeholderText)
             .byAddTo(self)

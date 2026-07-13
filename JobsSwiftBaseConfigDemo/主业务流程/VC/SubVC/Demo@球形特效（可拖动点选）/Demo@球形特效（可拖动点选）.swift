@@ -54,8 +54,8 @@ final class SphereDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "拖动旋转 / 捏合缩放 / 点按标签")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "拖动旋转 / 捏合缩放 / 点按标签".tr)
         sphereView.byVisible(YES)
     }
 
@@ -63,8 +63,8 @@ final class SphereDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(.randomColor(), for: .normal)
             .byTitle(title, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byCornerRadius(14)
             .byMasksToBounds(true)
             .bySize { v in
@@ -72,7 +72,7 @@ final class SphereDemoVC: BaseVC {
                 CGSize(width: v.bounds.width + 14, height: max(28, v.bounds.height + 10))
             }
             .onTap { sender in
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 sender.title?.toast;
                 sender.playTapBounce(haptic: .light)  // 👈 临时放大→回弹（不注册任何手势/事件）
             }

@@ -11,6 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsSwiftDSL
+
 public protocol GestureUnlockViewDelegate: AnyObject {
     func gestureUnlockViewDidBeginInput(_ view: GestureUnlockView)
     func gestureUnlockView(_ view: GestureUnlockView, didComplete pattern: GesturePattern)
@@ -54,9 +58,9 @@ public final class GestureUnlockView: UIView {
 
     private func commonInit() {
         isMultipleTouchEnabled = false
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
 
-        lineLayer.fillColor = UIColor.clear.cgColor
+        lineLayer.fillColor = JobsCor.clear.cgColor
         lineLayer.lineCap = .round
         lineLayer.lineJoin = .round
         layer.addSublayer(lineLayer)
@@ -81,7 +85,7 @@ public final class GestureUnlockView: UIView {
         updateLinePath()
 
         if animated {
-            UIView.animate(withDuration: 0.18) { self.alpha = 1.0 }
+            UIView.jobsAnimate(0.18) { self.byAlpha(1.0) }
         }
     }
 
@@ -104,7 +108,7 @@ public final class GestureUnlockView: UIView {
             let node = GestureNodeView(index: idx)
             node.configuration = configuration
             node.apply(state: .normal)
-            addSubview(node)
+            node.byAddTo(self)
             nodes.append(node)
         }
 
@@ -125,9 +129,9 @@ public final class GestureUnlockView: UIView {
                 let idx = r * n + c
                 let center = CGPoint(x: spacingX * CGFloat(c + 1),
                                      y: spacingY * CGFloat(r + 1))
-                nodes[idx].frame = CGRect(origin: CGPoint(x: center.x - size.width / 2,
+                nodes[idx].byFrame(CGRect(origin: CGPoint(x: center.x - size.width / 2,
                                                           y: center.y - size.height / 2),
-                                          size: size)
+                                          size: size))
                 nodes[idx].setNeedsLayout()
             }
         }
@@ -250,15 +254,15 @@ public final class GestureUnlockView: UIView {
     // MARK: - Line
 
     private func updateLinePath() {
-        let path = UIBezierPath()
+        let path = UIBezierPath.make()
         let points = selected.compactMap { idx -> CGPoint? in
             guard idx >= 0, idx < nodes.count else { return nil };return nodes[idx].center
         }
 
         if let first = points.first {
-            path.move(to: first)
-            for p in points.dropFirst() { path.addLine(to: p) }
-            if let finger = currentTouchPoint { path.addLine(to: finger) }
+            path.byMove(to: first)
+            for p in points.dropFirst() { path.byAddLine(to: p) }
+            if let finger = currentTouchPoint { path.byAddLine(to: finger) }
         }
 
         lineLayer.path = path.cgPath

@@ -24,11 +24,11 @@ final class TipsGrantPermissionView: UIView {
     /// 白色卡片
     private lazy var cardView: UIView = {
         UIView()
-            .byBackgroundColor(.white)
+            .byBackgroundColor(JobsCor.white)
             .byLayer { layer in
                 layer.byCornerRadius(14)
                     .byMasksToBounds(NO) // 有阴影就不要 masksToBounds = true，不然阴影会被裁掉
-                    .byShadowColor(.black.withAlphaComponent(0.15))
+                    .byShadowColor(JobsCor.black.withAlphaComponent(0.15))
                     .byShadowOffset(CGSize(width: 0, height: 4))
                     .byShadowRadius(12)
                     .byShadowOpacity(1)
@@ -41,8 +41,8 @@ final class TipsGrantPermissionView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("温馨提示".tr)
-            .byTextColor(.label)
-            .byFont(.systemFont(ofSize: 17, weight: .semibold))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
             .byTextAlignment(.center)
             .byAddTo(cardView) { make in
                 make.top.equalToSuperview().inset(18)
@@ -53,8 +53,8 @@ final class TipsGrantPermissionView: UIView {
     private lazy var messageLabel: UILabel = {
         UILabel()
             .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
-            .byTextColor(.label)
-            .byFont(.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byAddTo(cardView) { [unowned self] make in
@@ -66,8 +66,8 @@ final class TipsGrantPermissionView: UIView {
     private lazy var hintLabel: UILabel = {
         UILabel()
             .byText("设置-隐私安全-照片和视频".tr)
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 12))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 12))
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byAddTo(cardView) { [unowned self] make in
@@ -80,8 +80,8 @@ final class TipsGrantPermissionView: UIView {
         UIButton.sys()
             .byBackgroundColor(.init(r: 0/255, g: 199/255, b: 140/25, a: 1))
             .byTitle("去开启".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.removeFromSuperview()
@@ -110,7 +110,7 @@ extension TipsGrantPermissionView {
     
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
-        // byBackgroundColor(.black.withAlphaComponent(0.35))
+        // byBackgroundColor(JobsCor.black.withAlphaComponent(0.35))
         // 触发懒加载，顺带确保整个层级建好
         cardView.byVisible(YES)
         confirmButton.byVisible(YES)

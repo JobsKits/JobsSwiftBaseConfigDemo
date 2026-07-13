@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -38,15 +39,15 @@ class DemoDetailVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "🍰 自定义高度 HalfSheet (320)"
+            title: "🍰 自定义高度 HalfSheet (320)".tr
         )
-        UIButton(type: .system)
+        UIButton.sys()
             // 普通文字：未选中状态标题
-            .byTitle("关闭", for: .normal)
+            .byTitle("关闭".tr, for: .normal)
             // 字体统一
-            .byTitleFont(.boldSystemFont(ofSize: 16))
+            .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             // 点按事件（统一入口）
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -68,13 +69,13 @@ class HalfSheetDemoVC: DemoDetailVC{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(16)
             .byClipsToBounds(true)
 
         UILabel()
             .byText("")
-            .byFont(.boldSystemFont(ofSize: 18))
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.center)
             .byAddTo(view) { make in
                 make.top.equalToSuperview().offset(20)

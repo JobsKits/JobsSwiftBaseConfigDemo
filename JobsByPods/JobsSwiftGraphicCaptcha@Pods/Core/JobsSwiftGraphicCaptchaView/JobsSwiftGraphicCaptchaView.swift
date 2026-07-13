@@ -11,6 +11,9 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
+
 #if os(iOS) || os(tvOS)
 public final class JobsSwiftGraphicCaptchaView: UIView {
     public var config: JobsSwiftGraphicCaptchaConfig = .defaultConfig {
@@ -19,9 +22,9 @@ public final class JobsSwiftGraphicCaptchaView: UIView {
     public var captchaText: String = "" {
         didSet { setNeedsDisplay() }
     }
-    public var font: UIFont = .boldSystemFont(ofSize: 18)
+    public var font: UIFont = JobsFont.boldSystemFont(ofSize: 18)
     public var textColor: UIColor?
-    public var captchaBackgroundColor: UIColor = UIColor(white: 1, alpha: 0.92)
+    public var captchaBackgroundColor: UIColor = UIColor(gray: 255, alpha: 0.92)
     public var interferenceLineCount: Int = 7
     public var noisePointCount: Int = 18
     public var shouldRefreshWhenTapped: Bool = true
@@ -125,10 +128,10 @@ private extension JobsSwiftGraphicCaptchaView {
     }
 
     static func randomColor(alpha: CGFloat) -> UIColor {
-        UIColor(hue: randomCGFloat(0, 1),
-                saturation: randomCGFloat(0.45, 0.95),
-                brightness: randomCGFloat(0.45, 0.95),
-                alpha: alpha)
+        UIColor(h: randomCGFloat(0, 1),
+                s: randomCGFloat(0.45, 0.95),
+                b: randomCGFloat(0.45, 0.95),
+                a: alpha)
     }
 }
 #endif

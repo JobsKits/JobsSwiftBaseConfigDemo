@@ -169,7 +169,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     // === 内部画布：等屏宽，居中于父视图 ===
     private lazy var canvas: UIView = {
         UIView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             /// 画布：等屏宽、中心对齐到父视图
             .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                  // ✅ 中心对齐（不从 0,0 起）
@@ -181,7 +181,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
 
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byHugging(.required, axis: .horizontal)
@@ -207,7 +207,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        byBackgroundColor(.clear).byUserInteractionEnabled(false)
+        byBackgroundColor(JobsCor.clear).byUserInteractionEnabled(false)
         canvas.byAlpha(1)
     }
     // 跟随窗口宽度（适配横竖屏 / iPad 分屏）
@@ -257,7 +257,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     private var canvasWidthConstraint: Constraint?
     private lazy var canvas: UIView = {
         UIView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                 // ✅ 居中对齐父视图
                 make.centerY.equalToSuperview()
@@ -268,7 +268,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byHugging(.required, axis: .horizontal)
@@ -297,7 +297,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        byBackgroundColor(.clear)
+        byBackgroundColor(JobsCor.clear)
         byUserInteractionEnabled(false)
         canvas.byVisible(YES)
         titleLabel.byVisible(YES)

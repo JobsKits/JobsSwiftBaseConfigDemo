@@ -54,9 +54,9 @@ final class MessageListDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("编辑".tr, for: .normal)
             .byTitle("完成".tr, for: .selected)
-            .byTitleColor(.label, for: .normal)
-            .byTitleColor(.label, for: .selected)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byTitleColor(JobsCor.label, for: .normal)
+            .byTitleColor(JobsCor.label, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byNumberOfLines(1)
             .byLineBreakMode(.byClipping)
             .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 18))
@@ -73,9 +73,9 @@ final class MessageListDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("全选".tr, for: .normal)
             .byTitle("取消".tr, for: .selected)
-            .byTitleColor(.label, for: .normal)
-            .byTitleColor(.label, for: .selected)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.label, for: .normal)
+            .byTitleColor(JobsCor.label, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 guard self.isEditingMode else { return }
@@ -87,8 +87,8 @@ final class MessageListDemoVC: BaseVC {
     private lazy var bottomDeleteButton: UIButton = {
         UIButton.sys()
             .byTitle("删除".tr, for: .normal)
-            .byTitleColor(.systemRed, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.systemRed, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.deleteSelectedRows()
@@ -97,8 +97,8 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - BottomBar
     private lazy var bottomBar: UIView = {
         let v = UIView()
-            .byBackgroundColor(.secondarySystemBackground)
-            .byShadowColor(.black.withAlphaComponent(0.10))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byShadowColor(JobsCor.black.withAlphaComponent(0.10))
             .byShadowOpacity(1)
             .byShadowRadius(8)
             .byShadowOffset(.init(width: 0, height: -2))
@@ -132,7 +132,7 @@ final class MessageListDemoVC: BaseVC {
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
+                UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
@@ -193,7 +193,7 @@ final class MessageListDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(
-            title: "消息",
+            title: "消息".tr,
             rightButtons: [rightEditButton]  // ✅ 右上角一直存在
         )
         tableView.byVisible(YES)
@@ -223,7 +223,7 @@ final class MessageListDemoVC: BaseVC {
     }
 
     private func updateNavUI() {
-        rightEditButton.isSelected = isEditingMode
+        rightEditButton.bySelected(isEditingMode)
     }
     // MARK: - Insets
     private func captureBaseInsetsIfNeeded() {
@@ -359,9 +359,9 @@ extension MessageListDemoVC {
     }
 
     private func updateBottomBarUI() {
-        bottomSelectAllButton.isSelected = isAllSelected
-        bottomDeleteButton.isEnabled = !selectedIDs.isEmpty
-        bottomDeleteButton.alpha = selectedIDs.isEmpty ? 0.35 : 1
+        bottomSelectAllButton.bySelected(isAllSelected)
+        bottomDeleteButton.byEnabled(!selectedIDs.isEmpty)
+        bottomDeleteButton.byAlpha(selectedIDs.isEmpty ? 0.35 : 1)
     }
     
     private func syncSelectionToUI() {

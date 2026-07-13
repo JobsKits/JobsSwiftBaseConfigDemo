@@ -25,14 +25,14 @@ final class FeedVideoCell: UITableViewCell {
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview()
             }
-            .byBackgroundColor(.black)
+            .byBackgroundColor(JobsCor.black)
             .byClipsToBounds(YES)
     }()
 
     private lazy var subtitleLabel: UILabel = { [unowned self] in
         UILabel()
-            .byTextColor(.lightGray)
-            .byFont(.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.lightGray)
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(2)
             .byAddTo(contentView) { make in
                 make.leading.trailing.equalToSuperview().inset(12)
@@ -42,8 +42,8 @@ final class FeedVideoCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = { [unowned self] in
         UILabel()
-            .byTextColor(.white)
-            .byFont(.boldSystemFont(ofSize: 18))
+            .byTextColor(JobsCor.white)
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview().inset(12)
                 make.bottom.equalTo(self.subtitleLabel.snp.top).offset(-6)
@@ -54,7 +54,7 @@ final class FeedVideoCell: UITableViewCell {
                   reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.backgroundColor = .black
+        contentView.byBackgroundColor(JobsCor.black)
         playerHost.byVisible(YES)
         subtitleLabel.byVisible(YES)
         titleLabel.byVisible(YES)

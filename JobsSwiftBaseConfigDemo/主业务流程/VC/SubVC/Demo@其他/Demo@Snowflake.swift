@@ -27,10 +27,10 @@ final class SnowflakeDemoVC: BaseVC {
     // 结果展示
     private lazy var resultLabel: UILabel = {
         UILabel()
-            .byText("未开始")
-            .byTextColor(.secondaryLabel)
+            .byText("未开始".tr)
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -44,12 +44,12 @@ final class SnowflakeDemoVC: BaseVC {
     // 生成按钮
     private lazy var genButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始生成", for: .normal)
-            .byTitle("生成中…", for: .selected)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitle("开始生成".tr, for: .normal)
+            .byTitle("生成中…".tr, for: .selected)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
             .byImage("bolt.fill".sysImg, for: .normal)
@@ -58,8 +58,8 @@ final class SnowflakeDemoVC: BaseVC {
             .byCornerBadgeText("NEW") { cfg in
                 cfg.byOffset(.init(horizontal: -8, vertical: 8))
                     .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                    .byBackgroundColor(.systemRed)
-                    .byFont(.systemFont(ofSize: 11, weight: .bold))
+                    .byBackgroundColor(JobsCor.systemRed)
+                    .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
             }
             .onTap { [weak self] _ in
                 self?.runBenchmark()
@@ -73,17 +73,17 @@ final class SnowflakeDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "雪花算法")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "雪花算法".tr)
         resultLabel.byVisible(YES)
         genButton.byVisible(YES)
     }
 
     // MARK: - 生成逻辑（放后台，避免卡 UI）
     private func runBenchmark() {
-        guard !genButton.isSelected else { return } // 防抖
-        genButton.isSelected = true
-        genButton.isUserInteractionEnabled = false
+        guard genButton.jobs_effectiveState != .selected else { return } // 防抖
+        genButton.bySelected(true)
+        genButton.byUserInteractionEnabled(false)
 
         let total = 1_000_000
         let start = Date()
@@ -114,7 +114,7 @@ final class SnowflakeDemoVC: BaseVC {
             let elapsed = end.timeIntervalSince(start)
 
             DispatchQueue.main.async {
-                self.genButton.isSelected = false
+                self.genButton.bySelected(false)
                 self.genButton.isUserInteractionEnabled = true
 
                 var text = ""

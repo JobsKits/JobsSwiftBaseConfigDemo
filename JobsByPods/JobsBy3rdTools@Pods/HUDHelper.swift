@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseTools
@@ -26,7 +27,7 @@ final class HUDHelper {
 
         let label = UILabel()
             .byText(message)
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byFont(.systemFont(ofSize: 15))
             .byTextAlignment(.center)
             .byBackgroundColor(UIColor(white: 0, alpha: 0.8))
@@ -40,20 +41,20 @@ final class HUDHelper {
         size.width += 2 * padding
         size.height += 2 * padding
 
-        label.frame = CGRect(
+        label.byFrame(CGRect(
             x: (window.frame.width - size.width) / 2,
             y: (window.frame.height - size.height) / 2,
             width: size.width,
             height: size.height
-        )
+        ))
 
-        window.addSubview(label)
+        label.byAddTo(window)
 
         UIView.animate(withDuration: 0.3, animations: {
-            label.alpha = 1
+            label.byAlpha(1)
         }) { _ in
             UIView.animate(withDuration: 0.3, delay: duration, options: [], animations: {
-                label.alpha = 0
+                label.byAlpha(0)
             }) { _ in
                 label.removeFromSuperview()
             }

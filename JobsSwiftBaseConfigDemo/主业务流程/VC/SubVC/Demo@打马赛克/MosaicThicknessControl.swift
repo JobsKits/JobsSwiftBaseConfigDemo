@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 final class MosaicThicknessControl: UIControl {
@@ -37,21 +38,21 @@ final class MosaicThicknessControl: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = min(bounds.width / 2, 22)
-        trackView.layer.cornerRadius = 4
-        thumbView.layer.cornerRadius = 16
-        trackView.frame = CGRect(
+        byCornerRadius(min(bounds.width / 2, 22))
+        trackView.byCornerRadius(4)
+        thumbView.byCornerRadius(16)
+        trackView.byFrame(CGRect(
             x: bounds.midX - 4,
             y: 22,
             width: 8,
             height: max(1, bounds.height - 76)
-        )
-        valueLabel.frame = CGRect(
+        ))
+        valueLabel.byFrame(CGRect(
             x: 0,
             y: bounds.height - 40,
             width: bounds.width,
             height: 28
-        )
+        ))
         layoutThumb()
     }
 
@@ -62,37 +63,37 @@ final class MosaicThicknessControl: UIControl {
     }
 
     private func setupUI() {
-        backgroundColor = UIColor.secondarySystemBackground.withAlphaComponent(0.92)
-        layer.shadowColor = UIColor.black.cgColor
+        self.byBackgroundColor(JobsCor.secondarySystemBackground.withAlphaComponent(0.92))
+        layer.shadowColor = JobsCor.black.cgColor
         layer.shadowOpacity = 0.18
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 3)
 
         trackView
-            .byBackgroundColor(.tertiaryLabel)
+            .byBackgroundColor(JobsCor.tertiaryLabel)
             .byAddTo(self)
 
         thumbView
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byAddTo(self)
 
         valueLabel
             .byText("\(Int(value))")
             .byTextAlignment(.center)
-            .byTextColor(.label)
-            .byFont(.systemFont(ofSize: 12, weight: .bold))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .bold))
             .byAddTo(self)
     }
 
     private func layoutThumb() {
         let progress = (value - minBlockSize) / (maxBlockSize - minBlockSize)
         let centerY = trackView.frame.maxY - progress * trackView.bounds.height
-        thumbView.frame = CGRect(
+        thumbView.byFrame(CGRect(
             x: bounds.midX - 16,
             y: centerY - 16,
             width: 32,
             height: 32
-        )
+        ))
     }
 
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {

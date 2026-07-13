@@ -32,12 +32,12 @@ extension UITextView {
 
      let runs: [JobsRichRun] = [
          JobsRichRun(.text("如需帮助，请联系 "))
-             .font(.systemFont(ofSize: 15))
+             .font(JobsFont.systemFont(ofSize: 15))
              .color(JobsCor.secondaryLabel),
 
          JobsRichRun(.text("专属客服"))
-             .font(.systemFont(ofSize: 15))
-             .color(.systemBlue)
+             .font(JobsFont.systemFont(ofSize: 15))
+             .color(JobsCor.systemBlue)
              .link("click://customer")
      ]
  */

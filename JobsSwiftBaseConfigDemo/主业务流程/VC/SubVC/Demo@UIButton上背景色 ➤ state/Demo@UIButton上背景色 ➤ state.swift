@@ -30,13 +30,13 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
             .byTitle("Hi", for: .normal)
-            .byTitle("Selected（再点切回）", for: .selected)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitle("Selected（再点切回）".tr, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             /// ✅ 核心：按 state 设置背景色
-            .byTitleColor(.yellow, for: .normal)
-            .byTitleColor(.red, for: .disabled)
-            .byBackgroundColor(.systemGreen, for: .normal)
-            .byBackgroundColor(.systemGray, for: .disabled)
+            .byTitleColor(JobsCor.yellow, for: .normal)
+            .byTitleColor(JobsCor.red, for: .disabled)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .disabled)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(50)
@@ -52,16 +52,16 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
 
     private lazy var toggleEnabledButton: UIButton = {
         UIButton.sys()
-            .byTitle("切换 isEnabled", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBackgroundColor(.systemBlue, for: .normal)
-            .byBackgroundColor(.systemBlue.withAlphaComponent(0.7), for: .highlighted)
+            .byTitle("切换 isEnabled".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.7), for: .highlighted)
             .byCornerRadius(10)
             .byMasksToBounds(true)
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.exampleButton.isEnabled.toggle()
+                self.exampleButton.byEnabled(self.exampleButton.jobs_effectiveState == .disabled)
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.exampleButton.snp.bottom).offset(16)
@@ -72,8 +72,8 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "根据不同的UIButton.state，设置不同的背景色")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "根据不同的UIButton.state，设置不同的背景色".tr)
         
         exampleButton.byVisible(YES)
         toggleEnabledButton.byVisible(YES)

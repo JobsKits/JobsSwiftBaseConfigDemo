@@ -190,22 +190,24 @@ public class RedPacketRainView: UIView {
         )
         // 用 UIButton + DSL 创建单个红包
         let packet = UIButton.sys()
-        packet.frame = startFrame
-        packet.isUserInteractionEnabled = config.tapEnabled
-        packet.clipsToBounds = true
+            .byFrame(startFrame)
+            .byUserInteractionEnabled(config.tapEnabled)
+            .byClipsToBounds()
 
         if let img = config.packetImage {
             // 有配置图片：直接用图片做背景
-            packet.setBackgroundImage(img, for: .normal)
-            packet.imageView?.contentMode = .scaleAspectFit
+            packet
+                .byBgImage(img)
+                .byImageViewContentMode(.scaleAspectFit)
         } else {
             // 简单占位：红底 + 黄金边框 + 中间 ¥ 图标
-            packet.backgroundColor = .systemRed
-            packet.layer.cornerRadius = 6
-            packet.layer.borderColor = UIColor.yellow.cgColor
-            packet.layer.borderWidth = 1.5
-            packet.layer.masksToBounds = true
-            packet.byBackgroundImage(makeDefaultIconImage())
+            packet
+                .byBackgroundColor(JobsCor.systemRed)
+                .byCornerRadius(6)
+                .byBorderColor(JobsCor.yellow)
+                .byBorderWidth(1.5)
+                .byMasksToBounds(true)
+                .byBackgroundImage(makeDefaultIconImage())
         }
 
         if config.tapEnabled {
@@ -239,7 +241,7 @@ public class RedPacketRainView: UIView {
         let angle = CGFloat.random(in: -0.25...0.25)
         packet.transform = CGAffineTransform(rotationAngle: angle)
 
-        addSubview(packet)
+        packet.byAddTo(self)
         activePackets.append(packet)
         // 保存运动参数，后续由定时器驱动更新
         let startCenter = packet.center

@@ -69,10 +69,10 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
         calendar.appearance.headerMinimumDissolvedAlpha = 0
         calendar.appearance.headerDateFormat = "yyyy年MM月"
         calendar.appearance.caseOptions = [.headerUsesUpperCase]
-        calendar.appearance.headerTitleFont = .systemFont(ofSize: 20, weight: .regular)
-        calendar.appearance.headerTitleColor = .label
+        calendar.appearance.headerTitleFont = JobsFont.systemFont(ofSize: 20, weight: .regular)
+        calendar.appearance.headerTitleColor = JobsCor.label
         calendar
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(true)
             .byAddTo(view) { [unowned self] make in
@@ -90,8 +90,8 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
     private lazy var selectedLabel: UILabel = {
         UILabel()
             .byText("请选择日期".tr)
-            .byFont(.systemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -104,7 +104,7 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsSwiftCalendar".tr)
-        view.byBackgroundColor(.systemGroupedBackground)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         calendarView.byVisible(true)
         selectedLabel.byVisible(true)
         calendarView.jobsReloadDataSafely()
@@ -165,6 +165,6 @@ extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDelegateAppearance {
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
                   selectionColorFor date: Date) -> UIColor? {
-        holidayMap[holidayFormatter.string(from: date)] == nil ? nil : .systemOrange
+        holidayMap[holidayFormatter.string(from: date)] == nil ? nil : JobsCor.systemOrange
     }
 }

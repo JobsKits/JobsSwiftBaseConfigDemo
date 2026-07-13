@@ -33,30 +33,30 @@ public final class ImageCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override func prepareForReuse() {
         super.prepareForReuse()
-        iv.image = nil
+        iv.byImage(nil)
     }
     // MARK: - byData
     @discardableResult
     func byData(_ payload: Any?) -> Self {
         if let img = payload as? UIImage {
-            iv.image = img
+            iv.byImage(img)
             return self
         }
         if let img = (payload as? UIImage?) ?? nil {
-            iv.image = img
+            iv.byImage(img)
             return self
         }
         if let items = payload as? [Any?] {
             let first = items.first ?? nil
             if let img = first as? UIImage {
-                iv.image = img
+                iv.byImage(img)
             } else if let img = (first as? UIImage?) ?? nil {
-                iv.image = img
+                iv.byImage(img)
             } else {
-                iv.image = nil
+                iv.byImage(nil)
             };return self
         }
-        iv.image = nil
+        iv.byImage(nil)
         return self
     }
 

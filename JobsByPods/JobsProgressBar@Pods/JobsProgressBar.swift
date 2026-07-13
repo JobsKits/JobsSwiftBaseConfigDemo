@@ -84,8 +84,8 @@ open class JobsProgressBar: UIView {
     // MARK: - Thumb Config
     public var thumbImage: UIImage? {
         didSet {
-            thumbImageView.image = thumbImage
-            thumbImageView.isHidden = (thumbImage == nil)
+            thumbImageView.byImage(thumbImage)
+            thumbImageView.byHidden((thumbImage == nil))
             setNeedsLayout()
         }
     }
@@ -99,15 +99,15 @@ open class JobsProgressBar: UIView {
     }
 
     public var thumbContentMode: UIView.ContentMode = .scaleAspectFit {
-        didSet { thumbImageView.contentMode = thumbContentMode }
+        didSet { thumbImageView.byContentMode(thumbContentMode) }
     }
 
     public var thumbCornerRadius: CGFloat? {
         didSet {
             let r = thumbCornerRadius ?? 0
-            thumbImageView.layer.cornerRadius = r
-            thumbImageView.layer.masksToBounds = (r > 0)
-            thumbHighlightLayer.cornerRadius = r
+            thumbImageView.byCornerRadius(r)
+            thumbImageView.byMasksToBounds(r > 0)
+            thumbHighlightLayer.byCornerRadius(r)
         }
     }
 
@@ -136,7 +136,7 @@ open class JobsProgressBar: UIView {
     public var thumbShadowOffset: CGSize = .zero {
         didSet { setNeedsLayout() }
     }
-    public var thumbShadowColor: UIColor? = UIColor.black {
+    public var thumbShadowColor: UIColor? = JobsCor.black {
         didSet { setNeedsLayout() }
     }
     // MARK: - Dragging
@@ -187,7 +187,7 @@ open class JobsProgressBar: UIView {
     private var baseShadowOpacity: Float = 0
     private var baseShadowRadius: CGFloat = 0
     private var baseShadowOffset: CGSize = .zero
-    private var baseShadowColor: UIColor? = .black
+    private var baseShadowColor: UIColor? = JobsCor.black
     // MARK: - Private
     private var _progress: CGFloat = 0
     private var autoTimer: JobsSwiftTimerProtocol?
@@ -203,7 +203,7 @@ open class JobsProgressBar: UIView {
 
     private lazy var fillView: UIView = {
         UIView()
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byMasksToBounds(true)
             .byAddTo(trackView)
     }()
@@ -220,7 +220,7 @@ open class JobsProgressBar: UIView {
         CALayer()
             .byOpacity(0.0)
             .byMasksToBounds(YES)
-            .byBorderColor(.white.withAlphaComponent(0.9))
+            .byBorderColor(JobsCor.white.withAlphaComponent(0.9))
             .byBorderWidth(pressedHighlightWidth)
     }()
 
@@ -307,14 +307,14 @@ open class JobsProgressBar: UIView {
 
     private func commonInit() {
         clipsToBounds = false
-        layer.masksToBounds = false
-        backgroundColor = .clear
+        byMasksToBounds(false)
+        self.byBackgroundColor(JobsCor.clear)
 
         trackView.byVisible(true)
         fillView.byVisible(true)
         progressLabel.byVisible(true)
 
-        thumbImageView.isHidden = (thumbImage == nil)
+        thumbImageView.byHidden((thumbImage == nil))
         if thumbImageView.layer.sublayers?.contains(thumbHighlightLayer) != true {
             thumbImageView.layer.addSublayer(thumbHighlightLayer)
         }
@@ -353,15 +353,15 @@ open class JobsProgressBar: UIView {
             let trackHeight = min(max(0, preferredThickness), availableHeight)
 
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
-            trackView.frame = trackFrame
-            trackView.layer.cornerRadius = trackHeight / 2
-            fillView.layer.cornerRadius = trackHeight / 2
+            trackView.byFrame(trackFrame)
+            trackView.byCornerRadius(trackHeight / 2)
+            fillView.byCornerRadius(trackHeight / 2)
 
             let fillWidth = trackWidth * displayProgress
             if direction == .leftToRight {
-                fillView.frame = CGRect(x: 0, y: 0, width: fillWidth, height: trackHeight)
+                fillView.byFrame(CGRect(x: 0, y: 0, width: fillWidth, height: trackHeight))
             } else {
-                fillView.frame = CGRect(x: trackWidth - fillWidth, y: 0, width: fillWidth, height: trackHeight)
+                fillView.byFrame(CGRect(x: trackWidth - fillWidth, y: 0, width: fillWidth, height: trackHeight))
             }
 
             let endpointX: CGFloat = (direction == .leftToRight)
@@ -382,16 +382,16 @@ open class JobsProgressBar: UIView {
             let trackHeight = max(0, bounds.height - 2 * vInset)
 
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
-            trackView.frame = trackFrame
-            trackView.layer.cornerRadius = trackWidth / 2
-            fillView.layer.cornerRadius = trackWidth / 2
+            trackView.byFrame(trackFrame)
+            trackView.byCornerRadius(trackWidth / 2)
+            fillView.byCornerRadius(trackWidth / 2)
 
             let fillHeight = trackHeight * displayProgress
             if direction == .bottomToTop {
                 let y = trackHeight - fillHeight
-                fillView.frame = CGRect(x: 0, y: y, width: trackWidth, height: fillHeight)
+                fillView.byFrame(CGRect(x: 0, y: y, width: trackWidth, height: fillHeight))
             } else {
-                fillView.frame = CGRect(x: 0, y: 0, width: trackWidth, height: fillHeight)
+                fillView.byFrame(CGRect(x: 0, y: 0, width: trackWidth, height: fillHeight))
             }
 
             let endpointY: CGFloat = (direction == .bottomToTop)
@@ -632,13 +632,16 @@ extension JobsProgressBar {
     private func setThumbDraggingUI(_ dragging: Bool) {
         if dragThumbScales {
             let target = dragging ? CGAffineTransform(scaleX: dragThumbScale, y: dragThumbScale) : .identity
-            UIView.animate(withDuration: dragging ? 0.12 : 0.18,
-                           delay: 0,
-                           usingSpringWithDamping: dragging ? 0.85 : 0.92,
-                           initialSpringVelocity: dragging ? 0.6 : 0.5,
-                           options: [.beginFromCurrentState, .allowUserInteraction]) { [weak self] in
-                self?.thumbImageView.transform = target
-            }
+            UIView.jobsAnimateWithSpring(
+                dragging ? 0.12 : 0.18,
+                delay: 0,
+                dampingRatio: dragging ? 0.85 : 0.92,
+                initialVelocity: dragging ? 0.6 : 0.5,
+                options: [.beginFromCurrentState, .allowUserInteraction],
+                animations: { [weak self] in
+                    self?.thumbImageView.transform = target
+                }
+            )
         }
 
         guard pressEnhancesShadowAndHighlight else { return }
@@ -749,11 +752,11 @@ extension JobsProgressBar {
                                  displayProgress: CGFloat,
                                  trackFrame: CGRect) {
         guard thumbImage != nil else {
-            thumbImageView.isHidden = true
+            thumbImageView.byHidden(true)
             return
         }
-        thumbImageView.isHidden = false
-        thumbImageView.contentMode = thumbContentMode
+        thumbImageView.byHidden(false)
+        thumbImageView.byContentMode(thumbContentMode)
 
         let defaultSide = max(0, thickness)
         let size = thumbSize ?? CGSize(width: defaultSide, height: defaultSide)
@@ -798,9 +801,9 @@ extension JobsProgressBar {
 
         thumbImageView.center = c
 
-        thumbHighlightLayer.frame = thumbImageView.bounds
-        thumbHighlightLayer.cornerRadius = thumbCornerRadius ?? min(size.width, size.height) / 2
-        thumbHighlightLayer.borderWidth = pressedHighlightWidth
+        thumbHighlightLayer.byFrame(thumbImageView.bounds)
+        thumbHighlightLayer.byCornerRadius(thumbCornerRadius ?? min(size.width, size.height) / 2)
+        thumbHighlightLayer.byBorderWidth(pressedHighlightWidth)
     }
 
     fileprivate func applyThumbStyleIfNeeded() {
@@ -815,7 +818,7 @@ extension JobsProgressBar {
 
         if thumbFollowsFillStyle {
             bgColor = fillView.backgroundColor
-            borderColor = (fillView.backgroundColor ?? UIColor.clear)
+            borderColor = (fillView.backgroundColor ?? JobsCor.clear)
             borderWidth = max(0, thumbBorderWidth)
 
             shadowColor = thumbShadowColor
@@ -833,15 +836,15 @@ extension JobsProgressBar {
             shadowOffset = thumbShadowOffset
         }
 
-        thumbImageView.backgroundColor = bgColor
-        thumbImageView.layer.borderColor = borderColor?.cgColor
-        thumbImageView.layer.borderWidth = borderWidth
+        thumbImageView.byBackgroundColor(bgColor)
+        thumbImageView.byBorderColor(borderColor)
+        thumbImageView.byBorderWidth(borderWidth)
 
-        thumbImageView.layer.shadowColor = (shadowColor ?? UIColor.black).cgColor
+        thumbImageView.layer.shadowColor = (shadowColor ?? JobsCor.black).cgColor
         thumbImageView.layer.shadowOpacity = shadowOpacity
         thumbImageView.layer.shadowRadius = shadowRadius
         thumbImageView.layer.shadowOffset = shadowOffset
-        thumbImageView.layer.masksToBounds = false
+        thumbImageView.byMasksToBounds(false)
 
         baseShadowColor = shadowColor
         baseShadowOpacity = shadowOpacity
@@ -880,13 +883,13 @@ extension JobsProgressBar {
 
     @discardableResult
     public func byTrackColor(_ color: UIColor) -> Self {
-        self.trackView.backgroundColor = color
+        self.trackView.byBackgroundColor(color)
         return self
     }
 
     @discardableResult
     public func byFillColor(_ color: UIColor) -> Self {
-        self.fillView.backgroundColor = color
+        self.fillView.byBackgroundColor(color)
         return self
     }
 
@@ -922,19 +925,19 @@ extension JobsProgressBar {
 
     @discardableResult
     public func byLabelFont(_ font: UIFont) -> Self {
-        self.progressLabel.font = font
+        self.progressLabel.byFont(font)
         return self
     }
 
     @discardableResult
     public func byLabelTextColor(_ color: UIColor) -> Self {
-        self.progressLabel.textColor = color
+        self.progressLabel.byTextColor(color)
         return self
     }
 
     @discardableResult
     public func byLabelBackgroundColor(_ color: UIColor) -> Self {
-        self.progressLabel.backgroundColor = color
+        self.progressLabel.byBackgroundColor(color)
         return self
     }
 
@@ -1010,7 +1013,7 @@ extension JobsProgressBar {
     public func byThumbShadow(opacity: Float,
                               radius: CGFloat = 6,
                               offset: CGSize = .zero,
-                              color: UIColor? = .black) -> Self {
+                              color: UIColor? = JobsCor.black) -> Self {
         self.thumbShadowOpacity = opacity
         self.thumbShadowRadius = radius
         self.thumbShadowOffset = offset
@@ -1036,7 +1039,7 @@ extension JobsProgressBar {
             return v
         }
         let v = UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byText("0%")

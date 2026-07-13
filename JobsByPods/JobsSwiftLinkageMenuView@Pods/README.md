@@ -2,6 +2,8 @@
 
 Swift 本地 Pod，用于把左侧纵向滚动菜单和右侧 UIView 内容区联动起来。
 
+本 Pod 直接依赖 `JobsSwiftBaseDefines`、`JobsSwiftDSL`；内部动态/基础/system 色统一使用 `JobsCor`，自定义 RGB 使用 `UIColor(r:g:b:a:)`，UIKit 配置和视图装配统一使用 Jobs 链式 API。
+
 ## 能力
 
 - 左侧菜单由 `JobsSwiftLinkageMenuItem` 数组配置。

@@ -38,7 +38,7 @@ final class JobsSysProgressDemoVC: BaseVC {
     private lazy var durationOptions: [Int] = [5, 10, 20]
     /// SegmentedControl 展示文案
     private lazy var durationSegmentTitles: [String] = {
-        durationOptions.map { "\($0) 秒".tr }
+        durationOptions.map { "%ld 秒".tr($0) }
     }()
     /// 选中的倒计时总时长（基于 durationOptions + 当前选中的 index）
     private var selectedDuration: TimeInterval {
@@ -56,7 +56,7 @@ final class JobsSysProgressDemoVC: BaseVC {
     private lazy var timeLabel: UILabel = {
         UILabel()
             .byText("剩余：-- 秒".tr)
-            .byFont(.monospacedDigitSystemFont(ofSize: 18, weight: .medium))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 18, weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(20)
@@ -81,10 +81,10 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 模式切换按钮：0%→100% / 100%→0%
     private lazy var modeButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemOrange, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
             .byTitle(modeButtonTitle(), for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(16)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -132,10 +132,10 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 开始按钮
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             .byTitle("开始倒计时".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.boldSystemFont(ofSize: 16))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .byCornerRadius(8)
             /// 点按 = 开始一次新的倒计时
             .onTap { [weak self] _ in
@@ -205,10 +205,10 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 取消按钮
     private lazy var cancelButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGray, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .normal)
             .byTitle("取消".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16))
             .byCornerRadius(8)
             /// 普通@点按事件触发
             .onTap { [weak self] _ in
@@ -228,9 +228,9 @@ final class JobsSysProgressDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "JobsSwiftTimer 倒计时 Demo"
+            title: "JobsSwiftTimer 倒计时 Demo".tr
         )
         timeLabel.byVisible(YES)
         progressView.byVisible(YES)
@@ -270,8 +270,8 @@ extension JobsSysProgressDemoVC {
     }
     /// 统一控制“开始倒计时”按钮的可用状态和样式
     private func setStartButton(_ enabled: Bool) {
-        startButton.isEnabled = enabled
-        startButton.alpha = enabled ? 1.0 : 0.5
+        startButton.byEnabled(enabled)
+        startButton.byAlpha(enabled ? 1.0 : 0.5)
     }
     /// 模式按钮标题
     private func modeButtonTitle() -> String {

@@ -46,8 +46,8 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
 
     private lazy var titleLab1: UILabel = {
         UILabel()
-            .byText("① 无图：主标题（普通字符串）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
+            .byText("① 无图：主标题（普通字符串）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -76,8 +76,8 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     
     private lazy var titleLab2: UILabel = {
         UILabel()
-            .byText("② 无图：副标题（富文本，只动数字）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
+            .byText("② 无图：副标题（富文本，只动数字）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_1.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -106,8 +106,8 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     
     private lazy var titleLab3: UILabel = {
         UILabel()
-            .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
+            .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_3.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -136,8 +136,8 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
 
     private lazy var titleLab4: UILabel = {
         UILabel()
-            .byText("④ 有图：副标题（普通字符串，只动数字）")
-            .byFont(.systemFont(ofSize: 14, weight: .semibold))
+            .byText("④ 有图：副标题（普通字符串，只动数字）".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_2.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -169,21 +169,21 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byTitle("¥99", for: .normal)
             .byTitle("¥99", for: .selected)
             .byTitle("¥99", for: .disabled)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
-            .byBackgroundColor(.systemBlue)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
+            .byBackgroundColor(JobsCor.systemBlue)
             /// 数字动效按钮@关键配置
             .byAnimationTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(JobsCor.white, for: .normal)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byShowsDecimals(true)// 是否展示小数（默认不展示）
                     .bySeparate(",")// 分隔符是 , 不写也行
                     .byDecimals(2)// 保留2位小数（默认）
-                    .byTitleDecimalsCor(.red)
+                    .byTitleDecimalsCor(JobsCor.red)
                     .byTitleDecimalsFont(.DINPro.Bold(12.fz))
             })
             .onTap { [weak self] sender in
@@ -210,13 +210,13 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         UIButton.sys()
             // 初始展示：你原来的 rich title 仍然可以保留（首次显示用）
             .byRichTitle(JobsRichText.make([
-                JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-                JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18, weight: .semibold)).color(JobsCor.systemRed),
+                JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
             ]))
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("star.fill".sysImg, for: .normal)
             .byImagePlacement(.leading, padding: 8)
-            .byBackgroundColor(.systemGreen)
+            .byBackgroundColor(JobsCor.systemGreen)
             /// 数字动效按钮@关键配置➤主标题富文本Builder
             .byAnimationTitleConfig { cfg in
                 cfg.byDuration(10)
@@ -227,9 +227,9 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                     .bySeparate(",")
                     .byDecimals(2)
                     // 如果仍然希望 plain/fallback 的字体颜色也一致，可以保留
-                    .byTitleColor(.white, for: .normal)
+                    .byTitleColor(JobsCor.white, for: .normal)
                     .byTitleFont(.DINPro.Bold(14.fz))
-                    .byTitleDecimalsCor(.red)
+                    .byTitleDecimalsCor(JobsCor.red)
                     .byTitleDecimalsFont(.DINPro.Bold(12.fz))
                     // 主标题整体富文本（¥ + 数字 + /月）
                     .byTitleAttributedBuilder { text, decimalsRange, _ in
@@ -239,15 +239,15 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                         // 数字段（含 ¥）：红色 18 semibold
                         let numberRange = NSRange(location: 0, length: 1 + (text as NSString).length) // "¥" + text
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
-                            .foregroundColor: UIColor.systemRed
+                            .font: JobsFont.systemFont(ofSize: 18, weight: .semibold),
+                            .foregroundColor: JobsCor.systemRed
                         ], range: numberRange)
                         // 后缀段：白色 16
                         let suffixStart = numberRange.length
                         let suffixRange = NSRange(location: suffixStart, length: (full as NSString).length - suffixStart)
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 16),
-                            .foregroundColor: UIColor.white
+                            .font: JobsFont.systemFont(ofSize: 16),
+                            .foregroundColor: JobsCor.white
                         ], range: suffixRange)
                         // 小数段（如果存在）：DINPro 12 + 红色（只改小数部分，不影响整数）
                         if let dr = decimalsRange {
@@ -255,7 +255,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                             let shifted = NSRange(location: 1 + dr.location, length: dr.length)
                             attr.addAttributes([
                                 .font: UIFont.DINPro.Bold(12.fz),
-                                .foregroundColor: UIColor.red
+                                .foregroundColor: JobsCor.red
                             ], range: shifted)
                         };return attr
                     }
@@ -284,25 +284,25 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     /// 数字动效按钮@副标题（普通文本）
     private lazy var btn_3: UIButton = {
         UIButton.sys()
-            .byTitle("会员价格", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .bySubTitle("原价 ¥199 /月", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
-            .bySubTitleFont(.systemFont(ofSize: 13))
+            .byTitle("会员价格".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .bySubTitle("原价 ¥199 /月".tr, for: .normal)
+            .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byBackgroundColor("#2F2F2F".cor)
             /// 数字动效按钮@关键配置
             .byAnimationSubTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .bySubTitleColor(.blue)
+                    .bySubTitleColor(JobsCor.blue)
                     .bySubTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byShowsDecimals(true)// 是否展示小数（默认不展示）
                     .bySeparate(",")// 分隔符是 , 不写也行
                     .byDecimals(2)// 保留2位小数（默认）
-                    .bySubTitleDecimalsCor(.red)
+                    .bySubTitleDecimalsCor(JobsCor.red)
                     .bySubTitleDecimalsFont(.DINPro.Bold(12.fz))
             })
             .onTap { [weak self] sender in
@@ -327,16 +327,16 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     /// 数字动效按钮@副标题（富文本）
     private lazy var btn_4: UIButton = {
         UIButton.sys()
-            .byTitle("限时折扣", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("限时折扣".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             // 初始展示：先给一个普通副标题（首次显示用）
-            .bySubTitle("倒计时 199 秒", for: .normal)
-            .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
-            .bySubTitleFont(.systemFont(ofSize: 13))
+            .bySubTitle("倒计时 199 秒".tr, for: .normal)
+            .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("clock".sysImg, for: .normal)
             .byImagePlacement(.leading, padding: 8)
-            .byBackgroundColor(.systemPurple)
+            .byBackgroundColor(JobsCor.systemPurple)
             .byCornerRadius(10)
             /// 数字动效按钮@关键配置➤副标题富文本Builder
             .byAnimationSubTitleConfig { cfg in
@@ -351,8 +351,8 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                     .byShowsDecimals(false)
 
                     // 可选：给副标题的基础样式（非 builder 场景兜底）
-                    .bySubTitleColor(.white.withAlphaComponent(0.85), for: .normal)
-                    .bySubTitleFont(.systemFont(ofSize: 13))
+                    .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
 
                     // ✅ 副标题整体富文本： "倒计时 199 秒"
                     .bySubTitleAttributedBuilder { text, _, _ in
@@ -363,16 +363,16 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
 
                         // 全段默认（灰白 13）
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 13),
-                            .foregroundColor: UIColor.white.withAlphaComponent(0.85)
+                            .font: JobsFont.systemFont(ofSize: 13),
+                            .foregroundColor: JobsCor.white.withAlphaComponent(0.85)
                         ], range: NSRange(location: 0, length: (full as NSString).length))
 
                         // 数字段强调（白色 13 medium，或你想要的高亮色）
                         let numberRange = NSRange(location: (prefix as NSString).length,
                                                   length: (text as NSString).length)
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 13, weight: .semibold),
-                            .foregroundColor: UIColor.white
+                            .font: JobsFont.systemFont(ofSize: 13, weight: .semibold),
+                            .foregroundColor: JobsCor.white
                         ], range: numberRange)
 
                         return attr
@@ -400,7 +400,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.byBackgroundColor(JobsCor.white)
         jobsSetupGKNav(title: "UIButton 数字动效 Demo".tr)
         scrollView.byVisible(YES)
         contentView.byVisible(YES)
@@ -430,6 +430,6 @@ extension AnimatedButtonNumberDemoVC {
             .byPlaceholder(ph)
             .byKeyboardType(.decimalPad)
             .byBorderStyle(.roundedRect)
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
     }
 }

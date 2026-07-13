@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsScale
@@ -64,8 +65,8 @@ final class MosaicDemoListVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "打马赛克")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "打马赛克".tr)
         tableView.byVisible(true)
     }
 }
@@ -84,8 +85,8 @@ extension MosaicDemoListVC: UITableViewDataSource, UITableViewDelegate {
         var config = cell.defaultContentConfiguration()
         config.text = row.title
         config.secondaryText = row.subtitle
-        config.textProperties.font = .systemFont(ofSize: 17, weight: .semibold)
-        config.secondaryTextProperties.font = .systemFont(ofSize: 13, weight: .regular)
+        config.textProperties.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
+        config.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
         config.secondaryTextProperties.numberOfLines = 0
         cell.contentConfiguration = config
         return cell

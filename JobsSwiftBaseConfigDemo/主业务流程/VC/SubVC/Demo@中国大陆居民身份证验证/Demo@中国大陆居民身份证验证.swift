@@ -39,13 +39,13 @@ final class CNIDDemoVC: BaseVC {
     }()
 
     private lazy var exampleButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("自动填入示例".tr)
-            .byTitleFont(.systemFont(ofSize: 15))
+            .byTitleFont(JobsFont.systemFont(ofSize: 15))
             .onTap { [weak self] _ in
                 guard let self else { return }
-                self.textField.text = "510105199307315321"
-                self.resultLabel.text = nil
+                self.textField.byText("510105199307315321")
+                self.resultLabel.byText(nil)
             }.byAddTo(view) { [unowned self] make in
                 make.top.equalTo(textField.snp.bottom).offset(12)
                 make.centerX.equalToSuperview()
@@ -54,9 +54,9 @@ final class CNIDDemoVC: BaseVC {
     }()
 
     private lazy var checkButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("开始校验".tr)
-            .byTitleFont(.boldSystemFont(ofSize: 16))
+            .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 let input = textField.text ?? ""
@@ -81,9 +81,9 @@ final class CNIDDemoVC: BaseVC {
     private lazy var resultLabel: UILabel = {
         UILabel()
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 16))
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byNumberOfLines(0)
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(checkButton.snp.bottom).offset(30)
                 make.left.right.equalToSuperview().inset(24)
@@ -92,9 +92,9 @@ final class CNIDDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "身份证校验 Demo"
+            title: "身份证校验 Demo".tr
         )
         bgImageView().byImage("唐老鸭".img)
         onMainAsync(self) { vc in
@@ -109,8 +109,8 @@ final class CNIDDemoVC: BaseVC {
     }
     // MARK: - 更新显示结果
     private func updateResult(_ text: String, success: Bool) {
-        resultLabel.text = text
-        resultLabel.textColor = success ? .systemGreen : .systemRed
+        resultLabel.byText(text)
+        resultLabel.byTextColor(success ? JobsCor.systemGreen : JobsCor.systemRed)
     }
     // MARK: - 打印示例
     private func printDemo() {

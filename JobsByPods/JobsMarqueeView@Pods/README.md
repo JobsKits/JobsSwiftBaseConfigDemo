@@ -99,6 +99,8 @@ public enum ItemSizeMode {
 * 连续滚动（**向上**）
 
   ```swift
+  import JobsSwiftBaseDefines
+
   private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
           JobsMarqueeView()
               .byDirection(.top)
@@ -106,77 +108,77 @@ public enum ItemSizeMode {
               .byItemSizeMode(.fitContent)   // 典型公告跑马灯
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                       .byTitle("向上连续 · 公告 1")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("更多内容 1")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上连续 · 公告 1 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上连续 · 公告 1 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                       .byTitle("向上连续 · 公告 2")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("更多内容 2")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上连续 · 公告 2 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上连续 · 公告 2 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                       .byTitle("向上连续 · 公告 3")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("更多内容 3")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("megaphone.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上连续 · 公告 3 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上连续 · 公告 3 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       }
@@ -200,6 +202,8 @@ public enum ItemSizeMode {
 * 间隔滚动（**向上**）
 
   ```swift
+  import JobsSwiftBaseDefines
+
   private lazy var upFrequencyMarquee: JobsMarqueeView = { [unowned self] in
           JobsMarqueeView()
               .byDirection(.top)
@@ -207,77 +211,77 @@ public enum ItemSizeMode {
               .byItemSizeMode(.fillBounds)   // 每页 1 行
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2))
                       .byTitle("向上间隔 · 公告 1")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("每 1 秒翻页")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上间隔 · 公告 1 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上间隔 · 公告 1 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2))
                       .byTitle("向上间隔 · 公告 2")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("每 1 秒翻页")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上间隔 · 公告 2 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上间隔 · 公告 2 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBackgroundColor(.systemBlue.withAlphaComponent(0.2))
+                      .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2))
                       .byTitle("向上间隔 · 公告 3")
-                      .byTitleColor(.label)
-                      .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                      .byTitleColor(JobsCor.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                       .bySubTitle("每 1 秒翻页")
-                      .bySubTitleColor(.secondaryLabel)
-                      .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                      .bySubTitleColor(JobsCor.secondaryLabel)
+                      .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                       .byImage("arrow.up.square.fill".sysImg)
                       .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                       .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔔 向上间隔 · 公告 3 tapped, selected=\(sender.isSelected)")
+                          print("🔔 向上间隔 · 公告 3 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           sender.title?.toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       }
@@ -295,6 +299,8 @@ public enum ItemSizeMode {
 * 本地@背景图
 
   ```swift
+  import JobsSwiftBaseDefines
+
   private lazy var localImageButtonsMarquee: JobsMarqueeView = {  [unowned self] in
           JobsMarqueeView()
               .byDirection(.left)
@@ -307,15 +313,15 @@ public enum ItemSizeMode {
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 极端 本地图 · 唐老鸭 tapped, selected=\(sender.isSelected)")
+                          print("🔴 极端 本地图 · 唐老鸭 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了唐老鸭".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
@@ -324,15 +330,15 @@ public enum ItemSizeMode {
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 极端 本地图 · 米老鼠 tapped, selected=\(sender.isSelected)")
+                          print("🔴 极端 本地图 · 米老鼠 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了米老鼠".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
@@ -341,15 +347,15 @@ public enum ItemSizeMode {
                       .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 极端 本地图 · 迪斯尼 tapped, selected=\(sender.isSelected)")
+                          print("🔴 极端 本地图 · 迪斯尼 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了迪斯尼".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       }
@@ -377,6 +383,8 @@ public enum ItemSizeMode {
 * [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)@背景图
 
   ```swift
+  import JobsSwiftBaseDefines
+
   private lazy var sdWebImageButtonsMarquee: JobsMarqueeView = { [unowned self] in
           JobsMarqueeView()
               .byDirection(.left)
@@ -385,7 +393,7 @@ public enum ItemSizeMode {
               .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
               .byDataSourceButtons([
                   UIButton.sys()
-                      .byBorderColor(UIColor.systemGray3)
+                      .byBorderColor(JobsCor.systemGray3)
                       .byTitle("我是UIButton主标题@SDWebImage")
                       .bySubTitle("我是UIButton副标题@SDWebImage")
                       .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
@@ -394,20 +402,20 @@ public enum ItemSizeMode {
                       .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 SDWebImage@背景图 1 tapped, selected=\(sender.isSelected)")
+                          print("🔴 SDWebImage@背景图 1 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了SDWebImage@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBorderColor(UIColor.systemGray3)
+                      .byBorderColor(JobsCor.systemGray3)
                       .byTitle("我是UIButton主标题@SDWebImage")
                       .bySubTitle("我是UIButton副标题@SDWebImage")
                       .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
@@ -416,20 +424,20 @@ public enum ItemSizeMode {
                       .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 SDWebImage@背景图 2 tapped, selected=\(sender.isSelected)")
+                          print("🔴 SDWebImage@背景图 2 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了SDWebImage@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byBorderColor(UIColor.systemGray3)
+                      .byBorderColor(JobsCor.systemGray3)
                       .byTitle("我是UIButton主标题@SDWebImage")
                       .bySubTitle("我是UIButton副标题@SDWebImage")
                       .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
@@ -438,15 +446,15 @@ public enum ItemSizeMode {
                       .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 SDWebImage@背景图 3 tapped, selected=\(sender.isSelected)")
+                          print("🔴 SDWebImage@背景图 3 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了SDWebImage@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       }
@@ -485,6 +493,8 @@ public enum ItemSizeMode {
 * [**Kingfisher**](https://github.com/onevcat/Kingfisher)@背景图
 
   ```swift
+  import JobsSwiftBaseDefines
+
   private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned self] in
           JobsMarqueeView()
               .byDirection(.left)
@@ -493,8 +503,8 @@ public enum ItemSizeMode {
               .byManualScrollEnabled(true)   // ✅ 开启手动拖拽
               .byDataSourceButtons ([
                   UIButton.sys()
-                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                       .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                       .kf_placeholderImage("唐老鸭".img)
                       .kf_options([
@@ -507,21 +517,21 @@ public enum ItemSizeMode {
                       .kf_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 Kingfisher@背景图 1 tapped, selected=\(sender.isSelected)")
+                          print("🔴 Kingfisher@背景图 1 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了Kingfisher@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                       .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                       .kf_placeholderImage("唐老鸭".img)
                       .kf_options([
@@ -534,21 +544,21 @@ public enum ItemSizeMode {
                       .kf_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
+                          print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了Kingfisher@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },
                   UIButton.sys()
-                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                      .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                      .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                       .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                       .kf_placeholderImage("唐老鸭".img)
                       .kf_options([
@@ -561,15 +571,15 @@ public enum ItemSizeMode {
                       .kf_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                       .byTapSound("Sound.wav")
                       .onTap { sender in
-                          print("🔴 Kingfisher@背景图 3 tapped, selected=\(sender.isSelected)")
+                          print("🔴 Kingfisher@背景图 3 tapped, selected=\(sender.jobs_effectiveState == .selected)")
                           "点击了Kingfisher@背景图".toast
                       }
                       .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                           if gr.state == .began {
-                              btn.alpha = 0.6
+                              btn.byAlpha(0.6)
                               print("长按开始 on \(btn)")
                           } else if gr.state == .ended || gr.state == .cancelled {
-                              btn.alpha = 1.0
+                              btn.byAlpha(1.0)
                               print("长按结束")
                           }
                       },

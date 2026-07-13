@@ -35,8 +35,8 @@ final class JobsProgressDemoVC: BaseVC {
         UILabel()
             .byTextAlignment(.left)
             .byNumberOfLines(0)
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byText("""
             ✅ 用法：
             1）点「开始」：自动播放进度（头部持续旋转）
@@ -77,7 +77,7 @@ final class JobsProgressDemoVC: BaseVC {
                 progressView.stopAutoProgress()
                 progressView.setProgress(0, animated: false)
                 lastAppliedPercent = 0
-                percentTextField.text = "0"
+                percentTextField.byText("0")
                 stateLabel.byText("方向切换：已归零".tr)
             }
             .byAddTo(view) { [unowned self] make in
@@ -88,10 +88,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 模式切换按钮：在 0→100 / 100→0 之间切换
     private lazy var modeToggleButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemOrange, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
             .byTitle("模式：100→0".tr, for: .normal)   // 初始和 progressView.byValueMode(.countDown) 对齐
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(16)
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -116,7 +116,7 @@ final class JobsProgressDemoVC: BaseVC {
                 self.progressView.setProgress(0, animated: false)
 
                 self.lastAppliedPercent = 0
-                self.percentTextField.text = "0"
+                self.percentTextField.byText("0")
                 self.stateLabel.byText("模式切换：已归零".tr)
             }
             .byAddTo(view) { [unowned self] make in
@@ -131,8 +131,8 @@ final class JobsProgressDemoVC: BaseVC {
         UILabel()
             .byTextAlignment(.center)
             .byNumberOfLines(2)
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byText("Ready".tr)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(modeToggleButton.snp.bottom).offset(10)
@@ -145,14 +145,14 @@ final class JobsProgressDemoVC: BaseVC {
         JobsProgressBar()
             .byDirection(.leftToRight)
             .byValueMode(.countDown)
-            .byTrackColor(.systemGray5)
+            .byTrackColor(JobsCor.systemGray5)
             .byTrackHorizontalInset(0)
             .byTrackVerticalInset(0)
             .byTrackThickness(nil)
             .byAutoHideLabel(true)
             .byLabelMinVisibleHeight(18)
-            .byLabelBackgroundColor(.secondarySystemBackground)
-            .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+            .byLabelBackgroundColor(JobsCor.secondarySystemBackground)
+            .byLabelFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
             /// ✅ 进度条“头”
             .byThumbImage("足球".img)
             .byThumbSize(CGSize(width: 20.h, height: 20.h))
@@ -160,27 +160,27 @@ final class JobsProgressDemoVC: BaseVC {
             .byThumbContentMode(.scaleAspectFit)
             .byThumbOffset(UIOffset(horizontal: 0, vertical: 0))
             .byThumbFollowsFillStyle(true)
-            .byThumbShadow(opacity: 0.25, radius: 6, offset: CGSize(width: 0, height: 2), color: .black)
+            .byThumbShadow(opacity: 0.25, radius: 6, offset: CGSize(width: 0, height: 2), color: JobsCor.black)
             .byDraggable(YES)
             .byOnDragBegan({ [weak self] raw in
                 guard let self else { return }
                 let percent = self.displayPercent(fromRaw: raw)
-                self.stateLabel.byText("拖动开始：\(Int(percent))%".tr)
+                self.stateLabel.byText("拖动开始：%ld%%".tr(Int(percent)))
             })
             /// ✅ 拖拽用法
             .byOnDragChanged({ [weak self] raw in
                 guard let self else { return }
                 let percent = self.displayPercent(fromRaw: raw)
-                self.percentTextField.text = "\(Int(percent))"
+                self.percentTextField.byText("\(Int(percent))")
                 self.lastAppliedPercent = percent
-                self.stateLabel.byText("拖动中：\(Int(percent))%".tr)
+                self.stateLabel.byText("拖动中：%ld%%".tr(Int(percent)))
             })
             .byOnDragEnded({ [weak self] raw in
                 guard let self else { return }
                 let percent = self.displayPercent(fromRaw: raw)
-                self.percentTextField.text = "\(Int(percent))"
+                self.percentTextField.byText("\(Int(percent))")
                 self.lastAppliedPercent = percent
-                self.stateLabel.byText("拖动结束：\(Int(percent))%".tr)
+                self.stateLabel.byText("拖动结束：%ld%%".tr(Int(percent)))
             })
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(stateLabel.snp.bottom).offset(16.h)
@@ -206,10 +206,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 点击“确定”后，动画到输入的百分比
     private lazy var applyButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
             .byTitle("设置".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -217,9 +217,9 @@ final class JobsProgressDemoVC: BaseVC {
                 self.progressView.stopAutoProgress()
 
                 if let clamped = self.progressView.setDisplayPercent(text: self.percentTextField.text, animated: true) {
-                    self.percentTextField.text = String(format: "%.0f", clamped)
+                    self.percentTextField.byText(String(format: "%.0f", clamped))
                     self.lastAppliedPercent = clamped
-                    self.stateLabel.byText("设置进度：\(Int(clamped))%".tr)
+                    self.stateLabel.byText("设置进度：%ld%%".tr(Int(clamped)))
                 } else {
                     self.stateLabel.byText("输入不合法：请输入 0~100".tr)
                 }
@@ -235,8 +235,8 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var dragTitleLabel: UILabel = {
         UILabel()
             .byText("可拖动".tr)
-            .byFont(.systemFont(ofSize: 13, weight: .medium))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(applyButton.snp.right).offset(14)
                 make.centerY.equalTo(percentTextField.snp.centerY)
@@ -260,10 +260,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 开始按钮（自动播放）
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             .byTitle("开始".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -291,10 +291,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 停止按钮
     private lazy var stopButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemRed, for: .normal)
+            .byBackgroundColor(JobsCor.systemRed, for: .normal)
             .byTitle("停止".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -311,10 +311,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 随机按钮（演示“前进/后退会反向旋转”）
     private lazy var randomButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemPurple, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
             .byTitle("随机".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -322,10 +322,10 @@ final class JobsProgressDemoVC: BaseVC {
 
                 let newPercent = CGFloat(Int.random(in: 0...100))
                 self.lastAppliedPercent = newPercent
-                self.percentTextField.text = "\(Int(newPercent))"
+                self.percentTextField.byText("\(Int(newPercent))")
 
                 _ = self.progressView.setDisplayPercent(newPercent, animated: true, duration: 0.35)
-                self.stateLabel.byText("随机：\(Int(newPercent))%".tr)
+                self.stateLabel.byText("随机：%ld%%".tr(Int(newPercent)))
             }
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(stopButton.snp.right).offset(12)
@@ -337,10 +337,10 @@ final class JobsProgressDemoVC: BaseVC {
     /// 回退按钮（强制往回跑，展示逆时针）
     private lazy var backButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGray, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .normal)
             .byTitle("回退".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -349,10 +349,10 @@ final class JobsProgressDemoVC: BaseVC {
                 // ✅ 往回退 20%，没有就退到 0
                 let newPercent = max(0, self.lastAppliedPercent - 20)
                 self.lastAppliedPercent = newPercent
-                self.percentTextField.text = "\(Int(newPercent))"
+                self.percentTextField.byText("\(Int(newPercent))")
 
                 _ = self.progressView.setDisplayPercent(newPercent, animated: true, duration: 0.35)
-                self.stateLabel.byText("回退：\(Int(newPercent))%".tr)
+                self.stateLabel.byText("回退：%ld%%".tr(Int(newPercent)))
             }
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(randomButton.snp.right).offset(12)
@@ -365,7 +365,7 @@ final class JobsProgressDemoVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "自定义进度条（含拖动）".tr)
 
         tipsLabel.byVisible(YES)
@@ -385,7 +385,7 @@ final class JobsProgressDemoVC: BaseVC {
         backButton.byVisible(YES)
 
         // 初始值对齐
-        percentTextField.text = "0"
+        percentTextField.byText("0")
         stateLabel.byText("Ready".tr)
     }
 }

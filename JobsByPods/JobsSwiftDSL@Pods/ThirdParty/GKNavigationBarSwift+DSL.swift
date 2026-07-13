@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 extension GKNavigationBarConfigure {
@@ -27,8 +29,8 @@ extension GKNavigationBarConfigure {
     /// App 启动时一次性全局配置（内部会先 reset 到 setupDefault）
     /// 用法：
     /// GKNavigationBarConfigure.setup { cfg in
-    ///     cfg.byBackground(color: .white)
-    ///        .byTitle(color: .black, font: .boldSystemFont(ofSize: 17))
+    ///     cfg.byBackground(color: JobsCor.white)
+    ///        .byTitle(color: JobsCor.black, font: JobsFont.boldSystemFont(ofSize: 17))
     ///        .byBack(style: .black)
     ///        .byFixSpace(left: 0, right: 0)
     ///        .byCommit()

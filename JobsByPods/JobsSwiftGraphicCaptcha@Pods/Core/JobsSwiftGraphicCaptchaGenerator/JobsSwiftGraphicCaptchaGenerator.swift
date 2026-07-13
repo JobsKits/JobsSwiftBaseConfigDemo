@@ -40,8 +40,10 @@ public enum JobsSwiftGraphicCaptchaGenerator {
         }
 
         let groups = characterGroups(for: captchaConfig.characterUnits)
-        if shouldUseMixedGroups(for: captchaConfig.characterUnits),
-           let mixedText = randomMixedText(groups: groups, length: length),
+        if captchaConfig.mixedGroupCount > 1,
+           let mixedText = randomMixedText(groups: groups,
+                                           length: length,
+                                           groupCount: captchaConfig.mixedGroupCount),
            !mixedText.isEmpty {
             return mixedText
         }
@@ -81,21 +83,16 @@ private extension JobsSwiftGraphicCaptchaGenerator {
         };return groups
     }
 
-    static func shouldUseMixedGroups(for units: JobsSwiftGraphicCaptchaCharacterUnit) -> Bool {
-        let mixedUnits: JobsSwiftGraphicCaptchaCharacterUnit = [.number, .lowercaseLetter, .uppercaseLetter, .chinese]
-        return units.intersection(mixedUnits) == mixedUnits
-    }
-
     static func randomText(characters: [String], length: Int) -> String {
         guard !characters.isEmpty else { return "" };return (0..<length).compactMap { _ in characters.randomElement() }.joined()
     }
 
-    static func randomMixedText(groups: [[String]], length: Int) -> String? {
+    static func randomMixedText(groups: [[String]], length: Int, groupCount: Int) -> String? {
         let validGroups = groups.filter { !$0.isEmpty }
-        guard validGroups.count >= 2, length >= 2 else { return nil }
-        let maxGroupCount = min(length, validGroups.count)
-        let groupCount = Int.random(in: 2...maxGroupCount)
-        let selectedGroups = Array(validGroups.shuffled().prefix(groupCount))
+        guard groupCount >= 2, validGroups.count >= 2, length >= 2 else { return nil }
+        let selectedGroupCount = min(groupCount, length, validGroups.count)
+        guard selectedGroupCount >= 2 else { return nil }
+        let selectedGroups = Array(validGroups.shuffled().prefix(selectedGroupCount))
         var characters = selectedGroups.compactMap { $0.randomElement() }
         let sourceCharacters = validGroups.flatMap { $0 }
         while characters.count < length {

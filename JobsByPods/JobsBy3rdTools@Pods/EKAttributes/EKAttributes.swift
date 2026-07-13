@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 #if canImport(SwiftEntryKit)
 import SwiftEntryKit
 // MARK: - EKAttributes 小型链式包装（已按 SwiftEntryKit 的真实类型修正）
@@ -32,7 +34,7 @@ public extension EKAttributes {
 
     // opacity 是 Float，不是 CGFloat
     @discardableResult
-    func byShadow(color: UIColor = .black,
+    func byShadow(color: UIColor = JobsCor.black,
                   opacity: Float = 0.15,
                   radius: CGFloat = 10) -> Self {
         var a = self

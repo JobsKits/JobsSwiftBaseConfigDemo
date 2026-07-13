@@ -32,8 +32,8 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .medium))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(1)
             .byAddTo(self.contentView) { make in
                 make.top.equalToSuperview().offset(12)
@@ -44,7 +44,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
 
     private lazy var cardView: UIView = { [unowned self] in
         UIView()
-            .byBackgroundColor(.systemGray6)
+            .byBackgroundColor(JobsCor.systemGray6)
             .byCornerRadius(10)
             .byClipsToBounds(true)
             .byAddTo(self.contentView) { make in
@@ -60,7 +60,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
             .byEditable(false)
             .bySelectable(true)               // 最终由 configure 调整
             .byTextAlignment(.center)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byTextContainerInset(UIEdgeInsets(top: 14, left: 12, bottom: 6, right: 12))
             .byAddTo(self.cardView) { make in
                 make.top.left.right.equalToSuperview()
@@ -82,7 +82,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.byBackgroundColor(.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
         // 唤起懒加载（不改变视觉状态）
         titleLabel.byVisible(YES)
         cardView.byVisible(YES)
@@ -119,9 +119,9 @@ extension LinkCell {
             if range.location != NSNotFound {
                 ms.addAttributes([
                     .jobsAction: phoneURL,
-                    .foregroundColor: UIColor.red,
+                    .foregroundColor: JobsCor.red,
                     .underlineStyle: NSUnderlineStyle.single.rawValue,
-                    .underlineColor: UIColor.blue
+                    .underlineColor: JobsCor.blue
                 ], range: range)
                 textView.byAttributedText(ms)
             }
@@ -218,7 +218,7 @@ extension LinkCell {
                         log("是否删除  = ",isDeleting)
 
                         let ok = alert.actions.first { $0.title == "确定" }
-                        ok?.isEnabled = !tf.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        ok?.byEnabled(!tf.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
                         print("Cancel tapped")
@@ -227,17 +227,17 @@ extension LinkCell {
                         let name = alert.textField(at: 0)?.text ?? ""
                         print("new name =", name)
                     }
-                    .byTintColor(.systemBlue)
+                    .byTintColor(JobsCor.systemBlue)
                     .byPresent(vc)
 
             };return
         }
         if url.scheme == "tel" || url.scheme == "telprompt" {
             #if targetEnvironment(simulator)
-            let ac = UIAlertController(title: "提示",
+            let ac = UIAlertController(title: "提示".tr,
                                        message: "模拟器不支持拨号：\(url.absoluteString)",
                                        preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定", style: .default))
+            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
             vc.present(ac, animated: true)
             #else
             UIApplication.shared.open(url, options: [:], completionHandler: nil)

@@ -38,12 +38,6 @@ extension UIToolbar {
     }
     // MARK: - Colors
     @discardableResult
-    public func byTintColor(_ color: UIColor) -> Self {
-        self.tintColor = color
-        return self
-    }
-
-    @discardableResult
     public func byBarTintColor(_ color: UIColor?) -> Self {
         self.barTintColor = color
         return self
@@ -125,12 +119,6 @@ extension UIToolbar {
         return self
     }
     
-    @discardableResult
-    public func byTintColor(_ builder: () -> UIColor) -> Self {
-        self.tintColor = builder()
-        return self
-    }
-
     @discardableResult
     public func byBarTintColor(_ builder: () -> UIColor?) -> Self {
         self.barTintColor = builder()

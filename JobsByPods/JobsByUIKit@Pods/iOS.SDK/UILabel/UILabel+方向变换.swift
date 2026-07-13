@@ -62,7 +62,7 @@ extension UILabel {
                 .byTransform(CATransform3DMakeRotation(.pi/2, 0, 0, 1))
         }
         self.byAddSublayer(textLayer)
-        byTextColor(.clear) // 只显示 layer 的文字
+        byTextColor(JobsCor.clear) // 只显示 layer 的文字
         return self
     }
 }

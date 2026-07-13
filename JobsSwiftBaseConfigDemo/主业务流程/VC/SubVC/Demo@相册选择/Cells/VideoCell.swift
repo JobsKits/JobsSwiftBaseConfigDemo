@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import AVFoundation
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import SnapKit
@@ -24,9 +25,9 @@ public final class VideoCell: UICollectionViewCell {
     private var endObserver: NSObjectProtocol?
     private lazy var playOverlay: UIButton = { [unowned self] in
         let img = "播放按钮".img.withRenderingMode(.alwaysOriginal)   // 确保非模板渲染
-        let b = UIButton(type: .system)
+        let b = UIButton.sys()
             .byImage(img, for: .normal)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byContentEdgeInsets(.zero)
             .onTap { [weak self] _ in self?.onReplay() }
             .byAddTo(self.contentView) { make in
@@ -36,7 +37,7 @@ public final class VideoCell: UICollectionViewCell {
             }
         // 绝对置顶
         b.layer.zPosition = 9999
-        b.isHidden = true
+        b.byHidden(true)
         return b
     }()
 
@@ -55,7 +56,7 @@ public final class VideoCell: UICollectionViewCell {
         player = nil
         playerLayer?.removeFromSuperlayer()
         playerLayer = nil
-        playOverlay.isHidden = true
+        playOverlay.byHidden(true)
     }
 
     // MARK: - byData
@@ -105,7 +106,7 @@ public final class VideoCell: UICollectionViewCell {
 
         let layer = AVPlayerLayer(player: player)
         layer.videoGravity = .resizeAspectFill
-        layer.frame = contentView.bounds
+        layer.byFrame(contentView.bounds)
         layer.zPosition = -1                    // ⬅︎ 永远在按钮下面
         contentView.layer.addSublayer(layer)
         playerLayer = layer
@@ -113,7 +114,7 @@ public final class VideoCell: UICollectionViewCell {
         // 再兜底把按钮提到最上
         contentView.bringSubviewToFront(playOverlay)
         playOverlay.layer.zPosition = 9999
-        playOverlay.isHidden = true
+        playOverlay.byHidden(true)
 
         // 结束后显示按钮 —— object 用 nil 更稳
         endObserver = NotificationCenter.default.addObserver(
@@ -121,24 +122,24 @@ public final class VideoCell: UICollectionViewCell {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.playOverlay.isHidden = false
+            self?.playOverlay.byHidden(false)
         }
 
         player.seek(to: .zero)
         player.play()
         setNeedsLayout(); layoutIfNeeded()
-        playerLayer?.frame = contentView.bounds
+        playerLayer?.byFrame(contentView.bounds)
     }
 
     @objc private func onReplay() {
-        playOverlay.isHidden = true
+        playOverlay.byHidden(true)
         player?.seek(to: .zero)
         player?.play()
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        playerLayer?.frame = contentView.bounds
+        playerLayer?.byFrame(contentView.bounds)
         // 再次确保覆盖层在最顶
         if let pl = playerLayer { pl.zPosition = -1 }
         playOverlay.layer.zPosition = 9999

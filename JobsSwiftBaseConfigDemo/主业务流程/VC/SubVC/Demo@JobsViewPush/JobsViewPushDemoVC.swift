@@ -22,7 +22,7 @@ import GKNavigationBarSwift
 final class JobsViewPushDemoVC: BaseVC {
 
     private lazy var directionControl: UISegmentedControl = {
-        UISegmentedControl(items: ["上", "下", "左", "右"])
+        UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
             .bySelectedSegmentIndex(3)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -37,9 +37,9 @@ final class JobsViewPushDemoVC: BaseVC {
 
     private lazy var ratioLabel: UILabel = {
         UILabel()
-            .byText("覆盖比例：65%")
-            .byFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byTextColor(.label)
+            .byText("覆盖比例：65%".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(directionControl.snp.bottom).offset(28)
                 make.left.equalToSuperview().offset(24)
@@ -52,7 +52,7 @@ final class JobsViewPushDemoVC: BaseVC {
             .byMaximumValue(1)
             .byValue(0.65)
             .onJobsChange { [weak self] (slider: UISlider) in
-                self?.ratioLabel.text = "覆盖比例：\(Int(slider.value * 100))%"
+                self?.ratioLabel.byText("覆盖比例：\(Int(slider.value * 100))%")
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(ratioLabel.snp.bottom).offset(12)
@@ -62,10 +62,10 @@ final class JobsViewPushDemoVC: BaseVC {
 
     private lazy var tipLabel: UILabel = {
         UILabel()
-            .byText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。")
+            .byText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。".tr)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(ratioSlider.snp.bottom).offset(24)
                 make.left.right.equalToSuperview().inset(24)
@@ -73,11 +73,11 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var pushButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("Push BView", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 18, weight: .bold))
-            .byBackgroundColor(.systemBlue)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
+            .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
                 self?.pushDemoView()
@@ -92,7 +92,7 @@ final class JobsViewPushDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsViewPush")
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         directionControl.byVisible(YES)
         ratioLabel.byVisible(YES)
         ratioSlider.byVisible(YES)
@@ -135,19 +135,19 @@ private final class JobsViewPushDemoPanel: UIView {
         UILabel()
             .byText("BView")
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 32, weight: .black))
-            .byTextColor(.white)
+            .byFont(JobsFont.systemFont(ofSize: 32, weight: .black))
+            .byTextColor(JobsCor.white)
             .byAddTo(self) { make in
                 make.center.equalToSuperview()
             }
     }()
 
     private lazy var closeButton: UIButton = {
-        UIButton(type: .system)
-            .byTitle("主动退出", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byBorderColor(.white)
+        UIButton.sys()
+            .byTitle("主动退出".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byBorderColor(JobsCor.white)
             .byBorderWidth(1)
             .byCornerRadius(10)
             .onTap { [weak self] _ in
@@ -163,8 +163,8 @@ private final class JobsViewPushDemoPanel: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemIndigo
-        layer.shadowColor = UIColor.black.cgColor
+        self.byBackgroundColor(JobsCor.systemIndigo)
+        layer.shadowColor = JobsCor.black.cgColor
         layer.shadowOpacity = 0.24
         layer.shadowRadius = 12
         titleLabel.byVisible(YES)

@@ -43,8 +43,8 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
             // 空态按钮
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -100,8 +100,8 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
     /// LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black.withAlphaComponent(0.92)
-        jobsSetupGKNav(title: "按钮完全盖在UICollectionViewCell上")
+        view.byBackgroundColor(JobsCor.black.withAlphaComponent(0.92))
+        jobsSetupGKNav(title: "按钮完全盖在UICollectionViewCell上".tr)
         collectionView.byReloadData()
     }
 
@@ -159,9 +159,9 @@ extension BtnFullOnCVCellDemoVC {
             let idx = startAt + i
             return JobsBtnCellModel(
                 title: titles[idx % titles.count],
-                titleCor:.red,
+                titleCor:JobsCor.red,
                 subTitle: "发言时聊天专属皮肤",
-                subTitleCor: .blue,
+                subTitleCor: JobsCor.blue,
                 imageURL:"https://picsum.photos/200",
                 bgImageURL:"https://picsum.photos/300",
                 selected: NO,

@@ -59,7 +59,7 @@ final class PlayerLocalVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "本地单播".tr)
         player.byVisible(YES)
     }

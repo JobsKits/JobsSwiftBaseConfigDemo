@@ -69,9 +69,9 @@ final class LunarDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
 
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onJobsTap { [weak self] (_: UIButton) in
@@ -127,9 +127,9 @@ final class LunarDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "日历"
+            title: "日历".tr
         )
         let header = UIView()
         datePicker.byAddTo(header) { make in
@@ -189,8 +189,8 @@ final class LunarDemoVC: BaseVC {
         let desc  = lunar.description
         let solar = lunar.solar.fullString
         exampleRows = [
-            .init(title: "农历（描述）", value: desc),
-            .init(title: "对应公历", value: solar)
+            .init(title: "农历（描述）".tr, value: desc),
+            .init(title: "对应公历".tr, value: solar)
         ]
     }
 
@@ -218,8 +218,8 @@ final class LunarDemoVC: BaseVC {
         let lunarStr = solar.lunar.description
 
         return [
-            .init(title: "公历", value: solarStr),
-            .init(title: "农历", value: lunarStr)
+            .init(title: "公历".tr, value: solarStr),
+            .init(title: "农历".tr, value: lunarStr)
         ]
     }
     // MARK: - Helpers
@@ -265,8 +265,8 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
             cell.contentConfiguration = cfg
         } else {
             // 老系统：避免 subtitle 样式需求，直接合并成一行
-            cell.textLabel?.numberOfLines = 0
-            cell.textLabel?.text = "\(row.title)  \(row.value)"
+            cell.textLabel?.byNumberOfLines(0)
+            cell.textLabel?.byText("\(row.title)  \(row.value)")
         }
         cell.selectionStyle = .none
         return cell

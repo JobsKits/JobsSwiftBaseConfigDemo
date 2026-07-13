@@ -34,13 +34,13 @@ final class SkeletonViewDemoVC: BaseVC {
     private var isLoading = true
     private var useGradient = true
     // Skeleton 配置
-    private let gradient = SkeletonGradient(baseColor: .systemGray5)
-    private let solid     = SkeletonGradient(baseColor: .systemGray5) // 纯色也用 gradient 类型，动画不同
+    private let gradient = SkeletonGradient(baseColor: JobsCor.systemGray5)
+    private let solid     = SkeletonGradient(baseColor: JobsCor.systemGray5) // 纯色也用 gradient 类型，动画不同
     private let slideAnim = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
     // UI
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
-            .byBackgroundColor(.systemGroupedBackground)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .bySeparatorStyle(.none)
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(72)
@@ -61,7 +61,7 @@ final class SkeletonViewDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(
-            title: "Demo@骨架屏视图",
+            title: "Demo@骨架屏视图".tr,
             rightButtons: [
                 UIButton.sys()
                     /// 按钮图片@图文关系
@@ -70,7 +70,7 @@ final class SkeletonViewDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         // 重新进入加载状态
                         startSkeleton()
                         simulateFetch()
@@ -82,7 +82,7 @@ final class SkeletonViewDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         // 动画模式在渐变滑动 & 脉冲之间切换
                         useGradient.toggle()
                         if isLoading {
@@ -93,7 +93,7 @@ final class SkeletonViewDemoVC: BaseVC {
             ]
         )
 
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         view.bySkeletonable(YES) // 容器也打标，避免传导问题
         startSkeleton()
     }
@@ -165,8 +165,8 @@ extension SkeletonViewDemoVC {
             "偏长的描述，目的是让 subtitleLabel 在骨架时出现 2 行以上，从而看到 lastLineFillPercent。"
         ]
         func randColor() -> UIColor {
-            let all: [UIColor] = [.systemBlue, .systemTeal, .systemPink, .systemOrange, .systemPurple, .systemGreen, .systemIndigo, .systemRed]
-            return all.randomElement() ?? .systemGray
+            let all: [UIColor] = [JobsCor.systemBlue, JobsCor.systemTeal, JobsCor.systemPink, JobsCor.systemOrange, JobsCor.systemPurple, JobsCor.systemGreen, JobsCor.systemIndigo, JobsCor.systemRed]
+            return all.randomElement() ?? JobsCor.systemGray
         };return (0..<count).map { i in
             .init(
                 name: names[i % names.count],

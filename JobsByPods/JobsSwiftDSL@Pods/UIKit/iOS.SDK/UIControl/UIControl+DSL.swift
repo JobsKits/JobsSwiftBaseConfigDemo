@@ -28,6 +28,12 @@ extension UIControl {
         self.isSelected = on ?? false
         return self
     }
+
+    @discardableResult
+    public func byToggleSelected() -> Self {
+        self.isSelected.toggle()
+        return self
+    }
     
     @discardableResult
     public func byHighlighted(_ on: Bool?) -> Self {

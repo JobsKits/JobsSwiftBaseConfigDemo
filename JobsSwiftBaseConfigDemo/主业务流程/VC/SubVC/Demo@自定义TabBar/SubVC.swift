@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
@@ -22,39 +23,39 @@ import GKNavigationBarSwift
 final class HomeVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "首页")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "首页".tr)
     }
 }
 
 final class DiscountVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemMint
-        jobsSetupGKNav(title: "优惠")
+        view.byBackgroundColor(JobsCor.systemMint)
+        jobsSetupGKNav(title: "优惠".tr)
     }
 }
 
 final class WalletVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemYellow
-        jobsSetupGKNav(title: "钱包")
+        view.byBackgroundColor(JobsCor.systemYellow)
+        jobsSetupGKNav(title: "钱包".tr)
     }
 }
 
 final class FriendsVC: BaseVC {
     private lazy var exampleButton: UIButton = {
-        UIButton(type: .system)
-            .byTitle("显示", for: .normal)
-            .byTitle("隐藏", for: .selected)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleColor(.systemRed, for: .selected)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        UIButton.sys()
+            .byTitle("显示".tr, for: .normal)
+            .byTitle("隐藏".tr, for: .selected)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleColor(JobsCor.systemRed, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] sender in
                 guard let self else { return }
                 DemoDetailVC()
-                    .byData(DemoModel(id: 7, title: "详情"))
+                    .byData(DemoModel(id: 7, title: "详情".tr))
                     .onResult { id in
                         print("回来了 id=\(String(describing: id))")
                     }
@@ -73,8 +74,8 @@ final class FriendsVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemTeal
-        jobsSetupGKNav(title: "好友")
+        view.byBackgroundColor(JobsCor.systemTeal)
+        jobsSetupGKNav(title: "好友".tr)
         exampleButton.byAlpha(1)
     }
 }
@@ -82,15 +83,15 @@ final class FriendsVC: BaseVC {
 final class ActivityVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemPurple
-        jobsSetupGKNav(title: "活动")
+        view.byBackgroundColor(JobsCor.systemPurple)
+        jobsSetupGKNav(title: "活动".tr)
     }
 }
 
 final class ServiceVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemOrange
-        jobsSetupGKNav(title: "客服")
+        view.byBackgroundColor(JobsCor.systemOrange)
+        jobsSetupGKNav(title: "客服".tr)
     }
 }

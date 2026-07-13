@@ -34,6 +34,6 @@ extension UILabel {
                         .byFontSize(font.pointSize)
                         .byAlignmentMode(.center)
                         .byContentsScale(UIScreen.main.scale)))
-            byTextColor(.clear)
+            byTextColor(JobsCor.clear)
     }
 }

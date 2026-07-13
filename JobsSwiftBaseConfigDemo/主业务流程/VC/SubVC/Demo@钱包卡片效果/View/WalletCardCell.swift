@@ -33,7 +33,7 @@ final class WalletCardCell: UICollectionViewCell {
     private lazy var logoView: UIImageView = {
         UIImageView()
             .byContentMode(.scaleAspectFit)
-            .byTintColor(.white.withAlphaComponent(0.9))
+            .byTintColor(JobsCor.white.withAlphaComponent(0.9))
             .byImage("creditcard.fill".sysImg)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalToSuperview().offset(12)
@@ -45,8 +45,8 @@ final class WalletCardCell: UICollectionViewCell {
 
     private lazy var bankLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 18, weight: .semibold))
-            .byTextColor(.white)
+            .byFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
+            .byTextColor(JobsCor.white)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalToSuperview().offset(self.horizontalInset)
                 make.centerY.equalTo(self.logoView.snp.centerY)
@@ -55,8 +55,8 @@ final class WalletCardCell: UICollectionViewCell {
 
     private lazy var numberLabel: UILabel = {
       UILabel()
-            .byFont(.monospacedDigitSystemFont(ofSize: 16, weight: .medium))
-            .byTextColor(.white.withAlphaComponent(0.95))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .medium))
+            .byTextColor(JobsCor.white.withAlphaComponent(0.95))
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalTo(self.bankLabel)
                 make.bottom.equalToSuperview().inset(18)
@@ -65,8 +65,8 @@ final class WalletCardCell: UICollectionViewCell {
 
     private lazy var holderLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.white.withAlphaComponent(0.8))
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.white.withAlphaComponent(0.8))
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalTo(self.bankLabel)
                 make.bottom.equalTo(self.numberLabel.snp.top).offset(-6)
@@ -75,8 +75,8 @@ final class WalletCardCell: UICollectionViewCell {
 
     private lazy var brandLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .medium))
-            .byTextColor(.white.withAlphaComponent(0.9))
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(JobsCor.white.withAlphaComponent(0.9))
             .byTextAlignment(.right)
             .byAddTo(contentView) { [unowned self] make in
                 make.right.equalToSuperview().inset(self.horizontalInset)
@@ -95,13 +95,13 @@ final class WalletCardCell: UICollectionViewCell {
     }
 
     private func buildUI() {
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
 
-        contentView.layer.cornerRadius = 14
-        contentView.layer.masksToBounds = true
+        contentView.byCornerRadius(14)
+        contentView.byMasksToBounds(true)
 
-        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowColor = JobsCor.black.cgColor
         layer.shadowOpacity = 0.18
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 6)
@@ -117,9 +117,10 @@ final class WalletCardCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradientLayer.frame = contentView.bounds
-        contentView.layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds,
-                                                    cornerRadius: 14).cgPath
+        gradientLayer.byFrame(contentView.bounds)
+        contentView.layer.shadowPath = UIBezierPath
+            .make(roundedRect: contentView.bounds, cornerRadius: 14)
+            .cgPath
     }
 
     private func applyHighlight(_ highlighted: Bool, animated: Bool) {
@@ -128,10 +129,11 @@ final class WalletCardCell: UICollectionViewCell {
             self.layer.shadowOpacity = highlighted ? 0.3 : 0.18
         }
         if animated {
-            UIView.animate(withDuration: 0.18,
-                           delay: 0,
-                           options: [.curveEaseOut],
-                           animations: block)
+            UIView.jobsAnimateWithOptions(
+                0.18,
+                options: [.curveEaseOut],
+                animations: block
+            )
         } else {
             block()
         }
@@ -184,8 +186,8 @@ final class WalletAddCardCell: UICollectionViewCell {
     private let horizontalInset: CGFloat = 20
     private lazy var dashedBorder: CAShapeLayer = {
         CAShapeLayer()
-            .byStrokeColor(.systemGray3)
-            .byFillColor(.clear)
+            .byStrokeColor(JobsCor.systemGray3)
+            .byFillColor(JobsCor.clear)
             .byLineDashPattern([6, 4])
             .byLineWidth(1)
             .byAddTo(self.layer)
@@ -194,7 +196,7 @@ final class WalletAddCardCell: UICollectionViewCell {
     private lazy var iconView: UIImageView = {
         UIImageView()
             .byImage("plus.circle.fill".sysImg)
-            .byTintColor(.systemBlue)
+            .byTintColor(JobsCor.systemBlue)
             .byContentMode(.scaleAspectFit)
             .byAddTo(contentView) { make in
                 make.centerY.equalToSuperview()
@@ -206,8 +208,8 @@ final class WalletAddCardCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("添加新的银行卡".tr)
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
-            .byTextColor(.systemBlue)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTextColor(JobsCor.systemBlue)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalTo(self.iconView.snp.right).offset(12)
                 make.centerY.equalToSuperview()
@@ -225,10 +227,10 @@ final class WalletAddCardCell: UICollectionViewCell {
     }
 
     private func buildUI() {
-        backgroundColor = .clear
-        contentView.backgroundColor = UIColor.secondarySystemBackground
-        contentView.layer.cornerRadius = 14
-        contentView.layer.masksToBounds = true
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
+        contentView.byCornerRadius(14)
+        contentView.byMasksToBounds(true)
 
         dashedBorder.byHidden(NO);
         iconView.byVisible(YES)
@@ -237,8 +239,8 @@ final class WalletAddCardCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        let path = UIBezierPath(roundedRect: bounds, cornerRadius: 14).cgPath
+        let path = UIBezierPath.make(roundedRect: bounds, cornerRadius: 14).cgPath
         dashedBorder.path = path
-        dashedBorder.frame = bounds
+        dashedBorder.byFrame(bounds)
     }
 }

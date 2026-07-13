@@ -11,31 +11,33 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 public final class JobsSwiftCalendarAppearance {
     public var headerDateFormat = "yyyy年MM月"
-    public var headerTitleFont = UIFont.systemFont(ofSize: 22, weight: .regular)
-    public var headerTitleColor = UIColor.black
+    public var headerTitleFont = JobsFont.systemFont(ofSize: 22, weight: .regular)
+    public var headerTitleColor = JobsCor.black
     public var headerTitleAlignment = NSTextAlignment.center
     public var headerTitleOffset = CGPoint.zero
     public var headerHeight: CGFloat = 56
     public var weekdayHeight: CGFloat = 34
     public var headerMinimumDissolvedAlpha: CGFloat = 0
     public var caseOptions: JobsSwiftCalendarCaseOptions = .headerUsesDefaultCase
-    public var weekdayFont = UIFont.systemFont(ofSize: 15, weight: .regular)
-    public var weekdayTextColor = UIColor.systemBlue
-    public var titleFont = UIFont.systemFont(ofSize: 17, weight: .regular)
-    public var subtitleFont = UIFont.systemFont(ofSize: 10, weight: .regular)
-    public var titleDefaultColor = UIColor.black
-    public var titlePlaceholderColor = UIColor.lightGray
-    public var titleSelectionColor = UIColor.white
-    public var titleTodayColor = UIColor.white
-    public var subtitleDefaultColor = UIColor.darkGray
-    public var subtitlePlaceholderColor = UIColor.lightGray
-    public var subtitleSelectionColor = UIColor.white
-    public var selectionColor = UIColor.systemRed
-    public var todayColor = UIColor.systemBlue
-    public var eventDefaultColor = UIColor.systemBlue
-    public var eventSelectionColor = UIColor.white
+    public var weekdayFont = JobsFont.systemFont(ofSize: 15, weight: .regular)
+    public var weekdayTextColor = JobsCor.systemBlue
+    public var titleFont = JobsFont.systemFont(ofSize: 17, weight: .regular)
+    public var subtitleFont = JobsFont.systemFont(ofSize: 10, weight: .regular)
+    public var titleDefaultColor = JobsCor.black
+    public var titlePlaceholderColor = JobsCor.lightGray
+    public var titleSelectionColor = JobsCor.white
+    public var titleTodayColor = JobsCor.white
+    public var subtitleDefaultColor = JobsCor.darkGray
+    public var subtitlePlaceholderColor = JobsCor.lightGray
+    public var subtitleSelectionColor = JobsCor.white
+    public var selectionColor = JobsCor.systemRed
+    public var todayColor = JobsCor.systemBlue
+    public var eventDefaultColor = JobsCor.systemBlue
+    public var eventSelectionColor = JobsCor.white
 
     public init() {}
 }

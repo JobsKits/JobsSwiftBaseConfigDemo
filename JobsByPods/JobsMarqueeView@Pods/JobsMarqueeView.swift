@@ -120,7 +120,7 @@ public final class JobsMarqueeView: UIView {
     public var isPageControlEnabled: Bool = false {
         didSet {
             let _ = pageControl
-            pageControl.isHidden = !isPageControlEnabled
+            pageControl.byHidden(!isPageControlEnabled)
             if isPageControlEnabled {
                 installDefaultPageControlConstraintsIfNeeded()
                 updatePageControlPages()
@@ -176,14 +176,14 @@ public final class JobsMarqueeView: UIView {
 
     private func commonInit() {
         clipsToBounds = true
-        addSubview(scrollView)
-        scrollView.delegate = self
+        scrollView.byAddTo(self)
+        scrollView.byDelegate(self)
         applyManualScrollConfig()
     }
     // ================================== Layout ==================================
     public override func layoutSubviews() {
         super.layoutSubviews()
-        scrollView.frame = bounds
+        scrollView.byFrame(bounds)
         guard bounds.width > 0, bounds.height > 0 else { return }
         if bounds.size != lastBoundsSize || needsRebuildContent {
             lastBoundsSize = bounds.size
@@ -208,7 +208,7 @@ public final class JobsMarqueeView: UIView {
                 updatePageControlPages()
                 updatePageControlConstraintsIfNeeded()
                 updatePageControlCurrentPage()
-                pageControl.isHidden = false
+                pageControl.byHidden(false)
             };return
         }
         let isHorizontal = direction.isHorizontal
@@ -246,8 +246,8 @@ public final class JobsMarqueeView: UIView {
                     size.width = bounds.width
                 }
 
-                button.frame = CGRect(x: x, y: 0, width: size.width, height: size.height)
-                scrollView.addSubview(button)
+                button.byFrame(CGRect(x: x, y: 0, width: size.width, height: size.height))
+                button.byAddTo(scrollView)
                 x += size.width
             }
             contentWidth = max(bounds.width, x)
@@ -265,8 +265,8 @@ public final class JobsMarqueeView: UIView {
                     size.height = bounds.height
                 }
 
-                button.frame = CGRect(x: 0, y: y, width: size.width, height: size.height)
-                scrollView.addSubview(button)
+                button.byFrame(CGRect(x: 0, y: y, width: size.width, height: size.height))
+                button.byAddTo(scrollView)
                 y += size.height
             }
             contentHeight = max(bounds.height, y)
@@ -283,7 +283,7 @@ public final class JobsMarqueeView: UIView {
             updatePageControlPages()
             updatePageControlConstraintsIfNeeded()
             updatePageControlCurrentPage()
-            pageControl.isHidden = false
+            pageControl.byHidden(false)
         }
     }
     // ================================== Manual Scroll Helpers ==================================
@@ -323,7 +323,7 @@ public final class JobsMarqueeView: UIView {
             target.y = CGFloat(page) * stepLength
         }
 
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.jobsAnimateWithCompletion(0.25, animations: {
             self.scrollView.contentOffset = target
         }, completion: { _ in
             if self.isPageControlEnabled { self.updatePageControlCurrentPage() }
@@ -483,7 +483,7 @@ public final class JobsMarqueeView: UIView {
                 target.y = (next < 0) ? maxOffsetY : next
             }
         }
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.jobsAnimateWithCompletion(0.25, animations: {
             self.scrollView.contentOffset = target
         }, completion: { finished in
             guard finished else { return }
@@ -535,7 +535,7 @@ public final class JobsMarqueeView: UIView {
         #if os(OSX)
         return CGSize(width: 10, height: 10)
         #else
-        let font = UIFont.systemFont(ofSize: UIFont.buttonFontSize)
+        let font = JobsFont.systemFont(ofSize: UIFont.buttonFontSize)
         let text = "A" as NSString
         let size = text.size(withAttributes: [.font: font])
         return size
@@ -560,7 +560,7 @@ public final class JobsMarqueeView: UIView {
         // 0) 先处理 iOS15+ configuration（放最前，避免后续把字体/样式冲掉）
         if #available(iOS 15.0, *) {
             if let cfg = source.configuration {
-                button.configuration = cfg
+                button.byConfiguration(cfg)
                 // 如果你希望 clone 的配置更新策略和 source 一致，可以打开：
                 // button.automaticallyUpdatesConfiguration = source.automaticallyUpdatesConfiguration
             }
@@ -608,15 +608,16 @@ public final class JobsMarqueeView: UIView {
             button.byBackgroundColor(bgColor, for: .normal)
         }
         // 3) 对齐/布局相关
-        button.contentHorizontalAlignment = source.contentHorizontalAlignment
-        button.contentVerticalAlignment   = source.contentVerticalAlignment
-        button.semanticContentAttribute   = source.semanticContentAttribute
-        button.tintColor                  = source.tintColor
+        button
+            .byContentHorizontalAlignment(source.contentHorizontalAlignment)
+            .byContentVerticalAlignment(source.contentVerticalAlignment)
+            .bySemanticContentAttribute(source.semanticContentAttribute)
+            .byTintColor(source.tintColor)
         // 4) layer 外观
-        button.layer.cornerRadius  = source.layer.cornerRadius
-        button.layer.masksToBounds = source.layer.masksToBounds
-        button.layer.borderWidth   = source.layer.borderWidth
-        button.layer.borderColor   = source.layer.borderColor
+        button.byCornerRadius(source.layer.cornerRadius)
+        button.byMasksToBounds(source.layer.masksToBounds)
+        button.byBorderWidth(source.layer.borderWidth)
+        button.layer.byBorderCGColor(source.layer.borderColor)
         // 5) 网络背景图 clone（你原逻辑保留）
         #if canImport(SDWebImage)
         source.sd_cloneBackground(to: button,
@@ -651,7 +652,7 @@ public final class JobsMarqueeView: UIView {
                 guard let actions = source.actions(forTarget: target,
                                                    forControlEvent: event) else { continue }
                 for action in actions {
-                    button.addTarget(target, action: Selector(action), for: event)
+                    button.byAddTarget(target, action: Selector(action), for: event)
                     if event == .touchUpInside {
                         hasTapTarget = true
                     }
@@ -660,12 +661,9 @@ public final class JobsMarqueeView: UIView {
         }
 
         if #available(iOS 14.0, *), !hasTapTarget {
-            button.addAction(
-                UIAction { [weak source] _ in
-                    source?.sendActions(for: .touchUpInside)
-                },
-                for: .touchUpInside
-            )
+            button.onTap { [weak source] _ in
+                source?.performTap()
+            }
         }
 
         if let recognizers = source.gestureRecognizers {
@@ -679,7 +677,7 @@ public final class JobsMarqueeView: UIView {
                 cloneGR.cancelsTouchesInView    = lp.cancelsTouchesInView
                 cloneGR.delaysTouchesBegan      = lp.delaysTouchesBegan
                 cloneGR.delaysTouchesEnded      = lp.delaysTouchesEnded
-                cloneGR.isEnabled               = lp.isEnabled
+                cloneGR.byEnabled(lp.isEnabled)
                 if let sleeve = objc_getAssociatedObject(lp, &kJobsUIButtonLongPressSleeveKey) {
                     cloneGR.addTarget(sleeve, action: NSSelectorFromString("invoke:"))
                     objc_setAssociatedObject(

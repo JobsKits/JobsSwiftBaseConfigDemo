@@ -174,7 +174,7 @@ public final class BaseWebView: UIView {
         webView.byVisible(true)
 
         registerMessageHandlers()
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         // 仅做“使用阶段”的配置；UI 生成与约束在 lazy block（progressView/webView）里完成
         progressView.byVisible(true)
         webView.byVisible(true)
@@ -235,7 +235,7 @@ private extension BaseWebView {
 
             onMainAsync { [weak self] in
                 guard let self else { return }
-                self.progressView.isHidden = p >= 1.0
+                self.progressView.byHidden(p >= 1.0)
                 self.progressView.setProgress(Float(p), animated: true)
 
                 if p >= 1.0 {

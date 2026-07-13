@@ -20,6 +20,7 @@ import JobsSwiftTools
 import JobsSwiftSplash
 import JobsSwiftOpen
 import LiveChat
+import JobsViewPush
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -29,12 +30,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("✅ SceneDelegate willConnect")
         guard let windowScene = (scene as? UIWindowScene) else { return }
         LiveChat.windowScene = windowScene
-        let homeViewController = JobsSideDrawerVC(
-                menuVC: JobsMeCenterVC().jobsNav.jobsNavContainer,
-                mainVC: RootListVC().jobsNav.jobsNavContainer,
-                menuWidth: JobsSideDrawerVC.defaultMenuWidth // 右移距离
-            )
-        self.window = UIWindow(windowScene: windowScene)
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
+        let homeViewController = RootListPreferences.makeAppRootViewController(in: window.bounds)
+        window
             .byRootViewController(homeViewController)
             .byMakeKeyAndVisible()
         guard JobsSplashPreferences.isEnabledForNextLaunch else { return }
@@ -42,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let openConfiguration = JobsOpenConfiguration()
             .byURL(URL(string: "http://www.baidu.com")!)
             .byMode(.inApp)
-            .byTitle("开屏详情")
+            .byTitle("开屏详情".tr)
             .byAnimated(true)
             .byCompletion { success in
                 print("开屏链接打开结果：\(success)")

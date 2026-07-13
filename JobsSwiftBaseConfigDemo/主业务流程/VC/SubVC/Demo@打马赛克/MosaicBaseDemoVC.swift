@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsScale
@@ -34,7 +35,7 @@ class MosaicBaseDemoVC: BaseVC {
 
     lazy var imageContainerView: UIView = {
         UIView()
-            .byBackgroundColor(.black)
+            .byBackgroundColor(JobsCor.black)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -57,9 +58,9 @@ class MosaicBaseDemoVC: BaseVC {
 
     lazy var loadingLabel: UILabel = {
         UILabel()
-            .byText("图片加载中...")
-            .byTextColor(.white)
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
+            .byText("图片加载中...".tr)
+            .byTextColor(JobsCor.white)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byTextAlignment(.center)
             .byNumberOfLines(0)
             .byAddTo(imageContainerView) { make in
@@ -75,7 +76,7 @@ class MosaicBaseDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: pageTitle,
             leftButton: makeBackButton(),
@@ -112,18 +113,18 @@ class MosaicBaseDemoVC: BaseVC {
         isExitAlertShowing = true
 
         let alert = UIAlertController(
-            title: "是否保存修改后的照片？",
-            message: "保存后会写入系统相册。",
+            title: "是否保存修改后的照片？".tr,
+            message: "保存后会写入系统相册。".tr,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "取消", style: .cancel) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "取消".tr, style: .cancel) { [weak self] _ in
             self?.isExitAlertShowing = false
         })
-        alert.addAction(UIAlertAction(title: "不保存", style: .destructive) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "不保存".tr, style: .destructive) { [weak self] _ in
             self?.isExitAlertShowing = false
             self?.leavePage()
         })
-        alert.addAction(UIAlertAction(title: "保存并退出", style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "保存并退出".tr, style: .default) { [weak self] _ in
             guard let self else { return }
             self.saveImageAndLeave(image)
         })
@@ -141,12 +142,12 @@ class MosaicBaseDemoVC: BaseVC {
 
     private func loadRemoteImage() {
         guard let url = URL(string: MosaicDemoImageURLProvider.sampleImage) else {
-            loadingLabel.byText("图片地址无效")
+            loadingLabel.byText("图片地址无效".tr)
             return
         }
 
-        imageView.image = "Ani".img
-        loadingLabel.byText("图片加载中...").byHidden(false)
+        imageView.byImage("Ani".img)
+        loadingLabel.byText("图片加载中...".tr).byHidden(false)
         imageLoadToken = JobsImageLoader.shared.load(
             .remote(url),
             options: JobsImageLoadOptions(preferredLoader: preferredLoader)
@@ -156,25 +157,25 @@ class MosaicBaseDemoVC: BaseVC {
             case .success(let value):
                 let image = value.image.jobs_mosaicNormalized()
                 self.originalImage = image
-                self.imageView.image = image
+                self.imageView.byImage(image)
                 self.loadingLabel.byHidden(true)
                 self.onImageLoaded(image)
             case .failure(let error):
-                self.loadingLabel.byText("图片加载失败")
+                self.loadingLabel.byText("图片加载失败".tr)
                 "图片加载失败：\(error)".toast
             }
         }
     }
 
     private func saveImageAndLeave(_ image: UIImage) {
-        loadingLabel.byText("正在保存到系统相册...").byHidden(false)
+        loadingLabel.byText("正在保存到系统相册...".tr).byHidden(false)
         MosaicPhotoAlbumSaver.save(image) { [weak self] result in
             guard let self else { return }
             self.loadingLabel.byHidden(true)
             self.isExitAlertShowing = false
             switch result {
             case .success:
-                "已保存到系统相册".toast
+                "已保存到系统相册".tr.toast
                 self.leavePage()
             case .failure(let error):
                 "保存失败：\(error.localizedDescription)".toast
@@ -192,13 +193,13 @@ class MosaicBaseDemoVC: BaseVC {
         if previousInteractivePopEnabled == nil {
             previousInteractivePopEnabled = gesture.isEnabled
         }
-        gesture.isEnabled = false
+        gesture.byEnabled(false)
     }
 
     private func restoreInteractivePopGesture() {
         guard let gesture = navigationController?.interactivePopGestureRecognizer,
               let previousInteractivePopEnabled else { return }
-        gesture.isEnabled = previousInteractivePopEnabled
+        gesture.byEnabled(previousInteractivePopEnabled)
         self.previousInteractivePopEnabled = nil
     }
 }

@@ -32,7 +32,7 @@ final class TabBarDemoVC: BaseVC {
             .bySwipeEnabled(true)
             .byHorizontalOnly(true)                // ✅ 只允许横向
             .bySuppressChildVerticalScrolls(true)  // ✅（可选）禁子 VC 内纵向滚动
-            .byBarBackgroundColor(.secondarySystemBackground)
+            .byBarBackgroundColor(JobsCor.secondarySystemBackground)
             .byCustomBarHeight(nil)              // 默认：49 + 安全区
             .byBarBottomOffset(0)                // 贴底
             .byBarBackgroundImage(nil)
@@ -53,12 +53,12 @@ final class TabBarDemoVC: BaseVC {
             }.byDataSource(
                 buttons: [
                     /// 普通按钮@（无副标题、不配置事件、无富文本）
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
                         .byTitle("首页".tr, for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .semibold))
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
                         .byImage("house".sysImg, for: .normal)
                         .byImage("house.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
@@ -67,21 +67,21 @@ final class TabBarDemoVC: BaseVC {
                         .byCornerBadgeText("NEW".tr) { cfg in
                             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                                .byBackgroundColor(.systemRed)
-                                .byFont(.systemFont(ofSize: 11, weight: .bold))
-                                .byShadow(color: UIColor.black.withAlphaComponent(0.25),
+                                .byBackgroundColor(JobsCor.systemRed)
+                                .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
+                                .byShadow(color: JobsCor.black.withAlphaComponent(0.25),
                                           radius: 2,
                                           opacity: 0.6,
                                           offset: .init(width: 0, height: 1))
                         },
 
                     /// 普通按钮@（配置事件）
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
                         .byTitle("优惠".tr, for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
                         .byImage("tag".sysImg, for: .normal)
                         .byImage("tag.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
@@ -91,62 +91,62 @@ final class TabBarDemoVC: BaseVC {
                         /// 事件触发@点按
                         .onTap { [weak self] sender in
                             guard let self else { return }
-                            sender.isSelected.toggle()
+                            sender.byToggleSelected()
                             if sender.isSelected {
                                 sender.byCornerDot(diameter: 10, offset: .init(horizontal: -4, vertical: 4))
                             } else {
                                 sender.removeCornerBadge()
                             }
-                            "优惠@点按事件".toast
+                            "优惠@点按事件".tr.toast
                         }
                         /// 事件触发@长按
                         .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                              if gr.state == .began {
-                                 btn.alpha = 0.6
+                                 btn.byAlpha(0.6)
                                  print("长按开始 on \(btn)")
-                                 "优惠@长按事件".toast
+                                 "优惠@长按事件".tr.toast
                              } else if gr.state == .ended || gr.state == .cancelled {
-                                 btn.alpha = 1.0
+                                 btn.byAlpha(1.0)
                                  print("长按结束")
                              }
                          },
                     /// 普通按钮@（富文本）
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
                         .byRichTitle(JobsRichText.make([
-                            JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 10, weight: .semibold)).color(.systemRed),
-                            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 12)).color(.green)
+                            JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 10, weight: .semibold)).color(JobsCor.systemRed),
+                            JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.green)
                         ]))
                         .byRichSubTitle(JobsRichText.make([
-                            JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 10)).color(.blue.withAlphaComponent(0.8)),
-                            JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
+                            JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 10)).color(JobsCor.blue.withAlphaComponent(0.8)),
+                            JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
                         ]))
                         .byImage("creditcard".sysImg, for: .normal)
                         .byImage("creditcard.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
 
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
-                        .byTitle("好友", for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
+                        .byTitle("好友".tr, for: .normal)
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
                         .byImage("person.2".sysImg, for: .normal)
                         .byImage("person.2.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
 
                     /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsSwiftTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
-                    UIButton(type: .system)
-                        .byTitle("活动", for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
-                        .bySubTitle("倒计时", for: .normal)
-                        .bySubTitleColor(.label, for: .normal)
-                        .bySubTitleColor(.systemRed, for: .selected)
-                        .bySubTitleFont(.systemFont(ofSize: 12, weight: .medium))
+                    UIButton.sys()
+                        .byTitle("活动".tr, for: .normal)
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+                        .bySubTitle("倒计时".tr, for: .normal)
+                        .bySubTitleColor(JobsCor.label, for: .normal)
+                        .bySubTitleColor(JobsCor.systemRed, for: .selected)
+                        .bySubTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
                         .byImage("sparkles".sysImg, for: .normal)
                         .byImage("sparkles".sysImg, for: .selected)
                         .byImagePlacement(.top)
@@ -165,28 +165,28 @@ final class TabBarDemoVC: BaseVC {
                             }
                         },
 
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
-                        .byTitle("客服", for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
+                        .byTitle("客服".tr, for: .normal)
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
                         .byImage("message".sysImg, for: .normal)
                         .byImage("message.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
 
                     /// 普通按钮@（展示副标题）
-                    UIButton(type: .system)
-                        .byNormalBgColor(.clear)
-                        .byTitle("我的", for: .normal)
-                        .byTitleColor(.label, for: .normal)
-                        .byTitleColor(.systemRed, for: .selected)
-                        .byTitleFont(.systemFont(ofSize: 12, weight: .semibold))
-                        .bySubTitle("未登录", for: .normal)
-                        .bySubTitleColor(.label, for: .normal)
-                        .bySubTitleColor(.systemRed, for: .selected)
-                        .bySubTitleFont(.systemFont(ofSize: 10, weight: .semibold))
+                    UIButton.sys()
+                        .byNormalBgColor(JobsCor.clear)
+                        .byTitle("我的".tr, for: .normal)
+                        .byTitleColor(JobsCor.label, for: .normal)
+                        .byTitleColor(JobsCor.systemRed, for: .selected)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
+                        .bySubTitle("未登录".tr, for: .normal)
+                        .bySubTitleColor(JobsCor.label, for: .normal)
+                        .bySubTitleColor(JobsCor.systemRed, for: .selected)
+                        .bySubTitleFont(JobsFont.systemFont(ofSize: 10, weight: .semibold))
                         .byImage("person.crop.circle".sysImg, for: .normal)
                         .byImage("person.crop.circle.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
@@ -206,11 +206,11 @@ final class TabBarDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "JobsTabBarCtrl@横滑 Demo（>5 个按钮）")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "JobsTabBarCtrl@横滑 Demo（>5 个按钮）".tr)
 
         addChild(tabCtrl)
-        view.addSubview(tabCtrl.view)
+        tabCtrl.view.byAddTo(view)
         tabCtrl.view.snp.makeConstraints { $0.edges.equalToSuperview() }
         tabCtrl.didMove(toParent: self)
     }

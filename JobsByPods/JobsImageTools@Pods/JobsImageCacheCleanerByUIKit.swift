@@ -11,6 +11,9 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
+
 public var _jobsCfgBgImageKey: UInt8 = 0
 private var _jobsBGURLKey:   UInt8 = 0   // URL?
 private var _jobsBGStateKey: UInt8 = 0   // UIControl.State.RawValue
@@ -65,7 +68,7 @@ public extension UIButton {
             var bg  = cfg.background
             bg.image = image
             if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
-            bg.backgroundColor = .clear
+            bg.byBackgroundColor(JobsCor.clear)
             cfg.background = bg
             self.configuration = cfg
 

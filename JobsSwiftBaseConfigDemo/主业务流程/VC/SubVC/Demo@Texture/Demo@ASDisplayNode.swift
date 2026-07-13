@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftBlock
 import AsyncDisplayKit
 import SnapKit
@@ -27,7 +28,7 @@ final class CardNode: ASDisplayNode {
     // 背景卡片
     private let backgroundNode: ASDisplayNode = {
         let n = ASDisplayNode()
-        n.backgroundColor = .secondarySystemBackground
+        n.backgroundColor = JobsCor.secondarySystemBackground
         n.cornerRadius = 12
         n.clipsToBounds = true
         return n
@@ -44,13 +45,13 @@ final class CardNode: ASDisplayNode {
 
         titleNode.attributedText = NSAttributedString(
             string: item.title,
-            attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .semibold),
-                         .foregroundColor: UIColor.label]
+            attributes: [.font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
+                         .foregroundColor: JobsCor.label]
         )
         subtitleNode.attributedText = NSAttributedString(
             string: item.subtitle,
-            attributes: [.font: UIFont.systemFont(ofSize: 13),
-                         .foregroundColor: UIColor.secondaryLabel]
+            attributes: [.font: JobsFont.systemFont(ofSize: 13),
+                         .foregroundColor: JobsCor.secondaryLabel]
         )
 
         switch item.kind {
@@ -58,8 +59,8 @@ final class CardNode: ASDisplayNode {
             let text = ASTextNode()
             text.attributedText = NSAttributedString(
                 string: "ASTextNode：字体/颜色/多行…（对应 CKLabelComponent）。",
-                attributes: [.font: UIFont.systemFont(ofSize: 14),
-                             .foregroundColor: UIColor.label]
+                attributes: [.font: JobsFont.systemFont(ofSize: 14),
+                             .foregroundColor: JobsCor.label]
             )
             contentNode = text
 
@@ -74,7 +75,7 @@ final class CardNode: ASDisplayNode {
 
         case .button:
             let btn = ASButtonNode()
-            btn.setTitle("Tap Me", with: .systemFont(ofSize: 15, weight: .medium), with: theme, for: .normal)
+            btn.setTitle("Tap Me", with: JobsFont.systemFont(ofSize: 15, weight: .medium), with: theme, for: .normal)
             btn.contentEdgeInsets = UIEdgeInsets(top: 8, left: 14, bottom: 8, right: 14)
             btn.backgroundColor = theme.withAlphaComponent(0.12)
             btn.cornerRadius = 8
@@ -101,7 +102,7 @@ final class CardNode: ASDisplayNode {
 
         case .flexColumn:
             let t1 = textNode("1️⃣ 上")
-            let t2 = textNode("2️⃣ 中", color: .secondaryLabel)
+            let t2 = textNode("2️⃣ 中", color: JobsCor.secondaryLabel)
             let t3 = textNode("3️⃣ 下", color: theme)
             contentNode = ASDisplayNode()
             addSubnode(t1); addSubnode(t2); addSubnode(t3)
@@ -124,9 +125,9 @@ final class CardNode: ASDisplayNode {
             baseImage.clipsToBounds = true
 
             let bg = ASDisplayNode()
-            bg.backgroundColor = .tertiarySystemFill
+            bg.backgroundColor = JobsCor.tertiarySystemFill
 
-            let overlay = textNode("Overlay", font: .systemFont(ofSize: 12, weight: .semibold), color: theme)
+            let overlay = textNode("Overlay", font: JobsFont.systemFont(ofSize: 12, weight: .semibold), color: theme)
 
             // 直接作为内容树子节点，布局时组合 Background+Overlay
             addSubnode(baseImage)
@@ -141,7 +142,7 @@ final class CardNode: ASDisplayNode {
             }
 
         case .center:
-            let inner = textNode("居中", font: .systemFont(ofSize: 14, weight: .medium), color: theme)
+            let inner = textNode("居中", font: JobsFont.systemFont(ofSize: 14, weight: .medium), color: theme)
             addSubnode(inner)
             contentNode = ASDisplayNode()
             self._customContentLayout = { [weak inner] in
@@ -168,7 +169,7 @@ final class CardNode: ASDisplayNode {
             bottom.cornerRadius = 6
             bottom.clipsToBounds = true
 
-            let top = textNode("Top", font: .systemFont(ofSize: 12), color: .white)
+            let top = textNode("Top", font: JobsFont.systemFont(ofSize: 12), color: JobsCor.white)
             addSubnode(bottom); addSubnode(top)
             contentNode = ASDisplayNode()
             self._customContentLayout = { [weak bottom, weak top] in
@@ -184,8 +185,8 @@ final class CardNode: ASDisplayNode {
     private var _customContentLayout: (() -> ASLayoutSpec)?
     // 小工具：文本节点
     private func textNode(_ s: String,
-                          font: UIFont = .systemFont(ofSize: 14),
-                          color: UIColor = .label) -> ASTextNode {
+                          font: UIFont = JobsFont.systemFont(ofSize: 14),
+                          color: UIColor = JobsCor.label) -> ASTextNode {
         let n = ASTextNode()
         n.attributedText = NSAttributedString(string: s, attributes: [.font: font, .foregroundColor: color])
         return n
@@ -217,7 +218,7 @@ final class KitchenSinkNode: ASScrollNode {
     private let theme: UIColor
     private var cardNodes: [CardNode] = []
 
-    init(items: [DemoItemStruct], theme: UIColor = .systemBlue) {
+    init(items: [DemoItemStruct], theme: UIColor = JobsCor.systemBlue) {
           self.items = items
           self.theme = theme
           super.init()

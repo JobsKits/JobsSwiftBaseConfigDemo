@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -27,19 +28,19 @@ final class LocalNotificationDemoVC: BaseVC {
     private lazy var btn: UIButton = {
         UIButton.sys()
             /// 背景色
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             /// 普通字符串@设置主标题
             .byTitle("点我".tr, for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             /// 普通字符串@设置副标题
             .bySubTitle("推送本地通知".tr, for: .normal)
-            .bySubTitleColor(.systemPink, for: .normal)
-            .bySubTitleFont(.systemFont(ofSize: 14, weight: .medium))
+            .bySubTitleColor(JobsCor.systemPink, for: .normal)
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             /// 普通@点按事件触发
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 JobsMakeLocalNotification().triggerLocalNotification(JobsLocalNotificationModel())
             }
             .byAddTo(view) { [unowned self] make in
@@ -50,7 +51,7 @@ final class LocalNotificationDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "推送本地通知")
+        jobsSetupGKNav(title: "推送本地通知".tr)
         btn.byVisible(true)
         
         NotificationCenter.default.rx

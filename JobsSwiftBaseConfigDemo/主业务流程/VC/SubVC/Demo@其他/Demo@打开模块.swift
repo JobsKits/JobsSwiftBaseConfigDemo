@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
@@ -21,11 +22,11 @@ import SnapKit
 final class JobsOpenDemoVC: BaseVC {
     // ================================== UI ==================================
     private lazy var btnOpenWeb: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("🌐 打开百度".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBlue)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(8)
             .onTap { _ in
                 "www.baidu.com".open()
@@ -33,11 +34,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnOpenChineseURL: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("🔍 打开含中文参数URL".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemGreen)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen)
             .byCornerRadius(8)
             .onTap { _ in
                 "https://example.com/search?q=中文 关键词".open()
@@ -45,11 +46,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnOpenScheme: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("💬 打开微信 Scheme".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemTeal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byCornerRadius(8)
             .onTap { _ in
                 "weixin://".open()
@@ -57,11 +58,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnCall: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("📞 拨打电话（tel://）".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemOrange)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange)
             .byCornerRadius(8)
             .onTap { _ in
                 "13434343434".call()
@@ -69,11 +70,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnCallPrompt: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("☎️ 拨打电话（telprompt://）".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemRed)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemRed)
             .byCornerRadius(8)
             .onTap { _ in
                 "13434343434".call(usePrompt: true)
@@ -81,11 +82,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
     // ========================== ✉️ 邮件相关 demo ==========================
     private lazy var btnMailSimple: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("✉️ 发邮件（最简单）".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemIndigo)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byCornerRadius(8)
             .onTap { _ in
                 "test@qq.com".mail()
@@ -93,11 +94,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnMailText: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("✉️ 发邮件（主题+正文）".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPurple)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple)
             .byCornerRadius(8)
             .onTap { _ in
                 "ops@company.com".mail(
@@ -108,11 +109,11 @@ final class JobsOpenDemoVC: BaseVC {
     }()
 
     private lazy var btnMailHTML: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("✉️ 群发/抄送（HTML）".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBrown)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBrown)
             .byCornerRadius(8)
             .onTap { _ in
                 "a@b.com,c@d.com".mail(
@@ -129,7 +130,7 @@ final class JobsOpenDemoVC: BaseVC {
     // ================================== 生命周期 ==================================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "🌐 Jobs Open/Call/Mail Demo")
 
         UIStackView(arrangedSubviews: [

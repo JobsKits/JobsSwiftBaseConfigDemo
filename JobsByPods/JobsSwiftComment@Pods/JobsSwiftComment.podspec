@@ -13,5 +13,7 @@ Pod::Spec.new do |spec|
   spec.source        = { :path => '.' }
   spec.source_files  = 'Core/**/*.swift'
   spec.frameworks    = ['UIKit']
+  spec.dependency 'JobsByUIKit'
+  spec.dependency 'JobsSwiftBaseDefines'
+  spec.dependency 'JobsSwiftDSL'
 end
-

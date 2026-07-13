@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
@@ -25,7 +26,7 @@ final class ToastDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Toast Demo"
         )
@@ -45,9 +46,9 @@ extension ToastDemoVC {
 
         @discardableResult
         func addButton(_ title: String, action: @escaping jobsByVoidBlock) -> UIButton {
-            let btn = UIButton(type: .system)
+            let btn = UIButton.sys()
                 .byTitle(title, for: .normal)
-                .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
                 .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
                 .onTap { _ in action() }
                 .byAddTo(view) { [unowned self] make in
@@ -65,27 +66,27 @@ extension ToastDemoVC {
 
         // 1) 默认：1s、底部偏移120
         addButton("默认 Toast（“谢谢光临”）") {
-            "谢谢光临".toast
+            "谢谢光临".tr.toast
         }
 
         // 2) 自定义时长/位置（链式 Config）
         addButton("时长2.5s / 底部偏移80") {
-            "操作成功".toast
+            "操作成功".tr.toast
         }
 
         // 3) 自定义样式：绿色背景 + 圆角12
         addButton("绿色圆角 Toast") {
-            "保存成功".toast
+            "保存成功".tr.toast
         }
 
         // 4) 可点击（按钮作为内容，tap 回调）
         addButton("可点击 Toast（撤销）") {
-            "点我撤销".toast
+            "点我撤销".tr.toast
         }
 
         // 5) 大内边距（更宽的背景气泡）
         addButton("大 padding Toast") {
-            "大 padding".toast
+            "大 padding".tr.toast
         }
 
         // 6) 手动提前关闭（先弹再 1s 后主动 dismiss）

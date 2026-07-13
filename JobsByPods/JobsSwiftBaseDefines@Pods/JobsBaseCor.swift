@@ -38,6 +38,36 @@ public enum JobsCor {
         };return UIColor(r: fallbackRGB.0, g: fallbackRGB.1, b: fallbackRGB.2, a: a)
     }
 }
+// MARK: - UIKit Base Palette
+public extension JobsCor {
+    static var clear: UIColor { UIColor.clear }
+    static var black: UIColor { UIColor.black }
+    static var white: UIColor { UIColor.white }
+    static var gray: UIColor { UIColor.gray }
+    static var darkGray: UIColor { UIColor.darkGray }
+    static var lightGray: UIColor { UIColor.lightGray }
+    static var red: UIColor { UIColor.red }
+    static var green: UIColor { UIColor.green }
+    static var blue: UIColor { UIColor.blue }
+    static var cyan: UIColor { UIColor.cyan }
+    static var yellow: UIColor { UIColor.yellow }
+    static var magenta: UIColor { UIColor.magenta }
+    static var orange: UIColor { UIColor.orange }
+    static var purple: UIColor { UIColor.purple }
+    static var brown: UIColor { UIColor.brown }
+}
+// MARK: - UIKit System Palette
+public extension JobsCor {
+    static var systemRed: UIColor { UIColor.systemRed }
+    static var systemBlue: UIColor { UIColor.systemBlue }
+    static var systemGreen: UIColor { UIColor.systemGreen }
+    static var systemOrange: UIColor { UIColor.systemOrange }
+    static var systemYellow: UIColor { UIColor.systemYellow }
+    static var systemPink: UIColor { UIColor.systemPink }
+    static var systemPurple: UIColor { UIColor.systemPurple }
+    static var systemTeal: UIColor { UIColor.systemTeal }
+    static var systemGray: UIColor { UIColor.systemGray }
+}
 // MARK: - iOS 13+ Grays
 public extension JobsCor {
     static var systemGray2: UIColor { dynamic13("systemGray2Color", fallbackRGB: (199, 199, 204)) }

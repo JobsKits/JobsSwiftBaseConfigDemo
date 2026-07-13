@@ -26,10 +26,10 @@ final class JobsNavigationDemoVC: BaseVC {
     // MARK: - 左侧：自定义返回按钮
     private lazy var backButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.clear, for: .normal)
+            .byBackgroundColor(JobsCor.clear, for: .normal)
             .byTitle("返回".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 12, weight: .bold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .bold))
             .byImage("chevron.backward".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 0, left: 10, bottom: 0, right: 10))
             .byTitleEdgeInsets(.init(top: 0, left: 4, bottom: 0, right: -4))
@@ -40,10 +40,10 @@ final class JobsNavigationDemoVC: BaseVC {
             }
             .onLongPress(minimumPressDuration: 0.6) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("返回按钮长按开始")
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("返回按钮长按结束")
                 }
             }
@@ -51,10 +51,10 @@ final class JobsNavigationDemoVC: BaseVC {
     // MARK: - 右侧：铃铛按钮（带红点 + NEW 角标）
     private lazy var bellButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.clear, for: .normal)
+            .byBackgroundColor(JobsCor.clear, for: .normal)
             .byTitle("铃".tr, for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 12, weight: .bold))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .bold))
             .byImage("bell".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 0, left: 10, bottom: 0, right: 10))
             .byTitleEdgeInsets(.init(top: 0, left: 4, bottom: 0, right: -4))
@@ -62,17 +62,17 @@ final class JobsNavigationDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 print("👉 点击了右侧『铃铛』按钮")
-                "点击了右侧『铃铛』按钮".toast
+                "点击了右侧『铃铛』按钮".tr.toast
             }
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("铃铛长按开始")
-                    "铃铛长按开始".toast
+                    "铃铛长按开始".tr.toast
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("铃铛长按结束")
-                    "铃铛长按结束".toast
+                    "铃铛长按结束".tr.toast
                 }
             }
     }()
@@ -83,38 +83,38 @@ final class JobsNavigationDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
+        view.byBackgroundColor(JobsCor.lightGray)
         // MARK: - 外观：背景图、底色、tintColor 等
         configureNavigationBarAppearance()
-        self.title = "系统导航栏 Demo" // 普通文本的优先级低于富文本。title的优先级低于navigationItem.titleView
+        self.title = "系统导航栏 Demo".tr // 普通文本的优先级低于富文本。title的优先级低于navigationItem.titleView
         // MARK: - 多语言国际化
 //        navigationItem.tr_setTitle("KEY".tr)          /// 主标题（中间大字）
 //        navigationItem.tr_setPrompt("KEY".tr)         /// 主标题上方的一行小字
 //        navigationItem.tr_setBackButtonTitle("KEY".tr)/// 返回按钮文字
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+//        navigationItem.rightBarButtonItem = UIBarButtonItem.make(title: nil)
 //        navigationItem.rightBarButtonItem?.tr_setTitle("KEY".tr)
         // MARK: - 标题：富文本（JobsRichRun）
         navigationItem.titleView = UILabel()
             .byTextAlignment(.center)
-            .byBgCor(.clear)
+            .byBgCor(JobsCor.clear)
             .byNumberOfLines(1)
             .richTextBy([
                 JobsRichRun(.text("合理".tr))
-                    .font(.systemFont(ofSize: 12, weight: .regular))
-                    .color(.systemBlue),
+                    .font(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                    .color(JobsCor.systemBlue),
                 JobsRichRun(.text("的".tr))
-                    .font(.systemFont(ofSize: 13, weight: .semibold))
-                    .color(.white),
+                    .font(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+                    .color(JobsCor.white),
                 JobsRichRun(.text("语法糖".tr))
-                    .font(.systemFont(ofSize: 14, weight: .ultraLight))
-                    .color(.red)
+                    .font(JobsFont.systemFont(ofSize: 14, weight: .ultraLight))
+                    .color(JobsCor.red)
             ], paragraphStyle: jobsMakeParagraphStyle {
                 $0.alignment = .center
                 $0.lineSpacing = 0
         }).bySizeToFit()
         navigationItem.hidesBackButton = true
         // MARK: - 左边：按钮 DSL 嵌进导航栏
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem.make(customView: backButton)
         // 如果有需求，也可以：
         // navigationController?.interactivePopGestureRecognizer?.delegate = self
         // MARK: - 右边：一个系统 hi + 一个按钮 DSL 铃铛
@@ -126,15 +126,15 @@ final class JobsNavigationDemoVC: BaseVC {
                     print("👉 点击了右侧『hi』按钮")
                     "点击了右侧\(item.title!)按钮".toast
                 },
-            UIBarButtonItem(customView: bellButton)]
+            UIBarButtonItem.make(customView: bellButton)]
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         navigationController?.setNavigationBarHidden(false, animated: animated)
-        navigationController?.navigationBar.isHidden = false
-        UINavigationBar.appearance().isHidden = false
+        navigationController?.navigationBar.byHidden(false)
+        UINavigationBar.appearance().byHidden(false)
     }
     
     deinit {
@@ -146,22 +146,22 @@ extension JobsNavigationDemoVC {
     // MARK: - 导航栏外观
     private func configureNavigationBarAppearance() {
         guard let navBar = navigationController?.navigationBar else { return }
-        navBar.byTintColor(.black)
+        navBar.byTintColor(JobsCor.black)
         let bgImage = "导航栏背景图".img
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
                 .byLargeTitleAttributes([
-                    .foregroundColor: UIColor.cyan,
-                    .font: UIFont.boldSystemFont(ofSize: 30)
+                    .foregroundColor: JobsCor.cyan,
+                    .font: JobsFont.boldSystemFont(ofSize: 30)
                 ])
                 .byTitleAttributes([
-                    .foregroundColor: UIColor.red,
-                    .font: UIFont.boldSystemFont(ofSize: 18)
+                    .foregroundColor: JobsCor.red,
+                    .font: JobsFont.boldSystemFont(ofSize: 18)
                 ])
                 .byOpaqueBackground()
                 .byBackgroundImage(bgImage)
-                .byBackgroundColor(.yellow)
-                .byShadowColor(.clear)
+                .byBackgroundColor(JobsCor.yellow)
+                .byShadowColor(JobsCor.clear)
 
             navBar
                 .byStandardAppearance(appearance)
@@ -174,12 +174,12 @@ extension JobsNavigationDemoVC {
         } else {
             navBar
                 .byBackgroundImage(bgImage, for: .default)
-                .byBarTintColor(.yellow)
+                .byBarTintColor(JobsCor.yellow)
                 .byTranslucent(NO)
-                .byShadowImage(UIImage())
+                .byShadowImage(.make())
                 .byTitleTextAttributes([
-                    .foregroundColor: UIColor.red,
-                    .font: UIFont.boldSystemFont(ofSize: 18)
+                    .foregroundColor: JobsCor.red,
+                    .font: JobsFont.boldSystemFont(ofSize: 18)
                 ])
         }
     }

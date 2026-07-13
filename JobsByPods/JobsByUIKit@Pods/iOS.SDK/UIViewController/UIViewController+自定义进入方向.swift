@@ -9,6 +9,7 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+import JobsViewPush
 #endif
 
 import JobsSwiftBlock

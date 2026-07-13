@@ -530,7 +530,7 @@ extension UITableView {
     }
     // MARK: - 隐藏分割线
     public func hiddenSeparator() {
-        tableFooterView = UIView().byBackgroundColor(UIColor.clear)
+        tableFooterView = UIView().byBackgroundColor(JobsCor.clear)
     }
     // MARK: - 设置整个区圆角
     public func sectionConner(cell: UITableViewCell,
@@ -559,7 +559,7 @@ extension UITableView {
         }
         cell.byBackgroundView(UIView(frame: bounds)
             .byInsertSublayer(CAShapeLayer().byPath(path.cgPath).byFillColor(bgColor), at: 0)
-            .byBackgroundColor(.clear))
+            .byBackgroundColor(JobsCor.clear))
     }
     /// 设置编辑状态（带动画）
     @discardableResult

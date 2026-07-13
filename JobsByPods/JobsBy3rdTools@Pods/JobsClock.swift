@@ -34,7 +34,7 @@ open class JobsClockView: UIView {
     /// 外圈表盘
     private lazy var dialLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label.withAlphaComponent(0.2))
             .byLineWidth(2)
             .byAddTo(layer)
@@ -42,7 +42,7 @@ open class JobsClockView: UIView {
     /// 12 个整点刻度
     private lazy var tickLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label)
             .byLineWidth(2)
             .byAddTo(layer)
@@ -51,7 +51,7 @@ open class JobsClockView: UIView {
     private lazy var centerDotLayer: CAShapeLayer = {
         CAShapeLayer()
             .byFillColor(JobsCor.label)
-            .byStrokeColor(.clear)
+            .byStrokeColor(JobsCor.clear)
             .byAddTo(layer)
     }()
     /// 1～12 的数字标签
@@ -68,21 +68,21 @@ open class JobsClockView: UIView {
     // MARK: - 指针层（懒加载）
     private lazy var hourHand: CALayer = {
         CALayer()
-            .byBackgroundColor(.black)
+            .byBackgroundColor(JobsCor.black)
             .byCornerRadius(3)
             .byAddTo(layer)
     }()
 
     private lazy var minuteHand: CALayer = {
         CALayer()
-            .byBackgroundColor(.darkGray)
+            .byBackgroundColor(JobsCor.darkGray)
             .byCornerRadius(2)
             .byAddTo(layer)
     }()
 
     private lazy var secondHand: CALayer = {
         CALayer()
-            .byBackgroundColor(.red)
+            .byBackgroundColor(JobsCor.red)
             .byCornerRadius(1)
             .byAddTo(layer)
     }()
@@ -108,7 +108,7 @@ open class JobsClockView: UIView {
 
 extension JobsClockView {
     private func commonInit() {
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         dialLayer.byHidden(NO)
         tickLayer.byHidden(NO)
         centerDotLayer.byHidden(NO)
@@ -128,11 +128,11 @@ extension JobsClockView {
             width: radius * 2,
             height: radius * 2
         )
-        let circlePath = UIBezierPath(ovalIn: circleRect)
+        let circlePath = UIBezierPath.make(ovalIn: circleRect)
         dialLayer.path = circlePath.cgPath
 
         // 12 个整点刻度
-        let tickPath = UIBezierPath()
+        let tickPath = UIBezierPath.make()
         let tickLen: CGFloat = 8
         for i in 0..<12 {
             // 0 对应 12 点，顺时针
@@ -145,8 +145,9 @@ extension JobsClockView {
                 x: center.x + cos(angle) * (radius - tickLen),
                 y: center.y + sin(angle) * (radius - tickLen)
             )
-            tickPath.move(to: inner)
-            tickPath.addLine(to: outer)
+            tickPath
+                .byMove(to: inner)
+                .byAddLine(to: outer)
         }
         tickLayer.path = tickPath.cgPath
         // 中心小圆点
@@ -157,7 +158,7 @@ extension JobsClockView {
             width: dotRadius * 2,
             height: dotRadius * 2
         )
-        let dotPath = UIBezierPath(ovalIn: dotRect)
+        let dotPath = UIBezierPath.make(ovalIn: dotRect)
         centerDotLayer.path = dotPath.cgPath
         // 1～12 数字布局
         let numberRadius = radius - 20
@@ -171,12 +172,12 @@ extension JobsClockView {
             )
 
             let labelSize = label.intrinsicContentSize
-            label.frame = CGRect(
+            label.byFrame(CGRect(
                 x: labelCenter.x - labelSize.width / 2,
                 y: labelCenter.y - labelSize.height / 2,
                 width: labelSize.width,
                 height: labelSize.height
-            )
+            ))
         }
     }
     /// 布局三根指针

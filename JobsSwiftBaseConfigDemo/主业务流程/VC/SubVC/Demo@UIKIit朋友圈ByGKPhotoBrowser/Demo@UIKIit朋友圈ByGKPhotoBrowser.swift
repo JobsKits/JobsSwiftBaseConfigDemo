@@ -38,7 +38,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
+                UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
@@ -99,7 +99,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "朋友圈")
+        jobsSetupGKNav(title: "朋友圈".tr)
         tableView.byVisible(YES)
         posts = MomentPost.makeSample(rows: rows)
         heightCache.removeAll()
@@ -181,7 +181,7 @@ extension GKPhotoBrowserByUIKitDemoVC: UITableViewDataSource, UITableViewDelegat
             // ✅ 自动高度模式：同一帧合并一次 batchUpdates，抑制跳动
             .byOnNeedHeightUpdate({ [weak tableView] cell in
                 guard let tableView else { return }
-                UIView.performWithoutAnimation {
+                UIView.jobsPerformWithoutAnimation {
                     tableView.performBatchUpdates(nil)
                 }
             })

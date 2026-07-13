@@ -5,7 +5,16 @@
 //  Created by Jobs on 2026年5月13日，星期三.
 //
 
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
 import Foundation
+import JobsByUIKit
+import JobsSwiftDSL
+import JobsSwiftBaseDefines
 
 // MARK: - 红包雨配置
 public struct RedPacketRainConfig {
@@ -57,13 +66,13 @@ public func makeDefaultIconImage() -> UIImage? {
     defer { UIGraphicsEndImageContext() }
 
     let rect = CGRect(origin: .zero, size: size)
-    let path = UIBezierPath(ovalIn: rect)
-    UIColor.red.setFill()
-    path.fill()
+    let path = UIBezierPath.make(ovalIn: rect)
+    JobsCor.red.setFill()
+    path.byFill()
 
     let attr: [NSAttributedString.Key: Any] = [
-        .font: UIFont.boldSystemFont(ofSize: 16),
-        .foregroundColor: UIColor.yellow
+        .font: JobsFont.boldSystemFont(ofSize: 16),
+        .foregroundColor: JobsCor.yellow
     ]
     let text = "$" as NSString
     let textSize = text.size(withAttributes: attr)

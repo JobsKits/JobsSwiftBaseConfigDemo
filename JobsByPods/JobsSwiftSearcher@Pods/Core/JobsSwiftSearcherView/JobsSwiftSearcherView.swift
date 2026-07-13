@@ -7,13 +7,18 @@
 
 import UIKit
 
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsSwiftDSL
+import Jobsl10n
+
 public final class JobsSwiftSearcherView: UIView {
     public private(set) var textField = UITextField()
     public private(set) var config: JobsSwiftSearcherConfig
     public private(set) var historySearches: [String] = []
 
     private let searchContainerView = UIView()
-    private let searchButton = UIButton(type: .system)
+    private let searchButton = UIButton.sys()
     private let recommendSectionView = UIView()
     private let recommendTitleLabel = UILabel()
     private let recommendTagContainerView = UIView()
@@ -111,11 +116,11 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
         let reuseIdentifier = "JobsSwiftSearcherHistoryCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
             UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-        cell.textLabel?.text = historySearches[indexPath.row]
-        cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        cell.textLabel?.textColor = UIColor(red: 0.24, green: 0.29, blue: 0.35, alpha: 1)
+        cell.textLabel?.byText(historySearches[indexPath.row])
+        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+        cell.textLabel?.byTextColor(UIColor(r: 0.24 * 255, g: 0.29 * 255, b: 0.35 * 255))
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = .clear
+        cell.byBackgroundColor(JobsCor.clear)
         return cell
     }
 
@@ -134,30 +139,31 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 
     public func tableView(_ tableView: UITableView,
                           titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        "删除"
+        "删除".tr
     }
 
     public func tableView(_ tableView: UITableView,
                           viewForHeaderInSection section: Int) -> UIView? {
         guard !historySearches.isEmpty else { return nil }
         let headerView = UIView()
-        headerView.backgroundColor = backgroundColor
+            .byBackgroundColor(backgroundColor)
 
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = config.historyTitle
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
-        label.textColor = UIColor(red: 0.30, green: 0.35, blue: 0.42, alpha: 1)
+            .byText(config.historyTitle)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
 
-        let clearButton = UIButton(type: .system)
-        clearButton.translatesAutoresizingMaskIntoConstraints = false
-        clearButton.setTitle("清空", for: .normal)
-        clearButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
-        clearButton.setTitleColor(UIColor(red: 0.68, green: 0.30, blue: 0.26, alpha: 1), for: .normal)
-        clearButton.addTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
+        let clearButton = UIButton.sys()
+            .tr_setTitle("清空".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byTitleColor(UIColor(r: 0.68 * 255, g: 0.30 * 255, b: 0.26 * 255))
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
+            .byAddTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
 
-        headerView.addSubview(label)
-        headerView.addSubview(clearButton)
+        headerView
+            .byAddSubviewRetSuper(label)
+            .byAddSubviewRetSuper(clearButton)
         NSLayoutConstraint.activate([
             label.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 16),
             label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
@@ -205,60 +211,63 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 private extension JobsSwiftSearcherView {
 
     func setupViews() {
-        backgroundColor = UIColor(red: 0.96, green: 0.97, blue: 0.99, alpha: 1)
+        self.byBackgroundColor(UIColor(r: 0.96 * 255, g: 0.97 * 255, b: 0.99 * 255))
 
-        searchContainerView.translatesAutoresizingMaskIntoConstraints = false
-        searchContainerView.backgroundColor = .white
-        searchContainerView.layer.cornerRadius = 16
-        searchContainerView.layer.borderWidth = 0.5
-        searchContainerView.layer.borderColor = UIColor(red: 0.93, green: 0.88, blue: 0.79, alpha: 1).cgColor
+        searchContainerView.byTranslatesAutoresizingMaskIntoConstraints(false)
+        searchContainerView.byBackgroundColor(JobsCor.white)
+        searchContainerView.byCornerRadius(16)
+        searchContainerView.byBorderWidth(0.5)
+        searchContainerView.byBorderColor(UIColor(r: 0.93 * 255, g: 0.88 * 255, b: 0.79 * 255))
 
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.delegate = self
-        textField.clearButtonMode = .whileEditing
-        textField.returnKeyType = .search
-        textField.font = .systemFont(ofSize: 15, weight: .regular)
-        textField.textColor = UIColor(red: 0.24, green: 0.29, blue: 0.35, alpha: 1)
-        textField.leftView = searchIconLeftView()
-        textField.leftViewMode = .always
-        textField.addTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
+        textField
+            .byDelegate(self)
+            .byClearButtonMode(.whileEditing)
+            .byReturnKeyType(.search)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTextColor(UIColor(r: 0.24 * 255, g: 0.29 * 255, b: 0.35 * 255))
+            .byLeftView(searchIconLeftView())
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
+            .byAddTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
 
-        searchButton.translatesAutoresizingMaskIntoConstraints = false
-        searchButton.setTitleColor(.white, for: .normal)
-        searchButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
-        searchButton.backgroundColor = UIColor(red: 0.68, green: 0.51, blue: 0.19, alpha: 1)
-        searchButton.layer.cornerRadius = 16
-        searchButton.layer.masksToBounds = true
-        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
+        searchButton
+            .byTitleColor(JobsCor.white)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byBackgroundColor(UIColor(r: 0.68 * 255, g: 0.51 * 255, b: 0.19 * 255))
+            .byCornerRadius(16)
+            .byMasksToBounds(true)
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
+            .byAddTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
 
-        recommendSectionView.translatesAutoresizingMaskIntoConstraints = false
-        recommendTitleLabel.font = .systemFont(ofSize: 14, weight: .semibold)
-        recommendTitleLabel.textColor = UIColor(red: 0.30, green: 0.35, blue: 0.42, alpha: 1)
-        recommendTitleLabel.translatesAutoresizingMaskIntoConstraints = true
+        recommendSectionView.byTranslatesAutoresizingMaskIntoConstraints(false)
+        recommendTitleLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+        recommendTitleLabel.byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
+        recommendTitleLabel.byTranslatesAutoresizingMaskIntoConstraints(true)
 
-        recommendTagContainerView.translatesAutoresizingMaskIntoConstraints = true
+        recommendTagContainerView.byTranslatesAutoresizingMaskIntoConstraints(true)
 
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
+        tableView.byTranslatesAutoresizingMaskIntoConstraints(false)
+        tableView
+            .byDelegate(self)
+            .byDataSource(self)
         tableView.separatorStyle = .singleLine
-        tableView.backgroundColor = .clear
+        tableView.byBackgroundColor(JobsCor.clear)
         tableView.keyboardDismissMode = .onDrag
         tableView.tableFooterView = UIView(frame: .zero)
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
 
-        addSubview(searchContainerView)
-        searchContainerView.addSubview(textField)
-        addSubview(searchButton)
-        addSubview(recommendSectionView)
-        recommendSectionView.addSubview(recommendTitleLabel)
-        recommendSectionView.addSubview(recommendTagContainerView)
-        addSubview(tableView)
+        searchContainerView.byAddTo(self)
+        textField.byAddTo(searchContainerView)
+        searchButton.byAddTo(self)
+        recommendSectionView.byAddTo(self)
+        recommendTitleLabel.byAddTo(recommendSectionView)
+        recommendTagContainerView.byAddTo(recommendSectionView)
+        tableView.byAddTo(self)
 
-        blankTapGestureRecognizer.addTarget(self, action: #selector(blankTapped))
-        blankTapGestureRecognizer.delegate = self
+        blankTapGestureRecognizer
+            .byTarget(self, action: #selector(blankTapped))
+            .byDelegate(self)
         addGestureRecognizer(blankTapGestureRecognizer)
 
         setupConstraints()
@@ -295,30 +304,30 @@ private extension JobsSwiftSearcherView {
     }
 
     func updateByConfig() {
-        textField.placeholder = config.placeholder
-        searchButton.setTitle(config.searchButtonTitle, for: .normal)
-        recommendTitleLabel.text = config.recommendTitle
+        textField.byPlaceholder(config.placeholder)
+        searchButton.byTitle(config.searchButtonTitle)
+        recommendTitleLabel.byText(config.recommendTitle)
         updateSearchButtonVisible(textField.isFirstResponder)
         updateSearchButtonEnabled(by: textField.text)
         rebuildRecommendTagButtons()
-        setNeedsLayout()
-        tableView.reloadData()
+        bySetNeedsLayout()
+        tableView.byReloadData()
     }
 
     func updateSearchButtonVisible(_ visible: Bool) {
         searchButtonLeftConstraint?.constant = visible ? 8 : 0
         searchButtonWidthConstraint?.constant = visible ? 56 : 0
-        searchButton.alpha = visible ? 1 : 0
+        searchButton.byAlpha(visible ? 1 : 0)
         searchButton.isUserInteractionEnabled = visible
-        UIView.animate(withDuration: 0.22) {
+        UIView.jobsAnimate(0.22) {
             self.layoutIfNeeded()
         }
     }
 
     func updateSearchButtonEnabled(by text: String?) {
         let enabled = !normalizedText(by: text).isEmpty
-        searchButton.isEnabled = enabled
-        searchButton.alpha = enabled || textField.isFirstResponder ? 1 : 0.55
+        searchButton.byEnabled(enabled)
+        searchButton.byAlpha(enabled || textField.isFirstResponder ? 1 : 0.55)
     }
 
     func readHistorySearches() -> [String] {
@@ -351,27 +360,28 @@ private extension JobsSwiftSearcherView {
     func rebuildRecommendTagButtons() {
         recommendButtons.forEach { $0.removeFromSuperview() }
         recommendButtons = recommendSearches.enumerated().map { index, title in
-            let button = UIButton(type: .system)
-            button.tag = index
-            button.backgroundColor = recommendTagColor(at: index)
-            button.layer.cornerRadius = 6
-            button.layer.masksToBounds = true
-            button.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
-            button.titleLabel?.adjustsFontSizeToFitWidth = true
-            button.titleLabel?.minimumScaleFactor = 0.72
-            button.setTitle(title, for: .normal)
-            button.setTitleColor(.white, for: .normal)
-            button.addTarget(self, action: #selector(recommendTagButtonTapped(_:)), for: .touchUpInside)
-            recommendTagContainerView.addSubview(button)
-            return button
+            UIButton.sys()
+                .byTag(index)
+                .byBackgroundColor(recommendTagColor(at: index))
+                .byCornerRadius(6)
+                .byMasksToBounds(true)
+                .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+                .byTitleAdjustsFontSizeToFitWidth(true)
+                .byTitleMinimumScaleFactor(0.72)
+                .byTitle(title)
+                .byTitleColor(JobsCor.white)
+                .byAddTarget(self,
+                             action: #selector(recommendTagButtonTapped(_:)),
+                             for: .touchUpInside)
+                .byAddTo(recommendTagContainerView)
         }
     }
 
     func layoutRecommendSection() {
         let hasRecommend = !recommendSearches.isEmpty
-        recommendSectionView.isHidden = !hasRecommend
-        recommendTitleLabel.isHidden = !hasRecommend
-        recommendTagContainerView.isHidden = !hasRecommend
+        recommendSectionView.byHidden(!hasRecommend)
+        recommendTitleLabel.byHidden(!hasRecommend)
+        recommendTagContainerView.byHidden(!hasRecommend)
         guard hasRecommend else {
             recommendSectionHeightConstraint?.constant = 0
             return
@@ -386,40 +396,40 @@ private extension JobsSwiftSearcherView {
         let verticalSpace: CGFloat = 8
         var x: CGFloat = 16
         var y: CGFloat = 0
-        recommendTitleLabel.frame = CGRect(x: 16, y: 0, width: contentWidth, height: titleHeight)
-        recommendTagContainerView.frame = CGRect(x: 0, y: tagTop, width: sectionWidth, height: 0)
+        recommendTitleLabel.byFrame(CGRect(x: 16, y: 0, width: contentWidth, height: titleHeight))
+        recommendTagContainerView.byFrame(CGRect(x: 0, y: tagTop, width: sectionWidth, height: 0))
         for button in recommendButtons {
             let title = button.title(for: .normal) ?? ""
-            let width = min(ceil((title as NSString).size(withAttributes: [.font: button.titleLabel?.font ?? .systemFont(ofSize: 13)]).width) + 26, contentWidth)
+            let width = min(ceil((title as NSString).size(withAttributes: [.font: button.titleLabel?.font ?? JobsFont.systemFont(ofSize: 13)]).width) + 26, contentWidth)
             if x > 16, x + width > sectionWidth - 16 {
                 x = 16
                 y += tagHeight + verticalSpace
             }
-            button.frame = CGRect(x: x, y: y, width: width, height: tagHeight)
+            button.byFrame(CGRect(x: x, y: y, width: width, height: tagHeight))
             x += width + horizontalSpace
         }
         let tagsHeight = recommendButtons.isEmpty ? 0 : y + tagHeight
-        recommendTagContainerView.frame = CGRect(x: 0, y: tagTop, width: sectionWidth, height: tagsHeight)
+        recommendTagContainerView.byFrame(CGRect(x: 0, y: tagTop, width: sectionWidth, height: tagsHeight))
         recommendSectionHeightConstraint?.constant = tagTop + tagsHeight + 10
     }
 
     func recommendTagColor(at index: Int) -> UIColor {
         let colors = [
-            UIColor(red: 0.18, green: 0.45, blue: 0.82, alpha: 1),
-            UIColor(red: 0.11, green: 0.58, blue: 0.36, alpha: 1),
-            UIColor(red: 0.84, green: 0.25, blue: 0.25, alpha: 1),
-            UIColor(red: 0.53, green: 0.31, blue: 0.78, alpha: 1),
-            UIColor(red: 0.90, green: 0.50, blue: 0.13, alpha: 1),
-            UIColor(red: 0.00, green: 0.52, blue: 0.57, alpha: 1),
-            UIColor(red: 0.23, green: 0.30, blue: 0.38, alpha: 1),
-            UIColor(red: 0.65, green: 0.24, blue: 0.49, alpha: 1)
+            UIColor(r: 0.18 * 255, g: 0.45 * 255, b: 0.82 * 255),
+            UIColor(r: 0.11 * 255, g: 0.58 * 255, b: 0.36 * 255),
+            UIColor(r: 0.84 * 255, g: 0.25 * 255, b: 0.25 * 255),
+            UIColor(r: 0.53 * 255, g: 0.31 * 255, b: 0.78 * 255),
+            UIColor(r: 0.90 * 255, g: 0.50 * 255, b: 0.13 * 255),
+            UIColor(r: 0.00 * 255, g: 0.52 * 255, b: 0.57 * 255),
+            UIColor(r: 0.23 * 255, g: 0.30 * 255, b: 0.38 * 255),
+            UIColor(r: 0.65 * 255, g: 0.24 * 255, b: 0.49 * 255)
         ];return colors[index % colors.count]
     }
 
     func submitSearch(_ text: String?) {
         let keyword = normalizedText(by: text)
         guard !keyword.isEmpty else { return }
-        textField.text = keyword
+        textField.byText(keyword)
         saveHistory(by: keyword)
         config.searchSubmittedBlock?(keyword)
         if config.dismissKeyboardWhenCancel {
@@ -428,9 +438,9 @@ private extension JobsSwiftSearcherView {
     }
 
     func searchIconLeftView() -> UIView {
-        let imageView = UIImageView(image: searchIconImage(with: UIColor(red: 0.55, green: 0.42, blue: 0.18, alpha: 1)))
-        imageView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        imageView.contentMode = .center
+        let imageView = UIImageView(image: searchIconImage(with: UIColor(r: 0.55 * 255, g: 0.42 * 255, b: 0.18 * 255)))
+        imageView.byFrame(CGRect(x: 0, y: 0, width: 24, height: 24))
+        imageView.byContentMode(.center)
         return imageView
     }
 
@@ -438,14 +448,15 @@ private extension JobsSwiftSearcherView {
         let size = CGSize(width: 16, height: 16)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setStroke()
-        let circlePath = UIBezierPath(ovalIn: CGRect(x: 2.2, y: 2.2, width: 8.8, height: 8.8))
+        let circlePath = UIBezierPath.make(ovalIn: CGRect(x: 2.2, y: 2.2, width: 8.8, height: 8.8))
         circlePath.lineWidth = 1.6
         circlePath.stroke()
-        let handlePath = UIBezierPath()
+        let handlePath = UIBezierPath.make()
         handlePath.lineWidth = 1.8
         handlePath.lineCapStyle = .round
-        handlePath.move(to: CGPoint(x: 9.4, y: 9.4))
-        handlePath.addLine(to: CGPoint(x: 13.4, y: 13.4))
+        handlePath
+            .byMove(to: CGPoint(x: 9.4, y: 9.4))
+            .byAddLine(to: CGPoint(x: 13.4, y: 13.4))
         handlePath.stroke()
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -465,7 +476,7 @@ private extension JobsSwiftSearcherView {
     @objc func recommendTagButtonTapped(_ sender: UIButton) {
         guard sender.tag >= 0, sender.tag < recommendSearches.count else { return }
         let text = recommendSearches[sender.tag]
-        textField.text = text
+        textField.byText(text)
         config.recommendSelectedBlock?(text)
         submitSearch(text)
     }
@@ -480,4 +491,3 @@ private extension JobsSwiftSearcherView {
         }
     }
 }
-

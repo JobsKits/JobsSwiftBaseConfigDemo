@@ -27,15 +27,18 @@ public struct JobsSwiftGraphicCaptchaConfig: Sendable {
     public var caseSensitive: Bool
     public var characterUnits: JobsSwiftGraphicCaptchaCharacterUnit
     public var customCharacters: [String]
+    public var mixedGroupCount: Int
 
     public init(length: Int = 4,
                 caseSensitive: Bool = true,
                 characterUnits: JobsSwiftGraphicCaptchaCharacterUnit = .default,
-                customCharacters: [String] = []) {
+                customCharacters: [String] = [],
+                mixedGroupCount: Int = 0) {
         self.length = length
         self.caseSensitive = caseSensitive
         self.characterUnits = characterUnits
         self.customCharacters = customCharacters
+        self.mixedGroupCount = mixedGroupCount
     }
 }
 
@@ -61,6 +64,24 @@ public extension JobsSwiftGraphicCaptchaConfig {
     }
 
     static var mixedConfig: Self {
-        Self(caseSensitive: true, characterUnits: [.number, .letter, .chinese])
+        fullMixedConfig
+    }
+
+    static var twoMixedConfig: Self {
+        Self(caseSensitive: true,
+             characterUnits: [.uppercaseLetter, .lowercaseLetter, .number, .chinese],
+             mixedGroupCount: 2)
+    }
+
+    static var threeMixedConfig: Self {
+        var config = twoMixedConfig
+        config.mixedGroupCount = 3
+        return config
+    }
+
+    static var fullMixedConfig: Self {
+        var config = twoMixedConfig
+        config.mixedGroupCount = 4
+        return config
     }
 }

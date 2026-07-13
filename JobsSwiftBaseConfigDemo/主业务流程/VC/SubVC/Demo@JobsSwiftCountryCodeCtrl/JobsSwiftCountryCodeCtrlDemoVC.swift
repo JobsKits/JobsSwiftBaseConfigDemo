@@ -26,8 +26,8 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
         UITextField()
             .byText("")
             .byPlaceholder("请选择国家 / 地区代码".tr)
-            .byTextColor(.label)
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextAlignment(.center)
             .byBorderStyle(.roundedRect)
             .byUserInteractionEnabled(false)
@@ -39,11 +39,11 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     }()
 
     private lazy var selectButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("选择".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .regular))
-            .byBackgroundColor(.label)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byBackgroundColor(JobsCor.label)
             .byCornerRadius(6)
             .onTap { [weak self] _ in
                 self?.pushCountryCodeCtrl()
@@ -60,7 +60,7 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsSwiftCountryCodeCtrl".tr)
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         countryCodeTextField.byVisible(true)
         selectButton.byVisible(true)
     }
@@ -71,7 +71,7 @@ private extension JobsSwiftCountryCodeCtrlDemoVC {
     func pushCountryCodeCtrl() {
         let controller = JobsSwiftCountryCodeCtrl()
         controller.countryCodeHandler = { [weak self] countryName, code in
-            self?.countryCodeTextField.text = "\(countryName) +\(code)"
+            self?.countryCodeTextField.byText("\(countryName) +\(code)")
         }
         navigationController?.pushViewController(controller, animated: true)
     }

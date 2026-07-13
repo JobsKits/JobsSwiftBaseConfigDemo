@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
@@ -53,7 +54,7 @@ final class RichTextDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "富文本演示（Delegate & RAC & RightAligned）".tr)
         tableView.byAlpha(1)
     }
@@ -85,24 +86,24 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                 $0.lineSpacing = 2
             }
             cell.configure(
-                title: "右对齐示例（文本与附件均右对齐）",
+                title: "右对齐示例（文本与附件均右对齐）".tr,
                 runs: [
                     JobsRichRun(.text("右对齐：如需帮助请联系 "))
-                        .font(.systemFont(ofSize: 16))
-                        .color(.label),
+                        .font(JobsFont.systemFont(ofSize: 16))
+                        .color(JobsCor.label),
 
                     // 保留「专属客服」可点击（系统 link 样式）
                     JobsRichRun(.text(customerText))
-                        .font(.systemFont(ofSize: 16))
+                        .font(JobsFont.systemFont(ofSize: 16))
                         .link(customerURL),
 
                     JobsRichRun(.text("  ")), // 间隔
 
                     // 保留“电话”的自定义样式（红字+蓝线）
                     JobsRichRun(.text(phoneText))
-                        .font(.systemFont(ofSize: 16))
-                        .color(.red)
-                        .underline(.single, color: .blue)
+                        .font(JobsFont.systemFont(ofSize: 16))
+                        .color(JobsCor.red)
+                        .underline(.single, color: JobsCor.blue)
                 ],
                 paragraphStyle: rightPS,
                 phoneText: phoneText,
@@ -116,8 +117,8 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                         CGSize(width: 16, height: 16)
                     )),
                     JobsRichRun(.text("  右侧说明文本"))
-                        .font(.systemFont(ofSize: 15))
-                        .color(.secondaryLabel)
+                        .font(JobsFont.systemFont(ofSize: 15))
+                        .color(JobsCor.secondaryLabel)
                 ],
                 attachmentParagraphStyle: rightAttachmentPS,
                 mode: mode,
@@ -131,19 +132,19 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                 : "RAC 方案（专属客服默认样式 + 电话红字蓝线）",
                 runs: [
                     JobsRichRun(.text("如需帮助，请联系 "))
-                        .font(.systemFont(ofSize: 16))
-                        .color(.label),
+                        .font(JobsFont.systemFont(ofSize: 16))
+                        .color(JobsCor.label),
 
                     JobsRichRun(.text(customerText))        // 系统默认蓝色
-                        .font(.systemFont(ofSize: 16))
+                        .font(JobsFont.systemFont(ofSize: 16))
                         .link(customerURL),
 
                     JobsRichRun(.text(" ")),                // 空格分隔
 
                     JobsRichRun(.text(phoneText))           // 红字 + 蓝线（自定义动作，非系统 link）
-                        .font(.systemFont(ofSize: 16))
-                        .color(.red)
-                        .underline(.single, color: .blue)
+                        .font(JobsFont.systemFont(ofSize: 16))
+                        .color(JobsCor.red)
+                        .underline(.single, color: JobsCor.blue)
                 ],
                 paragraphStyle: jobsMakeParagraphStyle { $0.alignment = .center; $0.lineSpacing = 4 },
                 // “电话”的自定义点击与样式将在 cell 内补充（.jobsAction）
@@ -154,8 +155,8 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                     JobsRichRun(.attachment(NSTextAttachment().byImage(UIImage(systemName: "paperclip", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .medium))!),
                                             CGSize(width: 16, height: 16))),
                     JobsRichRun(.text("  附件说明"))
-                        .font(.systemFont(ofSize: 15))
-                        .color(.secondaryLabel)
+                        .font(JobsFont.systemFont(ofSize: 15))
+                        .color(JobsCor.secondaryLabel)
                 ],
                 attachmentParagraphStyle: jobsMakeParagraphStyle { $0.alignment = .center; $0.lineSpacing = 2 },
                 mode: mode,
@@ -189,16 +190,16 @@ extension RichTextDemoVC: UITextViewDelegate {
     private func handleURL(_ url: URL, source: String) {
         if url.scheme == "click", url.host == "customer" {
             let ac = UIAlertController(title: "\(source) 点击",
-                                       message: "点了：专属客服",
+                                       message: "点了：专属客服".tr,
                                        preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定", style: .default))
+            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
             present(ac, animated: true)
         } else if url.scheme == "tel" || url.scheme == "telprompt" {
             #if targetEnvironment(simulator)
-            let ac = UIAlertController(title: "提示",
+            let ac = UIAlertController(title: "提示".tr,
                                        message: "模拟器不支持拨号：\(url.absoluteString)",
                                        preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定", style: .default))
+            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
             present(ac, animated: true)
             #else
             UIApplication.shared.open(url, options: [:], completionHandler: nil)

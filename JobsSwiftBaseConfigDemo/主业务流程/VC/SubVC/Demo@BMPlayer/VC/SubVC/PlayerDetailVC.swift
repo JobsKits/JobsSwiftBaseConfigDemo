@@ -64,8 +64,8 @@ final class PlayerDetailVC: BaseVC {
         UILabel()
             .byNumberOfLines(0)
             .byText(item.content.isEmpty ? " " : item.content)
-            .byTextColor(.label)
-            .byFont(.preferredFont(forTextStyle: .body))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.preferredFont(forTextStyle: .body))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.player.snp.bottom).offset(12)
                 make.leading.trailing.equalToSuperview().inset(12)
@@ -75,7 +75,7 @@ final class PlayerDetailVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: JobsText(item.nickname))
         player.byVisible(YES)
         contentLabel.byVisible(YES)

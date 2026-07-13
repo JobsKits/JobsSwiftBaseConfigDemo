@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import AVFoundation
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import SnapKit
@@ -40,7 +41,7 @@ open class PlayerControlsView: UIView {
         let v = UIButton.sys()
             .byImage("play.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.zero)
-            .byTintColor(.white)
+            .byTintColor(JobsCor.white)
             .onTap { [weak self] _ in
                 self?.delegate?.didTapPlayPause()
             }
@@ -55,9 +56,9 @@ open class PlayerControlsView: UIView {
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0)
-            .byThumbTintColor(.white)
-            .byMinimumTrackTintColor(.white)
-            .byMaximumTrackTintColor(UIColor.white.withAlphaComponent(0.3))
+            .byThumbTintColor(JobsCor.white)
+            .byMinimumTrackTintColor(JobsCor.white)
+            .byMaximumTrackTintColor(JobsCor.white.withAlphaComponent(0.3))
             // 拖动中：只更新 UI 显示，不真正 seek
             .onJobsChange { [weak self] (s: UISlider) in
                 guard let self, self.isUserDragging else { return }
@@ -87,7 +88,7 @@ open class PlayerControlsView: UIView {
     private lazy var currentTimeLabel: UILabel = {
         UILabel()
             .byText("00:00")
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
             .byTextAlignment(.center)
             .byHugging(.required)
@@ -97,7 +98,7 @@ open class PlayerControlsView: UIView {
     private lazy var durationLabel: UILabel = {
         UILabel()
             .byText("00:00")
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
             .byTextAlignment(.center)
             .byHugging(.required)
@@ -127,9 +128,9 @@ open class PlayerControlsView: UIView {
 
     // MARK: - Setup
     private func setupUI() {
-        backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        layer.cornerRadius = 8
-        layer.masksToBounds = true
+        self.byBackgroundColor(JobsCor.black.withAlphaComponent(0.7))
+        byCornerRadius(8)
+        byMasksToBounds(true)
 
         // 先把 arrangedSubviews 塞进去，避免懒加载循环引用
         _ = controlsStackView.byAddArrangedSubviews([playPauseButton, currentTimeLabel, progressSlider, durationLabel])
@@ -179,17 +180,17 @@ open class PlayerControlsView: UIView {
 
     public func show(animated: Bool = true) {
         if animated {
-            UIView.animate(withDuration: 0.3) { self.alpha = 1.0 }
+            UIView.animate(withDuration: 0.3) { self.byAlpha(1.0) }
         } else {
-            alpha = 1.0
+            self.byAlpha(1.0)
         }
     }
 
     public func hide(animated: Bool = true) {
         if animated {
-            UIView.animate(withDuration: 0.3) { self.alpha = 0.0 }
+            UIView.animate(withDuration: 0.3) { self.byAlpha(0.0) }
         } else {
-            alpha = 0.0
+            self.byAlpha(0.0)
         }
     }
 

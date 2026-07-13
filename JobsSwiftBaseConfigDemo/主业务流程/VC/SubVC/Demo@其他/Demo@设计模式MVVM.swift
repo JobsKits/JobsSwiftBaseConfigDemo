@@ -14,6 +14,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 
 // ========== Model ==========
@@ -81,9 +82,9 @@ final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Users (MVVM)"
-        view.backgroundColor = .systemBackground
-        tableView.dataSource = self; tableView.delegate = self
-        view.addSubview(tableView); tableView.frame = view.bounds
+        view.byBackgroundColor(JobsCor.systemBackground)
+        tableView.byDataSource(self).byDelegate(self)
+        tableView.byAddTo(view); tableView.byFrame(view.bounds)
 
         vm.onStateChange = { [weak self] state in
             guard let self else { return }
@@ -109,14 +110,14 @@ final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
         let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let u = data[ip.row]
-        c.textLabel?.text = u.name
-        c.detailTextLabel?.text = "ID: \(u.id)"
+        c.textLabel?.byText(u.name)
+        c.detailTextLabel?.byText("ID: \(u.id)")
         return c
     }
     func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
         let u = data[ip.row]
         let vc = UIViewController()
-        vc.view.backgroundColor = .systemBackground
+        vc.view.byBackgroundColor(JobsCor.systemBackground)
         vc.title = "Detail \(u.name)"
         navigationController?.pushViewController(vc, animated: true)
     }

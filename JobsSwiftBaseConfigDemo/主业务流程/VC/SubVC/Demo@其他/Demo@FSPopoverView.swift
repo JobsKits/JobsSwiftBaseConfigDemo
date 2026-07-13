@@ -32,12 +32,12 @@ final class FSPopoverDemoVC: BaseVC {
     // MARK: - UI（by-DSL + 约束在 byAddTo 内）
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             .byTitle("从按钮处弹出列表 ▶︎".tr, for: .normal)
             .byTitle("隐藏".tr, for: .selected)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleColor(.systemRed, for: .selected)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleColor(JobsCor.systemRed, for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byImage("list.bullet".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
@@ -57,10 +57,10 @@ final class FSPopoverDemoVC: BaseVC {
 
     private lazy var customButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo, for: .normal)
+            .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
             .byTitle("从右上角弹出【自定义内容】 ▶︎".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byImage("sparkles".sysImg, for: .normal)
             .byTitleEdgeInsets(.init(top: 0, left: 8, bottom: 0, right: -8))
             .onTap { [weak self] _ in
@@ -77,14 +77,14 @@ final class FSPopoverDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor("#4c4d4e".cor, for: .normal)
             .byTitle("测试 JobsDialogBox ▶︎".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.PingFangSC.Regular(12))
             .byImage("globe".sysImg, for: .normal)
             .byTitleEdgeInsets(.init(top: 0, left: 8, bottom: 0, right: -8))
             .onTap { [weak self] sender in
                 sender.byDialogBoxContent { dialogBoxView in
                     UITextView()
-                        .byBackgroundColor(.clear)
+                        .byBackgroundColor(JobsCor.clear)
                         .byText(
                             "1.电话、QQ、微信号、乱码、全数字皆、不雅字眼、辱骂 词汇带、负面情绪字眼、标点符号皆会审核失败"
                                 .add("\n")
@@ -92,8 +92,8 @@ final class FSPopoverDemoVC: BaseVC {
                                 .add("\n")
                                 .add("3. 昵称30日内仅能更改一次")
                         )
-                        .byTextColor(.white)
-                        .byFont(.systemFont(ofSize: 16))
+                        .byTextColor(JobsCor.white)
+                        .byFont(JobsFont.systemFont(ofSize: 16))
                         .byEditable(NO)
                         .byAddTo(dialogBoxView) { [unowned self] make in
                             make.edges.equalToSuperview()
@@ -118,7 +118,7 @@ final class FSPopoverDemoVC: BaseVC {
             /// 事件触发@点按
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 let listView = FSPopoverListView()
                 listView.items = makeDemoItems()
                 listView.present(fromView: btn)
@@ -127,7 +127,7 @@ final class FSPopoverDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Demo@FSPopoverView",
             rightButtons: [btn]
@@ -206,10 +206,10 @@ extension FSPopoverDemoVC: FSPopoverViewDataSource {
     }
     /// 内容
     func contentView(for popoverView: FSPopoverView) -> UIView? {
-        let container = UIView().byBackgroundColor(.clear)
+        let container = UIView().byBackgroundColor(JobsCor.clear)
         let title = UILabel()
-            .byText("这是自定义内容")
-            .byFont(.boldSystemFont(ofSize: 16))
+            .byText("这是自定义内容".tr)
+            .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextAlignment(.center)
             .byAddTo(container) { make in
                 make.top.equalToSuperview().offset(14)
@@ -217,9 +217,9 @@ extension FSPopoverDemoVC: FSPopoverViewDataSource {
             }
 
         UIButton.sys()
-            .byTitle("我知道了", for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("我知道了".tr, for: .normal)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .onTap { [weak self] _ in
                 // 自定义：点按钮关闭（库会处理 dismiss）
                 self?.dismiss(animated: true)

@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsByUIKit
+
 #if os(iOS) || os(tvOS)
 public enum JobsWorkerBinder {
     @discardableResult
@@ -21,7 +23,7 @@ public enum JobsWorkerBinder {
                                 storeIn bag: JobsWorkerBag? = nil) -> JobsWorker {
         let worker = source.ever { change in
             DispatchQueue.main.async {
-                label.text = prefix + change.newValue + suffix
+                label.byText(prefix + change.newValue + suffix)
             }
         }
         if let bag {
@@ -33,7 +35,9 @@ public enum JobsWorkerBinder {
     public static func bindTextField(_ textField: UITextField,
                                      to source: JobsObservable<String>) -> JobsWorker {
         let worker = JobsWorker(mode: .ever, label: "textField.binding")
-        textField.addTarget(TextFieldTarget.shared, action: #selector(TextFieldTarget.shared.inputChanged(_:)), for: .editingChanged)
+        textField.byAddTarget(TextFieldTarget.shared,
+                              action: #selector(TextFieldTarget.shared.inputChanged(_:)),
+                              for: .editingChanged)
         TextFieldTarget.shared.register(textField: textField, observable: source, worker: worker)
         worker.setDisposer {
             TextFieldTarget.shared.unregister(textField: textField)

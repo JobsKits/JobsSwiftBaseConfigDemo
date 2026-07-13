@@ -34,16 +34,16 @@ public final class VideoThumbCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.byClipsToBounds(YES).byCornerRadius(8)
         iv.byVisible(YES)
-        if #available(iOS 13.0, *) { playBadge.tintColor = .white }
-        playBadge.alpha = 0.9
-        contentView.addSubview(playBadge)
+        if #available(iOS 13.0, *) { playBadge.byTintColor(JobsCor.white) }
+        playBadge.byAlpha(0.9)
+        playBadge.byAddTo(contentView)
         playBadge.snp.makeConstraints { make in make.center.equalToSuperview(); make.width.height.equalTo(28) }
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override func prepareForReuse() {
         super.prepareForReuse()
         currentURL = nil
-        iv.image = nil
+        iv.byImage(nil)
     }
     // MARK: - byData
     @discardableResult
@@ -67,12 +67,12 @@ public final class VideoThumbCell: UICollectionViewCell {
                 render(url)
             } else {
                 currentURL = nil
-                iv.image = nil
+                iv.byImage(nil)
             };return self
         }
 
         currentURL = nil
-        iv.image = nil
+        iv.byImage(nil)
         return self
     }
 
@@ -84,7 +84,7 @@ public final class VideoThumbCell: UICollectionViewCell {
 
     private func render(_ url: URL) {
         currentURL = url
-        iv.image = nil
+        iv.byImage(nil)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let asset = AVAsset(url: url)
@@ -98,7 +98,7 @@ public final class VideoThumbCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 guard let self else { return }
                 guard self.currentURL == url else { return } // ✅ 防复用串图
-                self.iv.image = img
+                self.iv.byImage(img)
             }
         }
     }

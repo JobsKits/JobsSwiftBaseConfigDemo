@@ -20,6 +20,7 @@
 | 平台 | `ios 12.0` |
 | podspec | `JobsByPods/JobsSwiftGraphicCaptcha@Pods/JobsSwiftGraphicCaptcha.podspec` |
 | source | `{ :path => '.' }` |
+| 直接依赖 | `JobsSwiftBaseDefines`（使用 `JobsFont` 系统字体工厂）、`JobsSwiftDSL`（使用 `UIColor(gray:alpha:)` / `UIColor(h:s:b:a:)`） |
 
 ## 二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -39,9 +40,15 @@ JobsSwiftGraphicCaptcha@Pods/
 
 ## 三、公开能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- `JobsSwiftGraphicCaptchaConfig`：配置验证码长度、字符单元、大小写校验策略和自定义字符池。
-- `JobsSwiftGraphicCaptchaGenerator`：提供数字、小写英文、大写英文、汉字四个独立字符池，并生成随机文本。
+- `JobsSwiftGraphicCaptchaConfig`：配置验证码长度、字符单元、大小写校验策略、自定义字符池和混合字符组数，内置 `twoMixedConfig`、`threeMixedConfig`、`fullMixedConfig`。
+- `JobsSwiftGraphicCaptchaGenerator`：提供数字、小写英文、大写英文、汉字四个独立字符池，并按指定混合组数生成随机文本。
 - `JobsSwiftGraphicCaptchaView`：绘制验证码文本、干扰线和噪点，支持点击刷新和输入校验。
+
+混合模式说明：
+
+- 两两混合：大写英文 + 小写英文、大写英文 + 数字、小写英文 + 数字、大写英文 + 汉字、小写英文 + 汉字、汉字 + 数字。
+- 三三混合：大写英文 + 小写英文 + 数字、大写英文 + 小写英文 + 汉字、大写英文 + 数字 + 汉字、小写英文 + 数字 + 汉字。
+- 全部混合：大写英文 + 小写英文 + 数字 + 汉字。
 
 ## 四、引用方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -49,7 +56,7 @@ JobsSwiftGraphicCaptcha@Pods/
 import JobsSwiftGraphicCaptcha
 
 let captchaView = JobsSwiftGraphicCaptchaView()
-captchaView.config = .mixedConfig
+captchaView.config = .fullMixedConfig
 captchaView.refreshCaptcha()
 let passed = captchaView.validateInput("Ab3中")
 ```

@@ -31,16 +31,16 @@ final class SkeletonUserCell: UITableViewCell {
                 make.top.greaterThanOrEqualToSuperview().offset(12)
                 make.bottom.lessThanOrEqualToSuperview().inset(12)
             }
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.layer.cornerRadius = 24
+        iv.byContentMode(.scaleAspectFill)
+        iv.byClipsToBounds()
+        iv.byCornerRadius(24)
         return iv
     }()
 
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byNumberOfLines(1)
             .bySkeletonable()
             .bySkeletonLinesCornerRadius(6)
@@ -48,8 +48,8 @@ final class SkeletonUserCell: UITableViewCell {
 
     private lazy var subtitleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
             .bySkeletonable()
             .bySkeletonLinesCornerRadius(6)
@@ -74,7 +74,7 @@ final class SkeletonUserCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.backgroundColor = .secondarySystemGroupedBackground
+        contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         avatar.byVisible(YES)
         stack.byVisible(YES)
         self.bySkeletonable()
@@ -85,7 +85,7 @@ final class SkeletonUserCell: UITableViewCell {
 extension SkeletonUserCell {
     // MARK: - Data
     func configure(with u: User) {
-        avatar.backgroundColor = u.color
+        avatar.byBackgroundColor(u.color)
         titleLabel.byText(u.name)
         subtitleLabel.byText(u.detail)
     }

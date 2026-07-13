@@ -11,6 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsSwiftDSL
+
 final class GestureNodeView: UIView {
 
     enum State {
@@ -37,8 +41,8 @@ final class GestureNodeView: UIView {
         layer.addSublayer(fillLayer)
         layer.addSublayer(borderLayer)
 
-        borderLayer.fillColor = UIColor.clear.cgColor
-        fillLayer.fillColor = UIColor.clear.cgColor
+        borderLayer.fillColor = JobsCor.clear.cgColor
+        fillLayer.fillColor = JobsCor.clear.cgColor
     }
 
     required init?(coder: NSCoder) {
@@ -47,11 +51,11 @@ final class GestureNodeView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        let path = UIBezierPath(ovalIn: bounds).cgPath
+        let path = UIBezierPath.make(ovalIn: bounds).cgPath
         borderLayer.path = path
         fillLayer.path = path
-        borderLayer.frame = bounds
-        fillLayer.frame = bounds
+        borderLayer.byFrame(bounds)
+        fillLayer.byFrame(bounds)
     }
 
     func apply(state: State) {
@@ -62,7 +66,7 @@ final class GestureNodeView: UIView {
         switch state {
         case .normal:
             borderLayer.strokeColor = configuration.nodeNormalColor.cgColor
-            fillLayer.fillColor = UIColor.clear.cgColor
+            fillLayer.fillColor = JobsCor.clear.cgColor
         case .selected:
             borderLayer.strokeColor = configuration.nodeSelectedColor.cgColor
             fillLayer.fillColor = configuration.nodeFillSelectedColor.cgColor

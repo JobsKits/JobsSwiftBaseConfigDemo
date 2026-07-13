@@ -47,8 +47,8 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel()
             .byText("点击按钮：开始 / 暂停 / 继续（完成后再点 = 重新开始）".tr)
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -64,10 +64,10 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     /// 倒计时演示按钮（用 VC 自己的 timer 驱动）
     private lazy var countdownButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             .byTitle("开始".tr + " \(defaultTotalSeconds)s", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.boldSystemFont(ofSize: 16))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .byCornerRadius(8)
             .onTap { [weak self] (btn: UIButton) in
                 guard let self else { return }
@@ -78,7 +78,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 case .running:
                     self.pauseCountdown()
                     let remain = self.remainingSeconds > 0 ? self.remainingSeconds : self.defaultTotalSeconds
-                    self.hintLabel.byText("已暂停，点击继续（还剩 \(remain)s）".tr)
+                    self.hintLabel.byText("已暂停，点击继续（还剩 %lds）".tr(remain))
 
                     // 这里看需求：目前导火索是独立连贯动画，不跟随暂停
                     // 如果要同步暂停，就需要给 UIView+JobsCountdownFuse 再加 pause/resume API
@@ -98,8 +98,8 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemBackground)
-        jobsSetupGKNav(title: "JobsSwiftTimer 按钮倒计时 Demo")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "JobsSwiftTimer 按钮倒计时 Demo".tr)
         hintLabel.byVisible(YES)
         countdownButton.byVisible(YES)
     }
@@ -162,7 +162,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
 
                         // 覆盖默认文案：完成后提示重新开始
                         btn.byTitle("重新开始".tr, for: .normal)
-                        self.hintLabel.byText("倒计时完成，点击可重新开始 \(self.defaultTotalSeconds)s".tr)
+                        self.hintLabel.byText("倒计时完成，点击可重新开始 %lds".tr(self.defaultTotalSeconds))
                     }
                 }
             }
@@ -175,7 +175,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                     duration: TimeInterval(self.totalSeconds),
                     config: JobsFuseConfig(
                         lineWidth: 2,
-                        color: .white,
+                        color: JobsCor.white,
                         inset: 0,
                         removeOnFinish: true,
                         direction: .counterClockwise

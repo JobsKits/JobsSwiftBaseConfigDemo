@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 /// 模拟 UIScrollView 的减速曲线
 /// velocity：当前速度（可以是角速度 rad/s）
@@ -53,10 +54,10 @@ struct LuckyWheelSegment {
     var imageURLString: String?
 
     init(text: String? = "",
-         textFont: UIFont = .systemFont(ofSize: 14),
-         textColor: UIColor = .black,
+         textFont: UIFont = JobsFont.systemFont(ofSize: 14),
+         textColor: UIColor = JobsCor.black,
          attributedText: NSAttributedString? = nil,
-         backgroundColor: UIColor = .clear,
+         backgroundColor: UIColor = JobsCor.clear,
          placeholderImage: UIImage? = nil,
          imageURLString: String? = nil) {
         self.text = text?.verticalByNewline

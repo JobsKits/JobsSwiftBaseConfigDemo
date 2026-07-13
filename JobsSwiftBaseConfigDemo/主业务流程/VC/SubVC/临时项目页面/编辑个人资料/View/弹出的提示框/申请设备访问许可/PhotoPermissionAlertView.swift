@@ -77,7 +77,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var limitedButton: UIButton = {
         makeActionButton("允许有限访问")
-            .byNormalBgColor(.white)
+            .byNormalBgColor(JobsCor.white)
             .onTap { [weak self] _ in
                 self?.limitedHandler?()
             }
@@ -85,7 +85,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var fullButton: UIButton = {
         makeActionButton("全部允许")
-            .byNormalBgColor(.white)
+            .byNormalBgColor(JobsCor.white)
             .onTap { [weak self] _ in
                 self?.fullHandler?()
             }
@@ -93,7 +93,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var denyButton: UIButton = {
         makeActionButton("不允许")
-            .byNormalBgColor(.white)
+            .byNormalBgColor(JobsCor.white)
             .onTap { [weak self] _ in
                 self?.denyHandler?()
             }
@@ -112,7 +112,7 @@ final class PhotoPermissionAlertView: UIView {
 // MARK: - Private
 private extension PhotoPermissionAlertView {
     func setupUI() {
-        byBackgroundColor(.systemBackground)
+        byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(12)
             .byClipsToBounds(true)
 
@@ -125,8 +125,8 @@ private extension PhotoPermissionAlertView {
         UIButton.sys()
             .byTitle(title, for: .normal)
             .byTitleColor("#2CB4EF".cor, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16))
-            .byBackgroundColor(.clear, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16))
+            .byBackgroundColor(JobsCor.clear, for: .normal)
             .byContentEdgeInsets(.init(top: 11, left: 0, bottom: 11, right: 0))
     }
 }

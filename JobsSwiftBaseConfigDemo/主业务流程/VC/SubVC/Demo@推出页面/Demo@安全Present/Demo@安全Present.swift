@@ -31,7 +31,7 @@ final class SafetyPresentDemoVC: BaseVC {
             .byAlignment(.center)
             .byAddArrangedSubviews(
                 [
-                    UIButton(type: .system)
+                    UIButton.sys()
                         .byTitle("系统 present (连点不会重复)".tr)
                         .onTap { [weak self] sender in
                             guard let self else { return }
@@ -49,10 +49,10 @@ final class SafetyPresentDemoVC: BaseVC {
                     UILabel()
                         .byText("👆 点击绿色区域也会触发 presentSafely".tr)
                         .byTextAlignment(.center)
-                        .byTextColor(.secondaryLabel)
-                        .byFont(.systemFont(ofSize: 14)),
-                    UIButton(type: .system)
-                        .byTitle("自定义高度 present (320)")
+                        .byTextColor(JobsCor.secondaryLabel)
+                        .byFont(JobsFont.systemFont(ofSize: 14)),
+                    UIButton.sys()
+                        .byTitle("自定义高度 present (320)".tr)
                         .onTap { _ in
                             /// 自定义高度 present：.custom + UIPresentationController
                             /// .custom 之后，系统不会给装手势 → 需要自己加 pan + 交互式转场（上面已给补丁）。
@@ -77,14 +77,14 @@ final class SafetyPresentDemoVC: BaseVC {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "🧱 Safety Present Demo"
         )
         stack.byVisible(YES)
         // 2️⃣ 从 UIView 内触发 presentSafely
         DemoInnerPresentView()
-            .byBackgroundColor(.systemGreen.withAlphaComponent(0.2))
+            .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2))
             .byCornerRadius(8)
             .byAddTo(stack) { make in
                 make.width.equalTo(260.w)

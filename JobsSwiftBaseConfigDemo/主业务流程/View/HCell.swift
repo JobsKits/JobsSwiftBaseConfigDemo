@@ -21,9 +21,9 @@ import SnapKit
 public final class HCell: UICollectionViewCell {
     private lazy var label: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextAlignment(.center)
-            .byTextColor(.label)
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.edges.equalToSuperview()
             }
@@ -32,7 +32,7 @@ public final class HCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.byVisible(YES)
-        contentView.byBackgroundColor(.secondarySystemBackground)
+        contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
     }

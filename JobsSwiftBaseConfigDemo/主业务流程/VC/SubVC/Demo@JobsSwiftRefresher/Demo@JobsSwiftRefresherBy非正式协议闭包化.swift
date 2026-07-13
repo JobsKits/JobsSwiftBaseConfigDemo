@@ -52,7 +52,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
             }
             .didSelectItemAt({ obj, cv, idx in
                 cv.deselectItem(at: idx, animated: true)
-                "点选逻辑".toast
+                "点选逻辑".tr.toast
             })
 
             .byAddTo(view) { [unowned self] make in
@@ -119,7 +119,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
             }
             .didSelectRowAt { _, tv, indexPath in
                 tv.deselectRow(at: indexPath, animated: true)
-                "点选逻辑".toast
+                "点选逻辑".tr.toast
             }
 
             .showRefreshHeaderInfo(YES)
@@ -160,7 +160,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "演示：非正式协议闭包化".tr)
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         collectionView.byVisible(YES)
         tableView.byVisible(YES)
     }

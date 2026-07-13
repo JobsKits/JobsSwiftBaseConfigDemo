@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 extension UIButton {
@@ -27,7 +28,7 @@ extension UIButton {
             };byUpdateConfig()
         }
         // 3) 避免 tint 影响（尤其是 system button）
-        byTintColor(.clear)
+        byTintColor(JobsCor.clear)
         // 4) 禁止 UIButton 自动“变暗/变亮”之类的调整（有时会影响观感）
         self.adjustsImageWhenHighlighted = false
         self.adjustsImageWhenDisabled = false
@@ -76,7 +77,7 @@ extension UIButton {
                 var c = btn.configuration ?? .plain()
                 c.baseBackgroundColor = color
                 c.background.backgroundColor = color
-                c.background.strokeColor = .clear
+                c.background.strokeColor = JobsCor.clear
                 c.background.strokeWidth = 0
                 // 3) 干掉系统的“按状态变色” transformer（关键）
                 c.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in

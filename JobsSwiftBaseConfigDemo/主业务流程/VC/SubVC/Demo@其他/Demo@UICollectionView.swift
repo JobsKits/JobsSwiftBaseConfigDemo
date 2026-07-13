@@ -49,8 +49,8 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             // 空态按钮
 //            .byEmptyButtonProvider { [unowned self] in
 //                UIButton.sys()
-//                    .byTitle("暂无数据（竖向）", for: .normal)
-//                    .bySubTitle("点我填充示例数据", for: .normal)
+//                    .byTitle("暂无数据（竖向）".tr, for: .normal)
+//                    .bySubTitle("点我填充示例数据".tr, for: .normal)
 //                    .byImage("square.grid.2x2".sysImg, for: .normal)
 //                    .byImagePlacement(.top)
 //                    .onTap { [weak self] _ in
@@ -105,8 +105,8 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             // 空态按钮
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据（横向）", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                    .byTitle("暂无数据（横向）".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("rectangle.grid.1x2".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -130,9 +130,9 @@ final class EmptyCollectionViewDemoVC: BaseVC {
     // ============================== 生命周期 ==============================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "UICollectionView@空态刷新",
+            title: "UICollectionView@空态刷新".tr,
             rightButtons: [
                 // 清空两个列表
                 UIButton.sys()
@@ -205,14 +205,14 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
             label = UILabel()
                 .byNumberOfLines(1)
                 .byTextAlignment(.center)
-                .byFont(.systemFont(ofSize: 16, weight: .medium))
-                .byTextColor(.label)
+                .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+                .byTextColor(JobsCor.label)
                 .byTag(1001)
                 .byAddTo(cell.contentView) { make in
                     make.edges.equalToSuperview().inset(8)
                 }
             cell.contentView
-                .byBackgroundColor(.secondarySystemBackground)
+                .byBackgroundColor(JobsCor.secondarySystemBackground)
                 .byCornerRadius(10)
                 .byMasksToBounds(true)
         }

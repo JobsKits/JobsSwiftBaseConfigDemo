@@ -59,11 +59,11 @@ final class HKLiveVC: BaseVC {
     /// 状态文案
     private lazy var statusLabel: UILabel = {
         UILabel()
-            .byTextColor(.white)
+            .byTextColor(JobsCor.white)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextAlignment(.center)
-            .byText("准备就绪")
+            .byText("准备就绪".tr)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalTo(recordButton.snp.top).offset(-12)
@@ -72,12 +72,12 @@ final class HKLiveVC: BaseVC {
     /// 开始/停止推流按钮（沿用原来的样式）
     private lazy var recordButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemRed, for: .normal)
-            .byBackgroundColor(.systemGray, for: .disabled)
-            .byTitle("开始推流", for: .normal)
-            .byTitle("停止推流", for: .selected)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byBackgroundColor(JobsCor.systemRed, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray, for: .disabled)
+            .byTitle("开始推流".tr, for: .normal)
+            .byTitle("停止推流".tr, for: .selected)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 20, bottom: 10, right: 20))
             .byCornerDot(diameter: 10, offset: .init(horizontal: -6, vertical: 6)) // 红点提示
             .onTap { [weak self] btn in
@@ -92,7 +92,7 @@ final class HKLiveVC: BaseVC {
     /// 切换前后摄像头按钮
     private lazy var switchCameraButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(UIColor.black.withAlphaComponent(0.4), for: .normal)
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.4), for: .normal)
             .byImage("camera.rotate".sysImg, for: .normal)
             .byCornerRadius(20)
             .onTap { [weak self] _ in
@@ -128,7 +128,7 @@ final class HKLiveVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.byBackgroundColor(JobsCor.black)
         /// 开启屏幕常亮
         keepScreenOn()
         /// 流量监控@上行下载
@@ -197,7 +197,7 @@ final class HKLiveVC: BaseVC {
             ),
             let audioDevice = AVCaptureDevice.default(for: .audio)
         else {
-            statusLabel.byText("❌ 找不到摄像头或麦克风")
+            statusLabel.byText("❌ 找不到摄像头或麦克风".tr)
             return
         }
         // 2. 把设备 attach 到 MediaMixer
@@ -216,7 +216,7 @@ final class HKLiveVC: BaseVC {
         await mixer.addOutput(stream)
         // 4. RTMPStream 再输出到预览视图
         await stream.addOutput(previewView) // 预览
-        statusLabel.byText("✅ 采集已就绪，点击“开始推流”")
+        statusLabel.byText("✅ 采集已就绪，点击“开始推流”".tr)
     }
     /// 释放资源
     private func cleanup() async {
@@ -239,19 +239,19 @@ final class HKLiveVC: BaseVC {
     @MainActor
     private func startStreaming() async {
         guard !isStreaming else { return }
-        statusLabel.byText("🔌 正在连接服务器...")
+        statusLabel.byText("🔌 正在连接服务器...".tr)
         do {
             // 1. 建立 RTMP 连接（长链接）
             let connectResponse = try await connection.connect(rtmpURI)
             print("✅ RTMP connect: \(connectResponse)")
-            statusLabel.byText("🚀 正在发起推流请求...")
+            statusLabel.byText("🚀 正在发起推流请求...".tr)
             // 2. 开始推流
             let publishResponse = try await stream.publish(streamName)
             print("✅ RTMP publish: \(publishResponse)")
 
             isStreaming = true
-            recordButton.isSelected = true
-            statusLabel.byText("🟢 已开始推流")
+            recordButton.bySelected(true)
+            statusLabel.byText("🟢 已开始推流".tr)
         } catch RTMPConnection.Error.requestFailed(let response) {
             statusLabel.byText("❌ 连接失败：\(String(describing: response.status))")
             print("⚠️ RTMPConnection.Error.requestFailed: \(response)")
@@ -267,12 +267,12 @@ final class HKLiveVC: BaseVC {
     @MainActor
     private func stopStreaming() async {
         guard isStreaming else { return }
-        statusLabel.byText("⏹ 正在停止推流...")
+        statusLabel.byText("⏹ 正在停止推流...".tr)
         do {
             try await connection.close()
             isStreaming = false
-            recordButton.isSelected = false
-            statusLabel.byText("✅ 已停止推流")
+            recordButton.bySelected(false)
+            statusLabel.byText("✅ 已停止推流".tr)
         } catch {
             // close 失败一般问题不大，但还是打印一下
             statusLabel.byText("⚠️ 停止推流异常：\(error.localizedDescription)")

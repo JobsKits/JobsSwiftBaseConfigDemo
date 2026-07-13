@@ -41,9 +41,10 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
                 .byImage("paintbrush.fill".sysImg, for: .selected)
                 .onTap { [weak self] sender in
                     guard let self else { return }
-                    sender.isSelected.toggle()
-                    self.imageView.isBrushEnabled = sender.isSelected
-                    (sender.isSelected ? "涂抹马赛克已开启" : "涂抹马赛克已关闭").toast
+                    sender.byToggleSelected()
+                    let isSelected = sender.isSelected
+                    self.imageView.isBrushEnabled = isSelected
+                    (isSelected ? "涂抹马赛克已开启" : "涂抹马赛克已关闭").toast
                 }
         ]
     }
@@ -77,7 +78,7 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
             brushDiameter: brushDiameter
         )
         self.currentImage = image
-        imageView.image = image
+        imageView.byImage(image)
         hasEdited = true
     }
 }

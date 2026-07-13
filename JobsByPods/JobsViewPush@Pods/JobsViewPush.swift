@@ -10,6 +10,8 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
 
 public enum JobsViewPushDirection: CaseIterable {
     case top
@@ -33,7 +35,7 @@ public struct JobsViewPushConfiguration {
         animationDuration: TimeInterval = 0.35,
         allowsInteractiveDismiss: Bool = true,
         dismissOnBackgroundTap: Bool = true,
-        backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.18)
+        backgroundColor: UIColor = JobsCor.black.withAlphaComponent(0.18)
     ) {
         self.direction = direction
         self.presentedRatio = min(max(presentedRatio, 0.1), 1)
@@ -82,13 +84,13 @@ public final class JobsViewPushPresentation: NSObject {
         transitionView.layer.removeAllAnimations()
         let visibleFrame = visibleFrameForTransitionBounds()
         presentedView.transform = .identity
-        presentedView.frame = visibleFrame
+        presentedView.byFrame(visibleFrame)
         presentedView.superview?.layoutIfNeeded()
 
         let animations = { [weak self] in
             guard let self else { return }
-            presentedView.frame = self.hiddenFrame(for: visibleFrame)
-            self.transitionView.backgroundColor = .clear
+            presentedView.byFrame(self.hiddenFrame(for: visibleFrame))
+            self.transitionView.byBackgroundColor(JobsCor.clear)
             presentedView.layoutIfNeeded()
         }
         let finish: (Bool) -> Void = { [weak self] _ in
@@ -107,8 +109,8 @@ public final class JobsViewPushPresentation: NSObject {
             return
         }
 
-        UIView.animate(
-            withDuration: configuration.animationDuration,
+        UIView.jobsAnimateWithOptions(
+            configuration.animationDuration,
             delay: 0,
             options: [.curveEaseInOut, .beginFromCurrentState],
             animations: animations,
@@ -153,19 +155,19 @@ private extension JobsViewPushPresentation {
     func install() {
         guard let sourceView, let presentedView else { return }
 
-        transitionView.frame = sourceView.bounds
+        transitionView.byFrame(sourceView.bounds)
         transitionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        transitionView.backgroundColor = .clear
+        transitionView.byBackgroundColor(JobsCor.clear)
         transitionView.layoutHandler = { [weak self] in
             self?.layoutPresentedView()
         }
-        sourceView.addSubview(transitionView)
-        transitionView.addSubview(presentedView)
+        transitionView.byAddTo(sourceView)
+        presentedView.byAddTo(transitionView)
         layoutPresentedView()
 
         if configuration.dismissOnBackgroundTap {
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped(_:)))
-            tapGesture.delegate = self
+            tapGesture.byDelegate(self)
             transitionView.addGestureRecognizer(tapGesture)
             backgroundTapGesture = tapGesture
         }
@@ -183,16 +185,16 @@ private extension JobsViewPushPresentation {
         isAnimatingTransition = true
         let visibleFrame = visibleFrameForTransitionBounds()
         presentedView.transform = .identity
-        presentedView.frame = hiddenFrame(for: visibleFrame)
+        presentedView.byFrame(hiddenFrame(for: visibleFrame))
 
-        UIView.animate(
-            withDuration: configuration.animationDuration,
+        UIView.jobsAnimateWithOptions(
+            configuration.animationDuration,
             delay: 0,
             options: [.curveEaseInOut, .beginFromCurrentState],
             animations: { [weak self] in
                 guard let self else { return }
-                presentedView.frame = visibleFrame
-                self.transitionView.backgroundColor = self.configuration.backgroundColor
+                presentedView.byFrame(visibleFrame)
+                self.transitionView.byBackgroundColor(self.configuration.backgroundColor)
                 presentedView.layoutIfNeeded()
             },
             completion: { [weak self] _ in
@@ -207,7 +209,7 @@ private extension JobsViewPushPresentation {
         guard !isAnimatingTransition else { return }
         let visibleFrame = visibleFrameForTransitionBounds()
         presentedView.transform = .identity
-        presentedView.frame = isPresented ? visibleFrame : hiddenFrame(for: visibleFrame)
+        presentedView.byFrame(isPresented ? visibleFrame : hiddenFrame(for: visibleFrame))
     }
 
     func visibleFrameForTransitionBounds() -> CGRect {
@@ -285,31 +287,33 @@ private extension JobsViewPushPresentation {
         let limitedOffset = distance * progress
         switch configuration.direction {
         case .top:
-            presentedView.frame = visibleFrame.offsetBy(dx: 0, dy: -limitedOffset)
+            presentedView.byFrame(visibleFrame.offsetBy(dx: 0, dy: -limitedOffset))
         case .bottom:
-            presentedView.frame = visibleFrame.offsetBy(dx: 0, dy: limitedOffset)
+            presentedView.byFrame(visibleFrame.offsetBy(dx: 0, dy: limitedOffset))
         case .left:
-            presentedView.frame = visibleFrame.offsetBy(dx: -limitedOffset, dy: 0)
+            presentedView.byFrame(visibleFrame.offsetBy(dx: -limitedOffset, dy: 0))
         case .right:
-            presentedView.frame = visibleFrame.offsetBy(dx: limitedOffset, dy: 0)
+            presentedView.byFrame(visibleFrame.offsetBy(dx: limitedOffset, dy: 0))
         }
 
-        transitionView.backgroundColor = configuration.backgroundColor.withAlphaComponent(
-            configuration.backgroundColor.cgColor.alpha * (1 - progress)
+        transitionView.byBackgroundColor(
+            configuration.backgroundColor.withAlphaComponent(
+                configuration.backgroundColor.cgColor.alpha * (1 - progress)
+            )
         )
     }
 
     func restoreAfterInteractiveDismiss() {
         guard let presentedView else { return }
-        UIView.animate(
-            withDuration: 0.25,
+        UIView.jobsAnimateWithOptions(
+            0.25,
             delay: 0,
             options: [.curveEaseOut, .beginFromCurrentState],
             animations: { [weak self] in
                 guard let self else { return }
                 presentedView.transform = .identity
-                presentedView.frame = self.visibleFrameForTransitionBounds()
-                self.transitionView.backgroundColor = self.configuration.backgroundColor
+                presentedView.byFrame(self.visibleFrameForTransitionBounds())
+                self.transitionView.byBackgroundColor(self.configuration.backgroundColor)
                 presentedView.layoutIfNeeded()
             }
         )

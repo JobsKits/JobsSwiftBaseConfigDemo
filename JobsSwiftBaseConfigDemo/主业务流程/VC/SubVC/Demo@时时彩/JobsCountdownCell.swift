@@ -27,8 +27,8 @@ public final class JobsCountdownCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byNumberOfLines(1)
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalToSuperview().offset(16)
                 make.centerY.equalToSuperview()
@@ -39,9 +39,9 @@ public final class JobsCountdownCell: UITableViewCell {
     private lazy var countdownLabel: UILabel = {
         UILabel()
             .byNumberOfLines(1)
-            .byFont(.monospacedDigitSystemFont(ofSize: 15, weight: .semibold))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .semibold))
             .byTextAlignment(.right)
-            .byTextColor(.systemRed)
+            .byTextColor(JobsCor.systemRed)
             .byAddTo(contentView) { make in
                 make.right.equalToSuperview().inset(16)
                 make.centerY.equalToSuperview()
@@ -64,8 +64,8 @@ public final class JobsCountdownCell: UITableViewCell {
         super.prepareForReuse()
         stopTimerIfNeeded()
         currentItem = nil
-        titleLabel.text = nil
-        countdownLabel.text = nil
+        titleLabel.byText(nil)
+        countdownLabel.byText(nil)
     }
     // ============================== Public ==============================
     /// ✅ 强类型（在 VC 里传 JobsCountdownItem 时会优先命中这个）
@@ -115,7 +115,7 @@ public final class JobsCountdownCell: UITableViewCell {
         // 已结束就不启动
         if item.remainSeconds() <= 0 {
             countdownLabel.byText(Self.format(0))
-            countdownLabel.byTextColor(.secondaryLabel)
+            countdownLabel.byTextColor(JobsCor.secondaryLabel)
             return
         }
 
@@ -145,7 +145,7 @@ public final class JobsCountdownCell: UITableViewCell {
                     strongSelf.renderCountdown()
                     // 到 0：立刻停掉并移除（避免无意义 tick）
                     if let it = strongSelf.currentItem, it.remainSeconds() <= 0 {
-                        strongSelf.countdownLabel.textColor = .secondaryLabel
+                        strongSelf.countdownLabel.byTextColor(JobsCor.secondaryLabel)
                         strongSelf.stopTimerIfNeeded()
                     }
                 }
@@ -156,7 +156,7 @@ public final class JobsCountdownCell: UITableViewCell {
         } catch {
             // 创建失败：一般是 manager 状态不对 / id 重复但 replace 失败
             countdownLabel.byText("--:--")
-            countdownLabel.byTextColor(.secondaryLabel)
+            countdownLabel.byTextColor(JobsCor.secondaryLabel)
         }
     }
 
@@ -165,7 +165,7 @@ public final class JobsCountdownCell: UITableViewCell {
         guard let item = currentItem else { return }
         let remain = item.remainSeconds()
         countdownLabel.byText(Self.format(remain))
-        countdownLabel.byTextColor((remain <= 0) ? .secondaryLabel : .systemRed)
+        countdownLabel.byTextColor((remain <= 0) ? JobsCor.secondaryLabel : JobsCor.systemRed)
     }
 
     private static func format(_ seconds: Int) -> String {

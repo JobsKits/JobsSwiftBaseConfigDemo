@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 // MARK: - 链式：通用属性
@@ -143,8 +144,8 @@ let item1 = UIBarButtonItem(systemItem: .add)
     .byImage(systemName: "plus.circle")
     .byImageInsets(.init(top: 0, left: 4, bottom: 0, right: -4))
     .byTag(100)
-    .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-    .byTitleColor(.systemBlue)
+    .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+    .byTitleColor(JobsCor.systemBlue)
     .byCopyTitleTextAttributes(from: .normal)
 
 let tabItem = UITabBarItem(title: "首页",

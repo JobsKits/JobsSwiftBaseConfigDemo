@@ -119,7 +119,7 @@ extension UIButton {
             if bg.imageContentMode == .scaleToFill {
                 bg.imageContentMode = .scaleAspectFill
             }
-            bg.backgroundColor = .clear
+            bg.backgroundColor = JobsCor.clear
             cfg.background = bg
             self.configuration = cfg
             // 让生命周期继续，但这里不要马上“强制”刷新，避免刚设的图被别的 handler 抢写
@@ -167,7 +167,7 @@ extension UIButton {
             var bg = cfg.background
             bg.image = bgImg
             if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
-            bg.backgroundColor = .clear
+            bg.backgroundColor = JobsCor.clear
             cfg.background = bg
             self.jobs_cfgBgImage = bgImg
         }

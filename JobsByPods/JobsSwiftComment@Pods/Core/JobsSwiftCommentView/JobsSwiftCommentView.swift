@@ -7,6 +7,10 @@
 
 import UIKit
 
+import JobsSwiftBaseDefines
+import JobsByUIKit
+import JobsSwiftDSL
+
 public final class JobsSwiftCommentView: UIView {
     public private(set) var tableView = UITableView(frame: .zero, style: .plain)
     public private(set) var config: JobsSwiftCommentConfig
@@ -15,7 +19,7 @@ public final class JobsSwiftCommentView: UIView {
     private var renderRows: [RenderRow] = []
     private var expandedRootIDs = Set<String>()
     private let refreshControlView = UIRefreshControl()
-    private let loadMoreButton = UIButton(type: .system)
+    private let loadMoreButton = UIButton.sys()
     private var isLoadingMore = false
     private var noMoreData = false
 
@@ -137,21 +141,23 @@ private extension JobsSwiftCommentView {
     }
 
     func setupViews() {
-        backgroundColor = UIColor(red: 0.96, green: 0.97, blue: 0.99, alpha: 1)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .clear
-        tableView.estimatedRowHeight = 96
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.keyboardDismissMode = .onDrag
-        tableView.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 10, right: 0)
-        tableView.register(JobsSwiftCommentCell.self, forCellReuseIdentifier: JobsSwiftCommentCell.reuseIdentifier)
+        byBackgroundColor(UIColor(r: 0.96 * 255, g: 0.97 * 255, b: 0.99 * 255))
+        tableView
+            .byDelegate(self)
+            .byDataSource(self)
+            .bySeparatorStyle(.none)
+            .byBackgroundColor(JobsCor.clear)
+            .byEstimatedRowHeight(96)
+            .byRowHeight(UITableView.automaticDimension)
+            .byKeyboardDismissMode(.onDrag)
+            .byContentInset(UIEdgeInsets(top: 6, left: 0, bottom: 10, right: 0))
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
+            .byRegisterCellOnID(CellCls: JobsSwiftCommentCell.self,
+                                ID: JobsSwiftCommentCell.reuseIdentifier)
         if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
+            tableView.bySectionHeaderTopPadding(0)
         }
-        addSubview(tableView)
+        tableView.byAddTo(self)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.leftAnchor.constraint(equalTo: leftAnchor),
@@ -159,11 +165,14 @@ private extension JobsSwiftCommentView {
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        refreshControlView.addTarget(self, action: #selector(pullRefreshTriggered), for: .valueChanged)
-        loadMoreButton.frame = CGRect(x: 0, y: 0, width: 0, height: 54)
-        loadMoreButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-        loadMoreButton.setTitleColor(UIColor(red: 0.17, green: 0.43, blue: 0.82, alpha: 1), for: .normal)
-        loadMoreButton.addTarget(self, action: #selector(loadMoreButtonTapped), for: .touchUpInside)
+        refreshControlView.byAddTarget(self,
+                                       action: #selector(pullRefreshTriggered),
+                                       for: .valueChanged)
+        loadMoreButton
+            .byFrame(CGRect(x: 0, y: 0, width: 0, height: 54))
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTitleColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
+            .byAddTarget(self, action: #selector(loadMoreButtonTapped), for: .touchUpInside)
         updateRefreshers()
     }
 
@@ -268,8 +277,9 @@ private extension JobsSwiftCommentView {
         } else {
             title = "上拉加载更多评论"
         }
-        loadMoreButton.setTitle(title, for: .normal)
-        loadMoreButton.isEnabled = !isLoadingMore && !noMoreData
+        loadMoreButton
+            .byTitle(title)
+            .byEnabled(!isLoadingMore && !noMoreData)
     }
 
     func triggerLoadMore() {
@@ -295,4 +305,3 @@ private extension JobsSwiftCommentView {
         triggerLoadMore()
     }
 }
-

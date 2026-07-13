@@ -26,21 +26,21 @@ public final class FTDashboardView: UIView {
     public var endAngle: CGFloat = CGFloat(45).degreesToRadians { didSet { setNeedsLayout() } }
     public var lineWidth: CGFloat = 14 { didSet { setNeedsLayout() } }
     public var trackColor: UIColor = UIColor(white: 1.0, alpha: 0.20) { didSet { trackLayer.strokeColor = trackColor.cgColor } }
-    public var progressColor: UIColor = .systemGreen { didSet { progressLayer.strokeColor = progressColor.cgColor } }
+    public var progressColor: UIColor = JobsCor.systemGreen { didSet { progressLayer.strokeColor = progressColor.cgColor } }
     public var tickColor: UIColor = UIColor(white: 1.0, alpha: 0.45) { didSet { tickLayer.strokeColor = tickColor.cgColor } }
     public var tickCount: Int = 11 { didSet { setNeedsLayout() } }
     public var tickLength: CGFloat = 8 { didSet { setNeedsLayout() } }
     public var tickWidth: CGFloat = 2 { didSet { setNeedsLayout() } }
-    public var needleColor: UIColor = .white { didSet { needleLayer.strokeColor = needleColor.cgColor } }
+    public var needleColor: UIColor = JobsCor.white { didSet { needleLayer.strokeColor = needleColor.cgColor } }
     public var needleWidth: CGFloat = 3 { didSet { setNeedsLayout() } }
     /// 指针起点离中心的比例（越大越不容易穿过中间数字）
     public var needleInnerRadiusRatio: CGFloat = 0.35 { didSet { setNeedsLayout() } }
     /// 指针终点距圆弧内侧留白
     public var needleOuterInset: CGFloat = 10 { didSet { setNeedsLayout() } }
-    public var centerDotColor: UIColor = .white { didSet { centerDotLayer.fillColor = centerDotColor.cgColor } }
+    public var centerDotColor: UIColor = JobsCor.white { didSet { centerDotLayer.fillColor = centerDotColor.cgColor } }
     public var centerDotRadius: CGFloat = 8 { didSet { setNeedsLayout() } }
-    public var valueTextColor: UIColor = .white { didSet { valueLabel.textColor = valueTextColor } }
-    public var valueFont: UIFont = .boldSystemFont(ofSize: 26) { didSet { valueLabel.font = valueFont } }
+    public var valueTextColor: UIColor = JobsCor.white { didSet { valueLabel.byTextColor(valueTextColor) } }
+    public var valueFont: UIFont = .boldSystemFont(ofSize: 26) { didSet { valueLabel.byFont(valueFont) } }
     /// 进度文本格式化：默认显示百分比
     public var valueFormatter: (CGFloat) -> String = { p in
         let v = Int(round(p * 100))
@@ -61,7 +61,7 @@ public final class FTDashboardView: UIView {
 
     private lazy var trackLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(trackColor)
             .byLineCap(.round)
             .byAddTo(self.layer)
@@ -69,7 +69,7 @@ public final class FTDashboardView: UIView {
 
     private lazy var progressLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(progressColor)
             .byLineCap(.round)
             .byStrokeEnd(0)
@@ -78,7 +78,7 @@ public final class FTDashboardView: UIView {
 
     private lazy var tickLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(tickColor)
             .byLineCap(.round)
             .byAddTo(self.layer)
@@ -90,7 +90,7 @@ public final class FTDashboardView: UIView {
 
     private lazy var needleLayer: CAShapeLayer = {
         CAShapeLayer()
-            .byFillColor(.clear)
+            .byFillColor(JobsCor.clear)
             .byStrokeColor(needleColor)
             .byLineCap(.round)
             .byAddTo( self.needleContainerLayer)
@@ -108,7 +108,7 @@ public final class FTDashboardView: UIView {
 
         let clamped = max(0, min(1, value))
         progress = clamped
-        valueLabel.text = valueFormatter(clamped)
+        valueLabel.byText(valueFormatter(clamped))
 
         // strokeEnd
         if animated {
@@ -160,7 +160,7 @@ public final class FTDashboardView: UIView {
         let radius = max(1, min(b.width, b.height) * 0.5 - safeInset)
 
         // arc path
-        let arcPath = UIBezierPath(
+        let arcPath = UIBezierPath.make(
             arcCenter: center,
             radius: radius,
             startAngle: startAngle,
@@ -172,16 +172,16 @@ public final class FTDashboardView: UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
 
-        trackLayer.frame = b
+        trackLayer.byFrame(b)
         trackLayer.lineWidth = lineWidth
         trackLayer.path = arcPath
 
-        progressLayer.frame = b
+        progressLayer.byFrame(b)
         progressLayer.lineWidth = lineWidth
         progressLayer.path = arcPath
         progressLayer.strokeEnd = progress
 
-        tickLayer.frame = b
+        tickLayer.byFrame(b)
         tickLayer.lineWidth = tickWidth
         tickLayer.path = makeTicksPath(center: center, radius: radius).cgPath
 
@@ -191,26 +191,26 @@ public final class FTDashboardView: UIView {
         needleContainerLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
 
         // needleLayer 只负责画“水平基准指针”，容器负责旋转
-        needleLayer.frame = b
+        needleLayer.byFrame(b)
         needleLayer.lineWidth = needleWidth
         needleLayer.path = makeNeedleBasePath(center: center, radius: radius).cgPath
         needleContainerLayer.transform = CATransform3DMakeRotation(needleAngle(for: progress), 0, 0, 1)
 
         // center dot
-        centerDotLayer.frame = b
+        centerDotLayer.byFrame(b)
         let dotRect = CGRect(
             x: center.x - centerDotRadius,
             y: center.y - centerDotRadius,
             width: centerDotRadius * 2,
             height: centerDotRadius * 2
         )
-        centerDotLayer.path = UIBezierPath(ovalIn: dotRect).cgPath
+        centerDotLayer.path = UIBezierPath.make(ovalIn: dotRect).cgPath
 
         CATransaction.commit()
     }
 
     private func makeTicksPath(center: CGPoint, radius: CGFloat) -> UIBezierPath {
-        let path = UIBezierPath()
+        let path = UIBezierPath.make()
         let count = max(2, tickCount)
         let sweep = endAngle - startAngle
 
@@ -229,13 +229,14 @@ public final class FTDashboardView: UIView {
                 y: center.y + sin(ang) * (baseR - tickLength)
             )
 
-            path.move(to: inner)
-            path.addLine(to: outer)
+            path
+                .byMove(to: inner)
+                .byAddLine(to: outer)
         };return path
     }
     /// 基准指针：水平向右（0 弧度），旋转交给 needleContainerLayer
     private func makeNeedleBasePath(center: CGPoint, radius: CGFloat) -> UIBezierPath {
-        let path = UIBezierPath()
+        let path = UIBezierPath.make()
 
         let inner = max(18, radius * needleInnerRadiusRatio)
         let outer = max(inner + 8, radius - lineWidth * 0.5 - needleOuterInset)
@@ -243,8 +244,9 @@ public final class FTDashboardView: UIView {
         let p1 = CGPoint(x: center.x + inner, y: center.y)
         let p2 = CGPoint(x: center.x + outer, y: center.y)
 
-        path.move(to: p1)
-        path.addLine(to: p2)
+        path
+            .byMove(to: p1)
+            .byAddLine(to: p2)
         return path
     }
 

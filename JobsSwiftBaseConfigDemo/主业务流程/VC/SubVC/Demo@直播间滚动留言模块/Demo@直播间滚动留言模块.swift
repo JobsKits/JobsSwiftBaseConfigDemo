@@ -51,7 +51,7 @@ final class LiveCommentDemoVC: BaseVC {
             .bySeparatorStyle(.none)
             .byKeyboardDismissMode(.interactive)
             .byNoContentInsetAdjustment()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -66,9 +66,9 @@ final class LiveCommentDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "直播间留言"
+            title: "直播间留言".tr
         )
         accessory.byVisible(YES)
         tableView.byVisible(YES)
@@ -82,7 +82,7 @@ final class LiveCommentDemoVC: BaseVC {
         let raw = accessory.tf.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !raw.isEmpty else { return }
         appendMessage(raw)
-        accessory.tf.text = nil
+        accessory.tf.byText(nil)
     }
 
     private func appendMessage(_ text: String) {

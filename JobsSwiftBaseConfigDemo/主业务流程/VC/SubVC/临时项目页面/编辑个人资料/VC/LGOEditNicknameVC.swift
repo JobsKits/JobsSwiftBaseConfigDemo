@@ -26,8 +26,8 @@ final class LGOEditNicknameVC: BaseVC {
         UITextField()
             // 基础视觉
             .byPlaceholder("请输入昵称 长度12个字符".tr)
-            .byTextColor(.label)
-            .byFont(.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextAlignment(.natural)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
@@ -46,7 +46,7 @@ final class LGOEditNicknameVC: BaseVC {
             // 编辑属性
             .byAllowsEditingTextAttributes(true)
             .byDefaultTextAttributes([.kern: 0.5]) // 字距
-            .byTypingAttributes([.foregroundColor: UIColor.label])
+            .byTypingAttributes([.foregroundColor: JobsCor.label])
             /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
             .byOnInput(limit: 12) { [weak self] char, value, mode, isLimited ,text ,tf in
                 // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
@@ -61,11 +61,11 @@ final class LGOEditNicknameVC: BaseVC {
                 let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
                 if trimmed != value {
                     // 这里会触发下一次 shouldChange，但一般不会形成死循环（因为 trimmed 稳定）
-                    nicknameField.text = trimmed
+                    nicknameField.byText(trimmed)
                 }
                 // 3) 控制按钮 enable
                 let current = nicknameField.text ?? trimmed
-                btn.isEnabled = !current.isEmpty
+                btn.byEnabled(!current.isEmpty)
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(current)'")
             }
             .byAddTo(view) { [unowned self] make in
@@ -79,8 +79,8 @@ final class LGOEditNicknameVC: BaseVC {
         UIButton.sys()
             /// 普通字符串@设置主标题
             .byTitle("保存".tr, for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 12, weight: .medium))
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
             /// 事件触发@点按
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -90,9 +90,9 @@ final class LGOEditNicknameVC: BaseVC {
     /// 底部说明文字
     private lazy var tipLabel: UILabel = {
         UILabel()
-            .byText("长度限制12个字节，仅免费修改1次")
-            .byFont(.systemFont(ofSize: 12))
-            .byTextColor(.red)
+            .byText("长度限制12个字节，仅免费修改1次".tr)
+            .byFont(JobsFont.systemFont(ofSize: 12))
+            .byTextColor(JobsCor.red)
             .byNumberOfLines(0)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(nicknameField.snp.bottom).offset(8)
@@ -102,7 +102,7 @@ final class LGOEditNicknameVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemGroupedBackground)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(
             title: "编辑昵称".tr,
             rightButtons: [btn]

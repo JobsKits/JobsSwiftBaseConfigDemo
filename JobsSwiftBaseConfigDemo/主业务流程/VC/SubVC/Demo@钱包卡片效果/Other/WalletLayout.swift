@@ -31,25 +31,28 @@ final class WalletLayout: UICollectionViewLayout {
     // MARK: - 点击展开/收起
     func animateToggle(at indexPath: IndexPath, allowExpand: Bool) {
         guard let collectionView = collectionView else { return }
-        UIView.transition(with: collectionView,
-                          duration: 0.25,
-                          options: .transitionCrossDissolve) { [weak self] in
-            guard let self else { return }
-            if allowExpand {
-                if self.expandedIndexPath == indexPath {
+        UIView.jobsTransition(
+            with: collectionView,
+            duration: 0.25,
+            options: .transitionCrossDissolve,
+            animations: { [weak self] in
+                guard let self else { return }
+                if allowExpand {
+                    if self.expandedIndexPath == indexPath {
+                        self.expandedIndexPath = nil
+                        self.isExpanded = false
+                    } else {
+                        self.expandedIndexPath = indexPath
+                        self.isExpanded = true
+                    }
+                } else {
                     self.expandedIndexPath = nil
                     self.isExpanded = false
-                } else {
-                    self.expandedIndexPath = indexPath
-                    self.isExpanded = true
                 }
-            } else {
-                self.expandedIndexPath = nil
-                self.isExpanded = false
+                self.invalidateLayout()
+                collectionView.layoutIfNeeded()
             }
-            self.invalidateLayout()
-            collectionView.layoutIfNeeded()
-        }
+        )
     }
     // MARK: - UICollectionViewLayout
     override func prepare() {

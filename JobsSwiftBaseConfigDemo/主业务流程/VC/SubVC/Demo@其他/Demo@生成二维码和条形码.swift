@@ -34,12 +34,12 @@ final class QRCodeDemoVC: BaseVC {
                     logoRatio: 0.22,
                     logoCornerRadius: 10,
                     borderWidth: 6,
-                    borderColor: .white
+                    borderColor: JobsCor.white
                 )
             )/* 生成带中心 Logo 的二维码 */
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)
-            .byBackgroundColor(UIColor.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()
@@ -54,7 +54,7 @@ final class QRCodeDemoVC: BaseVC {
             .byImage(barContent.code128ByText(width: 260, barHeight: 100))
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byCornerRadius(8)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(imageViewQR.snp.bottom).offset(20)
@@ -66,8 +66,8 @@ final class QRCodeDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "二维码 + 条形码")
-        view.byBackgroundColor(.systemBackground)
+        jobsSetupGKNav(title: "二维码 + 条形码".tr)
+        view.byBackgroundColor(JobsCor.systemBackground)
         imageViewQR.byVisible(YES)
         imageViewBar.byVisible(YES)
     }

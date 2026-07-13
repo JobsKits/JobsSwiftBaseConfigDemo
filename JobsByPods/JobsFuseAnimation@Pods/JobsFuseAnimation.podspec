@@ -27,4 +27,7 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'UIKit', 'QuartzCore', 'AudioToolbox'
 
   s.dependency 'JobsSwiftTimer'
+  s.dependency 'JobsByUIKit'
+  s.dependency 'JobsSwiftDSL'
+  s.dependency 'JobsSwiftBaseDefines'
 end

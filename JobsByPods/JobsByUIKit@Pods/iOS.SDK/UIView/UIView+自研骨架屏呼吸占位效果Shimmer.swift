@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import os.lock
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 //  ================================== 自述 ==================================
@@ -105,8 +106,8 @@ public struct JobsShimmerConfig {
     public var highlightWidthRatio: CGFloat   // 0 ~ 1
     public static let `default` = JobsShimmerConfig()
     public init(
-        baseColor: UIColor = UIColor(white: 0.90, alpha: 1),
-        highlightColor: UIColor = UIColor(white: 1.0, alpha: 0.9),
+        baseColor: UIColor = UIColor(gray: 0.90 * 255),
+        highlightColor: UIColor = UIColor(gray: 255, alpha: 0.9),
         duration: CFTimeInterval = 1.4,
         highlightWidthRatio: CGFloat = 0.35
     ) {
@@ -477,7 +478,7 @@ extension UIButton {
         // overlay 尺寸/位置完全由 jobs_layoutFGOverlayIfNeeded() 决定
         let v = UIView(frame: .zero)
         v.isUserInteractionEnabled = false
-        v.backgroundColor = .clear
+        v.backgroundColor = JobsCor.clear
         v.isHidden = true
         self.addSubview(v)
         jobs_fgShimmerOverlayView = v

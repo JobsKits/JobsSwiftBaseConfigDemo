@@ -42,13 +42,13 @@ public final class JobsButton: UIImageView {
     // MARK: - Subviews (lazy)
     private lazy var contentContainer: UIView = {
         UIView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byUserInteractionEnabled(false)
     }()
     /// 对标 UIButton 的前景图
     public lazy var foregroundImageView: UIImageView = {
         let iv = UIImageView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)
         // 仿系统：图标优先保留，不被文字挤没
@@ -62,16 +62,16 @@ public final class JobsButton: UIImageView {
     public lazy var titleLabel: UILabel = {
         UILabel()
             .byNumberOfLines(1)
-            .byBackgroundColor(.clear)
-            .byFont(.systemFont(ofSize: 17))
-            .byTextColor(.black)
+            .byBackgroundColor(JobsCor.clear)
+            .byFont(JobsFont.systemFont(ofSize: 17))
+            .byTextColor(JobsCor.black)
     }()
     /// 对标 UIButton.subtitle（拟合系统风格）
     public lazy var subtitleLabel: UILabel = {
         UILabel()
             .byNumberOfLines(1)
-            .byBackgroundColor(.clear)
-            .byFont(.systemFont(ofSize: 12))
+            .byBackgroundColor(JobsCor.clear)
+            .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
     }()
     // MARK: - Init
@@ -140,7 +140,7 @@ public final class JobsButton: UIImageView {
     /// 设置前景图（如果传 nil，会自动隐藏前景图）
     @discardableResult
     public func byForegroundImage(_ image: UIImage?) -> Self {
-        foregroundImageView.image = image
+        foregroundImageView.byImage(image)
         showsForegroundImage = (image != nil)
         refreshUI()
         return self
@@ -221,10 +221,10 @@ public final class JobsButton: UIImageView {
     private func setupViewsIfNeeded() {
         guard !didSetupViews else { return }
         didSetupViews = true
-        addSubview(contentContainer)
-        contentContainer.addSubview(foregroundImageView)
-        contentContainer.addSubview(titleLabel)
-        contentContainer.addSubview(subtitleLabel)
+        contentContainer.byAddTo(self)
+        foregroundImageView.byAddTo(contentContainer)
+        titleLabel.byAddTo(contentContainer)
+        subtitleLabel.byAddTo(contentContainer)
         updateContainerConstraints()
     }
 
@@ -249,11 +249,11 @@ public final class JobsButton: UIImageView {
 
     private func updateHiddenState() {
         let titleText = titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        titleLabel.isHidden = titleText.isEmpty
+        titleLabel.byHidden(titleText.isEmpty)
         let subText = subtitleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        subtitleLabel.isHidden = subText.isEmpty
+        subtitleLabel.byHidden(subText.isEmpty)
         // ✅ 只由显式开关控制是否参与布局（避免异步加载阶段被剔除布局）
-        foregroundImageView.isHidden = !showsForegroundImage
+        foregroundImageView.byHidden(!showsForegroundImage)
     }
 
     private func remakeLayoutConstraints() {

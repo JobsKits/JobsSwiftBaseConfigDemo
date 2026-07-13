@@ -45,7 +45,7 @@ final class JobsNetworkingDemoVC: BaseVC {
             .byTableHeaderView(
                 UIView()
                     .byHeight(8)
-                    .byBackgroundColor(.clear)
+                    .byBackgroundColor(JobsCor.clear)
             )
             .byTarget(self)
             .numberOfRowsInSection { [weak self] (_, _, _) -> Int in
@@ -102,7 +102,7 @@ final class JobsNetworkingDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsNetworking@本地模拟数据（iOS模拟器可看数据，真机无法）".tr)
-        view.byBackgroundColor(.systemBackground)
+        view.byBackgroundColor(JobsCor.systemBackground)
         tableView.byVisible(YES)
 //        loadCatalog()
     }

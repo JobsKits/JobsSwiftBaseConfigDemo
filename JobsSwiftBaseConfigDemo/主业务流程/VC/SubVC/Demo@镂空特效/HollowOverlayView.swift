@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsByQuartzCore
@@ -28,12 +29,12 @@ final class HollowOverlayView: UIView {
         CAShapeLayer().byFillRule(.evenOdd)
     }()
     /// 半透明遮罩颜色
-    var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.5) {
+    var overlayColor: UIColor = JobsCor.white.withAlphaComponent(0.5) {
         didSet { shapeLayer.fillColor = overlayColor.cgColor }
     }
     /// 是否允许拖动镂空区域
     var enableDrag: Bool = true {
-        didSet { panGR.isEnabled = enableDrag }
+        didSet { panGR.byEnabled(enableDrag) }
     }
     /// 允许从“洞的边缘外扩多少范围”开始拖（避免整屏拦截手势）
     var dragPadding: CGFloat = 30
@@ -68,7 +69,7 @@ final class HollowOverlayView: UIView {
         super.init(frame: frame)
         // 要能拖动：必须能接收手势
         isUserInteractionEnabled = true
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         layer.addSublayer(shapeLayer)
         shapeLayer.fillColor = overlayColor.cgColor
         jobs_addGesture(panGR)
@@ -77,18 +78,19 @@ final class HollowOverlayView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        shapeLayer.frame = bounds
+        shapeLayer.byFrame(bounds)
 
-        let path = UIBezierPath(rect: bounds)
+        let path = UIBezierPath.make(rect: bounds)
         let holePath: UIBezierPath
         switch holeShape {
         case .oval:
-            holePath = UIBezierPath(ovalIn: holeRect)
+            holePath = UIBezierPath.make(ovalIn: holeRect)
         case .roundedRect(let radius):
-            holePath = UIBezierPath(roundedRect: holeRect, cornerRadius: radius)
+            holePath = UIBezierPath.make(roundedRect: holeRect, cornerRadius: radius)
         }
-        path.append(holePath)
-        path.usesEvenOddFillRule = true
+        path
+            .byAppend(holePath)
+            .byUsesEvenOddFillRule(true)
         shapeLayer.path = path.cgPath
     }
     // 关键：只在“洞附近”吃掉触摸，其它区域放行给下面的 scrollView 等

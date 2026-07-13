@@ -86,7 +86,7 @@ final class JobsSlot {
     var showsInfo: Bool = true {
         didSet {
             guard state != .removed else { return }
-            view.isHidden = !showsInfo
+            view.byHidden(!showsInfo)
         }
     }
 
@@ -111,15 +111,15 @@ final class JobsSlot {
     }
 
     func attach(to sv: UIScrollView) {
-        if view.superview !== sv { sv.addSubview(view) }
-        if state != .removed { view.isHidden = !showsInfo }
+        if view.superview !== sv { view.byAddTo(sv) }
+        if state != .removed { view.byHidden(!showsInfo) }
         layout(in: sv)
         if state == .removed { state = .idle }
     }
 
     func detach() {
         view.removeFromSuperview()
-        view.isHidden = true
+        view.byHidden(true)
         state = .removed
     }
 
@@ -136,21 +136,21 @@ final class JobsSlot {
         }
         switch position {
         case .header:
-            view.frame = CGRect(x: 0, y: -h - baseInset.top, width: sv.bounds.width, height: h)
+            view.byFrame(CGRect(x: 0, y: -h - baseInset.top, width: sv.bounds.width, height: h))
         case .footer:
             let contentH = max(
                 sv.contentSize.height,
                 sv.bounds.height - (sv.adjustedContentInset.top + sv.adjustedContentInset.bottom)
             )
-            view.frame = CGRect(x: 0, y: contentH + baseInset.bottom, width: sv.bounds.width, height: h)
+            view.byFrame(CGRect(x: 0, y: contentH + baseInset.bottom, width: sv.bounds.width, height: h))
         case .left:
-            view.frame = CGRect(x: -h - baseInset.left, y: 0, width: h, height: sv.bounds.height)
+            view.byFrame(CGRect(x: -h - baseInset.left, y: 0, width: h, height: sv.bounds.height))
         case .right:
             let contentW = max(
                 sv.contentSize.width,
                 sv.bounds.width - (sv.adjustedContentInset.left + sv.adjustedContentInset.right)
             )
-            view.frame = CGRect(x: contentW + baseInset.right, y: 0, width: h, height: sv.bounds.height)
+            view.byFrame(CGRect(x: contentW + baseInset.right, y: 0, width: h, height: sv.bounds.height))
         }
     }
 
@@ -208,7 +208,7 @@ final class JobsSlot {
         sv.byRefreshFeedback(for: position)
 
         state = .refreshing
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
 
         let h = view.heightOrWidth
         let oldAdjusted = sv.adjustedContentInset
@@ -234,12 +234,15 @@ final class JobsSlot {
             targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
         }
 
-        UIView.animate(withDuration: 0.25,
-                       delay: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState]) {
-            sv.contentInset = inset
-            sv.setContentOffset(targetOffset, animated: false)
-        }
+        UIView.jobsAnimateWithOptions(
+            0.25,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState],
+            animations: {
+                sv.byContentInset(inset)
+                sv.setContentOffset(targetOffset, animated: false)
+            }
+        )
 
         action?()
         if container == nil { endRefreshing(on: sv) }
@@ -254,22 +257,26 @@ final class JobsSlot {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
         }
 
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
 
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
         isEndingAnimation = true
         state = .ending
 
-        UIView.animate(withDuration: restoreInsetDuration,
-                       delay: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState]) {
-            sv.contentInset = targetInset
-            self.layout(in: sv)
-        } completion: { _ in
-            self.layout(in: sv)
-            self.state = finalState
-            self.isEndingAnimation = false
-        }
+        UIView.jobsAnimateWithOptions(
+            restoreInsetDuration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState],
+            animations: {
+                sv.byContentInset(targetInset)
+                self.layout(in: sv)
+            },
+            completion: { _ in
+                self.layout(in: sv)
+                self.state = finalState
+                self.isEndingAnimation = false
+            }
+        )
     }
 
     func reset(on sv: UIScrollView) {
@@ -279,7 +286,7 @@ final class JobsSlot {
         }
         isEndingAnimation = false
         state = .idle
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
         layout(in: sv)
     }
 
@@ -289,7 +296,7 @@ final class JobsSlot {
             return
         }
         state = .failed
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
         layout(in: sv)
     }
 
@@ -299,14 +306,14 @@ final class JobsSlot {
             return
         }
         state = .disabled
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
         layout(in: sv)
     }
 
     func noticeNoMoreData(on sv: UIScrollView) {
         guard role == .loadMore else { return }
         state = .noMore
-        view.isHidden = !showsInfo
+        view.byHidden(!showsInfo)
         layout(in: sv)
     }
 

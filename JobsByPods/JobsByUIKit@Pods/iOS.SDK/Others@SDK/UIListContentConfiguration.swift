@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsSwiftBlock
 import JobsSwiftDSL
 
@@ -20,12 +21,12 @@ import JobsSwiftDSL
 //       .bySecondaryText("副标题")
 //       .byImage(systemName: "tray")
 //       .byPreferredSymbol(pointSize: 18, weight: .semibold)
-//       .byTintColor(.systemBlue)
+//       .byTintColor(JobsCor.systemBlue)
 //       .byImageCornerRadius(6)
 //       .byImageMaximumSize(CGSize(width: 28, height: 28))
-//       .byTextFont(.preferredFont(forTextStyle: .body))
+//       .byTextFont(JobsFont.preferredFont(forTextStyle: .body))
 //       .byTextColor(.label)
-//       .bySecondaryFont(.preferredFont(forTextStyle: .subheadline))
+//       .bySecondaryFont(JobsFont.preferredFont(forTextStyle: .subheadline))
 //       .bySecondaryColor(.secondaryLabel)
 //       .byTextLines(1)
 //       .bySecondaryLines(1)

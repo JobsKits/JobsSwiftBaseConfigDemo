@@ -46,7 +46,7 @@ open class BaseWebVC: BaseVC {
                     preferences.javaScriptCanOpenWindowsAutomatically = true
                 }
         }
-        .byBackgroundColor(.clear)
+        .byBackgroundColor(JobsCor.clear)
         .byAllowedHosts([])                  // 不限域
         .byOpenBlankInPlace(true)
         .byDisableSelectionAndCallout(false)
@@ -78,11 +78,11 @@ open class BaseWebVC: BaseVC {
         }
         /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
         .byNavBarBackButtonProvider {
-            UIButton(type: .system)
-                .byBackgroundColor(.clear)
+            UIButton.sys()
+                .byBackgroundColor(JobsCor.clear)
                 .byImage("chevron.left".sysImg, for: .normal)
                 .byTitle("返回".tr, for: .normal)
-                .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
                 .byTitleColor(JobsCor.label, for: .normal)
                 .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                 .byTapSound("Sound.wav")

@@ -38,15 +38,15 @@ final class SDBtnTBVCell: UITableViewCell {
 //        layer.byCornerRadius(8)
 //            .byMasksToBounds(NO)
 //            .byBorderWidth(1)
-//            .byBorderColor(.clear)
+//            .byBorderColor(JobsCor.clear)
     }
     /// 覆盖在Cell上的按钮设置为不可用，那么手势将执行以下方法
     override var isSelected: Bool {
         didSet {
             // ✅ 用 Cell 选中状态驱动按钮切换（文字/图标都能自动切）
-            coverButton.isSelected = isSelected
+            coverButton.bySelected(isSelected)
             // ✅ 红色描边
-            layer.borderColor = (isSelected ? UIColor.systemRed : UIColor.clear).cgColor
+            byBorderColor(isSelected ? JobsCor.systemRed : JobsCor.clear)
         }
     }
 }

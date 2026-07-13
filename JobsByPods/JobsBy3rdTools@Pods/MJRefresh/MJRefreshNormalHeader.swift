@@ -13,6 +13,8 @@ import UIKit
 
 #if canImport(MJRefresh)
 import MJRefresh
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
 extension MJRefreshNormalHeader {
     static func customHeader(refreshingTarget target: Any?, refreshingAction action: Selector?) -> MJRefreshNormalHeader {
         let header = MJRefreshNormalHeader(refreshingTarget: target as Any, refreshingAction: action!)
@@ -28,10 +30,10 @@ extension MJRefreshNormalHeader {
         }
 
         // 可选：调整字体和颜色
-        header.stateLabel?.font = UIFont.systemFont(ofSize: 12)
-        header.stateLabel?.textColor = UIColor.gray
-        header.lastUpdatedTimeLabel?.font = UIFont.systemFont(ofSize: 12)
-        header.lastUpdatedTimeLabel?.textColor = UIColor.lightGray
+        header.stateLabel?.byFont(UIFont.systemFont(ofSize: 12))
+        header.stateLabel?.byTextColor(JobsCor.gray)
+        header.lastUpdatedTimeLabel?.byFont(UIFont.systemFont(ofSize: 12))
+        header.lastUpdatedTimeLabel?.byTextColor(JobsCor.lightGray)
 
         return header
     }

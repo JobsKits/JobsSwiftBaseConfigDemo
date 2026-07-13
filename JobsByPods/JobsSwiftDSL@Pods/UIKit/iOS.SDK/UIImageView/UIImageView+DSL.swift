@@ -56,12 +56,6 @@ extension UIImageView {
         animationRepeatCount = count
         return self
     }
-    // MARK: Tint 颜色（支持 SF Symbol / 模板渲染）
-    @discardableResult
-    public func byTintColor(_ color: UIColor?) -> Self {
-        tintColor = color
-        return self
-    }
     // MARK: iOS13+ Symbol 配置
     @available(iOS 13.0, *)
     @discardableResult
@@ -138,12 +132,6 @@ extension UIImageView {
             guard let self else { return }
             self.animationRepeatCount = count
         }
-    }
-
-    @discardableResult
-    public func byTintColor(_ builder: () -> UIColor?) -> Self {
-        self.tintColor = builder()
-        return self
     }
 
     @available(iOS 13.0, *)

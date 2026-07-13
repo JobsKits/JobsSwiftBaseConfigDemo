@@ -14,6 +14,7 @@ digraph PodspecDependencies {
   "IGListKit";
   "JXSegmentedView";
   "JobsBlock";
+  "JobsBluetooth";
   "JobsBy3rdTools";
   "JobsByPDFKit";
   "JobsByPhotosUI";
@@ -125,6 +126,7 @@ digraph PodspecDependencies {
   "JobsByUIKit" -> "JobsSwiftDSL";
   "JobsByUIKit" -> "JobsSwiftTimer";
   "JobsByUIKit" -> "JobsTextTools";
+  "JobsByUIKit" -> "JobsViewPush";
   "JobsByUIKit" -> "Jobsl10n";
   "JobsByUIKit" -> "Kingfisher";
   "JobsByUIKit" -> "NSObject+Rx";
@@ -146,6 +148,9 @@ digraph PodspecDependencies {
   "JobsEmptyView" -> "JobsSwiftBlock";
   "JobsEmptyView" -> "JobsSwiftDSL";
   "JobsEmptyView" -> "SnapKit";
+  "JobsFuseAnimation" -> "JobsByUIKit";
+  "JobsFuseAnimation" -> "JobsSwiftBaseDefines";
+  "JobsFuseAnimation" -> "JobsSwiftDSL";
   "JobsFuseAnimation" -> "JobsSwiftTimer";
   "JobsGestureUnlock" -> "JobsByUIKit";
   "JobsGestureUnlock" -> "JobsSwiftBaseDefines";
@@ -172,6 +177,7 @@ digraph PodspecDependencies {
   "JobsLocalNotification" -> "JobsByUIKit";
   "JobsLocalNotification" -> "JobsSwiftTools";
   "JobsLuckyEnvelopeRain" -> "JobsByUIKit";
+  "JobsLuckyEnvelopeRain" -> "JobsSwiftBaseDefines";
   "JobsLuckyEnvelopeRain" -> "JobsSwiftDSL";
   "JobsLuckyEnvelopeRain" -> "JobsSwiftTimer";
   "JobsLuckyEnvelopeRain" -> "SnapKit";
@@ -224,7 +230,13 @@ digraph PodspecDependencies {
   "JobsSwiftBlock" -> "Moya";
   "JobsSwiftBlock" -> "SnapKit";
   "JobsSwiftBlock" -> "YTKNetwork";
+  "JobsSwiftCalendar" -> "JobsSwiftBaseDefines";
+  "JobsSwiftCalendar" -> "JobsSwiftDSL";
+  "JobsSwiftComment" -> "JobsByUIKit";
+  "JobsSwiftComment" -> "JobsSwiftBaseDefines";
+  "JobsSwiftComment" -> "JobsSwiftDSL";
   "JobsSwiftCountryCodeCtrl" -> "JobsByUIKit";
+  "JobsSwiftCountryCodeCtrl" -> "JobsSwiftBaseDefines";
   "JobsSwiftCountryCodeCtrl" -> "JobsSwiftDSL";
   "JobsSwiftCountryCodeCtrl" -> "Jobsl10n";
   "JobsSwiftCountryCodeCtrl" -> "SnapKit";
@@ -243,6 +255,10 @@ digraph PodspecDependencies {
   "JobsSwiftDebugTools" -> "JobsToast";
   "JobsSwiftFoundation" -> "JobsByUIKit";
   "JobsSwiftFoundation" -> "JobsSwiftDSL";
+  "JobsSwiftGraphicCaptcha" -> "JobsSwiftBaseDefines";
+  "JobsSwiftGraphicCaptcha" -> "JobsSwiftDSL";
+  "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
+  "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
   "JobsSwiftOpen" -> "JobsByUIKit";
   "JobsSwiftOpen" -> "JobsInheritance";
@@ -253,9 +269,14 @@ digraph PodspecDependencies {
   "JobsSwiftRefresher" -> "SDWebImage";
   "JobsSwiftRefresher" -> "SnapKit";
   "JobsSwiftRefresher" -> "lottie-ios";
+  "JobsSwiftSearcher" -> "JobsByUIKit";
+  "JobsSwiftSearcher" -> "JobsSwiftBaseDefines";
+  "JobsSwiftSearcher" -> "JobsSwiftDSL";
+  "JobsSwiftSearcher" -> "Jobsl10n";
   "JobsSwiftSplash" -> "JobsByUIKit";
   "JobsSwiftSplash" -> "JobsCountdownButton";
   "JobsSwiftSplash" -> "JobsInheritance";
+  "JobsSwiftSplash" -> "JobsSwiftBaseDefines";
   "JobsSwiftSplash" -> "JobsSwiftDSL";
   "JobsSwiftSplash" -> "JobsSwiftOpen";
   "JobsSwiftStandardLibrary" -> "JobsSwiftBaseDefines";
@@ -281,6 +302,8 @@ digraph PodspecDependencies {
   "JobsToast" -> "JobsSwiftBlock";
   "JobsToast" -> "JobsSwiftDSL";
   "JobsToast" -> "SnapKit";
+  "JobsViewPush" -> "JobsSwiftBaseDefines";
+  "JobsViewPush" -> "JobsSwiftDSL";
   "Texture" -> "IGListDiffKit";
   "Texture" -> "IGListKit";
   "Texture" -> "PINRemoteImage";

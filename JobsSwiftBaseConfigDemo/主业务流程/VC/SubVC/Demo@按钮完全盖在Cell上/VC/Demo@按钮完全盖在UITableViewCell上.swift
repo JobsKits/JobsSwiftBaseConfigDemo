@@ -38,9 +38,9 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
             .byContentInsetTop(8)
             // ✅ 空态 API：reloadData 后自动评估，无需手动 updateEmptyState
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -95,8 +95,8 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black.withAlphaComponent(0.92)
-        jobsSetupGKNav(title: "按钮完全盖在UITableViewCell上")
+        view.byBackgroundColor(JobsCor.black.withAlphaComponent(0.92))
+        jobsSetupGKNav(title: "按钮完全盖在UITableViewCell上".tr)
         tableView.reloadData()
 //        tableView.contentInset.top = 100
 //        tableView.contentInset.left = 100
@@ -137,9 +137,9 @@ extension BtnFullOnTBVCellDemoVC {
             let idx = startAt + i
             return JobsBtnCellModel(
                 title: titles[idx % titles.count],
-                titleCor: .systemCyan,
+                titleCor: JobsCor.systemCyan,
                 subTitle: "发言时聊天专属皮肤",
-                subTitleCor: .blue,
+                subTitleCor: JobsCor.blue,
                 imageURL:"https://picsum.photos/200",
                 bgImageURL:"https://picsum.photos/300",
                 selected: false,

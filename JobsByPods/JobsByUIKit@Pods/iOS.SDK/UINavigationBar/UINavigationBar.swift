@@ -27,12 +27,6 @@ extension UINavigationBar {
         self.isTranslucent = translucent
         return self
     }
-    /// tintColor（按钮、返回箭头等）
-    @discardableResult
-    public func byTintColor(_ color: UIColor?) -> Self {
-        self.tintColor = color
-        return self
-    }
     /// barTintColor（老 API，iOS13- 主要作用）
     @discardableResult
     public func byBarTintColor(_ color: UIColor?) -> Self {
@@ -125,12 +119,6 @@ extension UINavigationBar {
     @discardableResult
     public func byTranslucent(_ builder: () -> Bool) -> Self {
         self.isTranslucent = builder()
-        return self
-    }
-    
-    @discardableResult
-    public func byTintColor(_ builder: () -> UIColor?) -> Self {
-        self.tintColor = builder()
         return self
     }
     

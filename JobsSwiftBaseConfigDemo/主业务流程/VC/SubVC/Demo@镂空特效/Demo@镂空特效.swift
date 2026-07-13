@@ -25,11 +25,11 @@ final class TransparentRegionVC: BaseVC {
     private var didInitHoleRect = false
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byText("iOS-UIView设置阴影效果")
+            .byText("iOS-UIView设置阴影效果".tr)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
-            .byBgCor(.systemYellow)
-            .byShadowColor(.systemBlue)
+            .byBgCor(JobsCor.systemYellow)
+            .byShadowColor(JobsCor.systemBlue)
             .byShadowOpacity(0.8)
             .byShadowOffset(.zero)
             .byCornerRadius(9)
@@ -45,7 +45,7 @@ final class TransparentRegionVC: BaseVC {
 
     private lazy var overlayView: HollowOverlayView = {
         let v = HollowOverlayView()
-        v.overlayColor = UIColor.white.withAlphaComponent(0.5)
+        v.overlayColor = JobsCor.white.withAlphaComponent(0.5)
         v.holeShape = .oval              // 想要圆角矩形：.roundedRect(12)
         return v.byAddTo(view) { make in
             make.edges.equalToSuperview()
@@ -54,8 +54,8 @@ final class TransparentRegionVC: BaseVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemYellow
-        jobsSetupGKNav(title: "镂空效果")
+        view.byBackgroundColor(JobsCor.systemYellow)
+        jobsSetupGKNav(title: "镂空效果".tr)
         titleLabel.byVisible(YES)
         overlayView.byVisible(YES)
     }
@@ -69,7 +69,7 @@ final class TransparentRegionVC: BaseVC {
             let y = view.safeAreaInsets.top + 60
             overlayView.holeRect = CGRect(x: x, y: y, width: size, height: size)
         }
-        titleLabel.layer.shadowPath = UIBezierPath(
+        titleLabel.layer.shadowPath = UIBezierPath.make(
             roundedRect: titleLabel.bounds,
             cornerRadius: 9
         ).cgPath

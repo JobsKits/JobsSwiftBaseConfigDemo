@@ -21,4 +21,6 @@ UIKit drawing view for Jobs Swift projects.
     'UIKit',
     'QuartzCore'
   ]
+  s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'JobsSwiftDSL'
 end

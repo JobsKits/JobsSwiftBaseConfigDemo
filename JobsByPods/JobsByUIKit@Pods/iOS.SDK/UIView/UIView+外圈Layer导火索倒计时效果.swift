@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 import JobsSwiftTimer
 import JobsSwiftDSL
 /// 导火索式倒计时：在任意 UIView 最外层画一圈可消耗的边框，随着时间递减
@@ -33,7 +34,7 @@ public struct JobsFuseConfig {
     public var direction: Direction
 
     public init(lineWidth: CGFloat = 4,
-                color: UIColor = .systemRed,
+                color: UIColor = JobsCor.systemRed,
                 inset: CGFloat = 0,
                 removeOnFinish: Bool = true,
                 direction: Direction = .counterClockwise) {
@@ -145,7 +146,7 @@ extension UIView {
             fuseLayer = existing
         } else {
             fuseLayer = CAShapeLayer()
-                .byFillColor(.clear)
+                .byFillColor(JobsCor.clear)
                 .byLineCap(.round)
                 .byAddSublayer(layer)
             jobs_fuseLayer = fuseLayer
@@ -153,7 +154,7 @@ extension UIView {
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
         // 配置 Layer 几何与样式
         fuseLayer
             .byFrame(bounds)
@@ -225,7 +226,7 @@ extension UIView {
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
         fuseLayer.byFrame(bounds).byPath(path.cgPath)
     }
     // MARK: - Private
@@ -250,7 +251,7 @@ extension UIView {
             fuseLayer = existing
         } else {
             fuseLayer = CAShapeLayer()
-                .byFillColor(.clear)
+                .byFillColor(JobsCor.clear)
                 .byLineCap(.round)
                 .byAddSublayer(layer)
             jobs_fuseLayer = fuseLayer
@@ -259,7 +260,7 @@ extension UIView {
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
         fuseLayer.byFrame(bounds)
             .byPath(path.cgPath)
             .byLineWidth(config.lineWidth)

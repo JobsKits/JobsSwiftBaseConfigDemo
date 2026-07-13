@@ -672,7 +672,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     private func titleBaseFont(button: UIButton) -> UIFont {
-        snapshot.titleFont ?? (button.titleLabel?.font ?? .systemFont(ofSize: 14))
+        snapshot.titleFont ?? (button.titleLabel?.font ?? JobsFont.systemFont(ofSize: 14))
     }
 
     private func titleBaseColor(button: UIButton) -> UIColor {
@@ -680,7 +680,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     private func subTitleBaseFont(button: UIButton) -> UIFont {
-        snapshot.subTitleFont ?? (Self.findSubTitleLabel(from: button)?.font ?? .systemFont(ofSize: 14))
+        snapshot.subTitleFont ?? (Self.findSubTitleLabel(from: button)?.font ?? JobsFont.systemFont(ofSize: 14))
     }
 
     private func subTitleBaseColor(button: UIButton) -> UIColor {

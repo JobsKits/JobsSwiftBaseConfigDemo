@@ -83,21 +83,21 @@ final class ObjectBoxDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 guard let selectedPerson else {
-                    "请先在列表里选中一条数据".toast
+                    "请先在列表里选中一条数据".tr.toast
                     return
                 }
 
                 guard let name = nameTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
                     !name.isEmpty else {
-                    "姓名不能为空".toast
+                    "姓名不能为空".tr.toast
                     return
                 }
 
                 guard let ageText = ageTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
                     let age = Int32(ageText) else {
-                    "年龄不合法".toast
+                    "年龄不合法".tr.toast
                     return
                 }
 
@@ -126,7 +126,7 @@ final class ObjectBoxDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 guard let selectedPerson else {
-                    "请先在列表里选中一条数据".toast
+                    "请先在列表里选中一条数据".tr.toast
                     return
                 }
 
@@ -196,7 +196,7 @@ final class ObjectBoxDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "ObjectBox CRUD Demo".tr)
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         nameTextField.byVisible(YES)
         ageTextField.byVisible(YES)
         addButton.byVisible(YES)
@@ -215,18 +215,16 @@ private extension ObjectBoxDemoVC {
         guard let name = nameTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
             !name.isEmpty else {
-            "姓名不能为空".toast
+            "姓名不能为空".tr.toast
             return nil
         }
 
         guard let ageText = ageTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
             let age = Int32(ageText) else {
-            "年龄不合法".toast
+            "年龄不合法".tr.toast
             return nil
-        }
-
-        return Human(name: name, age: age)
+        };return Human(name: name, age: age)
     }
 
     func loadAllPersons() {

@@ -10,6 +10,8 @@
 
 `JobsSwiftCalendar` 是 Swift 侧对齐 `JobsOCCalendar` 的独立日历控件。它不包裹第三方日历视图，内部负责年月标题、星期栏、日期格、选中态、翻页、日期范围、节假日副标题和安全刷新。
 
+本 Pod 直接依赖 `JobsSwiftBaseDefines` 和 `JobsSwiftDSL`；系统字体统一走 `JobsFont`，Jobs 自维护的 UIKit 属性和装配统一走 `byXxx` 链式入口。
+
 ## 一、用途 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Demo、业务页、组件页需要稳定月历视图，并希望规避约束变化或异步刷新导致的错位。

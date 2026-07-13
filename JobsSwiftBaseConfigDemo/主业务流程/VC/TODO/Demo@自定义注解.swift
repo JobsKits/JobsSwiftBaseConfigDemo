@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsBy3rdTools
@@ -44,9 +45,9 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -110,10 +111,10 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
 
     private lazy var renameButton: UIButton = {
         UIButton.sys()
-            .byTitle("① 改 #2 的 name（id 不变）", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBackgroundColor(.systemBlue)
+            .byTitle("① 改 #2 的 name（id 不变）".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemBlue)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in self?.renameSameID() }
             .byAddTo(view) { [unowned self] make in
@@ -124,10 +125,10 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
 
     private lazy var replaceButton: UIButton = {
         UIButton.sys()
-            .byTitle("② 替换 #2（id → 99）", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
-            .byBackgroundColor(.systemOrange)
+            .byTitle("② 替换 #2（id → 99）".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemOrange)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in self?.replaceWithNewID() }
             .byAddTo(view) { [unowned self] make in
@@ -145,7 +146,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
         jobsSetupGKNav(
             title: "@EquatableBy(\"id\") × Jobs DSL"
         )
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         _ = tableView; _ = renameButton; _ = replaceButton
 
         // Diffable：真正的数据源
@@ -159,7 +160,7 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
         }
 
         // 覆盖掉 .byDataSource(self) 设置的 dataSource
-        tableView.dataSource = dataSource
+        tableView.byDataSource(dataSource)
 
         applySnapshot(animated: false)
     }

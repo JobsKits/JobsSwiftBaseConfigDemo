@@ -59,7 +59,7 @@ extension BaseWebView: WKUIDelegate {
         UIAlertController
             .makeAlert("确认".tr, prompt)
             .byAddTextField { tf in
-                tf.text = defaultText
+                tf.byText(defaultText)
             }
             .byAddCancel { _ in completionHandler(nil) }
             .byAddOK { _ in completionHandler(nil) }
@@ -86,7 +86,7 @@ extension BaseWebView: WKUIDelegate {
         }
 
         docPickerDelegate = proxy
-        picker.delegate = proxy
+        picker.byDelegate(proxy)
         picker.modalPresentationStyle = .formSheet
         presentingVC?.present(picker, animated: true)
     }

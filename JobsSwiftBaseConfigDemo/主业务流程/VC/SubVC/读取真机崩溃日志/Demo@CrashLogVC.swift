@@ -28,8 +28,8 @@ final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 12
     private lazy var tv: UITextView = { [unowned self] in
         UITextView()
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.label)
             .byEditable(false)
             .bySelectable(true)
             .byTextContainerInset(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
@@ -47,7 +47,7 @@ final class CrashLogDemoVC: BaseVC {
     // ================================== Life Cycle ==================================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Crash Log Viewer",
             rightButtons: [
@@ -63,7 +63,7 @@ final class CrashLogDemoVC: BaseVC {
                     .byImage("trash.fill".sysImg, for: .normal)
                     .onTap { [unowned self] _ in
                         let (ok, msg) = CrashLogCenter.shared.clear()
-                        tv.text = msg
+                        tv.byText(msg)
                         (ok ? "日志清理成功✅" : "日志清理失败❌").tr.toast
                     },
                 // 刷新
@@ -87,13 +87,13 @@ extension CrashLogDemoVC {
         let content = CrashLogCenter.shared.readTail(kilobytes: 512)
 
         if keyword.isEmpty {
-            tv.text = headerText(keyword: "") + content
+            tv.byText(headerText(keyword: "") + content)
         } else {
             let filtered = content
                 .components(separatedBy: "\n")
                 .filter { keyword.inStr($0) }
                 .joined(separator: "\n")
-            tv.text = headerText(keyword: keyword) + filtered
+            tv.byText(headerText(keyword: keyword) + filtered)
         }
 
         tv.scrollRangeToVisible(NSRange(location: 0, length: 0))

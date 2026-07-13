@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
 import JobsSwiftDebugTools
 import SnapKit
 
@@ -24,7 +26,7 @@ open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.byBackgroundColor(JobsCor.white)
 //        jobsSetupGKNav(title: "定义当前的标题")
     }
     /// 手势返回
@@ -34,7 +36,8 @@ open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
         // 只有当栈深 > 1 时才允许侧滑
         let canPop = nav.viewControllers.count > 1
         // 关键：把手势的 delegate 置空，交还给系统默认的触发逻辑
-        nav.interactivePopGestureRecognizer?.delegate = nil
-        nav.interactivePopGestureRecognizer?.isEnabled = canPop
+        nav.interactivePopGestureRecognizer?
+            .byDelegate(nil)
+            .byEnabled(canPop)
     }
 }

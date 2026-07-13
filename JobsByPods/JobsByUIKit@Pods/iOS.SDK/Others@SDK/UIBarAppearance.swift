@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 @available(iOS 13.0, *)
 extension UIBarAppearance {
     // MARK: - 1. 背景预设 configureXXX
@@ -69,7 +71,7 @@ extension UIBarAppearance {
         return self
     }
     // MARK: - 3. 阴影（shadow）
-    /// 阴影颜色（传 nil / .clear 代表不要阴影）
+    /// 阴影颜色（传 nil / JobsCor.clear 代表不要阴影）
     @discardableResult
     public func byShadowColor(_ color: UIColor?) -> Self {
         shadowColor = color

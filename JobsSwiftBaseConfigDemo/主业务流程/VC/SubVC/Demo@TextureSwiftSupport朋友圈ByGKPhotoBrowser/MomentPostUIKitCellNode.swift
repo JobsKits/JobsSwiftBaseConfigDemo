@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import AsyncDisplayKit
@@ -29,9 +30,9 @@ final class MomentPostUIKitCellNode: ASCellNode {
     /// ✅ 用于“离屏测高”，绝不改动屏幕上正在显示的 hostCell（防止 UI 被测高逻辑弄坏）
     private lazy var sizingCell: MomentPostCell = {
         let c = MomentPostCell(style: .default, reuseIdentifier: nil)
-        c.backgroundColor = .clear
-        c.contentView.backgroundColor = .clear
-        c.clipsToBounds = false
+        c.byBackgroundColor(JobsCor.clear)
+        c.contentView.byBackgroundColor(JobsCor.clear)
+        c.byClipsToBounds(false)
         // 不需要回调，不要绑事件
         return c
     }()
@@ -63,15 +64,15 @@ final class MomentPostUIKitCellNode: ASCellNode {
 
         self.containerNode = ASDisplayNode(viewBlock: {
             let v = UIView()
-            v.backgroundColor = .clear
-            v.clipsToBounds = false
+            v.byBackgroundColor(JobsCor.clear)
+            v.byClipsToBounds(false)
             return v
         })
 
         super.init()
 
         automaticallyManagesSubnodes = true
-        backgroundColor = .clear
+        backgroundColor = JobsCor.clear
         selectionStyle = .none
     }
 
@@ -103,15 +104,15 @@ final class MomentPostUIKitCellNode: ASCellNode {
             .byData(self.post, layoutMode: layoutMode)
 
         // ⚠️ 不要动 UITableViewCell.translatesAutoresizingMaskIntoConstraints
-        cell.backgroundColor = .clear
-        cell.contentView.backgroundColor = .clear
-        cell.clipsToBounds = false
+        cell.byBackgroundColor(JobsCor.clear)
+        cell.contentView.byBackgroundColor(JobsCor.clear)
+        cell.byClipsToBounds(false)
 
         hostCell = cell
 
         let host = containerNode.view
-        host.addSubview(cell)
-        cell.frame = host.bounds
+        cell.byAddTo(host)
+        cell.byFrame(host.bounds)
         cell.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         // 首次进来测一次真实高度（用 sizingCell，不会影响屏幕上的 cell）
@@ -252,9 +253,7 @@ final class MomentPostUIKitCellNode: ASCellNode {
         let commentCount = post.comments.count
         if commentCount > 0 {
             h += CGFloat(min(commentCount, 3)) * 22 + 16
-        }
-
-        return h
+        };return h
     }
     // MARK: - Force media grid to 3 columns (3*3)
     /// 返回：是否真的改动了 layout/约束（用于决定要不要触发高度重测）

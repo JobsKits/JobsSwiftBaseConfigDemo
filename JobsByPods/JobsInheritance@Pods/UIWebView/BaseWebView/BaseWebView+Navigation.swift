@@ -19,7 +19,7 @@ extension BaseWebView: WKNavigationDelegate {
 
     @MainActor
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        progressView.isHidden = false
+        progressView.byHidden(false)
     }
 
     @MainActor

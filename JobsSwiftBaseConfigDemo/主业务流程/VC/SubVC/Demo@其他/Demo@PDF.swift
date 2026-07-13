@@ -34,7 +34,7 @@ final class PDFDemoVC: BaseVC {
             .byAutoScales(NO) // 交给我们手动控制
             .byDisplayMode(.singlePageContinuous)
             .byDisplayDirection(.vertical)
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -46,7 +46,7 @@ final class PDFDemoVC: BaseVC {
         PDFThumbnailView()
             .byLayoutMode(.horizontal)
             .byThumbnailSize(CGSize(width: 60, height: 80))
-            .byBackgroundColor(.tertiarySystemBackground)
+            .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byContentInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
             .byAddTo(view) { [unowned self] make in
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -57,12 +57,12 @@ final class PDFDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav( title: "PDF",
                         rightButtons: [
                             UIButton.sys()
-                                .byTitle("上一页", for: .normal)
-                                .byTitleFont(.systemFont(ofSize: 8, weight: .medium))
+                                .byTitle("上一页".tr, for: .normal)
+                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                                 .byImage("moon.circle.fill".sysImg, for: .normal)
                                 .byImage("moon.circle.fill".sysImg, for: .selected)
                                 .byImagePlacement(.top)
@@ -74,8 +74,8 @@ final class PDFDemoVC: BaseVC {
                                     make.size.equalTo(CGSize(width: 50, height: 44))
                                 }),
                             UIButton.sys()
-                                .byTitle("下一页", for: .normal)
-                                .byTitleFont(.systemFont(ofSize: 8, weight: .medium))
+                                .byTitle("下一页".tr, for: .normal)
+                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                                 .byImage("tray".sysImg, for: .normal)
                                 .byImage("tray".sysImg, for: .selected)
                                 .byImagePlacement(.top)
@@ -87,8 +87,8 @@ final class PDFDemoVC: BaseVC {
                                     make.size.equalTo(CGSize(width: 50, height: 44))
                                 }),
                             UIButton.sys()
-                                .byTitle("分享", for: .normal)
-                                .byTitleFont(.systemFont(ofSize: 8, weight: .medium))
+                                .byTitle("分享".tr, for: .normal)
+                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                                 .byImage("globe".sysImg, for: .normal)
                                 .byImage("globe".sysImg, for: .selected)
                                 .byImagePlacement(.top)

@@ -54,7 +54,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
 
     private lazy var label: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)          // ✅ 允许两行
             .byTextAlignment(.center)    // ✅ 两行居中更稳
@@ -87,12 +87,12 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
             x: (bounds.width - indicator.bounds.width) * 0.5,
             y: originY
         )
-        label.frame = CGRect(
+        label.byFrame(CGRect(
             x: (bounds.width - maxLabelW) * 0.5,
             y: indicator.frame.maxY + spacing,
             width: maxLabelW,
             height: labelH
-        )
+        ))
     }
     // MARK: - JobsRefreshTimeTrackable
     public func markRefreshed(at date: Date) {

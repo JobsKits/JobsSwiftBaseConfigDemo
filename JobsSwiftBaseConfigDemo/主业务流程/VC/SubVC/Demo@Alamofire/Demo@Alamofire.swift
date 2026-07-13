@@ -34,9 +34,9 @@ final class AFDemoVC: UIViewController {
             .byEditable(false)
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byTextColor(.label)
-            .byBackgroundColor(UIColor.secondarySystemBackground)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(true)
             .byAddTo(view) { [unowned self] make in
@@ -50,13 +50,13 @@ final class AFDemoVC: UIViewController {
     private lazy var btnZen: UIButton = {
         UIButton.sys()
             .byTitle("GET /zen (AF)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBlue)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "GET /zen → 请求中…")
+                show(title: "GET /zen → 请求中…".tr)
                 api.request(.ghZen) { [weak self] res in
                     guard let self else { return }
                     switch res {
@@ -82,13 +82,13 @@ final class AFDemoVC: UIViewController {
     private lazy var btnUser: UIButton = {
         UIButton.sys()
             .byTitle("GET /users/apple", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemIndigo)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "GET /users/apple → 请求中…")
+                show(title: "GET /users/apple → 请求中…".tr)
                 api.request(.ghUser(username: "apple")) { [weak self] res in
                     guard let self else { return }
                     switch res {
@@ -100,7 +100,7 @@ final class AFDemoVC: UIViewController {
                                 body: "login=\(user.login), id=\(user.id)\navatar=\(user.avatar_url)"
                             )
                         } catch {
-                            show(title: "解析失败 ❌", body: "\(error)")
+                            show(title: "解析失败 ❌".tr, body: "\(error)")
                         }
                     case .failure(let e):
                         show(title: "GET /users/apple ❌", body: "\(e)")
@@ -117,13 +117,13 @@ final class AFDemoVC: UIViewController {
     private lazy var btnLogin: UIButton = {
         UIButton.sys()
             .byTitle("POST /login (ReqRes)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemGreen)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "POST /api/login → 请求中…")
+                show(title: "POST /api/login → 请求中…".tr)
                 api.request(.login(email: "eve.holt@reqres.in", password: "cityslicka")) { [weak self] res in
                     guard let self else { return }
                     switch res {
@@ -144,16 +144,16 @@ final class AFDemoVC: UIViewController {
     private lazy var btnUpload: UIButton = {
         UIButton.sys()
             .byTitle("UPLOAD /post (httpbin)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemOrange)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "UPLOAD /post → 上传中…（看进度）")
+                show(title: "UPLOAD /post → 上传中…（看进度）".tr)
                 let fake = Data(repeating: 0xFF, count: 200_000)
                 api.uploadAvatar(.uploadAvatar(fake), imageData: fake, progress: { [weak self] p in
-                    self?.show(title: "⬆️ 上传进度", body: String(format: "%.1f%%", p * 100))
+                    self?.show(title: "⬆️ 上传进度".tr, body: String(format: "%.1f%%", p * 100))
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
@@ -174,15 +174,15 @@ final class AFDemoVC: UIViewController {
     private lazy var btnDownloadPNG: UIButton = {
         UIButton.sys()
             .byTitle("DOWNLOAD /image/png", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPink)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPink)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "DOWNLOAD /image/png → 下载中…")
+                show(title: "DOWNLOAD /image/png → 下载中…".tr)
                 api.download(.downloadPNG, progress: { [weak self] p in
-                    self?.show(title: "⬇️ PNG 进度", body: String(format: "%.1f%%", p * 100))
+                    self?.show(title: "⬇️ PNG 进度".tr, body: String(format: "%.1f%%", p * 100))
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
@@ -203,15 +203,15 @@ final class AFDemoVC: UIViewController {
     private lazy var btnDownloadBytes: UIButton = {
         UIButton.sys()
             .byTitle("DOWNLOAD /bytes/524288", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemTeal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "DOWNLOAD /bytes/524288 → 下载中…")
+                show(title: "DOWNLOAD /bytes/524288 → 下载中…".tr)
                 api.download(.downloadBytes(size: 524_288), progress: { [weak self] p in
-                    self?.show(title: "⬇️ BYTES 进度", body: String(format: "%.1f%%", p * 100))
+                    self?.show(title: "⬇️ BYTES 进度".tr, body: String(format: "%.1f%%", p * 100))
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
@@ -232,17 +232,17 @@ final class AFDemoVC: UIViewController {
     private lazy var btnCombineZen: UIButton = {
         UIButton.sys()
             .byTitle("Combine GET /zen (AF)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPurple)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
                 guard #available(iOS 13.0, *) else {
-                    self.show(title: "Combine 未可用", body: "系统版本过低")
+                    self.show(title: "Combine 未可用".tr, body: "系统版本过低")
                     return
                 }
-                show(title: "Combine GET /zen → 请求中…")
+                show(title: "Combine GET /zen → 请求中…".tr)
                 api.publisherString(.ghZen)
                     .sink { [weak self] comp in
                         guard let self else { return }
@@ -264,15 +264,15 @@ final class AFDemoVC: UIViewController {
     private lazy var btnAsyncSearch: UIButton = {
         UIButton.sys()
             .byTitle("async/await /search/users", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBrown)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBrown)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
                 #if compiler(>=5.5) && canImport(_Concurrency)
                 if #available(iOS 13.0, *) {
-                    show(title: "async /search/users → 请求中…")
+                    show(title: "async /search/users → 请求中…".tr)
                     Task { [weak self] in
                         guard let self else { return }
                         do {
@@ -285,10 +285,10 @@ final class AFDemoVC: UIViewController {
                         }
                     }
                 } else {
-                    show(title: "async/await 不可用", body: "iOS < 13")
+                    show(title: "async/await 不可用".tr, body: "iOS < 13")
                 }
                 #else
-                show(title: "当前工具链不支持 async/await", body: "请使用 Swift 5.5+")
+                show(title: "当前工具链不支持 async/await".tr, body: "请使用 Swift 5.5+")
                 #endif
             }
             .byAddTo(view) { [unowned self] make in
@@ -301,13 +301,13 @@ final class AFDemoVC: UIViewController {
     private lazy var btnStub: UIButton = {
         UIButton.sys()
             .byTitle("Stub: sampleData (AF)", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.darkGray)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.darkGray)
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
                 guard let self else { return }
                 clear()
-                show(title: "Stub 示例（URLProtocol）")
+                show(title: "Stub 示例（URLProtocol）".tr)
                 let stub = AFService(mode: .stubbed) { [weak self] t in self?.appendRawLog(t) }
                 stub.request(.ghZen) { [weak self] r in
                     guard let self else { return }
@@ -329,9 +329,9 @@ final class AFDemoVC: UIViewController {
 
     private lazy var btnClear: UIButton = {
         UIButton.sys()
-            .byTitle("清空输出", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemRed)
+            .byTitle("清空输出".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemRed)
             .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -346,15 +346,15 @@ final class AFDemoVC: UIViewController {
 
     private func clear() {
         DispatchQueue.main.async { [weak self] in
-            self?.resultView.text = ""
+            self?.resultView.byText("")
         }
     }
 
     // ================= 生命周期 =================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "Alamofire 全量用法 Demo")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "Alamofire 全量用法 Demo".tr)
 
         btnZen.byVisible(YES)
         btnUser.byVisible(YES)
@@ -368,7 +368,7 @@ final class AFDemoVC: UIViewController {
         btnClear.byVisible(YES)
         resultView.byVisible(YES)
 
-        show(title: "准备就绪 ✅", body: "按钮触发请求；日志与结果会回显在此。")
+        show(title: "准备就绪 ✅".tr, body: "按钮触发请求；日志与结果会回显在此。")
     }
     // ================= 工具 =================
     private func show(title: String, body: String? = nil) {
@@ -376,9 +376,9 @@ final class AFDemoVC: UIViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if let b = body, !b.isEmpty {
-                self.resultView.text = header + b + "\n\n" + (self.resultView.text ?? "")
+                self.resultView.byText(header + b + "\n\n" + (self.resultView.text ?? ""))
             } else {
-                self.resultView.text = header + (self.resultView.text ?? "")
+                self.resultView.byText(header + (self.resultView.text ?? ""))
             }
         }
     }
@@ -386,7 +386,7 @@ final class AFDemoVC: UIViewController {
     private func appendRawLog(_ text: String) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.resultView.text = text + "\n\n" + (self.resultView.text ?? "")
+            self.resultView.byText(text + "\n\n" + (self.resultView.text ?? ""))
         }
     }
 

@@ -18,27 +18,7 @@ import JobsSwiftDSL
 /// 为了更加的贴合语义，这里使用OC的runtime机制去拿到内部私有的内部类来进行修改
 
 extension UITextField {
-    
-    @discardableResult
-    public func byPlaceholder(_ text: String?) -> Self {
-        placeholder = text
-        // ✅ 尝试让 placeholderLabel 尽早生成（不保证一定生成，但通常会）
-        // 做一次轻量布局触发：避免你紧接着 byPlaceholderColor/Font 时 label 还是 nil
-        setNeedsLayout()
-        layoutIfNeeded()
-        // ✅ 如果 label 已经存在，而且外部可能先设了 attributedPlaceholder（或你内部有缓存样式）
-        // 这里不强行改样式，交给 byPlaceholderColor/byPlaceholderFont 去做
-        // 如果你想“设文案时自动同步已有 attributedPlaceholder 样式”，可以取消下面注释：
-        /*
-        if jobs_placeholderLabel_byRuntime() == nil, attributedPlaceholder != nil {
-            // 仅把 string 换掉但保留属性
-            let attrs = attributedPlaceholder?.attributes(at: 0, effectiveRange: nil) ?? [:]
-            attributedPlaceholder = NSAttributedString(string: text ?? "", attributes: attrs)
-        }
-        */
-        return self
-    }
-    
+
     @discardableResult
     public func byPlaceholderColor(_ color: UIColor) -> Self {
         if let label = jobs_placeholderLabel_byRuntime() {

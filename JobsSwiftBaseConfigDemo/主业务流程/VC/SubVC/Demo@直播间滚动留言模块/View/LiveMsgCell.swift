@@ -20,7 +20,7 @@ import SnapKit
 final class LiveMsgCell: UITableViewCell {
     private lazy var bubble: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(true)
             .byAddTo(contentView) {[unowned self] make in
@@ -33,8 +33,8 @@ final class LiveMsgCell: UITableViewCell {
     private lazy var label: UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 16))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
             .byAddTo(bubble) {[unowned self] make in
                 make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
             }
@@ -43,8 +43,8 @@ final class LiveMsgCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
         bubble.byVisible(YES)
         label.byVisible(YES)
     }
@@ -56,15 +56,17 @@ final class LiveMsgCell: UITableViewCell {
     }
 
     func playAppearAnimation() {
-        contentView.alpha = 0
+        contentView.byAlpha(0)
         contentView.transform = CGAffineTransform(translationX: 0, y: 22)
-        UIView.animate(withDuration: 0.25,
-                       delay: 0,
-                       usingSpringWithDamping: 0.85,
-                       initialSpringVelocity: 0.6,
-                       options: [.curveEaseOut, .allowUserInteraction]) {
-            self.contentView.alpha = 1
-            self.contentView.transform = .identity
-        }
+        UIView.jobsAnimateWithSpring(
+            0.25,
+            dampingRatio: 0.85,
+            initialVelocity: 0.6,
+            options: [.curveEaseOut, .allowUserInteraction],
+            animations: {
+                self.contentView.byAlpha(1)
+                self.contentView.transform = .identity
+            }
+        )
     }
 }

@@ -11,10 +11,17 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 import CoreGraphics
 /// 基础绘制
 
 extension UIImage {
+    /// 创建空图片；调用侧不直接使用 UIKit 空初始化器。
+    public static func make() -> UIImage {
+        UIImage()
+    }
+
     // MARK: - 绘制渐变色图片：任意方向线性渐变
     public convenience init?(gradientColors: [UIColor],
                              size: CGSize,
@@ -63,7 +70,7 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()
         UIRectFill(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make()
         UIGraphicsEndImageContext()
         return image.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     }
@@ -98,7 +105,7 @@ extension UIImage {
         defer { UIGraphicsEndImageContext() }
         color.setFill()
         UIRectFill(rect)
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make()
     }
 }
 /// 功能性方法
@@ -113,7 +120,7 @@ extension UIImage {
     // MARK: - 圆角/圆形 + 内描边
     public func rounded(cornerRadius: CGFloat? = nil,
                         borderWidth: CGFloat = 0,
-                        borderColor: UIColor = .clear) -> UIImage? {
+                        borderColor: UIColor = JobsCor.clear) -> UIImage? {
         let shortest = min(size.width, size.height)
         guard shortest > 0 else { return nil }
 
@@ -125,8 +132,8 @@ extension UIImage {
 
         let clipRadius = max(0, cornerRadius ?? shortest * 0.5)
         let clipPath: UIBezierPath = (cornerRadius == nil)
-            ? UIBezierPath(ovalIn: rect)
-            : UIBezierPath(roundedRect: rect, cornerRadius: clipRadius)
+            ? UIBezierPath.make(ovalIn: rect)
+            : UIBezierPath.make(roundedRect: rect, cornerRadius: clipRadius)
         clipPath.addClip()
 
         draw(in: CGRect(
@@ -145,8 +152,8 @@ extension UIImage {
                 : max(0, clipRadius - inset)
 
             let strokePath: UIBezierPath = (cornerRadius == nil)
-                ? UIBezierPath(ovalIn: strokeRect)
-                : UIBezierPath(roundedRect: strokeRect, cornerRadius: strokeRadius)
+                ? UIBezierPath.make(ovalIn: strokeRect)
+                : UIBezierPath.make(roundedRect: strokeRect, cornerRadius: strokeRadius)
 
             borderColor.setStroke()
             strokePath.lineWidth = borderWidth
@@ -158,10 +165,10 @@ extension UIImage {
         let size = CGSize(width: diameter, height: diameter)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         defer { UIGraphicsEndImageContext() }
-        guard let ctx = UIGraphicsGetCurrentContext() else { return UIImage() }
+        guard let ctx = UIGraphicsGetCurrentContext() else { return UIImage.make() }
         ctx.setFillColor(color.cgColor)
         ctx.fillEllipse(in: CGRect(origin: .zero, size: size))
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make()
     }
     // MARK: - 图片叠加（overlay 居中 + 左右间距）
     func overlayed(with overlay: UIImage, horizontalInset: CGFloat = 2) -> UIImage {

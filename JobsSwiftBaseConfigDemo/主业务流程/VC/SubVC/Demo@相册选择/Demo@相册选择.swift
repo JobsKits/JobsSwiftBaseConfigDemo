@@ -54,25 +54,25 @@ final class PhotoAlbumDemoVC: BaseVC {
     }
     // MARK: - Buttons
     private lazy var cameraBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("调用相机照相", for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
+        UIButton.sys()
+            .byTitle("调用相机照相".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("camera.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 #if targetEnvironment(simulator)
-                "模拟器无法使用相机".toast; return
+                "模拟器无法使用相机".tr.toast; return
                 #else
                 guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                    "此设备不支持相机".toast; return
+                    "此设备不支持相机".tr.toast; return
                 }
                 pickFromCamera(allowsEditing: false) { [weak self] img in
                     guard let self else { return }
-                    "已拍照 1 张".toast
+                    "已拍照 1 张".tr.toast
                     mode = .cameraPhoto
                     images = [img]; videoURL = nil; albumVideoURLs.removeAll()
                     reloadPreviewAndScrollMode()
@@ -87,14 +87,14 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
 
     private lazy var albumBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle(albumImageButtonTitle(), for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("photo.on.rectangle".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBackgroundColor(.systemGreen)
+            .byBackgroundColor(JobsCor.systemGreen)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 pickFromPhotoLibrary(maxSelection: imageMaxSelection, imagesOnly: true) { [weak self] imgs in
@@ -112,18 +112,18 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
 
     private lazy var recordBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("录制视频".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("video.fill".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBackgroundColor(.systemPink)
+            .byBackgroundColor(JobsCor.systemPink)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 #if targetEnvironment(simulator)
-                    "模拟器无法录制视频".toast; return
+                    "模拟器无法录制视频".tr.toast; return
                 #else
                 MediaPickerService.recordVideo(from: self, maxDuration: 30, quality: .typeHigh) { [weak self] url in
                     guard let self else { return }
@@ -139,14 +139,14 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
     // 相册单选视频
     private lazy var pickOneVideoBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("选择一个视频".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("film".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBackgroundColor(.systemIndigo)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
@@ -162,19 +162,19 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
     // 相册多选视频（上限可自定义）
     private lazy var pickMultiVideoBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle(albumVideoButtonTitle(), for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTitleColor(.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white, for: .normal)
             .byImage("film.stack".sysImg, for: .normal)
             .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
             .byCornerRadius(12)
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.pickVideosFromLibrary(maxSelection: self.videoMaxSelection) { [weak self] urls in
                     guard let self else { return }
-                    if urls.isEmpty { "未选择视频".toast; return }
+                    if urls.isEmpty { "未选择视频".tr.toast; return }
                     "已选择 \(urls.count) 个视频".toast
                     mode = .albumVideos
                     images.removeAll(); videoURL = nil; albumVideoURLs = urls
@@ -188,7 +188,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
     // MARK: - Preview
     private lazy var previewContainer: UIView = { [unowned self] in
-        UIView().byBackgroundColor(.secondarySystemBackground)
+        UIView().byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] v, make in
                 make.top.equalTo(self.pickMultiVideoBtn.snp.bottom).offset(16)
@@ -199,7 +199,7 @@ final class PhotoAlbumDemoVC: BaseVC {
 
     private lazy var collectionView: UICollectionView = { [unowned self] in
         UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout().byScrollDirection(.vertical).byMinimumInteritemSpacing(gridSpacing).byMinimumLineSpacing(gridSpacing))
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byScrollEnabled(NO)
             .byShowsVerticalScrollIndicator(NO)
             .byDataSource(self)
@@ -220,8 +220,8 @@ final class PhotoAlbumDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "鉴权后：相机 / 相册 / 录制 / 选视频")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "鉴权后：相机 / 相册 / 录制 / 选视频".tr)
 
         cameraBtn.byVisible(YES)
         albumBtn.byVisible(YES)
@@ -352,13 +352,13 @@ private extension PhotoAlbumDemoVC {
                     jobsByVoidBlock(urls); self?.pickerHold = nil
                 }
                 let picker = PHPickerViewController(configuration: config)
-                picker.delegate = proxy
+                picker.byDelegate(proxy)
                 self.pickerHold = proxy
                 self.present(picker, animated: true)
             } else {
                 // iOS 13 及以下仅支持单选
                 if maxSelection != 1 {
-                    onMainAsync(self) { vc in "多选视频仅支持 iOS 14 及以上".toast }
+                    onMainAsync(self) { vc in "多选视频仅支持 iOS 14 及以上".tr.toast }
                 }
                 guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
                 let proxy = LegacyVideoLibraryProxy { [weak self] url in
@@ -367,7 +367,7 @@ private extension PhotoAlbumDemoVC {
                 let picker = UIImagePickerController()
                 picker.sourceType = .photoLibrary
                 picker.mediaTypes = [UTType.movie.identifier]
-                picker.delegate = proxy
+                picker.byDelegate(proxy)
                 self.pickerHold = proxy
                 self.present(picker, animated: true)
             }

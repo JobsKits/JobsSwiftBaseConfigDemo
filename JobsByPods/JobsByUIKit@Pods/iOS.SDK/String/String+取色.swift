@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: - 字符串取颜色@校验成功后取色
 /**
  "#353a3e".cor          // OK → 正常色
@@ -21,7 +23,7 @@ import UIKit
  "乱七八糟".cor         // ❌ → 直接红色
 
  "80FF0000".cor(alpha: 1) // alpha 走字符串里的 0x80，而不是你传的 1
- "垃圾".cor(.black)        // 非法 → black
+ "垃圾".cor(JobsCor.black) // 非法 → black
  */
 extension String {
     /// 支持格式：
@@ -37,7 +39,7 @@ extension String {
     public var cor: UIColor {
         guard let (rgb, alpha) = jobsParseHexColor(self),
               let color = UIColor(hexString: rgb, alpha: alpha) else {
-            return .red
+            return JobsCor.red
         };return color
     }
     /// 带 alpha 的版本
@@ -47,7 +49,7 @@ extension String {
         let defaultAlpha = explicitAlpha
         guard let (rgb, parsedAlpha) = jobsParseHexColor(self, defaultAlpha: defaultAlpha),
               let color = UIColor(hexString: rgb, alpha: parsedAlpha) else {
-            return UIColor.red.withAlphaComponent(explicitAlpha)
+            return JobsCor.red.withAlphaComponent(explicitAlpha)
         };return color
     }
     /// 指定兜底颜色版本（你要自定义 fallback 就用这个）

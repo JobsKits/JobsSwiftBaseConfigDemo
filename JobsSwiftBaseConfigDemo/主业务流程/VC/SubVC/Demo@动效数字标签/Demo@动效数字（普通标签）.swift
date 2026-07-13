@@ -32,7 +32,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     // MARK: - UI
     private lazy var cardView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(self.view.safeAreaLayoutGuide).offset(self.horizontalInset)
@@ -48,8 +48,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private lazy var valueLabel: UILabel = {
         UILabel()
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 52, weight: .bold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 52, weight: .bold))
+            .byTextColor(JobsCor.label)
             .byText("\(Int(defaultStart))")
             .byNumberOfLines(1)
             /// 配置@数字动效
@@ -64,10 +64,10 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel()
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
-            .byText("起点 → 终点（只允许数字输入）\n不填默认：起点 60，终点 0")
+            .byText("起点 → 终点（只允许数字输入）\n不填默认：起点 60，终点 0".tr)
             .byAddTo(cardView) { [unowned self] make in
                 make.top.equalTo(self.valueLabel.snp.bottom).offset(10)
                 make.left.equalToSuperview().offset(self.cardInset)
@@ -105,7 +105,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                         guard let self else { return }
                         // 去空格 + 只保留数字格式
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
-                        if trimmed != value { self.startTF.text = trimmed }
+                        if trimmed != value { self.startTF.byText(trimmed) }
                         self.filterNumericInPlace(self.startTF.textField)
                         self.syncStartTextToLabel(value)
                     }
@@ -147,7 +147,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                         // isLimited：是否设置了限制（limit != nil）
                         guard let self else { return }
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
-                        if trimmed != value { self.endTF.text = trimmed }
+                        if trimmed != value { self.endTF.byText(trimmed) }
                         self.filterNumericInPlace(self.endTF.textField)
                     }
             })
@@ -172,8 +172,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private lazy var startBtn: UIButton = {
         UIButton.sys()
             .byTitle("启动".tr, for: .normal)
-            .byBackgroundColor(.systemGreen, for: .normal)
-            .byTitleColor(.systemRed, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitleColor(JobsCor.systemRed, for: .normal)
             /// 普通@点按事件触发
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -197,7 +197,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
 
                 let endText = self.formatTargetText(endValue)
                 if endText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    "❌ 目标值为空".toast; return
+                    "❌ 目标值为空".tr.toast; return
                 }
                 /// 启动@数字动效
                 self.valueLabel
@@ -222,8 +222,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private lazy var stopBtn: UIButton = {
         UIButton.sys()
             .byTitle("停止".tr, for: .normal)
-            .byBackgroundColor(.systemOrange, for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
             /// 普通@点按事件触发
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -240,8 +240,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "UILabel数字动效")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "UILabel数字动效".tr)
 
         cardView.byVisible(YES)
         valueLabel.byVisible(YES)
@@ -272,7 +272,7 @@ extension AnimationEffectLabelDemoVC {
     /// 只允许：数字、一个小数点、一个前置负号
     private func filterNumericInPlace(_ tf: UITextField) {
         let raw = tf.text ?? ""
-        tf.text = filterNumericString(raw)
+        tf.byText(filterNumericString(raw))
     }
 
     private func filterNumericString(_ raw: String) -> String {

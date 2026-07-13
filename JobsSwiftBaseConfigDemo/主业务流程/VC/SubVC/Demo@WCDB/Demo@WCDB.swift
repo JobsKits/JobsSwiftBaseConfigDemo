@@ -25,8 +25,8 @@ final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
     private lazy var hintLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 14))
-            .byBgCor(.systemCyan)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byBgCor(JobsCor.systemCyan)
             .byText("WCDB Demo\nDB: \(DemoDB.shared.dbPath)")
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(horizontalInset)
@@ -40,7 +40,7 @@ final class WCDBDemoVC: BaseVC {
     }()
     
     private lazy var insertBtn: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("Insert One Row")
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -62,11 +62,11 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var queryBtn: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("Query Latest 20")
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 do {
                     let list = try DemoDB.shared.fetchLatest(limit: 20)
                     // 5) 用的时候，用 .byVisible(YES) 来唤起
@@ -78,10 +78,10 @@ final class WCDBDemoVC: BaseVC {
                         let t = m.createdAt?.description ?? "-"
                         return "\(id) | \(t) | \(text)"
                     }
-                    resultTextView.text = lines.joined(separator: "\n")
+                    resultTextView.byText(lines.joined(separator: "\n"))
                 } catch {
                     player.byVisible(YES)
-                    resultTextView.text = "❌ query error: \(error)"
+                    resultTextView.byText("❌ query error: \(error)")
                 }
             }
             .byAddTo(view) { [unowned self] make in
@@ -91,18 +91,18 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var clearBtn: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("Clear Table")
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 do {
                     try DemoDB.shared.clear()
                     player.byVisible(YES)
-                    resultTextView.text = "✅ cleared"
+                    resultTextView.byText("✅ cleared")
                 } catch {
                     player.byVisible(YES)
-                    resultTextView.text = "❌ clear error: \(error)"
+                    resultTextView.byText("❌ clear error: \(error)")
                 }
             }
             .byAddTo(view) { [unowned self] make in
@@ -113,7 +113,7 @@ final class WCDBDemoVC: BaseVC {
 
     private lazy var player: UIView = {
         UIView()
-            .byBackgroundColor(UIColor(white: 0.96, alpha: 1))
+            .byBackgroundColor(UIColor(gray: 0.96 * 255))
             .byCornerRadius(12)
             .byVisible(NO)
             .byAddTo(view) { [unowned self] make in
@@ -127,7 +127,7 @@ final class WCDBDemoVC: BaseVC {
     private lazy var resultTextView: UITextView = {
         UITextView()
             .byEditable(NO)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byAddTo(player) { make in
                 make.edges.equalToSuperview().inset(12)
             }
@@ -135,7 +135,7 @@ final class WCDBDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "腾讯数据库WCDB@演示DEMO".tr
         )

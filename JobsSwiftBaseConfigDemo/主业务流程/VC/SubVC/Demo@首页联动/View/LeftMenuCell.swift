@@ -21,7 +21,7 @@ final class LeftMenuCell: UITableViewCell {
 
     private lazy var indicator: UIView = {
         UIView()
-            .byBackgroundColor(.systemOrange)
+            .byBackgroundColor(JobsCor.systemOrange)
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview()
                 make.centerY.equalToSuperview()
@@ -32,7 +32,7 @@ final class LeftMenuCell: UITableViewCell {
 
     private lazy var iconView: UIImageView = {
         UIImageView(image:"star".sysImg)
-            .byTintColor(.systemGray)
+            .byTintColor(JobsCor.systemGray)
             .byContentMode(.scaleAspectFit)
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview().offset(16)
@@ -44,8 +44,8 @@ final class LeftMenuCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("--")
-            .byFont(.systemFont(ofSize: 15, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.leading.equalTo(iconView.snp.trailing).offset(10)
                 make.trailing.lessThanOrEqualToSuperview().inset(8)
@@ -55,8 +55,8 @@ final class LeftMenuCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
         selectionStyle = .none
 
         indicator.byHidden(YES)
@@ -66,14 +66,14 @@ final class LeftMenuCell: UITableViewCell {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func configure(icon: String, title: String, selected: Bool) {
-        iconView.image = UIImage(systemName: icon)
-        titleLabel.text = title
-        indicator.isHidden = !selected
-        titleLabel.textColor = selected ? .label : .secondaryLabel
-        iconView.tintColor = selected ? .systemOrange : .systemGray
-        contentView.backgroundColor = selected
-            ? UIColor.systemOrange.withAlphaComponent(0.15) // 浅橙底，贴近截图
-            : .clear
+        iconView.byImage(UIImage(systemName: icon))
+        titleLabel.byText(title)
+        indicator.byHidden(!selected)
+        titleLabel.byTextColor(selected ? JobsCor.label : JobsCor.secondaryLabel)
+        iconView.byTintColor(selected ? JobsCor.systemOrange : JobsCor.systemGray)
+        contentView.byBackgroundColor(
+            selected ? JobsCor.systemOrange.withAlphaComponent(0.15) : JobsCor.clear
+        )
     }
 }
 // MARK: - DSL
@@ -83,27 +83,27 @@ extension LeftMenuCell {
     func byMenu(icon: String,
                 title: String,
                 selected: Bool) -> Self {
-        iconView.image = UIImage(systemName: icon)
-        titleLabel.text = title
+        iconView.byImage(UIImage(systemName: icon))
+        titleLabel.byText(title)
         return byMenuSelected(selected)
     }
     /// 仅更新选中态（便于复用）
     @discardableResult
     func byMenuSelected(_ selected: Bool) -> Self {
-        indicator.isHidden = !selected
-        titleLabel.byTextColor(selected ? .label : .secondaryLabel)
-        iconView.byTintColor(selected ? .systemOrange : .systemGray)
+        indicator.byHidden(!selected)
+        titleLabel.byTextColor(selected ? JobsCor.label : JobsCor.secondaryLabel)
+        iconView.byTintColor(selected ? JobsCor.systemOrange : JobsCor.systemGray)
         contentView.byBackgroundColor(
-            selected ? UIColor.systemOrange.withAlphaComponent(0.15) : .clear
+            selected ? JobsCor.systemOrange.withAlphaComponent(0.15) : JobsCor.clear
         )
         return self
     }
     /// 仅更新标题或图标（可选）
     @discardableResult
-    func byMenuTitle(_ text: String) -> Self { titleLabel.text = text; return self }
+    func byMenuTitle(_ text: String) -> Self { titleLabel.byText(text); return self }
 
     @discardableResult
     func byMenuIcon(_ name: String) -> Self {
-        iconView.image = UIImage(systemName: name); return self
+        iconView.byImage(UIImage(systemName: name)); return self
     }
 }

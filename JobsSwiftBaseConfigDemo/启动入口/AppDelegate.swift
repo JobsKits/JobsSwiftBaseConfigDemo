@@ -565,9 +565,9 @@ extension AppDelegate {
         GKNavigationBarConfigure
             .bySetupDefault()
             .byAwake()
-            .byBackground(.systemBackground)
-            .byTitleCor(.label)
-            .byTitleFont(.systemFont(ofSize: 18, weight: .semibold))
+            .byBackground(JobsCor.systemBackground)
+            .byTitleCor(JobsCor.label)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
     }
 
     func 全局比例尺() {

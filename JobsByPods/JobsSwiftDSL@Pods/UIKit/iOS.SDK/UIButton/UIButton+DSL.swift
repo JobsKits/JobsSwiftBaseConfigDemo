@@ -33,8 +33,8 @@ extension UIButton {
     }
     
     @discardableResult
-    public func byTintColor(_ color: UIColor) -> Self {
-        self.tintColor = color
+    public func bySemanticContentAttribute(_ attribute: UISemanticContentAttribute) -> Self {
+        self.semanticContentAttribute = attribute
         return self
     }
     
@@ -65,6 +65,18 @@ extension UIButton {
     @discardableResult
     public func byTitleAlignment(_ alignment: NSTextAlignment) -> Self {
         self.titleLabel?.textAlignment = alignment
+        return self
+    }
+
+    @discardableResult
+    public func byTitleAdjustsFontSizeToFitWidth(_ adjusts: Bool) -> Self {
+        self.titleLabel?.adjustsFontSizeToFitWidth = adjusts
+        return self
+    }
+
+    @discardableResult
+    public func byTitleMinimumScaleFactor(_ factor: CGFloat) -> Self {
+        self.titleLabel?.minimumScaleFactor = factor
         return self
     }
     
@@ -210,8 +222,8 @@ extension UIButton {
     }
     
     @discardableResult
-    public func byTintColor(_ builder: () -> UIColor) -> Self {
-        self.tintColor = builder()
+    public func bySemanticContentAttribute(_ builder: () -> UISemanticContentAttribute) -> Self {
+        self.semanticContentAttribute = builder()
         return self
     }
     
@@ -242,6 +254,18 @@ extension UIButton {
     @discardableResult
     public func byTitleAlignment(_ builder: () -> NSTextAlignment) -> Self {
         self.titleLabel?.textAlignment = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTitleAdjustsFontSizeToFitWidth(_ builder: () -> Bool) -> Self {
+        self.titleLabel?.adjustsFontSizeToFitWidth = builder()
+        return self
+    }
+
+    @discardableResult
+    public func byTitleMinimumScaleFactor(_ builder: () -> CGFloat) -> Self {
+        self.titleLabel?.minimumScaleFactor = builder()
         return self
     }
     
@@ -442,7 +466,7 @@ extension UIButton {
     }
 
     @discardableResult
-    public func byShadow(color: UIColor = .black,
+    public func byShadow(color: UIColor = JobsCor.black,
                   opacity: Float = 0.15,
                   radius: CGFloat = 6,
                   offset: CGSize = .init(width: 0, height: 2)) -> Self {
@@ -744,7 +768,7 @@ extension UIButton {
             if t.isEmpty { continue }
 
             var attrs: [NSAttributedString.Key: Any] = [
-                .font: font ?? UIFont.systemFont(ofSize: 15)
+                .font: font ?? JobsFont.systemFont(ofSize: 15)
             ]
             // 颜色：优先该状态，取不到回退 normal
             if let c = self.titleColor(for: st) ?? self.titleColor(for: .normal) {

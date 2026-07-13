@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+import JobsSwiftDSL
 #endif
+
+import JobsSwiftBaseDefines
 
 public struct JobsSwiftLinkageMenuItem {
     public var title: String
@@ -43,12 +46,12 @@ public final class JobsSwiftLinkageMenuViewConfig {
     public var menuItemHeights: [CGFloat] = []
     public var menuItemHeightMap: [Int: CGFloat] = [:]
     public var clearsContentWhenMissing = true
-    public var menuBackgroundColor: UIColor = UIColor(white: 0.96, alpha: 1)
-    public var contentBackgroundColor: UIColor = .white
-    public var lineColor: UIColor = UIColor(white: 0.86, alpha: 1)
-    public var normalTintColor: UIColor = .gray
-    public var selectedTintColor: UIColor = UIColor(red: 1.0, green: 0.55, blue: 0.0, alpha: 1)
-    public var selectedBackgroundColor: UIColor = UIColor(red: 1.0, green: 0.55, blue: 0.0, alpha: 0.18)
+    public var menuBackgroundColor: UIColor = UIColor(gray: 0.96 * 255)
+    public var contentBackgroundColor: UIColor = JobsCor.white
+    public var lineColor: UIColor = UIColor(gray: 0.86 * 255)
+    public var normalTintColor: UIColor = JobsCor.gray
+    public var selectedTintColor: UIColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
+    public var selectedBackgroundColor: UIColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
     public var noContentClickBlock: ((JobsSwiftLinkageMenuPayload) -> Void)?
     public var menuClickBlock: ((JobsSwiftLinkageMenuPayload) -> Void)?
 
@@ -56,8 +59,7 @@ public final class JobsSwiftLinkageMenuViewConfig {
 
     public func itemHeight(at index: Int) -> CGFloat {
         if let value = menuItemHeightMap[index], value > 0 { return value }
-        if menuItemHeights.indices.contains(index), menuItemHeights[index] > 0 { return menuItemHeights[index] }
-        return defaultMenuItemHeight > 0 ? defaultMenuItemHeight : 56
+        if menuItemHeights.indices.contains(index), menuItemHeights[index] > 0 { return menuItemHeights[index] };return defaultMenuItemHeight > 0 ? defaultMenuItemHeight : 56
     }
 }
 
@@ -65,9 +67,9 @@ private final class JobsSwiftLinkageMenuButton: UIControl {
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private var item = JobsSwiftLinkageMenuItem(title: "")
-    private var normalTintColor: UIColor = .secondaryLabel
-    private var selectedTintColor: UIColor = .systemOrange
-    private var selectedBackgroundColor: UIColor = .clear
+    private var normalTintColor: UIColor = JobsCor.secondaryLabel
+    private var selectedTintColor: UIColor = JobsCor.systemOrange
+    private var selectedBackgroundColor: UIColor = JobsCor.clear
 
     override var isSelected: Bool {
         didSet { applyState() }
@@ -76,12 +78,12 @@ private final class JobsSwiftLinkageMenuButton: UIControl {
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-        titleLabel.textAlignment = .center
-        titleLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        titleLabel.numberOfLines = 2
-        addSubview(imageView)
-        addSubview(titleLabel)
+        imageView.byContentMode(.scaleAspectFit)
+        titleLabel.byTextAlignment(.center)
+        titleLabel.byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+        titleLabel.byNumberOfLines(2)
+        imageView.byAddTo(self)
+        titleLabel.byAddTo(self)
     }
 
     required init?(coder: NSCoder) {
@@ -96,31 +98,31 @@ private final class JobsSwiftLinkageMenuButton: UIControl {
         self.normalTintColor = normalTintColor
         self.selectedTintColor = selectedTintColor
         self.selectedBackgroundColor = selectedBackgroundColor
-        titleLabel.text = item.title
+        titleLabel.byText(item.title)
         applyState()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = min(10, bounds.height / 8)
+        byCornerRadius(min(10, bounds.height / 8))
         let imageSide = min(28, max(20, bounds.height * 0.34))
-        imageView.frame = CGRect(x: (bounds.width - imageSide) / 2,
+        imageView.byFrame(CGRect(x: (bounds.width - imageSide) / 2,
                                  y: max(8, bounds.height * 0.18 - imageSide / 2),
                                  width: imageSide,
-                                 height: imageSide)
-        titleLabel.frame = CGRect(x: 8,
+                                 height: imageSide))
+        titleLabel.byFrame(CGRect(x: 8,
                                   y: imageView.frame.maxY + 5,
                                   width: max(0, bounds.width - 16),
-                                  height: max(18, bounds.height - imageView.frame.maxY - 8))
+                                  height: max(18, bounds.height - imageView.frame.maxY - 8)))
     }
 
     private func applyState() {
         let tint = isSelected ? selectedTintColor : normalTintColor
-        backgroundColor = isSelected ? selectedBackgroundColor : .clear
-        titleLabel.textColor = tint
-        imageView.tintColor = tint
+        self.byBackgroundColor(isSelected ? selectedBackgroundColor : JobsCor.clear)
+        titleLabel.byTextColor(tint)
+        imageView.byTintColor(tint)
         let image = isSelected ? (item.selectedImage ?? item.image) : item.image
-        imageView.image = image?.withRenderingMode(.alwaysTemplate)
+        imageView.byImage(image?.withRenderingMode(.alwaysTemplate))
     }
 }
 
@@ -160,14 +162,14 @@ public final class JobsSwiftLinkageMenuView: UIView {
         super.layoutSubviews()
         let lineWidth = max(0, config.lineWidth)
         let menuWidth = resolvedMenuWidth()
-        menuScrollView.frame = CGRect(x: 0, y: 0, width: menuWidth, height: bounds.height)
-        lineView.frame = CGRect(x: menuWidth, y: 0, width: lineWidth, height: bounds.height)
-        contentContainerView.frame = CGRect(x: menuWidth + lineWidth,
+        menuScrollView.byFrame(CGRect(x: 0, y: 0, width: menuWidth, height: bounds.height))
+        lineView.byFrame(CGRect(x: menuWidth, y: 0, width: lineWidth, height: bounds.height))
+        contentContainerView.byFrame(CGRect(x: menuWidth + lineWidth,
                                             y: 0,
                                             width: max(0, bounds.width - menuWidth - lineWidth),
-                                            height: bounds.height)
+                                            height: bounds.height))
         layoutButtons(menuWidth: menuWidth)
-        contentContainerView.subviews.forEach { $0.frame = contentContainerView.bounds }
+        contentContainerView.subviews.forEach { $0.byFrame(contentContainerView.bounds) }
     }
 
     public func reload(menuItems: [JobsSwiftLinkageMenuItem],
@@ -178,14 +180,14 @@ public final class JobsSwiftLinkageMenuView: UIView {
         buttons.removeAll()
         for (index, item) in menuItems.enumerated() {
             let button = JobsSwiftLinkageMenuButton()
-            button.tag = index
+            button.byTag(index)
             button.render(item: item,
                           normalTintColor: config.normalTintColor,
                           selectedTintColor: config.selectedTintColor,
                           selectedBackgroundColor: config.selectedBackgroundColor)
-            button.addTarget(self, action: #selector(menuButtonTapped(_:)), for: .touchUpInside)
+            button.byAddTarget(self, action: #selector(menuButtonTapped(_:)), for: .touchUpInside)
             buttons.append(button)
-            menuScrollView.addSubview(button)
+            button.byAddTo(menuScrollView)
         }
         selectedIndex = min(selectedIndex, max(0, menuItems.count - 1))
         setNeedsLayout()
@@ -201,7 +203,7 @@ public final class JobsSwiftLinkageMenuView: UIView {
                                                   item: menuItems[index],
                                                   contentView: contentView)
         buttons.enumerated().forEach { offset, button in
-            button.isSelected = offset == index
+            button.bySelected(offset == index)
         }
         moveIndicator(to: index, animated: animated)
         if let contentView {
@@ -219,19 +221,19 @@ public final class JobsSwiftLinkageMenuView: UIView {
         clipsToBounds = true
         menuScrollView.scrollsToTop = false
         menuScrollView.showsVerticalScrollIndicator = false
-        addSubview(menuScrollView)
-        addSubview(lineView)
-        addSubview(contentContainerView)
-        menuScrollView.addSubview(indicatorView)
+        menuScrollView.byAddTo(self)
+        lineView.byAddTo(self)
+        contentContainerView.byAddTo(self)
+        indicatorView.byAddTo(menuScrollView)
         applyConfig()
     }
 
     private func applyConfig() {
-        menuScrollView.backgroundColor = config.menuBackgroundColor
-        contentContainerView.backgroundColor = config.contentBackgroundColor
-        lineView.backgroundColor = config.lineColor
-        indicatorView.backgroundColor = config.selectedTintColor
-        indicatorView.layer.cornerRadius = max(1, config.indicatorWidth / 2)
+        menuScrollView.byBackgroundColor(config.menuBackgroundColor)
+        contentContainerView.byBackgroundColor(config.contentBackgroundColor)
+        lineView.byBackgroundColor(config.lineColor)
+        indicatorView.byBackgroundColor(config.selectedTintColor)
+        indicatorView.byCornerRadius(max(1, config.indicatorWidth / 2))
         for (index, button) in buttons.enumerated() {
             button.render(item: menuItems[index],
                           normalTintColor: config.normalTintColor,
@@ -258,7 +260,7 @@ public final class JobsSwiftLinkageMenuView: UIView {
         var y: CGFloat = 0
         for (index, button) in buttons.enumerated() {
             let height = config.itemHeight(at: index)
-            button.frame = CGRect(x: 0, y: y, width: menuWidth, height: height)
+            button.byFrame(CGRect(x: 0, y: y, width: menuWidth, height: height))
             y += height
         }
         menuScrollView.contentSize = CGSize(width: menuWidth, height: y)
@@ -272,16 +274,16 @@ public final class JobsSwiftLinkageMenuView: UIView {
                            y: button.frame.midY - config.indicatorHeight / 2,
                            width: config.indicatorWidth,
                            height: min(config.indicatorHeight, button.bounds.height))
-        let changes = { self.indicatorView.frame = frame }
-        animated ? UIView.animate(withDuration: config.animationDuration, animations: changes) : changes()
+        let changes: () -> Void = { _ = self.indicatorView.byFrame(frame) }
+        animated ? UIView.jobsAnimate(config.animationDuration, animations: changes) : changes()
         menuScrollView.scrollRectToVisible(button.frame.insetBy(dx: 0, dy: -12), animated: animated)
     }
 
     private func showContentView(_ contentView: UIView) {
         contentContainerView.subviews.forEach { $0.removeFromSuperview() }
-        contentView.frame = contentContainerView.bounds
+        contentView.byFrame(contentContainerView.bounds)
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentContainerView.addSubview(contentView)
+        contentView.byAddTo(contentContainerView)
     }
 
     @objc private func menuButtonTapped(_ sender: JobsSwiftLinkageMenuButton) {

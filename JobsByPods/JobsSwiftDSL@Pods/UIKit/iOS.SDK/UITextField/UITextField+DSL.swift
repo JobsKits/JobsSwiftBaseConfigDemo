@@ -12,10 +12,17 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsSwiftBaseDefines
 import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UITextField {
+
+    @discardableResult
+    public func byPlaceholder(_ placeholder: String?) -> Self {
+        self.placeholder = placeholder
+        return self
+    }
     // MARK: 🌸 基础文本属性
     @discardableResult
     public func byLeftViewMode(_ mode: UITextField.ViewMode) -> Self {
@@ -111,6 +118,12 @@ extension UITextField {
     @discardableResult
     public func bySecureTextEntry(_ secure: Bool) -> Self {
         self.isSecureTextEntry = secure
+        return self
+    }
+
+    @discardableResult
+    public func byToggleSecureTextEntry() -> Self {
+        self.isSecureTextEntry.toggle()
         return self
     }
     // MARK: ⌨️ 键盘行为
@@ -255,13 +268,19 @@ extension UITextField {
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
-        self.font = .preferredFont(forTextStyle: style)
+        self.font = JobsFont.preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
         return self
     }
 }
 // MARK: - 闭包重载@单参数
 extension UITextField {
+
+    @discardableResult
+    public func byPlaceholder(_ builder: () -> String?) -> Self {
+        self.placeholder = builder()
+        return self
+    }
     
     @discardableResult
     public func byLeftViewMode(_ builder: () -> UITextField.ViewMode) -> Self {
@@ -493,7 +512,7 @@ extension UITextField {
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ builder: () -> UIFont.TextStyle) -> Self {
-        self.font = .preferredFont(forTextStyle: builder())
+        self.font = JobsFont.preferredFont(forTextStyle: builder())
         self.adjustsFontForContentSizeCategory = true
         return self
     }

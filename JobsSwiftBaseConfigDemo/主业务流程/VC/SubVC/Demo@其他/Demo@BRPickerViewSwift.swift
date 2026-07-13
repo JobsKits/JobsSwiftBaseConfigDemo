@@ -32,13 +32,13 @@ final class BRPickerDemoVC: BaseVC {
             .bySelectedIndex(2)
             .byTheme { theme in
                 theme
-                    .byPanelBackgroundColor(.yellow)
-                    .byToolbarBackgroundColor(.systemCyan)
-                    .byTitleColor(.white)
-                    .byButtonColor(.systemRed)
-                    .byMaskColor(.black.withAlphaComponent(0.55))
-                    .byPickerTextColor(.red)
-                    .byPickerSelectedTextColor(.blue)
+                    .byPanelBackgroundColor(JobsCor.yellow)
+                    .byToolbarBackgroundColor(JobsCor.systemCyan)
+                    .byTitleColor(JobsCor.white)
+                    .byButtonColor(JobsCor.systemRed)
+                    .byMaskColor(JobsCor.black.withAlphaComponent(0.55))
+                    .byPickerTextColor(JobsCor.red)
+                    .byPickerSelectedTextColor(JobsCor.blue)
                     .byPickerFont(.systemFont(ofSize: 20))
                     .byAutoSelect(false)
             }
@@ -49,7 +49,7 @@ final class BRPickerDemoVC: BaseVC {
             }
             .byAnimation(.spring)
             .byResult { value in
-                ("单列：\(value)".tr).toast
+                ("单列：%@".tr(value)).toast
             }
     }()
     /// 文本：多列（尺码/颜色）
@@ -252,7 +252,7 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var resultCard: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
@@ -266,7 +266,7 @@ final class BRPickerDemoVC: BaseVC {
         UILabel()
             .byText("文本选择器（BRTextPickerView）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
                 make.top.equalTo(self.resultCard.snp.bottom).offset(12)
@@ -278,7 +278,7 @@ final class BRPickerDemoVC: BaseVC {
         UILabel()
             .byText("日期选择器（系统样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
                 make.top.equalTo(self.btnCascade.snp.bottom).offset(12)
@@ -290,7 +290,7 @@ final class BRPickerDemoVC: BaseVC {
         UILabel()
             .byText("日期选择器（自定义样式）".tr)
             .byFont(.systemFont(ofSize: 13, weight: .semibold))
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [weak self] make in
                 guard let self else { return }
                 make.top.equalTo(self.btnSysCount.snp.bottom).offset(12)
@@ -300,9 +300,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnSingle: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byTitle("单列（学历）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -319,9 +319,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnMulti: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byTitle("多列（尺码/颜色）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -338,9 +338,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnCascade: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue)
+            .byBackgroundColor(JobsCor.systemBlue)
             .byTitle("三级联动（省/市/区）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -357,9 +357,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnSysDate: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byTitle("系统：Date（年月日）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -376,9 +376,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnSysDateTime: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byTitle("系统：Date & Time".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -395,9 +395,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnSysTime: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byTitle("系统：Time（12h）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -414,9 +414,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnSysCount: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemIndigo)
+            .byBackgroundColor(JobsCor.systemIndigo)
             .byTitle("系统：CountDownTimer".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -433,9 +433,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnYMD: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byTitle("自定义：YMD（年月日）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -452,9 +452,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnYM: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byTitle("自定义：YM（年月）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -471,9 +471,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnY: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byTitle("自定义：Y（年）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -490,9 +490,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnMD: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byTitle("自定义：MD（月日）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -509,9 +509,9 @@ final class BRPickerDemoVC: BaseVC {
 
     private lazy var btnHM: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemTeal)
+            .byBackgroundColor(JobsCor.systemTeal)
             .byTitle("自定义：HM（时:分，步进=5）".tr, for: .normal)
-            .byTitleColor(.white, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
             .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 14, bottom: 10, right: 14))
             .onTap { [weak self] _ in
@@ -538,7 +538,7 @@ final class BRPickerDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGroupedBackground
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(title: "Demo@BRPickerViewSwift")
     }
 }

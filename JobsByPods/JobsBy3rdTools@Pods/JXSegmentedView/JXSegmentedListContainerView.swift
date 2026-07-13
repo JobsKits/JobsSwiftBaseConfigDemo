@@ -72,7 +72,7 @@ extension JXSegmentedListContainerView {
 
     @discardableResult
     public func byNeverAdjustContentInset() -> Self {
-        if #available(iOS 11.0, *) { self.scrollView.contentInsetAdjustmentBehavior = .never };return self
+        if #available(iOS 11.0, *) { self.scrollView.byContentInsetAdjustmentBehavior(.never) };return self
     }
     // MARK: 绑定 / 刷新
     /// 绑定到 SegmentedView（等价于 `segmentedView.listContainer = self`）
@@ -114,9 +114,10 @@ extension JXSegmentedListContainerView {
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         // 把 scrollView.delegate 改成 proxy，proxy 再转发给原本的 self（pod 内部逻辑不受影响）
-        self.contentScrollView().delegate = proxy
+        let contentScrollView = self.contentScrollView()
+        contentScrollView.byDelegate(proxy)
         self.on("jx.segmented.scrollViewDidEndScrollingAnimation",
-                object: self.contentScrollView()) { [weak self] noti, obj, userInfo in
+                object: contentScrollView) { [weak self] noti, obj, userInfo in
             guard let self else { return }
             self.jx_reportIfNeeded()
         };return self

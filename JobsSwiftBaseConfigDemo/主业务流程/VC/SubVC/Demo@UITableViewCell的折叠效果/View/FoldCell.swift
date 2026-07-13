@@ -45,7 +45,7 @@ final class FoldCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 18, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
                 make.left.equalToSuperview().offset(16)
@@ -55,7 +55,7 @@ final class FoldCell: UITableViewCell {
 
     private lazy var subtitleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(6)
@@ -96,7 +96,7 @@ final class FoldCell: UITableViewCell {
     private lazy var detailLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14))
+            .byFont(JobsFont.systemFont(ofSize: 14))
             .byAddTo(detailContentView) { make in
                 make.top.equalToSuperview().offset(12)
                 make.left.equalToSuperview().offset(16)
@@ -107,7 +107,7 @@ final class FoldCell: UITableViewCell {
 
     private lazy var foldShadowView: UIView = {
         UIView()
-            .byBackgroundColor(.black)
+            .byBackgroundColor(JobsCor.black)
             .byAlpha(0.22)
             .byAddTo(detailClipView) { make in
                 make.edges.equalToSuperview()
@@ -118,8 +118,8 @@ final class FoldCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
 
         // 触发懒加载（保证层级正确）
         cardView.byVisible(YES)
@@ -173,28 +173,29 @@ extension FoldCell {
 
         let apply = { [self] in
             detailContentView.layer.transform = targetTransform
-            detailContentView.alpha = targetAlpha
-            foldShadowView.alpha = targetShadowAlpha
+            detailContentView.byAlpha(targetAlpha)
+            foldShadowView.byAlpha(targetShadowAlpha)
             chevron.transform = targetChevron
         }
 
         if animated {
-            UIView.animate(
-                withDuration: 0.38,
-                delay: 0,
-                usingSpringWithDamping: 0.92,
-                initialSpringVelocity: 0,
-                options: [.beginFromCurrentState, .allowUserInteraction]
-            ) {
-                apply()
-            } completion: { [weak self] _ in
-                guard let self else { return }
-                if !expanded {
-                    self.detailContentView.byVisible(NO)
+            UIView.jobsAnimateWithSpring(
+                0.38,
+                dampingRatio: 0.92,
+                initialVelocity: 0,
+                options: [.beginFromCurrentState, .allowUserInteraction],
+                animations: {
+                    apply()
+                },
+                completion: { [weak self] _ in
+                    guard let self else { return }
+                    if !expanded {
+                        self.detailContentView.byVisible(NO)
+                    }
                 }
-            }
+            )
         } else {
-            UIView.performWithoutAnimation { apply() }
+            UIView.jobsPerformWithoutAnimation { apply() }
             if !expanded { detailContentView.byVisible(NO) }
         }
     }

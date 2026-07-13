@@ -71,7 +71,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 居中承载面板的容器（加圆角/毛玻璃都可以放这层）
     private lazy var panelHost: UIView = {
         UIView()
-            .byBackgroundColor(UIColor(white: 1, alpha: 0.08))
+            .byBackgroundColor(UIColor(gray: 255, alpha: 0.08))
             .byCornerRadius(14)
             .byAlpha(0)
             .byTransform(CGAffineTransform(scaleX: 0.001, y: 0.001)) // 进场起态（春
@@ -84,7 +84,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 登录面板（把真实的登录表单塞进来即可）
     private lazy var loginPanel: UIView = {
         UIView()
-            .byBackgroundColor(.systemBackground.withAlphaComponent(0.75))
+            .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.75))
             .byCornerRadius(14)
             .byAddTo(panelHost) { [unowned self] make in
                 make.edges.equalToSuperview()
@@ -93,7 +93,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     /// 注册面板（同理，塞自己的注册表单）
     private lazy var registerPanel: UIView = {
         UIView()
-            .byBackgroundColor(.systemBackground.withAlphaComponent(0.75))
+            .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.75))
             .byCornerRadius(14)
             .byHidden(YES)
             .byAddTo(panelHost) { [unowned self] make in
@@ -116,10 +116,10 @@ final class JobsAppDoorDemoVC: BaseVC {
     }()
     /// 右下角客服按钮（与 OC 的 alpha 动画保持“平行”）
 //    private lazy var customerServiceBtn: UIButton = {
-//        UIButton(type: .system)
-//            .byTitle("客服", for: .normal)
-//            .byTitleFont(.systemFont(ofSize: 16, weight: .semibold))
-//            .byBackgroundColor(UIColor.black.withAlphaComponent(0.35))
+//        UIButton.sys()
+//            .byTitle("客服".tr, for: .normal)
+//            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+//            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.35))
 //            .byCornerRadius(10)
 //            .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
 //            .byAddTo(view) { make in
@@ -129,7 +129,7 @@ final class JobsAppDoorDemoVC: BaseVC {
 //    }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.byBackgroundColor(JobsCor.black)
        
         panelHost.byVisible(YES)
         loginPanel.byVisible(YES)
@@ -173,24 +173,24 @@ extension JobsAppDoorDemoVC {
 
             // 1) 先把整体缩放态复位到 1（不然 mask 看起来会“收缩”）
             panelHost.transform = .identity
-            panelHost.alpha = 1
+            panelHost.byAlpha(1)
 
             // 2) 给 panelHost 做圆形揭示 mask
             let local = panelHost.convert(from, from: view)
             let endR = maxDistanceToCorner(from: local, in: panelHost.bounds.size) + 20
 
-            let startPath = UIBezierPath(
+            let startPath = UIBezierPath.make(
                 arcCenter: local, radius: startRadius,
                 startAngle: 0, endAngle: .pi * 2, clockwise: true
             )
 
-            let endPath = UIBezierPath(
+            let endPath = UIBezierPath.make(
                 arcCenter: local, radius: endR,
                 startAngle: 0, endAngle: .pi * 2, clockwise: true
             )
 
             let mask = CAShapeLayer()
-            mask.fillColor = UIColor.black.cgColor
+            mask.fillColor = JobsCor.black.cgColor
             mask.path = endPath.cgPath
             panelHost.layer.mask = mask
 
@@ -202,27 +202,38 @@ extension JobsAppDoorDemoVC {
             mask.add(anim, forKey: "circularReveal")
 
             // 客服按钮与 OC 保持“渐显”
-//            UIView.animate(withDuration: 0.60,
-//                           delay: 0.05,
-//                           usingSpringWithDamping: 0.85,
-//                           initialSpringVelocity: 0.6,
-//                           options: [.curveEaseOut]) {
-//                self.customerServiceBtn.alpha = 1
-//            }
+//            UIView.jobsAnimateWithSpring(
+//                0.60,
+//                delay: 0.05,
+//                dampingRatio: 0.85,
+//                initialVelocity: 0.6,
+//                options: [.curveEaseOut],
+//                animations: {
+//                    self.customerServiceBtn.byAlpha(1)
+//                }
+//            )
         case .springPop:
-            panelHost.alpha = 0
+            panelHost.byAlpha(0)
             panelHost.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
-            UIView.animate(withDuration: 0.50,
-                           delay: 0.05,
-                           usingSpringWithDamping: 0.82,
-                           initialSpringVelocity: 0.5,
-                           options: [.curveEaseOut]) {
-                self.panelHost.alpha = 1
-                self.panelHost.transform = .identity
-            }
-//            UIView.animate(withDuration: 0.60, delay: 0.10, options: [.curveEaseOut]) {
-//                self.customerServiceBtn.alpha = 1
-//            }
+            UIView.jobsAnimateWithSpring(
+                0.50,
+                delay: 0.05,
+                dampingRatio: 0.82,
+                initialVelocity: 0.5,
+                options: [.curveEaseOut],
+                animations: {
+                    self.panelHost.byAlpha(1)
+                    self.panelHost.transform = .identity
+                }
+            )
+//            UIView.jobsAnimateWithOptions(
+//                0.60,
+//                delay: 0.10,
+//                options: [.curveEaseOut],
+//                animations: {
+//                    self.customerServiceBtn.byAlpha(1)
+//                }
+//            )
         }
     }
     /// 计算到四角最远距离（为圆形揭示提供终点半径）
@@ -243,8 +254,8 @@ extension JobsAppDoorDemoVC {
         let toView   = (target == .login) ? loginPanel : registerPanel
 
         // 起态准备
-        toView.alpha = 0
-        toView.isHidden = false
+        toView.byAlpha(0)
+        toView.byHidden(false)
         toView.transform = make2DTransform(
             translateX: (direction == .toRight ? panelHost.bounds.width * 0.12 : -panelHost.bounds.width * 0.12),
             scale: 0.96
@@ -254,35 +265,47 @@ extension JobsAppDoorDemoVC {
         panelHost.enablePerspective(-1/800)
 
         let total: TimeInterval = 0.42
-        UIView.animateKeyframes(withDuration: total, delay: 0, options: [.calculationModeCubic]) {
-
-            // fromView 退场（轻后退 + 轻缩 + 淡出）
-            UIView.addKeyframe(withRelativeStartTime: 0.00, relativeDuration: 0.35) {
-                fromView.alpha = 0
-                fromView.transform = self.make2DTransform(
-                    translateX: (direction == .toRight ? -18 : 18),
-                    scale: 0.96
+        UIView.jobsAnimateKeyframes(
+            total,
+            options: [.calculationModeCubic],
+            animations: {
+                // fromView 退场（轻后退 + 轻缩 + 淡出）
+                UIView.jobsAddKeyframe(
+                    withRelativeStartTime: 0.00,
+                    relativeDuration: 0.35,
+                    animations: {
+                        fromView.byAlpha(0)
+                        fromView.transform = self.make2DTransform(
+                            translateX: (direction == .toRight ? -18 : 18),
+                            scale: 0.96
+                        )
+                    }
                 )
-            }
 
-            // toView 进场（从侧面靠近 + 放大到 1 + 淡入）
-            UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.75) {
-                toView.alpha = 1
-                toView.transform = .identity
-            }
-        } completion: { _ in
-            fromView.isHidden = true
-            fromView.alpha = 1
-            fromView.transform = .identity
-            self.current = target
-            // 与 OC 一样：非登录页隐藏客服按钮（举例）
-            onMainAsync {
-                _ = (target == .login)
-            }
-//            UIView.animate(withDuration: 0.28) {
-//                self.customerServiceBtn.alpha = shouldShowService ? 1 : 0
+                // toView 进场（从侧面靠近 + 放大到 1 + 淡入）
+                UIView.jobsAddKeyframe(
+                    withRelativeStartTime: 0.25,
+                    relativeDuration: 0.75,
+                    animations: {
+                        toView.byAlpha(1)
+                        toView.transform = .identity
+                    }
+                )
+            },
+            completion: { _ in
+                fromView.byHidden(true)
+                fromView.byAlpha(1)
+                fromView.transform = .identity
+                self.current = target
+                // 与 OC 一样：非登录页隐藏客服按钮（举例）
+                onMainAsync {
+                    _ = (target == .login)
+                }
+//            UIView.jobsAnimate(0.28) {
+//                self.customerServiceBtn.byAlpha(shouldShowService ? 1 : 0)
 //            }
-        }
+            }
+        )
     }
 
     private func make2DTransform(translateX: CGFloat, scale: CGFloat) -> CGAffineTransform {

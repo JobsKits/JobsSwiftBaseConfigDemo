@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import SwiftMessages
+import JobsSwiftDSL
 
 public enum JobsSwiftMessageToast {
     @MainActor public static func show(
@@ -21,7 +22,7 @@ public enum JobsSwiftMessageToast {
         let view = MessageView.viewFromNib(layout: .messageView)
         view.configureTheme(.info)
         view.configureDropShadow()
-        view.button?.isHidden = true
+        view.button?.byHidden(true)
 
         // 标题可留空，只用 body
         view.configureContent(title: "", body: text)

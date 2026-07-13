@@ -265,7 +265,7 @@ extension UITableViewCell {
     @discardableResult
     public func bySelectedBackgroundColor(_ color: UIColor?) -> Self {
         return byBackgroundConfiguration { bg in
-            bg.backgroundColor = .clear
+            bg.backgroundColor = JobsCor.clear
             if let color {
                 var selected = UIBackgroundConfiguration.listPlainCell()
                 selected.backgroundColor = color

@@ -46,17 +46,17 @@ final class GestureUnlockDemoVC: BaseVC {
 
                 if seg.selectedSegmentIndex == 0 {
                     flowState = .createFirst
-                    hintLabel.text = "绘制新手势（至少 4 个点）".tr
+                    hintLabel.byText("绘制新手势（至少 4 个点）".tr)
                     unlockView.byVisible(YES)
                     unlockView.isInputEnabled = true
                 } else {
                     flowState = .verify
                     if store.hasPattern {
-                        hintLabel.text = "请输入手势解锁".tr
+                        hintLabel.byText("请输入手势解锁".tr)
                         unlockView.byVisible(YES)
                         unlockView.isInputEnabled = true
                     } else {
-                        hintLabel.text = "还没设置手势，先去“设置/重置”".tr
+                        hintLabel.byText("还没设置手势，先去“设置/重置”".tr)
                         unlockView.byVisible(NO)
                         unlockView.isInputEnabled = false
                     }
@@ -76,7 +76,7 @@ final class GestureUnlockDemoVC: BaseVC {
         UILabel()
             .byNumberOfLines(0)
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.modeControl.snp.bottom).offset(14)
                 make.left.equalToSuperview().offset(self.horizontalInset)
@@ -86,7 +86,7 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var unlockView: GestureUnlockView = {
         GestureUnlockView()
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
                 make.centerX.equalToSuperview()
@@ -96,10 +96,10 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var resetButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
-            .byTitle("清除/重来", for: .normal)
-            .byTitleColor(.systemBlue, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitle("清除/重来".tr, for: .normal)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] sender in
                 guard let self else { return }
 
@@ -108,11 +108,11 @@ final class GestureUnlockDemoVC: BaseVC {
                 switch flowState {
                 case .confirmFirst:
                     flowState = .createFirst
-                    hintLabel.text = "请重新设置手势（至少 4 个点 ）"
+                    hintLabel.byText("请重新设置手势（至少 4 个点 ）".tr)
                     unlockView.reset()
                 default:
                     if store.hasPattern {
-                        hintLabel.text = "请输入手势解锁"
+                        hintLabel.byText("请输入手势解锁".tr)
                     } else {
                         showInfoHintAndClear("请先设置手势（至少 4 个点）") // ✅ 提示后清痕
                     }
@@ -126,8 +126,8 @@ final class GestureUnlockDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "九宫格解锁🔒")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "九宫格解锁🔒".tr)
 
         modeControl.byVisible(YES)
         hintLabel.byVisible(YES)
@@ -153,13 +153,13 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
         case .createFirst:
             flowState = .confirmFirst(temp: pattern)
             view.showSelected()
-            hintLabel.text = "请再绘制一次进行确认".tr
+            hintLabel.byText("请再绘制一次进行确认".tr)
             delayedReset()
         case .confirmFirst(let temp):
             if temp == pattern {
                 store.save(pattern: pattern)
                 view.showSelected()
-                hintLabel.text = "设置成功 ✅ 现在可以用它解锁了".tr
+                hintLabel.byText("设置成功 ✅ 现在可以用它解锁了".tr)
                 flowState = .verify
                 modeControl.selectedSegmentIndex = 1
                 delayedReset()
@@ -170,13 +170,13 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
             }
         case .verify:
             guard store.hasPattern else {
-                "还没设置手势，先去“设置/重置”".toast
+                "还没设置手势，先去“设置/重置”".tr.toast
                 unlockView.reset() // 防止残留（即使理论上此时应该不可输入）
                 return
             }
             if store.verify(pattern: pattern) {
                 view.showSelected()
-                hintLabel.text = "解锁成功 ✅".tr
+                hintLabel.byText("解锁成功 ✅".tr)
                 delayedReset()
             } else {
                 // ✅ 手势错误：提示完成后清除之前手势痕迹
@@ -201,7 +201,7 @@ extension GestureUnlockDemoVC{
     private func refreshStateFromStorage() {
         if store.hasPattern {
             flowState = .verify
-            hintLabel.text = "请输入手势解锁".tr
+            hintLabel.byText("请输入手势解锁".tr)
             modeControl.selectedSegmentIndex = 1
             unlockView.byVisible(YES)
             unlockView.isInputEnabled = true
@@ -228,7 +228,7 @@ extension GestureUnlockDemoVC{
     }
     /// 状态提示：立即清痕（避免残留）
     private func showInfoHintAndClear(_ text: String) {
-        hintLabel.text = text
+        hintLabel.byText(text)
         unlockView.reset()
     }
     /// 成功提示：保留短暂展示，再清痕

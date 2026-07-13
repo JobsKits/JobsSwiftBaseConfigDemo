@@ -54,9 +54,9 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byEstimatedSectionFooterHeight(0)
 
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -127,7 +127,7 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "朋友圈 (Texture)")
+        jobsSetupGKNav(title: "朋友圈 (Texture)".tr)
         tableNode.view.byVisible(YES)
 
         posts = MomentPost.makeSample(rows: rows)

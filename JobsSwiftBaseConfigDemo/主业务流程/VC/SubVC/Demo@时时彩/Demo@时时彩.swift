@@ -55,7 +55,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     // ============================== Life Cycle ==============================
     public override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "时时彩")
+        jobsSetupGKNav(title: "时时彩".tr)
         tableView.byVisible(YES)
 
         data = (0..<60).map { i in

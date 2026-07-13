@@ -4,6 +4,7 @@ digraph PodspecDependencies {
   "BRPickerViewSwift";
   "Flutter";
   "FlutterPluginRegistrant";
+  "JobsBluetooth";
   "JobsBy3rdTools";
   "JobsByPDFKit";
   "JobsByPhotosUI";
@@ -83,6 +84,7 @@ digraph PodspecDependencies {
   "JobsByUIKit" -> "JobsSwiftDSL";
   "JobsByUIKit" -> "JobsSwiftTimer";
   "JobsByUIKit" -> "JobsTextTools";
+  "JobsByUIKit" -> "JobsViewPush";
   "JobsByUIKit" -> "Jobsl10n";
   "JobsByWebKit" -> "JobsByUIKit";
   "JobsByWebKit" -> "JobsSwiftDSL";
@@ -94,6 +96,9 @@ digraph PodspecDependencies {
   "JobsEmptyView" -> "JobsSwiftBaseDefines";
   "JobsEmptyView" -> "JobsSwiftBlock";
   "JobsEmptyView" -> "JobsSwiftDSL";
+  "JobsFuseAnimation" -> "JobsByUIKit";
+  "JobsFuseAnimation" -> "JobsSwiftBaseDefines";
+  "JobsFuseAnimation" -> "JobsSwiftDSL";
   "JobsFuseAnimation" -> "JobsSwiftTimer";
   "JobsGestureUnlock" -> "JobsByUIKit";
   "JobsGestureUnlock" -> "JobsSwiftBaseDefines";
@@ -115,6 +120,7 @@ digraph PodspecDependencies {
   "JobsLocalNotification" -> "JobsByUIKit";
   "JobsLocalNotification" -> "JobsSwiftTools";
   "JobsLuckyEnvelopeRain" -> "JobsByUIKit";
+  "JobsLuckyEnvelopeRain" -> "JobsSwiftBaseDefines";
   "JobsLuckyEnvelopeRain" -> "JobsSwiftDSL";
   "JobsLuckyEnvelopeRain" -> "JobsSwiftTimer";
   "JobsMarqueeView" -> "JobsByUIKit";
@@ -146,7 +152,13 @@ digraph PodspecDependencies {
   "JobsSwiftBaseTools" -> "JobsSwiftBaseDefines";
   "JobsSwiftBaseTools" -> "JobsSwiftBlock";
   "JobsSwiftBaseTools" -> "JobsSwiftDSL";
+  "JobsSwiftCalendar" -> "JobsSwiftBaseDefines";
+  "JobsSwiftCalendar" -> "JobsSwiftDSL";
+  "JobsSwiftComment" -> "JobsByUIKit";
+  "JobsSwiftComment" -> "JobsSwiftBaseDefines";
+  "JobsSwiftComment" -> "JobsSwiftDSL";
   "JobsSwiftCountryCodeCtrl" -> "JobsByUIKit";
+  "JobsSwiftCountryCodeCtrl" -> "JobsSwiftBaseDefines";
   "JobsSwiftCountryCodeCtrl" -> "JobsSwiftDSL";
   "JobsSwiftCountryCodeCtrl" -> "Jobsl10n";
   "JobsSwiftDSL" -> "JobsSwiftBaseDefines";
@@ -157,6 +169,10 @@ digraph PodspecDependencies {
   "JobsSwiftDebugTools" -> "JobsToast";
   "JobsSwiftFoundation" -> "JobsByUIKit";
   "JobsSwiftFoundation" -> "JobsSwiftDSL";
+  "JobsSwiftGraphicCaptcha" -> "JobsSwiftBaseDefines";
+  "JobsSwiftGraphicCaptcha" -> "JobsSwiftDSL";
+  "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
+  "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
   "JobsSwiftOpen" -> "JobsByUIKit";
   "JobsSwiftOpen" -> "JobsInheritance";
@@ -164,9 +180,14 @@ digraph PodspecDependencies {
   "JobsSwiftRefresher" -> "JobsSwiftBaseDefines";
   "JobsSwiftRefresher" -> "JobsSwiftBlock";
   "JobsSwiftRefresher" -> "JobsSwiftDSL";
+  "JobsSwiftSearcher" -> "JobsByUIKit";
+  "JobsSwiftSearcher" -> "JobsSwiftBaseDefines";
+  "JobsSwiftSearcher" -> "JobsSwiftDSL";
+  "JobsSwiftSearcher" -> "Jobsl10n";
   "JobsSwiftSplash" -> "JobsByUIKit";
   "JobsSwiftSplash" -> "JobsCountdownButton";
   "JobsSwiftSplash" -> "JobsInheritance";
+  "JobsSwiftSplash" -> "JobsSwiftBaseDefines";
   "JobsSwiftSplash" -> "JobsSwiftDSL";
   "JobsSwiftSplash" -> "JobsSwiftOpen";
   "JobsSwiftStandardLibrary" -> "JobsSwiftBaseDefines";
@@ -190,5 +211,7 @@ digraph PodspecDependencies {
   "JobsToast" -> "JobsSwiftBaseDefines";
   "JobsToast" -> "JobsSwiftBlock";
   "JobsToast" -> "JobsSwiftDSL";
+  "JobsViewPush" -> "JobsSwiftBaseDefines";
+  "JobsViewPush" -> "JobsSwiftDSL";
   "TextureSwiftSupport" -> "Texture";
 }

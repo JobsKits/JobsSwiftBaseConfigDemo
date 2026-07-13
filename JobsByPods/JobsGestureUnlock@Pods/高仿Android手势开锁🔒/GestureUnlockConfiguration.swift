@@ -20,15 +20,15 @@ public struct GestureUnlockConfiguration {
     public var nodeBorderWidth: CGFloat = 2
 
     public var nodeNormalColor: UIColor = JobsCor.systemGray3
-    public var nodeSelectedColor: UIColor = .systemBlue
-    public var nodeErrorColor: UIColor = .systemRed
+    public var nodeSelectedColor: UIColor = JobsCor.systemBlue
+    public var nodeErrorColor: UIColor = JobsCor.systemRed
 
-    public var nodeFillSelectedColor: UIColor = UIColor.systemBlue.withAlphaComponent(0.22)
-    public var nodeFillErrorColor: UIColor = UIColor.systemRed.withAlphaComponent(0.18)
+    public var nodeFillSelectedColor: UIColor = JobsCor.systemBlue.withAlphaComponent(0.22)
+    public var nodeFillErrorColor: UIColor = JobsCor.systemRed.withAlphaComponent(0.18)
 
     public var lineWidth: CGFloat = 6
-    public var lineSelectedColor: UIColor = .systemBlue
-    public var lineErrorColor: UIColor = .systemRed
+    public var lineSelectedColor: UIColor = JobsCor.systemBlue
+    public var lineErrorColor: UIColor = JobsCor.systemRed
 
     public var minimumPatternLength: Int = 4
     public var hapticsEnabled: Bool = true

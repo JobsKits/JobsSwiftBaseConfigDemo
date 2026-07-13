@@ -46,8 +46,8 @@ final class UITableViewCellCornerDemoVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "UITableViewCell切圆角方案")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "UITableViewCell切圆角方案".tr)
         tableView.byVisible(YES)
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 #endif
 
 import AVFoundation
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsCountdownButton
@@ -67,9 +68,9 @@ public final class JobsSplashVC: BaseVC {
 
     private lazy var skipButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(UIColor.black.withAlphaComponent(0.45), for: .normal)
-            .byTitleColor(.white)
-            .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.45), for: .normal)
+            .byTitleColor(JobsCor.white)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byCornerRadius(18)
             .byMasksToBounds(true)
             .byCountdown { [weak self] cfg in
@@ -124,7 +125,7 @@ public final class JobsSplashVC: BaseVC {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.black)
+        view.byBackgroundColor(JobsCor.black)
         imageView
             .byAddTo(view) { make in
                 make.edges.equalToSuperview()
@@ -144,7 +145,7 @@ public final class JobsSplashVC: BaseVC {
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        playerLayer?.frame = view.bounds
+        playerLayer?.byFrame(view.bounds)
         if let customFrame = configuration.skipButtonFrame {
             skipButton.byFrame(customFrame)
         } else {
@@ -239,7 +240,7 @@ public final class JobsSplashVC: BaseVC {
         let player = AVPlayer(url: url)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = configuration.videoGravity
-        playerLayer.frame = view.bounds
+        playerLayer.byFrame(view.bounds)
         view.layer.insertSublayer(playerLayer, above: imageView.layer)
         self.player = player
         self.playerLayer = playerLayer

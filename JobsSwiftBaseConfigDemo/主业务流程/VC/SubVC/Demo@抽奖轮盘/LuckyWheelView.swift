@@ -44,7 +44,7 @@ final class LuckyWheelView: UIView {
     }
     /// 仅背景色（向下兼容）：设置 colors 会自动生成 segments
     var colors: [UIColor] {
-        get { segments.map { $0.backgroundColor ?? .clear } }
+        get { segments.map { $0.backgroundColor ?? JobsCor.clear } }
         set {
             segments = newValue.map { LuckyWheelSegment(backgroundColor: $0) }
         }
@@ -58,7 +58,7 @@ final class LuckyWheelView: UIView {
     /// 是否允许手势拖动旋转（默认 true）
     var isPanRotationEnabled: Bool = true {
         didSet {
-            panGesture.isEnabled = isPanRotationEnabled
+            panGesture.byEnabled(isPanRotationEnabled)
         }
     }
     /// 减速率（默认 UIScrollView.normal）
@@ -74,11 +74,11 @@ final class LuckyWheelView: UIView {
     private lazy var centerButton: UIButton = {
         UIButton.sys()
             /// 背景色
-            .byBackgroundColor(.systemGreen, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
             /// 普通标题
-            .byTitle("点我\n抽奖", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("点我\n抽奖".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byCornerRadius(30)
             .byMasksToBounds(true)
             /// 点击声音
@@ -94,9 +94,9 @@ final class LuckyWheelView: UIView {
             /// 长按反馈（按钮自身的视觉反馈）
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                 }
             }
             .byAddTo(self) { make in
@@ -187,12 +187,12 @@ final class LuckyWheelView: UIView {
 extension LuckyWheelView {
     
     private func commonInit() {
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         clipsToBounds = false
 
         /// 盘面铺满整个 LuckyWheelView
-        addSubview(plateView)
-        plateView.backgroundColor = .clear
+        plateView.byAddTo(self)
+        plateView.byBackgroundColor(JobsCor.clear)
         plateView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -234,14 +234,16 @@ extension LuckyWheelView {
             let endAngle = startAngle + anglePerSlice
 
             // 扇形路径
-            let path = UIBezierPath()
-            path.move(to: center)
-            path.addArc(withCenter: center,
-                        radius: radius,
-                        startAngle: startAngle,
-                        endAngle: endAngle,
-                        clockwise: true)
-            path.close()
+            let path = UIBezierPath.make()
+                .byMove(to: center)
+                .byAddArc(
+                    withCenter: center,
+                    radius: radius,
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    clockwise: true
+                )
+                .byClose()
 
             let layer = CAShapeLayer()
                 .byPath(path.cgPath)
@@ -255,7 +257,7 @@ extension LuckyWheelView {
                 let label = UILabel()
                     .byNumberOfLines(0)
                     .byTextAlignment(.center)
-                    .byBgCor(.clear)
+                    .byBgCor(JobsCor.clear)
                     .byAttributedString(attr)
 
                 // 文本中心在扇形中线、偏内一点
@@ -285,7 +287,7 @@ extension LuckyWheelView {
                 let rotation = midAngle - CGFloat.pi / 2
                 label.transform = CGAffineTransform(rotationAngle: rotation)
 
-                plateView.addSubview(label)
+                label.byAddTo(plateView)
             }
 
             // ==== 图片：文字外侧的圆形 ImageView ===================
@@ -315,7 +317,7 @@ extension LuckyWheelView {
 
         // 中心点方便观察
         let dotRadius: CGFloat = 3
-        let dotPath = UIBezierPath(ovalIn: CGRect(
+        let dotPath = UIBezierPath.make(ovalIn: CGRect(
             x: center.x - dotRadius,
             y: center.y - dotRadius,
             width: dotRadius * 2,
@@ -323,7 +325,7 @@ extension LuckyWheelView {
         ))
         let dotLayer = CAShapeLayer()
             .byPath(dotPath.cgPath)
-            .byFillColor(.white)
+            .byFillColor(JobsCor.white)
         plateView.layer.addSublayer(dotLayer)
         sliceLayers.append(dotLayer)
     }
@@ -337,8 +339,8 @@ extension LuckyWheelView {
         };return NSAttributedString(
             string: text,
             attributes: [
-                .font: segment.textFont ?? .systemFont(ofSize: 12, weight: .medium),
-                .foregroundColor: segment.textColor ?? .black
+                .font: segment.textFont ?? JobsFont.systemFont(ofSize: 12, weight: .medium),
+                .foregroundColor: segment.textColor ?? JobsCor.black
             ]
         )
     }
@@ -476,7 +478,7 @@ extension LuckyWheelView {
             v0 = velocityForTargetDuration(spinDuration)
         }
 
-        centerButton.isSelected = true
+        centerButton.bySelected(true)
         centerButton.isUserInteractionEnabled = false
 
         decelerator = ScrollDecelerator(
@@ -549,7 +551,7 @@ extension LuckyWheelView {
         timer = nil
         decelerator = nil
 
-        centerButton.isSelected = false
+        centerButton.bySelected(false)
         centerButton.isUserInteractionEnabled = true
     }
 

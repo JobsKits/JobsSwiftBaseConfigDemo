@@ -25,14 +25,14 @@ import JXSegmentedView
 final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
     // 左侧菜单数据（与截图一致顺序，默认选中“棋牌.5”）
     private let menuItems: [LeftMenuItem] = [
-        .init(icon: "star", title: "日常.5"),
-        .init(icon: "star", title: "新人.5"),
-        .init(icon: "star", title: "电子.5"),
-        .init(icon: "star", title: "体育.5"),
-        .init(icon: "star.fill", title: "棋牌.5"),
-        .init(icon: "star", title: "真人.5"),
-        .init(icon: "star", title: "捕鱼.5"),
-        .init(icon: "star", title: "钱包教程.5")
+        .init(icon: "star", title: "日常.5".tr),
+        .init(icon: "star", title: "新人.5".tr),
+        .init(icon: "star", title: "电子.5".tr),
+        .init(icon: "star", title: "体育.5".tr),
+        .init(icon: "star.fill", title: "棋牌.5".tr),
+        .init(icon: "star", title: "真人.5".tr),
+        .init(icon: "star", title: "捕鱼.5".tr),
+        .init(icon: "star", title: "钱包教程.5".tr)
     ]
 
     var items: [String] = (1...5).map { "返水 - 棋牌.5 活动 \($0)" }
@@ -62,11 +62,11 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
-            .byBackgroundColor(UIColor.systemGroupedBackground)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byEmptyButtonProvider { [unowned self] in
-                UIButton(type: .system)
-                    .byTitle("暂无数据", for: .normal)
-                    .bySubTitle("点我填充示例数据", for: .normal)
+                UIButton.sys()
+                    .byTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
                     .byImage("tray".sysImg, for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
@@ -97,7 +97,7 @@ final class RebatePageVC: BaseVC, JXSegmentedListContainerViewListDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         menuView.byVisible(YES)
         tableView.byVisible(YES)
     }

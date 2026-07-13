@@ -107,8 +107,8 @@ final class PromiseKitDemoVC: BaseVC {
                     """)
             .byTextColor(.darkText)
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 14, weight: .regular))
-            .byBackgroundColor(.white)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byBackgroundColor(JobsCor.white)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
             .byAddTo(view) { [unowned self] make in
@@ -125,9 +125,9 @@ final class PromiseKitDemoVC: BaseVC {
         UILabel()
             .byText("Idle")
             .byTextAlignment(.center)
-            .byTextColor(.white)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
-            .byBackgroundColor(.systemBlue.withAlphaComponent(0.9))
+            .byTextColor(JobsCor.white)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.9))
             .byCornerRadius(18)
             .byMasksToBounds(YES)
             .byAddTo(view) { [unowned self] make in
@@ -185,7 +185,7 @@ final class PromiseKitDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(.systemGroupedBackground)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(title: "PromiseKit Demo".tr)
 
         tipsLabel.byVisible(YES)
@@ -358,7 +358,7 @@ extension PromiseKitDemoVC {
             self.loadingLabel
                 .byVisible(YES)
                 .byText(loading ? text : "Idle")
-                .byBackgroundColor(loading ? .systemOrange.withAlphaComponent(0.9) : .systemBlue.withAlphaComponent(0.9))
+                .byBackgroundColor(loading ? JobsCor.systemOrange.withAlphaComponent(0.9) : JobsCor.systemBlue.withAlphaComponent(0.9))
         }
     }
 
@@ -491,9 +491,9 @@ private final class MockPromiseService {
         Promise { seal in
             after(seconds: 0.8).done {
                 seal.fulfill([
-                    .init(title: "新人礼"),
-                    .init(title: "秒杀专区"),
-                    .init(title: "会员日")
+                    .init(title: "新人礼".tr),
+                    .init(title: "秒杀专区".tr),
+                    .init(title: "会员日".tr)
                 ])
             }
         }

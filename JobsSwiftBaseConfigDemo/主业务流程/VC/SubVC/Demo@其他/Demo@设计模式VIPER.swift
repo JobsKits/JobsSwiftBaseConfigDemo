@@ -14,6 +14,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 
 // ========== Entity ==========
@@ -114,9 +115,9 @@ final class VIPERUserListVC: UIViewController, VIPERUserListView, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Users (VIPER)"
-        view.backgroundColor = .systemBackground
-        tableView.dataSource = self; tableView.delegate = self
-        view.addSubview(tableView); tableView.frame = view.bounds
+        view.byBackgroundColor(JobsCor.systemBackground)
+        tableView.byDataSource(self).byDelegate(self)
+        tableView.byAddTo(view); tableView.byFrame(view.bounds)
         presenter.onViewDidLoad()
     }
 
@@ -141,8 +142,8 @@ final class VIPERUserListVC: UIViewController, VIPERUserListView, UITableViewDat
     func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
         let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let r = rows[ip.row]
-        c.textLabel?.text = r.title
-        c.detailTextLabel?.text = r.subtitle
+        c.textLabel?.byText(r.title)
+        c.detailTextLabel?.byText(r.subtitle)
         return c
     }
     func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
@@ -155,7 +156,7 @@ final class VIPERUserListVC: UIViewController, VIPERUserListView, UITableViewDat
 final class VIPERUserListRouter: VIPERUserListRouting {
     func toDetail(userID: String, from: UIViewController) {
         let vc = UIViewController()
-        vc.view.backgroundColor = .systemBackground
+        vc.view.byBackgroundColor(JobsCor.systemBackground)
         vc.title = "Detail \(userID)"
         from.navigationController?.pushViewController(vc, animated: true)
     }

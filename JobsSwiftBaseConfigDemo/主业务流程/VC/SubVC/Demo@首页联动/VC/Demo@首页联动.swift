@@ -30,10 +30,10 @@ final class CashbackRootVC: BaseVC {
     private lazy var segmentedDataSource: JXSegmentedTitleDataSource = {
         JXSegmentedTitleDataSource()
             .byTitles(segments)
-            .byTitleNormalColor(.secondaryLabel)
-            .byTitleSelectedColor(.systemOrange)
-            .byTitleNormalFont(.systemFont(ofSize: 16, weight: .regular))
-            .byTitleSelectedFont(.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleNormalColor(JobsCor.secondaryLabel)
+            .byTitleSelectedColor(JobsCor.systemOrange)
+            .byTitleNormalFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byTitleSelectedFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTitleColorGradientEnabled(true)
             // 推荐：用 CoreText 测宽，规避 NSString/AttributedString 在少数环境下的崩
             .byWidthForTitle { [unowned self] title in
@@ -45,7 +45,7 @@ final class CashbackRootVC: BaseVC {
         JXSegmentedIndicatorLineView()
             .byIndicatorWidth(28)
             .byIndicatorHeight(3)
-            .byIndicatorColor(.systemOrange)
+            .byIndicatorColor(JobsCor.systemOrange)
             .byVerticalOffset(3)
             .byLineStyle(.normal)
     }()
@@ -70,7 +70,7 @@ final class CashbackRootVC: BaseVC {
     // 顶部分隔线
     private lazy var segmentedHairline: UIView = {
         UIView()
-            .byBackgroundColor(UIColor.separator)
+            .byBackgroundColor(JobsCor.separator)
             .byAddTo(segmentedView) { make in
                 make.bottom.leading.trailing.equalToSuperview()
                 make.height.equalTo(0.5)
@@ -92,8 +92,8 @@ final class CashbackRootVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        jobsSetupGKNav(title: "示例 · 返水页签")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        jobsSetupGKNav(title: "示例 · 返水页签".tr)
         // 触发懒加载
         segmentedView.byVisible(YES)
         segmentedHairline.byVisible(YES)

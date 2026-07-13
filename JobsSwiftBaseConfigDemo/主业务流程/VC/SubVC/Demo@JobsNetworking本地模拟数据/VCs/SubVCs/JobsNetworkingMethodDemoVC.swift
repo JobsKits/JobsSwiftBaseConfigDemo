@@ -65,7 +65,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel()
             .byText(item.subTitle)
-            .byFont(.boldSystemFont(ofSize: 22))
+            .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byNumberOfLines(0)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(16)
@@ -76,7 +76,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     private lazy var pathLabel: UILabel = {
         UILabel()
             .byText("接口：\(item.path)")
-            .byFont(.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(introLabel.snp.bottom).offset(12)
@@ -87,7 +87,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel()
             .byText("状态：\(statusText)")
-            .byTextColor(.secondaryLabel)
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(pathLabel.snp.bottom).offset(8)
@@ -96,9 +96,9 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var requestButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("发起请求".tr, for: .normal)
-            .byBackgroundColor(.systemBlue.withAlphaComponent(0.12))
+            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -112,9 +112,9 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var errorButton: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("触发错误".tr, for: .normal)
-            .byBackgroundColor(.systemRed.withAlphaComponent(0.12))
+            .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -190,8 +190,8 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "\(item.methodType.title) Demo".tr)
-        view.byBackgroundColor(.systemBackground)
+        jobsSetupGKNav(title: "%@ Demo".tr(item.methodType.title))
+        view.byBackgroundColor(JobsCor.systemBackground)
         scrollView.byVisible(YES)
         contentView.byVisible(YES)
         requestPreviewTextView.byText(requestPreviewText)
@@ -224,8 +224,8 @@ extension JobsNetworkingMethodDemoVC {
     }
 
     func sendRequest(triggerError: Bool) {
-        requestButton.isEnabled = false
-        errorButton.isEnabled = false
+        requestButton.byEnabled(false)
+        errorButton.byEnabled(false)
         statusText = "\(item.methodType.title) 请求中..."
         requestPreviewText = buildRequestPreview(triggerError: triggerError)
 
@@ -341,8 +341,8 @@ extension JobsNetworkingMethodDemoVC {
     }
 
     func finishRequest() {
-        requestButton.isEnabled = true
-        errorButton.isEnabled = true
+        requestButton.byEnabled(true)
+        errorButton.byEnabled(true)
     }
 
     func prettyPrint(_ lines: [String]) -> String {
@@ -352,17 +352,17 @@ extension JobsNetworkingMethodDemoVC {
     private func sectionTitleLabel(_ text: String) -> UILabel {
         UILabel()
             .byText(text)
-            .byFont(.boldSystemFont(ofSize: 18))
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byNumberOfLines(1)
     }
 
     private func sectionTextView() -> UITextView {
         UITextView()
-            .byTextColor(.label)
-            .byFont(.monospacedSystemFont(ofSize: 13, weight: .regular))
-            .byBackgroundColor(.secondarySystemBackground)
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
-            .byBorderColor(.separator)
+            .byBorderColor(JobsCor.separator)
             .byBorderWidth(0.5)
             .byEditable(NO)
             .byScrollEnabled(NO)

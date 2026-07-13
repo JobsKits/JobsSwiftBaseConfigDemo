@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import WebKit
 import JobsToast
 import JobsNavBar
@@ -95,7 +96,7 @@ final class BaseWebViewDemoVC: BaseVC {
     // MARK: - 懒加载 Web（全通用，无业务常量）
     private lazy var web: BaseWebView = { [unowned self] in
         BaseWebView()
-//            .byBackgroundColor(.clear)
+//            .byBackgroundColor(JobsCor.clear)
             .byAllowedHosts([])                  // 不限域
             .byOpenBlankInPlace(true)
             .byDisableSelectionAndCallout(false)
@@ -122,17 +123,17 @@ final class BaseWebViewDemoVC: BaseVC {
             .byNavBarEnabled(true)
             .byNavBarStyle { s in
                 s.byHairlineHidden(false)
-                 .byBackgroundColor(.systemBackground)
+                 .byBackgroundColor(JobsCor.systemBackground)
                  .byTitleAlignmentCenter(true)
             }
             /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
             .byNavBarBackButtonProvider {
-                UIButton(type: .system)
-                    .byBackgroundColor(.clear)
+                UIButton.sys()
+                    .byBackgroundColor(JobsCor.clear)
                     .byImage("chevron.left".sysImg, for: .normal)
                     .byTitle("返回".tr, for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                    .byTitleColor(.label, for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+                    .byTitleColor(JobsCor.label, for: .normal)
                     .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                     .byTapSound("Sound.wav")
             }
@@ -184,7 +185,7 @@ final class BaseWebViewDemoVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         /// 1️⃣ 加载线上 URL（任选其一）
 //        web.loadBy("https://www.youtube.com/")
 //        web.loadBy("https://www.google.com")
@@ -203,7 +204,7 @@ final class BaseWebViewDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         BaseWebVC()
                             .byData("https://www.youtube.com/")
                             .onResult { id in

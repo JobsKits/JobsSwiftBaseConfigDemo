@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
 import JobsSwiftTimer
 
 #if !targetEnvironment(simulator)
@@ -103,7 +104,7 @@ final class UnityManager: NSObject {
 
         if let uWindow = ufw.appController()?.window {
             unityWindow = uWindow
-            uWindow.isHidden = false
+            uWindow.byHidden(false)
             uWindow.makeKeyAndVisible()
         }
         isRunning = true
@@ -122,7 +123,7 @@ final class UnityManager: NSObject {
         autoCloseTimer?.stop()
         autoCloseTimer = nil
 
-        unityWindow?.isHidden = true
+        unityWindow?.byHidden(true)
         hostWindow?.makeKeyAndVisible()
 
         isRunning = false

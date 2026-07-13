@@ -28,7 +28,7 @@ final class CashbackCardCell: UITableViewCell {
             }
 
         cardView.layer.insertSublayer(gradient, at: 0)
-        cardView.layer.shadowColor = UIColor.black.withAlphaComponent(0.08).cgColor
+        cardView.layer.shadowColor = JobsCor.black.withAlphaComponent(0.08).cgColor
         cardView.layer.shadowOpacity = 1
         cardView.layer.shadowRadius = 10
         cardView.layer.shadowOffset = .init(width: 0, height: 3)
@@ -38,7 +38,7 @@ final class CashbackCardCell: UITableViewCell {
 
     private lazy var iconWrap: UIView = {
         UIView()
-            .byBackgroundColor(.systemOrange)
+            .byBackgroundColor(JobsCor.systemOrange)
             .byCornerRadius(12)
             .byAddTo(cardView) { make in
                 make.leading.top.equalToSuperview().offset(18)
@@ -48,7 +48,7 @@ final class CashbackCardCell: UITableViewCell {
 
     private lazy var iconView: UIImageView = {
         UIImageView(image: UIImage(systemName: "envelope.fill"))
-            .byTintColor(.white)
+            .byTintColor(JobsCor.white)
             .byContentMode(.scaleAspectFit)
             .byAddTo(iconWrap) { make in
                 make.center.equalToSuperview()
@@ -59,8 +59,8 @@ final class CashbackCardCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("——")
-            .byFont(.systemFont(ofSize: 20, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 20, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(cardView) { [unowned self] make in
                 make.leading.equalTo(iconWrap.snp.trailing).offset(16)
                 make.trailing.equalTo(cardView).inset(16)
@@ -71,8 +71,8 @@ final class CashbackCardCell: UITableViewCell {
     private lazy var subLabel: UILabel = {
         UILabel()
             .byText("神秘彩金等你来拿".tr)
-            .byFont(.systemFont(ofSize: 16))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(cardView) { [unowned self] make in
                 make.leading.equalTo(titleLabel.snp.leading)
                 make.trailing.equalTo(titleLabel.snp.trailing)
@@ -84,8 +84,8 @@ final class CashbackCardCell: UITableViewCell {
     private lazy var gradient:CAGradientLayer = {
         CAGradientLayer()
             .byCGColors([
-                UIColor(red: 0.90, green: 0.78, blue: 0.97, alpha: 1).cgColor, // #E6C7F7
-                UIColor(red: 0.82, green: 0.72, blue: 0.95, alpha: 1).cgColor  // #D1B7F3
+                UIColor(hex: 0xE6C7F7).cgColor,
+                UIColor(hex: 0xD1B7F3).cgColor
             ])
             .byStartPoint(CGPoint(x: 0, y: 0.5))
             .byEndPoint(CGPoint(x: 1, y: 0.5))
@@ -95,8 +95,8 @@ final class CashbackCardCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
+        contentView.byBackgroundColor(JobsCor.clear)
 
         cardView.byVisible(YES)
         iconWrap.byVisible(YES)
@@ -109,7 +109,7 @@ final class CashbackCardCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradient.frame = cardView.bounds
+        gradient.byFrame(cardView.bounds)
     }
 
     func configure(title: String, subtitle: String) {

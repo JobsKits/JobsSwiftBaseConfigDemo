@@ -41,7 +41,7 @@ extension UITextView {
     }
     
     @discardableResult
-    public func byAttributedText(_ attrText: NSAttributedString) -> Self {
+    public func byAttributedText(_ attrText: NSAttributedString?) -> Self {
         self.attributedText = attrText
         return self
     }
@@ -170,7 +170,7 @@ extension UITextView {
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
-        self.font = .preferredFont(forTextStyle: style)
+        self.font = JobsFont.preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
         return self
     }
@@ -209,7 +209,7 @@ extension UITextView {
     }
     
     @discardableResult
-    public func byAttributedText(_ builder: () -> NSAttributedString) -> Self {
+    public func byAttributedText(_ builder: () -> NSAttributedString?) -> Self {
         self.attributedText = builder()
         return self
     }
@@ -340,7 +340,7 @@ extension UITextView {
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ builder: () -> UIFont.TextStyle) -> Self {
-        self.font = .preferredFont(forTextStyle: builder())
+        self.font = JobsFont.preferredFont(forTextStyle: builder())
         self.adjustsFontForContentSizeCategory = true
         return self
     }

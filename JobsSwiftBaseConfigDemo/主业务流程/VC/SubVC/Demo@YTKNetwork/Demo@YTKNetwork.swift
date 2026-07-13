@@ -30,9 +30,9 @@ final class YTKNetworkDemoVC: BaseVC {
     private lazy var logTextView: UITextView = {
         UITextView()
             .byEditable(NO)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBackgroundColor(.secondarySystemBackground)
-            .byTextColor(.label)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalToSuperview().inset(26)
@@ -42,10 +42,10 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 单请求按钮：GET /ip
     private lazy var singleRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemGreen, for: .normal)
-            .byTitle("单请求：GET /ip", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitle("单请求：GET /ip".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .byTapSound("Sound.wav")
             .onTap { [weak self] _ in
@@ -78,10 +78,10 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 批量请求按钮：GET /ip + GET /headers
     private lazy var batchRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemBlue, for: .normal)
-            .byTitle("批量：IP + Headers", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("批量：IP + Headers".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -115,10 +115,10 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 链式请求按钮：POST /post → GET /headers
     private lazy var chainRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemOrange, for: .normal)
-            .byTitle("链式：POST → GET", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
+            .byTitle("链式：POST → GET".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -145,10 +145,10 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 上传头像按钮：Multipart POST /post
     private lazy var uploadButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.systemPurple, for: .normal)
-            .byTitle("上传头像：Multipart", for: .normal)
-            .byTitleColor(.white, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 15, weight: .medium))
+            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
+            .byTitle("上传头像：Multipart".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .onTap { [weak self] _ in
                 guard let self else { return }
@@ -156,7 +156,7 @@ final class YTKNetworkDemoVC: BaseVC {
                 // 造一张纯色图
                 UploadAvatarRequest(image: UIGraphicsImageRenderer(size: CGSize(width: 80, height: 80))
                     .image { ctx in
-                        UIColor.systemPink.setFill()
+                        JobsCor.systemPink.setFill()
                         ctx.fill(CGRect(x: 0, y: 0, width: 80, height: 80))
                     })
                     .bySuccess({ [weak self] (request: YTKBaseRequest) in
@@ -180,7 +180,7 @@ final class YTKNetworkDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         setupYTKNetworkBaseURL()
         jobsSetupGKNav(
             title: "YTKNetwork Swift Demo",
@@ -192,7 +192,7 @@ final class YTKNetworkDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         logTextView.byText("")
                     }
             ]

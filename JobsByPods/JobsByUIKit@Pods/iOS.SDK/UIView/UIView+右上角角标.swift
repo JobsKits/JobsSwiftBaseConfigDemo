@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 // MARK: - 公共类型@右上角角标
@@ -21,9 +22,9 @@ public enum RTBadgeContent {
 }
 
 public struct RTBadgeConfig {
-    public var backgroundColor: UIColor = .systemRed
-    public var textColor: UIColor = .white
-    public var font: UIFont = .systemFont(ofSize: 12, weight: .semibold)
+    public var backgroundColor: UIColor = JobsCor.systemRed
+    public var textColor: UIColor = JobsCor.white
+    public var font: UIFont = JobsFont.systemFont(ofSize: 12, weight: .semibold)
     /// nil = 自动按高度一半做胶囊圆角；给值则为固定圆角
     public var cornerRadius: CGFloat? = nil
     public var insets: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)
@@ -58,17 +59,17 @@ public extension RTBadgeConfig {
     }
     
     @discardableResult
-    func byBackgroundColor(_ v: UIColor = .systemRed) -> Self {
+    func byBackgroundColor(_ v: UIColor = JobsCor.systemRed) -> Self {
         var c = self; c.backgroundColor = v; return c
     }
     
     @discardableResult
-    func byTextColor(_ v: UIColor = .white) -> Self {
+    func byTextColor(_ v: UIColor = JobsCor.white) -> Self {
         var c = self; c.textColor = v; return c
     }
     
     @discardableResult
-    func byFont(_ v: UIFont = .systemFont(ofSize: 11, weight: .bold)) -> Self {
+    func byFont(_ v: UIFont = JobsFont.systemFont(ofSize: 11, weight: .bold)) -> Self {
         var c = self; c.font = v; return c
     }
     
@@ -114,7 +115,7 @@ public extension RTBadgeConfig {
 
     @discardableResult
     func byShadow(
-        color: UIColor? = UIColor.black.withAlphaComponent(0.25),
+        color: UIColor? = JobsCor.black.withAlphaComponent(0.25),
         radius: CGFloat = 2,
         opacity: Float = 0.6,
         offset: CGSize = .init(width: 0, height: 1)
@@ -179,7 +180,7 @@ extension UIView {
     @discardableResult
     public func byCornerDot(diameter: CGFloat = 8,
                             offset: UIOffset = .init(horizontal: -4, vertical: 4),
-                            color: UIColor = .systemRed) -> Self {
+                            color: UIColor = JobsCor.systemRed) -> Self {
         return byCornerBadge(.custom(UIView()
             .byBackgroundColor(color)
             .byCornerRadius(diameter / 2)
@@ -189,7 +190,7 @@ extension UIView {
                 cfg.byInset(.zero)
                     .byCornerRadius(diameter / 2)
                     .byOffset(offset)
-                    .byBackgroundColor(.clear)
+                    .byBackgroundColor(JobsCor.clear)
                     .byBorder(color: nil, width: 0)
                     .byShadow(color: nil)
         }

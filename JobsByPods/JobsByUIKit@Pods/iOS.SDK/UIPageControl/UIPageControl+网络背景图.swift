@@ -78,8 +78,8 @@ extension UIPageControl {
         )
         if useOverlay {
             // ✅ 隐藏系统默认点，避免叠影
-            self.pageIndicatorTintColor = .clear
-            self.currentPageIndicatorTintColor = .clear
+            self.pageIndicatorTintColor = JobsCor.clear
+            self.currentPageIndicatorTintColor = JobsCor.clear
         }
         jobs_applyIndicatorImagesIfNeeded()
     }
@@ -148,7 +148,7 @@ extension UIPageControl {
         if objc_getAssociatedObject(self, &kJobsPCOverlayKey) as? UIView != nil { return }
         let overlay = UIView()
             .byUserInteractionEnabled(false)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             // overlay 跟随 UIPageControl 自己居中
             .byAddTo(self) { [unowned self] make in
                 make.center.equalToSuperview()
@@ -168,7 +168,7 @@ extension UIPageControl {
                 .byAxis(.horizontal)
                 .byAlignment(.center)
                 .byDistribution(.equalSpacing)
-                .byBackgroundColor(.clear)
+                .byBackgroundColor(JobsCor.clear)
                 .byAddTo(overlay) { [unowned self] make in
                     make.center.equalToSuperview()
                     make.height.lessThanOrEqualToSuperview()
@@ -242,7 +242,7 @@ extension UIPageControl {
         let size = CGSize(width: diameter, height: diameter)
         let out = UIGraphicsImageRenderer(size: size).image { _ in
             let rect = CGRect(origin: .zero, size: size)
-            UIBezierPath(ovalIn: rect).addClip()
+            UIBezierPath.make(ovalIn: rect).addClip()
             image.draw(in: rect)
         };return out.withRenderingMode(.alwaysOriginal)
     }

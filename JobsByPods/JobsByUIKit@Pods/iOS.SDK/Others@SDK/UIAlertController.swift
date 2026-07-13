@@ -510,7 +510,7 @@ extension UIAlertController {
                     } else {
                         let v = UIView()
                         v.isUserInteractionEnabled = false
-                        v.backgroundColor = .clear
+                        v.backgroundColor = JobsCor.clear
                         v.tag = tag
                         box.insertSubview(v, belowSubview: tf)
                         v.snp.makeConstraints { make in make.edges.equalToSuperview().inset(insets) }
@@ -674,8 +674,8 @@ extension UIAlertController {
             v.subviews.forEach(hideEffect)
         }
         hideEffect(in: card)
-        card.backgroundColor = .clear
-        view.backgroundColor = .clear
+        card.backgroundColor = JobsCor.clear
+        view.backgroundColor = JobsCor.clear
     }
 
     @MainActor

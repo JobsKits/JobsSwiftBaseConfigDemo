@@ -58,8 +58,8 @@ final class JobsTextDemoVC: BaseVC {
     private lazy var rawLabel: UILabel = { [unowned self] in
         UILabel()
             .byNumberOfLines(0)
-            .byFont(.systemFont(ofSize: 13))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13))
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { make in
                 make.top.equalTo(self.previewLabel.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(16)
@@ -67,7 +67,7 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var boldBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("加粗".tr, for: .normal)
             .onTap(jobs_weakify(self) { me, _ in
                 me.onBold()
@@ -80,8 +80,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var redBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("红色", for: .normal)
+        UIButton.sys()
+            .byTitle("红色".tr, for: .normal)
             .onTap { [weak self] _ in self?.onRed() }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
@@ -91,8 +91,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var appendBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("拼接“ +World”", for: .normal)
+        UIButton.sys()
+            .byTitle("拼接“ +World”".tr, for: .normal)
             .onTap { [weak self] _ in self?.onAppend() }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
@@ -102,8 +102,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var resetBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("还原", for: .normal)
+        UIButton.sys()
+            .byTitle("还原".tr, for: .normal)
             .onTap { [weak self] _ in self?.onReset() }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
@@ -113,8 +113,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var exportRTFBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("导出为 RTF", for: .normal)
+        UIButton.sys()
+            .byTitle("导出为 RTF".tr, for: .normal)
             .onTap { [weak self] _ in self?.onExportRTF() }
             .byAddTo(view) { make in
                 make.top.equalTo(self.boldBtn.snp.bottom).offset(10)
@@ -124,8 +124,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var importRTFBtn: UIButton = { [unowned self] in
-        UIButton(type: .system)
-            .byTitle("从 RTF 导入", for: .normal)
+        UIButton.sys()
+            .byTitle("从 RTF 导入".tr, for: .normal)
             .onTap { [weak self] _ in self?.onImportRTF() }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.exportRTFBtn)
@@ -137,8 +137,8 @@ final class JobsTextDemoVC: BaseVC {
     private lazy var debugTextView: UITextView = { [unowned self] in
         UITextView()
             .byEditable(false)
-            .byFont(.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBackgroundColor(.secondarySystemBackground)
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byAddTo(view) {[unowned self] make in
                 make.top.equalTo(self.exportRTFBtn.snp.bottom).offset(12)
@@ -150,7 +150,7 @@ final class JobsTextDemoVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "JobsText Demo")
         sourceControl.byVisible(YES)
         previewLabel.byVisible(YES)
@@ -178,13 +178,13 @@ final class JobsTextDemoVC: BaseVC {
     }
 
     private func onBold() {
-        let font = UIFont.boldSystemFont(ofSize: 18)
+        let font = JobsFont.boldSystemFont(ofSize: 18)
         current = current.applying([.font: font])
         refresh()
     }
 
     private func onRed() {
-        current = current.applying([.foregroundColor: UIColor.systemRed])
+        current = current.applying([.foregroundColor: JobsCor.systemRed])
         refresh()
     }
 
@@ -200,7 +200,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private func onExportRTF() {
         guard let data = current.rtfData() else {
-            "RTF 导出失败".toast
+            "RTF 导出失败".tr.toast
             return
         }
         "RTF 导出成功（\(data.count) bytes）".toast
@@ -224,32 +224,32 @@ final class JobsTextDemoVC: BaseVC {
                    .characterEncoding: String.Encoding.utf8.rawValue
                ]) {
                 current = restored
-                "已从 HTML 恢复".toast
+                "已从 HTML 恢复".tr.toast
                 refresh()
             } else {
-                "RTF/HTML 导入失败".toast
+                "RTF/HTML 导入失败".tr.toast
             }
         }
     }
     // MARK: - 渲染
     private func refresh() {
         // 1) 富文本预览
-        previewLabel.attributedText = current.asAttributedString()
+        previewLabel.byAttributedString(current.asAttributedString())
         // 2) 纯文本视图
         rawLabel.byText("rawString: \(current.asString)")
         // 3) 调试信息
-        debugTextView.text = debugDump(current)
+        debugTextView.byText(debugDump(current))
     }
     // MARK: - 辅助
     private func makeSampleAttributed() -> JobsText {
         let m = NSMutableAttributedString(string: "Hello, ")
         m.append(NSAttributedString(string: "Rich", attributes: [
-            .font: UIFont.boldSystemFont(ofSize: 22),
-            .foregroundColor: UIColor.systemBlue
+            .font: JobsFont.boldSystemFont(ofSize: 22),
+            .foregroundColor: JobsCor.systemBlue
         ]))
         m.append(NSAttributedString(string: "Text", attributes: [
-            .font: UIFont.italicSystemFont(ofSize: 22),
-            .foregroundColor: UIColor.systemPink
+            .font: JobsFont.italicSystemFont(ofSize: 22),
+            .foregroundColor: JobsCor.systemPink
         ]))
         m.append(NSAttributedString(string: " ✨", attributes: [
             .baselineOffset: 2

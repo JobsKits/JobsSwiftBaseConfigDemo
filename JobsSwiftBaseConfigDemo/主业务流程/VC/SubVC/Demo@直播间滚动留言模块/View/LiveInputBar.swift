@@ -42,7 +42,7 @@ final class LiveInputBar: UIView {
 
     private lazy var topLine: UIView = {
         UIView()
-            .byBackgroundColor(.separator)
+            .byBackgroundColor(JobsCor.separator)
             .byAddTo(self) { make in
                 make.top.leading.trailing.equalToSuperview()
                 make.height.equalTo(0.5)
@@ -55,7 +55,7 @@ final class LiveInputBar: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        byBackgroundColor(.systemBackground)
+        byBackgroundColor(JobsCor.systemBackground)
         isUserInteractionEnabled = true
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
         topLine.byVisible(YES)
@@ -67,7 +67,7 @@ final class LiveInputBar: UIView {
         let text = (tf.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
         onSend?(text)
-        if autoClearAfterSend { tf.text = nil }
+        if autoClearAfterSend { tf.byText(nil) }
         if autoResignAfterSend { tf.resignFirstResponder() }
     }
 }

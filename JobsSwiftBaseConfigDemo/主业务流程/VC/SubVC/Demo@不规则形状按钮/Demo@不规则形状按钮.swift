@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -32,7 +33,7 @@ final class IrregularButtonDemoVC: BaseVC {
     private lazy var btn1: IrregularButton = {
         // 右斜边梯形：0,0 -> 120,0 -> 90,50 -> 0,120
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.orange, for: .normal)
+            .byBackgroundColor(JobsCor.orange, for: .normal)
             .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 0),
@@ -40,7 +41,7 @@ final class IrregularButtonDemoVC: BaseVC {
                 .init(x: 120 * 3/4, y: 50),
                 .init(x: 0, y: 120)
             ], designSize: CGSize(width: 120, height: 120))
-            .byStroke(.clear, 0)
+            .byStroke(JobsCor.clear, 0)
             .onTap { [weak self] sender in
                 sender.byBackgroundColor(.randomColor, for: .normal)
             }
@@ -58,7 +59,7 @@ final class IrregularButtonDemoVC: BaseVC {
     private lazy var btn2: IrregularButton = {
         // 平行四边形：0,50 -> 30,0 -> 120,0 -> 90,50
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.green, for: .normal)
+            .byBackgroundColor(JobsCor.green, for: .normal)
             .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 50),
@@ -83,7 +84,7 @@ final class IrregularButtonDemoVC: BaseVC {
     private lazy var btn3: IrregularButton = {
         // 左斜边梯形：30,50 -> 120,0 -> 120,50 -> 0,50
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.cyan, for: .normal)
+            .byBackgroundColor(JobsCor.cyan, for: .normal)
             .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 120/4, y: 50),
@@ -110,7 +111,7 @@ final class IrregularButtonDemoVC: BaseVC {
         let w: CGFloat = 150
         let a = sin(.pi / 180 * 60) * (w/2)  // 0.866 * 75
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.purple, for: .normal)
+            .byBackgroundColor(JobsCor.purple, for: .normal)
             .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: a, y: w/4),
@@ -137,8 +138,8 @@ final class IrregularButtonDemoVC: BaseVC {
     private lazy var btn5: IrregularButton = {
         // 对折形状：0,0 -> 150,0 -> 0,150 -> 150,150（实际上就是“X 折角”的轮廓）
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.brown, for: .normal)
-            .byTitle("按钮", for: .normal)
+            .byBackgroundColor(JobsCor.brown, for: .normal)
+            .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 0),
                 .init(x: 150, y: 0),
@@ -162,7 +163,7 @@ final class IrregularButtonDemoVC: BaseVC {
     private lazy var btn6: IrregularButton = {
         // 箭头：基于 330x150
         return IrregularButton(type: .custom)
-            .byBackgroundColor(.magenta, for: .normal)
+            .byBackgroundColor(JobsCor.magenta, for: .normal)
             .byTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0, y: 150),
@@ -189,7 +190,7 @@ final class IrregularButtonDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemYellow
+        view.byBackgroundColor(JobsCor.systemYellow)
         jobsSetupGKNav(title: "不规则形状按钮".tr)
         btn1.byVisible(true)
         btn2.byVisible(true)

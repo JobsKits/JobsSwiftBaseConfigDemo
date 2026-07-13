@@ -21,8 +21,8 @@ final class WalletSectionHeaderView: UICollectionReusableView {
     private let horizontalInset: CGFloat = 20
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byText("我的银行卡".tr)
             .byAddTo(self)
             .byAddTo(self) { make in
@@ -33,8 +33,8 @@ final class WalletSectionHeaderView: UICollectionReusableView {
 
     private lazy var subtitleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
             .byText("点击银行卡，可展开查看".tr)
             .byAddTo(self) { [unowned self] make in
                 make.left.equalTo(self.titleLabel)
@@ -44,7 +44,7 @@ final class WalletSectionHeaderView: UICollectionReusableView {
 
     private lazy var separator: UIView = {
         UIView()
-            .byBackgroundColor(.label.withAlphaComponent(0.06))
+            .byBackgroundColor(JobsCor.label.withAlphaComponent(0.06))
             .byAddTo(self) { [unowned self] make in
                 make.left.equalToSuperview().offset(self.horizontalInset)
                 make.right.equalToSuperview().inset(self.horizontalInset)
@@ -55,7 +55,7 @@ final class WalletSectionHeaderView: UICollectionReusableView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         titleLabel.byVisible(YES)
         subtitleLabel.byVisible(YES)
         separator.byVisible(YES)
@@ -63,7 +63,7 @@ final class WalletSectionHeaderView: UICollectionReusableView {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         titleLabel.byVisible(YES)
         subtitleLabel.byVisible(YES)
         separator.byVisible(YES)

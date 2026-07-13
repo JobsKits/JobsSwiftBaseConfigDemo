@@ -14,6 +14,9 @@ import UIKit
 import QuartzCore
 import AudioToolbox
 import ObjectiveC
+import JobsByUIKit
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
 import JobsSwiftTimer
 
 // MARK: - 长按导火索外圈配置
@@ -48,9 +51,9 @@ public struct JobsFuseOuterRingConfig {
 
     public init(
         lineWidth: CGFloat = 4,
-        strokeColor: UIColor = .white,
-        trackColor: UIColor? = UIColor.white.withAlphaComponent(0.22),
-        fillColor: UIColor = .clear,
+        strokeColor: UIColor = JobsCor.white,
+        trackColor: UIColor? = JobsCor.white.withAlphaComponent(0.22),
+        fillColor: UIColor = JobsCor.clear,
         fromOpacity: Float = 1.0,
         toOpacity: Float = 1.0,
         growDuration: TimeInterval = 1.2,
@@ -322,7 +325,7 @@ extension UIView {
             // 圆形按钮走 arc，可从 12 点钟方向开始增长。
             let center = CGPoint(x: bounds.midX, y: bounds.midY)
             let r = max(0.1, min(rect.width, rect.height) / 2.0)
-            path = UIBezierPath(
+            path = UIBezierPath.make(
                 arcCenter: center,
                 radius: r,
                 startAngle: -.pi / 2,
@@ -330,13 +333,13 @@ extension UIView {
                 clockwise: true
             ).cgPath
         } else {
-            path = UIBezierPath(roundedRect: rect, cornerRadius: radius).cgPath
+            path = UIBezierPath.make(roundedRect: rect, cornerRadius: radius).cgPath
         }
 
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         for layer in [jobs_fuseTrackLayer, ring].compactMap({ $0 }) {
-            layer.frame = bounds
+            layer.byFrame(bounds)
             layer.path = path
             layer.lineWidth = config.lineWidth
         }

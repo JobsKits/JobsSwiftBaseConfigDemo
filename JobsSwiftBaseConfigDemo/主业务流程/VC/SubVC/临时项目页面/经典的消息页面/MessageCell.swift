@@ -21,21 +21,21 @@ final class MessageCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 16, weight: .semibold))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTextColor(JobsCor.label)
     }()
 
     private lazy var timeLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 12))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 12))
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.right)
     }()
 
     private lazy var previewLabel: UILabel = {
         UILabel()
-            .byFont(.systemFont(ofSize: 13))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(1)
     }()
 
@@ -94,7 +94,7 @@ extension MessageCell {
         let iv = editControl.subviews.compactMap { $0 as? UIImageView }.first
         guard let imageView = iv else { return }
 
-        imageView.tintColor = .systemBlue
-        imageView.image = isSelected ? "选择框（已选择）".img : "选择框（未选择）".img
+        imageView.byTintColor(JobsCor.systemBlue)
+        imageView.byImage(isSelected ? "选择框（已选择）".img : "选择框（未选择）".img)
     }
 }

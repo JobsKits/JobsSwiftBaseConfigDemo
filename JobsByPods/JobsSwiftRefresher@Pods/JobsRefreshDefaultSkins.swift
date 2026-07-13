@@ -102,9 +102,9 @@ final class JobsLoadingIndicator: UIView {
 
     private let imageView: UIImageView = {
         let v = UIImageView()
-        v.contentMode = .scaleAspectFit
-        v.clipsToBounds = true
-        v.isHidden = true
+        v.byContentMode(.scaleAspectFit)
+        v.byClipsToBounds()
+        v.byHidden(true)
         return v
     }()
 
@@ -118,9 +118,9 @@ final class JobsLoadingIndicator: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        backgroundColor = .clear
-        addSubview(spinner)
-        addSubview(imageView)
+        self.byBackgroundColor(JobsCor.clear)
+        spinner.byAddTo(self)
+        imageView.byAddTo(self)
         spinner.stopAnimating()
     }
     // MARK: - State
@@ -131,7 +131,7 @@ final class JobsLoadingIndicator: UIView {
             spinner.stopAnimating()
         } else if usesLottie {
             #if canImport(Lottie) && JOBS_MODERN_LOTTIE
-            lottieView?.isHidden = false
+            lottieView?.byHidden(false)
             lottieView?.play()
             #endif
             spinner.stopAnimating()
@@ -144,10 +144,10 @@ final class JobsLoadingIndicator: UIView {
         isRefreshing = false
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         lottieView?.stop()
-        lottieView?.isHidden = true
+        lottieView?.byHidden(true)
         #endif
         imageView.stopAnimating()
-        imageView.isHidden = true
+        imageView.byHidden(true)
         spinner.stopAnimating()
         isHidden = true
     }
@@ -174,16 +174,16 @@ final class JobsLoadingIndicator: UIView {
         if let setting = resolveImageSetting(), applyImage(setting) {
             hideLottieIfNeeded()
             spinner.stopAnimating()
-            spinner.isHidden = true
-            imageView.isHidden = false
+            spinner.byHidden(true)
+            imageView.byHidden(false)
             setNeedsLayout()
             return
         }
 
         imageView.stopAnimating()
         imageView.animationImages = nil
-        imageView.image = nil
-        imageView.isHidden = true
+        imageView.byImage(nil)
+        imageView.byHidden(true)
 
         let resolved = resolveLottieSetting()
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
@@ -192,18 +192,18 @@ final class JobsLoadingIndicator: UIView {
             if lottieView == nil {
                 let v = LottieAnimationView(animation: anim)
                 v.backgroundBehavior = .pauseAndRestore
-                v.contentMode = .scaleAspectFit
+                v.byContentMode(.scaleAspectFit)
                 v.isUserInteractionEnabled = false
-                addSubview(v)
+                v.byAddTo(self)
                 lottieView = v
             } else {
                 lottieView?.animation = anim
             }
             lottieView?.animationSpeed = setting.speed
             lottieView?.loopMode = mapLoopMode(setting.loopMode)
-            lottieView?.isHidden = false
+            lottieView?.byHidden(false)
             spinner.stopAnimating()
-            spinner.isHidden = true
+            spinner.byHidden(true)
             setNeedsLayout()
             return
         }
@@ -214,7 +214,7 @@ final class JobsLoadingIndicator: UIView {
         }
         #endif
 
-        spinner.isHidden = false
+        spinner.byHidden(false)
         setNeedsLayout()
     }
 
@@ -259,7 +259,7 @@ final class JobsLoadingIndicator: UIView {
         switch setting.source {
         case .gif(let name, let bundle):
             guard let image = loadGIF(named: name, bundle: bundle) else { return false }
-            imageView.image = image
+            imageView.byImage(image)
             imageView.startAnimating()
             return true
         case .frames(let names, let bundle, let interval):
@@ -270,7 +270,7 @@ final class JobsLoadingIndicator: UIView {
             imageView.animationImages = images
             imageView.animationDuration = max(0.02, interval) * Double(images.count)
             imageView.animationRepeatCount = 0
-            imageView.image = images.first
+            imageView.byImage(images.first)
             imageView.startAnimating()
             return true
         case .network(let url, let placeholderName):
@@ -282,7 +282,7 @@ final class JobsLoadingIndicator: UIView {
             return true
             #else
             guard let placeholder else { return false }
-            imageView.image = placeholder
+            imageView.byImage(placeholder)
             return true
             #endif
         }
@@ -322,7 +322,7 @@ final class JobsLoadingIndicator: UIView {
     private func hideLottieIfNeeded() {
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         lottieView?.stop()
-        lottieView?.isHidden = true
+        lottieView?.byHidden(true)
         #endif
     }
 
@@ -358,10 +358,10 @@ final class JobsLoadingIndicator: UIView {
         let x = (bounds.width - side) * 0.5
         let y = (bounds.height - side) * 0.5
         let r = CGRect(x: x, y: y, width: side, height: side)
-        spinner.frame = r
-        imageView.frame = r
+        spinner.byFrame(r)
+        imageView.byFrame(r)
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
-        lottieView?.frame = r
+        lottieView?.byFrame(r)
         #endif
     }
 }
@@ -401,7 +401,7 @@ public class JobsArrowIndicatorView: UIView,
     private lazy var loading: JobsLoadingIndicator = {
         let v = JobsLoadingIndicator()
         v.preferredSize = 18
-        v.isHidden = true
+        v.byHidden(true)
         v.lottiePreference = lottiePreference
         v.imagePreference = imagePreference
         return self.byAddSubviewRetSub(v)
@@ -410,7 +410,7 @@ public class JobsArrowIndicatorView: UIView,
     private lazy var label: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
-                .byFont(.systemFont(ofSize: 14, weight: .medium))
+                .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
@@ -437,7 +437,7 @@ public class JobsArrowIndicatorView: UIView,
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         applyArrow(direction: idleArrowDirection(), animated: false)
         loading.hideRefreshing()
     }
@@ -448,12 +448,12 @@ public class JobsArrowIndicatorView: UIView,
         switch state {
         case .idle:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             displayText(idleText())
         case .pulling(let p):
             loading.hideRefreshing() // 关键：pulling 一定不能显示 loading
-            arrow.isHidden = false
+            arrow.byHidden(false)
             if p >= 1 {
                 applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
                 displayText(readyText())
@@ -463,36 +463,36 @@ public class JobsArrowIndicatorView: UIView,
             }
         case .ready:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             displayText(readyText())
         case .refreshing:
-            arrow.isHidden = true
+            arrow.byHidden(true)
             loading.lottiePreference = lottiePreference
             loading.imagePreference = imagePreference
             loading.showRefreshing()
             displayText(refreshingText())
         case .ending:
-            arrow.isHidden = true
+            arrow.byHidden(true)
             loading.hideRefreshing()
             displayText(refreshingText())
         case .failed:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: true)
             displayText(JobsRefreshConfig.common.failed)
         case .disabled:
             loading.hideRefreshing()
-            arrow.isHidden = true
+            arrow.byHidden(true)
             displayText(JobsRefreshConfig.common.disabled)
         case .noMore:
             loading.hideRefreshing()
-            arrow.isHidden = true
+            arrow.byHidden(true)
             displayText(JobsRefreshConfig.common.noMore)
         case .removed:
             loading.hideRefreshing()
-            arrow.isHidden = true
-            label.text = nil
+            arrow.byHidden(true)
+            label.byText(nil)
         };setNeedsLayout()
     }
 
@@ -514,15 +514,15 @@ public class JobsArrowIndicatorView: UIView,
         let startX = (availableW - totalW) * 0.5
         let iconY = (availableH - iconSide) * 0.5
 
-        arrow.frame = CGRect(x: startX, y: iconY, width: iconSide, height: iconSide)
-        loading.frame = arrow.frame
+        arrow.byFrame(CGRect(x: startX, y: iconY, width: iconSide, height: iconSide))
+        loading.byFrame(arrow.frame)
 
-        label.frame = CGRect(
+        label.byFrame(CGRect(
             x: arrow.frame.maxX + spacing,
             y: (availableH - labelSize.height) * 0.5,
             width: labelSize.width,
             height: labelSize.height
-        )
+        ))
     }
 
     private func idleText() -> String {
@@ -591,11 +591,12 @@ public class JobsArrowIndicatorView: UIView,
         }()
         let willBeReadyDirection = (direction == readyArrowDirection())
         if animated {
-            UIView.animate(withDuration: rotationDuration,
-                           delay: 0,
-                           options: [.beginFromCurrentState, .allowUserInteraction]) {
-                self.arrow.transform = target
-            }
+            UIView.jobsAnimateWithOptions(
+                rotationDuration,
+                delay: 0,
+                options: [.beginFromCurrentState, .allowUserInteraction],
+                animations: { self.arrow.transform = target }
+            )
         } else {
             arrow.transform = target
         }
@@ -658,14 +659,14 @@ public class JobsSideIndicatorView: UIView,
         v.preferredSize = 18
         v.lottiePreference = lottiePreference
         v.imagePreference = imagePreference
-        v.isHidden = true
+        v.byHidden(true)
         return self.byAddSubviewRetSub(v)
     }()
 
     private lazy var statusLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
-                .byFont(.systemFont(ofSize: 14, weight: .medium))
+                .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
@@ -675,7 +676,7 @@ public class JobsSideIndicatorView: UIView,
     private lazy var updatePrefixLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
-                .byFont(.systemFont(ofSize: 14, weight: .medium))
+                .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
@@ -685,7 +686,7 @@ public class JobsSideIndicatorView: UIView,
     private lazy var updateValueLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
-                .byFont(.systemFont(ofSize: 14, weight: .medium))
+                .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
                 .byTextAlignment(.center)
@@ -712,7 +713,7 @@ public class JobsSideIndicatorView: UIView,
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
         loading.hideRefreshing()
         applyArrow(direction: idleArrowDirection(), animated: false)
         setUpdateInfoVisible(false)
@@ -722,13 +723,13 @@ public class JobsSideIndicatorView: UIView,
         switch state {
         case .idle:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             setVertical(statusLabel, text: idleText())
             setUpdateInfoVisible(false)
         case .pulling(let p):
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             if p >= 1 {
                 applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
                 setVertical(statusLabel, text: readyText())
@@ -739,12 +740,12 @@ public class JobsSideIndicatorView: UIView,
             };setUpdateInfoVisible(false)
         case .ready:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             setVertical(statusLabel, text: readyText())
             setUpdateInfoVisible(false)
         case .refreshing:
-            arrow.isHidden = true
+            arrow.byHidden(true)
             loading.lottiePreference = lottiePreference
             loading.imagePreference = imagePreference
             loading.showRefreshing()
@@ -753,30 +754,30 @@ public class JobsSideIndicatorView: UIView,
             setUpdateInfoVisible(refreshRole == .refresh)
             if refreshRole == .refresh { updateLabelsFromDate(lastRefreshedAt) }
         case .ending:
-            arrow.isHidden = true
+            arrow.byHidden(true)
             loading.hideRefreshing()
             setVertical(statusLabel, text: refreshingText())
             setUpdateInfoVisible(false)
         case .failed:
             loading.hideRefreshing()
-            arrow.isHidden = false
+            arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.failed)
             setUpdateInfoVisible(false)
         case .disabled:
             loading.hideRefreshing()
-            arrow.isHidden = true
+            arrow.byHidden(true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.disabled)
             setUpdateInfoVisible(false)
         case .noMore:
             loading.hideRefreshing()
-            arrow.isHidden = true
+            arrow.byHidden(true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.noMore)
             setUpdateInfoVisible(false)
         case .removed:
             loading.hideRefreshing()
-            arrow.isHidden = true
-            statusLabel.text = nil
+            arrow.byHidden(true)
+            statusLabel.byText(nil)
             setUpdateInfoVisible(false)
         };setNeedsLayout()
     }
@@ -821,33 +822,33 @@ public class JobsSideIndicatorView: UIView,
                                y: groupY,
                                width: iconSide,
                                height: iconSide)
-        arrow.frame = iconFrame
-        loading.frame = iconFrame
+        arrow.byFrame(iconFrame)
+        loading.byFrame(iconFrame)
 
         let textY = iconFrame.maxY + stackSpacing
-        statusLabel.frame = CGRect(x: startX,
+        statusLabel.byFrame(CGRect(x: startX,
                                    y: textY,
                                    width: colW,
-                                   height: textH)
+                                   height: textH))
         if showUpdate {
-            updatePrefixLabel.frame = CGRect(x: startX + (colW + spacing),
+            updatePrefixLabel.byFrame(CGRect(x: startX + (colW + spacing),
                                              y: textY,
                                              width: colW,
-                                             height: textH)
-            updateValueLabel.frame = CGRect(x: startX + 2 * (colW + spacing),
+                                             height: textH))
+            updateValueLabel.byFrame(CGRect(x: startX + 2 * (colW + spacing),
                                             y: textY,
                                             width: colW,
-                                            height: textH)
+                                            height: textH))
         }
     }
     // MARK: - Text helpers
     private func setVertical(_ label: UILabel, text: String) {
-        label.text = text.verticalized
+        label.byText(text.verticalized)
     }
 
     private func setUpdateInfoVisible(_ visible: Bool) {
-        updatePrefixLabel.isHidden = !visible
-        updateValueLabel.isHidden = !visible
+        updatePrefixLabel.byHidden(!visible)
+        updateValueLabel.byHidden(!visible)
         if visible {
             setVertical(updatePrefixLabel, text: JobsRefreshConfig.common.updatePrefixVertical)
         }
@@ -923,11 +924,12 @@ public class JobsSideIndicatorView: UIView,
         }()
         let willBeReadyDirection = (direction == readyArrowDirection())
         if animated {
-            UIView.animate(withDuration: rotationDuration,
-                           delay: 0,
-                           options: [.beginFromCurrentState, .allowUserInteraction]) {
-                self.arrow.transform = target
-            }
+            UIView.jobsAnimateWithOptions(
+                rotationDuration,
+                delay: 0,
+                options: [.beginFromCurrentState, .allowUserInteraction],
+                animations: { self.arrow.transform = target }
+            )
         } else {
             arrow.transform = target
         };isArrowInReadyDirection = willBeReadyDirection

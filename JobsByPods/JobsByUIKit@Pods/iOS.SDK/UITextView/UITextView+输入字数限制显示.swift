@@ -190,9 +190,9 @@ extension UITextView {
         if let lb = jobs_hintLabel { return lb }
         let lb = UILabel()
             .byUserInteractionEnabled(false)
-            .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byTextAlignment(.right)
             .byNumberOfLines(1)
             .byZPosition(.greatestFiniteMagnitude)
@@ -224,7 +224,7 @@ extension UITextView {
     fileprivate func jobs_installSuperviewHookIfNeeded() {
         if jobs_superviewHook != nil { return }
         jobs_superviewHook = JobsSuperviewHookView(frame: .zero)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byUserInteractionEnabled(false)
             .byHost(self)
             .byAddTo(self) { [unowned self] make in

@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 private extension UIControl.State { var raw: UInt { rawValue } }
 // MARK: - Subtitle（无富文本）
 public struct _JobsSubPackNoAttr {
@@ -150,13 +152,13 @@ extension UIButton {
                 if bg.image !== keep {
                     bg.image = keep
                     if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
-                    bg.backgroundColor = .clear
+                    bg.backgroundColor = JobsCor.clear
                 }
             } else if bg.image == nil {
                 if let legacy = self.backgroundImage(for: st) ?? self.backgroundImage(for: .normal) {
                     bg.image = legacy
                     if bg.imageContentMode == .scaleToFill { bg.imageContentMode = .scaleAspectFill }
-                    bg.backgroundColor = .clear
+                    bg.backgroundColor = JobsCor.clear
                 }
             }
             cfg.background = bg
@@ -184,7 +186,7 @@ extension UIButton {
         ?? self.attributedTitle(for: .normal)
         ?? {
             let t = self.title(for: state) ?? self.title(for: .normal) ?? ""
-            if t.isEmpty { return nil };return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? UIFont.systemFont(ofSize: 15)])
+            if t.isEmpty { return nil };return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? JobsFont.systemFont(ofSize: 15)])
         }()
 
         let sub = subAttr

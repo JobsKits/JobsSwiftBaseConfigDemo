@@ -15,6 +15,7 @@ Pod::Spec.new do |spec|
   spec.resources     = 'Resources/**/*.{plist,strings,stringsdict}'
   spec.frameworks    = ['Foundation', 'UIKit']
 
+  spec.dependency 'JobsSwiftBaseDefines'
   spec.dependency 'JobsSwiftDSL'
   spec.dependency 'JobsByUIKit'
   spec.dependency 'Jobsl10n'

@@ -45,7 +45,7 @@ final class JobsWalletDemoVC: BaseVC {
             .byOverlap(14)
             .byExpandOffset(14)
             .byLayoutDelegate(self))
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byShowsVerticalScrollIndicator(NO)
             .byContentInset(UIEdgeInsets(top: 16.h, left: 0.w, bottom: 24.h, right: 0.w))
             .byRegisterCell(WalletCardCell.self)
@@ -66,43 +66,43 @@ final class JobsWalletDemoVC: BaseVC {
                          lastDigits: "7895",
                          holder: "Jobs",
                          brand: "VISA",
-                         gradientColors: [.systemPurple, .systemBlue])),
+                         gradientColors: [JobsCor.systemPurple, JobsCor.systemBlue])),
         .card(WalletCard(bankName: "国泰世华".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "Mastercard",
-                         gradientColors: [.systemPink, .systemOrange])),
+                         gradientColors: [JobsCor.systemPink, JobsCor.systemOrange])),
         .card(WalletCard(bankName: "台湾银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "VISA",
-                         gradientColors: [.systemTeal, .systemBlue])),
+                         gradientColors: [JobsCor.systemTeal, JobsCor.systemBlue])),
         .card(WalletCard(bankName: "嘉华银行".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "UnionPay",
-                         gradientColors: [.systemIndigo, .systemTeal])),
+                         gradientColors: [JobsCor.systemIndigo, JobsCor.systemTeal])),
         .card(WalletCard(bankName: "包头银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "Debit",
-                         gradientColors: [.systemGreen, .systemTeal])),
+                         gradientColors: [JobsCor.systemGreen, JobsCor.systemTeal])),
         .card(WalletCard(bankName: "成都银行".tr,
                          lastDigits: "2345",
                          holder: "Jobs",
                          brand: "Credit",
-                         gradientColors: [.systemRed, .systemOrange])),
+                         gradientColors: [JobsCor.systemRed, JobsCor.systemOrange])),
         .card(WalletCard(bankName: "南充商业银行".tr,
                          lastDigits: "7654",
                          holder: "Jobs",
                          brand: "VISA",
-                         gradientColors: [.systemBlue, .systemGreen]))
+                         gradientColors: [JobsCor.systemBlue, JobsCor.systemGreen]))
     ],[.addNew]]
     private var selectedIndexPath: IndexPath?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.systemGroupedBackground
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(
             title: "钱包卡片效果".tr
         )
@@ -178,7 +178,7 @@ extension JobsWalletDemoVC: UICollectionViewDelegate {
             collectionView.reloadData()
         case .addNew:
             // 这里接自己的跳转绑卡页面逻辑
-            "📇 点击添加新的银行卡".toast
+            "📇 点击添加新的银行卡".tr.toast
         }
     }
 }

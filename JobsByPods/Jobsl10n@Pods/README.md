@@ -57,24 +57,30 @@
 
 ## 二、✅ UI 统一调用规范示例
 
+调用方应引入 `JobsByUIKit`；按钮创建以及 UIKit 配置继续遵守 `JobsByUIKit` / `JobsSwiftDSL` 规范。
+
 ### 1、`UILabel`
 
 * 普通文本
 
   ```swift
-  UILabel().tr_setText("KEY".tr)
+  titleLabel.tr_setText("KEY".tr)
   ```
 
 * 富文本
 
   ```swift
+  import JobsSwiftBaseDefines
+
   TRBind.bind(titleLabel, translated: "KEY".tr) { label, text in
-      UILabel().attributedText = NSAttributedString(
-          string: text,
-          attributes: [
-              .font: UIFont.boldSystemFont(ofSize: 18),
-              .foregroundColor: UIColor.systemBlue
-          ]
+      label.byAttributedText(
+          NSAttributedString(
+              string: text,
+              attributes: [
+                  .font: JobsFont.boldSystemFont(ofSize: 18),
+                  .foregroundColor: JobsCor.systemBlue
+              ]
+          )
       )
   }
   ```
@@ -84,21 +90,25 @@
 * 普通文本
 
   ```swift
-  UIButton(type: .system).tr_setTitle("KEY".tr, for: .normal)
+  UIButton.sys().tr_setTitle("KEY".tr, for: .normal)
   ```
 
 * 富文本
 
   ```swift
+  import JobsSwiftBaseDefines
+
   TRBind.bind(payButton, translated: "KEY".tr) { btn, text in
-      UIButton(type: .system)
-          .setAttributedTitle(NSAttributedString(
+      btn.byAttributedTitle(
+          NSAttributedString(
               string: text,
               attributes: [
-                  .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+                  .font: JobsFont.systemFont(ofSize: 16, weight: .medium),
                   .underlineStyle: NSUnderlineStyle.single.rawValue
               ]
-          ), for: .normal)
+          ),
+          for: .normal
+      )
   }
   ```
 
@@ -109,19 +119,23 @@
   * 普通文本
 
     ```swift
-    UITextField().tr_setPlaceholder("KEY".tr)
+    phoneField.tr_setPlaceholder("KEY".tr)
     ```
 
   * 富文本
 
     ```swift
+    import JobsSwiftBaseDefines
+
     TRBind.bind(phoneField, translated: "KEY".tr) { tf, text in
-        tf.attributedPlaceholder = NSAttributedString(
-            string: text,
-            attributes: [
-                .foregroundColor: UIColor.gray,
-                .font: UIFont.systemFont(ofSize: 14)
-            ]
+        tf.byAttributedPlaceholder(
+            NSAttributedString(
+                string: text,
+                attributes: [
+                    .foregroundColor: JobsCor.gray,
+                    .font: JobsFont.systemFont(ofSize: 14)
+                ]
+            )
         )
     }
     ```
@@ -131,19 +145,23 @@
   * 普通文本
 
     ```swift
-    UITextField().tr_setText("KEY".tr)
+    phoneField.tr_setText("KEY".tr)
     ```
 
   * 富文本
 
     ```swift
+    import JobsSwiftBaseDefines
+
     TRBind.bind(phoneField, translated: "KEY".tr) { tf, text in
-        UITextField().attributedPlaceholder = NSAttributedString(
-            string: text,
-            attributes: [
-                .foregroundColor: UIColor.gray,
-                .font: UIFont.systemFont(ofSize: 14)
-            ]
+        tf.byAttributedText(
+            NSAttributedString(
+                string: text,
+                attributes: [
+                    .foregroundColor: JobsCor.gray,
+                    .font: JobsFont.systemFont(ofSize: 14)
+                ]
+            )
         )
     }
     ```
@@ -155,19 +173,23 @@
 * 普通文本
 
   ```swift
-  UITextView().tr_setText("KEY".tr)
+  textView.tr_setText("KEY".tr)
   ```
 
 * 富文本
 
   ```swift
+  import JobsSwiftBaseDefines
+
   TRBind.bind(descView, translated: "KEY".tr) { tv, text in
-      UITextView().attributedText = NSAttributedString(
-          string: text,
-          attributes: [
-              .font: UIFont.systemFont(ofSize: 15),
-              .foregroundColor: UIColor.secondaryLabel
-          ]
+      tv.byAttributedText(
+          NSAttributedString(
+              string: text,
+              attributes: [
+                  .font: JobsFont.systemFont(ofSize: 15),
+                  .foregroundColor: JobsCor.secondaryLabel
+              ]
+          )
       )
   }
   ```
@@ -181,7 +203,7 @@
   ```
 
 * ```swift
-  navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+  navigationItem.rightBarButtonItem = UIBarButtonItem.make(title: nil)
   navigationItem.rightBarButtonItem?.tr_setTitle("KEY".tr)
   ```
 
@@ -194,17 +216,13 @@ tabBarItem.tr_setTitle("KEY".tr)
 ### 7、`UISegmentedControl`
 
 ```swift
-let seg = UISegmentedControl(items: ["", ""])
-
-seg.tr_setTitle("KEY".tr, forSegmentAt: 0)
-seg.tr_setTitle("KEY".tr, forSegmentAt: 1)
+segmentedControl.tr_setTitle("KEY".tr, forSegmentAt: 0)
+segmentedControl.tr_setTitle("KEY".tr, forSegmentAt: 1)
 ```
 
 ### 8、`UISearchBar`
 
 ```swift
-let searchBar = UISearchBar()
-
 searchBar.tr_setPlaceholder("KEY".tr)
 searchBar.tr_setPrompt("KEY".tr)
 ```
@@ -212,20 +230,20 @@ searchBar.tr_setPrompt("KEY".tr)
 ### 9、`UIAlertController`
 
 ```swift
-let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+let alert = UIAlertController.makeAlert()
 
 alert
     .tr_setAlertTitle("KEY".tr)
     .tr_setMessage("KEY".tr)
 
-alert.addAction(UIAlertAction(title: "KEY".tr, style: .default))
+alert.byAddAction(title: "KEY".tr)
 present(alert, animated: true)
 ```
 
 ### 10、`UIView`（无障碍 `accessibilityLabel` / `Hint`）
 
 ```swift
-UIView()
+contentView
     .tr_setA11yLabel("KEY".tr)
     .tr_setA11yHint("KEY".tr)
 ```
@@ -234,11 +252,9 @@ UIView()
 
 ```swift
 TRBind.bind(self, translated: "KEY".tr) { vc, text in
-    UIViewController().title = text
+    vc.byTitle(text)
 }
 ```
-
-
 
 
 

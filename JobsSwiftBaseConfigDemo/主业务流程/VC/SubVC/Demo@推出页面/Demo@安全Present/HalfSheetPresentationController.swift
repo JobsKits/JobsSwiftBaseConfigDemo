@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 
@@ -20,7 +21,7 @@ final class HalfSheetPresentationController: UIPresentationController {
     private let height: CGFloat
     private lazy var dimmingView: UIView = {
         let v = UIView(frame: containerView?.bounds ?? .zero)
-        v.backgroundColor = UIColor.black.withAlphaComponent(0.38)
+        v.byBackgroundColor(JobsCor.black.withAlphaComponent(0.38))
         v.byAlpha(1)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTapDim)))
         return v
@@ -41,8 +42,8 @@ final class HalfSheetPresentationController: UIPresentationController {
 
     override func presentationTransitionWillBegin() {
         guard let container = containerView else { return }
-        dimmingView.frame = container.bounds
-        container.addSubview(dimmingView)
+        dimmingView.byFrame(container.bounds)
+        dimmingView.byAddTo(container)
 
         // 跟随系统转场动画
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
@@ -58,8 +59,8 @@ final class HalfSheetPresentationController: UIPresentationController {
 
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
-        dimmingView.frame = containerView?.bounds ?? .zero
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        dimmingView.byFrame(containerView?.bounds ?? .zero)
+        presentedView?.byFrame(frameOfPresentedViewInContainerView)
     }
 
     @objc private func onTapDim() {

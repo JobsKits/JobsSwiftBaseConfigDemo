@@ -26,25 +26,25 @@ final class LuckyWheelDemoVC: BaseVC {
         LuckyWheelView()
             .bySegments([
                 .init(text: "一等奖".tr,
-                      textFont: .systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "globe".sysImg,
                       imageURLString:"https://picsum.photos/30"),
                 .init(text: "二等奖".tr,
-                      textFont: .systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "plus".sysImg,
                       imageURLString:"https://picsum.photos/30"),
                 .init(text: "三等奖".tr,
-                      textFont: .systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "message".sysImg,
                       imageURLString:"https://picsum.photos/30"),
                 .init(text: "谢谢参与".tr,
-                      textFont: .systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "tray".sysImg,
@@ -71,9 +71,9 @@ final class LuckyWheelDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "抽奖转盘",
+            title: "抽奖转盘".tr,
             rightButtons: [
                 UIButton.sys()
                     /// 按钮图片@图文关系
@@ -82,7 +82,7 @@ final class LuckyWheelDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         wheelView.stopSpin()
                     }
             ]

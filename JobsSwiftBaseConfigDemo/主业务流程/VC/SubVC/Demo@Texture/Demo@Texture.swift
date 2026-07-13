@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -63,7 +64,7 @@ final class ComponentKitLikeKitchenSinkVC: BaseVC {
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "Kitchen-Sink (Swift+Texture)",
             rightButtons: [
@@ -72,7 +73,7 @@ final class ComponentKitLikeKitchenSinkVC: BaseVC {
                     .byImage("moon.circle.fill".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         items.shuffle()
                         rootNode.update(items: items, animated: true)
                     },
@@ -81,7 +82,7 @@ final class ComponentKitLikeKitchenSinkVC: BaseVC {
                     .byImage("globe".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.isSelected.toggle()
+                        sender.byToggleSelected()
                         items.append(.item(.text, "New Text", "Append at \(items.count)"))
                         rootNode.update(items: items, animated: true)
                     }

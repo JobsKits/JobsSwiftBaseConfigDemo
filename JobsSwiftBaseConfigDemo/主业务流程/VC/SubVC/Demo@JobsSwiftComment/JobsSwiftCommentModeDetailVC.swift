@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftComment
 import JobsSwiftDSL
@@ -46,7 +47,7 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF6F7FB)
+        view.byBackgroundColor(UIColor(hex: 0xF6F7FB))
         setupNavigation()
         updatePreferredContentSizeIfNeeded()
         commentView.byVisible(true)
@@ -65,9 +66,9 @@ private extension JobsSwiftCommentModeDetailVC {
             jobsSetupGKNav(
                 title: titleText,
                 rightButtons: [
-                    UIButton(type: .system)
-                        .byTitle("关闭", for: .normal)
-                        .byTitleFont(.systemFont(ofSize: 15, weight: .semibold))
+                    UIButton.sys()
+                        .byTitle("关闭".tr, for: .normal)
+                        .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
                         .onTap { [weak self] _ in
                             self?.dismiss(animated: true)
                         }

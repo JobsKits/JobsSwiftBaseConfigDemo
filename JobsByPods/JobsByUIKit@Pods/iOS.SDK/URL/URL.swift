@@ -20,13 +20,13 @@ extension URL {
     public var img: UIImage {
         if isHTTPRemote {
             print("🚫 检测到网络 URL：\(self.absoluteString)，无法同步返回图片")
-            return UIImage()
+            return UIImage.make()
         }
         if isFileURL {
-            return UIImage(contentsOfFile: path) ?? UIImage()
+            return UIImage(contentsOfFile: path) ?? UIImage.make()
         }
         // 兜底：当作 Bundle 资源名（取最后路径段去扩展名）
         let name = self.deletingPathExtension().lastPathComponent
-        return UIImage(named: name) ?? UIImage()
+        return UIImage(named: name) ?? UIImage.make()
     }
 }

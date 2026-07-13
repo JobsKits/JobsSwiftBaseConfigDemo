@@ -47,9 +47,10 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
                 .byImage("slider.vertical.3".sysImg, for: .selected)
                 .onTap { [weak self] sender in
                     guard let self else { return }
-                    sender.isSelected.toggle()
-                    self.toggleThicknessControl(sender.isSelected)
-                    if sender.isSelected {
+                    sender.byToggleSelected()
+                    let isSelected = sender.isSelected
+                    self.toggleThicknessControl(isSelected)
+                    if isSelected {
                         self.applyMosaic(blockSize: self.thicknessControl.value)
                     }
                 }
@@ -61,13 +62,17 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
             thicknessControl.byHidden(false)
         }
 
-        UIView.animate(withDuration: 0.2) { [weak self] in
-            self?.thicknessControl.byAlpha(visible ? 1 : 0)
-        } completion: { [weak self] _ in
-            if visible == false {
-                self?.thicknessControl.byHidden(true)
+        UIView.jobsAnimateWithCompletion(
+            0.2,
+            animations: { [weak self] in
+                self?.thicknessControl.byAlpha(visible ? 1 : 0)
+            },
+            completion: { [weak self] _ in
+                if visible == false {
+                    self?.thicknessControl.byHidden(true)
+                }
             }
-        }
+        )
     }
 
     private func applyMosaic(blockSize: CGFloat) {
@@ -75,13 +80,13 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
         renderVersion += 1
         let currentVersion = renderVersion
         hasEdited = true
-        loadingLabel.byText("马赛克处理中...").byHidden(false)
+        loadingLabel.byText("马赛克处理中...".tr).byHidden(false)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let image = originalImage.jobs_mosaicPixelated(blockSize: blockSize)
             DispatchQueue.main.async {
                 guard let self, self.renderVersion == currentVersion else { return }
-                self.imageView.image = image
+                self.imageView.byImage(image)
                 self.loadingLabel.byHidden(true)
             }
         }

@@ -51,9 +51,9 @@ final class PicLoadDemoVC: BaseVC {
     // MARK: - UIImageView
     private lazy var localImgLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串本地图")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIImageView（可点击、长按）➤ 字符串本地图".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(10.h)
@@ -92,9 +92,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var asyncImgLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(localImgView.snp.bottom).offset(12.h)
@@ -135,9 +135,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var asyncImgSDLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(asyncImgView.snp.bottom).offset(12.h)
@@ -176,9 +176,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var wrapperImgKFLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(asyncImgViewSD.snp.bottom).offset(12.h)
@@ -217,9 +217,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var wrapperImgSDLabel: UILabel = {
         UILabel()
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(wrapperImgView.snp.bottom).offset(12.h)
@@ -259,9 +259,9 @@ final class PicLoadDemoVC: BaseVC {
     // MARK: - UIButton
     private lazy var btnBGLabel: UILabel = {
         UILabel()
-            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（带呼吸效果、失败兜底）@SDWebImage")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（带呼吸效果、失败兜底）@SDWebImage".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(wrapperImgViewSD.snp.bottom).offset(18.h)
@@ -271,25 +271,25 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIButton网络背景图@SDWebImage
     private lazy var btnBG: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byCornerRadius(12)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@SDWebImage").byTitleColor(.red)
-            .bySubTitle("我是UIButton副标题@SDWebImage").bySubTitleColor(.yellow)
+            .byTitle("我是UIButton主标题@SDWebImage".tr).byTitleColor(JobsCor.red)
+            .bySubTitle("我是UIButton副标题@SDWebImage".tr).bySubTitleColor(JobsCor.yellow)
             .sd_imageURL(JobsDemoImageURLProvider.common_400x300)
             .sd_placeholderImage("Ani".img)
             .sd_options([.scaleDownLargeImages, .retryFailed])
             .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
             .onTap { sender in
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
-                "点击了UIButton网络背景图@SDWebImage".toast
+                "点击了UIButton网络背景图@SDWebImage".tr.toast
             }
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("长按开始 on \(btn)")
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("长按结束")
                 }
             }
@@ -302,9 +302,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var btnImageLabel: UILabel = {
         UILabel()
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnBG.snp.bottom).offset(12.h)
@@ -314,14 +314,14 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIButton网络前景图@SDWebImage
     private lazy var btnImage: UIButton = {
-        UIButton(type: .system)
-            .byNormalBgColor(.yellow)
+        UIButton.sys()
+            .byNormalBgColor(JobsCor.yellow)
             .byCornerRadius(12)
             .byBorderWidth(1)
-            .byBorderColor(.systemGray3)
+            .byBorderColor(JobsCor.systemGray3)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@SDWebImage").byTitleColor(.red)
-            .bySubTitle("我是UIButton副标题@SDWebImage").bySubTitleColor(.green)
+            .byTitle("我是UIButton主标题@SDWebImage".tr).byTitleColor(JobsCor.red)
+            .bySubTitle("我是UIButton副标题@SDWebImage".tr).bySubTitleColor(JobsCor.green)
             .sd_imageURL(JobsDemoImageURLProvider.common_400x300)
             .sd_placeholderImage("Ani".img)
             .sd_options([
@@ -332,14 +332,14 @@ final class PicLoadDemoVC: BaseVC {
             .sd_normalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
             .onTap { sender in
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
-                "UIButton网络前景图@SDWebImage".toast
+                "UIButton网络前景图@SDWebImage".tr.toast
             }
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("长按开始 on \(btn)")
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("长按结束")
                 }
             }
@@ -352,9 +352,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var btnBGKFLabel: UILabel = {
         UILabel()
-            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（呼吸效果、失败兜底）@Kingfisher")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（呼吸效果、失败兜底）@Kingfisher".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnImage.snp.bottom).offset(18.h)
@@ -364,11 +364,11 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIButton网络背景图@Kingfisher
     private lazy var btnBG_KF: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byCornerRadius(12)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-            .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+            .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
+            .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
             .kf_imageURL(JobsDemoImageURLProvider.kfButtonFG)
             .kf_placeholderImage("Ani".img)
             .kf_options([
@@ -381,14 +381,14 @@ final class PicLoadDemoVC: BaseVC {
             .kf_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
             .onTap { sender in
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
-                "UIButton网络背景图@Kingfisher".toast
+                "UIButton网络背景图@Kingfisher".tr.toast
             }
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("长按开始 on \(btn)")
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("长按结束")
                 }
             }
@@ -401,9 +401,9 @@ final class PicLoadDemoVC: BaseVC {
     }()
     private lazy var btnImageKFLabel: UILabel = {
         UILabel()
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher")
-            .byTextColor(.secondaryLabel)
-            .byFont(.systemFont(ofSize: 13, weight: .semibold))
+            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnBG_KF.snp.bottom).offset(12.h)
@@ -413,14 +413,14 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIButton网络前景图@Kingfisher
     private lazy var btnImage_KF: UIButton = {
-        UIButton(type: .system)
-            .byNormalBgColor(.yellow)
+        UIButton.sys()
+            .byNormalBgColor(JobsCor.yellow)
             .byCornerRadius(12)
             .byBorderWidth(1)
-            .byBorderColor(.systemGray3)
+            .byBorderColor(JobsCor.systemGray3)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-            .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.green)
+            .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
+            .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.green)
             .kf_imageURL(JobsDemoImageURLProvider.kfButtonFG)
             .kf_placeholderImage("Ani".img)
             .kf_options([
@@ -433,14 +433,14 @@ final class PicLoadDemoVC: BaseVC {
             .kf_normalLoad() // 之前是配置项，这里才是真正决定渲染背景图/前景图
             .onTap { sender in
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
-                "UIButton网络前景图@Kingfisher".toast
+                "UIButton网络前景图@Kingfisher".tr.toast
             }
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
-                    btn.alpha = 0.6
+                    btn.byAlpha(0.6)
                     print("长按开始 on \(btn)")
                 } else if gr.state == .ended || gr.state == .cancelled {
-                    btn.alpha = 1.0
+                    btn.byAlpha(1.0)
                     print("长按结束")
                 }
             }
@@ -454,9 +454,9 @@ final class PicLoadDemoVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "图片加载",
+            title: "图片加载".tr,
             rightButtons: [
                 UIButton.sys()
                     .byTitle("🧹", for: .normal)
@@ -469,12 +469,12 @@ final class PicLoadDemoVC: BaseVC {
                     .onTap { [weak self] _ in
                         guard let self else { return }
                         JobsImageCacheCleaner.clearAllCachesAndForceRedownload(in: self.view) {
-                            "清完并重下完成".toast
+                            "清完并重下完成".tr.toast
                         }
                     },
                 UIButton.sys()
                     .byTitle(JobsDemoImageURLSwitch.useBadURL ? "切可用URL" : "切不可达URL", for: .normal)
-                    .byTitleFont(.systemFont(ofSize: 10, weight: .medium))
+                    .byTitleFont(JobsFont.systemFont(ofSize: 10, weight: .medium))
                     .byNumberOfLines(1)
                     .byAdd({ make in
                         make.size.equalTo(CGSize(width: 60, height: 44))

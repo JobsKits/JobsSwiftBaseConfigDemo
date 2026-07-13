@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 /// Model
 
 struct JobsBtnCellModel {
@@ -65,20 +67,20 @@ struct JobsBtnCellModel {
         // MARK: - 主标题
         title: String? = "",
         titleSelected: String? = "",
-        titleFont: UIFont? = .systemFont(ofSize: 14, weight: .semibold),
-        titleFontSelected: UIFont? = .systemFont(ofSize: 14, weight: .semibold),
-        titleCor: UIColor? = .black,
-        titleCorSelected: UIColor? = .black,
+        titleFont: UIFont? = JobsFont.systemFont(ofSize: 14, weight: .semibold),
+        titleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 14, weight: .semibold),
+        titleCor: UIColor? = JobsCor.black,
+        titleCorSelected: UIColor? = JobsCor.black,
         // MARK: - 副标题
         subTitle: String? = "",
         subTitleSelected: String? = "",
-        subTitleFont: UIFont? = .systemFont(ofSize: 12, weight: .semibold),
-        subTitleFontSelected: UIFont? = .systemFont(ofSize: 12, weight: .semibold),
-        subTitleCor: UIColor? = .black,
-        subTitleCorSelected: UIColor? = .black,
+        subTitleFont: UIFont? = JobsFont.systemFont(ofSize: 12, weight: .semibold),
+        subTitleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 12, weight: .semibold),
+        subTitleCor: UIColor? = JobsCor.black,
+        subTitleCorSelected: UIColor? = JobsCor.black,
         // MARK: - 前景色
-        bgCor: UIColor? = .white,
-        bgCorSelected: UIColor? = .white,
+        bgCor: UIColor? = JobsCor.white,
+        bgCorSelected: UIColor? = JobsCor.white,
         // MARK: - 前景图@本地图、网络图（含兜底）
         image: UIImage? = nil,
         imageURL: String? = nil,

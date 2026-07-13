@@ -29,6 +29,7 @@ Pod::Spec.new do |s|
   s.dependency 'SnapKit'
   s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsByUIKit'
-    s.dependency 'JobsSwiftDSL'
+  s.dependency 'JobsSwiftDSL'
+  s.dependency 'JobsSwiftBaseDefines'
 
 end

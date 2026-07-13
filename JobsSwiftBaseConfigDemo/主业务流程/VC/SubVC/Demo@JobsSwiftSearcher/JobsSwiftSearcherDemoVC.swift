@@ -37,7 +37,7 @@ final class JobsSwiftSearcherDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF6F8FC)
+        view.byBackgroundColor(UIColor(hex: 0xF6F8FC))
         jobsSetupGKNav(title: "JobsSwiftSearcher")
         searchView.byVisible(true)
     }
@@ -57,7 +57,7 @@ private extension JobsSwiftSearcherDemoVC {
 
     func demoSearchConfig() -> JobsSwiftSearcherConfig {
         let config = JobsSwiftSearcherConfig.defaultConfig
-        config.placeholder = "请输入搜索关键词"
+        config.placeholder = "请输入搜索关键词".tr
         config.recommendTitle = "搜索推荐"
         config.historyTitle = "搜索历史"
         config.historyStorageKey = "JobsSwiftSearcherDemoSearchConfirmHistoryData"

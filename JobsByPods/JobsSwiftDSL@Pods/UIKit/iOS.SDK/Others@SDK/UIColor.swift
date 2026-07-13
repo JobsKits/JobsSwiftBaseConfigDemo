@@ -83,6 +83,16 @@ extension UIColor {
                   blue: gray/255,
                   alpha: alpha)
     }
+    /// HSB/HSV 颜色的 Jobs 等价入口，参数范围与 UIKit 保持一致。
+    public convenience init(h: CGFloat,
+                            s: CGFloat,
+                            b: CGFloat,
+                            a: CGFloat = 1) {
+        self.init(hue: h,
+                  saturation: s,
+                  brightness: b,
+                  alpha: a)
+    }
     /// 使用十六进制字符串初始化 UIColor
     ///
     /// 支持格式（不区分大小写）：

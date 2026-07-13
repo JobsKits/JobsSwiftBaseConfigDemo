@@ -17,6 +17,7 @@ import SnapKit
 enum PlayerCenter { static let shared = PlayerCenterImpl() }
 #if canImport(BMPlayer)
 import BMPlayer
+import JobsSwiftDSL
 final class PlayerCenterImpl {
     let player = BMPlayer()
     private var currentHost: UIView?
@@ -28,7 +29,7 @@ final class PlayerCenterImpl {
     func attach(to host: UIView) {
         guard host !== currentHost else { return }
         player.removeFromSuperview()
-        host.addSubview(player)
+        player.byAddTo(host)
         player.snp.remakeConstraints { $0.edges.equalToSuperview() }
         currentHost = host
     }

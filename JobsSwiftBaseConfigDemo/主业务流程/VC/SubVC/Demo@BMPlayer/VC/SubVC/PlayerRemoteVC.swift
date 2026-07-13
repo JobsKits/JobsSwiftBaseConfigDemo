@@ -101,9 +101,9 @@ final class PlayerRemoteVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(JobsCor.systemBackground)
         networkRichListenerBy(view)
-        jobsSetupGKNav(title: "网络单播")
+        jobsSetupGKNav(title: "网络单播".tr)
         player.byVisible(YES)
     }
 

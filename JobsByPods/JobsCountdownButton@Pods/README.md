@@ -42,6 +42,7 @@
   
   ```swift
   import JobsByUIKit
+  import JobsSwiftBaseDefines
   
   private lazy var countdownButton: UIButton = {
       UIButton.sys()
@@ -66,6 +67,8 @@
   ```
   
   ```swift
+  import JobsSwiftBaseDefines
+
   /// 启动倒计时
   private func countDown () {
       guard isCountdownTime else {
@@ -85,9 +88,11 @@
   
   ```swift
   import JobsCountdownButton
+  import JobsByUIKit
+  import JobsSwiftBaseDefines
   
   private lazy var countdownButton: UIButton = {
-      UIButton()
+      UIButton.sys()
           /// 倒计时按钮核心配置
           .byCountdown { cfg in
               cfg.mode = .down(from: 12)
@@ -124,7 +129,7 @@
           .byAddTo(self) { [unowned self] make in
               /// TODO
           }
-          .byBorderColor(.cyan)
+          .byBorderColor(JobsCor.cyan)
           .byBorderWidth(0.5)
           .byMasksToBounds(YES)
           .byClipsToBounds(YES)
@@ -138,6 +143,5 @@
   ```
   
   
-
 
 

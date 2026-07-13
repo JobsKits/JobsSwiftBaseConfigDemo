@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsByUIKit
 import Jobsl10n
@@ -42,7 +43,7 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
             .bySeparatorStyle(.singleLine)
             .byShowsVerticalScrollIndicator(false)
             .byShowsHorizontalScrollIndicator(false)
-            .byBackgroundColor(.clear)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -52,7 +53,7 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = "国家 / 地区代码".tr
-        view.backgroundColor = .white
+        view.byBackgroundColor(JobsCor.white)
         sortedNameDict = loadCountryCodeDictionary()
         tableView.byVisible(true)
     }
@@ -90,8 +91,7 @@ private extension JobsSwiftCountryCodeCtrl {
         guard let rows = sortedNameDict[key],
               rows.indices.contains(indexPath.row) else { return nil }
         let parts = rows[indexPath.row].components(separatedBy: "+")
-        guard parts.count > 1 else { return nil }
-        return (parts[0], parts[1])
+        guard parts.count > 1 else { return nil };return (parts[0], parts[1])
     }
 
     func selectCountry(at indexPath: IndexPath) {
@@ -115,8 +115,7 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard indexArray.indices.contains(section) else { return 0 }
-        return sortedNameDict[indexArray[section]]?.count ?? 0
+        guard indexArray.indices.contains(section) else { return 0 };return sortedNameDict[indexArray[section]]?.count ?? 0
     }
 
     public func tableView(_ tableView: UITableView,
@@ -125,11 +124,11 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
             ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
         let info = countryInfo(at: indexPath)
-        cell.textLabel?.text = info?.countryName
-        cell.textLabel?.font = .systemFont(ofSize: 16, weight: .regular)
-        cell.detailTextLabel?.text = info.map { "+\($0.code)" }
-        cell.detailTextLabel?.font = .systemFont(ofSize: 12, weight: .regular)
-        cell.detailTextLabel?.textColor = .secondaryLabel
+        cell.textLabel?.byText(info?.countryName)
+        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+        cell.detailTextLabel?.byText(info.map { "+\($0.code)" })
+        cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+        cell.detailTextLabel?.byTextColor(JobsCor.secondaryLabel)
         cell.selectionStyle = .none
         return cell
     }

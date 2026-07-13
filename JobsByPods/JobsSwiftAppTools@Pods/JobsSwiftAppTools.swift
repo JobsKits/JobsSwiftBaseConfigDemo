@@ -245,7 +245,7 @@ public func makeEKAttributes() -> EKAttributes{
         .byEntryInteraction(.absorbTouches)
         .byScreenInteraction(.forward)
         // 给一点儿半透明遮罩增强聚焦，但不响应关闭
-        .byScreen(.color(color: EKColor(UIColor(white: 0, alpha: 0.15))))
+        .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.15))))
         .byDisplayMode(.inferred)
         .byStatusBar(.inferred)
         .byEntrance(anim.entrance)
@@ -303,11 +303,11 @@ public extension UIView {
         let container = containerView ?? self
         let label = UILabel()
             .byText("网络初始化中...".tr)
-            .byFont(.systemFont(ofSize: 11, weight: .medium))
-            .byTextColor(.white)
+            .byFont(JobsFont.systemFont(ofSize: 11, weight: .medium))
+            .byTextColor(JobsCor.white)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
-            .byBackgroundColor(UIColor.black.withAlphaComponent(0.7))
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.7))
             .byCornerRadius(8)
             .byMasksToBounds(true)
             .byUserInteractionEnabled(YES)
@@ -360,30 +360,30 @@ public func networkRichListenerBy(_ view:UIView){
             let attr = JobsRichText.make([
                 // 第 1 行：源
                 JobsRichRun(.text("源: "))
-                    .font(.systemFont(ofSize: 10, weight: .medium))
+                    .font(JobsFont.systemFont(ofSize: 10, weight: .medium))
                     .color(JobsCor.secondaryLabel),
 
                 JobsRichRun(.text(source.displayName))
-                    .font(.systemFont(ofSize: 11, weight: .semibold))
-                    .color(.white),
+                    .font(JobsFont.systemFont(ofSize: 11, weight: .semibold))
+                    .color(JobsCor.white),
 
                 JobsRichRun(.text("\n")),
                 // 第 2 行：上行
                 JobsRichRun(.text("⬆︎ "))
-                    .font(.systemFont(ofSize: 11))
-                    .color(.systemGreen),
+                    .font(JobsFont.systemFont(ofSize: 11))
+                    .color(JobsCor.systemGreen),
 
                 JobsRichRun(.text(upStr + "  "))
-                    .font(.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
-                    .color(.white),
+                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
+                    .color(JobsCor.white),
                 // 下行
                 JobsRichRun(.text("⬇︎ "))
-                    .font(.systemFont(ofSize: 11))
-                    .color(.systemRed),
+                    .font(JobsFont.systemFont(ofSize: 11))
+                    .color(JobsCor.systemRed),
 
                 JobsRichRun(.text(downStr))
-                    .font(.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
-                    .color(.white)
+                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
+                    .color(JobsCor.white)
             ], paragraphStyle: paragraph)
             // 单例悬浮 Label + 富文本
             view.makeNetworkListener().byAttributedString(attr)

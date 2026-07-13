@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import ObjectiveC
+import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
@@ -27,7 +28,7 @@ public final class JobsDialogBoxBuilder {
     public var cornerRadius: CGFloat = 12
     public var contentPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12)
     public var bubbleColor: UIColor = UIColor(white: 0.15, alpha: 0.95)
-    public var shadowColor: UIColor = .black
+    public var shadowColor: UIColor = JobsCor.black
     public var shadowOpacity: Float = 0.25
     public var shadowRadius: CGFloat = 10
     public var shadowOffset: CGSize = CGSize(width: 0, height: 6)
@@ -98,7 +99,7 @@ public final class JobsDialogBoxBuilder {
         // anchor frame -> container 坐标
         let anchorFrame = anchor.convert(anchor.bounds, to: container)
         let dialog = JobsDialogBoxView()
-        dialog.backgroundColor = .clear
+        dialog.byBackgroundColor(JobsCor.clear)
         dialog.bubbleColor = bubbleColor
         dialog.cornerRadius = cornerRadius
         dialog.arrowSize = arrowSize
@@ -127,7 +128,7 @@ public final class JobsDialogBoxBuilder {
             cornerRadius: cornerRadius,
             arrowBaseWidth: arrowSize.width
         )
-        dialog.frame = dialogFrame
+        dialog.byFrame(dialogFrame)
         dialog.arrowPositionRatio = ratio
         dialog.setNeedsLayout()
         dialog.layoutIfNeeded()
@@ -138,10 +139,10 @@ public final class JobsDialogBoxBuilder {
         // outside tap dismiss（可按需删）
         dialog.installOutsideTapDismiss(in: container)
         // 动画
-        dialog.alpha = 0
+        dialog.byAlpha(0)
         dialog.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
         UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseOut]) {
-            dialog.alpha = 1
+            dialog.byAlpha(1)
             dialog.transform = .identity
         };return dialog
     }
@@ -229,13 +230,13 @@ public final class JobsDialogBoxView: UIControl {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = true
-        backgroundColor = .clear
+        self.byBackgroundColor(JobsCor.clear)
 
         layer.insertSublayer(shapeLayer, at: 0)
         shapeLayer.fillColor = bubbleColor.cgColor
 
-        contentView.backgroundColor = .clear
-        addSubview(contentView)
+        contentView.byBackgroundColor(JobsCor.clear)
+        contentView.byAddTo(self)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -247,14 +248,14 @@ public final class JobsDialogBoxView: UIControl {
 
     fileprivate func updateShape() {
         shapeLayer.fillColor = bubbleColor.cgColor
-        shapeLayer.frame = bounds
+        shapeLayer.byFrame(bounds)
         shapeLayer.path = makePath().cgPath
     }
 
     private func layoutContent() {
         let bubble = bubbleRect()
         let padded = bubble.inset(by: contentPadding)
-        contentView.frame = padded
+        contentView.byFrame(padded)
     }
     // bubble rect excluding arrow area（别写反，否则箭头高度为 0）
     private func bubbleRect() -> CGRect {
@@ -279,7 +280,7 @@ public final class JobsDialogBoxView: UIControl {
         
         let full = bounds
         let bubble = bubbleRect()
-        let path = UIBezierPath(roundedRect: bubble, cornerRadius: cornerRadius)
+        let path = UIBezierPath.make(roundedRect: bubble, cornerRadius: cornerRadius)
         let halfBase = arrowSize.width / 2
 
         switch resolvedEdge {
@@ -288,49 +289,53 @@ public final class JobsDialogBoxView: UIControl {
             let tipY = full.minY
             let baseY = bubble.minY
             let cx = bubble.minX + bubble.width * arrowPositionRatio
-            path.move(to: CGPoint(x: cx - halfBase, y: baseY))
-            path.addLine(to: CGPoint(x: cx, y: tipY))
-            path.addLine(to: CGPoint(x: cx + halfBase, y: baseY))
-            path.close()
+            path
+                .byMove(to: CGPoint(x: cx - halfBase, y: baseY))
+                .byAddLine(to: CGPoint(x: cx, y: tipY))
+                .byAddLine(to: CGPoint(x: cx + halfBase, y: baseY))
+                .byClose()
         case .top:
             // 箭头在底部，指向下
             let tipY = full.maxY
             let baseY = bubble.maxY
             let cx = bubble.minX + bubble.width * arrowPositionRatio
-            path.move(to: CGPoint(x: cx - halfBase, y: baseY))
-            path.addLine(to: CGPoint(x: cx, y: tipY))
-            path.addLine(to: CGPoint(x: cx + halfBase, y: baseY))
-            path.close()
+            path
+                .byMove(to: CGPoint(x: cx - halfBase, y: baseY))
+                .byAddLine(to: CGPoint(x: cx, y: tipY))
+                .byAddLine(to: CGPoint(x: cx + halfBase, y: baseY))
+                .byClose()
         case .left:
             // 箭头在右侧，指向右
             let tipX = full.maxX
             let baseX = bubble.maxX
             let cy = bubble.minY + bubble.height * arrowPositionRatio
-            path.move(to: CGPoint(x: baseX, y: cy - halfBase))
-            path.addLine(to: CGPoint(x: tipX, y: cy))
-            path.addLine(to: CGPoint(x: baseX, y: cy + halfBase))
-            path.close()
+            path
+                .byMove(to: CGPoint(x: baseX, y: cy - halfBase))
+                .byAddLine(to: CGPoint(x: tipX, y: cy))
+                .byAddLine(to: CGPoint(x: baseX, y: cy + halfBase))
+                .byClose()
         case .right:
             // 箭头在左侧，指向左
             let tipX = full.minX
             let baseX = bubble.minX
             let cy = bubble.minY + bubble.height * arrowPositionRatio
-            path.move(to: CGPoint(x: baseX, y: cy - halfBase))
-            path.addLine(to: CGPoint(x: tipX, y: cy))
-            path.addLine(to: CGPoint(x: baseX, y: cy + halfBase))
-            path.close()
+            path
+                .byMove(to: CGPoint(x: baseX, y: cy - halfBase))
+                .byAddLine(to: CGPoint(x: tipX, y: cy))
+                .byAddLine(to: CGPoint(x: baseX, y: cy + halfBase))
+                .byClose()
         };return path
     }
     // MARK: - outside tap dismiss (optional)
     fileprivate func installOutsideTapDismiss(in container: UIView) {
         let mask = UIControl(frame: container.bounds)
-        mask.backgroundColor = .clear
+        mask.byBackgroundColor(JobsCor.clear)
         // ✅ 用你的 DSL：byAddAction(for:_:)（iOS12/13/14+ 都能跑）
         mask.byAddAction(for: .touchUpInside) { [weak self] _ in
             self?.dismiss()
         }
-        container.addSubview(mask)
-        container.addSubview(self)
+        mask.byAddTo(container)
+        self.byAddTo(container)
         objc_setAssociatedObject(self,
                                  &AssociatedKeys.maskKey,
                                  mask,
@@ -340,7 +345,7 @@ public final class JobsDialogBoxView: UIControl {
     public func dismiss() {
         let mask = objc_getAssociatedObject(self, &AssociatedKeys.maskKey) as? UIControl
         UIView.animate(withDuration: 0.15, delay: 0, options: [.curveEaseIn]) {
-            self.alpha = 0
+            self.byAlpha(0)
             self.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
         } completion: { _ in
             mask?.removeFromSuperview()

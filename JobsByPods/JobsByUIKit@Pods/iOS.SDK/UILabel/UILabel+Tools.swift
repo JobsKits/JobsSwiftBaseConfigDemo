@@ -19,7 +19,7 @@ extension UILabel {
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ style: UIFont.TextStyle) -> Self {
-        self.font = .preferredFont(forTextStyle: style)
+        self.font = JobsFont.preferredFont(forTextStyle: style)
         self.adjustsFontForContentSizeCategory = true
         return self
     }
@@ -72,7 +72,7 @@ extension UILabel {
     /// 轻量 Layer 阴影（UILabel 自带 shadowColor/Offset 太弱）
     @discardableResult
     public func byLayerShadow(
-        color: UIColor? = UIColor.black.withAlphaComponent(0.25),
+        color: UIColor? = JobsCor.black.withAlphaComponent(0.25),
         radius: CGFloat = 3,
         offset: CGSize = .init(width: 0, height: 2),
         opacity: Float = 1

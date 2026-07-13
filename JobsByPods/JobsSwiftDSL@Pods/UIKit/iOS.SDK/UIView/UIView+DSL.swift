@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: - 直接赋值@单参数
 extension UIView {
     
@@ -25,6 +27,13 @@ extension UIView {
         self.alpha = a
         return self
     }
+
+    @discardableResult
+    public func byTintColor(_ color: UIColor?) -> Self {
+        self.tintColor = color
+        return self
+    }
+
     /// 统一圆角：按钮走 UIButton.Configuration 方案，其他视图保持原始 layer 逻辑
     @discardableResult
     public func byCornerRadius(_ radius: CGFloat?) -> Self {
@@ -236,6 +245,13 @@ extension UIView {
         self.alpha = builder()
         return self
     }
+
+    @discardableResult
+    public func byTintColor(_ builder: () -> UIColor?) -> Self {
+        self.tintColor = builder()
+        return self
+    }
+
 
     @discardableResult
     public func byCornerRadius(_ builder: () -> CGFloat?) -> Self {
@@ -485,6 +501,12 @@ extension UIView {
         addSubview(view)
         return view
     }
+    /// 把当前视图添加到父视图；基础装配不依赖 SnapKit。
+    @discardableResult
+    public func byAddTo(_ superView: UIView?) -> Self {
+        superView?.addSubview(self)
+        return self
+    }
     /// 在指定层级插入 ✅ 返回调用者（父视图）
     @discardableResult
     public func byInsertSubview(_ view: UIView, at index: Int) -> Self {
@@ -666,7 +688,7 @@ extension UIView {
                 if button.configuration == nil {
                     button.configuration = UIButton.Configuration.plain()
                         .byBackgroundPatch { bg in
-                            bg.backgroundColor = .clear
+                            bg.backgroundColor = JobsCor.clear
                             bg.backgroundColorTransformer = nil
                         }
                 }
@@ -695,7 +717,7 @@ extension UIView {
                     let resolvedColor =
                         colors?[wantedKey]
                         ?? colors?[normalKey]
-                        ?? .clear
+                        ?? JobsCor.clear
 
                     c.background.backgroundColor = resolvedColor
                     btn.configuration = c

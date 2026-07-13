@@ -11,62 +11,64 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: 二维码
 extension String {
     /// 由当前字符串生成二维码 UIImage（无插值放大，清晰）
     /// - Parameters:
     ///   - widthSize: 目标边长（正方形）
     ///   - correction: 纠错等级 L/M/Q/H（默认 M）
-    /// - Returns: 生成的二维码图片；失败返回空 UIImage()
+    /// - Returns: 生成的二维码图片；失败返回空 `UIImage.make()`
     @MainActor
     public func qrcodeImage(_ widthSize: CGFloat, correction: String = "M") -> UIImage {
         guard !self.isEmpty,
               let data = self.data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator")
-        else { return UIImage() }
+        else { return UIImage.make() }
 
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // "L" "M" "Q" "H"
 
-        guard let output = filter.outputImage, widthSize > 0 else { return UIImage() }
+        guard let output = filter.outputImage, widthSize > 0 else { return UIImage.make() }
 
         // 无插值等比放大
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
 
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
     }
     /// 可选：着色版（前景/背景色）
     @MainActor
     public func qrcodeImage(_ widthSize: CGFloat,
                             foreground: UIColor,
-                            background: UIColor = .white,
+                            background: UIColor = JobsCor.white,
                             correction: String = "M") -> UIImage {
         guard !self.isEmpty,
               let data = self.data(using: .utf8),
               let gen = CIFilter(name: "CIQRCodeGenerator"),
               let falseColor = CIFilter(name: "CIFalseColor")
-        else { return UIImage() }
+        else { return UIImage.make() }
 
         gen.setDefaults()
         gen.setValue(data, forKey: "inputMessage")
         gen.setValue(correction, forKey: "inputCorrectionLevel")
 
-        guard let qr = gen.outputImage else { return UIImage() }
+        guard let qr = gen.outputImage else { return UIImage.make() }
         // 颜色映射
         falseColor.setValue(qr, forKey: kCIInputImageKey)
         falseColor.setValue(CIColor(color: foreground), forKey: "inputColor0")
         falseColor.setValue(CIColor(color: background), forKey: "inputColor1")
 
-        guard let colored = falseColor.outputImage else { return UIImage() }
+        guard let colored = falseColor.outputImage else { return UIImage.make() }
         // 无插值放大
         let scale = max(widthSize / colored.extent.width, widthSize / colored.extent.height)
         let scaled = colored.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
 
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
     }
     /// 生成带中心 Logo 的二维码
     /// - Parameters:
@@ -86,26 +88,26 @@ extension String {
         logoRatio: CGFloat = 0.22,
         logoCornerRadius: CGFloat = 8,
         borderWidth: CGFloat = 4,
-        borderColor: UIColor = .white
+        borderColor: UIColor = JobsCor.white
     ) -> UIImage {
         // 1) 先生成基础二维码（无插值放大）
         guard !isEmpty,
               let data = data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator"),
               widthSize > 0
-        else { return UIImage() }
+        else { return UIImage.make() }
 
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // L/M/Q/H
 
-        guard let output = filter.outputImage else { return UIImage() }
+        guard let output = filter.outputImage else { return UIImage.make() }
 
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
 
         let ciCtx = CIContext()
-        guard let qrCG = ciCtx.createCGImage(scaled, from: scaled.extent) else { return UIImage() }
+        guard let qrCG = ciCtx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
         let qrImage = UIImage(cgImage: qrCG)
         // 2) 若没有 Logo，直接返回
         guard let logo = logo else { return qrImage }
@@ -126,12 +128,12 @@ extension String {
             // 画 Logo 外围白色边框（圆角矩形）
             if borderWidth > 0 {
                 let borderRect = logoRect.insetBy(dx: -borderWidth, dy: -borderWidth)
-                let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: logoCornerRadius + borderWidth)
+                let borderPath = UIBezierPath.make(roundedRect: borderRect, cornerRadius: logoCornerRadius + borderWidth)
                 borderColor.setFill()
                 borderPath.fill()
             }
             // 裁剪圆角并画 Logo
-            let clipPath = UIBezierPath(roundedRect: logoRect, cornerRadius: logoCornerRadius)
+            let clipPath = UIBezierPath.make(roundedRect: logoRect, cornerRadius: logoCornerRadius)
             clipPath.addClip()
             logo.draw(in: logoRect)
         }

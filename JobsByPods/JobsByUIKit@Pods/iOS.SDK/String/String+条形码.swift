@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: 条形码
 extension String {
     /// Code128 条形码（可指定目标尺寸；自动无插值放大）
@@ -22,12 +24,12 @@ extension String {
         guard !isEmpty,
               // Code128 推荐 ASCII；退化到 UTF8 也给过
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
-              let f = CIFilter(name: "CICode128BarcodeGenerator") else { return UIImage() }
+              let f = CIFilter(name: "CICode128BarcodeGenerator") else { return UIImage.make() }
         f.setDefaults()
         f.setValue(msg, forKey: "inputMessage")
         f.setValue(quietSpace, forKey: "inputQuietSpace") // 左右静区
 
-        guard let out = f.outputImage, size.width > 0, size.height > 0 else { return UIImage() }
+        guard let out = f.outputImage, size.width > 0, size.height > 0 else { return UIImage.make() }
 
         // 非等比缩放到目标尺寸（条形码需要明确宽高）
         let scaleX: CGFloat = size.width  / out.extent.width
@@ -35,7 +37,7 @@ extension String {
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
 
         let ctx = CIContext()
-        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage() };return UIImage(cgImage: cg)
+        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cg)
     }
     /// 生成带底部文字的人类可读 Code128 条形码
     /// - Parameters:
@@ -52,26 +54,26 @@ extension String {
                               barHeight: CGFloat = 100,
                               quietSpace: CGFloat = 7,
                               spacing: CGFloat = 6,
-                              font: UIFont = .monospacedDigitSystemFont(ofSize: 16, weight: .regular),
-                              textColor: UIColor = .black,
-                              background: UIColor = .white) -> UIImage {
+                              font: UIFont = JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .regular),
+                              textColor: UIColor = JobsCor.black,
+                              background: UIColor = JobsCor.white) -> UIImage {
         guard !isEmpty,
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
               let f = CIFilter(name: "CICode128BarcodeGenerator"),
               width > 0, barHeight > 0
-        else { return UIImage() }
+        else { return UIImage.make() }
         // 1) 生成条形码 CIImage
         f.setDefaults()
         f.setValue(msg, forKey: "inputMessage")
         f.setValue(quietSpace, forKey: "inputQuietSpace")
-        guard let out = f.outputImage else { return UIImage() }
+        guard let out = f.outputImage else { return UIImage.make() }
         // 2) 放大到目标条码尺寸（非等比按宽/高分别缩放）
         let scaleX = width  / out.extent.width
         let scaleY = barHeight / out.extent.height
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
 
         let ctx = CIContext()
-        guard let cgBar = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage() }
+        guard let cgBar = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
         // 3) 计算文字区域高度（先用行高；若太宽会缩放字体）
         _ = font.lineHeight
         var drawFont = font
@@ -80,7 +82,7 @@ extension String {
 
         if textSize.width > width { // 太宽就按比例缩小字体
             let factor = width / textSize.width
-            drawFont = .monospacedDigitSystemFont(ofSize: max(8, font.pointSize * factor),
+            drawFont = JobsFont.monospacedDigitSystemFont(ofSize: max(8, font.pointSize * factor),
                                                   weight: (font.fontDescriptor.symbolicTraits.contains(.traitBold) ? .bold : .regular))
             textSize = (self as NSString).size(withAttributes: [.font: drawFont])
         }

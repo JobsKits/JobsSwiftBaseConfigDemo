@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -26,7 +27,7 @@ final class LottieDemoVC: BaseVC {
     // MARK: - UI（lazy：只配置，不 add/约束）
     private lazy var containerView: UIView = {
         UIView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()
@@ -127,7 +128,7 @@ final class LottieDemoVC: BaseVC {
         UILabel()
             .byText("1.00×")
             .byTextAlignment(.right)
-            .byFont(.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
     }()
     // 行：按钮
     private lazy var buttonsRow: UIStackView = {
@@ -140,15 +141,15 @@ final class LottieDemoVC: BaseVC {
     }()
     // 行：循环
     private lazy var loopRow: UIStackView = {
-        makeRow(title: "循环", control: loopSegment)
+        makeRow(title: "循环".tr, control: loopSegment)
     }()
     // 行：进度
     private lazy var progressRow: UIStackView = {
-        makeRow(title: "进度", control: progressSlider)
+        makeRow(title: "进度".tr, control: progressSlider)
     }()
     // 行：速度（右侧数值标签）
     private lazy var speedRow: UIStackView = {
-        makeRow2(title: "速度", left: speedSlider, right: speedLabel)
+        makeRow2(title: "速度".tr, left: speedSlider, right: speedLabel)
     }()
     // 垂直面板：
     private lazy var controlsPanel: UIStackView = { [unowned self] in
@@ -180,8 +181,8 @@ final class LottieDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "Lottie 动画")
-        view.byBackgroundColor(.systemBackground)
+        jobsSetupGKNav(title: "Lottie 动画".tr)
+        view.byBackgroundColor(JobsCor.systemBackground)
 
         containerView.byAlpha(1)
         controlsPanel.byAlpha(1)

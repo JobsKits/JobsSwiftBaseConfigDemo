@@ -10,6 +10,7 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+import JobsViewPush
 #endif
 
 import JobsSwiftDSL
@@ -37,6 +38,14 @@ import MJRefresh
 final class RootListVC: BaseVC {
     private static let demoSectionOrderUserDefaultsKey = "com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey"
     private static let pinnedDemoUserDefaultsKey = "com.BSports.JobsSwiftPinnedDemoUserDefaultsKey"
+    private static let demoProjectFolderInfoKey = "JobsProjectFolderName"
+    private static let fallbackDemoProjectFolderName = "JobsBaseConfig@JobsSwiftBaseConfigDemo"
+    private static let demoProjectFolderName: String = {
+        let configuredName = Bundle.main.object(forInfoDictionaryKey: demoProjectFolderInfoKey) as? String
+        let normalizedName = configuredName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let shouldUseFallback = normalizedName.isEmpty || normalizedName.contains("$(")
+        return shouldUseFallback ? fallbackDemoProjectFolderName : normalizedName
+    }()
 
     private enum FunctionMenuAction: CaseIterable {
         case search
@@ -131,10 +140,13 @@ final class RootListVC: BaseVC {
     private var demo2D: [DemoGroup] = []
     private func makeDemo2D() -> [DemoGroup] {
         return [
-            (title: "Swift Package Manager 集成示例", items: [
+            (title: "系统能力与硬件通信".tr, items: [
+                ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self)
+            ]),
+            (title: "Swift Package Manager 集成示例".tr, items: [
                 ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self)
             ]),
-            (title: "JobsSwiftTimer系列衍生产品", items: [
+            (title: "JobsSwiftTimer系列衍生产品".tr, items: [
                 ("🐯 节流防抖", JobsWorkerDemoVC.self),
                 ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
@@ -151,23 +163,23 @@ final class RootListVC: BaseVC {
                 ("🟩⬜⬜ 系统进度条", JobsSysProgressDemoVC.self),
                 ("🟩🟩⬜ 自定义进度条（进度值+前进方向）", JobsProgressDemoVC.self)
             ]),
-            (title: "Pods集成@其他外源框架使用示例", items: g0),
-            (title: "Pods集成@网络请求适用示例", items: [
+            (title: "Pods集成@其他外源框架使用示例".tr, items: g0),
+            (title: "Pods集成@网络请求适用示例".tr, items: [
                 ("🌍 JobsNetworking 公共网络接口", JobsNetworkingListDemoVC.self),
                 ("🌍 JobsNetworking 本地模拟数据", JobsNetworkingDemoVC.self),
                 ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
                 ("🛜 Moya网络请求框架", MoyaDemoVC.self),
                 ("🛜 Alamofire网络请求框架", AFDemoVC.self),
             ]),
-            (title: "3rd集成@区分设备条件编译", items: g1),
-            (title: "直播项目相关", items: [
+            (title: "3rd集成@区分设备条件编译".tr, items: g1),
+            (title: "直播项目相关".tr, items: [
                 ("⏺️ 本地录制到系统相册", HKLocalRecordVC.self),
                 ("🌘 直播间@滚动留言", LiveCommentDemoVC.self),
                 ("📺 直播推流", HKLiveVC.self),
                 ("📹 播放器@BMPlayer(🛜 网络流量监控)", BMPlayerDemoVC.self),
                 ("📹 播放器@PNPlayer", PNPlayerDemoVC.self),
             ]),
-            (title: "炫技特效", items: [
+            (title: "炫技特效".tr, items: [
                 ("🗜️ UITableViewCell的折叠效果", FoldTableDemoVC.self),
                 ("👛 钱包卡片效果", JobsWalletDemoVC.self),
                 ("☁️ 镂空特效", TransparentRegionVC.self),
@@ -178,7 +190,7 @@ final class RootListVC: BaseVC {
                 ("🔒 手势解锁", GestureUnlockDemoVC.self),
                 ("⏱️ 仪表盘", FTDashboadDemoVC.self),
             ]),
-            (title: "实用UI@Sys", items: [
+            (title: "实用UI@Sys".tr, items: [
                 ("🔘 按钮的替代解决方案", JobsButtonDemoVC.self),
                 ("🔘 按钮", UIButtonDemoVC.self),
                 ("🔘 依据状态为按钮设置不同背景颜色", UIButtonBackgroundColorDemoVC.self),
@@ -194,7 +206,7 @@ final class RootListVC: BaseVC {
                 ("😂 按钮完全覆盖在UITableViewCell上", BtnFullOnTBVCellDemoVC.self),
                 ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
             ]),
-            (title: "实用工具集", items: [
+            (title: "实用工具集".tr, items: [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
                 ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
                 ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),
@@ -213,22 +225,23 @@ final class RootListVC: BaseVC {
                 ("🧧 TraitChange", TraitChangeDemoVC.self),
                 ("🚀 JobsOpen", JobsOpenDemoVC.self),
             ]),
-            (title: "一些常见功能模块页面", items: [
+            (title: "一些常见功能模块页面".tr, items: [
                 ("📮 经典的消息页面", MessageListDemoVC.self),
                 ("🔥 编辑个人资料", LGOEditProfileVC.self),
                 ("🏠 首页联动", HomeLinkageDemoListVC.self),
                 ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
             ]),
-            (title: "富文本/普通文本处理", items: [
+            (title: "富文本/普通文本处理".tr, items: [
                 ("🌋 富文本", RichTextDemoVC.self),
                 ("🌋 普通文本和富文本的融合数据类型", JobsTextDemoVC.self),
             ]),
-            (title: "安全推页面（高度自定义）", items: [
-                ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
+            (title: "安全推页面（高度自定义）".tr, items: [
+        ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
+        ("🗂️ 侧滑抽屉：方向、比例与跟随模式", JobsSideDrawerDemoVC.self),
                 ("⛑️ 支持上下左右安全Push和原路返回", SafetyPushDemoVC.self),
                 ("⛑️ 安全Present", SafetyPresentDemoVC.self),
             ]),
-            (title: "其他", items: [
+            (title: "其他".tr, items: [
 //                ("📌 自定义注解", 自定义注解DemoVC.self),
                 ("🛢️ 解码", SafeCodableDemoVC.self),
                 ("❄️ 雪花算法", SnowflakeDemoVC.self),
@@ -237,19 +250,19 @@ final class RootListVC: BaseVC {
     }
     // ================================== 悬浮控件（原逻辑不动） ==================================
     private lazy var suspendBtn: UIButton = {
-        UIButton(type: .system)
-            .byTitle("当前时间", for: .normal)
-            .byTitleFont(.systemFont(ofSize: 18, weight: .bold))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemBlue, for: .normal)
+        UIButton.sys()
+            .byTitle("当前时间".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
             .onLongPress(minimumPressDuration: 0.8) { _, _ in
-                "长按了悬浮按钮".toast
+                "长按了悬浮按钮".tr.toast
             }
             .onTap { [weak self] _ in
                 guard let self else { return }
-                "点击了悬浮按钮".toast
+                "点击了悬浮按钮".tr.toast
             }
             .bySuspend { cfg in
                 cfg
@@ -264,26 +277,26 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var suspendSpinBtn: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("0", for: .normal)
-            .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemOrange, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             .onLongPress(minimumPressDuration: 0.8) { _, _ in
-                "长按了悬浮按钮".toast
+                "长按了悬浮按钮".tr.toast
             }
             .onTap { [weak self] btn in
                 guard let self else { return }
                 if btn.jobs_isSpinning {
                     btn.bySpinPause()
                     self.suspendSpinBtnTimer?.pause()
-                    "已暂停旋转 & 计时".toast
+                    "已暂停旋转 & 计时".tr.toast
                 } else {
                     btn.bySpinStart()
                     self.suspendSpinBtnTimer?.resume()
-                    "继续旋转 & 计时".toast
+                    "继续旋转 & 计时".tr.toast
                 }
                 btn.playTapBounce(haptic: .light)
             }
@@ -297,11 +310,11 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var suspendFuseBtn: UIButton = {
-        UIButton(type: .system)
+        UIButton.sys()
             .byTitle("按".tr, for: .normal)
-            .byTitleFont(.systemFont(ofSize: 10, weight: .bold))
-            .byTitleColor(.white, for: .normal)
-            .byBackgroundColor(.systemPurple, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 10, weight: .bold))
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             .byPointerInteractionEnabled(false)
@@ -320,8 +333,8 @@ final class RootListVC: BaseVC {
                     btn.byFusePressStart(
                         ringConfig: JobsFuseOuterRingConfig(
                             lineWidth: 4,
-                            strokeColor: .white,
-                            trackColor: UIColor.white.withAlphaComponent(0.22),
+                            strokeColor: JobsCor.white,
+                            trackColor: JobsCor.white.withAlphaComponent(0.22),
                             fromOpacity: 1.0,
                             toOpacity: 1.0,
                             growDuration: 1.2,
@@ -356,13 +369,50 @@ final class RootListVC: BaseVC {
             }
     }()
     // ================================== TableView（一级目录） ==================================
+    private lazy var demoNavigationTitleLabel: UILabel = {
+        UILabel()
+            .tr_setText("演武堂".tr)
+            .byTextColor(RootListPreferences.primaryTextColor)
+            .byFont(JobsFont.systemFont(ofSize: 17, weight: .medium))
+            .byTextAlignment(.center)
+            .byNumberOfLines(1)
+    }()
+
+    private lazy var demoNavigationProjectLabel: UILabel = {
+        UILabel()
+            .byText(Self.demoProjectFolderName)
+            .byTextColor(RootListPreferences.secondaryTextColor)
+            .byFont(JobsFont.systemFont(ofSize: 10, weight: .regular))
+            .byTextAlignment(.center)
+            .byNumberOfLines(1)
+            .byLineBreakMode(.byTruncatingMiddle)
+            .byAdjustsFontSizeToFitWidth(YES)
+            .byMinimumScaleFactor(0.75)
+    }()
+
+    private lazy var demoNavigationTitleView: UIStackView = {
+        UIStackView()
+            .byAxis(.vertical)
+            .byAlignment(.center)
+            .byDistribution(.fill)
+            .bySpacing(1)
+            .byAddArrangedSubviews([
+                demoNavigationTitleLabel,
+                demoNavigationProjectLabel
+            ])
+    }()
+
     private lazy var functionMenuButton: UIButton = {
         UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
             .byImage("ellipsis.circle".sysImg, for: .normal)
             .byImage("ellipsis.circle.fill".sysImg, for: .selected)
+            .byTintColor(RootListPreferences.primaryTextColor)
+            .byShadowOpacity(0)
+            .byClipsToBounds(YES)
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.isSelected.toggle()
+                sender.byToggleSelected()
                 toggleFunctionMenu(sender.isSelected)
             }
     }()
@@ -385,9 +435,11 @@ final class RootListVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
+            .byBackgroundColor(RootListPreferences.cardBackgroundColor)
             .byScrollEnabled(false)
             .bySeparatorStyle(.singleLine)
             .byCornerRadius(8)
+            .byShadowOpacity(0)
             .byMasksToBounds(true)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(6)
@@ -402,7 +454,7 @@ final class RootListVC: BaseVC {
             .byPlaceholder("输入关键词搜索 Demo".tr)
             .byDelegate(self)
             .byShowsCancelButton(true)
-            .byBarTintColor(.systemBackground)
+            .byBarTintColor(RootListPreferences.pageBackgroundColor)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
                 make.height.equalTo(52)
@@ -415,7 +467,7 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero, style: .insetGrouped)
             // ✅ 关键：禁用预估高度，避免首次布局“画错一遍”
             .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
@@ -423,11 +475,12 @@ final class RootListVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(RootFoldTableCell.self)
+            .byBackgroundColor(JobsCor.clear)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
             .byContentInset(UIEdgeInsets(
-                top: 0,left: 0, bottom: 0, right: 0
+                top: 8,left: 0, bottom: 0, right: 0
             ))
             // 下拉刷新 Header
             .byRefreshHeader(component: JobsDefaultHeader(),
@@ -473,7 +526,8 @@ final class RootListVC: BaseVC {
         ) { [weak self] _ in
             guard let self else { return }
             self.reloadDemoDataFromSource()
-            self.gk_navTitle = "演武堂".tr
+            self.refreshLocalizedContent()
+            self.applyDemoListThemeChrome()
             self.tableView.reloadData()
             self.functionMenuTableView.reloadData()
         }
@@ -481,17 +535,19 @@ final class RootListVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.byBackgroundColor(RootListPreferences.pageBackgroundColor)
         RootListPreferences.applyPreferredInterfaceStyle()
         jobsSetupGKNav(
             title: "演武堂".tr,
             leftButton: UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
+                .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
                 .byImage("list.bullet".sysImg, for: .normal)
                 .byImage("list.bullet".sysImg, for: .selected)
+                .byShadowOpacity(0)
+                .byClipsToBounds(YES)
                 .onTap { [weak self] sender in
                     guard let self else { return }
-                    sender.isSelected.toggle()
+                    sender.byToggleSelected()
                     self.jobsSideDrawer?.toggleDrawer()
                     print("")
                 }
@@ -500,10 +556,10 @@ final class RootListVC: BaseVC {
                 }
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                     if gr.state == .began {
-                        btn.alpha = 0.6
+                        btn.byAlpha(0.6)
                         print("长按开始 on \(btn)")
                     } else if gr.state == .ended || gr.state == .cancelled {
-                        btn.alpha = 1.0
+                        btn.byAlpha(1.0)
                         print("长按结束")
                     }
                 }
@@ -512,9 +568,11 @@ final class RootListVC: BaseVC {
                 },
             rightButtons: [functionMenuButton]
         )
+        gk_navTitleView = demoNavigationTitleView
         demoSearchBar.byVisible(NO)
         tableView.byVisible(YES)
         functionMenuTableView.byVisible(NO)
+        applyDemoListThemeChrome()
         view.addGestureRecognizer(functionMenuDismissTapGesture)
         updateFooterAvailability()
 
@@ -523,6 +581,12 @@ final class RootListVC: BaseVC {
         suspendFuseBtn.byVisible(YES)
 
         setupJobsTimers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshLocalizedContent()
+        applyDemoListThemeChrome()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -540,6 +604,56 @@ final class RootListVC: BaseVC {
 }
 
 extension RootListVC{
+    // ================================== 运行时语言刷新 ==================================
+    private func refreshLocalizedContent() {
+        demoNavigationTitleLabel.byText("演武堂".tr)
+        demoSearchBar.byPlaceholder("输入关键词搜索 Demo".tr)
+        suspendBtn.byTitle("当前时间".tr, for: .normal)
+        suspendFuseBtn.byTitle("按".tr, for: .normal)
+        if let tabBarController = view.window?.rootViewController as? UITabBarController,
+           let items = tabBarController.tabBar.items,
+           items.count >= 3 {
+            items[0].byTitle("Demo".tr)
+            items[1].byTitle("消息".tr)
+            items[2].byTitle("我的".tr)
+        }
+    }
+
+    // ================================== Demo 列表主题刷新 ==================================
+    private func applyDemoListThemeChrome() {
+        RootListPreferences.applyThemeChrome(to: self,
+                                             backgroundColor: RootListPreferences.pageBackgroundColor)
+        gk_navShadowColor = JobsCor.clear
+        gk_navLineHidden = true
+        gk_navigationBar.byShadowOpacity(0)
+        tableView.byBackgroundColor(JobsCor.clear)
+        tableView.separatorColor = RootListPreferences.separatorColor
+        demoNavigationTitleLabel.byTextColor(RootListPreferences.primaryTextColor)
+        demoNavigationProjectLabel.byTextColor(RootListPreferences.secondaryTextColor)
+        functionMenuButton.byTintColor(RootListPreferences.primaryTextColor)
+        functionMenuTableView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
+        functionMenuTableView.bySeparatorColor(RootListPreferences.separatorColor)
+        demoSearchBar.byBarTintColor(RootListPreferences.pageBackgroundColor)
+        demoSearchBar.byTintColor(RootListPreferences.selectedTintColor)
+        #if os(iOS)
+        if #available(iOS 13.0, *) {
+            demoSearchBar.searchTextField.byBackgroundColor(RootListPreferences.cardBackgroundColor)
+            demoSearchBar.searchTextField.byTextColor(RootListPreferences.primaryTextColor)
+            demoSearchBar.searchTextField.byTintColor(RootListPreferences.selectedTintColor)
+            demoSearchBar.searchTextField.byAttributedPlaceholder(
+                NSAttributedString(
+                    string: "输入关键词搜索 Demo".tr,
+                    attributes: [.foregroundColor: RootListPreferences.secondaryTextColor]
+                )
+            )
+        }
+        #endif
+        if view.window != nil {
+            functionMenuTableView.reloadData()
+            tableView.reloadData()
+        }
+    }
+
     // ================================== JobsSwiftTimer（新版）创建与绑定 UI ==================================
     private func setupJobsTimers() {
         // 1) suspendBtn：每秒刷新当前时间
@@ -557,7 +671,7 @@ extension RootListVC{
                 onMainAsync(self) { vc in
                     let btn = vc.suspendBtn
                     if btn.title(for: .normal) != "当前时间" {
-                        btn.byTitle("当前时间", for: .normal)
+                        btn.byTitle("当前时间".tr, for: .normal)
                     }
                     btn.bySubTitle(nowClock(), for: .normal)
                     btn.bySetNeedsUpdateConfiguration()
@@ -610,7 +724,14 @@ extension RootListVC{
     }
 
     private func reloadDemoDataFromSource() {
-        allDemo2D = makeDemo2D()
+        allDemo2D = makeDemo2D().map { group in
+            (
+                title: group.title.tr,
+                items: group.items.map { item in
+                    (title: item.title.tr, vcType: item.vcType)
+                }
+            )
+        }
         applySavedDemoSectionOrderIfNeeded()
         applySavedPinnedDemosIfNeeded()
         applySearchKeyword(demoSearchKeyword)
@@ -712,7 +833,7 @@ extension RootListVC{
             demo2D = allDemo2D.compactMap { group in
                 let items = group.items.filter { !isPinnedDemoItem($0) };return items.isEmpty ? nil : (title: group.title, items: items)
             }
-            expandedGroups.removeAll()
+            expandedGroups = demo2D.isEmpty ? [] : [0]
             return
         }
         demo2D = allDemo2D.compactMap { group in
@@ -754,16 +875,16 @@ extension RootListVC{
                   canDragDemoGroup(at: indexPath),
                   let cell = tableView.cellForRow(at: indexPath),
                   let snapshotView = cell.snapshotView(afterScreenUpdates: false) else { return }
-            snapshotView.frame = cell.frame
-            snapshotView.layer.shadowColor = UIColor.black.cgColor
+            snapshotView.byFrame(cell.frame)
+            snapshotView.layer.shadowColor = JobsCor.black.cgColor
             snapshotView.layer.shadowOpacity = 0.18
             snapshotView.layer.shadowRadius = 10
             snapshotView.layer.shadowOffset = CGSize(width: 0, height: 6)
-            tableView.addSubview(snapshotView)
+            snapshotView.byAddTo(tableView)
             demoGroupDragSnapshotView = snapshotView
             demoGroupDragIndexPath = indexPath
             demoGroupDragTouchOffsetY = point.y - cell.frame.midY
-            cell.isHidden = true
+            cell.byHidden(true)
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
 
         case .changed:
@@ -780,8 +901,8 @@ extension RootListVC{
             tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
             tableView.endUpdates()
             demoGroupDragIndexPath = destinationIndexPath
-            tableView.visibleCells.forEach { $0.isHidden = false }
-            tableView.cellForRow(at: destinationIndexPath)?.isHidden = true
+            tableView.visibleCells.forEach { $0.byHidden(false) }
+            tableView.cellForRow(at: destinationIndexPath)?.byHidden(true)
 
         case .ended, .cancelled, .failed:
             finishDemoGroupDrag()
@@ -836,7 +957,7 @@ extension RootListVC{
         let indexPath = demoGroupDragIndexPath
         let cell = indexPath.flatMap { tableView.cellForRow(at: $0) }
         let clearState = { [weak self, weak cell, weak snapshotView] in
-            cell?.isHidden = false
+            cell?.byHidden(false)
             snapshotView?.removeFromSuperview()
             self?.demoGroupDragSnapshotView = nil
             self?.demoGroupDragIndexPath = nil
@@ -847,13 +968,16 @@ extension RootListVC{
             clearState()
             return
         }
-        UIView.animate(withDuration: 0.2,
-                       delay: 0,
-                       options: [.curveEaseOut, .allowUserInteraction]) {
-            snapshotView.frame = cell.frame
-        } completion: { _ in
-            clearState()
-        }
+        UIView.jobsAnimateWithOptions(
+            0.2,
+            options: [.curveEaseOut, .allowUserInteraction],
+            animations: {
+                snapshotView.byFrame(cell.frame)
+            },
+            completion: { _ in
+                clearState()
+            }
+        )
     }
 
     private func menuTitle(for action: FunctionMenuAction) -> String {
@@ -890,9 +1014,10 @@ extension RootListVC{
     }
 
     private func toggleFunctionMenu(_ visible: Bool) {
-        functionMenuButton.isSelected = visible
+        functionMenuButton.bySelected(visible)
         functionMenuTableView.byVisible(visible)
         if visible {
+            applyDemoListThemeChrome()
             functionMenuTableView.reloadData()
             view.bringSubviewToFront(functionMenuTableView)
         }
@@ -910,16 +1035,18 @@ extension RootListVC{
     }
 
     private func updateSearchCancelButtonStyle() {
-        demoSearchBar.tintColor = .systemBlue
-        demoSearchBar.layoutIfNeeded()
+        demoSearchBar
+            .byTintColor(JobsCor.systemBlue)
+            .byLayoutIfNeeded()
         guard let button = searchCancelButton(in: demoSearchBar) else { return }
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(UIColor.white.withAlphaComponent(0.75), for: .highlighted)
-        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 6
-        button.layer.masksToBounds = true
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button
+            .byTitleColor(JobsCor.white)
+            .byTitleColor(JobsCor.white.withAlphaComponent(0.75), for: .highlighted)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byBackgroundColor(JobsCor.systemBlue)
+            .byCornerRadius(6)
+            .byMasksToBounds(true)
+            .byContentEdgeInsets(UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
     }
 
     private func handleMenuAction(_ action: FunctionMenuAction) {
@@ -969,7 +1096,7 @@ extension RootListVC{
             - tableView.adjustedContentInset.top
             - tableView.adjustedContentInset.bottom
         let enableLoadMore = contentH > visibleH + 20
-        tableView.mj_footer?.isHidden = !enableLoadMore
+        tableView.mj_footer?.byHidden(!enableLoadMore)
         if !enableLoadMore {
             /// TODO
         }
@@ -1009,8 +1136,12 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         if tableView === functionMenuTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
             let action = FunctionMenuAction.allCases[indexPath.row]
-            cell.textLabel?.text = menuTitle(for: action)
-            cell.textLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+            cell.textLabel?.byText(menuTitle(for: action))
+            cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            cell.textLabel?.byTextColor(RootListPreferences.primaryTextColor)
+            cell.byBackgroundColor(RootListPreferences.cardBackgroundColor)
+            cell.contentView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
+            cell.byTintColor(RootListPreferences.selectedTintColor)
             cell.accessoryType = .none
             cell.selectionStyle = .default
             return cell

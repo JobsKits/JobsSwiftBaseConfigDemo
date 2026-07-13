@@ -22,7 +22,7 @@ final class FeedListCell: UITableViewCell {
     // MARK: - 懒加载 UI
     private lazy var cover: UIImageView = { [unowned self] in
         UIImageView()
-            .byBackgroundColor(.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
             .byAddTo(contentView) { [unowned self] make in
@@ -34,7 +34,7 @@ final class FeedListCell: UITableViewCell {
     private lazy var playIcon: UIImageView = { [unowned self] in
         UIImageView()
             .byImage(UIImage(systemName: "play.circle.fill"))
-            .byTintColor(.white)
+            .byTintColor(JobsCor.white)
             .byContentMode(.scaleAspectFit)
             .byAlpha(0.9)
             .byAddTo(cover) { make in
@@ -45,8 +45,8 @@ final class FeedListCell: UITableViewCell {
 
     private lazy var nameLabel: UILabel = { [unowned self] in
         UILabel()
-            .byFont(.boldSystemFont(ofSize: 16))
-            .byTextColor(.label)
+            .byFont(JobsFont.boldSystemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(cover.snp.bottom).offset(8)
                 make.leading.trailing.equalToSuperview().inset(12)
@@ -55,8 +55,8 @@ final class FeedListCell: UITableViewCell {
 
     private lazy var contentLabel: UILabel = { [unowned self] in
         UILabel()
-            .byFont(.systemFont(ofSize: 14))
-            .byTextColor(.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(nameLabel.snp.bottom).offset(4)
@@ -69,7 +69,7 @@ final class FeedListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.backgroundColor = .systemBackground
+        contentView.byBackgroundColor(JobsCor.systemBackground)
         cover.byVisible(YES)
         playIcon.byVisible(YES)
         nameLabel.byVisible(YES)
