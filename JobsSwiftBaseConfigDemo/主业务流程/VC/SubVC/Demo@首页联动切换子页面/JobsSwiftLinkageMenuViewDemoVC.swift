@@ -74,7 +74,6 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
 
     private func rebuildLinkageView() {
         linkageView?.removeFromSuperview()
-
         let config = JobsSwiftLinkageMenuViewConfig()
         config.defaultMenuItemHeight = 78
         config.menuItemHeightMap = [4: 96]
@@ -84,7 +83,6 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         config.contentBackgroundColor = JobsCor.white
         config.selectedTintColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
         config.selectedBackgroundColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
-
         switch LayoutMode(rawValue: modeControl.selectedSegmentIndex) ?? .fixedMenu {
         case .fixedMenu:
             config.menuWidth = 96
@@ -93,7 +91,6 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         case .ratio:
             config.menuRatio = 0.26
         }
-
         config.menuClickBlock = { [weak self] payload in
             self?.callbackLabel.byText("当前菜单：\(payload.item.title)")
         }
@@ -102,7 +99,6 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
             self?.callbackLabel.byText(text)
             text.toast
         }
-
         let view = JobsSwiftLinkageMenuView(menuItems: makeMenuItems(),
                                             contentViews: makeContentViews(),
                                             config: config)
@@ -197,7 +193,6 @@ private final class ActivityListView: UIView {
         card.layer.shadowOpacity = 0.15
         card.layer.shadowOffset = CGSize(width: 0, height: 3)
         card.layer.shadowRadius = 6
-
         let iconLabel = UILabel()
         iconLabel.byText("✉")
         iconLabel.byTextAlignment(.center)
@@ -206,22 +201,18 @@ private final class ActivityListView: UIView {
         iconLabel.byBackgroundColor(UIColor(r: 255, g: 0.32 * 255, b: 0.13 * 255))
         iconLabel.byCornerRadius(8)
         iconLabel.byMasksToBounds(true)
-
         let titleLabel = UILabel()
         titleLabel.byText("\(sectionTitle) - \(menuTitle) 活动 \(index + 1)")
         titleLabel.byTextColor(JobsCor.label)
         titleLabel.byFont(JobsFont.boldSystemFont(ofSize: 18))
         titleLabel.byNumberOfLines(2)
-
         let subtitleLabel = UILabel()
         subtitleLabel.byText("神秘彩金等你来拿".tr)
         subtitleLabel.byTextColor(JobsCor.darkGray)
         subtitleLabel.byFont(JobsFont.systemFont(ofSize: 15))
-
         iconLabel.byAddTo(card)
         titleLabel.byAddTo(card)
         subtitleLabel.byAddTo(card)
-
         iconLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()

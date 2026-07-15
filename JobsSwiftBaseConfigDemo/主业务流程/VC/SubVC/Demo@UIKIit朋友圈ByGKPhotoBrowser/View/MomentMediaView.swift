@@ -89,7 +89,6 @@ final class MomentMediaView: UIView {
     // ✅ 分段公式：1（视频/图）、2、3、4、5-9
     static func height(for items: [MomentMedia], width: CGFloat) -> CGFloat {
         guard width > 0, !items.isEmpty else { return 0 }
-
         if items.count == 1 {
             let m = items[0]
             if m.isVideo {
@@ -100,7 +99,6 @@ final class MomentMediaView: UIView {
                 return side
             }
         }
-
         let met = metrics(for: items.count, width: width, spacing: 6)
         return met.totalHeight
     }
@@ -111,7 +109,6 @@ final class MomentMediaView: UIView {
         else if count == 3 { cols = 3 }
         else if count == 4 { cols = 2 }
         else { cols = 3 }
-
         let rows = Int(ceil(Double(count) / Double(cols)))
         let itemSide = floor((width - CGFloat(cols - 1) * spacing) / CGFloat(cols))
         let totalHeight = CGFloat(rows) * itemSide + CGFloat(rows - 1) * spacing

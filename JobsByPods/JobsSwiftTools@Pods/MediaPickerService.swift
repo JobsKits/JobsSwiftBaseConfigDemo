@@ -108,7 +108,6 @@ public final class MediaPickerService: NSObject {
                         // return modes.compactMap { UIImagePickerController.CameraCaptureMode(rawValue: $0.intValue) }
                         //            .contains(.video)
                     }
-
                     if supportsVideo(.rear)  { return .rear }
                     if supportsVideo(.front) { return .front };return nil
                 }()
@@ -164,19 +163,15 @@ private final class CameraProxy: NSObject, UIImagePickerControllerDelegate, UINa
 // iOS 14+ 相册多选
 @available(iOS 14, *)
 private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate {
-    
     let jobsByVoidBlock: ([UIImage]) -> Void
     init(jobsByVoidBlock: @escaping ([UIImage])->Void) { self.jobsByVoidBlock = jobsByVoidBlock }
 
     func picker(_ picker: PHPickerViewController,
                 didFinishPicking results: [PHPickerResult]) {
-        
         picker.dismiss(animated: true)
         guard !results.isEmpty else { jobsByVoidBlock([]); return }
-
         var images = [UIImage]()
         let group = DispatchGroup()
-
         for r in results {
             let provider = r.itemProvider
             if provider.canLoadObject(ofClass: UIImage.self) {
@@ -187,7 +182,6 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate {
                 }
             }
         }
-
         group.notify(queue: .main) { [jobsByVoidBlock] in
             jobsByVoidBlock(images)
         }
@@ -221,7 +215,6 @@ private final class LegacyLibraryProxy: NSObject,
 private final class VideoCameraProxy: NSObject,
                                       UIImagePickerControllerDelegate,
                                       UINavigationControllerDelegate {
-    
     let jobsByVoidBlock: (URL) -> Void
     init(jobsByVoidBlock: @escaping (URL) -> Void) { self.jobsByVoidBlock = jobsByVoidBlock }
 

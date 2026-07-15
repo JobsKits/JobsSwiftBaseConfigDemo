@@ -234,7 +234,6 @@ extension UIScrollView {
         if let v = component as? JobsRefreshRoleConfigurable {
             v.refreshRole = role
         }
-
         let slot = JobsSlot(position: position,
                             role: role,
                             view: component,
@@ -278,7 +277,6 @@ extension UIScrollView {
         case .header, .left, .footer, .right:
             break
         }
-
         if proxy.enablesHaptics {
             jobs_playHapticImpact()
         }
@@ -330,7 +328,6 @@ extension UIScrollView {
         if let url = Bundle.main.url(forResource: baseName, withExtension: ext) {
             return url
         }
-
         // 2) Enumerate all matching ext files (works even if the file is inside subdirectories)
         let urls = Bundle.main.urls(forResourcesWithExtension: ext, subdirectory: nil) ?? []
         if let exact = urls.first(where: { $0.lastPathComponent == preferredFullName }) {

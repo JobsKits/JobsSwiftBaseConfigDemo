@@ -54,7 +54,6 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                 cv.deselectItem(at: idx, animated: true)
                 "点选逻辑".tr.toast
             })
-
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
                 make.height.equalTo(topHeight)
@@ -92,7 +91,6 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                     self.collectionView.switchSideRefresh(.right, to: .normal)
                 }
             }
-
     }()
 
     private lazy var tableView: UITableView = {
@@ -121,7 +119,6 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                 tv.deselectRow(at: indexPath, animated: true)
                 "点选逻辑".tr.toast
             }
-
             .showRefreshHeaderInfo(YES)
             .showRefreshFooterInfo(NO)
             .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
@@ -156,7 +153,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                 }
             }
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "演示：非正式协议闭包化".tr)

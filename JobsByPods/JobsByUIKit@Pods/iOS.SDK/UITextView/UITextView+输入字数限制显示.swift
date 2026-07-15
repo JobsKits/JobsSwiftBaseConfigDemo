@@ -60,11 +60,9 @@ extension UITextView {
 }
 // MARK: - Private Associated Storage
 extension UITextView {
-
     private struct JobsHintKeys {
         static var labelKey: UInt8 = 0
         static var hintLockedKey: UInt8 = 0
-
         static var tokenKey: UInt8 = 0
         static var originalInsetKey: UInt8 = 0
         static var didAdjustInsetKey: UInt8 = 0
@@ -79,20 +77,17 @@ extension UITextView {
     }
 
     private final class JobsSuperviewHookView: UIView {
-        
         weak var host: UITextView?
         @discardableResult
         public func byHost(_ host: UITextView?) -> Self {
             self.host = host
             return self
         }
-        
         override func didMoveToSuperview() {
             super.didMoveToSuperview()
             host?.jobs_attachHintLabelIfPossible()
             host?.jobs_updateHintLabel()
         }
-        
         override func didMoveToWindow() {
             super.didMoveToWindow()
             host?.jobs_attachHintLabelIfPossible()
@@ -184,7 +179,6 @@ extension UITextView {
 }
 // MARK: - Install / Update
 extension UITextView {
-
     @discardableResult
     fileprivate func jobs_installHintLabelIfNeeded() -> UILabel {
         if let lb = jobs_hintLabel { return lb }
@@ -203,18 +197,15 @@ extension UITextView {
     fileprivate func jobs_attachHintLabelIfPossible() {
         guard let lb = jobs_hintLabel else { return }
         guard let sv = superview else { return }
-
         if lb.superview === sv {
             sv.bringSubviewToFront(lb)
             lb.layer.zPosition = .greatestFiniteMagnitude
             return
         }
-
         lb.removeFromSuperview()
         sv.addSubview(lb)
         sv.bringSubviewToFront(lb)
         lb.layer.zPosition = .greatestFiniteMagnitude
-
         lb.snp.remakeConstraints { make in
             make.right.equalTo(self.snp.right).offset(-6)
             make.bottom.equalTo(self.snp.bottom).offset(-6)

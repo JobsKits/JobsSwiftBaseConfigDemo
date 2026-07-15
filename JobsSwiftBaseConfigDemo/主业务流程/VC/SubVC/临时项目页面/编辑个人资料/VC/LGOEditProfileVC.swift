@@ -28,7 +28,6 @@ import BRPickerViewSwift
 
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
-    
     case avatar
     case nickname
     case gender
@@ -83,7 +82,6 @@ private enum EditProfileRow: CaseIterable {
 }
 
 final class LGOEditProfileVC: BaseVC {
-    
     private let sections: [[EditProfileRow]] = [
         [.avatar, .nickname, .gender, .sign],
         [.birthday, .emotion, .hometown, .profession]
@@ -175,7 +173,6 @@ final class LGOEditProfileVC: BaseVC {
 }
 // MARK: - UITableViewDataSource
 extension LGOEditProfileVC: UITableViewDataSource {
-
     func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
     }
@@ -187,7 +184,6 @@ extension LGOEditProfileVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = sections[indexPath.section][indexPath.row]
-
         switch row {
         case .avatar:
             return tableView.byDequeueReusableCell(
@@ -207,7 +203,6 @@ extension LGOEditProfileVC: UITableViewDataSource {
 }
 // MARK: - UITableViewDelegate
 extension LGOEditProfileVC: UITableViewDelegate {
-
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section][indexPath.row]

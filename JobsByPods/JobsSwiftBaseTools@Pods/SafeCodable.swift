@@ -109,10 +109,8 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
         let cfg = SafeCodableConfig.shared
         let codingPath = codingPathStrings(decoder)
         let container = try decoder.singleValueContainer()
-
         // 用局部变量承接结果，最后统一赋值，避免“提前 return 未初始化所有存储属性”
         let value: T
-
         if container.decodeNil() {
             value = T.defaultValue
             report(.defaulted(expected: "\(T.self)", codingPath: codingPath, reason: "null"))
@@ -131,7 +129,6 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
             value = T.defaultValue
             report(.defaulted(expected: "\(T.self)", codingPath: codingPath, reason: "coercion-failed"))
         }
-
         // 统一在最后初始化所有存储属性
         self.wrappedValue = value
         // 解码时 wrapper 的构造参数不会被传入，这里置空仅为满足初始化完整性
@@ -158,10 +155,8 @@ public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
         let cfg = SafeCodableConfig.shared
         let codingPath = codingPathStrings(decoder)
         let container = try decoder.singleValueContainer()
-
         // 收敛到局部变量
         let value: T?
-
         if container.decodeNil() {
             value = nil    // Optional 碰到 null → nil，不上报以减少噪音
         } else if let v = try? container.decode(T.self) {
@@ -178,7 +173,6 @@ public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
             value = nil
             report(.failed(expected: "\(T?.self)", codingPath: codingPath, reason: "coercion-failed"))
         }
-
         self.wrappedValue = value
         self.localTreatEmptyStringAsNilForURL = nil
     }

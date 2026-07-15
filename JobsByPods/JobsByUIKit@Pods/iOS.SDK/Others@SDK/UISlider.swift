@@ -17,7 +17,7 @@ extension UISlider {
         self.setValue(value, animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byValue(_ value: Float) -> Self {
         self.setValue(value, animated: false)

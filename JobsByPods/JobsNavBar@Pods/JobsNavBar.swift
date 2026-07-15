@@ -174,7 +174,6 @@ public class JobsNavBar: UIView {
             // 3) 默认占位
             return Self._jobsMakeTitleAttr(fallback)
         }
-
         kvoTitle?.invalidate()
         kvoTitle = webView.observe(\.title, options: [.new]) { [weak self] _, _ in
             onMainAsync(self) { vc in self?.refreshTitle() }
@@ -251,7 +250,6 @@ public class JobsNavBar: UIView {
                 make.right.lessThanOrEqualToSuperview().inset(8)
             }
         }
-
         if _backConstraintsInstalled {
             btn.snp.remakeConstraints(install)
         } else {
@@ -259,7 +257,7 @@ public class JobsNavBar: UIView {
             _backConstraintsInstalled = true
         }
     }
-    
+
     @MainActor
     private func backTapped() {
         if let onBack {

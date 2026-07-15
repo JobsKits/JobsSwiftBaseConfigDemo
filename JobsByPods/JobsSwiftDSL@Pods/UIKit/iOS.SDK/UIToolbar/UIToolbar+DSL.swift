@@ -94,19 +94,18 @@ extension UIToolbar {
 }
 // MARK: - 闭包重载@单参数
 extension UIToolbar {
-    
     @discardableResult
     public func byItemsAnimated(_ builder: () -> [UIBarButtonItem]?) -> Self {
         self.setItems(builder(), animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byItems(_ builder: () -> [UIBarButtonItem]?) -> Self {
         self.setItems(builder(), animated: false)
         return self
     }
-    
+
     @discardableResult
     public func byBarStyle(_ builder: () -> UIBarStyle) -> Self {
         self.barStyle = builder()
@@ -118,13 +117,13 @@ extension UIToolbar {
         self.isTranslucent = builder()
         return self
     }
-    
+
     @discardableResult
     public func byBarTintColor(_ builder: () -> UIColor?) -> Self {
         self.barTintColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byStandardAppearance(_ builder: () -> UIToolbarAppearance) -> Self {
         if #available(iOS 13.0, *) {
@@ -152,7 +151,7 @@ extension UIToolbar {
             self.compactScrollEdgeAppearance = builder()
         };return self
     }
-    
+
     @discardableResult
     public func byDelegate(_ builder: () -> UIToolbarDelegate?) -> Self {
         self.delegate = builder()

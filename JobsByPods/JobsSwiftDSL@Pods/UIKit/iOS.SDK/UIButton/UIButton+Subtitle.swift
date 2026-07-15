@@ -107,10 +107,8 @@ extension UIButton {
         // 已安装就不重复装
         if (objc_getAssociatedObject(self, &_jobsSubtitleHandlerInstalledKey) as? Bool) == true { return }
         objc_setAssociatedObject(self, &_jobsSubtitleHandlerInstalledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
         let existing = self.configurationUpdateHandler
         self.automaticallyUpdatesConfiguration = true
-
         self.configurationUpdateHandler = { [weak self] btn in
             // 先把外部原有的 handler 执行（不抢控制权）
             existing?(btn)
@@ -137,7 +135,6 @@ extension UIButton {
                 let pack = self._subDict_noAttr[st.rawValue] ?? self._subDict_noAttr[UIControl.State.normal.rawValue]
                 let subText = pack?.text ?? ""
                 cfg.subtitle = subText.isEmpty ? nil : subText
-
                 let f = pack?.font
                 let c = pack?.color
                 cfg.subtitleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
@@ -188,20 +185,17 @@ extension UIButton {
             let t = self.title(for: state) ?? self.title(for: .normal) ?? ""
             if t.isEmpty { return nil };return NSAttributedString(string: t, attributes: [.font: self.titleLabel?.font ?? JobsFont.systemFont(ofSize: 15)])
         }()
-
         let sub = subAttr
         if titleAttr == nil, sub == nil {
             setAttributedTitle(nil, for: state)
             return
         }
-
         let full = NSMutableAttributedString()
         if let titleAttr { full.append(titleAttr) }
         if let sub {
             if full.length > 0 { full.append(NSAttributedString(string: "\n")) }
             full.append(sub)
         }
-
         setAttributedTitle(full, for: state)
         titleLabel?.numberOfLines = 2
         titleLabel?.textAlignment = .center
@@ -209,7 +203,6 @@ extension UIButton {
 }
 
 extension UIButton {
-
     @discardableResult
     public func bySubTitle(_ text: String?, for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {

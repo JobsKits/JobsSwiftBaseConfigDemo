@@ -24,7 +24,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsNetworkingDemoVC: BaseVC {
-
     private var dataSources: [MethodDemoItem] = MethodType.allCases.map {
         MethodDemoItem(
             title: $0.title,
@@ -109,7 +108,6 @@ final class JobsNetworkingDemoVC: BaseVC {
 }
 
 extension JobsNetworkingDemoVC {
-    
     private func loadCatalog(isRefresh: Bool = false) {
         Task {
             do {
@@ -130,7 +128,7 @@ extension JobsNetworkingDemoVC {
             }
         }
     }
-    
+
     private func endRefreshing() {
         tableView.switchRefreshHeader(to: .normal)
         tableView.switchRefreshFooter(to: .normal)

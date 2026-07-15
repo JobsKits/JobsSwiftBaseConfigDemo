@@ -52,7 +52,6 @@ public extension JobsAgent {
                     continuation.finish()
                 }
             })
-
             continuation.onTermination = { _ in
                 token.cancel()
             }

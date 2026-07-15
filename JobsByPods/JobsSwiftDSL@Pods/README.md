@@ -27,6 +27,7 @@
 | `PhotosUI/` | `PHPickerConfiguration`、`PHPickerViewController` 链式封装 |
 | `MetalKit/` | `MTKView`、`MTL*Descriptor` 链式封装 |
 | `Foundation/` | `JSONDecoder`、`NSMutableAttributedString` 等 Foundation DSL |
+| `CoreMotion/` | `CMMotionManager` 的传感器频率、启停、队列回调与参考坐标系 DSL |
 | `ThirdParty/` | `SnapKit`、`BMPlayer`、`YTKNetwork`、`GKNavigationBarSwift` 等第三方 DSL |
 
 ## 三、引用方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -67,11 +68,18 @@ func show(view: UIView) {
     animations: { view.byAlpha(1) }
   )
 }
+
+let motionManager = CMMotionManager.make()
+    .byGyroUpdateInterval(1.0 / 30.0)
+    .byStartGyroUpdates(to: .main) { data, error in
+        print(data?.rotationRate as Any, error as Any)
+    }
 ```
 
 ## 四、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 本 Pod 是语法糖层，不应该承载业务状态。
+- `CMMotionManager.byStopAllUpdates()` 只负责统一停止当前 manager 的四类更新；页面仍需持有 manager，并在离开或销毁时主动调用。
 - 后续新增 DSL 时，优先放在这里，不再散落到各个功能 Pod。
 - `UIView.tintColor` 这类父类公共属性只在 `UIView` DSL 中封装，子类不重复声明同名 API。
 - 不带约束的视图装配统一使用 `UIView.byAddTo(_:)`；带 SnapKit 约束的重载由 `JobsByUIKit` 承接。

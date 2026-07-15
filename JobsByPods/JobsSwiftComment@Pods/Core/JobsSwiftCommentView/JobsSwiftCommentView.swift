@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
@@ -80,7 +79,6 @@ public final class JobsSwiftCommentView: UIView {
 }
 
 extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
-
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         renderRows.count
     }
@@ -131,7 +129,6 @@ extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
 }
 
 private extension JobsSwiftCommentView {
-
     struct RenderRow {
         let comment: JobsSwiftCommentModel
         let depth: Int
@@ -164,7 +161,6 @@ private extension JobsSwiftCommentView {
             tableView.rightAnchor.constraint(equalTo: rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
         refreshControlView.byAddTarget(self,
                                        action: #selector(pullRefreshTriggered),
                                        for: .valueChanged)

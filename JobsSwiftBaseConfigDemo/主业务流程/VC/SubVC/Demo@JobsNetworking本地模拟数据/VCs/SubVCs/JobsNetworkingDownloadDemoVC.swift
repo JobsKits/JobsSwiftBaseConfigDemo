@@ -10,7 +10,6 @@ import Foundation
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingDownloadDemoVC: JobsNetworkingMethodDemoVC {
-
     override func buildRequestPreview(triggerError: Bool) -> String {
         triggerError
         ? "GET /api/download/file?fileName=not-found.txt\nresponseType: file"

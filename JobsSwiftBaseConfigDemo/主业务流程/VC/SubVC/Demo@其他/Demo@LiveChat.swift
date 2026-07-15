@@ -21,7 +21,6 @@ import SnapKit
 import LiveChat
 
 final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
-
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("默认展示（presentChat）".tr, for: .normal)
@@ -62,7 +61,6 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
         jobsSetupGKNav(title: "LiveChat Demo")
         btnDefault.byVisible(YES)
         btnCustom.byVisible(YES)
-
     }
     // MARK: - 默认方式（SDK 自带展示）
     @objc private func onDefault() {

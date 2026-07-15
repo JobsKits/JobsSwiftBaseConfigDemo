@@ -120,7 +120,6 @@ final class FoldCell: UITableViewCell {
         selectionStyle = .none
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-
         // 触发懒加载（保证层级正确）
         cardView.byVisible(YES)
         headerView.byVisible(YES)
@@ -131,7 +130,6 @@ final class FoldCell: UITableViewCell {
         detailContentView.byVisible(YES)
         detailLabel.byVisible(YES)
         foldShadowView.byVisible(YES)
-
         setExpanded(false, animated: false)
     }
     override func layoutSubviews() {
@@ -147,7 +145,6 @@ final class FoldCell: UITableViewCell {
 }
 
 extension FoldCell {
-    
     func byData(title: String,
                 subtitle: String,
                 detail: String,
@@ -161,23 +158,19 @@ extension FoldCell {
     /// 展开/收起的核心方法
     func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
-
         if expanded {
             detailContentView.byVisible(YES)
         }
-
         let targetTransform = expanded ? CATransform3DIdentity : foldedTransform()
         let targetAlpha: CGFloat = expanded ? 1.0 : 0.0
         let targetShadowAlpha: CGFloat = expanded ? 0.0 : 0.22
         let targetChevron = expanded ? CGAffineTransform(rotationAngle: .pi) : .identity
-
         let apply = { [self] in
             detailContentView.layer.transform = targetTransform
             detailContentView.byAlpha(targetAlpha)
             foldShadowView.byAlpha(targetShadowAlpha)
             chevron.transform = targetChevron
         }
-
         if animated {
             UIView.jobsAnimateWithSpring(
                 0.38,

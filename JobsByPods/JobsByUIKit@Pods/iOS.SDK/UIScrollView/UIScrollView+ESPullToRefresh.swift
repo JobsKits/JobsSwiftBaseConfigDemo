@@ -146,7 +146,6 @@ extension UIScrollView {
         self.header?.stopRefreshing()
         self.header?.removeFromSuperview()
         self.header = nil
-
         self.footer?.stopRefreshing()
         self.footer?.removeFromSuperview()
         self.footer = nil
@@ -155,7 +154,6 @@ extension UIScrollView {
 }
 // MARK: - 下拉刷新（Header）
 public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnimatorProtocol {
-    
     public var state: ESRefreshViewState = .pullToRefresh
     public var idleDescription: String = "下拉刷新".tr
     public var releaseToRefreshDescription: String = "松开立即刷新".tr
@@ -243,7 +241,6 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
 }
 // MARK: - 上拉加载（Footer）
 public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnimatorProtocol {
-    
     public var state: ESRefreshViewState = .pullToRefresh
     public var idleDescription: String = "上拉加载更多".tr
     public var releaseToRefreshDescription: String = "松开立即加载".tr
@@ -253,7 +250,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     public var insets: UIEdgeInsets = .zero
     public var trigger: CGFloat = 52
     public var executeIncremental: CGFloat = 52
-    
+
     private var canvasWidthConstraint: Constraint?
     private lazy var canvas: UIView = {
         UIView()
@@ -265,7 +262,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
                 make.height.greaterThanOrEqualTo(executeIncremental)
             }
     }()
-    
+
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -280,7 +277,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
                 make.trailing.lessThanOrEqualTo(canvas.snp.trailing).inset(16)
             }
     }()
-    
+
     private lazy var indicator: UIActivityIndicatorView = {
         UIActivityIndicatorView(jobsStyle: .medium)
             .byHidesWhenStopped(true)
@@ -289,11 +286,11 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
                 make.trailing.equalTo(titleLabel.snp.leading).offset(-6)
             }
     }()
-    
+
     private lazy var w: CGFloat = {
         (self.window?.bounds.width).map { CGFloat($0) } ?? UIScreen.main.bounds.width
     }()
-    
+
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -303,7 +300,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
         titleLabel.byVisible(YES)
         indicator.byVisible(YES)
     }
-    
+
     public override func layoutSubviews() {
         super.layoutSubviews()
         canvasWidthConstraint?.update(offset: 0)
@@ -415,7 +412,6 @@ public extension JobsFooterAnimator {
 }
 // MARK: - 轻量的“最近刷新时间”缓存，替代 ESRefreshDataManager（避免跨模块 internal 访问问题）
 public enum JobsRefreshCache {
-    
     private static let prefix = "jobs.refresh."
     private static let ud = UserDefaults.standard
 

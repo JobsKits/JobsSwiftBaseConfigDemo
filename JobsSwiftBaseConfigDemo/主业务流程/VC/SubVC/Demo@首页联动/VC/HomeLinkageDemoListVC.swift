@@ -22,21 +22,18 @@ final class HomeLinkageDemoListVC: BaseVC {
     private enum Row: Int, CaseIterable {
         case cashback
         case linkageMenu
-
         var title: String {
             switch self {
             case .cashback: return "🏠 首页联动"
             case .linkageMenu: return "🧭 首页联动切换子页面@Pod"
             }
         }
-
         var subtitle: String {
             switch self {
             case .cashback: return "JXSegmentedView 页签联动示例"
             case .linkageMenu: return "JobsSwiftLinkageMenuView 子页面切换示例"
             }
         }
-
         var vcType: UIViewController.Type {
             switch self {
             case .cashback: return CashbackRootVC.self

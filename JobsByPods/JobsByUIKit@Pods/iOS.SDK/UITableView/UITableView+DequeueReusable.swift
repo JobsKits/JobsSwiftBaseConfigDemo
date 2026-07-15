@@ -91,7 +91,6 @@ extension UITableView {
                 fatalError("❌ dequeueReusableHeaderFooterView failed after register: \(reuseId)")
             };return view
         }
-
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: reuseId) as? T else {
             fatalError("❌ dequeueReusableHeaderFooterView failed: \(reuseId)")
         };return view

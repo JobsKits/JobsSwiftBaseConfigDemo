@@ -18,7 +18,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class LeftMenuCell: UITableViewCell {
-
     private lazy var indicator: UIView = {
         UIView()
             .byBackgroundColor(JobsCor.systemOrange)
@@ -58,7 +57,6 @@ final class LeftMenuCell: UITableViewCell {
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
         selectionStyle = .none
-
         indicator.byHidden(YES)
         iconView.byVisible(YES)
         titleLabel.byVisible(YES)

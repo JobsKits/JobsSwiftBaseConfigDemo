@@ -66,15 +66,12 @@ public struct JobsRetryPolicy: Sendable {
         if let customDecider {
             return customDecider(context)
         }
-
         guard context.attempt < maxRetries else {
             return .init(shouldRetry: false)
         }
-
         guard retriableMethods.contains(context.request.method) else {
             return .init(shouldRetry: false)
         }
-
         switch context.error {
         case let .http(statusCode, _), let .server(statusCode, _):
             guard retriableStatusCodes.contains(statusCode) else {
@@ -87,7 +84,6 @@ public struct JobsRetryPolicy: Sendable {
                 return .init(shouldRetry: false)
             }
         }
-
         let factor = pow(multiplier, Double(context.attempt))
         let jitterValue = Double.random(in: jitter)
         return .init(shouldRetry: true, delay: initialDelay * factor * jitterValue)

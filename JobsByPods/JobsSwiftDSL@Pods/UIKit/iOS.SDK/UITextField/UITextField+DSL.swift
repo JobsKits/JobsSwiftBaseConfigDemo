@@ -17,7 +17,6 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UITextField {
-
     @discardableResult
     public func byPlaceholder(_ placeholder: String?) -> Self {
         self.placeholder = placeholder
@@ -29,7 +28,7 @@ extension UITextField {
         self.leftViewMode = mode
         return self
     }
-    
+
     @discardableResult
     public func byRightViewMode(_ mode: UITextField.ViewMode) -> Self {
         self.rightViewMode = mode
@@ -275,19 +274,18 @@ extension UITextField {
 }
 // MARK: - 闭包重载@单参数
 extension UITextField {
-
     @discardableResult
     public func byPlaceholder(_ builder: () -> String?) -> Self {
         self.placeholder = builder()
         return self
     }
-    
+
     @discardableResult
     public func byLeftViewMode(_ builder: () -> UITextField.ViewMode) -> Self {
         self.leftViewMode = builder()
         return self
     }
-    
+
     @discardableResult
     public func byRightViewMode(_ builder: () -> UITextField.ViewMode) -> Self {
         self.rightViewMode = builder()
@@ -519,7 +517,6 @@ extension UITextField {
 }
 
 extension UITextField {
-
     @discardableResult
     public func byLeftView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
         self.leftView = view
@@ -593,11 +590,9 @@ extension UITextField {
             leftViewMode = .never
             return self
         }
-
         let containerW = leading + size.width + spacing
         let containerH = max(24, size.height)    // 高度随便给，系统会垂直居中
         let container = UIView(frame: CGRect(x: 0, y: 0, width: containerW, height: containerH))
-
         self.byLeftView(container.byAddSubviewRetSuper(UIImageView().byImage(tint == nil ? image : image.withRenderingMode(.alwaysTemplate))
             .byTintColor(tint)
             .byContentMode(.scaleAspectFit)

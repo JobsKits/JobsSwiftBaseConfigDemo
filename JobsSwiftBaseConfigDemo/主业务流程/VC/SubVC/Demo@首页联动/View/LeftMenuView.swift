@@ -20,7 +20,6 @@ import SnapKit
 struct LeftMenuItem { let icon: String; let title: String }
 
 final class LeftMenuView: UIView {
-
     private let items: [LeftMenuItem]
     private(set) var selectedIndex: Int
     var selectionChanged: ((Int) -> Void)?

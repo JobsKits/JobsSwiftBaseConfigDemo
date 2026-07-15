@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name         = 'JobsFuseAnimation'
-  s.version      = '0.1.1'
+  s.version      = '0.2.0'
   s.summary      = 'Long press fuse/ring animations for UIView.'
   s.description  = <<-DESC
                     JobsFuseAnimation provides chainable UIView animations for
-                    long-press fuse ring growth, press-scale feedback and tap sound.
+                    long-press fuse ring growth, press-scale feedback, reusable bubble emission and tap sound.
                    DESC
 
   s.homepage     = 'https://github.com/JobsKits/JobsFuseAnimation'

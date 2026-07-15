@@ -62,19 +62,16 @@ public final class VideoCell: UICollectionViewCell {
     // MARK: - byData
     @discardableResult
     func byData(_ payload: Any?) -> Self {
-
         // 1) URL
         if let url = payload as? URL {
             render(url)
             return self
         }
-
         // 2) URL? （例如传进来的是 videoURL）
         if let url = (payload as? URL?) ?? nil {
             render(url)
             return self
         }
-
         // 3) [Any?]（varargs 糖会进这里）
         if let items = payload as? [Any?] {
             let first = items.first ?? nil
@@ -86,7 +83,6 @@ public final class VideoCell: UICollectionViewCell {
                 tearDownPlayer()
             };return self
         }
-
         tearDownPlayer()
         return self
     }
@@ -99,23 +95,19 @@ public final class VideoCell: UICollectionViewCell {
 
     private func render(_ url: URL) {
         tearDownPlayer()
-
         let player = AVPlayer(url: url)
         player.actionAtItemEnd = .pause        // 到尾暂停，等点按钮
         self.player = player
-
         let layer = AVPlayerLayer(player: player)
         layer.videoGravity = .resizeAspectFill
         layer.byFrame(contentView.bounds)
         layer.zPosition = -1                    // ⬅︎ 永远在按钮下面
         contentView.layer.addSublayer(layer)
         playerLayer = layer
-
         // 再兜底把按钮提到最上
         contentView.bringSubviewToFront(playOverlay)
         playOverlay.layer.zPosition = 9999
         playOverlay.byHidden(true)
-
         // 结束后显示按钮 —— object 用 nil 更稳
         endObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
@@ -124,7 +116,6 @@ public final class VideoCell: UICollectionViewCell {
         ) { [weak self] _ in
             self?.playOverlay.byHidden(false)
         }
-
         player.seek(to: .zero)
         player.play()
         setNeedsLayout(); layoutIfNeeded()

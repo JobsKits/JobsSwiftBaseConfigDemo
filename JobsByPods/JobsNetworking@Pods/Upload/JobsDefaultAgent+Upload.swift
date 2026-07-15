@@ -19,7 +19,6 @@ extension JobsDefaultAgent: JobsUploadCapable {
         token.setCancel { [weak self] in
             self?.client.cancel(requestId: request.trace.requestId)
         }
-
         doUpload(request, as: type, token: token, attempt: 0, completion: completion)
         return token
     }
@@ -32,17 +31,14 @@ extension JobsDefaultAgent: JobsUploadCapable {
         completion: @escaping (Result<T, JobsError>) -> Void
     ) {
         let url = URL(string: request.path, relativeTo: config.baseURL)?.absoluteURL ?? config.baseURL.appendingPathComponent(request.path)
-
         var headers = request.headers
         let fakeRequest = JobsRequest(path: request.path, method: request.method, headers: request.headers, timeout: request.timeout, trace: request.trace)
         headers.merge(headerHook.headers(for: fakeRequest)) { _, new in new }
         headers[config.traceHeaderKeys.requestId] = request.trace.requestId
         headers[config.traceHeaderKeys.traceId] = request.trace.traceId
         headers[config.traceHeaderKeys.spanId] = request.trace.spanId
-
         var afHeaders: HTTPHeaders = [:]
         headers.forEach { afHeaders.add(name: $0.key, value: $0.value) }
-
         let parts = request.files.compactMap { spec -> JobsMultipartPart? in
             switch spec {
             case let .file(fileURL, name, fileName, mimeType):
@@ -51,7 +47,6 @@ extension JobsDefaultAgent: JobsUploadCapable {
                 return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
             }
         }
-
         client.uploadMultipart(
             url: url,
             method: request.method,
@@ -62,7 +57,6 @@ extension JobsDefaultAgent: JobsUploadCapable {
             timeout: request.timeout
         ) { [weak self] result in
             guard let self else { return }
-
             switch result {
             case .success(let (data, response)):
                 do {

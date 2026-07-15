@@ -50,28 +50,22 @@ public class MetalRenderer: NSObject {
     }
 
     private func setupMetal() {
-
         // ✅ 重点：MetalRenderer 在 JobsBy3rdTools（Pod/Framework）里时，默认库通常在 framework bundle
         let rendererBundle = Bundle(for: MetalRenderer.self)
-
         var library: MTLLibrary?
-
         // 1) iOS16+/tvOS16+/macOS13+：从指定 bundle 取默认库（最稳）
         if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
             library = try? device.makeDefaultLibrary(bundle: rendererBundle)
         }
-
         // 2) fallback：手动找 default.metallib（仍然在 rendererBundle）
         if library == nil,
            let metallibURL = rendererBundle.url(forResource: "default", withExtension: "metallib") {
             library = try? device.makeLibrary(URL: metallibURL)
         }
-
         // 3) 最后 fallback：main bundle 默认库（有些静态集成场景会命中）
         if library == nil {
             library = device.makeDefaultLibrary()
         }
-
         guard let library else {
             let hasMetallib = (rendererBundle.url(forResource: "default", withExtension: "metallib") != nil)
             fatalError(
@@ -86,23 +80,18 @@ public class MetalRenderer: NSObject {
                 """
             )
         }
-
         let vertexFunction   = library.makeFunction(name: "vertex_main")
         let fragmentFunction = library.makeFunction(name: "fragment_main")
-
         // 顶点描述（⚠️ 避免 “Vertex function has input attributes but no vertex descriptor was set.”）
         let vDesc = MTLVertexDescriptor()
         vDesc.attributes[0].format = .float3
         vDesc.attributes[0].offset = 0
         vDesc.attributes[0].bufferIndex = 0
-
         vDesc.attributes[1].format = .float2
         vDesc.attributes[1].offset = MemoryLayout<SIMD3<Float>>.stride
         vDesc.attributes[1].bufferIndex = 0
-
         vDesc.layouts[0].stride = MemoryLayout<Vertex>.stride
         vDesc.layouts[0].stepFunction = .perVertex
-
         // Render Pipeline（全链式 by-DSL）
         let rpDesc = MTLRenderPipelineDescriptor()
             .byLabel("PNPlayer.Pipeline")
@@ -112,20 +101,17 @@ public class MetalRenderer: NSObject {
             .byRasterSampleCount(boundView?.sampleCount ?? 4)
             .byColorAttachment(0, pixelFormat: boundView?.colorPixelFormat ?? .bgra8Unorm)
             .byDepthPixelFormat(boundView?.depthStencilPixelFormat ?? .depth32Float)
-
         do {
             pipelineState = try device.makeRenderPipelineState(descriptor: rpDesc)
         } catch {
             fatalError("Could not create render pipeline state: \(error)")
         }
-
         // Depth/Stencil（内球只渲染天空，可禁写深度减少闪烁）
         let dsDesc = MTLDepthStencilDescriptor()
             .byLabel("PNPlayer.Depth")
             .byDepthCompare(.less)
             .byDepthWriteEnabled(false) // 内部天空盒通常关闭写入，避免偶发闪烁
         depthStencilState = device.makeDepthStencilState(descriptor: dsDesc)
-
         // 采样器
         samplerState = device.makeSamplerState(
             descriptor: MTLSamplerDescriptor()
@@ -172,24 +158,18 @@ extension MetalRenderer: MTKViewDelegate {
               let pso = pipelineState,
               let cmd = commandQueue.makeCommandBuffer(),
               let enc = cmd.makeRenderCommandEncoder(descriptor: rpd) else { return }
-
         updateUniforms(viewSize: view.drawableSize)
-
         enc.setRenderPipelineState(pso)
         enc.setDepthStencilState(depthStencilState)
-
         // 内球渲染建议：不开启剔除或剔除背面；视具体球面顶点绕序
         enc.setCullMode(.none)               // inside sphere 更安全
         enc.setFrontFacing(.counterClockwise)
-
         enc.setVertexBuffer(sphere.vertexBuffer, offset: 0, index: 0)
         enc.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
-
         enc.setFragmentSamplerState(samplerState, index: 0)
         if let tex = videoTextureManager.currentTexture {
             enc.setFragmentTexture(tex, index: 0)
         }
-
         if let ib = sphere.indexBuffer {
             enc.drawIndexedPrimitives(type: .triangle,
                                       indexCount: sphere.indexCount,
@@ -197,7 +177,6 @@ extension MetalRenderer: MTKViewDelegate {
                                       indexBuffer: ib,
                                       indexBufferOffset: 0)
         }
-
         enc.endEncoding()
         cmd.present(drawable)
         cmd.commit()
@@ -209,7 +188,6 @@ extension MetalRenderer: MTKViewDelegate {
         let viewM = cameraController.viewMatrix
         let model = float4x4(1.0)
         let mvp = proj * viewM * model
-
         var u = Uniforms(modelViewProjectionMatrix: mvp)
         memcpy(uniformBuffer?.contents(), &u, MemoryLayout<Uniforms>.stride)
     }

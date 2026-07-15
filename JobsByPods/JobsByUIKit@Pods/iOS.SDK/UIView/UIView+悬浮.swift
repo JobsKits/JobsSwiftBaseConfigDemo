@@ -56,7 +56,6 @@ extension UIView {
         public var animated: Bool = true
         public var hapticOnDock: Bool = false
         public var confineInContainer: Bool = true
-
         public init() {}
         public static var `default`: SuspendConfig { .init() }
     }
@@ -72,35 +71,35 @@ public extension UIView.SuspendConfig {
     @discardableResult func byContainer(_ v: UIView?) -> Self {
         var c = self; c.container = v; return c
     }
-    
+
     @discardableResult func byFallbackSize(_ v: CGSize) -> Self {
         var c = self; c.fallbackSize = v; return c
     }
-    
+
     @discardableResult func byDocking(_ v: UIView.SuspendDocking) -> Self {
         var c = self; c.docking = v; return c
     }
-    
+
     @discardableResult func byInitialOrigin(_ v: CGPoint?) -> Self {
         var c = self; c.initialOrigin = v; return c
     }
-    
+
     @discardableResult func byDraggable(_ v: Bool) -> Self {
         var c = self; c.draggable = v; return c
     }
-    
+
     @discardableResult func byAnimated(_ v: Bool) -> Self {
         var c = self; c.animated = v; return c
     }
-    
+
     @discardableResult func byHapticOnDock(_ v: Bool) -> Self {
         var c = self; c.hapticOnDock = v; return c
     }
-    
+
     @discardableResult func byConfineInContainer(_ v: Bool) -> Self {
         var c = self; c.confineInContainer = v; return c
     }
-    
+
     @discardableResult func byStart(_ v: Start) -> Self {
         var c = self
         c.start = v
@@ -210,7 +209,6 @@ extension UIView {
                                 let cfg = objc_getAssociatedObject(self, &SuspendKeys.configKey) as? UIView.SuspendConfig,
                                 let container = self.superview
                             else { return }
-
                             switch pan.state {
                             case .changed:
                                 let delta = pan.translation(in: container)
@@ -218,7 +216,6 @@ extension UIView {
                                 self.frame.origin.y += delta.y
                                 pan.setTranslation(.zero, in: container)
                                 if cfg.confineInContainer { self._clampFrameWithinContainer() }
-
                             case .ended, .cancelled, .failed:
                                 let mode = self._effectiveDocking(cfg)
                                 let target = self._snapOrigin(for: mode, in: container, cfg: cfg, currentFrame: self.frame)
@@ -341,11 +338,9 @@ extension UIView {
         let b = Self._availableBounds(in: container) // ✅ 去掉 extraInsets
         let w = f.width, h = f.height
         let center = CGPoint(x: f.midX, y: f.midY)
-
         switch mode {
         case .none:
             return _clamped(f.origin, size: f.size, in: b, clamp: cfg.confineInContainer)
-
         case .nearestEdge:
             let dLeft   = abs(center.x - b.minX)
             let dRight  = abs(b.maxX - center.x)
@@ -356,7 +351,6 @@ extension UIView {
             if minD == dRight  { return CGPoint(x: b.maxX - w,      y: min(max(b.minY, f.origin.y), b.maxY - h)) }
             if minD == dTop    { return CGPoint(x: min(max(b.minX, f.origin.x), b.maxX - w), y: b.minY) }
             /* minD == dBottom */ return CGPoint(x: min(max(b.minX, f.origin.x), b.maxX - w), y: b.maxY - h)
-
         case .nearestCorner, .auto:
             let corners: [CGPoint] = [
                 CGPoint(x: b.minX,       y: b.minY),

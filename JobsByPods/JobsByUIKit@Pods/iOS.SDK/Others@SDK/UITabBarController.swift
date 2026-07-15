@@ -17,7 +17,7 @@ extension UITabBarController {
         self.setViewControllers(controllers, animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byViewControllers(_ controllers: [UIViewController]) -> Self {
         self.setViewControllers(controllers, animated: false)

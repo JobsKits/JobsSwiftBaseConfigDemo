@@ -122,13 +122,11 @@ final class PDFDemoVC: BaseVC {
     // MARK: - Load
     private func loadDocumentOrFail() {
         let bundleURL = Bundle.main.url(forResource: resourceName, withExtension: fileExtension)
-
         var docsURL: URL?
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let candidate = dir.appendingPathComponent("\(resourceName).\(fileExtension)")
             if FileManager.default.fileExists(atPath: candidate.path) { docsURL = candidate }
         }
-
         guard let url = bundleURL ?? docsURL else {
             "未找到 \(resourceName).\(fileExtension)\n请将文件放入 Bundle 或 Documents 目录。".toast
             return
@@ -137,7 +135,6 @@ final class PDFDemoVC: BaseVC {
             "无法打开 PDF：\(url.lastPathComponent)".toast
             return
         }
-
         loadedURL = url
         document = doc
         pdfView.document = doc

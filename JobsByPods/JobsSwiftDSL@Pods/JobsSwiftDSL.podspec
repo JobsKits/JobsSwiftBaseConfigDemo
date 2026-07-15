@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
                       'PhotosUI',
                       'MetalKit',
                       'AVFoundation',
+                      'CoreMotion',
                       'MediaPlayer'
 
   s.dependency 'JobsSwiftBlock'

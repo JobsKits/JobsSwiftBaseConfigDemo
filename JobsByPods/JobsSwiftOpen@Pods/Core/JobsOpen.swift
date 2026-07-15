@@ -12,7 +12,6 @@ import UIKit
 import JobsByUIKit
 
 public final class JobsOpen: NSObject {
-
     public static let shared = JobsOpen()
 
     @MainActor
@@ -38,7 +37,6 @@ public final class JobsOpen: NSObject {
             configuration.completion?(false)
             return
         }
-
         let webViewController = JobsOpenWebViewController(
             url: configuration.url,
             pageTitle: configuration.title

@@ -27,7 +27,7 @@ final class JobsSwiftRefresherDemoVC: BaseVC {
     private let topHeight: CGFloat = 180
     private var hItems = 18              // 顶部横向卡片数量
     private var rows = 20                // 底部纵向行数
-    
+
     private lazy var hLayout: UICollectionViewFlowLayout = {
         UICollectionViewFlowLayout()
             .byScrollDirection(.horizontal)
@@ -167,7 +167,6 @@ extension JobsSwiftRefresherDemoVC: UICollectionViewDataSource {
             .byDequeueCell(HCell.self, for: indexPath)
             .byData(indexPath.item)
             .onResult { _ in
-
             }
     }
 }

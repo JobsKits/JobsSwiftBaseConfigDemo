@@ -242,7 +242,6 @@ enum RootListPreferences {
             UINavigationBar.appearance().standardAppearance = navigationAppearance
             UINavigationBar.appearance().compactAppearance = navigationAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = navigationAppearance
-
             let tabBarAppearance = makeTabBarAppearance()
             UITabBar.appearance().standardAppearance = tabBarAppearance
             if #available(iOS 15.0, *) {
@@ -334,7 +333,6 @@ final class RootListSettingsVC: BaseVC {
         case chinese
         case english
         case tagalog
-
         var languageCode: String {
             switch self {
             case .chinese:
@@ -345,7 +343,6 @@ final class RootListSettingsVC: BaseVC {
                 return "tl"
             }
         }
-
         var title: String {
             switch self {
             case .chinese:

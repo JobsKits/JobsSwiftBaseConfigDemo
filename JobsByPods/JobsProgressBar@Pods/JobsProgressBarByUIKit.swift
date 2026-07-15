@@ -20,13 +20,13 @@ extension UIView {
         backgroundColor = color
         return self
     }
-    
+
     @discardableResult
     func byMasksToBounds(_ masksToBounds: Bool?) -> Self {
         layer.masksToBounds = masksToBounds ?? false
         return self
     }
-    
+
     @discardableResult
     func byAddTo(_ superview: UIView,
                  _ closure: ((ConstraintMaker) -> Void)? = nil) -> Self {
@@ -60,7 +60,7 @@ extension UIView {
         self.layer.cornerRadius = r
         return self
     }
-    
+
     @discardableResult
     func byHidden(_ hidden: Bool) -> Self {
         isHidden = hidden
@@ -72,7 +72,7 @@ extension UIView {
         alpha = a
         return self
     }
-    
+
     @MainActor
     @discardableResult
     func byVisible(_ visible: Bool) -> Self {
@@ -88,25 +88,25 @@ extension UILabel {
         self.font = font
         return self
     }
-    
+
     @discardableResult
     func byTextColor(_ color: UIColor) -> Self {
         self.textColor = color
         return self
     }
-    
+
     @discardableResult
     func byTextAlignment(_ alignment: NSTextAlignment) -> Self {
         self.textAlignment = alignment
         return self
     }
-    
+
     @discardableResult
     func byText(_ text: String?) -> Self {
         self.text = text
         return self
     }
-    
+
     @discardableResult
     func byBgCor(_ color: UIColor) -> Self {
         self.backgroundColor = color

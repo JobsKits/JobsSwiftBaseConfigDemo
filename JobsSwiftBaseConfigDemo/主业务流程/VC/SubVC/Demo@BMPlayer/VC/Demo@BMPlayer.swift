@@ -69,7 +69,6 @@ extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
             .byText(Row(rawValue: indexPath.row)?.title)
             .byAccessoryType(.disclosureIndicator)
             .onResult { _ in
-
             }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -20,7 +20,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class SwiftPackageManagerDemoVC: BaseVC {
-
     private lazy var introLabel: UILabel = {
         UILabel()
             .byText("一个本地 Package，同时演示 Library Product、资源 Bundle、泛型 API、actor 并发、Swift Macro、Executable 与测试。App 页面只负责调用公开 API。".tr)
@@ -93,7 +92,6 @@ final class SwiftPackageManagerDemoVC: BaseVC {
 }
 
 private extension SwiftPackageManagerDemoVC {
-
     func makeButton(_ title: String, color: UIColor, action: @escaping () -> Void) -> UIButton {
         UIButton.sys()
             .byTitle(title, for: .normal)
@@ -155,7 +153,6 @@ private extension SwiftPackageManagerDemoVC {
         } catch {
             appendResult("【Resource / Generic ❌】\n\(error.localizedDescription)")
         }
-
         appendResult("【Swift Macro】\n\(JobsSPMDemoKit.macroSummary)")
         runActorSearch(append: true)
     }

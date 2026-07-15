@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - 背景色兜底
 extension UIButton {
-    
     public func setBgCor(_ color: UIColor, forState: UIControl.State) {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
         UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)

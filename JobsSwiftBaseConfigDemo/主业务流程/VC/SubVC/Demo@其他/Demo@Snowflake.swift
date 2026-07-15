@@ -84,19 +84,15 @@ final class SnowflakeDemoVC: BaseVC {
         guard genButton.jobs_effectiveState != .selected else { return } // 防抖
         genButton.bySelected(true)
         genButton.byUserInteractionEnabled(false)
-
         let total = 1_000_000
         let start = Date()
         let startTS = Date().timeIntervalSince1970
-
         // UI 先更新一次
         resultLabel.byText("开始：\(startTS)\n正在生成 \(total) 个 ID…")
-
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self else { return }
             var lastID: UInt64 = 0
             var failCount = 0
-
             for _ in 0..<total {
                 if let id = self.general.nextID() {
                     lastID = id
@@ -108,15 +104,12 @@ final class SnowflakeDemoVC: BaseVC {
                     failCount &+= 1
                 }
             }
-
             let end = Date()
             let endTS = end.timeIntervalSince1970
             let elapsed = end.timeIntervalSince(start)
-
             DispatchQueue.main.async {
                 self.genButton.bySelected(false)
                 self.genButton.isUserInteractionEnabled = true
-
                 var text = ""
                 text += "开始：\(startTS)\n结束：\(endTS)\n"
                 text += String(format: "耗时：%.3f s\n", elapsed)

@@ -68,11 +68,9 @@ class DemoDetailVC: BaseVC {
 class HalfSheetDemoVC: DemoDetailVC{
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(16)
             .byClipsToBounds(true)
-
         UILabel()
             .byText("")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))

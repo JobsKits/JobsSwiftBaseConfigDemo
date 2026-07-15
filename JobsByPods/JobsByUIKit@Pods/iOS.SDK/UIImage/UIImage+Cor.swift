@@ -28,10 +28,8 @@ extension UIImage {
     // MARK: 反转图片颜色（RGB 反转，Alpha 不变）
     public func invertedColors() -> UIImage? {
         guard let ciImage = CIImage(image: self) else { return nil }
-
         let filter = CIFilter(name: "CIColorInvert")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
-
         guard
             let output = filter?.outputImage,
             let cgImage = CIContext(options: nil)
@@ -46,22 +44,17 @@ extension UIImage {
     public func filled(by color: UIColor) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer { UIGraphicsEndImageContext() }
-
         guard let ctx = UIGraphicsGetCurrentContext(),
               let cgImage = self.cgImage else { return jobsSolidBlue() }
-
         let rect = CGRect(origin: .zero, size: size)
-
         ctx.translateBy(x: 0, y: size.height)
         ctx.scaleBy(x: 1, y: -1)
-
         ctx.clip(to: rect, mask: cgImage)
         ctx.setFillColor(color.cgColor)
         ctx.fill(rect)
-
         return UIGraphicsGetImageFromCurrentImageContext() ?? jobsSolidBlue()
     }
-    
+
     public func rotated(_ radians: CGFloat) -> UIImage {
         UIGraphicsImageRenderer(size: size).image { ctx in
             ctx.cgContext.translateBy(x: size.width / 2, y: size.height / 2)

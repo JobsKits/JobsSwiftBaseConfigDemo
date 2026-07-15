@@ -25,7 +25,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class CNIDDemoVC: BaseVC {
-
     private lazy var textField: UITextField = {
         UITextField()
             .byPlaceholder("请输入身份证号码".tr)
@@ -64,7 +63,6 @@ final class CNIDDemoVC: BaseVC {
                     updateResult("❌ 请输入身份证号码", success: false)
                     return
                 }
-
                 do {
                     let normalized = try CNID.validate(input)
                     updateResult("✅ 校验成功\n标准化结果：\(normalized)", success: true)

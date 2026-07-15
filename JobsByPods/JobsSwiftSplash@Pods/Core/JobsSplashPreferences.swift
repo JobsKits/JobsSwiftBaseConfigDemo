@@ -8,7 +8,6 @@
 import Foundation
 
 public enum JobsSplashPreferences {
-
     private static let enabledKey = "JobsSwiftSplash.isEnabledForNextLaunch"
 
     public static var isEnabledForNextLaunch: Bool {

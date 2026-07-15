@@ -217,31 +217,24 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
         onTapMedia = nil
         onToggleExpand = nil
         onLikeTapped = nil
         onCommentTapped = nil
         onNeedHeightUpdate = nil
-
         pendingHeightUpdate = false
         currentPost = nil
         needsToggle = false
         lastTextWidth = 0
-
         avatar.jobs_cancelImageLoad()
         avatar.byImage(nil)
-
         nameLabel.byText(nil)
         contentTextView.byAttributedText(nil)
-
         mediaView.byVisible(false)
         mediaHeightConstraint?.update(offset: 0)
         mediaView.render([])
-
         timeLabel.byText(nil)
         likeButton.byTitle("赞".tr, for: .normal)
-
         commentsBG.byVisible(false)
         commentsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
     }
@@ -289,7 +282,6 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         ? "已赞".tr + String(post.likeCount)
         : (post.likeCount > 0 ? "赞".tr + String(post.likeCount) : "赞".tr)
         likeButton.byTitle(likeTitle, for: .normal)
-
         // comments
         rebuildComments(post.comments)
         requestHeightUpdateOnce()
@@ -313,22 +305,17 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     private func rebuildContentTextIfNeeded() {
         guard let post = currentPost else { return }
-
         let width = max(0, rightStack.bounds.width > 0 ? rightStack.bounds.width : estimatedRightWidth())
         guard width > 0 else { return }
-
         let base = makeBaseText(post: post)
         let maxLines = 3
-
         // 是否需要“全文”
         let fullFits = TextKitMeasure.fits(base, width: width, maxLines: maxLines)
         needsToggle = !fullFits
-
         if !needsToggle {
             contentTextView.byAttributedText(base)
             return
         }
-
         if post.isExpanded {
             let expanded = NSMutableAttributedString(attributedString: base)
             expanded.append(NSAttributedString(string: " "))
@@ -366,13 +353,11 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         var lo = 0
         var hi = fullLen
         var best = 0
-
         while lo <= hi {
             let mid = (lo + hi) / 2
             let prefix = base.attributedSubstring(from: NSRange(location: 0, length: mid))
             let candidate = NSMutableAttributedString(attributedString: prefix)
             candidate.append(tail)
-
             if TextKitMeasure.fits(candidate, width: width, maxLines: maxLines) {
                 best = mid
                 lo = mid + 1
@@ -431,13 +416,10 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     static func heightFormula(for post: MomentPost, tableWidth: CGFloat) -> CGFloat {
         let outer: CGFloat = 8 + 8 + 12 + 12
         let contentW = max(0, tableWidth - (24 + 24 + 40 + 10 + 12))
-
         var heights: [CGFloat] = []
         heights.append(JobsFont.boldSystemFont(ofSize: 15).lineHeight)
-
         let fullTextCount = post.richText?.string.count ?? post.text.count
         let likelyNeedsMore = fullTextCount > 60
-
         let textH: CGFloat = {
             if let rich = post.richText {
                 let h = rich.boundingHeight(width: contentW, fontFallback: JobsFont.systemFont(ofSize: 14))
@@ -454,13 +436,10 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             }
         }()
         heights.append(textH)
-
         if !post.media.isEmpty {
             heights.append(MomentMediaView.height(for: post.media, width: contentW))
         }
-
         heights.append(22) // bottomBar
-
         if !post.comments.isEmpty {
             let commentsW = max(0, contentW - 16)
             var commentsH: CGFloat = 16
@@ -475,17 +454,14 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             }
             heights.append(commentsH)
         }
-
         let spacing: CGFloat = 6
         let spacingSum = CGFloat(max(0, heights.count - 1)) * spacing
         let stackH = heights.reduce(0, +) + spacingSum
-
         return ceil(outer + max(40, stackH) + 1)
     }
 }
 // MARK: - DSL
 extension MomentPostCell {
-
     @discardableResult
     func byOnTapMedia(_ cb: CellIntCallback?) -> Self {
         onTapMedia = cb

@@ -11,7 +11,6 @@ import JobsNetworking
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingGetDemoVC: JobsNetworkingMethodDemoVC {
-
     override func buildRequestPreview(triggerError: Bool) -> String {
         triggerError
         ? "GET /api/errors/get"
@@ -28,7 +27,6 @@ final class JobsNetworkingGetDemoVC: JobsNetworkingMethodDemoVC {
             ],
             encoding: .urlQuery
         )
-
         let raw = service.prettyJSONString(from: data)
         if triggerError, let error = service.decode(DioErrorResponse.self, from: data) {
             let render = prettyPrint([
@@ -40,7 +38,6 @@ final class JobsNetworkingGetDemoVC: JobsNetworkingMethodDemoVC {
             ])
             await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
-
         let resp = service.decode(DioGETResponse.self, from: data)
         let render = prettyPrint([
             "页面标题：\(resp?.data?.pageTitle ?? "--")",

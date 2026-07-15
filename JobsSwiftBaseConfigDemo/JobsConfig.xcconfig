@@ -60,3 +60,4 @@ OTHER_LDFLAGS = $(inherited) $(JOBS_UNITY_OTHER_LDFLAGS)
 // bridging header 已经做了条件 import，一般不需要额外 Header Search Paths / CFlags
 HEADER_SEARCH_PATHS    = $(inherited)
 OTHER_CFLAGS           = $(inherited)
+SWIFT_OBJC_BRIDGING_HEADER = $(SRCROOT)/JobsSwiftBaseConfigDemo/JobsSwiftBaseConfigDemo-Bridging-Header.h

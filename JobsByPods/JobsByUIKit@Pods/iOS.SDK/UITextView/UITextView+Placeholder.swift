@@ -109,12 +109,9 @@ public extension UITextView {
             true,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         let cls: AnyClass = UITextView.self
-
         let original = class_getInstanceMethod(cls, #selector(UITextView.layoutSubviews))
         let swizzled = class_getInstanceMethod(cls, #selector(UITextView.by_layoutSubviews))
-
         if let original = original, let swizzled = swizzled {
             method_exchangeImplementations(original, swizzled)
         }

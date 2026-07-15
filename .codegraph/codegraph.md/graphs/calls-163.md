@@ -12,79 +12,79 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASBatchFetchingTests::testHorizontalScrollToExactLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:140"]
-  T1["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S1["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
-  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S2["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
+  T2["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S2 -->|calls| T2
-  S3["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  S3["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
   T3["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S3 -->|calls| T3
-  S4["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
+  S4["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
   T4["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S4 -->|calls| T4
-  S5["method:ASBatchFetchingTests::testHorizontalScrollToLessThanLeading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:156"]
-  T5["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S5["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T5["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S5 -->|calls| T5
-  S6["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
-  T6["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S6["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
+  T6["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S6 -->|calls| T6
-  S7["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  S7["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
   T7["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S7 -->|calls| T7
-  S8["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
+  S8["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
   T8["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
   S8 -->|calls| T8
-  S9["method:ASBatchFetchingTests::testHorizontalScrollingPastContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:172"]
-  T9["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S9["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
+  T9["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
   S9 -->|calls| T9
-  S10["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
-  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S10["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
+  T10["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
   S10 -->|calls| T10
-  S11["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
-  T11["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S11["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  T11["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
   S11 -->|calls| T11
-  S12["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
-  T12["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S12["method:ASBridgedPropertiesTests::testTheresASharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:75"]
+  T12["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
   S12 -->|calls| T12
-  S13["method:ASBatchFetchingTests::testVerticalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:189"]
-  T13["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S13["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T13["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
   S13 -->|calls| T13
-  S14["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
-  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S14["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T14["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S14 -->|calls| T14
-  S15["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
-  T15["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S15["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
+  T15["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
   S15 -->|calls| T15
-  S16["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
-  T16["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S16["method:ASBridgedPropertiesTests::testThatSettingABridgedViewPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:104"]
+  T16["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S16 -->|calls| T16
-  S17["method:ASBatchFetchingTests::testHorizontalScrollingSmallContentSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBatchFetchingTests.mm:205"]
-  T17["function:ASDisplayShouldFetchBatchForContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASBatchFetching.mm:37"]
+  S17["method:ASBridgedPropertiesTests::testThatSettingABridgedViewPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:104"]
+  T17["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
   S17 -->|calls| T17
-  S18["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
-  T18["method:ASBridgedPropertiesTestView::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:29"]
+  S18["method:ASBridgedPropertiesTests::testThatSettingABridgedViewPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:104"]
+  T18["method:ASBridgedPropertiesTests::waitForMainDispatchQueueToFlush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:247"]
   S18 -->|calls| T18
-  S19["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
-  T19["method:ASBridgedPropertiesTestView::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:35"]
+  S19["method:ASBridgedPropertiesTests::testThatSettingABridgedLayerPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:117"]
+  T19["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S19 -->|calls| T19
-  S20["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
-  T20["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
+  S20["method:ASBridgedPropertiesTests::testThatSettingABridgedLayerPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:117"]
+  T20["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
   S20 -->|calls| T20
-  S21["method:ASBridgedPropertiesTests::testTheresASharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:75"]
-  T21["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S21["method:ASBridgedPropertiesTests::testThatSettingABridgedLayerPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:117"]
+  T21["method:ASBridgedPropertiesTests::waitForMainDispatchQueueToFlush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:247"]
   S21 -->|calls| T21
-  S22["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
-  T22["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S22["method:ASBridgedPropertiesTests::testThatReadingABridgedViewPropertyInBackgroundThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:130"]
+  T22["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S22 -->|calls| T22
-  S23["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
-  T23["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S23["method:ASBridgedPropertiesTests::testThatReadingABridgedViewPropertyInBackgroundThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:130"]
+  T23["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
   S23 -->|calls| T23
-  S24["method:ASBridgedPropertiesTests::DISABLED_testThatDirtyNodesAreNotRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:84"]
-  T24["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S24["method:ASBridgedPropertiesTests::testThatReadingABridgedViewPropertyInBackgroundThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:130"]
+  T24["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
   S24 -->|calls| T24
-  S25["method:ASBridgedPropertiesTests::testThatSettingABridgedViewPropertyInBackgroundGetsFlushedOnNextRunLoop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:104"]
+  S25["method:ASBridgedPropertiesTests::testThatReadingABridgedLayerPropertyInBackgroundThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:139"]
   T25["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
   S25 -->|calls| T25
 ```

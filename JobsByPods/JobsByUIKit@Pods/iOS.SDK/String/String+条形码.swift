@@ -28,14 +28,11 @@ extension String {
         f.setDefaults()
         f.setValue(msg, forKey: "inputMessage")
         f.setValue(quietSpace, forKey: "inputQuietSpace") // 左右静区
-
         guard let out = f.outputImage, size.width > 0, size.height > 0 else { return UIImage.make() }
-
         // 非等比缩放到目标尺寸（条形码需要明确宽高）
         let scaleX: CGFloat = size.width  / out.extent.width
         let scaleY: CGFloat = size.height / out.extent.height
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
-
         let ctx = CIContext()
         guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cg)
     }
@@ -71,7 +68,6 @@ extension String {
         let scaleX = width  / out.extent.width
         let scaleY = barHeight / out.extent.height
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
-
         let ctx = CIContext()
         guard let cgBar = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
         // 3) 计算文字区域高度（先用行高；若太宽会缩放字体）
@@ -79,14 +75,12 @@ extension String {
         var drawFont = font
         let attr: [NSAttributedString.Key: Any] = [.font: drawFont]
         var textSize = (self as NSString).size(withAttributes: attr)
-
         if textSize.width > width { // 太宽就按比例缩小字体
             let factor = width / textSize.width
             drawFont = JobsFont.monospacedDigitSystemFont(ofSize: max(8, font.pointSize * factor),
                                                   weight: (font.fontDescriptor.symbolicTraits.contains(.traitBold) ? .bold : .regular))
             textSize = (self as NSString).size(withAttributes: [.font: drawFont])
         }
-
         let totalHeight = barHeight + spacing + ceil(textSize.height)
         // 4) 合成：上条码、下文字
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: width, height: totalHeight))

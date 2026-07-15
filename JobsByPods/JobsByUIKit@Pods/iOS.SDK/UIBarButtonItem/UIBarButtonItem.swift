@@ -101,7 +101,7 @@ extension UIBarButtonItem {
         self.style = style
         return self
     }
-    
+
     @discardableResult
     public func byWidth(_ width: CGFloat) -> Self {
         self.width = width

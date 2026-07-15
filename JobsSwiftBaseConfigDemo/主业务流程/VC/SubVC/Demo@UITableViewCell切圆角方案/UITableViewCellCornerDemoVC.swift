@@ -16,12 +16,12 @@ import JobsScale
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import JobsInheritance
 import SnapKit
 import GKNavigationBarSwift
 
 // MARK: - UITableViewCellCornerDemoVC
-final class UITableViewCellCornerDemoVC: UIViewController {
-
+final class UITableViewCellCornerDemoVC: BaseVC {
     private var rowsPerSection: [Int] = [1, 3, 5, 2] // 用来演示 single/first/middle/last
 
     private lazy var tableView: UITableView = {
@@ -53,7 +53,6 @@ final class UITableViewCellCornerDemoVC: UIViewController {
 }
 // MARK: - UITableViewDataSource
 extension UITableViewCellCornerDemoVC: UITableViewDataSource {
-
     func numberOfSections(in tableView: UITableView) -> Int {
         rowsPerSection.count
     }
@@ -75,12 +74,11 @@ extension UITableViewCellCornerDemoVC: UITableViewDataSource {
 }
 // MARK: - UITableViewDelegate
 extension UITableViewCellCornerDemoVC: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         64
     }
-    
+
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -92,9 +90,7 @@ extension UITableViewCellCornerDemoVC: UITableViewDelegate {
                    forRowAt indexPath: IndexPath) {
         // 只处理我们 demo 的 cell
         guard let c = cell as? DemoInsetRoundTableViewCell else { return }
-
         let rows = tableView.numberOfRows(inSection: indexPath.section)
-
         let position: SectionCellPosition
         if rows == 1 {
             position = .single

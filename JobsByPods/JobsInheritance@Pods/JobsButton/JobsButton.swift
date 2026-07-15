@@ -93,7 +93,6 @@ public final class JobsButton: UIImageView {
         isUserInteractionEnabled = true
         clipsToBounds = false
         contentMode = .scaleToFill
-
         setupViewsIfNeeded()
         refreshUI()
     }
@@ -195,7 +194,6 @@ public final class JobsButton: UIImageView {
     // MARK: - DSL Type
     public struct JobsButtonLayoutDSL {
         fileprivate unowned let owner: JobsButton
-
         fileprivate init(owner: JobsButton) {
             self.owner = owner
         }
@@ -305,7 +303,6 @@ public final class JobsButton: UIImageView {
         let title = titleLabel.isHidden ? nil : titleLabel
         let sub = subtitleLabel.isHidden ? nil : subtitleLabel
         func compact(_ arr: [UIView?]) -> [UIView] { arr.compactMap { $0 } }
-
         switch mode {
         case .imageTopTextBottom:  return compact([image, title, sub])
         case .textTopImageBottom:  return compact([title, sub, image])

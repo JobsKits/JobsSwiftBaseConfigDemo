@@ -67,7 +67,6 @@ public struct JobsRichText {
         var finalString = ""
         var pieces: [(range: NSRange, run: JobsRichRun)] = []
         var cursor = 0
-
         for run in runs {
             switch run.payload {
             case .text(let s):
@@ -84,7 +83,6 @@ public struct JobsRichText {
                 cursor += 1
             }
         }
-
         let ms = NSMutableAttributedString(string: finalString)
         // 1) 全局段落样式（可选）
         if let ps = paragraphStyle {
@@ -98,7 +96,6 @@ public struct JobsRichText {
                     att.bounds = CGRect(origin: .zero, size: size)
                 }
                 ms.addAttribute(.attachment, value: att, range: range)
-
             case .text:
                 if let font = run.font {
                     ms.addAttribute(.font, value: font, range: range)
@@ -125,9 +122,7 @@ public struct JobsRichText {
                     ms.addAttribute(.link, value: url, range: range)
                 }
             }
-        }
-
-        return ms
+        };return ms
     }
     /// 等价工具：中划线
     public static func strike(_ s: String) -> NSAttributedString {

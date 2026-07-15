@@ -96,7 +96,6 @@ final class HKLocalRecordVC: BaseVC {
                         print("⚠️ 找不到对应方向摄像头：\(self.currentPosition)")
                         return
                     }
-
                     do {
                         try await self.mixer.attachVideo(device)
                         self.statusLabel.byText("📷 已切换到 \(self.currentPosition == .back ? "后置" : "前置") 摄像头")
@@ -181,7 +180,6 @@ final class HKLocalRecordVC: BaseVC {
         } catch {
             print("⚠️ attachVideo 失败：\(error)")
         }
-
         do {
             try await mixer.attachAudio(audioDevice)
         } catch {
@@ -242,7 +240,6 @@ final class HKLocalRecordVC: BaseVC {
             isRecording = false
             recordButton.bySelected(false)
             statusLabel.byText("✅ 已停止录制，正在保存到相册...".tr)
-
             saveToPhotoLibrary(outputURL)
         } catch {
             statusLabel.byText("❌ 停止录制失败：\(error.localizedDescription)")
@@ -256,7 +253,6 @@ final class HKLocalRecordVC: BaseVC {
                 print("⚠️ 没有照片权限，无法保存：\(status.rawValue)")
                 return
             }
-
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL)
             }, completionHandler: { saved, error in

@@ -70,9 +70,7 @@ public extension UIView {
         // 4) 记录引用
         self.jobs_lottieView = lottieView
         // 5) 自动播放（可选）
-        if autoPlay { lottieView.play() }
-
-        return lottieView
+        if autoPlay { lottieView.play() };return lottieView
     }
     // MARK: 入口（重载）：直接传 LottieAnimation
     /// 你也可以先用 `LottieAnimation.named(...)` 自行解析，再走这个重载
@@ -92,7 +90,6 @@ public extension UIView {
         lottieView.animationSpeed = speed
         lottieView.contentMode = contentMode
         lottieView.backgroundBehavior = backgroundBehavior
-
         if lottieView.superview !== self {
             addSubview(lottieView)
         }

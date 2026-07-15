@@ -73,14 +73,12 @@ extension UIButton {
             guard let self else { return }
             // ✅ 关键：把文字层提到最前，避免被 shimmer overlay 盖住
             if let tl = self.titleLabel { self.bringSubviewToFront(tl) }
-
             // subTitle 很可能也是 UILabel（bySubTitle 添加的），一起提到最前
             for v in self.subviews where v is UILabel {
                 self.bringSubviewToFront(v)
             }
             // 如果按钮还有前景图，也一并提到最前（可选）
             if let iv = self.imageView { self.bringSubviewToFront(iv) }
-
             self.jobs_updateShimmerLayout()
         }
     }

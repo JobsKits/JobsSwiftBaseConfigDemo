@@ -56,7 +56,7 @@ extension UIButton {
             )
         }
     }
-    
+
     private var _legacyRichSubMap: [StateRaw: NSAttributedString] {
         get { objc_getAssociatedObject(self, &_richSubKey) as? [StateRaw: NSAttributedString] ?? [:] }
         set {
@@ -67,7 +67,7 @@ extension UIButton {
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    
+
     var _jobsTitlePadding: CGFloat {
         get {
             (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0
@@ -81,7 +81,7 @@ extension UIButton {
             )
         }
     }
-    
+
     var _jobsLegacyTitlePadding: CGFloat {
         get { (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0 }
         set {
@@ -100,7 +100,7 @@ extension UIButton {
         if let r = rich { m[k] = r } else { m.removeValue(forKey: k) }
         _legacyRichTitleMap = m
     }
-    
+
     private func _setLegacyRichSubTitle(_ rich: NSAttributedString?, for state: UIControl.State) {
         var m = _legacyRichSubMap
         let k = state.rawValue
@@ -131,17 +131,14 @@ extension UIButton {
                 p.paragraphSpacingBefore = padding
                 // 如果你还想保持居中（也可以不写，取 label alignment）
                 p.alignment = titleLabel?.textAlignment ?? .center
-
                 subMutable.addAttribute(.paragraphStyle,
                                         value: p,
                                         range: NSRange(location: 0, length: subMutable.length))
             }
-
             let combined = NSMutableAttributedString()
             combined.append(t)
             combined.append(NSAttributedString(string: "\n")) // 保留换行（必须要有两行）
             combined.append(subMutable)
-
             byAttributedTitle(combined, for: state)
         }
     }

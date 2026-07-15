@@ -25,7 +25,6 @@ final class ImageLoader {
         imageView.byImage(placeholder)
         guard let url = url else { return nil }
         if let cached = cache.object(forKey: url as NSURL) { imageView.byImage(cached); return nil }
-
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             var img: UIImage? = nil
             if let d = data { img = UIImage(data: d) }

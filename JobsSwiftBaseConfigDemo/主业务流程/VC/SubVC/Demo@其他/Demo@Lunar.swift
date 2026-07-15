@@ -67,7 +67,6 @@ final class LunarDemoVC: BaseVC {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
@@ -114,7 +113,6 @@ final class LunarDemoVC: BaseVC {
                     self.tableView.switchRefreshFooter(to: .noMoreData)
                 }
             }
-
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -211,12 +209,10 @@ final class LunarDemoVC: BaseVC {
         let hh  = c.hour   ?? 0
         let mm  = c.minute ?? 0
         let ss  = c.second ?? 0
-
         // 不同版本可能是 year/month/day 标签（而非 solarYear/solarMonth/...）
         let solar = Solar.fromYmdHms(year: y, month: m, day: d, hour: hh, minute: mm, second: ss)
         let solarStr = solar.fullString
         let lunarStr = solar.lunar.description
-
         return [
             .init(title: "公历".tr, value: solarStr),
             .init(title: "农历".tr, value: lunarStr)
@@ -229,7 +225,6 @@ final class LunarDemoVC: BaseVC {
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
 extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
-
     func numberOfSections(in tableView: UITableView) -> Int { Section.allCases.count }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -256,7 +251,6 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
         case .today:       row = todayRows[indexPath.row]
         case .interactive: row = interactiveRows[indexPath.row]
         }
-
         if #available(iOS 14.0, *) {
             var cfg = cell.defaultContentConfiguration()
             cfg.text = row.title

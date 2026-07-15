@@ -42,7 +42,6 @@ final class CardNode: ASDisplayNode {
         self.theme = theme
         super.init()
         automaticallyManagesSubnodes = true
-
         titleNode.attributedText = NSAttributedString(
             string: item.title,
             attributes: [.font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
@@ -53,7 +52,6 @@ final class CardNode: ASDisplayNode {
             attributes: [.font: JobsFont.systemFont(ofSize: 13),
                          .foregroundColor: JobsCor.secondaryLabel]
         )
-
         switch item.kind {
         case .text:
             let text = ASTextNode()
@@ -63,7 +61,6 @@ final class CardNode: ASDisplayNode {
                              .foregroundColor: JobsCor.label]
             )
             contentNode = text
-
         case .image:
             let img = ASImageNode()
             img.image = item.image ?? "photo".sysImg
@@ -72,7 +69,6 @@ final class CardNode: ASDisplayNode {
             img.clipsToBounds = true
             img.cornerRadius = 8
             contentNode = img
-
         case .button:
             let btn = ASButtonNode()
             btn.setTitle("Tap Me", with: JobsFont.systemFont(ofSize: 15, weight: .medium), with: theme, for: .normal)
@@ -81,7 +77,6 @@ final class CardNode: ASDisplayNode {
             btn.cornerRadius = 8
             btn.addTarget(self, action: #selector(handleTap), forControlEvents: .touchUpInside)
             contentNode = btn
-
         case .flexRow:
             // 横向 3 列，等比伸展（flexGrow）
             let a = textNode("A", color: theme)
@@ -99,7 +94,6 @@ final class CardNode: ASDisplayNode {
                 row.justifyContent = .spaceBetween
                 row.children = [a, b, c].compactMap { $0 };return row
             }
-
         case .flexColumn:
             let t1 = textNode("1️⃣ 上")
             let t2 = textNode("2️⃣ 中", color: JobsCor.secondaryLabel)
@@ -111,11 +105,9 @@ final class CardNode: ASDisplayNode {
                 col.spacing = 4
                 col.children = [t1, t2, t3].compactMap { $0 };return col
             }
-
         case .insetCard:
             let t = textNode("ASInsetLayoutSpec: 卡片内容留白。")
             contentNode = t
-
         case .backgroundOverlay:
             let baseImage = ASImageNode()
             baseImage.image = "photo".sysImg
@@ -123,12 +115,9 @@ final class CardNode: ASDisplayNode {
             baseImage.contentMode = .scaleAspectFill
             baseImage.cornerRadius = 6
             baseImage.clipsToBounds = true
-
             let bg = ASDisplayNode()
             bg.backgroundColor = JobsCor.tertiarySystemFill
-
             let overlay = textNode("Overlay", font: JobsFont.systemFont(ofSize: 12, weight: .semibold), color: theme)
-
             // 直接作为内容树子节点，布局时组合 Background+Overlay
             addSubnode(baseImage)
             addSubnode(bg)
@@ -140,7 +129,6 @@ final class CardNode: ASDisplayNode {
                 let ovInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 4, left: 6, bottom: 0, right: 0), child: ov)
                 return ASOverlayLayoutSpec(child: bgSpec, overlay: ovInset)
             }
-
         case .center:
             let inner = textNode("居中", font: JobsFont.systemFont(ofSize: 14, weight: .medium), color: theme)
             addSubnode(inner)
@@ -148,7 +136,6 @@ final class CardNode: ASDisplayNode {
             self._customContentLayout = { [weak inner] in
                 guard let inner = inner else { return ASLayoutSpec() };return ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: inner)
             }
-
         case .ratio:
             // 16:9
             let img = ASImageNode()
@@ -160,7 +147,6 @@ final class CardNode: ASDisplayNode {
             self._customContentLayout = { [weak img] in
                 guard let img = img else { return ASLayoutSpec() };return ASRatioLayoutSpec(ratio: 16.0 / 9.0, child: img)
             }
-
         case .zstack:
             let bottom = ASImageNode()
             bottom.image = "photo".sysImg
@@ -168,7 +154,6 @@ final class CardNode: ASDisplayNode {
             bottom.contentMode = .scaleAspectFill
             bottom.cornerRadius = 6
             bottom.clipsToBounds = true
-
             let top = textNode("Top", font: JobsFont.systemFont(ofSize: 12), color: JobsCor.white)
             addSubnode(bottom); addSubnode(top)
             contentNode = ASDisplayNode()
@@ -222,11 +207,9 @@ final class KitchenSinkNode: ASScrollNode {
           self.items = items
           self.theme = theme
           super.init()
-
           automaticallyManagesSubnodes = true
           automaticallyManagesContentSize = true   // ✅ 关键
           scrollableDirections = .down             // ✅ 关键
-
           buildsCards()
       }
 
@@ -241,7 +224,6 @@ final class KitchenSinkNode: ASScrollNode {
         v.alignItems = .stretch
         v.children = cardNodes
         v.style.width = ASDimension(unit: .fraction, value: 1.0)
-
         return ASInsetLayoutSpec(
             insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0),
             child: v

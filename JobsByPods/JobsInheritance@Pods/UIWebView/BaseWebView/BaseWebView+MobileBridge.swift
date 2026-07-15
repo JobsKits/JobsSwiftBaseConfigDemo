@@ -20,22 +20,18 @@ public extension BaseWebView {
     struct MobileBridgeConfig {
         public var injectShim: Bool = true                             // 无前端桥时的兜底
         public var tokenProvider: (@Sendable () async -> String?)?     // 异步 token
-
         public var onNavigateHome: (jobsByVoidBlock)? = nil
         public var onNavigateLogin: (jobsByVoidBlock)? = nil
         public var onNavigateDeposit: (jobsByVoidBlock)? = nil
         public var onCloseWebView: (jobsByVoidBlock)? = nil
         public var onShowToast: ((String) -> Void)? = nil
         public var onUnknownAction: ((String, [String: Any]) -> Void)? = nil
-
         public init() {}
-
         public static func defaults() -> Self { .init() }
     }
 }
 // MARK: - MobileBridgeConfig · 链式 DSL
 public extension BaseWebView.MobileBridgeConfig {
-
     @discardableResult
     func byInjectShim(_ on: Bool = true) -> Self {
         var c = self

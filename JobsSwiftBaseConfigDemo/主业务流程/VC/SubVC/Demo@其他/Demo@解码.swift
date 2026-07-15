@@ -198,7 +198,6 @@ final class SafeCodableDemoVC: BaseVC {
 }
 
 extension SafeCodableDemoVC {
-    
     private func makeValueLabel(baseline: UILabel?) -> UILabel {
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -237,12 +236,10 @@ extension SafeCodableDemoVC {
     private func decodeCurrentJSON() {
         clearValues()
         clearLog()
-
         guard let data = jsonTextView.text.data(using: .utf8) else {
             appendLog("❌ 无法转成 Data")
             return
         }
-
         do {
             let user = try JSONDecoder().decode(User.self, from: data)
             render(user)

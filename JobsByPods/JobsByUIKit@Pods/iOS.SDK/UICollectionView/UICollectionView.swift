@@ -364,7 +364,6 @@ private struct JobsCollectionViewDelegateMuxAssociatedKeys {
 final class JobsCollectionViewDelegateMux: NSObject,
                                            UICollectionViewDelegate,
                                            UICollectionViewDelegateFlowLayout {
-
     weak var primary: NSObjectProtocol?
     weak var secondary: NSObjectProtocol?
 
@@ -390,15 +389,12 @@ extension UICollectionView {
     // MARK: Swizzle setDelegate: for hard defense
     private static let jobs_swizzleDelegateOnce: Void = {
         let cls: AnyClass = UICollectionView.self
-
         let originalSelector = #selector(setter: UICollectionView.delegate)
         let swizzledSelector = #selector(UICollectionView.jobs_setDelegate_swizzled(_:))
-
         guard
             let originalMethod = class_getInstanceMethod(cls, originalSelector),
             let swizzledMethod = class_getInstanceMethod(cls, swizzledSelector)
         else { return }
-
         method_exchangeImplementations(originalMethod, swizzledMethod)
     }()
     /// 开启“硬防覆盖”：任何外部 set delegate 都会被捕获并塞回 mux.secondary，然后把 mux 抢回 delegate
@@ -409,7 +405,6 @@ extension UICollectionView {
     @objc private func jobs_setDelegate_swizzled(_ delegate: UICollectionViewDelegate?) {
         // 这里调用的是“原始 setDelegate:”（因为已经交换过实现）
         self.jobs_setDelegate_swizzled(delegate)
-
         // 如果当前 collectionView 安装了 mux，并且外部试图覆盖 delegate，则把外部 delegate 塞回 secondary，再把 mux 抢回
         if let mux = objc_getAssociatedObject(self, &JobsCollectionViewDelegateMuxAssociatedKeys.muxKey) as? JobsCollectionViewDelegateMux {
             if let d = delegate as AnyObject?, d !== mux {
@@ -436,7 +431,6 @@ extension UICollectionView {
         if let current = self.delegate as AnyObject?, current !== mux {
             mux.secondary = current as? NSObjectProtocol
         }
-
         objc_setAssociatedObject(
             self,
             &JobsCollectionViewDelegateMuxAssociatedKeys.muxKey,

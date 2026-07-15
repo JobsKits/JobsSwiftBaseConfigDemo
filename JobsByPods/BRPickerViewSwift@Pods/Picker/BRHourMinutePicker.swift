@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     private var selectDate: Date = Date()
     private var minuteInterval: Int = 5
 
@@ -30,17 +29,14 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
     public override func buildContentView() -> UIView {
         picker.delegate = self
         picker.dataSource = self
-
         let cal = BRCalendar.gregorian
         let h = cal.component(.hour, from: selectDate)
         let m = cal.component(.minute, from: selectDate)
         let step = minuteInterval
         let snapped = (m / step) * step
         let minuteRow = snapped / step
-
         picker.selectRow(h, inComponent: 0, animated: false)
         picker.selectRow(minuteRow, inComponent: 1, animated: false)
-
         // Default state: no highlight until user scrolls.
         lastSelectedRow[0] = picker.selectedRow(inComponent: 0)
         lastSelectedRow[1] = picker.selectedRow(inComponent: 1)
@@ -52,12 +48,10 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
         let y = cal.component(.year, from: selectDate)
         let mo = cal.component(.month, from: selectDate)
         let d = cal.component(.day, from: selectDate)
-
         let h = hours[picker.selectedRow(inComponent: 0)]
         let step = minuteInterval
         let minuteRow = picker.selectedRow(inComponent: 1)
         let mi = minuteRow * step
-
         var comps = DateComponents()
         comps.year = y
         comps.month = mo
@@ -65,7 +59,6 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
         comps.hour = h
         comps.minute = mi
         comps.second = 0
-
         if let date = cal.date(from: comps) {
             send(date)
         }
@@ -97,10 +90,8 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let old = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
-
         // mark user interaction for this component
         touchedComponents.insert(component)
-
         br_on_main_async { [weak self] in
             guard let self else { return }
             self.applyRowColor(pickerView, component: component, row: old, selected: false)
@@ -111,7 +102,6 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
                 selected: self.touchedComponents.contains(component)
             )
         }
-
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()

@@ -66,11 +66,9 @@ public enum JobsScale {
         self.designW = designWidth
         self.designH = designHeight
         self.useSafeArea = useSafeArea
-
         self.fontMode = fontMode
         self.fontMinScale = fontMinScale
         self.fontMaxScale = fontMaxScale
-
         if let bps = fontBreakpoints, !bps.isEmpty {
             self.fontBreakpoints = bps
         }
@@ -82,17 +80,14 @@ public enum JobsScale {
     public static var screenSize: CGSize {
         let base = Screen.size
         guard useSafeArea else { return base }
-
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.windowLevel == .normal,
            !window.isHidden,
            window.alpha > 0.01,
            window.bounds.size != .zero {
-
             let insets = window.safeAreaInsets
             let w = max(0, window.bounds.width - (insets.left + insets.right))
             let h = max(0, window.bounds.height - (insets.top + insets.bottom))
-
             if w > 0, h > 0 {
                 return CGSize(width: w, height: h)
             }
@@ -106,7 +101,6 @@ public enum JobsScale {
     public static var fontScale: CGFloat {
         let w = screenSize.width
         let raw: CGFloat
-
         switch fontMode {
         case .continuous:
             raw = w / designW

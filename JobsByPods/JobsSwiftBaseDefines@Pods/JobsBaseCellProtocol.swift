@@ -40,7 +40,6 @@ public protocol UITableViewCellInsetProtocol: AnyObject {
 }
 
 public extension UITableViewCellInsetProtocol where Self: UITableViewCell {
-    
     var contentInsets: UIEdgeInsets { .init(top: 8, left: 16, bottom: 8, right: 16) }
     var shouldInsetSeparator: Bool { true }
 
@@ -55,11 +54,9 @@ public extension UITableViewCellInsetProtocol where Self: UITableViewCell {
         f.origin.y += inset.top
         f.size.width -= (inset.left + inset.right)
         f.size.height -= (inset.top + inset.bottom)
-
         // 防御：避免出现负数（例如极端小高度、或外界错误 insets）
         if f.size.width < 0 { f.size.width = 0 }
         if f.size.height < 0 { f.size.height = 0 }
-
         contentView.frame = f
         // layoutMargins 同步（可选，主要影响 cell 内部系统控件/constraints 的默认边距）
         contentView.layoutMargins = UIEdgeInsets(
@@ -125,7 +122,6 @@ public protocol SectionCornerRoundable: AnyObject {
 }
 
 extension SectionCornerRoundable where Self: UITableViewCell {
-
     public var sectionCornerRadius: CGFloat { 8 }
     public func applySectionCorners(_ position: SectionCellPosition) {
         // 先重置（避免复用残留）
@@ -150,7 +146,6 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
-
         case .first:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
@@ -158,7 +153,6 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
-
         case .last:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
@@ -166,7 +160,6 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
-
         case .middle:
             // 保持重置后的状态：无圆角
             break

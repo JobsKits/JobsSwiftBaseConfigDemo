@@ -35,7 +35,6 @@ final class DemoInnerPresentView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.byVisible(YES)
-
         addGestureRecognizer(
             UITapGestureRecognizer
                 .byConfig { gr in

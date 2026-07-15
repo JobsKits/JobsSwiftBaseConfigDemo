@@ -55,7 +55,6 @@ final class JobsControlEventsDemoVC: BaseVC {
 }
 
 extension JobsControlEventsDemoVC {
-    
     private func buildDemos() {
         stack.byAlpha(1)
         demo_Switch_onJobsChange()

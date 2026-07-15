@@ -23,7 +23,6 @@ import GKNavigationBarSwift
 final class FeedListVC: BaseVC,
                         UITableViewDataSource,
                         UITableViewDelegate {
-
     private var allItems: [FeedItem] = []
     private var items: [FeedItem] = []
     private var page = 1

@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     private var columns: [[String]] = []
     private var selectedRows: [Int] = []
     private let picker = UIPickerView()
@@ -76,10 +75,8 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         // mark user interaction for this component
         touchedComponents.insert(component)
-
         let old = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
-
         // update colors only for changed component
         br_on_main_async { [weak self] in
             guard let self else { return }
@@ -91,7 +88,6 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
                 selected: self.touchedComponents.contains(component)
             )
         }
-
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()

@@ -120,7 +120,6 @@ public final class CrashLogCenter {
         let url = crashLogURL
         let line = text.hasSuffix("\n") ? text : (text + "\n")
         guard let data = line.data(using: .utf8) else { return }
-
         let path = url.path
         path.withCString { cPath in
             // O_APPEND：始终追加；0644：rw-r--r--
@@ -154,11 +153,9 @@ public final class CrashLogCenter {
             defer {
                 if #available(iOS 13.0, *) { try? fh.close() } else { fh.closeFile() }
             }
-
             let attr = try FileManager.default.attributesOfItem(atPath: url.path)
             let size = (attr[.size] as? NSNumber)?.int64Value ?? 0
             let tail = Int64(max(0, size - Int64(kilobytes) * 1024))
-
             if #available(iOS 13.4, *) {
                 try fh.seek(toOffset: UInt64(tail))
                 let data = try fh.readToEnd() ?? Data()
@@ -251,7 +248,6 @@ final class CrashCatcher {
         ===============================================================
         """
         CrashLogCenter.shared.writeCrashSync(msg)
-
         // 还原默认处理并重新触发，让系统生成标准 crash（方便系统日志/三方平台抓）
         Darwin.signal(signo, SIG_DFL)
         raise(signo)

@@ -23,17 +23,14 @@ public enum JobsSwiftMessageToast {
         view.configureTheme(.info)
         view.configureDropShadow()
         view.button?.byHidden(true)
-
         // 标题可留空，只用 body
         view.configureContent(title: "", body: text)
-
         var config = SwiftMessages.Config()
         config.presentationStyle = .top // 或 .bottom
         config.presentationContext = .window(windowLevel: .statusBar)
         config.duration = .seconds(seconds: duration)
         config.interactiveHide = false
         config.dimMode = .none
-
         SwiftMessages.show(config: config, view: view)
     }
 }

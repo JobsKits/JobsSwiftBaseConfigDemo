@@ -21,31 +21,31 @@ extension UITextView {
         self.text = string
         return self
     }
-    
+
     @discardableResult
     public func byTextColor(_ color: UIColor) -> Self {
         self.textColor = color
         return self
     }
-    
+
     @discardableResult
     public func byFont(_ f: UIFont) -> Self {
         self.font = f
         return self
     }
-    
+
     @discardableResult
     public func byTextAlignment(_ alignment: NSTextAlignment) -> Self {
         self.textAlignment = alignment
         return self
     }
-    
+
     @discardableResult
     public func byAttributedText(_ attrText: NSAttributedString?) -> Self {
         self.attributedText = attrText
         return self
     }
-    
+
     @discardableResult
     public func byTypingAttributes(_ attrs: [NSAttributedString.Key: Any]) -> Self {
         self.typingAttributes = attrs
@@ -57,19 +57,19 @@ extension UITextView {
         self.isEditable = editable
         return self
     }
-    
+
     @discardableResult
     public func bySelectable(_ selectable: Bool) -> Self {
         self.isSelectable = selectable
         return self
     }
-    
+
     @discardableResult
     public func byDataDetectorTypes(_ types: UIDataDetectorTypes) -> Self {
         self.dataDetectorTypes = types
         return self
     }
-    
+
     @discardableResult
     public func byAllowsEditingTextAttributes(_ allow: Bool) -> Self {
         self.allowsEditingTextAttributes = allow
@@ -81,19 +81,19 @@ extension UITextView {
         self.keyboardType = type
         return self
     }
-    
+
     @discardableResult
     public func byInputView(_ view: UIView?) -> Self {
         self.inputView = view
         return self
     }
-    
+
     @discardableResult
     public func byInputAccessoryView(_ view: UIView?) -> Self {
         self.inputAccessoryView = view
         return self
     }
-    
+
     @discardableResult
     public func byClearsOnInsertion(_ clear: Bool) -> Self {
         self.clearsOnInsertion = clear
@@ -145,7 +145,7 @@ extension UITextView {
         self.writingToolsBehavior = behavior
         return self
     }
-    
+
     @available(iOS 18.0, *)
     @discardableResult
     public func byAllowedWritingToolsResultOptions(_ options: UIWritingToolsResultOptions) -> Self {
@@ -183,138 +183,137 @@ extension UITextView {
 
 // MARK: - 闭包重载@单参数
 extension UITextView {
-    
     @discardableResult
     public func byText(_ builder: () -> String?) -> Self {
         self.text = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTextColor(_ builder: () -> UIColor) -> Self {
         self.textColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byFont(_ builder: () -> UIFont) -> Self {
         self.font = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
         self.textAlignment = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAttributedText(_ builder: () -> NSAttributedString?) -> Self {
         self.attributedText = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTypingAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.typingAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byEditable(_ builder: () -> Bool) -> Self {
         self.isEditable = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySelectable(_ builder: () -> Bool) -> Self {
         self.isSelectable = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDataDetectorTypes(_ builder: () -> UIDataDetectorTypes) -> Self {
         self.dataDetectorTypes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAllowsEditingTextAttributes(_ builder: () -> Bool) -> Self {
         self.allowsEditingTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byKeyboardType(_ builder: () -> UIKeyboardType) -> Self {
         self.keyboardType = builder()
         return self
     }
-    
+
     @discardableResult
     public func byInputView(_ builder: () -> UIView?) -> Self {
         self.inputView = builder()
         return self
     }
-    
+
     @discardableResult
     public func byInputAccessoryView(_ builder: () -> UIView?) -> Self {
         self.inputAccessoryView = builder()
         return self
     }
-    
+
     @discardableResult
     public func byClearsOnInsertion(_ builder: () -> Bool) -> Self {
         self.clearsOnInsertion = builder()
         return self
     }
-    
+
     @discardableResult
     public func byLinkTextAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.linkTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     @available(iOS 13.0, *)
     public func byUsesStandardTextScaling(_ builder: () -> Bool) -> Self {
         self.usesStandardTextScaling = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTextContainerInset(_ builder: () -> UIEdgeInsets) -> Self {
         self.textContainerInset = builder()
         return self
     }
-    
+
     @available(iOS 16.0, *)
     @discardableResult
     public func byFindInteractionEnabled(_ builder: () -> Bool) -> Self {
         self.isFindInteractionEnabled = builder()
         return self
     }
-    
+
     @available(iOS 17.0, *)
     @discardableResult
     public func byBorderStyle(_ builder: () -> UITextView.BorderStyle) -> Self {
         self.borderStyle = builder()
         return self
     }
-    
+
     @available(iOS 18.0, *)
     @discardableResult
     public func byTextHighlightAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.textHighlightAttributes = builder()
         return self
     }
-    
+
     @available(iOS 18.0, *)
     @discardableResult
     public func byWritingToolsBehavior(_ builder: () -> UIWritingToolsBehavior) -> Self {
         self.writingToolsBehavior = builder()
         return self
     }
-    
+
     @available(iOS 18.0, *)
     @discardableResult
     public func byAllowedWritingToolsResultOptions(_ builder: () -> UIWritingToolsResultOptions) -> Self {
@@ -323,20 +322,20 @@ extension UITextView {
         self.allowedWritingToolsResultOptions = safe
         return self
     }
-    
+
     @available(iOS 18.0, *)
     @discardableResult
     public func byTextFormattingConfiguration(_ builder: () -> UITextFormattingViewController.Configuration) -> Self {
         self.textFormattingConfiguration = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDelegate(_ builder: () -> UITextViewDelegate?) -> Self {
         self.delegate = builder()
         return self
     }
-    
+
     @available(iOS 10.0, *)
     @discardableResult
     public func byDynamicTextStyle(_ builder: () -> UIFont.TextStyle) -> Self {
@@ -344,7 +343,7 @@ extension UITextView {
         self.adjustsFontForContentSizeCategory = true
         return self
     }
-    
+
     @discardableResult
     public func byLineFragmentPadding(_ builder: () -> CGFloat) -> Self {
         return byTextContainer { $0.lineFragmentPadding = builder() }

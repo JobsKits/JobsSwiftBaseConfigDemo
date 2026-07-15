@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     private var data: [BRAreaNode] = []
     private let picker = UIPickerView()
 
@@ -44,13 +43,10 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     public override func buildContentView() -> UIView {
         picker.delegate = self
         picker.dataSource = self
-
         provinces = data
         cities = provinces.first?.children ?? []
         districts = cities.first?.children ?? []
-
         applyPendingSelectionIfNeeded()
-
         // Default state: no highlight until user scrolls.
         for c in 0..<3 {
             lastSelectedRow[c] = picker.selectedRow(inComponent: c)
@@ -60,17 +56,14 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     public override func confirmSelection() {
         guard !provinces.isEmpty else { return }
         let p = provinces[picker.selectedRow(inComponent: 0)].name
-
         let c: String?
         if !cities.isEmpty, picker.selectedRow(inComponent: 1) < cities.count {
             c = cities[picker.selectedRow(inComponent: 1)].name
         } else { c = nil }
-
         let d: String?
         if !districts.isEmpty, picker.selectedRow(inComponent: 2) < districts.count {
             d = districts[picker.selectedRow(inComponent: 2)].name
         } else { d = nil }
-
         send(BRAreaSelection(province: p, city: c, district: d))
     }
 
@@ -95,7 +88,6 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         label.font = theme.pickerFont
         label.textColor = theme.pickerTextColor
         label.backgroundColor = .clear
-
         switch component {
         case 0: label.text = provinces[row].name
         case 1: label.text = cities[row].name
@@ -104,13 +96,10 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
         // mark user interaction for this component
         touchedComponents.insert(component)
-
         let oldRow = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
-
         if component == 0 {
             // province changed -> reset cities & districts
             let p = provinces[row]
@@ -134,7 +123,6 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
             pickerView.selectRow(0, inComponent: 2, animated: false)
             lastSelectedRow[2] = 0
         }
-
         // colors
         br_on_main_async { [weak self] in
             guard let self else { return }
@@ -145,19 +133,15 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
                 row: row,
                 selected: self.touchedComponents.contains(component)
             )
-
             // If province changed, city/district were reset & reloaded.
             if component == 0 {
                 let cityComp = 1
                 let districtComp = 2
-
                 let cityRow = pickerView.selectedRow(inComponent: cityComp)
                 self.applyRowColor(pickerView, component: cityComp, row: cityRow, selected: self.touchedComponents.contains(cityComp))
-
                 let districtRow = pickerView.selectedRow(inComponent: districtComp)
                 self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
             }
-
             // If city changed, district was reset & reloaded.
             if component == 1 {
                 let districtComp = 2
@@ -165,7 +149,6 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
                 self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
             }
         }
-
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()

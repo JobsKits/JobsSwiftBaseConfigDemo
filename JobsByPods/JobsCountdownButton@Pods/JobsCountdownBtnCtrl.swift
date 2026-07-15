@@ -37,44 +37,35 @@ private struct JobsLegacyButtonState {
 
     init(_ button: UIButton) {
         self.isEnabled = button.jobs_effectiveState != .disabled
-
         self.titleNormal = button.jobs_title(for: .normal)
         self.titleSelected = button.jobs_title(for: .selected)
         self.attrTitleNormal = button.jobs_attributedTitle(for: .normal)
         self.attrTitleSelected = button.jobs_attributedTitle(for: .selected)
-
         self.titleColorNormal = button.jobs_titleColor(for: .normal)
         self.titleColorSelected = button.jobs_titleColor(for: .selected)
-
         self.imageNormal = button.jobs_foregroundImage(for: .normal)
         self.imageSelected = button.jobs_foregroundImage(for: .selected)
-
         self.backgroundImageNormal = button.jobs_backgroundImage(for: .normal)
         self.backgroundImageSelected = button.jobs_backgroundImage(for: .selected)
     }
 
     func restore(to button: UIButton) {
         button.byEnabled(isEnabled)
-
         // 使用你自己的「DSL」API 做复原（避免直接 setXxx 导致 iOS15+ configuration 打架）
         if let attrTitleNormal {
             button.byAttributedTitle(attrTitleNormal, for: .normal)
         } else {
             button.byTitle(titleNormal, for: .normal)
         }
-
         if let attrTitleSelected {
             button.byAttributedTitle(attrTitleSelected, for: .selected)
         } else {
             button.byTitle(titleSelected, for: .selected)
         }
-
         button.byTitleColor(titleColorNormal, for: .normal)
         button.byTitleColor(titleColorSelected, for: .selected)
-
         button.byImage(imageNormal, for: .normal)
         button.byImage(imageSelected, for: .selected)
-
         button.byBgImage(backgroundImageNormal, for: .normal)
         button.byBgImage(backgroundImageSelected, for: .selected)
     }
@@ -89,7 +80,6 @@ private struct JobsLegacyButtonState {
 
 // MARK: - 内部控制器
 public final class JobsCountdownBtnCtrl {
-
     weak var button: UIButton?
     public var config: JobsCountdownBtnConfig
     private var timer: JobsSwiftTimerProtocol?
@@ -104,7 +94,6 @@ public final class JobsCountdownBtnCtrl {
     init(button: UIButton, config: JobsCountdownBtnConfig) {
         self.button = button
         self.config = config
-
         self.baseLegacyState = JobsLegacyButtonState(button)
         if #available(iOS 15.0, *) {
             self.baseConfiguration_iOS15 = button.configuration ?? .plain()
@@ -144,7 +133,6 @@ extension JobsCountdownBtnCtrl {
         if !config.clickableWhileRunning {
             btn.byEnabled(false)
         }
-
         let tConfig = JobsSwiftTimerConfig(
             interval: config.interval,
             repeats: true,
@@ -162,7 +150,6 @@ extension JobsCountdownBtnCtrl {
                 self?.onTickMainActor()
             }
         }
-
         timer = t
         t.start()
         isRunning = true
@@ -172,7 +159,6 @@ extension JobsCountdownBtnCtrl {
         isRunning = false
         timer?.stop()
         timer = nil
-
         guard let btn = button else { return }
         btn.byEnabled(true)
         if resetUI {
@@ -201,24 +187,20 @@ extension JobsCountdownBtnCtrl {
             stop(resetUI: false)
             return
         }
-
         switch config.mode {
         case .down:
             current -= 1
             let sec = max(0, current)
             applyRender(sec: sec)
             config.onTick?(btn, config, sec)
-
             if sec <= 0 {
                 finishMainActor()
             }
-
         case .up(let to):
             current += 1
             let sec = min(to, current)
             applyRender(sec: sec)
             config.onTick?(btn, config, sec)
-
             if sec >= to {
                 finishMainActor()
             }
@@ -228,12 +210,10 @@ extension JobsCountdownBtnCtrl {
     @MainActor
     private func applyRender(sec: Int) {
         guard let btn = button else { return }
-
         if #available(iOS 15.0, *) {
             var cfg = btn.configuration
                 ?? (baseConfiguration_iOS15 as? UIButton.Configuration)
                 ?? .plain()
-
             // iOS 15+：走 UIButton.Configuration 渲染
             if let renderer = config.renderConfiguration {
                 cfg = renderer(sec, cfg)
@@ -241,7 +221,6 @@ extension JobsCountdownBtnCtrl {
             btn.byConfiguration(cfg)
             return
         }
-
         // iOS 14 及以下：走 legacy 渲染（不删你的逻辑，只是把渲染出口换到 closure）
         config.renderLegacy?(sec, btn)
     }
@@ -252,7 +231,6 @@ extension JobsCountdownBtnCtrl {
             stop(resetUI: false)
             return
         }
-
         stop(resetUI: true)
         config.onFinish?(btn, config)
     }

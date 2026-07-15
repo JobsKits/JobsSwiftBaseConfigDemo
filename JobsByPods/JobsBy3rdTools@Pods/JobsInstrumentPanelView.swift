@@ -105,11 +105,9 @@ public final class FTDashboardView: UIView {
     public func setProgress(_ value: CGFloat, animated: Bool = true, duration: CFTimeInterval = 0.6) {
         // 通过 .byVisible(YES) 触发懒加载 + 显示（符合项目的调用习惯）
         valueLabel.byVisible(YES)
-
         let clamped = max(0, min(1, value))
         progress = clamped
         valueLabel.byText(valueFormatter(clamped))
-
         // strokeEnd
         if animated {
             let anim = CABasicAnimation(keyPath: "strokeEnd")
@@ -123,11 +121,9 @@ public final class FTDashboardView: UIView {
             progressLayer.removeAnimation(forKey: "ft.strokeEnd")
             progressLayer.strokeEnd = clamped
         }
-
         // needle (关键：只旋转 needleContainerLayer，避免乱飞)
         let angle = needleAngle(for: clamped)
         let toTransform = CATransform3DMakeRotation(angle, 0, 0, 1)
-
         needleContainerLayer.removeAnimation(forKey: "ft.needle")
         if animated {
             let anim = CABasicAnimation(keyPath: "transform")
@@ -145,20 +141,16 @@ public final class FTDashboardView: UIView {
     private func layoutLayers() {
         let b = bounds
         guard b.width > 0, b.height > 0 else { return }
-
         trackLayer.byHidden(NO)
         progressLayer.byHidden(NO)
         tickLayer.byHidden(NO)
         needleContainerLayer.byHidden(NO)
         needleLayer.byHidden(NO)
         centerDotLayer.byHidden(NO)
-
         let center = CGPoint(x: b.midX, y: b.midY)
-
         // radius
         let safeInset = max(lineWidth, tickLength) + 10
         let radius = max(1, min(b.width, b.height) * 0.5 - safeInset)
-
         // arc path
         let arcPath = UIBezierPath.make(
             arcCenter: center,
@@ -167,35 +159,28 @@ public final class FTDashboardView: UIView {
             endAngle: endAngle,
             clockwise: true
         ).cgPath
-
         // 禁用隐式动画，避免 layout 时抖动
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-
         trackLayer.byFrame(b)
         trackLayer.lineWidth = lineWidth
         trackLayer.path = arcPath
-
         progressLayer.byFrame(b)
         progressLayer.lineWidth = lineWidth
         progressLayer.path = arcPath
         progressLayer.strokeEnd = progress
-
         tickLayer.byFrame(b)
         tickLayer.lineWidth = tickWidth
         tickLayer.path = makeTicksPath(center: center, radius: radius).cgPath
-
         // ===== needle container 固定几何（关键：锁死旋转中心）=====
         needleContainerLayer.bounds = b
         needleContainerLayer.position = CGPoint(x: b.midX, y: b.midY)
         needleContainerLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-
         // needleLayer 只负责画“水平基准指针”，容器负责旋转
         needleLayer.byFrame(b)
         needleLayer.lineWidth = needleWidth
         needleLayer.path = makeNeedleBasePath(center: center, radius: radius).cgPath
         needleContainerLayer.transform = CATransform3DMakeRotation(needleAngle(for: progress), 0, 0, 1)
-
         // center dot
         centerDotLayer.byFrame(b)
         let dotRect = CGRect(
@@ -205,7 +190,6 @@ public final class FTDashboardView: UIView {
             height: centerDotRadius * 2
         )
         centerDotLayer.path = UIBezierPath.make(ovalIn: dotRect).cgPath
-
         CATransaction.commit()
     }
 
@@ -213,13 +197,10 @@ public final class FTDashboardView: UIView {
         let path = UIBezierPath.make()
         let count = max(2, tickCount)
         let sweep = endAngle - startAngle
-
         let baseR = radius + lineWidth * 0.5 + 2
-
         for i in 0..<count {
             let t = CGFloat(i) / CGFloat(count - 1)
             let ang = startAngle + sweep * t
-
             let outer = CGPoint(
                 x: center.x + cos(ang) * baseR,
                 y: center.y + sin(ang) * baseR
@@ -228,7 +209,6 @@ public final class FTDashboardView: UIView {
                 x: center.x + cos(ang) * (baseR - tickLength),
                 y: center.y + sin(ang) * (baseR - tickLength)
             )
-
             path
                 .byMove(to: inner)
                 .byAddLine(to: outer)
@@ -237,13 +217,10 @@ public final class FTDashboardView: UIView {
     /// 基准指针：水平向右（0 弧度），旋转交给 needleContainerLayer
     private func makeNeedleBasePath(center: CGPoint, radius: CGFloat) -> UIBezierPath {
         let path = UIBezierPath.make()
-
         let inner = max(18, radius * needleInnerRadiusRatio)
         let outer = max(inner + 8, radius - lineWidth * 0.5 - needleOuterInset)
-
         let p1 = CGPoint(x: center.x + inner, y: center.y)
         let p2 = CGPoint(x: center.x + outer, y: center.y)
-
         path
             .byMove(to: p1)
             .byAddLine(to: p2)

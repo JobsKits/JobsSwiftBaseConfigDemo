@@ -20,7 +20,6 @@ import SnapKit
 
 // MARK: - 同步并发请求
 final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
-
     private lazy var agent: DefaultJobsAgent = {
         DefaultJobsAgent(config:  JobsRequestConfig(
             baseURL: URL(string: "https://httpbin.org")!,
@@ -43,7 +42,6 @@ final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
                 Task {
                     do {
                         let start = Date()
-
                         let results: [String] = try await withThrowingTaskGroup(of: String.self) { group in
                             for _ in 0..<5 {
                                 group.addTask {
@@ -54,11 +52,9 @@ final class ConcurrentRequestsDemoVC: JobsNetworkingDemoBaseVC {
                                     );return resp.uuid
                                 }
                             }
-
                             var list: [String] = []
                             for try await r in group { list.append(r) };return list
                         }
-
                         let cost = Date().timeIntervalSince(start)
                         self.append("Done. count=\(results.count), cost=\(String(format: "%.2f", cost))s\n")
                         results.enumerated().forEach { idx, v in

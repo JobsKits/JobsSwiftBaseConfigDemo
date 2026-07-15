@@ -70,13 +70,12 @@ extension UIDocumentPickerViewController {
 }
 // MARK: - 直接赋值@单参数
 extension UIDocumentPickerViewController {
-    
     @discardableResult
     public func byDelegate(_ v: UIDocumentPickerDelegate?) -> Self {
         self.delegate = v
         return self
     }
-    
+
     @discardableResult
     public func byAllowsMultipleSelection(_ v: Bool) -> Self {
         self.allowsMultipleSelection = v
@@ -97,13 +96,12 @@ extension UIDocumentPickerViewController {
 }
 // MARK: - 闭包重载@单参数
 extension UIDocumentPickerViewController {
-    
     @discardableResult
     public func byDelegate(_ builder: () -> UIDocumentPickerDelegate?) -> Self {
         self.delegate = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAllowsMultipleSelection(_ builder: () -> Bool) -> Self {
         self.allowsMultipleSelection = builder()

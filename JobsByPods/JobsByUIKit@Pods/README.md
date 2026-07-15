@@ -11,3 +11,4 @@
 - `UIBezierPath` 创建统一使用 `make()` / `make(rect:)` / `make(ovalIn:)` / `make(roundedRect:cornerRadius:)` / `make(arcCenter:...)`。
 - `UIAction` / `UIMenu` 创建统一使用 `make(...)`；`UIBarButtonItem` 的标题、图片、系统项和自定义视图均使用对应 `make(...)` 工厂。
 - 空 `UIImage` 使用 `UIImage.make()`，调用侧不直接写 `UIImage()`。
+- `UIViewController.jobsEnsureNavigationBackButton()` 为导航栈子页面和模态子页面补默认 GK 导航栏返回键；页面已有自定义左按钮时保持原配置，根页面不处理。

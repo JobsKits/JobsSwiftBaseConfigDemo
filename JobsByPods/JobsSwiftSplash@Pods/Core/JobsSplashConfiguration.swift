@@ -32,7 +32,6 @@ public enum JobsSplashAction {
 }
 
 public final class JobsSplashConfiguration {
-
     public var content: JobsSplashContent
     public var countdownSeconds: Int?
     public var language: JobsSplashLanguage

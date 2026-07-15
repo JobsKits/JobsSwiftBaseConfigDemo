@@ -62,7 +62,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         token.setCancel { [weak self] in
             self?.client.cancel(requestId: request.trace.requestId)
         }
-
         perform(request, as: type, token: token, onEvent: onEvent, completion: completion)
         return token
     }
@@ -78,11 +77,9 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             let prepared = try prepareRequest(request)
             let cacheKey = makeCacheKey(for: request, prepared: prepared)
             let policy = request.cachePolicy
-
             switch policy {
             case .disabled, .networkOnly:
                 fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
-
             case .cacheOnly:
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -90,7 +87,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 } else {
                     completion(.failure(.cacheMiss))
                 }
-
             case let .cacheElseLoad(ttl):
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -98,7 +94,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 } else {
                     fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: ttl, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
                 }
-
             case let .staleWhileRevalidate(ttl):
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -125,19 +120,16 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
     ) {
         logStart(request, attempt: attempt)
         config.observer.willSend(request)
-
         client.perform(prepared) { [weak self] result in
             guard let self else { return }
             if token.isCancelled {
                 completion(.failure(.cancelled))
                 return
             }
-
             switch result {
             case .success(let (data, response)):
                 let event = JobsResponseEvent(source: .network, request: request, response: response, data: data)
                 self.config.observer.didReceive(event)
-
                 do {
                     let decoded: T = try self.validateAndDecode(data: data, response: response, request: request, as: type)
                     if let cacheTTL {
@@ -152,7 +144,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                     let wrapped = JobsError.unknown(underlying: error.localizedDescription)
                     self.handle(error: wrapped, request: request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt, onEvent: onEvent, completion: completion)
                 }
-
             case .failure(let error):
                 self.handle(error: error, request: request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt, onEvent: onEvent, completion: completion)
             }
@@ -174,7 +165,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         let policy = request.retryPolicy ?? config.defaultRetryPolicy
         let context = JobsRetryContext(request: request, attempt: attempt, error: error)
         let decision = policy.decision(for: context)
-
         if decision.shouldRetry {
             config.logger.log(.warn, "Retrying request", meta: [
                 "requestId": request.trace.requestId,
@@ -182,13 +172,11 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 "delay": String(format: "%.3f", decision.delay),
                 "error": error.localizedDescription
             ])
-
             DispatchQueue.global().asyncAfter(deadline: .now() + decision.delay) { [weak self] in
                 guard let self else { return }
                 self.fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt + 1, onEvent: onEvent, completion: completion)
             };return
         }
-
         config.observer.didFail(request: request, error: error)
         config.logger.log(.error, "Request failed", meta: [
             "requestId": request.trace.requestId,
@@ -203,17 +191,14 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         let absoluteURL = URL(string: request.path, relativeTo: config.baseURL)?.absoluteURL ?? config.baseURL.appendingPathComponent(request.path)
         let rule = JobsEncodingRule.encoding(for: request)
         try JobsEncodingRule.validate(request, encoding: rule)
-
         var headers: [String: String] = ["Accept": "application/json"]
         headers.merge(request.headers) { _, new in new }
         headers.merge(headerHook.headers(for: request)) { _, new in new }
         headers[config.traceHeaderKeys.requestId] = request.trace.requestId
         headers[config.traceHeaderKeys.traceId] = request.trace.traceId
         headers[config.traceHeaderKeys.spanId] = request.trace.spanId
-
         var afHeaders: HTTPHeaders = [:]
         headers.forEach { afHeaders.add(name: $0.key, value: $0.value) }
-
         switch rule {
         case .urlQuery:
             return JobsPreparedRequest(
@@ -325,13 +310,11 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         guard (200...299).contains(response.statusCode) else {
             throw JobsError.http(statusCode: response.statusCode, data: data)
         }
-
         if request.allowsEmptyResponse, data.isEmpty {
             if T.self == EmptyResponse.self, let value = EmptyResponse() as? T {
                 return value
             }
         }
-
         switch config.envelopeStrategy {
         case .none:
             return try decodePlain(data: data, as: type)
@@ -355,7 +338,6 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         if T.self == Data.self, let raw = data as? T {
             return raw
         }
-
         do {
             let envelope = try config.decoder.decode(JobsEnvelope<T>.self, from: data)
             guard successCodes.contains(envelope.code) else {

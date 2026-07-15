@@ -17,7 +17,6 @@ extension UICollectionView {
     private func isValid(indexPath: IndexPath) -> Bool {
         let section = indexPath.section
         let item = indexPath.item
-
         guard section >= 0, item >= 0 else { return false }
         guard section < numberOfSections else { return false }
         guard item < numberOfItems(inSection: section) else { return false };return true

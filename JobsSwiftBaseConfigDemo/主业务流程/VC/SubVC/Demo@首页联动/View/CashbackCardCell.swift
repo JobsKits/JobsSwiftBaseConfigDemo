@@ -26,13 +26,11 @@ final class CashbackCardCell: UITableViewCell {
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
             }
-
         cardView.layer.insertSublayer(gradient, at: 0)
         cardView.layer.shadowColor = JobsCor.black.withAlphaComponent(0.08).cgColor
         cardView.layer.shadowOpacity = 1
         cardView.layer.shadowRadius = 10
         cardView.layer.shadowOffset = .init(width: 0, height: 3)
-
         return cardView
     }()
 
@@ -90,14 +88,12 @@ final class CashbackCardCell: UITableViewCell {
             .byStartPoint(CGPoint(x: 0, y: 0.5))
             .byEndPoint(CGPoint(x: 1, y: 0.5))
             .byCornerRadius(corner)
-
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-
         cardView.byVisible(YES)
         iconWrap.byVisible(YES)
         iconView.byVisible(YES)

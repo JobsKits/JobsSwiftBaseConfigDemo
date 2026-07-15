@@ -39,7 +39,7 @@ public struct ShadowDirection: OptionSet {
     public static let rightTop   = ShadowDirection(rawValue: 1 << 5)
     public static let rightDown  = ShadowDirection(rawValue: 1 << 6)
     public static let all: ShadowDirection = [.top, .down, .left, .right, .leftTop, .leftDown, .rightTop, .rightDown]
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
@@ -52,7 +52,7 @@ public struct UIBorderSideType: OptionSet {
     public static let bottom = UIBorderSideType(rawValue: 1 << 1)
     public static let left   = UIBorderSideType(rawValue: 1 << 2)
     public static let right  = UIBorderSideType(rawValue: 1 << 3)
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
@@ -69,7 +69,7 @@ public struct JobsEmptyViewType: OptionSet {
     public static let label      = JobsEmptyViewType(rawValue: 1 << 0)
     public static let button     = JobsEmptyViewType(rawValue: 1 << 1)
     public static let customView = JobsEmptyViewType(rawValue: 1 << 2)
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }

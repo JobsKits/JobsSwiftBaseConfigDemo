@@ -142,10 +142,8 @@ extension UIView {
             self.layoutIfNeeded()
             self.byFuseOuterRingStop(animated: false)
             guard self.bounds.width > 0, self.bounds.height > 0 else { return }
-
             self.jobs_fuseRingConfig = config
             self.jobs_fuseRingStartTS = CACurrentMediaTime()
-
             let trackLayer: CAShapeLayer?
             if let trackColor = config.trackColor {
                 let t = CAShapeLayer()
@@ -164,7 +162,6 @@ extension UIView {
             } else {
                 trackLayer = nil
             }
-
             let ring = CAShapeLayer()
             ring.name = "jobs.fuse.outerRing.progress"
             ring.contentsScale = UIScreen.main.scale
@@ -177,12 +174,10 @@ extension UIView {
             ring.strokeEnd = 0.001      // 不是 0，长按 began 的瞬间也能看到起点
             ring.opacity = config.fromOpacity
             self.layer.addSublayer(ring)
-
             self.jobs_fuseTrackLayer = trackLayer
             self.jobs_fuseRingLayer = ring
             self.jobs_layoutFuseOuterRingLayers()
             self.jobs_updateFuseOuterRing(progress: 0.001)
-
             let timer = JobsTimer(
                 kind: .gcd,
                 config: JobsSwiftTimerConfig(
@@ -198,7 +193,6 @@ extension UIView {
             self.jobs_fuseRingTimer = timer
             timer.start()
         }
-
         if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
@@ -207,15 +201,12 @@ extension UIView {
     public func byFuseOuterRingStop(animated: Bool = true) -> Self {
         let work = { [weak self] in
             guard let self else { return }
-
             // 先停掉“增长”定时器。后面如果需要退潮，会重新创建一个 JobsSwiftTimer。
             self.jobs_fuseRingTimer?.stop()
             self.jobs_fuseRingTimer = nil
-
             guard let ring = self.jobs_fuseRingLayer else { return }
             let track = self.jobs_fuseTrackLayer
             let config = self.jobs_fuseRingConfig
-
             let removeBlock = { [weak self, weak ring, weak track] in
                 ring?.removeAllAnimations()
                 track?.removeAllAnimations()
@@ -224,16 +215,13 @@ extension UIView {
                 self?.jobs_fuseRingLayer = nil
                 self?.jobs_fuseTrackLayer = nil
             }
-
             let currentStrokeEnd = CGFloat(
                 max(0, min(1, ring.presentation()?.strokeEnd ?? ring.strokeEnd))
             )
-
             guard animated, config.retreatDuration > 0, currentStrokeEnd > 0.001 else {
                 removeBlock()
                 return
             }
-
             // 固定当前展示进度，避免从 presentation layer 切回 model layer 时跳帧。
             let currentRingOpacity = ring.presentation()?.opacity ?? ring.opacity
             let currentTrackOpacity = track?.presentation()?.opacity ?? track?.opacity ?? 1
@@ -244,7 +232,6 @@ extension UIView {
             ring.opacity = currentRingOpacity
             track?.opacity = currentTrackOpacity
             CATransaction.commit()
-
             let retreatStartTS = CACurrentMediaTime()
             let retreatTimer = JobsTimer(
                 kind: .gcd,
@@ -257,15 +244,12 @@ extension UIView {
                 )
             ) { [weak self, weak ring, weak track] in
                 guard let self, let ring else { return }
-
                 let elapsed = max(0, CACurrentMediaTime() - retreatStartTS)
                 let raw = min(1.0, elapsed / max(0.001, config.retreatDuration))
                 let p = CGFloat(raw)
-
                 // easeOut：一松手先明显回退，后面慢慢收尾，像退潮。
                 let eased = 1.0 - pow(1.0 - p, 2.0)
                 let strokeEnd = max(0.0001, currentStrokeEnd * (1.0 - CGFloat(eased)))
-
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 ring.strokeStart = 0
@@ -273,35 +257,28 @@ extension UIView {
                 ring.opacity = currentRingOpacity
                 track?.opacity = currentTrackOpacity * Float(1.0 - p)
                 CATransaction.commit()
-
                 guard raw >= 1.0 else { return }
-
                 self.jobs_fuseRingTimer?.stop()
                 self.jobs_fuseRingTimer = nil
-
                 let fadeDuration = config.fadeOutDuration
                 guard fadeDuration > 0 else {
                     removeBlock()
                     return
                 }
-
                 let fadeRing = CABasicAnimation(keyPath: "opacity")
                 fadeRing.fromValue = ring.presentation()?.opacity ?? ring.opacity
                 fadeRing.toValue = 0
                 fadeRing.duration = fadeDuration
                 fadeRing.fillMode = .forwards
                 fadeRing.isRemovedOnCompletion = false
-
                 CATransaction.begin()
                 CATransaction.setCompletionBlock(removeBlock)
                 ring.add(fadeRing, forKey: "jobs.fuse.outerRing.retreatFadeOut")
                 CATransaction.commit()
             }
-
             self.jobs_fuseRingTimer = retreatTimer
             retreatTimer.start()
         }
-
         if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
@@ -318,7 +295,6 @@ extension UIView {
         let inset = config.inset + config.lineWidth / 2.0
         let rect = bounds.insetBy(dx: inset, dy: inset)
         guard rect.width > 0, rect.height > 0 else { return }
-
         let radius = max(0, min(layer.cornerRadius, min(rect.width, rect.height) / 2.0))
         let path: CGPath
         if config.startsFromTop {
@@ -335,7 +311,6 @@ extension UIView {
         } else {
             path = UIBezierPath.make(roundedRect: rect, cornerRadius: radius).cgPath
         }
-
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         for layer in [jobs_fuseTrackLayer, ring].compactMap({ $0 }) {
@@ -364,7 +339,6 @@ extension UIView {
         let config = jobs_fuseRingConfig
         let p = max(0.001, min(1.0, progress))
         let opacity = config.fromOpacity + (config.toOpacity - config.fromOpacity) * Float(p)
-
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         ring.strokeStart = 0
@@ -401,7 +375,6 @@ extension UIView {
                 self.jobs_fuseScaleOriginalTransform = self.transform
             }
             self.jobs_fuseScaleActive = true
-
             let base = self.jobs_fuseScaleOriginalTransform ?? self.transform
             UIView.animate(
                 withDuration: duration,
@@ -411,7 +384,6 @@ extension UIView {
                 self?.transform = base.scaledBy(x: max(0.01, scale), y: max(0.01, scale))
             }
         }
-
         if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 
@@ -428,12 +400,10 @@ extension UIView {
             let original = self.jobs_fuseScaleOriginalTransform ?? .identity
             self.jobs_fuseScaleActive = false
             self.jobs_fuseScaleOriginalTransform = nil
-
             guard animated else {
                 self.transform = original
                 return
             }
-
             UIView.animate(
                 withDuration: duration,
                 delay: 0,
@@ -444,7 +414,6 @@ extension UIView {
                 self?.transform = original
             }
         }
-
         if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
     }
 }

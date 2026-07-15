@@ -104,7 +104,6 @@ public final class JobsDialogBoxBuilder {
         dialog.cornerRadius = cornerRadius
         dialog.arrowSize = arrowSize
         dialog.contentPadding = contentPadding
-
         dialog.layer.shadowColor = shadowColor.cgColor
         dialog.layer.shadowOpacity = shadowOpacity
         dialog.layer.shadowRadius = shadowRadius
@@ -154,7 +153,6 @@ public final class JobsDialogBoxBuilder {
                                           inBounds bounds: CGRect) -> CGRect {
         var x: CGFloat = 0
         var y: CGFloat = 0
-
         switch direction {
         case .bottom:
             x = anchorFrame.midX - dialogSize.width / 2
@@ -174,10 +172,8 @@ public final class JobsDialogBoxBuilder {
         let maxX = bounds.maxX - dialogSize.width - 8
         let minY = bounds.minY + 8
         let maxY = bounds.maxY - dialogSize.height - 8
-
         x = min(max(x, minX), maxX)
         y = min(max(y, minY), maxY)
-
         return CGRect(x: x, y: y, width: dialogSize.width, height: dialogSize.height)
     }
 
@@ -231,10 +227,8 @@ public final class JobsDialogBoxView: UIControl {
         super.init(frame: frame)
         isUserInteractionEnabled = true
         self.byBackgroundColor(JobsCor.clear)
-
         layer.insertSublayer(shapeLayer, at: 0)
         shapeLayer.fillColor = bubbleColor.cgColor
-
         contentView.byBackgroundColor(JobsCor.clear)
         contentView.byAddTo(self)
     }
@@ -261,7 +255,6 @@ public final class JobsDialogBoxView: UIControl {
     private func bubbleRect() -> CGRect {
         var r = bounds
         let arrowH = arrowSize.height
-
         switch resolvedEdge {
         case .bottom:
             r.origin.y += arrowH
@@ -277,12 +270,10 @@ public final class JobsDialogBoxView: UIControl {
     }
 
     private func makePath() -> UIBezierPath {
-        
         let full = bounds
         let bubble = bubbleRect()
         let path = UIBezierPath.make(roundedRect: bubble, cornerRadius: cornerRadius)
         let halfBase = arrowSize.width / 2
-
         switch resolvedEdge {
         case .bottom:
             // 箭头在顶部，指向上

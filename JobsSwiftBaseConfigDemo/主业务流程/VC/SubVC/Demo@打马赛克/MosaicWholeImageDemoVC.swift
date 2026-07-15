@@ -61,7 +61,6 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
         if visible {
             thicknessControl.byHidden(false)
         }
-
         UIView.jobsAnimateWithCompletion(
             0.2,
             animations: { [weak self] in
@@ -81,7 +80,6 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
         let currentVersion = renderVersion
         hasEdited = true
         loadingLabel.byText("马赛克处理中...".tr).byHidden(false)
-
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let image = originalImage.jobs_mosaicPixelated(blockSize: blockSize)
             DispatchQueue.main.async {

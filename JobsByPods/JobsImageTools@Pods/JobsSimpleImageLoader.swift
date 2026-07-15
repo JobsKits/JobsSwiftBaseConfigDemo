@@ -91,7 +91,6 @@ public final class JobsImageLoadToken {
 }
 
 public final class JobsImageLoader {
-
     public static let shared = JobsImageLoader()
     public static var defaultScale: CGFloat {
         #if os(iOS) || os(tvOS)
@@ -119,13 +118,11 @@ public final class JobsImageLoader {
             return image
         }
         #endif
-
         #if canImport(Kingfisher)
         if let image = KingfisherManager.shared.cache.retrieveImageInMemoryCache(forKey: url.absoluteString) {
             return image
         }
         #endif
-
         return fallbackCache.object(forKey: url as NSURL)
     }
 
@@ -138,7 +135,6 @@ public final class JobsImageLoader {
         guard let source else {
             DispatchQueue.main.async { completion(.failure(.invalidSource)) };return JobsImageLoadToken()
         }
-
         switch source {
         case .local(let name):
             return loadLocalImage(name, completion: completion)
@@ -159,7 +155,6 @@ public final class JobsImageLoader {
 }
 
 private extension JobsImageLoader {
-
     func loadLocalImage(
         _ name: String,
         completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void
@@ -227,7 +222,6 @@ private extension JobsImageLoader {
             kfOptions.append(.scaleFactor(options.scale))
             kfOptions.append(.cacheOriginalImage)
         }
-
         let task = KingfisherManager.shared.retrieveImage(with: url, options: kfOptions) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -262,13 +256,11 @@ private extension JobsImageLoader {
     ) -> JobsImageLoadToken {
         var sdOptions: SDWebImageOptions = [.retryFailed, .highPriority, .scaleDownLargeImages]
         if options.forceRefresh { sdOptions.insert(.refreshCached) }
-
         var context: [SDWebImageContextOption: Any] = [:]
         if let targetSize = options.targetSize, targetSize.width > 1, targetSize.height > 1 {
             context[.imageThumbnailPixelSize] = CGSize(width: targetSize.width * options.scale,
                                                        height: targetSize.height * options.scale)
         }
-
         let operation = SDWebImageManager.shared.loadImage(
             with: url,
             options: sdOptions,
@@ -311,21 +303,17 @@ private extension JobsImageLoader {
                 completion(.success(.init(image: image, url: url, loaderKind: .urlSession, isCacheHit: true)))
             };return JobsImageLoadToken()
         }
-
         let task = fallbackSession.dataTask(with: url) { [weak self] data, _, error in
             guard let self else { return }
             if let error {
                 DispatchQueue.main.async { completion(.failure(.failed(url, error))) };return
             }
-
             guard let data else {
                 DispatchQueue.main.async { completion(.failure(.badData(url))) };return
             }
-
             guard let image = self.image(from: data, targetSize: options.targetSize, scale: options.scale) else {
                 DispatchQueue.main.async { completion(.failure(.badData(url))) };return
             }
-
             self.fallbackCache.setObject(image, forKey: url as NSURL, cost: data.count)
             DispatchQueue.main.async {
                 completion(.success(.init(image: image, url: url, loaderKind: .urlSession, isCacheHit: false)))
@@ -339,7 +327,6 @@ private extension JobsImageLoader {
         guard let targetSize, targetSize.width > 1, targetSize.height > 1 else {
             return UIImage(data: data)
         }
-
         let options = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let source = CGImageSourceCreateWithData(data as CFData, options) else { return UIImage(data: data) }
         let maxPixel = max(targetSize.width, targetSize.height) * scale
@@ -349,7 +336,6 @@ private extension JobsImageLoader {
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: max(1, Int(maxPixel))
         ] as CFDictionary
-
         guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else {
             return UIImage(data: data)
         };return UIImage(cgImage: cgImage, scale: scale, orientation: .up)

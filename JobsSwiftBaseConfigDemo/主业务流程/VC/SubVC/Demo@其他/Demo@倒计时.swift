@@ -143,7 +143,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title1Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -187,7 +186,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title2Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -231,7 +229,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title3Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -271,7 +268,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title4Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -305,27 +301,22 @@ final class JobsCountdownDemoVC: BaseVC {
                 cfg.mode = .down(from: 15)
                 cfg.renderConfiguration = { sec, base in
                     var c = base
-
                     let ps = jobsMakeParagraphStyle {
                         $0.alignment = .center
                         $0.lineSpacing = 1.5
                     }
-
                     let runs: [JobsRichRun] = [
                         JobsRichRun(.text("剩余 "))
                             .font(JobsFont.systemFont(ofSize: 16, weight: .semibold))
                             .color(JobsCor.systemBlue),
-
                         JobsRichRun(.text("\(sec)"))
                             .font(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .bold))
                             .color(JobsCor.systemBlue)
                             .underline(.single, color: JobsCor.systemBlue),
-
                         JobsRichRun(.text(" s"))
                             .font(JobsFont.systemFont(ofSize: 16))
                             .color(JobsCor.systemBlue)
                     ]
-
                     let ns = JobsRichText.make(runs, paragraphStyle: ps)
                     c.title = nil
                     c.attributedTitle = AttributedString(ns)
@@ -334,7 +325,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title5Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -371,17 +361,14 @@ final class JobsCountdownDemoVC: BaseVC {
                     let att = jobsMakeTextAttachment {
                         $0.image = "paperclip".sysImg(UIImage.SymbolConfiguration(pointSize: 14, weight: .medium))
                     }
-
                     let runs: [JobsRichRun] = [
                         JobsRichRun(.attachment(att, CGSize(width: 14, height: 14))),
                         JobsRichRun(.text(" 附件 \(sec)s"))
                             .font(JobsFont.systemFont(ofSize: 14))
                             .color(JobsCor.white)
                     ]
-
                     let ps = jobsMakeParagraphStyle { $0.alignment = .center }
                     let ns = JobsRichText.make(runs, paragraphStyle: ps)
-
                     c.title = nil
                     c.attributedTitle = AttributedString(ns)
                     return c
@@ -389,7 +376,6 @@ final class JobsCountdownDemoVC: BaseVC {
             }
             /// 把「点击按钮」和「启动倒计时」自动绑定起来
             .byCountdownOnTapAuto()
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title6Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -436,7 +422,6 @@ final class JobsCountdownDemoVC: BaseVC {
                 guard let self = self,
                       let ctrl = sender.jobsCountdownController
                 else { return }
-
                 if ctrl.isRunning {
                     // 正在跑
                     if ctrl.config.clickableWhileRunning {
@@ -449,7 +434,6 @@ final class JobsCountdownDemoVC: BaseVC {
                     ctrl.start()
                 }
             }
-        
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title7Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -458,7 +442,7 @@ final class JobsCountdownDemoVC: BaseVC {
                 make.bottom.equalTo(contentView.snp.bottom).offset(-24)
             }
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -468,22 +452,16 @@ final class JobsCountdownDemoVC: BaseVC {
         if #available(iOS 15.0, *) {
             title1Label.byVisible(YES)
             button1Basic.byVisible(YES)
-
             title2Label.byVisible(YES)
             button2Flash.byVisible(YES)
-
             title3Label.byVisible(YES)
             button3Up.byVisible(YES)
-
             title4Label.byVisible(YES)
             button4RenderOnInit.byVisible(YES)
-
             title5Label.byVisible(YES)
             button5RichText.byVisible(YES)
-
             title6Label.byVisible(YES)
             button6Attachment.byVisible(YES)
-
             title7Label.byVisible(YES)
             button7Tappable.byVisible(YES)
         } else {

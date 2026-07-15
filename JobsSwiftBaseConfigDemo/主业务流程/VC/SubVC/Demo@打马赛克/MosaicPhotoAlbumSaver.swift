@@ -34,7 +34,6 @@ enum MosaicPhotoAlbumSaver {
                     completion(.failure(MosaicPhotoAlbumSaveError.unauthorized))
                 };return
             }
-
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.creationRequestForAsset(from: image)
             }, completionHandler: { saved, error in

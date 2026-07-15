@@ -42,7 +42,7 @@ final class LiveCommentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().offset(-8)
             }
     }()
-    
+
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
@@ -72,7 +72,6 @@ final class LiveCommentDemoVC: BaseVC {
         )
         accessory.byVisible(YES)
         tableView.byVisible(YES)
-
         DispatchQueue.main.async { [weak self] in
             self?.scrollToBottom(false)
         }
@@ -89,15 +88,12 @@ final class LiveCommentDemoVC: BaseVC {
         let new = LiveMsg(text: text)
         let newRow = data.count
         data.append(new)
-
         tableView.performBatchUpdates({
             tableView.insertRows(at: [IndexPath(row: newRow, section: 0)], with: .none)
         }, completion: { [weak self] _ in
             guard let self else { return }
-
             self.tableView.layoutIfNeeded()
             self.scrollToBottom(false)
-
             let ip = IndexPath(row: newRow, section: 0)
             if let cell = self.tableView.cellForRow(at: ip) as? LiveMsgCell {
                 cell.playAppearAnimation()

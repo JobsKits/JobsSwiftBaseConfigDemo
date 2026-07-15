@@ -315,7 +315,6 @@ extension UIScrollView {
         // 读取按钮布局
         let buttonLayout = objc_getAssociatedObject(self, &_jobsEmptyLayoutKey) as? JobsEmptyButtonLayout
         btn._jobsEmptyLayout = buttonLayout
-
         // 自定义布局优先；否则使用默认居中 + 宽度<=90% + 左右不贴边
         btn
             .byAddTo(self) { [unowned self] make in
@@ -331,7 +330,6 @@ extension UIScrollView {
                 }
             }
             .byBringToFront(self)
-
         objc_setAssociatedObject(
             self,
             &_jobsEmptyBtnKey,
@@ -344,7 +342,6 @@ extension UIScrollView {
         guard let dataSource = table.dataSource else { return true }
         let sections = dataSource.numberOfSections?(in: table) ?? 1
         if sections == 0 { return true }
-
         var rows = 0
         for section in 0..<sections {
             rows += dataSource.tableView(table, numberOfRowsInSection: section)
@@ -356,7 +353,6 @@ extension UIScrollView {
         guard let dataSource = collection.dataSource else { return true }
         let sections = dataSource.numberOfSections?(in: collection) ?? 1
         if sections == 0 { return true }
-
         var items = 0
         for section in 0..<sections {
             items += dataSource.collectionView(collection, numberOfItemsInSection: section)

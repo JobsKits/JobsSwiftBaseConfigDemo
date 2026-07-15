@@ -66,11 +66,10 @@ public final class JobsTextField: UIImageView {
 }
 // MARK: - Convenience
 extension JobsTextField {
-    
     public convenience init() {
         self.init(frame: .zero)
     }
-    
+
     public var text: String? {
         get { textField.text }
         set { textField.byText(newValue) }
@@ -112,7 +111,7 @@ extension JobsTextField {
         block(textField)
         return self
     }
-    
+
     @discardableResult
     public func byInsetTop(_ v: CGFloat) -> Self {
         textInsets.top = v

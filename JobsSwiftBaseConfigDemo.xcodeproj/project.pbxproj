@@ -10,7 +10,7 @@
 		76EC06E82C92C5E0BAB51BD6 /* Pods_JobsSwiftBaseConfigDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */; };
 		9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */; };
 		A10C00012F20000100C0DE01 /* JobsSPMDemoKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10C00042F20000100C0DE01 /* JobsSPMDemoKit */; };
-		A20C00012F21000100C0DE01 /* JobsByPods/JobsSwiftTools@Pods/UnityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C00022F21000100C0DE01 /* JobsByPods/JobsSwiftTools@Pods/UnityManager.swift */; };
+		A20C00012F21000100C0DE01 /* UnityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C00022F21000100C0DE01 /* UnityManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +35,7 @@
 		34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "EntityInfo-JobsSwiftBaseConfigDemo.generated.swift"; sourceTree = "<group>"; };
 		7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A20C00022F21000100C0DE01 /* JobsByPods/JobsSwiftTools@Pods/UnityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JobsByPods/JobsSwiftTools@Pods/UnityManager.swift"; sourceTree = SOURCE_ROOT; };
+		A20C00022F21000100C0DE01 /* UnityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JobsByPods/JobsSwiftTools@Pods/UnityManager.swift"; sourceTree = SOURCE_ROOT; };
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,11 +65,15 @@
 		};
 		C59C65482F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = JobsSwiftBaseConfigDemoTests;
 			sourceTree = "<group>";
 		};
 		C59C65522F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = JobsSwiftBaseConfigDemoUITests;
 			sourceTree = "<group>";
 		};
@@ -122,7 +126,7 @@
 		A20C00032F21000100C0DE01 /* Unity Host Support */ = {
 			isa = PBXGroup;
 			children = (
-				A20C00022F21000100C0DE01 /* JobsByPods/JobsSwiftTools@Pods/UnityManager.swift */,
+				A20C00022F21000100C0DE01 /* UnityManager.swift */,
 			);
 			name = "Unity Host Support";
 			sourceTree = "<group>";
@@ -274,7 +278,7 @@
 			mainGroup = C59C652D2F1BFB190060EEAD;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsBySwiftPackageManager/JobsSPMDemoPackage" */,
+				A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C59C65372F1BFB1A0060EEAD /* Products */;
@@ -339,11 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
 			name = "[CP-User] Run Flutter Build my_flutter Script";
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh build";
@@ -355,12 +355,8 @@
 			);
 			inputFileListPaths = (
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -372,11 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
 			name = "[CP-User] Embed Flutter Build my_flutter Script";
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/my_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
@@ -457,8 +449,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "\n";
 		};
 		D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -467,12 +458,8 @@
 			);
 			inputFileListPaths = (
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -487,7 +474,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */,
-				A20C00012F21000100C0DE01 /* JobsByPods/JobsSwiftTools@Pods/UnityManager.swift in Sources */,
+				A20C00012F21000100C0DE01 /* UnityManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,7 +841,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsBySwiftPackageManager/JobsSPMDemoPackage" */ = {
+		A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = JobsBySwiftPackageManager/JobsSPMDemoPackage;
 		};
@@ -863,7 +850,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		A10C00042F20000100C0DE01 /* JobsSPMDemoKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsBySwiftPackageManager/JobsSPMDemoPackage" */;
+			package = A10C00032F20000100C0DE01 /* XCLocalSwiftPackageReference "JobsSPMDemoPackage" */;
 			productName = JobsSPMDemoKit;
 		};
 /* End XCSwiftPackageProductDependency section */

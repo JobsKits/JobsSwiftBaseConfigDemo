@@ -23,7 +23,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class AnimatedButtonNumberDemoVC: BaseVC {
-
     private lazy var scrollView: UIScrollView = {
         UIScrollView()
             .byAddTo(view) { [unowned self] make in
@@ -73,7 +72,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-    
+
     private lazy var titleLab2: UILabel = {
         UILabel()
             .byText("② 无图：副标题（富文本，只动数字）".tr)
@@ -103,7 +102,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.width.equalTo(120)
             }
     }()
-    
+
     private lazy var titleLab3: UILabel = {
         UILabel()
             .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
@@ -262,7 +261,6 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             }
             .onTap { [weak self] sender in
                 guard let self else { return }
-
                 // 你这里读 tf 的 start/end 只是业务参数；真正动画起终值由 config 的 startValue/endValue 控制
                 // 如果你想“按输入框变更动画起终值”，需要在点击时重新调用 byAnimationTitleConfig 覆盖 start/end
                 // 这里先按你原逻辑保留回调即可
@@ -342,31 +340,25 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byAnimationSubTitleConfig { cfg in
                 cfg.byDuration(10)
                     .byFps(60)
-
                     // 这里的 start/end 才是副标题动画的数值来源
                     .byStartValue("199")
                     .byEndValue("9")
-
                     // 倒计时一般不需要小数，这里关掉
                     .byShowsDecimals(false)
-
                     // 可选：给副标题的基础样式（非 builder 场景兜底）
                     .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
                     .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
-
                     // ✅ 副标题整体富文本： "倒计时 199 秒"
                     .bySubTitleAttributedBuilder { text, _, _ in
                         let prefix = "倒计时 "
                         let suffix = " 秒"
                         let full = prefix + text + suffix
                         let attr = NSMutableAttributedString(string: full)
-
                         // 全段默认（灰白 13）
                         attr.addAttributes([
                             .font: JobsFont.systemFont(ofSize: 13),
                             .foregroundColor: JobsCor.white.withAlphaComponent(0.85)
                         ], range: NSRange(location: 0, length: (full as NSString).length))
-
                         // 数字段强调（白色 13 medium，或你想要的高亮色）
                         let numberRange = NSRange(location: (prefix as NSString).length,
                                                   length: (text as NSString).length)
@@ -374,11 +366,9 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                             .font: JobsFont.systemFont(ofSize: 13, weight: .semibold),
                             .foregroundColor: JobsCor.white
                         ], range: numberRange)
-
                         return attr
                     }
             }
-
             .onTap { [weak self] sender in
                 guard let self else { return }
                 sender.byStartAnim { m in
@@ -424,7 +414,6 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
 }
 
 extension AnimatedButtonNumberDemoVC {
-
     private func _makeTF(ph: String) -> UITextField {
         UITextField()
             .byPlaceholder(ph)

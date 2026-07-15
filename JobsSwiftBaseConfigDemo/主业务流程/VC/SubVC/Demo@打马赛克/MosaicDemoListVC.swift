@@ -23,21 +23,18 @@ final class MosaicDemoListVC: BaseVC {
     private enum Row: Int, CaseIterable {
         case wholeImage
         case brush
-
         var title: String {
             switch self {
             case .wholeImage: return "整图粗细马赛克"
             case .brush: return "手势涂抹马赛克"
             }
         }
-
         var subtitle: String {
             switch self {
             case .wholeImage: return "右侧拖动开关控制马赛克块大小，图片经 SDWebImage 封装加载"
             case .brush: return "右上角开关开启后，手指划过的位置局部马赛克，图片经 Kingfisher 封装加载"
             }
         }
-
         var vcType: UIViewController.Type {
             switch self {
             case .wholeImage: return MosaicWholeImageDemoVC.self

@@ -22,7 +22,6 @@ public extension Double {
         format.locale = Locale(identifier: "zh_CN")
         format.maximumFractionDigits = 2
         format.minimumFractionDigits = 2
-
         let str0 = format.string(from: NSDecimalNumber(value: self)) ?? "0.00"
         return str0
     }

@@ -20,7 +20,6 @@ import SnapKit
 
 // MARK: - 下载文件到本地
 final class DownloadToLocalDemoVC: JobsNetworkingDemoBaseVC {
-
     private var token: JobsRequestToken?
     private lazy var agent: DefaultJobsAgent = {
         DefaultJobsAgent(config: JobsRequestConfig(

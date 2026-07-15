@@ -144,9 +144,7 @@ extension UITableViewCell {
         } else {
             cfg = defaultContentConfiguration()
         }
-
         build(&cfg)
-
         automaticallyUpdatesContentConfiguration = automaticallyUpdates
         contentConfiguration = cfg
         return self

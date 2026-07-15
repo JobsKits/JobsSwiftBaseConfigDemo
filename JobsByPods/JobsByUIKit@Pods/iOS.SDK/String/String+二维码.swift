@@ -26,17 +26,13 @@ extension String {
               let data = self.data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator")
         else { return UIImage.make() }
-
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // "L" "M" "Q" "H"
-
         guard let output = filter.outputImage, widthSize > 0 else { return UIImage.make() }
-
         // 无插值等比放大
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-
         let context = CIContext(options: nil)
         guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
     }
@@ -51,22 +47,18 @@ extension String {
               let gen = CIFilter(name: "CIQRCodeGenerator"),
               let falseColor = CIFilter(name: "CIFalseColor")
         else { return UIImage.make() }
-
         gen.setDefaults()
         gen.setValue(data, forKey: "inputMessage")
         gen.setValue(correction, forKey: "inputCorrectionLevel")
-
         guard let qr = gen.outputImage else { return UIImage.make() }
         // 颜色映射
         falseColor.setValue(qr, forKey: kCIInputImageKey)
         falseColor.setValue(CIColor(color: foreground), forKey: "inputColor0")
         falseColor.setValue(CIColor(color: background), forKey: "inputColor1")
-
         guard let colored = falseColor.outputImage else { return UIImage.make() }
         // 无插值放大
         let scale = max(widthSize / colored.extent.width, widthSize / colored.extent.height)
         let scaled = colored.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-
         let context = CIContext(options: nil)
         guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
     }
@@ -96,16 +88,12 @@ extension String {
               let filter = CIFilter(name: "CIQRCodeGenerator"),
               widthSize > 0
         else { return UIImage.make() }
-
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // L/M/Q/H
-
         guard let output = filter.outputImage else { return UIImage.make() }
-
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-
         let ciCtx = CIContext()
         guard let qrCG = ciCtx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
         let qrImage = UIImage(cgImage: qrCG)

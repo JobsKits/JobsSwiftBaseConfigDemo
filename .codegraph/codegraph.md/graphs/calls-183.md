@@ -12,79 +12,79 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
-  T1["function:ASDisplayNodeDisableHierarchyNotifications<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:329"]
+  S1["method:ASDisplayNodeAppearanceTests::testDisableWithNodeAPIView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:410"]
+  T1["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
   S1 -->|calls| T1
-  S2["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
-  T2["function:ASDisplayNodeEnableHierarchyNotifications<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:334"]
+  S2["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
+  T2["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
   S2 -->|calls| T2
-  S3["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
-  T3["function:ASDisplayNodeDisableHierarchyNotifications<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:329"]
+  S3["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
+  T3["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
   S3 -->|calls| T3
-  S4["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
-  T4["function:ASDisplayNodeEnableHierarchyNotifications<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:334"]
+  S4["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
+  T4["method:ASNodeController::didExitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:94"]
   S4 -->|calls| T4
-  S5["method:ASDisplayNodeAppearanceTests::testMoveAcrossHierarchyLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:385"]
-  T5["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S5["method:ASDisplayNodeExtrasTests::testShallowFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:25"]
+  T5["function:ASDisplayNodeFindAllSubnodesOfClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:202"]
   S5 -->|calls| T5
-  S6["method:ASDisplayNodeAppearanceTests::testMoveAcrossHierarchyView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:390"]
-  T6["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S6["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
+  T6["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
   S6 -->|calls| T6
-  S7["method:ASDisplayNodeAppearanceTests::testMoveAcrossHierarchyManualLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:395"]
-  T7["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S7["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
+  T7["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
   S7 -->|calls| T7
-  S8["method:ASDisplayNodeAppearanceTests::testMoveAcrossHierarchyManualView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:400"]
-  T8["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S8["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
+  T8["function:ASDisplayNodeFindAllSubnodesOfClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:202"]
   S8 -->|calls| T8
-  S9["method:ASDisplayNodeAppearanceTests::testDisableWithNodeAPILayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:405"]
-  T9["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S9["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
+  T9["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
   S9 -->|calls| T9
-  S10["method:ASDisplayNodeAppearanceTests::testDisableWithNodeAPIView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:410"]
-  T10["method:ASDisplayNodeAppearanceTests::checkMoveAcrossHierarchyLayerBacked:useManualCalls:useNodeAPI:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:294"]
+  S10["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
+  T10["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
   S10 -->|calls| T10
-  S11["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
-  T11["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S11["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  T11["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S11 -->|calls| T11
-  S12["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
-  T12["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S12["method:ASDisplayNodeImplicitHierarchyTests::testFeatureFlag<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:45"]
+  T12["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S12 -->|calls| T12
-  S13["method:ASDisplayNodeAppearanceTests::testPreventManualAppearanceMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeAppearanceTests.mm:415"]
-  T13["method:ASNodeController::didExitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:94"]
+  S13["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T13["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S13 -->|calls| T13
-  S14["method:ASDisplayNodeExtrasTests::testShallowFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:25"]
-  T14["function:ASDisplayNodeFindAllSubnodesOfClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:202"]
+  S14["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T14["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
-  T15["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
+  S15["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T15["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
-  T16["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
+  S16["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T16["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNodeExtrasTests::testDeepFindSubnodesOfSubclass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:42"]
-  T17["function:ASDisplayNodeFindAllSubnodesOfClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:202"]
+  S17["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T17["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
-  T18["method:ASDisplayNodeExtrasTests::addSubnodesToNode:number:remainingLevels:accumulated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:58"]
+  S18["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T18["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
-  T19["method:ASDisplayNodeExtrasTests::capacityForCount:levels:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeExtrasTests.mm:71"]
+  S19["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T19["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S19 -->|calls| T19
-  S20["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S20["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
   T20["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNodeImplicitHierarchyTests::testFeatureFlag<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:45"]
-  T21["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S21["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  T21["function:ASDisplayNodeSizeToFitSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:51"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  S22["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
   T22["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  S23["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
   T23["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  S24["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
   T24["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWithOrdering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:54"]
+  S25["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
   T25["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
   S25 -->|calls| T25
 ```

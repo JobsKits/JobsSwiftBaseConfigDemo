@@ -21,7 +21,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftPatchDemoVC: BaseVC {
-
     private static let patchID = "com.jobs.demo.swiftpatch.payload"
 
     private lazy var patchCardView: UIView = {
@@ -129,7 +128,6 @@ final class JobsSwiftPatchDemoVC: BaseVC {
 }
 
 private extension JobsSwiftPatchDemoVC {
-
     func buildDemoUI() {
         patchCardView.byVisible(true)
         titleLabel.byVisible(true)
@@ -147,7 +145,6 @@ private extension JobsSwiftPatchDemoVC {
         progressView
             .byProgress(0)
             .byHidden(false)
-
         UIView.jobsAnimateWithCompletion(
             1.2,
             animations: {

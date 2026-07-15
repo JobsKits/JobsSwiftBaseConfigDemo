@@ -18,7 +18,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public class JobsEmptyView: UIView {
-
     private lazy var tapGR: UITapGestureRecognizer = {
         UITapGestureRecognizer
             .byConfig { [weak self] _ in
@@ -42,7 +41,7 @@ public class JobsEmptyView: UIView {
                 make.center.equalToSuperview()
             }
     }()
-    
+
     required init?(coder: NSCoder) { fatalError() }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,7 +52,6 @@ public class JobsEmptyView: UIView {
 }
 /// DSL
 extension JobsEmptyView{
-
     @discardableResult
     public func byOnTapRetry(_ block: @escaping jobsByVoidBlock) -> Self {
         jobsByVoidCallback(block)

@@ -19,7 +19,6 @@ import SnapKit
 
 // ============================== 自定义“需确认”中心 Toast 视图 ==============================
 final class ConfirmToastView: UIView {
-
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("需要确认".tr)

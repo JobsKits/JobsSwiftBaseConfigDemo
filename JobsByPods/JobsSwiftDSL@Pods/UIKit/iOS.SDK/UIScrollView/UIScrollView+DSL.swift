@@ -21,67 +21,67 @@ extension UIScrollView {
         self.contentSize = size
         return self
     }
-    
+
     @discardableResult
     public func byShowsVerticalScrollIndicator(_ show: Bool) -> Self {
         self.showsVerticalScrollIndicator = show
         return self
     }
-    
+
     @discardableResult
     public func byShowsHorizontalScrollIndicator(_ show: Bool) -> Self {
         self.showsHorizontalScrollIndicator = show
         return self
     }
-    
+
     @discardableResult
     public func byBounces(_ bounces: Bool) -> Self {
         self.bounces = bounces
         return self
     }
-    
+
     @discardableResult
     public func byAlwaysBounceVertical(_ enable: Bool) -> Self {
         self.alwaysBounceVertical = enable
         return self
     }
-    
+
     @discardableResult
     public func byAlwaysBounceHorizontal(_ enable: Bool) -> Self {
         self.alwaysBounceHorizontal = enable
         return self
     }
-    
+
     @discardableResult
     public func byPagingEnabled(_ enabled: Bool) -> Self {
         self.isPagingEnabled = enabled
         return self
     }
-    
+
     @discardableResult
     public func byScrollEnabled(_ enabled: Bool) -> Self {
         self.isScrollEnabled = enabled
         return self
     }
-    
+
     @discardableResult
     public func byDirectionalLockEnabled(_ enabled: Bool) -> Self {
         self.isDirectionalLockEnabled = enabled
         return self
     }
-    
+
     @discardableResult
     public func byScrollIndicatorInsets(_ insets: UIEdgeInsets) -> Self {
         self.scrollIndicatorInsets = insets
         return self
     }
-    
+
     @discardableResult
     public func byContentInset(_ insets: UIEdgeInsets) -> Self {
         self.contentInset = insets
         return self
     }
-    
+
     @discardableResult
     public func byIndicatorStyle(_ style: UIScrollView.IndicatorStyle) -> Self {
         self.indicatorStyle = style
@@ -93,25 +93,25 @@ extension UIScrollView {
         self.delegate = delegate
         return self
     }
-    
+
     @discardableResult
     public func byKeyboardDismissMode(_ mode: UIScrollView.KeyboardDismissMode) -> Self {
         self.keyboardDismissMode = mode
         return self
     }
-    
+
     @discardableResult
     public func byRefreshControl(_ control: UIRefreshControl?) -> Self {
         self.refreshControl = control
         return self
     }
-    
+
     @discardableResult
     public func byDecelerationRate(_ rate: UIScrollView.DecelerationRate) -> Self {
         self.decelerationRate = rate
         return self
     }
-    
+
     @discardableResult
     public func byScrollsToTop(_ enabled: Bool) -> Self {
         self.scrollsToTop = enabled
@@ -196,7 +196,7 @@ extension UIScrollView {
         self.delaysContentTouches = enable
         return self
     }
-    
+
     @discardableResult
     public func byCanCancelContentTouches(_ enable: Bool) -> Self {
         self.canCancelContentTouches = enable
@@ -208,7 +208,7 @@ extension UIScrollView {
         self.minimumZoomScale = scale
         return self
     }
-    
+
     @discardableResult
     public func byMaximumZoomScale(_ scale: CGFloat) -> Self {
         self.maximumZoomScale = scale
@@ -223,103 +223,102 @@ extension UIScrollView {
 }
 // MARK: - 闭包重载@单参数
 extension UIScrollView {
-    
     @discardableResult
     public func byContentSize(_ builder: () -> CGSize) -> Self {
         self.contentSize = builder()
         return self
     }
-    
+
     @discardableResult
     public func byShowsVerticalScrollIndicator(_ builder: () -> Bool) -> Self {
         self.showsVerticalScrollIndicator = builder()
         return self
     }
-    
+
     @discardableResult
     public func byShowsHorizontalScrollIndicator(_ builder: () -> Bool) -> Self {
         self.showsHorizontalScrollIndicator = builder()
         return self
     }
-    
+
     @discardableResult
     public func byBounces(_ builder: () -> Bool) -> Self {
         self.bounces = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAlwaysBounceVertical(_ builder: () -> Bool) -> Self {
         self.alwaysBounceVertical = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAlwaysBounceHorizontal(_ builder: () -> Bool) -> Self {
         self.alwaysBounceHorizontal = builder()
         return self
     }
-    
+
     @discardableResult
     public func byPagingEnabled(_ builder: () -> Bool) -> Self {
         self.isPagingEnabled = builder()
         return self
     }
-    
+
     @discardableResult
     public func byScrollEnabled(_ builder: () -> Bool) -> Self {
         self.isScrollEnabled = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDirectionalLockEnabled(_ builder: () -> Bool) -> Self {
         self.isDirectionalLockEnabled = builder()
         return self
     }
-    
+
     @discardableResult
     public func byScrollIndicatorInsets(_ builder: () -> UIEdgeInsets) -> Self {
         self.scrollIndicatorInsets = builder()
         return self
     }
-    
+
     @discardableResult
     public func byContentInset(_ builder: () -> UIEdgeInsets) -> Self {
         self.contentInset = builder()
         return self
     }
-    
+
     @discardableResult
     public func byIndicatorStyle(_ builder: () -> UIScrollView.IndicatorStyle) -> Self {
         self.indicatorStyle = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDelegate(_ builder: () -> UIScrollViewDelegate?) -> Self {
         self.delegate = builder()
         return self
     }
-    
+
     @discardableResult
     public func byKeyboardDismissMode(_ builder: () -> UIScrollView.KeyboardDismissMode) -> Self {
         self.keyboardDismissMode = builder()
         return self
     }
-    
+
     @discardableResult
     public func byRefreshControl(_ builder: () -> UIRefreshControl?) -> Self {
         self.refreshControl = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDecelerationRate(_ builder: () -> UIScrollView.DecelerationRate) -> Self {
         self.decelerationRate = builder()
         return self
     }
-    
+
     @discardableResult
     public func byScrollsToTop(_ builder: () -> Bool) -> Self {
         self.scrollsToTop = builder()
@@ -390,25 +389,25 @@ extension UIScrollView {
         self.delaysContentTouches = builder()
         return self
     }
-    
+
     @discardableResult
     public func byCanCancelContentTouches(_ builder: () -> Bool) -> Self {
         self.canCancelContentTouches = builder()
         return self
     }
-    
+
     @discardableResult
     public func byMinimumZoomScale(_ builder: () -> CGFloat) -> Self {
         self.minimumZoomScale = builder()
         return self
     }
-    
+
     @discardableResult
     public func byMaximumZoomScale(_ builder: () -> CGFloat) -> Self {
         self.maximumZoomScale = builder()
         return self
     }
-    
+
     @discardableResult
     public func byIndexDisplayMode(_ builder: () -> UIScrollView.IndexDisplayMode) -> Self {
         self.indexDisplayMode = builder()
@@ -417,7 +416,6 @@ extension UIScrollView {
 }
 
 extension UIScrollView {
-
     @discardableResult
     public func byContentOffsetBy(_ offset: CGPoint) -> Self {
         self.setContentOffset(offset, animated: false)

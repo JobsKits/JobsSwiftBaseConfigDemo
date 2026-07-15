@@ -53,7 +53,7 @@ public func jobsGetMainWindowAfter13() -> UIWindow? {
 public func jobsGetMainWindow() -> UIWindow? {
     let mainWindowBefore13 = jobsGetMainWindowBefore13()
     let mainWindowAfter13 = jobsGetMainWindowAfter13()
-    
+
     let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
     let resultWindow = systemVersion >= 13.0 ? mainWindowAfter13 : mainWindowBefore13
 

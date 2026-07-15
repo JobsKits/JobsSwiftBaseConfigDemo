@@ -40,7 +40,6 @@ extension BinaryInteger {
         let h = total / 3600
         let m = (total % 3600) / 60
         let s = total % 60
-
         if h > 0 { return "\(h)时\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" }
         if m > 0 { return "\(m)分\(String(format: "%02d", s))秒" };return "\(s)秒"
     }
@@ -60,7 +59,6 @@ extension BinaryInteger {
         let h = total / 3600
         let m = (total % 3600) / 60
         let s = total % 60
-
         if h > 0 { return "\(h)时\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" }
         if m > 0 { return "\(String(format: "%02d", m))分\(String(format: "%02d", s))秒" };return "\(s)秒"
     }

@@ -41,6 +41,7 @@ final class RootFoldTableCell: UITableViewCell,
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
     private static let innerCellReuseID = "RootFoldInnerCell"
+    private static let chargingProgressStates = ["🟩⬜⬜", "🟩🟩⬜", "🟩🟩🟩"]
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
@@ -48,6 +49,7 @@ final class RootFoldTableCell: UITableViewCell,
     private var pinAccessoryIndex: Int?
     private var pinnedSectionStyle = false
     private var isExpanded: Bool = false
+    private var chargingProgressPhase = 0
     private var innerTableHeight: Constraint?
     // MARK: - Lazy UI
     private lazy var card: UIView = {
@@ -171,11 +173,9 @@ final class RootFoldTableCell: UITableViewCell,
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         selectionStyle = .none
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-
         card.byVisible(YES)
         header.byVisible(YES)
         titleLab.byVisible(YES)
@@ -187,10 +187,9 @@ final class RootFoldTableCell: UITableViewCell,
         shadow.byVisible(YES)
         innerTableView.addGestureRecognizer(innerCellLongPressGesture)
         applyTheme()
-
         setExpanded(false, animated: false)
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         items = []
@@ -204,7 +203,7 @@ final class RootFoldTableCell: UITableViewCell,
         applyTheme()
         setExpanded(false, animated: false)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         applyInsets()      // 水平边距@距离TableView
@@ -218,7 +217,6 @@ final class RootFoldTableCell: UITableViewCell,
 }
 
 extension RootFoldTableCell{
-    
     static func collapsedHeight() -> CGFloat {
         headerH + vInset * 2
     }
@@ -229,7 +227,7 @@ extension RootFoldTableCell{
         + CGFloat(itemCount) * innerRowH
         + innerBottom
     }
-    
+
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
@@ -284,13 +282,10 @@ extension RootFoldTableCell{
             // ✅ 如果是“从展开 -> 折叠”的动画，内容此时本来就是可见的；这里兜底保证可见以便折页动画能演
             detailContent.byVisible(YES)
         }
-
         if window != nil { detailContent.layoutIfNeeded() }
-
         let targetTransform = targetExpanded ? CATransform3DIdentity : foldedTransform()
         let targetAlpha: CGFloat = targetExpanded ? 1.0 : 0.0
         let targetChevron = targetExpanded ? CGAffineTransform(rotationAngle: .pi / 2) : .identity
-
         let apply = { [self] in
             detailContent.layer.transform = targetTransform
             detailContent.byAlpha(targetAlpha)
@@ -298,7 +293,6 @@ extension RootFoldTableCell{
             // ✅ shadow 永远不参与显示（彻底消灭“灰条”）
             shadow.byVisible(NO)
         }
-
         if animated {
             UIView.jobsAnimateWithSpring(
                 0.35,
@@ -362,6 +356,21 @@ extension RootFoldTableCell{
         String(describing: item.vcType)
     }
 
+    private func displayTitle(for item: DemoItem) -> String {
+        guard item.vcType == JobsProgressDemoVC.self else { return item.title }
+        let state = Self.chargingProgressStates[chargingProgressPhase]
+        return "\(state) \(item.title)"
+    }
+
+    func updateChargingProgress(phase: Int) {
+        chargingProgressPhase = max(0, phase) % Self.chargingProgressStates.count
+        for indexPath in innerTableView.indexPathsForVisibleRows ?? [] {
+            guard items.indices.contains(indexPath.row),
+                  items[indexPath.row].vcType == JobsProgressDemoVC.self else { continue }
+            innerTableView.cellForRow(at: indexPath)?.textLabel?.byText(displayTitle(for: items[indexPath.row]))
+        }
+    }
+
     private static let demoIconSymbolNamesByVCType: [String: String] = {
         let names = [
             "FSPopoverDemoVC": "arrowtriangle.down.circle", "PicLoadDemoVC": "photo",
@@ -387,6 +396,7 @@ extension RootFoldTableCell{
             "BMPlayerDemoVC": "play.rectangle", "PNPlayerDemoVC": "play.square",
             "FoldTableDemoVC": "rectangle.compress.vertical", "JobsWalletDemoVC": "creditcard",
             "TransparentRegionVC": "viewfinder", "MosaicDemoListVC": "square.grid.3x3",
+            "JobsLongPressLikeDemoVC": "hand.thumbsup.fill",
             "SphereDemoVC": "globe.asia.australia", "IrregularButtonDemoVC": "hexagon",
             "SlideToUnlockDemoVC": "lock.open", "GestureUnlockDemoVC": "hand.draw",
             "FTDashboadDemoVC": "speedometer", "JobsButtonDemoVC": "circle",
@@ -395,7 +405,9 @@ extension RootFoldTableCell{
             "UITextViewDemoVC": "text.cursor", "EmptyTableViewDemoVC": "list.bullet.rectangle",
             "UITableViewCellCornerDemoVC": "rectangle.roundedtop", "EmptyCollectionViewDemoVC": "square.grid.2x2",
             "JobsSwiftCommentDemoVC": "message", "JobsSwiftSearcherDemoVC": "magnifyingglass",
+            "JobsAudioRecorderDemoVC": "mic.fill",
             "JobsBluetoothDemoVC": "antenna.radiowaves.left.and.right",
+            "JobsCoreMotionDemoVC": "gyroscope",
             "BtnFullOnCVCellDemoVC": "rectangle.grid.1x2", "BtnFullOnTBVCellDemoVC": "rectangle.grid.3x2",
             "JobsNavigationDemoVC": "arrow.triangle.turn.up.right.diamond", "LocalNotificationDemoVC": "bell",
             "JobsSwiftRefresherDemoVC": "arrow.clockwise", "JobsSwiftRefresherBy非正式协议闭包化DemoVC": "arrow.triangle.2.circlepath",
@@ -409,7 +421,8 @@ extension RootFoldTableCell{
             "MessageListDemoVC": "envelope", "LGOEditProfileVC": "person.crop.circle",
             "HomeLinkageDemoListVC": "rectangle.split.2x1", "JobsAppDoorDemoVC": "key",
             "RichTextDemoVC": "textformat", "JobsTextDemoVC": "character.book.closed",
-            "JobsViewPushDemoVC": "arrow.right.square", "SafetyPushDemoVC": "shield.lefthalf.fill",
+            "JobsViewPushDemoVC": "arrow.right.square", "JobsSideDrawerDemoVC": "sidebar.left",
+            "SafetyPushDemoVC": "shield.lefthalf.fill",
             "SafetyPresentDemoVC": "rectangle.portrait.and.arrow.right", "自定义注解DemoVC": "mappin",
             "SafeCodableDemoVC": "doc.text", "SnowflakeDemoVC": "snowflake"
         ]
@@ -445,13 +458,11 @@ extension RootFoldTableCell{
     // MARK: - Fold
     private func foldedTransform() -> CATransform3D {
         let h = max(detailContent.bounds.height, 1)
-
         var t = CATransform3DIdentity
         t.m34 = -1.0 / 520.0
         t = CATransform3DTranslate(t, 0, -h / 2.0, 0)
         t = CATransform3DRotate(t, -CGFloat.pi / 2.0, 1, 0, 0)
         t = CATransform3DTranslate(t, 0,  h / 2.0, 0)
-
         return t
     }
 }
@@ -465,7 +476,7 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
         let item = items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.innerCellReuseID) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
-        cell.byText(item.title)
+        cell.byText(displayTitle(for: item))
             .bySecondaryText(subTitleText(for: item))
             .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byDetailTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))

@@ -18,7 +18,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class MessageCell: UITableViewCell {
-
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
@@ -76,7 +75,6 @@ final class MessageCell: UITableViewCell {
 }
 
 extension MessageCell {
-    
     func render(item: MessageItem, editing: Bool) {
         titleLabel.byText(item.title)
         previewLabel.byText(item.preview)
@@ -93,7 +91,6 @@ extension MessageCell {
         // 里面通常有 UIImageView
         let iv = editControl.subviews.compactMap { $0 as? UIImageView }.first
         guard let imageView = iv else { return }
-
         imageView.byTintColor(JobsCor.systemBlue)
         imageView.byImage(isSelected ? "选择框（已选择）".img : "选择框（未选择）".img)
     }

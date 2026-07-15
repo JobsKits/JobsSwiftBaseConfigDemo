@@ -224,12 +224,10 @@ final class TimerDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Timer Demo")
-
         _ = kindSelector
         _ = lastFireLabel
         _ = intervalField
         _ = countdownField
-
         layoutButtons()
         updateControlButtons(by: .idle)
     }
@@ -239,7 +237,7 @@ final class TimerDemoVC: BaseVC {
         // 离开页面时清掉 timer
         stopAll()
     }
-    
+
     deinit {
         countUpTimer?.stop()
         countdownTimer?.stop()
@@ -262,7 +260,6 @@ extension TimerDemoVC {
                 make.height.greaterThanOrEqualTo(52)
             }
         }
-
         hintLabel.byAlpha(1)
         _ = countdownButton
     }
@@ -290,17 +287,13 @@ extension TimerDemoVC {
         // 重投：先停旧
         countUpTimer?.stop()
         countUpTimer = nil
-
         elapsed = 0
         countUpState = .running
         updateControlButtons(by: .running)
-
         startButton.byTitle("0.0s", for: .normal)
         lastFireLabel.byText("Last: -")
-
         let kind = currentKind
         let interval = intervalSec
-
         let t = makeTimer(kind: kind, interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
             guard let strongSelf = self else { return }
@@ -311,7 +304,6 @@ extension TimerDemoVC {
                 strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
             }
         }
-
         countUpTimer = t
         t.start()
     }
@@ -321,45 +313,37 @@ extension TimerDemoVC {
     private func startCountDown(total: Int) {
         countdownTimer?.stop()
         countdownTimer = nil
-
         countdownTotal = TimeInterval(max(1, total))
         countdownRemaining = countdownTotal
         countdownState = .running
         updateControlButtons(by: .running)
-
         countdownButton.byTitle("还剩 \(Int(countdownRemaining))s", for: .normal)
         lastFireLabel.byText("Last: -")
-
         let kind = currentKind
         let interval = intervalSec
-
         let t = makeTimer(kind: kind, interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
             guard let strongSelf = self else { return }
             onMainAsync(self) { vc in
                 guard strongSelf.countdownState == .running else { return }
-
                 strongSelf.countdownRemaining -= interval
                 if strongSelf.countdownRemaining <= 0 {
                     strongSelf.countdownRemaining = 0
                     strongSelf.countdownButton.byTitle("获取验证码".tr, for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                     print("✅ [\(strongSelf.currentKind)] 倒计时完成")
-
                     strongSelf.countdownTimer?.stop()
                     strongSelf.countdownTimer = nil
                     strongSelf.countdownState = .stopped
                     strongSelf.syncGlobalStateAfterStop()
                     return
                 }
-
                 let remainInt = max(0, Int(ceil(strongSelf.countdownRemaining)))
                 strongSelf.countdownButton.byTitle("还剩 \(remainInt)s", for: .normal)
                 strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                 print("⏱️ [\(strongSelf.currentKind)] \(remainInt)/\(Int(strongSelf.countdownTotal))")
             }
         }
-
         countdownTimer = t
         t.start()
     }
@@ -416,10 +400,8 @@ extension TimerDemoVC {
         // 然后 stop（触发并销毁）
         countUpTimer?.stop()
         countdownTimer?.stop()
-
         countUpTimer = nil
         countdownTimer = nil
-
         countUpState = .stopped
         countdownState = .stopped
         updateControlButtons(by: .stopped)
@@ -429,14 +411,11 @@ extension TimerDemoVC {
     private func stopAll() {
         countUpTimer?.stop()
         countdownTimer?.stop()
-
         countUpTimer = nil
         countdownTimer = nil
-
         countUpState = .stopped
         countdownState = .stopped
         updateControlButtons(by: .stopped)
-
         // UI 复位（按你原 demo 习惯：start 允许再次点击）
         startButton.byTitle("开始".tr, for: .normal)
         if countdownState == .stopped {
@@ -449,7 +428,6 @@ extension TimerDemoVC {
         let runningOrPaused =
             (countUpState == .running || countUpState == .paused) ||
             (countdownState == .running || countdownState == .paused)
-
         if !runningOrPaused {
             updateControlButtons(by: .idle)
         }
@@ -470,18 +448,14 @@ extension TimerDemoVC {
         // 正计时：running/paused 则重建
         if countUpState == .running || countUpState == .paused {
             let wasPaused = (countUpState == .paused)
-
             // 先停旧
             countUpTimer?.stop()
             countUpTimer = nil
-
             // 用新 kind/interval 继续（不清 elapsed）
             countUpState = .running
             updateControlButtons(by: .running)
-
             let kind = currentKind
             let interval = intervalSec
-
             let t = makeTimer(kind: kind, interval: interval) { [weak self] in
                 guard let strongSelf = self else { return }
                 onMainAsync(self) { vc in
@@ -502,44 +476,35 @@ extension TimerDemoVC {
         // 倒计时：running/paused 则用剩余时间近似重建
         if countdownState == .running || countdownState == .paused {
             let wasPaused = (countdownState == .paused)
-
             countdownTimer?.stop()
             countdownTimer = nil
-
             countdownState = .running
             updateControlButtons(by: .running)
-
             let kind = currentKind
             let interval = intervalSec
-
             let t = makeTimer(kind: kind, interval: interval) { [weak self] in
                 guard let strongSelf = self else { return }
                 onMainAsync(self) { vc in
                     guard strongSelf.countdownState == .running else { return }
-
                     strongSelf.countdownRemaining -= interval
                     if strongSelf.countdownRemaining <= 0 {
                         strongSelf.countdownRemaining = 0
                         strongSelf.countdownButton.byTitle("获取验证码".tr, for: .normal)
                         strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                         print("✅ [\(strongSelf.currentKind)] 倒计时完成")
-
                         strongSelf.countdownTimer?.stop()
                         strongSelf.countdownTimer = nil
                         strongSelf.countdownState = .stopped
                         strongSelf.syncGlobalStateAfterStop()
                         return
                     }
-
                     let remainInt = max(0, Int(ceil(strongSelf.countdownRemaining)))
                     strongSelf.countdownButton.byTitle("还剩 \(remainInt)s", for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                 }
             }
-
             countdownTimer = t
             t.start()
-
             if wasPaused {
                 t.pause()
                 countdownState = .paused
@@ -556,7 +521,6 @@ extension TimerDemoVC {
                 .byBackgroundColor(color, for: .normal)
                 .bySetNeedsUpdateConfiguration()
         }
-
         switch state {
         case .idle, .stopped:
             set(startButton,  true,  JobsCor.systemBlue)
@@ -564,14 +528,12 @@ extension TimerDemoVC {
             set(resumeButton, false, JobsCor.systemGray3)
             set(fireButton,   false, JobsCor.systemGray3)
             set(stopButton,   false, JobsCor.systemGray3)
-
         case .running:
             set(startButton,  false, JobsCor.systemGray3)
             set(pauseButton,  true,  JobsCor.systemBlue)
             set(resumeButton, false, JobsCor.systemGray3)
             set(fireButton,   true,  JobsCor.systemTeal)
             set(stopButton,   true,  JobsCor.systemRed)
-
         case .paused:
             set(startButton,  false, JobsCor.systemGray3)
             set(pauseButton,  false, JobsCor.systemGray3)

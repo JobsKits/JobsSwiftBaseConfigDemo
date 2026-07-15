@@ -20,7 +20,6 @@ import SnapKit
 
 // MARK: - 一般数据请求
 final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
-    
     private var token: JobsRequestToken?
     private lazy var agent: DefaultJobsAgent = {
         DefaultJobsAgent(config: JobsRequestConfig(

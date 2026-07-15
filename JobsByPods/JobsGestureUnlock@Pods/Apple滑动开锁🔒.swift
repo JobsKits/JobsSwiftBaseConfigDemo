@@ -106,13 +106,11 @@ public class SlideToUnlockView: UIView {
                               let pan = gr as? UIPanGestureRecognizer,
                               let container = gr.view?.superview
                         else { return }
-
                         let translation = pan.translation(in: container)
                         let dragWidth = max(
                             container.bounds.width - self.thumbInset * 2 - self.thumbSize.width,
                             1
                         )
-
                         switch pan.state {
                         case .began:
                             self.panStartProgress = self.progress
@@ -125,18 +123,15 @@ public class SlideToUnlockView: UIView {
                             case .rightToLeft:
                                 delta = -rawDelta
                             }
-
                             self.progress = self.panStartProgress + delta
                             self.layoutIfNeeded()
                             self.updateShimmerMask()
-
                         case .ended, .cancelled, .failed:
                             if self.progress > 0.85 {
                                 self.completeUnlock()
                             } else {
                                 self.reset(animated: true)
                             }
-
                         default:
                             break
                         }
@@ -179,7 +174,6 @@ public class SlideToUnlockView: UIView {
         titleLabel.byVisible(YES)
         thumbView.byVisible(YES)
         arrow.byVisible(YES)
-
         updateDirectionUI()
         updateSkeletonState()
     }
@@ -196,7 +190,6 @@ public class SlideToUnlockView: UIView {
         case .leftToRight: symbolName = "chevron.right"
         case .rightToLeft: symbolName = "chevron.left"
         }
-
         if #available(iOS 13.0, *) {
             let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
             arrow.byImage(symbolName.sysImg(config))
@@ -208,9 +201,7 @@ public class SlideToUnlockView: UIView {
 
     private func updateLayoutForProgress(animated: Bool) {
         guard bounds.width > 0 else { return }
-
         let maxOffset = bounds.width - thumbInset - thumbSize.width
-
         let positionFactor: CGFloat
         switch direction {
         case .leftToRight:
@@ -218,12 +209,9 @@ public class SlideToUnlockView: UIView {
         case .rightToLeft:
             positionFactor = 1 - _progress
         }
-
         let offset = thumbInset + maxOffset * positionFactor
         thumbLeadingConstraint?.update(offset: offset)
-
         titleLabel.byAlpha(1 - _progress * 0.8)
-
         if animated {
             UIView.jobsAnimate(0.2, animations: {
                 self.layoutIfNeeded()
@@ -246,20 +234,16 @@ public class SlideToUnlockView: UIView {
             shimmerView.jobs_setShimmerMask(nil)
             return
         }
-
         layoutIfNeeded()
         shimmerView.byFrame(trackView.bounds)
         shimmerView.jobs_updateShimmerLayout()
-
         let trackBounds = trackView.bounds
         guard trackBounds.width > 0, trackBounds.height > 0 else {
             shimmerView.jobs_setShimmerMask(nil)
             return
         }
-
         let thumbFrameInTrack = trackView.convert(thumbView.frame, from: self)
         let maskRect: CGRect
-
         switch direction {
         case .leftToRight:
             // 左->右：分界线在圆心位置，右侧保留呼吸屏
@@ -270,7 +254,6 @@ public class SlideToUnlockView: UIView {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
             };maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
-
         case .rightToLeft:
             // 右->左：分界线在圆心位置，左侧保留呼吸屏
             var endX = thumbFrameInTrack.midX          // 圆心
@@ -305,7 +288,6 @@ public class SlideToUnlockView: UIView {
 }
 
 extension SlideToUnlockView {
-
     @discardableResult
     public func byOnUnlock(_ handler: @escaping jobsByVoidBlock) -> Self {
         self.onUnlock = handler

@@ -76,6 +76,6 @@ function	mono_assembly_load_from_gac	Unity/xcode_effectTest/Il2CppOutputProject/
 function	mono_debug_symfile_get_seq_points	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/debug-mono-symfile.c	520	23	calls
 function	mono_domain_create	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/domain.c	417	23	calls
 function	mono_domain_create_appdomain_internal	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/appdomain.c	799	23	calls
+function	mono_ftnptr_to_delegate_impl	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/marshal.c	466	23	calls
 function	mono_method_get_signature_checked	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/loader.c	739	23	calls
 file	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/bdwgc/include/private/gc_pmark.h	1	22	calls
-function	_CorDllMain	Unity/xcode_effectTest/Il2CppOutputProject/IL2CPP/external/mono/mono/metadata/coree.c	75	22	calls

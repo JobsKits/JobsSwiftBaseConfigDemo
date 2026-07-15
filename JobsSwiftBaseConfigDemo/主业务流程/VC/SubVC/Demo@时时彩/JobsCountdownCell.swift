@@ -73,16 +73,12 @@ public final class JobsCountdownCell: UITableViewCell {
     public func byData(_ item: JobsCountdownItem) -> Self {
         // 复用：先停旧 timer（避免一个 cell 复用时还在跑旧的 tick）
         stopTimerIfNeeded()
-
         currentItem = item
         currentTimerId = item.timerIdentifier
-
         titleLabel.byText(item.title)
         renderCountdown()
-
         // 每个 item 一个 timerId（同屏多个 timer 并行）
         startTimer(item: item)
-
         return self
     }
     /// 兼容老接口
@@ -94,10 +90,8 @@ public final class JobsCountdownCell: UITableViewCell {
         // 先 stop 本地 timer（立即停止回调）
         timer?.stop()
         timer = nil
-
         guard let id = currentTimerId else { return }
         currentTimerId = nil
-
         // 再 cancel manager（stop + remove）
         Task {
             do {
@@ -111,14 +105,12 @@ public final class JobsCountdownCell: UITableViewCell {
     private func startTimer(item: JobsCountdownItem) {
         let id = item.timerIdentifier
         let interval = max(0.1, item.tickInterval)
-
         // 已结束就不启动
         if item.remainSeconds() <= 0 {
             countdownLabel.byText(Self.format(0))
             countdownLabel.byTextColor(JobsCor.secondaryLabel)
             return
         }
-
         let cfg = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
@@ -129,7 +121,6 @@ public final class JobsCountdownCell: UITableViewCell {
             pauseInBackground: true,
             autoManageAppState: true
         )
-
         do {
             let t = try JobsSwiftTimerMgr.shared.create(
                 kind: .gcd,
@@ -150,7 +141,6 @@ public final class JobsCountdownCell: UITableViewCell {
                     }
                 }
             }
-
             timer = t
             t.start()
         } catch {

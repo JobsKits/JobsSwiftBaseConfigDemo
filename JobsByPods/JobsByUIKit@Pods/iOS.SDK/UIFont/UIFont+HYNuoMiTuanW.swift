@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 extension UIFont {
-    
     enum HYNuoMiTuanW {
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
@@ -26,7 +25,6 @@ extension UIFont {
                 return make("HYNuoMiTuanW", size, fallback: .regular)
             }
         }
-
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {

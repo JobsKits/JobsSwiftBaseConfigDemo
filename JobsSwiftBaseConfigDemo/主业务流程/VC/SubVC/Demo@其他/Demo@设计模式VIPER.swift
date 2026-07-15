@@ -16,6 +16,7 @@ import UIKit
 
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsInheritance
 
 // ========== Entity ==========
 struct VIPERUser: Decodable { let id: String; let name: String }
@@ -101,7 +102,7 @@ final class VIPERUserListPresenter: VIPERUserListPresenting {
 }
 
 // ========== View ==========
-final class VIPERUserListVC: UIViewController, VIPERUserListView, UITableViewDataSource, UITableViewDelegate {
+final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, UITableViewDelegate {
     private let presenter: VIPERUserListPresenting
     private let tableView = UITableView(frame: .zero, style: .plain)
     private var rows: [VIPERUserListState.Row] = []
@@ -155,7 +156,7 @@ final class VIPERUserListVC: UIViewController, VIPERUserListView, UITableViewDat
 @MainActor
 final class VIPERUserListRouter: VIPERUserListRouting {
     func toDetail(userID: String, from: UIViewController) {
-        let vc = UIViewController()
+        let vc = BaseVC()
         vc.view.byBackgroundColor(JobsCor.systemBackground)
         vc.title = "Detail \(userID)"
         from.navigationController?.pushViewController(vc, animated: true)

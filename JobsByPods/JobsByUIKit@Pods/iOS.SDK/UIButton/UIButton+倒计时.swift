@@ -49,7 +49,6 @@ extension UIButton {
                                      &_timerStateKey,
                                      newValue,
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
             if let hook = objc_getAssociatedObject(self, &_timerStateDidChangeKey) as? TimerStateChangeHandler {
                 hook(self, old, newValue)
             } else {
@@ -129,7 +128,6 @@ extension UIButton {
         kind: JobsTimerKind? = nil,
         onStartBlock: ((UIButton) -> Void)? = nil
     ) -> Self {
-
         let kind = kind ?? .gcd
         stopTimer()
         if let total {
@@ -167,7 +165,6 @@ extension UIButton {
             onMainAsync(self) { vc in
                 guard var mode = objc_getAssociatedObject(self, &_timerModeKey) as? _TimerMode else { return }
                 let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? kind
-
                 switch mode {
                 case .countUp(let elapsed0):
                     let elapsed = elapsed0 + 1
@@ -178,14 +175,11 @@ extension UIButton {
                         mode,
                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                     )
-
                     self.setTitle("\(elapsed)", for: .normal)
-
                     if let tick = objc_getAssociatedObject(self, &_timerTickAnyKey)
                         as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
                         tick(self, elapsed, nil, k)
                     }
-
                 case .countdown(let remain0, let total):
                     let remain = remain0 - 1
                     if remain > 0 {
@@ -196,14 +190,11 @@ extension UIButton {
                             mode,
                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                         )
-
                         self.setTitle("\(remain)s", for: .normal)
-
                         if let tick = objc_getAssociatedObject(self, &_timerTickAnyKey)
                             as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
                             tick(self, remain, total, k)
                         }
-
                         if let legacy = objc_getAssociatedObject(self, &_legacyCountdownTickKey) as? (Int, Int) -> Void {
                             legacy(remain, total)
                         }
@@ -212,11 +203,9 @@ extension UIButton {
                             as? (UIButton, JobsTimerKind) -> Void {
                             fin(self, k)
                         }
-
                         if let legacyFin = objc_getAssociatedObject(self, &_legacyCountdownFinishKey) as? jobsByVoidBlock {
                             legacyFin()
                         }
-
                         self.stopTimer()
                         self.isEnabled = true
                         self.setTitle("重新获取".tr, for: .normal)
@@ -224,7 +213,6 @@ extension UIButton {
                 }
             }
         }
-
         self.timer = core
         self.timerState = .running
         core.start()
@@ -284,7 +272,6 @@ extension UIButton {
                         as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
                         tick(self, remain, total, k)
                     }
-
                     if let legacy = objc_getAssociatedObject(self, &_legacyCountdownTickKey) as? (Int, Int) -> Void {
                         legacy(remain, total)
                     }
@@ -293,7 +280,6 @@ extension UIButton {
                         as? (UIButton, JobsTimerKind) -> Void {
                         fin(self, k)
                     }
-
                     if let legacyFin = objc_getAssociatedObject(self, &_legacyCountdownFinishKey) as? jobsByVoidBlock {
                         legacyFin()
                     }
@@ -310,19 +296,15 @@ extension UIButton {
     @discardableResult
     public func stopTimer() -> Self {
         let mode = objc_getAssociatedObject(self, &_timerModeKey) as? _TimerMode
-
         timer?.stop()
         timer = nil
-
         objc_setAssociatedObject(
             self,
             &_timerModeKey,
             nil,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         timerState = .stopped
-
         if mode?.isCountdown == true {
             isEnabled = true
             setTitle("重新获取".tr, for: .normal)

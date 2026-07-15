@@ -20,7 +20,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class TransparentRegionVC: BaseVC {
-    
     private let horizontalInset: CGFloat = 16
     private var didInitHoleRect = false
     private lazy var titleLabel: UILabel = {
@@ -51,7 +50,7 @@ final class TransparentRegionVC: BaseVC {
             make.edges.equalToSuperview()
         }
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemYellow)
@@ -59,7 +58,7 @@ final class TransparentRegionVC: BaseVC {
         titleLabel.byVisible(YES)
         overlayView.byVisible(YES)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if !didInitHoleRect {

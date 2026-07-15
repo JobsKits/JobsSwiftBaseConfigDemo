@@ -36,7 +36,6 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
         let n = ASTableNode(style: .plain)
         n.dataSource = self
         n.delegate = self
-
         // Fix: avoid readable-width shrinking & unexpected insets
         n.view.cellLayoutMarginsFollowReadableWidth = false
         if #available(iOS 11.0, *) {
@@ -44,7 +43,6 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
         }
         n.view.layoutMargins = .zero
         n.view.separatorInset = .zero
-
         // 下面这些是原先 UITableView 的链式配置，直接作用到 n.view (UITableView) 就行
         n.view
             .byNoContentInsetAdjustment()
@@ -52,7 +50,6 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
-
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
@@ -129,7 +126,6 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "朋友圈 (Texture)".tr)
         tableNode.view.byVisible(YES)
-
         posts = MomentPost.makeSample(rows: rows)
         applyLayoutMode()
         tableNode.reloadData()
@@ -157,13 +153,10 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
         // ✅ UI 只展示最多 9 张（3×3），预览也必须保持一致
         let medias = Array(post.media.prefix(9))
         guard medias.indices.contains(index) else { return }
-
         var photos: [GKPhoto] = []
         photos.reserveCapacity(medias.count)
-
         for (i, m) in medias.enumerated() {
             let p = GKPhoto()
-
             if let cover = URL(string: m.coverURL) {
                 p.url = cover
             }
@@ -177,12 +170,10 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             }
             photos.append(p)
         }
-
         let b = GKPhotoBrowser(photos: photos, currentIndex: index)
         let cfg = GKPhotoBrowserConfigure.default()
         cfg.showStyle = .zoom
         b.configure = cfg
-
         browser = b
         b.show(fromVC: self)
     }

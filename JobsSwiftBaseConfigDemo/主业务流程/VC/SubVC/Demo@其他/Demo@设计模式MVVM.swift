@@ -16,6 +16,7 @@ import UIKit
 
 import JobsSwiftBaseDefines
 import JobsByUIKit
+import JobsInheritance
 
 // ========== Model ==========
 struct MVVMUser: Decodable { let id: String; let name: String }
@@ -68,7 +69,7 @@ final class MVVMUserListViewModel {
     }
 }
 // ========== ViewController ==========
-final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
     private let vm: MVVMUserListViewModel
     private let tableView = UITableView(frame: .zero, style: .plain)
     private var data: [MVVMUser] = []
@@ -85,7 +86,6 @@ final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableView
         view.byBackgroundColor(JobsCor.systemBackground)
         tableView.byDataSource(self).byDelegate(self)
         tableView.byAddTo(view); tableView.byFrame(view.bounds)
-
         vm.onStateChange = { [weak self] state in
             guard let self else { return }
             switch state {
@@ -116,7 +116,7 @@ final class MVVMUserListVC: UIViewController, UITableViewDataSource, UITableView
     }
     func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
         let u = data[ip.row]
-        let vc = UIViewController()
+        let vc = BaseVC()
         vc.view.byBackgroundColor(JobsCor.systemBackground)
         vc.title = "Detail \(u.name)"
         navigationController?.pushViewController(vc, animated: true)

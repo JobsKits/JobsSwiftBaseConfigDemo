@@ -10,7 +10,6 @@ import Foundation
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingUploadDemoVC: JobsNetworkingMethodDemoVC {
-
     override func buildRequestPreview(triggerError: Bool) -> String {
         triggerError
         ? "POST /api/upload/file\nform-data: {description: \"触发错误\"}"
@@ -20,7 +19,6 @@ final class JobsNetworkingUploadDemoVC: JobsNetworkingMethodDemoVC {
     override func performRequest(triggerError: Bool) async throws {
         let data = try await service.uploadDemo(triggerError: triggerError)
         let raw = service.prettyJSONString(from: data)
-
         if triggerError, let error = service.decode(DioErrorResponse.self, from: data) {
             let render = prettyPrint([
                 "状态码：\(error.status ?? 0)",
@@ -29,7 +27,6 @@ final class JobsNetworkingUploadDemoVC: JobsNetworkingMethodDemoVC {
             ])
             await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
-
         let response = service.decode(DioUPLOADResponse.self, from: data)
         let render = prettyPrint([
             "文件名：\(response?.data?.fileName ?? "--")",
@@ -39,7 +36,6 @@ final class JobsNetworkingUploadDemoVC: JobsNetworkingMethodDemoVC {
             "分类：\(response?.data?.category ?? "--")",
             "预览：\(response?.data?.preview ?? "--")"
         ])
-
         onMainSync { [weak self] in
             guard let self else { return }
             self.handleSuccess(render: render, raw: raw) 

@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - Animation / Transition 终止动作
 public extension UIView {
-
     static func jobsAnimate(_ duration: TimeInterval,
                             animations: @escaping () -> Void) {
         UIView.animate(withDuration: duration, animations: animations)

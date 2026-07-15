@@ -20,15 +20,12 @@ final class DemoMessage: Codable, TableCodable {
     var lastInsertedRowID: Int64 = 0
     enum CodingKeys: String, CodingTableKey {
         typealias Root = DemoMessage
-
         case identifier
         case content
         case createdAt
-
         static let objectRelationalMapping = TableBinding(CodingKeys.self) {
             // 主键 + 自增
             BindColumnConstraint(identifier, isPrimary: true, isAutoIncrement: true)
-
             // 非空 + 默认值
             BindColumnConstraint(content, isNotNull: true, defaultTo: "")
         }

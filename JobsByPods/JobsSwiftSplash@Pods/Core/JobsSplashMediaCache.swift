@@ -8,7 +8,6 @@
 import Foundation
 
 final class JobsSplashMediaCache {
-
     static let shared = JobsSplashMediaCache()
 
     private let fileManager = FileManager.default
@@ -34,7 +33,6 @@ final class JobsSplashMediaCache {
             completion(.success(cachedURL))
             return nil
         }
-
         let task = URLSession.shared.downloadTask(with: remoteURL) { [weak self] temporaryURL, _, error in
             guard let self else { return }
             if let error {
@@ -48,7 +46,6 @@ final class JobsSplashMediaCache {
                 )
                 DispatchQueue.main.async { completion(.failure(error)) };return
             }
-
             let destinationURL = self.localFileURL(for: remoteURL)
             do {
                 if self.fileManager.fileExists(atPath: destinationURL.path) {

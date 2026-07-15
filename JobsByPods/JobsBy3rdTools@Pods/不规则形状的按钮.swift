@@ -18,7 +18,6 @@ import JobsSwiftDSL
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
 
 public class IrregularButton: UIButton {
-
     var points: [CGPoint] = [] { didSet { setNeedsLayout() } }
     var designSize: CGSize? { didSet { setNeedsLayout() } }
 
@@ -40,13 +39,11 @@ public class IrregularButton: UIButton {
         // ✅ 关键：把“整个视图”裁成不规则形状
         layer.mask = maskLayer
         maskLayer.fillColor = JobsCor.black.cgColor
-
         // 描边层（可选）
         layer.addSublayer(strokeLayer)
         strokeLayer.fillColor = JobsCor.clear.cgColor
         strokeLayer.strokeColor = JobsCor.clear.cgColor
         strokeLayer.lineWidth = 0
-
         // 不要系统按钮那套高亮干预
 //        adjustsImageWhenHighlighted = false
 //        showsTouchWhenHighlighted = false
@@ -54,13 +51,10 @@ public class IrregularButton: UIButton {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-
         let path = buildPath().cgPath
         cachedPath = path
-
         maskLayer.byFrame(bounds)
         maskLayer.path = path
-
         strokeLayer.byFrame(bounds)
         strokeLayer.path = path
     }
@@ -72,7 +66,6 @@ public class IrregularButton: UIButton {
     private func buildPath() -> UIBezierPath {
         let p = UIBezierPath.make()
         guard bounds.width > 0, bounds.height > 0, points.count >= 3 else { return p }
-
         let pts = scaled(points)
         p.byMove(to: pts[0])
         for i in 1..<pts.count { p.byAddLine(to: pts[i]) }

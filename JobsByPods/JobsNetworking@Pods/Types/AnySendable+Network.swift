@@ -14,7 +14,6 @@ public extension JobsValue {
 
     private static func stringify(_ value: Any?) -> String {
         guard let value else { return "nil" }
-
         switch value {
         case let value as String:
             return value

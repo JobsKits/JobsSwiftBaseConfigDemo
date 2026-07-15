@@ -22,34 +22,33 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class TaskCenterComponentDemoVC: BaseVC {
-    
     private enum DemoTag {
         static let heartbeat = "TaskCenterDemo.heartbeat"
         static let burst = "TaskCenterDemo.burst"
     }
-    
+
     private let burstPlannedCount = 3
     private let burstInitialDelaySeconds = 2
-    
+
     private var heartbeatComponent: JobsTaskCenterComponent?
     private var burstComponent: JobsTaskCenterComponent?
-    
+
     private var heartbeatCounter = 0
     private var burstExecutedCount = 0
     private var logs: [String] = []
-    
+
     private var statusObserverTask: Task<Void, Never>?
     private var heartbeatExecutionObserverTask: Task<Void, Never>?
     private var burstExecutionObserverTask: Task<Void, Never>?
-    
+
     private var isObserving = false {
         didSet { updateObserverStateLabel() }
     }
-    
+
     private lazy var timestampFormatter: DateFormatter = {
         DateFormatter().byDateFormat("HH:mm:ss")
     }()
-    
+
     private lazy var scrollView: UIScrollView = {
         UIScrollView()
             .byAlwaysBounceVertical(true)
@@ -65,7 +64,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 }
             }
     }()
-    
+
     private lazy var contentView: UIView = {
         UIView()
             .byBackgroundColor(JobsCor.clear)
@@ -75,7 +74,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview()
             }
     }()
-    
+
     private lazy var introLabel: UILabel = {
         UILabel()
             .byText(
@@ -91,9 +90,9 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var conceptCard: UIView = makeCard(top: introLabel.snp.bottom, offset: 16)
-    
+
     private lazy var conceptTitleLabel: UILabel = {
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
@@ -103,7 +102,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var conceptDetailLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
@@ -120,9 +119,9 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatCard: UIView = makeCard(top: conceptCard.snp.bottom, offset: 16)
-    
+
     private lazy var heartbeatTitleLabel: UILabel = {
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
@@ -132,7 +131,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatExplainLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
@@ -144,7 +143,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatStateLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
@@ -155,7 +154,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatMetricsLabel: UILabel = {
         UILabel()
             .byNumberOfLines(0)
@@ -167,7 +166,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatButtonsRow1: UIStackView = {
         UIStackView(arrangedSubviews: [heartbeatStartBtn, heartbeatPauseBtn, heartbeatFireBtn])
             .byAxis(.horizontal)
@@ -178,7 +177,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatButtonsRow2: UIStackView = {
         UIStackView(arrangedSubviews: [heartbeatAsyncFireBtn, heartbeatResetBtn, heartbeatRemoveBtn])
             .byAxis(.horizontal)
@@ -190,7 +189,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var heartbeatStartBtn: UIButton = {
         UIButton.sys()
             .byTitle("开始".tr)
@@ -198,13 +197,13 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self?.startHeartbeat()
             }
     }()
-    
+
     private lazy var heartbeatPauseBtn: UIButton = {
         UIButton.sys()
             .byTitle("暂停".tr)
             .onTap { [weak self] _ in self?.pauseHeartbeat() }
     }()
-    
+
     private lazy var heartbeatFireBtn: UIButton = {
         UIButton.sys()
             .byTitle("立即执行".tr)
@@ -215,7 +214,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 appendLog("⚡️ heartbeat 已 executeNow")
             }
     }()
-    
+
     private lazy var heartbeatAsyncFireBtn: UIButton = {
         UIButton.sys()
             .byTitle("异步触发".tr)
@@ -228,7 +227,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 }
             }
     }()
-    
+
     private lazy var heartbeatResetBtn: UIButton = {
         UIButton.sys()
             .byTitle("重建".tr)
@@ -237,15 +236,15 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.resetHeartbeatTask(showToast: true)
             }
     }()
-    
+
     private lazy var heartbeatRemoveBtn: UIButton = {
         UIButton.sys()
             .byTitle("移除".tr)
             .onTap { [weak self] _ in self?.removeHeartbeat() }
     }()
-    
+
     private lazy var burstCard: UIView = makeCard(top: heartbeatCard.snp.bottom, offset: 16)
-    
+
     private lazy var burstTitleLabel: UILabel = { [unowned self] in
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
@@ -255,7 +254,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var burstExplainLabel: UILabel = { [unowned self] in
         UILabel()
             .byNumberOfLines(0)
@@ -267,7 +266,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var burstStateLabel: UILabel = { [unowned self] in
         UILabel()
             .byNumberOfLines(0)
@@ -278,7 +277,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var burstButtonsStack: UIStackView = { [unowned self] in
         UIStackView(arrangedSubviews: [burstStartBtn, burstCancelBtn, burstRebuildBtn])
             .byAxis(.horizontal)
@@ -290,7 +289,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var burstStartBtn: UIButton = {
         UIButton.sys()
             .byTitle("启动".tr)
@@ -299,7 +298,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.startBurstTask()
             }
     }()
-    
+
     private lazy var burstCancelBtn: UIButton = {
         UIButton.sys()
             .byTitle("终止".tr)
@@ -308,7 +307,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.cancelBurstTask()
             }
     }()
-    
+
     private lazy var burstRebuildBtn: UIButton = {
         UIButton.sys()
             .byTitle("重建".tr)
@@ -318,9 +317,9 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.startBurstTask()
             }
     }()
-    
+
     private lazy var observerCard: UIView = makeCard(top: burstCard.snp.bottom, offset: 16)
-    
+
     private lazy var observerTitleLabel: UILabel = { [unowned self] in
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
@@ -330,7 +329,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var observerExplainLabel: UILabel = { [unowned self] in
         UILabel()
             .byNumberOfLines(0)
@@ -342,7 +341,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var observerStateLabel: UILabel = { [unowned self] in
         UILabel()
             .byNumberOfLines(0)
@@ -353,7 +352,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var observerButtonsStack: UIStackView = { [unowned self] in
         UIStackView(arrangedSubviews: [startObserveBtn, stopObserveBtn, clearLogBtn])
             .byAxis(.horizontal)
@@ -365,7 +364,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var startObserveBtn: UIButton = {
         UIButton.sys()
             .byTitle("开启观察".tr)
@@ -374,7 +373,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.startObservation()
             }
     }()
-    
+
     private lazy var stopObserveBtn: UIButton = {
         UIButton.sys()
             .byTitle("停止观察".tr)
@@ -383,7 +382,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 self.stopObservation(showLog: true)
             }
     }()
-    
+
     private lazy var clearLogBtn: UIButton = {
         UIButton.sys()
             .byTitle("清空日志".tr)
@@ -393,7 +392,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 logTextView.byText("--")
             }
     }()
-    
+
     private lazy var logTitleLabel: UILabel = { [unowned self] in
         UILabel()
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
@@ -403,7 +402,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }()
-    
+
     private lazy var logTextView: UITextView = { [unowned self] in
         UITextView()
             .byEditable(false)
@@ -418,25 +417,23 @@ final class TaskCenterComponentDemoVC: BaseVC {
                 make.bottom.equalToSuperview().inset(24)
             }
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "任务中枢组件演示".tr)
-        
         [scrollView, contentView, introLabel,
          conceptCard, conceptTitleLabel, conceptDetailLabel,
          heartbeatCard, heartbeatTitleLabel, heartbeatExplainLabel, heartbeatStateLabel, heartbeatMetricsLabel, heartbeatButtonsRow1, heartbeatButtonsRow2,
          burstCard, burstTitleLabel, burstExplainLabel, burstStateLabel, burstButtonsStack,
          observerCard, observerTitleLabel, observerExplainLabel, observerStateLabel, observerButtonsStack,
          logTitleLabel, logTextView].forEach { $0.byVisible(YES) }
-        
         resetHeartbeatTask(showToast: false)
         updateBurstStateLabel(extra: "点击“启动”后开始演示")
         updateObserverStateLabel()
         appendLog("📌 页面初始化完成：已重建 heartbeat，等待你手动控制")
     }
-    
+
     deinit {
         stopObservation(showLog: false)
         heartbeatComponent?.cancel()
@@ -447,7 +444,6 @@ final class TaskCenterComponentDemoVC: BaseVC {
 }
 
 private extension TaskCenterComponentDemoVC {
-    
     func makeCard(top: ConstraintItem, offset: CGFloat) -> UIView {
         UIView()
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -457,19 +453,19 @@ private extension TaskCenterComponentDemoVC {
                 make.left.right.equalToSuperview().inset(16)
             }
     }
-    
+
     func startHeartbeat() {
         JobsTaskManager.default.resume(by: DemoTag.heartbeat)
         updateHeartbeatState()
         appendLog("✅ heartbeat 已 resume")
     }
-    
+
     func pauseHeartbeat() {
         JobsTaskManager.default.suspend(by: DemoTag.heartbeat)
         updateHeartbeatState()
         appendLog("⏸️ heartbeat 已 suspend")
     }
-    
+
     func removeHeartbeat() {
         JobsTaskManager.default.removeTask(by: DemoTag.heartbeat)
         heartbeatComponent?.cancel()
@@ -479,12 +475,11 @@ private extension TaskCenterComponentDemoVC {
         updateHeartbeatState()
         appendLog("🗑️ heartbeat 已从 Manager 移除")
     }
-    
+
     func resetHeartbeatTask(showToast: Bool) {
         JobsTaskManager.default.removeTask(by: DemoTag.heartbeat)
         heartbeatComponent?.cancel()
         heartbeatCounter = 0
-        
         let config = JobsTaskCenterComponent.Configuration(
             interval: 1.seconds,
             initialDelay: .zero,
@@ -493,7 +488,6 @@ private extension TaskCenterComponentDemoVC {
             runLoopMode: nil,
             fireImmediately: true
         )
-        
         let component = JobsTaskCenterComponent.schedule(configuration: config) { [weak self] in
             self?.handleHeartbeatTick()
         }
@@ -504,7 +498,7 @@ private extension TaskCenterComponentDemoVC {
         if showToast { "已重建 heartbeat 任务".tr.toast }
         appendLog("♻️ heartbeat 已重建：已 attach，但默认不自动启动")
     }
-    
+
     func handleHeartbeatTick() {
         heartbeatCounter += 1
         onMainAsync { [weak self] in
@@ -514,7 +508,7 @@ private extension TaskCenterComponentDemoVC {
             self.appendLog("❤️ heartbeat 第\(heartbeatCounter)次触发")
         }
     }
-    
+
     func updateHeartbeatState() {
         let lifecycleText = heartbeatComponent.map { describeLifecycle($0.lifecycle) } ?? "未创建".tr
         let managerStatusText = JobsTaskManager.default.task(by: DemoTag.heartbeat).map { describeStatus($0.status) } ?? "未注册".tr
@@ -525,12 +519,11 @@ private extension TaskCenterComponentDemoVC {
             "nextFireDate: \(nextText)"
         )
     }
-    
+
     func startBurstTask() {
         JobsTaskManager.default.removeTask(by: DemoTag.burst)
         burstComponent?.cancel()
         burstExecutedCount = 0
-        
         let config = JobsTaskCenterComponent.Configuration(
             interval: 1.seconds,
             initialDelay: burstInitialDelaySeconds.seconds,
@@ -539,7 +532,6 @@ private extension TaskCenterComponentDemoVC {
             runLoopMode: nil,
             fireImmediately: false
         )
-        
         let component = JobsTaskCenterComponent.schedule(configuration: config) { [weak self] in
             self?.handleBurstTick()
         }
@@ -548,7 +540,7 @@ private extension TaskCenterComponentDemoVC {
         updateBurstStateLabel(extra: "等待 \(burstInitialDelaySeconds)s 后开始……")
         appendLog("🚀 burst 已创建并 attach：2 秒后开始，执行 3 次")
     }
-    
+
     func handleBurstTick() {
         burstExecutedCount += 1
         onMainAsync { [weak self] in
@@ -562,7 +554,7 @@ private extension TaskCenterComponentDemoVC {
             }
         }
     }
-    
+
     func cancelBurstTask(showToast: Bool = true, shouldLog: Bool = true) {
         JobsTaskManager.default.removeTask(by: DemoTag.burst)
         burstComponent?.cancel()
@@ -572,18 +564,16 @@ private extension TaskCenterComponentDemoVC {
         if showToast { "已终止 burst 任务".tr.toast }
         if shouldLog { appendLog("🛑 burst 已终止并从 Manager 移除") }
     }
-    
+
     func updateBurstStateLabel(extra: String?) {
         guard let component = burstComponent else {
             burstStateLabel.byText("状态：尚未创建\n剩余次数：--\n下次触发：--\nattach tag：\(DemoTag.burst)")
             return
         }
-        
         let lifecycle = describeLifecycle(component.lifecycle)
         let managerStatus = JobsTaskManager.default.task(by: DemoTag.burst).map { describeStatus($0.status) } ?? "未注册"
         let remaining = max(0, burstPlannedCount - burstExecutedCount)
         let nextText = component.nextFireDate.map { timestampFormatter.string(from: $0) } ?? "--"
-        
         var rows = [
             "Component.lifecycle: \(lifecycle)",
             "Manager.status: \(managerStatus)",
@@ -594,7 +584,7 @@ private extension TaskCenterComponentDemoVC {
         if let extra { rows.append(extra) }
         burstStateLabel.byText(rows.joined(separator: "\n"))
     }
-    
+
     func startObservation() {
         guard !isObserving else {
             appendLog("ℹ️ 观察已开启，无需重复开启")
@@ -602,21 +592,18 @@ private extension TaskCenterComponentDemoVC {
         }
         isObserving = true
         appendLog("👀 已开启观察：statusChanges + heartbeat.executionStream + burst.executionStream")
-        
         statusObserverTask = observeOnMain(
             JobsTaskManager.default.statusChanges()
         ) { [weak self] change in
             guard let self else { return }
             self.handleStatusChange(change)
         }
-        
         heartbeatExecutionObserverTask = observeOnMain(
             JobsTaskManager.default.executionStream(for: DemoTag.heartbeat)
         ) { [weak self] execution in
             guard let self else { return }
             self.handleExecution(execution, tag: DemoTag.heartbeat)
         }
-
         burstExecutionObserverTask = observeOnMain(
             JobsTaskManager.default.executionStream(for: DemoTag.burst)
         ) { [weak self] execution in
@@ -624,7 +611,7 @@ private extension TaskCenterComponentDemoVC {
             self.handleExecution(execution, tag: DemoTag.burst)
         }
     }
-    
+
     func stopObservation(showLog: Bool) {
         statusObserverTask?.cancel()
         heartbeatExecutionObserverTask?.cancel()
@@ -632,14 +619,13 @@ private extension TaskCenterComponentDemoVC {
         statusObserverTask = nil
         heartbeatExecutionObserverTask = nil
         burstExecutionObserverTask = nil
-        
         let wasObserving = isObserving
         isObserving = false
         if showLog, wasObserving {
             appendLog("🧹 已停止所有观察流")
         }
     }
-    
+
     func handleStatusChange(_ change: JobsTaskStatusChange) {
         let oldText = change.oldStatus.map(describeStatus) ?? "nil"
         let newText = change.newStatus.map(describeStatus) ?? "nil"
@@ -647,7 +633,7 @@ private extension TaskCenterComponentDemoVC {
         updateHeartbeatState()
         updateBurstStateLabel(extra: nil)
     }
-    
+
     func handleExecution(_ execution: TaskExecution, tag: String) {
         let dateText = timestampFormatter.string(from: execution.date)
         let lifecycleText = describeLifecycle(execution.lifecycle)
@@ -656,7 +642,7 @@ private extension TaskCenterComponentDemoVC {
         updateHeartbeatState()
         updateBurstStateLabel(extra: nil)
     }
-    
+
     func updateObserverStateLabel() {
         let currentTasks = JobsTaskManager.default.allTasks.map(\.tag)
         observerStateLabel.byText(
@@ -665,7 +651,7 @@ private extension TaskCenterComponentDemoVC {
             "说明：状态变化来自 Manager，执行事件来自每个 Task 的 AsyncSequence。"
         )
     }
-    
+
     func describeLifecycle(_ lifecycle: JobsTaskLifecycle) -> String {
         switch lifecycle {
         case .idle: return "idle / 待启动"
@@ -675,7 +661,7 @@ private extension TaskCenterComponentDemoVC {
         case .finished: return "finished / 已结束"
         }
     }
-    
+
     func describeStatus(_ status: JobsTaskStatus) -> String {
         switch status {
         case .expire: return "expire / 过期"
@@ -686,7 +672,7 @@ private extension TaskCenterComponentDemoVC {
         case .background: return "background / 后台"
         }
     }
-    
+
     func appendLog(_ text: String) {
         let timestamp = timestampFormatter.string(from: Date())
         logs.append("[\(timestamp)] \(text)")

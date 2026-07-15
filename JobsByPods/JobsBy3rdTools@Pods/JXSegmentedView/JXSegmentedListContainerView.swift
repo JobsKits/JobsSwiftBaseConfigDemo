@@ -94,7 +94,6 @@ private struct AssociatedKeys {
 }
 
 extension JXSegmentedListContainerView {
-    
     public typealias JXIndexChangedHandler = (_ from: Int, _ to: Int) -> Void
     /// 开启“统一切换完成回调”（点击标题 + 手势滑动都会走到同一个回调）
     /// 建议：创建后 / 设置好 segmentedView 绑定关系后调用一次即可。
@@ -105,7 +104,6 @@ extension JXSegmentedListContainerView {
         }
         // 记录初始 index（用 defaultSelectedIndex / current visible offset 推断一个合理值）
         jx_lastReportedIndex = jx_currentIndexFromContentOffset()
-
         let proxy = _JXScrollDelegateProxy(owner: self, forwardTo: self)
         objc_setAssociatedObject(
             self,
@@ -134,7 +132,6 @@ extension JXSegmentedListContainerView {
 }
 // MARK: - Internal (associated storage)
 extension JXSegmentedListContainerView {
-
     private var jx_handler: JXIndexChangedHandler? {
         get { objc_getAssociatedObject(self, &AssociatedKeys.handler) as? JXIndexChangedHandler }
         set { objc_setAssociatedObject(
@@ -174,7 +171,6 @@ extension JXSegmentedListContainerView {
 }
 // MARK: - Delegate Proxy
 private final class _JXScrollDelegateProxy: NSObject, UIScrollViewDelegate {
-    
     weak var owner: JXSegmentedListContainerView?
     weak var forwardTo: UIScrollViewDelegate?
 

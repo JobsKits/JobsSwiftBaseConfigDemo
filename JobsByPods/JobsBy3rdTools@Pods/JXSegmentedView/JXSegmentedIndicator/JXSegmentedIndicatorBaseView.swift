@@ -15,31 +15,30 @@ import UIKit
 import JXSegmentedView
 /// 共用：基类可链式配置
 extension JXSegmentedIndicatorBaseView {
-    
     @discardableResult
     public func byIndicatorColor(_ v: UIColor) -> Self {
         indicatorColor = v
         return self
     }
-    
+
     @discardableResult
     public func byIndicatorHeight(_ v: CGFloat) -> Self {
         indicatorHeight = v
         return self
     }
-    
+
     @discardableResult
     public func byIndicatorWidth(_ v: CGFloat) -> Self {
         indicatorWidth = v
         return self
     }
-    
+
     @discardableResult
     public func byVerticalOffset(_ v: CGFloat) -> Self {
         verticalOffset = v
         return self
     }
-    
+
     @discardableResult
     public func byPosition(_ p: JXSegmentedIndicatorPosition) -> Self {
         indicatorPosition = p

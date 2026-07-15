@@ -63,14 +63,13 @@ extension UIWindow {
 }
 // MARK: - 闭包重载@单参数
 extension UIWindow {
-    
     @discardableResult
     public func byAttach(to builder: () -> Any?) -> Self {
         if #available(iOS 13.0, *) {
             return byAttach(toScene: builder() as? UIWindowScene)
         };return self
     }
-    
+
     @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
     public func byAttach(toScene builder: () -> UIWindowScene?) -> Self {
@@ -81,13 +80,13 @@ extension UIWindow {
             }
         };return self
     }
-    
+
     @discardableResult
     public func byRootViewController(_ builder: () -> UIViewController?) -> Self {
         self.rootViewController = builder()
         return self
     }
-    
+
     @discardableResult
     public func byWindowLevel(_ builder: () -> UIWindow.Level) -> Self {
         self.windowLevel = builder()

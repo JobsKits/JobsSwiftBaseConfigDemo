@@ -12,11 +12,21 @@ import UIKit
 import WebKit
 import JobsInheritance
 import JobsByUIKit
+import GKNavigationBarSwift
 
 public final class JobsOpenWebViewController: BaseVC {
-
     private let url: URL
     private let pageTitle: String?
+
+    private lazy var backButton: UIButton = {
+        UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 64, height: 44))
+            .byTitle("‹ 返回", for: .normal)
+            .byContentHorizontalAlignment(.left)
+            .onTap { [weak self] _ in
+                self?.handleBack()
+            }
+    }()
 
     private lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
@@ -39,17 +49,38 @@ public final class JobsOpenWebViewController: BaseVC {
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = pageTitle ?? url.host
-        webView.byAddTo(view) { [unowned self] make in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide)
-        }
+        jobsSetupGKNav(title: title ?? "网页", leftButton: backButton)
+        webView
+            .byAutoLayout()
+            .byAddTo(view)
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: gk_navigationBar.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
         webView.load(URLRequest(url: url))
+    }
+
+    private func handleBack() {
+        if webView.canGoBack {
+            webView.goBack()
+        } else if let navigationController,
+                  navigationController.viewControllers.first != self {
+            navigationController.popViewController(animated: true)
+        } else if let navigationController,
+                  navigationController.presentingViewController != nil {
+            navigationController.dismiss(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
 }
 
 extension JobsOpenWebViewController: WKNavigationDelegate {
-
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         guard pageTitle == nil else { return }
         title = webView.title ?? url.host
+        gk_navTitle = title ?? "网页"
     }
 }

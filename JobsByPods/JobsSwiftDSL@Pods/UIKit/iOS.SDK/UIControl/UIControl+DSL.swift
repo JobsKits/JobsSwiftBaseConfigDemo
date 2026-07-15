@@ -15,14 +15,13 @@ import ObjectiveC
 
 // MARK: - 直接赋值@单参数
 extension UIControl {
-    
     // MARK: - 基础状态
     @discardableResult
     public func byEnabled(_ on: Bool?) -> Self {
         self.isEnabled = on ?? false
         return self
     }
-    
+
     @discardableResult
     public func bySelected(_ on: Bool?) -> Self {
         self.isSelected = on ?? false
@@ -34,7 +33,7 @@ extension UIControl {
         self.isSelected.toggle()
         return self
     }
-    
+
     @discardableResult
     public func byHighlighted(_ on: Bool?) -> Self {
         self.isHighlighted = on ?? false
@@ -85,19 +84,18 @@ extension UIControl {
 }
 // MARK: - 闭包重载@单参数
 extension UIControl {
-    
     @discardableResult
     public func byEnabled(_ builder: () -> Bool?) -> Self {
         self.isEnabled = builder() ?? false
         return self
     }
-    
+
     @discardableResult
     public func bySelected(_ builder: () -> Bool?) -> Self {
         self.isSelected = builder() ?? false
         return self
     }
-    
+
     @discardableResult
     public func byHighlighted(_ builder: () -> Bool?) -> Self {
         self.isHighlighted = builder() ?? false
@@ -141,9 +139,7 @@ extension UIControl {
 
 private var trampolines: UInt8 = 0
 extension UIControl {
-    
     private final class _JobsActionTrampoline: NSObject {
-        
         let handler: (UIControl) -> Void
         init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
         @objc func invoke(_ sender: UIControl) { handler(sender) }

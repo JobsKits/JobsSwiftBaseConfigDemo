@@ -131,10 +131,8 @@ open class PlayerControlsView: UIView {
         self.byBackgroundColor(JobsCor.black.withAlphaComponent(0.7))
         byCornerRadius(8)
         byMasksToBounds(true)
-
         // 先把 arrangedSubviews 塞进去，避免懒加载循环引用
         _ = controlsStackView.byAddArrangedSubviews([playPauseButton, currentTimeLabel, progressSlider, durationLabel])
-
         // 再把 stack 加到自己身上并约束
         _ = controlsStackView.byAddTo(self) { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16))
@@ -164,14 +162,11 @@ open class PlayerControlsView: UIView {
     public func updateProgress(currentTime: TimeInterval, duration: TimeInterval) {
         guard currentTime.isFinite, !currentTime.isNaN, currentTime >= 0,
               duration.isFinite, !duration.isNaN, duration > 0 else { return }
-
         self.duration = duration
-
         if isUserDragging {
             updateDurationLabel()
             return
         }
-
         self.currentTime = currentTime
         progressSlider.setValue(Float(currentTime / duration), animated: false)
         updateCurrentTimeLabel()

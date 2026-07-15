@@ -12,52 +12,52 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T1["method:ASControlNode::__exitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:114"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
+  T1["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S1 -->|calls| T1
-  S2["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T2["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
+  T2["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S2 -->|calls| T2
-  S3["method:ASTableView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1994"]
-  T3["method:ASTableView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1480"]
+  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
+  T3["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S3 -->|calls| T3
-  S4["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
-  T4["method:ASTableView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:739"]
+  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
+  T4["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S4 -->|calls| T4
-  S5["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
-  T5["method:ASTableView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:2040"]
+  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
+  T5["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T6["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h:1"]
+  T6["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S6 -->|calls| T6
-  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T7["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h:1"]
+  T7["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S7 -->|calls| T7
-  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T8["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T8["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T9["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T9["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T10["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T10["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T11["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T12["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T13["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableViewProtocols.h:1"]
-  T14["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
+  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S14 -->|calls| T14
-  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h:1"]
+  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
   T15["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S15 -->|calls| T15
-  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode+Beta.h:1"]
+  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
   T16["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S16 -->|calls| T16
   S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
@@ -73,16 +73,16 @@ flowchart LR
   T20["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S20 -->|calls| T20
   S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
-  T21["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  T21["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S21 -->|calls| T21
   S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
-  T22["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  T22["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S22 -->|calls| T22
   S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
   T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S23 -->|calls| T23
   S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
-  T24["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  T24["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S24 -->|calls| T24
   S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
   T25["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]

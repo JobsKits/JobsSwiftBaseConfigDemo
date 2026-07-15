@@ -28,12 +28,12 @@ public extension UIButton {
         get { UIControl.State(rawValue: (objc_getAssociatedObject(self, &_jobsBGStateKey) as? UInt) ?? UIControl.State.normal.rawValue) }
         set { objc_setAssociatedObject(self, &_jobsBGStateKey, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    
+
     var jobs_cfgBgImage: UIImage? {
         get { objc_getAssociatedObject(self, &_jobsCfgBgImageKey) as? UIImage }
         set { objc_setAssociatedObject(self, &_jobsCfgBgImageKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     func byUpdateConfig() -> Self {
@@ -71,7 +71,6 @@ public extension UIButton {
             bg.byBackgroundColor(JobsCor.clear)
             cfg.background = bg
             self.configuration = cfg
-
             // 让生命周期继续，但这里不要马上“强制”刷新，避免刚设的图被别的 handler 抢写
             self.automaticallyUpdatesConfiguration = true
             // self.setNeedsUpdateConfiguration()  // ← 刻意不在这里触发

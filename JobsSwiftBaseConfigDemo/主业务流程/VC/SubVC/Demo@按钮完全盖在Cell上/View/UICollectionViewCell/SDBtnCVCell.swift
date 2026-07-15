@@ -20,7 +20,6 @@ import SnapKit
 #if canImport(SDWebImage)
 import SDWebImage
 final class SDBtnCVCell: UICollectionViewCell {
-    
     private lazy var coverButton: UIButton = {
         UIButton.sys()
             .byAddTo(contentView) { make in

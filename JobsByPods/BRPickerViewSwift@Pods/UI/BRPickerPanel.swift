@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRPickerPanel: UIView {
-
     public var strongOwner: AnyObject?
     public var theme: BRPickerTheme = BRPickerTheme()
     public var animator: BRPanelAnimatable = BRSlideAnimation()
@@ -27,20 +26,15 @@ public final class BRPickerPanel: UIView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-
         addSubview(dimmingControl)
         addSubview(panelView)
-
         panelView.addSubview(toolbar)
         panelView.addSubview(contentContainer)
-
         dimmingControl.addTarget(self, action: #selector(tapMask), for: .touchUpInside)
-
         // Accessibility
         isAccessibilityElement = false
         dimmingControl.isAccessibilityElement = true
         dimmingControl.accessibilityLabel = "Dismiss"
-
         applyTheme()
     }
 
@@ -49,11 +43,9 @@ public final class BRPickerPanel: UIView {
     public func applyTheme() {
         backgroundColor = .clear
         dimmingControl.backgroundColor = theme.maskColor
-
         panelView.backgroundColor = theme.panelBackgroundColor
         panelView.layer.cornerRadius = theme.cornerRadius
         panelView.clipsToBounds = true
-
         toolbar.backgroundColor = theme.toolbarBackgroundColor
         toolbar.titleLabel.textColor = theme.titleColor
         toolbar.titleLabel.font = theme.titleFont
@@ -93,28 +85,22 @@ public final class BRPickerPanel: UIView {
         let host = containerView ?? BRPickerPanel.defaultHostView()
         guard let host else { return }
         hostView = host
-
         host.addSubview(self)
         frame = host.bounds
-
         dimmingControl.frame = bounds
-
         // Height adaptive
         let safeBottom = host.safeAreaInsets.bottom
         let desired = theme.toolBarHeight + theme.pickerHeight + safeBottom + theme.panelBottomOffset
         let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
         panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
-
         let finalFrame = CGRect(
             x: 0,
             y: bounds.height - panelHeight + theme.panelBottomOffset,
             width: bounds.width,
             height: panelHeight
         )
-
         panelView.frame = finalFrame
         layoutPanelSubviews()
-
         animator.animateIn(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame)
     }
 
@@ -128,14 +114,12 @@ public final class BRPickerPanel: UIView {
         let desired = theme.toolBarHeight + theme.pickerHeight + safeBottom + theme.panelBottomOffset
         let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
         panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
-
         let finalFrame = CGRect(
             x: 0,
             y: bounds.height - panelHeight + theme.panelBottomOffset,
             width: bounds.width,
             height: panelHeight
         )
-
         animator.animateOut(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame) { [weak self] in
             guard let self else { return }
             self.strongOwner = nil

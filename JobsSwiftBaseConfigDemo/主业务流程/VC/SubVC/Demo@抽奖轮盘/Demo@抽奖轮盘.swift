@@ -21,7 +21,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class LuckyWheelDemoVC: BaseVC {
-    
     private lazy var wheelView: LuckyWheelView = {
         LuckyWheelView()
             .bySegments([

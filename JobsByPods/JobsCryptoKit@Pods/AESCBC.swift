@@ -25,10 +25,8 @@ public struct AESCBC {
             throw CryptoError.invalidKey
         }
         guard iv.count == kCCBlockSizeAES128 else { throw CryptoError.invalidNonce }
-
         var out = Data(count: data.count + kCCBlockSizeAES128)
         var outLength: size_t = 0
-
         let status: CCCryptorStatus = out.withUnsafeMutableBytes { outBytes in
             data.withUnsafeBytes { dataBytes in
                 iv.withUnsafeBytes { ivBytes in
@@ -47,7 +45,6 @@ public struct AESCBC {
                 }
             }
         }
-
         guard status == kCCSuccess else { throw CryptoError.encryptionFailed }
         out.removeSubrange(outLength..<out.count)
         return out

@@ -22,7 +22,6 @@ extension UIFont {
         public static func Semibold(_ size: CGFloat) -> UIFont{
             make("Mitr-SemiBold",size, fallback: .semibold)
         }
-
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {

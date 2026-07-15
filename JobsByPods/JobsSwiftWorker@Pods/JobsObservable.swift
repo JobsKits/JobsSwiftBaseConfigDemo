@@ -69,7 +69,6 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         let oldValue: Value
         let newValue: Value
         let snapshot: [Observer]
-
         lock.lock()
         oldValue = storage
         var copy = storage
@@ -78,7 +77,6 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         newValue = copy
         snapshot = Array(observers.values)
         lock.unlock()
-
         let change = JobsWorkerChange(oldValue: oldValue, newValue: newValue)
         snapshot.forEach { $0(change) };return self
     }
@@ -98,14 +96,12 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
                            shouldNotify: Bool) {
         let change: JobsWorkerChange<Value>
         let snapshot: [Observer]
-
         lock.lock()
         let old = storage
         storage = newValue
         change = .init(oldValue: old, newValue: newValue)
         snapshot = shouldNotify ? Array(observers.values) : []
         lock.unlock()
-
         snapshot.forEach { $0(change) }
     }
 }

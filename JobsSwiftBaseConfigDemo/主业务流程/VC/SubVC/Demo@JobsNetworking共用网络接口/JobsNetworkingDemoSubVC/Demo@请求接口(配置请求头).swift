@@ -20,7 +20,6 @@ import SnapKit
 
 // MARK: - 请求接口(配置请求头)
 final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
-    
     private lazy var agent: DefaultJobsAgent = {
         DefaultJobsAgent(config: JobsRequestConfig(
             baseURL: "https://httpbin.org".url!,

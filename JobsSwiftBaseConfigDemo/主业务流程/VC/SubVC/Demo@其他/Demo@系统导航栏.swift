@@ -131,12 +131,11 @@ final class JobsNavigationDemoVC: BaseVC {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         navigationController?.setNavigationBarHidden(false, animated: animated)
         navigationController?.navigationBar.byHidden(false)
         UINavigationBar.appearance().byHidden(false)
     }
-    
+
     deinit {
         print("JobsNavigationDemoVC deinit")
     }
@@ -162,12 +161,10 @@ extension JobsNavigationDemoVC {
                 .byBackgroundImage(bgImage)
                 .byBackgroundColor(JobsCor.yellow)
                 .byShadowColor(JobsCor.clear)
-
             navBar
                 .byStandardAppearance(appearance)
                 .byScrollEdgeAppearance(appearance)
                 .byCompactAppearance(appearance)
-
             if #available(iOS 15.0, *) {
                 navBar.byCompactScrollEdgeAppearance(appearance)
             }

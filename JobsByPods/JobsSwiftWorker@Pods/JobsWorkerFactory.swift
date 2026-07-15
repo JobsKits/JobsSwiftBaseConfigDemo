@@ -85,7 +85,6 @@ public enum JobsWorkerFactory {
         let worker = JobsWorker(mode: .interval(window: time), label: label)
         let lock = NSLock()
         var nextAllowedDate: Date = .distantPast
-
         let token = source.observe { change in
             if let condition, !condition(change) { return }
             let shouldFire: Bool = lock.jobs_sync {
@@ -97,7 +96,6 @@ public enum JobsWorkerFactory {
             guard shouldFire else { return }
             onChange(change)
         }
-
         worker.setDisposer {
             source.removeObserver(token)
         };return worker

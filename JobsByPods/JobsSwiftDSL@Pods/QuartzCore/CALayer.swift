@@ -305,7 +305,7 @@ extension CALayer {
         self.name = name
         return self
     }
-    
+
     @discardableResult
     @inlinable
     public func byActions(_ v: [String: CAAction]?) -> Self {

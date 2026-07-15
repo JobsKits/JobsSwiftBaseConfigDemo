@@ -22,7 +22,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsButtonDemoVC: BaseVC {
-
     private let horizontalInset: CGFloat = 16
     private let itemHeight: CGFloat = 78
     private let vSpacing: CGFloat = 14

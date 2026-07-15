@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRPickerTheme {
-
     // Panel
     public var panelBackgroundColor: UIColor = .white
     public var cornerRadius: CGFloat = 14

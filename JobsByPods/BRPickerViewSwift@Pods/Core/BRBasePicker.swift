@@ -14,7 +14,6 @@ import UIKit
 import JobsSwiftDSL
 
 open class BRBasePicker<Result>: NSObject {
-
     private(set) weak var panel: BRPickerPanel?
     private var resultHandler: ((Result) -> Void)?
 
@@ -72,7 +71,6 @@ open class BRBasePicker<Result>: NSObject {
         fileprivate var title: String?
         fileprivate var cancelText: String = "Cancel"
         fileprivate var confirmText: String = "Done"
-
         @discardableResult public func byTitle(_ t: String?) -> Self { title = t; return self }
         @discardableResult public func byCancelText(_ t: String) -> Self { cancelText = t; return self }
         @discardableResult public func byConfirmText(_ t: String) -> Self { confirmText = t; return self }
@@ -135,9 +133,7 @@ open class BRBasePicker<Result>: NSObject {
     public func byPresent(in container: UIView? = nil) -> Self {
         let panel = BRPickerPanel()
         bind(panel: panel)
-
         let content = buildContentView()
-
         panel.configureToolbar(
             title: toolbarTitle,
             cancelText: cancelText,
@@ -154,10 +150,8 @@ open class BRBasePicker<Result>: NSObject {
                 self.dismissPanel()
             }
         )
-
         panel.embed(content)
         panel.present(in: container)
-
         return self
     }
 }

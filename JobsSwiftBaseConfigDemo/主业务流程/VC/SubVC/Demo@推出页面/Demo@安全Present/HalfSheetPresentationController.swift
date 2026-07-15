@@ -44,7 +44,6 @@ final class HalfSheetPresentationController: UIPresentationController {
         guard let container = containerView else { return }
         dimmingView.byFrame(container.bounds)
         dimmingView.byAddTo(container)
-
         // 跟随系统转场动画
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
             self.dimmingView.byAlpha(1)

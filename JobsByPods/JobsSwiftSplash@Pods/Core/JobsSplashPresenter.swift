@@ -13,7 +13,6 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 public enum JobsSplashPresenter {
-
     @discardableResult
     @MainActor
     public static func show(

@@ -106,7 +106,6 @@ extension NSObject {
         }
         guard let rootVC = activeKeyWindow()?.rootViewController else { return nil }
         guard let topVC = visibleViewController(from: rootVC) else { return nil }
-
         // 1) 顶部就是导航
         if let nav = topVC as? UINavigationController { return nav }
         // 2) 顶部所在的导航

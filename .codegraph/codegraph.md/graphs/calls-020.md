@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDKViewController::primitiveTraitCollectionForUITraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:295"]
-  T1["function:ASPrimitiveTraitCollectionFromUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:51"]
+  S1["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  T1["method:ASBasicImageDownloader::sharedImageDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:227"]
   S1 -->|calls| T1
-  S2["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T2["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  S2["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  T2["method:ASPINRemoteImageDownloader::sharedDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASPINRemoteImageDownloader.mm:120"]
   S2 -->|calls| T2
-  S3["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T3["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S3["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  T3["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
   S3 -->|calls| T3
-  S4["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T4["function:NSStringFromASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:218"]
+  S4["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
+  T4["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
   S4 -->|calls| T4
-  S5["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T5["function:ASTraitCollectionPropagateDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:18"]
+  S5["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
+  T5["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
   S5 -->|calls| T5
-  S6["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T6["method:ASDKViewController::nodeConstrainedSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:273"]
+  S6["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
+  T6["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
   S6 -->|calls| T6
-  S7["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T7["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  S7["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
+  T7["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
   S7 -->|calls| T7
-  S8["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T8["method:Mutex::Mutex<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:118"]
+  S8["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
+  T8["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
   S8 -->|calls| T8
-  S9["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T9["method:ASPINRemoteImageDownloader::sharedDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASPINRemoteImageDownloader.mm:120"]
+  S9["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
+  T9["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
   S9 -->|calls| T9
-  S10["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T10["method:ASBasicImageDownloader::sharedImageDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:227"]
+  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T10["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S10 -->|calls| T10
-  S11["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T11["method:ASPINRemoteImageDownloader::sharedDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASPINRemoteImageDownloader.mm:120"]
+  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S11 -->|calls| T11
-  S12["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
-  T12["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S12 -->|calls| T12
-  S13["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
-  T13["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
+  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S13 -->|calls| T13
-  S14["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
-  T14["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S14 -->|calls| T14
-  S15["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
-  T15["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
+  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
+  T15["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S15 -->|calls| T15
-  S16["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
-  T16["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S16["method:ASDisplayNode::closestViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Convenience.mm:17"]
+  T16["function:ASFindClosestViewOfLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:266"]
   S16 -->|calls| T16
-  S17["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
-  T17["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
+  S17["method:ASDisplayNode::closestViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Convenience.mm:17"]
+  T17["method:UIResponder::asdk_responderChainEnumerator<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASResponderChainEnumerator.mm:40"]
   S17 -->|calls| T17
-  S18["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
-  T18["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S18["method:ASDisplayNode::style:propertyDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:30"]
+  T18["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T19["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S19["method:ASDisplayNode::style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:51"]
+  T19["method:ASDisplayNode::_locked_style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:57"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T20["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S20["method:ASDisplayNode::_locked_style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:57"]
+  T20["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T21["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S21["method:ASDisplayNode::layoutThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:83"]
+  T21["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T22["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S22["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
+  T22["method:ASDisplayNode::_isLayoutTransitionInvalid<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:564"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S23["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
+  T23["method:ASScrollNode::calculateLayoutThatFits:restrictedToSize:relativeToParentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASScrollNode.mm:80"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T24["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S24["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
+  T24["method:ASScrollNode::calculateLayoutThatFits:restrictedToSize:relativeToParentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASScrollNode.mm:80"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNode::closestViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Convenience.mm:17"]
-  T25["function:ASFindClosestViewOfLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:266"]
+  S25["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
+  T25["function:ASLayoutLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:33"]
   S25 -->|calls| T25
 ```
 

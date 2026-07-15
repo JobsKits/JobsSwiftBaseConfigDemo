@@ -33,7 +33,6 @@ extension UILabel {
         textContainer.lineFragmentPadding = 0
         textContainer.maximumNumberOfLines = numberOfLines
         textContainer.lineBreakMode = lineBreakMode
-
         layoutManager.addTextContainer(textContainer)
         textStorage.addLayoutManager(layoutManager)
         // 2️⃣ 计算点击位置

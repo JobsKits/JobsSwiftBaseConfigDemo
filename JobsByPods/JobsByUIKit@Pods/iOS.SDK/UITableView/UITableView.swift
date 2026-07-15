@@ -27,7 +27,7 @@ extension UITableView {
     public var jobs_target: AnyObject? {
         (objc_getAssociatedObject(self, &JobsTableViewBlocksAssociatedKeys.targetKey) as? AnyWeakBox)?.value
     }
-    
+
     @discardableResult
     public func byTarget(_ target: AnyObject) -> Self {
         // 1) 保存 weak target（给其它地方取用，例如 scroll / mux 兜底）

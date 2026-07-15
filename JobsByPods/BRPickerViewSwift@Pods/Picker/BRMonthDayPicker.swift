@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     private var selectDate: Date = Date()
     private var minDate: Date?
     private var maxDate: Date?
@@ -33,13 +32,11 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
         picker.delegate = self
         picker.dataSource = self
         rebuildDays(month: BRCalendar.gregorian.component(.month, from: selectDate))
-
         let m = BRCalendar.gregorian.component(.month, from: selectDate)
         let d = BRCalendar.gregorian.component(.day, from: selectDate)
         picker.selectRow(m - 1, inComponent: 0, animated: false)
         BRiOS12SafePickerReload.reload(picker, component: 1)
         picker.selectRow(min(d - 1, max(0, days.count - 1)), inComponent: 1, animated: false)
-
         // Default state: no highlight until user scrolls.
         lastSelectedRow[0] = picker.selectedRow(inComponent: 0)
         lastSelectedRow[1] = picker.selectedRow(inComponent: 1)
@@ -49,7 +46,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
     public override func confirmSelection() {
         let m = months[picker.selectedRow(inComponent: 0)]
         let d = days[min(picker.selectedRow(inComponent: 1), max(0, days.count - 1))]
-
         var comps = DateComponents()
         comps.year = BRCalendar.gregorian.component(.year, from: selectDate)
         comps.month = m
@@ -57,7 +53,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
         comps.hour = 0
         comps.minute = 0
         comps.second = 0
-
         if let date = BRCalendar.gregorian.date(from: comps) {
             if let minDate, date < minDate { send(minDate) }
             else if let maxDate, date > maxDate { send(maxDate) }
@@ -96,10 +91,8 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let old = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
-
         // mark user interaction for this component
         touchedComponents.insert(component)
-
         if component == 0 {
             let m = months[row]
             rebuildDays(month: m)
@@ -108,7 +101,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
             pickerView.selectRow(dayRow, inComponent: 1, animated: false)
             lastSelectedRow[1] = dayRow
         }
-
         br_on_main_async { [weak self] in
             guard let self else { return }
             self.applyRowColor(pickerView, component: component, row: old, selected: false)
@@ -118,7 +110,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
                 row: row,
                 selected: self.touchedComponents.contains(component)
             )
-
             // If month changed, day component reloaded; only highlight it if user has interacted with day column.
             if component == 0 {
                 let dayComp = 1
@@ -134,7 +125,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
                 )
             }
         }
-
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()

@@ -33,11 +33,9 @@ extension UITextField {
             guard let self else { return }
             callback(char, value, mode, isLimited, self.text ?? "", self)
         }
-
         let proxy = installDelegateProxyIfNeeded()
         proxy.forward = obs
         obs.originalTextFieldDelegate = proxy.original
-
         return self
     }
     /// 输入框由不活跃状态 ➤ 活跃状态 只调用一次
@@ -45,11 +43,9 @@ extension UITextField {
     public func byBeginEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.onBegin = callback
-
         let proxy = installDelegateProxyIfNeeded()
         proxy.forward = obs
         obs.originalTextFieldDelegate = proxy.original
-
         return self
     }
     /// 失去激活状态回调
@@ -57,11 +53,9 @@ extension UITextField {
     public func byEndEditing(_ callback: @escaping (_ value: String) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.onEnd = callback
-
         let proxy = installDelegateProxyIfNeeded()
         proxy.forward = obs
         obs.originalTextFieldDelegate = proxy.original
-
         return self
     }
 }
@@ -93,7 +87,6 @@ public final class UITextFieldDelegateProxy: NSObject, UITextFieldDelegate {
 
 private var tfProxyKey: UInt8 = 0
 public extension UITextField {
-
     var textFieldDelegateProxy: UITextFieldDelegateProxy {
         if let p = objc_getAssociatedObject(self, &tfProxyKey) as? UITextFieldDelegateProxy {
             return p

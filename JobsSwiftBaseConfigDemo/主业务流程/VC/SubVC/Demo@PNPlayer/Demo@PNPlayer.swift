@@ -23,21 +23,17 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 class PNPlayerDemoVC: BaseVC {
-
     private lazy var renderer: MetalRenderer = {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
         }
-
         // [FIX] 1/2：拆开链式调用，避免 `MetalRenderer(...).byVideoTextureManagerDelegate(self)`
         //        在 Swift 6.2.x 上触发协议 witness/类型推断路径的编译器崩溃（ICE）。
         let r = MetalRenderer(device: device)
-
         // [FIX] 2/2：显式把 self 转成协议类型，降低编译器推断压力（也更明确）。
         //        如果你的 byVideoTextureManagerDelegate 接受的就是具体协议类型，这里能稳定绕开 ICE。
         let delegate: any VideoTextureManagerDelegate = self
         _ = r.byVideoTextureManagerDelegate(delegate)
-
         return r
     }()
 
@@ -53,17 +49,14 @@ class PNPlayerDemoVC: BaseVC {
             .byDelegate(renderer)
             .addPanAction { [weak self] gr in
                 guard let self else { return }
-
                 let pan = gr as! UIPanGestureRecognizer
                 let p = pan.translation(in: gr.view)
                 print("拖拽中: \(p)")
-
                 // [FIX] 不再在初始化闭包里捕获 `metalView` 变量本身，
                 //       改为使用 `gr.view`（实际发生手势的 view），减少初始化表达式复杂度与捕获关系。
                 if let view = gr.view as? MTKView {
                     renderer.handlePan(pan, in: view)
                 }
-
                 showControlsTemporarily()
             }
             .addTapAction { [weak self] gr in

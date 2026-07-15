@@ -43,9 +43,7 @@ enum FeedModel {
             let url = Bundle.main.url(forResource: "CommentData", withExtension: "json"),
             let data = try? Data(contentsOf: url),
             let decoded = try? JSONDecoder().decode(_CommentListResponse.self, from: data)
-        else { return [] }
-
-        return decoded.data.list.enumerated().map { (idx, r) in
+        else { return [] };return decoded.data.list.enumerated().map { (idx, r) in
             .init(id: r.id,
                   nickname: r.nickname,
                   content: r.content,

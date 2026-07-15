@@ -24,7 +24,6 @@ final class HUDHelper {
 
     func show(_ message: String, duration: TimeInterval = 2.0) {
         guard let window = jobsGetMainWindow() else { return }
-
         let label = UILabel()
             .byText(message)
             .byTextColor(JobsCor.white)
@@ -34,22 +33,18 @@ final class HUDHelper {
             .byCornerRadius(10)
             .byNumberOfLines(0)
             .byAlpha(0)
-
         let padding: CGFloat = 20
         let maxSize = CGSize(width: window.frame.width - 2 * padding, height: window.frame.height)
         var size = label.sizeThatFits(maxSize)
         size.width += 2 * padding
         size.height += 2 * padding
-
         label.byFrame(CGRect(
             x: (window.frame.width - size.width) / 2,
             y: (window.frame.height - size.height) / 2,
             width: size.width,
             height: size.height
         ))
-
         label.byAddTo(window)
-
         UIView.animate(withDuration: 0.3, animations: {
             label.byAlpha(1)
         }) { _ in

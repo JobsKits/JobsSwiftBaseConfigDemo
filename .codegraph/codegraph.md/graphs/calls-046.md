@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
-  T1["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S1["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  T1["function:ASGraphicsCreateImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASGraphicsContext.mm:35"]
   S1 -->|calls| T1
-  S2["method:ASMapNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:87"]
-  T2["method:ASMapNode::removeLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:316"]
+  S2["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
+  T2["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S2 -->|calls| T2
-  S3["method:ASMapNode::setLiveMap:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:105"]
-  T3["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
+  S3["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
+  T3["method:ASMapNode::applySnapshotOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:285"]
   S3 -->|calls| T3
-  S4["method:ASMapNode::setLiveMap:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:105"]
-  T4["method:ASMapNode::removeLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:316"]
+  S4["method:ASMapNode::setAnnotations:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:328"]
+  T4["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S4 -->|calls| T4
-  S5["method:ASMapNode::options<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:130"]
-  T5["method:ASMapNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:40"]
+  S5["method:ASMapNode::setSnapshotSizeWithReloadIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:386"]
+  T5["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
   S5 -->|calls| T5
-  S6["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
-  T6["method:ASMapNode::applySnapshotOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:285"]
+  S6["method:ASMapNode::setSnapshotSizeWithReloadIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:386"]
+  T6["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S6 -->|calls| T6
-  S7["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
-  T7["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
+  S7["method:ASMapNode::calculateSizeThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:397"]
+  T7["function:ASIsCGSizeValidForLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:24"]
   S7 -->|calls| T7
-  S8["method:ASMapNode::setOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:144"]
-  T8["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  S8["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
+  T8["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
   S8 -->|calls| T8
-  S9["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
-  T9["method:ASMapNode::setUpSnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:274"]
+  S9["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
+  T9["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
   S9 -->|calls| T9
-  S10["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
-  T10["function:ASGraphicsCreateImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASGraphicsContext.mm:35"]
+  S10["method:ASMapNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:419"]
+  T10["method:ASMapNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:419"]
   S10 -->|calls| T10
-  S11["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
-  T11["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  S11["method:ASMultiplexImageNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:165"]
+  T11["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
   S11 -->|calls| T11
-  S12["method:ASMapNode::addLiveMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:296"]
-  T12["method:ASMapNode::applySnapshotOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:285"]
+  S12["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
+  T12["method:ASMultiplexImageNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:165"]
   S12 -->|calls| T12
-  S13["method:ASMapNode::setAnnotations:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:328"]
-  T13["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  S13["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
+  T13["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:69"]
   S13 -->|calls| T13
-  S14["method:ASMapNode::setSnapshotSizeWithReloadIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:386"]
-  T14["method:ASMapNode::destroySnapshotter<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:279"]
+  S14["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
+  T14["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:63"]
   S14 -->|calls| T14
-  S15["method:ASMapNode::setSnapshotSizeWithReloadIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:386"]
-  T15["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  S15["method:ASMultiplexImageNode::dealloc<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:192"]
+  T15["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S15 -->|calls| T15
-  S16["method:ASMapNode::calculateSizeThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:397"]
-  T16["function:ASIsCGSizeValidForLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:24"]
+  S16["method:ASMultiplexImageNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:199"]
+  T16["method:ASMultiplexImageNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:199"]
   S16 -->|calls| T16
-  S17["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
-  T17["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
+  S17["method:ASMultiplexImageNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:199"]
+  T17["method:ASMultiplexImageNode::_setDisplayedImageIdentifier:withImage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:391"]
   S17 -->|calls| T17
-  S18["method:ASMapNode::calculatedLayoutDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:409"]
-  T18["method:ASMapNode::takeSnapshot<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:187"]
+  S18["method:ASMultiplexImageNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:207"]
+  T18["method:ASMultiplexImageNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:207"]
   S18 -->|calls| T18
-  S19["method:ASMapNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:419"]
-  T19["method:ASMapNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMapNode.mm:419"]
+  S19["method:ASMultiplexImageNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:207"]
+  T19["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S19 -->|calls| T19
-  S20["method:ASMultiplexImageNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:165"]
-  T20["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
+  S20["method:ASMultiplexImageNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:227"]
+  T20["method:ASMultiplexImageNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:227"]
   S20 -->|calls| T20
-  S21["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
-  T21["method:ASMultiplexImageNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:165"]
+  S21["method:ASMultiplexImageNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:227"]
+  T21["method:ASMultiplexImageNode::_loadImageIdentifiers<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:432"]
   S21 -->|calls| T21
-  S22["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
-  T22["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:69"]
+  S22["method:ASMultiplexImageNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:234"]
+  T22["method:ASMultiplexImageNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:234"]
   S22 -->|calls| T22
-  S23["method:ASMultiplexImageNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:187"]
-  T23["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:63"]
+  S23["method:ASMultiplexImageNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:234"]
+  T23["method:ASMultiplexImageNode::_setDisplayedImageIdentifier:withImage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:391"]
   S23 -->|calls| T23
-  S24["method:ASMultiplexImageNode::dealloc<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:192"]
-  T24["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  S24["method:ASMultiplexImageNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:234"]
+  T24["function:ASDisplayNodeThreadIsMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:21"]
   S24 -->|calls| T24
-  S25["method:ASMultiplexImageNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:199"]
-  T25["method:ASMultiplexImageNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:199"]
+  S25["method:ASMultiplexImageNode::displayWillStartAsynchronously:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:268"]
+  T25["method:ASMultiplexImageNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASMultiplexImageNode.mm:227"]
   S25 -->|calls| T25
 ```
 

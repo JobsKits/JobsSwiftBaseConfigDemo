@@ -20,6 +20,19 @@ import JobsSwiftBaseDefines
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 extension UIViewController {
+    /// 为导航栈子页面或模态子页面补齐默认返回按钮；已有自定义左按钮时不覆盖。
+    @discardableResult
+    public func jobsEnsureNavigationBackButton() -> Self {
+        let isNavigationChild = navigationController?.viewControllers
+            .dropFirst()
+            .contains(where: { $0 === self }) ?? false
+        let isPresentedPage = presentingViewController != nil ||
+            (navigationController?.viewControllers.first === self && navigationController?.presentingViewController != nil)
+        guard isNavigationChild || isPresentedPage,
+              gk_navLeftBarButtonItem == nil else { return self }
+        gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: makeDefaultBackButton())
+        return self
+    }
     /// 统一配置 GKNav
     /// - Parameters:
     ///   - title: JobsText（支持纯文本/富文本，这里取 rawString 写到 gk_navTitle）

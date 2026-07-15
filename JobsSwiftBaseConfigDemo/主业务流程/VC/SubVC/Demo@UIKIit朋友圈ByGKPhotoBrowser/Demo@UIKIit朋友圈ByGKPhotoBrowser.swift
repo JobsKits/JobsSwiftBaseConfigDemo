@@ -103,7 +103,6 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
         tableView.byVisible(YES)
         posts = MomentPost.makeSample(rows: rows)
         heightCache.removeAll()
-
         applyLayoutMode()
         tableView.byReloadData()
     }
@@ -125,13 +124,10 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
 
     private func showBrowser(for post: MomentPost, at index: Int, sourceCell: MomentPostCell?) {
         guard post.media.indices.contains(index) else { return }
-
         var photos: [GKPhoto] = []
         photos.reserveCapacity(post.media.count)
-
         for (i, m) in post.media.enumerated() {
             let p = GKPhoto()
-
             if let cover = URL(string: m.coverURL) {
                 p.url = cover
             }
@@ -142,12 +138,10 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
                 p.videoUrl = vURL
             };photos.append(p)
         }
-
         let b = GKPhotoBrowser(photos: photos, currentIndex: index)
         let cfg = GKPhotoBrowserConfigure.default()
         cfg.showStyle = .zoom
         b.configure = cfg
-
         browser = b
         b.show(fromVC: self)
     }
@@ -166,7 +160,6 @@ extension GKPhotoBrowserByUIKitDemoVC: UITableViewDataSource, UITableViewDelegat
     // ✅ 不开 estimated 时：走“手动高度 + 缓存”
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard layoutMode == .noEstimated_manualHeight else { return UITableView.automaticDimension }
-
         if let h = heightCache[indexPath.row] { return h }
         let w = tableView.bounds.width > 0 ? tableView.bounds.width : UIScreen.main.bounds.width
         let h = MomentPostCell.heightFormula(for: posts[indexPath.row], tableWidth: w)

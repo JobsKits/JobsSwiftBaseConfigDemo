@@ -21,7 +21,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
-
     private lazy var countryCodeTextField: UITextField = {
         UITextField()
             .byText("")
@@ -67,7 +66,6 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
 }
 
 private extension JobsSwiftCountryCodeCtrlDemoVC {
-
     func pushCountryCodeCtrl() {
         let controller = JobsSwiftCountryCodeCtrl()
         controller.countryCodeHandler = { [weak self] countryName, code in

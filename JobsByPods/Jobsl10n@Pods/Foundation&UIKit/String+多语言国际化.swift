@@ -40,7 +40,6 @@ extension String {
         // 拆 BCP-47
         let parts = tag.split(separator: "-").map(String.init)
         let language = (parts.first ?? "").lowercased()
-
         var script: String? = nil   // Hans / Hant
         var region: String? = nil   // PH / BR / MX / EG ...
         // 简单解析：第二段如果长度=4 当 script；长度=2/3 当 region
@@ -56,7 +55,6 @@ extension String {
         }
         // 1) 先尝试“完整匹配”：language-script-region / language-region / language-script
         func pick(_ candidate: String) -> String? { map[candidate.lowercased()] }
-
         if let s = script, let r = region, let hit = pick("\(language)-\(s)-\(r)") { return hit }
         if let r = region, let hit = pick("\(language)-\(r)") { return hit }
         if let s = script, let hit = pick("\(language)-\(s)") { return hit }
@@ -66,7 +64,6 @@ extension String {
             // 没给 script 时按 region 推断
             let preferHansRegions: Set<String> = ["CN", "SG", "MY"]
             let preferHantRegions: Set<String> = ["TW", "HK", "MO"]
-
             if let s = script?.lowercased() {
                 if s == "hans", let hit = pick("zh-Hans") { return hit }
                 if s == "hant", let hit = pick("zh-Hant") { return hit }
@@ -85,7 +82,6 @@ extension String {
             if region == "BR", let hit = pick("pt-BR") { return hit };return pick("pt") ?? fallback
         case "es":
             if region == "MX", let hit = pick("es-MX") { return hit };return pick("es") ?? fallback
-
         default:
             break
         }

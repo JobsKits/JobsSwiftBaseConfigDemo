@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - init
 extension UIButton {
-    
     public convenience init(x: CGFloat,
                             y: CGFloat,
                             w: CGFloat,
@@ -30,11 +29,11 @@ extension UIButton {
     public static func sys() -> UIButton {
         UIButton(type: .system)
     }
-    
+
     public static func custom() -> UIButton {
         UIButton(type: .custom)
     }
-    
+
     @available(iOS 13.0, *)
     public static func close() -> UIButton {
         UIButton(type: .close)

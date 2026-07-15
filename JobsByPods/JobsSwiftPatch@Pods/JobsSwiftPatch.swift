@@ -26,7 +26,6 @@ public struct JobsSwiftPatchModel {
 }
 
 public final class JobsSwiftPatchMgr {
-
     public static let shared = JobsSwiftPatchMgr()
 
     private struct PatchRecord {
@@ -46,7 +45,6 @@ public final class JobsSwiftPatchMgr {
         guard !patch.identifier.isEmpty else { return false }
         rollbackPatch(identifier: patch.identifier)
         guard let method = class_getInstanceMethod(patch.targetClass, patch.selector) else { return false }
-
         let payload = patch.payload.copy() as? NSDictionary ?? NSDictionary()
         let block: @convention(block) (AnyObject) -> NSDictionary = { _ in
             payload
@@ -54,7 +52,6 @@ public final class JobsSwiftPatchMgr {
         let patchIMP = imp_implementationWithBlock(block as Any)
         let originalIMP = method_getImplementation(method)
         method_setImplementation(method, patchIMP)
-
         lock.lock()
         records[patch.identifier] = PatchRecord(targetClass: patch.targetClass,
                                                 selector: patch.selector,
@@ -67,11 +64,9 @@ public final class JobsSwiftPatchMgr {
     @discardableResult
     public func rollbackPatch(identifier: String) -> Bool {
         guard !identifier.isEmpty else { return false }
-
         lock.lock()
         let record = records.removeValue(forKey: identifier)
         lock.unlock()
-
         guard let record else { return false }
         if let method = class_getInstanceMethod(record.targetClass, record.selector) {
             method_setImplementation(method, record.originalIMP)
@@ -84,7 +79,6 @@ public final class JobsSwiftPatchMgr {
         lock.lock()
         let identifiers = Array(records.keys)
         lock.unlock()
-
         identifiers.forEach { rollbackPatch(identifier: $0) }
     }
 

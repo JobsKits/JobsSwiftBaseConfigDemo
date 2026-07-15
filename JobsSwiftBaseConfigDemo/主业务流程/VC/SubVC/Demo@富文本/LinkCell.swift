@@ -111,7 +111,6 @@ extension LinkCell {
             .bySelectable(mode == .delegate || mode == .rightAligned) // rightAligned 也保留系统 link 的可交互能力
         // 主富文本
         textView.richTextBy(runs, paragraphStyle: paragraphStyle)
-
         // 给“电话”片段打 .jobsAction + 颜色/下划线（无论哪种模式都打标，命中时按 preferJobsAction 优先）
         if let ms = textView.attributedText?.mutableCopy() as? NSMutableAttributedString {
             let full = ms.string as NSString
@@ -181,24 +180,18 @@ extension LinkCell {
         var p  = gesture.location(in: textView)
         p.x -= textView.textContainerInset.left
         p.y -= textView.textContainerInset.top
-
         let glyph = lm.glyphIndex(for: p, in: tc)
         guard glyph < lm.numberOfGlyphs else { return nil }
-
         var usedRect = lm.lineFragmentUsedRect(forGlyphAt: glyph, effectiveRange: nil, withoutAdditionalLayout: true)
         usedRect.origin.x += textView.textContainerInset.left
         usedRect.origin.y += textView.textContainerInset.top
         guard usedRect.contains(gesture.location(in: textView)) else { return nil }
-
         let char = lm.characterIndexForGlyph(at: glyph)
         guard char < textView.attributedText.length else { return nil }
-
         let attrs = textView.attributedText.attributes(at: char, effectiveRange: nil)
-
         if preferJobsAction,
            let action = attrs[.jobsAction] as? String,
            let url = URL(string: action) { return url }
-
         if let v = attrs[.link] as? URL { return v }
         if let s = attrs[.link] as? String, let url = URL(string: s) { return url };return nil
     }
@@ -216,7 +209,6 @@ extension LinkCell {
                         log("新文本 = ",tf.text)
                         log("本次输入 = ",input)
                         log("是否删除  = ",isDeleting)
-
                         let ok = alert.actions.first { $0.title == "确定" }
                         ok?.byEnabled(!tf.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
@@ -229,7 +221,6 @@ extension LinkCell {
                     }
                     .byTintColor(JobsCor.systemBlue)
                     .byPresent(vc)
-
             };return
         }
         if url.scheme == "tel" || url.scheme == "telprompt" {

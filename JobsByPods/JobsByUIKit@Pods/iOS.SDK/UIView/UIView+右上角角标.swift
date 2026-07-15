@@ -42,52 +42,51 @@ public struct RTBadgeConfig {
 }
 
 public extension RTBadgeConfig {
-    
     @discardableResult
     func byOffset(_ v: UIOffset = .init(horizontal: -6, vertical: 6)) -> Self {
         var c = self; c.offset = v; return c
     }
-    
+
     @discardableResult
     func byInsets(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self {
         var c = self; c.insets = v; return c
     }
-    
+
     @discardableResult
     func byInset(_ v: UIEdgeInsets = .init(top: 2, left: 6, bottom: 2, right: 6)) -> Self {
         var c = self; c.insets = v; return c
     }
-    
+
     @discardableResult
     func byBackgroundColor(_ v: UIColor = JobsCor.systemRed) -> Self {
         var c = self; c.backgroundColor = v; return c
     }
-    
+
     @discardableResult
     func byTextColor(_ v: UIColor = JobsCor.white) -> Self {
         var c = self; c.textColor = v; return c
     }
-    
+
     @discardableResult
     func byFont(_ v: UIFont = JobsFont.systemFont(ofSize: 11, weight: .bold)) -> Self {
         var c = self; c.font = v; return c
     }
-    
+
     @discardableResult
     func byCornerRadius(_ v: CGFloat? = nil) -> Self {
         var c = self; c.cornerRadius = v; return c
     }
-    
+
     @discardableResult
     func byBorder(color: UIColor? = nil, width: CGFloat = 0) -> Self {
         var c = self; c.borderColor = color; c.borderWidth = width; return c
     }
-    
+
     @discardableResult
     func byMaxWidth(_ v: CGFloat = 200) -> Self {
         var c = self; c.maxWidth = v; return c
     }
-    
+
     @discardableResult
     func byZIndex(_ v: CGFloat = 9999) -> Self {
         var c = self; c.zIndex = v; return c
@@ -136,17 +135,14 @@ extension UIView {
         assert(Thread.isMainThread, "UI must be updated on main thread")
         var cfg = RTBadgeConfig()
         if let build = build { cfg = build(cfg) }
-
         let container = ensureRTBadgeContainer()
         if container.superview !== self { addSubview(container) }
-
         container.byUserInteractionEnabled(false)
             .byMasksToBounds(false)
             .byBorderColor(cfg.borderColor)
             .byZPosition(cfg.zIndex)
             .byBackgroundColor(cfg.backgroundColor)
             .byBorderWidth(cfg.borderWidth)
-
         if let sc = cfg.shadowColor {
             container.byShadowColor(sc)
                 .byShadowRadius(cfg.shadowRadius)
@@ -264,7 +260,6 @@ extension UIView {
                 }
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
-
         case .attributed(let attr):
             let label = _InsetLabel()
                 .byAttributedString(attr)
@@ -275,10 +270,8 @@ extension UIView {
                 .byAddTo(container) { [unowned self] make in
                     make.edges.equalToSuperview()
                 }
-
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
-
         case .custom(let view):
             view.byAddTo(container) { [unowned self] make in
                 make.edges.equalToSuperview().inset(config.insets)

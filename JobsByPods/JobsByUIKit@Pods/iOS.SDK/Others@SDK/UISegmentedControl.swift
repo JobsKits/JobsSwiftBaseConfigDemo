@@ -35,7 +35,7 @@ extension UISegmentedControl {
         self.insertSegment(withTitle: title, at: index, animated: true)
         return self
     }
-    
+
     @discardableResult
     public func insertSegment(withTitle title: String, at index: Int) -> Self {
         self.insertSegment(withTitle: title, at: index, animated: false)
@@ -47,7 +47,7 @@ extension UISegmentedControl {
         self.removeSegment(at: index, animated: true)
         return self
     }
-    
+
     @discardableResult
     public func removeSegment(at index: Int) -> Self {
         self.removeSegment(at: index, animated: false)

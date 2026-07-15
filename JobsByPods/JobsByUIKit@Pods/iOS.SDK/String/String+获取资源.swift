@@ -37,7 +37,6 @@ extension String {
         // 既支持 "name.ext" 也支持 "name"
         let name = (trimmed as NSString).deletingPathExtension
         let ext  = (trimmed as NSString).pathExtension.isEmpty ? nil : (trimmed as NSString).pathExtension
-
         return bundle.url(forResource: name, withExtension: ext)
     }
     /// 必得版（开发期断言失败直接崩，等价你以前的 `!`）
@@ -86,7 +85,7 @@ extension String {
             return UIImage(named: name) ?? UIImage.make()
         }
     }
-    
+
     public var sysImg: UIImage {
         if #available(iOS 13.0, *) {
             return UIImage(systemName: self) ?? jobsSolidBlue()
@@ -152,7 +151,6 @@ extension String {
                     completion(.failure(err))
                 }
             }
-
         case .local(let name):
             if let img = UIImage(named: name) {
                 completion(.success(img))
@@ -238,11 +236,9 @@ extension String {
             completion(placeholder)
             return
         }
-
         switch source {
         case .remote(let url):
             var didFinish = false
-
             SDWebImageManager.shared.loadImage(
                 with: url,
                 options: [],
@@ -252,7 +248,6 @@ extension String {
                 didFinish = true
                 completion(image ?? placeholder)
             }
-
         case .local(let name):
             completion(UIImage(named: name) ?? placeholder)
         }

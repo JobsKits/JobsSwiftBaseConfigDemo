@@ -28,7 +28,6 @@ import JobsSwiftBaseDefines
      }
  */
 extension UIViewController {
-
     public func jobsForceHideSystemNavBar(_ hidden: Bool) {
         onMainAsync(self) { vc in
             var r: UIResponder? = vc.view
@@ -41,7 +40,6 @@ extension UIViewController {
                 }
                 r = cur.next
             }
-
             vc.navigationController?.setNavigationBarHidden(hidden, animated: false)
             vc.navigationController?.navigationBar.isHidden = hidden
         }
@@ -71,7 +69,6 @@ extension UIViewController {
         var done = (objc_getAssociatedObject(cls, &_nbSwizzledKey) as? Set<ObjectIdentifier>) ?? []
         guard !done.contains(key) else { return }
         done.insert(key); objc_setAssociatedObject(cls, &_nbSwizzledKey, done, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
         func exch(_ c: AnyClass, _ o: Selector, _ n: Selector) {
             guard let m1 = class_getInstanceMethod(c, o),
                   let m2 = class_getInstanceMethod(c, n) else { return }
@@ -108,19 +105,15 @@ extension UINavigationController {
         guard !_JobsNavPopSwizzleOnceToken.done else { return }
         _JobsNavPopSwizzleOnceToken.done = true
         let cls: AnyClass = UINavigationController.self
-
         func exch(_ o: Selector, _ n: Selector) {
             guard let m1 = class_getInstanceMethod(cls, o),
                   let m2 = class_getInstanceMethod(cls, n) else { return }
             method_exchangeImplementations(m1, m2)
         }
-
         exch(#selector(UINavigationController.popViewController(animated:)),
              #selector(UINavigationController._jobs_popViewController_swizzled(animated:)))
-
         exch(#selector(UINavigationController.popToViewController(_:animated:)),
              #selector(UINavigationController._jobs_popToViewController_swizzled(_:animated:)))
-
         exch(#selector(UINavigationController.popToRootViewController(animated:)),
              #selector(UINavigationController._jobs_popToRootViewController_swizzled(animated:)))
     }
@@ -215,7 +208,6 @@ extension UIViewController {
         let alreadyHad = (self is UINavigationController)
             || (self.navigationController != nil)
             || (objc_getAssociatedObject(self, &_JobsNavKey.wrapper) != nil)
-
         let nav = jobsNavContainer
         if !alreadyHad { onWrap(nav) };return self
     }

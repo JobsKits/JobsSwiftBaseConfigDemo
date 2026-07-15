@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm:1"]
-  T1["function:ASDisplayNodeThreadIsMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:21"]
+  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
+  T1["function:ASImageLoadingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:45"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm:1"]
-  T2["function:ASLayerToDisplayNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:75"]
+  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
+  T2["function:ASMainThreadDeallocationLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:49"]
   S2 -->|calls| T2
-  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm:1"]
-  T3["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
+  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
+  T3["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm:1"]
-  T4["method:ASResponderChainEnumerator::nextObject<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASResponderChainEnumerator.mm:28"]
+  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
+  T4["function:ASPointsOfInterestLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:58"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASDisplayNode+Ancestry.mm:1"]
-  T5["function:ASObjectDescriptionMakeTiny<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:87"]
+  S5["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  T5["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T6["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S6["function:ASLayoutLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:33"]
+  T6["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S6 -->|calls| T6
-  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T7["function:ASLayoutLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:33"]
+  S7["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
+  T7["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S7 -->|calls| T7
-  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T8["function:ASDisplayLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:41"]
+  S8["function:ASDisplayLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:41"]
+  T8["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T9["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
+  S9["function:ASImageLoadingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:45"]
+  T9["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T10["function:ASImageLoadingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:45"]
+  S10["function:ASMainThreadDeallocationLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:49"]
+  T10["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T11["function:ASMainThreadDeallocationLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:49"]
+  S11["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
+  T11["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T12["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
+  S12["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T12["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.h:1"]
-  T13["function:ASPointsOfInterestLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:58"]
+  S13["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T13["method:ASControlNode::enableHitTestDebug<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:57"]
   S13 -->|calls| T13
-  S14["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
-  T14["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S14["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T14["property:ASDisplayNode::hitTestSlop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.h:484"]
   S14 -->|calls| T14
-  S15["function:ASLayoutLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:33"]
-  T15["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S15["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T15["function:ASLayerToDisplayNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:75"]
   S15 -->|calls| T15
-  S16["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
-  T16["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S16["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T16["method:ASControlNode::setEdgesOfIntersectionForChildRect:parentRect:rectEdge:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:160"]
   S16 -->|calls| T16
-  S17["function:ASDisplayLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:41"]
-  T17["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S17["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T17["method:ASControlNode::setEdgesOfIntersectionForChildRect:parentRect:rectEdge:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:160"]
   S17 -->|calls| T17
-  S18["function:ASImageLoadingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:45"]
-  T18["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S18["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T18["method:ASControlNode::debugHighlightOverlay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:512"]
   S18 -->|calls| T18
-  S19["function:ASMainThreadDeallocationLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:49"]
-  T19["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S19["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T19["function:ASGraphicsCreateImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASGraphicsContext.mm:35"]
   S19 -->|calls| T19
-  S20["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
-  T20["function:ASLoggingIsEnabled<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:25"]
+  S20["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T20["method:ASControlNode::drawEdgeIfClippedWithEdges:color:borderWidth:imgRect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:179"]
   S20 -->|calls| T20
   S21["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
-  T21["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
+  T21["method:ASControlNode::drawEdgeIfClippedWithEdges:color:borderWidth:imgRect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:179"]
   S21 -->|calls| T21
-  S22["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
-  T22["method:ASControlNode::enableHitTestDebug<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:57"]
+  S22["method:ASRangeController::layoutDebugOverlayIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:254"]
+  T22["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
   S22 -->|calls| T22
-  S23["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
-  T23["property:ASDisplayNode::hitTestSlop<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.h:484"]
+  S23["method:ASRangeController::layoutDebugOverlayIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:254"]
+  T23["method:_ASRangeDebugOverlayView::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:314"]
   S23 -->|calls| T23
-  S24["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
-  T24["function:ASLayerToDisplayNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:75"]
+  S24["method:ASRangeController::addRangeControllerToRangeDebugOverlay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:259"]
+  T24["method:_ASRangeDebugOverlayView::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:314"]
   S24 -->|calls| T24
-  S25["method:ASControlNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:63"]
-  T25["method:ASControlNode::setEdgesOfIntersectionForChildRect:parentRect:rectEdge:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:160"]
+  S25["method:ASRangeController::updateRangeController:withScrollableDirections:scrollDirection:rangeMode:displayTuningParameters:preloadTuningParameters:interfaceState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:264"]
+  T25["method:ASRangeController::updateRangeController:withScrollableDirections:scrollDirection:rangeMode:displayTuningParameters:preloadTuningParameters:interfaceState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:264"]
   S25 -->|calls| T25
 ```
 

@@ -16,7 +16,6 @@ import JobsSwiftBaseDefines
 
 // ===== ScriptMessageHandler（iOS < 14）=====
 extension BaseWebView: WKScriptMessageHandler {
-
     @MainActor
     public func userContentController(_ userContentController: WKUserContentController,
                                       didReceive message: WKScriptMessage) {
@@ -27,7 +26,6 @@ extension BaseWebView: WKScriptMessageHandler {
 // ===== WithReply（iOS 14+）=====
 @available(iOS 14.0, *)
 extension BaseWebView: WKScriptMessageHandlerWithReply {
-
     @MainActor
     public func userContentController(_ userContentController: WKUserContentController,
                                       didReceive message: WKScriptMessage,
@@ -38,7 +36,6 @@ extension BaseWebView: WKScriptMessageHandlerWithReply {
 }
 // ===== 统一消息处理 =====
 public extension BaseWebView {
-
     @MainActor
     func handleScriptMessage(channel: String,
                              body: Any,
@@ -58,7 +55,6 @@ public extension BaseWebView {
         }
         // 3) 原有的 bridge
         guard channel == bridgeName else { return }
-
         let dictBody: [String: Any]
         if let d = body as? [String: Any] {
             dictBody = d
@@ -70,11 +66,9 @@ public extension BaseWebView {
             print("Invalid bridge message:", body)
             return
         }
-
         let api = dictBody["name"] as? String ?? ""
         let payload = dictBody["payload"]
         let reqId = dictBody["id"] as? Int
-
         guard let handler = handlers[api] else {
             if #available(iOS 14.0, *), reqId == nil {
                 reply(["error": "unhandled:\(api)"], nil)
@@ -82,7 +76,6 @@ public extension BaseWebView {
                 jsReturn(id: reqId, value: ["error": "unhandled:\(api)"])
             };return
         }
-
         handler(payload) { [weak self] value in
             guard let self else { return }
             if #available(iOS 14.0, *), reqId == nil {
@@ -102,16 +95,12 @@ public extension BaseWebView {
 
 // MARK: - iOSBridge（MobileBridge）
 extension BaseWebView {
-
     @MainActor
     func handleIOSBridgeMessage(_ body: Any) {
         guard let dict = body as? [String: Any] else { return }
-
         let action = (dict["action"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let callback = (dict["callback"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-
         guard !action.isEmpty else { return }
-
         // 1) 查找注册的处理器
         if let handler = mobileActionHandlers[action] {
             handler(dict) { [weak self] value in
@@ -123,7 +112,6 @@ extension BaseWebView {
                 self.webView.jobsEval(js)
             };return
         }
-
         // 2) 没有注册时：默认 getToken（可选）
         if action == "getToken", let f = mobileConfig.tokenProvider {
             if #available(iOS 13.0, *) {
@@ -140,7 +128,6 @@ extension BaseWebView {
                 self.webView.jobsEval(js)
             };return
         }
-
         mobileConfig.onUnknownAction?(action, dict)
     }
 }

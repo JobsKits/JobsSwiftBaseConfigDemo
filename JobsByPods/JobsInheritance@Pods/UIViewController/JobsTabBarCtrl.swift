@@ -137,19 +137,15 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             addChild(vc)
             vc.view.byAddTo(contentScrollView)
             vc.didMove(toParent: self)
-
             // 可选：对子 VC 内纵向滚动控件做限制
             if suppressChildVerticalScrolls {
                 suppressVertical(in: vc.view)
             }
         }
-
         selectedIndex = 0
         applySelectionState(animated: false)
-
         // 首次构建完成回调
         onButtonsBuilt?(self.buttons)
-
         view.setNeedsLayout()
     }
     /// 主动选中
@@ -178,7 +174,6 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     private func layoutUI() {
         let safeBottom = view.safeAreaInsets.bottom
         let barH = (customBarHeight ?? (49 + safeBottom))
-
         TabBar.byFrame(CGRect(
             x: 0,
             y: view.bounds.height - barH - barBottomOffset,
@@ -186,7 +181,6 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             height: barH
         ))
         bgImageView.byFrame(TabBar.bounds)
-
         contentScrollView.byFrame(CGRect(
             x: 0,
             y: 0,
@@ -213,9 +207,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         let bounds = TabBar.bounds
         let availableW = max(0, bounds.width - contentInset.left - contentInset.right)
         let h = max(0, bounds.height - contentInset.top - contentInset.bottom)
-
         var frames: [CGRect] = .init(repeating: .zero, count: total)
-
         if total == 1 {
             // 居中：宽度取 intrinsic + padding 与 availableW 的夹取
             let b = buttons[0]
@@ -245,12 +237,10 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
                 curX += unitW + equalSpacing
             }
         }
-
         // 应用 frame
         for (i, f) in frames.enumerated() {
             buttons[i].byFrame(f)
         }
-
         // contentSize
         let widthSum: CGFloat
         if buttons.count <= equalVisibleRange.upperBound {

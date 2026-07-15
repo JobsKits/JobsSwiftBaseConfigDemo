@@ -30,7 +30,6 @@ public extension Data {
         guard hex.count % 2 == 0 else { return nil }
         var data = Data()
         data.reserveCapacity(hex.count / 2)
-
         var i = hex.startIndex
         while i < hex.endIndex {
             let j = hex.index(i, offsetBy: 2)

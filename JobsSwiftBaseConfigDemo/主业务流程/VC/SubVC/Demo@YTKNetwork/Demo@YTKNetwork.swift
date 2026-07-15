@@ -24,7 +24,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class YTKNetworkDemoVC: BaseVC {
-    
     private var currentChainRequest: YTKChainRequest?
     /// 输出日志
     private lazy var logTextView: UITextView = {
@@ -54,10 +53,8 @@ final class YTKNetworkDemoVC: BaseVC {
                 GetIpRequest()
                     .bySuccess({ [weak self] (request: YTKBaseRequest) in
                         guard let self = self,let r = request as? GetIpRequest else { return }
-
                         self.appendLog("✅ 成功：IP = \(r.ip ?? "nil")")
                         self.appendLog("响应 JSON = \(String(describing: r.responseJSONObject))")
-
                         request.clearCompletionBlock()
                     })
                     .byFailure({ [weak self] (request: YTKBaseRequest) in
@@ -216,9 +213,7 @@ final class YTKNetworkDemoVC: BaseVC {
 }
 // MARK: - YTKChainRequestDelegate
 extension YTKNetworkDemoVC: YTKChainRequestDelegate {
-    
     func chainRequestFinished(_ chainRequest: YTKChainRequest) {
-        
         guard let last = chainRequest.requestArray().last as? GetHeadersRequest else {
             appendLog("⚠️ 链式成功但取不到最后一个请求")
             return
@@ -230,16 +225,13 @@ extension YTKNetworkDemoVC: YTKChainRequestDelegate {
             appendLog("⚠️ last.responseString 为空")
             return
         }
-
         guard let data = jsonStr.data(using: .utf8) else {
             appendLog("⚠️ responseString 不能转成 UTF-8 Data")
             return
         }
-
         do {
             let person = try JSONDecoder().decode(Person.self, from: data)
             let h = person.headers
-
             appendLog("✅ JSON 解析成功")
             appendLog("Accept = \(h.accept)")
             appendLog("User-Agent = \(h.userAgent)")

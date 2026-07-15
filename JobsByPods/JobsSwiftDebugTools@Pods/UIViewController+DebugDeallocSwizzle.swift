@@ -44,16 +44,13 @@ extension UIViewController {
         if objc_getAssociatedObject(self, &_vcDebugDeinitObserverKey) != nil {
             return
         }
-
         let clsName = String(describing: type(of: self))
-
         let tag: String
         if let p = self as? UIViewControllerDebugDeinitProtocol {
             tag = p.debugDeinitTag
         } else {
             tag = ""
         }
-
         // 这里可以自定义 toast 展示文案
         let text: String
         if tag.isEmpty {
@@ -61,11 +58,9 @@ extension UIViewController {
         } else {
             text = "🧹 \(clsName) [\(tag)] deinit"
         }
-
         let observer = _VCDebugDeinitObserver {
             text.toast
         }
-
         objc_setAssociatedObject(
             self,
             &_vcDebugDeinitObserverKey,
@@ -79,11 +74,9 @@ extension UIViewController {
         struct _Once { static var done = false }
         guard !_Once.done else { return }
         _Once.done = true
-
         let cls: AnyClass = UIViewController.self
         let originalSel = #selector(UIViewController.viewDidLoad)
         let swizzledSel = #selector(UIViewController._vcDebug_viewDidLoad)
-
         guard
             let originalMethod = class_getInstanceMethod(cls, originalSel),
             let swizzledMethod = class_getInstanceMethod(cls, swizzledSel)

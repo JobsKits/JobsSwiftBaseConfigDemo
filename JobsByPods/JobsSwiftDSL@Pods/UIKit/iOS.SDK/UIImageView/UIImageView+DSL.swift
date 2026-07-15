@@ -85,7 +85,6 @@ extension UIImageView {
 }
 // MARK: - 闭包重载@单参数
 extension UIImageView {
-
     @discardableResult
     public func byImage(_ builder: () -> UIImage?) -> Self {
         self.image = builder()

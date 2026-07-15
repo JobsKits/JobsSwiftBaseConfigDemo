@@ -14,7 +14,6 @@ import UIKit
 import WebKit
 
 extension BaseWebView {
-
     public static func quote(_ s: String) -> String {
         let escaped = s
             .replacingOccurrences(of: "\\", with: "\\\\")
@@ -60,23 +59,19 @@ extension BaseWebView {
         if T.self == Int.self, let v = value as? Int { return v as! T }
         if T.self == Double.self, let v = value as? Double { return v as! T }
         if T.self == Float.self, let v = value as? Float { return v as! T }
-
         if value == nil || value is NSNull {
             throw NSError(domain: "BaseWebView", code: -2, userInfo: [NSLocalizedDescriptionKey: "JS returned null"])
         }
-
         if JSONSerialization.isValidJSONObject(value ?? NSNull()) {
             let data = try JSONSerialization.data(withJSONObject: value!, options: [])
             return try decoder.decode(T.self, from: data)
         }
-
         if let s = value as? String, let data = s.data(using: .utf8) {
             let first = s.trimmingCharacters(in: .whitespacesAndNewlines).first
             if let f = first, ["{", "["].contains(f) {
                 return try decoder.decode(T.self, from: data)
             }
         }
-
         let fallback = "\(value!)"
         if let data = fallback.data(using: .utf8) {
             let first = fallback.trimmingCharacters(in: .whitespacesAndNewlines).first
@@ -86,7 +81,6 @@ extension BaseWebView {
                 return decoded
             }
         }
-
         throw NSError(domain: "BaseWebView",
                       code: -3,
                       userInfo: [NSLocalizedDescriptionKey: "Cannot decode JS result to \(T.self) – raw: \(String(describing: value))"])
@@ -94,7 +88,6 @@ extension BaseWebView {
 }
 // MARK: - Private helpers
 extension BaseWebView {
-
     func normalizeSuffix(_ s: String?) -> String? {
         guard let t = s?.trimmingCharacters(in: .whitespacesAndNewlines), !t.isEmpty else { return nil };return t
     }
@@ -110,10 +103,8 @@ extension BaseWebView {
     func makeNoCache(_ original: URLRequest) -> URLRequest {
         var req = original
         req.cachePolicy = .reloadIgnoringLocalCacheData
-
         var headers = req.allHTTPHeaderFields ?? [:]
         headers[Self.noCacheHeader] = "1" // 打标，防止在 decidePolicyFor 被我们再次拦截造成死循环
-
         if headers["Cache-Control"] == nil {
             headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
         }
@@ -123,7 +114,6 @@ extension BaseWebView {
         if headers["Expires"] == nil {
             headers["Expires"] = "0"
         }
-
         req.allHTTPHeaderFields = headers
         return req
     }

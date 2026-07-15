@@ -16,7 +16,6 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 final class GestureNodeView: UIView {
-
     enum State {
         case normal
         case selected
@@ -37,10 +36,8 @@ final class GestureNodeView: UIView {
         self.index = index
         super.init(frame: .zero)
         isUserInteractionEnabled = false
-
         layer.addSublayer(fillLayer)
         layer.addSublayer(borderLayer)
-
         borderLayer.fillColor = JobsCor.clear.cgColor
         fillLayer.fillColor = JobsCor.clear.cgColor
     }
@@ -60,9 +57,7 @@ final class GestureNodeView: UIView {
 
     func apply(state: State) {
         self.state = state
-
         borderLayer.lineWidth = configuration.nodeBorderWidth
-
         switch state {
         case .normal:
             borderLayer.strokeColor = configuration.nodeNormalColor.cgColor

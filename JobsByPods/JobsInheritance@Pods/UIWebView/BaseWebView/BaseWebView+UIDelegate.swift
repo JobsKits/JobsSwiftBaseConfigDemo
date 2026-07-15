@@ -22,7 +22,6 @@ import UniformTypeIdentifiers
 #endif
 
 extension BaseWebView: WKUIDelegate {
-
     @MainActor
     public func webView(_ webView: WKWebView,
                         runJavaScriptAlertPanelWithMessage message: String,
@@ -76,15 +75,12 @@ extension BaseWebView: WKUIDelegate {
                         completionHandler: @escaping ([URL]?) -> Void) {
         var types: [UTType] = [.item]
         if parameters.allowsDirectories { types = [.folder] }
-
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
         picker.allowsMultipleSelection = parameters.allowsMultipleSelection
-
         let proxy = DocumentPickerDelegateProxy { [weak self] urls in
             completionHandler(urls)
             self?.docPickerDelegate = nil
         }
-
         docPickerDelegate = proxy
         picker.byDelegate(proxy)
         picker.modalPresentationStyle = .formSheet

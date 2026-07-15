@@ -80,7 +80,7 @@ final class RowCell: UITableViewCell {
             }
         };return self
     }
-    
+
     func sendResult(_ any: Any?) {}
     @discardableResult
     func onResult(_ callback: @escaping (Any?) -> Void) -> Self { self }

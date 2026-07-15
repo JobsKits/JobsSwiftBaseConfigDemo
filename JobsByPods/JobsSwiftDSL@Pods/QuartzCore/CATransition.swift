@@ -18,7 +18,6 @@ extension CATransition {
 }
 
 extension CATransition {
-
     @discardableResult
     public func byType(_ type: CATransitionType) -> Self {
         self.type = type

@@ -42,7 +42,7 @@ public final class JobsTask: @unchecked Sendable {
     private var generation: UInt64 = 0
     private var _executionCount: Int = 0
     private var _estimatedNextExecutionDate: Date?
-    
+
     // 性能指标追踪
     private let creationDate: Date = Date()
     private var firstExecutionDate: Date?
@@ -72,21 +72,17 @@ public final class JobsTask: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() };return actions.count
     }
-    
+
     /// 获取任务的性能指标
     public var metrics: JobsTaskMetrics {
         lock.lock()
         defer { lock.unlock() }
-        
         let totalDuration = Date().timeIntervalSince(creationDate)
         var averageInterval: TimeInterval?
-        
         if _executionCount > 1, let first = firstExecutionDate, let last = lastExecutionDate {
             let executionDuration = last.timeIntervalSince(first)
             averageInterval = executionDuration / Double(_executionCount - 1)
-        }
-        
-        return JobsTaskMetrics(
+        };return JobsTaskMetrics(
             totalExecutions: _executionCount,
             creationDate: creationDate,
             firstExecutionDate: firstExecutionDate,
@@ -175,7 +171,6 @@ extension JobsTask {
         let current = state
         let timer = self.timer
         lock.unlock()
-
         switch current {
         case .suspended:
             _ = updateState(to: .running, allowed: { $0 == .suspended })
@@ -210,7 +205,6 @@ extension JobsTask {
         didChange = true
         let observers = Array(lifecycleObservers.values)
         lock.unlock()
-
         timerToStop?.stop()
         if didChange {
             observers.forEach { $0(.cancelled) }
@@ -227,23 +221,19 @@ extension JobsTask {
     public func executeNow() {
         let snapshot: [Action]
         let now = Date()
-        
         lock.lock()
         guard state != .cancelled else {
             lock.unlock()
             return
         }
         _executionCount += 1
-        
         // 更新性能指标
         if firstExecutionDate == nil {
             firstExecutionDate = now
         }
         lastExecutionDate = now
-        
         snapshot = Array(actions.values)
         lock.unlock()
-
         snapshot.forEach { $0(self) }
     }
 
@@ -265,7 +255,6 @@ extension JobsTask {
         _estimatedNextExecutionDate = Date().adding(next)
         let observers = Array(lifecycleObservers.values)
         lock.unlock()
-
         observers.forEach { $0(.running) }
         installTimer(after: next, generation: generation)
     }
@@ -293,7 +282,6 @@ extension JobsTask {
         let oldTimer = timer
         timer = nil
         lock.unlock()
-
         oldTimer?.stop()
         installTimer(after: next, generation: generation)
     }
@@ -308,12 +296,10 @@ extension JobsTask {
             pauseInBackground: false,
             autoManageAppState: false
         )
-
         let kind: JobsTimerKind = runLoopMode == nil ? .gcd : .runLoop
         let oneShot = JobsTimer(kind: kind, config: config) { [weak self] in
             self?.handleTimerFired(generation: generation)
         }
-
         lock.lock()
         guard state != .cancelled else {
             lock.unlock()
@@ -321,7 +307,6 @@ extension JobsTask {
         }
         timer = oneShot
         lock.unlock()
-
         if kind == .gcd {
             oneShot.start()
         } else if Thread.isMainThread {
@@ -375,7 +360,6 @@ extension JobsTask {
             return 0
         }
         let target = initial + count
-
         return await withCheckedContinuation { continuation in
             let box = JobsTaskContinuationBox()
             let token = self.addAction { task in
@@ -385,7 +369,6 @@ extension JobsTask {
                 if box.markResumed() { continuation.resume(returning: current - initial) }
             }
             box.token = token
-
             if self.lifecycle.isTerminated {
                 self.removeAction(token)
                 if box.markResumed() { continuation.resume(returning: max(0, self.executionCount - initial)) }
@@ -403,7 +386,6 @@ extension JobsTask {
                 if box.markResumed() { continuation.resume(returning: current) }
             }
             box.token = token
-
             if self.lifecycle.isTerminated {
                 self.removeAction(token)
                 if box.markResumed() { continuation.resume(returning: self.executionCount) }
@@ -413,7 +395,6 @@ extension JobsTask {
 
     public func waitUntilFinished() async {
         guard !lifecycle.isTerminated else { return }
-
         await withCheckedContinuation { continuation in
             let box = JobsTaskContinuationBox()
             let token = self.addLifecycleObserver { lifecycle in
@@ -422,7 +403,6 @@ extension JobsTask {
                 if box.markResumed() { continuation.resume() }
             }
             box.token = token
-
             if self.lifecycle.isTerminated {
                 self.removeLifecycleObserver(token)
                 if box.markResumed() { continuation.resume() }
@@ -455,7 +435,6 @@ extension JobsTask {
                 if box.markResumed() { continuation.resume(returning: current) }
             }
             box.token = token
-
             if self.executionCount > initialCount || self.lifecycle.isTerminated {
                 self.removeAction(token)
                 if box.markResumed() { continuation.resume(returning: self.executionCount) }
@@ -480,7 +459,7 @@ extension JobsTask {
             await group.waitForAll()
         }
     }
-    
+
     /// 等待任意一个任务完成
     /// - Parameter tasks: 要等待的任务数组
     /// - Returns: 第一个完成的任务
@@ -499,19 +478,19 @@ extension JobsTask {
             };return nil
         }
     }
-    
+
     /// 取消多个任务
     /// - Parameter tasks: 要取消的任务数组
     public static func cancelAll(_ tasks: [JobsTask]) {
         tasks.forEach { $0.cancel() }
     }
-    
+
     /// 暂停多个任务
     /// - Parameter tasks: 要暂停的任务数组
     public static func suspendAll(_ tasks: [JobsTask]) {
         tasks.forEach { $0.suspend() }
     }
-    
+
     /// 恢复多个任务
     /// - Parameter tasks: 要恢复的任务数组
     public static func resumeAll(_ tasks: [JobsTask]) {

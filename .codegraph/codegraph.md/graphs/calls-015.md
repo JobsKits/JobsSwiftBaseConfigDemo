@@ -12,65 +12,65 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T1["method:ASCollectionView::_superReloadData:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:878"]
+  S1["method:ASCollectionView::nodesDidRelayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2370"]
+  T1["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
   S1 -->|calls| T1
-  S2["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T2["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
+  S2["method:ASCollectionView::nodesDidRelayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2370"]
+  T2["function:ASDisplayNodeFindFirstNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:226"]
   S2 -->|calls| T2
-  S3["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T3["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
+  S3["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
+  T3["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
   S3 -->|calls| T3
-  S4["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T4["method:ASCollectionView::_superReloadData:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:878"]
+  S4["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
+  T4["method:ASControlNode::__exitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:114"]
   S4 -->|calls| T4
-  S5["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T5["method:ASCollectionView::_superPerformBatchUpdates:completion:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:897"]
+  S5["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
+  T5["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
   S5 -->|calls| T5
-  S6["method:ASCollectionView::rangeController:updateWithChangeSet:updates:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2236"]
-  T6["function:ASCollectionLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:37"]
+  S6["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
+  T6["method:ASCollectionView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:1864"]
   S6 -->|calls| T6
-  S7["method:ASCollectionView::nodeSelectedStateDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2344"]
-  T7["method:ASCollectionNode::selectItemAtIndexPath:animated:scrollPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:841"]
+  S7["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
+  T7["function:ASScrollDirectionContainsVerticalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:15"]
   S7 -->|calls| T7
-  S8["method:ASCollectionView::nodeSelectedStateDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2344"]
-  T8["method:ASCollectionNode::deselectItemAtIndexPath:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:855"]
+  S8["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
+  T8["function:ASScrollDirectionContainsHorizontalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:19"]
   S8 -->|calls| T8
-  S9["method:ASCollectionView::nodeDidInvalidateSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2364"]
-  T9["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S9["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
+  T9["method:ASCollectionView::relayoutItems<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:372"]
   S9 -->|calls| T9
-  S10["method:ASCollectionView::nodesDidRelayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2370"]
-  T10["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S10["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
+  T10["method:ASCollectionView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:390"]
   S10 -->|calls| T10
-  S11["method:ASCollectionView::nodesDidRelayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2370"]
-  T11["function:ASDisplayNodeFindFirstNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:226"]
+  S11["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
+  T11["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
   S11 -->|calls| T11
-  S12["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T12["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T12["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S12 -->|calls| T12
-  S13["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T13["method:ASControlNode::__exitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:114"]
+  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T13["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S13 -->|calls| T13
-  S14["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T14["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T14["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S14 -->|calls| T14
-  S15["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T15["method:ASCollectionView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:1864"]
+  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T15["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S15 -->|calls| T15
-  S16["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T16["function:ASScrollDirectionContainsVerticalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:15"]
+  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T16["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S16 -->|calls| T16
-  S17["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T17["function:ASScrollDirectionContainsHorizontalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:19"]
+  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T17["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S17 -->|calls| T17
-  S18["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T18["method:ASCollectionView::relayoutItems<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:372"]
+  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T18["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S18 -->|calls| T18
-  S19["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
-  T19["method:ASCollectionView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:390"]
+  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T19["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S19 -->|calls| T19
-  S20["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
-  T20["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
+  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
+  T20["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
   S20 -->|calls| T20
   S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
   T21["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]

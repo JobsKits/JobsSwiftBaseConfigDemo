@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 import JobsSwiftBaseDefines
-
 import CoreGraphics
 /// 基础绘制
 
@@ -30,20 +29,17 @@ extension UIImage {
                              opaque: Bool = false) {
         guard gradientColors.count >= 2,
               size.width > 0, size.height > 0 else { return nil }
-
         let renderer = UIGraphicsImageRenderer(size: size, format: {
             let f = UIGraphicsImageRendererFormat.default()
             f.opaque = opaque
             return f
         }())
-
         let img = renderer.image { ctx in
             let cgColors = gradientColors.map { $0.cgColor } as CFArray
             let space = CGColorSpaceCreateDeviceRGB()
             guard let gradient = CGGradient(colorsSpace: space,
                                             colors: cgColors,
                                             locations: nil) else { return }
-
             let sp = CGPoint(x: startPoint.x * size.width,
                              y: startPoint.y * size.height)
             let ep = CGPoint(x: endPoint.x * size.width,
@@ -80,10 +76,8 @@ extension UIImage {
         let scale = self.scale
         let width  = Int(size.width  * scale)
         let height = Int(size.height * scale)
-
         let colorSpace = CGColorSpaceCreateDeviceGray()
         let bitmapInfo = CGImageAlphaInfo.none.rawValue
-
         guard let ctx = CGContext(data: nil,
                                   width: width,
                                   height: height,
@@ -93,7 +87,6 @@ extension UIImage {
                                   bitmapInfo: bitmapInfo) else {
             return nil
         }
-
         ctx.draw(cgImg, in: CGRect(x: 0, y: 0, width: width, height: height))
         guard let out = ctx.makeImage() else { return nil };return UIImage(cgImage: out, scale: scale, orientation: .up)
     }
@@ -123,38 +116,30 @@ extension UIImage {
                         borderColor: UIColor = JobsCor.clear) -> UIImage? {
         let shortest = min(size.width, size.height)
         guard shortest > 0 else { return nil }
-
         let outputSize = CGSize(width: shortest, height: shortest)
         let rect = CGRect(origin: .zero, size: outputSize)
-
         UIGraphicsBeginImageContextWithOptions(outputSize, false, scale)
         defer { UIGraphicsEndImageContext() }
-
         let clipRadius = max(0, cornerRadius ?? shortest * 0.5)
         let clipPath: UIBezierPath = (cornerRadius == nil)
             ? UIBezierPath.make(ovalIn: rect)
             : UIBezierPath.make(roundedRect: rect, cornerRadius: clipRadius)
         clipPath.addClip()
-
         draw(in: CGRect(
             x: (shortest - size.width)  / 2,
             y: (shortest - size.height) / 2,
             width: size.width,
             height: size.height
         ))
-
         if borderWidth > 0 {
             let inset = borderWidth / 2
             let strokeRect = rect.insetBy(dx: inset, dy: inset)
-
             let strokeRadius = (cornerRadius == nil)
                 ? strokeRect.width * 0.5
                 : max(0, clipRadius - inset)
-
             let strokePath: UIBezierPath = (cornerRadius == nil)
                 ? UIBezierPath.make(ovalIn: strokeRect)
                 : UIBezierPath.make(roundedRect: strokeRect, cornerRadius: strokeRadius)
-
             borderColor.setStroke()
             strokePath.lineWidth = borderWidth
             strokePath.stroke()
@@ -174,24 +159,19 @@ extension UIImage {
     func overlayed(with overlay: UIImage, horizontalInset: CGFloat = 2) -> UIImage {
         let size = self.size
         guard size.width > 0, size.height > 0 else { return self }
-
         UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
         defer { UIGraphicsEndImageContext() }
-
         self.draw(in: CGRect(origin: .zero, size: size))
-
         let maxWidth = max(0, size.width - 2 * horizontalInset)
         guard maxWidth > 0, overlay.size.width > 0 else {
             return UIGraphicsGetImageFromCurrentImageContext() ?? self
         }
-
         let overlayHeight = overlay.size.height * (maxWidth / overlay.size.width)
         let overlayRect = CGRect(x: horizontalInset,
                                  y: (size.height - overlayHeight) / 2,
                                  width: maxWidth,
                                  height: overlayHeight)
         overlay.draw(in: overlayRect)
-
         return UIGraphicsGetImageFromCurrentImageContext() ?? self
     }
     //MARK: - 压缩图片至指定大小（字节）
@@ -203,7 +183,6 @@ extension UIImage {
         let minQ = max(0, min(minQuality, 1))
         let stepQ = max(0.01, min(step, 0.5))
         let ratio = max(0.1, min(downscaleRatio, 0.99))
-
         guard let data = self.jpegData(compressionQuality: 1.0) else { return nil }
         if data.count <= maxByteSize { return data }
         // 逐步降低质量
@@ -221,7 +200,6 @@ extension UIImage {
             let newSize = CGSize(width: currentImage.size.width * ratio,
                                  height: currentImage.size.height * ratio)
             if newSize.width < 16 || newSize.height < 16 { return d }
-
             autoreleasepool {
                 UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
                 currentImage.draw(in: CGRect(origin: .zero, size: newSize))

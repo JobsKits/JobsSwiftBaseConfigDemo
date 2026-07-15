@@ -51,7 +51,6 @@ final class UIAlertDemoVC: BaseVC {
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] _ in
                 guard let self else { return }
-
                 UIAlertController
                     .makeAlert("重命名", "请输入新的名称")
 //                    .bySDBgImageView("https://picsum.photos/800/600",
@@ -167,7 +166,6 @@ final class UIAlertDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "系统的弹出框".tr)
-
         simpleAlertBtn.byVisible(YES)
         textFieldAlertBtn.byVisible(YES)
         actionSheetAutoBtn.byVisible(YES)

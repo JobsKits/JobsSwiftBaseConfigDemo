@@ -86,24 +86,20 @@ final class ObjectBoxDemoVC: BaseVC {
                     "请先在列表里选中一条数据".tr.toast
                     return
                 }
-
                 guard let name = nameTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
                     !name.isEmpty else {
                     "姓名不能为空".tr.toast
                     return
                 }
-
                 guard let ageText = ageTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
                     let age = Int32(ageText) else {
                     "年龄不合法".tr.toast
                     return
                 }
-
                 selectedPerson.name = name
                 selectedPerson.age = age
-
                 do {
                     try personBox.put(selectedPerson)
                     clearInput()
@@ -129,7 +125,6 @@ final class ObjectBoxDemoVC: BaseVC {
                     "请先在列表里选中一条数据".tr.toast
                     return
                 }
-
                 do {
                     try personBox.remove(selectedPerson.id)
                     clearInput()
@@ -210,7 +205,6 @@ final class ObjectBoxDemoVC: BaseVC {
 }
 // MARK: - Data
 private extension ObjectBoxDemoVC {
-    
     func buildInputPerson() -> Human? {
         guard let name = nameTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
@@ -218,7 +212,6 @@ private extension ObjectBoxDemoVC {
             "姓名不能为空".tr.toast
             return nil
         }
-
         guard let ageText = ageTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
             let age = Int32(ageText) else {
@@ -244,7 +237,6 @@ private extension ObjectBoxDemoVC {
 }
 // MARK: - UITableViewDataSource
 extension ObjectBoxDemoVC: UITableViewDataSource {
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         dataSource.count
     }
@@ -257,16 +249,13 @@ extension ObjectBoxDemoVC: UITableViewDataSource {
             .bySecondaryText("id: \(Human.id)")
             .byAccessoryType(Human.id == selectedPerson?.id ? .checkmark : .none)
             .onResult { _ in
-
             }
     }
 }
 // MARK: - UITableViewDelegate
 extension ObjectBoxDemoVC: UITableViewDelegate {
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         let Human = dataSource[indexPath.row]
         selectedPerson = Human
         nameTextField.byText(Human.name)

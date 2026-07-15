@@ -23,7 +23,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class ToastDemoVC: BaseVC {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -41,9 +40,7 @@ extension ToastDemoVC {
         let btnHeight: CGFloat = 44
         let sideInset: CGFloat = 24
         let vSpacing: CGFloat = 12
-
         var last: UIView?
-
         @discardableResult
         func addButton(_ title: String, action: @escaping jobsByVoidBlock) -> UIButton {
             let btn = UIButton.sys()
@@ -63,32 +60,26 @@ extension ToastDemoVC {
             last = btn
             return btn
         }
-
         // 1) 默认：1s、底部偏移120
         addButton("默认 Toast（“谢谢光临”）") {
             "谢谢光临".tr.toast
         }
-
         // 2) 自定义时长/位置（链式 Config）
         addButton("时长2.5s / 底部偏移80") {
             "操作成功".tr.toast
         }
-
         // 3) 自定义样式：绿色背景 + 圆角12
         addButton("绿色圆角 Toast") {
             "保存成功".tr.toast
         }
-
         // 4) 可点击（按钮作为内容，tap 回调）
         addButton("可点击 Toast（撤销）") {
             "点我撤销".tr.toast
         }
-
         // 5) 大内边距（更宽的背景气泡）
         addButton("大 padding Toast") {
             "大 padding".tr.toast
         }
-
         // 6) 手动提前关闭（先弹再 1s 后主动 dismiss）
         addButton("手动提前关闭") {
             let t = JobsToast.show(

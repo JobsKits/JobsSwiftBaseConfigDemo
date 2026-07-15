@@ -96,7 +96,6 @@ extension UIImageView {
         guard imageSize.width > 0, imageSize.height > 0, bounds.width > 0, bounds.height > 0 else {
             return .zero
         }
-
         let imageRatio = imageSize.width / imageSize.height
         let viewRatio = bounds.width / bounds.height
         if imageRatio > viewRatio {

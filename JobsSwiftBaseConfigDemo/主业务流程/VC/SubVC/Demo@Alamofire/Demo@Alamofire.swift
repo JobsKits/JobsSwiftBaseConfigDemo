@@ -17,11 +17,12 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
+import JobsInheritance
 import Alamofire
 import SnapKit
 import GKNavigationBarSwift
 
-final class AFDemoVC: UIViewController {
+final class AFDemoVC: BaseVC {
     // live 或 stubbed；live 演示真实请求
     private lazy var api = AFService(mode: .live) { [weak self] text in
         DispatchQueue.main.async { self?.appendRawLog(text) }
@@ -355,7 +356,6 @@ final class AFDemoVC: UIViewController {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Alamofire 全量用法 Demo".tr)
-
         btnZen.byVisible(YES)
         btnUser.byVisible(YES)
         btnLogin.byVisible(YES)
@@ -367,7 +367,6 @@ final class AFDemoVC: UIViewController {
         btnStub.byVisible(YES)
         btnClear.byVisible(YES)
         resultView.byVisible(YES)
-
         show(title: "准备就绪 ✅".tr, body: "按钮触发请求；日志与结果会回显在此。")
     }
     // ================= 工具 =================

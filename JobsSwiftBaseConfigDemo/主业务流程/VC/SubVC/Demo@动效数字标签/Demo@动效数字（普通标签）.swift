@@ -178,10 +178,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.view.endEditing(true)
-
                 let startRaw = (self.startTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                 let endRaw   = (self.endTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-
                 // 规则：允许为空（走 fallback），但只要非空就必须是纯数字
                 if !startRaw.isEmpty && !startRaw.isPureNumber {
                     "❌ 起点不是纯数字：\(startRaw)".toast
@@ -191,10 +189,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     "❌ 终点不是纯数字：\(endRaw)".toast
                     return
                 }
-
                 let startValue = self.parseValue(startRaw, fallback: self.defaultStart)
                 let endValue   = self.parseValue(endRaw,   fallback: self.defaultEnd)
-
                 let endText = self.formatTargetText(endValue)
                 if endText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     "❌ 目标值为空".tr.toast; return
@@ -211,7 +207,6 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     )
                     .byStartAnimatedTextNumber(endText)
             }
-
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.startTF.snp.bottom).offset(self.spacingY)
                 make.left.equalTo(self.startTF)
@@ -242,18 +237,15 @@ final class AnimationEffectLabelDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "UILabel数字动效".tr)
-
         cardView.byVisible(YES)
         valueLabel.byVisible(YES)
         hintLabel.byVisible(YES)
-
         startTF.byVisible(YES)
         endTF.byVisible(YES)
-
         startBtn.byVisible(YES)
         stopBtn.byVisible(YES)
     }
-    
+
     deinit {
         valueLabel.byStopAnimatedTextNumber()
     }
@@ -279,7 +271,6 @@ extension AnimationEffectLabelDemoVC {
         var result = ""
         var hasDot = false
         var hasMinus = false
-
         for (idx, ch) in raw.enumerated() {
             if ch.isNumber {
                 result.append(ch)

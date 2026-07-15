@@ -31,7 +31,6 @@ final class PromiseKitDemoVC: BaseVC {
         case fallback
         case partialSuccess
         case timeoutRace
-
         var title: String {
             switch self {
             case .serial: "串行依赖：登录 → 用户资料 → 权益"
@@ -41,7 +40,6 @@ final class PromiseKitDemoVC: BaseVC {
             case .timeoutRace: "竞争/超时：race + after"
             }
         }
-
         var subtitle: String {
             switch self {
             case .serial: "then 把前一个结果自然传给下一个请求"
@@ -56,7 +54,6 @@ final class PromiseKitDemoVC: BaseVC {
     private enum Section: Int, CaseIterable {
         case actions
         case logs
-
         var title: String {
             switch self {
             case .actions: "PromiseKit 场景"
@@ -187,11 +184,9 @@ final class PromiseKitDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(title: "PromiseKit Demo".tr)
-
         tipsLabel.byVisible(YES)
         loadingLabel.byVisible(YES)
         tableView.byVisible(YES)
-
         appendLog("DemoVC ready")
         appendLog("点任意一行，观察 PromiseKit 的组合能力")
     }
@@ -228,7 +223,6 @@ extension PromiseKitDemoVC {
     /// 串行依赖：上一个请求的产物给下一个请求继续用
     private func 上一个请求的产物给下一个请求继续用() {
         setLoading(true, text: "串行中...")
-
         firstly {
             service.login(username: "jobs", password: "123456")
         }.then { [service] token in
@@ -252,7 +246,6 @@ extension PromiseKitDemoVC {
     /// 并发聚合：多个互不依赖的请求同时发，最后一次性收口
     private func 多个互不依赖的请求同时发最后一次性收口() {
         setLoading(true, text: "并发中...")
-
         firstly {
             when(fulfilled:
                 service.fetchCurrentUser(),
@@ -277,7 +270,6 @@ extension PromiseKitDemoVC {
     /// 失败回退：主链路挂了以后，不把页面打死，直接切缓存
     private func 主链路挂了以后不把页面打死直接切缓存() {
         setLoading(true, text: "回退中...")
-
         firstly {
             service.fetchRemoteConfig(forceFail: true)
         }.recover { [service] error -> Promise<String> in
@@ -299,19 +291,15 @@ extension PromiseKitDemoVC {
     /// 部分成功：一个接口失败，不影响其它接口的成功结果展示
     private func 一个接口失败不影响其它接口的成功结果展示() {
         setLoading(true, text: "收集中...")
-
         let promises: [Promise<String>] = [
             service.fetchWidget(name: "推荐位", shouldFail: false),
             service.fetchWidget(name: "运营角标", shouldFail: true),
             service.fetchWidget(name: "活动弹窗", shouldFail: false)
         ]
-
         when(resolved: promises).done { [weak self] (results: [Result<String>]) in
             guard let self else { return }
-
             var successLogs = [String]()
             var failureLogs = [String]()
-
             results.forEach { result in
                 switch result {
                 case .fulfilled(let value):
@@ -320,12 +308,10 @@ extension PromiseKitDemoVC {
                     failureLogs.append(error.localizedDescription)
                 }
             }
-
             self.appendLog("✅ 部分成功：成功[\(successLogs.joined(separator: "、"))]")
             if !failureLogs.isEmpty {
                 self.appendLog("⚠️ 部分失败：失败[\(failureLogs.joined(separator: "、"))]")
             }
-
             self.setLoading(false)
         }
     }
@@ -333,12 +319,10 @@ extension PromiseKitDemoVC {
     /// 竞争 / 超时：哪个先完成就用哪个
     private func 哪个先完成就用哪个() {
         setLoading(true, text: "竞争中...")
-
         let request = service.fetchSlowResource(delay: 2.0)
         let timeout = after(seconds: 1.0).then { () -> Promise<String> in
             Promise(error: DemoError.timeout)
         }
-
         firstly {
             race(request, timeout)
         }.done { [weak self] value in
@@ -375,7 +359,6 @@ extension PromiseKitDemoVC {
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
 extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
-
     func numberOfSections(in tableView: UITableView) -> Int {
         Section.allCases.count
     }
@@ -401,24 +384,19 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         guard
             let section = Section(rawValue: indexPath.section),
             section == .actions,
             let row = Row(rawValue: indexPath.row)
         else { return }
-
         runDemo(row)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byAccessoryType(.none)
-
         var config = cell.defaultContentConfiguration()
-
         if indexPath.section == Section.actions.rawValue,
            let row = Row(rawValue: indexPath.row) {
             config.text = row.title
@@ -429,7 +407,6 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
             config.secondaryText = nil
             cell.accessoryType = .none
         }
-
         config.textProperties.numberOfLines = 0
         config.secondaryTextProperties.numberOfLines = 0
         cell.contentConfiguration = config
@@ -438,7 +415,6 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
 }
 // MARK: - Mock Service
 private final class MockPromiseService {
-
     func login(username: String, password: String) -> Promise<String> {
         Promise { seal in
             after(seconds: 0.6).done {

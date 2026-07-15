@@ -8,7 +8,6 @@
 import Foundation
 
 public struct JobsWindowedTaskExecutionSequence: AsyncSequence {
-
     public typealias Element = [TaskExecution]
     private let base: JobsTaskExecutionSequence
     private let windowDuration: TimeInterval
@@ -20,22 +19,18 @@ public struct JobsWindowedTaskExecutionSequence: AsyncSequence {
 }
 
 extension JobsWindowedTaskExecutionSequence {
-
     public func makeAsyncIterator() -> AsyncIterator {
         AsyncIterator(base: base.makeAsyncIterator(), windowDuration: windowDuration)
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
-        
         private var base: JobsTaskExecutionSequence.AsyncIterator
         private let windowDuration: TimeInterval
         private var bufferedExecution: TaskExecution?
-
         init(base: JobsTaskExecutionSequence.AsyncIterator, windowDuration: TimeInterval) {
             self.base = base
             self.windowDuration = Swift.max(0, windowDuration)
         }
-
         public mutating func next() async -> [TaskExecution]? {
             let firstExecution: TaskExecution
             if let bufferedExecution {
@@ -45,10 +40,8 @@ extension JobsWindowedTaskExecutionSequence {
                 guard let next = await base.next() else { return nil }
                 firstExecution = next
             }
-
             var window: [TaskExecution] = [firstExecution]
             let endTime = firstExecution.date.addingTimeInterval(windowDuration)
-
             while let execution = await base.next() {
                 if execution.date <= endTime {
                     window.append(execution)

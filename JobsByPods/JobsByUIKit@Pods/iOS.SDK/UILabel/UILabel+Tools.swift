@@ -39,23 +39,18 @@ extension UILabel {
                 .foregroundColor: self.textColor as Any
             ])
         }()
-
         let result = NSMutableAttributedString(attributedString: raw)
         let full = NSRange(location: 0, length: result.length)
-
         let p = (result.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSMutableParagraphStyle) ?? {
             return NSMutableParagraphStyle()
         }()
-
         if let v = lineSpacing { p.lineSpacing = v }
         if let v = paragraphSpacing { p.paragraphSpacing = v }
         if let v = alignment { p.alignment = v }
         if let v = lineHeightMultiple { p.lineHeightMultiple = v }
         if let v = hyphenationFactor { p.hyphenationFactor = v }
-
         result.addAttribute(.paragraphStyle, value: p, range: full)
         if let k = kerning { result.addAttribute(.kern, value: k, range: full) }
-
         self.attributedText = result
         return self
     }

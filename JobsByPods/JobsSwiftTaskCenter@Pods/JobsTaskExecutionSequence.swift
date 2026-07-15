@@ -9,7 +9,6 @@ import Foundation
 /// 任务执行的异步序列
 
 public struct JobsTaskExecutionSequence: AsyncSequence {
-
     public typealias Element = TaskExecution
     private let task: JobsTask
 
@@ -19,7 +18,6 @@ public struct JobsTaskExecutionSequence: AsyncSequence {
 }
 
 extension JobsTaskExecutionSequence {
-
     public func makeAsyncIterator() -> AsyncIterator {
         AsyncIterator(task: task)
     }
@@ -28,10 +26,8 @@ extension JobsTaskExecutionSequence {
         private let task: JobsTask
         private let stream: AsyncStream<TaskExecution>
         private var iterator: AsyncStream<TaskExecution>.Iterator
-
         init(task: JobsTask) {
             self.task = task
-
             self.stream = AsyncStream<TaskExecution>(bufferingPolicy: .unbounded) { continuation in
                 let actionToken = task.addAction { task in
                     let execution = TaskExecution(
@@ -41,30 +37,25 @@ extension JobsTaskExecutionSequence {
                         nextFireDate: task.estimatedNextExecutionDate
                     )
                     continuation.yield(execution)
-
                     if task.lifecycle.isTerminated {
                         continuation.finish()
                     }
                 }
-
                 let lifecycleToken = task.addLifecycleObserver { lifecycle in
                     if lifecycle.isTerminated {
                         continuation.finish()
                     }
                 }
-
                 continuation.onTermination = { _ in
                     task.removeAction(actionToken)
                     task.removeLifecycleObserver(lifecycleToken)
                 }
-
                 if task.lifecycle.isTerminated {
                     continuation.finish()
                 }
             }
             self.iterator = stream.makeAsyncIterator()
         }
-
         public mutating func next() async -> TaskExecution? {
             await iterator.next()
         }

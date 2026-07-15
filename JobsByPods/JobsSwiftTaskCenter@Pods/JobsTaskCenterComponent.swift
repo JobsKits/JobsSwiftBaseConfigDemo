@@ -10,7 +10,6 @@ import Foundation
 /// 提供便捷的任务创建、配置和管理接口
 
 public final class JobsTaskCenterComponent: @unchecked Sendable {
-    
     public let task: JobsTask
     public let configuration: Configuration
 
@@ -26,7 +25,7 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
     public var lifecycle: JobsTaskLifecycle {
         task.lifecycle
     }
-    
+
     private init(task: JobsTask, configuration: Configuration, tag: String? = nil) {
         self.task = task
         self.configuration = configuration
@@ -41,7 +40,6 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
 }
 
 extension JobsTaskCenterComponent {
-    
     public struct Configuration: Sendable {
         public var interval: JobsPeriod
         public var initialDelay: JobsPeriod
@@ -49,7 +47,6 @@ extension JobsTaskCenterComponent {
         public var queue: DispatchQueue
         public var runLoopMode: RunLoop.Mode?
         public var fireImmediately: Bool
-
         public init(
             interval: JobsPeriod,
             initialDelay: JobsPeriod = .zero,
@@ -66,7 +63,7 @@ extension JobsTaskCenterComponent {
             self.fireImmediately = fireImmediately
         }
     }
-    
+
     @discardableResult
     public static func schedule(
         configuration: Configuration,
@@ -368,7 +365,6 @@ extension JobsTaskCenterComponent {
             repeatCount: config.repeatCount,
             fireImmediately: config.fireImmediately
         ).doAsync(queue: queue, priority: priority, action: taskBlock)
-        
         return JobsTaskCenterComponent(task: task, configuration: config)
     }
     /// 创建异步一次性任务

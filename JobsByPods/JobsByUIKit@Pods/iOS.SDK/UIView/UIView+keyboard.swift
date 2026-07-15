@@ -36,7 +36,6 @@ public extension UIView {
         let willShow  = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
         let willHide  = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
         let willChangeFrame = NotificationCenter.default.rx.notification(UIResponder.keyboardWillChangeFrameNotification)
-
         // 统一拿键盘 endFrame → 计算与当前视图的遮挡高度
         func height(from note: Notification) -> CGFloat {
             guard let frame = note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
@@ -65,17 +64,14 @@ public extension UIView {
         let showOrChange = Observable
             .merge(willShow, willChangeFrame)
             .map { height(from: $0) }
-
         let hide = willHide
             .map { _ in CGFloat(0) }
-
         let stream = Observable
             .merge(showOrChange, hide)
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             // 保证多订阅者共享一个上游订阅；最后一个订阅者取消后自动释放
             .share(replay: 1, scope: .whileConnected)
-
         objc_setAssociatedObject(self, &kKeyboardHeightKey, stream, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return stream
     }

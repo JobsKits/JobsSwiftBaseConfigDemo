@@ -23,7 +23,7 @@ extension UIButton {
             configurationUpdateHandler = nil
         };return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byAdoptConfigurationIfAvailable() -> Self {

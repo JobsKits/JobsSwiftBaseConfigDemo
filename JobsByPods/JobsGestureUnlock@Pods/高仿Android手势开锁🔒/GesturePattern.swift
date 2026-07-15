@@ -22,7 +22,6 @@ public struct GesturePattern: Equatable {
 
     public func sha256Hex(salt: String) -> String {
         let data = Data("\(salt)|\(string)".utf8)
-
         if #available(iOS 13.0, *) {
             let digest = SHA256.hash(data: data)
             return digest.map { String(format: "%02x", $0) }.joined()

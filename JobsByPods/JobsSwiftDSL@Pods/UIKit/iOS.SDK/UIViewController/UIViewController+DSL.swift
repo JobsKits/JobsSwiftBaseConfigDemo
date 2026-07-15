@@ -29,7 +29,7 @@ extension UIViewController {
         self.view.backgroundColor = color
         return self
     }
-    
+
     @discardableResult
     public func byFrame(_ frame: CGRect) -> Self {
         self.view.frame = frame
@@ -113,13 +113,12 @@ extension UIViewController {
 @MainActor
 // MARK: - 闭包重载@单参数
 extension UIViewController {
-    
     @discardableResult
     public func byView(_ builder: (UIView) -> Void) -> Self {
         builder(view)
         return self
     }
-    
+
     @discardableResult
     public func byTitle(_ builder: () -> String?) -> Self {
         self.title = builder()
@@ -132,7 +131,7 @@ extension UIViewController {
         self.view.backgroundColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byFrame(_ builder: () -> CGRect) -> Self {
         self.view.frame = builder()

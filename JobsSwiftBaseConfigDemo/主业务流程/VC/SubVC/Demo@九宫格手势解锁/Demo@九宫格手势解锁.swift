@@ -25,7 +25,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class GestureUnlockDemoVC: BaseVC {
-
     private enum FlowState {
         case createFirst
         case confirmFirst(temp: GesturePattern)
@@ -41,9 +40,7 @@ final class GestureUnlockDemoVC: BaseVC {
             .bySelectedSegmentIndex(1)
             .onJobsChange { [weak self] (seg: UISegmentedControl) in
                 guard let self else { return }
-
                 unlockView.reset()
-
                 if seg.selectedSegmentIndex == 0 {
                     flowState = .createFirst
                     hintLabel.byText("绘制新手势（至少 4 个点）".tr)
@@ -102,9 +99,7 @@ final class GestureUnlockDemoVC: BaseVC {
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .onTap { [weak self] sender in
                 guard let self else { return }
-
                 unlockView.reset()
-
                 switch flowState {
                 case .confirmFirst:
                     flowState = .createFirst
@@ -128,12 +123,10 @@ final class GestureUnlockDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "九宫格解锁🔒".tr)
-
         modeControl.byVisible(YES)
         hintLabel.byVisible(YES)
         unlockView.byVisible(YES)
         resetButton.byVisible(YES)
-
         configureUnlockView()
         refreshStateFromStorage()
     }
@@ -187,13 +180,11 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
 }
 
 extension GestureUnlockDemoVC{
-    
     private func configureUnlockView() {
         var config = GestureUnlockConfiguration()
         config.gridDimension = 3
         config.minimumPatternLength = 4
         config.hapticsEnabled = true
-
         unlockView.configuration = config
         unlockView.delegate = self
     }

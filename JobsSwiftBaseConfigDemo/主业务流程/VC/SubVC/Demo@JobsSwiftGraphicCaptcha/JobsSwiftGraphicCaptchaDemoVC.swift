@@ -102,7 +102,6 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         resultLabel.byAddTo(view)
         refreshButton.byAddTo(view)
         validateButton.byAddTo(view)
-
         modeControl.snp.makeConstraints { [unowned self] make in
             make.left.right.equalToSuperview().inset(16)
             if view.jobs_hasVisibleTopBar() {
@@ -112,37 +111,31 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
             }
             make.height.equalTo(34)
         }
-
         mixedModeControl.snp.makeConstraints { make in
             mixedModeTopConstraint = make.top.equalTo(modeControl.snp.bottom).offset(10).constraint
             make.left.right.equalTo(modeControl)
             mixedModeHeightConstraint = make.height.equalTo(34).constraint
         }
-
         captchaView.snp.makeConstraints { make in
             captchaTopConstraint = make.top.equalTo(mixedModeControl.snp.bottom).offset(22).constraint
             make.left.right.equalToSuperview().inset(32)
             make.height.equalTo(72)
         }
-
         inputField.snp.makeConstraints { make in
             make.top.equalTo(captchaView.snp.bottom).offset(18)
             make.left.right.equalTo(captchaView)
             make.height.equalTo(44)
         }
-
         resultLabel.snp.makeConstraints { make in
             make.top.equalTo(inputField.snp.bottom).offset(12)
             make.left.right.equalTo(inputField)
         }
-
         refreshButton.snp.makeConstraints { make in
             make.top.equalTo(resultLabel.snp.bottom).offset(18)
             make.left.equalTo(inputField)
             make.height.equalTo(42)
             make.width.equalTo(inputField).multipliedBy(0.45)
         }
-
         validateButton.snp.makeConstraints { make in
             make.top.height.width.equalTo(refreshButton)
             make.right.equalTo(inputField)
@@ -164,7 +157,6 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         mixedModeTopConstraint?.update(offset: isMixedMode ? 10 : 0)
         mixedModeHeightConstraint?.update(offset: isMixedMode ? 34 : 0)
         captchaTopConstraint?.update(offset: isMixedMode ? 22 : 18)
-
         switch index {
         case 1:
             captchaView.config = .letterCaseSensitiveConfig

@@ -38,7 +38,6 @@ extension APIService {
                 done(.failure(MoyaError.underlying(error, nil)))
             }
         }
-
         // —— 日志重定向到 UI —— //
         let output: NetworkLoggerPlugin.Configuration.OutputType = { _, items in
             uiLog?(items.joined(separator: "\n"))
@@ -50,7 +49,6 @@ extension APIService {
         )
         let curl = CurlLoggerPlugin(emit: uiLog)
         let token = AccessTokenPlugin { _ in TokenStore.shared.accessToken ?? "" }
-
         let provider = MoyaProvider<DemoAPI>(
             endpointClosure: endpointClosure,
             requestClosure: requestClosure,
@@ -70,7 +68,6 @@ extension APIService {
                                  logOptions: .verbose)
         )
         let curl = CurlLoggerPlugin(emit: uiLog)
-
         let provider = MoyaProvider<DemoAPI>(
             stubClosure: { _ in .delayed(seconds: 0.3) },
             plugins: [logger, curl, TimeoutPlugin()]
@@ -79,7 +76,6 @@ extension APIService {
 }
 // MARK: - 401 -> 刷新 Token -> 重放一次
 extension APIService {
-    
     public func requestWithAutoRefresh(_ target: DemoAPI,
                                        retryOnce: Bool = true,
                                        completion: @escaping jobsByMoyaResultBlock) {

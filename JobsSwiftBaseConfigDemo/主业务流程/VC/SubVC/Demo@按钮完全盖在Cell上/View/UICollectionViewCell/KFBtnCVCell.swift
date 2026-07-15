@@ -20,7 +20,6 @@ import SnapKit
 import Kingfisher
 import JobsByUIKit
 final class KFBtnCVCell: UICollectionViewCell {
-    
     private lazy var coverButton: UIButton = {
         UIButton.custom()
             .byAddTo(contentView) { make in
@@ -52,7 +51,6 @@ final class KFBtnCVCell: UICollectionViewCell {
 }
 // MARK: ViewDataProtocol
 extension KFBtnCVCell {
-
     @discardableResult
     func byData(_ model: JobsBtnCellModel, _ index: Int? = nil) -> Self {
         coverButton

@@ -117,7 +117,7 @@ extension AttributeContainer {
         c.uiKit.textEffect = v
         return c
     }
-    
+
     @discardableResult
     @inlinable
     public func byBaselineOffset(_ v: CGFloat?) -> Self {

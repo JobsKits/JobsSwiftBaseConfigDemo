@@ -34,7 +34,6 @@ extension Optional where Wrapped == String {
      b.isNilOrEmpty  // true
  */
 extension Optional where Wrapped == String {
-    
     public var isNilOrEmpty: Bool {
         self?.isEmpty ?? true
     }

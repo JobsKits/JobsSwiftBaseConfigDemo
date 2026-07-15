@@ -22,17 +22,14 @@ extension URL {
         if isHTTPRemote {
             return try await withCheckedThrowingContinuation { continuation in
                 var didResume = false
-
                 SDWebImageManager.shared.loadImage(
                     with: self,
                     options: [],
                     progress: nil
                 ) { image, _, error, _, finished, _ in
-
                     // 避免渐进式/重复回调：只在最终 finished 且未 resume 时处理一次
                     guard finished, !didResume else { return }
                     didResume = true
-
                     if let image {
                         continuation.resume(returning: image)
                     } else if let error {

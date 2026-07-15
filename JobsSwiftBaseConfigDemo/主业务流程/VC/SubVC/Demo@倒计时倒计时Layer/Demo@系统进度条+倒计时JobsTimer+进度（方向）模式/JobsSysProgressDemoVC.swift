@@ -25,7 +25,6 @@ import GKNavigationBarSwift
 /// Demo@系统进度条+倒计时JobsSwiftTimer+进度（方向）模式
 
 final class JobsSysProgressDemoVC: BaseVC {
-    
     let horizontalInset: CGFloat = 40
     /// 当前正在运行的倒计时过程
     private var countdownProcess: JobsSwiftTimerCountdown?
@@ -153,11 +152,9 @@ final class JobsSysProgressDemoVC: BaseVC {
                     case .countDown: return 1.0
                     }
                 }()
-
                 self.progressView.setProgress(initialRatio, animated: false)
                 self.timeLabel.byText(String(format: "剩余：%.1f 秒", duration))
                 self.setStartButton(false)
-
                 self.countdownProcess = JobsSwiftTimerCountdown(
                     duration: duration,
                     kind: .displayLink,          // CADisplayLink 内核，更顺滑
@@ -186,7 +183,6 @@ final class JobsSysProgressDemoVC: BaseVC {
                             case .countDown: return 0.0
                             }
                         }()
-
                         strongSelf.progressView.setProgress(finalRatio, animated: true)
                         strongSelf.timeLabel.byText("倒计时完成 ✅（总 \(Int(snap.total)) 秒）")
                         strongSelf.countdownProcess = nil
@@ -238,7 +234,6 @@ final class JobsSysProgressDemoVC: BaseVC {
         durationSegment.byVisible(YES)
         startButton.byVisible(YES)
         cancelButton.byVisible(YES)
-
         updateTimeLabelForIdle()
     }
 
@@ -257,14 +252,12 @@ extension JobsSysProgressDemoVC {
     private func updateTimeLabelForIdle() {
         let duration = selectedDuration
         timeLabel.byText(String(format: "准备开始：%.0f 秒", duration))
-
         let initialRatio: Float = {
             switch progressMode {
             case .countUp:   return 0.0
             case .countDown: return 1.0
             }
         }()
-
         progressView.setProgress(initialRatio, animated: false)
         modeButton.byTitle(modeButtonTitle(), for: .normal)
     }

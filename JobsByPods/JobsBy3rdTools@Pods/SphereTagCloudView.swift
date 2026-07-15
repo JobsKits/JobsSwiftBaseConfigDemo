@@ -84,7 +84,6 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         // remove old
         subviews.forEach { $0.removeFromSuperview() }
         nodes.removeAll()
-
         for v in views {
             addItem(v)
         }
@@ -94,7 +93,6 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     /// 添加一个标签
     public func addItem(_ view: UIView) {
         view.byAddTo(self)
-
         // 如果 view 没尺寸，用 intrinsic 做一次兜底
         if view.bounds.size == .zero {
             if let label = view as? UILabel {
@@ -175,36 +173,29 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     @objc private func onPan(_ gr: UIPanGestureRecognizer) {
         guard !nodes.isEmpty else { return }
         let p = gr.location(in: self)
-
         switch gr.state {
         case .began:
             lastPanPoint = p
             // 进入手势时，先把自动旋转“让路”
             velX = 0
             velY = 0
-
         case .changed:
             let dx = p.x - lastPanPoint.x
             let dy = p.y - lastPanPoint.y
             lastPanPoint = p
-
             // 手指水平移动 -> 绕 Y 轴转；垂直移动 -> 绕 X 轴转
             let angleY = dx * rotationSensitivity
             let angleX = -dy * rotationSensitivity
-
             rotate(byX: angleX, y: angleY)
             renderAll()
-
             // 实时更新速度，用于惯性
             velX = angleX
             velY = angleY
-
         case .ended, .cancelled, .failed:
             let v = gr.velocity(in: self)
             // 把像素速度映射成角速度（经验值）
             velY = (v.x * rotationSensitivity) / 60.0
             velX = (-v.y * rotationSensitivity) / 60.0
-
         default:
             break
         }
@@ -225,14 +216,12 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     // MARK: - Ticking
     @objc private func tick(_ link: CADisplayLink) {
         guard !nodes.isEmpty else { return }
-
         if lastTimestamp == 0 {
             lastTimestamp = link.timestamp
             return
         }
         let dt = CGFloat(link.timestamp - lastTimestamp)
         lastTimestamp = link.timestamp
-
         // 惯性旋转
         let hasInertia = abs(velX) > 0.00001 || abs(velY) > 0.00001
         if hasInertia {
@@ -246,7 +235,6 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         } else {
             return
         }
-
         renderAll()
     }
     // MARK: - Core Math
@@ -260,43 +248,35 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     private func distributeIfNeeded(force: Bool = false) {
         guard !nodes.isEmpty else { return }
         if !force, nodes.allSatisfy({ $0.pos != SIMD3<Double>(0, 0, 0) }) { return }
-
         let n = Double(nodes.count)
         // golden angle
         let ga = Double.pi * (3.0 - sqrt(5.0))
-
         for i in 0..<nodes.count {
             let y = 1.0 - (Double(i) + 0.5) * (2.0 / n)
             let r = sqrt(max(0.0, 1.0 - y * y))
             let theta = ga * (Double(i) + 0.5)
-
             let x = cos(theta) * r
             let z = sin(theta) * r
-
             nodes[i].pos = SIMD3<Double>(x, y, z)
         }
     }
 
     private func rotate(byX angleX: CGFloat, y angleY: CGFloat) {
         if angleX == 0 && angleY == 0 { return }
-
         let ax = Double(angleX)
         let ay = Double(angleY)
-
         // rotation around X
         let rx = double3x3(
             SIMD3<Double>(1, 0, 0),
             SIMD3<Double>(0, cos(ax), -sin(ax)),
             SIMD3<Double>(0, sin(ax), cos(ax))
         )
-
         // rotation around Y
         let ry = double3x3(
             SIMD3<Double>(cos(ay), 0, sin(ay)),
             SIMD3<Double>(0, 1, 0),
             SIMD3<Double>(-sin(ay), 0, cos(ay))
         )
-
         for i in 0..<nodes.count {
             var p = nodes[i].pos
             p = ry * (rx * p)
@@ -308,40 +288,30 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         guard !nodes.isEmpty else { return }
         let r = effectiveRadius
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
-
         // 先按 z 排序：远的先画，近的后画（更符合视觉）
         let sortedIdx = nodes.indices.sorted { nodes[$0].pos.z < nodes[$1].pos.z }
-
         for idx in sortedIdx {
             guard let v = nodes[idx].view else { continue }
             let p = nodes[idx].pos
-
             // p.z in [-1, 1]
             let z = CGFloat(p.z)
-
             // 透视：z 越大（越靠近屏幕），perspectiveFactor 越大
             let persp = r / (r + (perspective * r) * (1 - z) * 0.5)
-
             let x2d = center.x + CGFloat(p.x) * r * persp
             let y2d = center.y + CGFloat(p.y) * r * persp
-
             // scale/alpha by depth
             let depth01 = (z + 1) * 0.5 // [-1..1] -> [0..1]
             let scale = minScale + (maxScale - minScale) * depth01
             let alpha = minAlpha + (maxAlpha - minAlpha) * depth01
-
             // place view (keep its own size)
             let size = v.bounds.size
             v.center = CGPoint(x: x2d, y: y2d)
             v.bounds = CGRect(origin: .zero, size: size)
-
             v.byAlpha(alpha)
             v.transform = CGAffineTransform(scaleX: scale, y: scale)
-
             // 让更靠前的更容易点到（也可不要）
             v.isUserInteractionEnabled = true
         }
-
         // bring frontmost to top (z 最大的最后 bringToFront)
         for idx in sortedIdx {
             if let v = nodes[idx].view {

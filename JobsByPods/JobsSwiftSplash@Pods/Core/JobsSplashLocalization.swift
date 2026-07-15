@@ -8,7 +8,6 @@
 import Foundation
 
 enum JobsSplashLocalization {
-
     static func skipTitle(language: JobsSplashLanguage, remainingSeconds: Int?) -> String {
         let bundle = localizedBundle(language: language)
         let skip = bundle.localizedString(
@@ -34,7 +33,6 @@ enum JobsSplashLocalization {
         case let .code(code):
             languageCode = code
         }
-
         for candidate in languageCandidates(languageCode) {
             if let path = resourceBundle.path(forResource: candidate, ofType: "lproj"),
                let bundle = Bundle(path: path) {

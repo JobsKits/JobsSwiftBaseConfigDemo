@@ -195,9 +195,7 @@ extension UIView {
                 }
             };return self
         }
-
         switch model.axis {
-
         case .horizontal:
             // 头尾
             views.first!.snp.makeConstraints { make in
@@ -215,7 +213,6 @@ extension UIView {
                     if let bottom = model.bottom { make.bottom.equalToSuperview().inset(bottom) }
                     if let h = model.crossSize { make.height.equalTo(h) }
                 }
-
                 if i > 0 {
                     v.snp.makeConstraints { make in
                         make.left.equalTo(views[i - 1].snp.right)
@@ -240,7 +237,6 @@ extension UIView {
                     if let h = model.crossSize { make.height.equalTo(h) }
                 }
             }
-
         case .vertical:
             views.first!.snp.makeConstraints { make in
                 make.top.equalToSuperview().inset(model.leadSpacing)
@@ -248,22 +244,18 @@ extension UIView {
             views.last!.snp.makeConstraints { make in
                 make.bottom.equalToSuperview().inset(model.tailSpacing)
             }
-
             for i in 0..<views.count {
                 let v = views[i]
-
                 v.snp.makeConstraints { make in
                     if let left = model.left { make.left.equalToSuperview().inset(left) }
                     if let right = model.right { make.right.equalToSuperview().inset(right) }
                     if let w = model.crossSize { make.width.equalTo(w) }
                 }
-
                 if i > 0 {
                     v.snp.makeConstraints { make in
                         make.top.equalTo(views[i - 1].snp.bottom)
                     }
                 }
-
                 if let h = model.fixedItemLength {
                     v.snp.makeConstraints { make in
                         make.height.equalTo(h)
@@ -274,7 +266,6 @@ extension UIView {
                     }
                 }
             }
-
             if model.makeContainerConstraints {
                 self.snp.makeConstraints { make in
                     if let left = model.left { make.left.equalToSuperview().inset(left) }

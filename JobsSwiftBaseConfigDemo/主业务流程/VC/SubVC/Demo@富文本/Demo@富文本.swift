@@ -30,7 +30,6 @@ import GKNavigationBarSwift
 //  - 在卡片里追加一个“图标附件”示例（回形针 + 文本）
 //  - 新增第三行 rightAligned：演示富文本整体右对齐（文本与附件都右对齐）
 final class RichTextDemoVC: BaseVC {
-
     private let customerText = "专属客服"
     private let customerURL  = "click://customer"
     private let phoneText    = "400-123-4567"
@@ -65,7 +64,6 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let mode: LinkCell.Mode = {
             switch indexPath.row {
             case 0: return .delegate
@@ -73,7 +71,6 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
             default: return .rightAligned
             }
         }()
-
         let cell = tableView.byDequeueReusableCell(withType: LinkCell.self, for: indexPath)
         if mode == .rightAligned {
             // ====================== 右对齐示例 ======================
@@ -91,14 +88,11 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                     JobsRichRun(.text("右对齐：如需帮助请联系 "))
                         .font(JobsFont.systemFont(ofSize: 16))
                         .color(JobsCor.label),
-
                     // 保留「专属客服」可点击（系统 link 样式）
                     JobsRichRun(.text(customerText))
                         .font(JobsFont.systemFont(ofSize: 16))
                         .link(customerURL),
-
                     JobsRichRun(.text("  ")), // 间隔
-
                     // 保留“电话”的自定义样式（红字+蓝线）
                     JobsRichRun(.text(phoneText))
                         .font(JobsFont.systemFont(ofSize: 16))
@@ -134,13 +128,10 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                     JobsRichRun(.text("如需帮助，请联系 "))
                         .font(JobsFont.systemFont(ofSize: 16))
                         .color(JobsCor.label),
-
                     JobsRichRun(.text(customerText))        // 系统默认蓝色
                         .font(JobsFont.systemFont(ofSize: 16))
                         .link(customerURL),
-
                     JobsRichRun(.text(" ")),                // 空格分隔
-
                     JobsRichRun(.text(phoneText))           // 红字 + 蓝线（自定义动作，非系统 link）
                         .font(JobsFont.systemFont(ofSize: 16))
                         .color(JobsCor.red)

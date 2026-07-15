@@ -14,7 +14,6 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedBaseDataSource {
-    
     @discardableResult
     public func byItemWidth(_ value: CGFloat) -> Self {
         itemWidth = value

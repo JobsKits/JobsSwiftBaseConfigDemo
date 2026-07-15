@@ -115,7 +115,6 @@ public extension YTKBaseRequest {
         if autoClearCompletion {
             let success = self.successCompletionBlock
             let failure = self.failureCompletionBlock
-
             self.successCompletionBlock = { [weak self] req in
                 success?(req)
                 self?.clearCompletionBlock()

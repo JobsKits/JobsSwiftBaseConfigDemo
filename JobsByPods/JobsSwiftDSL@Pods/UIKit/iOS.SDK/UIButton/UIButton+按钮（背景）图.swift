@@ -35,14 +35,11 @@ extension UIButton {
     ) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
-
             var bg = cfg.background
             bg.image = image
             bg.imageContentMode = .scaleAspectFill
-
             cfg.background = bg
             self.configuration = cfg
-
             updateConfiguration()
             return self
         }
@@ -53,7 +50,7 @@ extension UIButton {
         self.adjustsImageWhenDisabled = false
         return self
     }
-    
+
     @discardableResult
     public func byBackgroundImage(_ source: JobsImageSource?,
                                   for state: UIControl.State = .normal) -> Self {

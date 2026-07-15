@@ -51,7 +51,6 @@ final class UIButtonDemoVC: BaseVC {
 }
 
 extension UIButtonDemoVC {
-    
     private func setupLayout() {
         // 1) 加入 ScrollView
         scroll.byAddTo(view)
@@ -82,14 +81,12 @@ extension UIButtonDemoVC {
                 .byBackgroundColor(JobsCor.systemBlue)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("基础链式 tapped") }
-
             if #available(iOS 13.0, *) {
                 _ = btnBasic.byImage("bolt.fill".sysImg, for: .normal)
                     .byTintColor(JobsCor.white)
                     .for(.normal)
                     .preferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold))
             }
-
             stack.addArrangedSubview(btnBasic)
         }
         // 2) 按 state 的链式代理：for(.highlighted).title(...) / 背景色
@@ -101,12 +98,10 @@ extension UIButtonDemoVC {
                 .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("StateProxy tapped") }
-
             btnState
                 .for(.highlighted).title("2) Highlighted 标题")
                 .for(.highlighted).titleColor(JobsCor.yellow)
                 .for(.highlighted).backgroundColor(JobsCor.systemPurple)
-
             stack.addArrangedSubview(btnState)
         }
         // 3) 背景色兜底：iOS15+ 走 configuration；其它/非 normal state 用 1×1 背景图
@@ -120,9 +115,7 @@ extension UIButtonDemoVC {
                 .onTap { btn in
                     btn.byEnabled(btn.jobs_effectiveState == .disabled)
                 }
-
             btnBG.for(.disabled).backgroundColor(JobsCor.systemGray)
-
             stack.addArrangedSubview(btnBG)
         }
         // 4) 内容内边距：byContentInsets / byContentEdgeInsets（兼容 iOS15-）
@@ -132,7 +125,6 @@ extension UIButtonDemoVC {
                 .byTitleColor(JobsCor.white)
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemGreen)
-
             _ = btnInsets.byContentInsets(NSDirectionalEdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
             stack.addArrangedSubview(btnInsets)
         }
@@ -144,7 +136,6 @@ extension UIButtonDemoVC {
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemOrange)
                 .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
-
             if #available(iOS 13.0, *) {
                 _ = btnPlacement.byImage("arrow.right.circle.fill".sysImg, for: .normal)
                     .byTintColor(JobsCor.white)
@@ -173,7 +164,6 @@ extension UIButtonDemoVC {
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemBrown)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-
             if #available(iOS 14.0, *) {
                 let items: [UIAction] = [
                     UIAction.make(title: "复制".tr, image: "doc.on.doc".sysImg) { _ in print("复制") },
@@ -194,7 +184,6 @@ extension UIButtonDemoVC {
                 .byBackgroundColor(JobsCor.systemCyan)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("Pointer tapped") }
-
             if #available(iOS 13.4, *) {
                 _ = btnPointer.byPointerInteractionEnabled(true)
             }
@@ -209,7 +198,6 @@ extension UIButtonDemoVC {
                 .byBackgroundColor(JobsCor.systemRed)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("Destructive tapped") }
-
             if #available(iOS 14.0, *) { _ = btnRole.byRole(.destructive) }
             stack.addArrangedSubview(btnRole)
         }
@@ -223,7 +211,6 @@ extension UIButtonDemoVC {
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .for(.selected).title("10) ✅ 已选择")
                 .for(.selected).backgroundColor(JobsCor.systemGreen)
-
             if #available(iOS 15.0, *) {
                 _ = btnToggle.byChangesSelectionAsPrimaryAction(true)
             } else {
@@ -239,7 +226,6 @@ extension UIButtonDemoVC {
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemBlue)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-
             if #available(iOS 15.0, *) {
                 _ = btnUpdate
                     .byAutomaticallyUpdatesConfiguration(true)
@@ -266,7 +252,6 @@ extension UIButtonDemoVC {
                         _ = b.startRotating(duration: 0.9, scope: .imageView, clockwise: true); print("开始旋转")
                     }
                 }
-
             if #available(iOS 13.0, *) {
                 _ = btnRotate.byImage("arrow.2.circlepath.circle.fill".sysImg, for: .normal)
                     .byTintColor(JobsCor.white)
@@ -306,7 +291,6 @@ extension UIButtonDemoVC {
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemOrange)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-
             if #available(iOS 13.0, *) {
                 _ = btnSymbol.byImage("star.fill".sysImg, for: .normal)
                     .byTintColor(JobsCor.white)
@@ -329,7 +313,6 @@ extension UIButtonDemoVC {
                     JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
                 ]))        // ✅ 副标题富文本：一个入参
                 .onTap { _ in print("富文本主/副 tapped") }
-
             stack.addArrangedSubview(btnRich)
         }
     }

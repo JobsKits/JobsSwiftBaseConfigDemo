@@ -21,7 +21,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class SlideToUnlockDemoVC: BaseVC {
-    
     private lazy var slideView: SlideToUnlockView = {
         SlideToUnlockView()
             .byBackgroundColor(JobsCor.clear)

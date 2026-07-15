@@ -17,13 +17,13 @@ extension UISwitch {
         self.setOn(on, animated: false)
         return self
     }
-    
+
     @discardableResult
     public func byOnAnimated(_ on: Bool) -> Self {
         self.setOn(on, animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byOnTintColor(_ color: UIColor) -> Self {
         self.onTintColor = color

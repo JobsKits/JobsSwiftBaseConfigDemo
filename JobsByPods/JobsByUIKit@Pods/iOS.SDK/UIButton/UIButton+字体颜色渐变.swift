@@ -37,7 +37,6 @@ extension UIButton {
         if let lb = objc_getAssociatedObject(self, &_JobsBtnGradientKey.subtitleLabel) as? UILabel {
             return lb
         }
-
         let lb = UILabel().byNumberOfLines(1).byTextAlignment(.center).byAddTo(self)
         self.titleLabel?.byVisible(YES)
         if let tl = self.titleLabel {
@@ -53,7 +52,6 @@ extension UIButton {
                 make.center.equalToSuperview()
             }
         }
-
         objc_setAssociatedObject(
             self,
             &_JobsBtnGradientKey.subtitleLabel,
@@ -173,7 +171,6 @@ extension UIButton {
             state.rawValue,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         _jobs_applyMainGradient(colors: colors, direction: direction, for: state)
         _jobs_applySubGradient(colors: colors, direction: direction)
         return self
@@ -187,15 +184,12 @@ extension UIButton {
             titleLabel?.layoutIfNeeded()
             jobs_subtitleLabel.layoutIfNeeded()
         }
-
         let stateRaw = (objc_getAssociatedObject(self, &_JobsBtnGradientKey.stateRaw) as? UInt) ?? UIControl.State.normal.rawValue
         let state = UIControl.State(rawValue: stateRaw)
-
         if let mainColors = objc_getAssociatedObject(self, &_JobsBtnGradientKey.mainColors) as? [UIColor],
            let mainDir = objc_getAssociatedObject(self, &_JobsBtnGradientKey.mainDir) as? JobsGradientDirection {
             _jobs_applyMainGradient(colors: mainColors, direction: mainDir, for: state)
         }
-
         if let subColors = objc_getAssociatedObject(self, &_JobsBtnGradientKey.subColors) as? [UIColor],
            let subDir = objc_getAssociatedObject(self, &_JobsBtnGradientKey.subDir) as? JobsGradientDirection {
             _jobs_applySubGradient(colors: subColors, direction: subDir)
@@ -242,14 +236,11 @@ extension UIButton {
         layerKey: UnsafeRawPointer
     ) {
         guard let text, !text.isEmpty else { return }
-
         let b = label.bounds
         guard b.width > 0, b.height > 0 else { return }
-
         if let old = objc_getAssociatedObject(self, layerKey) as? CAGradientLayer {
             old.removeFromSuperlayer()
         }
-
         let g = CAGradientLayer()
             .byFrame(b)
             .byColors(colors.map(\.cgColor))
@@ -263,9 +254,7 @@ extension UIButton {
                     .byAlignmentMode(.center)
                     .byContentsScale(UIScreen.main.scale)
                     .byFrame(b))
-
         label.byTextColor(JobsCor.clear).byAddSublayer(g)
-        
         objc_setAssociatedObject(
             self,
             layerKey,

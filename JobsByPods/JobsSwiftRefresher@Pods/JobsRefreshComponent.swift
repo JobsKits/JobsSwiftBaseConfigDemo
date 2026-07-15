@@ -68,7 +68,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
         indicator.byVisible(true)
         label.byVisible(true)
     }
-    
+
     public override func layoutSubviews() {
         super.layoutSubviews()
         indicator.sizeToFit()

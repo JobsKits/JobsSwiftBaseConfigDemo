@@ -13,79 +13,79 @@
 ```mermaid
 flowchart LR
   S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T1["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  T1["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T2["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S2["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
+  T2["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
   S2 -->|calls| T2
-  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T3["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S3["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
+  T3["method:ASControlNode::addTarget:action:forControlEvents:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:283"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T4["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S4["method:ASVideoNode::constructPlayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:114"]
+  T4["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T5["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S5["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
+  T5["method:ASVideoPlayerNode::asset<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:191"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T6["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S6["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
+  T6["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
   S6 -->|calls| T6
-  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T7["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S7["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
+  T7["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
   S7 -->|calls| T7
-  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T8["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S8["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
+  T8["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T9["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S9["method:ASVideoNode::calculateSizeThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:254"]
+  T9["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.h:1"]
-  T10["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
+  S10["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T10["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
   S10 -->|calls| T10
-  S11["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
-  T11["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
+  S11["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T11["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S11 -->|calls| T11
-  S12["method:ASVideoNode::initWithCache:downloader:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:97"]
-  T12["method:ASControlNode::addTarget:action:forControlEvents:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:283"]
+  S12["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  T12["function:ASAssetIsEqual<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:21"]
   S12 -->|calls| T12
-  S13["method:ASVideoNode::constructPlayerNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:114"]
-  T13["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S13["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
+  T13["function:ASPerformBlockOnBackgroundThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:145"]
   S13 -->|calls| T13
-  S14["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
-  T14["method:ASVideoPlayerNode::asset<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoPlayerNode.mm:191"]
+  S14["method:ASVideoNode::setVideoPlaceholderImage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:315"]
+  T14["function:ASContentModeFromVideoGravity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:28"]
   S14 -->|calls| T14
-  S15["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
-  T15["method:ASVideoNode::constructPlayerItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:126"]
+  S15["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T15["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
   S15 -->|calls| T15
-  S16["method:ASVideoNode::prepareToPlayAsset:withKeys:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:144"]
-  T16["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
+  S16["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T16["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S16 -->|calls| T16
-  S17["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
-  T17["method:ASVideoNode::layout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:247"]
+  S17["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T17["method:ASVideoNode::play<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:660"]
   S17 -->|calls| T17
-  S18["method:ASVideoNode::calculateSizeThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:254"]
-  T18["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S18["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T18["method:ASNodeController::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:112"]
   S18 -->|calls| T18
-  S19["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
-  T19["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
+  S19["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T19["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
   S19 -->|calls| T19
-  S20["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
-  T20["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S20["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T20["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
   S20 -->|calls| T20
-  S21["method:ASVideoNode::generatePlaceholderImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:274"]
-  T21["function:ASAssetIsEqual<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:21"]
+  S21["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T21["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
   S21 -->|calls| T21
-  S22["method:ASVideoNode::imageAtTime:completionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:289"]
-  T22["function:ASPerformBlockOnBackgroundThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:145"]
+  S22["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T22["method:ASVideoNode::play<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:660"]
   S22 -->|calls| T22
-  S23["method:ASVideoNode::setVideoPlaceholderImage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:315"]
-  T23["function:ASContentModeFromVideoGravity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:28"]
+  S23["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
+  T23["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
   S23 -->|calls| T23
-  S24["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
-  T24["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
+  S24["method:ASVideoNode::tapped<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:385"]
+  T24["method:ASVideoNode::pause<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:694"]
   S24 -->|calls| T24
-  S25["method:ASVideoNode::observeValueForKeyPath:ofObject:change:context:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:325"]
-  T25["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
+  S25["method:ASVideoNode::tapped<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:385"]
+  T25["method:ASVideoNode::play<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVideoNode.mm:660"]
   S25 -->|calls| T25
 ```
 

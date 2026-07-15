@@ -15,7 +15,6 @@ import UIKit
 import JXSegmentedView
 // MARK: - GradientLine
 extension JXSegmentedIndicatorGradientLineView {
-
     @discardableResult
     public func byColors(_ v: [UIColor]) -> Self {
         colors = v

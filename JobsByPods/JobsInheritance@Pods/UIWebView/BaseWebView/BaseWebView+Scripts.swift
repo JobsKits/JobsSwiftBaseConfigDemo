@@ -15,7 +15,6 @@ import WebKit
 
 // ===== WK Script Bridge / UserScripts =====
 public extension BaseWebView {
-
     static func makeBridgeUserScript() -> WKUserScript {
         let js = """
         (function() {
@@ -66,7 +65,6 @@ public extension BaseWebView {
           window.Native = { post:_post, call:_call, emit:_emit, on:_on };
         })();
         """
-
         if #available(iOS 14.0, *) {
             return WKUserScript(source: js,
                                 injectionTime: .atDocumentStart,
@@ -120,7 +118,6 @@ public extension BaseWebView {
 }
 // MARK: - Dark CSS / MobileBridge shim
 extension BaseWebView {
-
     @MainActor
     func injectDarkCSSIfNeeded() {
         guard injectDarkStylePatch else { return }
@@ -134,7 +131,6 @@ extension BaseWebView {
           html, body { background:#000 !important; color:#eee !important; }
         }
         """
-
         let js = "var s=document.createElement('style');s.innerHTML=\(BaseWebView.quote(css));document.head&&document.head.appendChild(s);"
         let script: WKUserScript
         if #available(iOS 14.0, *) {

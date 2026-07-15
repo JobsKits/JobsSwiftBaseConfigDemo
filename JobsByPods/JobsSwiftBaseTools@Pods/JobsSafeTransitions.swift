@@ -51,18 +51,14 @@ public extension UINavigationController {
     /// 被交换后的实现：类型去重 + 动画期闸门
     @objc dynamic func jobs_pushViewController_swizzled(_ vc: UIViewController, animated: Bool) {
         guard _canPushNow() else { return }
-
         let T = type(of: vc)
         if viewControllers.contains(where: { type(of: $0) == T }) { return }
         if let top = topViewController, type(of: top) == T { return }
-
         _beginPushGate()
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in self?._endPushGate() }
-
         // 调“同名”即系统原始实现（因已交换）
         jobs_pushViewController_swizzled(vc, animated: animated)
-
         CATransaction.commit()
     }
 }
@@ -106,17 +102,13 @@ public extension UIViewController {
                                              animated: Bool,
                                              completion: (jobsByVoidBlock)? = nil) {
         guard _canPresentNow() else { return }
-
         let T = type(of: vc)
         if let presented = presentedViewController, type(of: presented) == T { return }
-
         _beginPresentGate()
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in self?._endPresentGate() }
-
         // 调系统原生 present（因已交换）
         jobs_present_swizzled(vc, animated: animated, completion: completion)
-
         CATransaction.commit()
     }
 }

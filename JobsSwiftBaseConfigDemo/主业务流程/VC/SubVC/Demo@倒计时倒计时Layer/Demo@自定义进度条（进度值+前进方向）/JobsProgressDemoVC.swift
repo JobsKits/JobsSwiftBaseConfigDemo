@@ -95,10 +95,8 @@ final class JobsProgressDemoVC: BaseVC {
             .byCornerRadius(16)
             .onTap { [weak self] sender in
                 guard let self else { return }
-
                 let newMode: JobsValueMode
                 let newTitle: String
-
                 switch self.progressView.valueMode {
                 case .countUp:
                     newMode = .countDown
@@ -107,14 +105,11 @@ final class JobsProgressDemoVC: BaseVC {
                     newMode = .countUp
                     newTitle = "模式：0→100"
                 }
-
                 self.progressView.byValueMode(newMode)
                 sender.byTitle(newTitle, for: .normal)
-
                 // ✅ 切模式：停掉定时器 & 归零
                 self.progressView.stopAutoProgress()
                 self.progressView.setProgress(0, animated: false)
-
                 self.lastAppliedPercent = 0
                 self.percentTextField.byText("0")
                 self.stateLabel.byText("模式切换：已归零".tr)
@@ -213,9 +208,7 @@ final class JobsProgressDemoVC: BaseVC {
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 guard let self else { return }
-
                 self.progressView.stopAutoProgress()
-
                 if let clamped = self.progressView.setDisplayPercent(text: self.percentTextField.text, animated: true) {
                     self.percentTextField.byText(String(format: "%.0f", clamped))
                     self.lastAppliedPercent = clamped
@@ -319,11 +312,9 @@ final class JobsProgressDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.progressView.stopAutoProgress()
-
                 let newPercent = CGFloat(Int.random(in: 0...100))
                 self.lastAppliedPercent = newPercent
                 self.percentTextField.byText("\(Int(newPercent))")
-
                 _ = self.progressView.setDisplayPercent(newPercent, animated: true, duration: 0.35)
                 self.stateLabel.byText("随机：%ld%%".tr(Int(newPercent)))
             }
@@ -345,12 +336,10 @@ final class JobsProgressDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.progressView.stopAutoProgress()
-
                 // ✅ 往回退 20%，没有就退到 0
                 let newPercent = max(0, self.lastAppliedPercent - 20)
                 self.lastAppliedPercent = newPercent
                 self.percentTextField.byText("\(Int(newPercent))")
-
                 _ = self.progressView.setDisplayPercent(newPercent, animated: true, duration: 0.35)
                 self.stateLabel.byText("回退：%ld%%".tr(Int(newPercent)))
             }
@@ -367,23 +356,19 @@ final class JobsProgressDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "自定义进度条（含拖动）".tr)
-
         tipsLabel.byVisible(YES)
         directionSegment.byVisible(YES)
         modeToggleButton.byVisible(YES)
         stateLabel.byVisible(YES)
-
         progressView.byVisible(YES)
         percentTextField.byVisible(YES)
         applyButton.byVisible(YES)
         dragTitleLabel.byVisible(YES)
         dragSwitch.byVisible(YES)
-
         startButton.byVisible(YES)
         stopButton.byVisible(YES)
         randomButton.byVisible(YES)
         backButton.byVisible(YES)
-
         // 初始值对齐
         percentTextField.byText("0")
         stateLabel.byText("Ready".tr)

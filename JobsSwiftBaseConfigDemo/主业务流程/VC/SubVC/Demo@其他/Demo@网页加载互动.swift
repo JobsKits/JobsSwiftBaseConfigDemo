@@ -157,7 +157,6 @@ final class BaseWebViewDemoVC: BaseVC {
                 reply(nil)
             }
             .registerMobileAction("getToken") {  [weak self] body, reply in
-
                 reply(nil)
             }
             .registerMobileAction("navigateToSecurityCenter") {  [weak self] body, reply in

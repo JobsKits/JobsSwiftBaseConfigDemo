@@ -15,7 +15,6 @@ import QuartzCore
 import CoreGraphics
 
 extension CATextLayer {
-
     @discardableResult
     public func byString(_ value: Any?) -> Self {
         self.string = value

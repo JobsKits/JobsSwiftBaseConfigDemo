@@ -152,7 +152,6 @@ extension BtnFullOnCVCellDemoVC : UICollectionViewDelegate {
 extension BtnFullOnCVCellDemoVC : UICollectionViewDelegateFlowLayout {}
 
 extension BtnFullOnCVCellDemoVC {
-    
     private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
         let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
         return (0..<count).map { i in

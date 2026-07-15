@@ -16,13 +16,12 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UITableView {
-    
     @discardableResult
     public func byDelegate(_ delegate: UITableViewDelegate) -> Self {
         self.delegate = delegate
         return self
     }
-    
+
     @discardableResult
     public func byDataSource(_ dataSource: UITableViewDataSource) -> Self {
         self.dataSource = dataSource
@@ -49,37 +48,37 @@ extension UITableView {
         self.dropDelegate = delegate
         return self
     }
-    
+
     @discardableResult
     public func byRowHeight(_ height: CGFloat) -> Self {
         self.rowHeight = height
         return self
     }
-    
+
     @discardableResult
     public func bySeparatorStyle(_ style: UITableViewCell.SeparatorStyle) -> Self {
         self.separatorStyle = style
         return self
     }
-    
+
     @discardableResult
     public func byTableFooterView(_ view: UIView?) -> Self {
         self.tableFooterView = view
         return self
     }
-    
+
     @discardableResult
     public func byTableHeaderView(_ view: UIView?) -> Self {
         self.tableHeaderView = view
         return self
     }
-    
+
     @discardableResult
     public func bySectionHeaderHeight(_ h: CGFloat) -> Self {
         self.sectionHeaderHeight = h
         return self
     }
-    
+
     @discardableResult
     public func bySectionFooterHeight(_ h: CGFloat) -> Self {
         self.sectionFooterHeight = h
@@ -147,13 +146,13 @@ extension UITableView {
         self.insetsContentViewsToSafeArea = enable
         return self
     }
-    
+
     @discardableResult
     public func byBackgroundView(_ view: UIView?) -> Self {
         self.backgroundView = view
         return self
     }
-    
+
     @discardableResult
     public func bySeparatorColor(_ color: UIColor?) -> Self {
         self.separatorColor = color
@@ -173,13 +172,13 @@ extension UITableView {
         self.cellLayoutMarginsFollowReadableWidth = follow
         return self
     }
-    
+
     @discardableResult
     public func byAllowsSelection(_ allow: Bool) -> Self {
         self.allowsSelection = allow
         return self
     }
-    
+
     @discardableResult
     public func byAllowsSelectionDuringEditing(_ allow: Bool) -> Self {
         self.allowsSelectionDuringEditing = allow
@@ -278,13 +277,12 @@ extension UITableView {
 }
 // MARK: - 闭包重载@单参数
 extension UITableView {
-    
     @discardableResult
     public func byDelegate(_ builder: () -> UITableViewDelegate) -> Self {
         self.delegate = builder()
         return self
     }
-    
+
     @discardableResult
     public func byDataSource(_ builder: () -> UITableViewDataSource) -> Self {
         self.dataSource = builder()
@@ -308,37 +306,37 @@ extension UITableView {
         self.dropDelegate = builder()
         return self
     }
-    
+
     @discardableResult
     public func byRowHeight(_ builder: () -> CGFloat) -> Self {
         self.rowHeight = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySeparatorStyle(_ builder: () -> UITableViewCell.SeparatorStyle) -> Self {
         self.separatorStyle = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTableFooterView(_ builder: () -> UIView?) -> Self {
         self.tableFooterView = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTableHeaderView(_ builder: () -> UIView?) -> Self {
         self.tableHeaderView = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySectionHeaderHeight(_ builder: () -> CGFloat) -> Self {
         self.sectionHeaderHeight = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySectionFooterHeight(_ builder: () -> CGFloat) -> Self {
         self.sectionFooterHeight = builder()
@@ -397,13 +395,13 @@ extension UITableView {
         self.insetsContentViewsToSafeArea = builder()
         return self
     }
-    
+
     @discardableResult
     public func byBackgroundView(_ builder: () -> UIView?) -> Self {
         self.backgroundView = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySeparatorColor(_ builder: () -> UIColor?) -> Self {
         self.separatorColor = builder()
@@ -421,13 +419,13 @@ extension UITableView {
         self.cellLayoutMarginsFollowReadableWidth = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAllowsSelection(_ builder: () -> Bool) -> Self {
         self.allowsSelection = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAllowsSelectionDuringEditing(_ builder: () -> Bool) -> Self {
         self.allowsSelectionDuringEditing = builder()
@@ -469,7 +467,7 @@ extension UITableView {
         self.remembersLastFocusedIndexPath = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySectionIndexMinimumDisplayRowCount(_ builder: () -> Int) -> Self {
         self.sectionIndexMinimumDisplayRowCount = builder()
@@ -679,7 +677,7 @@ extension UITableView {
         self.reloadSectionIndexTitles()
         return self
     }
-    
+
     @discardableResult
     public func byScrollToRow(_ indexPath: IndexPath,
                               at position: UITableView.ScrollPosition,
@@ -696,7 +694,7 @@ extension UITableView {
         self.scrollToNearestSelectedRow(at: position, animated: animated)
         return self
     }
-    
+
     // MARK: - iOS 14.0+ 配置 contextMenuInteraction（只读属性，提供配置闭包）
     @available(iOS 14.0, *)
     @discardableResult

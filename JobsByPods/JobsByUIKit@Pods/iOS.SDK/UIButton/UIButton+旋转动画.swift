@@ -16,7 +16,6 @@ import JobsSwiftDSL
 
 // MARK: - 旋转动画
 extension UIButton {
-    
     public static let rotationKey = "jobs.rotation"
     public enum RotationScope { case imageView, wholeButton, layer(CALayer) }
 

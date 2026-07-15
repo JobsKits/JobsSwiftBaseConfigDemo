@@ -16,7 +16,6 @@ import JobsGestureUnlock
 
 // MARK: - Demo Store（示例用 UserDefaults + SHA256）
 final class PatternStore {
-    
     private let keyHash = "gesture_unlock.pattern_hash"
     private let keySalt = "gesture_unlock.salt"
 

@@ -18,7 +18,6 @@ import JobsSwiftDSL
 /// 为了更加的贴合语义，这里使用OC的runtime机制去拿到内部私有的内部类来进行修改
 
 extension UITextField {
-
     @discardableResult
     public func byPlaceholderColor(_ color: UIColor) -> Self {
         if let label = jobs_placeholderLabel_byRuntime() {

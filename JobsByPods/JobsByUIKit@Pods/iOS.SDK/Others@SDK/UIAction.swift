@@ -13,7 +13,6 @@ import UIKit
 
 @available(iOS 13.0, tvOS 13.0, *)
 public extension UIAction {
-
     static func make(
         title: String,
         image: UIImage? = nil,

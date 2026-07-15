@@ -16,7 +16,6 @@ import WebKit
 import JobsSwiftDSL
 
 extension BaseWebView: WKNavigationDelegate {
-
     @MainActor
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         progressView.byHidden(false)
@@ -32,7 +31,6 @@ extension BaseWebView: WKNavigationDelegate {
                 "title": webView.title ?? ""
             ])
         }
-
         // 如果外部在当前视图上装了 NavBar 且未自定义标题，则默认绑定 webView.title
         if let nb = self.jobsNavBar, nb.titleProvider == nil {
             nb.bind(webView: webView)
@@ -49,12 +47,10 @@ extension BaseWebView: WKNavigationDelegate {
     public func webView(_ webView: WKWebView,
                         decidePolicyFor action: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-
         guard let url = action.request.url else {
             decisionHandler(.cancel)
             return
         }
-
         let scheme = (url.scheme ?? "").lowercased()
         let isMain = (action.targetFrame?.isMainFrame == true)
         // 0) 外部 scheme（weixin:// 等）
@@ -123,7 +119,6 @@ extension BaseWebView: WKNavigationDelegate {
                 return
             }
         }
-
         decisionHandler(.allow)
     }
 
@@ -145,7 +140,6 @@ extension BaseWebView: WKNavigationDelegate {
 }
 // MARK: - Safari
 private extension BaseWebView {
-
     @MainActor
     func presentSafari(with url: URL) {
         SFSafariViewController(url: url)

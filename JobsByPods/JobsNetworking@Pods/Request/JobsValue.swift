@@ -29,7 +29,6 @@ public extension Dictionary where Key == String, Value == JobsValue {
 enum JobsValueNormalizer {
     static func normalize(_ value: Any?) -> Any {
         guard let value else { return NSNull() }
-
         switch value {
         case let value as JobsValue:
             return normalize(value.raw)

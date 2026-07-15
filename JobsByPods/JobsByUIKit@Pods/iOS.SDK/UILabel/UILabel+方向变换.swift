@@ -23,7 +23,6 @@ extension UILabel {
         layer.sublayers?
             .filter { $0 is CATextLayer && $0.name == "JobsTextLayer" }
             .forEach { $0.removeFromSuperlayer() }
-
         let textLayer = CATextLayer()
             .byName("JobsTextLayer")
             .byContentsScale(UIScreen.main.scale)
@@ -32,7 +31,6 @@ extension UILabel {
                                 (lineBreakMode == .byTruncatingMiddle) ? .middle :
                                 (lineBreakMode == .byTruncatingTail) ? .end : .none)
             .byWrapped((numberOfLines == 0))
-
         if let attributed = attributedText {
             textLayer.byString(attributed)
         } else {
@@ -42,7 +40,6 @@ extension UILabel {
                 .byFontSize(font.pointSize)
         }
         textLayer.byFrame(bounds)
-
         switch direction {
         case .up:
             break

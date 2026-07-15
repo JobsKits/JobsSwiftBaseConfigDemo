@@ -138,7 +138,6 @@ final class LuckyWheelView: UIView {
             .byTaps(1)
             .byTouches(1)
             .byCancelsTouchesInView(false)  // 不拦截中心按钮触摸
-
         self.jobs_addGesture(gr)
         return gr
     }()
@@ -153,7 +152,6 @@ final class LuckyWheelView: UIView {
             .byMinDuration(0.5)
             .byMovement(12)
             .byTouches(1)
-
         self.jobs_addGesture(gr)
         return gr
     }()
@@ -185,54 +183,43 @@ final class LuckyWheelView: UIView {
 }
 
 extension LuckyWheelView {
-    
     private func commonInit() {
         self.byBackgroundColor(JobsCor.clear)
         clipsToBounds = false
-
         /// 盘面铺满整个 LuckyWheelView
         plateView.byAddTo(self)
         plateView.byBackgroundColor(JobsCor.clear)
         plateView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
         /// 触发 lazy，完成 jobs_addGesture 绑定
         panGesture.byEnabled(YES)
         tapRecognizer.byEnabled(YES)
         longPressRecognizer.byEnabled(YES)
-
         /// Tap / LongPress 与 Pan 冲突时，让 Pan 优先（拖动优先）
         tapRecognizer.require(toFail: panGesture)
         longPressRecognizer.require(toFail: panGesture)
-
         // 确保按钮创建并在最上
         centerButton.byVisible(YES)
         bringSubviewToFront(centerButton)
     }
-    
+
     private func rebuildSlices() {
         sliceLayers.forEach { $0.removeFromSuperlayer() }
         sliceLayers.removeAll()
-
         // 清掉旧的文字 label / 图片
         plateView.subviews.forEach { $0.removeFromSuperview() }
-
         guard !segments.isEmpty,
               plateView.bounds.width > 0,
               plateView.bounds.height > 0 else { return }
-
         let bounds = plateView.bounds
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2
-
         let count = segments.count
         let anglePerSlice = 2 * CGFloat.pi / CGFloat(count)
-
         for (index, segment) in segments.enumerated() {
             let startAngle = -CGFloat.pi / 2 + CGFloat(index) * anglePerSlice
             let endAngle = startAngle + anglePerSlice
-
             // 扇形路径
             let path = UIBezierPath.make()
                 .byMove(to: center)
@@ -244,7 +231,6 @@ extension LuckyWheelView {
                     clockwise: true
                 )
                 .byClose()
-
             let layer = CAShapeLayer()
                 .byPath(path.cgPath)
                 .byFillColor(segment.backgroundColor)
@@ -252,21 +238,18 @@ extension LuckyWheelView {
             sliceLayers.append(layer)
             // ==== 文本：整体“对准圆心” ===========================
             let midAngle = (startAngle + endAngle) / 2
-
             if let attr = makeSegmentAttributedText(for: segment) {
                 let label = UILabel()
                     .byNumberOfLines(0)
                     .byTextAlignment(.center)
                     .byBgCor(JobsCor.clear)
                     .byAttributedString(attr)
-
                 // 文本中心在扇形中线、偏内一点
                 let textRadius = radius * 0.55
                 let textCenter = CGPoint(
                     x: center.x + cos(midAngle) * textRadius,
                     y: center.y + sin(midAngle) * textRadius
                 )
-
                 // 先算一下所需大小
                 let maxTextWidth: CGFloat = anglePerSlice * radius * 0.5
                 let maxTextHeight: CGFloat = radius * 1.4
@@ -276,20 +259,15 @@ extension LuckyWheelView {
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
                     context: nil
                 )
-
                 let w = min(maxTextWidth, ceil(rect.width))
                 let h = min(maxTextHeight, ceil(rect.height))
-
                 label.bounds = CGRect(x: 0, y: 0, width: w, height: h)
                 label.center = textCenter
-
                 // 让 label 的纵向轴沿着圆心连线方向
                 let rotation = midAngle - CGFloat.pi / 2
                 label.transform = CGAffineTransform(rotationAngle: rotation)
-
                 label.byAddTo(plateView)
             }
-
             // ==== 图片：文字外侧的圆形 ImageView ===================
             if let placeholder = segment.placeholderImage,
                let url = segment.imageURLString {
@@ -314,7 +292,6 @@ extension LuckyWheelView {
                     .byAddTo(plateView)
             }
         }
-
         // 中心点方便观察
         let dotRadius: CGFloat = 3
         let dotPath = UIBezierPath.make(ovalIn: CGRect(
@@ -329,7 +306,7 @@ extension LuckyWheelView {
         plateView.layer.addSublayer(dotLayer)
         sliceLayers.append(dotLayer)
     }
-    
+
     private func makeSegmentAttributedText(for segment: LuckyWheelSegment) -> NSAttributedString? {
         if let attr = segment.attributedText {
             return attr
@@ -350,33 +327,25 @@ extension LuckyWheelView {
               plateView.bounds.width > 0,
               plateView.bounds.height > 0
         else { return nil }
-
         let bounds = self.bounds
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2
-
         let dx = point.x - center.x
         let dy = point.y - center.y
         let distance = hypot(dx, dy)
         if distance > radius { return nil }
-
         let touchAngle = atan2(dy, dx)
-
         var angle0 = touchAngle - currentAngle
         let twoPi = 2 * CGFloat.pi
-
         while angle0 < 0 { angle0 += twoPi }
         while angle0 >= twoPi { angle0 -= twoPi }
-
         let startFromTop: CGFloat = -CGFloat.pi / 2
         var relative = angle0 - startFromTop
         while relative < 0 { relative += twoPi }
         while relative >= twoPi { relative -= twoPi }
-
         let count = segments.count
         let anglePerSlice = twoPi / CGFloat(count)
         let idx = Int(relative / anglePerSlice)
-
         if idx >= 0 && idx < count {
             return idx
         } else {
@@ -387,26 +356,20 @@ extension LuckyWheelView {
     private func handleSegmentTap(_ gr: UITapGestureRecognizer) {
         guard gr.state == .ended else { return }
         guard timer == nil else { return }
-
         let point = gr.location(in: self)
         if centerButton.frame.contains(point) { return }
-
         guard let index = segmentIndex(point),
               index >= 0, index < segments.count else { return }
-
         let segment = segments[index]
         segmentTapHandler?(segment)
     }
 
     private func handleSegmentLongPress(_ gr: UILongPressGestureRecognizer) {
         guard timer == nil else { return }
-
         let point = gr.location(in: self)
         if centerButton.frame.contains(point) { return }
-
         guard let index = segmentIndex(point),
               index >= 0, index < segments.count else { return }
-
         let segment = segments[index]
         segmentLongPressHandler?(segment, gr)
     }
@@ -414,42 +377,34 @@ extension LuckyWheelView {
     private func handlePan(_ gesture: UIPanGestureRecognizer) {
         if !isPanRotationEnabled { return }
         if timer != nil { return }
-
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let location = gesture.location(in: self)
-
         if gesture.state == .began,
            centerButton.frame.contains(location) {
             return
         }
-
         let dx = location.x - center.x
         let dy = location.y - center.y
         let angle = atan2(dy, dx)
         let now = CACurrentMediaTime()
-
         switch gesture.state {
         case .began:
             lastTouchAngle = angle
             lastTouchTimestamp = now
             angularVelocityFromPan = 0
-
         case .changed:
             var step = angle - lastTouchAngle
             let pi = CGFloat.pi
             if step > pi { step -= 2 * pi }
             if step < -pi { step += 2 * pi }
-
             currentAngle += step
             plateView.transform = CGAffineTransform(rotationAngle: currentAngle)
-
             let dt = now - lastTouchTimestamp
             if dt > 0 {
                 angularVelocityFromPan = step / CGFloat(dt)
             }
             lastTouchAngle = angle
             lastTouchTimestamp = now
-
         case .ended, .cancelled, .failed:
             let v = angularVelocityFromPan
             angularVelocityFromPan = 0
@@ -458,7 +413,6 @@ extension LuckyWheelView {
                     self.startSpinWithScrollLikeDeceleration(initialVelocity: v)
                 }
             }
-
         default:
             break
         }
@@ -468,7 +422,6 @@ extension LuckyWheelView {
     @MainActor
     func startSpinWithScrollLikeDeceleration(initialVelocity: CGFloat? = nil) {
         guard timer == nil else { return }
-
         let v0: CGFloat
         if let v = initialVelocity {
             v0 = v
@@ -477,10 +430,8 @@ extension LuckyWheelView {
         } else {
             v0 = velocityForTargetDuration(spinDuration)
         }
-
         centerButton.bySelected(true)
         centerButton.isUserInteractionEnabled = false
-
         decelerator = ScrollDecelerator(
             velocity: v0,
             decelerationRate: decelerationRate
@@ -510,7 +461,6 @@ extension LuckyWheelView {
         let T = max(0.1, min(duration, 6.0))
         let d = decelerationRate
         let eps = stopThreshold
-
         let denom = pow(d, 1000 * T)
         if denom < 1e-4 {
             return eps / 1e-4
@@ -525,18 +475,14 @@ extension LuckyWheelView {
             stopSpin()
             return
         }
-
         let dt = timerInterval
         let deltaAngle = dec.step(dt: dt)
         decelerator = dec
-
         currentAngle += deltaAngle
         plateView.transform = CGAffineTransform(rotationAngle: currentAngle)
-
         if dec.isStopped(threshold: stopThreshold) {
             stopSpin()
             print("✅ 减速结束，最终角度 = \(currentAngle)")
-
             if let idx = currentSegmentIndex(pointerDirection),
                idx >= 0, idx < segments.count {
                 let segment = segments[idx]
@@ -550,7 +496,6 @@ extension LuckyWheelView {
         timer?.stop()
         timer = nil
         decelerator = nil
-
         centerButton.bySelected(false)
         centerButton.isUserInteractionEnabled = true
     }
@@ -559,11 +504,9 @@ extension LuckyWheelView {
         guard !segments.isEmpty,
               bounds.width > 0,
               bounds.height > 0 else { return nil }
-
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2
         let inset: CGFloat = 1
-
         let point: CGPoint
         switch direction {
         case .up:
@@ -579,7 +522,6 @@ extension LuckyWheelView {
 }
 // MARK: - LuckyWheelView 点语法 DSL ===================
 extension LuckyWheelView {
-
     @discardableResult
     func byPointerDirection(_ direction: PointerDirection) -> Self {
         self.pointerDirection = direction

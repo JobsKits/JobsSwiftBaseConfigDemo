@@ -22,11 +22,8 @@ extension Reactive where Base: UIView {
         let willShow = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
             .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
             .map { $0.height }
-
         let willHide = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
-            .map { _ in CGFloat(0) }
-
-        return Observable.merge(willShow, willHide)
+            .map { _ in CGFloat(0) };return Observable.merge(willShow, willHide)
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
     }

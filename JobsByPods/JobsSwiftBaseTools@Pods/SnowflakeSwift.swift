@@ -28,13 +28,12 @@ public final class SnowflakeSwift {
     private var sequence: UInt32
     private var publishMillisecond: UInt64    //发布的时间
     private var lastGeneralMillisecond: UInt64     //单位毫秒
-    
+
     //WARN: publishMillisecond推荐使用固定值，如果使用Date().timeIntervalSince1970 * 1000 自动获取，会导致时间差重复
     public init(publishMillisecond: UInt64 = 1662278876498, IDCID: UInt32, machineID: UInt32) {
         assert(publishMillisecond <= (1 << SnowflakeConfig.timeBits), "time is too big")
         assert(IDCID <= (1 << SnowflakeConfig.IDCBits), "idc id is too big")
         assert(machineID <= (1 << SnowflakeConfig.machineBits), "machine id is too big")
-        
         self.publishMillisecond = publishMillisecond
         self.lastGeneralMillisecond = publishMillisecond
         self.IDC = IDCID & UInt32(1 << SnowflakeConfig.IDCBits - 1)
@@ -65,23 +64,20 @@ public extension SnowflakeSwift {
         //组装ID
         let timeParameter = UInt64(lastGeneralMillisecond - publishMillisecond)
         let timeOffset = UInt64(SnowflakeConfig.IDCBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
-        
         //
         let idcParameter = UInt64(self.IDC)
         let idcOffset = UInt64(SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
-        
         let machineParameter = UInt64(self.machine)
         let machineOffset = UInt64(SnowflakeConfig.sequenceBits)
-        
         let result = UInt64(timeParameter << timeOffset) | UInt64(idcParameter << idcOffset) | UInt64(machineParameter << machineOffset) | UInt64(self.sequence)
         return result
     }
-    
+
     func time(id: SnowflakeID) -> UInt64 {
         let timeOffset = UInt64(SnowflakeConfig.IDCBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
         return UInt64(id >> timeOffset) + publishMillisecond
     }
-    
+
     func IDC(id: SnowflakeID) -> UInt32 {
         let step1 = UInt64(id << UInt64(SnowflakeConfig.timeBits + SnowflakeConfig.symbolBits))
         return UInt32(step1 >> UInt64(SnowflakeConfig.timeBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits + SnowflakeConfig.symbolBits))

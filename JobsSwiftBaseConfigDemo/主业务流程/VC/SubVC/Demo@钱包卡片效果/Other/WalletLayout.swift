@@ -58,15 +58,11 @@ final class WalletLayout: UICollectionViewLayout {
     override func prepare() {
         super.prepare()
         guard let collectionView = collectionView else { return }
-
         cachedAttributes.removeAll()
         contentHeight = 0
-
         let width = collectionView.bounds.width
         var yOffset: CGFloat = 0
-
         let numberOfSections = collectionView.numberOfSections
-
         for section in 0..<numberOfSections {
             // Header
             let headerHeight = layoutDelegate?
@@ -90,13 +86,10 @@ final class WalletLayout: UICollectionViewLayout {
                 let indexPath = IndexPath(item: item, section: section)
                 let attr = UICollectionViewLayoutAttributes(forCellWith: indexPath)
                 attr.zIndex = item * 2
-
                 let cellWidth = width - 2 * padding
                 let size = CGSize(width: cellWidth, height: itemHeight)
-
                 let baseOverlap: CGFloat = (item == 0 ? 0 : overlap)
                 var expandH = baseOverlap
-
                 // 是否为“被选中卡片的下一张”
                 if isExpanded,
                    let expanded = expandedIndexPath,
@@ -104,11 +97,9 @@ final class WalletLayout: UICollectionViewLayout {
                    expanded.item + 1 == item {
                     expandH = -expandOffset
                 }
-
                 let origin = CGPoint(x: padding,
                                      y: yOffset - expandH)
                 attr.frame = CGRect(origin: origin, size: size)
-
                 cachedAttributes.append(attr)
                 yOffset = attr.frame.maxY
             }

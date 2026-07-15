@@ -230,35 +230,26 @@ open class JobsProgressBar: UIView {
                 guard let self else { return }
                 guard isDraggable else { return }
                 guard bounds.width > 0, bounds.height > 0 else { return }
-
                 if autoTimer != nil { stopAutoProgress() }
-
                 let loc = gr.location(in: self)
                 let newDisplay = displayProgress(from: loc)
                 let newRaw = rawProgressValue(fromDisplay: newDisplay)
-
                 let v = gr.velocity(in: self)
                 let axisV = axisSpeed(from: v)
-
                 smoothedDragSpeed = smoothedDragSpeed + (axisV - smoothedDragSpeed) * rotationSpeedSmoothing
                 let rotDuration = rotationDuration(forSpeed: smoothedDragSpeed)
-
                 switch gr.state {
                 case .began:
                     isUserDragging = true
                     setThumbDraggingUI(true)
-
                     lastDisplayProgress = displayProgressValue(forRaw: _progress)
                     updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: rotDuration)
-
                     setProgress(newRaw, animated: false)
                     onDragBegan?(newRaw)
-
                 case .changed:
                     // ✅ 没滑动就不转：用“速度 + 显示进度 delta”双阈值判断
                     let old = lastDisplayProgress ?? newDisplay
                     let deltaAbs = abs(newDisplay - old)
-
                     if axisV < dragRotationStopSpeedThreshold,
                        deltaAbs < dragRotationStopDeltaThreshold {
                         lastDisplayProgress = newDisplay
@@ -266,27 +257,20 @@ open class JobsProgressBar: UIView {
                     } else {
                         updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: rotDuration)
                     }
-
                     setProgress(newRaw, animated: false)
                     onDragChanged?(newRaw)
-
                 case .ended, .cancelled, .failed:
                     updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: rotDuration)
-
                     setProgress(newRaw, animated: false)
                     onDragEnded?(newRaw)
-
                     isUserDragging = false
                     setThumbDraggingUI(false)
-
                     if isAutoAnimating == false {
                         spinDownAndStop(sign: lastRotationSign)
                     }
-
                 default:
                     break
                 }
-                
             }
             .byMaxTouches(1)
     }()
@@ -309,11 +293,9 @@ open class JobsProgressBar: UIView {
         clipsToBounds = false
         byMasksToBounds(false)
         self.byBackgroundColor(JobsCor.clear)
-
         trackView.byVisible(true)
         fillView.byVisible(true)
         progressLabel.byVisible(true)
-
         thumbImageView.byHidden((thumbImage == nil))
         if thumbImageView.layer.sublayers?.contains(thumbHighlightLayer) != true {
             thumbImageView.layer.addSublayer(thumbHighlightLayer)
@@ -341,33 +323,27 @@ open class JobsProgressBar: UIView {
         }
         if lastDisplayProgress == nil { lastDisplayProgress = displayProgress }
         updateProgressLabelText(displayProgress)
-
         let hInset: CGFloat = max(0, trackHorizontalInset ?? 0)
         let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
         let preferredThickness: CGFloat = trackThickness ?? bounds.height
-
         switch direction {
         case .leftToRight, .rightToLeft:
             let trackWidth = max(0, bounds.width - 2 * hInset)
             let availableHeight = max(0, bounds.height - 2 * vInset)
             let trackHeight = min(max(0, preferredThickness), availableHeight)
-
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
             trackView.byFrame(trackFrame)
             trackView.byCornerRadius(trackHeight / 2)
             fillView.byCornerRadius(trackHeight / 2)
-
             let fillWidth = trackWidth * displayProgress
             if direction == .leftToRight {
                 fillView.byFrame(CGRect(x: 0, y: 0, width: fillWidth, height: trackHeight))
             } else {
                 fillView.byFrame(CGRect(x: trackWidth - fillWidth, y: 0, width: fillWidth, height: trackHeight))
             }
-
             let endpointX: CGFloat = (direction == .leftToRight)
             ? (trackFrame.minX + fillWidth)
             : (trackFrame.maxX - fillWidth)
-
             layoutThumb(
                 center: CGPoint(x: endpointX, y: trackFrame.midY),
                 thickness: trackHeight,
@@ -375,17 +351,14 @@ open class JobsProgressBar: UIView {
                 trackFrame: trackFrame
             )
             layoutProgressLabelForHorizontal(endpointX: endpointX, trackFrame: trackFrame)
-
         case .bottomToTop, .topToBottom:
             let availableWidth = max(0, bounds.width - 2 * hInset)
             let trackWidth = min(max(0, preferredThickness), availableWidth)
             let trackHeight = max(0, bounds.height - 2 * vInset)
-
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
             trackView.byFrame(trackFrame)
             trackView.byCornerRadius(trackWidth / 2)
             fillView.byCornerRadius(trackWidth / 2)
-
             let fillHeight = trackHeight * displayProgress
             if direction == .bottomToTop {
                 let y = trackHeight - fillHeight
@@ -393,7 +366,6 @@ open class JobsProgressBar: UIView {
             } else {
                 fillView.byFrame(CGRect(x: 0, y: 0, width: trackWidth, height: fillHeight))
             }
-
             let endpointY: CGFloat = (direction == .bottomToTop)
             ? (trackFrame.minY + (trackHeight - fillHeight))
             : (trackFrame.minY + fillHeight)
@@ -430,7 +402,6 @@ open class JobsProgressBar: UIView {
             _progress = 0
             setProgress(0, animated: false)
         }
-
         let config = JobsSwiftTimerConfig(
             interval: interval,
             repeats: true,
@@ -474,7 +445,6 @@ open class JobsProgressBar: UIView {
         if animated {
             let newDisplay = displayProgressValue(forRaw: clamped)
             updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: autoRotationDuration)
-
             if isAutoAnimating == false && isUserDragging == false {
                 DispatchQueue.main.asyncAfter(deadline: .now() + max(0.05, duration)) { [weak self] in
                     guard let self else { return }
@@ -512,7 +482,6 @@ open class JobsProgressBar: UIView {
         autoStopIfNeeded()
         let clampedPercent = max(0, min(percent, 100))
         let displayRatio = clampedPercent / 100.0
-
         let raw: CGFloat
         switch valueMode {
         case .countUp:
@@ -520,14 +489,12 @@ open class JobsProgressBar: UIView {
         case .countDown:
             raw = 1 - displayRatio
         }
-
         setProgress(raw, animated: animated, duration: duration)
         return clampedPercent
     }
 }
 // MARK: - Drag / Rotation Internals
 extension JobsProgressBar {
-
     private func updateDragGestureEnabled() {
         if isDraggable {
             if panGesture.view == nil { addGestureRecognizer(panGesture) }
@@ -540,14 +507,12 @@ extension JobsProgressBar {
         let hInset: CGFloat = max(0, trackHorizontalInset ?? 0)
         let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
         let preferredThickness: CGFloat = trackThickness ?? bounds.height
-
         switch direction {
         case .leftToRight, .rightToLeft:
             let trackWidth = max(0, bounds.width - 2 * hInset)
             let availableHeight = max(0, bounds.height - 2 * vInset)
             let trackHeight = min(max(0, preferredThickness), availableHeight)
             return CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
-
         case .bottomToTop, .topToBottom:
             let availableWidth = max(0, bounds.width - 2 * hInset)
             let trackWidth = min(max(0, preferredThickness), availableWidth)
@@ -579,7 +544,6 @@ extension JobsProgressBar {
     private func displayProgress(from location: CGPoint) -> CGFloat {
         let tf = currentTrackFrame()
         guard tf.width > 0, tf.height > 0 else { return displayProgressValue(forRaw: _progress) }
-
         switch direction {
         case .leftToRight:
             return max(0, min(1, (location.x - tf.minX) / tf.width))
@@ -603,11 +567,9 @@ extension JobsProgressBar {
 
     private func rotationDuration(forSpeed speed: CGFloat) -> CFTimeInterval {
         guard rotationFollowsDragSpeed else { return autoRotationDuration }
-
         let range = rotationSpeedRange
         let s = max(range.lowerBound, min(range.upperBound, speed))
         let t = (range.upperBound == range.lowerBound) ? 0 : (s - range.lowerBound) / (range.upperBound - range.lowerBound)
-
         let d = rotationSlowDuration + (rotationFastDuration - rotationSlowDuration) * CFTimeInterval(t)
         return max(0.18, d)
     }
@@ -617,14 +579,12 @@ extension JobsProgressBar {
         let old = lastDisplayProgress ?? newDisplay
         let delta = newDisplay - old
         let eps: CGFloat = 0.0005
-
         let sign: CGFloat
         if abs(delta) < eps {
             sign = lastRotationSign
         } else {
             sign = (delta > 0) ? 1 : -1
         }
-
         lastDisplayProgress = newDisplay
         startThumbRotationIfNeeded(sign: sign, duration: duration)
     }
@@ -643,14 +603,11 @@ extension JobsProgressBar {
                 }
             )
         }
-
         guard pressEnhancesShadowAndHighlight else { return }
-
         let dur: CFTimeInterval = dragging ? 0.12 : 0.18
         CATransaction.begin()
         CATransaction.setAnimationDuration(dur)
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeOut))
-
         if dragging {
             thumbImageView.layer.shadowOpacity = min(1, baseShadowOpacity + pressedShadowOpacityBoost)
             thumbImageView.layer.shadowRadius = baseShadowRadius + pressedShadowRadiusBoost
@@ -660,7 +617,6 @@ extension JobsProgressBar {
             thumbImageView.layer.shadowRadius = baseShadowRadius
             thumbHighlightLayer.opacity = 0
         }
-
         CATransaction.commit()
     }
     // MARK: - Rotation Core
@@ -677,20 +633,16 @@ extension JobsProgressBar {
     private func startThumbRotationIfNeeded(sign: CGFloat, duration: CFTimeInterval?) {
         guard thumbImage != nil else { return }
         guard thumbImageView.isHidden == false else { return }
-
         let normalizedSign: CGFloat = (sign >= 0) ? 1 : -1
         let targetDuration = max(0.18, duration ?? autoRotationDuration)
-
         if let anim = thumbImageView.layer.animation(forKey: thumbRotationAnimationKey) as? CABasicAnimation,
            normalizedSign == lastRotationSign {
             if abs(anim.duration - targetDuration) < 0.08 { return }
         }
-
         let current = currentRotationZ()
         thumbImageView.layer.removeAnimation(forKey: thumbSpinDownAnimationKey)
         thumbImageView.layer.removeAnimation(forKey: thumbRotationAnimationKey)
         thumbImageView.layer.setValue(current, forKeyPath: "transform.rotation.z")
-
         thumbImageView.layer.add(
             CABasicAnimation(keyPath: "transform.rotation.z")
                 .byFromValue(current)
@@ -717,13 +669,10 @@ extension JobsProgressBar {
             return
         }
         guard thumbImage != nil, thumbImageView.isHidden == false else { return }
-
         let normalizedSign: CGFloat = (sign >= 0) ? 1 : -1
         let current = currentRotationZ()
-
         thumbImageView.layer.removeAnimation(forKey: thumbRotationAnimationKey)
         thumbImageView.layer.setValue(current, forKeyPath: "transform.rotation.z")
-
         let extra = normalizedSign * (.pi * 2) * max(0, min(1, spinDownTurns))
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in
@@ -746,7 +695,6 @@ extension JobsProgressBar {
 }
 // MARK: - Thumb Layout + Style
 extension JobsProgressBar {
-
     fileprivate func layoutThumb(center: CGPoint,
                                  thickness: CGFloat,
                                  displayProgress: CGFloat,
@@ -757,17 +705,13 @@ extension JobsProgressBar {
         }
         thumbImageView.byHidden(false)
         thumbImageView.byContentMode(thumbContentMode)
-
         let defaultSide = max(0, thickness)
         let size = thumbSize ?? CGSize(width: defaultSide, height: defaultSide)
         thumbImageView.bounds = CGRect(origin: .zero, size: size)
-
         applyThumbStyleIfNeeded()
-
         var c = center
         c.x += thumbOffset.horizontal
         c.y += thumbOffset.vertical
-
         let halfW = size.width / 2
         let halfH = size.height / 2
         // ✅ 只在边界时，把 thumb 往“里”推，保证完整可见（针对 clipsToBounds = true 特别有效）
@@ -798,9 +742,7 @@ extension JobsProgressBar {
         // 你原来的 clamp（可保留，避免 thumbOffset 推太离谱）
         c.x = min(max(c.x, bounds.minX - halfW), bounds.maxX + halfW)
         c.y = min(max(c.y, bounds.minY - halfH), bounds.maxY + halfH)
-
         thumbImageView.center = c
-
         thumbHighlightLayer.byFrame(thumbImageView.bounds)
         thumbHighlightLayer.byCornerRadius(thumbCornerRadius ?? min(size.width, size.height) / 2)
         thumbHighlightLayer.byBorderWidth(pressedHighlightWidth)
@@ -810,17 +752,14 @@ extension JobsProgressBar {
         let bgColor: UIColor?
         let borderColor: UIColor?
         let borderWidth: CGFloat
-
         let shadowColor: UIColor?
         let shadowOpacity: Float
         let shadowRadius: CGFloat
         let shadowOffset: CGSize
-
         if thumbFollowsFillStyle {
             bgColor = fillView.backgroundColor
             borderColor = (fillView.backgroundColor ?? JobsCor.clear)
             borderWidth = max(0, thumbBorderWidth)
-
             shadowColor = thumbShadowColor
             shadowOpacity = max(0, thumbShadowOpacity)
             shadowRadius = max(0, thumbShadowRadius)
@@ -829,28 +768,23 @@ extension JobsProgressBar {
             bgColor = thumbBackgroundColor
             borderColor = thumbBorderColor
             borderWidth = max(0, thumbBorderWidth)
-
             shadowColor = thumbShadowColor
             shadowOpacity = max(0, thumbShadowOpacity)
             shadowRadius = max(0, thumbShadowRadius)
             shadowOffset = thumbShadowOffset
         }
-
         thumbImageView.byBackgroundColor(bgColor)
         thumbImageView.byBorderColor(borderColor)
         thumbImageView.byBorderWidth(borderWidth)
-
         thumbImageView.layer.shadowColor = (shadowColor ?? JobsCor.black).cgColor
         thumbImageView.layer.shadowOpacity = shadowOpacity
         thumbImageView.layer.shadowRadius = shadowRadius
         thumbImageView.layer.shadowOffset = shadowOffset
         thumbImageView.byMasksToBounds(false)
-
         baseShadowColor = shadowColor
         baseShadowOpacity = shadowOpacity
         baseShadowRadius = shadowRadius
         baseShadowOffset = shadowOffset
-
         if isUserDragging, pressEnhancesShadowAndHighlight {
             thumbImageView.layer.shadowOpacity = min(1, baseShadowOpacity + pressedShadowOpacityBoost)
             thumbImageView.layer.shadowRadius = baseShadowRadius + pressedShadowRadiusBoost
@@ -860,7 +794,6 @@ extension JobsProgressBar {
 }
 // MARK: - DSL
 extension JobsProgressBar {
-
     @discardableResult
     public func byDirection(_ direction: JobsAxisDirection) -> Self {
         self.direction = direction
@@ -1069,26 +1002,22 @@ extension JobsProgressBar {
         case .top, .bottom:
             break
         }
-
         if autoHideLabel, bounds.height < labelMinVisibleHeight {
             progressLabel.byHidden(YES)
             return
         } else {
             progressLabel.byHidden(NO)
         }
-
         progressLabel.sizeToFit()
         let labelSize = CGSize(
             width: progressLabel.bounds.width + 8,
             height: progressLabel.bounds.height + 4
         )
         progressLabel.bounds.size = labelSize
-
         var centerX = endpointX
         let minX = trackFrame.minX + labelSize.width / 2
         let maxX = trackFrame.maxX - labelSize.width / 2
         centerX = min(max(centerX, minX), maxX)
-
         let spacing = max(0, progressLabelSpacing)
         let centerY: CGFloat = {
             switch progressLabelPlacement {
@@ -1112,21 +1041,18 @@ extension JobsProgressBar {
         case .top, .bottom:
             break
         }
-
         if autoHideLabel, bounds.height < labelMinVisibleHeight {
             progressLabel.byHidden(YES)
             return
         } else {
             progressLabel.byHidden(NO)
         }
-
         progressLabel.sizeToFit()
         let labelSize = CGSize(
             width: progressLabel.bounds.width + 8,
             height: progressLabel.bounds.height + 4
         )
         progressLabel.bounds.size = labelSize
-
         let centerX = trackFrame.midX
         let spacing = max(0, progressLabelSpacing)
         let centerY: CGFloat = {

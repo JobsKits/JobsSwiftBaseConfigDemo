@@ -67,7 +67,6 @@ public struct JobsSwiftCommentModel: Equatable {
 }
 
 private extension JobsSwiftCommentModel {
-
     static func normalized(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines)
     }

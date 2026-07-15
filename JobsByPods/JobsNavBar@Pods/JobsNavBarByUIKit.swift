@@ -44,13 +44,13 @@ extension UIView {
             closure(self, make)
         };return self
     }
-    
+
     @discardableResult
     func byBackgroundColor(_ color: UIColor?) -> Self {
         backgroundColor = color
         return self
     }
-    
+
     @discardableResult
     func byHidden(_ hidden: Bool) -> Self {
         isHidden = hidden

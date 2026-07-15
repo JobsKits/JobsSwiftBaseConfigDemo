@@ -22,14 +22,12 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsMeCenterVC: BaseVC {
-    
     enum Row: Int, CaseIterable {
         case userInfo
         case crashLog
         case favorites
         case settings
         case about
-
         var title: String {
             switch self {
             case .userInfo:  return "用户信息".tr
@@ -39,7 +37,6 @@ final class JobsMeCenterVC: BaseVC {
             case .about:     return "关于".tr
             }
         }
-
         var symbolName: String {
             switch self {
             case .userInfo:  return "person.text.rectangle"
@@ -119,7 +116,6 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         switch Row(rawValue: indexPath.row)! {
         case .userInfo:
             JobsSwiftUserInfoVC().byPush(self)

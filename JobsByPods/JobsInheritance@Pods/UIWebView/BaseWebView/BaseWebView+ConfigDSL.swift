@@ -15,7 +15,6 @@ import WebKit
 
 // ===== BaseWebView 专属：Web 配置 DSL =====
 extension BaseWebView {
-
     @discardableResult
     public func byAllowedHosts(_ hosts: [String]) -> Self {
         allowedHosts = Set(hosts.map { $0.lowercased() })
@@ -85,7 +84,7 @@ extension BaseWebView {
         webViewConfigurationHook = hook
         return self
     }
-    
+
     @discardableResult
     public func byApply(_ block: (BaseWebView) -> Void) -> Self {
         block(self)

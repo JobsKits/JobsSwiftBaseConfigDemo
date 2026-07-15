@@ -53,15 +53,12 @@ extension UIColor {
             let b = hex[hex.index(hex.startIndex, offsetBy: 2)]
             hex = "\(r)\(r)\(g)\(g)\(b)\(b)"
         }
-
         var a: CGFloat = alpha
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
-
         var value: UInt64 = 0
         guard Scanner(string: hex).scanHexInt64(&value) else { return nil }
-
         switch hex.count {
         case 6: // RRGGBB
             r = CGFloat((value & 0xFF0000) >> 16) / 255.0
@@ -123,10 +120,8 @@ extension UIColor {
         // 4）按 2 位一组截取 R/G/B（例如 "FF" -> 255）
         var range = NSRange(location: 0, length: 2)
         let rHex = (tempHex as NSString).substring(with: range)
-
         range.location = 2
         let gHex = (tempHex as NSString).substring(with: range)
-
         range.location = 4
         let bHex = (tempHex as NSString).substring(with: range)
         // 5）将十六进制字符串转换为数值
@@ -137,7 +132,7 @@ extension UIColor {
         // 6）使用 RGB 数值初始化颜色（alpha 参数如需生效，应在 init 内部或此处带入）
         self.init(r: CGFloat(r), g: CGFloat(g), b: CGFloat(b))
     }
-    
+
     public convenience init(hex: UInt32) {
         let red = CGFloat((hex & 0xFF0000) >> 16) / 255.0
         let green = CGFloat((hex & 0x00FF00) >> 8) / 255.0
@@ -181,11 +176,9 @@ extension UIColor {
         var startIndex = cString.startIndex
         var endIndex = cString.index(after: startIndex)
         let rString = String(cString[startIndex...endIndex])
-
         startIndex = cString.index(after: endIndex)
         endIndex = cString.index(after: startIndex)
         let gString = String(cString[startIndex...endIndex])
-
         startIndex = cString.index(after: endIndex)
         endIndex = cString.index(after: startIndex)
         let bString = String(cString[startIndex...endIndex])
@@ -311,14 +304,13 @@ extension UIColor {
 }
 // MARK: - 生成随机颜色
 extension UIColor {
-    
     public static func randomColor(_ alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(red: CGFloat.random(in: 0...1),
                        green: CGFloat.random(in: 0...1),
                        blue: CGFloat.random(in: 0...1),
                        alpha: alpha)
     }
-    
+
     public static var randomColor: UIColor {
         randomColor()
     }

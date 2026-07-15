@@ -88,21 +88,17 @@ extension UIApplication {
             return _jobsVisibleVC(from: nav.visibleViewController ?? nav.topViewController ?? nav,
                                   ignoreAlert: ignoreAlert)
         }
-
         if let tab = vc as? UITabBarController {
             return _jobsVisibleVC(from: tab.selectedViewController ?? tab,
                                   ignoreAlert: ignoreAlert)
         }
-
         if let split = vc as? UISplitViewController {
             return _jobsVisibleVC(from: split.viewControllers.last ?? split,
                                   ignoreAlert: ignoreAlert)
         }
-
         if let page = vc as? UIPageViewController, let cur = page.viewControllers?.first {
             return _jobsVisibleVC(from: cur, ignoreAlert: ignoreAlert)
         }
-
         if let presented = vc.presentedViewController {
             if !(ignoreAlert && presented is UIAlertController) {
                 return _jobsVisibleVC(from: presented, ignoreAlert: ignoreAlert)

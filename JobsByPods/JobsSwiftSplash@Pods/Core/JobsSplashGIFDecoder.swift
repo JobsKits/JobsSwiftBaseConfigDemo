@@ -12,14 +12,12 @@ import UIKit
 import ImageIO
 
 enum JobsSplashGIFDecoder {
-
     static func image(data: Data) -> UIImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(source)
         guard frameCount > 1 else {
             guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil };return UIImage(cgImage: image)
         }
-
         var frames: [UIImage] = []
         var duration: TimeInterval = 0
         for index in 0..<frameCount {

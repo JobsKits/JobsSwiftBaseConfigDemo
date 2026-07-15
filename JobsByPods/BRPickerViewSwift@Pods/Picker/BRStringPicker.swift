@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRStringPicker: BRBasePicker<String>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     private var data: [String] = []
     private var selectedIndex: Int = 0
     private let picker = UIPickerView()

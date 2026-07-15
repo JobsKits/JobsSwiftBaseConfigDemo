@@ -114,7 +114,6 @@ public final class JobsTextInputObserver: NSObject,
             if text == "\n" { return .return }
             if text.isEmpty, range.length > 0 { return .delete };return .normal
         }()
-        
         if let limit, new.count > limit {
             // 变更被拦截：看当前真实文本 old 是否已达到 limit
             let isLimited = (old.count >= limit) // 你要“达到限制才 true”

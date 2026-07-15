@@ -99,6 +99,7 @@ def byJobs
     pod 'JobsFuseAnimation',                  :path => 'JobsByPods/JobsFuseAnimation@Pods'
     pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
     pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
+    pod 'JobsAudioRecorder',                  :path => 'JobsByPods/JobsAudioRecorder@Pods'
     pod 'JobsSwiftTimerMgr',                  :path => 'JobsByPods/JobsSwiftTimerMgr@Pods'             # https://github.com/JobsKits/JobsSwiftTimerMgr
     pod 'JobsSwiftPatch',                     :path => 'JobsByPods/JobsSwiftPatch@Pods'
     pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'

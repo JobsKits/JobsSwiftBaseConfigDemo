@@ -149,19 +149,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
     func setupLocalNotificationsIfNeeded() {
         let center = UNUserNotificationCenter.current()
-
         // delegate
         #if canImport(Flutter)
         center.delegate = self
         #else
         center.delegate = self
         #endif
-
         var options: UNAuthorizationOptions = [.alert, .badge]
         #if !os(tvOS)
         options.insert(.sound)
         #endif
-
         center.requestAuthorization(options: options) { granted, error in
             if let error {
                 log("requestAuthorization error: \(error)")
@@ -197,7 +194,6 @@ extension AppDelegate {
 #else
 // 非 Flutter 分支需要自己声明协议
 extension AppDelegate: UNUserNotificationCenterDelegate {
-
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -223,24 +219,19 @@ extension AppDelegate {
     func SA() {
         setupLocalNotificationsIfNeeded()
         _ = flutterEngine
-
         if let (minV, maxV) = [3, 1, 9, 7].minMax() {
             print(minV, maxV)   // 1 9
         }
-
         App显示语言环境配置()
         日志框架接入()
-        
         #if DEBUG
         VCDebugDeallocDebug.install()
 //        循环打印当前的时间()
         #endif
-        
         udSave()
         udRead()
         udSaveAge()
         udReadAge()
-
         Subscript_Character()
         Subscript_Array()
         Subscript_Dictionary()
@@ -251,9 +242,7 @@ extension AppDelegate {
         JSONDecoder解析字段处理时间()
         JSONDecoder嵌套JSON数组解析()
         JSONDecoder嵌套对象()
-
         OrderedDictionary测试()
-
         GK配置()
         全局比例尺()
         安全Push和Present()
@@ -266,13 +255,12 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    
     struct UserInfoModel: Codable {
         let id: Int
         let name: String
         let isVIP: Bool
     }
-    
+
     func 循环打印当前的时间() {
         do {
             appTickerTimer = JobsTimer(kind: .displayLink,
@@ -291,7 +279,7 @@ extension AppDelegate {
             }.start()
         }
     }
-    
+
     func App显示语言环境配置(){
         Bundle.enableLanguageOverride()
         Bundle.setLanguageBundle(LanguageManager.shared.localizedBundle)
@@ -300,7 +288,6 @@ extension AppDelegate {
     func 日志框架接入() {
         dynamicLogLevel = .verbose   // Debug 包：全开
         // dynamicLogLevel = .warning // Release 包：只保留 warn/error
-
         /// iOS 10+ 推荐
         DDLog.add(DDOSLogger.sharedInstance)
         /// Xcode Console
@@ -343,7 +330,6 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    
     func Subscript_Character() {
         let s = "Jobs"
         print(s[1] as Any)   // Optional("o")
@@ -352,7 +338,6 @@ extension AppDelegate {
 
     func Subscript_Array() {
         let arr = [10, 20, 30]
-
         let a = arr[safe: 1]              // Optional(20)
         let b = arr[safe: 99]             // nil
         print(a as Any)   // Optional(20)
@@ -361,10 +346,8 @@ extension AppDelegate {
 
     func Subscript_Dictionary() {
         let dict = ["a": 1, "b": 2]
-
         let x = dict[safe: "a"]                 // Optional(1)
         let y = dict[safe: "zzz"]               // nil
-
         print(x as Any)   // Optional("1")
         print(y as Any)   // nil
     }
@@ -373,14 +356,12 @@ extension AppDelegate {
 extension AppDelegate {
     /// JSONDecoder解析字段@用CodingKeys处理Json字段名和模型名不一致以及忽略字段（age）
     func JSONDecoder_CodingKeys() {
-
         let json = """
         {
           "user_id": 1,
           "user_name": "Jobs"
         }
         """.data(using: .utf8)!
-
         struct User: Codable {
             let userId: Int
             let userName: String
@@ -393,7 +374,6 @@ extension AppDelegate {
                 case userName = "user_name"
             }
         }
-
         do {
             let user = try JSONDecoder().decode(User.self, from: json)
             print(user.userId, user.userName) // 1 Jobs true
@@ -403,19 +383,16 @@ extension AppDelegate {
     }
     /// JSONDecoder解析字段@用keyDecodingStrategy处理Json字段名和模型名不一致
     func JSONDecoder_keyDecodingStrategy() {
-
         let json = """
         {
           "user_id": 1,
           "user_name": "Jobs"
         }
         """.data(using: .utf8)!
-
         struct User: Codable {
             let userId: Int
             let userName: String
         }
-
         do {
             let user = try JSONDecoder()
                 .bykeyDecodingStrategy(.convertFromSnakeCase) // 👈 关键
@@ -427,19 +404,16 @@ extension AppDelegate {
     }
 
     func JSONDecoder解析字段处理时间() {
-
         let json = """
         {
           "id": 1,
           "created_at": "2025-11-18 16:39:00"
         }
         """.data(using: .utf8)!
-
         struct Post: Codable {
             let id: Int
             let createdAt: Date
         }
-
         let decoder = JSONDecoder()
             .bykeyDecodingStrategy(.convertFromSnakeCase)
             .byDateDecodingStrategy(
@@ -455,19 +429,16 @@ extension AppDelegate {
     }
 
     func JSONDecoder嵌套JSON数组解析() {
-
         let json = """
         [
           { "id": 1, "name": "A" },
           { "id": 2, "name": "B" }
         ]
         """.data(using: .utf8)!
-
         struct User: Codable {
             let id: Int
             let name: String
         }
-
         do {
             let users = try JSONDecoder().decode([User].self, from: json)
             print(users.count) // 2
@@ -477,7 +448,6 @@ extension AppDelegate {
     }
 
     func JSONDecoder嵌套对象() {
-
         let json = """
         {
           "code": 0,
@@ -488,18 +458,15 @@ extension AppDelegate {
           }
         }
         """.data(using: .utf8)!
-
         struct APIResponse<T: Codable>: Codable {
             let code: Int
             let message: String
             let data: T
         }
-
         struct User: Codable {
             let id: Int
             let name: String
         }
-
         do {
             let resp = try JSONDecoder().decode(APIResponse<User>.self, from: json)
             let user = resp.data
@@ -522,7 +489,6 @@ extension AppDelegate {
             ]),
             "nothing": .null
         ]
-
         let d2 = [1, 2, 3, 4]
         let d3 = [
             "sd": "1",
@@ -536,23 +502,18 @@ extension AppDelegate {
             "do": "3",
             "gg": "4"
         ]
-
         for (k, v) in d4 {
             // ✅ 一定是 sd, ff, fff, fdf
             print(k, v)
         }
-
         log(d1)
         log(d2)
         log(d3)
-
         for key in d3.keys.sorted() {
             print(key, d3[key] as Any)
         }
-
         print(type(of: d3))
         dump(d3)
-
         for (k, v) in d3 {
             print(k, v)
         }
@@ -560,7 +521,6 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    
     func GK配置() {
         GKNavigationBarConfigure
             .bySetupDefault()
@@ -618,7 +578,6 @@ extension AppDelegate {
         IQKeyboardManager.shared.isEnabled = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
         IQKeyboardManager.shared.keyboardDistance = 0
-
         IQKeyboardToolbarManager.shared.isEnabled = false
     }
 

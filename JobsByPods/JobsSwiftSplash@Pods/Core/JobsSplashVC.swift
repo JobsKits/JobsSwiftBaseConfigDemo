@@ -18,7 +18,6 @@ import JobsSwiftDSL
 import JobsSwiftOpen
 
 public final class JobsSplashVC: BaseVC {
-
     private let countdownTimeKey = "com.BSports.countdownTimeKey"
     private let isCountdownTimeKey = "com.BSports.isCountdownTimeKey"
     private let defaultCountdownTime = 15 * 60
@@ -182,7 +181,6 @@ public final class JobsSplashVC: BaseVC {
         mediaTask?.cancel()
         player?.pause()
         configuration.onSkip?(self)
-
         if presentingViewController != nil {
             dismiss(animated: false)
         } else if let navigationController, navigationController.viewControllers.first !== self {
@@ -307,5 +305,4 @@ public final class JobsSplashVC: BaseVC {
             break
         }
     }
-
 }

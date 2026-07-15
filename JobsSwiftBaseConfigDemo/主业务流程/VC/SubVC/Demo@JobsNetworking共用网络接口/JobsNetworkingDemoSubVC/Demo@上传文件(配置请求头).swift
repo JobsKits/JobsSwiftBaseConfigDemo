@@ -20,7 +20,6 @@ import SnapKit
 
 // MARK: - 上传文件
 final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
-
     private lazy var agent: DefaultJobsAgent = {
         DefaultJobsAgent(config: JobsRequestConfig(
             baseURL: URL(string: "https://httpbin.org")!,

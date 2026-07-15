@@ -16,7 +16,6 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 final class MethodTBVCell: UITableViewCell {
-
     @discardableResult
     func byData(_ item: MethodDemoItem) -> Self {
         byText("\(item.methodType.title) Demo")

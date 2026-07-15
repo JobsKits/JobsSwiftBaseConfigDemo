@@ -16,7 +16,6 @@ import UIKit
 /// 线程安全：使用 NSLock 保护状态修改
 
 public final class JobsTaskItem {
-    
     var task: JobsTask
     private let lock = NSLock()
     public let tag: String

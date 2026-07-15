@@ -63,7 +63,6 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
             from: currentViewPoint,
             imageSize: originalImage.size
         ) else { return }
-
         let previousImagePoint = previousViewPoint.flatMap {
             imageView.jobs_mosaicImagePoint(from: $0, imageSize: originalImage.size)
         } ?? currentImagePoint

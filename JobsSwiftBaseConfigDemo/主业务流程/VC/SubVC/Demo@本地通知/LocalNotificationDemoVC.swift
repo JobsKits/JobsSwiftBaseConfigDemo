@@ -24,7 +24,6 @@ import RxSwift
 import RxCocoa
 
 final class LocalNotificationDemoVC: BaseVC {
-    
     private lazy var btn: UIButton = {
         UIButton.sys()
             /// 背景色
@@ -53,12 +52,10 @@ final class LocalNotificationDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "推送本地通知".tr)
         btn.byVisible(true)
-        
         NotificationCenter.default.rx
             .notification(Notification.Name("IFReceivedSocketPush"))
             .observe(on: MainScheduler.instance) // 需要更新 UI 的话
             .subscribe(onNext: { [weak self] noti in
-                
             })
             .disposed(by: disposeBag)
     }

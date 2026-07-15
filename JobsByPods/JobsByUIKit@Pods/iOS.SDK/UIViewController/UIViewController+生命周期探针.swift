@@ -48,7 +48,6 @@ private final class UITestView: UIView, VCLifeCycleListener {
 /// 示例代码 ➤ UIViewController 侧@注入使用（手动映射示例）
 /// 注意：实际使用本文件提供的 bindVCLifecycleListener 后，不需要手动写这些转发。
 private final class UITestVC: UIViewController {
-    
     lazy var testView = {
         UITestView()
     }()

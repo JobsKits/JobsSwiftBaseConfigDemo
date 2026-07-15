@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayNodeTests::testSubnodeAddedAfterLoadingExternalView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1905"]
+  S1["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
   T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
-  S2["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
-  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S2["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T2["method:ASDisplayNode::displayNodeRecursiveDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm:3701"]
   S2 -->|calls| T2
-  S3["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1961"]
-  T3["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
+  S3["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T3["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S3 -->|calls| T3
-  S4["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1966"]
-  T4["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
+  S4["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T4["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S4 -->|calls| T4
-  S5["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipNoView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1971"]
-  T5["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
+  S5["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T5["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S5 -->|calls| T5
-  S6["method:ASDisplayNodeTests::testBackgroundColorOpaqueRelationshipNoLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1976"]
-  T6["method:ASDisplayNodeTests::checkBackgroundColorOpaqueRelationshipWithViewLoaded:layerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:1922"]
+  S6["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
+  T6["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S6 -->|calls| T6
   S7["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T7["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  T7["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S7 -->|calls| T7
   S8["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T8["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  T8["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S8 -->|calls| T8
   S9["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T9["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  T9["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S9 -->|calls| T9
   S10["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  T10["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
   S10 -->|calls| T10
-  S11["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T11["method:ASDisplayNode::displayNodeRecursiveDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm:3701"]
+  S11["method:ASDisplayNodeTests::checkNameInDescriptionIsLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2123"]
+  T11["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S11 -->|calls| T11
-  S12["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T12["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S12["method:ASDisplayNodeTests::testBounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2146"]
+  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S12 -->|calls| T12
-  S13["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T13["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S13["method:ASDisplayNodeTests::testDidEnterDisplayIsCalledWhenNodesEnterDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2158"]
+  T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S13 -->|calls| T13
-  S14["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T14["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S14["method:ASDisplayNodeTests::testDidExitDisplayIsCalledWhenNodesExitDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2167"]
+  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T15["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S15["method:ASDisplayNodeTests::testDidEnterPreloadIsCalledWhenNodesEnterPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2177"]
+  T15["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T16["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S16["method:ASDisplayNodeTests::testDidExitPreloadIsCalledWhenNodesExitPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2186"]
+  T16["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T17["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S17["method:ASDisplayNodeTests::testThatNodeGetsRenderedIfItGoesFromZeroSizeToRealSizeButOnlyOnce<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2198"]
+  T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T18["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S18["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenContainerEntersHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2224"]
+  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNodeTests::testDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2088"]
-  T19["function:ASDisplayNodeTests::stringContainsPointer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2084"]
+  S19["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenContainerEntersHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2224"]
+  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S19 -->|calls| T19
-  S20["method:ASDisplayNodeTests::checkNameInDescriptionIsLayerBacked:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2123"]
-  T20["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S20["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenContainerEntersHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2224"]
+  T20["function:ASHierarchyStateIncludesRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+FrameworkPrivate.h:56"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNodeTests::testBounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2146"]
-  T21["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S21["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenContainerEntersHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2224"]
+  T21["function:ASHierarchyStateIncludesRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+FrameworkPrivate.h:56"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNodeTests::testDidEnterDisplayIsCalledWhenNodesEnterDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2158"]
+  S22["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenAddedToContainerThatIsInHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2242"]
   T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNodeTests::testDidExitDisplayIsCalledWhenNodesExitDisplayRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2167"]
+  S23["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenAddedToContainerThatIsInHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2242"]
   T23["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNodeTests::testDidEnterPreloadIsCalledWhenNodesEnterPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2177"]
-  T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S24["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenAddedToContainerThatIsInHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2242"]
+  T24["function:ASHierarchyStateIncludesRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+FrameworkPrivate.h:56"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNodeTests::testDidExitPreloadIsCalledWhenNodesExitPreloadRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2186"]
-  T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S25["method:ASDisplayNodeTests::testThatRasterizedNodesGetInterfaceStateUpdatesWhenAddedToContainerThatIsInHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2242"]
+  T25["function:ASHierarchyStateIncludesRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+FrameworkPrivate.h:56"]
   S25 -->|calls| T25
 ```
 

@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - 创建工厂
 public extension UIBezierPath {
-
     /// 创建空路径。
     static func make() -> UIBezierPath {
         UIBezierPath()

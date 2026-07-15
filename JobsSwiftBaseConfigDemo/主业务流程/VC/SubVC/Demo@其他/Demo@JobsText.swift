@@ -162,7 +162,6 @@ final class JobsTextDemoVC: BaseVC {
         exportRTFBtn.byVisible(YES)
         importRTFBtn.byVisible(YES)
         debugTextView.byVisible(YES)
-
         refresh()
     }
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASControlNode::actionsForTarget:forControlEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:342"]
-  T1["function:ASControlNode::_ASControlNodeEventKeyForControlEvent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:467"]
+  S1["function:ASControlNode::_ASEnumerateControlEventsIncludedInMaskWithBlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:472"]
+  T1["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
   S1 -->|calls| T1
-  S2["method:ASControlNode::actionsForTarget:forControlEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:342"]
-  T2["method:ASControlNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:81"]
+  S2["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
+  T2["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
   S2 -->|calls| T2
-  S3["method:ASControlNode::allTargets<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:367"]
-  T3["method:ASControlNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:81"]
+  S3["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
+  T3["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
   S3 -->|calls| T3
-  S4["method:ASControlNode::removeTarget:action:forControlEvents:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:384"]
-  T4["function:ASControlNode::_ASEnumerateControlEventsIncludedInMaskWithBlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:472"]
+  S4["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
+  T4["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
   S4 -->|calls| T4
-  S5["method:ASControlNode::removeTarget:action:forControlEvents:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:384"]
-  T5["function:ASControlNode::_ASControlNodeEventKeyForControlEvent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:467"]
+  S5["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
+  T5["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S5 -->|calls| T5
-  S6["method:ASControlNode::sendActionsForControlEvents:withEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:423"]
-  T6["method:ASControlNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:81"]
+  S6["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
+  T6["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
   S6 -->|calls| T6
-  S7["method:ASControlNode::sendActionsForControlEvents:withEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:423"]
-  T7["function:ASControlNode::_ASEnumerateControlEventsIncludedInMaskWithBlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:472"]
+  S7["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
+  T7["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
   S7 -->|calls| T7
-  S8["method:ASControlNode::sendActionsForControlEvents:withEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:423"]
-  T8["function:ASControlNode::_ASControlNodeEventKeyForControlEvent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:467"]
+  S8["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
+  T8["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S8 -->|calls| T8
-  S9["method:ASControlNode::sendActionsForControlEvents:withEvent:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:423"]
-  T9["method:ASControlNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:81"]
+  S9["method:ASDKNavigationController::setViewControllers:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:80"]
+  T9["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S9 -->|calls| T9
-  S10["function:ASControlNode::_ASEnumerateControlEventsIncludedInMaskWithBlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:472"]
-  T10["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
+  S10["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
+  T10["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
   S10 -->|calls| T10
-  S11["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
-  T11["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
+  S11["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
+  T11["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
   S11 -->|calls| T11
-  S12["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
-  T12["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S12["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
+  T12["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
   S12 -->|calls| T12
-  S13["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
-  T13["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
+  S13["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
+  T13["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S13 -->|calls| T13
-  S14["method:ASDKNavigationController::popToViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:60"]
-  T14["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
+  S14["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
+  T14["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
   S14 -->|calls| T14
-  S15["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
-  T15["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S15["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
+  T15["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
   S15 -->|calls| T15
-  S16["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
-  T16["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
+  S16["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
+  T16["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S16 -->|calls| T16
-  S17["method:ASDKNavigationController::popToRootViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:70"]
-  T17["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
+  S17["method:ASDKNavigationController::popViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:104"]
+  T17["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
   S17 -->|calls| T17
-  S18["method:ASDKNavigationController::setViewControllers:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:80"]
+  S18["method:ASDKNavigationController::popViewControllerAnimated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:104"]
   T18["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
   S18 -->|calls| T18
-  S19["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
-  T19["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h:1"]
+  T19["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S19 -->|calls| T19
-  S20["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
-  T20["function:ASGetDescriptionValueString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:16"]
+  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h:1"]
+  T20["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S20 -->|calls| T20
-  S21["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
-  T21["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
+  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h:1"]
+  T21["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S21 -->|calls| T21
-  S22["method:ASDKNavigationController::setViewControllers:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:88"]
-  T22["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
+  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h:1"]
+  T22["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S22 -->|calls| T22
-  S23["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
-  T23["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.h:1"]
+  T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S23 -->|calls| T23
-  S24["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
-  T24["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
+  S24["method:ASDKViewController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:31"]
+  T24["method:ASDKViewController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:31"]
   S24 -->|calls| T24
-  S25["method:ASDKNavigationController::pushViewController:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:96"]
-  T25["method:ASDKNavigationController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKNavigationController.mm:30"]
+  S25["method:ASDKViewController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:31"]
+  T25["method:ASDKViewController::_initializeInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:78"]
   S25 -->|calls| T25
 ```
 

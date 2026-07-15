@@ -10,16 +10,13 @@ import CommonCrypto
 import CryptoKit
 
 public struct JobsChaCha20Poly1305Box {
-
     public static func encrypt(plaintext: String, key: Data) throws -> String {
         let plainData = Data(plaintext.utf8)
-
         if #available(iOS 13.0, *) {
             // ===== v0x11: ChaCha20-Poly1305 =====
             let sk = SymmetricKey(data: key)
             let nonce = ChaChaPoly.Nonce()
             let sealed = try ChaChaPoly.seal(plainData, using: sk, nonce: nonce)
-
             var out = Data()
             out.append(0x11)
             out.append(contentsOf: nonce)        // 12
@@ -30,7 +27,6 @@ public struct JobsChaCha20Poly1305Box {
             // ===== v0x02: AES-CBC-PKCS7 =====
             let iv = try randomBytes(count: kCCBlockSizeAES128) // 16
             let cipher = try aesCBCEncrypt(data: plainData, key: key, iv: iv)
-
             var out = Data()
             out.append(0x02)
             out.append(iv)
@@ -43,9 +39,7 @@ public struct JobsChaCha20Poly1305Box {
         guard let blob = Data(base64Encoded: base64), blob.count >= 1 else {
             throw CryptoError.invalidBase64
         }
-
         let ver = blob[blob.startIndex]
-
         switch ver {
         case 0x11:
             // ChaCha20-Poly1305
@@ -54,25 +48,20 @@ public struct JobsChaCha20Poly1305Box {
                 throw CryptoError.decryptionFailed
             }
             guard blob.count >= 1 + 12 + 16 else { throw CryptoError.invalidData }
-
             let nonceData = blob.subdata(in: 1 ..< 13)
             let tagData = blob.suffix(16)
             let cipherData = blob.subdata(in: 13 ..< (blob.count - 16))
-
             let nonce = try ChaChaPoly.Nonce(data: nonceData)
             let sealed = try ChaChaPoly.SealedBox(nonce: nonce, ciphertext: cipherData, tag: tagData)
             let plain = try ChaChaPoly.open(sealed, using: SymmetricKey(data: key))
             return String(data: plain, encoding: .utf8) ?? ""
-
         case 0x02:
             // AES-CBC-PKCS7
             guard blob.count >= 1 + 16 else { throw CryptoError.invalidData }
             let iv = blob.subdata(in: 1 ..< 17)
             let cipher = blob.subdata(in: 17 ..< blob.count)
-
             let plain = try aesCBCDecrypt(data: cipher, key: key, iv: iv)
             return String(data: plain, encoding: .utf8) ?? ""
-
         default:
             throw CryptoError.invalidData
         }

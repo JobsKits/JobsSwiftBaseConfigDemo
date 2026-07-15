@@ -33,7 +33,6 @@ private enum EntranceStyle {
 }
 // MARK: - Demo
 final class JobsAppDoorDemoVC: BaseVC {
-    
     deinit {
         if let o = loopObserver { NotificationCenter.default.removeObserver(o) }
     }
@@ -100,7 +99,7 @@ final class JobsAppDoorDemoVC: BaseVC {
                 make.edges.equalToSuperview()
             }
     }()
-    
+
     private lazy var switchButtons: UISegmentedControl = {
         UISegmentedControl(items: ["登录".tr, "注册".tr])
             .bySelectedSegmentIndex(1) // 默认 GCD
@@ -130,7 +129,6 @@ final class JobsAppDoorDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.black)
-       
         panelHost.byVisible(YES)
         loginPanel.byVisible(YES)
         registerPanel.byVisible(YES)
@@ -170,37 +168,30 @@ extension JobsAppDoorDemoVC {
         switch style {
         case let .circularReveal(from, startRadius):
             view.layoutIfNeeded()
-
             // 1) 先把整体缩放态复位到 1（不然 mask 看起来会“收缩”）
             panelHost.transform = .identity
             panelHost.byAlpha(1)
-
             // 2) 给 panelHost 做圆形揭示 mask
             let local = panelHost.convert(from, from: view)
             let endR = maxDistanceToCorner(from: local, in: panelHost.bounds.size) + 20
-
             let startPath = UIBezierPath.make(
                 arcCenter: local, radius: startRadius,
                 startAngle: 0, endAngle: .pi * 2, clockwise: true
             )
-
             let endPath = UIBezierPath.make(
                 arcCenter: local, radius: endR,
                 startAngle: 0, endAngle: .pi * 2, clockwise: true
             )
-
             let mask = CAShapeLayer()
             mask.fillColor = JobsCor.black.cgColor
             mask.path = endPath.cgPath
             panelHost.layer.mask = mask
-
             let anim = CABasicAnimation(keyPath: "path")
             anim.fromValue = startPath.cgPath
             anim.toValue = endPath.cgPath
             anim.duration = 0.52
             anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             mask.add(anim, forKey: "circularReveal")
-
             // 客服按钮与 OC 保持“渐显”
 //            UIView.jobsAnimateWithSpring(
 //                0.60,
@@ -249,10 +240,8 @@ extension JobsAppDoorDemoVC {
     private enum SwitchDirection { case toLeft, toRight }
     private func switchPanel(to target: PanelKind, direction: SwitchDirection) {
         guard target != current else { return }
-
         let fromView = (current == .login) ? loginPanel : registerPanel
         let toView   = (target == .login) ? loginPanel : registerPanel
-
         // 起态准备
         toView.byAlpha(0)
         toView.byHidden(false)
@@ -260,10 +249,8 @@ extension JobsAppDoorDemoVC {
             translateX: (direction == .toRight ? panelHost.bounds.width * 0.12 : -panelHost.bounds.width * 0.12),
             scale: 0.96
         )
-
         // 为了立体感：容器统一加透视（只需设一次，但在这里再设一遍也无伤）
         panelHost.enablePerspective(-1/800)
-
         let total: TimeInterval = 0.42
         UIView.jobsAnimateKeyframes(
             total,
@@ -281,7 +268,6 @@ extension JobsAppDoorDemoVC {
                         )
                     }
                 )
-
                 // toView 进场（从侧面靠近 + 放大到 1 + 淡入）
                 UIView.jobsAddKeyframe(
                     withRelativeStartTime: 0.25,

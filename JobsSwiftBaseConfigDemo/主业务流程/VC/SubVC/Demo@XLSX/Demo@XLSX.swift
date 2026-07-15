@@ -168,21 +168,17 @@ final class XLSXDemoVC: BaseVC {
         // ⚠️ 不要清空 injectedSheets（本地），仅替换 xlsxSheets
         xlsxSheets.removeAll()
         refreshSegments(preserveSelection: true) // 先清 UI（避免上一份名字残留）
-
         let needsStop = url.startAccessingSecurityScopedResource()
         defer {
             if needsStop { url.stopAccessingSecurityScopedResource() }
             spinner.stopAnimating()
         }
-
         guard let file = XLSXFile(filepath: url.path) else {
             showError("无法打开 XLSX：文件不存在或已损坏")
             return
         }
-
         do {
             sharedStrings = try file.parseSharedStrings()
-
             var parsed: [SheetData] = []
             for wbk in try file.parseWorkbooks() {
                 for (maybeName, path) in try file.parseWorksheetPathsAndNames(workbook: wbk) {
@@ -194,7 +190,6 @@ final class XLSXDemoVC: BaseVC {
             }
             xlsxSheets = parsed
             refreshSegments(preserveSelection: false)
-
             if allSheets.isEmpty {
                 showError("文件中未发现任何工作表")
             }
@@ -231,18 +226,15 @@ final class XLSXDemoVC: BaseVC {
         let selectedName: String? = (0..<sheetControl.numberOfSegments).contains(currentSheetIndex)
             ? sheetControl.titleForSegment(at: currentSheetIndex)
             : nil
-
         sheetControl.removeAllSegments()
         for (i, s) in allSheets.enumerated() {
             sheetControl.insertSegment(withTitle: s.name, at: i, animated: false)
         }
-
         if allSheets.isEmpty {
             currentSheetIndex = 0
             tableView.byReloadData()
             return
         }
-
         if preserveSelection, let sel = selectedName,
            let idx = allSheets.firstIndex(where: { $0.name == sel }) {
             sheetControl.selectedSegmentIndex = idx

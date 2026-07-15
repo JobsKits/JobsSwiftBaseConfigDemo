@@ -202,7 +202,6 @@ extension NSObject {
         let wrapped: jobsByAnyTransformBlock = { value in
             guard let typedValue = value as? T else { return value };return block(typedValue)
         }
-
         objc_setAssociatedObject(
             self,
             &JobsTransformCallbackKey,

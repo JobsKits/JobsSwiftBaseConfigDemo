@@ -398,7 +398,6 @@ final class UITextViewDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "UITextView 全量演示".tr)
-
         title1.byVisible(YES)
         tv1.byVisible(YES)
         title2.byVisible(YES)
@@ -418,7 +417,6 @@ final class UITextViewDemoVC: BaseVC {
 }
 
 extension UITextViewDemoVC {
-    
     func sync(from source: UITextView, to target: UITextView, value: String) {
         guard !isSyncing else { return }
         isSyncing = true

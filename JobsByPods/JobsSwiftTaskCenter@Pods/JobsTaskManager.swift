@@ -16,7 +16,6 @@ import UIKit
 /// 线程安全：使用 NSLock 保护内部状态
 
 public final class JobsTaskManager: @unchecked Sendable {
-
     public static let `default` = JobsTaskManager()
     private let lock = NSLock()
     private var tasks: [JobsTaskItem] = []
@@ -46,7 +45,6 @@ public final class JobsTaskManager: @unchecked Sendable {
 }
 
 extension JobsTaskManager {
-    
     @discardableResult
     public func mergedExecutions(for tags: [String]) -> JobsMergedTaskExecutionSequence {
         let sequences = tags.compactMap { tag -> (String, JobsTaskExecutionSequence)? in
@@ -72,9 +70,7 @@ extension JobsTaskManager {
             didAdd = true
         }
         lock.unlock()
-
         guard didAdd else { return self }
-
         bindLifecycle(for: item)
         InternalTaskCenter.default.add(item.task)
         InternalTaskCenter.default.addTag(item.tag, to: item.task)
@@ -97,7 +93,6 @@ extension JobsTaskManager {
         item = idx.map { tasks.remove(at: $0) }
         let lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
-
         if let item {
             if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
             InternalTaskCenter.default.remove(item.task)
@@ -115,7 +110,6 @@ extension JobsTaskManager {
         tokens = lifecycleObserverTokens
         lifecycleObserverTokens.removeAll()
         lock.unlock()
-
         for item in snapshot {
             if let token = tokens[item.tag] {
                 item.task.removeLifecycleObserver(token)
@@ -189,7 +183,6 @@ extension JobsTaskManager {
         item = idx.map { tasks.remove(at: $0) }
         lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
-
         if let item {
             if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
             item.task.cancel()
@@ -211,7 +204,6 @@ extension JobsTaskManager {
         tokens = lifecycleObserverTokens
         lifecycleObserverTokens.removeAll()
         lock.unlock()
-
         snapshot.forEach { item in
             if let token = tokens[item.tag] {
                 item.task.removeLifecycleObserver(token)
@@ -288,7 +280,6 @@ extension JobsTaskManager {
                     await self.executeNowAsync(by: tag)
                 }
             }
-
             var successCount = 0
             for await success in group {
                 if success {
@@ -355,7 +346,6 @@ extension JobsTaskManager {
         }
         let observers = Array(statusObservers.values)
         lock.unlock()
-
         guard shouldEmit else { return }
         let change = JobsTaskStatusChange(tag: tag,
                                           oldStatus: oldStatus,
@@ -484,7 +474,6 @@ extension JobsTaskManager {
 }
 #if os(iOS) || os(tvOS)
 extension JobsTaskManager: TaskForApplicationStatusDelegate {
-
     @objc private func backgroundState() {
         applicationStatusDidChanged(.background)
     }
@@ -495,7 +484,6 @@ extension JobsTaskManager: TaskForApplicationStatusDelegate {
 
     public func applicationStatusDidChanged(_ state: UIApplication.State) {
         let snapshot = tasksSnapshot()
-
         switch state {
         case .active:
             snapshot.filter { $0.status == .background }.forEach {

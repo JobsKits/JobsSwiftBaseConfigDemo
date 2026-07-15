@@ -16,7 +16,6 @@ import JobsSwiftBaseDefines
 
 // MARK: - CAGradientLayer DSL
 extension CAGradientLayer {
-    
     @discardableResult
     public func byColors(_ uiColors: [UIColor]) -> Self {
         self.colors = uiColors.map { $0.cgColor };return self
@@ -27,7 +26,7 @@ extension CAGradientLayer {
         self.colors = cgColors
         return self
     }
-    
+
     @discardableResult
     public func byCGColors(_ cgColors: [CGColor]) -> Self {
         self.colors = cgColors
@@ -38,7 +37,7 @@ extension CAGradientLayer {
     public func byLocations(_ locs: [CGFloat]) -> Self {
         self.locations = locs.map { NSNumber(value: Double($0)) };return self
     }
-    
+
     @discardableResult
     public func byLocations(_ locs: [NSNumber]) -> Self {
         self.locations = locs

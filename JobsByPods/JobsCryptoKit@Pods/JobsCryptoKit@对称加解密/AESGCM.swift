@@ -10,19 +10,16 @@ import CommonCrypto
 import CryptoKit
 
 public struct JobsAES {
-
     /// 统一输出格式（Base64）： version(1) + ivOrNonce(12/16) + ciphertext + tag(16 optional)
     /// - version = 0x01: AES-GCM (iOS13+)
     /// - version = 0x02: AES-CBC-PKCS7 (iOS12-)
     public static func encrypt(plaintext: String, key: Data) throws -> String {
         let plainData = Data(plaintext.utf8)
-
         if #available(iOS 13.0, *) {
             // ===== v1: AES-GCM =====
             let sk = try makeSymmetricKey(key)
             let nonce = AES.GCM.Nonce()
             let sealed = try AES.GCM.seal(plainData, using: sk, nonce: nonce)
-
             var out = Data()
             out.append(0x01)
             out.append(contentsOf: nonce)               // 12
@@ -33,7 +30,6 @@ public struct JobsAES {
             // ===== v2: AES-CBC + PKCS7 =====
             let iv = try randomBytes(count: kCCBlockSizeAES128) // 16
             let cipher = try aesCBCEncrypt(data: plainData, key: key, iv: iv)
-
             var out = Data()
             out.append(0x02)
             out.append(iv)                               // 16
@@ -45,9 +41,7 @@ public struct JobsAES {
     public static func decrypt(base64: String, key: Data) throws -> String {
         guard let blob = Data(base64Encoded: base64) else { throw CryptoError.invalidBase64 }
         guard blob.count >= 1 else { throw CryptoError.invalidData }
-
         let version = blob[blob.startIndex]
-
         switch version {
         case 0x01:
             // ===== v1: AES-GCM =====
@@ -56,26 +50,20 @@ public struct JobsAES {
                 throw CryptoError.decryptionFailed
             }
             guard blob.count >= 1 + 12 + 16 else { throw CryptoError.invalidData }
-
             let nonceData = blob.subdata(in: 1 ..< 13)
             let tagData = blob.suffix(16)
             let cipherData = blob.subdata(in: 13 ..< (blob.count - 16))
-
             let nonce = try AES.GCM.Nonce(data: nonceData)
             let sealed = try AES.GCM.SealedBox(nonce: nonce, ciphertext: cipherData, tag: tagData)
             let plain = try AES.GCM.open(sealed, using: try makeSymmetricKey(key))
-
             return String(data: plain, encoding: .utf8) ?? ""
-
         case 0x02:
             // ===== v2: AES-CBC-PKCS7 =====
             guard blob.count >= 1 + 16 else { throw CryptoError.invalidData }
             let iv = blob.subdata(in: 1 ..< 17)
             let cipher = blob.subdata(in: 17 ..< blob.count)
-
             let plain = try aesCBCDecrypt(data: cipher, key: key, iv: iv)
             return String(data: plain, encoding: .utf8) ?? ""
-
         default:
             throw CryptoError.invalidData
         }
@@ -121,7 +109,6 @@ private func aesCBCEncrypt(data: Data, key: Data, iv: Data) throws -> Data {
     out.count = outLength
     return out
 }
-
 
 private func aesCBCDecrypt(data: Data, key: Data, iv: Data) throws -> Data {
     guard [16, 24, 32].contains(key.count) else { throw CryptoError.invalidKey }

@@ -111,7 +111,6 @@ class MosaicBaseDemoVC: BaseVC {
         }
         guard isExitAlertShowing == false else { return }
         isExitAlertShowing = true
-
         let alert = UIAlertController(
             title: "是否保存修改后的照片？".tr,
             message: "保存后会写入系统相册。".tr,
@@ -145,7 +144,6 @@ class MosaicBaseDemoVC: BaseVC {
             loadingLabel.byText("图片地址无效".tr)
             return
         }
-
         imageView.byImage("Ani".img)
         loadingLabel.byText("图片加载中...".tr).byHidden(false)
         imageLoadToken = JobsImageLoader.shared.load(

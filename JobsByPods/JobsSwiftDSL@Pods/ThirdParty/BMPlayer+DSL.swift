@@ -99,7 +99,7 @@ extension BMPlayer {
         self.pause(allowAutoPlay: allowAutoPlay)
         return self
     }
-    
+
     @discardableResult
     public func byAutoPlayIfNeeded() -> Self {
         self.autoPlay()

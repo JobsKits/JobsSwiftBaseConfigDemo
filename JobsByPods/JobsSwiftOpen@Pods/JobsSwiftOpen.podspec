@@ -16,4 +16,5 @@ Pod::Spec.new do |spec|
 
   spec.dependency 'JobsInheritance'
   spec.dependency 'JobsByUIKit'
+  spec.dependency 'GKNavigationBarSwift'
 end

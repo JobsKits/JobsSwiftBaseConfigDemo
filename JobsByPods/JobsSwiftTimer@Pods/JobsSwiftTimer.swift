@@ -91,12 +91,10 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
         self.kind = kind
         self.config = config
         self.tickBlock = handler
-
         if kind != .gcd {
             requireMainRunLoopForNonGCD()
             precondition(Thread.isMainThread, "JobsTimer: init(kind=\(kind)) must be called on main thread.")
         }
-
         setupAppStateIfNeeded()
     }
 
@@ -109,7 +107,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     @discardableResult
     public func start() -> Self {
         if kind != .gcd { requireMainThreadForRunLoopAPI("start") }
-
         let token = stateLock.jobs_withLock { () -> UInt64? in
             switch state {
             case .running:
@@ -123,7 +120,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             }
         }
         guard let token else { return self }
-
         switch kind {
         case .gcd:
             startGCD(token: token)
@@ -139,7 +135,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     @discardableResult
     public func pause() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("pause") }
-
         let shouldPause = stateLock.jobs_withLock { () -> Bool in
             guard state == .running else { return false }
             state = .paused
@@ -147,7 +142,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             return true
         }
         guard shouldPause else { return self}
-
         switch kind {
         case .gcd:
             pauseGCD()
@@ -168,7 +162,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     @discardableResult
     public func resume() -> Self{
         if kind != .gcd { requireMainThreadForRunLoopAPI("resume") }
-
         let token = stateLock.jobs_withLock { () -> UInt64? in
             guard state == .paused else { return nil }
             state = .running
@@ -176,7 +169,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             return generation
         }
         guard let token else { return self}
-
         switch kind {
         case .gcd:
             resumeGCD()
@@ -197,7 +189,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
                 _ = self?.fireOnce()
             };return self
         }
-
         let (shouldStop, finish) = stateLock.jobs_withLock { () -> (Bool, JobsTimerCallback?) in
             guard state != .stopped else { return (false, nil) }
             state = .stopped
@@ -219,7 +210,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             // 外部 stop 强制主线程；内部（比如 one-shot）会走 routeStopIfNeeded
             requireMainThreadForRunLoopAPI("stop")
         }
-
         let shouldStop = stateLock.jobs_withLock { () -> Bool in
             guard state != .stopped else { return false }
             state = .stopped
@@ -260,7 +250,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     }
 
     private func routeStopIfNeededFromCallback() {
-        
         if kind == .gcd {
             // GCD：不要求主线程
             stateLock.jobs_withLock {
@@ -291,18 +280,14 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
                 return (false, {}, nil, config.repeats)
             };return (true, tickBlock, finishBlock, config.repeats)
         }
-
         guard snapshot.shouldFire else { return }
-
         // tick 在 config.queue 执行
         config.queue.async {
             snapshot.tick()
         }
-
         if !snapshot.repeats {
             // one-shot：触发一次后结束（注意：非 GCD stop 必须回主线程）
             routeStopIfNeededFromCallback()
-
             if let finish = snapshot.finish {
                 config.queue.async { finish() }
             }
@@ -312,7 +297,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     private func startGCD(token: UInt64) {
         // 重建更干净：避免 resume/suspend 计数错乱
         stopGCDSafely()
-
         let t = DispatchSource.makeTimerSource(queue: config.queue)
         t.schedule(
             deadline: .now() + config.interval,
@@ -346,23 +330,19 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
 
     private func stopGCDSafely() {
         guard let t = gcdTimer else { return }
-
         // ✅ 关键：cancel 前必须平衡 suspend
         if gcdIsSuspended {
             gcdIsSuspended = false
             t.resume()
         }
-
         t.setEventHandler {}
         t.cancel()
-
         gcdTimer = nil
     }
     // MARK: - Foundation Timer（依赖 RunLoop）
     private func startFoundationTimer(token: UInt64) {
         requireMainThreadForRunLoopAPI("startFoundationTimer")
         requireMainRunLoopForNonGCD()
-
         let t = Timer(timeInterval: config.interval, repeats: config.repeats) { [weak self] _ in
             self?.fireTickIfValid(token: token)
         }
@@ -374,11 +354,9 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     private func startDisplayLink(token: UInt64) {
         requireMainThreadForRunLoopAPI("startDisplayLink")
         requireMainRunLoopForNonGCD()
-
         let proxy = DisplayLinkProxy { [weak self] in
             self?.fireTickIfValid(token: token)
         }
-
         let link = CADisplayLink(target: proxy, selector: #selector(DisplayLinkProxy.tick))
         link.add(to: config.runLoop, forMode: config.runLoopMode)
         displayLink = link
@@ -395,7 +373,6 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
     private func startRunLoopTimer(token: UInt64) {
         requireMainThreadForRunLoopAPI("startRunLoopTimer")
         requireMainRunLoopForNonGCD()
-
         let context = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         var ctx = CFRunLoopTimerContext(
             version: 0,
@@ -404,10 +381,8 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             release: nil,
             copyDescription: nil
         )
-
         let nextFire = CFAbsoluteTimeGetCurrent() + config.interval
         let interval = config.repeats ? config.interval : 0
-
         let timer = CFRunLoopTimerCreate(
             kCFAllocatorDefault,
             nextFire,
@@ -422,27 +397,21 @@ public final class JobsTimer: JobsSwiftTimerProtocol {
             },
             &ctx
         )
-
         let cfRunLoop = config.runLoop.getCFRunLoop()
         let cfMode: CFRunLoopMode = (config.runLoopMode == .common)
             ? .commonModes
             : CFRunLoopMode(config.runLoopMode.rawValue as CFString)
-
         CFRunLoopAddTimer(cfRunLoop, timer, cfMode)
-
         stateLock.jobs_withLock { rlTimer = timer }
-
         #if canImport(UIKit)
         appState?.syncWithCurrentAppStateIfNeeded()
         #endif
-
         _ = context
     }
     // MARK: - App State (UIKit)
     private func setupAppStateIfNeeded() {
         #if canImport(UIKit)
         guard config.autoManageAppState else { return }
-
         appState = JobsAppStateManager(
             pauseInBackground: config.pauseInBackground,
             action: { [weak self] action in

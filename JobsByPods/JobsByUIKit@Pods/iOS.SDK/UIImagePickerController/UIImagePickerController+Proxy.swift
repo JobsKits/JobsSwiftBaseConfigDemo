@@ -48,7 +48,7 @@ private final class JobsImagePickerBlocksProxy: NSObject,
     var didFinishPickingMediaWithInfo: ((AnyObject,
                                          UIImagePickerController,
                                          [UIImagePickerController.InfoKey: Any]) -> Void)?
-    
+
     var didCancel: ((AnyObject, UIImagePickerController) -> Void)?
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -67,7 +67,6 @@ private final class JobsImagePickerBlocksProxy: NSObject,
 // MARK: - Associated
 private var proxyImagePickerCtrlKey: UInt8 = 0
 extension UIImagePickerController {
-
     private func jobs_imagePickerBlocksProxy(createIfNeeded: Bool = true) -> JobsImagePickerBlocksProxy? {
         if let p = objc_getAssociatedObject(self, &proxyImagePickerCtrlKey) as? JobsImagePickerBlocksProxy {
             return p

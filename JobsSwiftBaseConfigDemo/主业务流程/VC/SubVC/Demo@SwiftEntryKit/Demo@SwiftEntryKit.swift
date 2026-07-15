@@ -213,11 +213,9 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     SwiftEntryKit.display(entry: makeMessageView(title: title, desc: "队列演示", systemImage: "list.bullet"),
                                           using: a)
                 }
-
                 enqueue("普通 #1")
                 enqueue("普通 #2")
                 enqueue("普通 #3")
-
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     let anim = EKAttributes.animTranslationInOut
                     var a = EKAttributes()
@@ -248,10 +246,8 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byHaptic(.success)
                     .byEntrance(t.entrance)
                     .byExit(t.exit)
-
                 SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Light".tr, desc: "statusBar = .light", systemImage: "sun.max.fill"),
                                       using: a1)
-
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     let tt = EKAttributes.animTranslationInOut
                     var a2 = EKAttributes()
@@ -263,7 +259,6 @@ final class SwiftEntryKitDemoVC: BaseVC {
                         .byHaptic(.warning)
                         .byEntrance(tt.entrance)
                         .byExit(tt.exit)
-
                     SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Dark".tr, desc: "statusBar = .dark", systemImage: "moon.fill"),
                                           using: a2)
                 }

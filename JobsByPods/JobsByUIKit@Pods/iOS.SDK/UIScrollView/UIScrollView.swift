@@ -15,7 +15,6 @@ import ObjectiveC
 
 // MARK: - DSL
 extension UIScrollView {
-    
     @discardableResult
     public func byScrollTargetWeak(_ target: AnyObject) -> Self {
         let p = jobs_scrollBlocksProxy()!   // 你现有的 scroll proxy getter
@@ -123,7 +122,6 @@ private final class JobsScrollViewBlocksProxy: NSObject, UIScrollViewDelegate {
 }
 // MARK: - Delegate Multiplexer（把 scroll 回调分发出去）
 private final class JobsScrollDelegateMux: NSObject {
-    
     private weak var primary: NSObject?
     private weak var scroll: JobsScrollViewBlocksProxy?
 
@@ -150,7 +148,6 @@ private enum JobsScrollViewBlocksAssociatedKeys {
 }
 
 extension UIScrollView {
-    
     private func jobs_scrollBlocksProxy(createIfNeeded: Bool = true) -> JobsScrollViewBlocksProxy? {
         if let p = objc_getAssociatedObject(self, &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey) as? JobsScrollViewBlocksProxy {
             return p

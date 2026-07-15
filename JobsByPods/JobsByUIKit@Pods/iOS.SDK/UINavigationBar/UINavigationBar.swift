@@ -48,13 +48,13 @@ extension UINavigationBar {
             self.preferredBehavioralStyle = style
         };return self
     }
-    
+
     @discardableResult
     public func byTitleTextAttributes(_ att: [NSAttributedString.Key: Any]?) -> Self {
         self.titleTextAttributes = att
         return self
     }
-    
+
     @discardableResult
     public func byLargeTitleTextAttributes(_ att: [NSAttributedString.Key: Any]?) -> Self {
         self.largeTitleTextAttributes = att
@@ -109,32 +109,31 @@ extension UINavigationBar {
 }
 // MARK: - 闭包重载@单参数
 extension UINavigationBar {
-    
     @discardableResult
     public func byBarStyle(_ builder: () -> UIBarStyle) -> Self {
         self.barStyle = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTranslucent(_ builder: () -> Bool) -> Self {
         self.isTranslucent = builder()
         return self
     }
-    
+
     @discardableResult
     public func byBarTintColor(_ builder: () -> UIColor?) -> Self {
         self.barTintColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byPrefersLargeTitles(_ builder: () -> Bool) -> Self {
         if #available(iOS 11.0, *) {
             self.prefersLargeTitles = builder()
         };return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byPreferredBehavioralStyle(_ builder: () -> UIBehavioralStyle) -> Self {
@@ -142,46 +141,46 @@ extension UINavigationBar {
             self.preferredBehavioralStyle = builder()
         };return self
     }
-    
+
     @discardableResult
     public func byTitleTextAttributes(_ builder: () -> [NSAttributedString.Key: Any]?) -> Self {
         self.titleTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byLargeTitleTextAttributes(_ builder: () -> [NSAttributedString.Key: Any]?) -> Self {
         self.largeTitleTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byShadowImage(_ builder: () -> UIImage?) -> Self {
         self.shadowImage = builder()
         return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byStandardAppearance(_ builder: () -> UINavigationBarAppearance) -> Self {
         self.standardAppearance = builder()
         return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byCompactAppearance(_ builder: () -> UINavigationBarAppearance?) -> Self {
         self.compactAppearance = builder()
         return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byScrollEdgeAppearance(_ builder: () -> UINavigationBarAppearance?) -> Self {
         self.scrollEdgeAppearance = builder()
         return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byCompactScrollEdgeAppearance(_ builder: () -> UINavigationBarAppearance?) -> Self {
@@ -189,7 +188,7 @@ extension UINavigationBar {
             self.compactScrollEdgeAppearance = builder()
         };return self
     }
-    
+
     @available(iOS 13.0, *)
     @discardableResult
     public func byUnifiedAppearance(_ builder: () -> UINavigationBarAppearance) -> Self {

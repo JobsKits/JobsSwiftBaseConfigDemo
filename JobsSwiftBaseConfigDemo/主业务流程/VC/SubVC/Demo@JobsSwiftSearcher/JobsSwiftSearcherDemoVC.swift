@@ -20,7 +20,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftSearcherDemoVC: BaseVC {
-
     private lazy var searchView: JobsSwiftSearcherView = {
         JobsSwiftSearcherView(config: demoSearchConfig())
             .byRecommendSearches(Self.recommendTexts)

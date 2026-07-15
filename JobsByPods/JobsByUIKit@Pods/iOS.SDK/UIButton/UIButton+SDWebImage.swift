@@ -53,31 +53,30 @@ extension UIButton {
 }
 
 extension UIButton {
-    
     @discardableResult
     private func _sd_setImageURL(_ url: URL?) -> Self {
         var c = _sd_config; c.url = url; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setPlaceholder(_ img: UIImage?) -> Self {
         var c = _sd_config; c.placeholder = img; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setBgPlaceholder(_ img: UIImage?) -> Self {
         var c = _sd_config; c.bgPlaceholder = img; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setOptions(_ opts: SDWebImageOptions) -> Self {
         var c = _sd_config; c.options = opts; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setContext(_ ctx: [SDWebImageContextOption: Any]?) -> Self {
         var c = _sd_config; c.context = ctx; _sd_config = c
@@ -88,19 +87,19 @@ extension UIButton {
         var c = _sd_config; c.progress = block; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setCompleted(_ block: SDExternalCompletionBlock?) -> Self {
         var c = _sd_config; c.completed = block; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setTargetSize(_ size: CGSize?) -> Self {
         var c = _sd_config; c.targetSize = size; _sd_config = c
         return self
     }
-    
+
     @discardableResult
     private func _sd_setBgTargetSize(_ size: CGSize?) -> Self {
         var c = _sd_config; c.bgTargetSize = size; _sd_config = c
@@ -109,12 +108,11 @@ extension UIButton {
 }
 
 extension UIButton {
-    
     @discardableResult
     public func sd_imageURL(_ url: URL?) -> Self {
         _sd_setImageURL(url)
     }
-    
+
     @discardableResult
     public func sd_imageURL(_ urlString: String?) -> Self {
         guard let s = urlString, let u = URL(string: s)
@@ -122,7 +120,7 @@ extension UIButton {
             return _sd_setImageURL(nil)
         };return _sd_setImageURL(u)
     }
-    
+
     @discardableResult
     public func sd_placeholderImage(_ img: UIImage?) -> Self {
         _sd_setPlaceholder(img)
@@ -132,22 +130,22 @@ extension UIButton {
     public func sd_placeholderBgImage(_ img: UIImage?) -> Self {
         _sd_setBgPlaceholder(img)
     }
-    
+
     @discardableResult
     public func sd_options(_ opts: SDWebImageOptions) -> Self {
         _sd_setOptions(opts)
     }
-    
+
     @discardableResult
     public func sd_context(_ ctx: [SDWebImageContextOption: Any]?) -> Self {
         _sd_setContext(ctx)
     }
-    
+
     @discardableResult
     public func sd_progress(_ block: SDImageLoaderProgressBlock?) -> Self {
         _sd_setProgress(block)
     }
-    
+
     @discardableResult
     public func sd_completed(_ block: SDExternalCompletionBlock?) -> Self {
         _sd_setCompleted(block)
@@ -168,81 +166,81 @@ extension UIButton {
         _sd_loadImage(for: .normal)
         return self
     }
-    
+
     @discardableResult
     public func sd_highlightedLoad() -> Self {
         _sd_loadImage(for: .highlighted)
         return self
     }
-    
+
     @discardableResult
     public func sd_disabledLoad() -> Self {
         _sd_loadImage(for: .disabled)
         return self
     }
-    
+
     @discardableResult
     public func sd_selectedLoad() -> Self {
         _sd_loadImage(for: .selected)
         return self
     }
-    
+
     @available(iOS 9.0, *)
     @discardableResult
     public func sd_focusedLoad() -> Self {
         _sd_loadImage(for: .focused)
         return self
     }
-    
+
     @discardableResult
     public func sd_applicationLoad() -> Self {
         _sd_loadImage(for: .application)
         return self
     }
-    
+
     @discardableResult
     public func sd_reservedLoad() -> Self {
         _sd_loadImage(for: .reserved)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgNormalLoad() -> Self {
         _sd_loadBackgroundImage(for: .normal)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgHighlightedLoad() -> Self {
         _sd_loadBackgroundImage(for: .highlighted)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgDisabledLoad() -> Self {
         _sd_loadBackgroundImage(for: .disabled)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgSelectedLoad() -> Self {
         _sd_loadBackgroundImage(for: .selected)
         return self
     }
-    
+
     @available(iOS 9.0, *)
     @discardableResult
     public func sd_bgFocusedLoad() -> Self {
         _sd_loadBackgroundImage(for: .focused)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgApplicationLoad() -> Self {
         _sd_loadBackgroundImage(for: .application)
         return self
     }
-    
+
     @discardableResult
     public func sd_bgReservedLoad() -> Self {
         _sd_loadBackgroundImage(for: .reserved)
@@ -375,7 +373,6 @@ extension UIButton {
             btn._jobs_forceSetBackgroundImage((cfg.bgPlaceholder ?? cfg.placeholder), for: state)
             btn._jobs_startBackgroundShimmer()
         }
-
         guard let url = cfg.url else {
             // URL 解析失败也视为失败：有兜底图则显示兜底并停 shimmer；否则继续 shimmer
             if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {
@@ -471,7 +468,6 @@ extension UIButton {
                 btn._jobs_forceSetBackgroundImage(ph, for: state)
             }
         }
-
         let url = effectiveURL!
         target.jobs_bgURL = url
         // ✅ 同步复制目标尺寸配置
@@ -492,7 +488,6 @@ extension UIButton {
         opts.insert(.highPriority)
         opts.insert(.scaleDownLargeImages)
         opts.insert(.avoidAutoSetImage)
-
         target._sd_setImageURL(url)
         target._sd_setPlaceholder(snapCfg.placeholder)
         target._sd_setBgPlaceholder(snapCfg.bgPlaceholder)
@@ -508,7 +503,6 @@ extension UIButton {
                               for state: UIControl.State = .normal) {
         guard let url = _sd_config.url else { return }
         target.jobs_imageLoaderKind = .sdwebimage
-
         target._sd_setImageURL(url)
         target._sd_setPlaceholder(self._sd_config.placeholder)
         target._sd_setOptions(self._sd_config.options)

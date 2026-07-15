@@ -56,7 +56,6 @@ final class JobsSwiftCommentDemoVC: BaseVC {
 }
 
 extension JobsSwiftCommentDemoVC: UITableViewDelegate, UITableViewDataSource {
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         modeArr.count
     }
@@ -87,7 +86,6 @@ extension JobsSwiftCommentDemoVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 private extension JobsSwiftCommentDemoVC {
-
     func showMode(_ mode: JobsSwiftCommentMode) {
         if mode == .toutiao {
             pushMode(mode)

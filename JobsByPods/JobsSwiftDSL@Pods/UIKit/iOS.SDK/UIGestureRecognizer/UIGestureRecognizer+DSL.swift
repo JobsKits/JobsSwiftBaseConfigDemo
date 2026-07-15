@@ -111,13 +111,12 @@ extension UIGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UITapGestureRecognizer
 extension UITapGestureRecognizer {
-    
     @discardableResult
     public func byTaps(_ count: Int) -> Self {
         numberOfTapsRequired = count
         return self
     }
-    
+
     @discardableResult
     public func byTouches(_ count: Int) -> Self {
         numberOfTouchesRequired = count
@@ -126,19 +125,18 @@ extension UITapGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UILongPressGestureRecognizer
 extension UILongPressGestureRecognizer {
-    
     @discardableResult
     public func byMinDuration(_ t: TimeInterval) -> Self {
         minimumPressDuration = t
         return self
     }
-    
+
     @discardableResult
     public func byMovement(_ v: CGFloat) -> Self {
         allowableMovement = v
         return self
     }
-    
+
     @discardableResult
     public func byTouches(_ n: Int) -> Self {
         numberOfTouchesRequired = n
@@ -147,13 +145,12 @@ extension UILongPressGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UIPanGestureRecognizer
 extension UIPanGestureRecognizer {
-    
     @discardableResult
     public func byMinTouches(_ n: Int) -> Self {
         minimumNumberOfTouches = n
         return self
     }
-    
+
     @discardableResult
     public func byMaxTouches(_ n: Int) -> Self {
         if maximumNumberOfTouches != Int.max {maximumNumberOfTouches = n;};return self
@@ -161,13 +158,12 @@ extension UIPanGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UISwipeGestureRecognizer
 extension UISwipeGestureRecognizer {
-    
     @discardableResult
     public func byDirection(_ d: UISwipeGestureRecognizer.Direction) -> Self {
         direction = d
         return self
     }
-    
+
     @discardableResult
     public func byTouches(_ n: Int) -> Self {
         numberOfTouchesRequired = n

@@ -24,7 +24,6 @@ extension String {
     fileprivate final class _JobsMailProxy: NSObject, @MainActor MFMailComposeViewControllerDelegate {
         static let shared = _JobsMailProxy()
         var completion: jobsByOpenResultBlock?
-
         @MainActor
         public func mailComposeController(_ controller: MFMailComposeViewController,
                                           didFinishWith result: MFMailComposeResult,
@@ -139,7 +138,6 @@ extension String {
             let host = presentFrom
                 ?? UIApplication.jobsKeyWindow()?.rootViewController
                 ?? UIViewController()
-
             _JobsMailProxy.shared.completion = completion
             host.present(vc, animated: true, completion: nil)
             return .opened

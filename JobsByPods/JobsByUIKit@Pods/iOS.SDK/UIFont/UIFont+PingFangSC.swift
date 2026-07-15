@@ -12,29 +12,23 @@ import UIKit
 #endif
 
 extension UIFont {
-    
     public enum PingFangSC {
         // MARK: - Public API
         public static func Ultralight(_ size: CGFloat) -> UIFont {
             make(.ultralight, size: size)
         }
-        
         public static func Thin(_ size: CGFloat) -> UIFont {
             make(.thin, size: size)
         }
-        
         public static func Light(_ size: CGFloat) -> UIFont {
             make(.light, size: size)
         }
-        
         public static func Regular(_ size: CGFloat) -> UIFont {
             make(.regular, size: size)
         }
-        
         public static func Medium(_ size: CGFloat) -> UIFont {
             make(.medium, size: size)
         }
-        
         public static func Semibold(_ size: CGFloat) -> UIFont {
             make(.semibold, size: size)
         }
@@ -57,7 +51,6 @@ extension UIFont {
                 }
             };var fontName: String { "PingFangSC-\(rawValue)" }
         }
-        
         private static func make(_ weight: PFWeight, size: CGFloat) -> UIFont {
             if let font = UIFont(name: weight.fontName, size: size) {
                 return font

@@ -34,12 +34,10 @@ extension UITextView {
         } else {
             obs.limit = limit
         }
-
         obs.onInput = { [weak self] char, value, mode, isLimited in
             guard let self else { return }
             callback(char, value, mode, isLimited, self.text ?? "", self)
         }
-
         if delegate !== obs {
             obs.originalTextViewDelegate = delegate
             delegate = obs

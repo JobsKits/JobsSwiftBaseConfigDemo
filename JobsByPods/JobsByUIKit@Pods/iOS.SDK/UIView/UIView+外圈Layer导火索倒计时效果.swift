@@ -168,7 +168,6 @@ extension UIView {
         CATransaction.commit()
         // 用 CABasicAnimation 按方向动 strokeStart / strokeEnd
         let animKey = "jobsFuseStroke"
-
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in
             guard let self else { return }
@@ -195,7 +194,6 @@ extension UIView {
             // 固定 end = 1，头往前推，视觉上顺时针烧
             anim = CABasicAnimation(keyPath: "strokeStart").byFromValue(0.0).byToValue(1.0)
         }
-
         anim.byDuration(duration)
             .byTimingFunction(CAMediaTimingFunction(name: .linear))
             .byFillMode(.forwards)

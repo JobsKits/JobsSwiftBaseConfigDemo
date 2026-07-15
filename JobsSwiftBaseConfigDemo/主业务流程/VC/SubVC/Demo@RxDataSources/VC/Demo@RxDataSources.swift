@@ -211,7 +211,6 @@ final class RxDataSourcesDemoVC: BaseVC {
                 make.height.equalTo(32)
             }
         }
-
         bindUI()
         bindData()
     }
@@ -220,7 +219,6 @@ final class RxDataSourcesDemoVC: BaseVC {
         // ✅ delegate 用 Rx 方式接管（避免你链式封装内部 setDelegate 时机不确定）
         tableView.rx.setDelegate(self).disposed(by: bag)
         collectionView.rx.setDelegate(self).disposed(by: bag)
-
         // seg 切换：外层用 byVisible(true/false) 唤醒
         seg.rx.selectedSegmentIndex
             .distinctUntilChanged()
@@ -232,7 +230,6 @@ final class RxDataSourcesDemoVC: BaseVC {
                 self.collectionView.byVisible(!showTable)
             })
             .disposed(by: bag)
-
         // 点击事件（table/collection 都演示）
         tableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
@@ -240,7 +237,6 @@ final class RxDataSourcesDemoVC: BaseVC {
                 print("✅ table didSelect: \(indexPath)")
             })
             .disposed(by: bag)
-
         collectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 self?.collectionView.deselectItem(at: indexPath, animated: true)
@@ -254,7 +250,6 @@ final class RxDataSourcesDemoVC: BaseVC {
             .asObservable()
             .bind(to: tableView.rx.items(dataSource: tableDataSource))
             .disposed(by: bag)
-
         collectionRelay
             .asObservable()
             .bind(to: collectionView.rx.items(dataSource: collectionDataSource))
@@ -269,7 +264,6 @@ final class RxDataSourcesDemoVC: BaseVC {
             TVSection(model: "Section B", items: Array(items.suffix(max(0, count - count / 2))))
         ]
         tableRelay.accept(sections)
-
         // ⚠️ 空态/刷新状态依赖 reload 的话就补这一句
         tableView.byReloadData()
     }
@@ -280,7 +274,6 @@ final class RxDataSourcesDemoVC: BaseVC {
             CVSection(model: "Grid", items: items)
         ]
         collectionRelay.accept(sections)
-
         // ⚠️ 同理
         collectionView.byReloadData()
     }

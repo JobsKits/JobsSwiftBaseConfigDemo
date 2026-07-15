@@ -24,44 +24,43 @@ private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
 // MARK: - 直接赋值@单参数
 extension UIButton {
-    
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfiguration(_ cfg: UIButton.Configuration?) -> Self {
         self.configuration = cfg
         return self
     }
-    
+
     @discardableResult
     public func bySemanticContentAttribute(_ attribute: UISemanticContentAttribute) -> Self {
         self.semanticContentAttribute = attribute
         return self
     }
-    
+
     @discardableResult
     public func byAdjustsImageWhenHighlighted(_ on: Bool?) -> Self {
         self.adjustsImageWhenHighlighted = on ?? false
         return self
     }
-    
+
     @discardableResult
     public func byShowsTouchWhenHighlighted(_ on: Bool?) -> Self {
         self.showsTouchWhenHighlighted = on ?? false
         return self
     }
-    
+
     @discardableResult
     public func byNumberOfLines(_ lines: Int) -> Self {
         self.titleLabel?.numberOfLines = lines
         return self
     }
-    
+
     @discardableResult
     public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self {
         self.titleLabel?.lineBreakMode = mode
         return self
     }
-    
+
     @discardableResult
     public func byTitleAlignment(_ alignment: NSTextAlignment) -> Self {
         self.titleLabel?.textAlignment = alignment
@@ -79,7 +78,7 @@ extension UIButton {
         self.titleLabel?.minimumScaleFactor = factor
         return self
     }
-    
+
     @discardableResult
     public func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
@@ -94,7 +93,7 @@ extension UIButton {
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
         };return self
     }
-    
+
     @discardableResult
     public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
         let inset = insets ?? .zero
@@ -111,7 +110,7 @@ extension UIButton {
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
         };return self
     }
-    
+
     @discardableResult
     public func byImageEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
@@ -121,7 +120,7 @@ extension UIButton {
             self.imageEdgeInsets = insets
         };return self
     }
-    
+
     @discardableResult
     public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
@@ -137,74 +136,74 @@ extension UIButton {
             self.titleEdgeInsets = insets
         };return self
     }
-    
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byMenu(_ menu: UIMenu?) -> Self {
         self.menu = menu
         return self
     }
-    
+
     @available(iOS 13.4, *)
     @discardableResult
     public func byPointerInteractionEnabled(_ on: Bool) -> Self {
         self.isPointerInteractionEnabled = on
         return self
     }
-    
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byRole(_ role: UIButton.Role) -> Self {
         self.role = role
         return self
     }
-    
+
     @available(iOS 16.0, *)
     @discardableResult
     public func byPreferredMenuElementOrder(_ order: UIContextMenuConfiguration.ElementOrder) -> Self {
         self.preferredMenuElementOrder = order
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byChangesSelectionAsPrimaryAction(_ on: Bool) -> Self {
         self.changesSelectionAsPrimaryAction = on
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byAutomaticallyUpdatesConfiguration(_ on: Bool) -> Self {
         self.automaticallyUpdatesConfiguration = on
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfigurationUpdateHandler(_ handler: @escaping UIButton.ConfigurationUpdateHandler) -> Self {
         self.configurationUpdateHandler = handler
         return self
     }
-    
+
     @discardableResult
     public func byImageViewContentMode(_ mode: UIView.ContentMode) -> Self {
         self.imageView?.contentMode = mode
         return self
     }
-    
+
     @discardableResult
     public func byImageViewBackgroundColor(_ color: UIColor?) -> Self {
         self.imageView?.backgroundColor = color
         return self
     }
-    
+
     @discardableResult
     public func byImageViewCornerRadius(_ radius: CGFloat) -> Self {
         self.imageView?.layer.cornerRadius = radius
         return self
     }
-    
+
     @discardableResult
     public func byImageViewMasksToBounds(_ on: Bool) -> Self {
         self.imageView?.layer.masksToBounds = on
@@ -213,44 +212,43 @@ extension UIButton {
 }
 // MARK: - 闭包重载@单参数
 extension UIButton {
-    
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfiguration(_ builder: () -> UIButton.Configuration?) -> Self {
         self.configuration = builder()
         return self
     }
-    
+
     @discardableResult
     public func bySemanticContentAttribute(_ builder: () -> UISemanticContentAttribute) -> Self {
         self.semanticContentAttribute = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAdjustsImageWhenHighlighted(_ builder: () -> Bool?) -> Self {
         self.adjustsImageWhenHighlighted = builder() ?? false
         return self
     }
-    
+
     @discardableResult
     public func byShowsTouchWhenHighlighted(_ builder: () -> Bool?) -> Self {
         self.showsTouchWhenHighlighted = builder() ?? false
         return self
     }
-    
+
     @discardableResult
     public func byNumberOfLines(_ builder: () -> Int) -> Self {
         self.titleLabel?.numberOfLines = builder()
         return self
     }
-    
+
     @discardableResult
     public func byLineBreakMode(_ builder: () -> NSLineBreakMode) -> Self {
         self.titleLabel?.lineBreakMode = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTitleAlignment(_ builder: () -> NSTextAlignment) -> Self {
         self.titleLabel?.textAlignment = builder()
@@ -268,7 +266,7 @@ extension UIButton {
         self.titleLabel?.minimumScaleFactor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byContentInsets(_ builder: () -> NSDirectionalEdgeInsets) -> Self {
         let insets = builder()
@@ -284,7 +282,7 @@ extension UIButton {
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
         };return self
     }
-    
+
     @discardableResult
     public func byContentEdgeInsets(_ builder: () -> UIEdgeInsets?) -> Self {
         let inset = builder() ?? .zero
@@ -301,7 +299,7 @@ extension UIButton {
             _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
         };return self
     }
-    
+
     @discardableResult
     public func byImageEdgeInsets(_ builder: () -> UIEdgeInsets) -> Self {
         let insets = builder()
@@ -312,7 +310,7 @@ extension UIButton {
             self.imageEdgeInsets = insets
         };return self
     }
-    
+
     @discardableResult
     public func byTitleEdgeInsets(_ builder: () -> UIEdgeInsets) -> Self {
         let insets = builder()
@@ -329,74 +327,74 @@ extension UIButton {
             self.titleEdgeInsets = insets
         };return self
     }
-    
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byMenu(_ builder: () -> UIMenu?) -> Self {
         self.menu = builder()
         return self
     }
-    
+
     @available(iOS 13.4, *)
     @discardableResult
     public func byPointerInteractionEnabled(_ builder: () -> Bool) -> Self {
         self.isPointerInteractionEnabled = builder()
         return self
     }
-    
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byRole(_ builder: () -> UIButton.Role) -> Self {
         self.role = builder()
         return self
     }
-    
+
     @available(iOS 16.0, *)
     @discardableResult
     public func byPreferredMenuElementOrder(_ builder: () -> UIContextMenuConfiguration.ElementOrder) -> Self {
         self.preferredMenuElementOrder = builder()
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byChangesSelectionAsPrimaryAction(_ builder: () -> Bool) -> Self {
         self.changesSelectionAsPrimaryAction = builder()
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byAutomaticallyUpdatesConfiguration(_ builder: () -> Bool) -> Self {
         self.automaticallyUpdatesConfiguration = builder()
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfigurationUpdateHandler(_ builder: () -> UIButton.ConfigurationUpdateHandler) -> Self {
         self.configurationUpdateHandler = builder()
         return self
     }
-    
+
     @discardableResult
     public func byImageViewContentMode(_ builder: () -> UIView.ContentMode) -> Self {
         self.imageView?.contentMode = builder()
         return self
     }
-    
+
     @discardableResult
     public func byImageViewBackgroundColor(_ builder: () -> UIColor?) -> Self {
         self.imageView?.backgroundColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byImageViewCornerRadius(_ builder: () -> CGFloat) -> Self {
         self.imageView?.layer.cornerRadius = builder()
         return self
     }
-    
+
     @discardableResult
     public func byImageViewMasksToBounds(_ builder: () -> Bool) -> Self {
         self.imageView?.layer.masksToBounds = builder()
@@ -418,14 +416,14 @@ extension UIButton {
             .byMasksToBounds(masksToBounds)
         return self
     }
-    
+
     @available(iOS 15.0, *)
     @discardableResult
     public func bySetNeedsUpdateConfiguration() -> Self {
         self.setNeedsUpdateConfiguration();
         return self
     }
-    
+
     @available(iOS 15.0, *)
     public func byToNS(_ a: AttributedString) -> NSAttributedString {
         NSAttributedString(a)
@@ -435,7 +433,7 @@ extension UIButton {
     public func byToSwift(_ a: NSAttributedString) -> AttributedString {
         AttributedString(a)
     }
-    
+
     @discardableResult
     public func byClearConfigurationBackground() -> Self {
         if #available(iOS 15.0, *) {
@@ -446,7 +444,7 @@ extension UIButton {
             }
         };return self
     }
-    
+
     @discardableResult
     public func byNormalBgColor(_ color: UIColor) -> Self {
         byBackgroundColor(color, for: .normal)
@@ -542,7 +540,7 @@ extension UIButton {
             }
         };return self
     }
-    
+
     @discardableResult
     public func byImagePlacementLegacy(_ placement: JobsDirection,
                                        padding: CGFloat) -> Self {
@@ -620,7 +618,6 @@ extension UIButton {
                                            left: (ttl.w) / 2,
                                            bottom: -(ttl.h + padding) / 2,
                                            right: -(ttl.w) / 2)
-
             titleEdgeInsets = UIEdgeInsets(top: -(img.h + padding) / 2,
                                            left: -(img.w) / 2,
                                            bottom: (img.h + padding) / 2,
@@ -663,7 +660,7 @@ extension UIButton {
         case left = 3
         case right = 4
     }
-        
+
     private var _jobsLegacyImagePlacement: _JobsLegacyImagePlacement {
         get {
             let v = (objc_getAssociatedObject(self, &_jobsLegacyImagePlacementKey) as? Int) ?? 0
@@ -711,7 +708,7 @@ extension UIButton {
             return
         }
     }
-    
+
     @discardableResult
     public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
         // ✅ 不管什么系统版本，先把 legacy title 写进去，给 handler 同步用
@@ -731,7 +728,7 @@ extension UIButton {
             byUpdateConfig()
         };return self
     }
-    
+
     @discardableResult
     public func byAttributedTitle(_ text: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
         self.setAttributedTitle(text, for: state)
@@ -750,7 +747,6 @@ extension UIButton {
         if #available(iOS 15.0, tvOS 15.0, *) {
             // 这句不是必须，但加上更稳：有些场景 titleLabel 仍然参与计算/展示
             self.titleLabel?.font = font
-
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
             return self
@@ -766,7 +762,6 @@ extension UIButton {
             // 优先取该状态的 title，取不到回退 normal
             let t = self.title(for: st) ?? self.title(for: .normal) ?? ""
             if t.isEmpty { continue }
-
             var attrs: [NSAttributedString.Key: Any] = [
                 .font: font ?? JobsFont.systemFont(ofSize: 15)
             ]
@@ -793,7 +788,6 @@ extension UIButton {
             } else {
                 _titleColorDict.removeValue(forKey: state.rawValue)
             }
-
             // 如果当前按钮“正处于”该 state，则立刻同步 baseForegroundColor，避免看起来丢字
             // （其它 state 仍由 configurationUpdateHandler 统一兜底）
             let stateIsActive: Bool = {
@@ -810,7 +804,6 @@ extension UIButton {
                 cfg.baseForegroundColor = color
                 self.configuration = cfg
             }
-
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
         } else {
@@ -829,7 +822,7 @@ extension UIButton {
             _applyLegacyComposite(for: .normal)
         };return self
     }
-    
+
     @discardableResult
     public func byTitleShadowColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
         self.setTitleShadowColor(color, for: state)
@@ -845,7 +838,7 @@ extension UIButton {
             byUpdateConfig()
         };return self
     }
-    
+
     @discardableResult
     public func byBgImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
         self.setBackgroundImage(image, for: state)
@@ -1001,58 +994,48 @@ extension UIButton {
 }
 // MARK: - 进阶：按 state 的链式代理
 extension UIButton {
-    
     public func `for`(_ state: UIControl.State) -> StateProxy {
         StateProxy(button: self, state: state)
     }
-    
+
     public final class StateProxy {
-        
         fileprivate let button: UIButton
         let state: UIControl.State
-
         init(button: UIButton, state: UIControl.State) {
             self.button = button
             self.state = state
         }
-
         @discardableResult
         public func title(_ text: String?) -> UIButton {
             button.setTitle(text, for: state)
             return button
         }
-        
         @discardableResult
         public func attributedTitle(_ text: NSAttributedString?) -> UIButton {
             button.setAttributedTitle(text, for: state)
             return button
         }
-        
         @discardableResult
         public func titleColor(_ color: UIColor?) -> UIButton {
             button.setTitleColor(color, for: state)
             return button
         }
-        
         @discardableResult
         public func titleShadowColor(_ color: UIColor?) -> UIButton {
             button.setTitleShadowColor(color, for: state)
             return button
         }
-        
         @discardableResult
         public func image(_ image: UIImage?) -> UIButton {
             button.setImage(image, for: state)
             return button
         }
-
         @available(iOS 13.0, *)
         @discardableResult
         public func preferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?) -> UIButton {
             button.setPreferredSymbolConfiguration(configuration, forImageIn: state)
             return button
         }
-
         @discardableResult
         public func backgroundColor(_ color: UIColor) -> UIButton {
             if #available(iOS 15.0, *), state == .normal {
@@ -1064,13 +1047,11 @@ extension UIButton {
                 button.setBackgroundColor(color, forState: state)
             };return button
         }
-
         @discardableResult
         public func backgroundImage(_ image: UIImage?) -> UIButton {
             button.setBackgroundImage(image, for: state)
             return button
         }
-
         @discardableResult
         public func subTitle(_ text: String?) -> UIButton {
             button.bySubTitle(text, for: state)
@@ -1080,12 +1061,10 @@ extension UIButton {
         public func attributedSubTitle(_ text: NSAttributedString?) -> UIButton {
             button.byAttributedSubTitle(text, for: state)
         }
-
         @discardableResult
         public func subTitleFont(_ font: UIFont) -> UIButton {
             button.bySubTitleFont(font, for: state)
         }
-        
         @discardableResult
         public func subTitleColor(_ color: UIColor) -> UIButton {
             button.bySubTitleColor(color, for: state)

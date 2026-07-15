@@ -183,7 +183,6 @@ extension UILabel {
 }
 // MARK: - Internal Tick / Stop
 extension UILabel {
-
     private func _jobsStopAnimatedNumberTimer() {
         let s = _jobsAnimatedNumberStore
         s.timer?.stop()
@@ -193,14 +192,11 @@ extension UILabel {
     private func _jobsTickAnimatedNumber() {
         let s = _jobsAnimatedNumberStore
         guard s.timer != nil else { return }
-
         let target = s.targetValue
         var cur = s.currentValue
         let step = s.deltaPerTick
-
         cur += step
         s.currentValue = cur
-
         // 到达判定（避免浮点误差）
         let reached: Bool
         if step > 0 {
@@ -208,7 +204,6 @@ extension UILabel {
         } else {
             reached = cur <= target
         }
-
         if reached {
             // 结束：落到原始文本（保持用户传入的格式）
             self.byText(s.originalText)

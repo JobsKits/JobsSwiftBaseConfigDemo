@@ -141,7 +141,6 @@ extension UIButton {
 }
 // MARK: - Internals
 extension UIButton {
-
     fileprivate func _jobsStartAnimIfNeeded() -> Self {
         // ✅ 倒计时过程中禁止重入
         if let r1 = objc_getAssociatedObject(self, &_jobsAnimTitleRunnerKey) as? JobsButtonNumberAnimRunner,
@@ -283,19 +282,15 @@ extension UIButton {
             NSNumber(value: now),
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         if let tick0 = objc_getAssociatedObject(self, &_jobsAnimTickVoidKey) as? (() -> Void) {
             tick0()
         }
-
         let t = objc_getAssociatedObject(self, &_jobsAnimLatestTitleKey) as? String
         let s = objc_getAssociatedObject(self, &_jobsAnimLatestSubTitleKey) as? String
         let sec = (objc_getAssociatedObject(self, &_jobsAnimLatestSecondsKey) as? NSNumber)?.doubleValue ?? 0
-
         if let tick1 = objc_getAssociatedObject(self, &_jobsAnimTickValueKey) as? ((String?, String?) -> Void) {
             tick1(t, s)
         }
-
         if let tick2 = objc_getAssociatedObject(self, &_jobsAnimTickModelKey) as? ((JobsButtonNumberAnimTickModel) -> Void) {
             tick2(JobsButtonNumberAnimTickModel(title: t, subTitle: s, seconds: sec))
         }
@@ -304,11 +299,9 @@ extension UIButton {
     fileprivate func _jobsTryFireEndIfAllFinished() {
         let titleRunner = objc_getAssociatedObject(self, &_jobsAnimTitleRunnerKey) as? JobsButtonNumberAnimRunner
         let subRunner = objc_getAssociatedObject(self, &_jobsAnimSubTitleRunnerKey) as? JobsButtonNumberAnimRunner
-
         let titleDone = (titleRunner == nil) || (titleRunner?.isFinished == true)
         let subDone = (subRunner == nil) || (subRunner?.isFinished == true)
         guard titleDone, subDone else { return }
-
         objc_setAssociatedObject(
             self,
             &_jobsAnimTitleRunnerKey,
@@ -321,7 +314,6 @@ extension UIButton {
             nil,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         if let end = objc_getAssociatedObject(self, &_jobsAnimEndKey) as? (() -> Void) {
             end()
         }
@@ -329,7 +321,6 @@ extension UIButton {
 }
 // MARK: - Config
 public enum JobsButtonNumberAnimConfig {
-
     public enum Grouping: Int { case international3 = 3; case china4 = 4 }
     /// ✅ 整体富文本 Builder
     /// - text: 例如 "1,234.56"
@@ -354,11 +345,9 @@ public enum JobsButtonNumberAnimConfig {
         public var endValue: String?
         public var fallbackEndValue: String?
         public var decimalsCfg: DecimalsSnapshot = .init()
-
         public var titleFont: UIFont?
         public var titleColorNormal: UIColor?
         public var titleColorDisabled: UIColor?
-
         public var subTitleFont: UIFont?
         public var subTitleColorNormal: UIColor?
         public var subTitleColorSelected: UIColor?
@@ -368,43 +357,35 @@ public enum JobsButtonNumberAnimConfig {
     }
 
     public final class Title {
-        
         fileprivate weak var button: UIButton?
         fileprivate let snapshot = Snapshot()
         fileprivate init(button: UIButton) { self.button = button }
-
         @discardableResult public func byDuration(_ v: TimeInterval) -> Self {
             snapshot.duration = max(0, v)
             return self
         }
-        
         @discardableResult public func byFps(_ v: Int) -> Self {
             snapshot.fps = max(1, v)
             return self
         }
-        
         @discardableResult public func byStartValue(_ v: String?) -> Self {
             snapshot.startValue = v
             return self
         }
-        
         @discardableResult public func byEndValue(_ v: String?) -> Self {
             snapshot.endValue = v
             return self
         }
-        
         @discardableResult public func byFallbackEndValue(_ v: String?) -> Self {
             snapshot.fallbackEndValue = v
             return self
         }
-
         @discardableResult
         public func byTitleFont(_ font: UIFont?) -> Self {
             snapshot.titleFont = font
             button?.byTitleFont(font)
             return self
         }
-
         @discardableResult
         public func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
             if state == .normal { snapshot.titleColorNormal = color }
@@ -412,27 +393,22 @@ public enum JobsButtonNumberAnimConfig {
             button?.byTitleColor(color, for: state)
             return self
         }
-
         @discardableResult public func byShowsDecimals(_ v: Bool) -> Self {
             snapshot.decimalsCfg.showsDecimals = v
             return self
         }
-        
         @discardableResult public func bySeparate(_ v: String?) -> Self {
             snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!
             return self
         }
-        
         @discardableResult public func byGrouping(_ v: Grouping) -> Self {
             snapshot.decimalsCfg.grouping = v
             return self
         }
-        
         @discardableResult public func byDecimals(_ v: Int) -> Self {
             snapshot.decimalsCfg.decimals = max(0, v)
             return self
         }
-        
         @discardableResult public func byTitleDecimalsCor(_ v: UIColor?) -> Self {
             snapshot.decimalsCfg.decimalsColor = v
             return self
@@ -450,43 +426,35 @@ public enum JobsButtonNumberAnimConfig {
     }
 
     public final class SubTitle {
-        
         fileprivate weak var button: UIButton?
         fileprivate let snapshot = Snapshot()
         fileprivate init(button: UIButton) { self.button = button }
-
         @discardableResult public func byDuration(_ v: TimeInterval) -> Self {
             snapshot.duration = max(0, v)
             return self
         }
-        
         @discardableResult public func byFps(_ v: Int) -> Self {
             snapshot.fps = max(1, v)
             return self
         }
-        
         @discardableResult public func byStartValue(_ v: String?) -> Self {
             snapshot.startValue = v
             return self
         }
-        
         @discardableResult public func byEndValue(_ v: String?) -> Self {
             snapshot.endValue = v
             return self
         }
-        
         @discardableResult public func byFallbackEndValue(_ v: String?) -> Self {
             snapshot.fallbackEndValue = v
             return self
         }
-
         @discardableResult
         public func bySubTitleFont(_ font: UIFont?) -> Self {
             snapshot.subTitleFont = font
             button?.bySubTitleFont(font)
             return self
         }
-
         @discardableResult
         public func bySubTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
             if state == .normal { snapshot.subTitleColorNormal = color }
@@ -494,37 +462,31 @@ public enum JobsButtonNumberAnimConfig {
             button?.bySubTitleColor(color, for: state)
             return self
         }
-
         @discardableResult
         public func byShowsDecimals(_ v: Bool) -> Self {
             snapshot.decimalsCfg.showsDecimals = v
             return self
         }
-        
         @discardableResult
         public func bySeparate(_ v: String?) -> Self {
             snapshot.decimalsCfg.separator = (v ?? "").isEmpty ? "," : v!
             return self
         }
-        
         @discardableResult
         public func byGrouping(_ v: Grouping) -> Self {
             snapshot.decimalsCfg.grouping = v
             return self
         }
-        
         @discardableResult
         public func byDecimals(_ v: Int) -> Self {
             snapshot.decimalsCfg.decimals = max(0, v)
             return self
         }
-        
         @discardableResult
         public func bySubTitleDecimalsCor(_ v: UIColor?) -> Self {
             snapshot.decimalsCfg.decimalsColor = v
             return self
         }
-        
         @discardableResult
         public func bySubTitleDecimalsFont(_ v: UIFont?) -> Self {
             snapshot.decimalsCfg.decimalsFont = v
@@ -540,7 +502,6 @@ public enum JobsButtonNumberAnimConfig {
 }
 // MARK: - Runner
 private final class JobsButtonNumberAnimRunner: NSObject {
-
     enum Kind { case title, subTitle }
 
     private weak var button: UIButton?
@@ -573,23 +534,18 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     func start() {
-        
         guard let button else { finish(); return }
         resolveValuesIfNeeded(button: button)
-        
         let now = CACurrentMediaTime()
         startTime = now
-
         let text = applyNumber(button: button, value: fromValue)
         onTick(now, 0.0, kind, text)
-
         guard snapshot.duration > 0 else {
             let endText = applyNumber(button: button, value: toValue)
             onTick(CACurrentMediaTime(), 0.0, kind, endText)
             finish()
             return
         }
-
         lastGateTime = 0
         timer = JobsTimer(kind: .displayLink,
                           config: JobsSwiftTimerConfig(
@@ -615,23 +571,18 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     }
 
     private func tick() {
-        
         guard let button else { finish(); return }
         if isFinished { return }
-
         let now = CACurrentMediaTime()
         let gateInterval = 1.0 / Double(max(1, snapshot.fps))
         if lastGateTime == 0 { lastGateTime = now }
         if now - lastGateTime < gateInterval { return }
         lastGateTime = now
-
         let elapsed = now - startTime
         let p = min(1.0, max(0.0, elapsed / snapshot.duration))
-
         let v = fromValue + (toValue - fromValue) * p
         let text = applyNumber(button: button, value: v)
         onTick(now, elapsed, kind, text)
-
         if p >= 1.0 { finish() }
     }
 
@@ -649,16 +600,13 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
             return t.isEmpty ? nil : t
         }
-
         let rawStart: String = nonEmpty(snapshot.startValue)
         ?? nonEmpty(currentText(button: button))
         ?? "0"
-
         let rawEnd: String = nonEmpty(snapshot.endValue)
         ?? nonEmpty(currentText(button: button))
         ?? nonEmpty(snapshot.fallbackEndValue)
         ?? rawStart
-
         let sep = snapshot.decimalsCfg.separator.isEmpty ? "," : snapshot.decimalsCfg.separator
         fromValue = Self.parseDouble(rawStart, separator: sep) ?? 0
         toValue   = Self.parseDouble(rawEnd,   separator: sep) ?? fromValue
@@ -691,7 +639,6 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     /// ✅ 写入统一走 DSL（plain），富文本：支持 Builder；未配置 Builder 时继续支持“小数 range 样式”
     @discardableResult
     private func applyNumber(button: UIButton, value: Double) -> String {
-
         let ds = snapshot.decimalsCfg
         let formatted = JobsNumberFormatter.format(
             value: value,
@@ -707,7 +654,6 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             button.byTitle(formatted.text, for: .selected)
             button.byTitle(formatted.text, for: .highlighted)
             button.byTitle(formatted.text, for: .disabled)
-
         case .subTitle:
             button.bySubTitle(formatted.text, for: .normal)
             button.bySubTitle(formatted.text, for: .selected)
@@ -728,9 +674,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
            ds.decimals > 0,
            (ds.decimalsFont != nil || ds.decimalsColor != nil),
            let decRange = formatted.decimalsRange {
-
             let attr = NSMutableAttributedString(string: formatted.text)
-
             let baseFont: UIFont
             let baseColor: UIColor
             switch kind {
@@ -748,7 +692,6 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             attr.addAttribute(.foregroundColor,
                               value: baseColor,
                               range: NSRange(location: 0, length: attr.length))
-
             if let f = ds.decimalsFont { attr.addAttribute(.font,
                                                            value: f,
                                                            range: decRange) }
@@ -779,7 +722,6 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             button.byAttributedTitle(attributed, for: .selected)
             button.byAttributedTitle(attributed, for: .highlighted)
             button.byAttributedTitle(attributed, for: .disabled)
-
             if #available(iOS 15.0, *) {
                 if var cfg = button.configuration {
                     cfg.title = plain
@@ -814,7 +756,6 @@ private final class JobsButtonNumberAnimRunner: NSObject {
 }
 // MARK: - Formatter
 private enum JobsNumberFormatter {
-
     struct Result {
         let text: String
         let decimalsRange: NSRange?
@@ -825,25 +766,19 @@ private enum JobsNumberFormatter {
                        decimals: Int,
                        separator: String,
                        groupingSize: Int) -> Result {
-
         let sep = separator.isEmpty ? "," : separator
         let g = max(1, groupingSize)
-
         let fixedDecimals = max(0, decimals)
         let rounded = roundToDecimals(value, fixedDecimals)
-
         let isNeg = rounded < 0
         let absV = abs(rounded)
-
         if showsDecimals && fixedDecimals > 0 {
             let base = toFixedString(absV, fixedDecimals)
             let parts = base.split(separator: ".", omittingEmptySubsequences: false)
             let intPart = String(parts.first ?? "0")
             let decPart = String(parts.count > 1 ? parts[1] : "")
-
             let groupedInt = groupDigits(intPart, groupSize: g, separator: sep)
             let full = (isNeg ? "-" : "") + groupedInt + "." + decPart
-
             let dotIndex = (isNeg ? 1 : 0) + groupedInt.count
             let start = dotIndex + 1
             let ns = NSRange(location: start, length: decPart.count)
@@ -871,10 +806,8 @@ private enum JobsNumberFormatter {
                                     separator: String) -> String {
         let chars = Array(digits)
         if chars.count <= groupSize { return digits }
-
         var out: [Character] = []
         out.reserveCapacity(chars.count + chars.count / groupSize)
-
         var countFromRight = 0
         for ch in chars.reversed() {
             if countFromRight > 0, countFromRight % groupSize == 0 {

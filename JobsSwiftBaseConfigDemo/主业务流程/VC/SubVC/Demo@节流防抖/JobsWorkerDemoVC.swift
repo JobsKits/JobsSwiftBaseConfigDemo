@@ -23,7 +23,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 public final class JobsWorkerDemoVC: BaseVC {
-
     private let workerBag = JobsWorkerBag()
     private let count = JobsObservable<Int>(0, name: "count")
     private let keyword = JobsObservable<String>("", name: "keyword")
@@ -336,7 +335,6 @@ public final class JobsWorkerDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsSwiftWorker Demo".tr)
         view.byBackgroundColor(JobsCor.systemBackground)
-
         setupUI()
         setupStaticTexts()
         bindWorkers()
@@ -350,7 +348,6 @@ public final class JobsWorkerDemoVC: BaseVC {
 }
 
 private extension JobsWorkerDemoVC {
-
     func setupUI() {
         scrollView.byVisible(YES)
         contentView.byVisible(YES)
@@ -390,7 +387,6 @@ private extension JobsWorkerDemoVC {
         结论不是看按钮名字，而是看最下面的“实时日志”。
         """
         )
-
         capabilityTextView.byText(
         """
         ever：每次变化都响应
@@ -416,7 +412,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         count
             .once(label: "count.once") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -424,7 +419,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         count
             .interval(1.seconds, label: "count.interval") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -432,7 +426,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         keyword
             .debounce(600.milliseconds, label: "keyword.debounce") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -440,7 +433,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         [count as JobsAnyValueListenable, keyword as JobsAnyValueListenable]
             .everAll(label: "all.everAll") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -448,7 +440,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         count
             .skip(2, label: "count.skip") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -456,7 +447,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         count
             .take(3, label: "count.take") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -464,7 +454,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         keywordDistinct
             .ever(label: "keyword.distinct") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -472,7 +461,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         workerState
             .ever(label: "state.combineLatest") { [weak self] change in
                 onMainAsync(self) { owner in
@@ -480,7 +468,6 @@ private extension JobsWorkerDemoVC {
                 }
             }
             .store(in: workerBag)
-
         JobsWorkerBinder.bindText(
             workerState.map(
                 {
@@ -491,7 +478,6 @@ private extension JobsWorkerDemoVC {
             to: summaryLabel,
             storeIn: workerBag
         )
-
         JobsWorkerBinder.bindTextField(inputViewField, to: keyword)
             .store(in: workerBag)
     }
@@ -543,7 +529,6 @@ private extension JobsWorkerDemoVC {
 
     @objc func didTapBurst() {
         appendLog("开始执行：连续触发 5 次 count 递增")
-
         (1...5).forEach { index in
             JobsWorkerScheduler.default.schedule(after: JobsPeriod(Double(index) * 0.12)) { [weak self] in
                 guard let self else { return }
@@ -558,7 +543,6 @@ private extension JobsWorkerDemoVC {
 
     @objc func didTapReplayKeyword() {
         appendLog("开始执行：回放输入序列 a -> ab -> abc -> abc -> abcd -> abcd")
-
         ["a", "ab", "abc", "abc", "abcd", "abcd"].enumerated().forEach { element in
             let text = element.element
             JobsWorkerScheduler.default.schedule(after: JobsPeriod(Double(element.offset) * 0.15)) { [weak self] in

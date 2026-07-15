@@ -87,7 +87,6 @@ extension UIButton {
         if #available(iOS 14.0, *) {
             let installed = (objc_getAssociatedObject(self, &JobsUIButtonAssociatedKeys.tapActionInstalled) as? Bool) ?? false
             if installed { return }
-
             let action = UIAction { [weak self] _ in
                 self?.jobs_invokeTapBlocks()
             }
@@ -100,7 +99,6 @@ extension UIButton {
             )
         } else {
             if objc_getAssociatedObject(self, &JobsUIButtonAssociatedKeys.tapSleeve) != nil { return }
-
             let sleeve = _JobsButtonTapSleeve(button: self)
             addTarget(
                 sleeve,
@@ -123,10 +121,8 @@ extension UIButton {
             existing.minimumPressDuration = minimumPressDuration
             return self
         }
-
         let gr = UILongPressGestureRecognizer(target: nil, action: nil)
         gr.minimumPressDuration = minimumPressDuration
-
         let sleeve = _JobsButtonLongPressSleeve(button: self)
         gr.addTarget(
             sleeve,
@@ -139,7 +135,6 @@ extension UIButton {
             sleeve,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-
         addGestureRecognizer(gr)
         isUserInteractionEnabled = true
         return self

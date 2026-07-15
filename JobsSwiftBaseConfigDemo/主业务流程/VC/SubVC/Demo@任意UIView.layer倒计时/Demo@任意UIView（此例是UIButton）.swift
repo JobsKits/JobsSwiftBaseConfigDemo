@@ -74,15 +74,12 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 switch self.timerState {
                 case .idle, .stopped:
                     self.startCountdown(on: btn, total: self.defaultTotalSeconds)
-
                 case .running:
                     self.pauseCountdown()
                     let remain = self.remainingSeconds > 0 ? self.remainingSeconds : self.defaultTotalSeconds
                     self.hintLabel.byText("已暂停，点击继续（还剩 %lds）".tr(remain))
-
                     // 这里看需求：目前导火索是独立连贯动画，不跟随暂停
                     // 如果要同步暂停，就需要给 UIView+JobsCountdownFuse 再加 pause/resume API
-
                 case .paused:
                     self.resumeCountdown()
                     self.hintLabel.byText("倒计时进行中，点击可以暂停".tr)
@@ -132,7 +129,6 @@ final class JobsCountdownLayerDemoVC: BaseVC {
         onMainAsync(self) { vc in
             // 先停旧
             self.stopCountdown()
-
             self.totalSeconds = max(1, total)
             self.remainingSeconds = self.totalSeconds
             self.timerState = .running
@@ -147,19 +143,14 @@ final class JobsCountdownLayerDemoVC: BaseVC {
                 guard let btn else { return }
                 onMainAsync(self) { vc in
                     guard self.timerState == .running else { return }
-
                     self.remainingSeconds -= 1
                     let remain = max(0, self.remainingSeconds)
-
                     print("⏱️ [\(kind)] remain=\(remain)s / total=\(self.totalSeconds)s")
                     btn.byTitle("\(remain)s", for: .normal)
-
                     if remain <= 0 {
                         print("✅ [\(kind)] 倒计时完成")
-
                         // stop timer
                         self.stopCountdown()
-
                         // 覆盖默认文案：完成后提示重新开始
                         btn.byTitle("重新开始".tr, for: .normal)
                         self.hintLabel.byText("倒计时完成，点击可重新开始 %lds".tr(self.defaultTotalSeconds))
@@ -205,7 +196,6 @@ final class JobsCountdownLayerDemoVC: BaseVC {
         onMainAsync(self) { vc in
             self.countdownTimer?.stop()
             self.countdownTimer = nil
-
             // 状态收口：如果没跑完，停下来算 stopped
             if self.timerState == .running || self.timerState == .paused {
                 self.timerState = .stopped

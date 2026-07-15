@@ -70,12 +70,10 @@ final class FMDBDemoVC: BaseVC {
                 guard let self else { return }
                 let name = (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                 let age = Int((ageField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
-
                 guard !name.isEmpty, age > 0 else {
                     hintLabel.byText("❗️请输入有效姓名和年龄".tr)
                     return
                 }
-
                 let ok = ManDB.shared.insert(name: name, age: age)
                 hintLabel.byText(ok ? "✅ 新增成功：\(name) - \(age)" : "❌ 新增失败")
                 onQueryAll()
@@ -102,10 +100,8 @@ final class FMDBDemoVC: BaseVC {
                     hintLabel.byText("ℹ️ 没有数据可更新".tr)
                     return
                 }
-
                 first.name = first.name + " (Updated)"
                 first.age += 1
-
                 let ok = ManDB.shared.update(id: first.id, name: first.name, age: first.age)
                 hintLabel.byText(ok ? "✅ 更新首条成功：id=\(first.id)" : "❌ 更新失败")
                 onQueryAll()
@@ -122,7 +118,6 @@ final class FMDBDemoVC: BaseVC {
                     hintLabel.byText("ℹ️ 没有数据可删除".tr)
                     return
                 }
-
                 let ok = ManDB.shared.delete(id: last.id)
                 hintLabel.byText(ok ? "✅ 删除末条成功：id=\(last.id)" : "❌ 删除失败")
                 onQueryAll()
@@ -183,7 +178,6 @@ final class FMDBDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.white)
         jobsSetupGKNav(title: "FMDB@Demo")
-
         hintLabel.byVisible(YES)
         nameField.byVisible(YES)
         ageField.byVisible(YES)
@@ -214,7 +208,6 @@ extension FMDBDemoVC: UITableViewDataSource {
             .byText("id=\(p.id) | \(p.name) | age=\(p.age)")
             .byData(nil)
             .onResult { _ in
-
             }
     }
 }

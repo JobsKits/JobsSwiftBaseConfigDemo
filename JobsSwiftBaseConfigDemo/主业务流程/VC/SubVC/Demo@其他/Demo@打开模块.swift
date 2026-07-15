@@ -132,7 +132,6 @@ final class JobsOpenDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "🌐 Jobs Open/Call/Mail Demo")
-
         UIStackView(arrangedSubviews: [
             btnOpenWeb,
             btnOpenChineseURL,

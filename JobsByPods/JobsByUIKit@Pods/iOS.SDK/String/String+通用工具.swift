@@ -34,7 +34,7 @@ extension String {
         let i = self.index(startIndex, offsetBy: index)
         return self[i]
     }
-    
+
     public func boundingHeight(width: CGFloat, font: UIFont) -> CGFloat {
         guard width > 0 else { return 0 };return ceil((self as NSString).boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
@@ -174,11 +174,9 @@ extension String {
     /// ⚠️ 同形字（简繁一致）会导致 false（无法区分）
     public var isPureSimplifiedChinese: Bool {
         guard isPureChineseHan else { return false }
-
         let toTraditional = applyingTransform(.init("Hans-Hant"), reverse: false) ?? self
         // 如果转换到繁体完全不变，可能是：全同形字 or 已是繁体/混合
         if toTraditional == self { return false }
-
         let backToSimplified = toTraditional.applyingTransform(.init("Hant-Hans"), reverse: false) ?? toTraditional
         return backToSimplified == self
     }
@@ -187,10 +185,8 @@ extension String {
     /// ⚠️ 同形字（简繁一致）会导致 false（无法区分）
     public var isPureTraditionalChinese: Bool {
         guard isPureChineseHan else { return false }
-
         let toSimplified = applyingTransform(.init("Hant-Hans"), reverse: false) ?? self
         if toSimplified == self { return false }
-
         let backToTraditional = toSimplified.applyingTransform(.init("Hans-Hant"), reverse: false) ?? toSimplified
         return backToTraditional == self
     }

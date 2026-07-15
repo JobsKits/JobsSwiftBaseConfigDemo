@@ -72,7 +72,6 @@ final class CrashLogDemoVC: BaseVC {
                     .onTap { [unowned self] _ in
                         reloadLog()
                     }
-
             ]
         )
         tv.byVisible(YES)
@@ -85,7 +84,6 @@ extension CrashLogDemoVC {
     private func reloadLog(keyword: String = "") {
         // 尽量读 tail，避免特别大时卡 UI
         let content = CrashLogCenter.shared.readTail(kilobytes: 512)
-
         if keyword.isEmpty {
             tv.byText(headerText(keyword: "") + content)
         } else {
@@ -95,14 +93,12 @@ extension CrashLogDemoVC {
                 .joined(separator: "\n")
             tv.byText(headerText(keyword: keyword) + filtered)
         }
-
         tv.scrollRangeToVisible(NSRange(location: 0, length: 0))
     }
     // ================================== Header Builder ==================================
     /// 组装 header：把你关心的 “log: /var/mobile/.../Documents/jobs_crash.log” 放最顶上
     private func headerText(keyword: String) -> String {
         let info = CrashLogCenter.shared.fileInfo()
-
         var header = ""
         header += "log: \(info.path)\n"
         header += "exists: \(info.exists ? "YES" : "NO")\n"
@@ -111,7 +107,6 @@ extension CrashLogDemoVC {
             header += "mtime: \(m)\n"
         }
         header += "didCrashLastRun: \(CrashLogCenter.shared.didCrashLastRun() ? "YES" : "NO")\n"
-
         if !keyword.isEmpty {
             header += "filter: \(keyword)\n"
         }

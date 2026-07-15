@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:267"]
-  T1["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:267"]
+  S1["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
+  T1["function:ASLayoutElementSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:39"]
   S1 -->|calls| T1
-  S2["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
-  T2["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S2["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
+  T2["function:ASDimensionMakeWithPoints<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:131"]
   S2 -->|calls| T2
-  S3["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
-  T3["function:ASCGFloatFromString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/CoreGraphics+ASConvenience.h:23"]
+  S3["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
+  T3["function:ASDimensionMakeWithPoints<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:131"]
   S3 -->|calls| T3
-  S4["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
-  T4["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S4["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T4["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S4 -->|calls| T4
-  S5["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
-  T5["function:ASCGFloatFromString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/CoreGraphics+ASConvenience.h:23"]
+  S5["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T5["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S5 -->|calls| T5
-  S6["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
-  T6["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S6["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T6["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S6 -->|calls| T6
-  S7["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
-  T7["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S7["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T7["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S7 -->|calls| T7
-  S8["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
-  T8["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S8["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T8["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S8 -->|calls| T8
-  S9["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
-  T9["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S9["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
+  T9["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
   S9 -->|calls| T9
-  S10["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
-  T10["function:ASLayoutElementSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:39"]
+  S10["function:ASLayoutElementSizeResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:93"]
+  T10["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
   S10 -->|calls| T10
-  S11["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
-  T11["function:ASDimensionMakeWithPoints<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:131"]
+  S11["function:ASLayoutElementSizeResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:93"]
+  T11["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
   S11 -->|calls| T11
-  S12["function:ASLayoutElementSizeMakeFromCGSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:54"]
-  T12["function:ASDimensionMakeWithPoints<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:131"]
+  S12["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T12["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
   S12 -->|calls| T12
-  S13["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T13["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S13["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T13["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S13 -->|calls| T13
-  S14["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T14["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S14["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T14["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
   S14 -->|calls| T14
-  S15["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T15["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S15["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T15["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S15 -->|calls| T15
-  S16["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T16["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S16["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T16["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
   S16 -->|calls| T16
-  S17["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T17["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S17["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
+  T17["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S17 -->|calls| T17
-  S18["function:ASLayoutElementSizeEqualToLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:65"]
-  T18["function:ASDimensionEqualToDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:149"]
+  S18["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T18["function:ASLayoutSizeResolveSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:200"]
   S18 -->|calls| T18
-  S19["function:ASLayoutElementSizeResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:93"]
-  T19["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  S19["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T19["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S19 -->|calls| T19
-  S20["function:ASLayoutElementSizeResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.h:93"]
-  T20["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S20["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T20["function:ASLayoutSizeResolveSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:200"]
   S20 -->|calls| T20
-  S21["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
-  T21["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
+  S21["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T21["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S21 -->|calls| T21
-  S22["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
-  T22["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
+  S22["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T22["function:ASLayoutSizeResolveSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:200"]
   S22 -->|calls| T22
-  S23["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
-  T23["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
+  S23["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T23["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
   S23 -->|calls| T23
-  S24["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
-  T24["function:ASLayoutSizeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:189"]
+  S24["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T24["function:ASLayoutElementSizeConstrain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:23"]
   S24 -->|calls| T24
-  S25["function:NSStringFromASLayoutElementSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:14"]
-  T25["function:NSStringFromASLayoutSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:209"]
+  S25["function:ASLayoutElementSizeResolveAutoSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:55"]
+  T25["function:ASLayoutElementSizeConstrain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimensionInternal.mm:23"]
   S25 -->|calls| T25
 ```
 

@@ -21,7 +21,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 class JobsNetworkingMethodDemoVC: BaseVC {
-
     let item: MethodDemoItem
     let service = DemoService.shared
 
@@ -209,7 +208,6 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 }
 
 extension JobsNetworkingMethodDemoVC {
-
     func debugRequestByURLSession() {
         let url = URL(string: "http://127.0.0.1:18080/api/get/dashboard?tab=overview&client=swift-demo")!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
@@ -228,20 +226,17 @@ extension JobsNetworkingMethodDemoVC {
         errorButton.byEnabled(false)
         statusText = "\(item.methodType.title) 请求中..."
         requestPreviewText = buildRequestPreview(triggerError: triggerError)
-
         Task {
             do {
                 try await performRequest(triggerError: triggerError)
             } catch let error as JobsError {
                 let message: String
-
                 switch error {
                 case let .transport(underlying):
                     message = """
                     JobsError.transport
                     underlying = \(underlying)
                     """
-
                 case let .http(statusCode, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -250,7 +245,6 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
-
                 case let .server(statusCode, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -259,7 +253,6 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
-
                 case let .decode(underlying, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -268,7 +261,6 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
-
                 case let .business(code, msg, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -278,29 +270,23 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
-
                 case .cacheMiss:
                     message = "JobsError.cacheMiss"
-
                 case .cancelled:
                     message = "JobsError.cancelled"
-
                 case let .invalidRequest(reason):
                     message = """
                     JobsError.invalidRequest
                     reason = \(reason)
                     """
-
                 case .emptyResponse:
                     message = "JobsError.emptyResponse"
-
                 case let .unknown(underlying):
                     message = """
                     JobsError.unknown
                     underlying = \(underlying)
                     """
                 }
-
                 onMainSync { [weak self] in
                     guard let self else { return }
                     self.statusText = "\(self.item.methodType.title) 请求异常"
@@ -314,7 +300,6 @@ extension JobsNetworkingMethodDemoVC {
                 \(error)
                 localized = \(error.localizedDescription)
                 """
-
                 onMainSync { [weak self] in
                     guard let self else { return }
                     self.statusText = "\(self.item.methodType.title) 请求异常"

@@ -49,7 +49,6 @@ import SDWebImage
 /// 13. Kingfisher@背景图
 
 final class JobsMarqueeDemoVC: BaseVC {
-    
     private let horizontalInset: CGFloat = 16
     private let verticalSpacing: CGFloat = 12
     private let marqueeHeight: CGFloat = 50
@@ -1208,12 +1207,10 @@ final class JobsMarqueeDemoVC: BaseVC {
         downContinuousMarquee.byVisible(YES)
         leftContinuousMarquee.byVisible(YES)
         rightContinuousMarquee.byVisible(YES)
-
         upFrequencyMarquee.byVisible(YES)
         downFrequencyMarquee.byVisible(YES)
         leftFrequencyMarquee.byVisible(YES)
         rightFrequencyMarquee.byVisible(YES)
-
         oneButtonMarquee.byVisible(YES)
         twoButtonsMarquee.byVisible(YES)
         /// JobsMarqueeView@轮播图 & 图片

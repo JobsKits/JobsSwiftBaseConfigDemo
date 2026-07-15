@@ -25,7 +25,6 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
         cancel(key)
         let task = JobsPlan.after(delay).do(queue: queue, action: action)
         center.add(task)
-
         lock.lock()
         tasks[key] = task
         lock.unlock()
@@ -40,7 +39,6 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
         cancel(key)
         let task = JobsPlan.every(interval).do(queue: queue, action: action)
         center.add(task)
-
         lock.lock()
         tasks[key] = task
         lock.unlock()

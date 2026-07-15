@@ -79,10 +79,8 @@ final class UnityDemoVC: BaseVC {
             .byCornerRadius(8)
             .onTap { [weak self] _ in
                 guard let self else { return }
-
                 let dataPath = Bundle.main.bundlePath + "/Data/boot.config"
                 print("Data boot.config exists:", FileManager.default.fileExists(atPath: dataPath))
-
                 // 从输入框读取关闭时间
                 if let text = self.closeTimeTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
@@ -98,14 +96,12 @@ final class UnityDemoVC: BaseVC {
                 // 先清理可能存在的 JobsSwiftTimer
                 self.unityAutoCloseTimer?.stop()
                 self.unityAutoCloseTimer = nil
-
                 // 打开 Unity（UnityManager 自带 autoCloseAfter：你想继续用它也OK）
                 UnityManager.shared.showUnity(
                     from: self,
                     autoCloseAfter: self.unityAutoCloseSeconds,
                     unloadOnClose: true
                 )
-
                 // 如果你想改成“完全由 JobsSwiftTimer 负责关闭”，就启用下面这句：
                 // self.scheduleUnityAutoClose()
 #endif
@@ -121,7 +117,6 @@ final class UnityDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "Unity@Demo")
-
         unityContainerView.byVisible(YES)
         startUnityButton.byVisible(YES)
         closeTimeTextField.byVisible(YES)
@@ -141,9 +136,7 @@ private extension UnityDemoVC {
     func scheduleUnityAutoClose() {
         unityAutoCloseTimer?.stop()
         unityAutoCloseTimer = nil
-
         guard unityAutoCloseSeconds > 0 else { return }
-
         let config = JobsSwiftTimerConfig(
             interval: unityAutoCloseSeconds,
             repeats: false,          // 一次性定时器
@@ -154,7 +147,6 @@ private extension UnityDemoVC {
             pauseInBackground: true,
             autoManageAppState: true
         )
-
         // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
         let timer = JobsTimer(kind: unityTimerKind, config: config) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：先冻结，再切回 MainActor
@@ -163,7 +155,6 @@ private extension UnityDemoVC {
                 strongSelf.closeUnity()
             }
         }
-
         unityAutoCloseTimer = timer
         timer.start()
     }
@@ -172,7 +163,6 @@ private extension UnityDemoVC {
     func closeUnity() {
         unityAutoCloseTimer?.stop()
         unityAutoCloseTimer = nil
-
 #if canImport(UnityFramework)
         // 把 Unity 从窗口里移除 / 卸载
         UnityManager.shared.detachUnity(from: self)

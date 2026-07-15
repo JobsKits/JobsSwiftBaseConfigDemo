@@ -18,21 +18,20 @@ import JobsSwiftBaseDefines
 //@import JobsByUIKit;
 // MARK: - 自定义便捷计算属性@必要要暴露给OC
 extension UIView {
-    
     @objc public var x: CGFloat {
         get { frame.origin.x }
         set { frame.origin.x = newValue }
     }
-    
+
     @objc public var y: CGFloat {
         get { frame.origin.y }
         set { frame.origin.y = newValue }
     }
-    
+
     @objc public var maxX: CGFloat {
         self.x + self.width
     }
-    
+
     @objc public var maxY: CGFloat {
         self.y + self.height
     }
@@ -66,7 +65,7 @@ extension UIView {
         get { frame.origin.x }
         set { frame.origin.x = newValue }
     }
-    
+
     @objc public var bottom: CGFloat {
         get { frame.origin.y + frame.size.height }
         set { frame.origin.y = newValue - frame.size.height }
@@ -81,7 +80,7 @@ extension UIView {
         get { frame.size }
         set { frame.size = newValue }
     }
-    
+
     @objc public var width: CGFloat {
         get { frame.size.width }
         set { frame.size.width = newValue }
@@ -109,7 +108,6 @@ extension UIView {
 }
 // MARK: - 修改位置大小@DSL系统API结构体
 extension UIView {
-    
     @discardableResult
     public func byFrame(_ f: CGRect) -> Self {
         frame = f
@@ -121,7 +119,7 @@ extension UIView {
         center = c
         return self
     }
-    
+
     @discardableResult
     public func byBounds(_ b: CGRect) -> Self {
         bounds = b
@@ -130,7 +128,6 @@ extension UIView {
 }
 // MARK: - 自定义便捷计算属性@DSL
 extension UIView {
-
     @discardableResult
     public func byX(_ value: CGFloat) -> Self {
         x = value
@@ -258,7 +255,6 @@ extension UIView {
 }
 // MARK: frame
 extension UIView {
-    
     @discardableResult
     public func byFrame(x: CGFloat? = nil,
                         y: CGFloat? = nil,
@@ -272,7 +268,7 @@ extension UIView {
         frame = f
         return self
     }
-    
+
     @discardableResult
     public func byFrame(origin: CGPoint? = nil,
                         size: CGSize? = nil) -> Self {
@@ -282,7 +278,7 @@ extension UIView {
         frame = f
         return self
     }
-    
+
     @discardableResult
     func byFrame(_ patch: FramePatch) -> Self {
         var f = frame
@@ -344,7 +340,7 @@ extension UIView {
         frame.size = make(self)
         return self
     }
-    
+
     @discardableResult
     public func bySize(width: CGFloat,
                        height: CGFloat) -> Self {

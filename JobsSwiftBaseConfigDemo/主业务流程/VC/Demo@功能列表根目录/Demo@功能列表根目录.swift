@@ -56,9 +56,11 @@ final class RootListVC: BaseVC {
     private let timerMgr = JobsSwiftTimerMgr.shared
     private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
     private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
+    private let progressIndicatorTimerID = "RootListVC.progressIndicator.timer"
 
     private var suspendBtnTimer: JobsSwiftTimerProtocol?
     private var suspendSpinBtnTimer: JobsSwiftTimerProtocol?
+    private var progressIndicatorTimer: JobsSwiftTimerProtocol?
     private var suspendFuseTimer: JobsSwiftTimerProtocol?
     private var suspendFuseStartTS: CFTimeInterval = 0
     private var suspendFuseProgress: CGFloat = 0
@@ -68,14 +70,16 @@ final class RootListVC: BaseVC {
 
     /// 旧版 onTimerTick 给 elapsed；新版不再给，自己计数即可
     private var spinSeconds: Int = 0
+    private var progressIndicatorPhase = 0
 
     deinit {
         suspendBtnTimer?.stop()
         suspendSpinBtnTimer?.stop()
+        progressIndicatorTimer?.stop()
         suspendFuseTimer?.stop()
         try? timerMgr.remove(identifier: suspendBtnTimerID)
         try? timerMgr.remove(identifier: suspendSpinBtnTimerID)
-
+        try? timerMgr.remove(identifier: progressIndicatorTimerID)
         if let langToken {
             NotificationCenter.default.removeObserver(langToken)
         }
@@ -119,7 +123,6 @@ final class RootListVC: BaseVC {
         #if canImport(FMDB) && !canImport(WCDB)
         temp.insert(("🛢️ FMDB@如需测试WCDB需要在Podfile屏蔽FMDB", FMDBDemoVC.self), at: 1) // 或 append
         #endif
-
         #if !canImport(FMDB) && canImport(WCDB)
         temp.insert( ("🐧 腾讯数据库@如需测试FMDB需要在Podfile屏蔽WCDB)", WCDBDemoVC.self), at: 2) // 或 append
         #endif
@@ -141,7 +144,9 @@ final class RootListVC: BaseVC {
     private func makeDemo2D() -> [DemoGroup] {
         return [
             (title: "系统能力与硬件通信".tr, items: [
-                ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self)
+                ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
+                ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),
+                ("🧭 CoreMotion DSL Demo", JobsCoreMotionDemoVC.self)
             ]),
             (title: "Swift Package Manager 集成示例".tr, items: [
                 ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self)
@@ -161,7 +166,7 @@ final class RootListVC: BaseVC {
                 ("🧧 红包雨", RedPacketRainDemoVC.self),
                 ("💣 任意UIView.layer@导火索倒计时效果", JobsCountdownLayerDemoVC.self),
                 ("🟩⬜⬜ 系统进度条", JobsSysProgressDemoVC.self),
-                ("🟩🟩⬜ 自定义进度条（进度值+前进方向）", JobsProgressDemoVC.self)
+                ("自定义进度条（进度值+前进方向）", JobsProgressDemoVC.self)
             ]),
             (title: "Pods集成@其他外源框架使用示例".tr, items: g0),
             (title: "Pods集成@网络请求适用示例".tr, items: [
@@ -184,6 +189,7 @@ final class RootListVC: BaseVC {
                 ("👛 钱包卡片效果", JobsWalletDemoVC.self),
                 ("☁️ 镂空特效", TransparentRegionVC.self),
                 ("🧩 打马赛克", MosaicDemoListVC.self),
+                ("👍 长按点赞冒泡", JobsLongPressLikeDemoVC.self),
                 ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
                 ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
                 ("🧭 苹果滑动开锁@带骨架屏的呼吸效果", SlideToUnlockDemoVC.self),
@@ -346,14 +352,12 @@ final class RootListVC: BaseVC {
                         ),
                         scale: 1.18
                     )
-
                 case .ended, .cancelled, .failed:
                     btn.byFusePressStop()
                     // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
                         self?.suspendFuseLongPressConsumed = false
                     }
-
                 default:
                     break
                 }
@@ -454,14 +458,18 @@ final class RootListVC: BaseVC {
             .byPlaceholder("输入关键词搜索 Demo".tr)
             .byDelegate(self)
             .byShowsCancelButton(true)
+            .bySearchBarStyle(.minimal)
+            .byTranslucent(true)
+            .byBackgroundImage(UIImage.make())
             .byBarTintColor(RootListPreferences.pageBackgroundColor)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
-                make.left.right.equalToSuperview()
-                make.height.equalTo(52)
+                make.left.right.equalToSuperview().inset(8)
+                make.height.equalTo(56)
                 if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(6)
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(8)
                 } else {
-                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(4)
                 }
             }
     }()
@@ -575,11 +583,9 @@ final class RootListVC: BaseVC {
         applyDemoListThemeChrome()
         view.addGestureRecognizer(functionMenuDismissTapGesture)
         updateFooterAvailability()
-
         suspendSpinBtn.bySpinStart()
         suspendBtn.byVisible(YES)
         suspendFuseBtn.byVisible(YES)
-
         setupJobsTimers()
     }
 
@@ -597,9 +603,15 @@ final class RootListVC: BaseVC {
             reloadDemoListToTopAndRefresh()
         }
         demoListHasAppeared = true
-
         suspendBtnTimer?.resume()
         suspendSpinBtnTimer?.resume()
+        progressIndicatorTimer?.resume()
+        updateVisibleProgressIndicators()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        progressIndicatorTimer?.pause()
     }
 }
 
@@ -635,19 +647,31 @@ extension RootListVC{
         functionMenuTableView.bySeparatorColor(RootListPreferences.separatorColor)
         demoSearchBar.byBarTintColor(RootListPreferences.pageBackgroundColor)
         demoSearchBar.byTintColor(RootListPreferences.selectedTintColor)
+        demoSearchBar.byBackgroundColor(JobsCor.clear)
         #if os(iOS)
         if #available(iOS 13.0, *) {
-            demoSearchBar.searchTextField.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-            demoSearchBar.searchTextField.byTextColor(RootListPreferences.primaryTextColor)
-            demoSearchBar.searchTextField.byTintColor(RootListPreferences.selectedTintColor)
-            demoSearchBar.searchTextField.byAttributedPlaceholder(
-                NSAttributedString(
-                    string: "输入关键词搜索 Demo".tr,
-                    attributes: [.foregroundColor: RootListPreferences.secondaryTextColor]
+            demoSearchBar.searchTextField
+                .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+                .byTextColor(RootListPreferences.primaryTextColor)
+                .byTintColor(RootListPreferences.selectedTintColor)
+                .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+                .byCornerRadius(18)
+                .byBorderWidth(1)
+                .byBorderColor(RootListPreferences.separatorColor)
+                .byClipsToBounds(YES)
+                .byAttributedPlaceholder(
+                    NSAttributedString(
+                        string: "输入关键词搜索 Demo".tr,
+                        attributes: [
+                            .foregroundColor: RootListPreferences.secondaryTextColor,
+                            .font: JobsFont.systemFont(ofSize: 15, weight: .regular)
+                        ]
+                    )
                 )
-            )
+            demoSearchBar.searchTextField.leftView?.byTintColor(RootListPreferences.secondaryTextColor)
         }
         #endif
+        updateSearchCancelButtonStyle()
         if view.window != nil {
             functionMenuTableView.reloadData()
             tableView.reloadData()
@@ -681,7 +705,6 @@ extension RootListVC{
         } catch {
             print("❌ create suspendBtnTimer failed: \(error)")
         }
-
         // 2) suspendSpinBtn：每秒 +1 显示秒数（替代旧 elapsed）
         do {
             spinSeconds = 0
@@ -709,6 +732,35 @@ extension RootListVC{
         } catch {
             print("❌ create suspendSpinBtnTimer failed: \(error)")
         }
+        // 3) 自定义进度条入口：仅更新当前可见标题，模拟三格电池循环充电
+        do {
+            progressIndicatorPhase = 0
+            let cfg = JobsSwiftTimerConfig(interval: 0.45,
+                                           repeats: true,
+                                           tolerance: 0.03,
+                                           queue: .main)
+            progressIndicatorTimer = try timerMgr.create(
+                kind: .gcd,
+                identifier: progressIndicatorTimerID,
+                config: cfg,
+                dedupPolicy: .replace
+            ) { [weak self] in
+                onMainAsync(self) { vc in
+                    vc.progressIndicatorPhase = (vc.progressIndicatorPhase + 1) % 3
+                    vc.updateVisibleProgressIndicators()
+                }
+            }
+            progressIndicatorTimer?.start()
+        } catch {
+            print("❌ create progressIndicatorTimer failed: \(error)")
+        }
+    }
+
+    private func updateVisibleProgressIndicators() {
+        let phase = UIAccessibility.isReduceMotionEnabled ? 2 : progressIndicatorPhase
+        tableView.visibleCells
+            .compactMap { $0 as? RootFoldTableCell }
+            .forEach { $0.updateChargingProgress(phase: phase) }
     }
 
     private var hasPinnedDemoSection: Bool {
@@ -886,7 +938,6 @@ extension RootListVC{
             demoGroupDragTouchOffsetY = point.y - cell.frame.midY
             cell.byHidden(true)
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-
         case .changed:
             guard let snapshotView = demoGroupDragSnapshotView,
                   let sourceIndexPath = demoGroupDragIndexPath else { return }
@@ -903,10 +954,8 @@ extension RootListVC{
             demoGroupDragIndexPath = destinationIndexPath
             tableView.visibleCells.forEach { $0.byHidden(false) }
             tableView.cellForRow(at: destinationIndexPath)?.byHidden(true)
-
         case .ended, .cancelled, .failed:
             finishDemoGroupDrag()
-
         default:
             break
         }
@@ -1024,7 +1073,8 @@ extension RootListVC{
     }
 
     private func searchCancelButton(in view: UIView) -> UIButton? {
-        if let button = view as? UIButton {
+        if let button = view as? UIButton,
+           !(button.title(for: .normal) ?? "").isEmpty {
             return button
         }
         for subview in view.subviews {
@@ -1036,17 +1086,22 @@ extension RootListVC{
 
     private func updateSearchCancelButtonStyle() {
         demoSearchBar
-            .byTintColor(JobsCor.systemBlue)
+            .byTintColor(RootListPreferences.selectedTintColor)
             .byLayoutIfNeeded()
         guard let button = searchCancelButton(in: demoSearchBar) else { return }
         button
-            .byTitleColor(JobsCor.white)
-            .byTitleColor(JobsCor.white.withAlphaComponent(0.75), for: .highlighted)
+            .byTitle("取消".tr)
+            .byTitleColor(RootListPreferences.selectedTintColor)
+            .byTitleColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.55), for: .highlighted)
             .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byBackgroundColor(JobsCor.systemBlue)
-            .byCornerRadius(6)
-            .byMasksToBounds(true)
-            .byContentEdgeInsets(UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
+            .byBackgroundColor(JobsCor.clear)
+            .byNumberOfLines(1)
+            .byTitleAdjustsFontSizeToFitWidth(false)
+            .byContentHorizontalAlignment(.center)
+            .byContentEdgeInsets(.zero)
+            .byCornerRadius(0)
+            .byMasksToBounds(false)
+            .bySizeToFit()
     }
 
     private func handleMenuAction(_ action: FunctionMenuAction) {
@@ -1203,11 +1258,9 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         } else {
             expandedGroups.insert(row)
         }
-
         if let cell = tableView.cellForRow(at: indexPath) as? RootFoldTableCell {
             cell.setExpanded(expandedGroups.contains(row), animated: true)
         }
-
         tableView.performBatchUpdates(nil) { [weak self] _ in
             self?.updateFooterAvailability()
         }

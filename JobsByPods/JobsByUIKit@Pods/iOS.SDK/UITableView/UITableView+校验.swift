@@ -19,7 +19,6 @@ extension UITableView {
     private func isValid(indexPath: IndexPath) -> Bool {
         let section = indexPath.section
         let row = indexPath.row
-
         guard section >= 0, row >= 0 else { return false }
         guard section < numberOfSections else { return false }
         guard row < numberOfRows(inSection: section) else { return false };return true

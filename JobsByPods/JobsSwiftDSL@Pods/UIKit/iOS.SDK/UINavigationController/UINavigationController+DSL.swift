@@ -58,43 +58,42 @@ extension UINavigationController {
 }
 // MARK: - 闭包重载@单参数
 extension UINavigationController {
-    
     @discardableResult
     public func byViewControllersByAnimated(_ builder: () -> [UIViewController]) -> Self {
         self.setViewControllers(builder(), animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byViewControllers(_ builder: () -> [UIViewController]) -> Self {
         self.setViewControllers(builder(), animated: false)
         return self
     }
-    
+
     @discardableResult
     public func byNavigationBarHidden(_ builder: () -> Bool) -> Self {
         self.isNavigationBarHidden = builder()
         return self
     }
-    
+
     @discardableResult
     public func byNaBarHiddenByAnimated(_ builder: () -> Bool) -> Self {
         self.setNavigationBarHidden(builder(), animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byNavBarHidden(_ builder: () -> Bool) -> Self {
         self.setNavigationBarHidden(builder(), animated: false)
         return self
     }
-    
+
     @discardableResult
     public func byToolbarHiddenByAnimated(_ builder: () -> Bool) -> Self {
         self.setToolbarHidden(builder(), animated: true)
         return self
     }
-    
+
     @discardableResult
     public func byToolbarHidden(_ builder: () -> Bool) -> Self {
         self.setToolbarHidden(builder(), animated: false)

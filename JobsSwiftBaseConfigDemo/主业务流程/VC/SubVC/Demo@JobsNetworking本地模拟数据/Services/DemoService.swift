@@ -10,7 +10,6 @@ import Foundation
 import JobsNetworking
 
 final class DemoService {
-
     static let shared = DemoService()
 
     let agent: DefaultJobsAgent = .init(
@@ -33,7 +32,6 @@ final class DemoService {
             encoding: .urlQuery,
             cachePolicy: .disabled
         )
-
         let response = try await agent.send(req, as: DioCatalogResponse.self)
         return response.data?.items ?? []
     }
@@ -87,19 +85,16 @@ final class DemoService {
     func downloadDemo(fileName: String) async throws -> DioDownloadRenderData {
         let safeName = fileName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? fileName
         let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-
         let request = JobsDownloadRequest(
             absoluteURL: URL(string: "http://127.0.0.1:18080/api/download/file?fileName=\(safeName)")!,
             destinationURL: destinationURL,
             timeout: 10
         )
-
         let fileURL = try await agent.download(request)
         let data = try Data(contentsOf: fileURL)
         let content = String(data: data, encoding: .utf8) ?? "<binary>"
         let mimeType = mimeTypeByFileName(fileName)
         let disposition = "attachment; filename=\"\(fileName)\""
-
         return .init(
             fileURL: fileURL,
             content: content,

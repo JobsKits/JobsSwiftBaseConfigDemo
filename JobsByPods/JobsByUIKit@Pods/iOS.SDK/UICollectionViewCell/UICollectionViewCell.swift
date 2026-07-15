@@ -48,7 +48,6 @@ extension UICollectionViewCell {
 }
 // MARK: - 闭包重载@单参数
 extension UICollectionViewCell {
-    
     @available(iOS 14.0, *)
     @discardableResult
     public func byAutomaticallyUpdatesContentConfiguration(_ builder: () -> Bool) -> Self {

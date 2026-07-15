@@ -84,7 +84,6 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
         if let data = ifa.ifa_data?.assumingMemoryBound(to: if_data.self).pointee {
             let inBytes  = UInt64(data.ifi_ibytes)
             let outBytes = UInt64(data.ifi_obytes)
-
             // en0 / en1... 一般是 Wi-Fi（也可能有有线），pdp_ip0... 一般是蜂窝
             if name.hasPrefix("en") {
                 wifiIn  &+= inBytes
@@ -97,7 +96,6 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
                 otherOut &+= outBytes
             }
         }
-
         ptr = ifa.ifa_next
     };freeifaddrs(addrs)
     return NetworkSplitBytes(
@@ -133,7 +131,6 @@ public final class JobsNetworkTrafficMonitor {
         // 监听当前网络类型
         pathMonitor.pathUpdateHandler = { [weak self] path in
             guard let self else { return }
-
             let source: JobsNetworkSource
             if path.status != .satisfied {
                 source = .none
@@ -144,7 +141,6 @@ public final class JobsNetworkTrafficMonitor {
             } else {
                 source = .other
             }
-
             DispatchQueue.main.async {
                 self.currentSource = source
             }
@@ -155,32 +151,25 @@ public final class JobsNetworkTrafficMonitor {
     func start(interval: TimeInterval = 1.0) {
         stop()
         lastBytes = currentNetworkBytes()
-
         let t = DispatchSource.makeTimerSource(queue: DispatchQueue.global())
         t.schedule(deadline: .now() + interval, repeating: interval)
-
         t.setEventHandler { [weak self] in
             guard let self else { return }
             guard let last = self.lastBytes else {
                 self.lastBytes = currentNetworkBytes()
                 return
             }
-
             let now = currentNetworkBytes()
             let deltaIn  = Double(now.download &- last.download)
             let deltaOut = Double(now.upload   &- last.upload)
-
             let downSpeed = deltaIn / interval   // Bytes/s
             let upSpeed   = deltaOut / interval  // Bytes/s
             let source    = self.currentSource
-
             self.lastBytes = now
-
             DispatchQueue.main.async {
                 self.onUpdate?(source, upSpeed, downSpeed)
             }
         }
-
         t.resume()
         timer = t
     }
@@ -277,7 +266,6 @@ func currentNetworkSource() -> JobsNetworkSource {
 /// - 这个逻辑只判断「网卡层的字节变化」，无法保证一定是App 发起的请求；
 /// - 但在触发了自己的网络请求之后再调用本方法，基本可以认为“出现的新增流量”与当前操作有强相关性。
 final class JobsNetworkDataReadyMonitor {
-
     static let shared = JobsNetworkDataReadyMonitor()
 
     private let queue = DispatchQueue(label: "jobs.network.ready")
@@ -309,27 +297,22 @@ final class JobsNetworkDataReadyMonitor {
     ) {
         queue.async { [weak self] in
             guard let self else { return }
-
             // 清理旧的
             self.stopLocked()
-
             // 如果两个回调都没传，其实就没必要等
             self.wifiDone = (onWiFiReady == nil)
             self.cellularDone = (onCellularReady == nil)
             self.waiting = !(self.wifiDone && self.cellularDone)
             guard self.waiting else { return }
-
             // 记录起始字节
             let split = currentNetworkBytesSplit()
             self.lastWiFi = split.wifi
             self.lastCellular = split.cellular
-
             if let timeout = timeout {
                 self.deadline = CFAbsoluteTimeGetCurrent() + timeout
             } else {
                 self.deadline = nil
             }
-
             let t = DispatchSource.makeTimerSource(queue: self.queue)
             t.schedule(deadline: .now() + interval, repeating: interval)
             t.setEventHandler { [weak self] in
@@ -340,7 +323,6 @@ final class JobsNetworkDataReadyMonitor {
                 // - 如果只传了其中一个，则保持原本“只要有对应流量就触发”的行为。
                 let primary = JobsNetworkTrafficMonitor.shared.jobsCurrentSource
                 let exclusive = (onWiFiReady != nil && onCellularReady != nil)
-
                 let nowSplit = currentNetworkBytesSplit()
                 let nowWiFi = nowSplit.wifi
                 let nowCell = nowSplit.cellular
@@ -372,7 +354,6 @@ final class JobsNetworkDataReadyMonitor {
                         }
                     }
                 }
-
                 self.lastWiFi = nowWiFi
                 self.lastCellular = nowCell
                 // 两边都已经触发完了，收工
@@ -404,10 +385,8 @@ final class JobsNetworkDataReadyMonitor {
     private func stopLocked() {
         timer?.cancel()
         timer = nil
-
         lastWiFi = nil
         lastCellular = nil
-
         waiting = false
         wifiDone = false
         cellularDone = false

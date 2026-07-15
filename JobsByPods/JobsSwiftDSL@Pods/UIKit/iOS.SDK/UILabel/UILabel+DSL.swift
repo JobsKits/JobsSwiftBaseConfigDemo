@@ -15,27 +15,26 @@ import JobsTextTools
 
 // MARK: - 直接赋值@单参数
 extension UILabel {
-    
     @discardableResult
     public func byJobsAttributedText(_ text: JobsText?) -> Self {
         guard let text else { return self }
         self.attributedText = text.asAttributed
         return self
     }
-    
+
     @discardableResult
     public func byJobsText(_ text: JobsText?) -> Self {
         guard let text else { return self }
         self.text = text.asString
         return self
     }
-    
+
     @discardableResult
     public func byText(_ text: String?) -> Self {
         self.text = text
         return self
     }
-    
+
     @discardableResult
     public func byTextColor(_ color: UIColor?) -> Self {
         if color != nil {
@@ -63,37 +62,37 @@ extension UILabel {
         self.textAlignment = alignment
         return self
     }
-    
+
     @discardableResult
     public func byNumberOfLines(_ lines: Int) -> Self {
         self.numberOfLines = lines
         return self
     }
-    
+
     @discardableResult
     public func byLineBreakMode(_ mode: NSLineBreakMode) -> Self {
         self.lineBreakMode = mode
         return self
     }
-    
+
     @discardableResult
     public func byBgCor(_ color: UIColor?) -> Self {
         self.backgroundColor = color
         return self
     }
-    
+
     @discardableResult
     public func byAttributedString(_ attributed: NSAttributedString?) -> Self {
         self.attributedText = attributed
         return self
     }
-    
+
     @discardableResult
     public func byNextText(_ str: String?) -> Self {
         self.text = (self.text ?? "") + (str ?? "")
         return self
     }
-    
+
     @discardableResult
     public func byNextAttributedText(_ attributed: NSAttributedString?) -> Self {
         if let current = self.attributedText {
@@ -213,7 +212,6 @@ extension UILabel {
 }
 // MARK: - 闭包重载@单参数
 extension UILabel {
-    
     @discardableResult
     public func byJobsAttributedText(_ builder: () -> JobsText?) -> Self {
         _byApplyOptional(builder) { [weak self] text in
@@ -221,7 +219,7 @@ extension UILabel {
             self.attributedText = text.asAttributed
         }
     }
-    
+
     @discardableResult
     public func byJobsText(_ builder: () -> JobsText?) -> Self {
         _byApplyOptional(builder) { [weak self] text in
@@ -229,13 +227,13 @@ extension UILabel {
             self.text = text.asString
         }
     }
-    
+
     @discardableResult
     public func byText(_ builder: () -> String?) -> Self {
         self.text = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTextColor(_ builder: () -> UIColor?) -> Self {
         _byApplyOptional(builder) { [weak self] color in
@@ -243,7 +241,7 @@ extension UILabel {
             self.textColor = color
         }
     }
-    
+
     @discardableResult
     public func byFont(_ builder: () -> UIFont?) -> Self {
         self.adjustsFontForContentSizeCategory = false
@@ -252,7 +250,7 @@ extension UILabel {
             self.font = font
         }
     }
-    
+
     @discardableResult
     public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
         _byApplyValue(builder) { [weak self] alignment in
@@ -260,7 +258,7 @@ extension UILabel {
             self.textAlignment = alignment
         }
     }
-    
+
     @discardableResult
     public func byNumberOfLines(_ builder: () -> Int) -> Self {
         _byApplyValue(builder) { [weak self] lines in
@@ -268,7 +266,7 @@ extension UILabel {
             self.numberOfLines = lines
         }
     }
-    
+
     @discardableResult
     public func byLineBreakMode(_ builder: () -> NSLineBreakMode) -> Self {
         _byApplyValue(builder) { [weak self] mode in
@@ -276,25 +274,25 @@ extension UILabel {
             self.lineBreakMode = mode
         }
     }
-    
+
     @discardableResult
     public func byBgCor(_ builder: () -> UIColor?) -> Self {
         self.backgroundColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byAttributedString(_ builder: () -> NSAttributedString?) -> Self {
         self.attributedText = builder()
         return self
     }
-    
+
     @discardableResult
     public func byHighlightedTextColor(_ builder: () -> UIColor?) -> Self {
         self.highlightedTextColor = builder()
         return self
     }
-    
+
     @discardableResult
     public func byIsHighlighted(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -302,7 +300,7 @@ extension UILabel {
             self.isHighlighted = value
         }
     }
-    
+
     @discardableResult
     public func byEnabled(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -310,7 +308,7 @@ extension UILabel {
             self.isEnabled = value
         }
     }
-    
+
     @discardableResult
     public func byAdjustsFontSizeToFitWidth(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -318,7 +316,7 @@ extension UILabel {
             self.adjustsFontSizeToFitWidth = value
         }
     }
-    
+
     @discardableResult
     public func byBaselineAdjustment(_ builder: () -> UIBaselineAdjustment) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -326,7 +324,7 @@ extension UILabel {
             self.baselineAdjustment = value
         }
     }
-    
+
     @discardableResult
     public func byMinimumScaleFactor(_ builder: () -> CGFloat) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -334,7 +332,7 @@ extension UILabel {
             self.minimumScaleFactor = value
         }
     }
-    
+
     @discardableResult
     public func byAllowsDefaultTighteningForTruncation(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -342,7 +340,7 @@ extension UILabel {
             self.allowsDefaultTighteningForTruncation = value
         }
     }
-    
+
     @discardableResult
     public func byPreferredMaxLayoutWidth(_ builder: () -> CGFloat) -> Self {
         _byApplyValue(builder) { [weak self] value in
@@ -350,7 +348,7 @@ extension UILabel {
             self.preferredMaxLayoutWidth = value
         }
     }
-    
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byLineBreakStrategy(_ builder: () -> NSParagraphStyle.LineBreakStrategy) -> Self {
@@ -359,7 +357,7 @@ extension UILabel {
             self.lineBreakStrategy = value
         }
     }
-    
+
     @available(iOS 17.0, *)
     @discardableResult
     public func byPreferredVibrancy(_ builder: () -> UILabelVibrancy) -> Self {
@@ -368,7 +366,7 @@ extension UILabel {
             self.preferredVibrancy = value
         }
     }
-    
+
     @available(iOS 17.0, *)
     @discardableResult
     public func byShowsExpansionTextWhenTruncated(_ builder: () -> Bool) -> Self {

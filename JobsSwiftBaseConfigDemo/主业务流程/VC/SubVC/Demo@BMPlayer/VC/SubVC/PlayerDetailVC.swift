@@ -36,7 +36,6 @@ final class PlayerDetailVC: BaseVC {
         // 1) 统一构造 Resource
         let def = BMPlayerResourceDefinition(url: item.videoURL, definition: "默认")
         let res = BMPlayerResource(name: item.id, definitions: [def], cover: item.headImg)
-
         // 2) 一步完成：resource + 回调 + 约束（byAddTo）
         return BMPlayer()
             .byResource(res, definitionIndex: 0, autoPlay: true)

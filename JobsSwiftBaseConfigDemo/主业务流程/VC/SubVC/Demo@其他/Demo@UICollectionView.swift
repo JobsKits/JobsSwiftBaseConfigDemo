@@ -186,7 +186,6 @@ extension EmptyCollectionViewDemoVC {
 }
 // MARK: - UICollectionViewDataSource
 extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -197,7 +196,6 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: UICollectionViewCell = collectionView.byDequeueCell(UICollectionViewCell.self, for: indexPath)
-
         let label: UILabel
         if let exist = cell.contentView.viewWithTag(1001) as? UILabel {
             label = exist
@@ -216,7 +214,6 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
                 .byCornerRadius(10)
                 .byMasksToBounds(true)
         }
-
         if collectionView === collectionViewV {
             label.byText(itemsV[indexPath.item])
         } else {
@@ -226,7 +223,6 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
 }
 // MARK: - UICollectionViewDelegate
 extension EmptyCollectionViewDemoVC: UICollectionViewDelegate {
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView === collectionViewV {
             print("✅[V] didSelect Item: \(indexPath.item)")
@@ -244,7 +240,6 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDelegate {
 }
 // MARK: - UICollectionViewDelegateFlowLayout
 extension EmptyCollectionViewDemoVC: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

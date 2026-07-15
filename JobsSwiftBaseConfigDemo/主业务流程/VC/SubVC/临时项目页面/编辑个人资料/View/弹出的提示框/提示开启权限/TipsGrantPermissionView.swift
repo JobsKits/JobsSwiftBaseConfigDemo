@@ -107,7 +107,6 @@ final class TipsGrantPermissionView: UIView {
 }
 
 extension TipsGrantPermissionView {
-    
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
         // byBackgroundColor(JobsCor.black.withAlphaComponent(0.35))

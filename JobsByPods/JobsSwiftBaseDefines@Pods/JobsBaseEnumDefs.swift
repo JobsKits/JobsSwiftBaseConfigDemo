@@ -966,7 +966,6 @@ public enum JSONValue: Equatable, Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-
         if container.decodeNil() {
             self = .null
         } else if let b = try? container.decode(Bool.self) {
@@ -991,7 +990,6 @@ public enum JSONValue: Equatable, Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-
         switch self {
         case .null:
             try container.encodeNil()

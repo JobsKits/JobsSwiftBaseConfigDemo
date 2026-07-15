@@ -50,7 +50,6 @@ public final class JobsToast: UIView {
         public var verticalPadding: CGFloat = 10
         public var cornerRadius: CGFloat = 10
         public var backgroundColor: UIColor = JobsCor.black.withAlphaComponent(0.85)
-
         public init() {}
         // MARK: - 链式配置
         @discardableResult public func byDuration(_ value: TimeInterval) -> Self {
@@ -168,7 +167,6 @@ public extension JobsToast {
     // 主动消失 —— 需要明确传入 window（不提供默认值）
     func dismiss(from window: UIWindow) {
         guard superview != nil else { return }
-
         UIView.jobsAnimateWithOptions(
             0.18,
             delay: 0,

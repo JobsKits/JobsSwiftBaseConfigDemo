@@ -18,7 +18,6 @@ import JobsSwiftDSL
 import JobsByQuartzCore
 
 final class HollowOverlayView: UIView {
-    
     enum HoleShape {
         case oval
         case roundedRect(CGFloat)
@@ -43,14 +42,12 @@ final class HollowOverlayView: UIView {
             .byConfig { [unowned self] gr in
                 guard self.enableDrag else { return }
                 guard let pan = gr as? UIPanGestureRecognizer else { return }
-
                 let location = pan.location(in: self)
                 let hotArea = self.holeRect.insetBy(dx: -self.dragPadding, dy: -self.dragPadding)
                 guard hotArea.contains(location) else {
                     pan.setTranslation(.zero, in: self)
                     return
                 }
-
                 let t = pan.translation(in: self)
                 if pan.state == .changed {
                     self.moveHole(by: t)
@@ -63,7 +60,7 @@ final class HollowOverlayView: UIView {
             .byMaxTouches(2)
             .byCancelsTouchesInView(true)
     }()
-    
+
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,12 +71,10 @@ final class HollowOverlayView: UIView {
         shapeLayer.fillColor = overlayColor.cgColor
         jobs_addGesture(panGR)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-
         shapeLayer.byFrame(bounds)
-
         let path = UIBezierPath.make(rect: bounds)
         let holePath: UIBezierPath
         switch holeShape {
@@ -108,55 +103,51 @@ extension HollowOverlayView : UIGestureRecognizerDelegate {
 }
 
 extension HollowOverlayView {
-    
     private func moveHole(by translation: CGPoint) {
         var r = holeRect
         r.origin.x += translation.x
         r.origin.y += translation.y
-
         let minX = bounds.minX
         let minY = bounds.minY
         let maxX = bounds.maxX - r.width
         let maxY = bounds.maxY - r.height
         r.origin.x = min(max(r.origin.x, minX), maxX)
         r.origin.y = min(max(r.origin.y, minY), maxY)
-
         holeRect = r
     }
 }
 // MARK: - HollowOverlayView@DSL
 extension HollowOverlayView {
-    
     @discardableResult
     func byHoleRect(_ rect: CGRect) -> Self {
         holeRect = rect
         return self
     }
-    
+
     @discardableResult
     func byHoleRect(x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat) -> Self {
         holeRect = CGRect(x: x, y: y, width: w, height: h)
         return self
     }
-    
+
     @discardableResult
     func byHoleShape(_ shape: HoleShape) -> Self {
         holeShape = shape
         return self
     }
-    
+
     @discardableResult
     func byOverlayColor(_ color: UIColor, alpha: CGFloat? = nil) -> Self {
         overlayColor = alpha == nil ? color : color.withAlphaComponent(alpha!)
         return self
     }
-    
+
     @discardableResult
     func byEnableDrag(_ enable: Bool) -> Self {
         enableDrag = enable
         return self
     }
-    
+
     @discardableResult
     func byDragPadding(_ padding: CGFloat) -> Self {
         dragPadding = padding

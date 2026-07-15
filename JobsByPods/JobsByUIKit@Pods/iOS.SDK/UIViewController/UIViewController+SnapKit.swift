@@ -46,10 +46,8 @@ extension UIViewController {
             iv.removeFromSuperview()
             holder?.addSubview(iv)
         }
-
         iv.contentMode = contentMode
         if let bg = backgroundColor { iv.backgroundColor = bg }
-
         if let layout = layout {
             if remakeConstraints { iv.snp.remakeConstraints(layout) }
             else { iv.snp.makeConstraints(layout) }

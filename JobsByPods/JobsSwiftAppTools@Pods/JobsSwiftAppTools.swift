@@ -93,7 +93,6 @@ public enum LaunchChecker {
         let storedM = UD.uint8(forKey: kM)
         let storedD = UD.uint8(forKey: kD)
         let (curY, curM, curD) = ymd(from: now)
-
         if storedY != curY || storedM != curM || storedD != curD {
             // 新的一天 → 更新 Y/M/D
             writeYMD(curY, curM, curD, UD: UD)
@@ -171,7 +170,6 @@ extension LaunchChecker {
     ) {
         let stamp = fullFormatter().string(from: now)
         let last = lastYMD ?? (nil, nil, nil)
-
         func desc(_ tuple: (UInt8?, UInt8?, UInt8?)) -> String {
             if let y = tuple.0, let m = tuple.1, let d = tuple.2 {
                 let absYear = Int(y) + yearBase
@@ -332,15 +330,12 @@ public extension UIView {
 public func networkNormalListenerBy(_ view:UIView){
     JobsNetworkTrafficMonitor.shared
         .byOnUpdate {source, up, down in
-
             let upStr   = jobs_formatSpeed(up)
             let downStr = jobs_formatSpeed(down)
-
             let text = """
             源: \(source.displayName)
             ⬆︎ \(upStr)  ⬇︎ \(downStr)
             """
-
             view.makeNetworkListener().byText(text)
         }
         .byStart(interval: 1.0)
@@ -362,17 +357,14 @@ public func networkRichListenerBy(_ view:UIView){
                 JobsRichRun(.text("源: "))
                     .font(JobsFont.systemFont(ofSize: 10, weight: .medium))
                     .color(JobsCor.secondaryLabel),
-
                 JobsRichRun(.text(source.displayName))
                     .font(JobsFont.systemFont(ofSize: 11, weight: .semibold))
                     .color(JobsCor.white),
-
                 JobsRichRun(.text("\n")),
                 // 第 2 行：上行
                 JobsRichRun(.text("⬆︎ "))
                     .font(JobsFont.systemFont(ofSize: 11))
                     .color(JobsCor.systemGreen),
-
                 JobsRichRun(.text(upStr + "  "))
                     .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
                     .color(JobsCor.white),
@@ -380,7 +372,6 @@ public func networkRichListenerBy(_ view:UIView){
                 JobsRichRun(.text("⬇︎ "))
                     .font(JobsFont.systemFont(ofSize: 11))
                     .color(JobsCor.systemRed),
-
                 JobsRichRun(.text(downStr))
                     .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
                     .color(JobsCor.white)

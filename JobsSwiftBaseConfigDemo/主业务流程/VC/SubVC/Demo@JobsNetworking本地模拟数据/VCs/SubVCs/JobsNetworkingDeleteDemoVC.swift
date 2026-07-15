@@ -11,7 +11,6 @@ import JobsNetworking
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingDeleteDemoVC: JobsNetworkingMethodDemoVC {
-
     override func buildRequestPreview(triggerError: Bool) -> String {
         triggerError
         ? "DELETE /api/errors/delete"
@@ -24,7 +23,6 @@ final class JobsNetworkingDeleteDemoVC: JobsNetworkingMethodDemoVC {
             path: triggerError ? "/api/errors/delete" : "/api/delete/order/ORD-20260324-0001",
             encoding: .urlQuery
         )
-
         let raw = service.prettyJSONString(from: data)
         if triggerError, let error = service.decode(DioErrorResponse.self, from: data) {
             let render = prettyPrint([
@@ -34,13 +32,11 @@ final class JobsNetworkingDeleteDemoVC: JobsNetworkingMethodDemoVC {
             ])
             await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
-
         let response = service.decode(DioDELETEResponse.self, from: data)
         let render = prettyPrint([
             "已删除订单：\(response?.data?.deletedOrderId ?? "--")",
             "删除结果：\((response?.data?.deleted ?? false) ? "true" : "false")"
         ])
-        
         onMainSync { [weak self] in
             guard let self else { return }
             self.handleSuccess(render: render, raw: raw)

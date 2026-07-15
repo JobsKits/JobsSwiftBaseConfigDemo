@@ -15,7 +15,6 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UIView {
-    
     @discardableResult
     public func byHidden(_ hidden: Bool) -> Self {
         self.isHidden = hidden
@@ -233,7 +232,6 @@ extension UIView {
 }
 // MARK: - 闭包重载@单参数
 extension UIView {
-    
     @discardableResult
     public func byHidden(_ builder: () -> Bool) -> Self {
         self.isHidden = builder()
@@ -251,7 +249,6 @@ extension UIView {
         self.tintColor = builder()
         return self
     }
-
 
     @discardableResult
     public func byCornerRadius(_ builder: () -> CGFloat?) -> Self {
@@ -697,12 +694,10 @@ extension UIView {
                 button.configurationUpdateHandler = { btn in
                     guard var c = btn.configuration else { return }
                     let colors = objc_getAssociatedObject(btn, &kBgColorMapKey) as? [Int: UIColor]
-
                     let normalKey = Int(UIControl.State.normal.rawValue)
                     let highlightedKey = Int(UIControl.State.highlighted.rawValue)
                     let selectedKey = Int(UIControl.State.selected.rawValue)
                     let disabledKey = Int(UIControl.State.disabled.rawValue)
-
                     let wantedKey: Int
                     if !btn.isEnabled {
                         wantedKey = disabledKey
@@ -718,7 +713,6 @@ extension UIView {
                         colors?[wantedKey]
                         ?? colors?[normalKey]
                         ?? JobsCor.clear
-
                     c.background.backgroundColor = resolvedColor
                     btn.configuration = c
                 }

@@ -68,15 +68,12 @@ final class MosaicThicknessControl: UIControl {
         layer.shadowOpacity = 0.18
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 3)
-
         trackView
             .byBackgroundColor(JobsCor.tertiaryLabel)
             .byAddTo(self)
-
         thumbView
             .byBackgroundColor(JobsCor.systemBlue)
             .byAddTo(self)
-
         valueLabel
             .byText("\(Int(value))")
             .byTextAlignment(.center)

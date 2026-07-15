@@ -130,7 +130,6 @@ extension JobsWalletDemoVC: UICollectionViewDataSource {
             return collectionView
                 .byDequeueCell(WalletCardCell.self, for: indexPath)
                 .byData(card, isSelected)
-
         case .addNew:
             return collectionView
                 .byDequeueCell(WalletAddCardCell.self, for: indexPath)
@@ -144,7 +143,6 @@ extension JobsWalletDemoVC: UICollectionViewDataSource {
         guard kind == UICollectionView.elementKindSectionHeader else {
             return UICollectionReusableView()
         }
-
         let header: WalletSectionHeaderView =
             collectionView.byDequeueSupplementary(WalletSectionHeaderView.self,
                                                kind: kind,

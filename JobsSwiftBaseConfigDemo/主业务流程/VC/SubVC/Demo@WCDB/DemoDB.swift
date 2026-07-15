@@ -36,7 +36,6 @@ final class DemoDB {
         msg.content = text
         msg.createdAt = Date()
         msg.isAutoIncrement = true
-
         try database.insert(msg, intoTable: table) // ✅ 修正：去掉 objects:
         return msg.lastInsertedRowID
     }

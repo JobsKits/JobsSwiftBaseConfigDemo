@@ -21,7 +21,6 @@ public enum JobsViewPushDirection: CaseIterable {
 }
 
 public struct JobsViewPushConfiguration {
-
     public var direction: JobsViewPushDirection
     public var presentedRatio: CGFloat
     public var animationDuration: TimeInterval
@@ -47,7 +46,6 @@ public struct JobsViewPushConfiguration {
 }
 
 public final class JobsViewPushPresentation: NSObject {
-
     public private(set) weak var sourceView: UIView?
     public private(set) weak var presentedView: UIView?
     public private(set) var isPresented = false
@@ -77,7 +75,6 @@ public final class JobsViewPushPresentation: NSObject {
             completion?()
             return
         }
-
         isPresented = false
         isAnimatingTransition = true
         presentedView.layer.removeAllAnimations()
@@ -86,7 +83,6 @@ public final class JobsViewPushPresentation: NSObject {
         presentedView.transform = .identity
         presentedView.byFrame(visibleFrame)
         presentedView.superview?.layoutIfNeeded()
-
         let animations = { [weak self] in
             guard let self else { return }
             presentedView.byFrame(self.hiddenFrame(for: visibleFrame))
@@ -102,13 +98,11 @@ public final class JobsViewPushPresentation: NSObject {
             self.onDismiss?()
             completion?()
         }
-
         guard animated, configuration.animationDuration > 0 else {
             animations()
             finish(true)
             return
         }
-
         UIView.jobsAnimateWithOptions(
             configuration.animationDuration,
             delay: 0,
@@ -120,7 +114,6 @@ public final class JobsViewPushPresentation: NSObject {
 }
 
 public extension UIView {
-
     @discardableResult
     func jobsPush(
         _ presentedView: UIView,
@@ -129,7 +122,6 @@ public extension UIView {
     ) -> JobsViewPushPresentation {
         jobsViewPushPresentation?.dismiss(animated: false)
         layoutIfNeeded()
-
         let presentation = JobsViewPushPresentation(
             sourceView: self,
             presentedView: presentedView,
@@ -151,10 +143,8 @@ public extension UIView {
 }
 
 private extension JobsViewPushPresentation {
-
     func install() {
         guard let sourceView, let presentedView else { return }
-
         transitionView.byFrame(sourceView.bounds)
         transitionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         transitionView.byBackgroundColor(JobsCor.clear)
@@ -164,14 +154,12 @@ private extension JobsViewPushPresentation {
         transitionView.byAddTo(sourceView)
         presentedView.byAddTo(transitionView)
         layoutPresentedView()
-
         if configuration.dismissOnBackgroundTap {
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped(_:)))
             tapGesture.byDelegate(self)
             transitionView.addGestureRecognizer(tapGesture)
             backgroundTapGesture = tapGesture
         }
-
         if configuration.allowsInteractiveDismiss {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panned(_:)))
             presentedView.addGestureRecognizer(panGesture)
@@ -186,7 +174,6 @@ private extension JobsViewPushPresentation {
         let visibleFrame = visibleFrameForTransitionBounds()
         presentedView.transform = .identity
         presentedView.byFrame(hiddenFrame(for: visibleFrame))
-
         UIView.jobsAnimateWithOptions(
             configuration.animationDuration,
             delay: 0,
@@ -295,7 +282,6 @@ private extension JobsViewPushPresentation {
         case .right:
             presentedView.byFrame(visibleFrame.offsetBy(dx: limitedOffset, dy: 0))
         }
-
         transitionView.byBackgroundColor(
             configuration.backgroundColor.withAlphaComponent(
                 configuration.backgroundColor.cgColor.alpha * (1 - progress)
@@ -332,7 +318,6 @@ private extension JobsViewPushPresentation {
     @objc func panned(_ gesture: UIPanGestureRecognizer) {
         guard presentedView != nil else { return }
         let offset = interactiveOffset(for: gesture.translation(in: transitionView))
-
         switch gesture.state {
         case .began, .changed:
             applyInteractiveOffset(offset)
@@ -352,7 +337,6 @@ private extension JobsViewPushPresentation {
 }
 
 extension JobsViewPushPresentation: UIGestureRecognizerDelegate {
-
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         guard gestureRecognizer === backgroundTapGesture, let presentedView else { return true }
         guard let touchedView = touch.view else { return true };return !touchedView.isDescendant(of: presentedView)
@@ -360,7 +344,6 @@ extension JobsViewPushPresentation: UIGestureRecognizerDelegate {
 }
 
 private final class JobsViewPushTransitionView: UIView {
-
     var layoutHandler: (() -> Void)?
 
     override func layoutSubviews() {
@@ -372,7 +355,6 @@ private final class JobsViewPushTransitionView: UIView {
 private var jobsViewPushPresentationKey: UInt8 = 0
 
 private extension UIView {
-
     var jobsViewPushPresentation: JobsViewPushPresentation? {
         objc_getAssociatedObject(self, &jobsViewPushPresentationKey) as? JobsViewPushPresentation
     }

@@ -38,7 +38,7 @@ final class WCDBDemoVC: BaseVC {
                 }
             }
     }()
-    
+
     private lazy var insertBtn: UIButton = {
         UIButton.sys()
             .byTitle("Insert One Row")
@@ -47,7 +47,6 @@ final class WCDBDemoVC: BaseVC {
                 do {
                     let short = String(UUID().uuidString.prefix(8))
                     let rowID = try DemoDB.shared.insert("hello-\(short)")
-
                     hintLabel.byText("WCDB Demo\nDB: \(DemoDB.shared.dbPath)\n✅ inserted rowID=\(rowID)")
                 } catch {
                     hintLabel.byText("❌ insert error: \(error)")

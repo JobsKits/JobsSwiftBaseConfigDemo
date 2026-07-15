@@ -13,7 +13,6 @@ import UIKit
 
 /// 系统字体的 Jobs 等价入口；调用侧不直接依赖 UIKit 的静态工厂。
 public enum JobsFont {
-
     public static func systemFont(ofSize fontSize: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: fontSize)
     }

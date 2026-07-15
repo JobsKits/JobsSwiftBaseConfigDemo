@@ -23,7 +23,6 @@ import JobsSwiftBaseDefines
 /// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 onMainAsync(self)）
 
 open class JobsClockView: UIView {
-    
     deinit {
         // ✅ 关键：deinit 里不要 onMainAsync / 不要 async / 不要调用 @MainActor 的 stop()
         // 只做“同步断回调”，避免释放窗口期还在 tick
@@ -92,12 +91,12 @@ open class JobsClockView: UIView {
         super.init(coder: coder)
         commonInit()
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
-    
+
     open override func layoutSubviews() {
         super.layoutSubviews()
         layoutDialAndNumbers()
@@ -117,7 +116,6 @@ extension JobsClockView {
     private func layoutDialAndNumbers() {
         let size = min(bounds.width, bounds.height)
         guard size > 0 else { return }
-
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let inset: CGFloat = size * 0.05
         let radius = size / 2 - inset
@@ -130,7 +128,6 @@ extension JobsClockView {
         )
         let circlePath = UIBezierPath.make(ovalIn: circleRect)
         dialLayer.path = circlePath.cgPath
-
         // 12 个整点刻度
         let tickPath = UIBezierPath.make()
         let tickLen: CGFloat = 8
@@ -165,12 +162,10 @@ extension JobsClockView {
         for (index, label) in numberLabels.enumerated() {
             let value = CGFloat(index + 1) // 1...12
             let angle = value / 12.0 * 2.0 * .pi - .pi / 2.0
-
             let labelCenter = CGPoint(
                 x: center.x + cos(angle) * numberRadius,
                 y: center.y + sin(angle) * numberRadius
             )
-
             let labelSize = label.intrinsicContentSize
             label.byFrame(CGRect(
                 x: labelCenter.x - labelSize.width / 2,
@@ -218,7 +213,6 @@ extension JobsClockView {
             pauseInBackground: true,
             autoManageAppState: true
         )
-
         let t = JobsTimer(kind: kind, config: config) { [weak self] in
             // ✅ @Sendable 回调里不直接碰 UI；回到 MainActor 再更新
             onMainAsync {

@@ -133,7 +133,6 @@ extension UIViewController {
             // 轻量防连点（沿用你现有策略）
             if mainNav._jobs_isPushingLocked { return self }
             mainNav._jobs_lockPushing(for: 0.2)
-
             if useCustom {
                 let tr = CATransition()
                 tr.type = .push
@@ -141,12 +140,10 @@ extension UIViewController {
                 tr.duration = duration
                 tr.timingFunction = CAMediaTimingFunction(name: timing)
                 mainNav.view.layer.add(tr, forKey: "jobs.push.main.\(dir._debugKey)")
-
                 self._jobs_entryDirection = dir
                 self._jobs_entryDuration = duration
                 self._jobs_entryTiming = timing
                 UINavigationController._jobs_installPopSwizzlesIfNeeded()
-
                 mainNav.pushViewController(self, animated: false)
                 DispatchQueue.main.async { [weak self] in
                     self?.jobs_fireAppearCompletionIfNeeded(reason: "pushCATransition(mainNav)")
@@ -154,7 +151,6 @@ extension UIViewController {
             } else {
                 self._jobs_entryDirection = nil
                 mainNav.pushViewController(self, animated: true)
-
                 if let tc = mainNav.transitionCoordinator {
                     tc.animate(alongsideTransition: nil) { [weak self] _ in
                         self?.jobs_fireAppearCompletionIfNeeded(reason: "pushTransitionCoordinator(mainNav)")
@@ -171,7 +167,6 @@ extension UIViewController {
             // 轻量防连点
             if nav._jobs_isPushingLocked { return self }
             nav._jobs_lockPushing(for: 0.2)
-
             if useCustom {
                 // 用 CATransition 模拟进入方向；push 本身必须设为非动画
                 let tr = CATransition()

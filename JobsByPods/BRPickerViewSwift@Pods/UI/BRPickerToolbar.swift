@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRPickerToolbar: UIView {
-
     public let titleLabel = UILabel()
     public let cancelButton = UIButton(type: .system)
     public let confirmButton = UIButton(type: .system)
@@ -25,12 +24,9 @@ public final class BRPickerToolbar: UIView {
         addSubview(cancelButton)
         addSubview(confirmButton)
         addSubview(titleLabel)
-
         cancelButton.addTarget(self, action: #selector(tapCancel), for: .touchUpInside)
         confirmButton.addTarget(self, action: #selector(tapConfirm), for: .touchUpInside)
-
         titleLabel.textAlignment = .center
-
         isAccessibilityElement = false
         titleLabel.isAccessibilityElement = true
         cancelButton.isAccessibilityElement = true

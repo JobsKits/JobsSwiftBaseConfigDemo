@@ -14,13 +14,9 @@
 flowchart LR
   M1["Unity"]
   M2["JobsByPods/ManualBySwiftPods@Pods"]
-  M3["JobsSwiftBaseConfigDemo"]
-  M4["my_flutter"]
-  M5["JobsBySwiftPackageManager"]
+  M3["my_flutter"]
   M1 -->|calls:49| M2
-  M3 -->|calls:10| M2
-  M2 -->|calls:1| M4
-  M5 -->|calls:1| M2
+  M2 -->|calls:1| M3
 ```
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

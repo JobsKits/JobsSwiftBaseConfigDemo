@@ -186,7 +186,6 @@ extension UIView {
         if let old = objc_getAssociatedObject(self, &GestureKeys.tapKey) as? UITapGestureRecognizer {
             removeGestureRecognizer(old)
         }
-
         let tap = jobs_addGesture(
             UITapGestureRecognizer
                 .byConfig { gr in
@@ -230,7 +229,6 @@ extension UIView {
             if #available(iOS 9.0, tvOS 9.0, *) {
                 tap.requiresExclusiveTouchType = requiresExclusiveTouchType
             }
-
             let oldAction = (objc_getAssociatedObject(tap, &GestureKeys.tapKey) as? _GestureActionBox)?.action
             let composed: jobsByGRBlock = { gr in
                 oldAction?(gr)
@@ -298,7 +296,7 @@ extension UIView {
             action(v)
         }
     }
-    
+
     public func removeTapAction() {
         if let g = objc_getAssociatedObject(self, &GestureKeys.tapKey) as? UITapGestureRecognizer {
             removeGestureRecognizer(g)
@@ -320,7 +318,6 @@ extension UIView {
         if let old = objc_getAssociatedObject(self, &GestureKeys.longKey) as? UILongPressGestureRecognizer {
             removeGestureRecognizer(old)
         }
-
         let long = jobs_addGesture(
             UILongPressGestureRecognizer
                 .byConfig { gr in
@@ -330,7 +327,6 @@ extension UIView {
                 .byMovement(allowableMovement)                    // 允许移动距离
                 .byTouches(numberOfTouchesRequired)               // 单指
         )!
-
         objc_setAssociatedObject(
             self,
             &GestureKeys.longKey,
@@ -352,12 +348,10 @@ extension UIView {
         _ action: @escaping jobsByGRBlock
     ) -> Self {
         isUserInteractionEnabled = true
-
         if let long = objc_getAssociatedObject(self, &GestureKeys.longKey) as? UILongPressGestureRecognizer {
             long.minimumPressDuration = minimumPressDuration
             long.allowableMovement = allowableMovement
             long.numberOfTouchesRequired = numberOfTouchesRequired
-
             let oldAction = (objc_getAssociatedObject(long, &GestureKeys.longKey) as? _GestureActionBox)?.action
             let composed: jobsByGRBlock = { gr in
                 oldAction?(gr)
@@ -369,9 +363,7 @@ extension UIView {
                 _GestureActionBox(composed),
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return self
-        }
-
-        return addLongPressAction(
+        };return addLongPressAction(
             minimumPressDuration: minimumPressDuration,
             allowableMovement: allowableMovement,
             numberOfTouchesRequired: numberOfTouchesRequired,
@@ -409,7 +401,6 @@ extension UIView {
         if let old = objc_getAssociatedObject(self, &GestureKeys.panKey) as? UIPanGestureRecognizer {
             removeGestureRecognizer(old)
         }
-
         let pan = jobs_addGesture(UIPanGestureRecognizer
             .byConfig { sender in
                 (objc_getAssociatedObject(sender, &GestureKeys.panKey) as? _GestureActionBox)?.action(sender)
@@ -417,7 +408,6 @@ extension UIView {
             .byMinTouches(minimumNumberOfTouches)
             .byMaxTouches(maximumNumberOfTouches)
             .byCancelsTouchesInView(true))!
-
         objc_setAssociatedObject(
             self,
             &GestureKeys.panKey,
@@ -485,11 +475,9 @@ extension UIView {
         _ action: @escaping jobsByGRBlock
     ) -> Self {
         isUserInteractionEnabled = true
-
         if let old = objc_getAssociatedObject(self, &GestureKeys.swipeKey) as? UISwipeGestureRecognizer {
             removeGestureRecognizer(old)
         }
-
         let swipe = jobs_addGesture(
             UISwipeGestureRecognizer
                 .byConfig { sender in
@@ -498,7 +486,6 @@ extension UIView {
                 }
                 .byDirection(direction)
                 .byTouches(numberOfTouchesRequired))!
-
         objc_setAssociatedObject(
             self,
             &GestureKeys.swipeKey,
@@ -523,7 +510,6 @@ extension UIView {
         if let swipe = objc_getAssociatedObject(self, &GestureKeys.swipeKey) as? UISwipeGestureRecognizer {
             swipe.direction = direction
             swipe.numberOfTouchesRequired = numberOfTouchesRequired
-
             let oldAction = (objc_getAssociatedObject(swipe, &GestureKeys.swipeKey) as? _GestureActionBox)?.action
             let composed: jobsByGRBlock = { gr in
                 oldAction?(gr)
@@ -534,9 +520,7 @@ extension UIView {
                 &GestureKeys.swipeKey,
                 _GestureActionBox(composed),
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC);return self
-        }
-
-        return addSwipeAction(
+        };return addSwipeAction(
             direction: direction,
             numberOfTouchesRequired: numberOfTouchesRequired,
             action
@@ -825,7 +809,7 @@ extension UIView {
         _setGrMap(map, for: &GestureMultiKeys.longMap)
         return id
     }
-    
+
     @discardableResult
     public func addLongPressActionMulti(
             use id: String,
@@ -841,7 +825,7 @@ extension UIView {
             numberOfTouchesRequired: numberOfTouchesRequired,
             action);return self
     }
-    
+
     public func removeLongPressActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.longMap)
         if let g = map[id] {
@@ -849,7 +833,7 @@ extension UIView {
             _setGrMap(map, for: &GestureMultiKeys.longMap)
         }
     }
-    
+
     public func removeAllLongPressActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.longMap)
         map.values.forEach { removeGestureRecognizer($0) }
@@ -873,7 +857,6 @@ extension UIView {
             .byMinTouches(minimumNumberOfTouches)
             .byMaxTouches(maximumNumberOfTouches)
             .byCancelsTouchesInView(true))!
-
         objc_setAssociatedObject(
             gr,
             &GestureKeys.panKey,
@@ -884,7 +867,7 @@ extension UIView {
         _setGrMap(map, for: &GestureMultiKeys.panMap)
         return id
     }
-    
+
     @discardableResult
     public func addPanActionMulti(
         use id: String,
@@ -898,7 +881,7 @@ extension UIView {
             maximumNumberOfTouches: maximumNumberOfTouches,
             action);return self
     }
-    
+
     public func removePanActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.panMap)
         if let g = map[id] {
@@ -906,7 +889,7 @@ extension UIView {
             _setGrMap(map, for: &GestureMultiKeys.panMap)
         }
     }
-    
+
     public func removeAllPanActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.panMap)
         map.values.forEach { removeGestureRecognizer($0) }
@@ -930,7 +913,6 @@ extension UIView {
             }
             .byDirection(direction)
             .byTouches(numberOfTouchesRequired))!
-
         objc_setAssociatedObject(
             gr,
             &GestureKeys.swipeKey,
@@ -940,7 +922,7 @@ extension UIView {
         _setGrMap(map, for: &GestureMultiKeys.swipeMap)
         return id
     }
-    
+
     @discardableResult
     public func addSwipeActionMulti(
         use id: String,
@@ -954,7 +936,7 @@ extension UIView {
             numberOfTouchesRequired: numberOfTouchesRequired,
             action);return self
     }
-    
+
     public func removeSwipeActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.swipeMap)
         if let g = map[id] {
@@ -962,7 +944,7 @@ extension UIView {
             _setGrMap(map, for: &GestureMultiKeys.swipeMap)
         }
     }
-    
+
     public func removeAllSwipeActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.swipeMap)
         map.values.forEach { removeGestureRecognizer($0) }
@@ -975,17 +957,14 @@ extension UIView {
             _ action: @escaping jobsByGRBlock
     ) -> String {
         isUserInteractionEnabled = true
-
         var map = _grMap(for: &GestureMultiKeys.pinchMap)
         if let old = map[id] as? UIPinchGestureRecognizer { removeGestureRecognizer(old) }
-
         let gr = jobs_addGesture(UIPinchGestureRecognizer
             .byConfig { _ in }
             .byOnScaleChange { sender, scale in
                 (objc_getAssociatedObject(sender, &GestureKeys.pinchKey) as? _GestureActionBox)?.action(sender)
             }
         )!
-
         objc_setAssociatedObject(
             gr,
             &GestureKeys.pinchKey,
@@ -1019,13 +998,10 @@ extension UIView {
         _ action: @escaping jobsByGRBlock
     ) -> String {
         isUserInteractionEnabled = true
-
         var map = _grMap(for: &GestureMultiKeys.rotateMap)
         if let old = map[id] as? UIRotationGestureRecognizer { removeGestureRecognizer(old) }
-
         let gr = UIRotationGestureRecognizer(target: self, action: #selector(_gestureHandleRotate(_:)))
         addGestureRecognizer(gr)
-        
         objc_setAssociatedObject(
             gr,
             &GestureKeys.rotateKey,
@@ -1035,13 +1011,13 @@ extension UIView {
         _setGrMap(map, for: &GestureMultiKeys.rotateMap)
         return id
     }
-    
+
     @discardableResult
     public func addRotationActionMulti(use id: String, _ action: @escaping jobsByGRBlock) -> Self {
         _ = addRotationActionMulti(id: id, action)
         return self
     }
-    
+
     public func removeRotationActionMulti(id: String) {
         var map = _grMap(for: &GestureMultiKeys.rotateMap)
         if let g = map[id] {
@@ -1049,7 +1025,7 @@ extension UIView {
             _setGrMap(map, for: &GestureMultiKeys.rotateMap)
         }
     }
-    
+
     public func removeAllRotationActionsMulti() {
         var map = _grMap(for: &GestureMultiKeys.rotateMap)
         map.values.forEach { removeGestureRecognizer($0) }

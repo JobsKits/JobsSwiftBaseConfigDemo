@@ -106,7 +106,6 @@ extension UINavigationBarAppearance {
 // MARK: - 闭包重载@单参数
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {
-    
     @discardableResult
     public func byTitleFont(_ builder: () -> UIFont?) -> Self {
         let font = builder()
@@ -116,7 +115,7 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes.removeValue(forKey: .font)
         };return self
     }
-    
+
     @discardableResult
     public func byTitleColor(_ builder: () -> UIColor?) -> Self {
         let color = builder()
@@ -126,19 +125,19 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
-    
+
     @discardableResult
     public func byTitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.titleTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     public func byTitlePositionAdjustment(_ builder: () -> UIOffset) -> Self {
         self.titlePositionAdjustment = builder()
         return self
     }
-    
+
     @discardableResult
     public func byLargeTitleFont(_ builder: () -> UIFont?) -> Self {
         let font = builder()
@@ -148,7 +147,7 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes.removeValue(forKey: .font)
         };return self
     }
-    
+
     @discardableResult
     public func byLargeTitleColor(_ builder: () -> UIColor?) -> Self {
         let color = builder()
@@ -158,20 +157,20 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
-    
+
     @discardableResult
     public func byLargeTitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.largeTitleTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {
         self.subtitleTextAttributes = builder()
         return self
     }
-    
+
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleFont(_ builder: () -> UIFont?) -> Self {
@@ -182,7 +181,7 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes.removeValue(forKey: .font)
         };return self
     }
-    
+
     @discardableResult
     @available(iOS 26.0, *)
     public func bySubtitleColor(_ builder: () -> UIColor?) -> Self {
@@ -193,7 +192,7 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes.removeValue(forKey: .foregroundColor)
         };return self
     }
-    
+
     @discardableResult
     @available(iOS 26.0, *)
     public func byLargeSubtitleAttributes(_ builder: () -> [NSAttributedString.Key: Any]) -> Self {

@@ -189,7 +189,6 @@ public final class JobsMarqueeView: UIView {
             lastBoundsSize = bounds.size
             rebuildContent()
         }
-
         if isPageControlEnabled {
             updatePageControlCurrentPage()
         }
@@ -237,15 +236,12 @@ public final class JobsMarqueeView: UIView {
             var x: CGFloat = 0
             for button in internalButtons {
                 button.sizeToFit()
-
                 var size = button.bounds.size
                 size.width  = max(size.width, minButtonSize.width)
                 size.height = bounds.height
-
                 if itemSizeMode == .fillBounds {
                     size.width = bounds.width
                 }
-
                 button.byFrame(CGRect(x: x, y: 0, width: size.width, height: size.height))
                 button.byAddTo(scrollView)
                 x += size.width
@@ -256,15 +252,12 @@ public final class JobsMarqueeView: UIView {
             var y: CGFloat = 0
             for button in internalButtons {
                 button.sizeToFit()
-
                 var size = button.bounds.size
                 size.height = max(size.height, minButtonSize.height)
                 size.width  = bounds.width
-
                 if itemSizeMode == .fillBounds {
                     size.height = bounds.height
                 }
-
                 button.byFrame(CGRect(x: 0, y: y, width: size.width, height: size.height))
                 button.byAddTo(scrollView)
                 y += size.height
@@ -298,13 +291,11 @@ public final class JobsMarqueeView: UIView {
         guard isManualScrollEnabled else { completion?(); return }
         guard itemSizeMode == .fillBounds else { completion?(); return }
         guard realPageCount > 0, stepLength > 0 else { completion?(); return }
-
         let isHorizontal = direction.isHorizontal
         let rawOffset = isHorizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y
         let maxOffset = isHorizontal
         ? max(0, scrollView.contentSize.width - scrollView.bounds.width)
         : max(0, scrollView.contentSize.height - scrollView.bounds.height)
-
         // 最后一页是复制的「第 0 页」，到尾部就直接无动画跳回 0
         if rawOffset >= maxOffset - 0.5 {
             scrollView.contentOffset = .zero
@@ -312,17 +303,14 @@ public final class JobsMarqueeView: UIView {
             completion?()
             return
         }
-
         var page = Int(round(rawOffset / stepLength))
         page = max(0, min(realPageCount - 1, page))
-
         var target = scrollView.contentOffset
         if isHorizontal {
             target.x = CGFloat(page) * stepLength
         } else {
             target.y = CGFloat(page) * stepLength
         }
-
         UIView.jobsAnimateWithCompletion(0.25, animations: {
             self.scrollView.contentOffset = target
         }, completion: { _ in
@@ -336,7 +324,7 @@ public final class JobsMarqueeView: UIView {
         if timer == nil { createTimer() }
         timer?.start()
     }
-    
+
     public func pause() {
         timer?.pause()
     }
@@ -351,7 +339,6 @@ public final class JobsMarqueeView: UIView {
     private func ensureAutoScrollRunning() {
         guard !dataSourceButtons.isEmpty else { return }
         if timer == nil { createTimer() }
-
         if timer?.isRunning == true {
             timer?.resume()
         } else {
@@ -499,14 +486,11 @@ public final class JobsMarqueeView: UIView {
     @MainActor
     private func tickContinuous() {
         guard !internalButtons.isEmpty else { return }
-
         let distance = CGFloat(continuousInterval) * continuousSpeed
         guard distance > 0 else { return }
-
         var offset = scrollView.contentOffset
         let maxOffsetX = max(0, scrollView.contentSize.width  - scrollView.bounds.width)
         let maxOffsetY = max(0, scrollView.contentSize.height - scrollView.bounds.height)
-
         switch direction {
         case .left:
             guard maxOffsetX > 0 else { return }
@@ -574,7 +558,6 @@ public final class JobsMarqueeView: UIView {
         // 1) 复制常用状态下的 title / attributedTitle / color / image / backgroundImage
         let states: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
         for st in states {
-
             if let title = source.title(for: st) {
                 button.byTitle(title, for: st)
             }
@@ -590,15 +573,12 @@ public final class JobsMarqueeView: UIView {
                     button.byAttributedTitle(att, for: st)
                 }
             }
-
             if let color = source.titleColor(for: st) {
                 button.byTitleColor(color, for: st)
             }
-
             if let image = source.image(for: st) {
                 button.byImage(image, for: st)
             }
-
             if let bgImage = source.backgroundImage(for: st) {
                 button.byBackgroundImage(bgImage, for: st)
             }
@@ -624,7 +604,6 @@ public final class JobsMarqueeView: UIView {
                                   for: .normal,
                                   allowNetworkIfMissing: true)
         #endif
-
         #if canImport(Kingfisher)
         source.kf_cloneBackground(to: button,
                                   for: .normal,
@@ -638,7 +617,6 @@ public final class JobsMarqueeView: UIView {
         }
         // ✅ 7) iOS15+ 强制触发一次配置更新（让 DSL 的 update handler / transformer 生效）
         button.byUpdateConfig()
-        
         var hasTapTarget = false
         for target in source.allTargets {
             for event in [
@@ -659,13 +637,11 @@ public final class JobsMarqueeView: UIView {
                 }
             }
         }
-
         if #available(iOS 14.0, *), !hasTapTarget {
             button.onTap { [weak source] _ in
                 source?.performTap()
             }
         }
-
         if let recognizers = source.gestureRecognizers {
             for recognizer in recognizers {
                 guard let lp = recognizer as? UILongPressGestureRecognizer else { continue }
@@ -694,7 +670,6 @@ public final class JobsMarqueeView: UIView {
 }
 // MARK: - UIScrollViewDelegate (Manual Drag)
 extension JobsMarqueeView: UIScrollViewDelegate {
-
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         guard isManualScrollEnabled else { return }
         // 拖拽开始：暂停定时器（仅记录“拖拽前是否在跑”）
@@ -737,7 +712,6 @@ extension JobsMarqueeView: UIScrollViewDelegate {
 }
 // MARK: - DSL
 extension JobsMarqueeView {
-
     @discardableResult
     public func byDirection(_ direction: JobsDirection) -> Self {
         self.direction = direction
@@ -770,7 +744,6 @@ extension JobsMarqueeView {
 }
 // MARK: - PageControl Core (SnapKit)
 private extension JobsMarqueeView {
-
     func installDefaultPageControlConstraintsIfNeeded() {
         updatePageControlConstraintsIfNeeded()
     }
@@ -788,7 +761,6 @@ private extension JobsMarqueeView {
         let dotSpacing: CGFloat = 6
         let pages = max(1, pageControl.numberOfPages)
         let minWidth = CGFloat(pages) * dotDiameter + CGFloat(max(0, pages - 1)) * dotSpacing
-
         pageControl.snp.remakeConstraints { make in
             make.height.greaterThanOrEqualTo(10.h).priority(.required)
             make.width.greaterThanOrEqualTo(minWidth).priority(.required)
@@ -823,16 +795,12 @@ private extension JobsMarqueeView {
             pageControl.jobs_applyIndicatorImagesIfNeeded()
             return
         }
-
         let isHorizontal = direction.isHorizontal
         let rawOffset = isHorizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y
-
         let maxOffset = isHorizontal
         ? max(0, scrollView.contentSize.width - scrollView.bounds.width)
         : max(0, scrollView.contentSize.height - scrollView.bounds.height)
-
         var page = Int(round(rawOffset / stepLength))
-
         if itemSizeMode == .fillBounds {
             if rawOffset >= maxOffset - 0.5 {
                 page = 0
@@ -842,7 +810,6 @@ private extension JobsMarqueeView {
         } else {
             page = max(0, min(realPageCount - 1, page))
         }
-
         pageControl.currentPage = page
         pageControl.jobs_applyIndicatorImagesIfNeeded()
     }

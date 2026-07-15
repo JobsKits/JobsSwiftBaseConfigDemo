@@ -74,7 +74,6 @@ final class TabBarDemoVC: BaseVC {
                                           opacity: 0.6,
                                           offset: .init(width: 0, height: 1))
                         },
-
                     /// 普通按钮@（配置事件）
                     UIButton.sys()
                         .byNormalBgColor(JobsCor.clear)
@@ -125,7 +124,6 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("creditcard.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
-
                     UIButton.sys()
                         .byNormalBgColor(JobsCor.clear)
                         .byTitle("好友".tr, for: .normal)
@@ -136,7 +134,6 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("person.2.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
-
                     /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsSwiftTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
                     UIButton.sys()
                         .byTitle("活动".tr, for: .normal)
@@ -164,7 +161,6 @@ final class TabBarDemoVC: BaseVC {
                                 )
                             }
                         },
-
                     UIButton.sys()
                         .byNormalBgColor(JobsCor.clear)
                         .byTitle("客服".tr, for: .normal)
@@ -175,7 +171,6 @@ final class TabBarDemoVC: BaseVC {
                         .byImage("message.fill".sysImg, for: .selected)
                         .byImagePlacement(.top)
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
-
                     /// 普通按钮@（展示副标题）
                     UIButton.sys()
                         .byNormalBgColor(JobsCor.clear)
@@ -208,7 +203,6 @@ final class TabBarDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "JobsTabBarCtrl@横滑 Demo（>5 个按钮）".tr)
-
         addChild(tabCtrl)
         tabCtrl.view.byAddTo(view)
         tabCtrl.view.snp.makeConstraints { $0.edges.equalToSuperview() }

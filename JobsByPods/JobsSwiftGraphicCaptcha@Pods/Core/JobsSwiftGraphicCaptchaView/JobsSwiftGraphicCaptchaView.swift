@@ -82,7 +82,6 @@ private extension JobsSwiftGraphicCaptchaView {
         guard !characters.isEmpty else { return }
         let cellWidth = rect.width / CGFloat(characters.count)
         let centerY = rect.midY
-
         for (idx, character) in characters.enumerated() {
             let textColor = self.textColor ?? JobsSwiftGraphicCaptchaView.randomColor(alpha: 0.95)
             let attributes: [NSAttributedString.Key: Any] = [
@@ -92,7 +91,6 @@ private extension JobsSwiftGraphicCaptchaView {
             let textSize = character.size(withAttributes: attributes)
             let x = cellWidth * CGFloat(idx) + max(2, (cellWidth - textSize.width) / 2) + Self.randomCGFloat(-2, 2)
             let y = centerY - textSize.height / 2 + Self.randomCGFloat(-4, 4)
-
             context.saveGState()
             context.translateBy(x: x + textSize.width / 2, y: y + textSize.height / 2)
             context.rotate(by: Self.randomCGFloat(-0.28, 0.28))
@@ -112,7 +110,6 @@ private extension JobsSwiftGraphicCaptchaView {
                                         y: Self.randomCGFloat(rect.minY, rect.maxY)))
             context.strokePath()
         }
-
         for _ in 0..<max(noisePointCount, 0) {
             let pointRect = CGRect(x: Self.randomCGFloat(rect.minX, rect.maxX),
                                    y: Self.randomCGFloat(rect.minY, rect.maxY),

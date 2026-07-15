@@ -57,7 +57,6 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "时时彩".tr)
         tableView.byVisible(YES)
-
         data = (0..<60).map { i in
             let remain = Int.random(in: 8...300)                 // 每行剩余时间不同
             let tick = [0.5, 1.0, 1.0, 2.0].randomElement()!     // tick 间隔不同
@@ -68,13 +67,11 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
                 tickInterval: tick
             )
         }
-
         tableView.reloadData()
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
 extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate {
-
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         data.count
     }

@@ -15,7 +15,6 @@ import JobsSwiftDSL
 
 // MARK: - 获取@标题、副标题、前景图、背景图
 extension UIButton {
-
     @discardableResult
     public func byTitleLab(_ config: ((UILabel) -> Void)?) -> Self {
         if let lab = self.titleLabel {
@@ -79,7 +78,6 @@ extension UIButton {
             ?? self.attributedTitle(for: state)?.string
             ?? self.title(for: .normal)
             ?? self.attributedTitle(for: .normal)?.string
-
         guard
             let full,
             let idx = full.firstIndex(of: "\n"),
@@ -142,9 +140,7 @@ extension UIButton {
     }
     /// 主标题字体（业务视角 best-effort）
     public func jobs_titleFont(for state: UIControl.State) -> UIFont? {
-
         let st = (state == .normal) ? jobs_effectiveState : state
-
         // ✅ 0) 最优先：读 DSL 缓存（不会被系统“冲”）
         if let f = jobs_dslTitleFont(for: st) {
             return f
@@ -152,11 +148,9 @@ extension UIButton {
         if let f = jobs_dslTitleFont(for: .normal) {
             return f
         }
-
         // 1) attributedTitle 里如果写了 UIFont，也返回
         if let att = self.attributedTitle(for: st), let f = att.jobs_firstFont { return f }
         if let att = self.attributedTitle(for: .normal), let f = att.jobs_firstFont { return f }
-
         // 2) iOS15+ configuration.attributedTitle
         if #available(iOS 15.0, *),
            let cfg = configuration,
@@ -164,7 +158,6 @@ extension UIButton {
             let ns = NSAttributedString(att)
             if let f = ns.jobs_firstFont { return f }
         }
-
         // 3) 最后兜底（不稳）
         return self.titleLabel?.font
     }
@@ -187,12 +180,10 @@ extension UIButton {
     }
     /// 副标题字体（业务视角 best-effort）
     public func jobs_subTitleFont(for state: UIControl.State) -> UIFont? {
-        
         if let att = jobs_attributedSubTitle(for: state),
            let f = att.jobs_firstFont {
             return f
         }
-        
         if #available(iOS 15.0, *), let lab = subtitleLabel {
             return lab.font
         };return nil
@@ -260,7 +251,6 @@ extension UIButton {
 }
 // MARK: - NSAttributedString helper（只拿第一段属性，够动画用）
 private extension NSAttributedString {
-
     var jobs_firstColor: UIColor? {
         guard length > 0 else { return nil }
         let c = attribute(.foregroundColor, at: 0, effectiveRange: nil)

@@ -16,7 +16,6 @@ import WebKit
 // ===== 下载（iOS 14.5+）=====
 @available(iOS 14.5, *)
 extension BaseWebView: WKDownloadDelegate {
-
     @MainActor
     public func download(_ download: WKDownload,
                          decideDestinationUsing response: URLResponse,
@@ -40,7 +39,6 @@ extension BaseWebView: WKDownloadDelegate {
 }
 // ===== 文档选择器代理（强引用由外层保持）=====
 final class DocumentPickerDelegateProxy: NSObject, UIDocumentPickerDelegate {
-
     private let onFinish: ([URL]?) -> Void
 
     init(_ onFinish: @escaping ([URL]?) -> Void) {

@@ -46,7 +46,6 @@ struct AppStorage {
 
 @propertyWrapper
  struct UserDefault<Value: Codable> {
-
     private let key: String
     private let defaultValue: Value
     private let defaults: UserDefaults
@@ -66,15 +65,11 @@ struct AppStorage {
             if let value = defaults.object(forKey: key) as? Value {
                 return value
             }
-
             // Codable（struct / array / model array）
             if let data = defaults.data(forKey: key),
                let decoded = try? JSONDecoder().decode(Value.self, from: data) {
                 return decoded
-            }
-
-            return defaultValue
-
+            };return defaultValue
         }
         set {
             // Optional == nil → 删除
@@ -106,7 +101,6 @@ struct AppStorage {
 
 //MARK: ******UserDefaults+Helper******
 extension UserDefaults {
-
     /// 判断是否是 UserDefaults 可直接存储的类型
     static func isPlistSafeType(_ value: Any) -> Bool {
         switch value {

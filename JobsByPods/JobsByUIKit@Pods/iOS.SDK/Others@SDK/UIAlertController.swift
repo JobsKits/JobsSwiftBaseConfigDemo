@@ -160,7 +160,6 @@ final class JobsTextFieldDelegateProxy:
     DelegateProxy<UITextField, UITextFieldDelegate>,
     DelegateProxyType,
     UITextFieldDelegate {
-
     init(textField: UITextField) {
         super.init(parentObject: textField, delegateProxy: JobsTextFieldDelegateProxy.self)
     }
@@ -207,7 +206,6 @@ extension UIAlertController {
                 .byAutocorrectionType(autocorrection)
                 .byAutocapitalizationType(capitalization)
                 .byTextContentType(contentType)
-
             var didStyle = false
             if let w = borderWidth { tf.layer.borderWidth = w; didStyle = true }
             if let c = borderColor { tf.layer.borderColor = c.cgColor; didStyle = true }
@@ -216,10 +214,8 @@ extension UIAlertController {
                 tf.layer.masksToBounds = true
                 if #available(iOS 13.0, *) { tf.layer.cornerCurve = .continuous }
             }
-
             guard let alert = self else { return }
             var previousText = tf.text ?? ""
-
             tf.rx.controlEvent(.editingChanged)
                 .subscribe(onNext: { [weak alert, weak tf] in
                     guard let alert = alert, let tf = tf else { return }
@@ -280,16 +276,13 @@ extension UIAlertController {
                           anchor: Anchor = .auto,
                           animated: Bool = true,
                           completion: (jobsByVoidBlock)? = nil) -> Self {
-
         let isSheet: Bool = {
             switch vc.modalPresentationStyle {
             case .pageSheet, .formSheet, .automatic: return true
             default: return false
             }
         }()
-
         let host = (isSheet ? vc.presentingViewController : nil) ?? vc
-
         if self.popoverPresentationController != nil {
             self.byAnchor(anchor, host: host)
         }
@@ -298,10 +291,8 @@ extension UIAlertController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
         _installLocalBGIfPending()
-
         host.present(self, animated: animated) { [weak self] in
             guard let self else { completion?(); return }
-
             if let tc = self.transitionCoordinator {
                 tc.animate(alongsideTransition: { _ in
                     UIView.performWithoutAnimation {
@@ -393,16 +384,13 @@ extension UIAlertController {
         crossfade: TimeInterval = 0.2
     ) -> Self {
         _ = byBgImage(image ?? jobsSolidBlue(), hideSystemBackdrop: hideSystemBackdrop)
-
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return self }
-
         _enqueueBGTask(preTransition: false) { alert in
             onMainAsync(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
-
                     if #available(iOS 13.0, *) {
                         Task { @MainActor in
                             let img = await trimmed.sdLoadImage(fallbackImage: placeholder)
@@ -435,16 +423,13 @@ extension UIAlertController {
         crossfade: TimeInterval = 0.2
     ) -> Self {
         _ = byBgImage(image ?? jobsSolidBlue(), hideSystemBackdrop: hideSystemBackdrop)
-
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return self }
-
         _enqueueBGTask(preTransition: false) { alert in
             onMainAsync(self) { vc in
                 alert._withAlertCard { card in
                     let iv = alert._ensureBGImageView(in: card)
                     let placeholder = iv.image ?? (image ?? jobsSolidBlue())
-
                     if #available(iOS 13.0, *) {
                         Task { @MainActor in
                             let img = await trimmed.kfLoadImage(fallbackImage: placeholder)
@@ -502,7 +487,6 @@ extension UIAlertController {
                 alert._withAlertCard { _ in
                     guard let tf = alert.textField(at: index) else { return }
                     guard let box = alert._findTextFieldBox(for: tf) else { return }
-
                     let tag = 0x7F_54_19
                     let borderView: UIView
                     if let exist = box.viewWithTag(tag) {
@@ -516,7 +500,6 @@ extension UIAlertController {
                         v.snp.makeConstraints { make in make.edges.equalToSuperview().inset(insets) }
                         borderView = v
                     }
-
                     borderView.layer.borderWidth = width
                     borderView.layer.borderColor = color.cgColor
                     borderView.layer.cornerRadius = cornerRadius ?? box.layer.cornerRadius
@@ -595,19 +578,16 @@ extension UIAlertController {
         }) as? UIImageView {
             return exist
         }
-
         let iv = UIImageView()
             .byUserInteractionEnabled(false)
             .byClipsToBounds(true)
             .byContentMode(.scaleAspectFill)
             .byAccessibilityIdentifier("jobs.alert.bg")
-
         // 降低“存在感”
         iv.setContentHuggingPriority(.init(1), for: .horizontal)
         iv.setContentHuggingPriority(.init(1), for: .vertical)
         iv.setContentCompressionResistancePriority(.init(1), for: .horizontal)
         iv.setContentCompressionResistancePriority(.init(1), for: .vertical)
-
         container.insertSubview(iv, at: 0)
         iv.snp.makeConstraints { make in
             make.edges.equalToSuperview()   // 只贴边，不加 <= 约束，避免卡片被“收缩”
@@ -696,10 +676,8 @@ extension UIAlertController {
             if (v.backgroundColor?.cgColor.alpha ?? 0) > 0.01 { return true }
             if v is UIVisualEffectView { return true };return false
         }
-
         if let s1 = tf.superview, looksLikeBox(s1) { return s1 }
         if let s2 = tf.superview?.superview, looksLikeBox(s2) { return s2 }
-
         var p = tf.superview
         while let v = p { if looksLikeBox(v) { return v }; p = v.superview }
         if let container = tf.superview?.superview {

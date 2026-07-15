@@ -13,7 +13,6 @@ public enum JobsOpenMode {
 }
 
 public final class JobsOpenConfiguration {
-
     public var url: URL
     public var mode: JobsOpenMode
     public var title: String?

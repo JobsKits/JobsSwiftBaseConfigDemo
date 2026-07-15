@@ -11,7 +11,6 @@ import Moya
 
 // MARK: - 把 cURL 也喂回 UI
 public struct CurlLoggerPlugin: PluginType {
-    
     private let emit: ((String) -> Void)?
     public init(emit: ((String) -> Void)? = nil) {
         self.emit = emit
@@ -27,7 +26,6 @@ public struct CurlLoggerPlugin: PluginType {
 }
 
 private extension URLRequest {
-    
     func cURLDescription() -> String {
         var comps = ["curl -v"]
         if let method = httpMethod { comps.append("-X \(method)") }

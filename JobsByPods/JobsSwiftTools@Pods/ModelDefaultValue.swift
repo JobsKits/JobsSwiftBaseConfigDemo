@@ -71,43 +71,33 @@ extension DecodableDefault {
         enum True: Source {
             static var defaultValue: Bool { true }
         }
-
         enum False: Source {
             static var defaultValue: Bool { false }
         }
-
         enum DefaultInt: Source {
             static var defaultValue: Int { 0 }
         }
-
         enum DefaultMinusOne: Source {
             static var defaultValue: Int { -1 }
         }
-
         enum DefaultTripleNine: Source {
             static var defaultValue: Int { 999 }
         }
-
         enum DefaultStringZero: Source {
             static var defaultValue: String { "0" }
         }
-
         enum EmptyString: Source {
             static var defaultValue: String { "" }
         }
-
         enum EmptyList<T: List>: Source {
             static var defaultValue: T { [] }
         }
-
         enum EmptyMap<T: Map>: Source {
             static var defaultValue: T { [:] }
         }
-
         enum DefaultFloat: Source {
             static var defaultValue: Float { 0 }
         }
-
 //        enum DefaultLiveStreamStatus: Source {
 //            static var defaultValue: LiveStreamStatus { .UnStream }
 //        }

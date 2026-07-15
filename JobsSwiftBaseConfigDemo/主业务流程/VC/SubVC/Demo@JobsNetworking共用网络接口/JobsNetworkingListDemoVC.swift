@@ -22,7 +22,6 @@ import GKNavigationBarSwift
 
 // MARK: - 外层入口：TableView + SnapKit
 final class JobsNetworkingListDemoVC : BaseVC {
-     
     private let items = DemoItem.allCases
     private enum DemoItem: CaseIterable {
         case requestAPI
@@ -30,7 +29,6 @@ final class JobsNetworkingListDemoVC : BaseVC {
         case concurrentRequests
         case downloadToLocal
         case generalRequest
-
         var title: String {
             switch self {
             case .requestAPI: return "Demo@ 请求接口.swift"
@@ -40,7 +38,6 @@ final class JobsNetworkingListDemoVC : BaseVC {
             case .generalRequest: return "Demo@ 一般数据请求.swift"
             }
         }
-
         func makeViewController() -> UIViewController {
             switch self {
             case .requestAPI:
@@ -70,7 +67,6 @@ final class JobsNetworkingListDemoVC : BaseVC {
             .cellForRowAt { [weak self] _, tv, indexPath in
                 let cell = tv.dequeueReusableCell(withIdentifier: "cell") ??
                     UITableViewCell(style: .default, reuseIdentifier: "cell")
-
                 guard let self else { return cell }
                 var cfg = cell.defaultContentConfiguration()
                 cfg.text = self.items[indexPath.row].title

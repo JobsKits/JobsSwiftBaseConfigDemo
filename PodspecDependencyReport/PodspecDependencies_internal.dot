@@ -4,6 +4,7 @@ digraph PodspecDependencies {
   "BRPickerViewSwift";
   "Flutter";
   "FlutterPluginRegistrant";
+  "JobsAudioRecorder";
   "JobsBluetooth";
   "JobsBy3rdTools";
   "JobsByPDFKit";
@@ -60,6 +61,7 @@ digraph PodspecDependencies {
   "BRPickerViewSwift" -> "JobsByUIKit";
   "BRPickerViewSwift" -> "JobsSwiftDSL";
   "FlutterPluginRegistrant" -> "Flutter";
+  "JobsAudioRecorder" -> "JobsSwiftTimer";
   "JobsBy3rdTools" -> "JobsByUIKit";
   "JobsBy3rdTools" -> "JobsInheritance";
   "JobsBy3rdTools" -> "JobsScale";

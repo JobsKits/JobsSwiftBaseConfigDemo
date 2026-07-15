@@ -24,7 +24,6 @@ import GKNavigationBarSwift
 
 // MARK: - 统一的 UI 骨架：TextView + Button（SnapKit）
 class JobsNetworkingDemoBaseVC: BaseVC {
-    
     lazy var runButton: UIButton = {
         UIButton.sys()
             /// 背景色
@@ -42,7 +41,7 @@ class JobsNetworkingDemoBaseVC: BaseVC {
                 }
             }
     }()
-    
+
     lazy var textView: UITextView = {
         UITextView()
             .byFont(JobsFont.systemFont(ofSize: 16))
@@ -64,7 +63,7 @@ class JobsNetworkingDemoBaseVC: BaseVC {
             .byClipsToBounds(YES)
             .byCornerRadius(8.h)
         }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)

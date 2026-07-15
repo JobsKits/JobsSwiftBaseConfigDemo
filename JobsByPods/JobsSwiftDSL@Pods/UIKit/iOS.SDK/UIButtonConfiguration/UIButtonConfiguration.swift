@@ -113,7 +113,7 @@ public extension UIButton.Configuration {
         c.background = bg
         return c
     }
-    
+
     @discardableResult
     @inlinable
     func byBaseForegroundColor(_ color: UIColor?) -> Self {
@@ -400,19 +400,15 @@ public extension UIButton.Configuration {
             .byActivityIndicatorColorTransformer(old.activityIndicatorColorTransformer)
             // MARK: - Behavior
             .byAutomaticallyUpdateForSelection(old.automaticallyUpdateForSelection)
-
         // MARK: - iOS 16+ Indicator
         if #available(iOS 16.0, tvOS 16.0, *) {
             c = c
                 .byIndicator(old.indicator)
                 .byIndicatorColorTransformer(old.indicatorColorTransformer)
         }
-
         // MARK: - iOS 26+ Symbol content transition
         if #available(iOS 26.0, tvOS 26.0, *) {
             c = c.bySymbolContentTransition(old.symbolContentTransition)
-        }
-
-        return c
+        };return c
     }
 }

@@ -34,7 +34,6 @@ final class EmptyTableViewDemoVC: BaseVC {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-        
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
                     .byTitle("暂无数据".tr, for: .normal)
@@ -55,14 +54,12 @@ final class EmptyTableViewDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-
 //            .byContentInset(UIEdgeInsets(
 //                top: UIApplication.jobsSafeTopInset + 30,
 //                left: 0,
 //                bottom: 0,
 //                right: 0
 //            ))
-
             .byAddTo(view) {[unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)

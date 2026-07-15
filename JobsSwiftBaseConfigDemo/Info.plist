@@ -65,8 +65,12 @@
     <string>NSCameraUsageDescription</string>
 
     <!-- 麦克风权限：用于录音、视频通话、语音消息等需要采集声音的场景 -->
-    <key>NSMicrophoneUsageDescription</key>
-    <string>NSMicrophoneUsageDescription</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>NSMicrophoneUsageDescription</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 
     <!-- 相册读取权限：从系统相册中选择、读取照片或视频 -->
     <key>NSPhotoLibraryUsageDescription</key>

@@ -115,7 +115,6 @@ private extension PhotoPermissionAlertView {
         byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(12)
             .byClipsToBounds(true)
-
         titleLabel.byVisible(YES)
         makeBelowSeparatorBy(below: titleLabel).byVisible(YES)
         buttonsStack.byVisible(YES)

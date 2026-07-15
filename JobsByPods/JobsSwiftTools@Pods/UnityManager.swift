@@ -30,7 +30,7 @@ final class UnityManager: NSObject {
     /// Unity 自己的窗口（UnityAppController.window）
     private weak var unityWindow: UIWindow?
     /// 自动关闭用的定时器
-    private var autoCloseTimer: JobsTimerProtocol?
+    private var autoCloseTimer: JobsSwiftTimerProtocol?
     private override init() {
         super.init()
     }
@@ -49,14 +49,12 @@ final class UnityManager: NSObject {
         if hostWindow == nil {
             hostWindow = UIApplication.jobsKeyWindow()
         }
-
         // 1. 找到 .app/Frameworks/UnityFramework.framework
         let frameworkPath = Bundle.main.bundlePath + "/Frameworks/UnityFramework.framework"
         guard let bundle = Bundle(path: frameworkPath) else {
             print("❌ 找不到 UnityFramework.framework，路径: \(frameworkPath)")
             return nil
         }
-
         if !bundle.isLoaded {
             bundle.load()
         }
@@ -74,10 +72,8 @@ final class UnityManager: NSObject {
             if let bundleId = Bundle.main.bundleIdentifier {
                 ufw.setDataBundleId(bundleId)
             }
-
             let argc = Int32(CommandLine.argc)
             let argv = CommandLine.unsafeArgv
-
             ufw.runEmbedded(
                 withArgc: argc,
                 argv: argv,
@@ -88,7 +84,6 @@ final class UnityManager: NSObject {
         ufw.register(self)
         self.ufw = ufw
         self.unityWindow = ufw.appController()?.window
-
         return ufw
     }
     // MARK: - 对外：显示 / 关闭 Unity（全屏）
@@ -101,7 +96,6 @@ final class UnityManager: NSObject {
         unloadOnClose: Bool = true
     ) {
         guard let ufw = loadUnityFramework() else { return }
-
         if let uWindow = ufw.appController()?.window {
             unityWindow = uWindow
             uWindow.byHidden(false)
@@ -122,17 +116,14 @@ final class UnityManager: NSObject {
     func hideUnity() {
         autoCloseTimer?.stop()
         autoCloseTimer = nil
-
         unityWindow?.byHidden(true)
         hostWindow?.makeKeyAndVisible()
-
         isRunning = false
     }
     /// 触发 Unity 的卸载流程（真正释放在 `unityDidUnload` 里完成）
     func unloadUnity() {
         autoCloseTimer?.stop()
         autoCloseTimer = nil
-
         guard let ufw = ufw else { return }
         ufw.unloadApplication()  // 异步，结束后会回调 unityDidUnload
     }
@@ -143,27 +134,27 @@ final class UnityManager: NSObject {
     ) {
         autoCloseTimer?.stop()
         autoCloseTimer = nil
-
         guard let seconds, seconds > 0 else { return }
-
-        let config = JobsTimerConfig(
+        let config = JobsSwiftTimerConfig(
             interval: seconds,
             repeats: false,
             tolerance: 0.01,
             queue: .main
         )
         // 可以按需换成 .gcd / .displayLink / .runLoopCore
-        let timer: JobsTimerProtocol = JobsFoundationTimer(
+        let timer: JobsSwiftTimerProtocol = JobsTimer(
+            kind: .foundation,
             config: config
         ) { [weak self] in
-            guard let self else { return }
-            if unloadOnClose {
-                self.unloadUnity()
-            } else {
-                self.hideUnity()
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if unloadOnClose {
+                    self.unloadUnity()
+                } else {
+                    self.hideUnity()
+                }
             }
         }
-
         autoCloseTimer = timer
         timer.start()
     }

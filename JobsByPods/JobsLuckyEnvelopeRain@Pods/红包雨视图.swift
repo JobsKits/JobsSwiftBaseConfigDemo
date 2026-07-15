@@ -100,7 +100,6 @@ public class RedPacketRainView: UIView {
         isRunning = false
         spawnTimer?.stop()
         spawnTimer = nil
-
         if clear {
             fallTimer?.stop()
             fallTimer = nil
@@ -142,7 +141,6 @@ public class RedPacketRainView: UIView {
                 }
             }
         }
-
         if fallTimer == nil {
             let fallCfg = JobsSwiftTimerConfig(
                 interval: 1.0 / 60.0,
@@ -175,13 +173,11 @@ public class RedPacketRainView: UIView {
         if activePackets.count >= config.maxConcurrentCount {
             return
         }
-
         let width = bounds.width - config.spawnInsets.left - config.spawnInsets.right
         guard width > 0 else { return }
         // 随机 X
         let maxX = max(0, width - config.packetSize.width)
         let randomX = config.spawnInsets.left + CGFloat.random(in: 0...maxX)
-
         let startFrame = CGRect(
             x: randomX,
             y: -config.packetSize.height,
@@ -193,7 +189,6 @@ public class RedPacketRainView: UIView {
             .byFrame(startFrame)
             .byUserInteractionEnabled(config.tapEnabled)
             .byClipsToBounds()
-
         if let img = config.packetImage {
             // 有配置图片：直接用图片做背景
             packet
@@ -209,7 +204,6 @@ public class RedPacketRainView: UIView {
                 .byMasksToBounds(true)
                 .byBackgroundImage(makeDefaultIconImage())
         }
-
         if config.tapEnabled {
             // 直接用按钮事件作为入口（onTap 最终是 addTarget + touchUpInside）
             packet.onTap { [weak self] sender in
@@ -218,7 +212,6 @@ public class RedPacketRainView: UIView {
                 self.removePacket(sender)
                 self.tappedCount += 1
                 self.tapCallback?(self, self.tappedCount)
-
                 let feedback = UIImpactFeedbackGenerator(style: .light)
                 feedback.impactOccurred()
             }
@@ -231,7 +224,6 @@ public class RedPacketRainView: UIView {
         // 计算终点 frame（含水平漂移）
         var endFrame = startFrame
         endFrame.origin.y = bounds.height + config.packetSize.height
-
         let drift = CGFloat.random(in: -40...40)
         endFrame.origin.x = min(
             max(config.spawnInsets.left, endFrame.origin.x + drift),
@@ -240,7 +232,6 @@ public class RedPacketRainView: UIView {
         // 固定一个轻微旋转角度
         let angle = CGFloat.random(in: -0.25...0.25)
         packet.transform = CGAffineTransform(rotationAngle: angle)
-
         packet.byAddTo(self)
         activePackets.append(packet)
         // 保存运动参数，后续由定时器驱动更新
@@ -263,38 +254,30 @@ public class RedPacketRainView: UIView {
                 fallTimer = nil
             };return
         }
-
         let now = Date().timeIntervalSinceReferenceDate
         var finished: [UIButton] = []
-
         for packet in activePackets {
             let key = ObjectIdentifier(packet)
             guard let motion = packetMotions[key] else { continue }
-
             let elapsed = now - motion.spawnTime
             if elapsed <= 0 { continue }
-
             let progress = min(1.0, elapsed / motion.duration)
             let sx = motion.startCenter.x
             let sy = motion.startCenter.y
             let ex = motion.endCenter.x
             let ey = motion.endCenter.y
-
             let newCenter = CGPoint(
                 x: sx + (ex - sx) * CGFloat(progress),
                 y: sy + (ey - sy) * CGFloat(progress)
             )
             packet.center = newCenter
-
             if progress >= 1.0 {
                 finished.append(packet)
             }
         }
-
         if !finished.isEmpty {
             finished.forEach { removePacket($0) }
         }
-
         if activePackets.isEmpty && !isRunning {
             fallTimer?.stop()
             fallTimer = nil

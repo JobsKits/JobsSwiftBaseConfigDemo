@@ -183,7 +183,6 @@ final class LottieDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "Lottie 动画".tr)
         view.byBackgroundColor(JobsCor.systemBackground)
-
         containerView.byAlpha(1)
         controlsPanel.byAlpha(1)
         _ = lottieView

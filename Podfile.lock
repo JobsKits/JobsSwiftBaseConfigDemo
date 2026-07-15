@@ -121,6 +121,8 @@ PODS:
     - IQKeyboardCore
   - IQTextView (1.0.5):
     - IQKeyboardToolbar/Placeholderable
+  - JobsAudioRecorder (0.1.0):
+    - JobsSwiftTimer
   - JobsBluetooth (1.0.0)
   - JobsBy3rdTools (0.0.1):
     - BMPlayer
@@ -188,7 +190,7 @@ PODS:
     - JobsSwiftBlock
     - JobsSwiftDSL
     - SnapKit
-  - JobsFuseAnimation (0.1.1):
+  - JobsFuseAnimation (0.2.0):
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftDSL
@@ -347,6 +349,7 @@ PODS:
   - JobsSwiftMetalKit (0.1.0):
     - JobsSwiftDSL
   - JobsSwiftOpen (0.0.1):
+    - GKNavigationBarSwift
     - JobsByUIKit
     - JobsInheritance
   - JobsSwiftPatch (0.0.1)
@@ -581,6 +584,7 @@ DEPENDENCIES:
   - HaishinKit
   - HTMLReader
   - IQKeyboardManagerSwift
+  - "JobsAudioRecorder (from `JobsByPods/JobsAudioRecorder@Pods`)"
   - "JobsBluetooth (from `JobsByPods/JobsBluetooth@Pods`)"
   - "JobsBy3rdTools (from `JobsByPods/JobsBy3rdTools@Pods`)"
   - "JobsByPDFKit (from `JobsByPods/JobsByPDFKit@Pods`)"
@@ -754,6 +758,8 @@ EXTERNAL SOURCES:
     :path: my_flutter/.ios/Flutter
   FlutterPluginRegistrant:
     :path: my_flutter/.ios/Flutter/FlutterPluginRegistrant
+  JobsAudioRecorder:
+    :path: "JobsByPods/JobsAudioRecorder@Pods"
   JobsBluetooth:
     :path: "JobsByPods/JobsBluetooth@Pods"
   JobsBy3rdTools:
@@ -896,6 +902,7 @@ SPEC CHECKSUMS:
   IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
   IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
+  JobsAudioRecorder: 5b3dbd0fb48bfb75d45de1f520a944b438181264
   JobsBluetooth: c4a3493d91388d005f41994441fbe42228bee202
   JobsBy3rdTools: 6ec5c901d29cc06770a1a733e4ff3e8d1ab39893
   JobsByPDFKit: 26daf711a18d487431bd2f9ca5cbf8cc38195ca4
@@ -906,7 +913,7 @@ SPEC CHECKSUMS:
   JobsCountdownButton: bdaa0a35d4fc729506bc61f4f1063c545a713054
   JobsCryptoKit: d43e6e44d8868a9f3b2b5f299377452afc4b8459
   JobsEmptyView: b791272f6fdb650c86a04070390851ba9507b110
-  JobsFuseAnimation: cd57c872f716f091cbbea7cb783b9bb6c656dac9
+  JobsFuseAnimation: 6a69f91101b0e4c3933549ed91455e5e2df17123
   JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
   JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
   JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
@@ -927,12 +934,12 @@ SPEC CHECKSUMS:
   JobsSwiftComment: c0e2ab2805291047a698879eaa42f006ca548eb5
   JobsSwiftCountryCodeCtrl: e20c6062017e46ce73d010a3f319eaff0c056c50
   JobsSwiftDebugTools: 0b091cc71765ad995323dde20f5017f42ee34819
-  JobsSwiftDSL: c2ffb7cabff69adc7657b1caf055f11634599008
+  JobsSwiftDSL: 750a34ada5131052ca81d584c2e6b10a981a871c
   JobsSwiftFoundation: 7850038734cf7f5b2154ca9ced57ae7d8bb6f618
   JobsSwiftGraphicCaptcha: bb851a79e6d850a79f34f564aa372f2a837e1a4e
   JobsSwiftLinkageMenuView: 62044cd7a4b49fec3b3795ad9f2c01f0acddd0a3
   JobsSwiftMetalKit: e406ede5c7672e570e16a8dfb22d629c37bd2bb8
-  JobsSwiftOpen: 1885cbecbaacf2a50dcd2bb2d37f09397049cf77
+  JobsSwiftOpen: 993dea17a71a21f4d3a1c34396462c0ee2fcaf6b
   JobsSwiftPatch: 99e4abe4866100b972356fe9d4a428bf5721345f
   JobsSwiftRefresher: 2e4999e225a099a40500307eee6e4250e08a2031
   JobsSwiftSearcher: 588268669883d0a1fa53f6bfb3bfb0db1118752c

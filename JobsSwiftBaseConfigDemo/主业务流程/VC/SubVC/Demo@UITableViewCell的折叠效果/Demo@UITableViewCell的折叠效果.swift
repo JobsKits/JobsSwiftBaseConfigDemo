@@ -68,7 +68,6 @@ extension FoldTableDemoVC {
     private func toggle(at indexPath: IndexPath) {
         let willExpand = !expanded.contains(indexPath)
         if willExpand { expanded.insert(indexPath) } else { expanded.remove(indexPath) }
-
         if let cell = tableView.cellForRow(at: indexPath) as? FoldCell {
             cell.setExpanded(willExpand, animated: true)
         }

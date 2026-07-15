@@ -120,10 +120,8 @@ public final class JobsSwiftTimerCountdown {
             onFinished?(snapshot)
             return self
         }
-
         startDate = Date()
         state = .running
-
         let config = JobsSwiftTimerConfig(
             interval: tickInterval,
             repeats: true,
@@ -135,10 +133,8 @@ public final class JobsSwiftTimerCountdown {
             guard let self else { return }
             guard self.state == .running else { return }
             guard let start = self.startDate else { return }
-
             let elapsed = Date().timeIntervalSince(start)
             let clampedElapsed = min(elapsed, self.snapshot.total)
-
             self.snapshot = Snapshot(total: self.snapshot.total, elapsed: clampedElapsed)
             // 进度回调
             self.onProgress?(self.snapshot)
@@ -150,7 +146,6 @@ public final class JobsSwiftTimerCountdown {
                 self.onFinished?(self.snapshot)
             }
         }
-
         timer?.stop()
         timer = t
         t.start()

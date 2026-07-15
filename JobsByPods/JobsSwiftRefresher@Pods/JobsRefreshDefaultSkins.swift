@@ -32,10 +32,8 @@ public enum JobsRefreshConfig {
         public static let readyLoadingMore = "松开立即加载更多".tr
         /// 兼容：JobsDefaultIndicatorView 会读取 readyLoading
         public static let readyLoading = readyLoadingMore
-
         public static let refreshing = "正在刷新...".tr
         public static let loadingMore = "正在加载更多的数据...".tr
-
         public static let noMore = "没有更多了".tr
         public static let failed = "加载失败，松手重试".tr
         public static let disabled = "刷新已关闭".tr
@@ -113,7 +111,7 @@ final class JobsLoadingIndicator: UIView {
     #endif
 
     private var isRefreshing = false
-    
+
     required init?(coder: NSCoder) { fatalError() }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -170,7 +168,6 @@ final class JobsLoadingIndicator: UIView {
             hideRefreshing()
             return
         }
-
         if let setting = resolveImageSetting(), applyImage(setting) {
             hideLottieIfNeeded()
             spinner.stopAnimating()
@@ -179,12 +176,10 @@ final class JobsLoadingIndicator: UIView {
             setNeedsLayout()
             return
         }
-
         imageView.stopAnimating()
         imageView.animationImages = nil
         imageView.byImage(nil)
         imageView.byHidden(true)
-
         let resolved = resolveLottieSetting()
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         if let setting = resolved, let anim = loadAnimation(setting) {
@@ -213,7 +208,6 @@ final class JobsLoadingIndicator: UIView {
             lottieView = nil
         }
         #endif
-
         spinner.byHidden(false)
         setNeedsLayout()
     }
@@ -374,7 +368,7 @@ public class JobsArrowIndicatorView: UIView,
                                      JobsRefreshImageConfigurable {
     public enum Style { case header, footer }
     private enum ArrowDirection { case up, down }
-    
+
     public var style: Style = .header {
         didSet { applyArrow(direction: idleArrowDirection(), animated: false); setNeedsLayout() }
     }
@@ -498,25 +492,19 @@ public class JobsArrowIndicatorView: UIView,
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-
         let availableW = bounds.width
         let availableH = bounds.height
-
         let iconSide: CGFloat = 18
         let spacing: CGFloat = 10
-
         // label 尺寸
         let labelMaxW = max(10, availableW - 24)
         let labelSize = label.sizeThatFits(CGSize(width: labelMaxW, height: .greatestFiniteMagnitude))
-
         // “箭头/动画 + 间距 + label”整体水平居中
         let totalW = iconSide + spacing + labelSize.width
         let startX = (availableW - totalW) * 0.5
         let iconY = (availableH - iconSide) * 0.5
-
         arrow.byFrame(CGRect(x: startX, y: iconY, width: iconSide, height: iconSide))
         loading.byFrame(arrow.frame)
-
         label.byFrame(CGRect(
             x: arrow.frame.maxX + spacing,
             y: (availableH - labelSize.height) * 0.5,
@@ -531,21 +519,21 @@ public class JobsArrowIndicatorView: UIView,
         case .footer: return JobsRefreshConfig.v.footer.idle
         }
     }
-    
+
     private func goOnText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.v.header.goOn
         case .footer: return JobsRefreshConfig.v.footer.goOn
         }
     }
-    
+
     private func readyText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.common.readyRefresh
         case .footer: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
-    
+
     private func refreshingText() -> String {
         switch style {
         case .header: return JobsRefreshConfig.common.refreshing
@@ -574,7 +562,7 @@ public class JobsArrowIndicatorView: UIView,
         case .footer: return .up
         }
     }
-    
+
     private func readyArrowDirection() -> ArrowDirection {
         switch style {
         case .header: return .up
@@ -631,7 +619,7 @@ public class JobsSideIndicatorView: UIView,
                                     JobsRefreshRoleConfigurable {
     public enum SideStyle { case left, right } // left=右拉刷新（头部组），right=左拉加载（尾部组）
     private enum ArrowDirection { case left, right }
-    
+
     public var style: SideStyle = .left { didSet { setNeedsLayout() } }
     public var refreshRole: JobsRefreshRole = .refresh { didSet { setNeedsLayout() } }
     public var heightOrWidth: CGFloat = 60
@@ -682,7 +670,7 @@ public class JobsSideIndicatorView: UIView,
                 .byTextAlignment(.center)
         )
     }()
-    
+
     private lazy var updateValueLabel: UILabel = {
         self.byAddSubviewRetSub(
             UILabel()
@@ -792,17 +780,14 @@ public class JobsSideIndicatorView: UIView,
         let iconSide: CGFloat = 18
         let stackSpacing: CGFloat = 8
         let vPadding: CGFloat = 10
-
         let showUpdate = !updatePrefixLabel.isHidden && !updateValueLabel.isHidden
         let cols = showUpdate ? 3 : 1
-
         // ---- Horizontal sizing (avoid clipping when width is small, e.g. 60) ----
         let xPadding: CGFloat = 6
         let minColW: CGFloat = 14
         let maxColW: CGFloat = 22
         let minSpacing: CGFloat = 4
         let maxSpacing: CGFloat = 10
-
         var spacing = maxSpacing
         var colW = (w - 2 * xPadding - spacing * CGFloat(max(0, cols - 1))) / CGFloat(cols)
         if colW < minColW {
@@ -824,7 +809,6 @@ public class JobsSideIndicatorView: UIView,
                                height: iconSide)
         arrow.byFrame(iconFrame)
         loading.byFrame(iconFrame)
-
         let textY = iconFrame.maxY + stackSpacing
         statusLabel.byFrame(CGRect(x: startX,
                                    y: textY,
@@ -873,7 +857,7 @@ public class JobsSideIndicatorView: UIView,
         case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreIdle
         }
     }
-    
+
     private func goOnText() -> String {
         switch (style, refreshRole) {
         case (.left, .refresh):   return JobsRefreshConfig.h.left.refreshGoOn
@@ -882,14 +866,14 @@ public class JobsSideIndicatorView: UIView,
         case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreGoOn
         }
     }
-    
+
     private func readyText() -> String {
         switch refreshRole {
         case .refresh:  return JobsRefreshConfig.common.readyRefresh
         case .loadMore: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
-    
+
     private func refreshingText() -> String {
         switch refreshRole {
         case .refresh:  return JobsRefreshConfig.common.refreshing
@@ -904,7 +888,7 @@ public class JobsSideIndicatorView: UIView,
         case .right: return .right
         }
     }
-    
+
     private func readyArrowDirection() -> ArrowDirection {
         // ready 翻转
         switch style {

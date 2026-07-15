@@ -16,7 +16,6 @@ import UIKit
 import SnapKit
 public var _jobsEmptyLayoutKey: UInt8 = 0
 extension UIButton {
-    
     public typealias JobsEmptyLayout = (_ btn: UIButton,
                                         _ make: ConstraintMaker,
                                         _ host: UIScrollView) -> Void

@@ -21,7 +21,6 @@ public protocol GestureUnlockViewDelegate: AnyObject {
 }
 
 public final class GestureUnlockView: UIView {
-
     public enum VisualState {
         case normal
         case selected
@@ -59,12 +58,10 @@ public final class GestureUnlockView: UIView {
     private func commonInit() {
         isMultipleTouchEnabled = false
         self.byBackgroundColor(JobsCor.clear)
-
         lineLayer.fillColor = JobsCor.clear.cgColor
         lineLayer.lineCap = .round
         lineLayer.lineJoin = .round
         layer.addSublayer(lineLayer)
-
         rebuildNodes()
     }
 
@@ -80,10 +77,8 @@ public final class GestureUnlockView: UIView {
         selected.removeAll()
         currentTouchPoint = nil
         setVisualState(.normal)
-
         for node in nodes { node.apply(state: .normal) }
         updateLinePath()
-
         if animated {
             UIView.jobsAnimate(0.18) { self.byAlpha(1.0) }
         }
@@ -102,7 +97,6 @@ public final class GestureUnlockView: UIView {
     private func rebuildNodes() {
         nodes.forEach { $0.removeFromSuperview() }
         nodes.removeAll()
-
         let n = max(2, configuration.gridDimension)
         for idx in 0..<(n * n) {
             let node = GestureNodeView(index: idx)
@@ -111,19 +105,15 @@ public final class GestureUnlockView: UIView {
             node.byAddTo(self)
             nodes.append(node)
         }
-
         setNeedsLayout()
     }
 
     private func layoutNodes() {
         let n = max(2, configuration.gridDimension)
-
         let spacingX = bounds.width / CGFloat(n + 1)
         let spacingY = bounds.height / CGFloat(n + 1)
-
         let diameter = min(configuration.nodeDiameter, min(spacingX, spacingY) * 0.65)
         let size = CGSize(width: diameter, height: diameter)
-
         for r in 0..<n {
             for c in 0..<n {
                 let idx = r * n + c
@@ -143,7 +133,6 @@ public final class GestureUnlockView: UIView {
         guard isInputEnabled, let p = touches.first?.location(in: self) else { return }
         delegate?.gestureUnlockViewDidBeginInput(self)
         if configuration.hapticsEnabled { impact.prepare() }
-
         reset(animated: false)
         currentTouchPoint = p
         trySelectNode(at: p)
@@ -161,7 +150,6 @@ public final class GestureUnlockView: UIView {
         guard isInputEnabled else { return }
         currentTouchPoint = nil
         updateLinePath()
-
         let pattern = GesturePattern(indices: selected)
         delegate?.gestureUnlockView(self, didComplete: pattern)
         onComplete?(pattern)
@@ -191,21 +179,18 @@ public final class GestureUnlockView: UIView {
 
     private func appendNodeIndexWithInterpolation(_ newIndex: Int) {
         guard !selected.contains(newIndex) else { return }
-
         if let last = selected.last {
             let intermediates = interpolatedIndices(from: last, to: newIndex)
             for idx in intermediates where !selected.contains(idx) {
                 selectIndex(idx)
             }
         }
-
         selectIndex(newIndex)
     }
 
     private func selectIndex(_ idx: Int) {
         selected.append(idx)
         nodes[idx].apply(state: visualState == .error ? .error : .selected)
-
         if configuration.hapticsEnabled {
             if #available(iOS 13.0, *) {
                 impact.impactOccurred(intensity: 0.8)
@@ -213,7 +198,6 @@ public final class GestureUnlockView: UIView {
                 impact.impactOccurred()
             }
         }
-
         if visualState == .normal { setVisualState(.selected) }
     }
 
@@ -222,16 +206,12 @@ public final class GestureUnlockView: UIView {
         let n = max(2, configuration.gridDimension)
         let (r1, c1) = (from / n, from % n)
         let (r2, c2) = (to / n, to % n)
-
         let dr = r2 - r1
         let dc = c2 - c1
-
         let g = gcd(abs(dr), abs(dc))
         guard g > 1 else { return [] }
-
         let stepR = dr / g
         let stepC = dc / g
-
         var result: [Int] = []
         for k in 1..<(g) {
             let rr = r1 + stepR * k
@@ -258,16 +238,13 @@ public final class GestureUnlockView: UIView {
         let points = selected.compactMap { idx -> CGPoint? in
             guard idx >= 0, idx < nodes.count else { return nil };return nodes[idx].center
         }
-
         if let first = points.first {
             path.byMove(to: first)
             for p in points.dropFirst() { path.byAddLine(to: p) }
             if let finger = currentTouchPoint { path.byAddLine(to: finger) }
         }
-
         lineLayer.path = path.cgPath
         lineLayer.lineWidth = configuration.lineWidth
-
         switch visualState {
         case .normal:
             lineLayer.strokeColor = configuration.lineSelectedColor.cgColor
@@ -280,10 +257,8 @@ public final class GestureUnlockView: UIView {
 
     private func setVisualState(_ state: VisualState) {
         visualState = state
-
         // 线颜色
         updateLinePath()
-
         // 点颜色（已选中的点跟随状态变化）
         for idx in selected {
             nodes[idx].apply(state: state == .error ? .error : .selected)

@@ -140,7 +140,6 @@ public final class PermissionCenter: NSObject {
         } else {
             status = CLLocationManager.authorizationStatus()
         }
-
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
             onMainAsync { onAuthorized() }

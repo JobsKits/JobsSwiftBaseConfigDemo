@@ -21,7 +21,6 @@ extension NSAttributedString {
         )
         let h = rect.height
         if h > 0 { return ceil(h) }
-
         let rect2 = (string as NSString).boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading],

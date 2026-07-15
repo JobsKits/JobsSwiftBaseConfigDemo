@@ -20,7 +20,6 @@ import TextureSwiftSupport
 
 // MARK: - ASCellNode: Wrap existing MomentPostCell (UIKit) into a Texture cell node
 final class MomentPostUIKitCellNode: ASCellNode {
-
     private let post: MomentPost
     private let layoutMode: TimelineLayoutMode
 
@@ -61,16 +60,13 @@ final class MomentPostUIKitCellNode: ASCellNode {
         }
         self.post = p
         self.layoutMode = layoutMode
-
         self.containerNode = ASDisplayNode(viewBlock: {
             let v = UIView()
             v.byBackgroundColor(JobsCor.clear)
             v.byClipsToBounds(false)
             return v
         })
-
         super.init()
-
         automaticallyManagesSubnodes = true
         backgroundColor = JobsCor.clear
         selectionStyle = .none
@@ -83,7 +79,6 @@ final class MomentPostUIKitCellNode: ASCellNode {
 
     override func didLoad() {
         super.didLoad()
-
         let cell = MomentPostCell(style: .default, reuseIdentifier: nil)
             .bySelectionStyle(.none)
             .byOnNeedHeightUpdate({ [weak self] _ in
@@ -102,19 +97,15 @@ final class MomentPostUIKitCellNode: ASCellNode {
                 self?.onCommentTapped?()
             })
             .byData(self.post, layoutMode: layoutMode)
-
         // ⚠️ 不要动 UITableViewCell.translatesAutoresizingMaskIntoConstraints
         cell.byBackgroundColor(JobsCor.clear)
         cell.contentView.byBackgroundColor(JobsCor.clear)
         cell.byClipsToBounds(false)
-
         hostCell = cell
-
         let host = containerNode.view
         cell.byAddTo(host)
         cell.byFrame(host.bounds)
         cell.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
         // 首次进来测一次真实高度（用 sizingCell，不会影响屏幕上的 cell）
         DispatchQueue.main.async { [weak self] in
             self?.requestHeightUpdateIfNeeded()
@@ -131,10 +122,8 @@ final class MomentPostUIKitCellNode: ASCellNode {
     override func layout() {
         super.layout()
         guard let cell = hostCell else { return }
-
         cell.setNeedsLayout()
         cell.layoutIfNeeded()
-
         let changed = applyWeChat3x3MediaGridFixIfPossible(in: cell)
         if changed {
             requestHeightUpdateIfNeeded()
@@ -143,15 +132,12 @@ final class MomentPostUIKitCellNode: ASCellNode {
 
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
         let w = effectiveWidth(constrainedSize)
-
         // 初次展示给个“够用的高度”，避免 UITableView 默认 44 把 UIKit 约束挤爆
         let hFormula = MomentPostCell.heightFormula(for: post, tableWidth: w)
         let hMin = estimatedMinimumHeight(tableWidth: w)
         let h = max(hFormula, hMin)
-
         cachedWidth = w
         cachedHeight = h
-
         containerNode.style.preferredSize = CGSize(width: w, height: h)
         return ASWrapperLayoutSpec(layoutElement: containerNode)
     }
@@ -161,15 +147,12 @@ final class MomentPostUIKitCellNode: ASCellNode {
     private func effectiveWidth(_ constrainedSize: ASSizeRange) -> CGFloat {
         let maxW = constrainedSize.max.width
         let minW = constrainedSize.min.width
-
         func isUsable(_ w: CGFloat) -> Bool {
             // greatestFiniteMagnitude 也是 isFinite = true，所以必须加“上限阈值”
             return w.isFinite && w > 0 && w < 10_000
         }
-
         if isUsable(maxW) { return maxW }
         if isUsable(minW) { return minW }
-
         #if os(iOS) || os(tvOS)
         return UIScreen.main.bounds.width
         #else
@@ -181,29 +164,21 @@ final class MomentPostUIKitCellNode: ASCellNode {
 
     private func requestHeightUpdateIfNeeded() {
         heightUpdateWorkItem?.cancel()
-
         let work = DispatchWorkItem { [weak self] in
             guard let self else { return }
             guard Thread.isMainThread else { return }
-
             let w = (self.cachedWidth > 0) ? self.cachedWidth : self.effectiveWidth(ASSizeRangeUnconstrained)
-
             // ✅ 用离屏 sizingCell 测真实高度（不会把屏幕上的 UI 搞没）
             let measured = self.measuredHeight(preferWidth: w)
-
             // ✅ 关键：不要再用 minH 抬高 measured（会产生大空白）
             let newHeight = max(measured, 44)
-
             guard abs(newHeight - self.cachedHeight) > 0.5 else { return }
-
             self.cachedHeight = newHeight
             self.containerNode.style.preferredSize = CGSize(width: w, height: newHeight)
-
             self.invalidateCalculatedLayout()
             self.setNeedsLayout()
             self.onNeedHeightUpdate?()
         }
-
         heightUpdateWorkItem = work
         DispatchQueue.main.async(execute: work)
     }
@@ -211,23 +186,19 @@ final class MomentPostUIKitCellNode: ASCellNode {
     /// 用 UIKit 的 systemLayoutSizeFitting 获取真实高度（主线程），用 sizingCell（离屏）。
     private func measuredHeight(preferWidth w: CGFloat) -> CGFloat {
         guard Thread.isMainThread else { return cachedHeight }
-
         let cell = sizingCell
         _ = cell.byData(self.post, layoutMode: layoutMode)
-
         // 给一个足够大的高度承载约束（离屏，不会影响 UI）
         cell.bounds = CGRect(x: 0, y: 0, width: w, height: 10_000)
         cell.contentView.bounds = cell.bounds
         cell.setNeedsLayout()
         cell.layoutIfNeeded()
-
         let target = CGSize(width: w, height: UIView.layoutFittingCompressedSize.height)
         let size = cell.contentView.systemLayoutSizeFitting(
             target,
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
-
         var h = size.height
         if h < 1 {
             h = cell.sizeThatFits(CGSize(width: w, height: CGFloat.greatestFiniteMagnitude)).height
@@ -240,7 +211,6 @@ final class MomentPostUIKitCellNode: ASCellNode {
     /// 初次展示的“安全最小高度”：尽量小，但不能小到把 UIKit 约束挤爆
     private func estimatedMinimumHeight(tableWidth w: CGFloat) -> CGFloat {
         var h: CGFloat = 88  // 比之前 120 更不容易产生空白，同时足够避免 44 的挤压
-
         let mediaCount = min(post.media.count, 9)
         if mediaCount > 0 {
             let spacing: CGFloat = 4
@@ -249,7 +219,6 @@ final class MomentPostUIKitCellNode: ASCellNode {
             let mediaH = CGFloat(rows) * side + CGFloat(max(0, rows - 1)) * spacing
             h += mediaH + 16
         }
-
         let commentCount = post.comments.count
         if commentCount > 0 {
             h += CGFloat(min(commentCount, 3)) * 22 + 16
@@ -266,14 +235,12 @@ final class MomentPostUIKitCellNode: ASCellNode {
         guard let cv = collectionViews.max(by: { $0.bounds.width < $1.bounds.width }) else {
             return false
         }
-
         let w = cv.bounds.width
         guard w > 0 else { return false }
         // 避免每次 layout 都重复 setLayout
         if didApplyMediaGridFix, abs(w - lastGridWidth) < 0.5, (cv.collectionViewLayout is WeChatNineGridLayout) {
             return false
         }
-
         let spacing: CGFloat = 4
         // ✅ 强制换成“硬 3 列”layout（绕开 sizeForItemAt）
         if !(cv.collectionViewLayout is WeChatNineGridLayout) {
@@ -281,17 +248,14 @@ final class MomentPostUIKitCellNode: ASCellNode {
         } else {
             cv.collectionViewLayout.invalidateLayout()
         }
-
         cv.byScrollEnabled(false)
             .byContentInset(.zero)
         cv.reloadData()
         cv.layoutIfNeeded()
-
         // 按 3 列算高度，顺便把 MomentMediaView 的 height 约束改掉
         let side = floor((w - 2 * spacing) / 3.0)
         let rows = Int(ceil(Double(mediaCount) / 3.0))
         let mediaHeight = CGFloat(rows) * side + CGFloat(max(0, rows - 1)) * spacing
-
         if let mediaView = cell.contentView.findSubviews(ofType: MomentMediaView.self).first {
             // 找到 SnapKit 那条 height == xx 的约束，把 constant 改成我们算出来的
             if let heightC = mediaView.constraints.first(where: {
@@ -307,7 +271,6 @@ final class MomentPostUIKitCellNode: ASCellNode {
             mediaView.setNeedsLayout()
             mediaView.layoutIfNeeded()
         }
-
         didApplyMediaGridFix = true
         lastGridWidth = w
         return true
@@ -315,7 +278,6 @@ final class MomentPostUIKitCellNode: ASCellNode {
         return false
         #endif
     }
-
 }
 
 // MARK: - UIView helpers
@@ -364,39 +326,32 @@ private final class WeChatNineGridLayout: UICollectionViewLayout {
         super.prepare()
         guard let cv = collectionView else { return }
         cache.removeAll(keepingCapacity: true)
-
         let width = cv.bounds.width
         guard width > 0 else {
             _contentSize = .zero
             return
         }
-
         let side = itemSide(for: width)
         guard side > 0 else {
             _contentSize = .zero
             return
         }
-
         var flatIndex = 0
         for section in 0..<cv.numberOfSections {
             let items = cv.numberOfItems(inSection: section)
             for item in 0..<items {
                 let row = flatIndex / columns
                 let col = flatIndex % columns
-
                 let x = CGFloat(col) * (side + spacing)
                 let y = CGFloat(row) * (side + spacing)
                 let frame = CGRect(x: x, y: y, width: side, height: side)
-
                 let ip = IndexPath(item: item, section: section)
                 let attr = UICollectionViewLayoutAttributes(forCellWith: ip)
                 attr.frame = frame
                 cache[ip] = attr
-
                 flatIndex += 1
             }
         }
-
         let rows = Int(ceil(Double(flatIndex) / Double(columns)))
         let height: CGFloat
         if rows <= 0 {

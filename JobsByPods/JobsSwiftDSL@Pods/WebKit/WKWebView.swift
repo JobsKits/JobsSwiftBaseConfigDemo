@@ -16,13 +16,12 @@ import JobsSwiftBlock
 import JobsSwiftBaseDefines
 
 extension WKWebView {
-    
     @discardableResult
     public func byScrollView(_ block: (UIScrollView) -> Void) -> Self {
         block(self.scrollView)
         return self
     }
-    
+
     @discardableResult
     public func loadURL(_ urlString: String) -> Self {
         guard let url = URL(string: urlString) else { return self }
@@ -53,13 +52,13 @@ extension WKWebView {
         self.customUserAgent = userAgent
         return self
     }
-    
+
     @discardableResult
     public func byConfiguration(_ block: (WKWebViewConfiguration) -> Void) -> Self {
         block(self.configuration)
         return self
     }
-    
+
     @discardableResult
     public func byNavigationDelegate(_ delegate: WKNavigationDelegate?) -> Self {
         self.navigationDelegate = delegate

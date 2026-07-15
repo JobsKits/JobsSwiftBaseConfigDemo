@@ -222,7 +222,6 @@ final class PhotoAlbumDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "鉴权后：相机 / 相册 / 录制 / 选视频".tr)
-
         cameraBtn.byVisible(YES)
         albumBtn.byVisible(YES)
         recordBtn.byVisible(YES)
@@ -230,7 +229,6 @@ final class PhotoAlbumDemoVC: BaseVC {
         pickMultiVideoBtn.byVisible(YES)
         previewContainer.byVisible(YES)
         collectionView.byVisible(YES)
-
         reloadPreviewAndScrollMode()
     }
 
@@ -283,17 +281,14 @@ extension PhotoAlbumDemoVC: UICollectionViewDataSource {
             return collectionView
                 .byDequeueCell(ImageCell.self, for: indexPath)
                 .byData(img)
-
         case .cameraVideo:
             return collectionView
                 .byDequeueCell(VideoCell.self, for: indexPath)
                 .byData(videoURL)
-
         case .albumVideos:
             return collectionView
                 .byDequeueCell(VideoThumbCell.self, for: indexPath)
                 .byData(albumVideoURLs[indexPath.item])
-
         case .none:
             return collectionView
                 .byDequeueCell(ImageCell.self, for: indexPath)
@@ -381,11 +376,9 @@ private final class PHPickerVideoProxy: NSObject, PHPickerViewControllerDelegate
 
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-
         guard !results.isEmpty else { jobsByVoidBlock([]); return }
         let group = DispatchGroup()
         var urls: [URL] = []
-
         for r in results {
             let provider = r.itemProvider
             let typeId = UTType.movie.identifier  // "public.movie"
@@ -406,7 +399,6 @@ private final class PHPickerVideoProxy: NSObject, PHPickerViewControllerDelegate
                 }
             }
         }
-
         group.notify(queue: .main) { [jobsByVoidBlock] in jobsByVoidBlock(urls) }
     }
 }

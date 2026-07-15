@@ -13,7 +13,6 @@ public struct EquatableByMacro: ExtensionMacro, MemberMacro {
         guard declaration.isSupportedDeclaration else {
             throw MacroError.message("@EquatableBy 只能用于 struct 或 class")
         }
-
         let declaration: DeclSyntax = "extension \(type): Equatable, Hashable {}"
         guard let extensionDeclaration = declaration.as(ExtensionDeclSyntax.self) else {
             throw MacroError.message("生成 Equatable、Hashable 扩展失败")
@@ -29,7 +28,6 @@ public struct EquatableByMacro: ExtensionMacro, MemberMacro {
         guard declaration.isSupportedDeclaration else {
             throw MacroError.message("@EquatableBy 只能用于 struct 或 class")
         }
-
         let property = try parseProperty(from: node)
         return [
             """

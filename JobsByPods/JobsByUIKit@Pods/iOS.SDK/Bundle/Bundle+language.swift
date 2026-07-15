@@ -46,15 +46,12 @@ extension Bundle {
         case thai                /// 泰语 th
         case turkish             /// 土耳其语 tr
         case arabic              /// 阿拉伯语 ar
-
         case chineseSimplified   /// 简体中文 zh-Hans / zh-CN / zh-SG
         case chineseTraditional  /// 繁体中文 zh-Hant / zh-TW / zh-HK / zh-MO
-
         case filipino            /// 菲律宾语 fil / tl
         case japanese            /// 日语 ja
         case portuguese          /// 葡萄牙语 pt
         case spanish             /// 西班牙语 es
-
         case other
     }
 
@@ -62,7 +59,7 @@ extension Bundle {
         let id = Locale.preferredLanguages.first ?? Locale.current.identifier
         return mapLanguageIdentifier(id)
     }
-    
+
     private static func mapLanguageIdentifier(_ identifier: String) -> AppLang {
         let lower = identifier.lowercased()
         // 先处理中文（因为 zh 的变体很多）
@@ -82,18 +79,15 @@ extension Bundle {
         }
         // 其它语言用主语言码匹配
         let code = lower.split(separator: "-").first.map(String.init) ?? lower
-        
         switch code {
         case "vi": return .vietnamese
         case "th": return .thai
         case "tr": return .turkish
         case "ar": return .arabic
-
         case "fil", "tl": return .filipino
         case "ja": return .japanese
         case "pt": return .portuguese
         case "es": return .spanish
-
         default:
             return .other
         }

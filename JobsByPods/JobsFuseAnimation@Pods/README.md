@@ -1,6 +1,21 @@
 # JobsFuseAnimation
 
-本地 Pod：长按按钮时显示导火索外圈增长动画，同时按钮放大；松手后外圈淡出，按钮恢复。
+本地 Pod：收口任意 `UIView` 的长按导火索、按压缩放和持续冒泡动画。业务层负责提供冒泡内容、手势状态和语义反馈。
+
+## 冒泡动画
+
+- `JobsFuseBubbleConfig` 管理发射间隔、上浮距离、水平漂移、缩放和并发上限。
+- `byFuseBubbleStart` 只管动画，`bubbleProvider` 由外层提供任意 `UIView`。
+- `byFuseBubbleStop` 停止继续发射，已发射的气泡会自然播放完并回收。
+- 系统开启“减少动态效果”时，自动降级为短距离淡出。
+
+```swift
+sourceView.byFuseBubbleStart(in: hostView) {
+    UIImageView(image: "hand.thumbsup.fill".sysImg)
+}
+
+sourceView.byFuseBubbleStop()
+```
 
 ## v3 关键修复
 

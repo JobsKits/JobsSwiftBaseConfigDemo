@@ -15,7 +15,6 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UICollectionView {
-    
     @discardableResult
     public func byAllowsSelection(_ allow: Bool) -> Self {
         self.allowsSelection = allow
@@ -157,7 +156,6 @@ extension UICollectionView {
 }
 // MARK: - 闭包重载@单参数
 extension UICollectionView {
-    
     @discardableResult
     public func byAllowsSelection(_ builder: () -> Bool) -> Self {
         self.allowsSelection = builder()

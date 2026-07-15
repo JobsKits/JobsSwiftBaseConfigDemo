@@ -15,7 +15,6 @@ import AVFoundation
 
 // =============== 全局默认值（保持不变） ===============
 public enum JobsSound {
-    
     public static var defaults = Defaults()
     public struct Defaults {
         public var bundle: Bundle = .main
@@ -100,14 +99,12 @@ extension UIButton {
     // MARK: - 点击时播放（核心逻辑）
     @objc private func _jobs_onTapPlaySound() {
         guard let box = objc_getAssociatedObject(self, &_kTapSoundBoxKey) as? _JobsSoundBox else { return }
-
         let session = AVAudioSession.sharedInstance()
         let category: AVAudioSession.Category = box.ignoreSilentSwitch ? .playback : .ambient
         var options: AVAudioSession.CategoryOptions = []
         if box.mixWithOthers { options.insert(.mixWithOthers) }
         try? session.setCategory(category, mode: .default, options: options)
         try? session.setActive(true, options: [])
-
         var player = objc_getAssociatedObject(self, &_kTapSoundPlayerKey) as? AVAudioPlayer
         if player == nil {
             player = try? AVAudioPlayer(contentsOf: box.url)

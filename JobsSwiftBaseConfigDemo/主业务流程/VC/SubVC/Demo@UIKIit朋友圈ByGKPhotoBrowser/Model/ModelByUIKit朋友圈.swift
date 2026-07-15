@@ -41,12 +41,10 @@ struct MomentPost {
 
     static func makeSample(rows: Int) -> [MomentPost] {
         var arr: [MomentPost] = []
-
         func avatar(_ seed: String) -> String {
             // ✅ 头像统一 picsum
             "https://picsum.photos/seed/\(seed)/80/80"
         }
-
         arr.append(MomentPost(
             name: "User 1",
             avatarURL: avatar("avatar_1"),
@@ -68,7 +66,6 @@ struct MomentPost {
                 .init(user: "Bob", text: "这个色调我喜欢")
             ]
         ))
-
         arr.append(MomentPost(
             name: "User 2",
             avatarURL: avatar("avatar_2"),
@@ -83,7 +80,6 @@ struct MomentPost {
             likeCount: 3,
             comments: [.init(user: "Cindy", text: "哈哈哈")]
         ))
-
         arr.append(MomentPost(
             name: "User 3",
             avatarURL: avatar("avatar_3"),
@@ -104,9 +100,7 @@ struct MomentPost {
             likeCount: 0,
             comments: []
         ))
-
         if rows <= arr.count { return Array(arr.prefix(rows)) }
-
         for i in (arr.count + 1)...rows {
             arr.append(MomentPost(
                 name: "User \(i)",

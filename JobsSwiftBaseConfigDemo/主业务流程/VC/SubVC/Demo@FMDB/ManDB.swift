@@ -17,7 +17,6 @@ final class ManDB {
         let doc = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first ?? NSTemporaryDirectory()
         let path = (doc as NSString).appendingPathComponent("fmdb_demo.sqlite")
         self.queue = FMDatabaseQueue(path: path)!
-
         createTableIfNeeded()
     }
 

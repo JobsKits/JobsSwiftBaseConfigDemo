@@ -70,7 +70,6 @@ public final class VideoThumbCell: UICollectionViewCell {
                 iv.byImage(nil)
             };return self
         }
-
         currentURL = nil
         iv.byImage(nil)
         return self
@@ -85,16 +84,13 @@ public final class VideoThumbCell: UICollectionViewCell {
     private func render(_ url: URL) {
         currentURL = url
         iv.byImage(nil)
-
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let asset = AVAsset(url: url)
             let gen = AVAssetImageGenerator(asset: asset)
             gen.appliesPreferredTrackTransform = true
             let time = CMTime(seconds: 0.1, preferredTimescale: 600)
-
             guard let cg = try? gen.copyCGImage(at: time, actualTime: nil) else { return }
             let img = UIImage(cgImage: cg)
-
             DispatchQueue.main.async {
                 guard let self else { return }
                 guard self.currentURL == url else { return } // ✅ 防复用串图
@@ -102,5 +98,4 @@ public final class VideoThumbCell: UICollectionViewCell {
             }
         }
     }
-
 }

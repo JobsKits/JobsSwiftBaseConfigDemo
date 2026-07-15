@@ -48,20 +48,20 @@ public extension JobsPeriod {
     static var minute: JobsPeriod { JobsPeriod(60) }
     static var hour: JobsPeriod { JobsPeriod(3600) }
     static var day: JobsPeriod { JobsPeriod(86400) }
-    
+
     /// 数学运算支持
     static func + (lhs: JobsPeriod, rhs: JobsPeriod) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval + rhs.timeInterval)
     }
-    
+
     static func - (lhs: JobsPeriod, rhs: JobsPeriod) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval - rhs.timeInterval)
     }
-    
+
     static func * (lhs: JobsPeriod, rhs: Double) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval * rhs)
     }
-    
+
     static func / (lhs: JobsPeriod, rhs: Double) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval / rhs)
     }
@@ -69,7 +69,6 @@ public extension JobsPeriod {
 /// JobsPlan@系列任务计划
 /// 定义了任务执行的时间序列，支持一次性、重复、延迟等多种调度策略
 public struct JobsPlan: Sequence, Sendable {
-    
     public typealias Element = JobsPeriod
     private let builder: @Sendable () -> AnyIterator<JobsPeriod>
 
@@ -79,7 +78,6 @@ public struct JobsPlan: Sequence, Sendable {
 }
 
 extension JobsPlan {
-    
     public static func make(_ builder: @escaping @Sendable () -> AnyIterator<JobsPeriod>) -> JobsPlan {
         JobsPlan(builder: builder)
     }
@@ -97,22 +95,18 @@ extension JobsPlan {
             return AnyIterator {
                 if let repeatCount, emitted >= repeatCount { return nil }
                 emitted += 1
-
                 if fireImmediately && !hasEmittedImmediate {
                     hasEmittedImmediate = true
                     return .zero
                 }
-
                 if shouldEmitInitialDelay {
                     shouldEmitInitialDelay = false
                     return initialDelay
-                }
-
-                return interval
+                };return interval
             }
         }
     }
-    
+
     public static func after(_ delay: JobsPeriod) -> JobsPlan {
         JobsPlan.make {
             var fired = false
@@ -130,13 +124,13 @@ extension JobsPlan {
         let interval = Swift.max(0, date.timeIntervalSinceNow)
         return after(JobsPeriod(interval))
     }
-    
+
     /// 创建立即执行的一次性计划
     /// - Returns: JobsPlan
     public static var now: JobsPlan {
         after(.zero)
     }
-    
+
     public func makeIterator() -> AnyIterator<JobsPeriod> {
         builder()
     }
@@ -254,7 +248,7 @@ public struct JobsTaskMetrics: Sendable {
     public let averageInterval: TimeInterval?
     /// 当前生命周期状态
     public let currentLifecycle: JobsTaskLifecycle
-    
+
     /// 计算平均执行频率（次/秒）
     public var executionRate: Double? {
         guard totalExecutions > 0, totalDuration > 0 else { return nil };return Double(totalExecutions) / totalDuration
@@ -296,17 +290,17 @@ public enum JobsTaskStatus: Sendable, Equatable {
     case execute     // 执行中
     case ended       // 已结束
     case background  // 后台
-    
+
     /// 是否为活跃状态（执行中或准备中）
     public var isActive: Bool {
         self == .execute || self == .prepare
     }
-    
+
     /// 是否为终止状态（已结束或过期）
     public var isTerminated: Bool {
         self == .ended || self == .expire
     }
-    
+
     /// 是否可以恢复
     public var canResume: Bool {
         self == .suspend || self == .background || self == .prepare
@@ -319,22 +313,22 @@ public enum JobsTaskLifecycle: Sendable, Equatable {
     case suspended
     case cancelled
     case finished
-    
+
     /// 是否为活跃状态（运行中或暂停）
     public var isActive: Bool {
         self == .running || self == .suspended
     }
-    
+
     /// 是否为终止状态
     public var isTerminated: Bool {
         self == .cancelled || self == .finished
     }
-    
+
     /// 是否可以恢复
     public var canResume: Bool {
         self == .suspended || self == .idle
     }
-    
+
     /// 是否可以暂停
     public var canSuspend: Bool {
         self == .running

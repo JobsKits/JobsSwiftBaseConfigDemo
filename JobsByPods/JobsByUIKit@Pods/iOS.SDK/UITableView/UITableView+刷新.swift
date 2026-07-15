@@ -62,10 +62,8 @@ extension UITableView {
         onMainAsync { [weak self] in
             guard let self else { return }
             guard !sections.isEmpty else { return }
-
             let safe = sections.filter { $0 >= 0 && $0 < self.numberOfSections }
             guard !safe.isEmpty else { return }
-
             self.reloadSections(IndexSet(safe), with: animation)
         };return self
     }

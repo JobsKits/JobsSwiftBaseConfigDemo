@@ -18,17 +18,14 @@ extension JobsDefaultAgent: JobsDownloadCapable {
         token.setCancel { [weak self] in
             self?.client.cancel(requestId: request.trace.requestId)
         }
-
         var headers = request.headers
         let asRequest = JobsRequest(path: request.absoluteURL.absoluteString, method: .get, headers: request.headers, timeout: request.timeout, trace: request.trace)
         headers.merge(headerHook.headers(for: asRequest)) { _, new in new }
         headers[config.traceHeaderKeys.requestId] = request.trace.requestId
         headers[config.traceHeaderKeys.traceId] = request.trace.traceId
         headers[config.traceHeaderKeys.spanId] = request.trace.spanId
-
         var afHeaders: HTTPHeaders = [:]
         headers.forEach { afHeaders.add(name: $0.key, value: $0.value) }
-
         client.download(
             absoluteURL: request.absoluteURL,
             headers: afHeaders,

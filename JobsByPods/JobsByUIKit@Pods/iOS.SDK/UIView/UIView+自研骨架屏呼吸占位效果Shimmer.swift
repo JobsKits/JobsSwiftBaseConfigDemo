@@ -79,7 +79,6 @@ private enum JobsShimmerRuntime {
 }
 
 extension UIView {
-    
     private static func jobs_enableShimmerAutoLayoutUpdatesOnce() {
         _ = JobsShimmerSwizzle.once
     }
@@ -88,18 +87,15 @@ extension UIView {
     internal func jobs_shimmer_layoutSubviews() {
         // 注意：交换实现后，这里调用的是“原始 layoutSubviews”（可能已被其它库 swizzle 过）。
         self.jobs_shimmer_layoutSubviews()
-
         // 全局没有任何 shimmer 活跃时，直接返回（避免对非 shimmer view 产生额外开销）。
         guard JobsShimmerRuntime.activeCount > 0 else { return }
         // 只对我们自己的 shimmer view 生效
         guard jobs_isShimmeringStored else { return }
-
         jobs_updateShimmerLayout()
     }
 }
 // MARK: - 配置对象
 public struct JobsShimmerConfig {
-    
     public var baseColor: UIColor
     public var highlightColor: UIColor
     public var duration: CFTimeInterval
@@ -128,7 +124,6 @@ private enum JobsShimmerAssociatedKeys {
 }
 // MARK: - 私有工具
 extension UIView {
-    
     private func jobs_withoutImplicitAnimations(_ block: () -> Void) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -226,11 +221,9 @@ extension UIView {
     }
 
     private func jobs_prepareShimmerLayerIfNeeded() -> CAGradientLayer {
-        
         if let layer = jobs_shimmerLayer {
             return layer
         }
-
         let layer = CAGradientLayer()
             .byName("jobs.shimmer.layer")
             // 禁用布局更新时的隐式动画（避免闪一下）
@@ -246,13 +239,11 @@ extension UIView {
             .byStartPoint(CGPoint(x: 0, y: 0.5))
             .byEndPoint(CGPoint(x: 1, y: 0.5))
             .byAddSublayer(self.layer)
-
         jobs_shimmerLayer = layer
         return layer
     }
 
     private func jobs_updateShimmerColors() {
-        
         guard let layer = jobs_shimmerLayer else { return }
         let cfg = jobs_shimmerConfig
         // 动态色支持：resolvedColor(with:) 可跟随暗黑模式变化
@@ -260,13 +251,11 @@ extension UIView {
         let highlight = cfg.highlightColor.jobsResolvedColor(with: traitCollection)
         let c1 = base.cgColor
         let c2 = highlight.cgColor
-
         let ratio = min(max(cfg.highlightWidthRatio, 0), 1)
         let mid = 0.5
         let half = Double(ratio) / 2.0
         let start = max(0, mid - half)
         let end   = min(1, mid + half)
-
         layer
             .byColors([c1, c1, c2, c1, c1])
             .byLocations([
@@ -279,26 +268,21 @@ extension UIView {
     }
 
     private func jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: Bool = false) {
-        
         guard let layer = jobs_shimmerLayer else { return }
         guard jobs_isShimmeringStored else { return }
-
         let cfg = jobs_shimmerConfig
         let w = bounds.width
         guard w > 0 else { return }
-
         if forceRestartIfWidthChanged {
             let last = jobs_lastAnimationWidth ?? 0
             if abs(last - w) > 0.5 {
                 layer.removeAnimation(forKey: "jobs.shimmer")
             }
         }
-
         guard layer.animation(forKey: "jobs.shimmer") == nil else {
             jobs_lastAnimationWidth = w
             return
         }
-        
         layer.add(
             CABasicAnimation(keyPath: "transform.translation.x")
                 .byFromValue(-w)
@@ -330,7 +314,6 @@ extension UIView {
     public func jobs_startShimmer(config: JobsShimmerConfig = .default) {
         // ✅ 无需子类化：自动跟随布局变化刷新 shimmer layer frame
         UIView.jobs_enableShimmerAutoLayoutUpdatesOnce()
-
         // 记录原始状态（仅首次开启时记录，stop 时会清理）
         if jobs_originalClipsToBounds == nil {
             jobs_originalClipsToBounds = clipsToBounds
@@ -338,25 +321,19 @@ extension UIView {
         if jobs_originalCornerRadius == nil {
             jobs_originalCornerRadius = layer.cornerRadius
         }
-
         jobs_shimmerConfig = config
         if jobs_isShimmeringStored == false {
             JobsShimmerRuntime.inc()
         }
         jobs_isShimmeringStored = true
-
         // 临时开启裁剪：因为 shimmer layer 会比 bounds 更宽（-w...3w）
         clipsToBounds = true
-
         let layer = jobs_prepareShimmerLayerIfNeeded()
-
         // 布局和颜色
         jobs_updateShimmerLayout()
         jobs_updateShimmerColors()
-
         // 动画
         jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: true)
-
         layer.isHidden = false
     }
     /// 停止呼吸效果
@@ -365,11 +342,9 @@ extension UIView {
             JobsShimmerRuntime.dec()
         }
         jobs_isShimmeringStored = false
-
         jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
         jobs_shimmerLayer?.removeFromSuperlayer()
         jobs_shimmerLayer = nil
-
         // 恢复原始属性，避免对宿主 view 产生永久副作用
         if let originClips = jobs_originalClipsToBounds {
             clipsToBounds = originClips
@@ -377,7 +352,6 @@ extension UIView {
         if let originCorner = jobs_originalCornerRadius {
             jobs_withoutImplicitAnimations { layer.cornerRadius = originCorner }
         }
-
         jobs_originalClipsToBounds = nil
         jobs_originalCornerRadius = nil
         jobs_lastAnimationWidth = nil
@@ -385,24 +359,19 @@ extension UIView {
     /// 视图尺寸变化时调用，更新渐变层 layout（建议在 layoutSubviews 里调用）
     public func jobs_updateShimmerLayout() {
         guard let layer = jobs_shimmerLayer, jobs_isShimmeringStored else { return }
-
         let w = bounds.width
         let h = bounds.height
         guard w > 0, h > 0 else { return }
-
         jobs_withoutImplicitAnimations {
             layer.frame = CGRect(x: -w, y: 0, width: w * 3, height: h)
-
             // 复刻“bar view”常见的圆角效果：
             // - 如果外部已经给 view 配了 cornerRadius，则尊重外部
             // - 否则默认使用 pill（h/2）
             let baseCorner = jobs_originalCornerRadius ?? self.layer.cornerRadius
             let desiredCorner = max(baseCorner, h / 2)
-
             layer.cornerRadius = desiredCorner
             self.layer.cornerRadius = max(self.layer.cornerRadius, desiredCorner)
         }
-
         // ✅ 尺寸变化后，确保动画距离正确
         jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: true)
     }
@@ -488,7 +457,6 @@ extension UIButton {
     private func jobs_fgOverlayRect(targetSize: CGSize) -> CGRect {
         let b = self.bounds
         guard b.width > 1, b.height > 1 else { return .zero }
-
         // ✅ 最优先：直接使用 imageView 的最终 frame（最贴近系统真实呈现）
         // - 在你“先灌兜底图撑开”的策略下，这里通常能拿到稳定 frame
         if let iv = self.imageView {
@@ -497,20 +465,16 @@ extension UIButton {
                 return iv.frame.integral
             }
         }
-
         let content = jobs_effectiveContentRect(in: b)
         guard content.width > 1, content.height > 1 else { return .zero }
-
         // 使用 targetSize / currentImage 尺寸兜底（避免调用 iOS15 起 deprecated 的 imageRect/contentRect）
         var baseSize = targetSize
         if baseSize.width <= 1 || baseSize.height <= 1, let img = self.currentImage {
             baseSize = img.size
         }
         guard baseSize.width > 1, baseSize.height > 1 else { return .zero }
-
         let w = min(max(baseSize.width, 1), content.width)
         let h = min(max(baseSize.height, 1), content.height)
-
         var x: CGFloat
         switch self.contentHorizontalAlignment {
         case .right:  x = content.maxX - w
@@ -518,7 +482,6 @@ extension UIButton {
         case .fill:   x = content.minX
         default:      x = content.minX
         }
-
         var y: CGFloat
         switch self.contentVerticalAlignment {
         case .top:    y = content.minY
@@ -526,9 +489,7 @@ extension UIButton {
         case .fill:   y = content.minY
         default:      y = content.midY - h / 2
         }
-
         var rect = CGRect(x: x, y: y, width: w, height: h)
-
         // legacy：imageEdgeInsets 做个近似偏移（configuration 模式下不走这套）
         // ⚠️ iOS15+ 直接访问 imageEdgeInsets 会产生 deprecated warning；
         // 这里改为走你统一的兼容读取（KVC），既保留 legacy 行为，也不污染编译输出。
@@ -560,7 +521,6 @@ extension UIButton {
         let size = jobs_fgOverlayTargetSize ?? CGSize(width: 48, height: 48)
         let r = jobs_fgOverlayRect(targetSize: size)
         guard r.width > 1, r.height > 1 else { return }
-
         overlay.frame = r
         // ✅ 圆角：优先贴合 imageView，其次走默认
         if let iv = self.imageView, iv.layer.cornerRadius > 0 {
@@ -590,17 +550,14 @@ extension UIButton {
     public func _jobs_startForegroundShimmerOverlay(targetSize: CGSize) {
         UIButton.jobs_enableForegroundOverlayAutoLayoutUpdatesOnce()
         jobs_fgOverlayTargetSize = targetSize
-
         let overlay = jobs_getOrCreateFGOverlayView()
         overlay.isHidden = false
         bringSubviewToFront(overlay)
-
         // ✅ 先开 shimmer，再立刻摆一次 frame：
         // - jobs_startShimmer 里会记录 shimmering 状态
         // - layoutSubviews swizzle 会持续兜底修正 frame/bounds
         overlay.jobs_startShimmer()
         jobs_layoutFGOverlayIfNeeded()
-
         // 约束布局常在下一帧才生效，多补几次更稳
         DispatchQueue.main.async { [weak self, weak overlay] in
             guard let self, let overlay else { return }

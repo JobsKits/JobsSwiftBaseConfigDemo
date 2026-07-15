@@ -108,14 +108,12 @@ final class MessageListDemoVC: BaseVC {
                 make.bottom.equalToSuperview()                      // ✅ 覆盖安全区：贴 superview 底
                 self.bottomBarHeightC = make.height.equalTo(0).constraint // 默认隐藏
             }
-
         // ✅ 关键：按钮对齐 safeAreaLayoutGuide，避免被额外的 safeBottom “拉偏”
         bottomSelectAllButton.byAddTo(v) { make in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalTo(v.safeAreaLayoutGuide.snp.centerY)
             make.height.equalTo(44)
         }
-
         bottomDeleteButton.byAddTo(v) { make in
             make.right.equalToSuperview().inset(16)
             make.centerY.equalTo(v.safeAreaLayoutGuide.snp.centerY)
@@ -228,7 +226,6 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - Insets
     private func captureBaseInsetsIfNeeded() {
         baseContentInset = tableView.contentInset
-
         if #available(iOS 13.0, *) {
             baseVerticalIndicatorInsets = tableView.verticalScrollIndicatorInsets
             baseHorizontalIndicatorInsets = tableView.horizontalScrollIndicatorInsets
@@ -239,16 +236,13 @@ final class MessageListDemoVC: BaseVC {
 
     private func applyTableInsetsForBottomBarVisible(_ visible: Bool) {
         let extra = visible ? bottomBarShownHeight : 0
-
         var inset = baseContentInset
         inset.bottom = baseContentInset.bottom + extra
         tableView.byContentInset(inset)
-
         if #available(iOS 13.0, *) {
             var v = baseVerticalIndicatorInsets
             v.bottom = baseVerticalIndicatorInsets.bottom + extra
             tableView.verticalScrollIndicatorInsets = v
-
             var h = baseHorizontalIndicatorInsets
             h.bottom = baseHorizontalIndicatorInsets.bottom + extra
             tableView.horizontalScrollIndicatorInsets = h
@@ -261,14 +255,12 @@ final class MessageListDemoVC: BaseVC {
 }
 // MARK: - UITableViewDataSource
 extension MessageListDemoVC: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         items.count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView.byDequeueReusableCell(withType: MessageCell.self, for: indexPath)
         let item = items[indexPath.row]
         cell.render(item: item, editing: isEditingMode)
@@ -328,13 +320,11 @@ extension MessageListDemoVC {
     private func applyEditingMode(_ editing: Bool) {
         tableView.allowsMultipleSelectionDuringEditing = true
         tableView.setEditing(editing, animated: true)
-
         if editing {
             syncSelectionToUI()
         } else {
             deselectAllRows(clearIDs: true)
         }
-
         setBottomBarVisible(editing, animated: true)
         updateNavUI()
         updateBottomBarUI()
@@ -344,9 +334,7 @@ extension MessageListDemoVC {
     private func setBottomBarVisible(_ visible: Bool, animated: Bool) {
         let h = bottomBarShownHeight
         let d: TimeInterval = animated ? 0.25 : 0
-
         applyTableInsetsForBottomBarVisible(visible)
-
         if visible {
             bottomBar.jobs_slide(.show(from: .bottom, size: h),
                                  sizeConstraint: bottomBarHeightC,
@@ -363,7 +351,7 @@ extension MessageListDemoVC {
         bottomDeleteButton.byEnabled(!selectedIDs.isEmpty)
         bottomDeleteButton.byAlpha(selectedIDs.isEmpty ? 0.35 : 1)
     }
-    
+
     private func syncSelectionToUI() {
         guard !items.isEmpty else { return }
         for (idx, item) in items.enumerated() where selectedIDs.contains(item.id) {
@@ -393,19 +381,15 @@ extension MessageListDemoVC {
     private func deleteSelectedRows() {
         guard isEditingMode else { return }
         guard let selected = tableView.indexPathsForSelectedRows, !selected.isEmpty else { return }
-
         let sorted = selected.sorted { $0.row > $1.row }
-
         let idsToRemove: [UUID] = sorted.compactMap { ip in
             guard items.indices.contains(ip.row) else { return nil };return items[ip.row].id
         }
-
         for ip in sorted {
             guard items.indices.contains(ip.row) else { continue }
             items.remove(at: ip.row)
         }
         idsToRemove.forEach { selectedIDs.remove($0) }
-
         tableView.performBatchUpdates {
             tableView.deleteRows(at: sorted, with: .automatic)
         } completion: { _ in

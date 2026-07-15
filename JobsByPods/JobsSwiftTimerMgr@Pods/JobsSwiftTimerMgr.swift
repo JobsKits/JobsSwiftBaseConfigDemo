@@ -25,7 +25,6 @@ public final class JobsSwiftTimerMgr {
         let timer: JobsSwiftTimerProtocol
         let backgroundPolicy: JobsTimerBackgroundPolicy
         var pauseState: PauseState
-
         init(
             timer: JobsSwiftTimerProtocol,
             backgroundPolicy: JobsTimerBackgroundPolicy,
@@ -74,20 +73,16 @@ public final class JobsSwiftTimerMgr {
         backgroundPolicy: JobsTimerBackgroundPolicy? = nil,
         onTick: @escaping JobsTimerCallback
     ) throws -> JobsSwiftTimerProtocol {
-
         guard let identifier, !identifier.isEmpty else {
             throw JobsSwiftTimerMgrError.identifierRequired
         }
-
         let policy = dedupPolicy ?? defaultDedupPolicy
         let resolvedBackgroundPolicy = backgroundPolicy ?? (config.pauseInBackground ? .pauseAndResume : .ignore)
-
         // 先读 existing，避免锁内做 stop/remove 这种可能引发回调的重操作
         let existing: JobsSwiftTimerProtocol? = {
             lock.lock()
             defer { lock.unlock() };return entries[identifier]?.timer
         }()
-
         if let existing {
             switch policy {
             case .keepExisting:
@@ -104,13 +99,11 @@ public final class JobsSwiftTimerMgr {
         #if canImport(UIKit)
         c.autoManageAppState = false
         #endif
-
         // 非 GCD 内核依赖 RunLoop/DisplayLink：强制主线程主 RunLoop
         if kind != .gcd {
             precondition(c.runLoop == .main, "JobsSwiftTimerMgr: kind=\(kind) currently only supports RunLoop.main.")
             precondition(Thread.isMainThread, "JobsSwiftTimerMgr: create(kind=\(kind)) must be called on main thread.")
         }
-
         let timer = JobsTimer(kind: kind, config: c, handler: onTick)
         return try register(
             timer,
@@ -138,7 +131,6 @@ public final class JobsSwiftTimerMgr {
             break
         }
         lock.unlock()
-
         guard let entry else { throw JobsSwiftTimerMgrError.notFound(identifier) }
         let t = entry.timer
         switch action {
@@ -165,12 +157,11 @@ public final class JobsSwiftTimerMgr {
         let all = entries
         entries.removeAll()
         lock.unlock()
-
         if stopAll {
             all.values.forEach { $0.timer.stop() }
         }
     }
-    
+
     // iOS 12 及以下：同步
     public func stopAndRemove(identifier: String) {
         stopAndRemoveSync(identifier: identifier)
@@ -222,7 +213,6 @@ public final class JobsSwiftTimerMgr {
         ) { [weak self] _ in
             self?.handleDidEnterBackground()
         }
-
         willEnterForegroundObserver = NotificationCenter.default.addObserver(
             forName: UIApplication.willEnterForegroundNotification,
             object: nil,
@@ -249,7 +239,6 @@ public final class JobsSwiftTimerMgr {
     private func handleDidEnterBackground() {
         var toPause: [JobsSwiftTimerProtocol] = []
         var toCancel: [JobsSwiftTimerProtocol] = []
-
         lock.lock()
         let identifiers = Array(entries.keys)
         for identifier in identifiers {
@@ -267,14 +256,12 @@ public final class JobsSwiftTimerMgr {
             }
         }
         lock.unlock()
-
         toPause.forEach { $0.pause() }
         toCancel.forEach { $0.stop() }
     }
 
     private func handleWillEnterForeground() {
         var toResume: [JobsSwiftTimerProtocol] = []
-
         lock.lock()
         for entry in entries.values {
             guard entry.backgroundPolicy == .pauseAndResume,
@@ -283,7 +270,6 @@ public final class JobsSwiftTimerMgr {
             toResume.append(entry.timer)
         }
         lock.unlock()
-
         toResume.forEach { $0.resume() }
     }
 }

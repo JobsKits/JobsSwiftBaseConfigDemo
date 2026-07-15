@@ -8,7 +8,6 @@
 import Foundation
 
 public final class LanguageManager {
-    
     public static let shared = LanguageManager()
     public private(set) var currentLanguageCode: String
     private let userDefaultsKey = "Jobs.LanguageCode"
@@ -21,7 +20,7 @@ public final class LanguageManager {
             return .main
         };return b
     }
-    
+
     public init() {
         currentLanguageCode = resolveLanguageCode()
     }
@@ -47,7 +46,6 @@ extension LanguageManager {
         let ud = UserDefaults.standard
         ud.set("system", forKey: languageModeKey)
         ud.removeObject(forKey: languageCodeKey)
-
         let normalized = (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
         guard normalized != currentLanguageCode else { return }
         currentLanguageCode = normalized

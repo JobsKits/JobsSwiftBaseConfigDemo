@@ -348,7 +348,6 @@ final class MoyaDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Moya 全量用法 Demo".tr)
-
         // 触发懒加载 + 就地布局（按顺序确保依赖关系）
         btnZen.byVisible(YES)
         btnUser.byVisible(YES)
@@ -360,13 +359,11 @@ final class MoyaDemoVC: BaseVC {
         btnStub.byVisible(YES)
         btnClear.byVisible(YES)
         resultView.byVisible(YES)
-
         show(title: "准备就绪 ✅".tr, body: "点上面的按钮触发网络示例，结果会回显到这里。")
     }
 }
 
 extension MoyaDemoVC {
-    
     private func clear() {
         onMainSync { [weak self] in
             guard let self else { return }

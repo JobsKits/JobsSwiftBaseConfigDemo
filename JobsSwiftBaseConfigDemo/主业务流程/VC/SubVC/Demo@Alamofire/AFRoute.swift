@@ -81,12 +81,10 @@ enum AFRoute: URLRequestConvertible {
         case .ghZen: return "/zen"
         case let .ghUser(username): return "/users/\(username)"
         case .ghSearchUsers: return "/search/users"
-
         case .login: return "/api/login"
         case .createUser: return "/api/users"
         case let .updateUser(id, _): return "/api/users/\(id)"
         case let .deleteUser(id): return "/api/users/\(id)"
-
         case .uploadAvatar: return "/post"
         case .downloadPNG:  return "/image/png"
         case let .downloadBytes(n): return "/bytes/\(n)"
@@ -128,12 +126,10 @@ enum AFRoute: URLRequestConvertible {
         req.method = method
         req.headers = headers
         req.timeoutInterval = timeout
-
         switch self {
         case .ghZen, .ghUser, .deleteUser, .downloadPNG, .downloadBytes, .uploadAvatar:
             // 这些要么无 body，要么交给 upload/download API
             return req
-
         case let .ghSearchUsers(q, page):
             var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)!
             var items: [URLQueryItem] = [.init(name: "q", value: q)]
@@ -141,16 +137,13 @@ enum AFRoute: URLRequestConvertible {
             comps.queryItems = items
             req.url = comps.url
             return req
-
         case let .login(email, password):
             let body = ["email": email, "password": password]
             req.httpBody = try JSONSerialization.data(withJSONObject: body)
             return req
-
         case let .createUser(b):
             req.httpBody = try jobs_encodeJSONObject(b)
             return req
-
         case let .updateUser(_, b):
             req.httpBody = try jobs_encodeJSONObject(b)
             return req

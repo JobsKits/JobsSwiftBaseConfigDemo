@@ -18,7 +18,6 @@ import JobsSwiftBaseDefines
 
 // MARK: - ✅ 新版 JobsSwiftTimer：给任意 UIButton 挂一个倒计时驱动
 public final class JobsCountdownBinder {
-
     private weak var button: UIButton?
     private var timer: JobsSwiftTimerProtocol?
 
@@ -38,16 +37,13 @@ public final class JobsCountdownBinder {
                       interval: TimeInterval,
                       kind: JobsTimerKind) {
         stop()
-
         self.button = button
         self.total = max(1, total)
         self.remain = self.total
         self.interval = max(0.000_001, interval)
         self.kind = kind
-
         // 先把 UI 初始化成 “还剩 xxxs”
         applyUI(remain: self.remain, total: self.total, kind: kind)
-
         let cfg = JobsSwiftTimerConfig(
             interval: self.interval,
             repeats: true,
@@ -58,7 +54,6 @@ public final class JobsCountdownBinder {
             pauseInBackground: true,
             autoManageAppState: true
         )
-
         let t = JobsTimer(kind: kind, config: cfg) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：先冻结 self，再切 MainActor
             guard let strongSelf = self else { return }
@@ -67,7 +62,6 @@ public final class JobsCountdownBinder {
                     strongSelf.stop()
                     return
                 }
-
                 strongSelf.remain -= 1
                 let remain = max(0, strongSelf.remain)
                 print("⏱️ [\(strongSelf.kind.displayName)] \(remain)/\(strongSelf.total)")
@@ -82,13 +76,11 @@ public final class JobsCountdownBinder {
                         .byUpdateConfig()
                     return
                 }
-
                 strongSelf.applyUI(remain: remain,
                                    total: strongSelf.total,
                                    kind: strongSelf.kind)
             }
         }
-
         timer = t
         t.start()
     }

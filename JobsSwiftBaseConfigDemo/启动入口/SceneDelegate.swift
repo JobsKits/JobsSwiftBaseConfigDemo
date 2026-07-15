@@ -37,7 +37,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .byRootViewController(homeViewController)
             .byMakeKeyAndVisible()
         guard JobsSplashPreferences.isEnabledForNextLaunch else { return }
-
         let openConfiguration = JobsOpenConfiguration()
             .byURL(URL(string: "http://www.baidu.com")!)
             .byMode(.inApp)
@@ -46,7 +45,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .byCompletion { success in
                 print("开屏链接打开结果：\(success)")
             }
-
         JobsSplashPresenter.show(
             over: homeViewController,
             configuration: JobsSplashConfiguration(

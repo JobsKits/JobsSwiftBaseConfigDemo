@@ -76,7 +76,6 @@ public enum JobsImageCacheCleaner {
         completion: (jobsByVoidBlock)? = nil
     ) {
         let group = DispatchGroup()
-
         // MARK: - helpers
         func _pointToPixel(_ point: CGSize) -> CGSize {
             #if canImport(UIKit)
@@ -86,12 +85,10 @@ public enum JobsImageCacheCleaner {
             return point
             #endif
         }
-
         func _guessImageViewTargetSize(_ iv: UIImageView) -> CGSize {
             let s = iv.jobs_remoteImageTargetSize ?? iv.bounds.size
             if s.width > 1, s.height > 1 { return s };return CGSize(width: 160, height: 160)
         }
-
         func _guessButtonForegroundTargetSize(_ btn: UIButton) -> CGSize {
             if let s = btn.jobs_remoteImageTargetSize, s.width > 1, s.height > 1 { return s }
             if let iv = btn.imageView {
@@ -104,7 +101,6 @@ public enum JobsImageCacheCleaner {
                 return CGSize(width: side, height: side)
             };return CGSize(width: 48, height: 48)
         }
-
         func _guessButtonBackgroundTargetSize(_ btn: UIButton) -> CGSize {
             if let s = btn.jobs_bgImageTargetSize, s.width > 1, s.height > 1 { return s }
             let s = btn.bounds.size
@@ -124,7 +120,6 @@ public enum JobsImageCacheCleaner {
                 group.leave()
             }
         }
-
         func _reloadWithKingfisher(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonForegroundTargetSize(btn)
             group.enter()
@@ -147,7 +142,6 @@ public enum JobsImageCacheCleaner {
                 }
             })
         }
-
         func _reloadWithKingfisherBackground(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonBackgroundTargetSize(btn)
             group.enter()
@@ -171,16 +165,13 @@ public enum JobsImageCacheCleaner {
             })
         }
         #endif
-
         #if canImport(SDWebImage)
         func _reloadWithSDWebImage(imageView iv: UIImageView, url: URL) {
             let target = _guessImageViewTargetSize(iv)
             group.enter()
-
             var ctx: [SDWebImageContextOption: Any] = [:]
             ctx[.imageScaleFactor] = UIScreen.main.scale
             ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
-
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages]
             iv.sd_setImage(with: url,
                           placeholderImage: placeholder,
@@ -190,15 +181,12 @@ public enum JobsImageCacheCleaner {
                 group.leave()
             }
         }
-
         func _reloadWithSDWebImage(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonForegroundTargetSize(btn)
             group.enter()
-
             var ctx: [SDWebImageContextOption: Any] = [:]
             ctx[.imageScaleFactor] = UIScreen.main.scale
             ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
-
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
             btn.sd_setImage(with: url,
                             for: state,
@@ -212,15 +200,12 @@ public enum JobsImageCacheCleaner {
                 }
             }
         }
-
         func _reloadWithSDWebImageBackground(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonBackgroundTargetSize(btn)
             group.enter()
-
             var ctx: [SDWebImageContextOption: Any] = [:]
             ctx[.imageScaleFactor] = UIScreen.main.scale
             ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
-
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
             btn.sd_setBackgroundImage(with: url,
                                       for: state,
@@ -290,7 +275,6 @@ public enum JobsImageCacheCleaner {
                 if let url = btn.jobs_remoteURL {
                     let state = btn.jobs_remoteState
                     let kind = btn.jobs_imageLoaderKind
-
                 switch kind {
                     case .urlSession:
                         #if canImport(SDWebImage)
@@ -322,7 +306,6 @@ public enum JobsImageCacheCleaner {
                 if let url = btn.jobs_bgURL {
                     let state = btn.jobs_bgState
                     let kind = btn.jobs_imageLoaderKind
-
                 switch kind {
                     case .urlSession:
                         #if canImport(SDWebImage)

@@ -11,7 +11,6 @@ import JobsNetworking
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
-
     private var requestBody: [String: AnySendable] {
         [
             "pageNo": .init(1),
@@ -31,9 +30,7 @@ final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
     override func buildRequestPreview(triggerError: Bool) -> String {
         if triggerError {
             return "POST /api/errors/post\nbody: {\"demo\": true}"
-        }
-
-        return """
+        };return """
         POST /api/post/orders
         body:
         {
@@ -59,7 +56,6 @@ final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
             body: triggerError ? ["demo": .init(true)] : requestBody,
             encoding: .jsonBody
         )
-
         let raw = service.prettyJSONString(from: data)
         if triggerError, let error = service.decode(DioErrorResponse.self, from: data) {
             let render = prettyPrint([
@@ -69,7 +65,6 @@ final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
             ])
             await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
-
         let response = service.decode(DioPOSTResponse.self, from: data)
         let records = response?.data?.records ?? []
         let render = records.enumerated().map { index, item in
@@ -90,7 +85,6 @@ final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
             \(products)
             """
         }.joined(separator: "\n\n")
-        
         onMainSync { [weak self] in
             guard let self else { return }
             self.handleSuccess(render: render, raw: raw)

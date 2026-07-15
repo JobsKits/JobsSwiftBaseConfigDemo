@@ -74,7 +74,6 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "根据不同的UIButton.state，设置不同的背景色".tr)
-        
         exampleButton.byVisible(YES)
         toggleEnabledButton.byVisible(YES)
     }

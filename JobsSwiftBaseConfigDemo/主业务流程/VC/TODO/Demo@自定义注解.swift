@@ -148,7 +148,6 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
         )
         view.byBackgroundColor(JobsCor.systemBackground)
         _ = tableView; _ = renameButton; _ = replaceButton
-
         // Diffable：真正的数据源
         dataSource = UITableViewDiffableDataSource<Section, UserInfo>(tableView: tableView) { tableView, indexPath, item in
             tableView
@@ -158,10 +157,8 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                 .bySelectionStyle(.none)
                 .byAccessoryType(.disclosureIndicator)
         }
-
         // 覆盖掉 .byDataSource(self) 设置的 dataSource
         tableView.byDataSource(dataSource)
-
         applySnapshot(animated: false)
     }
 

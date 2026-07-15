@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 extension UIFont {
-    
     public convenience init?(medium: CGFloat) {
         self.init(name: "PingFangSC-Medium", size: medium)
     }
@@ -67,14 +66,11 @@ extension UIFont {
      label.font = .Mitr.Regular(14)
  */
 extension UIFont {
-    
     public enum App {
         public static func Regular(_ size: CGFloat) -> UIFont { pick(.regular, size) }
         public static func Medium(_ size: CGFloat) -> UIFont  { pick(.medium,  size) }
         public static func Semibold(_ size: CGFloat) -> UIFont{ pick(.semibold,size) }
-
         private enum W { case regular, medium, semibold }
-
         private static func pick(_ w: W, _ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -87,7 +83,6 @@ extension UIFont {
                 return pingFang(w, size)
             }
         }
-
         private static func roboto(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
             case .regular:  return UIFont.Roboto.Regular(size)
@@ -95,7 +90,6 @@ extension UIFont {
             case .semibold: return UIFont.Roboto.Semibold(size)
             }
         }
-
         private static func mitr(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
             case .regular:  return UIFont.Mitr.Regular(size)
@@ -103,7 +97,6 @@ extension UIFont {
             case .semibold: return UIFont.Mitr.Semibold(size)
             }
         }
-
         private static func sfArabic(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
             case .regular:  return UIFont.SFArabic.Regular(size)
@@ -111,7 +104,6 @@ extension UIFont {
             case .semibold: return UIFont.SFArabic.Semibold(size)
             }
         }
-
         private static func pingFang(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
             case .regular:  return UIFont.PingFangSC.Regular(size)

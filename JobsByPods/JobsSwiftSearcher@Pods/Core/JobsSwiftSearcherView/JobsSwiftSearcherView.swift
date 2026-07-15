@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
@@ -106,7 +105,6 @@ public final class JobsSwiftSearcherView: UIView {
 }
 
 extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
-
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         historySearches.count
     }
@@ -147,20 +145,17 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
         guard !historySearches.isEmpty else { return nil }
         let headerView = UIView()
             .byBackgroundColor(backgroundColor)
-
         let label = UILabel()
             .byText(config.historyTitle)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
             .byTranslatesAutoresizingMaskIntoConstraints(false)
-
         let clearButton = UIButton.sys()
             .tr_setTitle("清空".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTitleColor(UIColor(r: 0.68 * 255, g: 0.30 * 255, b: 0.26 * 255))
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
-
         headerView
             .byAddSubviewRetSuper(label)
             .byAddSubviewRetSuper(clearButton)
@@ -209,16 +204,13 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 }
 
 private extension JobsSwiftSearcherView {
-
     func setupViews() {
         self.byBackgroundColor(UIColor(r: 0.96 * 255, g: 0.97 * 255, b: 0.99 * 255))
-
         searchContainerView.byTranslatesAutoresizingMaskIntoConstraints(false)
         searchContainerView.byBackgroundColor(JobsCor.white)
         searchContainerView.byCornerRadius(16)
         searchContainerView.byBorderWidth(0.5)
         searchContainerView.byBorderColor(UIColor(r: 0.93 * 255, g: 0.88 * 255, b: 0.79 * 255))
-
         textField
             .byDelegate(self)
             .byClearButtonMode(.whileEditing)
@@ -228,7 +220,6 @@ private extension JobsSwiftSearcherView {
             .byLeftView(searchIconLeftView())
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
-
         searchButton
             .byTitleColor(JobsCor.white)
             .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
@@ -237,14 +228,11 @@ private extension JobsSwiftSearcherView {
             .byMasksToBounds(true)
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
-
         recommendSectionView.byTranslatesAutoresizingMaskIntoConstraints(false)
         recommendTitleLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
         recommendTitleLabel.byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
         recommendTitleLabel.byTranslatesAutoresizingMaskIntoConstraints(true)
-
         recommendTagContainerView.byTranslatesAutoresizingMaskIntoConstraints(true)
-
         tableView.byTranslatesAutoresizingMaskIntoConstraints(false)
         tableView
             .byDelegate(self)
@@ -256,7 +244,6 @@ private extension JobsSwiftSearcherView {
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
-
         searchContainerView.byAddTo(self)
         textField.byAddTo(searchContainerView)
         searchButton.byAddTo(self)
@@ -264,12 +251,10 @@ private extension JobsSwiftSearcherView {
         recommendTitleLabel.byAddTo(recommendSectionView)
         recommendTagContainerView.byAddTo(recommendSectionView)
         tableView.byAddTo(self)
-
         blankTapGestureRecognizer
             .byTarget(self, action: #selector(blankTapped))
             .byDelegate(self)
         addGestureRecognizer(blankTapGestureRecognizer)
-
         setupConstraints()
         updateByConfig()
         reloadHistorySearches()

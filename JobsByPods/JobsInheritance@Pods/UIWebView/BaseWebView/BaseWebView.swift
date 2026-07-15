@@ -130,7 +130,6 @@ public final class BaseWebView: UIView {
             .byScrollView({ scrollView in
                 scrollView.byAlwaysBounceVertical(true)
                     .byRefreshControl(refresher)
-                
             })
             .byAddTo(self) { [unowned self] make in
                 make.top.equalTo(self.progressView.snp.bottom)
@@ -172,7 +171,6 @@ public final class BaseWebView: UIView {
         // 先唤起 UI 懒加载（UI/约束都在 lazy block 内）
         progressView.byVisible(true)
         webView.byVisible(true)
-
         registerMessageHandlers()
         self.byBackgroundColor(JobsCor.clear)
         // 仅做“使用阶段”的配置；UI 生成与约束在 lazy block（progressView/webView）里完成
@@ -181,7 +179,6 @@ public final class BaseWebView: UIView {
         lastAppliedUASuffix = nil
         setupKVO()
         applyRuntimeToggles()
-
         // 默认启用通用 MobileBridge（零配置可用）
         _ = useMobileBridge()
     }
@@ -197,24 +194,20 @@ public final class BaseWebView: UIView {
     private func cleanupNow() {
         webView.byNavigationDelegate(nil)
         webView.byUIDelegate(nil)
-
         let ucc = webView.configuration.userContentController
         ucc.removeAllUserScripts()
         ucc.removeScriptMessageHandler(forName: bridgeName)
         ucc.removeScriptMessageHandler(forName: consoleName)
         ucc.removeScriptMessageHandler(forName: mobileBridgeName)
-
         kvoEstimatedProgress?.invalidate()
         kvoTitle?.invalidate()
     }
 }
 // MARK: - Internal assemble
 private extension BaseWebView {
-
     @MainActor
     func registerMessageHandlers() {
         let ucc = webView.configuration.userContentController
-
         if #available(iOS 14.0, *) {
             let weakH = WeakScriptMessageHandlerWithReply(target: self)
             ucc.addScriptMessageHandler(weakH, contentWorld: .page, name: bridgeName)
@@ -232,12 +225,10 @@ private extension BaseWebView {
         kvoEstimatedProgress = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, change in
             guard let self else { return }
             guard let p = change.newValue else { return }
-
             onMainAsync { [weak self] in
                 guard let self else { return }
                 self.progressView.byHidden(p >= 1.0)
                 self.progressView.setProgress(Float(p), animated: true)
-
                 if p >= 1.0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
                         guard let self else { return }
@@ -246,7 +237,6 @@ private extension BaseWebView {
                 }
             }
         }
-
         kvoTitle = webView.observe(\.title, options: [.new]) { _, _ in }
     }
 
@@ -258,7 +248,6 @@ private extension BaseWebView {
 }
 // MARK: - Public API
 public extension BaseWebView {
-
     @discardableResult
     @MainActor
     func loadBy(_ url: URL) -> Self {
@@ -341,7 +330,6 @@ public extension BaseWebView {
 }
 // MARK: - JS eval（Raw + Decodable）
 public extension BaseWebView {
-
     @available(iOS 13.0, *)
     func evalAsyncRaw(_ js: String, timeout: TimeInterval = 8) async throws -> Any? {
         try await withThrowingTaskGroup(of: Any?.self) { group in
@@ -365,12 +353,10 @@ public extension BaseWebView {
                     }
                 }
             }
-
             group.addTask {
                 try await Task.sleep(nanoseconds: UInt64(timeout * 1e9))
                 throw NSError(domain: "BaseWebView", code: -1, userInfo: [NSLocalizedDescriptionKey: "JS eval timeout"])
             }
-
             let v = try await group.next()!!
             group.cancelAll()
             return v
@@ -388,7 +374,6 @@ public extension BaseWebView {
 }
 // MARK: - Cookies / Selection
 public extension BaseWebView {
-
     @MainActor
     func setCookies(_ cookies: [HTTPCookie], completion: (jobsByVoidBlock)? = nil) {
         let store = webView.configuration.websiteDataStore.httpCookieStore
@@ -417,7 +402,6 @@ public extension BaseWebView {
 }
 // MARK: - MobileBridge API
 public extension BaseWebView {
-
     @discardableResult
     @MainActor
     func useMobileBridge(_ cfg: MobileBridgeConfig = .defaults()) -> Self {

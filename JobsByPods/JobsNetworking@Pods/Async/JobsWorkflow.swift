@@ -55,7 +55,6 @@ public enum JobsWorkflow {
                         }
                     }
                 }
-
                 var values = Array<Value?>(repeating: nil, count: tasks.count)
                 var errors: [JobsError] = []
                 for await result in group {
@@ -80,13 +79,11 @@ public enum JobsWorkflow {
         };return state
     }
 
-
     public static func chain<State: Sendable>(
         seed: State,
         _ steps: [@Sendable (State) async throws -> State]
     ) async throws -> State {
         try await chain(initial: seed, steps: steps)
     }
-
 }
 #endif

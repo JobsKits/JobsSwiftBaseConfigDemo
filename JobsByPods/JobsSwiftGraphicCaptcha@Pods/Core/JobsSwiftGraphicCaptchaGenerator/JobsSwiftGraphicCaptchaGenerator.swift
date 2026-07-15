@@ -38,7 +38,6 @@ public enum JobsSwiftGraphicCaptchaGenerator {
         if !validCustomCharacters.isEmpty {
             return randomText(characters: validCustomCharacters, length: length)
         }
-
         let groups = characterGroups(for: captchaConfig.characterUnits)
         if captchaConfig.mixedGroupCount > 1,
            let mixedText = randomMixedText(groups: groups,
@@ -47,7 +46,6 @@ public enum JobsSwiftGraphicCaptchaGenerator {
            !mixedText.isEmpty {
             return mixedText
         }
-
         var sourceCharacters = characters(for: captchaConfig.characterUnits)
         if sourceCharacters.isEmpty {
             sourceCharacters = characters(for: .default)

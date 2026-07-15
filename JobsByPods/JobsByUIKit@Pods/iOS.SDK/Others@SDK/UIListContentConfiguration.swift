@@ -278,7 +278,6 @@ extension UIListContentConfiguration {
             weight.map    { .init(weight: $0)    },
             scale.map     { .init(scale: $0)     }
         ].compactMap { $0 }
-
         let merged = pieces.reduce(nil as UIImage.SymbolConfiguration?) { acc, cfg in
             acc?.applying(cfg) ?? cfg
         };return byPreferredSymbolConfiguration(merged)

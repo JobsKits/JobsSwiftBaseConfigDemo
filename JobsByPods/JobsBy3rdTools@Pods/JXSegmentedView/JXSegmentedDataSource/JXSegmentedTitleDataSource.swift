@@ -157,7 +157,7 @@ extension JXSegmentedTitleDataSource {
         segmentedView.reloadData()
         return self
     }
-    
+
     @discardableResult
     public func byTitleColorGradient(_ enabled: Bool = true) -> Self {
         isTitleColorGradientEnabled = enabled

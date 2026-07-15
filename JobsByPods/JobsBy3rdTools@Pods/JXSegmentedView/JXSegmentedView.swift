@@ -14,14 +14,13 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedView {
-
     @discardableResult
     public func byContentScrollViewConfig(_ block: (UIScrollView) -> Void) -> Self {
         if let scrollView = self.contentScrollView {
             block(scrollView)
         };return self
     }
-    
+
     @discardableResult
     public func byDataSource(_ ds: JXSegmentedViewDataSource) -> Self {
         self.dataSource = ds
@@ -81,13 +80,13 @@ extension JXSegmentedView {
         self.contentEdgeInsetRight = right
         return self
     }
-    
+
     @discardableResult
     public func byContentEdgeInsetLeft(_ left: CGFloat) -> Self {
         self.contentEdgeInsetLeft = left
         return self
     }
-    
+
     @discardableResult
     public func byContentEdgeInsetRight(_ right: CGFloat) -> Self {
         self.contentEdgeInsetRight = right
@@ -102,7 +101,6 @@ extension JXSegmentedView {
 }
 /// 把 JXSegmentedViewDelegate 做成 closure 版，方便链式写回调
 public final class JobsSegmentedViewDelegateProxy: NSObject, JXSegmentedViewDelegate {
-
     public var didSelected: ((JXSegmentedView, Int) -> Void)?
     public var didClickSelected: ((JXSegmentedView, Int) -> Void)?
     public var didScrollSelected: ((JXSegmentedView, Int) -> Void)?
@@ -134,7 +132,6 @@ public final class JobsSegmentedViewDelegateProxy: NSObject, JXSegmentedViewDele
 }
 private var _jobs_jx_delegate_proxy_key: UInt8 = 0
 extension JXSegmentedView {
-
     private var jobs_delegateProxy: JobsSegmentedViewDelegateProxy {
         if let p = objc_getAssociatedObject(self, &_jobs_jx_delegate_proxy_key) as? JobsSegmentedViewDelegateProxy {
             return p

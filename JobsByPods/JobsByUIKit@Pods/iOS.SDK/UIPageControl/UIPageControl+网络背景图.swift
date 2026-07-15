@@ -43,7 +43,6 @@ extension UIPageControl {
         // ✅ 强制 alwaysOriginal：保留网络图纹理/颜色
         let n = normal?.withRenderingMode(.alwaysOriginal)
         let c = current?.withRenderingMode(.alwaysOriginal)
-        
         objc_setAssociatedObject(
             self,
             &kJobsPCNormalImageKey,
@@ -88,7 +87,6 @@ extension UIPageControl {
         let normal = objc_getAssociatedObject(self, &kJobsPCNormalImageKey) as? UIImage
         let current = objc_getAssociatedObject(self, &kJobsPCCurrentImageKey) as? UIImage
         guard normal != nil || current != nil else { return }
-
         let useOverlay = (objc_getAssociatedObject(self, &kJobsPCUseOverlayKey) as? Bool) ?? false
         guard useOverlay else {
             // 如果你未来想允许“走系统点”，可以在这里加回 setIndicatorImage 的逻辑
@@ -113,23 +111,19 @@ extension UIPageControl {
             dotDiameter: dotDiameter,
             dotSpacing: dotSpacing
         )
-
         let group = DispatchGroup()
         var normalImage: UIImage? = fallbackNormal
         var currentImage: UIImage? = fallbackCurrent
-
         group.enter()
         jobs_loadImage(url: normalURL, fallback: fallbackNormal) { img in
             normalImage = img ?? fallbackNormal
             group.leave()
         }
-
         group.enter()
         jobs_loadImage(url: currentURL, fallback: fallbackCurrent) { img in
             currentImage = img ?? fallbackCurrent
             group.leave()
         }
-
         group.notify(queue: .main) { [weak self] in
             guard let self else { return }
             // ✅ picsum 是 JPG：裁圆 + 透明背景 + alwaysOriginal
@@ -220,14 +214,12 @@ extension UIPageControl {
                 iv.image = normal?.withRenderingMode(.alwaysOriginal)
             }
         }
-
         objc_setAssociatedObject(
             self,
             &kJobsPCDotViewsKey,
             dots,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
-    
         stack.byRemakeConstraints { make in
             make.center.equalToSuperview()
             make.height.lessThanOrEqualToSuperview()
@@ -268,7 +260,6 @@ extension UIPageControl {
             }
         };return
         #endif
-
         #if canImport(Kingfisher)
         KingfisherManager.shared.retrieveImage(with: url) { result in
             onMainAsync {

@@ -35,7 +35,6 @@ private enum JobsImageViewLoadingKeys {
 }
 
 extension UIImageView {
-
     private var jobs_loadingURL: URL? {
         get { objc_getAssociatedObject(self, &JobsImageViewLoadingKeys.urlKey) as? URL }
         set { objc_setAssociatedObject(self, &JobsImageViewLoadingKeys.urlKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -62,7 +61,6 @@ extension UIImageView {
 }
 
 public extension UIImageView {
-
     @inline(__always)
     func jobs_beginShimmerLoading(config: JobsShimmerConfig = .default) {
         byShimmering(true, config: config)
@@ -97,13 +95,11 @@ public extension UIImageView {
     ) -> Self {
         let mode: JobsImageFallbackMode = fallback.map { .fallback($0) } ?? .shimmerOnly
         jobs_loadingToken?.cancel()
-
         guard let source = JobsImageSource(src) else {
             jobs_cancelImageLoad()
             jobs_handleImageLoadFailure(mode: mode, shimmerConfig: shimmerConfig)
             return self
         }
-
         switch source {
         case .local:
             jobs_remoteURL = nil
@@ -114,22 +110,18 @@ public extension UIImageView {
             jobs_loadingURL = url
             jobs_imageLoaderKind = .unknown
         }
-
         if let shimmerConfig {
             image = nil
             jobs_beginShimmerLoading(config: shimmerConfig)
         }
-
         let options = JobsImageLoadOptions(
             preferredLoader: preferredLoader,
             targetSize: jobs_targetSizeForImageLoading(targetSize),
             forceRefresh: forceRefresh
         )
-
         jobs_loadingToken = JobsImageLoader.shared.load(source, options: options) { [weak self] result in
             guard let self else { return }
             if case .remote(let url) = source, self.jobs_loadingURL != url { return }
-
             self.jobs_runOnMain { iv in
                 switch result {
                 case .success(let value):

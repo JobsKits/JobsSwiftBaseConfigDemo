@@ -27,7 +27,6 @@ public enum DemoAPI {
 }
 
 extension DemoAPI: TargetType {
-
     public var baseURL: URL {
         switch self {
         case .ghZen, .ghUser, .ghSearchUsers:
@@ -44,12 +43,10 @@ extension DemoAPI: TargetType {
         case .ghZen: return "/zen"
         case let .ghUser(username): return "/users/\(username)"
         case .ghSearchUsers: return "/search/users"
-
         case .login: return "/api/login"
         case .createUser: return "/api/users"
         case let .updateUser(id, _): return "/api/users/\(id)"
         case let .deleteUser(id):    return "/api/users/\(id)"
-
         case .uploadAvatar: return "/post"
         case .downloadPNG:  return "/image/png"
         case let .downloadBytes(size): return "/bytes/\(size)"
@@ -73,7 +70,6 @@ extension DemoAPI: TargetType {
         case let .ghSearchUsers(q, page):
             var params = ["q": q]
             if let p = page { params["page"] = "\(p)" };return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
-
         // ReqRes
         case let .login(email, password):
             return .requestParameters(parameters: ["email": email, "password": password],
@@ -84,7 +80,6 @@ extension DemoAPI: TargetType {
             return .requestJSONEncodable(body)
         case .deleteUser:
             return .requestPlain
-
         // httpbin 上传/下载
         case let .uploadAvatar(data):
             let form = MultipartFormData(provider: .data(data),
@@ -92,7 +87,6 @@ extension DemoAPI: TargetType {
                                          fileName: "avatar.jpg",
                                          mimeType: "image/jpeg")
             return .uploadMultipart([form])
-
         case .downloadPNG, .downloadBytes:
             let destination: DownloadDestination = { _, _ in
                 let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - System UIDatePicker wrappers (iOS 12+)
 public final class BRSystemDatePicker: BRBasePicker<Date> {
-
     private var selectDate: Date = Date()
     private var minDate: Date?
     private var maxDate: Date?
@@ -46,7 +45,6 @@ public final class BRSystemDatePicker: BRBasePicker<Date> {
 }
 
 public final class BRSystemDateTimePicker: BRBasePicker<Date> {
-
     private var selectDate: Date = Date()
     private var minDate: Date?
     private var maxDate: Date?
@@ -79,7 +77,6 @@ public final class BRSystemDateTimePicker: BRBasePicker<Date> {
 }
 
 public final class BRSystemTimePicker: BRBasePicker<Date> {
-
     private var selectDate: Date = Date()
     private var minuteInterval: Int = 1
     private var locale: Locale = .current
@@ -108,7 +105,6 @@ public final class BRSystemTimePicker: BRBasePicker<Date> {
 }
 
 public final class BRSystemCountDownPicker: BRBasePicker<Date> {
-
     private var countDownDuration: TimeInterval = 0 // seconds
     private var minuteInterval: Int = 1
 

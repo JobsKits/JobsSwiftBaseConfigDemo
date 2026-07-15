@@ -24,7 +24,6 @@ import FlutterPluginRegistrant
 /// 必须进入Flutter目录中执行flutter pub get  生成中间产物podhelper.rb 才能跑通 pod install
 
 public final class FlutterBridge {
-
     public static let shared = FlutterBridge()
     private init() {}
     // MARK: - Config
@@ -61,10 +60,8 @@ public final class FlutterBridge {
         configure: Configure? = nil,
         completion: @escaping Completion
     ) -> String {
-
         let requestId = normalizedRequestId(from: arguments)
         callbacks[requestId] = completion
-
         guard let flutterVC = makeFlutterVC(
             requestId: requestId,
             route: route,
@@ -75,7 +72,6 @@ public final class FlutterBridge {
             assertionFailure("❌ FlutterBridge: makeFlutterVC failed")
             return requestId
         }
-
         DispatchQueue.main.async {
             flutterVC.byPresent(host, animated: animated, policy: policy, jobsByVoidBlock: nil)
         };return requestId
@@ -91,10 +87,8 @@ public final class FlutterBridge {
         configure: Configure? = nil,
         completion: @escaping Completion
     ) -> String {
-
         let requestId = normalizedRequestId(from: arguments)
         callbacks[requestId] = completion
-
         guard let flutterVC = makeFlutterVC(
             requestId: requestId,
             route: route,
@@ -105,7 +99,6 @@ public final class FlutterBridge {
             assertionFailure("❌ FlutterBridge: makeFlutterVC failed")
             return requestId
         }
-
         DispatchQueue.main.async {
             flutterVC.byPush(host, duration: duration, timing: timing)
         };return requestId
@@ -118,21 +111,16 @@ public final class FlutterBridge {
         arguments: Payload,
         configure: Configure?
     ) -> FlutterViewController? {
-
         let engine = ensureEngineReady()
         installChannelIfNeeded(engine)
         guard let channel else { return nil }
-
         let vc = FlutterViewController(engine: engine, nibName: nil, bundle: nil)
         configure?(vc)
-
         vcBoxes[requestId] = WeakBox(vc)
-
         var args = arguments
         args["route"] = route
         args["requestId"] = requestId
         pendingOpenArgs[requestId] = args
-
         // ✅ 等真正显示后再发 open（时序稳）
         _ = vc.byCompletion { [weak self] in
             guard let self else { return }
@@ -147,7 +135,6 @@ public final class FlutterBridge {
             registerPluginsIfNeeded(e)
             return e
         }
-
         let e = FlutterEngine(name: "jobs_flutter_engine.auto")
         _ = runEngineIfNeeded(e)
         registerPluginsIfNeeded(e)
@@ -172,30 +159,24 @@ public final class FlutterBridge {
 
     private func installChannelIfNeeded(_ engine: FlutterEngine) {
         if channel != nil { return }
-
         let ch = FlutterMethodChannel(name: channelName, binaryMessenger: engine.binaryMessenger)
         channel = ch
-
         ch.setMethodCallHandler { [weak self] call, result in
             guard let self else { return }
-
             switch call.method {
             case "result":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
-
                 if let cb = self.callbacks.removeValue(forKey: requestId) {
                     cb(payload)
                 }
                 self.closeFlutterPage(requestId: requestId)
                 result(true)
-
             case "close":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
                 self.closeFlutterPage(requestId: requestId)
                 result(true)
-
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -204,19 +185,16 @@ public final class FlutterBridge {
 
     private func closeFlutterPage(requestId: String) {
         pendingOpenArgs.removeValue(forKey: requestId)
-
         let vc = vcBoxes[requestId]?.value
         // 注意：这里再清理，别提前清掉
         vcBoxes.removeValue(forKey: requestId)
         callbacks.removeValue(forKey: requestId)
-
         guard let vc else { return }
         // present 场景
         if vc.presentingViewController != nil {
             vc.dismiss(animated: true)
             return
         }
-
         // push 场景 / byPush 包了一层 nav 再 present 的场景
         if let nav = vc.navigationController {
             if nav.presentingViewController != nil {
@@ -225,7 +203,6 @@ public final class FlutterBridge {
                 nav.popViewController(animated: true)
             };return
         }
-
         vc.dismiss(animated: true)
     }
 

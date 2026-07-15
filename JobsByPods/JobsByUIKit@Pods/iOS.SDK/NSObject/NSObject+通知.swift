@@ -117,7 +117,6 @@ private final class JobsNotiTokenBag: NSObject {
 
 private var jobsNotiBagKey: UInt8 = 0
 private extension NSObject {
-    
     var jobs_notiBag: JobsNotiTokenBag {
         if let bag = objc_getAssociatedObject(self, &jobsNotiBagKey) as? JobsNotiTokenBag {
             return bag
@@ -150,14 +149,12 @@ extension NotificationCenter {
         queue queue: OperationQueue? = nil,
         handler: @escaping jobsByNotiBlock
     ) -> JobsNotificationToken {
-
         let token = NotificationCenter.default.addObserver(
             forName: name,
             object: object,
             queue: queue,
             using: handler
         )
-
         return JobsAnyNotificationToken {
             NotificationCenter.default.removeObserver(token)
         }

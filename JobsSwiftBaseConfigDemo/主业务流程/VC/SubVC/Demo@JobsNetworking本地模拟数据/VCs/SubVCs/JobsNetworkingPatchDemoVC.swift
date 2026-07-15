@@ -11,13 +11,10 @@ import JobsNetworking
 import JobsSwiftBaseDefines
 
 final class JobsNetworkingPatchDemoVC: JobsNetworkingMethodDemoVC {
-
     override func buildRequestPreview(triggerError: Bool) -> String {
         if triggerError {
             return "PATCH /api/errors/patch"
-        }
-
-        return """
+        };return """
         PATCH /api/patch/settings
         body:
         {
@@ -39,7 +36,6 @@ final class JobsNetworkingPatchDemoVC: JobsNetworkingMethodDemoVC {
             ],
             encoding: .jsonBody
         )
-
         let raw = service.prettyJSONString(from: data)
         if triggerError, let error = service.decode(DioErrorResponse.self, from: data) {
             let render = prettyPrint([
@@ -49,14 +45,12 @@ final class JobsNetworkingPatchDemoVC: JobsNetworkingMethodDemoVC {
             ])
             await MainActor.run { self.handleFailure(render + "\n\n" + raw) };return
         }
-
         let response = service.decode(DioPATCHResponse.self, from: data)
         let render = prettyPrint([
             "主题：\(response?.data?.settings?.theme ?? "--")",
             "通知开关：\((response?.data?.settings?.notifications ?? false) ? "true" : "false")",
             "字体缩放：\(response?.data?.settings?.fontScale ?? 0)"
         ])
-        
         onMainSync { [weak self] in
             guard let self else { return }
             self.handleSuccess(render: render, raw: raw)

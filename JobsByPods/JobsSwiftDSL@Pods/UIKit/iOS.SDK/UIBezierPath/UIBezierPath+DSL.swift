@@ -13,7 +13,6 @@ import UIKit
 
 // MARK: - 路径编排
 public extension UIBezierPath {
-
     @discardableResult
     func byMove(to point: CGPoint) -> Self {
         move(to: point)

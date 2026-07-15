@@ -53,7 +53,6 @@ extension UIView {
 // MARK: - 私有：配置读写 + 应用
 @MainActor
 extension UIView {
-    
     private var _jobsNavBarConfig: JobsNavBarConfig {
         get { (objc_getAssociatedObject(self, &_JobsNavBarAO.conf) as? JobsNavBarConfig) ?? .init() }
         set {

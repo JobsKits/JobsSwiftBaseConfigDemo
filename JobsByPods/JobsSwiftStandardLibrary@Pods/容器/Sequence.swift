@@ -20,10 +20,8 @@ extension Sequence where Element: Comparable {
     public func minMax() -> (min: Element, max: Element)? {
         var iterator = makeIterator()
         guard let first = iterator.next() else { return nil }
-
         var minVal = first
         var maxVal = first
-
         while let next = iterator.next() {
             if next < minVal { minVal = next }
             if next > maxVal { maxVal = next }

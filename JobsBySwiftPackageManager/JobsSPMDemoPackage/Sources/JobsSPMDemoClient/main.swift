@@ -17,7 +17,6 @@ struct JobsSPMDemoClient {
             ClientUser(id: 1, name: "Jobs"),
             ClientUser(id: 1, name: "Codex")
         ])
-
         print(JobsSPMDemoKit.packageSummary)
         print(JobsSPMDemoFormatter.lines(matches.map(\.title)))
         print("@EquatableBy 去重后用户数：\(users.count)")

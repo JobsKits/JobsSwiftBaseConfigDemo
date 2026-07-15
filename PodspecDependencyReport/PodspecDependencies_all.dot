@@ -13,6 +13,7 @@ digraph PodspecDependencies {
   "IGListDiffKit";
   "IGListKit";
   "JXSegmentedView";
+  "JobsAudioRecorder";
   "JobsBlock";
   "JobsBluetooth";
   "JobsBy3rdTools";
@@ -91,6 +92,7 @@ digraph PodspecDependencies {
   "BRPickerViewSwift" -> "JobsSwiftDSL";
   "BRPickerViewSwift" -> "SnapKit";
   "FlutterPluginRegistrant" -> "Flutter";
+  "JobsAudioRecorder" -> "JobsSwiftTimer";
   "JobsBy3rdTools" -> "BMPlayer";
   "JobsBy3rdTools" -> "GKNavigationBarSwift";
   "JobsBy3rdTools" -> "JXSegmentedView";
@@ -260,6 +262,7 @@ digraph PodspecDependencies {
   "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
+  "JobsSwiftOpen" -> "GKNavigationBarSwift";
   "JobsSwiftOpen" -> "JobsByUIKit";
   "JobsSwiftOpen" -> "JobsInheritance";
   "JobsSwiftRefresher" -> "JobsByUIKit";

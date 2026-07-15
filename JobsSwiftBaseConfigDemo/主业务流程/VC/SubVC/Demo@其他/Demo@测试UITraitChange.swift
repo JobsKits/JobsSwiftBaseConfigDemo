@@ -192,7 +192,6 @@ final class TraitChangeDemoVC: BaseVC {
                 self.rerenderRasterizedStuff()
             })
         }
-
         // 唤起（显式渲染）—— Jobs 链式 DSL 约定
         titleLabel.byAlpha(1)
         subtitleLabel.byAlpha(1)
@@ -228,7 +227,6 @@ extension TraitChangeDemoVC {
     private func updateColors() {
         let style = traitCollection.userInterfaceStyle
         view.byBackgroundColor((style == .dark) ? JobsCor.secondarySystemBackground : JobsCor.systemBackground)
-
         // 手动刷新不会自动变化的 CGColor（Layer）
         let c1: UIColor
         let c2: UIColor
@@ -244,7 +242,6 @@ extension TraitChangeDemoVC {
             rightBox.byBackgroundColor(JobsCor.secondarySystemFill)
         }
         gradientLayer.colors = [c1.cgColor, c2.cgColor]
-
         infoLabel.byText("""
         当前 Traits
         Style: \(style == .dark ? "Dark" : "Light")
@@ -262,15 +259,12 @@ extension TraitChangeDemoVC {
         titleLabel
             .byFont(JobsFont.preferredFont(forTextStyle: .title2))
             .byAdjustsFontForContentSizeCategory(true)
-
         subtitleLabel
             .byFont(JobsFont.preferredFont(forTextStyle: .footnote))
             .byAdjustsFontForContentSizeCategory(true)
-
         infoLabel
             .byFont(JobsFont.preferredFont(forTextStyle: .footnote))
             .byAdjustsFontForContentSizeCategory(true)
-
         dynamicText
             .byFont(JobsFont.preferredFont(forTextStyle: .body))
             .byAdjustsFontForContentSizeCategory(true)

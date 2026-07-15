@@ -171,7 +171,6 @@ public enum JobsLog {
             : (String(cString: __dispatch_queue_get_label(nil), encoding: .utf8) ?? "bg")
             return " | \(name)"
         }()
-
         Swift.print("\(level.symbol) \(timeNow()) | \(fileName):\(line) | \(function)\(threadPart) → \(msg)",
                     terminator: terminator)
     }
@@ -180,13 +179,10 @@ public enum JobsLog {
         switch mode {
         case .plain:
             return stringify(any)
-
         case .json:
             return toJSONString(any, pretty: prettyJSON, decodeUnicode: true) ?? stringify(any)
-
         case .object:
             return toJSONStringFromObject(any, pretty: prettyJSON, maxDepth: maxDepth) ?? stringify(any)
-
         case .auto:
             // 1) 明确是 JSON 的几种：Data / String 以 { 或 [
             if let s = toJSONString(any, pretty: prettyJSON, decodeUnicode: true) { return s }
@@ -207,15 +203,12 @@ public enum JobsLog {
     private static func stringify(_ v: Any) -> String {
         if case Optional<Any>.none = v as Any? { return "nil" }
         let x = v
-
         if let s = x as? String { return decodeUnicodeEscapes(s) }
         if let s = x as? NSString { return decodeUnicodeEscapes(s as String) }
-
         if let data = x as? Data,
            let json = try? JSONSerialization.jsonObject(with: data),
            let pretty = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]),
            let s = String(data: pretty, encoding: .utf8) { return decodeUnicodeEscapes(s) }
-
         if let arr = x as? [Any] {
             return "[" + arr.map { stringify($0) }.joined(separator: ", ") + "]"
         }
@@ -225,7 +218,6 @@ public enum JobsLog {
         if let set = x as? Set<AnyHashable> {
             return "Set([" + set.map { stringify($0) }.joined(separator: ", ") + "])"
         }
-
         if let dict = x as? [AnyHashable: Any] {
             let body = dict.map { k, v -> String in
                 let ks = stringify(k)
@@ -256,7 +248,6 @@ public enum JobsLog {
         let normalized = s
             .replacingOccurrences(of: #"\\u"#, with: #"\u"#)
             .replacingOccurrences(of: #"\\U"#, with: #"\U"#)
-
         let ms = NSMutableString(string: normalized)
         // "Any-Hex/Java" 会把 \uXXXX / \UXXXXXXXX 都转为真实字符
         if CFStringTransform(ms, nil, "Any-Hex/Java" as CFString, true) {
@@ -266,14 +257,12 @@ public enum JobsLog {
     // ---------- JSON Utilities ----------
     private static func toJSONString(_ any: Any, pretty: Bool, decodeUnicode: Bool) -> String? {
         let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
-
         if let data = any as? Data,
            let obj = try? JSONSerialization.jsonObject(with: data),
            let out = try? JSONSerialization.data(withJSONObject: obj, options: options),
            let s = String(data: out, encoding: .utf8) {
             return decodeUnicode ? decodeUnicodeEscapes(s) : s
         }
-
         if let s = any as? String {
             let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
             if t.first == "{" || t.first == "[" {
@@ -328,12 +317,10 @@ public enum JobsLog {
 
     private static func toJSONReady(_ any: Any, depth: Int, visited: inout Set<ObjectIdentifier>) -> Any {
         if depth <= 0 { return "<depth-limit>" }
-
         // 1) Optional
         let (isNil, unwrapped) = unwrapOptional(any)
         if isNil { return NSNull() }
         let value = unwrapped ?? any
-
         // 2) 基本/可序列化类型直接返回
         switch value {
         case is NSNull:               return NSNull()
@@ -358,7 +345,6 @@ public enum JobsLog {
         case let x as Data:           return ["<Data>": x.count] // 避免巨型 base64
         default: break
         }
-
         let mirror = Mirror(reflecting: value)
         // 3) Array / Set
         if mirror.displayStyle == .collection || mirror.displayStyle == .set {
@@ -398,7 +384,6 @@ public enum JobsLog {
             if visited.contains(oid) { return ["<ref>": String(describing: type(of: value))] }
             visited.insert(oid); do { visited.remove(oid) }
         }
-
         var cur: Mirror? = mirror
         var depthNext = depth - 1
         while let m = cur, depthNext >= 0 {

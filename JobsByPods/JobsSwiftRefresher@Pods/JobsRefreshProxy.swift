@@ -206,10 +206,8 @@ final class JobsSlot {
               state != .noMore else { return }
         // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
         sv.byRefreshFeedback(for: position)
-
         state = .refreshing
         view.byHidden(!showsInfo)
-
         let h = view.heightOrWidth
         let oldAdjusted = sv.adjustedContentInset
         var inset = sv.contentInset
@@ -219,7 +217,6 @@ final class JobsSlot {
         case .left:   inset.left   += h
         case .right:  inset.right  += h
         }
-
         var targetOffset = sv.contentOffset
         switch position {
         case .header:
@@ -233,7 +230,6 @@ final class JobsSlot {
             let contentW = max(sv.contentSize.width, sv.bounds.width - (oldAdjusted.left + oldAdjusted.right))
             targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
         }
-
         UIView.jobsAnimateWithOptions(
             0.25,
             delay: 0,
@@ -243,7 +239,6 @@ final class JobsSlot {
                 sv.setContentOffset(targetOffset, animated: false)
             }
         )
-
         action?()
         if container == nil { endRefreshing(on: sv) }
     }
@@ -256,13 +251,10 @@ final class JobsSlot {
         if role == .refresh {
             (view as? JobsRefreshTimeTrackable)?.markRefreshed(at: Date())
         }
-
         view.byHidden(!showsInfo)
-
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
         isEndingAnimation = true
         state = .ending
-
         UIView.jobsAnimateWithOptions(
             restoreInsetDuration,
             delay: 0,

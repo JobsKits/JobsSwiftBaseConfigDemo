@@ -26,7 +26,6 @@ public protocol JobsSwiftCountryCodeCtrlDelegate: AnyObject {
 }
 
 public final class JobsSwiftCountryCodeCtrl: UIViewController {
-
     public weak var countryCodeDelegate: JobsSwiftCountryCodeCtrlDelegate?
     public var countryCodeHandler: JobsSwiftCountryCodeHandler?
 
@@ -60,7 +59,6 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
 }
 
 private extension JobsSwiftCountryCodeCtrl {
-
     var plistName: String {
         let language = Locale.preferredLanguages.first?.lowercased() ?? ""
         return language.hasPrefix("en") ? "sortedNameEN" : "sortedNameCH"
@@ -109,7 +107,6 @@ private extension JobsSwiftCountryCodeCtrl {
 }
 
 extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
-
     public func numberOfSections(in tableView: UITableView) -> Int {
         indexArray.count
     }
@@ -145,7 +142,6 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
 }
 
 extension JobsSwiftCountryCodeCtrl: UITableViewDelegate {
-
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         section == 0 ? 0.01 : 30
     }

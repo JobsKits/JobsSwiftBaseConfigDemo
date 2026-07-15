@@ -15,7 +15,6 @@ import UIKit
 import JXSegmentedView
 /// Line 指示器专属
  extension JXSegmentedIndicatorLineView {
-    
     @discardableResult
     public func byLineStyle(_ s: JXSegmentedIndicatorLineStyle) -> Self {
         lineStyle = s

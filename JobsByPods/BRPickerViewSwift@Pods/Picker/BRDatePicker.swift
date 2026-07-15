@@ -12,7 +12,6 @@ import UIKit
 #endif
 
 public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
-
     public enum Mode { case ymd, ym, y }
 
     private var mode: Mode = .ymd
@@ -42,16 +41,12 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         configureData()
         picker.dataSource = self
         picker.delegate = self
-
         // preselect
         preselect()
-
         // Default state: no highlight until user scrolls.
         for comp in 0..<numberOfComponents(in: picker) {
             lastSelectedRow[comp] = picker.selectedRow(inComponent: comp)
-        }
-
-        return picker
+        };return picker
     }
 
     public override func confirmSelection() {
@@ -70,10 +65,8 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     private func configureData() {
         let cal = BRCalendar.gregorian
         let yNow = cal.component(.year, from: Date())
-
         let minY = minDate.map { cal.component(.year, from: $0) } ?? (yNow - 100)
         let maxY = maxDate.map { cal.component(.year, from: $0) } ?? (yNow + 30)
-
         years = Array(minY...maxY)
         rebuildDays()
     }
@@ -95,9 +88,7 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         let y = cal.component(.year, from: selectDate)
         let m = cal.component(.month, from: selectDate)
         let d = cal.component(.day, from: selectDate)
-
         func sel(_ comp: Int, _ row: Int) { picker.selectRow(row, inComponent: comp, animated: false) }
-
         switch mode {
         case .ymd:
             sel(0, years.firstIndex(of: y) ?? 0)
@@ -117,7 +108,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         var comps = DateComponents()
         let cal = BRCalendar.gregorian
         func s(_ c: Int) -> Int { picker.selectedRow(inComponent: c) }
-
         switch mode {
         case .ymd:
             comps.year = years[s(0)]
@@ -164,7 +154,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         label.font = theme.pickerFont
         label.textColor = theme.pickerTextColor
         label.backgroundColor = .clear
-
         switch mode {
         case .ymd:
             if component == 0 { label.text = "\(years[row])年" }
@@ -175,20 +164,16 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
         case .y:
             label.text = "\(years[row])年"
         }
-
         // iOS12: no selectedRow checks here (avoid flicker); color updated in didSelect
         return label
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
         // mark user interaction for this component
         touchedComponents.insert(component)
-
         // store old row for color swap
         let oldRow = lastSelectedRow[component] ?? row
         lastSelectedRow[component] = row
-
         var needsReloadDays = false
         if mode == .ymd, (component == 0 || component == 1) {
             let y = years[pickerView.selectedRow(inComponent: 0)]
@@ -196,18 +181,15 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
             rebuildDays(year: y, month: m)
             needsReloadDays = true
         }
-
         // async reload (iOS12 safe)
         br_on_main_async { [weak self] in
             guard let self else { return }
-
             if needsReloadDays {
                 BRiOS12SafePickerReload.reload(pickerView, component: 2)
                 // keep day selection in range
                 let dayRow = min(pickerView.selectedRow(inComponent: 2), max(0, self.days.count - 1))
                 pickerView.selectRow(dayRow, inComponent: 2, animated: false)
             }
-
             // update colors for just old/new rows in changed component
             self.applyRowColor(pickerView, component: component, row: oldRow, selected: false)
             self.applyRowColor(
@@ -216,7 +198,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
                 row: row,
                 selected: self.touchedComponents.contains(component)
             )
-
             if needsReloadDays {
                 let dayComp = 2
                 let dayRow = pickerView.selectedRow(inComponent: dayComp)
@@ -231,7 +212,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
                 )
             }
         }
-
         if theme.autoSelect {
             confirmSelection()
             dismissPanel()

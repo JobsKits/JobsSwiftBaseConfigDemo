@@ -47,7 +47,6 @@ final class AFService {
         // Token 注入 + 401 重试
         let tokenAdapter = TokenRetryInterceptor()
         self.interceptor = tokenAdapter
-
         self.logger = AFLogger(emit: uiLog)
         self.session = Session(configuration: config,
                                interceptor: tokenAdapter,
@@ -119,13 +118,10 @@ final class TokenRetryInterceptor: RequestInterceptor {
             let response = request.task?.response as? HTTPURLResponse,
             response.statusCode == 401
         else { jobsByVoidBlock(.doNotRetry); return }
-
         lock.lock()
         defer { lock.unlock() }
-
         waiters.append { ok in jobsByVoidBlock(ok ? .retry : .doNotRetry) }
         guard !isRefreshing else { return }
-
         isRefreshing = true
         // 这里模拟刷新；可以换成真实刷新接口
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {

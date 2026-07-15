@@ -23,13 +23,12 @@ import GKNavigationBarSwift
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
 
 final class IrregularButtonDemoVC: BaseVC {
-    
     private enum Layout {
         static let row1Top: CGFloat = 10      // 第一排（3个小按钮）
         static let row2Top: CGFloat = 80      // 第二排（两个 150x150）
         static let row3Top: CGFloat = 260     // 第三排（箭头）
     }
-    
+
     private lazy var btn1: IrregularButton = {
         // 右斜边梯形：0,0 -> 120,0 -> 90,50 -> 0,120
         return IrregularButton(type: .custom)

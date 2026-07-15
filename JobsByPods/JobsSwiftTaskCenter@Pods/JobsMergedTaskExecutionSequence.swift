@@ -10,7 +10,6 @@ import Foundation
 // MARK: - 组合多个任务的执行流
 /// 合并多个任务的执行流
 public struct JobsMergedTaskExecutionSequence: AsyncSequence {
-
     public typealias Element = TaggedTaskExecution
     private let sequences: [(tag: String, sequence: JobsTaskExecutionSequence)]
 
@@ -20,7 +19,6 @@ public struct JobsMergedTaskExecutionSequence: AsyncSequence {
 }
 
 extension JobsMergedTaskExecutionSequence {
-
     public func makeAsyncIterator() -> AsyncIterator {
         AsyncIterator(sequences: sequences)
     }
@@ -28,7 +26,6 @@ extension JobsMergedTaskExecutionSequence {
     public struct AsyncIterator: AsyncIteratorProtocol {
         private let stream: AsyncStream<TaggedTaskExecution>
         private var iterator: AsyncStream<TaggedTaskExecution>.Iterator
-
         init(sequences: [(tag: String, sequence: JobsTaskExecutionSequence)]) {
             self.stream = AsyncStream<TaggedTaskExecution>(bufferingPolicy: .unbounded) { continuation in
                 let worker = Task {
@@ -45,18 +42,15 @@ extension JobsMergedTaskExecutionSequence {
                     }
                     continuation.finish()
                 }
-
                 continuation.onTermination = { _ in
                     worker.cancel()
                 }
-
                 if sequences.isEmpty {
                     continuation.finish()
                 }
             }
             self.iterator = stream.makeAsyncIterator()
         }
-
         public mutating func next() async -> TaggedTaskExecution? {
             await iterator.next()
         }

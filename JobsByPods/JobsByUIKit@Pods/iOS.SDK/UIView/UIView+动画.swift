@@ -119,7 +119,6 @@ extension UIView {
         // 以“当前 transform”为基准，避免覆盖你已有的缩放
         let original = self.transform
         if let style = haptic { UIImpactFeedbackGenerator(style: style).impactOccurred() }
-
         UIView.animate(withDuration: upDuration,
                        delay: 0,
                        options: [.beginFromCurrentState, .allowUserInteraction, .curveEaseOut]) { [weak self] in

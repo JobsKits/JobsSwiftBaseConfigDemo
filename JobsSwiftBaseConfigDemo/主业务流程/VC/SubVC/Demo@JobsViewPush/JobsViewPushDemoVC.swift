@@ -20,7 +20,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsViewPushDemoVC: BaseVC {
-
     private lazy var directionControl: UISegmentedControl = {
         UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
             .bySelectedSegmentIndex(3)
@@ -102,7 +101,6 @@ final class JobsViewPushDemoVC: BaseVC {
 }
 
 private extension JobsViewPushDemoVC {
-
     var selectedDirection: JobsViewPushDirection {
         switch directionControl.selectedSegmentIndex {
         case 0: return .top
@@ -128,7 +126,6 @@ private extension JobsViewPushDemoVC {
 }
 
 private final class JobsViewPushDemoPanel: UIView {
-
     var closeHandler: (() -> Void)?
 
     private lazy var titleLabel: UILabel = {

@@ -53,7 +53,6 @@ public enum TRAutoRefresh {
         let key: String
         let table: String?
         let apply: (AnyObject, String) -> Void
-
         init(
             target: AnyObject,
             key: String,
@@ -112,7 +111,6 @@ public enum TRAutoRefresh {
         entries = entries.filter { $0.target != nil }
         let snapshot = entries
         let bundle = TRLang.bundle()
-
         for e in snapshot {
             guard let obj = e.target else { continue }
             let translated = NSLocalizedString(

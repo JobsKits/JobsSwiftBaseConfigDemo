@@ -60,7 +60,6 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 }
 
 private extension JobsSwiftCommentModeDetailVC {
-
     func setupNavigation() {
         if popupStyle {
             jobsSetupGKNav(

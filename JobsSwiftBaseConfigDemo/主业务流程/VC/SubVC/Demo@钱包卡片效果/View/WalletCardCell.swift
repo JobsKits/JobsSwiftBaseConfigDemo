@@ -97,15 +97,12 @@ final class WalletCardCell: UICollectionViewCell {
     private func buildUI() {
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-
         contentView.byCornerRadius(14)
         contentView.byMasksToBounds(true)
-
         layer.shadowColor = JobsCor.black.cgColor
         layer.shadowOpacity = 0.18
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 6)
-
         // 触发懒加载创建 UI
         gradientLayer.byHidden(NO)
         logoView.byVisible(YES)
@@ -231,7 +228,6 @@ final class WalletAddCardCell: UICollectionViewCell {
         contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
         contentView.byCornerRadius(14)
         contentView.byMasksToBounds(true)
-
         dashedBorder.byHidden(NO);
         iconView.byVisible(YES)
         titleLabel.byVisible(YES)

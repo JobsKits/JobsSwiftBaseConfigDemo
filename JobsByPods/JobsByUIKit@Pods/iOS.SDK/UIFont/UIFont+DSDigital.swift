@@ -12,9 +12,7 @@ import UIKit
 #endif
 
 extension UIFont {
-    
     public enum DSDigital {
-
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -27,7 +25,6 @@ extension UIFont {
                 return make("DS-Digital", size, fallback: .regular)
             }
         }
-
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {

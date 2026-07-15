@@ -108,7 +108,6 @@ final class HKLiveVC: BaseVC {
                         print("⚠️ 找不到对应方向摄像头：\(self.currentPosition)")
                         return
                     }
-
                     do {
                         try await self.mixer.attachVideo(device)
                         let posText = (self.currentPosition == .back) ? "后置" : "前置"
@@ -206,7 +205,6 @@ final class HKLiveVC: BaseVC {
         } catch {
             print("⚠️ attachVideo 失败：\(error)")
         }
-
         do {
             try await mixer.attachAudio(audioDevice)
         } catch {
@@ -248,7 +246,6 @@ final class HKLiveVC: BaseVC {
             // 2. 开始推流
             let publishResponse = try await stream.publish(streamName)
             print("✅ RTMP publish: \(publishResponse)")
-
             isStreaming = true
             recordButton.bySelected(true)
             statusLabel.byText("🟢 已开始推流".tr)

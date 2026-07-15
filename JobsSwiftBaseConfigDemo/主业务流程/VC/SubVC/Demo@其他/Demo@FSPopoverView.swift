@@ -72,7 +72,7 @@ final class FSPopoverDemoVC: BaseVC {
                 make.height.equalTo(44)
             }
     }()
-    
+
     private lazy var jobsDialogBoxBtn: UIButton = {
         UIButton.sys()
             .byBackgroundColor("#4c4d4e".cor, for: .normal)
@@ -132,7 +132,6 @@ final class FSPopoverDemoVC: BaseVC {
             title: "Demo@FSPopoverView",
             rightButtons: [btn]
         )
-        
         exampleButton.byVisible(YES)
         customButton.byVisible(YES)
         jobsDialogBoxBtn.byVisible(YES)
@@ -179,7 +178,6 @@ extension FSPopoverDemoVC{
                 }
             }
         }
-
         let items: [FSPopoverListItem] = Feature.allCases.map { f in
             let it = FSPopoverListTextItem()
             it.image = f.image
@@ -215,7 +213,6 @@ extension FSPopoverDemoVC: FSPopoverViewDataSource {
                 make.top.equalToSuperview().offset(14)
                 make.left.right.equalToSuperview().inset(16)
             }
-
         UIButton.sys()
             .byTitle("我知道了".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue, for: .normal)
@@ -229,7 +226,6 @@ extension FSPopoverDemoVC: FSPopoverViewDataSource {
                 make.centerX.equalToSuperview()
                 make.bottom.equalToSuperview().inset(14)
             }.byVisible(YES)
-
         return container
     }
     /// 固定内容尺寸

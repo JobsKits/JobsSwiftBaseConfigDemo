@@ -45,7 +45,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
     init(config: JobsRequestConfig) {
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = config.timeout
-
         if let sslPinning = config.sslPinning, !sslPinning.pinnedHosts.isEmpty {
             var evaluators: [String: ServerTrustEvaluating] = [:]
             for host in sslPinning.pinnedHosts {
@@ -78,7 +77,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
     ) {
         let method = Alamofire.HTTPMethod(rawValue: request.method.rawValue)
         let afRequest: DataRequest
-
         if let rawBody = request.rawBody {
             var urlRequest = URLRequest(url: request.url)
             urlRequest.httpMethod = request.method.rawValue
@@ -102,7 +100,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
                 }
             )
         }
-
         remember(afRequest, id: request.trace.requestId)
         afRequest.responseData { [weak self] response in
             self?.forget(id: request.trace.requestId)
@@ -134,7 +131,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         let destination: DownloadRequest.Destination = { _, _ in
             (destinationURL, [.removePreviousFile, .createIntermediateDirectories])
         }
-
         let request = session.download(
             absoluteURL,
             headers: headers,
@@ -145,7 +141,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
             },
             to: destination
         )
-
         remember(request, id: trace.requestId)
         request.response { [weak self] response in
             self?.forget(id: trace.requestId)
@@ -197,7 +192,6 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
                 }
             }
         )
-
         remember(request, id: trace.requestId)
         request.responseData { [weak self] response in
             self?.forget(id: trace.requestId)

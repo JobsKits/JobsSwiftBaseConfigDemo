@@ -22,7 +22,6 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class ClockDemoVC: BaseVC {
-    
     private lazy var clockView: JobsClockView = {
         JobsClockView()
             .byAddTo(view) { [weak self] make in

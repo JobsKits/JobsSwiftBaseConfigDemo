@@ -23,7 +23,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class UITextFieldDemoVC: BaseVC {
-
     private lazy var emailTF: UITextField = {
         UITextField()
             .byPlaceholder("请输入邮箱（去空格 / 最长 8）".tr)

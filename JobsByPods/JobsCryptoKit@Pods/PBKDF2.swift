@@ -18,7 +18,6 @@ public struct PBKDF2 {
     ) throws -> Data {
         var derived = Data(count: keyByteCount)
         let passwordData = password.data(using: .utf8)!
-
         let status = derived.withUnsafeMutableBytes { derivedBytes in
             salt.withUnsafeBytes { saltBytes in
                 CCKeyDerivationPBKDF(

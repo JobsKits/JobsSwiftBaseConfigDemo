@@ -12,9 +12,7 @@ import UIKit
 #endif
 
 extension UIFont {
-    
     public enum Montserrat {
-
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -27,7 +25,6 @@ extension UIFont {
                 return make("Montserrat-Regular", size, fallback: .regular)
             }
         }
-
         public static func Medium(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -40,7 +37,6 @@ extension UIFont {
                 return make("Montserrat-Medium", size, fallback: .medium)
             }
         }
-
         public static func Semibold(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -53,7 +49,6 @@ extension UIFont {
                 return make("Montserrat-SemiBold", size, fallback: .semibold)
             }
         }
-
         public static func SemiboldItalic(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             case .vietnamese, .turkish:
@@ -66,7 +61,6 @@ extension UIFont {
                 return make("Montserrat-SemiBoldItalic", size, fallback: .semibold)
             }
         }
-
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {
