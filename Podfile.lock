@@ -121,6 +121,7 @@ PODS:
     - IQKeyboardCore
   - IQTextView (1.0.5):
     - IQKeyboardToolbar/Placeholderable
+  - JobsAppIconRibbon (1.0.0)
   - JobsAudioRecorder (0.1.0):
     - JobsSwiftTimer
   - JobsBluetooth (1.0.0)
@@ -256,6 +257,8 @@ PODS:
     - SnapKit
   - JobsScale (0.1.14):
     - JobsGetWindow
+  - JobsScrollingLabel (0.0.1):
+    - JobsSwiftTimer
   - JobsSwiftAppTools (0.0.1):
     - JobsBy3rdTools
     - JobsByUIKit
@@ -584,6 +587,7 @@ DEPENDENCIES:
   - HaishinKit
   - HTMLReader
   - IQKeyboardManagerSwift
+  - "JobsAppIconRibbon (from `JobsByPods/JobsAppIconRibbon@Pods`)"
   - "JobsAudioRecorder (from `JobsByPods/JobsAudioRecorder@Pods`)"
   - "JobsBluetooth (from `JobsByPods/JobsBluetooth@Pods`)"
   - "JobsBy3rdTools (from `JobsByPods/JobsBy3rdTools@Pods`)"
@@ -609,6 +613,7 @@ DEPENDENCIES:
   - "JobsNetworking/Async (from `JobsByPods/JobsNetworking@Pods`)"
   - "JobsProgressBar (from `JobsByPods/JobsProgressBar@Pods`)"
   - "JobsScale (from `JobsByPods/JobsScale@Pods`)"
+  - "JobsScrollingLabel (from `JobsByPods/JobsScrollingLabel@Pods`)"
   - "JobsSwiftAppTools (from `JobsByPods/JobsSwiftAppTools@Pods`)"
   - "JobsSwiftBaseDefines (from `JobsByPods/JobsSwiftBaseDefines@Pods`)"
   - "JobsSwiftBaseTools (from `JobsByPods/JobsSwiftBaseTools@Pods`)"
@@ -758,6 +763,8 @@ EXTERNAL SOURCES:
     :path: my_flutter/.ios/Flutter
   FlutterPluginRegistrant:
     :path: my_flutter/.ios/Flutter/FlutterPluginRegistrant
+  JobsAppIconRibbon:
+    :path: "JobsByPods/JobsAppIconRibbon@Pods"
   JobsAudioRecorder:
     :path: "JobsByPods/JobsAudioRecorder@Pods"
   JobsBluetooth:
@@ -806,6 +813,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsProgressBar@Pods"
   JobsScale:
     :path: "JobsByPods/JobsScale@Pods"
+  JobsScrollingLabel:
+    :path: "JobsByPods/JobsScrollingLabel@Pods"
   JobsSwiftAppTools:
     :path: "JobsByPods/JobsSwiftAppTools@Pods"
   JobsSwiftBaseDefines:
@@ -902,6 +911,7 @@ SPEC CHECKSUMS:
   IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
   IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
+  JobsAppIconRibbon: ffa1614f80e480efc6d1f76749a1c938b0f638c9
   JobsAudioRecorder: 5b3dbd0fb48bfb75d45de1f520a944b438181264
   JobsBluetooth: c4a3493d91388d005f41994441fbe42228bee202
   JobsBy3rdTools: 6ec5c901d29cc06770a1a733e4ff3e8d1ab39893
@@ -913,7 +923,7 @@ SPEC CHECKSUMS:
   JobsCountdownButton: bdaa0a35d4fc729506bc61f4f1063c545a713054
   JobsCryptoKit: d43e6e44d8868a9f3b2b5f299377452afc4b8459
   JobsEmptyView: b791272f6fdb650c86a04070390851ba9507b110
-  JobsFuseAnimation: 6a69f91101b0e4c3933549ed91455e5e2df17123
+  JobsFuseAnimation: 8e17ff91bc67c5b0be525aef75fdcaad1a8a303a
   JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
   JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
   JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
@@ -926,6 +936,7 @@ SPEC CHECKSUMS:
   JobsNetworking: 4dcb85f830623ba9105a3a2a73707a5eea41fec1
   JobsProgressBar: 18efb6cdb4d0f77739f12eed45ec6cc5d454f2c9
   JobsScale: 0455fa25096eae822c98ecb443122e6125053231
+  JobsScrollingLabel: 7fe4773b0f05fc015c568d5eef159f0930792dd0
   JobsSwiftAppTools: e2d672d26bde70330c836809395058c76d9b28dc
   JobsSwiftBaseDefines: f75d5587dfe99fb44479aa4b23294d9484313884
   JobsSwiftBaseTools: 3f54c8cb79c9d84902deb474265d1c462a990dba

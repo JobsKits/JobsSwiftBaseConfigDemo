@@ -151,7 +151,7 @@ extension AttributeContainer {
         return c
     }
     // MARK: - Obliqueness / Expansion (TextKit2 not supported，但 API 仍在)
-    @available(iOS, introduced: 15.0, deprecated: 100000.0, message: "This attribute is not supported with TextKit 2")
+    @available(iOS 15.0, *)
     @discardableResult
     @inlinable
     public func byObliqueness(_ v: CGFloat?) -> Self {
@@ -160,7 +160,7 @@ extension AttributeContainer {
         return c
     }
 
-    @available(iOS, introduced: 15.0, deprecated: 100000.0, message: "This attribute is not supported with TextKit 2")
+    @available(iOS 15.0, *)
     @discardableResult
     @inlinable
     public func byExpansion(_ v: CGFloat?) -> Self {

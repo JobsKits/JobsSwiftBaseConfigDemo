@@ -84,6 +84,9 @@ let motionManager = CMMotionManager.make()
 - `UIView.tintColor` 这类父类公共属性只在 `UIView` DSL 中封装，子类不重复声明同名 API。
 - 不带约束的视图装配统一使用 `UIView.byAddTo(_:)`；带 SnapKit 约束的重载由 `JobsByUIKit` 承接。
 - `UIView` 动画 overload 由 `jobsAnimate...` / `jobsAnimateKeyframes(...)` / `jobsAddKeyframe(...)` / `jobsPerformWithoutAnimation(...)` / `jobsTransition(...)` / `jobsTransitionFromViewToView(...)` 类级终止动作屏蔽；`UIBezierPath` 实例编排使用 `byMove` / `byAddLine` / `byAddArc` / `byAppend` / `byClose` / `byFill`。
+- `UIButton.jobsResetBtnImage` / `jobsResetBtnBgImage` 在 iOS 15+ 同步 `UIButton.Configuration` 后只请求下一帧刷新，不在异步图片回调中强制布局。
+- `UIButton.byContentInsets` / `byContentEdgeInsets` 把 iOS 15+ `UIButton.Configuration.contentInsets` 与旧系统 `contentEdgeInsets` 回退收口到封装内部，上层不写版本分支，也不承接系统 deprecated 标记。
+- `UIWindow.byScreen`、`WKWebViewConfiguration.byProcessPool` / `bySelectionGranularity` 同样不复制系统 deprecated 标记；scene 映射、旧系统赋值和新系统无效语义均由封装内部按版本处理。
 - RGB、灰度和 HSB 颜色分别使用 `UIColor(r:g:b:a:)`、`UIColor(gray:alpha:)`、`UIColor(h:s:b:a:)`。
 - `UITextField.byPlaceholder(_:)` 由本 Pod 唯一承接；`JobsByUIKit` 只补充占位颜色、字体等增强能力，不重复声明基础文字 API。
 - 封装实现内部可以调用系统 API；上层调用方必须使用对应 `byXxx` / `onXxx` 入口。

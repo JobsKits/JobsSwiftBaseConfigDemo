@@ -1,247 +1,110 @@
-# ⏰`JobsSwiftTimer`
+# ⏰ `JobsSwiftTimer`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
 [toc]
 
-<p align="left">
-  <a><img src="https://img.shields.io/badge/Swift-red" alt="Swift"/></a>
-  <a><img src="https://img.shields.io/badge/Xcode-15.4-blue" alt="Xcode"/></a>
-  <a><img src="https://img.shields.io/badge/iOS-17.5+-critical" alt="iOS"/></a>
-  <a><img src="https://img.shields.io/badge/pod-1.15.2-brightgreen" alt="CocoaPods"/></a>
-  <a><img src="https://img.shields.io/github/actions/workflow/status/JobsKits/JobsSwiftBaseConfigDemo/ci.yml?branch=main" alt="Build Status"/></a>
-  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo"><img src="https://img.shields.io/github/license/JobsKits/JobsSwiftBaseConfigDemo?style=flat&color=success" alt="License"/></a>
-  <a><img src="https://img.shields.io/github/languages/top/JobsKits/JobsSwiftBaseConfigDemo?color=blueviolet" alt="Top Language"/></a>
-  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/stargazers"><img src="https://img.shields.io/github/stars/JobsKits/JobsSwiftBaseConfigDemo?style=flat-square&color=yellow" alt="Stars"/></a>
-  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/network"><img src="https://img.shields.io/github/forks/JobsKits/JobsSwiftBaseConfigDemo?style=flat-square&color=blue" alt="Forks"/></a>
-  <a><img src="https://img.shields.io/github/issues/JobsKits/JobsSwiftBaseConfigDemo?color=important" alt="Issues"/></a>
-  <a><img src="https://img.shields.io/github/last-commit/JobsKits/JobsSwiftBaseConfigDemo?color=ff69b4" alt="Last Commit"/></a>
-  <a><img src="https://img.shields.io/github/languages/code-size/JobsKits/JobsSwiftBaseConfigDemo" alt="Code Size"/></a>
-</p>
+---
 
-![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
+## 🔥 <font id=前言>前言</font>
 
-## 一、摘要
+> `JobsSwiftTimer` 统一四种定时器内核，并负责线程亲和、回调防穿透和应用活跃态治理。
 
-* <font color=red>**用协议统一iOS的4种定时器**</font>，外界只关心：
+## 一、定位
 
-  * 定时器（内核）类型 ➤ `JobsTimerKind` 支持 4 种内核：`gcd`/ `foundation` / `displayLink` / `runLoop`
+`JobsSwiftTimer` 用 `JobsSwiftTimerProtocol` 统一四种定时器内核，并把回调队列、前后台策略与生命周期语义收口到 `JobsTimer`。
 
-    ```swift
-    /// 只有.gcd 才能随便线程调用。非 GCD 内核强制主线程
-    public enum JobsTimerKind: Sendable {
-        case gcd // 不依赖 RunLoop，不强制主线程、回调在 `config.queue` 上执行、适合后台任务、非 UI、精准调度
-        case foundation
-        case displayLink
-        case runLoop
+| 内核 | `JobsTimerKind` | 线程要求 | 典型场景 |
+| ---- | ---- | ---- | ---- |
+| GCD | `.gcd` | 生命周期可在任意线程调用 | 后台轮询、非 UI 调度 |
+| Foundation | `.foundation` | 创建及生命周期操作必须在主线程 | 常规 UI 定时 |
+| DisplayLink | `.displayLink` | 创建及生命周期操作必须在主线程 | 与屏幕刷新同步的视觉更新 |
+| CFRunLoopTimer | `.runLoop` | 创建及生命周期操作必须在主线程 | 明确依赖 RunLoop 的场景 |
+
+非 GCD 内核当前只支持 `RunLoop.main`；`runLoopMode` 推荐使用 `.common`。
+
+## 二、基础用法
+
+```swift
+import JobsSwiftTimer
+
+private var timer: JobsTimer?
+
+func startTimer() {
+    let config = JobsSwiftTimerConfig(
+        interval: 1,
+        repeats: true,
+        tolerance: 0.1,
+        queue: .main,
+        runLoop: .main,
+        runLoopMode: .common,
+        pauseInBackground: true,
+        autoManageAppState: true
+    )
+
+    timer?.stop()
+    timer = JobsTimer(kind: .foundation, config: config) {
+        // 更新 UI
     }
-    ```
+    timer?.start()
+}
+```
 
-  * 定时器基础配置`JobsSwiftTimerConfig` 
+`JobsSwiftTimerConfig` 会把非有限的 `interval` 回退到 `1` 秒，把有效间隔限制为至少 `0.000001` 秒；非有限的 `tolerance` 回退到 `0`，有效值限制在 `0...interval`。
 
-    ```swift
-    public struct JobsSwiftTimerConfig {
-        public var interval: TimeInterval    // 时间间隔（最小会被 clamp 到 0.000001）
-        public var repeats: Bool             // 是否重复；false 就是 one-shot
-        public var tolerance: TimeInterval   // 容忍误差（对 `Timer` 有意义；GCD 用 leeway）
-    
-        public var queue: DispatchQueue      // 回调实际执行的队列
-        public var runLoop: RunLoop          // 非 GCD 内核用（且必须 `.main`）
-        public var runLoopMode: RunLoop.Mode // 非 GCD 内核用（且必须 `.main`）
-    
-        public var pauseInBackground: Bool   // 进入后台是否 pause（UIKit 下有效）
-        public var autoManageAppState: Bool  // 是否自动监听前后台（UIKit 下有效）
-    
-        public init(
-            interval: TimeInterval = 1.0,
-            repeats: Bool = true,
-            tolerance: TimeInterval = 0,
-            queue: DispatchQueue = .main,
-            runLoop: RunLoop = .main,
-            runLoopMode: RunLoop.Mode = .common,
-            pauseInBackground: Bool = true,
-            autoManageAppState: Bool = true
-        ) {
-            self.interval = max(0.000_001, interval)
-            self.repeats = repeats
-            self.tolerance = max(0, tolerance)
-            self.queue = queue
-            self.runLoop = runLoop
-            self.runLoopMode = runLoopMode
-            self.pauseInBackground = pauseInBackground
-            self.autoManageAppState = autoManageAppState
-        }
-    }
-    ```
-
-  * 定时器回调任务
-
-    ```swift
-    /// 无论哪种内核，真正执行 tick/finish 的地方是：
-    config.queue.async { snapshot.tick() }
-    ```
-
-  * 定时器状态
-
-    ```swift
-    public protocol JobsSwiftTimerProtocol: AnyObject {
-        var isRunning: Bool { get }
-        func start()
-        func pause()
-        func resume()
-        func stop()
-    
-        @discardableResult
-        func onTick(_ block: @escaping JobsTimerCallback) -> Self
-    
-        @discardableResult
-        func onFinish(_ block: @escaping JobsTimerCallback) -> Self
-    }
-    ```
-
-* 在**`JobsSwiftTimer`**之上再封装一层，用 [**JobsSwiftTimerMgr**](#JobsSwiftTimerMgr) 管理多个 `JobsSwiftTimer`（带 **identifier**）
-
-  * 用 `identifier` 管理 **timer** 生命周期（列表 cell / 页面复用特别实用）
-    * 有**去重策略** `JobsTimerDedupPolicy` ➤  `keepExisting` / `replace` / `error` 
-  * 一行 act：`start`/`pause`/`resume`/`stop`/`cancel` 
-
-## 二、<font id=JobsSwiftTimer>`JobsSwiftTimer`的使用</font>
-
-### 1、GCD 定时器
-
-> 不吃主线程/RunLoop限制
+## 三、一次性任务
 
 ```swift
 let config = JobsSwiftTimerConfig(
-    interval: 1.0,
-    repeats: true,
-    tolerance: 0.1,
-    queue: DispatchQueue.global(qos: .userInitiated) // 回调跑这里
+    interval: 0.5,
+    repeats: false,
+    queue: .main
 )
 
-let timer = JobsSwiftTimer(kind: .gcd, config: config) {
-    // tick：在 config.queue 上执行
+let timer = JobsTimer(kind: .gcd, config: config) {
     print("tick")
-}
-
-timer
-    .onFinish { print("finish") } // repeats=false 时才会触发 finish
-    .start()
-
-timer.pause()
-timer.resume()
-timer.stop()
-```
-
-### 2、主线程 UI 定时
-
-> 必须主线程创建+操作
-
-```swift
-/// .foundation / .runLoop / .displayLink：init/start/pause/resume/stop 全都必须主线程，否则 precondition 直接 crash
-
-DispatchQueue.main.async {
-    let config = JobsSwiftTimerConfig(
-        interval: 1.0,
-        repeats: true,
-        queue: .main,               // 回调在主线程跑，适合更新 UI
-        runLoop: .main,
-        runLoopMode: .common
-    )
-
-    let timer = JobsSwiftTimer(kind: .foundation, config: config) {
-        // 更新 UI
-    }
-
-    timer.start()
-}
-```
-
-### 3、只触发一次
-
-```swift
-let config = JobsSwiftTimerConfig(interval: 0.5, repeats: false, queue: .main)
-let t = JobsSwiftTimer(kind: .gcd, config: config) {
-    print("only once")
-}
-t.onFinish {
-    print("finished")
+}.onFinish {
+    print("finish")
 }.start()
 ```
 
-## 三、<font id=JobsSwiftTimerMgr>`JobsSwiftTimerMgr` 的使用</font>
+一次性任务先进入终态并销毁底层引擎，再在同一回调队列中依次执行 `tick`、`finish`，避免重复触发和完成顺序漂移。
 
-### 1、创建并注册（🌟最推荐用法🌟）
+## 四、生命周期保证
 
-```swift
-/// 同 id 已存在时，默认策略是 .replace（Manager 内部默认）
-let id = "home.countdown"
-var config = JobsSwiftTimerConfig(interval: 1.0, repeats: true, queue: .main)
-let timer = try JobsSwiftTimerMgr.shared.create(
-    kind: .foundation,
-    identifier: id,// 不能为空，否则抛 identifierRequired
-    config: config,
-    dedupPolicy: .replace
-) {
-    // tick
-}
+- `start`、`pause`、`resume`、`fireOnce`、`stop` 由生命周期锁串行化。
+- `JobsSwiftTimerProtocol.requiresMainThreadLifecycle` 公开生命周期执行上下文；自定义实现默认按主线程路由，Manager 不再依赖具体类型强转。
+- 每次状态切换都会刷新 generation token；已排队的旧 tick 在执行前会再次校验，`pause` / `stop` 后不会穿透。
+- GCD 内核恢复时会同步重绑 event handler，避免继续携带暂停前的 token。
+- Foundation `Timer` 使用弱捕获闭包，`CADisplayLink` 使用弱代理，不会通过回调链反向强持有 `JobsTimer`。
+- `CFRunLoopTimer` 使用弱捕获的 block API，不保存未托管裸指针。
+- `CADisplayLink` 会按 `config.interval` 节流，不再把每一帧都当成一次业务 tick。
+- `deinit` 会撤销底层引擎；非 GCD 引擎在主线程完成失效处理。
 
-timer.start()
-```
-
-### 2、用 act 控制
-
-> 不需要持有 **JobsSwiftTimer** 引用
+## 五、前后台策略
 
 ```swift
-try JobsSwiftTimerMgr.shared.act(.start, identifier: id)
-try JobsSwiftTimerMgr.shared.act(.pause, identifier: id)
-try JobsSwiftTimerMgr.shared.act(.resume, identifier: id)
-try JobsSwiftTimerMgr.shared.act(.stop, identifier: id)
+let config = JobsSwiftTimerConfig(
+    interval: 2,
+    repeats: true,
+    queue: .global(qos: .utility),
+    pauseInBackground: true,
+    autoManageAppState: true
+)
 ```
 
-```swift
-/// cancel ➤ 停止并移除
-/// 最适合 cell reuse / deinit
-/// JobsSwiftTimerMgr 的 .cancel 会先 stop() 再 remove()
+`pauseInBackground = true` 且 `autoManageAppState = true` 时，应用进入 `.inactive` 或 `.background` 都会自动暂停；只有收到重新活跃通知时，才恢复由应用状态自动暂停的 timer。手动 `pause` 会清除自动恢复资格，因此控制中心、系统弹窗等 inactive→active 路径不会遗留暂停状态，也不会误恢复手动暂停项。
 
-try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
+多定时器、页面复用和 identifier 去重场景统一使用 [JobsSwiftTimerMgr](../JobsSwiftTimerMgr@Pods/README.md)。
+
+## 六、验证
+
+```shell
+xcrun swiftc -frontend -parse JobsSwiftTimer.swift JobsSwiftTimerConfig.swift JobsSwiftTimerDefs.swift JobsSwiftTimerProtocol.swift
 ```
 
-### 3、停止并移除
-
-> <font color=red>**async**</font> 版，吞错误，适合复用场景
->
-> 内部 <font color=red>try/catch</font> 静默掉**找不到 id**的情况，适合 cell 已复用的场景 
-
-```swift
-Task {
-    await JobsSwiftTimerMgr.shared.stopAndRemove(identifier: id)
-}
+```shell
+xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 ```
 
-## 四、经典场景推荐方案
-
-### 1、列表 cell 每秒更新倒计时 ➤ 防复用
-
-```swift
-/// 用 Manager + identifier（把 indexPath / model id 拼进去）
-/// 出队/复用时 cancel
-
-let id = "cell.\(model.id)"
-let config = JobsSwiftTimerConfig(interval: 1, repeats: true, queue: .main)
-
-try? JobsSwiftTimerMgr.shared.create(kind: .foundation, identifier: id, config: config) {
-    // 更新 label
-}.start()
-
-// 在 prepareForReuse / didEndDisplaying / deinit:
-Task { await JobsSwiftTimerMgr.shared.stopAndRemove(identifier: id) }
-```
-
-### 2、后台轮询 ➤ 不阻塞主线程
-
-```swift
-/// .gcd + 后台 queue
-let config = JobsSwiftTimerConfig(interval: 2, repeats: true, queue: .global(qos: .background))
-let t = JobsSwiftTimer(kind: .gcd, config: config) { /* poll */ }
-t.start()
-```
+应用测试 target 还覆盖自动暂停恢复、手动暂停保护以及 Manager 替换句柄隔离。

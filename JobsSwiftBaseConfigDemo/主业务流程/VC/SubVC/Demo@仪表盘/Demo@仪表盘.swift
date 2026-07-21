@@ -33,9 +33,13 @@ final class FTDashboadDemoVC: BaseVC {
             .byNeedleInnerRadiusRatio(0.42)
             .byNeedleOuterInset(12)
             .byCenterDotRadius(10)
+            .byDraggable(YES)
             .byValueFormatter { p in
                 let value = Int(round(p * 100))
                 return "\(value)"
+            }
+            .onProgressChanged { [weak self] progress in
+                self?.slider.byValue(Float(progress))
             }
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()

@@ -19,6 +19,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import SnapKit
+import GKNavigationBarSwift
 import HaishinKit      // HaishinKit / RTMPHaishinKit
 
 final class HKLocalRecordVC: BaseVC {
@@ -106,7 +107,7 @@ final class HKLocalRecordVC: BaseVC {
                 }
             }
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(20)
+                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(12)
                 make.right.equalToSuperview().inset(20)
                 make.size.equalTo(CGSize(width: 40, height: 40))
             }
@@ -114,6 +115,7 @@ final class HKLocalRecordVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         view.byBackgroundColor(JobsCor.black)
         // 触发懒加载
         previewView.byVisible(YES)
@@ -134,6 +136,24 @@ final class HKLocalRecordVC: BaseVC {
             guard let self else { return }
             await self.cleanup()
         }
+    }
+    // MARK: - 导航栏
+    private func setupNavigationBar() {
+        jobsSetupGKNav(
+            title: "本地录制到系统相册",
+            leftButton: UIButton.sys()
+                .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
+                .byTintColor(JobsCor.white)
+                .byImage("chevron.left".sysImg, for: .normal)
+                .byContentEdgeInsets(.zero)
+                .byTitleEdgeInsets(.zero)
+                .onTap { [weak self] _ in
+                    self?.goBack("")
+                }
+        )
+        gk_navBackgroundColor = JobsCor.black
+        gk_navTitleColor = JobsCor.white
+        gk_navLineHidden = true
     }
     // MARK: - 权限
     /// 申请摄像头 + 麦克风权限（简单版）

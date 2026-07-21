@@ -64,6 +64,7 @@ class AppDelegate: FlutterAppDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        CrashLogCenter.shared.startMonitoring()
         SA()
         print("INFO PLIST PATH =", Bundle.main.path(forResource: "Info", ofType: "plist") ?? "nil")
         print("SceneManifest? =", Bundle.main.object(forInfoDictionaryKey: "UIApplicationSceneManifest") != nil)
@@ -114,6 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        CrashLogCenter.shared.startMonitoring()
         SA()
         return true
     }

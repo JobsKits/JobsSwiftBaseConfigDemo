@@ -78,6 +78,7 @@ def debugPods
 end
 # ============================== PodByJobs ==============================
 def byJobs
+    pod 'JobsAppIconRibbon',                  :path => 'JobsByPods/JobsAppIconRibbon@Pods'
     pod 'JobsSwiftWorker',                :path => 'JobsByPods/JobsSwiftWorker@Pods'
     pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
 #    pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
@@ -121,6 +122,7 @@ def byJobs
     pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
     pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
     pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'
+    pod 'JobsScrollingLabel',                 :path => 'JobsByPods/JobsScrollingLabel@Pods'
     pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods'
     pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods'
     pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods'

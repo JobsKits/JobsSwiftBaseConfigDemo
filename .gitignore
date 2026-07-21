@@ -124,3 +124,6 @@ tmp/
 
 # Graphify generated output files; can be regenerated locally.
 graphify-out/
+
+# Build-time AppIcon variants generated from the original asset catalog.
+**/JobsAppIconRibbon-*.appiconset/

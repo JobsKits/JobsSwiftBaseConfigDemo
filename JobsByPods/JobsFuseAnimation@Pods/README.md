@@ -1,6 +1,49 @@
 # JobsFuseAnimation
 
-本地 Pod：收口任意 `UIView` 的长按导火索、按压缩放和持续冒泡动画。业务层负责提供冒泡内容、手势状态和语义反馈。
+本地 Pod：收口任意 `UIView` 的长按导火索、按压缩放、持续冒泡、分格充电和抖音风格双球刷新动画。业务层只提供手势、内容或动画配置。
+
+## 抖音风格双球刷新动画
+
+- `JobsDouyinRefreshView` 使用红、绿双球交叉换位、上下错峰跳跃和尺度切换表达刷新状态。
+- `JobsDouyinRefreshConfig` 可配置颜色、球径、水平行程、跳跃高度和单轮时长。
+- `byStart()` / `byPause()` / `byResume()` / `byStop()` 提供完整生命周期入口，重复开始不会叠加动画。
+- 视图离开 window、App 进入后台时自动暂停；开启“减少动态效果”时保持静态双球。
+
+```swift
+let refreshView = JobsDouyinRefreshView(
+    config: JobsDouyinRefreshConfig(
+        redColor: UIColor(hex: 0xFE2C55),
+        greenColor: UIColor(hex: 0x25F4EE)
+    )
+)
+
+refreshView.byStart()
+refreshView.byPause()
+refreshView.byResume()
+refreshView.byStop()
+```
+
+## 分格充电动画
+
+- 默认 3 格，已充格使用 `JobsCor.systemGreen`，未充格使用 `JobsCor.systemGray3`。
+- 每次 Timer tick 只前进 1 格，满格后的下一次 tick 回到 0 格。
+- `segmentCount` / `filledColor` / `emptyColor` / `interval` 等均可配置。
+- `UITableViewCell.byChargingAnimationStart(...)` 只更新当前 cell 里的 `CALayer`，不调用 `reloadData` 或 `reloadRows`。
+- cell 离开 window、应用进入后台或系统开启“减少动态效果”时，内部 Timer 会暂停。
+
+```swift
+let chargingConfig = JobsChargingAnimationConfig(
+    segmentCount: 5,
+    filledColor: JobsCor.systemGreen,
+    emptyColor: JobsCor.systemGray3,
+    interval: 0.45
+)
+
+cell.byChargingAnimationStart(chargingConfig)
+cell.byChargingAnimationPause()
+cell.byChargingAnimationResume()
+cell.byChargingAnimationStop()
+```
 
 ## 冒泡动画
 

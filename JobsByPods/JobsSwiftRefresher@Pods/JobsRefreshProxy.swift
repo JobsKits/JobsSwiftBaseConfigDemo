@@ -39,10 +39,12 @@ final class JobsProxy: NSObject {
     var leftImagePref: JobsRefreshImagePreference = .inherit
     var rightImagePref: JobsRefreshImagePreference = .inherit
     // MARK: - Human interaction feedback
-    /// Whether to perform haptic feedback when refresh/load is triggered by reaching threshold.
-    var enablesHaptics: Bool = false
-    /// Optional sound file name. Supports full name (e.g. "Sound.wav") or base name (e.g. "Sound").
-    var soundFileName: String? = nil
+    /// ScrollView 级默认配置；slot 未单独设置时继承这里。
+    var refreshFeedback = JobsRefreshFeedback.disabled
+    var headerRefreshFeedback: JobsRefreshFeedback?
+    var footerRefreshFeedback: JobsRefreshFeedback?
+    var leftRefreshFeedback: JobsRefreshFeedback?
+    var rightRefreshFeedback: JobsRefreshFeedback?
 
     deinit { kvo?.invalidate(); panKvo?.invalidate() }
     init(scrollView: UIScrollView) {
@@ -71,6 +73,16 @@ final class JobsProxy: NSObject {
 
     func role(for position: JobsPosition) -> JobsRefreshRole {
         horizontalMode.role(for: position)
+    }
+
+    func refreshFeedback(for position: JobsPosition) -> JobsRefreshFeedback {
+        let slotFeedback: JobsRefreshFeedback?
+        switch position {
+        case .header: slotFeedback = headerRefreshFeedback
+        case .footer: slotFeedback = footerRefreshFeedback
+        case .left: slotFeedback = leftRefreshFeedback
+        case .right: slotFeedback = rightRefreshFeedback
+        };return slotFeedback ?? refreshFeedback
     }
 }
 

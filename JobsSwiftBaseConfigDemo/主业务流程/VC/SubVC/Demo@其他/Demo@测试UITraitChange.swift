@@ -110,7 +110,6 @@ final class TraitChangeDemoVC: BaseVC {
             }
     }()
     // MARK: - 调试状态
-    private var forceDark = false
     private var forceRTL  = false
     // MARK: - Tokens（可选：若需要在对象存活时手动停止监听）
     // 跨版本安全的底层存储（不标 @available）
@@ -155,10 +154,11 @@ final class TraitChangeDemoVC: BaseVC {
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.byToggleSelected()
-                        self.forceDark.toggle()
-                        // 触发外观相关 trait 变化 —— 注意前缀 self.
-                        self.overrideUserInterfaceStyle = self.forceDark ? .dark : .unspecified
+                        let nextStyle: UIUserInterfaceStyle =
+                            self.traitCollection.userInterfaceStyle == .dark ? .light : .dark
+                        sender.bySelected(nextStyle == .dark)
+                        // 在当前实际样式的反向值之间切换，避免深色系统下 `.unspecified` 仍是深色。
+                        self.overrideUserInterfaceStyle = nextStyle
                         // 保底刷新（即使 trait 回调还没到）
                         self.updateColors()
                     }

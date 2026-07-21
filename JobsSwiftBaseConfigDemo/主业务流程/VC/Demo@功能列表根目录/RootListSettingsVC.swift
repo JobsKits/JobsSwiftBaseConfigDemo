@@ -15,6 +15,7 @@ import JobsByUIKit
 import JobsInheritance
 import JobsScale
 import JobsSwiftDSL
+import JobsSwiftDebugTools
 import JobsSwiftSplash
 import JobsSwiftBaseDefines
 import JobsToast
@@ -28,6 +29,7 @@ enum RootListPreferences {
     private static let darkModeKey = "RootList.darkModeEnabled"
     private static let sideDrawerContentModeKey = "RootList.sideDrawerContentMode"
     private static let usesTabBarEntryKey = "RootList.usesTabBarEntry"
+    private static let showsSuspendTimeButtonKey = "com.jobs.demoList.showsSuspendTimeButton"
 
     static var usesTabBarEntry: Bool {
         get { UserDefaults.standard.bool(forKey: usesTabBarEntryKey) }
@@ -55,6 +57,16 @@ enum RootListPreferences {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: returnToTopAndRefreshKey)
+            UserDefaults.standard.synchronize()
+        }
+    }
+
+    static var showsSuspendTimeButton: Bool {
+        get {
+            guard UserDefaults.standard.object(forKey: showsSuspendTimeButtonKey) != nil else { return true };return UserDefaults.standard.bool(forKey: showsSuspendTimeButtonKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: showsSuspendTimeButtonKey)
             UserDefaults.standard.synchronize()
         }
     }
@@ -100,15 +112,41 @@ enum RootListPreferences {
     }
 
     private static func makeDemoListEntryViewController() -> UIViewController {
-        JobsSideDrawerVC(
+        let rootListViewController = RootListVC()
+        let mainNavigationController = rootListViewController.jobsNav.jobsNavContainer
+        return JobsSideDrawerVC(
             drawerViewController: JobsMeCenterVC().jobsNav.jobsNavContainer,
-            mainViewController: RootListVC().jobsNav.jobsNavContainer,
+            mainViewController: mainNavigationController,
             configuration: JobsSideDrawerConfiguration(
                 direction: .left,
                 contentMode: sideDrawerContentMode,
-                presentedRatio: 0.5
+                presentedRatio: 0.5,
+                shouldBeginOpeningGesture: { [weak rootListViewController, weak mainNavigationController] in
+                    guard let rootListViewController,
+                          let mainNavigationController else { return false };return isDemoListCurrentViewController(
+                        rootListViewController,
+                        in: mainNavigationController
+                    )
+                }
             )
         )
+    }
+
+    private static func isDemoListCurrentViewController(
+        _ rootListViewController: RootListVC,
+        in mainNavigationController: UINavigationController
+    ) -> Bool {
+        guard rootListViewController.viewIfLoaded?.window != nil,
+              mainNavigationController.visibleViewController === rootListViewController else { return false }
+        var currentViewController: UIViewController? = rootListViewController
+        while let viewController = currentViewController {
+            if viewController.presentedViewController != nil { return false }
+            if let tabBarController = viewController.parent as? UITabBarController,
+               tabBarController.selectedViewController !== viewController {
+                return false
+            }
+            currentViewController = viewController.parent
+        };return true
     }
 
     static var darkModeEnabled: Bool {
@@ -324,9 +362,11 @@ final class RootListSettingsVC: BaseVC {
     private enum GeneralSettingItem: Int, CaseIterable {
         case splash
         case returnBehavior
+        case suspendTimeButton
         case theme
         case sideDrawerContentMode
         case appEntry
+        case deinitTips
     }
 
     private enum LanguageSettingItem: Int, CaseIterable {
@@ -427,12 +467,16 @@ private extension RootListSettingsVC {
             return JobsSplashPreferences.isEnabledForNextLaunch ? "下次开屏：开".tr : "下次开屏：关".tr
         case .returnBehavior:
             return RootListPreferences.returnToTopAndRefreshEnabled ? "返回：回顶部并刷新".tr : "返回：保持原样".tr
+        case .suspendTimeButton:
+            return RootListPreferences.showsSuspendTimeButton ? "悬浮时间：开".tr : "悬浮时间：关".tr
         case .theme:
             return RootListPreferences.darkModeEnabled ? "主题切换：黑夜".tr : "主题切换：白天".tr
         case .sideDrawerContentMode:
             return RootListPreferences.sideDrawerContentMode == .following ? "侧滑菜单：内容跟随".tr : "侧滑菜单：内容固定".tr
         case .appEntry:
             return RootListPreferences.usesTabBarEntry ? "启动入口：TabBar".tr : "启动入口：Demo 列表".tr
+        case .deinitTips:
+            return VCDebugDeallocDebug.showsDeinitTips ? "销毁提示：开".tr : "销毁提示：关".tr
         }
     }
 
@@ -449,6 +493,9 @@ private extension RootListSettingsVC {
         case .returnBehavior:
             let enabled = RootListPreferences.toggleReturnToTopAndRefresh()
             (enabled ? "返回主列表：回顶部并刷新".tr : "返回主列表：保持原样".tr).toast
+        case .suspendTimeButton:
+            RootListPreferences.showsSuspendTimeButton.toggle()
+            (RootListPreferences.showsSuspendTimeButton ? "悬浮时间按钮已显示".tr : "悬浮时间按钮已隐藏".tr).toast
         case .theme:
             let dark = RootListPreferences.toggleDarkMode()
             applySettingsTheme()
@@ -460,6 +507,9 @@ private extension RootListSettingsVC {
             RootListPreferences.usesTabBarEntry.toggle()
             shouldApplyAppEntryAfterReturning = true
             (RootListPreferences.usesTabBarEntry ? "返回后从 TabBar 进入".tr : "返回后直接进入 Demo 列表".tr).toast
+        case .deinitTips:
+            VCDebugDeallocDebug.showsDeinitTips.toggle()
+            (VCDebugDeallocDebug.showsDeinitTips ? "控制器销毁提示已开启".tr : "控制器销毁提示已关闭".tr).toast
         }
         tableView.reloadData()
     }

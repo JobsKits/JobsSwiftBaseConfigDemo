@@ -29,6 +29,28 @@ final class AFDemoVC: BaseVC {
     }
 
     private var bag = Set<AnyCancellable>()
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView()
+            .byAlwaysBounceVertical(true)
+            .byShowsVerticalScrollIndicator(true)
+            .byKeyboardDismissMode(.onDrag)
+            .byAddTo(view) { [unowned self] make in
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                    make.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                } else {
+                    make.edges.equalTo(self.view.safeAreaLayoutGuide)
+                }
+            }
+    }()
+
+    private lazy var contentView: UIView = {
+        UIView()
+            .byAddTo(scrollView) { [unowned self] make in
+                make.edges.equalTo(self.scrollView.contentLayoutGuide)
+                make.width.equalTo(self.scrollView.frameLayoutGuide)
+            }
+    }()
     // ================= 回显区 =================
     private lazy var resultView: UITextView = {
         UITextView()
@@ -40,11 +62,11 @@ final class AFDemoVC: BaseVC {
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(true)
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnClear.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(16)
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-                make.height.greaterThanOrEqualTo(180)
+                make.height.equalTo(220)
+                make.bottom.equalToSuperview().inset(12)
             }
     }()
     // ================= 按钮们（调用写在 onTap 里） =================
@@ -69,12 +91,8 @@ final class AFDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
-                if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
-                } else {
-                    make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(40)
-                }
+            .byAddTo(contentView) { make in
+                make.top.equalToSuperview()
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
             }
@@ -108,7 +126,7 @@ final class AFDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnZen.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -135,7 +153,7 @@ final class AFDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnUser.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -165,7 +183,7 @@ final class AFDemoVC: BaseVC {
                     }
                 })
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnLogin.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -194,7 +212,7 @@ final class AFDemoVC: BaseVC {
                     }
                 })
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnUpload.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -223,7 +241,7 @@ final class AFDemoVC: BaseVC {
                     }
                 })
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnDownloadPNG.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -255,7 +273,7 @@ final class AFDemoVC: BaseVC {
                     }
                     .store(in: &self.bag)
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnDownloadBytes.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -292,7 +310,7 @@ final class AFDemoVC: BaseVC {
                 show(title: "当前工具链不支持 async/await".tr, body: "请使用 Swift 5.5+")
                 #endif
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnCombineZen.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -320,7 +338,7 @@ final class AFDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 // ⚠️ 改为跟在 async/await 按钮后面
                 make.top.equalTo(self.btnAsyncSearch.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
@@ -338,7 +356,7 @@ final class AFDemoVC: BaseVC {
                 guard let self else { return }
                 clear()
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnStub.snp.bottom).offset(8)
                 make.right.equalToSuperview().inset(24)
                 make.height.equalTo(36)
@@ -356,6 +374,8 @@ final class AFDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Alamofire 全量用法 Demo".tr)
+        scrollView.byVisible(YES)
+        contentView.byVisible(YES)
         btnZen.byVisible(YES)
         btnUser.byVisible(YES)
         btnLogin.byVisible(YES)

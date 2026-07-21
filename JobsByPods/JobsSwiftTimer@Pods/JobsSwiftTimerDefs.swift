@@ -33,6 +33,16 @@ public enum JobsTimerKind: Sendable {
     case displayLink
     case runLoop
 }
+// MARK: - Callback Delivery
+/// 重复计时器的回调投递策略。
+public enum JobsTimerCallbackDeliveryPolicy: Sendable, Equatable {
+    /// 保留每一次有效 tick；兼容既有行为。
+    case enqueue
+    /// 上一次回调尚未结束时丢弃新 tick，适合只关心实时状态的场景。
+    case dropIfBusy
+    /// 上一次回调尚未结束时只保留最新 tick，避免回调队列持续堆积。
+    case coalesceLatest
+}
 /// JobsTimer 专用回调类型：可跨并发域安全传递
 public typealias JobsTimerCallback = @Sendable () -> Void
 public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void

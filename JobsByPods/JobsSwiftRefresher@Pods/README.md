@@ -21,6 +21,7 @@
   * 拉动到触发实际操作的时候，有用户感官反馈
     * 震动反馈 ➤ 可以开启 / 关闭
     * 播放声音 ➤ 支持**文件全名**和**主文件名**
+    * 支持 ScrollView 全局配置，也支持 Header / Footer / Left / Right 独立配置
 
 ## 二、使用方式
 
@@ -41,8 +42,12 @@ private lazy var tableView: UITableView = {
         .showRefreshFooterInfo(NO)  // 竖向Footer + 横向Right
         .setHeaderLottie(.custom(.init(animationName: "LottieLogo1")))
         .setFooterLottie(.disabled) // 强制 footer 回退菊花（即使全局配置了）
-        .enableRefreshHaptics(true)
-        .setRefreshSound("Sound.wav")
+        .setHeaderRefreshFeedback(
+            JobsRefreshFeedback(
+                enablesHaptics: true,
+                soundFileName: "Sound.wav"
+            )
+        )
         // 下拉刷新 Header
         .byRefreshHeader(component: JobsDefaultHeader(),
                          container: self,

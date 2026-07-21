@@ -46,6 +46,10 @@ public final class FTDashboardView: UIView {
         let v = Int(round(p * 100))
         return "\(v)%"
     }
+    /// 是否允许在仪表盘上直接拖动指针
+    public var isDraggable: Bool = false { didSet { updateDragGestureEnabled() } }
+
+    private var progressChangedAction: ((CGFloat) -> Void)?
 
     private lazy var valueLabel: UILabel = {
         UILabel()
@@ -100,6 +104,16 @@ public final class FTDashboardView: UIView {
         CAShapeLayer()
             .byFillColor(centerDotColor)
             .byAddTo(self.layer)
+    }()
+
+    private lazy var panGesture: UIPanGestureRecognizer = {
+        UIPanGestureRecognizer
+            .byConfig { [weak self] (gesture: UIPanGestureRecognizer) in
+                self?.handlePan(gesture)
+            }
+            .byMinTouches(1)
+            .byMaxTouches(1)
+            .byCancelsTouchesInView(YES)
     }()
     /// 设置进度
     public func setProgress(_ value: CGFloat, animated: Bool = true, duration: CFTimeInterval = 0.6) {
@@ -232,6 +246,53 @@ public final class FTDashboardView: UIView {
         return startAngle + (endAngle - startAngle) * p
     }
 
+    private func updateDragGestureEnabled() {
+        if panGesture.view !== self {
+            jobs_addGesture(panGesture)
+        }
+        panGesture.byEnabled(isDraggable)
+    }
+
+    private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        guard isDraggable else { return }
+        switch gesture.state {
+        case .began, .changed, .ended:
+            updateProgress(at: gesture.location(in: self))
+        default:
+            break
+        }
+    }
+
+    private func updateProgress(at location: CGPoint) {
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let offsetX = location.x - center.x
+        let offsetY = location.y - center.y
+        guard hypot(offsetX, offsetY) > max(centerDotRadius, 12) else { return }
+        let fullCircle = CGFloat.pi * 2
+        let rawSweep = endAngle - startAngle
+        let normalizedSweep = normalizedAngle(rawSweep)
+        let sweep = abs(rawSweep) >= fullCircle ? fullCircle : normalizedSweep
+        guard sweep > .ulpOfOne else { return }
+        let touchAngle = atan2(offsetY, offsetX)
+        let delta = normalizedAngle(touchAngle - startAngle)
+        let newProgress: CGFloat
+        if delta <= sweep {
+            newProgress = delta / sweep
+        } else {
+            let distanceToEnd = delta - sweep
+            let distanceToStart = fullCircle - delta
+            newProgress = distanceToStart < distanceToEnd ? 0 : 1
+        }
+        setProgress(newProgress, animated: false)
+        progressChangedAction?(newProgress)
+    }
+
+    private func normalizedAngle(_ angle: CGFloat) -> CGFloat {
+        let fullCircle = CGFloat.pi * 2
+        let value = angle.truncatingRemainder(dividingBy: fullCircle)
+        return value >= 0 ? value : value + fullCircle
+    }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
         layoutLayers()
@@ -247,6 +308,18 @@ public extension FTDashboardView {
                     animated: Bool = true,
                     duration: CFTimeInterval = 0.6) -> Self {
         setProgress(value, animated: animated, duration: duration)
+        return self
+    }
+    // MARK: - Interaction
+    @discardableResult
+    func byDraggable(_ value: Bool) -> Self {
+        isDraggable = value
+        return self
+    }
+
+    @discardableResult
+    func onProgressChanged(_ action: @escaping (CGFloat) -> Void) -> Self {
+        progressChangedAction = action
         return self
     }
     // MARK: - Angles (Radians)

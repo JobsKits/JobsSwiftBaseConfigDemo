@@ -27,7 +27,7 @@ final class BMPlayerDemoVC: BaseVC {
         var title: String {
             switch self {
             case .local:  return "本地视频：welcome_video.mp4（单独播放）".tr
-            case .remote: return "网络视频：信号源@巴基斯坦电视台（单独播放）".tr
+            case .remote: return "网络视频：中国频道优先 · 多信号源可切换（单独播放）".tr
             case .feed:   return "抖音风：列表预览 → 详情页独立播放".tr
             case .float:  return "悬浮窗口播放（直播）".tr
             }

@@ -186,11 +186,13 @@ final class YTKNetworkDemoVC: BaseVC {
                     /// 按钮图片@图文关系
                     .byImage("moon.circle.fill".sysImg, for: .normal)
                     .byImage("moon.circle.fill".sysImg, for: .selected)
+                    .bySelected(RootListPreferences.darkModeEnabled)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
-                        sender.byToggleSelected()
-                        logTextView.byText("")
+                        let isDarkMode = RootListPreferences.toggleDarkMode()
+                        sender.bySelected(isDarkMode)
+                        appendLog("🌗 主题已切换 -> \(isDarkMode ? "Dark" : "Light")")
                     }
             ]
         )

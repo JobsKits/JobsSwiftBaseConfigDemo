@@ -446,3 +446,369 @@ extension UIView {
         return self
     }
 }
+
+// MARK: - 分格充电动画配置
+public struct JobsChargingAnimationConfig {
+    /// 充电格数，默认 3 格。
+    public var segmentCount: Int
+    /// 已充格颜色，默认系统绿色。
+    public var filledColor: UIColor
+    /// 未充格颜色，默认系统三级灰色。
+    public var emptyColor: UIColor
+    /// 每次前进一格的间隔。
+    public var interval: TimeInterval
+    /// 单次颜色跃迁时长。
+    public var transitionDuration: TimeInterval
+    /// 格子间距。
+    public var segmentSpacing: CGFloat
+    /// 单格圆角。
+    public var segmentCornerRadius: CGFloat
+    /// 动画视图尺寸。
+    public var indicatorSize: CGSize
+
+    public init(
+        segmentCount: Int = 3,
+        filledColor: UIColor = JobsCor.systemGreen,
+        emptyColor: UIColor = JobsCor.systemGray3,
+        interval: TimeInterval = 0.45,
+        transitionDuration: TimeInterval = 0.18,
+        segmentSpacing: CGFloat = 2,
+        segmentCornerRadius: CGFloat = 2,
+        indicatorSize: CGSize = CGSize(width: 30, height: 14)
+    ) {
+        self.segmentCount = max(1, segmentCount)
+        self.filledColor = filledColor
+        self.emptyColor = emptyColor
+        self.interval = interval.isFinite ? max(0.05, interval) : 0.45
+        self.transitionDuration = transitionDuration.isFinite ? max(0, transitionDuration) : 0.18
+        self.segmentSpacing = segmentSpacing.isFinite ? max(0, segmentSpacing) : 2
+        self.segmentCornerRadius = segmentCornerRadius.isFinite ? max(0, segmentCornerRadius) : 2
+        self.indicatorSize = CGSize(
+            width: indicatorSize.width.isFinite ? max(1, indicatorSize.width) : 30,
+            height: indicatorSize.height.isFinite ? max(1, indicatorSize.height) : 14
+        )
+    }
+}
+
+// MARK: - 分格充电动画视图
+public final class JobsChargingAnimationView: UIView {
+    public private(set) var config = JobsChargingAnimationConfig()
+    public private(set) var filledSegmentCount = 0
+
+    private var segmentLayers: [CALayer] = []
+    private var timer: JobsSwiftTimerProtocol?
+    private var wantsRunning = false
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        jobs_setupChargingAnimation()
+    }
+
+    public convenience init(config: JobsChargingAnimationConfig) {
+        self.init(frame: CGRect(origin: .zero, size: config.indicatorSize))
+        byConfig(config)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        jobs_setupChargingAnimation()
+    }
+
+    deinit {
+        timer?.stop()
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    public override var intrinsicContentSize: CGSize {
+        config.indicatorSize
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        jobs_layoutChargingSegments()
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        jobs_syncChargingTimerState()
+    }
+
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        jobs_applyChargingColors(animated: false)
+    }
+
+    /// 更新配置。格数、颜色、间隔、间距和尺寸均可覆盖缺省值。
+    @discardableResult
+    public func byConfig(_ config: JobsChargingAnimationConfig) -> Self {
+        let normalized = JobsChargingAnimationConfig(
+            segmentCount: config.segmentCount,
+            filledColor: config.filledColor,
+            emptyColor: config.emptyColor,
+            interval: config.interval,
+            transitionDuration: config.transitionDuration,
+            segmentSpacing: config.segmentSpacing,
+            segmentCornerRadius: config.segmentCornerRadius,
+            indicatorSize: config.indicatorSize
+        )
+        let shouldResume = wantsRunning
+        jobs_stopChargingTimer()
+        self.config = normalized
+        filledSegmentCount = min(filledSegmentCount, normalized.segmentCount)
+        jobs_rebuildChargingSegments()
+        invalidateIntrinsicContentSize()
+        setNeedsLayout()
+        if shouldResume { jobs_syncChargingTimerState() };return self
+    }
+
+    /// 从 0 格开始播放；每一拍前进 1 格，满格后的下一拍回到 0 格。
+    @discardableResult
+    public func byStart(reset: Bool = true) -> Self {
+        wantsRunning = true
+        if reset {
+            filledSegmentCount = 0
+            jobs_applyChargingColors(animated: false)
+        }
+        jobs_syncChargingTimerState()
+        return self
+    }
+
+    /// 暂停并保留当前格数。
+    @discardableResult
+    public func byPause() -> Self {
+        wantsRunning = false
+        timer?.pause()
+        return self
+    }
+
+    /// 从当前格数继续播放。
+    @discardableResult
+    public func byResume() -> Self {
+        wantsRunning = true
+        jobs_syncChargingTimerState()
+        return self
+    }
+
+    /// 停止并销毁内部 JobsSwiftTimer。
+    @discardableResult
+    public func byStop(reset: Bool = true) -> Self {
+        wantsRunning = false
+        jobs_stopChargingTimer()
+        if reset {
+            filledSegmentCount = 0
+            jobs_applyChargingColors(animated: false)
+        };return self
+    }
+
+    /// 手动前进 1 格，便于业务层按自己的节奏驱动。
+    @discardableResult
+    public func byAdvance(animated: Bool = true) -> Self {
+        let advance = { [weak self] in
+            guard let self else { return }
+            self.filledSegmentCount = self.filledSegmentCount >= self.config.segmentCount
+            ? 0
+            : self.filledSegmentCount + 1
+            self.jobs_applyChargingColors(animated: animated)
+        }
+        if Thread.isMainThread {
+            advance()
+        } else {
+            DispatchQueue.main.async(execute: advance)
+        };return self
+    }
+
+    private func jobs_setupChargingAnimation() {
+        isUserInteractionEnabled = false
+        byBackgroundColor(JobsCor.clear)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(jobs_reduceMotionStatusDidChange),
+            name: UIAccessibility.reduceMotionStatusDidChangeNotification,
+            object: nil
+        )
+        jobs_rebuildChargingSegments()
+    }
+
+    @objc private func jobs_reduceMotionStatusDidChange() {
+        jobs_syncChargingTimerState()
+    }
+
+    private func jobs_rebuildChargingSegments() {
+        segmentLayers.forEach { $0.removeFromSuperlayer() }
+        segmentLayers = (0..<config.segmentCount).map { _ in
+            CALayer()
+                .byBackgroundColor(config.emptyColor)
+                .byCornerRadius(config.segmentCornerRadius)
+        }
+        segmentLayers.forEach(layer.addSublayer)
+        jobs_layoutChargingSegments()
+        jobs_applyChargingColors(animated: false)
+    }
+
+    private func jobs_layoutChargingSegments() {
+        guard !segmentLayers.isEmpty,
+              bounds.width > 0,
+              bounds.height > 0 else { return }
+        let count = CGFloat(segmentLayers.count)
+        let totalSpacing = config.segmentSpacing * max(0, count - 1)
+        let segmentWidth = max(1, (bounds.width - totalSpacing) / count)
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        for (index, segmentLayer) in segmentLayers.enumerated() {
+            let originX = CGFloat(index) * (segmentWidth + config.segmentSpacing)
+            segmentLayer
+                .byFrame(CGRect(x: originX, y: 0, width: segmentWidth, height: bounds.height))
+                .byCornerRadius(
+                    min(config.segmentCornerRadius, min(segmentWidth, bounds.height) / 2)
+                )
+        }
+        CATransaction.commit()
+    }
+
+    private func jobs_applyChargingColors(animated: Bool) {
+        for (index, segmentLayer) in segmentLayers.enumerated() {
+            let targetColor = index < filledSegmentCount
+            ? config.filledColor
+            : config.emptyColor
+            let currentColor = segmentLayer.presentation()?.backgroundColor
+            ?? segmentLayer.backgroundColor
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            segmentLayer.byBackgroundColor(targetColor)
+            CATransaction.commit()
+            guard animated,
+                  config.transitionDuration > 0 else {
+                segmentLayer.removeAnimation(forKey: "jobs.charging.color")
+                continue
+            }
+            segmentLayer.add(
+                CABasicAnimation(keyPath: "backgroundColor")
+                    .byFromValue(currentColor)
+                    .byToValue(targetColor.cgColor)
+                    .byDuration(config.transitionDuration)
+                    .byTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut)),
+                forKey: "jobs.charging.color"
+            )
+        }
+    }
+
+    private func jobs_syncChargingTimerState() {
+        guard wantsRunning,
+              window != nil,
+              !UIAccessibility.isReduceMotionEnabled else {
+            timer?.pause()
+            return
+        }
+        if let timer {
+            timer.resume()
+            return
+        }
+        timer = JobsTimer(
+            kind: .gcd,
+            config: JobsSwiftTimerConfig(
+                interval: config.interval,
+                repeats: true,
+                tolerance: min(0.03, config.interval * 0.1),
+                queue: .main,
+                pauseInBackground: true,
+                autoManageAppState: true
+            )
+        ) { [weak self] in
+            self?.byAdvance()
+        }.start()
+    }
+
+    private func jobs_stopChargingTimer() {
+        timer?.stop()
+        timer = nil
+    }
+}
+
+// MARK: - UITableViewCell 分格充电动画入口
+private var _jobsChargingAnimationViewKey: UInt8 = 0
+
+extension UITableViewCell {
+    private var jobs_chargingAnimationView: JobsChargingAnimationView? {
+        get {
+            objc_getAssociatedObject(
+                self,
+                &_jobsChargingAnimationViewKey
+            ) as? JobsChargingAnimationView
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &_jobsChargingAnimationViewKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
+    }
+
+    /// 只驱动当前 cell 的充电视图，不触发 UITableView.reloadData / reloadRows。
+    @discardableResult
+    public func byChargingAnimationStart(
+        _ config: JobsChargingAnimationConfig = .init(),
+        reset: Bool = true
+    ) -> Self {
+        let work = { [weak self] in
+            guard let self else { return }
+            let chargingView: JobsChargingAnimationView
+            if let current = self.jobs_chargingAnimationView {
+                chargingView = current.byConfig(config)
+            } else {
+                chargingView = JobsChargingAnimationView(config: config)
+                    .byAddTo(self.contentView)
+                chargingView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    chargingView.leadingAnchor.constraint(
+                        equalTo: self.contentView.layoutMarginsGuide.leadingAnchor
+                    ),
+                    chargingView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+                ])
+                self.jobs_chargingAnimationView = chargingView
+            }
+            self.byImage(Self.jobs_chargingPlaceholderImage(size: config.indicatorSize))
+            self.contentView.bringSubviewToFront(chargingView)
+            chargingView.byStart(reset: reset)
+            self.setNeedsLayout()
+        }
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async(execute: work)
+        };return self
+    }
+
+    /// 暂停当前 cell 的动画，保留格数。
+    @discardableResult
+    public func byChargingAnimationPause() -> Self {
+        jobs_chargingAnimationView?.byPause()
+        return self
+    }
+
+    /// 恢复当前 cell 的动画。
+    @discardableResult
+    public func byChargingAnimationResume() -> Self {
+        jobs_chargingAnimationView?.byResume()
+        return self
+    }
+
+    /// 停止当前 cell 的动画；复用前调用可避免旧动画串到其它入口。
+    @discardableResult
+    public func byChargingAnimationStop(removeFromSuperview: Bool = true) -> Self {
+        jobs_chargingAnimationView?.byStop()
+        if removeFromSuperview {
+            jobs_chargingAnimationView?.removeFromSuperview()
+            jobs_chargingAnimationView = nil
+        };return self
+    }
+
+    private static func jobs_chargingPlaceholderImage(size: CGSize) -> UIImage {
+        let normalizedSize = CGSize(
+            width: max(1, size.width),
+            height: max(1, size.height)
+        )
+        return UIGraphicsImageRenderer(size: normalizedSize).image { _ in }
+    }
+}

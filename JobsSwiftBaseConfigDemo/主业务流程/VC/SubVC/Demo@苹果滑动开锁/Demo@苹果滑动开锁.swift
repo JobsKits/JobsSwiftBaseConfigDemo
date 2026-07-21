@@ -38,9 +38,37 @@ final class SlideToUnlockDemoVC: BaseVC {
             }
     }()
 
+    private lazy var dependencyCard: UIView = { [unowned self] in
+        UIView()
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(14)
+            .byMasksToBounds(YES)
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(slideView.snp.bottom).offset(32)
+                make.left.right.equalToSuperview().inset(24)
+            }
+    }()
+
+    private lazy var dependencyLabel: UILabel = { [unowned self] in
+        UILabel()
+            .byText("""
+            ① Demo 页面 · SlideToUnlockDemoVC
+            ② 交互组件 · JobsGestureUnlock / SlideToUnlockView
+            ③ 流光底层 · JobsByUIKit / UIView Shimmer
+            """)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byAddTo(dependencyCard) { make in
+                make.edges.equalToSuperview().inset(16)
+            }
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         slideView.byVisible(YES)
+        dependencyLabel.byVisible(YES)
     }
 }

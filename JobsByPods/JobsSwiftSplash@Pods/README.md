@@ -18,6 +18,7 @@
 - 默认没有倒计时；配置倒计时后，时间结束与用户手动点击都会执行同一套跳过行为。
 - 跳过文案默认跟随系统语言，也可以通过 `.code("zh-Hans")` 等语言码固定语言。
 - 点击开屏和摇一摇默认通过 `JobsSwiftOpen` 在应用内打开百度，也可以分别替换成自定义闭包或关闭行为。
+- 开屏覆盖展示期间会暂停宿主根视图已有的手势，开屏结束后按原状态恢复，避免侧滑抽屉等父级手势穿透触发。
 - `JobsSplashPreferences.isEnabledForNextLaunch` 持久化记录下次启动是否展示开屏，首次使用默认为开启。
 - 本 Pod 直接依赖 `JobsSwiftBaseDefines`，系统字体统一由 `JobsFont` 工厂提供。
 
@@ -42,7 +43,7 @@ let configuration = JobsSplashConfiguration(
 JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 ```
 
-`JobsSplashPresenter` 把开屏作为首页的子控制器覆盖展示。点击跳过或倒计时结束后，开屏会被移除，原首页自然显露。
+`JobsSplashPresenter` 把开屏作为首页的子控制器覆盖展示，同时隔离宿主根视图已有手势。点击跳过或倒计时结束后，开屏会被移除，宿主手势按展示前状态恢复，原首页自然显露。
 
 ## 三、内容配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

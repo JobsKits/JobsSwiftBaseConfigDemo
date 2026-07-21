@@ -13,6 +13,7 @@ digraph PodspecDependencies {
   "IGListDiffKit";
   "IGListKit";
   "JXSegmentedView";
+  "JobsAppIconRibbon";
   "JobsAudioRecorder";
   "JobsBlock";
   "JobsBluetooth";
@@ -40,6 +41,7 @@ digraph PodspecDependencies {
   "JobsOCProtocols";
   "JobsProgressBar";
   "JobsScale";
+  "JobsScrollingLabel";
   "JobsSwiftAppTools";
   "JobsSwiftBaseDefines";
   "JobsSwiftBaseTools";
@@ -205,6 +207,7 @@ digraph PodspecDependencies {
   "JobsProgressBar" -> "JobsSwiftTimer";
   "JobsProgressBar" -> "SnapKit";
   "JobsScale" -> "JobsGetWindow";
+  "JobsScrollingLabel" -> "JobsSwiftTimer";
   "JobsSwiftAppTools" -> "JobsBy3rdTools";
   "JobsSwiftAppTools" -> "JobsByUIKit";
   "JobsSwiftAppTools" -> "JobsInheritance";

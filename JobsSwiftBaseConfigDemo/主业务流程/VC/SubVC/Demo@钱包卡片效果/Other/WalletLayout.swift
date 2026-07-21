@@ -23,6 +23,8 @@ final class WalletLayout: UICollectionViewLayout {
     var overlap: CGFloat = 10
     /// 展开时向下腾出的高度
     var expandOffset: CGFloat = 10
+    /// Header 与第一个 Cell 之间的距离
+    var headerItemSpacing: CGFloat = 0
     weak var layoutDelegate: WalletLayoutDelegate?
     private var cachedAttributes: [UICollectionViewLayoutAttributes] = []
     private var contentHeight: CGFloat = 0
@@ -78,7 +80,7 @@ final class WalletLayout: UICollectionViewLayout {
                                           width: width,
                                           height: headerHeight)
                 cachedAttributes.append(headerAttr)
-                yOffset = headerAttr.frame.maxY
+                yOffset = headerAttr.frame.maxY + headerItemSpacing
             }
             // Cells
             let itemsCount = collectionView.numberOfItems(inSection: section)
@@ -173,6 +175,12 @@ extension WalletLayout {
     @discardableResult
     func byExpandOffset(_ value: CGFloat) -> Self {
         expandOffset = value
+        return self
+    }
+    /// Header 与第一个 Cell 的间距
+    @discardableResult
+    func byHeaderItemSpacing(_ value: CGFloat) -> Self {
+        headerItemSpacing = value
         return self
     }
     /// 设置 delegate

@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsFuseAnimation
 import JobsSwiftDSL
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
@@ -28,6 +29,7 @@ final class RootFoldTableCell: UITableViewCell,
     let cornerRadius: CGFloat = 14
     // MARK: - Layout
     private static let vInset: CGFloat = 8
+    private static let cardHorizontalInset: CGFloat = 10
     private static let titleFont = JobsFont.systemFont(ofSize: 16, weight: .medium)
     private static let subTitleFont = JobsFont.systemFont(ofSize: 12, weight: .regular)
     private static let headerTitleTop: CGFloat = 11
@@ -37,11 +39,21 @@ final class RootFoldTableCell: UITableViewCell,
     private static let subTitleHeight = ceil(subTitleFont.lineHeight)
     private static let headerSubTitleTop = headerTitleTop + titleHeight + headerTitleGap
     private static let headerH = max(64, headerTitleTop + titleHeight + headerTitleGap + subTitleHeight + headerTitleBottom)
-    private static let innerRowH: CGFloat = 50
+    private static let innerMinimumRowH: CGFloat = 50
+    private static let innerTitleFont = JobsFont.systemFont(ofSize: 15, weight: .regular)
+    private static let innerSubTitleFont = JobsFont.systemFont(ofSize: 11, weight: .regular)
+    private static let innerCellVerticalInset: CGFloat = 7
+    private static let innerCellHorizontalInset: CGFloat = 16
+    private static let innerCellImageWidth: CGFloat = 30
+    private static let innerCellImageToTextPadding: CGFloat = 10
+    /// 给 disclosure / 置顶按钮预留完整布局区，包含系统在 accessory 前自动加入的间距。
+    private static let innerCellAccessoryReservedWidth: CGFloat = 56
+    private static let innerCellTitleSubTitleGap: CGFloat = 2
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
     private static let innerCellReuseID = "RootFoldInnerCell"
-    private static let chargingProgressStates = ["🟩⬜⬜", "🟩🟩⬜", "🟩🟩🟩"]
+    private static let chargingAnimationConfig = JobsChargingAnimationConfig()
+    private static var innerRowHeightCache: [String: CGFloat] = [:]
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
@@ -49,8 +61,10 @@ final class RootFoldTableCell: UITableViewCell,
     private var pinAccessoryIndex: Int?
     private var pinnedSectionStyle = false
     private var isExpanded: Bool = false
-    private var chargingProgressPhase = 0
     private var innerTableHeight: Constraint?
+    private var expandedHeightDidChange: ((CGFloat) -> Void)?
+    private var lastInnerTableWidth: CGFloat = 0
+    private var lastReportedExpandedHeight: CGFloat = 0
     // MARK: - Lazy UI
     private lazy var card: UIView = {
         UIView()
@@ -60,8 +74,8 @@ final class RootFoldTableCell: UITableViewCell,
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(Self.vInset)
                 make.bottom.equalToSuperview().inset(Self.vInset)
-                make.left.equalToSuperview().offset(10)
-                make.right.equalToSuperview().inset(10)
+                make.left.equalToSuperview().offset(Self.cardHorizontalInset)
+                make.right.equalToSuperview().inset(Self.cardHorizontalInset)
             }
     }()
 
@@ -134,10 +148,10 @@ final class RootFoldTableCell: UITableViewCell,
             .byBackgroundColor(JobsCor.clear)
             .bySeparatorStyle(.singleLine)
             .bySeparatorColor(RootListPreferences.separatorColor)
-            .byRowHeight(Self.innerRowH)
+            .byRowHeight(UITableView.automaticDimension)
             .byScrollEnabled(NO)
             .byBounces(NO)
-            .byEstimatedRowHeight(0)
+            .byEstimatedRowHeight(Self.innerMinimumRowH)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
             .byContentInsetAdjustmentBehavior(.never)
@@ -192,11 +206,15 @@ final class RootFoldTableCell: UITableViewCell,
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        stopChargingProgressAnimation()
         items = []
         onSelectItem = nil
         onPinItem = nil
+        expandedHeightDidChange = nil
         pinAccessoryIndex = nil
         pinnedSectionStyle = false
+        lastInnerTableWidth = 0
+        lastReportedExpandedHeight = 0
         subTitleLab.byVisible(YES)
         chevron.byVisible(YES)
         chevron.byImage("chevron.right".sysImg)
@@ -208,11 +226,17 @@ final class RootFoldTableCell: UITableViewCell,
         super.layoutSubviews()
         applyInsets()      // 水平边距@距离TableView
         applyCornerStyle() // 圆角
+        let currentWidth = contentView.bounds.width - Self.cardHorizontalInset * 2
+        guard currentWidth > 0,
+              abs(currentWidth - lastInnerTableWidth) > 0.5 else { return }
+        lastInnerTableWidth = currentWidth
+        updateInnerTableHeight(tableWidth: currentWidth)
     }
 
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil { innerTableView.reloadData() }
+        syncChargingProgressAnimationState()
     }
 }
 
@@ -221,22 +245,102 @@ extension RootFoldTableCell{
         headerH + vInset * 2
     }
 
-    static func expandedHeight(itemCount: Int) -> CGFloat {
+    static func expandedHeight(items: [DemoItem], tableWidth: CGFloat) -> CGFloat {
         collapsedHeight()
         + innerTop
-        + CGFloat(itemCount) * innerRowH
+        + innerTableContentHeight(
+            items: items,
+            tableWidth: max(tableWidth - cardHorizontalInset * 2, 0)
+        )
         + innerBottom
+    }
+
+    private static func innerTableContentHeight(items: [DemoItem],
+                                                tableWidth: CGFloat) -> CGFloat {
+        items.reduce(0) { partialResult, item in
+            partialResult + innerRowHeight(for: item, tableWidth: tableWidth)
+        }
+    }
+
+    private static func innerRowHeight(for item: DemoItem,
+                                       tableWidth: CGFloat) -> CGFloat {
+        guard tableWidth > 0 else { return innerMinimumRowH }
+        let widthKey = Int((tableWidth * 100).rounded())
+        let cacheKey = "\(widthKey)|\(item.title)|\(String(reflecting: item.vcType))"
+        if let cachedHeight = innerRowHeightCache[cacheKey] { return cachedHeight }
+        let contentView = innerContentConfiguration(for: item).makeContentView()
+        let fittedSize = contentView.systemLayoutSizeFitting(
+            CGSize(
+                width: max(tableWidth - innerCellAccessoryReservedWidth, 1),
+                height: UIView.layoutFittingCompressedSize.height
+            ),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        let resolvedHeight = max(innerMinimumRowH, ceil(fittedSize.height))
+        innerRowHeightCache[cacheKey] = resolvedHeight
+        return resolvedHeight
+    }
+
+    private static func innerContentConfiguration(for item: DemoItem) -> UIListContentConfiguration {
+        var config = UIListContentConfiguration.subtitleCell()
+        config.text = item.title
+        config.secondaryText = String(describing: item.vcType)
+        config.image = demoIconImage(for: item)
+        config.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: innerCellVerticalInset,
+            leading: innerCellHorizontalInset,
+            bottom: innerCellVerticalInset,
+            trailing: innerCellHorizontalInset
+        )
+        config.imageProperties.maximumSize = CGSize(
+            width: innerCellImageWidth,
+            height: innerCellImageWidth
+        )
+        config.imageToTextPadding = innerCellImageToTextPadding
+        config.textToSecondaryTextVerticalPadding = innerCellTitleSubTitleGap
+        config.textProperties.font = innerTitleFont
+        config.textProperties.color = RootListPreferences.foldPrimaryTextColor
+        config.textProperties.numberOfLines = 0
+        config.textProperties.lineBreakMode = .byWordWrapping
+        config.secondaryTextProperties.font = innerSubTitleFont
+        config.secondaryTextProperties.color = RootListPreferences.foldSecondaryTextColor
+        config.secondaryTextProperties.numberOfLines = 1
+        config.secondaryTextProperties.lineBreakMode = .byTruncatingTail
+        return config
+    }
+
+    private func updateInnerTableHeight(tableWidth: CGFloat? = nil) {
+        guard isExpanded else {
+            innerTableHeight?.update(offset: 0)
+            return
+        }
+        let resolvedWidth = tableWidth
+        ?? contentView.bounds.width - Self.cardHorizontalInset * 2
+        guard resolvedWidth > 0 else { return }
+        let contentHeight = Self.innerTableContentHeight(items: items, tableWidth: resolvedWidth)
+        innerTableHeight?.update(offset: contentHeight)
+        let expandedHeight = Self.collapsedHeight()
+            + Self.innerTop
+            + contentHeight
+            + Self.innerBottom
+        guard abs(expandedHeight - lastReportedExpandedHeight) > 0.5 else { return }
+        lastReportedExpandedHeight = expandedHeight
+        expandedHeightDidChange?(expandedHeight)
     }
 
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
+                   expandedHeightDidChange: @escaping (CGFloat) -> Void,
                    onSelectItem: @escaping (Int) -> Void,
                    pinItem: @escaping (Int) -> Void) {
         pinnedSectionStyle = false
         self.items = items
+        self.expandedHeightDidChange = expandedHeightDidChange
         self.onSelectItem = onSelectItem
         self.onPinItem = pinItem
+        lastReportedExpandedHeight = 0
         pinAccessoryIndex = nil
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
@@ -249,12 +353,15 @@ extension RootFoldTableCell{
 
     func configurePinned(groupTitle: String,
                          items: [DemoItem],
+                         expandedHeightDidChange: @escaping (CGFloat) -> Void,
                          selectItem: @escaping (Int) -> Void,
                          unpinItem: @escaping (Int) -> Void) {
         pinnedSectionStyle = true
         self.items = items
+        self.expandedHeightDidChange = expandedHeightDidChange
         self.onSelectItem = selectItem
         self.onPinItem = unpinItem
+        lastReportedExpandedHeight = 0
         pinAccessoryIndex = nil
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
@@ -270,8 +377,7 @@ extension RootFoldTableCell{
         let targetExpanded = pinnedSectionStyle ? true : expanded
         isExpanded = targetExpanded
         subTitleLab.byText(subTitleText(expanded: targetExpanded))
-        let targetH: CGFloat = targetExpanded ? CGFloat(items.count) * Self.innerRowH : 0
-        innerTableHeight?.update(offset: targetH)
+        updateInnerTableHeight()
         // ✅ 展开前先把容器露出来（折叠完成后会隐藏回去）
         if targetExpanded || animated {
             detailClip.byVisible(YES)
@@ -318,6 +424,7 @@ extension RootFoldTableCell{
                 detailClip.byVisible(NO) // ✅ 非动画折叠：直接隐藏
             }
         }
+        syncChargingProgressAnimationState()
     }
 
     @objc private func handleInnerCellLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -352,23 +459,26 @@ extension RootFoldTableCell{
         return "\(items.count) 个 Demo · \(stateText)"
     }
 
-    private func subTitleText(for item: DemoItem) -> String {
-        String(describing: item.vcType)
+    private var chargingProgressIndexPath: IndexPath? {
+        guard let row = items.firstIndex(where: { $0.vcType == JobsSysProgressDemoVC.self }) else {
+            return nil
+        };return IndexPath(row: row, section: 0)
     }
 
-    private func displayTitle(for item: DemoItem) -> String {
-        guard item.vcType == JobsProgressDemoVC.self else { return item.title }
-        let state = Self.chargingProgressStates[chargingProgressPhase]
-        return "\(state) \(item.title)"
-    }
-
-    func updateChargingProgress(phase: Int) {
-        chargingProgressPhase = max(0, phase) % Self.chargingProgressStates.count
-        for indexPath in innerTableView.indexPathsForVisibleRows ?? [] {
-            guard items.indices.contains(indexPath.row),
-                  items[indexPath.row].vcType == JobsProgressDemoVC.self else { continue }
-            innerTableView.cellForRow(at: indexPath)?.textLabel?.byText(displayTitle(for: items[indexPath.row]))
+    private func syncChargingProgressAnimationState() {
+        guard let chargingProgressIndexPath,
+              let cell = innerTableView.cellForRow(at: chargingProgressIndexPath) else { return }
+        if window != nil, isExpanded {
+            cell.byChargingAnimationResume()
+        } else {
+            cell.byChargingAnimationPause()
         }
+    }
+
+    private func stopChargingProgressAnimation() {
+        guard let chargingProgressIndexPath else { return }
+        innerTableView.cellForRow(at: chargingProgressIndexPath)?
+            .byChargingAnimationStop()
     }
 
     private static let demoIconSymbolNamesByVCType: [String: String] = {
@@ -386,6 +496,7 @@ extension RootFoldTableCell{
             "TimerDemoVC": "timer", "JobsTimerMgrDemoVC": "stopwatch",
             "JobsMultiTimerTableDemoVC": "list.number", "AnimationEffectLabelDemoVC": "textformat.123",
             "AnimatedButtonNumberDemoVC": "capsule", "JobsMarqueeDemoVC": "text.line.first.and.arrowtriangle.forward",
+            "JobsScrollingLabelDemoVC": "text.line.last.and.arrowtriangle.forward",
             "JobsCountdownDemoVC": "hourglass", "ClockDemoVC": "clock",
             "LuckyWheelDemoVC": "circle.grid.cross", "RedPacketRainDemoVC": "envelope.open",
             "JobsCountdownLayerDemoVC": "flame", "JobsSysProgressDemoVC": "gauge",
@@ -408,9 +519,11 @@ extension RootFoldTableCell{
             "JobsAudioRecorderDemoVC": "mic.fill",
             "JobsBluetoothDemoVC": "antenna.radiowaves.left.and.right",
             "JobsCoreMotionDemoVC": "gyroscope",
+            "JobsWidgetDemoVC": "widget.small",
             "BtnFullOnCVCellDemoVC": "rectangle.grid.1x2", "BtnFullOnTBVCellDemoVC": "rectangle.grid.3x2",
             "JobsNavigationDemoVC": "arrow.triangle.turn.up.right.diamond", "LocalNotificationDemoVC": "bell",
             "JobsSwiftRefresherDemoVC": "arrow.clockwise", "JobsSwiftRefresherBy非正式协议闭包化DemoVC": "arrow.triangle.2.circlepath",
+            "JobsDouyinRefreshDemoVC": "music.note",
             "KeyboardDemoVC": "keyboard", "PhotoAlbumDemoVC": "camera",
             "JobsSwiftCountryCodeCtrlDemoVC": "flag", "JobsSwiftCalendarDemoVC": "calendar.badge.plus",
             "JobsSwiftPatchDemoVC": "wrench", "JobsControlEventsDemoVC": "gamecontroller",
@@ -430,14 +543,14 @@ extension RootFoldTableCell{
         return names
     }()
 
-    private func demoIconSymbolName(for item: DemoItem) -> String {
+    private static func demoIconSymbolName(for item: DemoItem) -> String {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
-        guard let symbolName = Self.demoIconSymbolNamesByVCType[vcName] else {
+        guard let symbolName = demoIconSymbolNamesByVCType[vcName] else {
             preconditionFailure("Demo 入口 \(vcName) 必须显式配置贴合内容且不重复的图标")
         };return symbolName
     }
 
-    private func demoIconImage(for item: DemoItem) -> UIImage {
+    private static func demoIconImage(for item: DemoItem) -> UIImage {
         demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
     }
 
@@ -476,13 +589,10 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
         let item = items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.innerCellReuseID) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
-        cell.byText(displayTitle(for: item))
-            .bySecondaryText(subTitleText(for: item))
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-            .byDetailTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
-            .byTitleCor(RootListPreferences.foldPrimaryTextColor)
-            .byDetailTitleCor(RootListPreferences.foldSecondaryTextColor)
-            .byImage(demoIconImage(for: item))
+        cell.byChargingAnimationStop()
+            .byContentConfiguration { config in
+                config = Self.innerContentConfiguration(for: item)
+        }
         cell.byBackgroundColor(JobsCor.clear)
         cell.contentView.byBackgroundColor(JobsCor.clear)
         cell.byTintColor(RootListPreferences.foldSecondaryTextColor)
@@ -495,12 +605,18 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
             cell.accessoryView = pinAccessoryButton(index: indexPath.row)
         } else {
             cell.byAccessoryType(.disclosureIndicator)
+        }
+        if item.vcType == JobsSysProgressDemoVC.self {
+            cell.byChargingAnimationStart(Self.chargingAnimationConfig)
+            if window == nil || !isExpanded {
+                cell.byChargingAnimationPause()
+            }
         };return cell
     }
 
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Self.innerRowH
+        guard items.indices.contains(indexPath.row) else { return Self.innerMinimumRowH };return Self.innerRowHeight(for: items[indexPath.row], tableWidth: tableView.bounds.width)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

@@ -93,7 +93,7 @@ extension UIButton {
     public func jobsResetBtnImage(_ image: UIImage?, for state: UIControl.State) {
         if #available(iOS 15.0, *) {
             self.configuration = (self.configuration ?? .plain()).byImage(image)
-            byUpdateConfig()
+            self.automaticallyUpdatesConfiguration = true
         } else {
             // ✅ 旧系统走 legacy API
             self.setImage(image, for: state)
@@ -123,9 +123,8 @@ extension UIButton {
             self.automaticallyUpdatesConfiguration = true
             // self.setNeedsUpdateConfiguration()  // ← 刻意不在这里触发
         }
-        // 保险刷新
+        // 异步图片回调可能和 UIButton 内部过渡动画重叠，只标记下一帧布局。
         self.setNeedsLayout()
-        self.layoutIfNeeded()
         self.setNeedsDisplay()
     }
 

@@ -28,6 +28,7 @@ public final class JobsSplashVC: BaseVC {
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     private var hasFinished = false
+    private var hostGestureRestoration: (() -> Void)?
 
     private var isCountdownTime: Bool {
         get {
@@ -166,6 +167,7 @@ public final class JobsSplashVC: BaseVC {
     }
 
     deinit {
+        restoreHostGesturesIfNeeded()
         skipButton.countdownStop(resetUI: false)
         mediaTask?.cancel()
         player?.pause()
@@ -180,6 +182,7 @@ public final class JobsSplashVC: BaseVC {
         skipButton.countdownStop(resetUI: false)
         mediaTask?.cancel()
         player?.pause()
+        restoreHostGesturesIfNeeded()
         configuration.onSkip?(self)
         if presentingViewController != nil {
             dismiss(animated: false)
@@ -190,6 +193,10 @@ public final class JobsSplashVC: BaseVC {
             view.removeFromSuperview()
             removeFromParent()
         }
+    }
+
+    func restoreHostGesturesOnFinish(_ block: @escaping () -> Void) {
+        hostGestureRestoration = block
     }
 
     private func renderContent() {
@@ -304,5 +311,11 @@ public final class JobsSplashVC: BaseVC {
         case .none:
             break
         }
+    }
+
+    private func restoreHostGesturesIfNeeded() {
+        guard let hostGestureRestoration else { return }
+        self.hostGestureRestoration = nil
+        hostGestureRestoration()
     }
 }

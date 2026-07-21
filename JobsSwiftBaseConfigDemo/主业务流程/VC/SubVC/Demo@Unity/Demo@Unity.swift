@@ -54,6 +54,17 @@ final class UnityDemoVC: BaseVC {
                 make.bottom.equalTo(closeTimeTextField.snp.top).offset(-8)
             }
     }()
+    /// 显式返回入口，避免 Unity Demo 页依赖导航栏默认按钮的生成时机。
+    private lazy var navigationBackButton: UIButton = {
+        UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 72, height: 32))
+            .byTitle("‹ 返回".tr, for: .normal)
+            .byTitleColor(JobsCor.systemBlue, for: .normal)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                self.goBack("")
+            }
+    }()
     /// 输入自动关闭时间（秒）
     private lazy var closeTimeTextField: UITextField = {
         UITextField()
@@ -116,7 +127,7 @@ final class UnityDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "Unity@Demo")
+        jobsSetupGKNav(title: "Unity@Demo", leftButton: navigationBackButton)
         unityContainerView.byVisible(YES)
         startUnityButton.byVisible(YES)
         closeTimeTextField.byVisible(YES)

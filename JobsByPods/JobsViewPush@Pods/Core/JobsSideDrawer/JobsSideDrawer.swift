@@ -7,6 +7,9 @@
 
 import UIKit
 
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
+
 public enum JobsSideDrawerDirection: Int, CaseIterable {
     case top, bottom, left, right
 }
@@ -23,23 +26,51 @@ public final class JobsSideDrawerConfiguration {
     public var animationDuration: TimeInterval
     public var dimColor: UIColor
     public var allowsInteractiveTransition: Bool
+    /// 返回 `false` 时禁止本次边缘打开手势，不影响已打开抽屉的关闭手势。
+    public var shouldBeginOpeningGesture: (() -> Bool)?
+    /// 低速拖动完成开关所需的位移比例。
+    public var interactiveCompletionThreshold: CGFloat
+    /// 超过该速度时以甩动方向直接决定开关结果。
+    public var interactiveVelocityThreshold: CGFloat
+    /// 用当前速度预测松手后进度的时间窗口。
+    public var interactiveProjectionTime: TimeInterval
+    /// 主轴速度达到副轴速度的该比例后即可接管手势。
+    public var interactiveAxisDominanceRatio: CGFloat
 
     public init(direction: JobsSideDrawerDirection = .left,
                 contentMode: JobsSideDrawerContentMode = .following,
                 presentedRatio: CGFloat = 0.5,
                 animationDuration: TimeInterval = 0.28,
-                dimColor: UIColor = UIColor.black.withAlphaComponent(0.35),
-                allowsInteractiveTransition: Bool = true) {
+                dimColor: UIColor = JobsCor.black.withAlphaComponent(0.35),
+                allowsInteractiveTransition: Bool = true,
+                shouldBeginOpeningGesture: (() -> Bool)? = nil,
+                interactiveCompletionThreshold: CGFloat = 0.28,
+                interactiveVelocityThreshold: CGFloat = 360,
+                interactiveProjectionTime: TimeInterval = 0.18,
+                interactiveAxisDominanceRatio: CGFloat = 0.8) {
         self.direction = direction
         self.contentMode = contentMode
         self.presentedRatio = max(0.1, min(1, presentedRatio))
-        self.animationDuration = animationDuration
+        self.animationDuration = max(animationDuration, 0)
         self.dimColor = dimColor
         self.allowsInteractiveTransition = allowsInteractiveTransition
+        self.shouldBeginOpeningGesture = shouldBeginOpeningGesture
+        self.interactiveCompletionThreshold = max(0.05, min(0.95, interactiveCompletionThreshold))
+        self.interactiveVelocityThreshold = max(interactiveVelocityThreshold, 0)
+        self.interactiveProjectionTime = max(interactiveProjectionTime, 0)
+        self.interactiveAxisDominanceRatio = max(0, min(1, interactiveAxisDominanceRatio))
     }
 }
 
 public final class JobsSideDrawerVC: UIViewController {
+    private enum InteractionIntent {
+        case opening
+        case closing
+    }
+
+    private static let progressEpsilon: CGFloat = 0.001
+    private static let minimumSettlementDuration: TimeInterval = 0.12
+
     public static var defaultMenuWidth: CGFloat { UIScreen.main.bounds.width * 0.5 }
     public private(set) var isOpen = false
     public let configuration: JobsSideDrawerConfiguration
@@ -50,17 +81,32 @@ public final class JobsSideDrawerVC: UIViewController {
     private let mainContentView: UIView
     private let drawerContainerView = UIView()
     private let contentContainerView = UIView()
-    private lazy var openGesture = UIScreenEdgePanGestureRecognizer(target: self,
-                                                                    action: #selector(handleOpenGesture(_:)))
-    private lazy var closeGesture = UIPanGestureRecognizer(target: self,
-                                                           action: #selector(handleCloseGesture(_:)))
-    private var interactiveProgress: CGFloat?
+    private lazy var openGesture: UIScreenEdgePanGestureRecognizer = {
+        UIScreenEdgePanGestureRecognizer
+            .byConfig { [weak self] (gesture: UIScreenEdgePanGestureRecognizer) in
+                self?.updateInteractiveTransition(gesture, intent: .opening)
+            }
+            .byDelegate(self)
+            .byCancelsTouchesInView(true)
+    }()
+    private lazy var closeGesture: UIPanGestureRecognizer = {
+        UIPanGestureRecognizer
+            .byConfig { [weak self] (gesture: UIPanGestureRecognizer) in
+                self?.updateInteractiveTransition(gesture, intent: .closing)
+            }
+            .byDelegate(self)
+            .byCancelsTouchesInView(true)
+    }()
+    private var currentProgress: CGFloat = 0
+    private var interactionStartProgress: CGFloat?
+    private var interactionIntent: InteractionIntent?
     private var isAnimatingTransition = false
+    private var transitionGeneration = 0
     private lazy var dimControl: UIControl = {
         let control = UIControl()
-        control.backgroundColor = configuration.dimColor
-        control.alpha = 0
-        control.isHidden = true
+            .byBackgroundColor(configuration.dimColor)
+            .byAlpha(0)
+            .byHidden(true)
         control.addTarget(self, action: #selector(closeFromDim), for: .touchUpInside)
         return control
     }()
@@ -101,23 +147,21 @@ public final class JobsSideDrawerVC: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.byBackgroundColor(JobsCor.black)
         installChildren()
-        view.addSubview(contentContainerView)
-        view.addSubview(drawerContainerView)
-        contentContainerView.addSubview(mainContentView)
-        contentContainerView.addSubview(dimControl)
-        drawerContainerView.addSubview(drawerContentView)
-        openGesture.delegate = self
-        closeGesture.delegate = self
-        view.addGestureRecognizer(openGesture)
-        drawerContainerView.addGestureRecognizer(closeGesture)
+        contentContainerView.byAddTo(view)
+        drawerContainerView.byAddTo(view)
+        mainContentView.byAddTo(contentContainerView)
+        dimControl.byAddTo(contentContainerView)
+        drawerContentView.byAddTo(drawerContainerView)
+        view.jobs_addGestureRetView(openGesture)
+            .jobs_addGestureRetView(closeGesture)
         updateGestureConfiguration()
-        mainContentView.frame = contentContainerView.bounds
-        drawerContentView.frame = drawerContainerView.bounds
-        dimControl.frame = contentContainerView.bounds
+        mainContentView.byFrame(contentContainerView.bounds)
+        drawerContentView.byFrame(drawerContainerView.bounds)
+        dimControl.byFrame(contentContainerView.bounds)
         [mainContentView, drawerContentView, dimControl].forEach {
-            $0.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            $0.byAutoresizingMask([.flexibleWidth, .flexibleHeight])
         }
         mainVC?.didMove(toParent: self)
         drawerVC?.didMove(toParent: self)
@@ -125,11 +169,13 @@ public final class JobsSideDrawerVC: UIViewController {
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        layoutDrawer(progress: interactiveProgress ?? (isOpen ? 1 : 0))
+        let progress = interactionStartProgress == nil ? (isOpen ? 1 : 0) : currentProgress
+        layoutDrawer(progress: progress)
     }
 
     public func applyConfiguration(animated: Bool = false) {
-        configuration.presentedRatio = max(0.1, min(1, configuration.presentedRatio))
+        normalizeConfiguration()
+        dimControl.byBackgroundColor(configuration.dimColor)
         updateGestureConfiguration()
         setDrawer(open: isOpen, animated: animated)
     }
@@ -151,55 +197,62 @@ public final class JobsSideDrawerVC: UIViewController {
         if let mainVC { addChild(mainVC) }
     }
 
-    private func setDrawer(open: Bool, animated: Bool) {
-        let wasInteractive = interactiveProgress != nil
-        if !wasInteractive { view.layoutIfNeeded() }
-        interactiveProgress = nil
-        isAnimatingTransition = animated
+    private func setDrawer(open: Bool,
+                           animated: Bool,
+                           initialVelocity: CGFloat = 0) {
+        let startProgress = stopTransitionAtRenderedProgress()
+        interactionStartProgress = nil
+        interactionIntent = nil
         isOpen = open
-        if open { dimControl.isHidden = false }
+        let targetProgress: CGFloat = open ? 1 : 0
+        if open || startProgress > Self.progressEpsilon {
+            dimControl.byHidden(false)
+        }
+        let remainingProgress = abs(targetProgress - startProgress)
+        guard animated,
+              configuration.animationDuration > 0,
+              remainingProgress > Self.progressEpsilon else {
+            layoutDrawer(progress: targetProgress)
+            finishTransition(open: open)
+            return
+        }
+        isAnimatingTransition = true
         updateGestureAvailability()
-        let changes = { [weak self] in
+        transitionGeneration += 1
+        let generation = transitionGeneration
+        let changes: () -> Void = { [weak self] in
             guard let self else { return }
-            self.layoutDrawer(progress: open ? 1 : 0)
+            self.layoutDrawer(progress: targetProgress)
         }
         let completion: (Bool) -> Void = { [weak self] _ in
-            self?.isAnimatingTransition = false
-            if !open { self?.dimControl.isHidden = true }
-            self?.updateGestureAvailability()
+            guard let self,
+                  self.transitionGeneration == generation else { return }
+            self.layoutDrawer(progress: targetProgress)
+            self.finishTransition(open: open)
         }
-        guard animated else { changes(); completion(true); return }
-        UIView.animate(withDuration: configuration.animationDuration,
-                       delay: 0,
-                       usingSpringWithDamping: 0.92,
-                       initialSpringVelocity: 0,
-                       options: [.curveEaseInOut, .allowUserInteraction],
-                       animations: changes,
-                       completion: completion)
+        UIView.jobsAnimateWithOptions(
+            settlementDuration(from: startProgress,
+                               to: targetProgress,
+                               initialVelocity: initialVelocity),
+            delay: 0,
+            options: [.curveEaseOut, .beginFromCurrentState, .allowUserInteraction],
+            animations: changes,
+            completion: completion
+        )
     }
 
     private func layoutDrawer(progress: CGFloat) {
         let bounds = view.bounds
         let progress = max(0, min(1, progress))
-        let horizontal = configuration.direction == .left || configuration.direction == .right
-        let distance = (horizontal ? bounds.width : bounds.height) * configuration.presentedRatio
-        var shownFrame = bounds
-        if horizontal { shownFrame.size.width = distance } else { shownFrame.size.height = distance }
-        if configuration.direction == .right { shownFrame.origin.x = bounds.width - distance }
-        if configuration.direction == .bottom { shownFrame.origin.y = bounds.height - distance }
-        var hiddenFrame = shownFrame
-        switch configuration.direction {
-        case .left: hiddenFrame.origin.x = -distance
-        case .right: hiddenFrame.origin.x = bounds.width
-        case .top: hiddenFrame.origin.y = -distance
-        case .bottom: hiddenFrame.origin.y = bounds.height
-        }
-        drawerContainerView.frame = CGRect(
-            x: hiddenFrame.origin.x + (shownFrame.origin.x - hiddenFrame.origin.x) * progress,
-            y: hiddenFrame.origin.y + (shownFrame.origin.y - hiddenFrame.origin.y) * progress,
-            width: shownFrame.width,
-            height: shownFrame.height
-        )
+        currentProgress = progress
+        let frames = drawerFrames(in: bounds)
+        let distance = interactiveDistance()
+        drawerContainerView.byFrame(CGRect(
+            x: frames.hidden.origin.x + (frames.shown.origin.x - frames.hidden.origin.x) * progress,
+            y: frames.hidden.origin.y + (frames.shown.origin.y - frames.hidden.origin.y) * progress,
+            width: frames.shown.width,
+            height: frames.shown.height
+        ))
         var contentFrame = bounds
         if configuration.contentMode == .following {
             switch configuration.direction {
@@ -209,13 +262,15 @@ public final class JobsSideDrawerVC: UIViewController {
             case .bottom: contentFrame.origin.y -= distance * progress
             }
         }
-        contentContainerView.transform = .identity
-        contentContainerView.frame = contentFrame
-        drawerContentView.frame = drawerContainerView.bounds
-        mainContentView.frame = contentContainerView.bounds
-        dimControl.frame = contentContainerView.bounds
-        dimControl.alpha = progress
-        view.bringSubviewToFront(drawerContainerView)
+        contentContainerView
+            .byTransform(.identity)
+            .byFrame(contentFrame)
+        drawerContentView.byFrame(drawerContainerView.bounds)
+        mainContentView.byFrame(contentContainerView.bounds)
+        dimControl
+            .byFrame(contentContainerView.bounds)
+            .byAlpha(progress)
+        view.byBringToFront(drawerContainerView)
     }
 
     private func updateGestureConfiguration() {
@@ -229,9 +284,9 @@ public final class JobsSideDrawerVC: UIViewController {
     }
 
     private func updateGestureAvailability() {
-        let allowsGesture = configuration.allowsInteractiveTransition && !isAnimatingTransition
-        openGesture.isEnabled = allowsGesture && !isOpen
-        closeGesture.isEnabled = allowsGesture && isOpen
+        let allowsGesture = configuration.allowsInteractiveTransition
+        openGesture.byEnabled(allowsGesture && !isOpen)
+        closeGesture.byEnabled(allowsGesture && isOpen)
     }
 
     private func interactiveDistance() -> CGFloat {
@@ -240,12 +295,12 @@ public final class JobsSideDrawerVC: UIViewController {
         return max(length * configuration.presentedRatio, 1)
     }
 
-    private func openingOffset(for translation: CGPoint) -> CGFloat {
+    private func openingTranslation(for translation: CGPoint) -> CGFloat {
         switch configuration.direction {
-        case .left: return max(translation.x, 0)
-        case .right: return max(-translation.x, 0)
-        case .top: return max(translation.y, 0)
-        case .bottom: return max(-translation.y, 0)
+        case .left: return translation.x
+        case .right: return -translation.x
+        case .top: return translation.y
+        case .bottom: return -translation.y
         }
     }
 
@@ -258,37 +313,20 @@ public final class JobsSideDrawerVC: UIViewController {
         }
     }
 
-    private func updateInteractiveTransition(_ gesture: UIPanGestureRecognizer, opening: Bool) {
-        let translation = gesture.translation(in: view)
-        let directionalOffset = opening
-            ? openingOffset(for: translation)
-            : max(-openingVelocity(for: translation), 0)
-        let progress = min(directionalOffset / interactiveDistance(), 1)
-        let targetProgress = opening ? progress : 1 - progress
+    private func updateInteractiveTransition(_ gesture: UIPanGestureRecognizer,
+                                             intent: InteractionIntent) {
         switch gesture.state {
         case .began:
-            dimControl.isHidden = false
-            interactiveProgress = opening ? 0 : 1
-            layoutDrawer(progress: interactiveProgress ?? 0)
+            beginInteraction(intent: intent)
+            updateInteractionProgress(using: gesture)
         case .changed:
-            interactiveProgress = targetProgress
-            layoutDrawer(progress: targetProgress)
+            updateInteractionProgress(using: gesture)
         case .ended, .cancelled, .failed:
-            let openingVelocity = openingVelocity(for: gesture.velocity(in: view))
-            let directionalVelocity = opening ? openingVelocity : -openingVelocity
-            let completed = gesture.state == .ended && (progress >= 0.35 || directionalVelocity >= 500)
-            setDrawer(open: opening ? completed : !completed, animated: true)
+            updateInteractionProgress(using: gesture)
+            finishInteraction(using: gesture, intent: intent)
         default:
             break
         }
-    }
-
-    @objc private func handleOpenGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
-        updateInteractiveTransition(gesture, opening: true)
-    }
-
-    @objc private func handleCloseGesture(_ gesture: UIPanGestureRecognizer) {
-        updateInteractiveTransition(gesture, opening: false)
     }
 
     @objc private func closeFromDim() {
@@ -298,15 +336,227 @@ public final class JobsSideDrawerVC: UIViewController {
 
 extension JobsSideDrawerVC: UIGestureRecognizerDelegate {
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard gestureRecognizer === closeGesture,
-              let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return true }
+        guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return true }
+        let intent: InteractionIntent = gestureRecognizer === openGesture ? .opening : .closing
+        if intent == .opening,
+           let shouldBeginOpeningGesture = configuration.shouldBeginOpeningGesture,
+           !shouldBeginOpeningGesture() {
+            return false
+        }
         let velocity = panGesture.velocity(in: view)
-        let horizontal = configuration.direction == .left || configuration.direction == .right
         let primaryVelocity = openingVelocity(for: velocity)
-        let isPrimaryDirection = horizontal
-            ? abs(velocity.x) > abs(velocity.y)
-            : abs(velocity.y) > abs(velocity.x)
-        return isPrimaryDirection && primaryVelocity < 0
+        guard isExpectedDirection(primaryVelocity, for: intent),
+              isPrimaryAxisDominant(for: velocity) else { return false }
+        if intent == .closing,
+           let scrollView = touchedScrollView(for: panGesture),
+           scrollViewCanConsume(velocity: velocity, in: scrollView) {
+            return false
+        };return true
+    }
+
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                  shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer === openGesture || gestureRecognizer === closeGesture,
+              otherGestureRecognizer.view is UIScrollView,
+              let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+        let intent: InteractionIntent = gestureRecognizer === openGesture ? .opening : .closing
+        let velocity = panGesture.velocity(in: view)
+        return isExpectedDirection(openingVelocity(for: velocity), for: intent)
+            && isPrimaryAxisDominant(for: velocity)
+    }
+}
+
+private extension JobsSideDrawerVC {
+    func normalizeConfiguration() {
+        configuration.presentedRatio = max(0.1, min(1, configuration.presentedRatio))
+        configuration.animationDuration = max(configuration.animationDuration, 0)
+        configuration.interactiveCompletionThreshold = max(
+            0.05,
+            min(0.95, configuration.interactiveCompletionThreshold)
+        )
+        configuration.interactiveVelocityThreshold = max(configuration.interactiveVelocityThreshold, 0)
+        configuration.interactiveProjectionTime = max(configuration.interactiveProjectionTime, 0)
+        configuration.interactiveAxisDominanceRatio = max(
+            0,
+            min(1, configuration.interactiveAxisDominanceRatio)
+        )
+    }
+
+    func drawerFrames(in bounds: CGRect) -> (shown: CGRect, hidden: CGRect) {
+        let horizontal = configuration.direction == .left || configuration.direction == .right
+        let distance = (horizontal ? bounds.width : bounds.height) * configuration.presentedRatio
+        var shownFrame = bounds
+        if horizontal {
+            shownFrame.size.width = distance
+        } else {
+            shownFrame.size.height = distance
+        }
+        if configuration.direction == .right { shownFrame.origin.x = bounds.width - distance }
+        if configuration.direction == .bottom { shownFrame.origin.y = bounds.height - distance }
+        var hiddenFrame = shownFrame
+        switch configuration.direction {
+        case .left: hiddenFrame.origin.x = -distance
+        case .right: hiddenFrame.origin.x = bounds.width
+        case .top: hiddenFrame.origin.y = -distance
+        case .bottom: hiddenFrame.origin.y = bounds.height
+        };return (shownFrame, hiddenFrame)
+    }
+
+    func stopTransitionAtRenderedProgress() -> CGFloat {
+        let progress = isAnimatingTransition ? renderedProgress() : currentProgress
+        transitionGeneration += 1
+        [drawerContainerView, contentContainerView, dimControl].forEach {
+            $0.layer.removeAllAnimations()
+        }
+        isAnimatingTransition = false
+        layoutDrawer(progress: progress)
+        return progress
+    }
+
+    func renderedProgress() -> CGFloat {
+        guard let presentationFrame = drawerContainerView.layer.presentation()?.frame else {
+            return currentProgress
+        }
+        let frames = drawerFrames(in: view.bounds)
+        let shownOrigin: CGFloat
+        let hiddenOrigin: CGFloat
+        let currentOrigin: CGFloat
+        switch configuration.direction {
+        case .left, .right:
+            shownOrigin = frames.shown.origin.x
+            hiddenOrigin = frames.hidden.origin.x
+            currentOrigin = presentationFrame.origin.x
+        case .top, .bottom:
+            shownOrigin = frames.shown.origin.y
+            hiddenOrigin = frames.hidden.origin.y
+            currentOrigin = presentationFrame.origin.y
+        }
+        let travel = shownOrigin - hiddenOrigin
+        guard abs(travel) > Self.progressEpsilon else { return currentProgress };return max(
+            0,
+            min(1, (currentOrigin - hiddenOrigin) / travel)
+        )
+    }
+
+    func finishTransition(open: Bool) {
+        isAnimatingTransition = false
+        if !open { dimControl.byHidden(true) }
+        updateGestureAvailability()
+    }
+
+    func settlementDuration(from startProgress: CGFloat,
+                            to targetProgress: CGFloat,
+                            initialVelocity: CGFloat) -> TimeInterval {
+        let remainingProgress = abs(targetProgress - startProgress)
+        let maximumDuration = configuration.animationDuration
+        let minimumDuration = min(Self.minimumSettlementDuration, maximumDuration)
+        var duration = max(minimumDuration, maximumDuration * TimeInterval(remainingProgress))
+        let velocity = abs(initialVelocity)
+        if velocity >= configuration.interactiveVelocityThreshold,
+           velocity > 0 {
+            let remainingPoints = remainingProgress * interactiveDistance()
+            let velocityDuration = TimeInterval(remainingPoints / velocity) * 0.85
+            duration = min(duration, max(minimumDuration, velocityDuration))
+        }
+        if UIAccessibility.isReduceMotionEnabled {
+            duration = min(duration, minimumDuration)
+        };return min(duration, maximumDuration)
+    }
+
+    private func beginInteraction(intent: InteractionIntent) {
+        let progress = stopTransitionAtRenderedProgress()
+        interactionIntent = intent
+        interactionStartProgress = progress
+        if progress > Self.progressEpsilon || intent == .opening {
+            dimControl.byHidden(false)
+        }
+    }
+
+    func updateInteractionProgress(using gesture: UIPanGestureRecognizer) {
+        guard let startProgress = interactionStartProgress else { return }
+        let translation = openingTranslation(for: gesture.translation(in: view))
+        let progress = startProgress + translation / interactiveDistance()
+        layoutDrawer(progress: progress)
+    }
+
+    private func finishInteraction(using gesture: UIPanGestureRecognizer,
+                                   intent: InteractionIntent) {
+        guard interactionIntent == intent else { return }
+        let velocity = openingVelocity(for: gesture.velocity(in: view))
+        let shouldOpen: Bool
+        if gesture.state != .ended {
+            shouldOpen = intent == .closing
+        } else if abs(velocity) >= configuration.interactiveVelocityThreshold {
+            shouldOpen = velocity > 0
+        } else {
+            let projectedProgress = max(
+                0,
+                min(
+                    1,
+                    currentProgress
+                        + velocity / interactiveDistance() * CGFloat(configuration.interactiveProjectionTime)
+                )
+            )
+            switch intent {
+            case .opening:
+                shouldOpen = max(currentProgress, projectedProgress)
+                    >= configuration.interactiveCompletionThreshold
+            case .closing:
+                shouldOpen = min(currentProgress, projectedProgress)
+                    > 1 - configuration.interactiveCompletionThreshold
+            }
+        }
+        setDrawer(open: shouldOpen,
+                  animated: true,
+                  initialVelocity: velocity)
+    }
+
+    private func isExpectedDirection(_ openingVelocity: CGFloat,
+                                     for intent: InteractionIntent) -> Bool {
+        switch intent {
+        case .opening: return openingVelocity > 0
+        case .closing: return openingVelocity < 0
+        }
+    }
+
+    func isPrimaryAxisDominant(for velocity: CGPoint) -> Bool {
+        let horizontal = configuration.direction == .left || configuration.direction == .right
+        let primary = horizontal ? abs(velocity.x) : abs(velocity.y)
+        let secondary = horizontal ? abs(velocity.y) : abs(velocity.x)
+        return primary >= secondary * configuration.interactiveAxisDominanceRatio
+    }
+
+    func touchedScrollView(for gesture: UIPanGestureRecognizer) -> UIScrollView? {
+        let location = gesture.location(in: view)
+        var touchedView = view.hitTest(location, with: nil)
+        while let currentView = touchedView {
+            if let scrollView = currentView as? UIScrollView { return scrollView }
+            touchedView = currentView.superview
+        };return nil
+    }
+
+    func scrollViewCanConsume(velocity: CGPoint,
+                              in scrollView: UIScrollView) -> Bool {
+        guard scrollView.isScrollEnabled else { return false }
+        let horizontal = configuration.direction == .left || configuration.direction == .right
+        let axisVelocity = horizontal ? velocity.x : velocity.y
+        let contentLength = horizontal ? scrollView.contentSize.width : scrollView.contentSize.height
+        let boundsLength = horizontal ? scrollView.bounds.width : scrollView.bounds.height
+        let leadingInset: CGFloat
+        let trailingInset: CGFloat
+        if #available(iOS 11.0, *) {
+            leadingInset = horizontal ? scrollView.adjustedContentInset.left : scrollView.adjustedContentInset.top
+            trailingInset = horizontal ? scrollView.adjustedContentInset.right : scrollView.adjustedContentInset.bottom
+        } else {
+            leadingInset = horizontal ? scrollView.contentInset.left : scrollView.contentInset.top
+            trailingInset = horizontal ? scrollView.contentInset.right : scrollView.contentInset.bottom
+        }
+        guard contentLength + leadingInset + trailingInset > boundsLength + 1 else { return false }
+        let currentOffset = horizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y
+        let minimumOffset = -leadingInset
+        let maximumOffset = max(minimumOffset, contentLength - boundsLength + trailingInset)
+        if axisVelocity < 0 { return currentOffset < maximumOffset - 1 }
+        if axisVelocity > 0 { return currentOffset > minimumOffset + 1 };return false
     }
 }
 

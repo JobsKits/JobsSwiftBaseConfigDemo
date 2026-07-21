@@ -31,6 +31,10 @@ final class UnityManager: NSObject {
     private weak var unityWindow: UIWindow?
     /// 自动关闭用的定时器
     private var autoCloseTimer: JobsSwiftTimerProtocol?
+    /// Unity Runtime 必须从宿主 App 的 Data 目录读取启动配置。
+    private var unityBootConfigPath: String {
+        Bundle.main.bundlePath + "/Data/boot.config"
+    }
     private override init() {
         super.init()
     }
@@ -48,6 +52,10 @@ final class UnityManager: NSObject {
         // 记录 Unity 接管前的宿主窗口
         if hostWindow == nil {
             hostWindow = UIApplication.jobsKeyWindow()
+        }
+        guard FileManager.default.fileExists(atPath: unityBootConfigPath) else {
+            print("❌ Unity Data 未嵌入宿主 App，缺少: \(unityBootConfigPath)")
+            return nil
         }
         // 1. 找到 .app/Frameworks/UnityFramework.framework
         let frameworkPath = Bundle.main.bundlePath + "/Frameworks/UnityFramework.framework"
@@ -68,6 +76,8 @@ final class UnityManager: NSObject {
         }
         // 3. 首次启动 Unity Runtime
         if ufw.appController() == nil {
+            // Unity 官方要求在 runEmbedded 前传入宿主 Mach-O Header。
+            JobsUnitySetExecuteHeader(ufw)
             // 用宿主 App 的 Data 目录
             if let bundleId = Bundle.main.bundleIdentifier {
                 ufw.setDataBundleId(bundleId)

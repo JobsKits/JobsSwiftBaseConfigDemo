@@ -65,13 +65,13 @@ final class TabBarDemoVC: BaseVC {
                         .byTapSound("Sound.wav")
                         .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                         .byCornerBadgeText("NEW".tr) { cfg in
-                            cfg.byOffset(.init(horizontal: -6, vertical: 6))
-                                .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
+                            cfg.byOffset(.init(horizontal: -4, vertical: 4))
+                                .byInset(.init(top: 1, left: 4, bottom: 1, right: 4))
                                 .byBackgroundColor(JobsCor.systemRed)
-                                .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
+                                .byFont(JobsFont.systemFont(ofSize: 9, weight: .semibold))
                                 .byShadow(color: JobsCor.black.withAlphaComponent(0.25),
-                                          radius: 2,
-                                          opacity: 0.6,
+                                          radius: 1,
+                                          opacity: 0.4,
                                           offset: .init(width: 0, height: 1))
                         },
                     /// 普通按钮@（配置事件）
@@ -114,16 +114,17 @@ final class TabBarDemoVC: BaseVC {
                         .byNormalBgColor(JobsCor.clear)
                         .byRichTitle(JobsRichText.make([
                             JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 10, weight: .semibold)).color(JobsCor.systemRed),
-                            JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.green)
+                            JobsRichRun(.text("/月")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.green)
                         ]))
                         .byRichSubTitle(JobsRichText.make([
-                            JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 10)).color(JobsCor.blue.withAlphaComponent(0.8)),
+                            JobsRichRun(.text("原价")).font(JobsFont.systemFont(ofSize: 10)).color(JobsCor.blue.withAlphaComponent(0.8)),
                             JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
                         ]))
                         .byImage("creditcard".sysImg, for: .normal)
                         .byImage("creditcard.fill".sysImg, for: .selected)
-                        .byImagePlacement(.top)
-                        .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10)),
+                        /// 窄等分按钮不保留多余空格和大内边距，避免价格折行后挤压图标。
+                        .byImagePlacement(NSDirectionalRectEdge.top, padding: 2)
+                        .byContentEdgeInsets(.init(top: 2, left: 2, bottom: 2, right: 2)),
                     UIButton.sys()
                         .byNormalBgColor(JobsCor.clear)
                         .byTitle("好友".tr, for: .normal)

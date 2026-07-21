@@ -19,11 +19,12 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsLongPressLikeDemoVC: BaseVC {
+    private var likeLongPressConsumed = false
     private lazy var hapticFeedback = UIImpactFeedbackGenerator(style: .light)
 
     private lazy var hintLabel: UILabel = {
         UILabel()
-            .byText("长按下方大拇指：图标立即变红，持续冒泡并伴随震动反馈".tr)
+            .byText("短按切换点赞状态；长按图标立即变红，持续冒泡并伴随震动与声音反馈".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextAlignment(.center)
@@ -45,13 +46,27 @@ final class JobsLongPressLikeDemoVC: BaseVC {
             .byBackgroundColor(JobsCor.secondarySystemBackground, for: .normal)
             .byCornerRadius(48)
             .byMasksToBounds(false)
+            .onTap { [weak self] button in
+                guard let self, !likeLongPressConsumed else { return }
+                button
+                    .byToggleSelected()
+                    .byTintColor(
+                        button.isSelected
+                            ? JobsCor.systemRed
+                            : JobsCor.secondaryLabel
+                    )
+            }
             .onLongPress(minimumPressDuration: 0.32) { [weak self] button, gesture in
                 guard let self else { return }
                 switch gesture.state {
                 case .began:
+                    likeLongPressConsumed = true
                     beginLike(on: button)
                 case .ended, .cancelled, .failed:
                     endLike(on: button)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
+                        self?.likeLongPressConsumed = false
+                    }
                 default:
                     break
                 }
@@ -73,12 +88,14 @@ final class JobsLongPressLikeDemoVC: BaseVC {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        likeLongPressConsumed = false
         likeButton
             .byFuseBubbleStop()
             .byFusePressScaleStop(animated: false)
     }
 
     private func beginLike(on button: UIButton) {
+        hapticFeedback.prepare()
         button
             .bySelected(YES)
             .byTintColor(JobsCor.systemRed)
@@ -99,11 +116,12 @@ final class JobsLongPressLikeDemoVC: BaseVC {
                         .byFrame(CGRect(x: 0, y: 0, width: 34, height: 34))
                         .byTintColor(JobsCor.systemRed)
                 },
-                onEmit: { [weak self] in
+                onEmit: { [weak self, weak button] in
                     self?.hapticFeedback.impactOccurred()
+                    self?.hapticFeedback.prepare()
+                    button?.byFusePlaySystemSound()
                 }
             )
-        hapticFeedback.prepare()
     }
 
     private func endLike(on button: UIButton) {

@@ -98,23 +98,27 @@ extension UIView {
 public struct JobsShimmerConfig {
     public var baseColor: UIColor
     public var highlightColor: UIColor
-    public var duration: CFTimeInterval
+    public var duration: CFTimeInterval       // 单次扫光时长
+    public var pauseDuration: CFTimeInterval  // 每次扫光后的停顿时长
     public var highlightWidthRatio: CGFloat   // 0 ~ 1
     public static let `default` = JobsShimmerConfig()
     public init(
         baseColor: UIColor = UIColor(gray: 0.90 * 255),
         highlightColor: UIColor = UIColor(gray: 255, alpha: 0.9),
         duration: CFTimeInterval = 1.4,
+        pauseDuration: CFTimeInterval = 0,
         highlightWidthRatio: CGFloat = 0.35
     ) {
         self.baseColor = baseColor
         self.highlightColor = highlightColor
         self.duration = duration
+        self.pauseDuration = pauseDuration
         self.highlightWidthRatio = highlightWidthRatio
     }
 }
 // MARK: - 关联 Key
 private enum JobsShimmerAssociatedKeys {
+    static var containerLayerKey: UInt8 = 0
     static var layerKey: UInt8  = 0
     static var configKey: UInt8 = 0
     static var isOnKey: UInt8   = 0
@@ -177,6 +181,20 @@ extension UIView {
         }
     }
 
+    private var jobs_shimmerContainerLayer: CALayer? {
+        get {
+            objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.containerLayerKey) as? CALayer
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &JobsShimmerAssociatedKeys.containerLayerKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
+    }
+
     private var jobs_shimmerLayer: CAGradientLayer? {
         get {
             objc_getAssociatedObject(self, &JobsShimmerAssociatedKeys.layerKey) as? CAGradientLayer
@@ -224,6 +242,17 @@ extension UIView {
         if let layer = jobs_shimmerLayer {
             return layer
         }
+        let containerLayer = CALayer()
+            .byName("jobs.shimmer.container")
+            .byMasksToBounds(true)
+            .byActions([
+                "bounds": NSNull(),
+                "position": NSNull(),
+                "frame": NSNull(),
+                "cornerRadius": NSNull(),
+                "mask": NSNull()
+            ])
+        self.layer.byAddSublayer(containerLayer)
         let layer = CAGradientLayer()
             .byName("jobs.shimmer.layer")
             // 禁用布局更新时的隐式动画（避免闪一下）
@@ -238,7 +267,8 @@ extension UIView {
             ])
             .byStartPoint(CGPoint(x: 0, y: 0.5))
             .byEndPoint(CGPoint(x: 1, y: 0.5))
-            .byAddSublayer(self.layer)
+        containerLayer.byAddSublayer(layer)
+        jobs_shimmerContainerLayer = containerLayer
         jobs_shimmerLayer = layer
         return layer
     }
@@ -283,14 +313,30 @@ extension UIView {
             jobs_lastAnimationWidth = w
             return
         }
+        let sweepDuration = max(cfg.duration, 0.01)
+        let pauseDuration = max(cfg.pauseDuration, 0)
+        let cycleDuration = sweepDuration + pauseDuration
+        let sweepProgress = sweepDuration / cycleDuration
         layer.add(
-            CABasicAnimation(keyPath: "transform.translation.x")
-                .byFromValue(-w)
-                .byToValue(w)
-                .byDuration(max(cfg.duration, 0.01))
+            CAKeyframeAnimation(keyPath: "transform.translation.x")
+                .byValues([
+                    NSNumber(value: Double(-w)),
+                    NSNumber(value: Double(w)),
+                    NSNumber(value: Double(w))
+                ])
+                .byKeyTimes([
+                    0.0 as NSNumber,
+                    NSNumber(value: sweepProgress),
+                    1.0 as NSNumber
+                ])
+                .byTimingFunctions([
+                    CAMediaTimingFunction(controlPoints: 0.4, 0, 0.2, 1),
+                    CAMediaTimingFunction(name: .linear)
+                ])
+                .byCalculationMode(.linear)
+                .byDuration(cycleDuration)
                 .byRepeatCount(.greatestFiniteMagnitude)
-                .byRemovedOnCompletion(false)
-                .byTimingFunction(CAMediaTimingFunction(name: .linear)), forKey: "jobs.shimmer")
+                .byRemovedOnCompletion(false), forKey: "jobs.shimmer")
         jobs_lastAnimationWidth = w
     }
 }
@@ -343,8 +389,9 @@ extension UIView {
         }
         jobs_isShimmeringStored = false
         jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
-        jobs_shimmerLayer?.removeFromSuperlayer()
+        jobs_shimmerContainerLayer?.removeFromSuperlayer()
         jobs_shimmerLayer = nil
+        jobs_shimmerContainerLayer = nil
         // 恢复原始属性，避免对宿主 view 产生永久副作用
         if let originClips = jobs_originalClipsToBounds {
             clipsToBounds = originClips
@@ -358,17 +405,21 @@ extension UIView {
     }
     /// 视图尺寸变化时调用，更新渐变层 layout（建议在 layoutSubviews 里调用）
     public func jobs_updateShimmerLayout() {
-        guard let layer = jobs_shimmerLayer, jobs_isShimmeringStored else { return }
+        guard let containerLayer = jobs_shimmerContainerLayer,
+              let layer = jobs_shimmerLayer,
+              jobs_isShimmeringStored else { return }
         let w = bounds.width
         let h = bounds.height
         guard w > 0, h > 0 else { return }
         jobs_withoutImplicitAnimations {
+            containerLayer.frame = bounds
             layer.frame = CGRect(x: -w, y: 0, width: w * 3, height: h)
             // 复刻“bar view”常见的圆角效果：
             // - 如果外部已经给 view 配了 cornerRadius，则尊重外部
             // - 否则默认使用 pill（h/2）
             let baseCorner = jobs_originalCornerRadius ?? self.layer.cornerRadius
             let desiredCorner = max(baseCorner, h / 2)
+            containerLayer.cornerRadius = desiredCorner
             layer.cornerRadius = desiredCorner
             self.layer.cornerRadius = max(self.layer.cornerRadius, desiredCorner)
         }
@@ -377,7 +428,8 @@ extension UIView {
     }
     /// 仅给呼吸层设置 mask（SlideToUnlock 用这个来裁掉滑块经过区域）
     public func jobs_setShimmerMask(_ maskLayer: CALayer?) {
-        jobs_shimmerLayer?.mask = maskLayer
+        // mask 必须挂在静止容器上，否则会跟着渐变层一起平移，导致可见区域被裁空。
+        jobs_shimmerContainerLayer?.mask = maskLayer
     }
 }
 // MARK: - DSL
@@ -398,6 +450,40 @@ extension UIView {
         var cfg = jobs_shimmerConfig
         cfg.baseColor = base
         cfg.highlightColor = highlight
+        jobs_shimmerConfig = cfg
+        jobs_updateShimmerColors()
+        return self
+    }
+
+    /// DSL：修改单次扫光时长（不改变开关状态）
+    @discardableResult
+    public func byShimmerDuration(_ duration: CFTimeInterval) -> Self {
+        var cfg = jobs_shimmerConfig
+        cfg.duration = max(duration, 0.01)
+        jobs_shimmerConfig = cfg
+        if jobs_isShimmeringStored {
+            jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
+            jobs_startShimmerAnimationIfNeeded()
+        };return self
+    }
+
+    /// DSL：修改每次扫光后的停顿时长（不改变开关状态）
+    @discardableResult
+    public func byShimmerPauseDuration(_ duration: CFTimeInterval) -> Self {
+        var cfg = jobs_shimmerConfig
+        cfg.pauseDuration = max(duration, 0)
+        jobs_shimmerConfig = cfg
+        if jobs_isShimmeringStored {
+            jobs_shimmerLayer?.removeAnimation(forKey: "jobs.shimmer")
+            jobs_startShimmerAnimationIfNeeded()
+        };return self
+    }
+
+    /// DSL：修改高光宽度比例（不改变开关状态）
+    @discardableResult
+    public func byShimmerHighlightWidthRatio(_ ratio: CGFloat) -> Self {
+        var cfg = jobs_shimmerConfig
+        cfg.highlightWidthRatio = min(max(ratio, 0), 1)
         jobs_shimmerConfig = cfg
         jobs_updateShimmerColors()
         return self
@@ -546,34 +632,13 @@ extension UIButton {
 }
 
 extension UIButton {
-    /// 前景图 loading：开启 shimmer（用 overlay，保证 iOS15 configuration / image=nil 时也可见）
-    public func _jobs_startForegroundShimmerOverlay(targetSize: CGSize) {
-        UIButton.jobs_enableForegroundOverlayAutoLayoutUpdatesOnce()
-        jobs_fgOverlayTargetSize = targetSize
-        let overlay = jobs_getOrCreateFGOverlayView()
-        overlay.isHidden = false
-        bringSubviewToFront(overlay)
-        // ✅ 先开 shimmer，再立刻摆一次 frame：
-        // - jobs_startShimmer 里会记录 shimmering 状态
-        // - layoutSubviews swizzle 会持续兜底修正 frame/bounds
-        overlay.jobs_startShimmer()
-        jobs_layoutFGOverlayIfNeeded()
-        // 约束布局常在下一帧才生效，多补几次更稳
-        DispatchQueue.main.async { [weak self, weak overlay] in
-            guard let self, let overlay else { return }
-            self.jobs_layoutFGOverlayIfNeeded()
-            overlay.jobs_updateShimmerLayout()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self, weak overlay] in
-                guard let self, let overlay else { return }
-                self.jobs_layoutFGOverlayIfNeeded()
-                overlay.jobs_updateShimmerLayout()
-            }
-        }
+    /// 前景图 loading：直接作用于当前 imageView，不向 UIButton 内部层级插入 overlay。
+    public func _jobs_startForegroundShimmerOverlay(targetSize _: CGSize) {
+        // UIButton.Configuration 会重建内部 imageView；旧 imageView 被替换时，shimmer layer 随之释放。
+        self.imageView?.jobs_startShimmer()
     }
     /// 前景图 loading：关闭 shimmer
     public func _jobs_stopForegroundShimmerOverlay() {
-        guard let overlay = jobs_fgShimmerOverlayView else { return }
-        overlay.jobs_stopShimmer()
-        overlay.isHidden = true
+        self.imageView?.jobs_stopShimmer()
     }
 }

@@ -44,6 +44,7 @@ final class JobsWalletDemoVC: BaseVC {
             .byItemHeight(120)
             .byOverlap(14)
             .byExpandOffset(14)
+            .byHeaderItemSpacing(10)
             .byLayoutDelegate(self))
             .byBackgroundColor(JobsCor.clear)
             .byShowsVerticalScrollIndicator(NO)

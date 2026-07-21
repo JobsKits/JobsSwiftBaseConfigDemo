@@ -20,6 +20,50 @@ import JobsSwiftBaseDefines
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 extension UIViewController {
+    /// “系统导航栏@富文本标题”仅用于独立演示系统导航栏，其余 Demo 子页面统一使用 Jobs/GK 导航栏。
+    private var jobsIsSystemNavigationBarDemo: Bool {
+        let className = NSStringFromClass(type(of: self))
+        return className == "JobsNavigationDemoVC" || className.hasSuffix(".JobsNavigationDemoVC")
+    }
+    /// 为导航栈和模态子页面补齐 Jobs/GK 导航栏、导航标题与 Jobs 返回按钮。
+    @discardableResult
+    public func jobsEnsureNavigationDefaults() -> Self {
+        let isNavigationChild = navigationController?.viewControllers
+            .dropFirst()
+            .contains(where: { $0 === self }) ?? false
+        let isPresentedPage = presentingViewController != nil ||
+            (navigationController?.viewControllers.first === self && navigationController?.presentingViewController != nil)
+        guard isNavigationChild || isPresentedPage else { return self }
+
+        if jobsIsSystemNavigationBarDemo {
+            navigationController?
+                .byNavBarHidden(false)
+                .navigationBar
+                .byHidden(false)
+            return self
+        }
+
+        if gk_navTitle?.isEmpty != false,gk_navTitleView == nil {
+            if let titleView = navigationItem.titleView {
+                gk_navTitleView = titleView
+            } else {
+                let defaultTitle = [title,navigationItem.title]
+                    .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .first(where: { !$0.isEmpty }) ?? String(describing: type(of: self))
+                tr_setGKNavTitle(defaultTitle)
+            }
+        }
+        if gk_navRightBarButtonItem == nil,gk_navRightBarButtonItems?.isEmpty != false {
+            if let rightItems = navigationItem.rightBarButtonItems,!rightItems.isEmpty {
+                gk_navRightBarButtonItems = rightItems
+            } else if let rightItem = navigationItem.rightBarButtonItem {
+                gk_navRightBarButtonItem = rightItem
+            }
+        }
+        jobsEnsureNavigationBackButton()
+        byGKNavBarHidden(false)
+        return self
+    }
     /// 为导航栈子页面或模态子页面补齐默认返回按钮；已有自定义左按钮时不覆盖。
     @discardableResult
     public func jobsEnsureNavigationBackButton() -> Self {
@@ -29,7 +73,8 @@ extension UIViewController {
         let isPresentedPage = presentingViewController != nil ||
             (navigationController?.viewControllers.first === self && navigationController?.presentingViewController != nil)
         guard isNavigationChild || isPresentedPage,
-              gk_navLeftBarButtonItem == nil else { return self }
+              gk_navLeftBarButtonItem == nil,
+              gk_navLeftBarButtonItems?.isEmpty != false else { return self }
         gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: makeDefaultBackButton())
         return self
     }
@@ -60,6 +105,7 @@ extension UIViewController {
             } else {
                 gk_navRightBarButtonItems = nil
             }
+            _ = byGKNavBarHidden(false)
     }
     /// 统一配置 GKNav（支持直接传入 String，如 "标题".tr）
     /// - Note: 如果传入的是 ".tr" 的结果，会自动注册语言切换刷新
@@ -84,6 +130,7 @@ extension UIViewController {
             } else {
                 gk_navRightBarButtonItems = nil
             }
+            _ = byGKNavBarHidden(false)
     }
     /// GKNav 标题绑定：支持 ".tr" 自动刷新
     @discardableResult
@@ -115,8 +162,8 @@ extension UIViewController {
     private func makeDefaultBackButton() -> UIButton {
         UIButton.sys()
             .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-            .byTintColor(JobsCor.black)
-            .byImage("chevron.left".sysImg, for: .normal)
+            .byTintColor(JobsCor.label)
+            .byImage("chevron.left".sysImg.withRenderingMode(.alwaysTemplate), for: .normal)
             .byContentEdgeInsets(.zero)
             .byTitleEdgeInsets(.zero)
             .onTap { [weak self] _ in
@@ -127,8 +174,13 @@ extension UIViewController {
     /// 立即隐藏/显示 GK 的导航栏（并把系统栏同步隐藏，避免双栏）
     @discardableResult
     public func byGKNavBarHidden(_ hidden: Bool) -> Self {
-        gk_navigationBar.isHidden = hidden   // 真实隐藏 GK 的 bar
-        navigationController?.setNavigationBarHidden(hidden, animated: false) // 避免系统栏干扰
+        let navigationBar = gk_navigationBar
+        navigationBar.isHidden = hidden
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        guard !hidden else { return self }
+        navigationBar.alpha = 1
+        gk_navBarAlpha = 1
+        view.bringSubviewToFront(navigationBar)
         return self
     }
     /// 透明导航/恢复（不移除视图，适合沉浸式）

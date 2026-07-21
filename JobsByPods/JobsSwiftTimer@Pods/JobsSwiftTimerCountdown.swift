@@ -7,19 +7,21 @@
 
 import Foundation
 /// JobsTimer@系统倒计时进度条
-public final class JobsSwiftTimerCountdown {
+public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     deinit {
         cancel()
     }
+    public typealias ProgressHandler = @Sendable (Snapshot) -> Void
+    public typealias TimeProvider = @Sendable () -> TimeInterval
     /// 进度模式：0 → 100（正向）或 100 → 0（反向）
     ///
     /// - `countUp`   : 0% 慢慢涨到 100%，适合“进度条”语义
     /// - `countDown` : 100% 慢慢掉到 0%，适合“剩余进度”语义
     public typealias ProgressMode = Snapshot.Mode
     /// 进度快照
-    public struct Snapshot {
+    public struct Snapshot: Sendable, Equatable {
         /// 进度模式
-        public enum Mode {
+        public enum Mode: Sendable, Equatable {
             /// 从 0% 到 100%（elapsed / total）
             case countUp
             /// 从 100% 到 0%（remaining / total）
@@ -61,7 +63,7 @@ public final class JobsSwiftTimerCountdown {
         }
     }
     /// 状态
-    public enum State {
+    public enum State: Sendable, Equatable {
         case idle       // 初始
         case running    // 进行中
         case finished   // 正常完成
@@ -69,13 +71,23 @@ public final class JobsSwiftTimerCountdown {
     }
     // MARK: - Public
     /// 当前状态
-    public private(set) var state: State = .idle
+    public var state: State {
+        withLock { storedState }
+    }
     /// 当前快照
-    public private(set) var snapshot: Snapshot
+    public var snapshot: Snapshot {
+        withLock { storedSnapshot }
+    }
     /// 进度回调（每次 tick）
-    public var onProgress: ((Snapshot) -> Void)?
+    public var onProgress: ProgressHandler? {
+        get { withLock { progressHandler } }
+        set { withLock { progressHandler = newValue } }
+    }
     /// 完成回调（走到 100%）
-    public var onFinished: ((Snapshot) -> Void)?
+    public var onFinished: ProgressHandler? {
+        get { withLock { finishedHandler } }
+        set { withLock { finishedHandler = newValue } }
+    }
     /// 所使用的 JobsTimer 内核
     public let kind: JobsTimerKind
     /// tick 间隔（秒），默认 1/60，适合做顺滑动画
@@ -85,8 +97,16 @@ public final class JobsSwiftTimerCountdown {
     /// 回调所在队列（更新 UI 就 .main）
     public let queue: DispatchQueue
     // MARK: - Private
+    private let lock = NSRecursiveLock()
+    private let total: TimeInterval
+    private let timeProvider: TimeProvider
+    private var storedState: State = .idle
+    private var storedSnapshot: Snapshot
+    private var progressHandler: ProgressHandler?
+    private var finishedHandler: ProgressHandler?
     private var timer: JobsSwiftTimerProtocol?
-    private var startDate: Date?
+    private var startTimestamp: TimeInterval?
+    private var generation: UInt64 = 0
     // MARK: - Init
     /// - Parameters:
     ///   - duration: 倒计时总时长（秒）
@@ -94,96 +114,168 @@ public final class JobsSwiftTimerCountdown {
     ///   - tickInterval: tick 间隔，默认 1/60 秒
     ///   - tolerance: 时间容差，默认 0
     ///   - queue: 回调队列，默认 .main
-    public init(duration: TimeInterval,
-                kind: JobsTimerKind = .displayLink,
-                tickInterval: TimeInterval = 1.0 / 60.0,
-                tolerance: TimeInterval = 0,
-                queue: DispatchQueue = .main) {
-        let total = max(0, duration)
-        self.snapshot = Snapshot(total: total, elapsed: 0)
+    public init(
+        duration: TimeInterval,
+        kind: JobsTimerKind = .displayLink,
+        tickInterval: TimeInterval = 1.0 / 60.0,
+        tolerance: TimeInterval = 0,
+        queue: DispatchQueue = .main,
+        timeProvider: @escaping TimeProvider = { ProcessInfo.processInfo.systemUptime }
+    ) {
+        let normalizedTotal = duration.isFinite ? max(0, duration) : 0
+        let normalizedTickInterval = tickInterval.isFinite ? max(0.000_001, tickInterval) : 1.0 / 60.0
+        let normalizedTolerance = tolerance.isFinite
+            ? min(max(0, tolerance), normalizedTickInterval)
+            : 0
+        self.total = normalizedTotal
+        self.storedSnapshot = Snapshot(total: normalizedTotal, elapsed: 0)
         self.kind = kind
-        self.tickInterval = tickInterval
-        self.tolerance = tolerance
+        self.tickInterval = normalizedTickInterval
+        self.tolerance = normalizedTolerance
         self.queue = queue
+        self.timeProvider = timeProvider
     }
     // MARK: - 控制
     /// 开始倒计时（从 0 开始走一次）
     @discardableResult
     public func start() -> JobsSwiftTimerCountdown {
-        if state == .running { return self }
-        /// 如果想重复使用同一个实例，可以每次 start 前重置
-        resetInternal()
-        guard snapshot.total > 0 else {
-            /// 特殊情况：总时长 <= 0 直接视作完成
-            state = .finished
-            onProgress?(snapshot)
-            onFinished?(snapshot)
+        if kind != .gcd {
+            precondition(Thread.isMainThread, "JobsSwiftTimerCountdown: non-GCD start must be called on main thread.")
+        }
+        var oldTimer: JobsSwiftTimerProtocol?
+        var token: UInt64 = 0
+        var initialSnapshot = Snapshot(total: total, elapsed: 0)
+        var initialProgress: ProgressHandler?
+        var immediateFinish: ProgressHandler?
+        let shouldCreateTimer = withLock { () -> Bool in
+            if storedState == .running { return false }
+            oldTimer = timer
+            timer = nil
+            generation &+= 1
+            token = generation
+            storedSnapshot = Snapshot(total: total, elapsed: 0)
+            initialSnapshot = storedSnapshot
+            initialProgress = progressHandler
+            startTimestamp = nil
+            if total <= 0 {
+                storedState = .finished
+                immediateFinish = finishedHandler
+                return false
+            }
+            startTimestamp = timeProvider()
+            storedState = .running
+            return true
+        }
+        stopTimerSafely(oldTimer)
+        guard shouldCreateTimer else {
+            initialProgress?(initialSnapshot)
+            immediateFinish?(initialSnapshot)
             return self
         }
-        startDate = Date()
-        state = .running
         let config = JobsSwiftTimerConfig(
             interval: tickInterval,
             repeats: true,
             tolerance: tolerance,
-            queue: queue
+            queue: queue,
+            callbackDeliveryPolicy: .coalesceLatest
         )
-        // ✅ 新版 JobsTimer：直接 new JobsTimer（不再用 JobsTimerFactory.make）
         let t = JobsTimer(kind: kind, config: config) { [weak self] in
-            guard let self else { return }
-            guard self.state == .running else { return }
-            guard let start = self.startDate else { return }
-            let elapsed = Date().timeIntervalSince(start)
-            let clampedElapsed = min(elapsed, self.snapshot.total)
-            self.snapshot = Snapshot(total: self.snapshot.total, elapsed: clampedElapsed)
-            // 进度回调
-            self.onProgress?(self.snapshot)
-            // 到点了
-            if clampedElapsed >= self.snapshot.total {
-                self.timer?.stop()
-                self.timer = nil
-                self.state = .finished
-                self.onFinished?(self.snapshot)
-            }
+            self?.handleTick(token: token)
         }
-        timer?.stop()
-        timer = t
+        let shouldStartTimer = withLock { () -> Bool in
+            guard generation == token, storedState == .running else { return false }
+            timer = t
+            return true
+        }
+        guard shouldStartTimer else {
+            stopTimerSafely(t)
+            return self
+        }
         t.start()
-        // 起步的时候先回调一次 0 进度
-        onProgress?(snapshot)
+        initialProgress?(initialSnapshot)
         return self
     }
     /// 手动取消倒计时（不触发 onFinished）
     public func cancel() {
-        timer?.stop()
-        timer = nil
-        if state == .running {
-            state = .cancelled
+        let timerToStop = withLock { () -> JobsSwiftTimerProtocol? in
+            generation &+= 1
+            let timerToStop = timer
+            timer = nil
+            startTimestamp = nil
+            if storedState == .running {
+                storedState = .cancelled
+            };return timerToStop
         }
+        stopTimerSafely(timerToStop)
     }
     /// 重置为初始状态（不自动 start）
     public func reset() {
         cancel()
-        resetInternal()
+        withLock {
+            storedSnapshot = Snapshot(total: total, elapsed: 0)
+            startTimestamp = nil
+            storedState = .idle
+        }
     }
     // MARK: - Private
-    private func resetInternal() {
-        snapshot = Snapshot(total: snapshot.total, elapsed: 0)
-        startDate = nil
-        state = .idle
+    private func handleTick(token: UInt64) {
+        var currentSnapshot: Snapshot?
+        var progress: ProgressHandler?
+        var finished: ProgressHandler?
+        var timerToStop: JobsSwiftTimerProtocol?
+        withLock {
+            guard generation == token,
+                  storedState == .running,
+                  let startTimestamp else { return }
+            let elapsed = max(0, timeProvider() - startTimestamp)
+            let clampedElapsed = min(elapsed, total)
+            storedSnapshot = Snapshot(total: total, elapsed: clampedElapsed)
+            currentSnapshot = storedSnapshot
+            progress = progressHandler
+            if clampedElapsed >= total {
+                generation &+= 1
+                storedState = .finished
+                self.startTimestamp = nil
+                timerToStop = timer
+                timer = nil
+                finished = finishedHandler
+            }
+        }
+        guard let currentSnapshot else { return }
+        progress?(currentSnapshot)
+        if let timerToStop {
+            stopTimerSafely(timerToStop)
+            finished?(currentSnapshot)
+        }
+    }
+
+    private func stopTimerSafely(_ timer: JobsSwiftTimerProtocol?) {
+        guard let timer else { return }
+        let stop = { _ = timer.stop() }
+        if timer.requiresMainThreadLifecycle, !Thread.isMainThread {
+            DispatchQueue.main.sync(execute: stop)
+        } else {
+            stop()
+        }
+    }
+
+    @discardableResult
+    private func withLock<T>(_ body: () throws -> T) rethrows -> T {
+        lock.lock()
+        defer { lock.unlock() };return try body()
     }
 }
 // MARK: - DSL
 public extension JobsSwiftTimerCountdown {
     /// 链式设置进度回调
     @discardableResult
-    func byProgress(_ handler: @escaping (Snapshot) -> Void) -> Self {
+    func byProgress(_ handler: @escaping ProgressHandler) -> Self {
         self.onProgress = handler
         return self
     }
     /// 链式设置完成回调
     @discardableResult
-    func byFinished(_ handler: @escaping (Snapshot) -> Void) -> Self {
+    func byFinished(_ handler: @escaping ProgressHandler) -> Self {
         self.onFinished = handler
         return self
     }
@@ -207,14 +299,16 @@ public extension JobsSwiftTimerCountdown {
                         tickInterval: TimeInterval = 1.0 / 60.0,
                         tolerance: TimeInterval = 0,
                         queue: DispatchQueue = .main,
-                        onProgress: ((Snapshot) -> Void)? = nil,
-                        onFinished: ((Snapshot) -> Void)? = nil) -> JobsSwiftTimerCountdown {
+                        onProgress: ProgressHandler? = nil,
+                        onFinished: ProgressHandler? = nil,
+                        timeProvider: @escaping TimeProvider = { ProcessInfo.processInfo.systemUptime }) -> JobsSwiftTimerCountdown {
         let process = JobsSwiftTimerCountdown(
             duration: duration,
             kind: kind,
             tickInterval: tickInterval,
             tolerance: tolerance,
-            queue: queue
+            queue: queue,
+            timeProvider: timeProvider
         )
         process.onProgress = onProgress
         process.onFinished = onFinished

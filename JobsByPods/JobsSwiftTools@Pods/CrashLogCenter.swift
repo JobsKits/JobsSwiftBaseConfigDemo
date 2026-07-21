@@ -7,6 +7,7 @@
 
 import Foundation
 import Darwin // Darwin 层的 C 标准库 + POSIX + 系统底层 API
+import UIKit
 
 // ================================== CrashLogCenter ==================================
 /// 负责写入/读取/清理 app sandbox Documents 下的 jobs_crash.log
@@ -28,8 +29,21 @@ public final class CrashLogCenter {
     /// - App 进入前台(激活)：写 false（代表正在运行中）
     /// - 进入后台/terminate：写 true（代表到达安全点）
     private let safeExitKey = "com.jobs.crashlog.safe_exit"
+    /// 启动时冻结的“上一次退出结果”，避免当前会话的 false 被误判成上次崩溃
+    private let previousRunCrashedKey = "com.jobs.crashlog.previous_run_crashed"
     /// 文件写入队列（业务侧日志用，避免多线程乱序）
     private let ioQueue = DispatchQueue(label: "com.jobs.crashlog.center.io", qos: .utility)
+    private let sampleInterval: TimeInterval = 5
+    private let maxLogBytes: Int64 = 1024 * 1024
+    private let retainedLogBytes: Int64 = 512 * 1024
+    private var memoryTimer: DispatchSourceTimer?
+    private var notificationTokens = [NSObjectProtocol]()
+    private var sessionID = ""
+    private var sessionStartedAt = Date()
+    private var sessionStartFootprint: UInt64 = 0
+    private var peakFootprint: UInt64 = 0
+    private var latestSnapshot: MemorySnapshot?
+    private var hasStartedSession = false
     private init() {}
     // ================================== Path ==================================
     /// Documents/jobs_crash.log
@@ -39,14 +53,57 @@ public final class CrashLogCenter {
     }
     /// 给 UI 打印用：完整路径提示
     func logPathHint() -> String { crashLogURL.path }
-    // ================================== Session Marker ==================================
+    // ================================== Session & Memory Monitor ==================================
+    public struct MemorySnapshot {
+        public let footprintBytes: UInt64
+        public let residentBytes: UInt64
+        public let peakFootprintBytes: UInt64
+        public let growthBytes: Int64
+        public let screen: String
+        public let appState: String
+        public let timestamp: Date
+    }
+
+    /// 尽可能早地启动。SIGKILL / Jetsam 没有回调，只能依靠被杀前持续落盘的轨迹。
+    public func startMonitoring() {
+        guard !hasStartedSession else { return }
+        hasStartedSession = true
+
+        let defaults = UserDefaults.standard
+        let hadPreviousSession = defaults.object(forKey: safeExitKey) != nil
+        let previousRunCrashed = hadPreviousSession && !defaults.bool(forKey: safeExitKey)
+        defaults.set(previousRunCrashed, forKey: previousRunCrashedKey)
+        defaults.set(false, forKey: safeExitKey)
+        defaults.synchronize()
+
+        sessionID = UUID().uuidString
+        sessionStartedAt = Date()
+        if let snapshot = captureMemorySnapshot() {
+            sessionStartFootprint = snapshot.footprintBytes
+            peakFootprint = snapshot.footprintBytes
+            latestSnapshot = snapshot
+        }
+
+        _ = ensureFileExists()
+        writeCrashSync(sessionBanner(previousRunCrashed: previousRunCrashed))
+        CrashCatcher.installOnce()
+        installLifecycleObservers()
+        startMemoryTimer()
+        captureAndPersistMemory(event: "launch")
+    }
+
+    /// 页面展示用的最近一次内存快照。
+    public func latestMemorySnapshot() -> MemorySnapshot? { latestSnapshot }
+
     /// App 进入前台(激活)时调用：标记“本次会话正在运行中（非安全点）”
     /// 建议放在：
     /// - SceneDelegate.sceneDidBecomeActive
     /// - AppDelegate.applicationDidBecomeActive
     public func markAppLaunched() {
+        startMonitoring()
         UserDefaults.standard.set(false, forKey: safeExitKey)
         UserDefaults.standard.synchronize()
+        append("[LIFECYCLE] time=\(Date()) event=active session=\(sessionID)")
     }
     /// App 进入后台/退出前调用：标记“到达安全退出点”
     /// 你问的：CrashLogCenter.shared.markSafeExitPoint() 写在哪里？
@@ -55,12 +112,163 @@ public final class CrashLogCenter {
     public func markSafeExitPoint() {
         UserDefaults.standard.set(true, forKey: safeExitKey)
         UserDefaults.standard.synchronize()
+        captureAndPersistMemory(event: "safe_exit")
     }
     /// 上次是否疑似崩溃（或被系统杀掉/强退）
     /// - 规则：上次没有写到安全退出点 => 认为“异常退出”
     public func didCrashLastRun() -> Bool {
-        // 如果从未写过 key（第一次安装），认为没有崩溃
-        if UserDefaults.standard.object(forKey: safeExitKey) == nil { return false };return UserDefaults.standard.bool(forKey: safeExitKey) == false
+        UserDefaults.standard.bool(forKey: previousRunCrashedKey)
+    }
+
+    private func startMemoryTimer() {
+        let timer = DispatchSource.makeTimerSource(queue: .main)
+        timer.schedule(deadline: .now() + sampleInterval, repeating: sampleInterval, leeway: .milliseconds(500))
+        timer.setEventHandler { [weak self] in
+            self?.captureAndPersistMemory(event: "sample")
+        }
+        memoryTimer = timer
+        timer.resume()
+    }
+
+    private func installLifecycleObservers() {
+        let center = NotificationCenter.default
+        let events: [(Notification.Name, String)] = [
+            (UIApplication.didReceiveMemoryWarningNotification, "memory_warning"),
+            (UIApplication.willResignActiveNotification, "will_resign_active"),
+            (UIApplication.didEnterBackgroundNotification, "did_enter_background"),
+            (UIApplication.willEnterForegroundNotification, "will_enter_foreground"),
+            (UIApplication.didBecomeActiveNotification, "did_become_active"),
+            (UIApplication.willTerminateNotification, "will_terminate")
+        ]
+        notificationTokens = events.map { name, event in
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                self?.captureAndPersistMemory(event: event, synchronous: event == "memory_warning")
+            }
+        }
+    }
+
+    private func captureAndPersistMemory(event: String, synchronous: Bool = false) {
+        guard var snapshot = captureMemorySnapshot() else {
+            append("[MEM] time=\(Date()) event=\(event) error=task_info_failed session=\(sessionID)")
+            return
+        }
+        peakFootprint = max(peakFootprint, snapshot.footprintBytes)
+        snapshot = MemorySnapshot(
+            footprintBytes: snapshot.footprintBytes,
+            residentBytes: snapshot.residentBytes,
+            peakFootprintBytes: peakFootprint,
+            growthBytes: Int64(snapshot.footprintBytes) - Int64(sessionStartFootprint),
+            screen: currentScreenName(),
+            appState: currentAppState(),
+            timestamp: snapshot.timestamp
+        )
+        latestSnapshot = snapshot
+        let line = memoryLine(snapshot: snapshot, event: event)
+        if synchronous {
+            writeCrashSync(line)
+        } else {
+            append(line)
+        }
+    }
+
+    private func captureMemorySnapshot() -> MemorySnapshot? {
+        var info = task_vm_info_data_t()
+        var count = mach_msg_type_number_t(
+            MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<natural_t>.size
+        )
+        let result = withUnsafeMutablePointer(to: &info) { pointer in
+            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
+                task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &count)
+            }
+        }
+        guard result == KERN_SUCCESS else { return nil };return MemorySnapshot(
+            footprintBytes: UInt64(info.phys_footprint),
+            residentBytes: UInt64(info.resident_size),
+            peakFootprintBytes: peakFootprint,
+            growthBytes: 0,
+            screen: "-",
+            appState: "-",
+            timestamp: Date()
+        )
+    }
+
+    private func memoryLine(snapshot: MemorySnapshot, event: String) -> String {
+        let elapsed = snapshot.timestamp.timeIntervalSince(sessionStartedAt)
+        return String(
+            format: "[MEM] time=%@ event=%@ elapsed=%.1fs footprint=%.1fMB resident=%.1fMB peak=%.1fMB growth=%+.1fMB state=%@ screen=%@ session=%@",
+            String(describing: snapshot.timestamp),
+            event,
+            elapsed,
+            megabytes(snapshot.footprintBytes),
+            megabytes(snapshot.residentBytes),
+            megabytes(snapshot.peakFootprintBytes),
+            signedMegabytes(snapshot.growthBytes),
+            snapshot.appState,
+            snapshot.screen,
+            sessionID
+        )
+    }
+
+    private func sessionBanner(previousRunCrashed: Bool) -> String {
+        let bundle = Bundle.main
+        let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "-"
+        let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "-"
+        return """
+
+        ==================== MEMORY SESSION ====================
+        time: \(sessionStartedAt)
+        session: \(sessionID)
+        app: \(version) (\(build))
+        system: \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)
+        previousRunCrashed: \(previousRunCrashed ? "YES" : "NO")
+        sampleInterval: \(Int(sampleInterval))s
+        ========================================================
+        """
+    }
+
+    private func currentScreenName() -> String {
+        let windows: [UIWindow]
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            windows = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap(\.windows)
+        } else {
+            windows = UIApplication.shared.windows
+        }
+        let window = windows.first(where: { $0.isKeyWindow }) ?? windows.first
+        guard let visible = visibleViewController(from: window?.rootViewController) else { return "-" };return NSStringFromClass(type(of: visible)).replacingOccurrences(of: " ", with: "_")
+    }
+
+    private func visibleViewController(from root: UIViewController?) -> UIViewController? {
+        if let presented = root?.presentedViewController {
+            return visibleViewController(from: presented)
+        }
+        if let navigation = root as? UINavigationController {
+            return visibleViewController(from: navigation.visibleViewController)
+        }
+        if let tab = root as? UITabBarController {
+            return visibleViewController(from: tab.selectedViewController)
+        }
+        if let split = root as? UISplitViewController {
+            return visibleViewController(from: split.viewControllers.last)
+        };return root
+    }
+
+    private func currentAppState() -> String {
+        switch UIApplication.shared.applicationState {
+        case .active: return "active"
+        case .inactive: return "inactive"
+        case .background: return "background"
+        @unknown default: return "unknown"
+        }
+    }
+
+    private func megabytes(_ bytes: UInt64) -> Double {
+        Double(bytes) / 1024 / 1024
+    }
+
+    private func signedMegabytes(_ bytes: Int64) -> Double {
+        Double(bytes) / 1024 / 1024
     }
     // ================================== File Info ==================================
     public struct FileInfo {
@@ -105,8 +313,36 @@ public final class CrashLogCenter {
         ioQueue.async { [weak self] in
             guard let self else { return }
             _ = self.ensureFileExists()
+            self.trimLogIfNeeded()
             self.writeSync(text)
         }
+    }
+
+    /// 日志只保留最近内容，防止诊断工具自身无限增长。
+    private func trimLogIfNeeded() {
+        let url = crashLogURL
+        guard let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
+              let number = attrs[.size] as? NSNumber,
+              number.int64Value > maxLogBytes,
+              let handle = try? FileHandle(forReadingFrom: url) else { return }
+        defer {
+            if #available(iOS 13.0, *) { try? handle.close() } else { handle.closeFile() }
+        }
+        let start = UInt64(max(0, number.int64Value - retainedLogBytes))
+        if #available(iOS 13.4, *) {
+            try? handle.seek(toOffset: start)
+        } else {
+            handle.seek(toFileOffset: start)
+        }
+        let tail: Data
+        if #available(iOS 13.4, *) {
+            tail = (try? handle.readToEnd()) ?? Data()
+        } else {
+            tail = handle.readDataToEndOfFile()
+        }
+        var data = Data("[LOG_ROTATED] time=\(Date()) retained=\(tail.count)bytes\n".utf8)
+        data.append(tail)
+        try? data.write(to: url, options: .atomic)
     }
     /// 给 crash handler 用：同步写入（落盘 + fsync）
     /// - 发生崩溃时，优先用这个（避免异步来不及写）

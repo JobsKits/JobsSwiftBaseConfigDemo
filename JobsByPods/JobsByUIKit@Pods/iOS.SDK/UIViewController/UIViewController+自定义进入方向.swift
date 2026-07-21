@@ -145,12 +145,18 @@ extension UIViewController {
                 self._jobs_entryTiming = timing
                 UINavigationController._jobs_installPopSwizzlesIfNeeded()
                 mainNav.pushViewController(self, animated: false)
+                #if canImport(GKNavigationBarSwift)
+                self.jobsEnsureNavigationDefaults()
+                #endif
                 DispatchQueue.main.async { [weak self] in
                     self?.jobs_fireAppearCompletionIfNeeded(reason: "pushCATransition(mainNav)")
                 };return self
             } else {
                 self._jobs_entryDirection = nil
                 mainNav.pushViewController(self, animated: true)
+                #if canImport(GKNavigationBarSwift)
+                self.jobsEnsureNavigationDefaults()
+                #endif
                 if let tc = mainNav.transitionCoordinator {
                     tc.animate(alongsideTransition: nil) { [weak self] _ in
                         self?.jobs_fireAppearCompletionIfNeeded(reason: "pushTransitionCoordinator(mainNav)")
@@ -182,6 +188,9 @@ extension UIViewController {
                 // 安装 pop swizzle（一次性）
                 UINavigationController._jobs_installPopSwizzlesIfNeeded()
                 nav.pushViewController(self, animated: false)
+                #if canImport(GKNavigationBarSwift)
+                self.jobsEnsureNavigationDefaults()
+                #endif
                 // appear-jobsByVoidBlock 兜底
                 DispatchQueue.main.async { [weak self] in
                     self?.jobs_fireAppearCompletionIfNeeded(reason: "pushCATransition")
@@ -190,6 +199,9 @@ extension UIViewController {
                 // 系统默认动画 → 不记录方向（保持系统默认 pop 行为）
                 self._jobs_entryDirection = nil
                 nav.pushViewController(self, animated: true)
+                #if canImport(GKNavigationBarSwift)
+                self.jobsEnsureNavigationDefaults()
+                #endif
                 if let tc = nav.transitionCoordinator {
                     tc.animate(alongsideTransition: nil) { [weak self] _ in
                         self?.jobs_fireAppearCompletionIfNeeded(reason: "pushTransitionCoordinator")
@@ -220,11 +232,17 @@ extension UIViewController {
             self._jobs_entryDuration = duration
             self._jobs_entryTiming = timing
             host.present(wrapped, animated: false) { [weak self] in
+                #if canImport(GKNavigationBarSwift)
+                self?.jobsEnsureNavigationDefaults()
+                #endif
                 self?.jobs_fireAppearCompletionIfNeeded(reason: "presentWrappedForPushCATransition")
             }
         } else {
             self._jobs_entryDirection = nil
             host.present(wrapped, animated: true) { [weak self] in
+                #if canImport(GKNavigationBarSwift)
+                self?.jobsEnsureNavigationDefaults()
+                #endif
                 self?.jobs_fireAppearCompletionIfNeeded(reason: "presentWrappedForPush")
             }
         };return self

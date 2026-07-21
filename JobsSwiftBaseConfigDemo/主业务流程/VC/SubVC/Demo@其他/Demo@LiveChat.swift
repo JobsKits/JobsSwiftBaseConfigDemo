@@ -59,14 +59,18 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "LiveChat Demo")
+        LiveChat.delegate = self
+        LiveChat.customPresentationStyleEnabled = false
         btnDefault.byVisible(YES)
         btnCustom.byVisible(YES)
     }
     // MARK: - 默认方式（SDK 自带展示）
     @objc private func onDefault() {
-        LiveChat.presentChat() // 一句到位
-        // 如果要监听打开/关闭等事件，可同时设置 delegate = self
         LiveChat.delegate = self
+        LiveChat.customPresentationStyleEnabled = false
+        guard !LiveChat.isChatPresented else { return }
+        /// LiveChat 2.0.26 在入场动画期间会忽略关闭请求，真机上可能遗留透明 key window 阻断 Demo 退出。
+        LiveChat.presentChat(animated: false)
     }
     // MARK: - 自定义方式（来决定怎么展示）
     @objc private func onCustom() {
@@ -110,7 +114,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
         // 可以在这里自行处理，比如用 SFSafariViewController 打开
     }
     // 加载失败（排障抓日志）
-    func loadingDidFail(with errror: Error) {
-        print("❌ LiveChat 加载失败：\(errror)")
+    func chatLoadingFailed(with error: Error) {
+        print("❌ LiveChat 加载失败：\(error)")
     }
 }

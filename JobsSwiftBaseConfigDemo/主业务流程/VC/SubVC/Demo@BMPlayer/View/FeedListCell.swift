@@ -25,7 +25,7 @@ final class FeedListCell: UITableViewCell {
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
-            .byAddTo(contentView) { [unowned self] make in
+            .byAddTo(contentView) { cover, make in
                 make.top.leading.trailing.equalToSuperview().inset(12)
                 make.height.equalTo(cover.snp.width).multipliedBy(9.0 / 16.0)
             }

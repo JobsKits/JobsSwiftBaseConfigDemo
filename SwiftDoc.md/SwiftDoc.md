@@ -1482,7 +1482,6 @@ class MyViewController {
             // 数据加载完成后执行闭包
             // 这里需要使用 self，因为在异步操作中，self 引用可能是弱引用
             completion()
-
             // 如果不标记 @escaping，编译器会产生错误：
             // Closure use of non-escaping parameter 'completion' may allow it to escape the function body
         }

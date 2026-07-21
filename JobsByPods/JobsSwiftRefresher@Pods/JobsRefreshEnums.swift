@@ -87,6 +87,21 @@ public enum JobsSwitch {
     case removed
     case noMoreData                 // 仅加载更多语义生效
 }
+
+@MainActor
+public struct JobsRefreshFeedback {
+    public let enablesHaptics: Bool
+    public let soundFileName: String?
+
+    public init(enablesHaptics: Bool = false,
+                soundFileName: String? = nil) {
+        self.enablesHaptics = enablesHaptics
+        let trimmed = soundFileName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.soundFileName = trimmed?.isEmpty == true ? nil : trimmed
+    }
+
+    public static let disabled = JobsRefreshFeedback()
+}
 // MARK: - Lottie (Global + Per-slot)
 //
 // 目标：

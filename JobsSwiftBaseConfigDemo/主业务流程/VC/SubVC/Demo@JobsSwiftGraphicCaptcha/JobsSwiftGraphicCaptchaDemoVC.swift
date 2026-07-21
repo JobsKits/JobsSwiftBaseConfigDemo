@@ -19,23 +19,92 @@ import JobsSwiftGraphicCaptcha
 import GKNavigationBarSwift
 import SnapKit
 
+private enum JobsSwiftGraphicCaptchaTwoMixedOption: Int, CaseIterable {
+    case uppercaseLowercase
+    case uppercaseNumber
+    case lowercaseNumber
+    case uppercaseChinese
+    case lowercaseChinese
+    case chineseNumber
+
+    var title: String {
+        switch self {
+        case .uppercaseLowercase:
+            return "英文大写+英文小写"
+        case .uppercaseNumber:
+            return "英文大写+数字"
+        case .lowercaseNumber:
+            return "英文小写+数字"
+        case .uppercaseChinese:
+            return "英文大写+汉字"
+        case .lowercaseChinese:
+            return "英文小写+汉字"
+        case .chineseNumber:
+            return "汉字+数字"
+        }
+    }
+
+    var characterUnits: JobsSwiftGraphicCaptchaCharacterUnit {
+        switch self {
+        case .uppercaseLowercase:
+            return [.uppercaseLetter, .lowercaseLetter]
+        case .uppercaseNumber:
+            return [.uppercaseLetter, .number]
+        case .lowercaseNumber:
+            return [.lowercaseLetter, .number]
+        case .uppercaseChinese:
+            return [.uppercaseLetter, .chinese]
+        case .lowercaseChinese:
+            return [.lowercaseLetter, .chinese]
+        case .chineseNumber:
+            return [.chinese, .number]
+        }
+    }
+
+    var config: JobsSwiftGraphicCaptchaConfig {
+        JobsSwiftGraphicCaptchaConfig(caseSensitive: true,
+                                      characterUnits: characterUnits,
+                                      mixedGroupCount: 2)
+    }
+}
+
 final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     private var mixedModeTopConstraint: Constraint?
     private var mixedModeHeightConstraint: Constraint?
+    private var twoMixedOptionsTopConstraint: Constraint?
+    private var twoMixedOptionsHeightConstraint: Constraint?
     private var captchaTopConstraint: Constraint?
+    private var selectedTwoMixedOption = JobsSwiftGraphicCaptchaTwoMixedOption.uppercaseLowercase
 
     private lazy var modeControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["混合", "大小写", "不敏感", "数字", "汉字"])
-        control.selectedSegmentIndex = 0
-        control.byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
-        return control
+        UISegmentedControl(items: ["混合", "大小写", "不敏感", "数字", "汉字"])
+            .bySelectedSegmentIndex(0)
+            .byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
     }()
 
     private lazy var mixedModeControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["两两混合", "三三混合", "全部混合"])
-        control.selectedSegmentIndex = 2
-        control.byAddTarget(self, action: #selector(mixedModeChanged(_:)), for: .valueChanged)
-        return control
+        UISegmentedControl(items: ["两两混合", "三三混合", "全部混合"])
+            .bySelectedSegmentIndex(2)
+            .byAddTarget(self, action: #selector(mixedModeChanged(_:)), for: .valueChanged)
+    }()
+
+    private lazy var twoMixedFirstRowControl: UISegmentedControl = {
+        UISegmentedControl(items: Array(JobsSwiftGraphicCaptchaTwoMixedOption.allCases.prefix(3)).map(\.title))
+            .bySelectedSegmentIndex(0)
+            .byAddTarget(self, action: #selector(twoMixedFirstRowChanged(_:)), for: .valueChanged)
+    }()
+
+    private lazy var twoMixedSecondRowControl: UISegmentedControl = {
+        UISegmentedControl(items: Array(JobsSwiftGraphicCaptchaTwoMixedOption.allCases.suffix(3)).map(\.title))
+            .bySelectedSegmentIndex(UISegmentedControl.noSegment)
+            .byAddTarget(self, action: #selector(twoMixedSecondRowChanged(_:)), for: .valueChanged)
+    }()
+
+    private lazy var twoMixedOptionsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [twoMixedFirstRowControl, twoMixedSecondRowControl])
+            .byAxis(.vertical)
+            .byDistribution(.fillEqually)
+            .bySpacing(10)
     }()
 
     private lazy var captchaView: JobsSwiftGraphicCaptchaView = {
@@ -51,13 +120,12 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     }()
 
     private lazy var inputField: UITextField = {
-        let textField = UITextField()
-        textField.byBorderStyle(.roundedRect)
-        textField.byClearButtonMode(.whileEditing)
-        textField.autocapitalizationType = .none
-        textField.autocorrectionType = .no
-        textField.byPlaceholder("输入验证码".tr)
-        return textField
+        UITextField()
+            .byBorderStyle(.roundedRect)
+            .byClearButtonMode(.whileEditing)
+            .byAutocapitalizationType(.none)
+            .byAutocorrectionType(.no)
+            .byPlaceholder("输入验证码".tr)
     }()
 
     private lazy var resultLabel: UILabel = {
@@ -97,6 +165,7 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
     func setupSubviews() {
         modeControl.byAddTo(view)
         mixedModeControl.byAddTo(view)
+        twoMixedOptionsStackView.byAddTo(view)
         captchaView.byAddTo(view)
         inputField.byAddTo(view)
         resultLabel.byAddTo(view)
@@ -116,8 +185,13 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
             make.left.right.equalTo(modeControl)
             mixedModeHeightConstraint = make.height.equalTo(34).constraint
         }
+        twoMixedOptionsStackView.snp.makeConstraints { make in
+            twoMixedOptionsTopConstraint = make.top.equalTo(mixedModeControl.snp.bottom).constraint
+            make.left.right.equalTo(modeControl)
+            twoMixedOptionsHeightConstraint = make.height.equalTo(0).constraint
+        }
         captchaView.snp.makeConstraints { make in
-            captchaTopConstraint = make.top.equalTo(mixedModeControl.snp.bottom).offset(22).constraint
+            captchaTopConstraint = make.top.equalTo(twoMixedOptionsStackView.snp.bottom).offset(22).constraint
             make.left.right.equalToSuperview().inset(32)
             make.height.equalTo(72)
         }
@@ -147,15 +221,40 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
     }
 
     @objc func mixedModeChanged(_ sender: UISegmentedControl) {
-        modeControl.selectedSegmentIndex = 0
+        modeControl.bySelectedSegmentIndex(0)
+        applyMode(index: 0)
+    }
+
+    @objc func twoMixedFirstRowChanged(_ sender: UISegmentedControl) {
+        guard let option = JobsSwiftGraphicCaptchaTwoMixedOption(rawValue: sender.selectedSegmentIndex) else { return }
+        selectedTwoMixedOption = option
+        twoMixedSecondRowControl.bySelectedSegmentIndex(UISegmentedControl.noSegment)
+        activateTwoMixedMode()
+    }
+
+    @objc func twoMixedSecondRowChanged(_ sender: UISegmentedControl) {
+        let rawValue = sender.selectedSegmentIndex + 3
+        guard let option = JobsSwiftGraphicCaptchaTwoMixedOption(rawValue: rawValue) else { return }
+        selectedTwoMixedOption = option
+        twoMixedFirstRowControl.bySelectedSegmentIndex(UISegmentedControl.noSegment)
+        activateTwoMixedMode()
+    }
+
+    func activateTwoMixedMode() {
+        modeControl.bySelectedSegmentIndex(0)
+        mixedModeControl.bySelectedSegmentIndex(0)
         applyMode(index: 0)
     }
 
     func applyMode(index: Int) {
         let isMixedMode = index == 0
+        let isTwoMixedMode = isMixedMode && mixedModeControl.selectedSegmentIndex == 0
         mixedModeControl.byHidden(!isMixedMode)
+        twoMixedOptionsStackView.byHidden(!isTwoMixedMode)
         mixedModeTopConstraint?.update(offset: isMixedMode ? 10 : 0)
         mixedModeHeightConstraint?.update(offset: isMixedMode ? 34 : 0)
+        twoMixedOptionsTopConstraint?.update(offset: isTwoMixedMode ? 10 : 0)
+        twoMixedOptionsHeightConstraint?.update(offset: isTwoMixedMode ? 78 : 0)
         captchaTopConstraint?.update(offset: isMixedMode ? 22 : 18)
         switch index {
         case 1:
@@ -170,13 +269,13 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
             captchaView.config = currentMixedConfig()
         }
         inputField.byText(nil)
-        view.layoutIfNeeded()
+        view.bySetNeedsLayout()
     }
 
     func currentMixedConfig() -> JobsSwiftGraphicCaptchaConfig {
         switch mixedModeControl.selectedSegmentIndex {
         case 0:
-            return .twoMixedConfig
+            return selectedTwoMixedOption.config
         case 1:
             return .threeMixedConfig
         default:

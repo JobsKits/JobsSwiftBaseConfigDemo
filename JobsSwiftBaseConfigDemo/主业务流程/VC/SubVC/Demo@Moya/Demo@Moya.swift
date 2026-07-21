@@ -39,6 +39,28 @@ final class MoyaDemoVC: BaseVC {
     }()
 
     private var bag = Set<AnyCancellable>()
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView()
+            .byAlwaysBounceVertical(true)
+            .byShowsVerticalScrollIndicator(true)
+            .byKeyboardDismissMode(.onDrag)
+            .byAddTo(view) { [unowned self] make in
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                    make.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                } else {
+                    make.edges.equalTo(self.view.safeAreaLayoutGuide)
+                }
+            }
+    }()
+
+    private lazy var contentView: UIView = {
+        UIView()
+            .byAddTo(scrollView) { [unowned self] make in
+                make.edges.equalTo(self.scrollView.contentLayoutGuide)
+                make.width.equalTo(self.scrollView.frameLayoutGuide)
+            }
+    }()
     // =============== 回显区（懒加载 + 的 byAddTo 就地约束） ===============
     private lazy var resultView: UITextView = {
         UITextView()
@@ -50,11 +72,11 @@ final class MoyaDemoVC: BaseVC {
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(true)
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnClear.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(16)
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-                make.height.greaterThanOrEqualTo(180)
+                make.height.equalTo(220)
+                make.bottom.equalToSuperview().inset(12)
             }
     }()
     // =============== 按钮们（懒加载 + DSL + 每个块内 byAddTo 约束） ===============
@@ -81,12 +103,8 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
-                if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
-                } else {
-                    make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(40)
-                }
+            .byAddTo(contentView) { make in
+                make.top.equalToSuperview()
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
             }
@@ -120,7 +138,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnZen.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -149,7 +167,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnUser.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -183,7 +201,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 })
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnLogin.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -216,7 +234,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnUpload.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -248,7 +266,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnDownloadPNG.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -287,7 +305,7 @@ final class MoyaDemoVC: BaseVC {
                 show(title: "CombineMoya 未集成，跳过 Combine 示例".tr)
                 #endif
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnDownloadBytes.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -320,7 +338,7 @@ final class MoyaDemoVC: BaseVC {
                     }
                 }
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnCombineZen.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -337,7 +355,7 @@ final class MoyaDemoVC: BaseVC {
                 guard let self else { return }
                 clear()
             }
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.btnStub.snp.bottom).offset(8)
                 make.right.equalToSuperview().inset(24)
                 make.height.equalTo(36)
@@ -349,6 +367,8 @@ final class MoyaDemoVC: BaseVC {
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "Moya 全量用法 Demo".tr)
         // 触发懒加载 + 就地布局（按顺序确保依赖关系）
+        scrollView.byVisible(YES)
+        contentView.byVisible(YES)
         btnZen.byVisible(YES)
         btnUser.byVisible(YES)
         btnLogin.byVisible(YES)

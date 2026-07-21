@@ -47,7 +47,6 @@ extension UIWindow {
         return self
     }
 
-    @available(*, deprecated, message: "Use windowScene assignment instead on iOS 13+")
     @discardableResult
     public func byScreen(_ screen: UIScreen) -> Self {
         if #available(iOS 13.0, *) {
@@ -93,7 +92,6 @@ extension UIWindow {
         return self
     }
 
-    @available(*, deprecated, message: "Use windowScene assignment instead on iOS 13+")
     @discardableResult
     public func byScreen(_ builder: () -> UIScreen) -> Self {
         let screen = builder()

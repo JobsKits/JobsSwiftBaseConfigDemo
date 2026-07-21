@@ -246,7 +246,7 @@ extension UIButton {
         self.jobs_imageLoaderKind = .kingfisher
         // ✅ 统一记录：前景 URL + state（供 JobsImageCacheCleaner 遍历重下）
         self.jobs_remoteState = state
-        // ✅ 目标尺寸：优先你显式设置的 targetSize，否则按 UI 猜一个兜底值（用于 shimmer overlay + downsampling）
+        // ✅ 目标尺寸：优先显式设置的 targetSize，否则按 UI 猜一个兜底值（用于 shimmer + downsampling）
         let targetPointSize = cfg.targetSize ?? _jobs_guessForegroundTargetSize()
         self.jobs_remoteImageTargetSize = targetPointSize
         let loadingPlaceholder = _jobs_loadingPlaceholderImage(targetPointSize: targetPointSize, fallback: cfg.placeholder)
@@ -260,17 +260,17 @@ extension UIButton {
             };return
         }
         self.jobs_remoteURL = url
-        // ✅ 折中策略：先灌入兜底图（或透明占位）把前景 imageView 撑开 → 再盖 overlay 做 shimmer
-        // 这样 overlay 的 frame 可以直接跟随系统最终算出来的 imageView/frame。
+        // 先灌入兜底图（或透明占位）让 imageView 可用，再在当前 imageView.layer 上做 shimmer。
         _jobs_runOnMain { btn in
             guard btn._jobs_isCurrentToken(token, loader: .kf, channel: .foreground, for: state) else { return }
             btn._jobs_forceSetForegroundImage(loadingPlaceholder, for: state)
             btn.setNeedsLayout()
-            btn.layoutIfNeeded()
             btn._jobs_startForegroundShimmer(targetSize: targetPointSize)
         }
         // ✅ 强制 Downsampling，保证不会被大图撑开 intrinsicContentSize
-        let opts = _jobs_kfUpsertDownsampleOptions(cfg.options, targetPointSize: targetPointSize)
+        var opts = _jobs_kfUpsertDownsampleOptions(cfg.options, targetPointSize: targetPointSize)
+        // 回调会再将图片同步到 UIButton.Configuration，先去掉 Kingfisher 对内部 imageView 的过渡动画。
+        opts.removeAll { if case .transition = $0 { return true } else { return false } }
         self.kf.setImage(with: url,
                          for: state,
                          placeholder: nil,
@@ -325,6 +325,8 @@ extension UIButton {
         var opts = _jobs_kfUpsertDownsampleOptions(cfg.options, targetPointSize: targetPointSize)
         // ✅ Shimmer 占位：不保留旧图，避免复用/叠图透出
         opts.removeAll { if case .keepCurrentImageWhileLoading = $0 { return true } else { return false } }
+        // 背景图回调还会更新 UIButton.Configuration，避免和 Kingfisher 的内部淡入同时改层级。
+        opts.removeAll { if case .transition = $0 { return true } else { return false } }
         if !opts.contains(where: { if case .backgroundDecode = $0 { return true } else { return false } }) {
             opts.append(.backgroundDecode)
         }

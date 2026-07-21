@@ -30,14 +30,15 @@ open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
         view.byBackgroundColor(JobsCor.white)
 //        jobsSetupGKNav(title: "定义当前的标题")
     }
-    /// 所有导航栈子页面统一补齐导航栏返回键，根页面和自定义左按钮不受影响。
+    /// 所有导航栈和模态子页面统一补齐导航栏、返回键及标题，根页面和自定义导航不受影响。
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        jobsEnsureNavigationBackButton()
+        jobsEnsureNavigationDefaults()
     }
     /// 手势返回
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        jobsEnsureNavigationDefaults()
         guard let nav = navigationController else { return }
         // 只有当栈深 > 1 时才允许侧滑
         let canPop = nav.viewControllers.count > 1

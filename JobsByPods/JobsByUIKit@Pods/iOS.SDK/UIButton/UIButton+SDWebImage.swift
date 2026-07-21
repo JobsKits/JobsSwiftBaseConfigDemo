@@ -275,7 +275,7 @@ extension UIButton {
         self.jobs_imageLoaderKind = .sdwebimage
         // ✅ 记录：前景 state / url（供 JobsImageCacheCleaner 遍历重下）
         self.jobs_remoteState = state
-        // ✅ 目标尺寸：优先你显式设置的 targetSize，否则按 UI 猜一个兜底值（用于 shimmer overlay + thumbnail 下采样）
+        // ✅ 目标尺寸：优先显式设置的 targetSize，否则按 UI 猜一个兜底值（用于 shimmer + thumbnail 下采样）
         let targetPointSize = cfg.targetSize ?? _jobs_guessForegroundTargetSize()
         self.jobs_remoteImageTargetSize = targetPointSize
         let loadingPlaceholder = _jobs_loadingPlaceholderImage(targetPointSize: targetPointSize, fallback: cfg.placeholder)
@@ -292,8 +292,7 @@ extension UIButton {
             };return
         }
         self.jobs_remoteURL = url
-        // ✅ 折中策略：先灌入兜底图（或透明占位）把前景 imageView 撑开 → 再盖 overlay 做 shimmer
-        // 这样 overlay 的 frame 可以直接跟随系统最终算出来的 imageView/frame。
+        // 先灌入兜底图（或透明占位）让 imageView 可用，再在当前 imageView.layer 上做 shimmer。
         _jobs_runOnMain { btn in
             guard btn._jobs_isCurrentToken(token,
                                            loader: .sd,
@@ -301,7 +300,6 @@ extension UIButton {
                                            for: state) else { return }
             btn._jobs_forceSetForegroundImage(loadingPlaceholder, for: state)
             btn.setNeedsLayout()
-            btn.layoutIfNeeded()
             btn._jobs_startForegroundShimmer(targetSize: targetPointSize)
         }
         // 取消同 state 的在途请求
@@ -339,17 +337,8 @@ extension UIButton {
                 if let img {
                     // ✅ Success：请求结束，停 shimmer，显示最终图
                     btn._jobs_stopForegroundShimmer()
-                    // 如果是新下载（非缓存），做一次淡入；缓存命中则直接显示更干净
-                    if cacheType == .none {
-                        UIView.transition(with: btn,
-                                          duration: 0.18,
-                                          options: .transitionCrossDissolve,
-                                          animations: {
-                            btn._jobs_forceSetForegroundImage(img, for: state)
-                        }, completion: nil)
-                    } else {
-                        btn._jobs_forceSetForegroundImage(img, for: state)
-                    }
+                    // UIButton.Configuration 会替换内部 imageView，不能放进 transition 动画块。
+                    btn._jobs_forceSetForegroundImage(img, for: state)
                 } else {
                     // ✅ Failure：请求结束，必须停 shimmer；有兜底图就落兜底；没有就保持 nil
                     btn._jobs_stopForegroundShimmer()
@@ -410,17 +399,8 @@ extension UIButton {
                 if let img {
                     // ✅ Success：停 shimmer，显示最终图
                     btn._jobs_stopBackgroundShimmer()
-                    // 如果是新下载（非缓存），做一次淡入；缓存命中则直接显示更干净
-                    if cacheType == .none {
-                        UIView.transition(with: btn,
-                                          duration: 0.22,
-                                          options: .transitionCrossDissolve,
-                                          animations: {
-                            btn._jobs_forceSetBackgroundImage(img, for: state)
-                        }, completion: nil)
-                    } else {
-                        btn._jobs_forceSetBackgroundImage(img, for: state)
-                    }
+                    // 背景图会同步到 UIButton.Configuration，避免在 transition 动画块内替换内部层级。
+                    btn._jobs_forceSetBackgroundImage(img, for: state)
                 } else {
                     // ✅ Failure：有兜底图才落兜底；否则继续 shimmer
                     if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {

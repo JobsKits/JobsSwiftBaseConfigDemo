@@ -18,25 +18,59 @@ import JobsScale
 import JobsSwiftBaseDefines
 import SnapKit
 
-// ============================== InputBar（inputAccessoryView） ==============================
+// ============================== InputBar（换行输入 + 独立发送） ==============================
 final class LiveInputBar: UIView {
-    /// 对外回调：点击发送按钮或在键盘上按“发送/回车”时触发
+    static let preferredHeight: CGFloat = 64
+
+    private static let placeholder = "说点什么…".tr
+
+    /// 对外回调：只由输入框右侧的发送按钮触发
     var onSend: ((String) -> Void)?
     /// 是否在发送后清空文本（默认 true）
     var autoClearAfterSend: Bool = true
     /// 是否在发送后收起键盘（默认 true）
     var autoResignAfterSend: Bool = true
 
-    lazy var tf: UITextField = {
-        UITextField()
-            .byBorderStyle(.roundedRect)
-            .byPlaceholder("说点什么…".tr)
-            .byReturnKeyType(.send)
+    private lazy var sendButton: UIButton = {
+        UIButton.sys()
+            .byTitle("发送".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.systemBlue)
+            .byCornerRadius(8)
+            .onTap { [weak self] _ in
+                self?.emitSend()
+            }
             .byAddTo(self) { make in
-                make.leading.equalToSuperview().offset(22.w)
-                make.trailing.equalToSuperview().offset(-22.w)
+                make.trailing.equalToSuperview().inset(12.w)
                 make.centerY.equalToSuperview()
-                make.height.equalTo(38.h)
+                make.width.equalTo(58.w)
+                make.height.equalTo(40.h)
+            }
+    }()
+
+    private lazy var textView: UITextView = {
+        UITextView()
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
+            .byKeyboardType(.default)
+            .byEditable(true)
+            .bySelectable(true)
+            .byTextContainerInset(UIEdgeInsets(top: 7, left: 8, bottom: 7, right: 8))
+            .byLineFragmentPadding(0)
+            .byRoundedBorder(
+                color: JobsCor.systemGray4,
+                width: 1,
+                radius: 8,
+                background: JobsCor.systemBackground
+            )
+            .byPlaceHolder(Self.placeholder)
+            .byPlaceHolderCor(JobsCor.placeholderText)
+            .byPlaceHolderFont(JobsFont.systemFont(ofSize: 16))
+            .byAddTo(self) { [unowned self] make in
+                make.leading.equalToSuperview().offset(12.w)
+                make.trailing.equalTo(sendButton.snp.leading).offset(-8.w)
+                make.top.bottom.equalToSuperview().inset(6.h)
             }
     }()
 
@@ -50,7 +84,7 @@ final class LiveInputBar: UIView {
     }()
 
     override var intrinsicContentSize: CGSize {
-        .init(width: UIView.noIntrinsicMetric, height: 52)
+        .init(width: UIView.noIntrinsicMetric, height: Self.preferredHeight)
     }
 
     override init(frame: CGRect) {
@@ -59,16 +93,21 @@ final class LiveInputBar: UIView {
         isUserInteractionEnabled = true
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
         topLine.byVisible(YES)
-        tf.byVisible(YES)
+        sendButton.byVisible(YES)
+        textView.byVisible(YES)
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    /// 统一出口：采集文本 -> 回调给外部 -> 按配置清空/收键盘
+    /// 点击真实发送按钮后，保留多行文本并追加到留言列表。
     private func emitSend() {
-        let text = (tf.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let text = (textView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
         onSend?(text)
-        if autoClearAfterSend { tf.byText(nil) }
-        if autoResignAfterSend { tf.resignFirstResponder() }
+        if autoClearAfterSend {
+            textView
+                .byText(nil)
+                .byPlaceHolder(Self.placeholder)
+        }
+        if autoResignAfterSend { textView.resignFirstResponder() }
     }
 }
 

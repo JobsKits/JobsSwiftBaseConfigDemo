@@ -116,7 +116,7 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
             UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
         cell.textLabel?.byText(historySearches[indexPath.row])
         cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-        cell.textLabel?.byTextColor(UIColor(r: 0.24 * 255, g: 0.29 * 255, b: 0.35 * 255))
+        cell.textLabel?.byTextColor(JobsCor.label)
         cell.accessoryType = .disclosureIndicator
         cell.byBackgroundColor(JobsCor.clear)
         return cell
@@ -148,12 +148,12 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
         let label = UILabel()
             .byText(config.historyTitle)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-            .byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
+            .byTextColor(JobsCor.secondaryLabel)
             .byTranslatesAutoresizingMaskIntoConstraints(false)
         let clearButton = UIButton.sys()
             .tr_setTitle("清空".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
-            .byTitleColor(UIColor(r: 0.68 * 255, g: 0.30 * 255, b: 0.26 * 255))
+            .byTitleColor(JobsCor.systemRed)
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
         headerView
@@ -205,32 +205,30 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 
 private extension JobsSwiftSearcherView {
     func setupViews() {
-        self.byBackgroundColor(UIColor(r: 0.96 * 255, g: 0.97 * 255, b: 0.99 * 255))
+        self.byBackgroundColor(JobsCor.systemBackground)
         searchContainerView.byTranslatesAutoresizingMaskIntoConstraints(false)
-        searchContainerView.byBackgroundColor(JobsCor.white)
+        searchContainerView.byBackgroundColor(JobsCor.secondarySystemBackground)
         searchContainerView.byCornerRadius(16)
         searchContainerView.byBorderWidth(0.5)
-        searchContainerView.byBorderColor(UIColor(r: 0.93 * 255, g: 0.88 * 255, b: 0.79 * 255))
+        searchContainerView.byBorderColor(JobsCor.separator)
         textField
             .byDelegate(self)
             .byClearButtonMode(.whileEditing)
             .byReturnKeyType(.search)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-            .byTextColor(UIColor(r: 0.24 * 255, g: 0.29 * 255, b: 0.35 * 255))
+            .byTextColor(JobsCor.label)
             .byLeftView(searchIconLeftView())
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
         searchButton
-            .byTitleColor(JobsCor.white)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byBackgroundColor(UIColor(r: 0.68 * 255, g: 0.51 * 255, b: 0.19 * 255))
-            .byCornerRadius(16)
-            .byMasksToBounds(true)
+            .byTitleColor(JobsCor.systemRed)
+            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byBackgroundColor(JobsCor.clear)
             .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
         recommendSectionView.byTranslatesAutoresizingMaskIntoConstraints(false)
         recommendTitleLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-        recommendTitleLabel.byTextColor(UIColor(r: 0.30 * 255, g: 0.35 * 255, b: 0.42 * 255))
+        recommendTitleLabel.byTextColor(JobsCor.secondaryLabel)
         recommendTitleLabel.byTranslatesAutoresizingMaskIntoConstraints(true)
         recommendTagContainerView.byTranslatesAutoresizingMaskIntoConstraints(true)
         tableView.byTranslatesAutoresizingMaskIntoConstraints(false)
@@ -289,7 +287,9 @@ private extension JobsSwiftSearcherView {
     }
 
     func updateByConfig() {
-        textField.byPlaceholder(config.placeholder)
+        textField
+            .byPlaceholder(config.placeholder)
+            .byPlaceholderColor(JobsCor.label)
         searchButton.byTitle(config.searchButtonTitle)
         recommendTitleLabel.byText(config.recommendTitle)
         updateSearchButtonVisible(textField.isFirstResponder)

@@ -22,12 +22,14 @@ import IQKeyboardManagerSwift
 import GKNavigationBarSwift
 
 final class LiveCommentDemoVC: BaseVC {
+    private static let inputBarBottomSpacing: CGFloat = 8
+
     // Data
     private var data: [LiveMsg] = [
         .init(text: "欢迎来到直播间～"),
         .init(text: "礼貌发言，气氛更好 😄")
     ]
-    // 底部输入条：普通子视图（不是 inputAccessoryView）
+    // 底部输入条：只跟随键盘顶部，不带动页面其它内容
     private lazy var accessory: LiveInputBar = {
         LiveInputBar()
             .onSend { [weak self] text in
@@ -38,8 +40,8 @@ final class LiveCommentDemoVC: BaseVC {
             .byAutoResignAfterSend(false)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
-                // 🔑 关键：约束到 view 底部（不是 safeArea），这样整个 view 被 IQKeyboardManager 往上挪时，输入条跟着挪
-                make.bottom.equalToSuperview().offset(-8)
+                make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                    .offset(-Self.inputBarBottomSpacing)
             }
     }()
 
@@ -51,6 +53,7 @@ final class LiveCommentDemoVC: BaseVC {
             .bySeparatorStyle(.none)
             .byKeyboardDismissMode(.interactive)
             .byNoContentInsetAdjustment()
+            .byContentInsetBottom(LiveInputBar.preferredHeight + Self.inputBarBottomSpacing)
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -59,29 +62,33 @@ final class LiveCommentDemoVC: BaseVC {
                     make.top.equalToSuperview()
                 }
                 make.left.right.equalToSuperview()
-                // ✅ 列表底部贴输入条顶部
-                make.bottom.equalTo(self.accessory.snp.top)
+                make.bottom.equalToSuperview()
             }
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
+        disableIQKeyboardDistanceHandling()
         jobsSetupGKNav(
             title: "直播间留言".tr
         )
         accessory.byVisible(YES)
         tableView.byVisible(YES)
+        view.byBringToFront(accessory)
         DispatchQueue.main.async { [weak self] in
             self?.scrollToBottom(false)
         }
     }
-    // MARK: - 发送逻辑
-    private func sendFromInput() {
-        let raw = accessory.tf.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        guard !raw.isEmpty else { return }
-        appendMessage(raw)
-        accessory.tf.byText(nil)
+
+    /// 该页由 keyboardLayoutGuide 管理输入条，避免 IQKeyboardManager 整体平移根视图。
+    private func disableIQKeyboardDistanceHandling() {
+        let manager = IQKeyboardManager.shared
+        let currentType = ObjectIdentifier(LiveCommentDemoVC.self)
+        guard !manager.disabledDistanceHandlingClasses.contains(where: {
+            ObjectIdentifier($0) == currentType
+        }) else { return }
+        manager.disabledDistanceHandlingClasses.append(LiveCommentDemoVC.self)
     }
 
     private func appendMessage(_ text: String) {
@@ -134,12 +141,5 @@ extension LiveCommentDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
         view.endEditing(true)
-    }
-}
-// MARK: —— UITextFieldDelegate
-extension LiveCommentDemoVC: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        sendFromInput()
-        return true
     }
 }

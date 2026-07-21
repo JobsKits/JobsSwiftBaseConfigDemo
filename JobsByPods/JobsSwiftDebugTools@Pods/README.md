@@ -14,6 +14,8 @@
 
 * 只在**Debug**环境下生效，能在**Release**环境下打包
 
+* `VCDebugDeallocDebug.showsDeinitTips` 持久化控制销毁 Toast 是否显示，默认开启；关闭后仍保留控制器销毁与日志清理流程
+
 * 第三方引用
 
   ```ruby
@@ -39,4 +41,10 @@
   #if DEBUG
   VCDebugDeallocDebug.install()
   #endif
+  ```
+
+* 在应用设置页或调试面板中切换销毁提示
+
+  ```swift
+  VCDebugDeallocDebug.showsDeinitTips.toggle()
   ```

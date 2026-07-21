@@ -24,13 +24,14 @@ extension WKWebViewConfiguration {
         return ct
     }
     // MARK: - 基础
-    #if compiler(>=5.10)
-    @available(iOS, introduced: 8.0, deprecated: 15.0, message: "Multiple WKProcessPool instances no longer matter.")
-    #endif
     @discardableResult
     public func byProcessPool(_ pool: WKProcessPool) -> Self {
-        self.processPool = pool
-        return self
+        if #available(iOS 15.0, tvOS 15.0, macOS 12.0, *) {
+            return self
+        } else {
+            self.processPool = pool
+            return self
+        }
     }
     /// 直接拿到 `preferences` 引用修改（WKPreferences 是引用类型）
     @discardableResult
@@ -132,11 +133,14 @@ extension WKWebViewConfiguration {
         return self
     }
 
-    @available(iOS, introduced: 8.0, deprecated: 11.0, message: "Ignored since iOS 11; selection is always character.")
     @discardableResult
     public func bySelectionGranularity(_ g: WKSelectionGranularity) -> Self {
-        self.selectionGranularity = g
-        return self
+        if #available(iOS 11.0, *) {
+            return self
+        } else {
+            self.selectionGranularity = g
+            return self
+        }
     }
 
     @available(iOS 9.0, *)

@@ -73,6 +73,9 @@ public class SlideToUnlockView: UIView {
                 base: JobsCor.systemGray5,                 // 与轨道底色一致
                 highlight: JobsCor.white.withAlphaComponent(0.9)
             )
+            .byShimmerDuration(1.35)
+            .byShimmerPauseDuration(1.8)
+            .byShimmerHighlightWidthRatio(0.12)
         view.byAddTo(trackView)
         view.byFrame(trackView.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]

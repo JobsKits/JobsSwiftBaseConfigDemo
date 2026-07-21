@@ -19,6 +19,29 @@ import JobsToast
 @objc public protocol UIViewControllerDebugDeinitProtocol {
     @objc var debugDeinitTag: String { get }
 }
+
+// MARK: - 对外安装入口
+public enum VCDebugDeallocDebug {
+    private static let showsDeinitTipsKey = "com.jobs.debug.showsControllerDeinitTips"
+
+    /// 是否显示控制器销毁 Toast；未配置时保持历史默认值 `true`。
+    public static var showsDeinitTips: Bool {
+        get {
+            guard UserDefaults.standard.object(forKey: showsDeinitTipsKey) != nil else { return true };return UserDefaults.standard.bool(forKey: showsDeinitTipsKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: showsDeinitTipsKey)
+        }
+    }
+
+    /// 建议在 App 启动时调用一次（AppDelegate / SceneDelegate）。
+    public static func install() {
+        #if DEBUG
+        UIViewController._vcDebug_swizzleViewDidLoadOnce()
+        #endif
+    }
+}
+
 #if DEBUG
 // MARK: - Deinit 监听器
 /// 通过关联对象给 VC 绑定一个监听器对象：
@@ -28,13 +51,6 @@ private final class _VCDebugDeinitObserver {
     private let onDeinit: () -> Void
     init(_ onDeinit: @escaping () -> Void) { self.onDeinit = onDeinit }
     deinit { onDeinit() }
-}
-// MARK: - 对外安装入口
-public enum VCDebugDeallocDebug {
-    /// 建议在 App 启动时调用一次（AppDelegate / SceneDelegate）。
-    public static func install() {
-        UIViewController._vcDebug_swizzleViewDidLoadOnce()
-    }
 }
 // MARK: - UIViewController Hook
 private var _vcDebugDeinitObserverKey: UInt8 = 0
@@ -59,6 +75,7 @@ extension UIViewController {
             text = "🧹 \(clsName) [\(tag)] deinit"
         }
         let observer = _VCDebugDeinitObserver {
+            guard VCDebugDeallocDebug.showsDeinitTips else { return }
             text.toast
         }
         objc_setAssociatedObject(

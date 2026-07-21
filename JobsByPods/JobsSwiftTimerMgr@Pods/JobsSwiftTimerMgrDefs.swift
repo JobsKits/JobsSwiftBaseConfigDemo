@@ -25,7 +25,7 @@ public enum JobsSwiftTimerMgrError: Error,
     }
 }
 // MARK: - 统一动作
-public enum JobsSwiftTimerMgrAction: Sendable {
+public enum JobsSwiftTimerMgrAction: Sendable, Equatable {
     case start
     case pause
     case resume
@@ -46,7 +46,7 @@ public enum JobsTimerDedupPolicy: Sendable {
 public enum JobsTimerBackgroundPolicy: Sendable {
     /// 不处理前后台切换
     case ignore
-    /// 进入后台自动 pause，回到前台只恢复自动 pause 的 timer
+    /// 失去活跃态自动 pause，重新活跃只恢复自动 pause 的 timer
     case pauseAndResume
     /// 进入后台直接 stop + remove
     case cancel

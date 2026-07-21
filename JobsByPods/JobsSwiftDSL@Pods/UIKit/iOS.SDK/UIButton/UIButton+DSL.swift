@@ -22,6 +22,25 @@ private var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 private var _jobsConfigPatchListKey: UInt8 = 0
 private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
+
+extension UIButton {
+    @discardableResult
+    private func _jobsApplyContentEdgeInsets(_ insets: UIEdgeInsets) -> Self {
+        if #available(iOS 15.0, *) {
+            self.configuration = (self.configuration ?? .plain()).byContentInsets(
+                NSDirectionalEdgeInsets(top: insets.top,
+                                        leading: insets.left,
+                                        bottom: insets.bottom,
+                                        trailing: insets.right)
+            )
+            self.byUpdateConfig()
+        } else {
+            let oldInsets = self.contentEdgeInsets
+            self.contentEdgeInsets = insets
+            _jobsSyncLegacyInsetsIfNeeded(old: oldInsets, new: insets)
+        };return self
+    }
+}
 // MARK: - 直接赋值@单参数
 extension UIButton {
     @available(iOS 15.0, *)
@@ -81,34 +100,17 @@ extension UIButton {
 
     @discardableResult
     public func byContentInsets(_ insets: NSDirectionalEdgeInsets) -> Self {
-        if #available(iOS 15.0, *) {
-            self.configuration = (self.configuration ?? .plain()).byContentInsets(insets)
-            self.byUpdateConfig()
-        } else {
-            let newInset = UIEdgeInsets(top: insets.top,
-                                        left: insets.leading,
-                                        bottom: insets.bottom,
-                                        right: insets.trailing)
-            self.contentEdgeInsets = newInset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
-        };return self
+        _jobsApplyContentEdgeInsets(
+            UIEdgeInsets(top: insets.top,
+                         left: insets.leading,
+                         bottom: insets.bottom,
+                         right: insets.trailing)
+        )
     }
 
     @discardableResult
     public func byContentEdgeInsets(_ insets: UIEdgeInsets?) -> Self {
-        let inset = insets ?? .zero
-        if #available(iOS 15.0, *) {
-            self.configuration = (self.configuration ?? .plain()).byContentInsets(
-                NSDirectionalEdgeInsets(top: inset.top,
-                                        leading: inset.left,
-                                        bottom: inset.bottom,
-                                        trailing: inset.right)
-            )
-            self.byUpdateConfig()
-        } else {
-            self.contentEdgeInsets = inset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
-        };return self
+        _jobsApplyContentEdgeInsets(insets ?? .zero)
     }
 
     @discardableResult
@@ -270,34 +272,17 @@ extension UIButton {
     @discardableResult
     public func byContentInsets(_ builder: () -> NSDirectionalEdgeInsets) -> Self {
         let insets = builder()
-        if #available(iOS 15.0, *) {
-            self.configuration = (self.configuration ?? .plain()).byContentInsets(insets)
-            self.byUpdateConfig()
-        } else {
-            let newInset = UIEdgeInsets(top: insets.top,
-                                        left: insets.leading,
-                                        bottom: insets.bottom,
-                                        right: insets.trailing)
-            self.contentEdgeInsets = newInset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: newInset)
-        };return self
+        return _jobsApplyContentEdgeInsets(
+            UIEdgeInsets(top: insets.top,
+                         left: insets.leading,
+                         bottom: insets.bottom,
+                         right: insets.trailing)
+        )
     }
 
     @discardableResult
     public func byContentEdgeInsets(_ builder: () -> UIEdgeInsets?) -> Self {
-        let inset = builder() ?? .zero
-        if #available(iOS 15.0, *) {
-            self.configuration = (self.configuration ?? .plain()).byContentInsets(
-                NSDirectionalEdgeInsets(top: inset.top,
-                                        leading: inset.left,
-                                        bottom: inset.bottom,
-                                        trailing: inset.right)
-            )
-            self.byUpdateConfig()
-        } else {
-            self.contentEdgeInsets = inset
-            _jobsSyncLegacyInsetsIfNeeded(old: self.contentEdgeInsets, new: inset)
-        };return self
+        _jobsApplyContentEdgeInsets(builder() ?? .zero)
     }
 
     @discardableResult

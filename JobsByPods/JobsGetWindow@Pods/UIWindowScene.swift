@@ -22,7 +22,14 @@ public extension UIWindowScene {
     }
 }
 
-@available(*, deprecated, message: "Use UIWindowScene.keyWindow instead on iOS 13+")
+@available(*, deprecated, message: "Use UIWindowScene.keyWindowCompat instead.")
 public func legacyKeyWindowPreiOS13() -> UIWindow? {
-    return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.first
+    if #available(iOS 13.0, *) {
+        return UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }?
+            .keyWindowCompat
+    } else {
+        return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.first
+    }
 }

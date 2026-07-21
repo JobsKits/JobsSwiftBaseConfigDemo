@@ -107,6 +107,15 @@ extension CrashLogDemoVC {
             header += "mtime: \(m)\n"
         }
         header += "didCrashLastRun: \(CrashLogCenter.shared.didCrashLastRun() ? "YES" : "NO")\n"
+        if let memory = CrashLogCenter.shared.latestMemorySnapshot() {
+            header += String(
+                format: "memory: %.1f MB (peak %.1f MB, growth %+.1f MB)\n",
+                Double(memory.footprintBytes) / 1024 / 1024,
+                Double(memory.peakFootprintBytes) / 1024 / 1024,
+                Double(memory.growthBytes) / 1024 / 1024
+            )
+            header += "screen: \(memory.screen)\n"
+        }
         if !keyword.isEmpty {
             header += "filter: \(keyword)\n"
         }

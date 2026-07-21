@@ -121,10 +121,43 @@ extension UIScrollView {
         return self
     }
     // MARK: - Human interaction feedback (haptic + sound)
+    /// ScrollView 级反馈配置，Header / Footer / Left / Right 默认继承这里。
+    @discardableResult
+    public func setRefreshFeedback(_ feedback: JobsRefreshFeedback) -> Self {
+        mrk_proxy.refreshFeedback = feedback
+        return self
+    }
+    /// Header 独立反馈；传 nil 恢复继承 ScrollView 级配置。
+    @discardableResult
+    public func setHeaderRefreshFeedback(_ feedback: JobsRefreshFeedback?) -> Self {
+        mrk_proxy.headerRefreshFeedback = feedback
+        return self
+    }
+    /// Footer 独立反馈；传 nil 恢复继承 ScrollView 级配置。
+    @discardableResult
+    public func setFooterRefreshFeedback(_ feedback: JobsRefreshFeedback?) -> Self {
+        mrk_proxy.footerRefreshFeedback = feedback
+        return self
+    }
+    /// Left 独立反馈；传 nil 恢复继承 ScrollView 级配置。
+    @discardableResult
+    public func setLeftRefreshFeedback(_ feedback: JobsRefreshFeedback?) -> Self {
+        mrk_proxy.leftRefreshFeedback = feedback
+        return self
+    }
+    /// Right 独立反馈；传 nil 恢复继承 ScrollView 级配置。
+    @discardableResult
+    public func setRightRefreshFeedback(_ feedback: JobsRefreshFeedback?) -> Self {
+        mrk_proxy.rightRefreshFeedback = feedback
+        return self
+    }
     /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
     @discardableResult
     public func enableRefreshHaptics(_ enable: Bool) -> Self {
-        mrk_proxy.enablesHaptics = enable
+        mrk_proxy.refreshFeedback = JobsRefreshFeedback(
+            enablesHaptics: enable,
+            soundFileName: mrk_proxy.refreshFeedback.soundFileName
+        )
         return self
     }
     /// Configure a sound file to play when user triggers refresh/loading by reaching threshold.
@@ -132,8 +165,10 @@ extension UIScrollView {
     /// Passing nil or empty string disables sound.
     @discardableResult
     public func setRefreshSound(_ fileName: String?) -> Self {
-        let trimmed = fileName?.trimmingCharacters(in: .whitespacesAndNewlines)
-        mrk_proxy.soundFileName = (trimmed?.isEmpty == true) ? nil : trimmed
+        mrk_proxy.refreshFeedback = JobsRefreshFeedback(
+            enablesHaptics: mrk_proxy.refreshFeedback.enablesHaptics,
+            soundFileName: fileName
+        )
         return self
     }
     // MARK: - Config header/footer/side
@@ -269,18 +304,12 @@ extension UIScrollView {
 extension UIScrollView {
     /// Called by JobsSlot when a refresh/loading is actually triggered (state -> refreshing).
     public func byRefreshFeedback(for position: JobsPosition) {
-        let proxy = mrk_proxy
-        guard proxy.enablesHaptics || (proxy.soundFileName != nil) else { return }
-        // Only trigger for the positions that represent user pull actions.
-        // header/left = refresh; footer/right = load more
-        switch position {
-        case .header, .left, .footer, .right:
-            break
-        }
-        if proxy.enablesHaptics {
+        let feedback = mrk_proxy.refreshFeedback(for: position)
+        guard feedback.enablesHaptics || feedback.soundFileName != nil else { return }
+        if feedback.enablesHaptics {
             jobs_playHapticImpact()
         }
-        if let sound = proxy.soundFileName {
+        if let sound = feedback.soundFileName {
             jobs_playSound(named: sound)
         }
     }

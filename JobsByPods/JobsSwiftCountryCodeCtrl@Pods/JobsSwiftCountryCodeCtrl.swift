@@ -26,8 +26,36 @@ public protocol JobsSwiftCountryCodeCtrlDelegate: AnyObject {
 }
 
 public final class JobsSwiftCountryCodeCtrl: UIViewController {
+    public struct Country {
+        public let countryName: String
+        public let code: String
+        public let regionCode: String
+
+        public var flag: String {
+            if regionCode == "TW" { return "🇹🇼" }
+            let regionalIndicatorOffset: UInt32 = 127397
+            let scalars = regionCode.uppercased().unicodeScalars.compactMap {
+                UnicodeScalar(regionalIndicatorOffset + $0.value)
+            }
+            guard scalars.count == 2 else { return "🏳️" };return String(String.UnicodeScalarView(scalars))
+        }
+
+        public var displayName: String {
+            "\(flag) \(countryName)"
+        }
+
+        fileprivate init(countryName: String,
+                         code: String,
+                         regionCode: String) {
+            self.countryName = countryName
+            self.code = code
+            self.regionCode = regionCode
+        }
+    }
+
     public weak var countryCodeDelegate: JobsSwiftCountryCodeCtrlDelegate?
     public var countryCodeHandler: JobsSwiftCountryCodeHandler?
+    public var countrySelectionHandler: ((Country) -> Void)?
 
     private var sortedNameDict: [String: [String]] = [:]
     private lazy var indexArray: [String] = {
@@ -42,7 +70,11 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
             .bySeparatorStyle(.singleLine)
             .byShowsVerticalScrollIndicator(false)
             .byShowsHorizontalScrollIndicator(false)
-            .byBackgroundColor(JobsCor.clear)
+            .bySeparatorColor(JobsCor.separator)
+            .bySectionIndexColor(JobsCor.systemBlue)
+            .bySectionIndexBackgroundColor(JobsCor.clear)
+            .bySectionIndexTrackingBackgroundColor(JobsCor.tertiarySystemFill)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -51,8 +83,7 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "国家 / 地区代码".tr
-        view.byBackgroundColor(JobsCor.white)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         sortedNameDict = loadCountryCodeDictionary()
         tableView.byVisible(true)
     }
@@ -83,27 +114,92 @@ private extension JobsSwiftCountryCodeCtrl {
         };return [:]
     }
 
-    func countryInfo(at indexPath: IndexPath) -> (countryName: String, code: String)? {
+    func countryInfo(at indexPath: IndexPath) -> Country? {
         guard indexArray.indices.contains(indexPath.section) else { return nil }
         let key = indexArray[indexPath.section]
         guard let rows = sortedNameDict[key],
               rows.indices.contains(indexPath.row) else { return nil }
-        let parts = rows[indexPath.row].components(separatedBy: "+")
-        guard parts.count > 1 else { return nil };return (parts[0], parts[1])
+        let row = rows[indexPath.row]
+        guard let separatorRange = row.range(of: "+", options: .backwards) else { return nil }
+        let countryName = String(row[..<separatorRange.lowerBound])
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let code = String(row[separatorRange.upperBound...])
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let regionCode = Self.regionCode(for: countryName) else { return nil };return Country(
+            countryName: countryName,
+            code: code,
+            regionCode: regionCode)
     }
 
     func selectCountry(at indexPath: IndexPath) {
-        guard let info = countryInfo(at: indexPath) else { return }
+        guard let country = countryInfo(at: indexPath) else { return }
         countryCodeDelegate?.jobsSwiftCountryCodeCtrl(self,
-                                                      didSelectCountryName: info.countryName,
-                                                      code: info.code)
-        countryCodeHandler?(info.countryName, info.code)
+                                                      didSelectCountryName: country.countryName,
+                                                      code: country.code)
+        countryCodeHandler?(country.countryName, country.code)
+        countrySelectionHandler?(country)
         if let navigationController {
             navigationController.popViewController(animated: true)
         } else {
             presentingViewController?.dismiss(animated: true)
         }
     }
+
+    static func regionCode(for countryName: String) -> String? {
+        regionCodeByCountryName[normalizedCountryName(countryName)]
+    }
+
+    static func normalizedCountryName(_ countryName: String) -> String {
+        countryName
+            .folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
+                     locale: Locale(identifier: "en_US_POSIX"))
+            .unicodeScalars
+            .filter { CharacterSet.alphanumerics.contains($0) }
+            .map(String.init)
+            .joined()
+    }
+
+    static let regionCodeAliases: [String: String] = [
+        "中国": "CN", "中国台湾": "TW", "中国澳门": "MO", "中国香港": "HK",
+        "中非": "CF", "刚果": "CG", "刚果民主共和国": "CD", "加那利群岛": "IC",
+        "千里达及托巴哥": "TT", "密克罗尼西亚联邦": "FM", "巴勒斯坦": "PS",
+        "布基拉法索": "BF", "格陵兰岛": "GL", "波黑": "BA", "留尼旺岛": "RE",
+        "荷属安的列斯": "CW", "蒙塞拉特岛": "MS", "西萨摩亚": "WS", "阿森松": "AC",
+        "阿鲁巴岛": "AW", "马其顿": "MK",
+        "Antigua and Barbuda": "AG", "Bosnia and Herzegovina": "BA",
+        "British Indian Ocean Territory": "IO", "Brunei Darussalam": "BN", "China": "CN",
+        "Czech Republic": "CZ", "Macedonia": "MK", "Myanmar": "MM",
+        "Saint Barthélemy": "BL", "Saint Helena": "SH", "Saint Kitts and Nevis": "KN",
+        "Saint Lucia": "LC", "Saint Martin": "MF", "Saint Pierre and Miquelon": "PM",
+        "Saint Vincent and the Grenadines": "VC", "Svalbard and Jan Mayen": "SJ",
+        "Swaziland": "SZ", "São Tomé and Príncipe": "ST", "Trinidad and Tobago": "TT",
+        "Turkey": "TR", "Turks and Caicos Islands": "TC", "Virgin Islands, British": "VG",
+        "Virgin Islands, U.S.": "VI", "Wallis and Futuna": "WF"
+    ]
+
+    static let regionCodeByCountryName: [String: String] = {
+        let locales = ["en_US", "en_GB", "zh_Hans_CN", "zh_Hant_TW", "zh_Hant_HK"]
+            .map(Locale.init(identifier:))
+        let regionCodes: [String]
+        if #available(iOS 16.0, *) {
+            regionCodes = Locale.Region.isoRegions.map(\.identifier)
+        } else {
+            regionCodes = Locale.isoRegionCodes
+        }
+        var result: [String: String] = [:]
+        for regionCode in regionCodes {
+            for locale in locales {
+                guard let countryName = locale.localizedString(forRegionCode: regionCode) else { continue }
+                let key = normalizedCountryName(countryName)
+                if result[key] == nil {
+                    result[key] = regionCode
+                }
+            }
+        }
+        regionCodeAliases.forEach {
+            result[normalizedCountryName($0.key)] = $0.value
+        };return result
+    }()
 }
 
 extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
@@ -120,13 +216,16 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
         let identifier = "JobsSwiftCountryCodeCtrlCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
             ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
-        let info = countryInfo(at: indexPath)
-        cell.textLabel?.byText(info?.countryName)
+        let country = countryInfo(at: indexPath)
+        cell.bySelectionStyle(.none)
+        cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+        cell.contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+        cell.textLabel?.byText(country?.displayName)
         cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
-        cell.detailTextLabel?.byText(info.map { "+\($0.code)" })
+        cell.textLabel?.byTextColor(JobsCor.label)
+        cell.detailTextLabel?.byText(country.map { "+\($0.code)" })
         cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
         cell.detailTextLabel?.byTextColor(JobsCor.secondaryLabel)
-        cell.selectionStyle = .none
         return cell
     }
 
