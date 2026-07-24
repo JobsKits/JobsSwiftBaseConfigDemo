@@ -373,9 +373,13 @@ extension JobsTaskManager {
 
     private func status(for lifecycle: JobsTaskLifecycle) -> JobsTaskStatus? {
         switch lifecycle {
+        /// 处理 .idle 分支
         case .idle: return .prepare
+        /// 处理 .running 分支
         case .running: return .execute
+        /// 处理 .suspended 分支
         case .suspended: return .suspend
+        /// 合并处理 .cancelled、.finished 分支
         case .cancelled, .finished: return .ended
         }
     }
@@ -485,16 +489,19 @@ extension JobsTaskManager: TaskForApplicationStatusDelegate {
     public func applicationStatusDidChanged(_ state: UIApplication.State) {
         let snapshot = tasksSnapshot()
         switch state {
+        /// 处理 .active 分支
         case .active:
             snapshot.filter { $0.status == .background }.forEach {
                 resume(by: $0.tag)
                 executeNow(by: $0.tag)
             }
+        /// 处理 .background 分支
         case .background:
             snapshot.filter { $0.status == .execute }.forEach { item in
                 item.task.suspend()
                 updateStatus(for: item.tag, to: .background)
             }
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

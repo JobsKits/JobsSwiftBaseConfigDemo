@@ -36,6 +36,8 @@ public final class JobsSideDrawerConfiguration {
     public var interactiveProjectionTime: TimeInterval
     /// 主轴速度达到副轴速度的该比例后即可接管手势。
     public var interactiveAxisDominanceRatio: CGFloat
+    /// 抽屉完成关闭后回调，模态预览可在此退出承载页面。
+    public var onDidClose: (() -> Void)?
 
     public init(direction: JobsSideDrawerDirection = .left,
                 contentMode: JobsSideDrawerContentMode = .following,
@@ -47,7 +49,8 @@ public final class JobsSideDrawerConfiguration {
                 interactiveCompletionThreshold: CGFloat = 0.28,
                 interactiveVelocityThreshold: CGFloat = 360,
                 interactiveProjectionTime: TimeInterval = 0.18,
-                interactiveAxisDominanceRatio: CGFloat = 0.8) {
+                interactiveAxisDominanceRatio: CGFloat = 0.8,
+                onDidClose: (() -> Void)? = nil) {
         self.direction = direction
         self.contentMode = contentMode
         self.presentedRatio = max(0.1, min(1, presentedRatio))
@@ -59,6 +62,7 @@ public final class JobsSideDrawerConfiguration {
         self.interactiveVelocityThreshold = max(interactiveVelocityThreshold, 0)
         self.interactiveProjectionTime = max(interactiveProjectionTime, 0)
         self.interactiveAxisDominanceRatio = max(0, min(1, interactiveAxisDominanceRatio))
+        self.onDidClose = onDidClose
     }
 }
 
@@ -200,6 +204,9 @@ public final class JobsSideDrawerVC: UIViewController {
     private func setDrawer(open: Bool,
                            animated: Bool,
                            initialVelocity: CGFloat = 0) {
+        if open {
+            dismissKeyboardBeforeOpening()
+        }
         let startProgress = stopTransitionAtRenderedProgress()
         interactionStartProgress = nil
         interactionIntent = nil
@@ -256,9 +263,13 @@ public final class JobsSideDrawerVC: UIViewController {
         var contentFrame = bounds
         if configuration.contentMode == .following {
             switch configuration.direction {
+            /// 处理 .left 分支
             case .left: contentFrame.origin.x += distance * progress
+            /// 处理 .right 分支
             case .right: contentFrame.origin.x -= distance * progress
+            /// 处理 .top 分支
             case .top: contentFrame.origin.y += distance * progress
+            /// 处理 .bottom 分支
             case .bottom: contentFrame.origin.y -= distance * progress
             }
         }
@@ -275,9 +286,13 @@ public final class JobsSideDrawerVC: UIViewController {
 
     private func updateGestureConfiguration() {
         switch configuration.direction {
+        /// 处理 .left 分支
         case .left: openGesture.edges = .left
+        /// 处理 .right 分支
         case .right: openGesture.edges = .right
+        /// 处理 .top 分支
         case .top: openGesture.edges = .top
+        /// 处理 .bottom 分支
         case .bottom: openGesture.edges = .bottom
         }
         updateGestureAvailability()
@@ -297,18 +312,26 @@ public final class JobsSideDrawerVC: UIViewController {
 
     private func openingTranslation(for translation: CGPoint) -> CGFloat {
         switch configuration.direction {
+        /// 处理 .left 分支
         case .left: return translation.x
+        /// 处理 .right 分支
         case .right: return -translation.x
+        /// 处理 .top 分支
         case .top: return translation.y
+        /// 处理 .bottom 分支
         case .bottom: return -translation.y
         }
     }
 
     private func openingVelocity(for velocity: CGPoint) -> CGFloat {
         switch configuration.direction {
+        /// 处理 .left 分支
         case .left: return velocity.x
+        /// 处理 .right 分支
         case .right: return -velocity.x
+        /// 处理 .top 分支
         case .top: return velocity.y
+        /// 处理 .bottom 分支
         case .bottom: return -velocity.y
         }
     }
@@ -316,14 +339,18 @@ public final class JobsSideDrawerVC: UIViewController {
     private func updateInteractiveTransition(_ gesture: UIPanGestureRecognizer,
                                              intent: InteractionIntent) {
         switch gesture.state {
+        /// 处理 .began 分支
         case .began:
             beginInteraction(intent: intent)
             updateInteractionProgress(using: gesture)
+        /// 处理 .changed 分支
         case .changed:
             updateInteractionProgress(using: gesture)
+        /// 合并处理 .ended、.cancelled、.failed 分支
         case .ended, .cancelled, .failed:
             updateInteractionProgress(using: gesture)
             finishInteraction(using: gesture, intent: intent)
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }
@@ -395,9 +422,13 @@ private extension JobsSideDrawerVC {
         if configuration.direction == .bottom { shownFrame.origin.y = bounds.height - distance }
         var hiddenFrame = shownFrame
         switch configuration.direction {
+        /// 处理 .left 分支
         case .left: hiddenFrame.origin.x = -distance
+        /// 处理 .right 分支
         case .right: hiddenFrame.origin.x = bounds.width
+        /// 处理 .top 分支
         case .top: hiddenFrame.origin.y = -distance
+        /// 处理 .bottom 分支
         case .bottom: hiddenFrame.origin.y = bounds.height
         };return (shownFrame, hiddenFrame)
     }
@@ -422,10 +453,12 @@ private extension JobsSideDrawerVC {
         let hiddenOrigin: CGFloat
         let currentOrigin: CGFloat
         switch configuration.direction {
+        /// 合并处理 .left、.right 分支
         case .left, .right:
             shownOrigin = frames.shown.origin.x
             hiddenOrigin = frames.hidden.origin.x
             currentOrigin = presentationFrame.origin.x
+        /// 合并处理 .top、.bottom 分支
         case .top, .bottom:
             shownOrigin = frames.shown.origin.y
             hiddenOrigin = frames.hidden.origin.y
@@ -442,6 +475,7 @@ private extension JobsSideDrawerVC {
         isAnimatingTransition = false
         if !open { dimControl.byHidden(true) }
         updateGestureAvailability()
+        if !open { configuration.onDidClose?() }
     }
 
     func settlementDuration(from startProgress: CGFloat,
@@ -464,12 +498,19 @@ private extension JobsSideDrawerVC {
     }
 
     private func beginInteraction(intent: InteractionIntent) {
+        if intent == .opening {
+            dismissKeyboardBeforeOpening()
+        }
         let progress = stopTransitionAtRenderedProgress()
         interactionIntent = intent
         interactionStartProgress = progress
         if progress > Self.progressEpsilon || intent == .opening {
             dimControl.byHidden(false)
         }
+    }
+
+    private func dismissKeyboardBeforeOpening() {
+        mainContentView.endEditing(true)
     }
 
     func updateInteractionProgress(using gesture: UIPanGestureRecognizer) {
@@ -498,9 +539,11 @@ private extension JobsSideDrawerVC {
                 )
             )
             switch intent {
+            /// 处理 .opening 分支
             case .opening:
                 shouldOpen = max(currentProgress, projectedProgress)
                     >= configuration.interactiveCompletionThreshold
+            /// 处理 .closing 分支
             case .closing:
                 shouldOpen = min(currentProgress, projectedProgress)
                     > 1 - configuration.interactiveCompletionThreshold
@@ -514,7 +557,9 @@ private extension JobsSideDrawerVC {
     private func isExpectedDirection(_ openingVelocity: CGFloat,
                                      for intent: InteractionIntent) -> Bool {
         switch intent {
+        /// 处理 .opening 分支
         case .opening: return openingVelocity > 0
+        /// 处理 .closing 分支
         case .closing: return openingVelocity < 0
         }
     }

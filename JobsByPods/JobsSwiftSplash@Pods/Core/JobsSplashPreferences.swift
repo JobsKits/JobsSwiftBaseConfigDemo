@@ -9,6 +9,7 @@ import Foundation
 
 public enum JobsSplashPreferences {
     private static let enabledKey = "JobsSwiftSplash.isEnabledForNextLaunch"
+    private static let contentTypeKey = "com.jobs.splash.contentTypeForNextLaunch"
 
     public static var isEnabledForNextLaunch: Bool {
         get {
@@ -16,6 +17,15 @@ public enum JobsSplashPreferences {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: enabledKey)
+        }
+    }
+
+    public static var contentTypeForNextLaunch: JobsSplashContentType {
+        get {
+            JobsSplashContentType(rawValue: UserDefaults.standard.integer(forKey: contentTypeKey)) ?? .localImage
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: contentTypeKey)
         }
     }
 

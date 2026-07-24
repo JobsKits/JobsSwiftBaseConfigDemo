@@ -69,12 +69,15 @@ extension UIButton {
 
     private func applyDefaultTimerUI(for state: TimerState) {
         switch state {
+        /// 合并处理 .idle、.stopped 分支
         case .idle, .stopped:
             isEnabled = true
             alpha = 1.0
+        /// 处理 .running 分支
         case .running:
             isEnabled = true
             alpha = 1.0
+        /// 处理 .paused 分支
         case .paused:
             isEnabled = true
             alpha = 0.85
@@ -166,6 +169,7 @@ extension UIButton {
                 guard var mode = objc_getAssociatedObject(self, &_timerModeKey) as? _TimerMode else { return }
                 let k = (objc_getAssociatedObject(self, &_timerKindKey) as? JobsTimerKind) ?? kind
                 switch mode {
+                /// 处理 .countUp 分支
                 case .countUp(let elapsed0):
                     let elapsed = elapsed0 + 1
                     mode = .countUp(elapsed: elapsed)
@@ -180,6 +184,7 @@ extension UIButton {
                         as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
                         tick(self, elapsed, nil, k)
                     }
+                /// 处理 .countdown 分支
                 case .countdown(let remain0, let total):
                     let remain = remain0 - 1
                     if remain > 0 {
@@ -243,6 +248,7 @@ extension UIButton {
         onMainAsync(self) { vc in
             var mode = mode0
             switch mode {
+            /// 处理 .countUp 分支
             case .countUp(let elapsed0):
                 let elapsed = elapsed0 + 1
                 mode = .countUp(elapsed: elapsed)
@@ -257,6 +263,7 @@ extension UIButton {
                     as? (UIButton, Int, Int?, JobsTimerKind) -> Void {
                     tick(self, elapsed, nil, k)
                 }
+            /// 处理 .countdown 分支
             case .countdown(let remain0, let total):
                 let remain = remain0 - 1
                 if remain > 0 {

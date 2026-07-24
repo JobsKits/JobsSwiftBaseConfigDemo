@@ -10,6 +10,7 @@ import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
 import Jobsl10n
+import SnapKit
 
 public final class JobsSwiftSearcherView: UIView {
     public private(set) var textField = UITextField()
@@ -23,9 +24,9 @@ public final class JobsSwiftSearcherView: UIView {
     private let recommendTagContainerView = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let blankTapGestureRecognizer = UITapGestureRecognizer()
-    private var searchButtonLeftConstraint: NSLayoutConstraint?
-    private var searchButtonWidthConstraint: NSLayoutConstraint?
-    private var recommendSectionHeightConstraint: NSLayoutConstraint?
+    private var searchButtonLeftConstraint: Constraint?
+    private var searchButtonWidthConstraint: Constraint?
+    private var recommendSectionHeightConstraint: Constraint?
     private var recommendSearches: [String] = []
     private var recommendButtons: [UIButton] = []
 
@@ -113,13 +114,22 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseIdentifier = "JobsSwiftSearcherHistoryCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
-            UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-        cell.textLabel?.byText(historySearches[indexPath.row])
-        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-        cell.textLabel?.byTextColor(JobsCor.label)
-        cell.accessoryType = .disclosureIndicator
-        cell.byBackgroundColor(JobsCor.clear)
-        return cell
+            UITableViewCell.make(style: .default, reuseIdentifier: reuseIdentifier)
+        let historyText = historySearches[indexPath.row]
+        let deleteButton = UIButton.sys()
+            .byImage("xmark".sysImg.withRenderingMode(.alwaysTemplate))
+            .byTintColor(JobsCor.secondaryLabel)
+            .byFrame(CGRect(x: 0, y: 0, width: 38, height: 38))
+            .byImageEdgeInsets(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+            .onTap { [weak self] _ in
+                self?.deleteHistory(by: historyText)
+            };return cell
+            .byText(historyText)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTitleCor(JobsCor.label)
+            .byAccessoryType(.none)
+            .byAccessoryView(deleteButton)
+            .byBackgroundColor(JobsCor.clear)
     }
 
     public func tableView(_ tableView: UITableView,
@@ -149,23 +159,24 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
             .byText(config.historyTitle)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
-            .byTranslatesAutoresizingMaskIntoConstraints(false)
         let clearButton = UIButton.sys()
             .tr_setTitle("清空".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTitleColor(JobsCor.systemRed)
-            .byTranslatesAutoresizingMaskIntoConstraints(false)
-            .byAddTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
+            .onTap { [weak self] _ in
+                self?.clearButtonTapped()
+            }
         headerView
             .byAddSubviewRetSuper(label)
             .byAddSubviewRetSuper(clearButton)
-        NSLayoutConstraint.activate([
-            label.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 16),
-            label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            clearButton.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -16),
-            clearButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
-        ])
-        return headerView
+        label.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(16)
+            make.centerY.equalToSuperview()
+        }
+        clearButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-16)
+            make.centerY.equalToSuperview()
+        };return headerView
     }
 
     public func tableView(_ tableView: UITableView,
@@ -206,7 +217,6 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 private extension JobsSwiftSearcherView {
     func setupViews() {
         self.byBackgroundColor(JobsCor.systemBackground)
-        searchContainerView.byTranslatesAutoresizingMaskIntoConstraints(false)
         searchContainerView.byBackgroundColor(JobsCor.secondarySystemBackground)
         searchContainerView.byCornerRadius(16)
         searchContainerView.byBorderWidth(0.5)
@@ -218,23 +228,28 @@ private extension JobsSwiftSearcherView {
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byTextColor(JobsCor.label)
             .byLeftView(searchIconLeftView())
-            .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byAddTarget(self, action: #selector(textFieldEditingChanged), for: .editingChanged)
         searchButton
-            .byTitleColor(JobsCor.systemRed)
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
-            .byBackgroundColor(JobsCor.clear)
-            .byTranslatesAutoresizingMaskIntoConstraints(false)
-            .byAddTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
-        recommendSectionView.byTranslatesAutoresizingMaskIntoConstraints(false)
+            .byTitleColor(JobsCor.white)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byNumberOfLines(1)
+            .byLineBreakMode(.byClipping)
+            .byTitleAdjustsFontSizeToFitWidth(true)
+            .byTitleMinimumScaleFactor(0.8)
+            .byContentHorizontalAlignment(.center)
+            .byBackgroundColor(JobsCor.systemBlue)
+            .byCornerRadius(10)
+            .onTap { [weak self] _ in
+                self?.searchButtonTapped()
+            }
         recommendTitleLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
         recommendTitleLabel.byTextColor(JobsCor.secondaryLabel)
         recommendTitleLabel.byTranslatesAutoresizingMaskIntoConstraints(true)
         recommendTagContainerView.byTranslatesAutoresizingMaskIntoConstraints(true)
-        tableView.byTranslatesAutoresizingMaskIntoConstraints(false)
         tableView
             .byDelegate(self)
             .byDataSource(self)
+        tableView.jobs_emptyAutoDisabled = true
         tableView.separatorStyle = .singleLine
         tableView.byBackgroundColor(JobsCor.clear)
         tableView.keyboardDismissMode = .onDrag
@@ -259,37 +274,36 @@ private extension JobsSwiftSearcherView {
     }
 
     func setupConstraints() {
-        recommendSectionHeightConstraint = recommendSectionView.heightAnchor.constraint(equalToConstant: 0)
-        searchButtonLeftConstraint = searchButton.leftAnchor.constraint(equalTo: searchContainerView.rightAnchor, constant: 0)
-        searchButtonWidthConstraint = searchButton.widthAnchor.constraint(equalToConstant: 0)
-        NSLayoutConstraint.activate([
-            searchContainerView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            searchContainerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
-            searchContainerView.heightAnchor.constraint(equalToConstant: 42),
-            searchButtonLeftConstraint!,
-            searchButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
-            searchButton.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
-            searchButton.heightAnchor.constraint(equalToConstant: 42),
-            searchButtonWidthConstraint!,
-            textField.topAnchor.constraint(equalTo: searchContainerView.topAnchor),
-            textField.leftAnchor.constraint(equalTo: searchContainerView.leftAnchor, constant: 12),
-            textField.rightAnchor.constraint(equalTo: searchContainerView.rightAnchor, constant: -12),
-            textField.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor),
-            recommendSectionView.topAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 12),
-            recommendSectionView.leftAnchor.constraint(equalTo: leftAnchor),
-            recommendSectionView.rightAnchor.constraint(equalTo: rightAnchor),
-            recommendSectionHeightConstraint!,
-            tableView.topAnchor.constraint(equalTo: recommendSectionView.bottomAnchor),
-            tableView.leftAnchor.constraint(equalTo: leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        searchContainerView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(12)
+            make.left.equalToSuperview().offset(16)
+            make.height.equalTo(42)
+        }
+        searchButton.snp.makeConstraints { make in
+            searchButtonLeftConstraint = make.left.equalTo(searchContainerView.snp.right).constraint
+            make.right.equalToSuperview().offset(-16)
+            make.centerY.equalTo(searchContainerView)
+            make.height.equalTo(42)
+            searchButtonWidthConstraint = make.width.equalTo(0).constraint
+        }
+        textField.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12))
+        }
+        recommendSectionView.snp.makeConstraints { make in
+            make.top.equalTo(searchContainerView.snp.bottom).offset(12)
+            make.left.right.equalToSuperview()
+            recommendSectionHeightConstraint = make.height.equalTo(0).constraint
+        }
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(recommendSectionView.snp.bottom)
+            make.left.right.bottom.equalToSuperview()
+        }
     }
 
     func updateByConfig() {
         textField
             .byPlaceholder(config.placeholder)
-            .byPlaceholderColor(JobsCor.label)
+            .byPlaceholderColor(JobsCor.placeholderText)
         searchButton.byTitle(config.searchButtonTitle)
         recommendTitleLabel.byText(config.recommendTitle)
         updateSearchButtonVisible(textField.isFirstResponder)
@@ -300,8 +314,8 @@ private extension JobsSwiftSearcherView {
     }
 
     func updateSearchButtonVisible(_ visible: Bool) {
-        searchButtonLeftConstraint?.constant = visible ? 8 : 0
-        searchButtonWidthConstraint?.constant = visible ? 56 : 0
+        searchButtonLeftConstraint?.update(offset: visible ? 8 : 0)
+        searchButtonWidthConstraint?.update(offset: visible ? 68 : 0)
         searchButton.byAlpha(visible ? 1 : 0)
         searchButton.isUserInteractionEnabled = visible
         UIView.jobsAnimate(0.22) {
@@ -355,9 +369,9 @@ private extension JobsSwiftSearcherView {
                 .byTitleMinimumScaleFactor(0.72)
                 .byTitle(title)
                 .byTitleColor(JobsCor.white)
-                .byAddTarget(self,
-                             action: #selector(recommendTagButtonTapped(_:)),
-                             for: .touchUpInside)
+                .onTap { [weak self] sender in
+                    self?.recommendTagButtonTapped(sender)
+                }
                 .byAddTo(recommendTagContainerView)
         }
     }
@@ -368,7 +382,7 @@ private extension JobsSwiftSearcherView {
         recommendTitleLabel.byHidden(!hasRecommend)
         recommendTagContainerView.byHidden(!hasRecommend)
         guard hasRecommend else {
-            recommendSectionHeightConstraint?.constant = 0
+            recommendSectionHeightConstraint?.update(offset: 0)
             return
         }
         let sectionWidth = bounds.width
@@ -395,7 +409,7 @@ private extension JobsSwiftSearcherView {
         }
         let tagsHeight = recommendButtons.isEmpty ? 0 : y + tagHeight
         recommendTagContainerView.byFrame(CGRect(x: 0, y: tagTop, width: sectionWidth, height: tagsHeight))
-        recommendSectionHeightConstraint?.constant = tagTop + tagsHeight + 10
+        recommendSectionHeightConstraint?.update(offset: tagTop + tagsHeight + 10)
     }
 
     func recommendTagColor(at index: Int) -> UIColor {

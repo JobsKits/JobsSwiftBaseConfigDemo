@@ -55,8 +55,10 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
         /// - `.countDown` 返回 1 → 0（剩余比例）
         public func progress(for mode: Mode) -> Double {
             switch mode {
+            /// 处理 .countUp 分支
             case .countUp:
                 return elapsedRatio
+            /// 处理 .countDown 分支
             case .countDown:
                 return remainingRatio
             }

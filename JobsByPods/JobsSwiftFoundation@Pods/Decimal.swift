@@ -76,13 +76,19 @@ extension Decimal {
     // MARK: - 内部：把自定义规则映射到 NSDecimalNumber.RoundingMode
     private static func _nsMode(for x: Decimal, rule: RoundingRule) -> NSDecimalNumber.RoundingMode {
         switch rule {
+        /// 处理 .plain 分支
         case .plain:        return .plain
+        /// 处理 .down 分支
         case .down:         return .down
+        /// 处理 .up 分支
         case .up:           return .up
+        /// 处理 .bankers 分支
         case .bankers:      return .bankers
+        /// 处理 .towardZero 分支
         case .towardZero:
             // 正数向下，负数向上 -> 趋近零
             return (x >= 0) ? .down : .up
+        /// 处理 .awayFromZero 分支
         case .awayFromZero:
             // 正数向上，负数向下 -> 远离零
             return (x >= 0) ? .up : .down

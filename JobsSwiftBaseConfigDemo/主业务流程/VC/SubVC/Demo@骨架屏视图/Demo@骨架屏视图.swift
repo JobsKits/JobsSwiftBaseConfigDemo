@@ -65,8 +65,8 @@ final class SkeletonViewDemoVC: BaseVC {
             rightButtons: [
                 UIButton.sys()
                     /// 按钮图片@图文关系
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
+                    .byImage("arrow.clockwise.circle".sysImg, for: .normal)
+                    .byImage("arrow.clockwise.circle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
@@ -77,8 +77,8 @@ final class SkeletonViewDemoVC: BaseVC {
                     },
                 UIButton.sys()
                     /// 按钮图片@图文关系
-                    .byImage("globe".sysImg, for: .normal)
-                    .byImage("globe".sysImg, for: .selected)
+                    .byImage("waveform.path.ecg".sysImg, for: .normal)
+                    .byImage("waveform.path.ecg".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }

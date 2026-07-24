@@ -445,17 +445,6 @@ def jobs_patch_pods_project!(installer)
   pods_project.save
 end
 
-# 在 Pods 分组里展示 Podfile.deps（方便改依赖/支持 Ruby 高亮）
-def jobs_show_deps_file_in_pods_group!(installer)
-  pods_project = installer.pods_project
-  main_group   = pods_project.main_group
-  deps_relpath = '../Podfile.deps'
-
-  file_ref = main_group.find_file_by_path(deps_relpath) || main_group.new_file(deps_relpath)
-  file_ref.explicit_file_type = 'text.script.ruby' if file_ref.respond_to?(:explicit_file_type=)
-  pods_project.save
-end
-
 # Xcode 26+ 会把 netinet6/in6.h 视作私有头，部分第三方库仍保留旧引用。
 def patch_private_netinet6_header_imports
   patch_targets = {
@@ -568,10 +557,7 @@ post_install do |installer|
   jobs_patch_pods_project!(installer)
   patch_private_netinet6_header_imports
 
-  # -------- 2、在 Pods 分组里展示 Podfile.deps（Ruby 高亮） --------
-  jobs_show_deps_file_in_pods_group!(installer)
-
-  # -------- 3、pod install 完成后生成 Podspec 依赖分析报告 --------
+  # -------- 2、pod install 完成后生成 Podspec 依赖分析报告 --------
   run_podspec_dependency_report_script
 end
 

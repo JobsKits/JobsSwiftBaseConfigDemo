@@ -59,8 +59,10 @@ extension UIButton {
             return self
         }
         switch source {
+        /// 处理 .image 分支
         case .image(let img):
             self.setBackgroundImage(img, for: state)
+        /// 处理 .base64 分支
         case .base64(let b64):
             if let data = Data(base64Encoded: b64, options: .ignoreUnknownCharacters),
                let img = UIImage(data: data) {
@@ -68,6 +70,7 @@ extension UIButton {
             } else {
                 self.setBackgroundImage(nil, for: state)
             }
+        /// 处理 .url 分支
         case .url(let url):
             let key = url.absoluteString as NSString
             if let cached = _JobsImageCache.shared.cache.object(forKey: key) {

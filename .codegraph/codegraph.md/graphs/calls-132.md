@@ -13,31 +13,31 @@
 ```mermaid
 flowchart LR
   S1["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T1["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
+  T1["function:ASTextCFRangeFromNSRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:310"]
   S1 -->|calls| T1
   S2["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T2["function:ASTextCFRangeFromNSRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:310"]
+  T2["function:ASTextUIEdgeInsetsInvert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:178"]
   S2 -->|calls| T2
   S3["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T3["function:ASTextUIEdgeInsetsInvert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:178"]
+  T3["function:ASTextNSRangeFromCFRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:302"]
   S3 -->|calls| T3
   S4["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T4["function:ASTextNSRangeFromCFRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:302"]
+  T4["method:NSMutableAttributedString::as_allDiscontinuousAttributeKeys<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1193"]
   S4 -->|calls| T4
   S5["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T5["method:NSMutableAttributedString::as_allDiscontinuousAttributeKeys<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.mm:1193"]
+  T5["method:ASMutableAttributedStringBuilder::initWithString:attributes:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:39"]
   S5 -->|calls| T5
   S6["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T6["method:ASMutableAttributedStringBuilder::initWithString:attributes:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:39"]
+  T6["function:ASTextVerticalFormRotateCharacterSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.mm:11"]
   S6 -->|calls| T6
   S7["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T7["function:ASTextVerticalFormRotateCharacterSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.mm:11"]
+  T7["function:ASTextVerticalFormRotateAndMoveCharacterSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.mm:54"]
   S7 -->|calls| T7
   S8["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T8["function:ASTextVerticalFormRotateAndMoveCharacterSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.mm:54"]
+  T8["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
   S8 -->|calls| T8
   S9["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T9["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
+  T9["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
   S9 -->|calls| T9
   S10["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
   T10["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
@@ -48,38 +48,38 @@ flowchart LR
   S12["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
   T12["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
   S12 -->|calls| T12
-  S13["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
-  T13["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
+  S13["method:ASTextLayout::layoutWithContainers:text:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1013"]
+  T13["method:ASTextLayout::layoutWithContainers:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1017"]
   S13 -->|calls| T13
-  S14["method:ASTextLayout::layoutWithContainers:text:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1013"]
-  T14["method:ASTextLayout::layoutWithContainers:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1017"]
+  S14["method:ASTextLayout::layoutWithContainers:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1017"]
+  T14["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
   S14 -->|calls| T14
   S15["method:ASTextLayout::layoutWithContainers:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1017"]
-  T15["method:ASTextContainer::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:127"]
+  T15["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
   S15 -->|calls| T15
-  S16["method:ASTextLayout::layoutWithContainers:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1017"]
-  T16["method:ASTextLayout::layoutWithContainer:text:range:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:398"]
+  S16["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
+  T16["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S16 -->|calls| T16
   S17["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
   T17["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S17 -->|calls| T17
   S18["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
-  T18["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
+  T18["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
   S18 -->|calls| T18
-  S19["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
-  T19["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
+  S19["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
+  T19["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
   S19 -->|calls| T19
   S20["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
-  T20["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
+  T20["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
   S20 -->|calls| T20
-  S21["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
-  T21["variable:block<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.mm:351"]
+  S21["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
+  T21["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
   S21 -->|calls| T21
-  S22["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
-  T22["function:ASTextCTFontContainsColorBitmapGlyphs<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:98"]
+  S22["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
+  T22["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
   S22 -->|calls| T22
   S23["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T23["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
+  T23["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S23 -->|calls| T23
   S24["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
   T24["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]

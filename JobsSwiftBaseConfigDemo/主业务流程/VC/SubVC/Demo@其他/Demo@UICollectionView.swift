@@ -12,7 +12,6 @@ import AppKit
 import UIKit
 #endif
 
-import JobsToast
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsEmptyView
@@ -68,7 +67,8 @@ final class EmptyCollectionViewDemoVC: BaseVC {
             .byEmptyViewProvider { [unowned self] in
                 JobsEmptyView()
                     .byOnTapRetry { [weak self] in
-                        "hello".tr.toast
+                        guard let self else { return }
+                        self.addVData()
                     }
             }
             .byEmptyViewLayout { emptyView, make, host in

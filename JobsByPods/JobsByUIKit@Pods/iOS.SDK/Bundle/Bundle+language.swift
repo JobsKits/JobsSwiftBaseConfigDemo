@@ -80,14 +80,23 @@ extension Bundle {
         // 其它语言用主语言码匹配
         let code = lower.split(separator: "-").first.map(String.init) ?? lower
         switch code {
+        /// 处理 "vi" 分支
         case "vi": return .vietnamese
+        /// 处理 "th" 分支
         case "th": return .thai
+        /// 处理 "tr" 分支
         case "tr": return .turkish
+        /// 处理 "ar" 分支
         case "ar": return .arabic
+        /// 合并处理 "fil"、"tl" 分支
         case "fil", "tl": return .filipino
+        /// 处理 "ja" 分支
         case "ja": return .japanese
+        /// 处理 "pt" 分支
         case "pt": return .portuguese
+        /// 处理 "es" 分支
         case "es": return .spanish
+        /// 未匹配已知分支时执行兜底处理
         default:
             return .other
         }

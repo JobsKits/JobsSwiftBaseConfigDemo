@@ -174,11 +174,13 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         guard !nodes.isEmpty else { return }
         let p = gr.location(in: self)
         switch gr.state {
+        /// 处理 .began 分支
         case .began:
             lastPanPoint = p
             // 进入手势时，先把自动旋转“让路”
             velX = 0
             velY = 0
+        /// 处理 .changed 分支
         case .changed:
             let dx = p.x - lastPanPoint.x
             let dy = p.y - lastPanPoint.y
@@ -191,11 +193,13 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
             // 实时更新速度，用于惯性
             velX = angleX
             velY = angleY
+        /// 合并处理 .ended、.cancelled、.failed 分支
         case .ended, .cancelled, .failed:
             let v = gr.velocity(in: self)
             // 把像素速度映射成角速度（经验值）
             velY = (v.x * rotationSensitivity) / 60.0
             velX = (-v.y * rotationSensitivity) / 60.0
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }
@@ -203,12 +207,15 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
 
     @objc private func onPinch(_ gr: UIPinchGestureRecognizer) {
         switch gr.state {
+        /// 处理 .began 分支
         case .began:
             baseRadius = effectiveRadius
+        /// 处理 .changed 分支
         case .changed:
             let r = max(40, baseRadius * gr.scale)
             radius = r
             renderAll()
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

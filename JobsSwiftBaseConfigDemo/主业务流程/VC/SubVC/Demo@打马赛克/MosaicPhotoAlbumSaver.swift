@@ -19,7 +19,9 @@ enum MosaicPhotoAlbumSaveError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        /// 处理 .unauthorized 分支
         case .unauthorized: return "没有相册写入权限"
+        /// 处理 .failed 分支
         case .failed: return "未知原因保存失败"
         }
     }

@@ -20,6 +20,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsViewPushDemoVC: BaseVC {
+    private lazy var demoPanel = JobsViewPushDemoPanel()
     private lazy var directionControl: UISegmentedControl = {
         UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
             .bySelectedSegmentIndex(3)
@@ -103,23 +104,26 @@ final class JobsViewPushDemoVC: BaseVC {
 private extension JobsViewPushDemoVC {
     var selectedDirection: JobsViewPushDirection {
         switch directionControl.selectedSegmentIndex {
+        /// 处理 数值 0 分支
         case 0: return .top
+        /// 处理 数值 1 分支
         case 1: return .bottom
+        /// 处理 数值 2 分支
         case 2: return .left
+        /// 未匹配已知分支时执行兜底处理
         default: return .right
         }
     }
 
     func pushDemoView() {
-        let panel = JobsViewPushDemoPanel()
         let presentation = view.jobsPush(
-            panel,
+            demoPanel,
             configuration: JobsViewPushConfiguration(
                 direction: selectedDirection,
                 presentedRatio: CGFloat(ratioSlider.value)
             )
         )
-        panel.closeHandler = { [weak presentation] in
+        demoPanel.closeHandler = { [weak presentation] in
             presentation?.dismiss()
         }
     }

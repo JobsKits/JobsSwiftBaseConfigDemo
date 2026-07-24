@@ -183,15 +183,16 @@ public final class BaseWebView: UIView {
         _ = useMobileBridge()
     }
 
-    // —— 学院派：deinit 非隔离；同步跳主线程做清理（无 Task、无 weak self）——
     deinit {
-        onMainAsync { [weak self] in
-            guard let self else { return }
-            cleanupNow()
-        }
+        cleanupNow()
     }
 
     private func cleanupNow() {
+        kvoEstimatedProgress?.invalidate()
+        kvoEstimatedProgress = nil
+        kvoTitle?.invalidate()
+        kvoTitle = nil
+        webView.stopLoading()
         webView.byNavigationDelegate(nil)
         webView.byUIDelegate(nil)
         let ucc = webView.configuration.userContentController
@@ -199,8 +200,9 @@ public final class BaseWebView: UIView {
         ucc.removeScriptMessageHandler(forName: bridgeName)
         ucc.removeScriptMessageHandler(forName: consoleName)
         ucc.removeScriptMessageHandler(forName: mobileBridgeName)
-        kvoEstimatedProgress?.invalidate()
-        kvoTitle?.invalidate()
+        handlers.removeAll()
+        mobileActionHandlers.removeAll()
+        docPickerDelegate = nil
     }
 }
 // MARK: - Internal assemble

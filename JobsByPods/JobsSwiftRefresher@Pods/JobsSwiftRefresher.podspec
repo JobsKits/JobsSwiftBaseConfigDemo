@@ -39,6 +39,7 @@ Pod::Spec.new do |s|
     ss.dependency 'JobsSwiftBaseDefines'
     ss.dependency 'JobsSwiftBlock'
     ss.dependency 'JobsSwiftDSL'
+    ss.dependency 'JobsFuseAnimation'
   end
 
   s.subspec 'Lottie' do |ss|

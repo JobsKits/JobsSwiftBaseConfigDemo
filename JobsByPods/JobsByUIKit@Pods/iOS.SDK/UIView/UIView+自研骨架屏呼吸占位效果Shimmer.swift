@@ -563,16 +563,24 @@ extension UIButton {
         let h = min(max(baseSize.height, 1), content.height)
         var x: CGFloat
         switch self.contentHorizontalAlignment {
+        /// 处理 .right 分支
         case .right:  x = content.maxX - w
+        /// 处理 .center 分支
         case .center: x = content.midX - w / 2
+        /// 处理 .fill 分支
         case .fill:   x = content.minX
+        /// 未匹配已知分支时执行兜底处理
         default:      x = content.minX
         }
         var y: CGFloat
         switch self.contentVerticalAlignment {
+        /// 处理 .top 分支
         case .top:    y = content.minY
+        /// 处理 .bottom 分支
         case .bottom: y = content.maxY - h
+        /// 处理 .fill 分支
         case .fill:   y = content.minY
+        /// 未匹配已知分支时执行兜底处理
         default:      y = content.midY - h / 2
         }
         var rect = CGRect(x: x, y: y, width: w, height: h)

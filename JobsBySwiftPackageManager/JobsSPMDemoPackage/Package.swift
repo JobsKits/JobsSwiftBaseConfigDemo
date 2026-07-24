@@ -1,6 +1,5 @@
 // swift-tools-version: 6.0
 
-import CompilerPluginSupport
 import PackageDescription
 
 let package = Package(
@@ -11,41 +10,16 @@ let package = Package(
         .tvOS(.v15)
     ],
     products: [
-        .library(name: "JobsSPMDemoKit", targets: ["JobsSPMDemoKit"]),
-        .library(name: "JobsSPMDemoMacros", targets: ["JobsSPMDemoMacros"]),
-        .executable(name: "JobsSPMDemoClient", targets: ["JobsSPMDemoClient"])
-    ],
-    dependencies: [
-        .package(
-            url: "https://github.com/swiftlang/swift-syntax.git",
-            exact: "603.0.2"
-        )
+        .library(name: "JobsSPMDemoKit", targets: ["JobsSPMDemoKit"])
     ],
     targets: [
         .target(
             name: "JobsSPMDemoKit",
             resources: [.process("Resources")]
         ),
-        .target(
-            name: "JobsSPMDemoMacros",
-            dependencies: ["JobsSPMDemoMacrosPlugin"]
-        ),
-        .macro(
-            name: "JobsSPMDemoMacrosPlugin",
-            dependencies: [
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-            ]
-        ),
-        .executableTarget(
-            name: "JobsSPMDemoClient",
-            dependencies: ["JobsSPMDemoKit", "JobsSPMDemoMacros"]
-        ),
         .testTarget(
-            name: "JobsSPMDemoTests",
-            dependencies: ["JobsSPMDemoKit", "JobsSPMDemoMacros"]
+            name: "JobsSPMDemoKitTests",
+            dependencies: ["JobsSPMDemoKit"]
         )
     ]
 )

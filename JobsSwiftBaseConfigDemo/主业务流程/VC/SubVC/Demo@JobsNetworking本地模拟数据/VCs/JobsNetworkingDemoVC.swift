@@ -136,12 +136,19 @@ extension JobsNetworkingDemoVC {
 
     private func makeDetailVC(with item: MethodDemoItem) -> UIViewController {
         switch item.methodType {
+        /// 处理 .get 分支
         case .get: JobsNetworkingGetDemoVC(item: item)
+        /// 处理 .post 分支
         case .post: JobsNetworkingPostDemoVC(item: item)
+        /// 处理 .put 分支
         case .put: JobsNetworkingPutDemoVC(item: item)
+        /// 处理 .patch 分支
         case .patch: JobsNetworkingPatchDemoVC(item: item)
+        /// 处理 .delete 分支
         case .delete: JobsNetworkingDeleteDemoVC(item: item)
+        /// 处理 .upload 分支
         case .upload: JobsNetworkingUploadDemoVC(item: item)
+        /// 处理 .download 分支
         case .download: JobsNetworkingDownloadDemoVC(item: item)
         }
     }

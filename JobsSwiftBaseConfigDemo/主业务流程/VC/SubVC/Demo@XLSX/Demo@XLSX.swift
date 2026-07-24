@@ -108,6 +108,7 @@ final class XLSXDemoVC: BaseVC {
     private var xlsxSheets: [SheetData] = []
 
     private var sharedStrings: SharedStrings?
+    private var documentPickerViewController: UIDocumentPickerViewController?
     /// 所有要展示的 Sheet = 本地 + 文件（本地在前）
     private var allSheets: [SheetData] { injectedSheets + xlsxSheets }
 
@@ -150,17 +151,28 @@ final class XLSXDemoVC: BaseVC {
         #if canImport(UniformTypeIdentifiers)
         if #available(iOS 14.0, *) {
             if let xlsx = UTType(filenameExtension: "xlsx") {
-                let picker = UIDocumentPickerViewController(forOpeningContentTypes: [xlsx], asCopy: true)
-                picker.allowsMultipleSelection = false
-                picker.byDelegate(self)
-                present(picker, animated: true)
+                documentPickerViewController = UIDocumentPickerViewController(
+                    forOpeningContentTypes: [xlsx],
+                    asCopy: true
+                )
+                documentPickerViewController?.allowsMultipleSelection = false
+                documentPickerViewController?.byDelegate(self)
+                if let documentPickerViewController {
+                    present(documentPickerViewController, animated: true)
+                }
                 return
             }
         }
         #endif
-        present(UIDocumentPickerViewController(forOpeningContentTypes: [UTType(filenameExtension: "xlsx") ?? .data], asCopy: true)
+        documentPickerViewController = UIDocumentPickerViewController(
+            forOpeningContentTypes: [UTType(filenameExtension: "xlsx") ?? .data],
+            asCopy: true
+        )
             .byAllowsMultipleSelection(NO)
-            .byDelegate(self), animated: true)
+            .byDelegate(self)
+        if let documentPickerViewController {
+            present(documentPickerViewController, animated: true)
+        }
     }
     // MARK: Parsing XLSX
     private func loadXLSX(from url: URL) {
@@ -292,14 +304,23 @@ extension XLSXDemoVC {
         anyRows.map { row in
             row.map { cell -> String in
                 switch cell {
+                /// 处理 String 类型分支
                 case let s as String: return s
+                /// 处理 Date 类型分支
                 case let d as Date:   return DateFormatter().byDateStyle(.medium).byTimeStyle(.short).string(from: d)
+                /// 处理 Bool 类型分支
                 case let b as Bool:   return b ? "true" : "false"
+                /// 处理 NSNumber 类型分支
                 case let n as NSNumber: return n.stringValue
+                /// 处理 Float 类型分支
                 case let f as Float:  return String(f)
+                /// 处理 Double 类型分支
                 case let d as Double: return String(d)
+                /// 处理 Int 类型分支
                 case let i as Int:    return String(i)
+                /// 处理 CustomStringConvertible 类型分支
                 case let c as CustomStringConvertible: return c.description
+                /// 未匹配已知分支时执行兜底处理
                 default: return "\(cell)"
                 }
             }

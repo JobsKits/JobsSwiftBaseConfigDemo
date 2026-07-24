@@ -15,7 +15,7 @@ import QuartzCore
 import JobsByUIKit
 
 /// 红、绿双球交叉换位并错峰跳跃的刷新动画视图。
-public final class JobsDouyinRefreshView: UIView {
+public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     public private(set) var config: JobsDouyinRefreshConfig
     public private(set) var isAnimating = false
 
@@ -117,6 +117,51 @@ public final class JobsDouyinRefreshView: UIView {
         jobs_removeAnimations()
         jobs_layoutDots()
         return self
+    }
+
+    public var refreshAnimatorView: UIView {
+        self
+    }
+
+    public var refreshAnimatorPreferredSize: CGSize {
+        config.indicatorSize
+    }
+
+    public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
+                                     progress: CGFloat) {
+        let normalizedProgress = min(1, max(0, progress))
+        switch phase {
+        /// 下拉过程中渐显并按进度缩放双球
+        case .pulling:
+            byHidden(false)
+            byStop()
+                .byAlpha(0.35 + normalizedProgress * 0.65)
+                .byTransform(CGAffineTransform(
+                    scaleX: 0.72 + normalizedProgress * 0.28,
+                    y: 0.72 + normalizedProgress * 0.28
+                ))
+        /// 达到阈值时展示完整静态双球
+        case .ready:
+            byHidden(false)
+            byStop()
+                .byAlpha(1)
+                .byTransform(.identity)
+        /// 刷新中循环播放双球交叉动画
+        case .refreshing:
+            byHidden(false)
+                .byAlpha(1)
+                .byTransform(.identity)
+            byStart()
+        /// 回弹阶段停止循环并保留完成态
+        case .ending:
+            byHidden(false)
+            byStop()
+        /// 空闲、失效或被替换时隐藏并清理动画
+        case .idle, .inactive:
+            byStop()
+                .byAlpha(0)
+                .byHidden(true)
+        }
     }
 
     private func jobs_setupDouyinRefreshView() {

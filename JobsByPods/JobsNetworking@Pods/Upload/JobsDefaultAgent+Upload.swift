@@ -41,8 +41,10 @@ extension JobsDefaultAgent: JobsUploadCapable {
         headers.forEach { afHeaders.add(name: $0.key, value: $0.value) }
         let parts = request.files.compactMap { spec -> JobsMultipartPart? in
             switch spec {
+            /// 处理 .file 分支
             case let .file(fileURL, name, fileName, mimeType):
                 guard let data = try? Data(contentsOf: fileURL) else { return nil };return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
+            /// 处理 .data 分支
             case let .data(data, name, fileName, mimeType):
                 return JobsMultipartPart(name: name, fileName: fileName, mimeType: mimeType, data: data)
             }
@@ -58,6 +60,7 @@ extension JobsDefaultAgent: JobsUploadCapable {
         ) { [weak self] result in
             guard let self else { return }
             switch result {
+            /// 处理 .success 分支
             case .success(let (data, response)):
                 do {
                     let fakeRequest = JobsRequest(path: request.path, method: request.method, headers: request.headers, timeout: request.timeout, trace: request.trace)
@@ -68,6 +71,7 @@ extension JobsDefaultAgent: JobsUploadCapable {
                 } catch {
                     self.retryUploadIfNeeded(request, as: type, token: token, attempt: attempt, error: .unknown(underlying: error.localizedDescription), completion: completion)
                 }
+            /// 处理 .failure 分支
             case .failure(let error):
                 self.retryUploadIfNeeded(request, as: type, token: token, attempt: attempt, error: error, completion: completion)
             }

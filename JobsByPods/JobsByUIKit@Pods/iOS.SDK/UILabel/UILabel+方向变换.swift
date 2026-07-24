@@ -41,18 +41,22 @@ extension UILabel {
         }
         textLayer.byFrame(bounds)
         switch direction {
+        /// 处理 .up 分支
         case .up:
             break
+        /// 处理 .left 分支
         case .left:
             textLayer
                 .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
                 .byTransform(CATransform3DMakeRotation(-.pi/2, 0, 0, 1))
+        /// 处理 .down 分支
         case .down:
             textLayer
                 .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
                 .byTransform(CATransform3DMakeRotation(.pi, 0, 0, 1))
+        /// 处理 .right 分支
         case .right:
             textLayer.byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
@@ -67,11 +71,17 @@ extension UILabel {
 extension CATextLayerAlignmentMode {
     internal static func _jobs_fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
         switch a {
+        /// 处理 .left 分支
         case .left: return .left
+        /// 处理 .right 分支
         case .right: return .right
+        /// 处理 .center 分支
         case .center: return .center
+        /// 处理 .justified 分支
         case .justified: return .justified
+        /// 处理 .natural 分支
         case .natural: return .natural
+        /// 处理系统后续新增的未知枚举值
         @unknown default: return .natural
         }
     }

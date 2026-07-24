@@ -72,14 +72,16 @@ final class JobsCountdownLayerDemoVC: BaseVC {
             .onTap { [weak self] (btn: UIButton) in
                 guard let self else { return }
                 switch self.timerState {
+                /// 合并处理 .idle、.stopped 分支
                 case .idle, .stopped:
                     self.startCountdown(on: btn, total: self.defaultTotalSeconds)
+                /// 处理 .running 分支
                 case .running:
                     self.pauseCountdown()
                     let remain = self.remainingSeconds > 0 ? self.remainingSeconds : self.defaultTotalSeconds
                     self.hintLabel.byText("已暂停，点击继续（还剩 %lds）".tr(remain))
                     // 这里看需求：目前导火索是独立连贯动画，不跟随暂停
-                    // 如果要同步暂停，就需要给 UIView+JobsCountdownFuse 再加 pause/resume API
+                /// 如果要同步暂停，就需要给 UIView+JobsCountdownFuse 再加 pause/resume API
                 case .paused:
                     self.resumeCountdown()
                     self.hintLabel.byText("倒计时进行中，点击可以暂停".tr)

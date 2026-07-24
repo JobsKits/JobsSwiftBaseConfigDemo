@@ -336,14 +336,18 @@ public enum JobsDirection: UInt {
          right  /// 右边
     public var isHorizontal: Bool {
         switch self {
+        /// 合并处理 .top、.bottom 分支
         case .top, .bottom: return false
+        /// 合并处理 .left、.right 分支
         case .left, .right: return true
         }
     }
     /// 是否垂直方向（与 isHorizontal 语义对称）
     public var isVertical: Bool {
         switch self {
+        /// 合并处理 .top、.bottom 分支
         case .top, .bottom: return true
+        /// 合并处理 .left、.right 分支
         case .left, .right: return false
         }
     }
@@ -353,9 +357,13 @@ public extension JobsDirection {
     @available(iOS 13.0, *)
     var toDirectionalEdge: NSDirectionalRectEdge {
         switch self {
+        /// 处理 .top 分支
         case .top:    return .top
+        /// 处理 .left 分支
         case .left:   return .leading
+        /// 处理 .bottom 分支
         case .bottom: return .bottom
+        /// 处理 .right 分支
         case .right:  return .trailing
         }
     }
@@ -364,10 +372,14 @@ public extension JobsDirection {
     /// - top/bottom 不变
     func resolved(for layout: UIUserInterfaceLayoutDirection) -> JobsResolvedEdge {
         switch self {
+        /// 处理 .top 分支
         case .top: return .top
+        /// 处理 .bottom 分支
         case .bottom: return .bottom
+        /// 处理 .left 分支
         case .left:
             return layout == .rightToLeft ? .right : .left
+        /// 处理 .right 分支
         case .right:
             return layout == .rightToLeft ? .left : .right
         }
@@ -420,22 +432,31 @@ public enum JobsGradientDirection {
 public extension JobsGradientDirection {
     var points: (start: CGPoint, end: CGPoint) {
         switch self {
+        /// 处理 .leftToRight 分支
         case .leftToRight:
             return (.init(x: 0, y: 0.5), .init(x: 1, y: 0.5))
+        /// 处理 .rightToLeft 分支
         case .rightToLeft:
             return (.init(x: 1, y: 0.5), .init(x: 0, y: 0.5))
+        /// 处理 .topToBottom 分支
         case .topToBottom:
             return (.init(x: 0.5, y: 0), .init(x: 0.5, y: 1))
+        /// 处理 .bottomToTop 分支
         case .bottomToTop:
             return (.init(x: 0.5, y: 1), .init(x: 0.5, y: 0))
+        /// 处理 .topLeftToBottomRight 分支
         case .topLeftToBottomRight:
             return (.init(x: 0, y: 0), .init(x: 1, y: 1))
+        /// 处理 .bottomRightToTopLeft 分支
         case .bottomRightToTopLeft:
             return (.init(x: 1, y: 1), .init(x: 0, y: 0))
+        /// 处理 .topRightToBottomLeft 分支
         case .topRightToBottomLeft:
             return (.init(x: 1, y: 0), .init(x: 0, y: 1))
+        /// 处理 .bottomLeftToTopRight 分支
         case .bottomLeftToTopRight:
             return (.init(x: 0, y: 1), .init(x: 1, y: 0))
+        /// 处理 .custom 分支
         case let .custom(start, end):
             return (start, end)
         }
@@ -894,9 +915,13 @@ public enum CNIDError: Error, CustomStringConvertible {
     case format, birthDate, sequence, checksum
     public var description: String {
         switch self {
+        /// 处理 .format 分支
         case .format:    return "格式错误：18位(前17位数字+最后一位数字或X) 或 15位纯数字"
+        /// 处理 .birthDate 分支
         case .birthDate: return "出生日期无效或超出合理范围"
+        /// 处理 .sequence 分支
         case .sequence:  return "顺序码无效（不能为000）"
+        /// 处理 .checksum 分支
         case .checksum:  return "校验位不匹配"
         }
     }
@@ -991,18 +1016,25 @@ public enum JSONValue: Equatable, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
+        /// 处理 .null 分支
         case .null:
             try container.encodeNil()
+        /// 处理 .bool 分支
         case .bool(let b):
             try container.encode(b)
+        /// 处理 .int 分支
         case .int(let i):
             try container.encode(i)
+        /// 处理 .double 分支
         case .double(let d):
             try container.encode(d)
+        /// 处理 .string 分支
         case .string(let s):
             try container.encode(s)
+        /// 处理 .object 分支
         case .object(let obj):
             try container.encode(obj)
+        /// 处理 .array 分支
         case .array(let arr):
             try container.encode(arr)
         }
@@ -1025,14 +1057,23 @@ public enum JobsSymbolWeight {
 extension JobsSymbolWeight {
     public func toSymbolWeight() -> UIImage.SymbolWeight {
         switch self {
+        /// 处理 .ultraLight 分支
         case .ultraLight: return .ultraLight
+        /// 处理 .thin 分支
         case .thin:       return .thin
+        /// 处理 .light 分支
         case .light:      return .light
+        /// 处理 .regular 分支
         case .regular:    return .regular
+        /// 处理 .medium 分支
         case .medium:     return .medium
+        /// 处理 .semibold 分支
         case .semibold:   return .semibold
+        /// 处理 .bold 分支
         case .bold:       return .bold
+        /// 处理 .heavy 分支
         case .heavy:      return .heavy
+        /// 处理 .black 分支
         case .black:      return .black
         }
     }

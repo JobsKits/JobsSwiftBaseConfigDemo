@@ -78,8 +78,10 @@ final class HollowOverlayView: UIView {
         let path = UIBezierPath.make(rect: bounds)
         let holePath: UIBezierPath
         switch holeShape {
+        /// 处理 .oval 分支
         case .oval:
             holePath = UIBezierPath.make(ovalIn: holeRect)
+        /// 处理 .roundedRect 分支
         case .roundedRect(let radius):
             holePath = UIBezierPath.make(roundedRect: holeRect, cornerRadius: radius)
         }

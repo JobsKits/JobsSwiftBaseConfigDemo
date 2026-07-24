@@ -285,8 +285,10 @@ extension UIButton {
                 // ✅ 请求结束（成功/失败/取消）都必须停 shimmer
                 btn._jobs_stopForegroundShimmer()
                 switch result {
+                /// 处理 .success 分支
                 case .success(let r):
                     btn._jobs_forceSetForegroundImage(r.image, for: state)
+                /// 处理 .failure 分支
                 case .failure:
                     // ✅ Failure：有兜底图就落兜底；没有就保持 nil
                     btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
@@ -340,9 +342,11 @@ extension UIButton {
             onMainAsync(self) { strongSelf in
                 strongSelf._jobs_runOnMain { btn in
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let s):
                         btn._jobs_stopBackgroundShimmer()
                         btn._jobs_forceSetBackgroundImage(s.image, for: state)
+                    /// 处理 .failure 分支
                     case .failure:
                         if let fb = cfg.placeholder {
                             btn._jobs_stopBackgroundShimmer()
@@ -417,8 +421,10 @@ extension UIButton {
         cacheOnlyOpts.append(.onlyFromCache)
         KingfisherManager.shared.retrieveImage(with: url, options: cacheOnlyOpts) { result in
             switch result {
+            /// 处理 .success 分支
             case .success(let r):
                 onMainAsync(self) { vc in target.jobsResetBtnBgImage(r.image, for: state) }
+            /// 处理 .failure 分支
             case .failure:
                 // 5) 缓存没命中：按需走网
                 guard allowNetworkIfMissing else { return }
@@ -446,7 +452,9 @@ extension UIButton {
                     ) { res in
                         onMainAsync(self) { vc in
                             switch res {
+                            /// 处理 .success 分支
                             case .success(let s): target.jobsResetBtnBgImage(s.image, for: state)
+                            /// 处理 .failure 分支
                             case .failure:        target.jobsResetBtnBgImage(ph, for: state)
                             }
                             snapCfg.completed?(res)

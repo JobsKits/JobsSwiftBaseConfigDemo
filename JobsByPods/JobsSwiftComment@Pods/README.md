@@ -9,9 +9,11 @@ Swift 本地 Pod，用于在 Swift 侧承接 OC `JobsOCComment` 的评论列表�
 - `JobsSwiftCommentConfig` 管理展示模式、回复入口、刷新加载和点击回调。
 - `JobsSwiftCommentView` 内置评论渲染、更多回复展开、下拉刷新和上拉加载更多。
 - 按钮创建、配置和事件统一使用 `JobsByUIKit` / `JobsSwiftDSL`。
+- 视图布局和动态缩进约束统一由 `SnapKit` 管理。
 
 ## 依赖
 
+- `SnapKit`（组件布局和动态约束更新）。
 - `JobsByUIKit`（按钮工厂和 UIKit 扩展）。
 - `JobsSwiftDSL`（视图、控件和按钮链式 API）。
 - `JobsSwiftBaseDefines`（使用 `JobsCor`、`JobsFont` 和 `UIColor(r:g:b:a:)`）。

@@ -93,10 +93,12 @@ final class MoyaDemoVC: BaseVC {
                 api.provider.request(.ghZen) { [weak self] result in
                     guard let self else { return }
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         let text = String(data: resp.data, encoding: .utf8) ?? ""
                         show(title: "GET /zen ✅",
                              body: text)
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "GET /zen ❌",
                              body: "\(e)")
@@ -123,6 +125,7 @@ final class MoyaDemoVC: BaseVC {
                 api.provider.request(.ghUser(username: "apple")) { [weak self] result in
                     guard let self else { return }
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         do {
                             let user = try JSONDecoder().decode(GHUser.self, from: resp.data)
@@ -132,6 +135,7 @@ final class MoyaDemoVC: BaseVC {
                             show(title: "解析失败 ❌".tr,
                                  body: "\(error)")
                         }
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "GET /users/apple ❌",
                              body: "\(e)")
@@ -158,9 +162,11 @@ final class MoyaDemoVC: BaseVC {
                 api.requestWithAutoRefresh(.login(email: "eve.holt@reqres.in", password: "cityslicka")) { [weak self] res in
                     guard let self else { return }
                     switch res {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         show(title: "POST /login ✅",
                              body: self.prettyJSON(resp.data))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "POST /login ❌",
                              body: "\(e)")
@@ -192,9 +198,11 @@ final class MoyaDemoVC: BaseVC {
                 }, completion: { [weak self] result in
                     guard let self else { return }
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         show(title: "UPLOAD ✅",
                              body: self.prettyJSON(resp.data))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "UPLOAD ❌",
                              body: "\(e)")
@@ -225,9 +233,11 @@ final class MoyaDemoVC: BaseVC {
                 }) { [weak self] result in
                     guard let self else { return }
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         show(title: "DOWNLOAD PNG ✅",
                              body: "保存至：\(resp.response?.url?.path ?? "-")")
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "DOWNLOAD PNG ❌",
                              body: "\(e)")
@@ -257,9 +267,11 @@ final class MoyaDemoVC: BaseVC {
                 }) { [weak self] result in
                     guard let self else { return }
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         show(title: "DOWNLOAD BYTES ✅",
                              body: "保存至：\(resp.response?.url?.path ?? "-")")
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "DOWNLOAD BYTES ❌",
                              body: "\(e)")
@@ -329,9 +341,11 @@ final class MoyaDemoVC: BaseVC {
                 stubAPI.provider.request(.ghZen) { [weak self] r in
                     guard let self else { return }
                     switch r {
+                    /// 处理 .success 分支
                     case .success(let resp):
                         self.show(title: "Stub /zen ✅",
                                   body: String(data: resp.data, encoding: .utf8))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         self.show(title: "Stub /zen ❌",
                                   body: "\(e)")

@@ -17,7 +17,9 @@ public extension MoyaProvider {
         try await withCheckedThrowingContinuation { cont in
             self.request(target, callbackQueue: callbackQueue, progress: progress) { result in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let resp): cont.resume(returning: resp)
+                /// 处理 .failure 分支
                 case .failure(let err):  cont.resume(throwing: err)
                 }
             }

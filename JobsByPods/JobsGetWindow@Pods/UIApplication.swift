@@ -127,9 +127,13 @@ private extension UIApplication {
     static func bestWindowScene() -> UIWindowScene? {
         func rank(_ s: UIScene.ActivationState) -> Int {
             switch s {
+            /// 处理 .foregroundActive 分支
             case .foregroundActive:   return 0
+            /// 处理 .foregroundInactive 分支
             case .foregroundInactive: return 1
+            /// 处理 .background 分支
             case .background:         return 2
+            /// 未匹配已知分支时执行兜底处理
             default:                  return 3
             }
         };return UIApplication.shared.connectedScenes

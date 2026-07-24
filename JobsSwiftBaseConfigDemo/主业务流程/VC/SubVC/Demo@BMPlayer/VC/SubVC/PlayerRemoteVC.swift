@@ -284,11 +284,17 @@ extension PlayerRemoteVC {
     private func updatePlaybackStatus(_ state: BMPlayerState) {
         let message: String
         switch state {
+        /// 处理 .notSetURL 分支
         case .notSetURL: message = "正在准备播放"
+        /// 处理 .readyToPlay 分支
         case .readyToPlay: message = "已就绪"
+        /// 处理 .buffering 分支
         case .buffering: message = "缓冲中"
+        /// 处理 .bufferFinished 分支
         case .bufferFinished: message = "正在播放"
+        /// 处理 .playedToTheEnd 分支
         case .playedToTheEnd: message = "播放完成，可重新点击该信号源"
+        /// 处理 .error 分支
         case .error: message = "播放失败，请切换其他信号源或重新点击当前源"
         }
         statusLabel.byText(statusText(message))

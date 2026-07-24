@@ -75,10 +75,13 @@ final class PicLoadDemoVC: BaseVC {
                                 numberOfTouchesRequired: 1) { gr in
                  guard let iv = gr.view as? UIImageView else { return }
                  switch gr.state {
+                 /// 处理 .began 分支
                  case .began:
                      "长按开始 on \(iv)".toast
+                 /// 合并处理 .ended、.cancelled、.failed 分支
                  case .ended, .cancelled, .failed:
                      "长按结束 on \(iv)".toast
+                 /// 未匹配已知分支时执行兜底处理
                  default:
                      break
                  }
@@ -118,10 +121,13 @@ final class PicLoadDemoVC: BaseVC {
                                  numberOfTouchesRequired: 1) { gr in
                  guard let iv = gr.view as? UIImageView else { return }
                  switch gr.state {
+                 /// 处理 .began 分支
                  case .began:
                      "长按开始 on \(iv)".toast
+                 /// 合并处理 .ended、.cancelled、.failed 分支
                  case .ended, .cancelled, .failed:
                      "长按结束 on \(iv)".toast
+                 /// 未匹配已知分支时执行兜底处理
                  default:
                      break
                  }
@@ -159,10 +165,13 @@ final class PicLoadDemoVC: BaseVC {
                                 numberOfTouchesRequired: 1) { gr in
                 guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
+                /// 处理 .began 分支
                 case .began:
                     "长按开始 on \(iv)".toast
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     "长按结束 on \(iv)".toast
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
@@ -200,10 +209,13 @@ final class PicLoadDemoVC: BaseVC {
                                 numberOfTouchesRequired: 1) { gr in
                 guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
+                /// 处理 .began 分支
                 case .began:
                     "长按开始 on \(iv)".toast
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     "长按结束 on \(iv)".toast
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
@@ -241,10 +253,13 @@ final class PicLoadDemoVC: BaseVC {
                                 numberOfTouchesRequired: 1) { gr in
                 guard let iv = gr.view as? UIImageView else { return }
                 switch gr.state {
+                /// 处理 .began 分支
                 case .began:
                     "长按开始 on \(iv)".toast
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     "长按结束 on \(iv)".toast
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }

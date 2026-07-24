@@ -21,10 +21,10 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class TipsGrantPermissionView: UIView {
-    /// 白色卡片
+    /// 自适应主题卡片
     private lazy var cardView: UIView = {
         UIView()
-            .byBackgroundColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byLayer { layer in
                 layer.byCornerRadius(14)
                     .byMasksToBounds(NO) // 有阴影就不要 masksToBounds = true，不然阴影会被裁掉
@@ -44,9 +44,13 @@ final class TipsGrantPermissionView: UIView {
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
             .byTextAlignment(.center)
+            .byNumberOfLines(1)
+            .byHugging(.required, axis: .vertical)
+            .byCompressionResistance(.required, axis: .vertical)
             .byAddTo(cardView) { make in
                 make.top.equalToSuperview().inset(18)
                 make.left.right.equalToSuperview().inset(20)
+                make.height.greaterThanOrEqualTo(24)
             }
     }()
     /// 主文案

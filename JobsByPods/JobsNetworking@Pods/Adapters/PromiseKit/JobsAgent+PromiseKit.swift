@@ -14,8 +14,10 @@ public extension JobsAgent {
         Promise { seal in
             _ = send(request, as: type) { result in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value):
                     seal.fulfill(value)
+                /// 处理 .failure 分支
                 case .failure(let error):
                     seal.reject(error)
                 }

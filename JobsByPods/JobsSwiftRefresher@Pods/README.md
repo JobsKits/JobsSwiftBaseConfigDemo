@@ -1,5 +1,25 @@
 # `JobsSwiftRefresher`
 
+## JobsFuseAnimation 插件热插拔
+
+`JobsSwiftRefresher` 只持有状态机和动画槽位；具体表现由 `JobsFuseAnimation` 的 `JobsRefreshAnimatorProtocol` 提供。系统菊花、单图、多图定时轮播、GIF、Lottie、今日头条和抖音都是同级插件。配置阶段可以直接注入，挂载后也可以原位替换，不会重建或打断当前刷新状态。
+
+```swift
+scrollView.byRefreshHeader(
+    animator: JobsTodayNewsRefreshView(config: JobsTodayNewsRefreshConfig()),
+    container: self,
+    height: 72,
+    trigger: 64
+) {
+    // 刷新任务
+}
+
+scrollView.byReplaceRefreshAnimator(
+    JobsDouyinRefreshView(config: JobsDouyinRefreshConfig()),
+    at: .header
+)
+```
+
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
 
 [toc]

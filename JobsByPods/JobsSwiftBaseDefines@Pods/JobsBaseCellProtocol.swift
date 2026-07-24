@@ -138,6 +138,7 @@ extension SectionCornerRoundable where Self: UITableViewCell {
         // 再按位置设置
         let radius = sectionCornerRadius
         switch position {
+        /// 处理 .single 分支
         case .single:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
@@ -146,6 +147,7 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
+        /// 处理 .first 分支
         case .first:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
@@ -153,6 +155,7 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
+        /// 处理 .last 分支
         case .last:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
@@ -160,6 +163,7 @@ extension SectionCornerRoundable where Self: UITableViewCell {
             ]
             selectedBackgroundView?.layer.cornerRadius = radius
             selectedBackgroundView?.layer.maskedCorners = contentView.layer.maskedCorners
+        /// 处理 .middle 分支
         case .middle:
             // 保持重置后的状态：无圆角
             break

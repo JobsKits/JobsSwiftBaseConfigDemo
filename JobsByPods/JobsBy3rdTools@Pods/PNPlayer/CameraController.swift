@@ -27,8 +27,10 @@ class CameraController {
     func handlePan(_ gesture: UIPanGestureRecognizer, in view: UIView) {
         let translation = gesture.translation(in: view)
         switch gesture.state {
+        /// 处理 .began 分支
         case .began:
             lastPanPoint = translation
+        /// 处理 .changed 分支
         case .changed:
             let deltaX = Float(translation.x - lastPanPoint.x) * 0.01
             let deltaY = Float(translation.y - lastPanPoint.y) * 0.01
@@ -36,8 +38,10 @@ class CameraController {
             rotationX += deltaY
             rotationX = max(-Float.pi/2, min(Float.pi/2, rotationX))
             lastPanPoint = translation
+        /// 合并处理 .ended、.cancelled 分支
         case .ended, .cancelled:
             break
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

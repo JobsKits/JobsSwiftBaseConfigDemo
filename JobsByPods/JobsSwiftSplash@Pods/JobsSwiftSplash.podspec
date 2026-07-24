@@ -23,4 +23,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'JobsCountdownButton'
   spec.dependency 'JobsSwiftDSL'
   spec.dependency 'JobsSwiftOpen'
+  spec.dependency 'SnapKit'
 end

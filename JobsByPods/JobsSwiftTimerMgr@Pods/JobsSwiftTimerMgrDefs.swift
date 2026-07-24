@@ -15,10 +15,13 @@ public enum JobsSwiftTimerMgrError: Error,
 
     public var errorDescription: String? {
         switch self {
+        /// 处理 .identifierRequired 分支
         case .identifierRequired:
             return "JobsSwiftTimerMgr: identifier is required."
+        /// 处理 .duplicatedIdentifier 分支
         case .duplicatedIdentifier(let id):
             return "JobsSwiftTimerMgr: duplicated identifier: \(id)"
+        /// 处理 .notFound 分支
         case .notFound(let id):
             return "JobsSwiftTimerMgr: not found: \(id)"
         }

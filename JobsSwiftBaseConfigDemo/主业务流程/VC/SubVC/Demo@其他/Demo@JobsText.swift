@@ -168,8 +168,10 @@ final class JobsTextDemoVC: BaseVC {
     // MARK: - 回调
     @objc private func onSourceChanged() {
         switch sourceControl.selectedSegmentIndex {
+        /// 处理 数值 0 分支
         case 0:
             current = "Hello, JobsText!"
+        /// 未匹配已知分支时执行兜底处理
         default:
             current = makeSampleAttributed()
         }

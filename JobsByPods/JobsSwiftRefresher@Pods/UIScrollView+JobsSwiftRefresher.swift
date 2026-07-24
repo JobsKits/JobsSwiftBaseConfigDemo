@@ -19,6 +19,7 @@ import AVFoundation
 #endif
 
 import JobsSwiftBlock
+import JobsFuseAnimation
 
 @MainActor
 private struct JobsAssocKeys {
@@ -196,17 +197,41 @@ extension UIScrollView {
         return self
     }
 
+    /// 使用 JobsFuseAnimation 插件创建 Header；刷新状态机仍由 JobsSwiftRefresher 持有。
+    @discardableResult
+    public func byRefreshHeader(animator: JobsRefreshAnimatorProtocol,
+                                container: AnyObject? = nil,
+                                height: CGFloat = 60,
+                                trigger: CGFloat = 60,
+                                action: @escaping jobsByVoidBlock) -> Self {
+        byRefreshHeader(
+            component: JobsRefreshAnimatorContainerView(
+                animator: animator,
+                heightOrWidth: height
+            ),
+            container: container,
+            trigger: trigger,
+            action: action
+        )
+    }
+
     @discardableResult
     public func switchRefreshHeader(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
         switch state {
+        /// 处理 .refreshing 分支
         case .refreshing: slot.beginRefreshing(on: sv)
+        /// 处理 .normal 分支
         case .normal:     slot.reset(on: sv)
+        /// 处理 .failed 分支
         case .failed:     slot.fail(on: sv)
+        /// 处理 .disabled 分支
         case .disabled:   slot.disable(on: sv)
+        /// 处理 .removed 分支
         case .removed:
             slot.detach()
             mrk_proxy.header = nil
+        /// 处理 .noMoreData 分支
         case .noMoreData:
             break
         };return self
@@ -236,17 +261,41 @@ extension UIScrollView {
         return self
     }
 
+    /// 使用 JobsFuseAnimation 插件创建 Footer。
+    @discardableResult
+    public func byRefreshFooter(animator: JobsRefreshAnimatorProtocol,
+                                container: AnyObject? = nil,
+                                height: CGFloat = 60,
+                                trigger: CGFloat = 60,
+                                action: @escaping jobsByVoidBlock) -> Self {
+        byRefreshFooter(
+            component: JobsRefreshAnimatorContainerView(
+                animator: animator,
+                heightOrWidth: height
+            ),
+            container: container,
+            trigger: trigger,
+            action: action
+        )
+    }
+
     @discardableResult
     public func switchRefreshFooter(to state: JobsSwitch) -> Self {
         guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
         switch state {
+        /// 处理 .refreshing 分支
         case .refreshing: slot.beginRefreshing(on: sv, isFooter: true)
+        /// 处理 .normal 分支
         case .normal:     slot.reset(on: sv)
+        /// 处理 .failed 分支
         case .failed:     slot.fail(on: sv)
+        /// 处理 .disabled 分支
         case .disabled:   slot.disable(on: sv)
+        /// 处理 .removed 分支
         case .removed:
             slot.detach()
             mrk_proxy.footer = nil
+        /// 处理 .noMoreData 分支
         case .noMoreData: slot.noticeNoMoreData(on: sv)
         };return self
     }
@@ -281,6 +330,51 @@ extension UIScrollView {
         return self
     }
 
+    /// 使用 JobsFuseAnimation 插件创建横向刷新槽位。
+    @discardableResult
+    public func bySideRefresh(with animator: JobsRefreshAnimatorProtocol,
+                              container: AnyObject? = nil,
+                              at position: JobsPosition,
+                              width: CGFloat = 60,
+                              trigger: CGFloat = 60,
+                              action: @escaping jobsByVoidBlock) -> Self {
+        bySideRefresh(
+            with: JobsRefreshAnimatorContainerView(
+                animator: animator,
+                heightOrWidth: width
+            ),
+            container: container,
+            at: position,
+            trigger: trigger,
+            action: action
+        )
+    }
+
+    /// 已挂载后原位替换动画，不重建或打断 JobsSwiftRefresher 状态机。
+    @discardableResult
+    public func byReplaceRefreshAnimator(_ animator: JobsRefreshAnimatorProtocol,
+                                         at position: JobsPosition) -> Self {
+        let slot: JobsSlot?
+        switch position {
+        /// 替换顶部刷新槽位
+        case .header:
+            slot = mrk_proxy.header
+        /// 替换底部加载槽位
+        case .footer:
+            slot = mrk_proxy.footer
+        /// 替换左侧刷新槽位
+        case .left:
+            slot = mrk_proxy.left
+        /// 替换右侧加载槽位
+        case .right:
+            slot = mrk_proxy.right
+        }
+        guard let slot,
+              let scrollView = mrk_proxy.scrollView else { return self }
+        slot.replaceAnimator(animator, on: scrollView)
+        return self
+    }
+
     @discardableResult
     public func switchSideRefresh(_ position: JobsPosition, to state: JobsSwitch) -> Self {
         guard (position == .left || position == .right),
@@ -288,13 +382,19 @@ extension UIScrollView {
         let slot = (position == .left) ? mrk_proxy.left : mrk_proxy.right
         guard let s = slot else { return self }
         switch state {
+        /// 处理 .refreshing 分支
         case .refreshing: s.beginRefreshing(on: sv)
+        /// 处理 .normal 分支
         case .normal:     s.reset(on: sv)
+        /// 处理 .failed 分支
         case .failed:     s.fail(on: sv)
+        /// 处理 .disabled 分支
         case .disabled:   s.disable(on: sv)
+        /// 处理 .removed 分支
         case .removed:
             s.detach()
             if position == .left { mrk_proxy.left = nil } else { mrk_proxy.right = nil }
+        /// 处理 .noMoreData 分支
         case .noMoreData: s.noticeNoMoreData(on: sv)
         };return self
     }

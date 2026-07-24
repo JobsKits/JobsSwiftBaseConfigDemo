@@ -106,6 +106,11 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
     private let presenter: VIPERUserListPresenting
     private let tableView = UITableView(frame: .zero, style: .plain)
     private var rows: [VIPERUserListState.Row] = []
+    private lazy var errorAlertController: UIAlertController = {
+        let alertController = UIAlertController(title: "Error", message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        return alertController
+    }()
 
     init(presenter: VIPERUserListPresenting) {
         self.presenter = presenter
@@ -124,17 +129,21 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
 
     func render(_ state: VIPERUserListState) {
         switch state.phase {
+        /// 处理 .loading 分支
         case .loading:
             navigationItem.prompt = "Loading..."
+        /// 处理 .content 分支
         case .content(let rows):
             navigationItem.prompt = nil
             self.rows = rows
             tableView.reloadData()
+        /// 处理 .error 分支
         case .error(let msg):
             navigationItem.prompt = nil
-            let ac = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "OK", style: .default))
-            present(ac, animated: true)
+            errorAlertController.message = msg
+            if presentedViewController !== errorAlertController {
+                present(errorAlertController, animated: true)
+            }
         }
     }
 

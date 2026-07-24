@@ -16,8 +16,10 @@ public let languageModeKey = "Jobs.LanguageMode"
 public let languageCodeKey = "Jobs.LanguageCode"
 public func resolveLanguageCode() -> String {
     switch loadLanguageMode() {
+    /// 处理 .system 分支
     case .system:
         return (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
+    /// 处理 .custom 分支
     case .custom(let code):
         return code.normalizedLanguageCode
     }

@@ -21,16 +21,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
-    private lazy var themeButton: UIButton = {
-        UIButton.sys()
-            .byTintColor(JobsCor.label)
-            .byImage("moon.circle.fill".sysImg.withRenderingMode(.alwaysTemplate), for: .normal)
-            .byImage("sun.max.circle.fill".sysImg.withRenderingMode(.alwaysTemplate), for: .selected)
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                toggleTheme(using: sender)
-            }
-    }()
+    private lazy var countryCodeController = JobsSwiftCountryCodeCtrl()
 
     private lazy var countryCodeTextField: UITextField = {
         UITextField()
@@ -70,14 +61,11 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(
-            title: "JobsSwiftCountryCodeCtrl".tr,
-            rightButtons: [themeButton]
-        )
+        jobsSetupGKNav(title: "JobsSwiftCountryCodeCtrl".tr)
         applyThemeChrome()
-        syncThemeButton()
         countryCodeTextField.byVisible(true)
         selectButton.byVisible(true)
+        refreshSelectedCountry()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -85,24 +73,10 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
         guard #available(iOS 13.0, *),
               previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
         applyThemeChrome()
-        syncThemeButton()
     }
 }
 
 private extension JobsSwiftCountryCodeCtrlDemoVC {
-    func toggleTheme(using sender: UIButton) {
-        guard #available(iOS 13.0, *) else { return }
-        let enablesDarkMode = traitCollection.userInterfaceStyle != .dark
-        byOverrideUserInterfaceStyle(enablesDarkMode ? .dark : .light)
-        sender.bySelected(enablesDarkMode)
-        applyThemeChrome()
-    }
-
-    func syncThemeButton() {
-        guard #available(iOS 13.0, *) else { return }
-        themeButton.bySelected(traitCollection.userInterfaceStyle == .dark)
-    }
-
     func applyThemeChrome() {
         view.byBackgroundColor(JobsCor.systemBackground)
         gk_navBackgroundColor = JobsCor.systemBackground
@@ -113,13 +87,21 @@ private extension JobsSwiftCountryCodeCtrlDemoVC {
     }
 
     func pushCountryCodeCtrl() {
-        let controller = JobsSwiftCountryCodeCtrl()
         if #available(iOS 13.0, *) {
-            controller.byOverrideUserInterfaceStyle(traitCollection.userInterfaceStyle)
+            countryCodeController.byOverrideUserInterfaceStyle(traitCollection.userInterfaceStyle)
         }
-        controller.countrySelectionHandler = { [weak self] country in
-            self?.countryCodeTextField.byText("\(country.displayName) +\(country.code)")
+        countryCodeController.countrySelectionHandler = { [weak self] country in
+            self?.showSelectedCountry(country)
         }
-        navigationController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(countryCodeController, animated: true)
+    }
+
+    func refreshSelectedCountry() {
+        guard let country = JobsSwiftCountryCodeCtrl.selectedCountry else { return }
+        showSelectedCountry(country)
+    }
+
+    func showSelectedCountry(_ country: JobsSwiftCountryCodeCtrl.Country) {
+        countryCodeTextField.byText("\(country.displayName) +\(country.code)")
     }
 }

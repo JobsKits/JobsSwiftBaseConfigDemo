@@ -248,6 +248,7 @@ extension UIView {
                          config: RTBadgeConfig) {
         container.subviews.forEach { $0.removeFromSuperview() }
         switch content {
+        /// 处理 .text 分支
         case .text(let s):
             let label = _InsetLabel()
                 .byText(s)
@@ -260,6 +261,7 @@ extension UIView {
                 }
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
+        /// 处理 .attributed 分支
         case .attributed(let attr):
             let label = _InsetLabel()
                 .byAttributedString(attr)
@@ -272,6 +274,7 @@ extension UIView {
                 }
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.setContentHuggingPriority(.required, for: .horizontal)
+        /// 处理 .custom 分支
         case .custom(let view):
             view.byAddTo(container) { [unowned self] make in
                 make.edges.equalToSuperview().inset(config.insets)

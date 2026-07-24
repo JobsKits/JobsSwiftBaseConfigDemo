@@ -25,23 +25,36 @@ extension BaseWebView {
     public static func toJSONLiteral(_ value: Any?) -> String {
         guard let value else { return "null" }
         switch value {
+        /// 处理 NSNull 类型分支
         case is NSNull: return "null"
+        /// 处理 String 类型分支
         case let s as String: return quote(s)
+        /// 处理 Bool 类型分支
         case let b as Bool: return b ? "true" : "false"
+        /// 处理 Int 类型分支
         case let i as Int: return "\(i)"
+        /// 处理 Int64 类型分支
         case let i64 as Int64: return "\(i64)"
+        /// 处理 UInt64 类型分支
         case let u64 as UInt64: return "\(u64)"
+        /// 处理 Double 类型分支
         case let d as Double: return d.isFinite ? "\(d)" : "null"
+        /// 处理 Float 类型分支
         case let f as Float: return f.isFinite ? "\(f)" : "null"
+        /// 处理 Decimal 类型分支
         case let dec as Decimal: return NSDecimalNumber(decimal: dec).stringValue
+        /// 处理 Date 类型分支
         case let date as Date:
             let iso = ISO8601DateFormatter()
             return quote(iso.string(from: date))
+        /// 处理 [Any] 类型分支
         case let arr as [Any]:
             return "[\(arr.map { toJSONLiteral($0) }.joined(separator: ","))]"
+        /// 处理 [String: Any] 类型分支
         case let dict as [String: Any]:
             let body = dict.map { key, val in "\(quote(key)):\(toJSONLiteral(val))" }.joined(separator: ",")
             return "{\(body)}"
+        /// 未匹配已知分支时执行兜底处理
         default:
             if JSONSerialization.isValidJSONObject(value),
                let data = try? JSONSerialization.data(withJSONObject: value, options: []),

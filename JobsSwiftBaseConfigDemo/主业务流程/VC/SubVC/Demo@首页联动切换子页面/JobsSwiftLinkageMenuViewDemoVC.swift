@@ -84,10 +84,13 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         config.selectedTintColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
         config.selectedBackgroundColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
         switch LayoutMode(rawValue: modeControl.selectedSegmentIndex) ?? .fixedMenu {
+        /// 处理 .fixedMenu 分支
         case .fixedMenu:
             config.menuWidth = 96
+        /// 处理 .fixedContent 分支
         case .fixedContent:
             config.contentWidth = 260
+        /// 处理 .ratio 分支
         case .ratio:
             config.menuRatio = 0.26
         }
@@ -157,6 +160,9 @@ private final class ActivityListView: UIView {
     private let sectionTitle: String
     private let menuTitle: String
     private var cards: [UIView] = []
+    private var iconLabels: [UILabel] = []
+    private var titleLabels: [UILabel] = []
+    private var subtitleLabels: [UILabel] = []
 
     init(sectionTitle: String, menuTitle: String) {
         self.sectionTitle = sectionTitle
@@ -194,6 +200,7 @@ private final class ActivityListView: UIView {
         card.layer.shadowOffset = CGSize(width: 0, height: 3)
         card.layer.shadowRadius = 6
         let iconLabel = UILabel()
+        iconLabels.append(iconLabel)
         iconLabel.byText("✉")
         iconLabel.byTextAlignment(.center)
         iconLabel.byTextColor(JobsCor.white)
@@ -202,11 +209,13 @@ private final class ActivityListView: UIView {
         iconLabel.byCornerRadius(8)
         iconLabel.byMasksToBounds(true)
         let titleLabel = UILabel()
+        titleLabels.append(titleLabel)
         titleLabel.byText("\(sectionTitle) - \(menuTitle) 活动 \(index + 1)")
         titleLabel.byTextColor(JobsCor.label)
         titleLabel.byFont(JobsFont.boldSystemFont(ofSize: 18))
         titleLabel.byNumberOfLines(2)
         let subtitleLabel = UILabel()
+        subtitleLabels.append(subtitleLabel)
         subtitleLabel.byText("神秘彩金等你来拿".tr)
         subtitleLabel.byTextColor(JobsCor.darkGray)
         subtitleLabel.byFont(JobsFont.systemFont(ofSize: 15))

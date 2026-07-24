@@ -59,12 +59,15 @@ final class GestureNodeView: UIView {
         self.state = state
         borderLayer.lineWidth = configuration.nodeBorderWidth
         switch state {
+        /// 处理 .normal 分支
         case .normal:
             borderLayer.strokeColor = configuration.nodeNormalColor.cgColor
             fillLayer.fillColor = JobsCor.clear.cgColor
+        /// 处理 .selected 分支
         case .selected:
             borderLayer.strokeColor = configuration.nodeSelectedColor.cgColor
             fillLayer.fillColor = configuration.nodeFillSelectedColor.cgColor
+        /// 处理 .error 分支
         case .error:
             borderLayer.strokeColor = configuration.nodeErrorColor.cgColor
             fillLayer.fillColor = configuration.nodeFillErrorColor.cgColor

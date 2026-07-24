@@ -28,6 +28,8 @@ struct DemoModel {
 class DemoDetailVC: BaseVC {
     // ✅ 缓存任意类型的入参
     private var input: Any?
+    private var demoNavigationTitle: String?
+
     override func loadView() {
         super.loadView()
         // ✅ 需要的再按类型拆
@@ -41,7 +43,7 @@ class DemoDetailVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "🍰 自定义高度 HalfSheet (320)".tr
+            title: (demoNavigationTitle ?? "🍰 自定义高度 HalfSheet (320)").tr
         )
         UIButton.sys()
             // 普通文字：未选中状态标题
@@ -61,6 +63,12 @@ class DemoDetailVC: BaseVC {
     @discardableResult
     func byData(_ any: Any?) -> Self {
         input = any
+        return self
+    }
+
+    @discardableResult
+    func byNavigationTitle(_ title: String) -> Self {
+        demoNavigationTitle = title
         return self
     }
 }

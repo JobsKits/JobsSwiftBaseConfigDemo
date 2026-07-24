@@ -23,9 +23,13 @@ public enum JobsNetworkSource {
 
     public var displayName: String {
         switch self {
+        /// 处理 .wifi 分支
         case .wifi:     return "Wi-Fi".tr
+        /// 处理 .cellular 分支
         case .cellular: return "蜂窝".tr
+        /// 处理 .other 分支
         case .other:    return "其他".tr
+        /// 处理 .none 分支
         case .none:     return "无网络".tr
         }
     }

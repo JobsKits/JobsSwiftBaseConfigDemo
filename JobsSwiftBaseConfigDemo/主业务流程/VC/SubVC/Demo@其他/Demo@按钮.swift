@@ -38,6 +38,7 @@ final class UIButtonDemoVC: BaseVC {
             .bySpacing(12)
             .byDistribution(.equalSpacing)
     }()
+    private var demoButtons: [UIButton] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +71,7 @@ extension UIButtonDemoVC {
             make.width.equalTo(scroll.frameLayoutGuide.snp.width).offset(-32)
         }
     }
-    // MARK: - 构建所有示例（每个按钮都是局部变量，注释写清用途）
+    // MARK: - 构建所有示例（动态按钮统一进入属性数组，保留后续修改入口）
     private func buildDemos() {
         // 1) 基础链式：标题 / 颜色 / 字体 / 图片 / 背景图
         do {
@@ -87,7 +88,7 @@ extension UIButtonDemoVC {
                     .for(.normal)
                     .preferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold))
             }
-            stack.addArrangedSubview(btnBasic)
+            addDemoButton(btnBasic)
         }
         // 2) 按 state 的链式代理：for(.highlighted).title(...) / 背景色
         do {
@@ -102,7 +103,7 @@ extension UIButtonDemoVC {
                 .for(.highlighted).title("2) Highlighted 标题")
                 .for(.highlighted).titleColor(JobsCor.yellow)
                 .for(.highlighted).backgroundColor(JobsCor.systemPurple)
-            stack.addArrangedSubview(btnState)
+            addDemoButton(btnState)
         }
         // 3) 背景色兜底：iOS15+ 走 configuration；其它/非 normal state 用 1×1 背景图
         do {
@@ -116,7 +117,7 @@ extension UIButtonDemoVC {
                     btn.byEnabled(btn.jobs_effectiveState == .disabled)
                 }
             btnBG.for(.disabled).backgroundColor(JobsCor.systemGray)
-            stack.addArrangedSubview(btnBG)
+            addDemoButton(btnBG)
         }
         // 4) 内容内边距：byContentInsets / byContentEdgeInsets（兼容 iOS15-）
         do {
@@ -126,7 +127,7 @@ extension UIButtonDemoVC {
                 .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
                 .byBackgroundColor(JobsCor.systemGreen)
             _ = btnInsets.byContentInsets(NSDirectionalEdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
-            stack.addArrangedSubview(btnInsets)
+            addDemoButton(btnInsets)
         }
         // 5) 图片与标题的相对位置：byImagePlacement(.leading/.trailing/.top/.bottom) + padding
         do {
@@ -141,7 +142,7 @@ extension UIButtonDemoVC {
                     .byTintColor(JobsCor.white)
             }
             _ = btnPlacement.byImagePlacement(.trailing, padding: 8)
-            stack.addArrangedSubview(btnPlacement)
+            addDemoButton(btnPlacement)
         }
         // 6) 副标题（iOS15+）：bySubtitle；低版本退化为主标题换行
         do {
@@ -154,7 +155,7 @@ extension UIButtonDemoVC {
                 .bySubTitle("副标题：iOS15+ 走 configuration.subtitle".tr)
                 .bySubTitleColor(JobsCor.white)
                 .bySubTitleFont(JobsFont.systemFont(ofSize: 12))
-            stack.addArrangedSubview(btnSubtitle)
+            addDemoButton(btnSubtitle)
         }
         // 7) 菜单（iOS14+）：byMenu + byShowsMenuAsPrimaryAction
         do {
@@ -173,7 +174,7 @@ extension UIButtonDemoVC {
                 _ = btnMenu.byMenu(UIMenu.make(title: "操作".tr, children: items))
                     .byShowsMenuAsPrimaryAction(true)
             }
-            stack.addArrangedSubview(btnMenu)
+            addDemoButton(btnMenu)
         }
         // 8) 指针交互（iOS13.4+）：byPointerInteractionEnabled
         do {
@@ -187,7 +188,7 @@ extension UIButtonDemoVC {
             if #available(iOS 13.4, *) {
                 _ = btnPointer.byPointerInteractionEnabled(true)
             }
-            stack.addArrangedSubview(btnPointer)
+            addDemoButton(btnPointer)
         }
         // 9) Role（iOS14+）
         do {
@@ -199,7 +200,7 @@ extension UIButtonDemoVC {
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("Destructive tapped") }
             if #available(iOS 14.0, *) { _ = btnRole.byRole(.destructive) }
-            stack.addArrangedSubview(btnRole)
+            addDemoButton(btnRole)
         }
         // 10) 主动作切换 selected（iOS15+）
         do {
@@ -216,7 +217,7 @@ extension UIButtonDemoVC {
             } else {
                 _ = btnToggle.onTap { b in b.byToggleSelected() }
             }
-            stack.addArrangedSubview(btnToggle)
+            addDemoButton(btnToggle)
         }
         // 11) Configuration Update（iOS15+）
         do {
@@ -233,7 +234,7 @@ extension UIButtonDemoVC {
                         btn.byAlpha(btn.jobs_effectiveState == .highlighted ? 0.6 : 1.0)
                     }
             }
-            stack.addArrangedSubview(btnUpdate)
+            addDemoButton(btnUpdate)
         }
         // 12) 旋转动画：startRotating / stopRotating + 防连点
         do {
@@ -256,7 +257,7 @@ extension UIButtonDemoVC {
                 _ = btnRotate.byImage("arrow.2.circlepath.circle.fill".sysImg, for: .normal)
                     .byTintColor(JobsCor.white)
             }
-            stack.addArrangedSubview(btnRotate)
+            addDemoButton(btnRotate)
         }
         // 13) 长按事件
         do {
@@ -270,7 +271,7 @@ extension UIButtonDemoVC {
                     if gr.state == .began { btn.byAlpha(0.7); print("长按开始 on \(btn)") }
                     else if gr.state == .ended || gr.state == .cancelled { btn.byAlpha(1.0); print("长按结束") }
                 }
-            stack.addArrangedSubview(btnLong)
+            addDemoButton(btnLong)
         }
         // 14) onTap 统一封装（UIAction / addTarget 兜底）
         do {
@@ -281,7 +282,7 @@ extension UIButtonDemoVC {
                 .byBackgroundColor(JobsCor.systemBlue)
                 .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
                 .onTap { _ in print("onTap 统一入口（内部已区分 iOS14+ / 低版本）") }
-            stack.addArrangedSubview(btnAction)
+            addDemoButton(btnAction)
         }
         // 15) per-state Symbol 配置
         do {
@@ -297,7 +298,7 @@ extension UIButtonDemoVC {
                     .for(.normal).preferredSymbolConfiguration(.init(pointSize: 16, weight: .regular))
                     .for(.highlighted).preferredSymbolConfiguration(.init(pointSize: 20, weight: .bold))
             }
-            stack.addArrangedSubview(btnSymbol)
+            addDemoButton(btnSymbol)
         }
         // 16) 富文本主/副标题（一个入参 = NSAttributedString）
         do {
@@ -313,7 +314,12 @@ extension UIButtonDemoVC {
                     JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
                 ]))        // ✅ 副标题富文本：一个入参
                 .onTap { _ in print("富文本主/副 tapped") }
-            stack.addArrangedSubview(btnRich)
+            addDemoButton(btnRich)
         }
+    }
+
+    private func addDemoButton(_ button: UIButton) {
+        demoButtons.append(button)
+        stack.addArrangedSubview(button)
     }
 }

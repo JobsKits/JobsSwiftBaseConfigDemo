@@ -81,8 +81,8 @@ final class EmptyTableViewDemoVC: BaseVC {
                     .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                     /// 按钮图片@图文关系
                     .byImagePlacement(.top)
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
+                    .byImage("trash.circle".sysImg, for: .normal)
+                    .byImage("trash.circle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }
@@ -101,8 +101,8 @@ final class EmptyTableViewDemoVC: BaseVC {
                     .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
                     /// 按钮图片@图文关系
                     .byImagePlacement(.top)
-                    .byImage("globe".sysImg, for: .normal)
-                    .byImage("globe".sysImg, for: .selected)
+                    .byImage("arrow.clockwise.circle".sysImg, for: .normal)
+                    .byImage("arrow.clockwise.circle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }

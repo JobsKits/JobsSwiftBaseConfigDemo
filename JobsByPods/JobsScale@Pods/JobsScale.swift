@@ -102,8 +102,10 @@ public enum JobsScale {
         let w = screenSize.width
         let raw: CGFloat
         switch fontMode {
+        /// 处理 .continuous 分支
         case .continuous:
             raw = w / designW
+        /// 处理 .breakpoints 分支
         case .breakpoints:
             raw = scaleFromBreakpoints(w)
         };return clamp(raw, fontMinScale, fontMaxScale)

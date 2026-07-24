@@ -22,8 +22,11 @@ extension NSObject {
                 .sorted { lhs, rhs in
                     func rank(_ s: UIScene.ActivationState) -> Int {
                         switch s {
+                        /// 处理 .foregroundActive 分支
                         case .foregroundActive:   return 0
+                        /// 处理 .foregroundInactive 分支
                         case .foregroundInactive: return 1
+                        /// 未匹配已知分支时执行兜底处理
                         default:                  return 2
                         }
                     };return rank(lhs.activationState) < rank(rhs.activationState)

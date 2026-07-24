@@ -34,16 +34,22 @@ public enum TextFormatStrategy {
 
     public func apply(_ s: String) -> String {
         switch self {
+        /// 处理 .identity 分支
         case .identity:
             return s
+        /// 处理 .trimSpaces 分支
         case .trimSpaces:
             return s.replacingOccurrences(of: " ", with: "")
+        /// 处理 .lowercased 分支
         case .lowercased:
             return s.lowercased()
+        /// 处理 .uppercased 分支
         case .uppercased:
             return s.uppercased()
+        /// 处理 .digitsOnly 分支
         case .digitsOnly:
             return s.filter { $0.isNumber }
+        /// 处理 .decimal 分支
         case .decimal(let scale):
             // 仅保留一处小数点 + 限制小数位数
             var filtered = s.filter { $0.isNumber || $0 == "." }
@@ -57,22 +63,27 @@ public enum TextFormatStrategy {
                 let end = filtered.index(dot, offsetBy: scale + 1, limitedBy: filtered.endIndex) ?? filtered.endIndex
                 filtered = String(filtered[..<end])
             };return filtered
+        /// 处理 .phoneCNGrouped 分支
         case .phoneCNGrouped:
             // 展示分组：3-4-4；内部可以在回写 VM 时去空格
             let digits = s.filter { $0.isNumber }.prefix(11)
             let raw = String(digits)
             switch raw.count {
+            /// 处理 0...3 范围 分支
             case 0...3: return raw
+            /// 处理 4...7 范围 分支
             case 4...7:
                 let a = raw.prefix(3)
                 let b = raw.dropFirst(3)
                 return "\(a) \(b)"
+            /// 未匹配已知分支时执行兜底处理
             default:
                 let a = raw.prefix(3)
                 let b = raw.dropFirst(3).prefix(4)
                 let c = raw.dropFirst(7)
                 return "\(a) \(b) \(c)"
             }
+        /// 处理 .bankCardGrouped 分支
         case .bankCardGrouped:
             let digits = s.filter { $0.isNumber };return stride(from: 0, to: digits.count, by: 4)
                 .map { i -> String in
@@ -81,6 +92,7 @@ public enum TextFormatStrategy {
                     return String(digits[start..<end])
                 }
                 .joined(separator: " ")
+        /// 处理 .custom 分支
         case .custom(let f):
             return f(s)
         }
@@ -104,25 +116,33 @@ public enum TextValidateStrategy {
 
     public func test(_ s: String) -> Bool {
         switch self {
+        /// 处理 .alwaysTrue 分支
         case .alwaysTrue:
             return true
+        /// 处理 .nonEmpty 分支
         case .nonEmpty:
             return !s.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        /// 处理 .minLength 分支
         case .minLength(let n):
             return s.count >= n
+        /// 处理 .email 分支
         case .email:
             // 简洁校验（生产建议换更严格正则）
             let pattern = #"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$"#
             return s.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
+        /// 处理 .phoneCN 分支
         case .phoneCN:
             let digits = s.filter { $0.isNumber };return digits.count == 11
+        /// 处理 .bankCard 分支
         case .bankCard(let min):
             let digits = s.filter { $0.isNumber };return digits.count >= min
+        /// 处理 .decimal 分支
         case .decimal(let maxScale):
             if let dot = s.firstIndex(of: ".") {
                 let scale = s.distance(from: dot, to: s.endIndex) - 1
                 return scale >= 0 && scale <= maxScale
             };return true
+        /// 处理 .regex 分支
         case .regex(let re):
             let range = NSRange(location: 0, length: (s as NSString).length)
             return re.firstMatch(in: s, options: [], range: range) != nil

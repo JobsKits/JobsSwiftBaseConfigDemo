@@ -25,8 +25,10 @@ extension URL {
             return try await withCheckedThrowingContinuation { cont in
                 KingfisherManager.shared.retrieveImage(with: self) { result in
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let value):
                         cont.resume(returning: value.image)
+                    /// 处理 .failure 分支
                     case .failure(let err):
                         cont.resume(throwing: err)
                     }
@@ -49,8 +51,10 @@ extension URL {
         if isHTTPRemote {
             KingfisherManager.shared.retrieveImage(with: self) { result in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value):
                     completion(.success(value.image))
+                /// 处理 .failure 分支
                 case .failure(let err):
                     completion(.failure(err))
                 }

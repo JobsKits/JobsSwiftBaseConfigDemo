@@ -32,6 +32,7 @@ class MosaicBaseDemoVC: BaseVC {
     private var imageLoadToken: JobsImageLoadToken?
     private var isExitAlertShowing = false
     private var previousInteractivePopEnabled: Bool?
+    private var exitAlertController: UIAlertController?
 
     lazy var imageContainerView: UIView = {
         UIView()
@@ -111,23 +112,25 @@ class MosaicBaseDemoVC: BaseVC {
         }
         guard isExitAlertShowing == false else { return }
         isExitAlertShowing = true
-        let alert = UIAlertController(
+        exitAlertController = UIAlertController(
             title: "是否保存修改后的照片？".tr,
             message: "保存后会写入系统相册。".tr,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "取消".tr, style: .cancel) { [weak self] _ in
+        exitAlertController?.addAction(UIAlertAction(title: "取消".tr, style: .cancel) { [weak self] _ in
             self?.isExitAlertShowing = false
         })
-        alert.addAction(UIAlertAction(title: "不保存".tr, style: .destructive) { [weak self] _ in
+        exitAlertController?.addAction(UIAlertAction(title: "不保存".tr, style: .destructive) { [weak self] _ in
             self?.isExitAlertShowing = false
             self?.leavePage()
         })
-        alert.addAction(UIAlertAction(title: "保存并退出".tr, style: .default) { [weak self] _ in
+        exitAlertController?.addAction(UIAlertAction(title: "保存并退出".tr, style: .default) { [weak self] _ in
             guard let self else { return }
             self.saveImageAndLeave(image)
         })
-        present(alert, animated: true)
+        if let exitAlertController {
+            present(exitAlertController, animated: true)
+        }
     }
 
     func makeBackButton() -> UIButton {
@@ -152,12 +155,14 @@ class MosaicBaseDemoVC: BaseVC {
         ) { [weak self] result in
             guard let self else { return }
             switch result {
+            /// 处理 .success 分支
             case .success(let value):
                 let image = value.image.jobs_mosaicNormalized()
                 self.originalImage = image
                 self.imageView.byImage(image)
                 self.loadingLabel.byHidden(true)
                 self.onImageLoaded(image)
+            /// 处理 .failure 分支
             case .failure(let error):
                 self.loadingLabel.byText("图片加载失败".tr)
                 "图片加载失败：\(error)".toast
@@ -172,9 +177,11 @@ class MosaicBaseDemoVC: BaseVC {
             self.loadingLabel.byHidden(true)
             self.isExitAlertShowing = false
             switch result {
+            /// 处理 .success 分支
             case .success:
                 "已保存到系统相册".tr.toast
                 self.leavePage()
+            /// 处理 .failure 分支
             case .failure(let error):
                 "保存失败：\(error.localizedDescription)".toast
             }

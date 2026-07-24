@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftBlock
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import JobsFuseAnimation
 
 @MainActor
 final class JobsProxy: NSObject {
@@ -78,9 +79,13 @@ final class JobsProxy: NSObject {
     func refreshFeedback(for position: JobsPosition) -> JobsRefreshFeedback {
         let slotFeedback: JobsRefreshFeedback?
         switch position {
+        /// 处理 .header 分支
         case .header: slotFeedback = headerRefreshFeedback
+        /// 处理 .footer 分支
         case .footer: slotFeedback = footerRefreshFeedback
+        /// 处理 .left 分支
         case .left: slotFeedback = leftRefreshFeedback
+        /// 处理 .right 分支
         case .right: slotFeedback = rightRefreshFeedback
         };return slotFeedback ?? refreshFeedback
     }
@@ -90,7 +95,7 @@ final class JobsProxy: NSObject {
 final class JobsSlot {
     let position: JobsPosition
     let role: JobsRefreshRole
-    let view: (UIView & JobsAnimatable)
+    private(set) var view: (UIView & JobsAnimatable)
     let trigger: CGFloat
     var action: (jobsByVoidBlock)?
     weak var container: AnyObject?
@@ -135,28 +140,51 @@ final class JobsSlot {
         state = .removed
     }
 
+    /// 保留当前 slot、触发距离和刷新状态，只原位替换表现插件。
+    func replaceAnimator(_ animator: JobsRefreshAnimatorProtocol,
+                         on scrollView: UIScrollView) {
+        let previousView = view
+        let replacementView = JobsRefreshAnimatorContainerView(
+            animator: animator,
+            heightOrWidth: previousView.heightOrWidth
+        )
+        previousView.apply(state: .removed)
+        previousView.removeFromSuperview()
+        view = replacementView
+        replacementView.apply(state: state)
+        attach(to: scrollView)
+    }
+
     func layout(in sv: UIScrollView) {
         let h = view.heightOrWidth
         var baseInset = sv.contentInset
         if state == .refreshing || state == .ending {
             switch position {
+            /// 处理 .header 分支
             case .header: baseInset.top    = max(0, baseInset.top - h)
+            /// 处理 .footer 分支
             case .footer: baseInset.bottom = max(0, baseInset.bottom - h)
+            /// 处理 .left 分支
             case .left:   baseInset.left   = max(0, baseInset.left - h)
+            /// 处理 .right 分支
             case .right:  baseInset.right  = max(0, baseInset.right - h)
             }
         }
         switch position {
+        /// 处理 .header 分支
         case .header:
             view.byFrame(CGRect(x: 0, y: -h - baseInset.top, width: sv.bounds.width, height: h))
+        /// 处理 .footer 分支
         case .footer:
             let contentH = max(
                 sv.contentSize.height,
                 sv.bounds.height - (sv.adjustedContentInset.top + sv.adjustedContentInset.bottom)
             )
             view.byFrame(CGRect(x: 0, y: contentH + baseInset.bottom, width: sv.bounds.width, height: h))
+        /// 处理 .left 分支
         case .left:
             view.byFrame(CGRect(x: -h - baseInset.left, y: 0, width: h, height: sv.bounds.height))
+        /// 处理 .right 分支
         case .right:
             let contentW = max(
                 sv.contentSize.width,
@@ -173,16 +201,20 @@ final class JobsSlot {
         let offset = sv.contentOffset
         let isDragging = sv.isDragging
         switch position {
+        /// 处理 .header 分支
         case .header:
             let distance = -(offset.y + inset.top)
             progress(distance: distance, isDragging: isDragging, sv: sv)
+        /// 处理 .footer 分支
         case .footer:
             let contentH = max(sv.contentSize.height, sv.bounds.height - (inset.top + inset.bottom))
             let distance = offset.y + sv.bounds.height - contentH - inset.bottom
             progress(distance: distance, isDragging: isDragging, sv: sv, isFooter: true)
+        /// 处理 .left 分支
         case .left:
             let distance = -(offset.x + inset.left)
             progress(distance: distance, isDragging: isDragging, sv: sv)
+        /// 处理 .right 分支
         case .right:
             let contentW = max(sv.contentSize.width, sv.bounds.width - (inset.left + inset.right))
             let distance = offset.x + sv.bounds.width - contentW - inset.right
@@ -224,20 +256,28 @@ final class JobsSlot {
         let oldAdjusted = sv.adjustedContentInset
         var inset = sv.contentInset
         switch position {
+        /// 处理 .header 分支
         case .header: inset.top    += h
+        /// 处理 .footer 分支
         case .footer: inset.bottom += h
+        /// 处理 .left 分支
         case .left:   inset.left   += h
+        /// 处理 .right 分支
         case .right:  inset.right  += h
         }
         var targetOffset = sv.contentOffset
         switch position {
+        /// 处理 .header 分支
         case .header:
             targetOffset.y = -(oldAdjusted.top + h)
+        /// 处理 .footer 分支
         case .footer:
             let contentH = max(sv.contentSize.height, sv.bounds.height - (oldAdjusted.top + oldAdjusted.bottom))
             targetOffset.y = contentH + (oldAdjusted.bottom + h) - sv.bounds.height
+        /// 处理 .left 分支
         case .left:
             targetOffset.x = -(oldAdjusted.left + h)
+        /// 处理 .right 分支
         case .right:
             let contentW = max(sv.contentSize.width, sv.bounds.width - (oldAdjusted.left + oldAdjusted.right))
             targetOffset.x = contentW + (oldAdjusted.right + h) - sv.bounds.width
@@ -324,9 +364,13 @@ final class JobsSlot {
     private func resetInset(from current: UIEdgeInsets) -> UIEdgeInsets {
         var inset = current
         switch position {
+        /// 处理 .header 分支
         case .header: inset.top    -= view.heightOrWidth
+        /// 处理 .footer 分支
         case .footer: inset.bottom -= view.heightOrWidth
+        /// 处理 .left 分支
         case .left:   inset.left   -= view.heightOrWidth
+        /// 处理 .right 分支
         case .right:  inset.right  -= view.heightOrWidth
         };return inset
     }

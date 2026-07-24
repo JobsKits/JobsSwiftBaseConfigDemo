@@ -3,12 +3,6 @@
 //  JobsSwiftBaseConfigDemo
 //
 //  Created by Jobs on 2026年5月13日，星期三.
-//  Copyright © 2026 Jobs. All rights reserved.
-//
-
-//
-//  PhotoAlbumDemoVC.swift
-//  JobsSwiftBaseConfigDemo
 //
 
 #if os(OSX)
@@ -39,6 +33,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     private var videoURL: URL?              // 单个视频（拍摄 / 单选）
     private var albumVideoURLs: [URL] = []  // 多个视频（相册多选）
     private var pickerHold: AnyObject?      // 持有 PHPicker/UIImagePicker 的代理，防释放
+    private var legacyVideoPickerController: UIImagePickerController?
     private let gridColumns: CGFloat = 3
     private let gridSpacing: CGFloat = 8
     private let gridInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
@@ -55,7 +50,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     // MARK: - Buttons
     private lazy var cameraBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("调用相机照相".tr, for: .normal)
+            .byTitle("调用相机照相 + 滤镜".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byTitleColor(JobsCor.white, for: .normal)
             .byImage("camera.fill".sysImg, for: .normal)
@@ -76,6 +71,7 @@ final class PhotoAlbumDemoVC: BaseVC {
                     mode = .cameraPhoto
                     images = [img]; videoURL = nil; albumVideoURLs.removeAll()
                     reloadPreviewAndScrollMode()
+                    showPhotoFilter(img)
                 }
                 #endif
             }
@@ -99,7 +95,9 @@ final class PhotoAlbumDemoVC: BaseVC {
                 guard let self else { return }
                 pickFromPhotoLibrary(maxSelection: imageMaxSelection, imagesOnly: true) { [weak self] imgs in
                     guard let self else { return }
-                    (imgs.isEmpty ? "未选择图片" : "已选择 \(imgs.count) 张").toast
+                    (imgs.isEmpty
+                     ? "未选择图片"
+                     : "已选择 \(imgs.count) 张，点击照片进入滤镜工作台").toast
                     mode = .albumImages
                     images = imgs; videoURL = nil; albumVideoURLs.removeAll()
                     reloadPreviewAndScrollMode()
@@ -213,6 +211,23 @@ final class PhotoAlbumDemoVC: BaseVC {
             }
     }()
 
+    private lazy var filterHintLabel: UILabel = {
+        UILabel()
+            .byText("点击照片进入滤镜工作台".tr)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byTextColor(JobsCor.white)
+            .byTextAlignment(.center)
+            .byBackgroundColor(JobsCor.black)
+            .byCornerRadius(10)
+            .byClipsToBounds(true)
+            .byAddTo(previewContainer) { make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalToSuperview().inset(12)
+                make.height.equalTo(28)
+                make.width.greaterThanOrEqualTo(190)
+            }
+    }()
+
     override func loadView() {
         super.loadView()
         mode = .none
@@ -221,7 +236,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "鉴权后：相机 / 相册 / 录制 / 选视频".tr)
+        jobsSetupGKNav(title: "相机 / 相册 / 录制 / 滤镜".tr)
         cameraBtn.byVisible(YES)
         albumBtn.byVisible(YES)
         recordBtn.byVisible(YES)
@@ -229,6 +244,7 @@ final class PhotoAlbumDemoVC: BaseVC {
         pickMultiVideoBtn.byVisible(YES)
         previewContainer.byVisible(YES)
         collectionView.byVisible(YES)
+        filterHintLabel.byVisible(NO)
         reloadPreviewAndScrollMode()
     }
 
@@ -243,17 +259,30 @@ final class PhotoAlbumDemoVC: BaseVC {
         collectionView.collectionViewLayout.invalidateLayout()
         applyScrollPolicy()
         collectionView.reloadData()
+        refreshFilterHint()
+    }
+
+    private func refreshFilterHint() {
+        let shouldShow = (mode == .cameraPhoto || mode == .albumImages) && !images.isEmpty
+        filterHintLabel.byVisible(shouldShow)
+    }
+
+    private func showPhotoFilter(_ image: UIImage) {
+        PhotoFilterDemoVC(sourceImage: image).byPush(self)
     }
     /// 滚动策略
     private func applyScrollPolicy() {
         switch mode {
+        /// 合并处理 .cameraPhoto、.cameraVideo、.none 分支
         case .cameraPhoto, .cameraVideo, .none:
             collectionView.isScrollEnabled = false
             collectionView.showsVerticalScrollIndicator = false
+        /// 处理 .albumImages 分支
         case .albumImages:
             let disable = images.count <= 9
             collectionView.isScrollEnabled = !disable
             collectionView.showsVerticalScrollIndicator = !disable
+        /// 处理 .albumVideos 分支
         case .albumVideos:
             let disable = albumVideoURLs.count <= 9
             collectionView.isScrollEnabled = !disable
@@ -266,29 +295,38 @@ final class PhotoAlbumDemoVC: BaseVC {
 extension PhotoAlbumDemoVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch mode {
+        /// 处理 .cameraPhoto 分支
         case .cameraPhoto: return images.isEmpty ? 0 : 1
+        /// 处理 .albumImages 分支
         case .albumImages: return images.count
+        /// 处理 .cameraVideo 分支
         case .cameraVideo: return videoURL == nil ? 0 : 1
+        /// 处理 .albumVideos 分支
         case .albumVideos: return albumVideoURLs.count
-        case .none:        return 1 // 空态
+        /// 空态
+        case .none:        return 1
         }
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch mode {
+        /// 合并处理 .cameraPhoto、.albumImages 分支
         case .cameraPhoto, .albumImages:
             let img = (mode == .cameraPhoto) ? images[0] : images[indexPath.item]
             return collectionView
                 .byDequeueCell(ImageCell.self, for: indexPath)
                 .byData(img)
+        /// 处理 .cameraVideo 分支
         case .cameraVideo:
             return collectionView
                 .byDequeueCell(VideoCell.self, for: indexPath)
                 .byData(videoURL)
+        /// 处理 .albumVideos 分支
         case .albumVideos:
             return collectionView
                 .byDequeueCell(VideoThumbCell.self, for: indexPath)
                 .byData(albumVideoURLs[indexPath.item])
+        /// 处理 .none 分支
         case .none:
             return collectionView
                 .byDequeueCell(ImageCell.self, for: indexPath)
@@ -299,14 +337,32 @@ extension PhotoAlbumDemoVC: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension PhotoAlbumDemoVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch mode {
+        /// 处理 .cameraPhoto 分支
+        case .cameraPhoto:
+            guard let image = images.first else { return }
+            showPhotoFilter(image)
+        /// 处理 .albumImages 分支
+        case .albumImages:
+            guard images.indices.contains(indexPath.item) else { return }
+            showPhotoFilter(images[indexPath.item])
+        /// 视频与空态不进入照片滤镜
+        case .cameraVideo, .albumVideos, .none:
+            break
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width
         switch mode {
+        /// 合并处理 .cameraPhoto、.cameraVideo、.none 分支
         case .cameraPhoto, .cameraVideo, .none:
             let w = width - gridInsets.left - gridInsets.right
             return CGSize(width: w, height: w) // 单格
+        /// 合并处理 .albumImages、.albumVideos 分支
         case .albumImages, .albumVideos:
             let totalSpacing = gridInsets.left + gridInsets.right + gridSpacing * (gridColumns - 1)
             let side = floor((width - totalSpacing) / gridColumns)
@@ -320,7 +376,9 @@ extension PhotoAlbumDemoVC: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         switch mode {
+        /// 合并处理 .cameraPhoto、.cameraVideo、.none 分支
         case .cameraPhoto, .cameraVideo, .none: return 0
+        /// 合并处理 .albumImages、.albumVideos 分支
         case .albumImages, .albumVideos:       return gridSpacing
         }
     }
@@ -328,7 +386,9 @@ extension PhotoAlbumDemoVC: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         switch mode {
+        /// 合并处理 .cameraPhoto、.cameraVideo、.none 分支
         case .cameraPhoto, .cameraVideo, .none: return 0
+        /// 合并处理 .albumImages、.albumVideos 分支
         case .albumImages, .albumVideos:        return gridSpacing
         }
     }
@@ -359,12 +419,14 @@ private extension PhotoAlbumDemoVC {
                 let proxy = LegacyVideoLibraryProxy { [weak self] url in
                     jobsByVoidBlock(url.map { [$0] } ?? []); self?.pickerHold = nil
                 }
-                let picker = UIImagePickerController()
-                picker.sourceType = .photoLibrary
-                picker.mediaTypes = [UTType.movie.identifier]
-                picker.byDelegate(proxy)
+                legacyVideoPickerController = UIImagePickerController()
+                legacyVideoPickerController?.sourceType = .photoLibrary
+                legacyVideoPickerController?.mediaTypes = [UTType.movie.identifier]
+                legacyVideoPickerController?.byDelegate(proxy)
                 self.pickerHold = proxy
-                self.present(picker, animated: true)
+                if let legacyVideoPickerController {
+                    self.present(legacyVideoPickerController, animated: true)
+                }
             }
         }
     }

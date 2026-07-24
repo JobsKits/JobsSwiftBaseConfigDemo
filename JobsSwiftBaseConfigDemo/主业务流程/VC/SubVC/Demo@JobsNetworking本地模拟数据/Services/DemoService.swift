@@ -118,10 +118,15 @@ final class DemoService {
 
     private func mimeTypeByFileName(_ fileName: String) -> String {
         switch (fileName as NSString).pathExtension.lowercased() {
+        /// 处理 "txt" 分支
         case "txt": return "text/plain"
+        /// 处理 "json" 分支
         case "json": return "application/json"
+        /// 处理 "png" 分支
         case "png": return "image/png"
+        /// 合并处理 "jpg"、"jpeg" 分支
         case "jpg", "jpeg": return "image/jpeg"
+        /// 未匹配已知分支时执行兜底处理
         default: return "application/octet-stream"
         }
     }

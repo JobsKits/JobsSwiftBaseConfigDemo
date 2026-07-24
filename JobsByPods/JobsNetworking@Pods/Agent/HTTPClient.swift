@@ -49,12 +49,14 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
             var evaluators: [String: ServerTrustEvaluating] = [:]
             for host in sslPinning.pinnedHosts {
                 switch sslPinning.mode {
+                /// 处理 .certificates 分支
                 case .certificates:
                     evaluators[host] = PinnedCertificatesTrustEvaluator(
                         acceptSelfSignedCertificates: sslPinning.allowsSelfSigned,
                         performDefaultValidation: true,
                         validateHost: sslPinning.validatesHost
                     )
+                /// 处理 .publicKeys 分支
                 case .publicKeys:
                     evaluators[host] = PublicKeysTrustEvaluator(
                         performDefaultValidation: true,
@@ -104,12 +106,14 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         afRequest.responseData { [weak self] response in
             self?.forget(id: request.trace.requestId)
             switch response.result {
+            /// 处理 .success 分支
             case .success(let data):
                 guard let http = response.response else {
                     completion(.failure(.emptyResponse))
                     return
                 }
                 completion(.success((data, http)))
+            /// 处理 .failure 分支
             case .failure(let error):
                 if error.isExplicitlyCancelledError {
                     completion(.failure(.cancelled))
@@ -145,12 +149,14 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         request.response { [weak self] response in
             self?.forget(id: trace.requestId)
             switch response.result {
+            /// 处理 .success 分支
             case .success:
                 guard let url = response.fileURL, let http = response.response else {
                     completion(.failure(.emptyResponse))
                     return
                 }
                 completion(.success((url, http)))
+            /// 处理 .failure 分支
             case .failure(let error):
                 if error.isExplicitlyCancelledError {
                     completion(.failure(.cancelled))
@@ -196,12 +202,14 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         request.responseData { [weak self] response in
             self?.forget(id: trace.requestId)
             switch response.result {
+            /// 处理 .success 分支
             case .success(let data):
                 guard let http = response.response else {
                     completion(.failure(.emptyResponse))
                     return
                 }
                 completion(.success((data, http)))
+            /// 处理 .failure 分支
             case .failure(let error):
                 if error.isExplicitlyCancelledError {
                     completion(.failure(.cancelled))

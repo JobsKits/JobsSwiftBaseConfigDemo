@@ -256,8 +256,10 @@ public final class FTDashboardView: UIView {
     private func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard isDraggable else { return }
         switch gesture.state {
+        /// 合并处理 .began、.changed、.ended 分支
         case .began, .changed, .ended:
             updateProgress(at: gesture.location(in: self))
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

@@ -141,10 +141,15 @@ public enum JobsLog {
     public enum Level: String { case plain = "LOG", info = "INFO", warn = "WARN", error = "ERROR", debug = "DEBUG"
         var symbol: String {
             switch self {
+            /// 处理 .plain 分支
             case .plain: return "📝"
+            /// 处理 .info 分支
             case .info:  return "ℹ️"
+            /// 处理 .warn 分支
             case .warn:  return "⚠️"
+            /// 处理 .error 分支
             case .error: return "❌"
+            /// 处理 .debug 分支
             case .debug: return "🐞"
             }
         }
@@ -177,12 +182,16 @@ public enum JobsLog {
     // 统一渲染：根据模式/类型输出
     private static func render(_ any: Any, mode: Mode, prettyJSON: Bool, maxDepth: Int) -> String {
         switch mode {
+        /// 处理 .plain 分支
         case .plain:
             return stringify(any)
+        /// 处理 .json 分支
         case .json:
             return toJSONString(any, pretty: prettyJSON, decodeUnicode: true) ?? stringify(any)
+        /// 处理 .object 分支
         case .object:
             return toJSONStringFromObject(any, pretty: prettyJSON, maxDepth: maxDepth) ?? stringify(any)
+        /// 处理 .auto 分支
         case .auto:
             // 1) 明确是 JSON 的几种：Data / String 以 { 或 [
             if let s = toJSONString(any, pretty: prettyJSON, decodeUnicode: true) { return s }
@@ -323,26 +332,47 @@ public enum JobsLog {
         let value = unwrapped ?? any
         // 2) 基本/可序列化类型直接返回
         switch value {
+        /// 处理 NSNull 类型分支
         case is NSNull:               return NSNull()
+        /// 处理 String 类型分支
         case let x as String:         return x
+        /// 处理 NSString 类型分支
         case let x as NSString:       return String(x)
+        /// 处理 Bool 类型分支
         case let x as Bool:           return x
+        /// 处理 Int 类型分支
         case let x as Int:            return x
+        /// 处理 Int8 类型分支
         case let x as Int8:           return x
+        /// 处理 Int16 类型分支
         case let x as Int16:          return x
+        /// 处理 Int32 类型分支
         case let x as Int32:          return x
+        /// 处理 Int64 类型分支
         case let x as Int64:          return x
+        /// 处理 UInt 类型分支
         case let x as UInt:           return x
+        /// 处理 UInt8 类型分支
         case let x as UInt8:          return x
+        /// 处理 UInt16 类型分支
         case let x as UInt16:         return x
+        /// 处理 UInt32 类型分支
         case let x as UInt32:         return x
+        /// 处理 UInt64 类型分支
         case let x as UInt64:         return x
+        /// 处理 Float 类型分支
         case let x as Float:          return x
+        /// 处理 Double 类型分支
         case let x as Double:         return x
+        /// 处理 NSNumber 类型分支
         case let x as NSNumber:       return x
+        /// 处理 Date 类型分支
         case let x as Date:           return ISO8601DateFormatter().string(from: x)
+        /// 处理 URL 类型分支
         case let x as URL:            return x.absoluteString
-        case let x as Data:           return ["<Data>": x.count] // 避免巨型 base64
+        /// 避免巨型 base64
+        case let x as Data:           return ["<Data>": x.count]
+        /// 未匹配已知分支时执行兜底处理
         default: break
         }
         let mirror = Mirror(reflecting: value)
@@ -416,11 +446,17 @@ public func log(_ items: Any?...,
 extension CATextLayerAlignmentMode {
     static func fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
         switch a {
+        /// 处理 .left 分支
         case .left: return .left
+        /// 处理 .right 分支
         case .right: return .right
+        /// 处理 .center 分支
         case .center: return .center
+        /// 处理 .justified 分支
         case .justified: return .justified
+        /// 处理 .natural 分支
         case .natural: return .natural
+        /// 处理系统后续新增的未知枚举值
         @unknown default: return .natural
         }
     }

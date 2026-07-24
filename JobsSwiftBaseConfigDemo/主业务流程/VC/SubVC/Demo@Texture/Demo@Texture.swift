@@ -69,8 +69,8 @@ final class ComponentKitLikeKitchenSinkVC: BaseVC {
             title: "Kitchen-Sink (Swift+Texture)",
             rightButtons: [
                 UIButton.sys()
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
+                    .byImage("shuffle".sysImg, for: .normal)
+                    .byImage("shuffle".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self else { return }
                         sender.byToggleSelected()
@@ -78,8 +78,8 @@ final class ComponentKitLikeKitchenSinkVC: BaseVC {
                         rootNode.update(items: items, animated: true)
                     },
                 UIButton.sys()
-                    .byImage("globe".sysImg, for: .normal)
-                    .byImage("globe".sysImg, for: .selected)
+                    .byImage("plus.circle".sysImg, for: .normal)
+                    .byImage("plus.circle.fill".sysImg, for: .selected)
                     .onTap { [weak self] sender in
                         guard let self else { return }
                         sender.byToggleSelected()

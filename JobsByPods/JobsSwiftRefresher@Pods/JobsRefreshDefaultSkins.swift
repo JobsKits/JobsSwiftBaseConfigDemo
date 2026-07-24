@@ -216,14 +216,19 @@ final class JobsLoadingIndicator: UIView {
         // 单独（slot） > 全局（JobsLottieConfig） > nil
         let pref = lottiePreference ?? .inherit
         switch pref {
+        /// 处理 .disabled 分支
         case .disabled:
             return nil
+        /// 处理 .custom 分支
         case .custom(let s):
             return s
+        /// 处理 .inherit 分支
         case .inherit:
             switch JobsLottieConfig.global {
+            /// 处理 .custom 分支
             case .custom(let s):
                 return s
+            /// 合并处理 .disabled、.inherit 分支
             case .disabled, .inherit:
                 return nil
             }
@@ -233,14 +238,19 @@ final class JobsLoadingIndicator: UIView {
     private func resolveImageSetting() -> JobsRefreshImageSetting? {
         let pref = imagePreference ?? .inherit
         switch pref {
+        /// 处理 .disabled 分支
         case .disabled:
             return nil
+        /// 处理 .custom 分支
         case .custom(let setting):
             return setting
+        /// 处理 .inherit 分支
         case .inherit:
             switch JobsRefreshImageConfig.global {
+            /// 处理 .custom 分支
             case .custom(let setting):
                 return setting
+            /// 合并处理 .disabled、.inherit 分支
             case .disabled, .inherit:
                 return nil
             }
@@ -251,11 +261,13 @@ final class JobsLoadingIndicator: UIView {
         imageView.stopAnimating()
         imageView.animationImages = nil
         switch setting.source {
+        /// 处理 .gif 分支
         case .gif(let name, let bundle):
             guard let image = loadGIF(named: name, bundle: bundle) else { return false }
             imageView.byImage(image)
             imageView.startAnimating()
             return true
+        /// 处理 .frames 分支
         case .frames(let names, let bundle, let interval):
             let images = names.compactMap {
                 UIImage(named: $0, in: bundle, compatibleWith: nil)
@@ -267,6 +279,7 @@ final class JobsLoadingIndicator: UIView {
             imageView.byImage(images.first)
             imageView.startAnimating()
             return true
+        /// 处理 .network 分支
         case .network(let url, let placeholderName):
             let placeholder = placeholderName.flatMap {
                 UIImage(named: $0, in: .main, compatibleWith: nil)
@@ -339,8 +352,11 @@ final class JobsLoadingIndicator: UIView {
 
     private func mapLoopMode(_ m: JobsLottieLoopMode) -> LottieLoopMode {
         switch m {
+        /// 处理 .playOnce 分支
         case .playOnce:    return .playOnce
+        /// 处理 .loop 分支
         case .loop:        return .loop
+        /// 处理 .autoReverse 分支
         case .autoReverse: return .autoReverse
         }
     }
@@ -440,11 +456,13 @@ public class JobsArrowIndicatorView: UIView,
 
     public func apply(state: JobsState) {
         switch state {
+        /// 处理 .idle 分支
         case .idle:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             displayText(idleText())
+        /// 处理 .pulling 分支
         case .pulling(let p):
             loading.hideRefreshing() // 关键：pulling 一定不能显示 loading
             arrow.byHidden(false)
@@ -455,34 +473,41 @@ public class JobsArrowIndicatorView: UIView,
                 applyArrow(direction: idleArrowDirection(), animated: false)
                 displayText(String(format: "%@ %.0f%%", goOnText(), min(1, max(0, p)) * 100))
             }
+        /// 处理 .ready 分支
         case .ready:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             displayText(readyText())
+        /// 处理 .refreshing 分支
         case .refreshing:
             arrow.byHidden(true)
             loading.lottiePreference = lottiePreference
             loading.imagePreference = imagePreference
             loading.showRefreshing()
             displayText(refreshingText())
+        /// 处理 .ending 分支
         case .ending:
             arrow.byHidden(true)
             loading.hideRefreshing()
             displayText(refreshingText())
+        /// 处理 .failed 分支
         case .failed:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: true)
             displayText(JobsRefreshConfig.common.failed)
+        /// 处理 .disabled 分支
         case .disabled:
             loading.hideRefreshing()
             arrow.byHidden(true)
             displayText(JobsRefreshConfig.common.disabled)
+        /// 处理 .noMore 分支
         case .noMore:
             loading.hideRefreshing()
             arrow.byHidden(true)
             displayText(JobsRefreshConfig.common.noMore)
+        /// 处理 .removed 分支
         case .removed:
             loading.hideRefreshing()
             arrow.byHidden(true)
@@ -515,28 +540,36 @@ public class JobsArrowIndicatorView: UIView,
 
     private func idleText() -> String {
         switch style {
+        /// 处理 .header 分支
         case .header: return JobsRefreshConfig.v.header.idle
+        /// 处理 .footer 分支
         case .footer: return JobsRefreshConfig.v.footer.idle
         }
     }
 
     private func goOnText() -> String {
         switch style {
+        /// 处理 .header 分支
         case .header: return JobsRefreshConfig.v.header.goOn
+        /// 处理 .footer 分支
         case .footer: return JobsRefreshConfig.v.footer.goOn
         }
     }
 
     private func readyText() -> String {
         switch style {
+        /// 处理 .header 分支
         case .header: return JobsRefreshConfig.common.readyRefresh
+        /// 处理 .footer 分支
         case .footer: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
 
     private func refreshingText() -> String {
         switch style {
+        /// 处理 .header 分支
         case .header: return JobsRefreshConfig.common.refreshing
+        /// 处理 .footer 分支
         case .footer: return JobsRefreshConfig.common.loadingMore
         }
     }
@@ -558,14 +591,18 @@ public class JobsArrowIndicatorView: UIView,
 
     private func idleArrowDirection() -> ArrowDirection {
         switch style {
+        /// 处理 .header 分支
         case .header: return .down
+        /// 处理 .footer 分支
         case .footer: return .up
         }
     }
 
     private func readyArrowDirection() -> ArrowDirection {
         switch style {
+        /// 处理 .header 分支
         case .header: return .up
+        /// 处理 .footer 分支
         case .footer: return .down
         }
     }
@@ -573,7 +610,9 @@ public class JobsArrowIndicatorView: UIView,
     private func applyArrow(direction: ArrowDirection, animated: Bool) {
         let target: CGAffineTransform = {
             switch direction {
+            /// 处理 .up 分支
             case .up:   return .identity
+            /// 处理 .down 分支
             case .down: return CGAffineTransform(rotationAngle: .pi)
             }
         }()
@@ -709,12 +748,14 @@ public class JobsSideIndicatorView: UIView,
 
     public func apply(state: JobsState) {
         switch state {
+        /// 处理 .idle 分支
         case .idle:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: isArrowInReadyDirection)
             setVertical(statusLabel, text: idleText())
             setUpdateInfoVisible(false)
+        /// 处理 .pulling 分支
         case .pulling(let p):
             loading.hideRefreshing()
             arrow.byHidden(false)
@@ -726,12 +767,14 @@ public class JobsSideIndicatorView: UIView,
                 let percent = Int(min(1, max(0, p)) * 100)
                 setVertical(statusLabel, text: "\(goOnText()) \(percent)%")
             };setUpdateInfoVisible(false)
+        /// 处理 .ready 分支
         case .ready:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: readyArrowDirection(), animated: !isArrowInReadyDirection)
             setVertical(statusLabel, text: readyText())
             setUpdateInfoVisible(false)
+        /// 处理 .refreshing 分支
         case .refreshing:
             arrow.byHidden(true)
             loading.lottiePreference = lottiePreference
@@ -741,27 +784,32 @@ public class JobsSideIndicatorView: UIView,
             // left（头部组）才显示“更新：时间”（仿你图1）
             setUpdateInfoVisible(refreshRole == .refresh)
             if refreshRole == .refresh { updateLabelsFromDate(lastRefreshedAt) }
+        /// 处理 .ending 分支
         case .ending:
             arrow.byHidden(true)
             loading.hideRefreshing()
             setVertical(statusLabel, text: refreshingText())
             setUpdateInfoVisible(false)
+        /// 处理 .failed 分支
         case .failed:
             loading.hideRefreshing()
             arrow.byHidden(false)
             applyArrow(direction: idleArrowDirection(), animated: true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.failed)
             setUpdateInfoVisible(false)
+        /// 处理 .disabled 分支
         case .disabled:
             loading.hideRefreshing()
             arrow.byHidden(true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.disabled)
             setUpdateInfoVisible(false)
+        /// 处理 .noMore 分支
         case .noMore:
             loading.hideRefreshing()
             arrow.byHidden(true)
             setVertical(statusLabel, text: JobsRefreshConfig.common.noMore)
             setUpdateInfoVisible(false)
+        /// 处理 .removed 分支
         case .removed:
             loading.hideRefreshing()
             arrow.byHidden(true)
@@ -851,32 +899,44 @@ public class JobsSideIndicatorView: UIView,
 
     private func idleText() -> String {
         switch (style, refreshRole) {
+        /// 处理 .left 分支
         case (.left, .refresh):   return JobsRefreshConfig.h.left.refreshIdle
+        /// 处理 .left 分支
         case (.left, .loadMore):  return JobsRefreshConfig.h.left.loadMoreIdle
+        /// 处理 .right 分支
         case (.right, .refresh):  return JobsRefreshConfig.h.right.refreshIdle
+        /// 处理 .right 分支
         case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreIdle
         }
     }
 
     private func goOnText() -> String {
         switch (style, refreshRole) {
+        /// 处理 .left 分支
         case (.left, .refresh):   return JobsRefreshConfig.h.left.refreshGoOn
+        /// 处理 .left 分支
         case (.left, .loadMore):  return JobsRefreshConfig.h.left.loadMoreGoOn
+        /// 处理 .right 分支
         case (.right, .refresh):  return JobsRefreshConfig.h.right.refreshGoOn
+        /// 处理 .right 分支
         case (.right, .loadMore): return JobsRefreshConfig.h.right.loadMoreGoOn
         }
     }
 
     private func readyText() -> String {
         switch refreshRole {
+        /// 处理 .refresh 分支
         case .refresh:  return JobsRefreshConfig.common.readyRefresh
+        /// 处理 .loadMore 分支
         case .loadMore: return JobsRefreshConfig.common.readyLoadingMore
         }
     }
 
     private func refreshingText() -> String {
         switch refreshRole {
+        /// 处理 .refresh 分支
         case .refresh:  return JobsRefreshConfig.common.refreshing
+        /// 处理 .loadMore 分支
         case .loadMore: return JobsRefreshConfig.common.loadingMore
         }
     }
@@ -884,7 +944,9 @@ public class JobsSideIndicatorView: UIView,
     private func idleArrowDirection() -> ArrowDirection {
         // 左侧控件（右拉）：idle 向左（指向内容外侧）；右侧控件（左拉）：idle 向右
         switch style {
+        /// 处理 .left 分支
         case .left:  return .left
+        /// 处理 .right 分支
         case .right: return .right
         }
     }
@@ -892,7 +954,9 @@ public class JobsSideIndicatorView: UIView,
     private func readyArrowDirection() -> ArrowDirection {
         // ready 翻转
         switch style {
+        /// 处理 .left 分支
         case .left:  return .right
+        /// 处理 .right 分支
         case .right: return .left
         }
     }
@@ -902,7 +966,9 @@ public class JobsSideIndicatorView: UIView,
         let base: CGAffineTransform = .identity
         let target: CGAffineTransform = {
             switch direction {
+            /// 处理 .left 分支
             case .left:  return base
+            /// 处理 .right 分支
             case .right: return CGAffineTransform(rotationAngle: .pi)
             }
         }()

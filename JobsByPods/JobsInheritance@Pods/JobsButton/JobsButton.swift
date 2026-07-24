@@ -304,16 +304,22 @@ public final class JobsButton: UIImageView {
         let sub = subtitleLabel.isHidden ? nil : subtitleLabel
         func compact(_ arr: [UIView?]) -> [UIView] { arr.compactMap { $0 } }
         switch mode {
+        /// 处理 .imageTopTextBottom 分支
         case .imageTopTextBottom:  return compact([image, title, sub])
+        /// 处理 .textTopImageBottom 分支
         case .textTopImageBottom:  return compact([title, sub, image])
+        /// 处理 .imageLeftTextRight 分支
         case .imageLeftTextRight:  return compact([image, title, sub])
+        /// 处理 .textLeftImageRight 分支
         case .textLeftImageRight:  return compact([title, sub, image])
         }
     }
 
     private func isVerticalMode(_ mode: Mode) -> Bool {
         switch mode {
+        /// 合并处理 .imageTopTextBottom、.textTopImageBottom 分支
         case .imageTopTextBottom, .textTopImageBottom: return true
+        /// 未匹配已知分支时执行兜底处理
         default: return false
         }
     }

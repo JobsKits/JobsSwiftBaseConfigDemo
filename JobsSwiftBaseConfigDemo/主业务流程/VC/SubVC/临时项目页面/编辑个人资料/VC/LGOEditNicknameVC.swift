@@ -25,15 +25,22 @@ final class LGOEditNicknameVC: BaseVC {
     private lazy var nicknameField: UITextField = {
         UITextField()
             // 基础视觉
-            .byPlaceholder("请输入昵称 长度12个字符".tr)
+            .byAttributedPlaceholder(
+                NSAttributedString(
+                    string: "请输入昵称 长度12个字符".tr,
+                    attributes: [.foregroundColor: JobsCor.secondaryLabel]
+                )
+            )
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextAlignment(.natural)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byBorderStyle(.roundedRect)
+            .byTintColor(JobsCor.systemBlue)
             .byClearButtonMode(.whileEditing)
             // 键盘
             .byKeyboardType(.default)
-            .byKeyboardAppearance(.dark)
+            .byKeyboardAppearance(.default)
             .byReturnKeyType(.next)
             .byEnablesReturnKeyAutomatically(true)
             // 智能输入
@@ -77,10 +84,9 @@ final class LGOEditNicknameVC: BaseVC {
 
     private lazy var btn: UIButton = {
         UIButton.sys()
-            /// 普通字符串@设置主标题
-            .byTitle("保存".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
+            .byImage("JobsSaveFloppy".img, for: .normal)
+            .byTintColor(JobsCor.systemBlue)
             /// 事件触发@点按
             .onTap { [weak self] sender in
                 guard let self else { return }
@@ -104,7 +110,7 @@ final class LGOEditNicknameVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(
-            title: "编辑昵称".tr,
+            title: "修改昵称".tr,
             rightButtons: [btn]
         )
         nicknameField.byVisible(YES)

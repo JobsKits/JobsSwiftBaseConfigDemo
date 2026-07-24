@@ -26,6 +26,7 @@ import GKNavigationBarSwift
 final class TimerDemoVC: BaseVC {
     // MARK: - Layout 常量
     let horizontalInset: CGFloat = 40
+    let selectorHorizontalInset: CGFloat = 8
     let spacing: CGFloat = 12
     // MARK: - TimerState（旧文件依赖 TimerState，这里完整补齐）
     private enum TimerState {
@@ -53,6 +54,12 @@ final class TimerDemoVC: BaseVC {
                                                                "DisplayLink".tr,
                                                                "RunLoop".tr])
         .bySelectedSegmentIndex(1) // 默认 GCD
+        .byTitleTextAttributes([
+            .font: JobsFont.systemFont(ofSize: 12, weight: .semibold)
+        ], for: .normal)
+        .byTitleTextAttributes([
+            .font: JobsFont.systemFont(ofSize: 12, weight: .semibold)
+        ], for: .selected)
         .onJobsChange { [weak self] (seg: UISegmentedControl) in
             guard let strongSelf = self else { return }
             onMainAsync(self) { vc in
@@ -64,8 +71,8 @@ final class TimerDemoVC: BaseVC {
         }
         .byAddTo(view) { [unowned self] make in
             make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().inset(40)
+            make.left.equalToSuperview().offset(selectorHorizontalInset)
+            make.right.equalToSuperview().inset(selectorHorizontalInset)
             make.height.equalTo(36)
         }
 
@@ -245,20 +252,18 @@ final class TimerDemoVC: BaseVC {
 }
 
 extension TimerDemoVC {
-    // MARK: - 布局（两排：开始 / 暂停-继续-Fire-停止）
+    // MARK: - 布局（生命周期按钮依次纵向排列）
     private func layoutButtons() {
-        let totalWidth = UIScreen.main.bounds.width - horizontalInset * 2
-        let itemWidth = (totalWidth - spacing * 3) / 4.0
-        // 第一排：开始
         startButton.byAlpha(1)
-        // 第二排：暂停 / 继续 / Fire / 停止
-        for (i, btn) in [pauseButton, resumeButton, fireButton, stopButton].enumerated() {
+        var previousButton = startButton
+        for btn in [pauseButton, resumeButton, fireButton, stopButton] {
+            let upperButton = previousButton
             btn.byAddTo(view) { [unowned self] make in
-                make.top.equalTo(startButton.snp.bottom).offset(16)
-                make.left.equalToSuperview().offset(horizontalInset + CGFloat(i) * (itemWidth + spacing))
-                make.width.equalTo(itemWidth)
-                make.height.greaterThanOrEqualTo(52)
+                make.top.equalTo(upperButton.snp.bottom).offset(spacing)
+                make.left.right.equalTo(startButton)
+                make.height.equalTo(startButton)
             }
+            previousButton = btn
         }
         hintLabel.byAlpha(1)
         _ = countdownButton
@@ -522,18 +527,21 @@ extension TimerDemoVC {
                 .bySetNeedsUpdateConfiguration()
         }
         switch state {
+        /// 合并处理 .idle、.stopped 分支
         case .idle, .stopped:
             set(startButton,  true,  JobsCor.systemBlue)
             set(pauseButton,  false, JobsCor.systemGray3)
             set(resumeButton, false, JobsCor.systemGray3)
             set(fireButton,   false, JobsCor.systemGray3)
             set(stopButton,   false, JobsCor.systemGray3)
+        /// 处理 .running 分支
         case .running:
             set(startButton,  false, JobsCor.systemGray3)
             set(pauseButton,  true,  JobsCor.systemBlue)
             set(resumeButton, false, JobsCor.systemGray3)
             set(fireButton,   true,  JobsCor.systemTeal)
             set(stopButton,   true,  JobsCor.systemRed)
+        /// 处理 .paused 分支
         case .paused:
             set(startButton,  false, JobsCor.systemGray3)
             set(pauseButton,  false, JobsCor.systemGray3)
@@ -561,13 +569,10 @@ extension TimerDemoVC {
             .bySubTitleFont(subtitleFont, for: .normal)
             .bySubTitleColor(subtitleColor, for: .normal)
             .byBackgroundColor(titleColor, for: .normal)
-            .byCornerRadius(8)
+            .byCornerRadius(10)
             .byMasksToBounds(true)
             .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
             .onTap(action)
-            .byAddTo(view) { make in
-                make.height.greaterThanOrEqualTo(52)
-            }
     }
 
     // MARK: - 步长解析 & 应用（commit=true 时，重建并沿用“当前模式+新步长+当前内核”）

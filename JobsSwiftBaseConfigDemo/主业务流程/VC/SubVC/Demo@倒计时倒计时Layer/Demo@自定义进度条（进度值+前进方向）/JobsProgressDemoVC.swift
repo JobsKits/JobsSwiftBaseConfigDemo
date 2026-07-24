@@ -44,6 +44,7 @@ final class JobsProgressDemoVC: BaseVC {
             3）输入 0~100 点「设置」：动画到指定百分比（动画期间旋转）
             4）直接拖动进度条：实时更新进度（前进顺时针 / 后退逆时针）
             5）右侧开关：控制是否允许拖动
+            6）足球头部气泡：默认仅在进度变化时显示，可配置上方 / 下方或常显
             """.tr)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -67,10 +68,15 @@ final class JobsProgressDemoVC: BaseVC {
             .onJobsChange { [weak self] (seg: UISegmentedControl) in
                 guard let self else { return }
                 switch seg.selectedSegmentIndex {
+                /// 处理 数值 0 分支
                 case 0: progressView.direction = .leftToRight
+                /// 处理 数值 1 分支
                 case 1: progressView.direction = .rightToLeft
+                /// 处理 数值 2 分支
                 case 2: progressView.direction = .bottomToTop
+                /// 处理 数值 3 分支
                 case 3: progressView.direction = .topToBottom
+                /// 未匹配已知分支时执行兜底处理
                 default: break
                 }
                 // ✅ 换方向：停掉自动动画 & 进度归零
@@ -98,9 +104,11 @@ final class JobsProgressDemoVC: BaseVC {
                 let newMode: JobsValueMode
                 let newTitle: String
                 switch self.progressView.valueMode {
+                /// 处理 .countUp 分支
                 case .countUp:
                     newMode = .countDown
                     newTitle = "模式：100→0"
+                /// 处理 .countDown 分支
                 case .countDown:
                     newMode = .countUp
                     newTitle = "模式：0→100"
@@ -144,7 +152,10 @@ final class JobsProgressDemoVC: BaseVC {
             .byTrackHorizontalInset(0)
             .byTrackVerticalInset(0)
             .byTrackThickness(nil)
-            .byAutoHideLabel(true)
+            .byProgressBubblePlacement(.top)
+            .byProgressBubbleDisplayMode(.whileChanging)
+            .byProgressBubbleHideDelay(0.8)
+            .byAutoHideLabel(false)
             .byLabelMinVisibleHeight(18)
             .byLabelBackgroundColor(JobsCor.secondarySystemBackground)
             .byLabelFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
@@ -178,7 +189,7 @@ final class JobsProgressDemoVC: BaseVC {
                 self.stateLabel.byText("拖动结束：%ld%%".tr(Int(percent)))
             })
             .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(stateLabel.snp.bottom).offset(16.h)
+                make.top.equalTo(stateLabel.snp.bottom).offset(48.h)
                 make.left.equalToSuperview().offset(40.w)
                 make.right.equalToSuperview().inset(40.w)
                 make.height.equalTo(20.h)
@@ -193,9 +204,11 @@ final class JobsProgressDemoVC: BaseVC {
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(progressView.snp.bottom).offset(16)
-                make.left.equalToSuperview().offset(40.w)
+                make.left.equalToSuperview().offset(20)
                 make.height.equalTo(36)
-                make.width.equalTo(120.w)
+                make.width.greaterThanOrEqualTo(64)
+                make.width.lessThanOrEqualTo(120)
+                make.width.equalTo(96).priority(750)
             }
     }()
     /// 点击“确定”后，动画到输入的百分比
@@ -231,7 +244,7 @@ final class JobsProgressDemoVC: BaseVC {
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { [unowned self] make in
-                make.left.equalTo(applyButton.snp.right).offset(14)
+                make.left.greaterThanOrEqualTo(applyButton.snp.right).offset(12)
                 make.centerY.equalTo(percentTextField.snp.centerY)
             }
     }()
@@ -247,7 +260,7 @@ final class JobsProgressDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(dragTitleLabel.snp.right).offset(8)
                 make.centerY.equalTo(dragTitleLabel.snp.centerY)
-                make.right.lessThanOrEqualToSuperview().inset(40.w)
+                make.right.equalToSuperview().inset(20)
             }
     }()
     /// 开始按钮（自动播放）
@@ -276,9 +289,8 @@ final class JobsProgressDemoVC: BaseVC {
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(percentTextField.snp.bottom).offset(18)
-                make.left.equalToSuperview().offset(40.w)
+                make.left.equalToSuperview().offset(20)
                 make.height.equalTo(40)
-                make.width.equalTo(72)
             }
     }()
     /// 停止按钮
@@ -295,10 +307,10 @@ final class JobsProgressDemoVC: BaseVC {
                 self.stateLabel.byText("已停止".tr)
             }
             .byAddTo(view) { [unowned self] make in
-                make.left.equalTo(startButton.snp.right).offset(12)
+                make.left.equalTo(startButton.snp.right).offset(8)
                 make.centerY.equalTo(startButton.snp.centerY)
                 make.height.equalTo(40)
-                make.width.equalTo(72)
+                make.width.equalTo(startButton.snp.width)
             }
     }()
     /// 随机按钮（演示“前进/后退会反向旋转”）
@@ -319,10 +331,10 @@ final class JobsProgressDemoVC: BaseVC {
                 self.stateLabel.byText("随机：%ld%%".tr(Int(newPercent)))
             }
             .byAddTo(view) { [unowned self] make in
-                make.left.equalTo(stopButton.snp.right).offset(12)
+                make.left.equalTo(stopButton.snp.right).offset(8)
                 make.centerY.equalTo(stopButton.snp.centerY)
                 make.height.equalTo(40)
-                make.width.equalTo(72)
+                make.width.equalTo(startButton.snp.width)
             }
     }()
     /// 回退按钮（强制往回跑，展示逆时针）
@@ -344,11 +356,11 @@ final class JobsProgressDemoVC: BaseVC {
                 self.stateLabel.byText("回退：%ld%%".tr(Int(newPercent)))
             }
             .byAddTo(view) { [unowned self] make in
-                make.left.equalTo(randomButton.snp.right).offset(12)
+                make.left.equalTo(randomButton.snp.right).offset(8)
                 make.centerY.equalTo(randomButton.snp.centerY)
                 make.height.equalTo(40)
-                make.width.equalTo(72)
-                make.right.lessThanOrEqualToSuperview().inset(40.w)
+                make.width.equalTo(startButton.snp.width)
+                make.right.equalToSuperview().inset(20)
             }
     }()
     // MARK: - 生命周期
@@ -381,8 +393,10 @@ extension JobsProgressDemoVC{
         let clamped = max(0, min(raw, 1))
         let displayProgress: CGFloat
         switch progressView.valueMode {
+        /// 处理 .countUp 分支
         case .countUp:
             displayProgress = clamped
+        /// 处理 .countDown 分支
         case .countDown:
             displayProgress = 1 - clamped
         };return displayProgress * 100

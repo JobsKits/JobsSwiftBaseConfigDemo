@@ -31,6 +31,7 @@ import JobsSwiftBaseDefines
 import JobsSwiftSplash
 import JobsSwiftCountryCodeCtrl
 import JobsSwiftCalendar
+import JobsScreenCapture
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
@@ -154,10 +155,12 @@ final class RootListVC: BaseVC {
                 ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
                 ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),
                 ("🧭 CoreMotion DSL Demo", JobsCoreMotionDemoVC.self),
+                ("📳 动作切换 App 图标", JobsMotionAppIconDemoVC.self),
+                ("📸 截屏后 Tips 提示", JobsScreenshotTipsDemoVC.self),
+                ("🙈 禁止截屏：敏感内容保护", JobsScreenshotProtectionDemoVC.self),
+                ("📱 全局横竖屏切换", JobsLandscapeSwitchDemoVC.self),
+                ("📋 系统剪贴板及粘贴提示", JobsClipboardCueDemoVC.self),
                 ("📱 iOS Widget", JobsWidgetDemoVC.self)
-            ]),
-            (title: "Swift Package Manager 集成示例".tr, items: [
-                ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self)
             ]),
             (title: "JobsSwiftTimer系列衍生产品".tr, items: [
                 ("🐯 节流防抖", JobsWorkerDemoVC.self),
@@ -165,6 +168,7 @@ final class RootListVC: BaseVC {
                 ("⏰ JobsSwiftTimer", TimerDemoVC.self),
                 ("🛠️ Jobs时间管理大师", JobsTimerMgrDemoVC.self),
                 ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
+                ("🔄 JobsImageRotation｜图片定时旋转", JobsImageRotationDemoVC.self),
                 ("🏷️ 动效数字按钮", AnimatedButtonNumberDemoVC.self),
                 ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
                 ("💥 倒计时按钮", JobsCountdownDemoVC.self),
@@ -177,13 +181,16 @@ final class RootListVC: BaseVC {
             ]),
             (title: "Label".tr, items: [
                 ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
-                ("🏷️ CoreText UILabel 文字滚动", JobsScrollingLabelDemoVC.self)
+                ("🏷️ UILabel+Scrolling｜四种定尺寸文字策略", UILabelScrollingDemoVC.self),
+                ("• 带小圆点文本及对齐", JobsBulletTextDemoVC.self),
+                ("🔄 UILabel 文字旋转", JobsLabelRotationDemoVC.self)
             ]),
             (title: "Pods集成@其他外源框架使用示例".tr, items: g0),
             (title: "Pods集成@网络请求适用示例".tr, items: [
                 ("🌍 JobsNetworking 公共网络接口", JobsNetworkingListDemoVC.self),
                 ("🌍 JobsNetworking 本地模拟数据", JobsNetworkingDemoVC.self),
                 ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
+                ("↔️ WebSocket 双向通信", JobsWebSocketDemoVC.self),
                 ("🛜 Moya网络请求框架", MoyaDemoVC.self),
                 ("🛜 Alamofire网络请求框架", AFDemoVC.self),
             ]),
@@ -204,6 +211,8 @@ final class RootListVC: BaseVC {
                 ("🔴 抖音双球刷新动画", JobsDouyinRefreshDemoVC.self),
                 ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
                 ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
+                ("🃏 GXCard 式滑动卡片堆", JobsCardStackDemoVC.self),
+                ("↕️ 指定 Y 区间拖动并吸附", JobsDockingScrollDemoVC.self),
                 ("🧭 苹果滑动开锁@带骨架屏的呼吸效果", SlideToUnlockDemoVC.self),
                 ("🔒 手势解锁", GestureUnlockDemoVC.self),
                 ("⏱️ 仪表盘", FTDashboadDemoVC.self),
@@ -215,13 +224,14 @@ final class RootListVC: BaseVC {
                 ("🌞 BaseWebView", BaseWebViewDemoVC.self),
                 ("✍️ UITextField", UITextFieldDemoVC.self),
                 ("✍️ UITextView", UITextViewDemoVC.self),
+                ("✍️ 手写板｜本地保存与离开确认", JobsHandwritingDemoVC.self),
                 ("🗄️ UITableView", EmptyTableViewDemoVC.self),
                 ("🗄️ UITableView设置圆角和边距", UITableViewCellCornerDemoVC.self),
                 ("🗄️ UICollectionView", EmptyCollectionViewDemoVC.self),
                 ("💬 JobsSwiftComment", JobsSwiftCommentDemoVC.self),
                 ("🔍 JobsSwiftSearcher", JobsSwiftSearcherDemoVC.self),
-                ("😂 按钮完全覆盖在UICollectionViewCell上", BtnFullOnCVCellDemoVC.self),
-                ("😂 按钮完全覆盖在UITableViewCell上", BtnFullOnTBVCellDemoVC.self),
+                ("👆 3D Touch / Context Menu", JobsContextMenuDemoVC.self),
+                ("😂 按钮完全覆盖在 Cell 上", JobsButtonCoverCellDemoListVC.self),
                 ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
             ]),
             (title: "实用工具集".tr, items: [
@@ -229,11 +239,15 @@ final class RootListVC: BaseVC {
                 ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
                 ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),
                 ("⌨️ 键盘", KeyboardDemoVC.self),
-                ("📷 鉴权后调用相机/相册", PhotoAlbumDemoVC.self),
+                ("📷 相机/相册/录像与照片滤镜", PhotoAlbumDemoVC.self),
+                ("🔐 图片加盐后转字符串存取", JobsSaltedImageStoreDemoVC.self),
+                ("🎲 随机数测试模块", JobsRandomNumberDemoVC.self),
                 ("🌍 JobsSwiftCountryCodeCtrl", JobsSwiftCountryCodeCtrlDemoVC.self),
                 ("📅 JobsSwiftCalendar", JobsSwiftCalendarDemoVC.self),
+                ("📊 JobsSwiftExcel｜任意冻结列与四种文字策略", JobsSwiftExcelDemoVC.self),
                 ("🔥 JobsSwiftPatch", JobsSwiftPatchDemoVC.self),
                 ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
+                ("➕ 数字步进输入", JobsSwiftNumberStepperDemoVC.self),
                 ("图形验证码", JobsSwiftGraphicCaptchaDemoVC.self),
                 ("🌍 JobsTabBarCtrl", TabBarDemoVC.self),
                 ("🏷️ Toast", ToastDemoVC.self),
@@ -245,13 +259,15 @@ final class RootListVC: BaseVC {
             ]),
             (title: "一些常见功能模块页面".tr, items: [
                 ("📮 经典的消息页面", MessageListDemoVC.self),
-                ("🔥 编辑个人资料", LGOEditProfileVC.self),
+                ("📝 图文发帖编辑与草稿存取", JobsPostDraftDemoVC.self),
+                ("🔥 编辑个人资料", LGOEditProfileDemoVC.self),
                 ("🏠 首页联动", HomeLinkageDemoListVC.self),
-                ("🔑 注册登录".tr + " (TODO)", JobsAppDoorDemoVC.self),
+                ("🔑 JobsAppDoor｜双风格认证".tr, JobsAppDoorDemoVC.self),
             ]),
             (title: "富文本/普通文本处理".tr, items: [
                 ("🌋 富文本", RichTextDemoVC.self),
                 ("🌋 普通文本和富文本的融合数据类型", JobsTextDemoVC.self),
+                ("🗜️ 字符串压缩、解压", JobsStringCompressionDemoVC.self),
             ]),
             (title: "安全推页面（高度自定义）".tr, items: [
         ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
@@ -261,6 +277,7 @@ final class RootListVC: BaseVC {
             ]),
             (title: "其他".tr, items: [
 //                ("📌 自定义注解", 自定义注解DemoVC.self),
+                ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self),
                 ("🛢️ 解码", SafeCodableDemoVC.self),
                 ("❄️ 雪花算法", SnowflakeDemoVC.self),
             ])
@@ -342,11 +359,12 @@ final class RootListVC: BaseVC {
                 guard let self else { return }
                 // 短按：只播放声音；长按结束后可能冒出来的 tap 直接吞掉
                 guard !self.suspendFuseLongPressConsumed else { return }
-                sender.byFusePlaySystemSound()
+                sender.byFusePlaySound()
             }
             .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
                 guard let self else { return }
                 switch gr.state {
+                /// 处理 .began 分支
                 case .began:
                     self.suspendFuseLongPressConsumed = true
                     btn.byFusePressStart(
@@ -365,12 +383,14 @@ final class RootListVC: BaseVC {
                         ),
                         scale: 1.18
                     )
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     btn.byFusePressStop()
                     // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
                         self?.suspendFuseLongPressConsumed = false
                     }
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
@@ -467,18 +487,49 @@ final class RootListVC: BaseVC {
             }
     }()
 
+    private lazy var demoSearchCancelButton: UIButton = {
+        UIButton.sys()
+            .byTitle("取消".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleColor(JobsCor.white.withAlphaComponent(0.78), for: .highlighted)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byNumberOfLines(1)
+            .byLineBreakMode(.byClipping)
+            .byTitleAdjustsFontSizeToFitWidth(true)
+            .byTitleMinimumScaleFactor(0.8)
+            .byContentHorizontalAlignment(.center)
+            .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12))
+            .byBackgroundColor(RootListPreferences.selectedTintColor, for: .normal)
+            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72), for: .highlighted)
+            .byCornerRadius(10)
+            .onTap { [weak self] _ in
+                self?.setSearchEnabled(false)
+            }
+            .byAddTo(view) { [unowned self] make in
+                make.right.equalToSuperview().inset(12)
+                make.width.greaterThanOrEqualTo(64)
+                make.height.equalTo(36)
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(18)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(14)
+                }
+            }
+    }()
+
     private lazy var demoSearchBar: UISearchBar = {
         UISearchBar()
             .byPlaceholder("输入关键词搜索 Demo".tr)
             .byDelegate(self)
-            .byShowsCancelButton(true)
+            .byShowsCancelButton(false)
             .bySearchBarStyle(.minimal)
             .byTranslucent(true)
             .byBackgroundImage(UIImage.make())
             .byBarTintColor(RootListPreferences.pageBackgroundColor)
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
-                make.left.right.equalToSuperview().inset(8)
+                make.left.equalToSuperview().inset(8)
+                make.right.equalTo(demoSearchCancelButton.snp.left).offset(-4)
                 make.height.equalTo(56)
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(8)
@@ -598,6 +649,7 @@ final class RootListVC: BaseVC {
         )
         gk_navTitleView = demoNavigationTitleView
         demoSearchBar.byVisible(NO)
+        demoSearchCancelButton.byVisible(NO)
         tableView.byVisible(YES)
         functionMenuTableView.byVisible(NO)
         applyDemoListThemeChrome()
@@ -658,6 +710,7 @@ extension RootListVC{
     private func refreshLocalizedContent() {
         demoNavigationTitleLabel.byText("演武堂".tr)
         demoSearchBar.byPlaceholder("输入关键词搜索 Demo".tr)
+        demoSearchCancelButton.byTitle("取消".tr, for: .normal)
         suspendBtn.byTitle("当前时间".tr, for: .normal)
         suspendFuseBtn.byTitle("按".tr, for: .normal)
         if let tabBarController = view.window?.rootViewController as? UITabBarController,
@@ -686,6 +739,12 @@ extension RootListVC{
         demoSearchBar.byBarTintColor(RootListPreferences.pageBackgroundColor)
         demoSearchBar.byTintColor(RootListPreferences.selectedTintColor)
         demoSearchBar.byBackgroundColor(JobsCor.clear)
+        demoSearchCancelButton
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleColor(JobsCor.white.withAlphaComponent(0.78), for: .highlighted)
+            .byBackgroundColor(RootListPreferences.selectedTintColor, for: .normal)
+            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72), for: .highlighted)
+            .byCornerRadius(10)
         #if os(iOS)
         if #available(iOS 13.0, *) {
             demoSearchBar.searchTextField
@@ -709,7 +768,6 @@ extension RootListVC{
             demoSearchBar.searchTextField.leftView?.byTintColor(RootListPreferences.secondaryTextColor)
         }
         #endif
-        updateSearchCancelButtonStyle()
         if view.window != nil {
             functionMenuTableView.reloadData()
             tableView.reloadData()
@@ -1059,8 +1117,13 @@ extension RootListVC{
     }
 
     @objc private func handleFunctionMenuDismissTap(_ gesture: UITapGestureRecognizer) {
-        guard !functionMenuTableView.isHidden else { return }
         let point = gesture.location(in: view)
+        let searchBarFrame = demoSearchBar.convert(demoSearchBar.bounds, to: view)
+        let pointInSearchBar = !demoSearchBar.isHidden && searchBarFrame.contains(point)
+        if !pointInSearchBar {
+            jobsDismissKeyboard()
+        }
+        guard !functionMenuTableView.isHidden else { return }
         let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds, to: view)
         if functionMenuTableView.frame.contains(point) || buttonFrame.contains(point) {
             return
@@ -1110,10 +1173,13 @@ extension RootListVC{
 
     private func menuTitle(for action: FunctionMenuAction) -> String {
         switch action {
+        /// 处理 .search 分支
         case .search:
             return "搜索 Demo".tr
+        /// 处理 .demoFold 分支
         case .demoFold:
             return demoFoldSwitchTitle()
+        /// 处理 .settings 分支
         case .settings:
             return "设置".tr
         }
@@ -1151,47 +1217,16 @@ extension RootListVC{
         }
     }
 
-    private func searchCancelButton(in view: UIView) -> UIButton? {
-        if let button = view as? UIButton,
-           !(button.title(for: .normal) ?? "").isEmpty {
-            return button
-        }
-        for subview in view.subviews {
-            if let button = searchCancelButton(in: subview) {
-                return button
-            }
-        };return nil
-    }
-
-    private func updateSearchCancelButtonStyle() {
-        demoSearchBar
-            .byTintColor(RootListPreferences.selectedTintColor)
-            .byLayoutIfNeeded()
-        guard let button = searchCancelButton(in: demoSearchBar) else { return }
-        button
-            .byTitle("取消".tr)
-            .byTitleColor(RootListPreferences.selectedTintColor)
-            .byTitleColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.55), for: .highlighted)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byBackgroundColor(JobsCor.clear)
-            .byNumberOfLines(1)
-            .byLineBreakMode(.byClipping)
-            .byTitleAdjustsFontSizeToFitWidth(true)
-            .byTitleMinimumScaleFactor(0.6)
-            .byContentHorizontalAlignment(.center)
-            .byContentEdgeInsets(.zero)
-            .byCornerRadius(0)
-            .byMasksToBounds(false)
-            .bySizeToFit()
-    }
-
     private func handleMenuAction(_ action: FunctionMenuAction) {
         toggleFunctionMenu(false)
         switch action {
+        /// 处理 .search 分支
         case .search:
             setSearchEnabled(true)
+        /// 处理 .demoFold 分支
         case .demoFold:
             setAllDemoGroupsExpanded(!anyVisibleDemoGroupExpanded())
+        /// 处理 .settings 分支
         case .settings:
             RootListSettingsVC().byPush(self)
         }
@@ -1199,6 +1234,7 @@ extension RootListVC{
 
     private func setSearchEnabled(_ enabled: Bool) {
         demoSearchBar.byVisible(enabled)
+        demoSearchCancelButton.byVisible(enabled)
         tableView.snp.remakeConstraints { [unowned self] make in
             make.left.bottom.right.equalToSuperview()
             if enabled {
@@ -1213,10 +1249,6 @@ extension RootListVC{
             tableView.reloadData()
             updateFooterAvailability()
             demoSearchBar.becomeFirstResponder()
-            updateSearchCancelButtonStyle()
-            DispatchQueue.main.async { [weak self] in
-                self?.updateSearchCancelButtonStyle()
-            }
         } else {
             demoSearchBar.byText("")
             applySearchKeyword("")
@@ -1257,9 +1289,6 @@ extension RootListVC: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        setSearchEnabled(false)
-    }
 }
 // MARK: —— UITableViewDataSource & UITableViewDelegate
 extension RootListVC: UITableViewDataSource, UITableViewDelegate {

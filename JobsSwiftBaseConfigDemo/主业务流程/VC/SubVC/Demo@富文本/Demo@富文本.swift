@@ -34,6 +34,8 @@ final class RichTextDemoVC: BaseVC {
     private let customerURL  = "click://customer"
     private let phoneText    = "400-123-4567"
     private let phoneURL     = "tel://4001234567"
+    private var customerAlertController: UIAlertController?
+    private var simulatorAlertController: UIAlertController?
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
@@ -66,8 +68,11 @@ extension RichTextDemoVC: UITableViewDataSource, UITableViewDelegate {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let mode: LinkCell.Mode = {
             switch indexPath.row {
+            /// 处理 数值 0 分支
             case 0: return .delegate
+            /// 处理 数值 1 分支
             case 1: return .rac
+            /// 未匹配已知分支时执行兜底处理
             default: return .rightAligned
             }
         }()
@@ -180,18 +185,22 @@ extension RichTextDemoVC: UITextViewDelegate {
 
     private func handleURL(_ url: URL, source: String) {
         if url.scheme == "click", url.host == "customer" {
-            let ac = UIAlertController(title: "\(source) 点击",
-                                       message: "点了：专属客服".tr,
-                                       preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
-            present(ac, animated: true)
+            customerAlertController = UIAlertController(title: "\(source) 点击",
+                                                        message: "点了：专属客服".tr,
+                                                        preferredStyle: .alert)
+            customerAlertController?.addAction(UIAlertAction(title: "确定".tr, style: .default))
+            if let customerAlertController {
+                present(customerAlertController, animated: true)
+            }
         } else if url.scheme == "tel" || url.scheme == "telprompt" {
             #if targetEnvironment(simulator)
-            let ac = UIAlertController(title: "提示".tr,
-                                       message: "模拟器不支持拨号：\(url.absoluteString)",
-                                       preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
-            present(ac, animated: true)
+            simulatorAlertController = UIAlertController(title: "提示".tr,
+                                                         message: "模拟器不支持拨号：\(url.absoluteString)",
+                                                         preferredStyle: .alert)
+            simulatorAlertController?.addAction(UIAlertAction(title: "确定".tr, style: .default))
+            if let simulatorAlertController {
+                present(simulatorAlertController, animated: true)
+            }
             #else
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             #endif

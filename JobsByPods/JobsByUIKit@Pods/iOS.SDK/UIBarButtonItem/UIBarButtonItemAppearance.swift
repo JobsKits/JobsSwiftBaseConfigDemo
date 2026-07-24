@@ -17,14 +17,19 @@ extension UIBarButtonItemAppearance {
     @discardableResult
     public func byTitleColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
         switch state {
+        /// 处理 .normal 分支
         case .normal:
             self.normal.titleTextAttributes[.foregroundColor] = color
+        /// 处理 .highlighted 分支
         case .highlighted:
             self.highlighted.titleTextAttributes[.foregroundColor] = color
+        /// 处理 .disabled 分支
         case .disabled:
             self.disabled.titleTextAttributes[.foregroundColor] = color
+        /// 处理 .focused 分支
         case .focused:
             self.focused.titleTextAttributes[.foregroundColor] = color
+        /// 未匹配已知分支时执行兜底处理
         default:
             self.normal.titleTextAttributes[.foregroundColor] = color
         };return self
@@ -33,14 +38,19 @@ extension UIBarButtonItemAppearance {
     @discardableResult
     public func byFont(_ font: UIFont, for state: UIControl.State = .normal) -> Self {
         switch state {
+        /// 处理 .normal 分支
         case .normal:
             self.normal.titleTextAttributes[.font] = font
+        /// 处理 .highlighted 分支
         case .highlighted:
             self.highlighted.titleTextAttributes[.font] = font
+        /// 处理 .disabled 分支
         case .disabled:
             self.disabled.titleTextAttributes[.font] = font
+        /// 处理 .focused 分支
         case .focused:
             self.focused.titleTextAttributes[.font] = font
+        /// 未匹配已知分支时执行兜底处理
         default:
             self.normal.titleTextAttributes[.font] = font
         };return self

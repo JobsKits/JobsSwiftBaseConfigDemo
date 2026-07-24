@@ -31,6 +31,13 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
         public let code: String
         public let regionCode: String
 
+        public var localizedName: String {
+            JobsSwiftCountryCodeCtrl.localizedCountryName(
+                for: regionCode,
+                fallback: countryName
+            )
+        }
+
         public var flag: String {
             if regionCode == "TW" { return "🇹🇼" }
             let regionalIndicatorOffset: UInt32 = 127397
@@ -41,7 +48,7 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
         }
 
         public var displayName: String {
-            "\(flag) \(countryName)"
+            "\(flag) \(localizedName)"
         }
 
         fileprivate init(countryName: String,
@@ -56,6 +63,24 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
     public weak var countryCodeDelegate: JobsSwiftCountryCodeCtrlDelegate?
     public var countryCodeHandler: JobsSwiftCountryCodeHandler?
     public var countrySelectionHandler: ((Country) -> Void)?
+
+    public static var selectedCountry: Country? {
+        let userDefaults = UserDefaults.standard
+        guard let countryName = userDefaults.string(forKey: selectedCountryNameKey),
+              let code = userDefaults.string(forKey: selectedCountryCodeKey),
+              let regionCode = userDefaults.string(forKey: selectedCountryRegionCodeKey),
+              !countryName.isEmpty,
+              !code.isEmpty,
+              !regionCode.isEmpty else { return nil };return Country(
+                countryName: countryName,
+                code: code,
+                regionCode: regionCode
+              )
+    }
+
+    private static let selectedCountryNameKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryName"
+    private static let selectedCountryCodeKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryCode"
+    private static let selectedCountryRegionCodeKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryRegionCode"
 
     private var sortedNameDict: [String: [String]] = [:]
     private lazy var indexArray: [String] = {
@@ -91,8 +116,8 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
 
 private extension JobsSwiftCountryCodeCtrl {
     var plistName: String {
-        let language = Locale.preferredLanguages.first?.lowercased() ?? ""
-        return language.hasPrefix("en") ? "sortedNameEN" : "sortedNameCH"
+        let language = LanguageManager.shared.currentLanguageCode.lowercased()
+        return language.hasPrefix("zh") ? "sortedNameCH" : "sortedNameEN"
     }
 
     func loadCountryCodeDictionary() -> [String: [String]] {
@@ -133,6 +158,7 @@ private extension JobsSwiftCountryCodeCtrl {
 
     func selectCountry(at indexPath: IndexPath) {
         guard let country = countryInfo(at: indexPath) else { return }
+        Self.saveSelectedCountry(country)
         countryCodeDelegate?.jobsSwiftCountryCodeCtrl(self,
                                                       didSelectCountryName: country.countryName,
                                                       code: country.code)
@@ -143,6 +169,23 @@ private extension JobsSwiftCountryCodeCtrl {
         } else {
             presentingViewController?.dismiss(animated: true)
         }
+    }
+
+    static func saveSelectedCountry(_ country: Country) {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(country.countryName, forKey: selectedCountryNameKey)
+        userDefaults.set(country.code, forKey: selectedCountryCodeKey)
+        userDefaults.set(country.regionCode, forKey: selectedCountryRegionCodeKey)
+        userDefaults.synchronize()
+    }
+
+    static func localizedCountryName(for regionCode: String,
+                                     fallback: String) -> String {
+        let locale = Locale(identifier: LanguageManager.shared.currentLanguageCode)
+        let localizedName = locale.localizedString(forRegionCode: regionCode)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let localizedName,
+              !localizedName.isEmpty else { return fallback };return localizedName
     }
 
     static func regionCode(for countryName: String) -> String? {

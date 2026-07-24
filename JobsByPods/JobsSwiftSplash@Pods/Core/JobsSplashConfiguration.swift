@@ -17,12 +17,29 @@ public enum JobsSplashLanguage {
     case code(String)
 }
 
+public enum JobsSplashContentType: Int, CaseIterable {
+    case localImage
+    case localGIF
+    case remoteImage
+    case localVideo
+    case remoteVideo
+}
+
 public enum JobsSplashContent {
     case localImage(name: String, bundle: Bundle = .main)
     case localGIF(name: String, bundle: Bundle = .main)
     case remoteImage(URL)
     case localVideo(name: String, fileExtension: String? = nil, bundle: Bundle = .main)
-    case remoteVideo(URL)
+    case remoteVideo(
+        URL,
+        fallbackName: String? = nil,
+        fallbackFileExtension: String? = nil,
+        fallbackBundle: Bundle = .main
+    )
+
+    public static func localGIF(fileURL: URL) -> Self {
+        .localGIF(name: fileURL.path)
+    }
 }
 
 public enum JobsSplashAction {

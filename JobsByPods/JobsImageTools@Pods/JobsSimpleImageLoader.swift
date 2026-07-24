@@ -136,8 +136,10 @@ public final class JobsImageLoader {
             DispatchQueue.main.async { completion(.failure(.invalidSource)) };return JobsImageLoadToken()
         }
         switch source {
+        /// 处理 .local 分支
         case .local(let name):
             return loadLocalImage(name, completion: completion)
+        /// 处理 .remote 分支
         case .remote(let url):
             return loadRemoteImage(url, options: options, completion: completion)
         }
@@ -173,10 +175,13 @@ private extension JobsImageLoader {
         completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void
     ) -> JobsImageLoadToken {
         switch resolvedLoader(for: options.preferredLoader) {
+        /// 处理 .sdwebimage 分支
         case .sdwebimage:
             return loadWithSDWebImage(url, options: options, completion: completion)
+        /// 处理 .kingfisher 分支
         case .kingfisher:
             return loadWithKingfisher(url, options: options, completion: completion)
+        /// 合并处理 .urlSession、.unknown 分支
         case .urlSession, .unknown:
             return loadWithURLSession(url, options: options, completion: completion)
         }
@@ -184,20 +189,24 @@ private extension JobsImageLoader {
 
     func resolvedLoader(for preference: JobsImageLoaderPreference) -> JobsImageLoaderKind {
         switch preference {
+        /// 处理 .sdwebimage 分支
         case .sdwebimage:
             #if canImport(SDWebImage)
             return .sdwebimage
             #else
             return resolvedLoader(for: .automatic)
             #endif
+        /// 处理 .kingfisher 分支
         case .kingfisher:
             #if canImport(Kingfisher)
             return .kingfisher
             #else
             return resolvedLoader(for: .automatic)
             #endif
+        /// 处理 .urlSession 分支
         case .urlSession:
             return .urlSession
+        /// 处理 .automatic 分支
         case .automatic:
             #if canImport(SDWebImage)
             return .sdwebimage
@@ -225,6 +234,7 @@ private extension JobsImageLoader {
         let task = KingfisherManager.shared.retrieveImage(with: url, options: kfOptions) { result in
             DispatchQueue.main.async {
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value):
                     completion(.success(.init(
                         image: value.image,
@@ -232,6 +242,7 @@ private extension JobsImageLoader {
                         loaderKind: .kingfisher,
                         isCacheHit: value.cacheType.cached
                     )))
+                /// 处理 .failure 分支
                 case .failure(let error):
                     completion(.failure(.failed(url, error)))
                 }

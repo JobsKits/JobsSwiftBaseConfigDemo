@@ -73,41 +73,57 @@ extension UIFont {
         private enum W { case regular, medium, semibold }
         private static func pick(_ w: W, _ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
+            /// 合并处理 .vietnamese、.turkish 分支
             case .vietnamese, .turkish:
                 return roboto(w, size)
+            /// 处理 .thai 分支
             case .thai:
                 return mitr(w, size)
+            /// 处理 .arabic 分支
             case .arabic:
                 return sfArabic(w, size)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 return pingFang(w, size)
             }
         }
         private static func roboto(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
+            /// 处理 .regular 分支
             case .regular:  return UIFont.Roboto.Regular(size)
+            /// 处理 .medium 分支
             case .medium:   return UIFont.Roboto.Medium(size)
+            /// 处理 .semibold 分支
             case .semibold: return UIFont.Roboto.Semibold(size)
             }
         }
         private static func mitr(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
+            /// 处理 .regular 分支
             case .regular:  return UIFont.Mitr.Regular(size)
+            /// 处理 .medium 分支
             case .medium:   return UIFont.Mitr.Medium(size)
+            /// 处理 .semibold 分支
             case .semibold: return UIFont.Mitr.Semibold(size)
             }
         }
         private static func sfArabic(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
+            /// 处理 .regular 分支
             case .regular:  return UIFont.SFArabic.Regular(size)
+            /// 处理 .medium 分支
             case .medium:   return UIFont.SFArabic.Medium(size)
+            /// 处理 .semibold 分支
             case .semibold: return UIFont.SFArabic.Semibold(size)
             }
         }
         private static func pingFang(_ w: W, _ size: CGFloat) -> UIFont {
             switch w {
+            /// 处理 .regular 分支
             case .regular:  return UIFont.PingFangSC.Regular(size)
+            /// 处理 .medium 分支
             case .medium:   return UIFont.PingFangSC.Medium(size)
+            /// 处理 .semibold 分支
             case .semibold: return UIFont.PingFangSC.Semibold(size)
             }
         }

@@ -49,8 +49,10 @@ final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
                     guard let self else { return }
                     Task { @MainActor in
                         switch result {
+                        /// 处理 .success 分支
                         case .success(let data):
                             self.append("Success. bytes=\(data.count)\n\n")
+                        /// 处理 .failure 分支
                         case .failure(let err):
                             self.append("Failure: \(err)\n\n")
                         }

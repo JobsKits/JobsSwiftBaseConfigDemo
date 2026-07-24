@@ -9,6 +9,7 @@ import UIKit
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
+import SnapKit
 
 final class JobsSwiftCommentCell: UITableViewCell {
     static let reuseIdentifier = "JobsSwiftCommentCell"
@@ -16,7 +17,7 @@ final class JobsSwiftCommentCell: UITableViewCell {
     var replyAction: ((JobsSwiftCommentModel) -> Void)?
 
     private var currentComment: JobsSwiftCommentModel?
-    private var contentLeadingConstraint: NSLayoutConstraint?
+    private var contentLeadingConstraint: Constraint?
 
     private let avatarLabel = UILabel()
     private let nicknameLabel = UILabel()
@@ -59,7 +60,7 @@ final class JobsSwiftCommentCell: UITableViewCell {
         contentLabel.byTextColor(UIColor(r: 0.18 * 255, g: 0.21 * 255, b: 0.26 * 255))
         contentLabel.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
         let displayDepth = config.mode == .custom ? min(depth, 2) : min(depth, 1)
-        contentLeadingConstraint?.constant = 16 + CGFloat(displayDepth) * 22
+        contentLeadingConstraint?.update(offset: 16 + CGFloat(displayDepth) * 22)
         avatarLabel.byText(avatarText(by: comment.nickname))
         nicknameLabel.byText(comment.nickname)
         timeLabel.byText(comment.publishTime)
@@ -90,7 +91,7 @@ final class JobsSwiftCommentCell: UITableViewCell {
         replyHintLabel.byHidden(true)
         metaLabel.byHidden(true)
         replyButton.byHidden(true)
-        contentLeadingConstraint?.constant = 16 + CGFloat(min(depth, 2)) * 22
+        contentLeadingConstraint?.update(offset: 16 + CGFloat(min(depth, 2)) * 22)
         contentLabel.byText(text)
         contentLabel.byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
         contentLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
@@ -101,7 +102,6 @@ private extension JobsSwiftCommentCell {
     func setupViews() {
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-        avatarLabel.byTranslatesAutoresizingMaskIntoConstraints(false)
         avatarLabel.byTextAlignment(.center)
         avatarLabel.byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
         avatarLabel.byTextColor(JobsCor.white)
@@ -140,22 +140,21 @@ private extension JobsSwiftCommentCell {
         contentStack.addArrangedSubview(contentLabel)
         contentStack.addArrangedSubview(metaLabel)
         contentStack.addArrangedSubview(replyButton)
-        verticalStack.byTranslatesAutoresizingMaskIntoConstraints(false)
         verticalStack.axis = .horizontal
         verticalStack.alignment = .top
         verticalStack.spacing = 10
         verticalStack.addArrangedSubview(avatarLabel)
         verticalStack.addArrangedSubview(contentStack)
         verticalStack.byAddTo(contentView)
-        contentLeadingConstraint = verticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16)
-        NSLayoutConstraint.activate([
-            contentLeadingConstraint!,
-            verticalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            verticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            verticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            avatarLabel.widthAnchor.constraint(equalToConstant: 36),
-            avatarLabel.heightAnchor.constraint(equalToConstant: 36)
-        ])
+        verticalStack.snp.makeConstraints { make in
+            contentLeadingConstraint = make.leading.equalToSuperview().offset(16).constraint
+            make.top.equalToSuperview().offset(12)
+            make.trailing.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-12)
+        }
+        avatarLabel.snp.makeConstraints { make in
+            make.size.equalTo(36)
+        }
     }
 
     func avatarText(by nickname: String) -> String {

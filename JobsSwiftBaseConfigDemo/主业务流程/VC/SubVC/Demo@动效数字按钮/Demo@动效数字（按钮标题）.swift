@@ -12,6 +12,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsImageRotation
 import JobsScale
 import JobsToast
 import JobsByUIKit
@@ -25,6 +26,7 @@ import GKNavigationBarSwift
 final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
         UIScrollView()
+            .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
@@ -37,6 +39,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
 
     private lazy var contentView: UIView = {
         UIView()
+            .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
                 make.width.equalToSuperview()
@@ -47,6 +50,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         UILabel()
             .byText("① 无图：主标题（普通字符串）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
                 make.left.right.equalToSuperview().inset(16)
@@ -77,6 +81,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         UILabel()
             .byText("② 无图：副标题（富文本，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_1.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -107,6 +112,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         UILabel()
             .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_3.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -137,6 +143,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         UILabel()
             .byText("④ 有图：副标题（普通字符串，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(btn_2.snp.bottom).offset(18)
                 make.left.right.equalToSuperview().inset(16)
@@ -293,7 +300,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
             .byAnimationSubTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .bySubTitleColor(JobsCor.blue)
+                    .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85))
                     .bySubTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
@@ -384,14 +391,81 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
                 make.top.equalTo(tf4Start.snp.bottom).offset(10)
                 make.left.right.equalToSuperview().inset(16)
                 make.height.equalTo(64)
+            }
+    }()
+    /// 数字动效按钮@副标题（富文本）+ 前景图逆时针旋转
+    private lazy var btn_5: UIButton = {
+        UIButton.sys()
+            .byTitle("限时折扣".tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .bySubTitle("倒计时 199 秒".tr, for: .normal)
+            .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
+            .byImage("clock".sysImg, for: .normal)
+            .byImagePlacement(.leading, padding: 8)
+            .byBackgroundColor(JobsCor.systemPurple)
+            .byCornerRadius(10)
+            .byAnimationSubTitleConfig { cfg in
+                cfg.byDuration(10)
+                    .byFps(60)
+                    .byStartValue("199")
+                    .byEndValue("9")
+                    .byShowsDecimals(false)
+                    .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85), for: .normal)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
+                    .bySubTitleAttributedBuilder { text, _, _ in
+                        let prefix = "倒计时 "
+                        let suffix = " 秒"
+                        let full = prefix + text + suffix
+                        let attr = NSMutableAttributedString(string: full)
+                        attr.addAttributes([
+                            .font: JobsFont.systemFont(ofSize: 13),
+                            .foregroundColor: JobsCor.white.withAlphaComponent(0.85)
+                        ], range: NSRange(location: 0, length: (full as NSString).length))
+                        let numberRange = NSRange(
+                            location: (prefix as NSString).length,
+                            length: (text as NSString).length
+                        )
+                        attr.addAttributes([
+                            .font: JobsFont.systemFont(ofSize: 13, weight: .semibold),
+                            .foregroundColor: JobsCor.white
+                        ], range: numberRange)
+                        return attr
+                    }
+            }
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                btn_5ImageRotator.start()
+                sender.byStartAnim { m in
+                    print("title:", m.title ?? "nil",
+                          "sub:", m.subTitle ?? "nil",
+                          "seconds:", m.seconds)
+                }
+                .byEndAnim { [weak self] in
+                    self?.btn_5ImageRotator.stop()
+                    "动画结束".tr.toast
+                }
+            }
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(btn_4.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(64)
                 make.bottom.equalToSuperview().offset(-24)
             }
+    }()
+
+    private lazy var btn_5ImageRotator: JobsImageRotator = {
+        JobsImageRotator(
+            targetView: btn_5.imageView ?? btn_5,
+            direction: .counterclockwise
+        )
     }()
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.white)
         jobsSetupGKNav(title: "UIButton 数字动效 Demo".tr)
+        applyThemeChrome()
         scrollView.byVisible(YES)
         contentView.byVisible(YES)
         titleLab1.byVisible(YES)
@@ -410,15 +484,46 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         tf4Start.byVisible(YES)
         tf4End.byVisible(YES)
         btn_4.byVisible(YES)
+        btn_5.byVisible(YES)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        btn_5ImageRotator.stop()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
+        applyThemeChrome()
     }
 }
 
-extension AnimatedButtonNumberDemoVC {
+private extension AnimatedButtonNumberDemoVC {
+    func applyThemeChrome() {
+        view.byBackgroundColor(JobsCor.systemBackground)
+        scrollView.byBackgroundColor(JobsCor.systemBackground)
+        contentView.byBackgroundColor(JobsCor.systemBackground)
+        gk_navBackgroundColor = JobsCor.systemBackground
+        gk_navTitleColor = JobsCor.label
+        gk_navShadowColor = JobsCor.separator
+        gk_navigationBar.byBackgroundColor(JobsCor.systemBackground)
+        gk_navigationBar.byTintColor(JobsCor.label)
+    }
+
     private func _makeTF(ph: String) -> UITextField {
         UITextField()
-            .byPlaceholder(ph)
+            .byAttributedPlaceholder(
+                NSAttributedString(
+                    string: ph,
+                    attributes: [.foregroundColor: JobsCor.placeholderText]
+                )
+            )
             .byKeyboardType(.decimalPad)
             .byBorderStyle(.roundedRect)
             .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.label)
+            .byTintColor(JobsCor.systemBlue)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
 }

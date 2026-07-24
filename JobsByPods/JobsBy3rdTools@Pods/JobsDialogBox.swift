@@ -154,15 +154,19 @@ public final class JobsDialogBoxBuilder {
         var x: CGFloat = 0
         var y: CGFloat = 0
         switch direction {
+        /// 处理 .bottom 分支
         case .bottom:
             x = anchorFrame.midX - dialogSize.width / 2
             y = anchorFrame.maxY + spacing
+        /// 处理 .top 分支
         case .top:
             x = anchorFrame.midX - dialogSize.width / 2
             y = anchorFrame.minY - spacing - dialogSize.height
+        /// 处理 .left 分支
         case .left:
             x = anchorFrame.minX - spacing - dialogSize.width
             y = anchorFrame.midY - dialogSize.height / 2
+        /// 处理 .right 分支
         case .right:
             x = anchorFrame.maxX + spacing
             y = anchorFrame.midY - dialogSize.height / 2
@@ -185,12 +189,14 @@ public final class JobsDialogBoxBuilder {
         let halfBase = arrowBaseWidth / 2
         func clamp(_ v: CGFloat, _ a: CGFloat, _ b: CGFloat) -> CGFloat { min(max(v, a), b) }
         switch resolvedDirection {
+        /// 合并处理 .bottom、.top 分支
         case .bottom, .top:
             let localX = anchorFrame.midX - dialogFrame.minX
             let safeMin = cornerRadius + halfBase + 1
             let safeMax = dialogFrame.width - cornerRadius - halfBase - 1
             let cx = clamp(localX, safeMin, safeMax)
             return cx / dialogFrame.width
+        /// 合并处理 .left、.right 分支
         case .left, .right:
             let localY = anchorFrame.midY - dialogFrame.minY
             let safeMin = cornerRadius + halfBase + 1
@@ -256,13 +262,17 @@ public final class JobsDialogBoxView: UIControl {
         var r = bounds
         let arrowH = arrowSize.height
         switch resolvedEdge {
+        /// 处理 .bottom 分支
         case .bottom:
             r.origin.y += arrowH
             r.size.height -= arrowH
+        /// 处理 .top 分支
         case .top:
             r.size.height -= arrowH
+        /// 处理 .left 分支
         case .left:
             r.size.width -= arrowH
+        /// 处理 .right 分支
         case .right:
             r.origin.x += arrowH
             r.size.width -= arrowH
@@ -275,6 +285,7 @@ public final class JobsDialogBoxView: UIControl {
         let path = UIBezierPath.make(roundedRect: bubble, cornerRadius: cornerRadius)
         let halfBase = arrowSize.width / 2
         switch resolvedEdge {
+        /// 处理 .bottom 分支
         case .bottom:
             // 箭头在顶部，指向上
             let tipY = full.minY
@@ -285,6 +296,7 @@ public final class JobsDialogBoxView: UIControl {
                 .byAddLine(to: CGPoint(x: cx, y: tipY))
                 .byAddLine(to: CGPoint(x: cx + halfBase, y: baseY))
                 .byClose()
+        /// 处理 .top 分支
         case .top:
             // 箭头在底部，指向下
             let tipY = full.maxY
@@ -295,6 +307,7 @@ public final class JobsDialogBoxView: UIControl {
                 .byAddLine(to: CGPoint(x: cx, y: tipY))
                 .byAddLine(to: CGPoint(x: cx + halfBase, y: baseY))
                 .byClose()
+        /// 处理 .left 分支
         case .left:
             // 箭头在右侧，指向右
             let tipX = full.maxX
@@ -305,6 +318,7 @@ public final class JobsDialogBoxView: UIControl {
                 .byAddLine(to: CGPoint(x: tipX, y: cy))
                 .byAddLine(to: CGPoint(x: baseX, y: cy + halfBase))
                 .byClose()
+        /// 处理 .right 分支
         case .right:
             // 箭头在左侧，指向左
             let tipX = full.minX

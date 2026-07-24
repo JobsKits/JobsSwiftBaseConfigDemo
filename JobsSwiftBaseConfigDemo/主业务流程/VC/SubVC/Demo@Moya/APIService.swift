@@ -82,11 +82,13 @@ extension APIService {
         provider.request(target) { [weak self] result in
             guard let self else { return }
             switch result {
+            /// 处理 .success 分支
             case .success(let resp) where resp.statusCode == 401 && retryOnce:
                 self.refreshToken { ok in
                     if ok { self.provider.request(target, completion: completion) }
                     else  { completion(.success(resp)) }
                 }
+            /// 未匹配已知分支时执行兜底处理
             default:
                 completion(result)
             }

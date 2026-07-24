@@ -14,7 +14,6 @@ import UIKit
 import JobsBluetooth
 import JobsByUIKit
 import JobsInheritance
-import JobsScale
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import SnapKit
@@ -34,7 +33,7 @@ final class JobsBluetoothDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .byRowHeight(64.h)
+            .byRowHeight(76)
             .byRegisterCell(UITableViewCell.self)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() { make.top.equalTo(gk_navigationBar.snp.bottom) }
@@ -55,13 +54,20 @@ extension JobsBluetoothDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { features.count }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        content.text = "\(indexPath.row + 1). \(features[indexPath.row])"
-        content.secondaryText = indexPath.row == 21 ? "进入详情页，模拟器可直接运行" : "进入独立功能详情页"
-        cell.contentConfiguration = content
-        cell.accessoryType = .disclosureIndicator
-        return cell
+        let title = "\(indexPath.row + 1). \(features[indexPath.row])"
+        let subTitle = indexPath.row == 21 ? "进入详情页，模拟器可直接运行" : "进入独立功能详情页"
+        return tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byContentConfiguration { content in
+                content = UIListContentConfiguration
+                    .jobsSubtitleCell(text: title, secondary: subTitle)
+                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .byTextLines(1)
+                    .bySecondaryLines(1)
+                    .byPrimarySecondaryVerticalPadding(3)
+            }
+            .byAccessoryType(.disclosureIndicator)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

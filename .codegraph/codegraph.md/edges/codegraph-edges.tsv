@@ -1,5 +1,4 @@
 edge_kind	source	target	source_file	target_file	source_line	target_line	edge_line
-calls	method:MoyaProvider::request	method:MoyaProvider::request	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift	JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Moya/MoyaProvider+Async.swift	14	14	18
 calls	function:install_all_flutter_pods	function:install_flutter_engine_pod	my_flutter/.ios/Flutter/podhelper.rb	my_flutter/.ios/Flutter/podhelper.rb	17	43	32
 calls	function:install_all_flutter_pods	function:install_flutter_plugin_pods	my_flutter/.ios/Flutter/podhelper.rb	my_flutter/.ios/Flutter/podhelper.rb	17	60	33
 calls	function:install_all_flutter_pods	function:install_flutter_application_pod	my_flutter/.ios/Flutter/podhelper.rb	my_flutter/.ios/Flutter/podhelper.rb	17	80	34
@@ -4999,3 +4998,4 @@ calls	method:ASDisplayViewAccessibilityTests::testAccessibilityElementsHidden	me
 calls	method:ASEditableTextNodeTests::setUp	method:ASEditableTextNodeTests::setUp	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASEditableTextNodeTests.mm	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASEditableTextNodeTests.mm	26	26	28
 calls	method:ASEditableTextNodeTests::setUp	method:ASTestSection::init	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASEditableTextNodeTests.mm	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm	26	360	30
 calls	method:ASEditableTextNodeTests::testAllocASEditableTextNode	method:ASTestSection::init	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASEditableTextNodeTests.mm	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm	52	360	54
+calls	method:ASEditableTextNodeTests::testUITextInputTraitDefaults	method:ASTestSection::init	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASEditableTextNodeTests.mm	JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm	60	360	62

@@ -47,9 +47,9 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         aCount = 0
         bCount = 0
         Task { @MainActor [weak vc] in
-            vc?.countALabel.byText("A ticks: 0")
-            vc?.countBLabel.byText("B ticks: 0")
-            vc?.oneShotLabel.byText("OneShot: not started")
+            vc?.countALabel.byText("A 持续任务\n0 次")
+            vc?.countBLabel.byText("B 后台取消\n0 次")
+            vc?.oneShotLabel.byText("一次性任务\n未启动")
         }
     }
 
@@ -63,7 +63,7 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         aCount += 1
         let v = aCount
         Task { @MainActor [weak vc] in
-            vc?.countALabel.byText("A ticks: \(v)")
+            vc?.countALabel.byText("A 持续任务\n\(v) 次")
         }
     }
 
@@ -71,7 +71,7 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         bCount += 1
         let v = bCount
         Task { @MainActor [weak vc] in
-            vc?.countBLabel.byText("B ticks: \(v)")
+            vc?.countBLabel.byText("B 后台取消\n\(v) 次")
         }
     }
 
@@ -90,8 +90,8 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
 // MARK: - VC
 final class JobsTimerMgrDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
-    private let verticalGap: CGFloat = 10
-    private let rowHeight: CGFloat = 44
+    private let sectionGap: CGFloat = 14
+    private let buttonHeight: CGFloat = 48
 
     private lazy var uiBridge: JobsTimerMgrDemoUIBridge = .init(self)
     // A 策略：pauseAndResume
@@ -100,234 +100,471 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private var aManuallyPaused = false
     private var aAutoPausedInBackground = false
     // MARK: - UI
-    private lazy var hintLabel: UILabel = {
-        UILabel()
-            .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
-            .byTextColor(JobsCor.secondaryLabel)
-            .byText(
-                """
-                特点演示（基于你当前 JobsSwiftTimerMgr API 实现）：
-                1) identifier 管理 + create(dedupPolicy:.replace) 防重复（同 id 替换旧 Timer）
-                2) A: pauseAndResume（后台 autoPause；前台只恢复 autoPaused，不误恢复手动暂停）
-                3) B: cancel（进后台 stop+remove）
-                4) OneShot: repeats=false（handler 首次触发后 cancel=stop+remove）
-                """
-            )
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView()
+            .byAlwaysBounceVertical(YES)
+            .byShowsVerticalScrollIndicator(NO)
+            .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
                 if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
                 } else {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
+                make.left.right.bottom.equalToSuperview()
+            }
+    }()
+
+    private lazy var contentView: UIView = {
+        UIView()
+            .byBackgroundColor(JobsCor.clear)
+            .byAddTo(scrollView) { [unowned self] make in
+                make.edges.equalTo(self.scrollView.contentLayoutGuide)
+                make.width.equalTo(self.scrollView.frameLayoutGuide)
+            }
+    }()
+
+    private lazy var heroTitleLabel: UILabel = {
+        UILabel()
+            .byText("一个管理器，统一驾驭三种计时内核".tr)
+            .byFont(JobsFont.boldSystemFont(ofSize: 23))
+            .byTextColor(JobsCor.label)
+            .byNumberOfLines(0)
+            .byAddTo(contentView) {[unowned self] make in
+                make.top.equalToSuperview().offset(20)
+                make.left.right.equalToSuperview().inset(self.horizontalInset)
+            }
+    }()
+
+    private lazy var heroDetailLabel: UILabel = {
+        UILabel()
+            .byText(
+                "JobsSwiftTimerMgr 的价值不是“再造一个 Timer”，而是给 GCD、DisplayLink、NSTimer 加上统一的 identifier 管理、去重替换、暂停恢复、后台策略和集中清理。下面按步骤操作，状态与日志会同步变化。".tr
+            )
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byAddTo(contentView) { [unowned self] make in
+                make.top.equalTo(self.heroTitleLabel.snp.bottom).offset(8)
+                make.left.right.equalToSuperview().inset(horizontalInset)
+            }
+    }()
+
+    private lazy var guideCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.heroDetailLabel.snp.bottom).offset(18)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var guideTitleLabel: UILabel = {
+        UILabel()
+            .byText("这个 Demo 要证明什么？".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTextColor(JobsCor.label)
+            .byAddTo(guideCard) { make in
+                make.top.equalToSuperview().offset(16)
+                make.left.right.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var guideDetailLabel: UILabel = {
+        UILabel()
+            .byText(
+                "① 同一个 identifier 只保留一个 Timer，新建时可原位替换旧实例。\n" +
+                "② A 支持暂停 / 恢复，并能区分“手动暂停”和“后台自动暂停”。\n" +
+                "③ B 进入后台后直接停止并从管理器移除。\n" +
+                "④ OneShot 只触发一次，完成后自动清理。"
+            )
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byAddTo(guideCard) { [unowned self] make in
+                make.top.equalTo(self.guideTitleLabel.snp.bottom).offset(8)
+                make.left.right.equalToSuperview().inset(16)
+                make.bottom.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var kindCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.guideCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var kindTitleLabel: UILabel = {
+        UILabel()
+            .byText("先选择 A 的计时内核".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTextColor(JobsCor.label)
+            .byAddTo(kindCard) { make in
+                make.top.equalToSuperview().offset(16)
+                make.left.right.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var kindDetailLabel: UILabel = {
+        UILabel()
+            .byText("选择只影响 A；点击“同 ID 替换 A”会切换到下一个内核，但 identifier 保持不变。".tr)
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byAddTo(kindCard) { [unowned self] make in
+                make.top.equalTo(self.kindTitleLabel.snp.bottom).offset(6)
+                make.left.right.equalToSuperview().inset(16)
             }
     }()
 
     private lazy var kindSegment: UISegmentedControl = {
         UISegmentedControl(items: ["GCD", "DisplayLink", "NSTimer"])
             .bySelectedSegmentIndex(0)
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(hintLabel.snp.bottom).offset(12)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
-                make.height.equalTo(32)
+            .onJobsChange { [weak self] (_: UISegmentedControl) in
+                self?.updateKindDescription()
+            }
+            .byAddTo(kindCard) { [unowned self] make in
+                make.top.equalTo(self.kindDetailLabel.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(36)
             }
     }()
 
-    public lazy var statusLabel: UILabel = {
+    private lazy var kindFootnoteLabel: UILabel = {
         UILabel()
+            .byText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-            .byTextColor(JobsCor.label)
-            .byText("Ready")
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(kindSegment.snp.bottom).offset(12)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byTextColor(JobsCor.systemBlue)
+            .byAddTo(kindCard) { [unowned self] make in
+                make.top.equalTo(self.kindSegment.snp.bottom).offset(8)
+                make.left.right.equalToSuperview().inset(16)
+                make.bottom.equalToSuperview().inset(16)
             }
     }()
 
-    public lazy var countALabel: UILabel = {
+    private lazy var statusCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.kindCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var statusTitleLabel: UILabel = {
         UILabel()
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
+            .byText("实时实验状态".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
-            .byText("A ticks: 0")
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(statusLabel.snp.bottom).offset(12)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
+            .byAddTo(statusCard) { make in
+                make.top.equalToSuperview().offset(16)
+                make.left.right.equalToSuperview().inset(16)
             }
     }()
 
-    public lazy var countBLabel: UILabel = {
+    fileprivate lazy var statusLabel: UILabel = {
         UILabel()
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
-            .byTextColor(JobsCor.label)
-            .byText("B ticks: 0")
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(countALabel.snp.bottom).offset(8)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
+            .byText("等待开始：先创建 A + B，再按下面的实验顺序操作。".tr)
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byAddTo(statusCard) { [unowned self] make in
+                make.top.equalTo(self.statusTitleLabel.snp.bottom).offset(6)
+                make.left.right.equalToSuperview().inset(16)
             }
     }()
 
-    public lazy var oneShotLabel: UILabel = {
+    private lazy var aMetricView: UIView = makeMetricView()
+    private lazy var bMetricView: UIView = makeMetricView()
+    private lazy var oneShotMetricView: UIView = makeMetricView()
+
+    fileprivate lazy var countALabel: UILabel = {
         UILabel()
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular))
+            .byText("A 持续任务\n0 次")
+            .byNumberOfLines(2)
+            .byTextAlignment(.center)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.label)
-            .byText("OneShot: not started")
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(countBLabel.snp.bottom).offset(8)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
+            .byAddTo(aMetricView) { make in
+                make.edges.equalToSuperview().inset(6)
             }
     }()
 
-    private lazy var createBtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("Create Timers", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .onTap { [weak self] _ in
-                guard let self else { return }
-                onMainAsync(self) { vc in
-                    self.createTimers()
-                }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(oneShotLabel.snp.bottom).offset(14)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
-                make.height.equalTo(rowHeight)
+    fileprivate lazy var countBLabel: UILabel = {
+        UILabel()
+            .byText("B 后台取消\n0 次")
+            .byNumberOfLines(2)
+            .byTextAlignment(.center)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            .byTextColor(JobsCor.label)
+            .byAddTo(bMetricView) { make in
+                make.edges.equalToSuperview().inset(6)
             }
     }()
 
-    private lazy var replaceABtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
-            .byTitle("Replace A (Same ID)", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .onTap { [weak self] _ in
-                guard let self else { return }
-                onMainAsync(self) { vc in
-                    self.replaceA()
-                }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(createBtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
+    fileprivate lazy var oneShotLabel: UILabel = {
+        UILabel()
+            .byText("一次性任务\n未启动")
+            .byNumberOfLines(2)
+            .byTextAlignment(.center)
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            .byTextColor(JobsCor.label)
+            .byAddTo(oneShotMetricView) { make in
+                make.edges.equalToSuperview().inset(6)
             }
     }()
 
-    private lazy var pauseABtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
-            .byTitle("Pause A (Manual)", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .onTap { [weak self] _ in
-                guard let self else { return }
-                onMainAsync(self) { vc in
-                    self.pauseA()
-                }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(replaceABtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
+    private lazy var metricsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [aMetricView, bMetricView, oneShotMetricView])
+            .byAxis(.horizontal)
+            .bySpacing(8)
+            .byDistribution(.fillEqually)
+            .byAddTo(statusCard) { [unowned self] make in
+                make.top.equalTo(self.statusLabel.snp.bottom).offset(14)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(72)
+                make.bottom.equalToSuperview().inset(16)
             }
     }()
 
-    private lazy var resumeABtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemTeal, for: .normal)
-            .byTitle("Resume A", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+    private lazy var identityCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.statusCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var identityTitleLabel: UILabel = makeSectionTitle("实验 1 · 创建与同 ID 替换")
+        .byAddTo(identityCard) { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var identityDetailLabel: UILabel = makeSectionDetail(
+        "先创建 A、B 两个持续任务；再用相同 identifier 替换 A，观察计数继续由新内核接管。"
+    )
+        .byAddTo(identityCard) { [unowned self] make in
+            make.top.equalTo(self.identityTitleLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var createBtn: UIButton = { [unowned self] in
+        makeActionButton("创建 A + B", color: JobsCor.systemGreen)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
-                    self.resumeA()
+                    vc.createTimers()
                 }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(pauseABtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
             }
     }()
 
-    private lazy var oneShotBtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
-            .byTitle("Start OneShot (2s)", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+    private lazy var replaceABtn: UIButton = { [unowned self] in
+        makeActionButton("同 ID 替换 A", color: JobsCor.systemBlue)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
-                    self.startOneShot()
+                    vc.replaceA()
                 }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(resumeABtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
             }
     }()
 
-    private lazy var cancelOneShotBtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
-            .byTitle("Cancel + Remove OneShot", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .onTap { [weak self] _ in
-                guard let self else { return }
-                onMainAsync(self) { vc in
-                    self.cancelOneShot()
-                }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(oneShotBtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
+    private lazy var identityButtonsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [createBtn, replaceABtn])
+            .byAxis(.horizontal)
+            .bySpacing(10)
+            .byDistribution(.fillEqually)
+            .byAddTo(identityCard) { [unowned self] make in
+                make.top.equalTo(self.identityDetailLabel.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(buttonHeight)
+                make.bottom.equalToSuperview().inset(16)
             }
     }()
 
-    private lazy var dumpIdsBtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGray, for: .normal)
-            .byTitle("Dump IDs", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+    private lazy var lifecycleCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.identityCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var lifecycleTitleLabel: UILabel = makeSectionTitle("实验 2 · 暂停与前后台策略")
+        .byAddTo(lifecycleCard) { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var lifecycleDetailLabel: UILabel = makeSectionDetail(
+        "手动暂停 A 后切后台再回来，A 不会被误恢复；正常运行时切后台，A 会自动暂停并在前台恢复，B 则被直接移除。"
+    )
+        .byAddTo(lifecycleCard) { [unowned self] make in
+            make.top.equalTo(self.lifecycleTitleLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var pauseABtn: UIButton = { [unowned self] in
+        makeActionButton("手动暂停 A", color: JobsCor.systemOrange)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
-                    self.dumpIDs()
+                    vc.pauseA()
                 }
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(cancelOneShotBtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
             }
     }()
 
-    private lazy var stopAllBtn: UIButton = {
-        UIButton.sys()
-            .byBackgroundColor(JobsCor.systemRed, for: .normal)
-            .byTitle("Stop All", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+    private lazy var resumeABtn: UIButton = { [unowned self] in
+        makeActionButton("恢复 A", color: JobsCor.systemTeal)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 onMainAsync(self) { vc in
-                    self.stopAll()
+                    vc.resumeA()
                 }
             }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(dumpIdsBtn.snp.bottom).offset(verticalGap)
-                make.left.right.height.equalTo(createBtn)
+    }()
+
+    private lazy var lifecycleButtonsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [pauseABtn, resumeABtn])
+            .byAxis(.horizontal)
+            .bySpacing(10)
+            .byDistribution(.fillEqually)
+            .byAddTo(lifecycleCard) { [unowned self] make in
+                make.top.equalTo(self.lifecycleDetailLabel.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(buttonHeight)
+                make.bottom.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var oneShotCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.lifecycleCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var oneShotTitleLabel: UILabel = makeSectionTitle("实验 3 · 一次性任务")
+        .byAddTo(oneShotCard) { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var oneShotDetailLabel: UILabel = makeSectionDetail(
+        "启动后等待约 2 秒：任务只触发一次，并通过 cancel 完成 stop + remove；也可以在触发前手动取消。"
+    )
+        .byAddTo(oneShotCard) { [unowned self] make in
+            make.top.equalTo(self.oneShotTitleLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var oneShotBtn: UIButton = { [unowned self] in
+        makeActionButton("启动 2 秒任务", color: JobsCor.systemIndigo)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                onMainAsync(self) { vc in
+                    vc.startOneShot()
+                }
+            }
+    }()
+
+    private lazy var cancelOneShotBtn: UIButton = { [unowned self] in
+        makeActionButton("取消并移除", color: JobsCor.systemPurple)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                onMainAsync(self) { vc in
+                    vc.cancelOneShot()
+                }
+            }
+    }()
+
+    private lazy var oneShotButtonsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [oneShotBtn, cancelOneShotBtn])
+            .byAxis(.horizontal)
+            .bySpacing(10)
+            .byDistribution(.fillEqually)
+            .byAddTo(oneShotCard) { [unowned self] make in
+                make.top.equalTo(self.oneShotDetailLabel.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(buttonHeight)
+                make.bottom.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var managerCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.oneShotCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+        }
+
+    private lazy var managerTitleLabel: UILabel = makeSectionTitle("实验 4 · 检查与集中清理")
+        .byAddTo(managerCard) { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var managerDetailLabel: UILabel = makeSectionDetail(
+        "查看当前仍由 Manager 托管的 identifier，或一次性停止并移除所有任务。"
+    )
+        .byAddTo(managerCard) { [unowned self] make in
+            make.top.equalTo(self.managerTitleLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+    private lazy var dumpIdsBtn: UIButton = { [unowned self] in
+        makeActionButton("查看活跃 ID", color: JobsCor.systemGray)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                onMainAsync(self) { vc in
+                    vc.dumpIDs()
+                }
+            }
+    }()
+
+    private lazy var stopAllBtn: UIButton = { [unowned self] in
+        makeActionButton("停止并清空全部", color: JobsCor.systemRed)
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                onMainAsync(self) { vc in
+                    vc.stopAll()
+                }
+            }
+    }()
+
+    private lazy var managerButtonsStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [dumpIdsBtn, stopAllBtn])
+            .byAxis(.horizontal)
+            .bySpacing(10)
+            .byDistribution(.fillEqually)
+            .byAddTo(managerCard) { [unowned self] make in
+                make.top.equalTo(self.managerDetailLabel.snp.bottom).offset(12)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(buttonHeight)
+                make.bottom.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var logCard: UIView = makeCard()
+        .byAddTo(contentView) { [unowned self] make in
+            make.top.equalTo(self.managerCard.snp.bottom).offset(sectionGap)
+            make.left.right.equalToSuperview().inset(horizontalInset)
+            make.bottom.equalToSuperview().inset(24)
+        }
+
+    private lazy var logTitleLabel: UILabel = {
+        UILabel()
+            .byText("实验日志".tr)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTextColor(JobsCor.label)
+            .byAddTo(logCard) { make in
+                make.top.equalToSuperview().offset(16)
+                make.left.right.equalToSuperview().inset(16)
+            }
+    }()
+
+    private lazy var logHintLabel: UILabel = {
+        UILabel()
+            .byText("每次操作、前后台切换和 Manager 状态变化都会记录在这里。".tr)
+            .byNumberOfLines(0)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byAddTo(logCard) { [unowned self] make in
+                make.top.equalTo(self.logTitleLabel.snp.bottom).offset(5)
+                make.left.right.equalToSuperview().inset(16)
             }
     }()
 
@@ -335,39 +572,38 @@ final class JobsTimerMgrDemoVC: BaseVC {
         UITextView()
             .byEditable(NO)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
-            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
             .byCornerRadius(10)
             .byTextContainerInset(.init(top: 10, left: 10, bottom: 10, right: 10))
             .byText("")
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(stopAllBtn.snp.bottom).offset(12)
-                make.left.equalToSuperview().offset(horizontalInset)
-                make.right.equalToSuperview().inset(horizontalInset)
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(12)
+            .byAddTo(logCard) { [unowned self] make in
+                make.top.equalTo(self.logHintLabel.snp.bottom).offset(10)
+                make.left.right.equalToSuperview().inset(12)
+                make.height.equalTo(220)
+                make.bottom.equalToSuperview().inset(12)
             }
     }()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "在JobsSwiftTimer基础上进行的二次封装".tr)
-        view.byBackgroundColor(JobsCor.systemBackground)
-        hintLabel.byVisible(YES)
-        kindSegment.byVisible(YES)
-        statusLabel.byVisible(YES)
-        countALabel.byVisible(YES)
-        countBLabel.byVisible(YES)
-        oneShotLabel.byVisible(YES)
-        createBtn.byVisible(YES)
-        replaceABtn.byVisible(YES)
-        pauseABtn.byVisible(YES)
-        resumeABtn.byVisible(YES)
-        oneShotBtn.byVisible(YES)
-        cancelOneShotBtn.byVisible(YES)
-        dumpIdsBtn.byVisible(YES)
-        stopAllBtn.byVisible(YES)
-        logView.byVisible(YES)
-        appendLog("提示：切到后台/切回前台：B（cancel）会消失；A（pauseAndResume）仍存在且仅恢复 autoPaused。")
+        jobsSetupGKNav(title: "Jobs 时间管理大师".tr)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
+        [
+            scrollView, contentView,
+            heroTitleLabel, heroDetailLabel,
+            guideTitleLabel, guideDetailLabel,
+            kindTitleLabel, kindDetailLabel, kindSegment, kindFootnoteLabel,
+            statusTitleLabel, statusLabel,
+            countALabel, countBLabel, oneShotLabel, metricsStackView,
+            identityTitleLabel, identityDetailLabel, identityButtonsStackView,
+            lifecycleTitleLabel, lifecycleDetailLabel, lifecycleButtonsStackView,
+            oneShotTitleLabel, oneShotDetailLabel, oneShotButtonsStackView,
+            managerTitleLabel, managerDetailLabel, managerButtonsStackView,
+            logTitleLabel, logHintLabel, logView
+        ].forEach { $0.byVisible(YES) }
+        updateKindDescription()
+        appendLog("页面已就绪：建议按“实验 1 → 实验 2 → 实验 3 → 实验 4”的顺序操作。")
         installAppStateObservers()
     }
 
@@ -420,12 +656,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
                 do {
                     _ = try JobsSwiftTimerMgr.shared.act(.pause, identifier: aID)
                     aAutoPausedInBackground = true
-                    uiBridge.log("App->BG: A autoPaused ✅")
+                    uiBridge.log("进入后台：A 自动暂停 ✅")
                 } catch {
-                    uiBridge.log("App->BG: A autoPause failed ❌ \(error)")
+                    uiBridge.log("进入后台：A 自动暂停失败 ❌ \(error)")
                 }
             } else {
-                uiBridge.log("App->BG: A is manually paused, skip autoPause")
+                uiBridge.log("进入后台：A 已被手动暂停，不改写其状态")
             }
         }
         // B：cancel（后台 stop+remove）
@@ -433,11 +669,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
         if JobsSwiftTimerMgr.shared.timer(for: bID) != nil {
             do {
                 _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: bID)
-                uiBridge.log("App->BG: B cancel(stop+remove) ✅")
+                uiBridge.log("进入后台：B 已停止并从 Manager 移除 ✅")
             } catch {
-                uiBridge.log("App->BG: B cancel failed ❌ \(error)")
+                uiBridge.log("进入后台：B 取消失败 ❌ \(error)")
             }
         }
+        uiBridge.setStatus("已进入后台：A 按策略暂停，B 按策略取消并移除。")
     }
 
     private func handleEnterForegroundLike() {
@@ -449,12 +686,17 @@ final class JobsTimerMgrDemoVC: BaseVC {
                 do {
                     _ = try JobsSwiftTimerMgr.shared.act(.resume, identifier: aID)
                     aAutoPausedInBackground = false
-                    uiBridge.log("App->FG: A autoResumed ✅")
+                    uiBridge.log("回到前台：A 从后台自动暂停中恢复 ✅")
                 } catch {
-                    uiBridge.log("App->FG: A autoResume failed ❌ \(error)")
+                    uiBridge.log("回到前台：A 自动恢复失败 ❌ \(error)")
                 }
             }
         }
+        uiBridge.setStatus(
+            aManuallyPaused
+            ? "已回到前台：A 仍保持手动暂停，不会被误恢复。"
+            : "已回到前台：如果 A 曾被后台自动暂停，现在已经恢复。"
+        )
     }
 
     // MARK: - Actions（按钮逻辑）
@@ -462,7 +704,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private func createTimers() {
         let uiBridge = self.uiBridge
         uiBridge.resetCounters()
-        uiBridge.setStatus("Creating...")
+        uiBridge.setStatus("正在创建 A 与 B，并通过 identifier 交给 Manager 托管…")
         aManuallyPaused = false
         aAutoPausedInBackground = false
         // A：pauseAndResume（后台自动 pause，前台恢复 autoPaused）
@@ -492,9 +734,9 @@ final class JobsTimerMgrDemoVC: BaseVC {
                 }
             }
             tA.start()
-            uiBridge.log("Created A ✅ policy=pauseAndResume  kind=\(kindA)")
+            uiBridge.log("A 创建成功 ✅ 策略=pauseAndResume，内核=\(kindA)")
         } catch {
-            uiBridge.log("Create A ❌ \(error)")
+            uiBridge.log("A 创建失败 ❌ \(error)")
         }
         // B：cancel（进后台 stop+remove）
         do {
@@ -520,11 +762,11 @@ final class JobsTimerMgrDemoVC: BaseVC {
                 }
             }
             tB.start()
-            uiBridge.log("Created B ✅ policy=cancel（后台 stop+remove） kind=GCD")
+            uiBridge.log("B 创建成功 ✅ 进入后台时 stop + remove，内核=GCD")
         } catch {
-            uiBridge.log("Create B ❌ \(error)")
+            uiBridge.log("B 创建失败 ❌ \(error)")
         }
-        uiBridge.setStatus("Created. Try: Pause A(Manual) -> background -> foreground -> Dump IDs.")
+        uiBridge.setStatus("A 与 B 已创建。现在可做同 ID 替换，或手动暂停 A 后测试前后台策略。")
     }
 
     @MainActor
@@ -532,13 +774,14 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerMgrDemoID.A_pauseResume.identifier!
         guard JobsSwiftTimerMgr.shared.timer(for: id) != nil else {
-            uiBridge.log("Replace A ❌ 先 Create Timers")
+            uiBridge.log("替换 A 失败：请先点击“创建 A + B”")
+            uiBridge.setStatus("操作未执行：A 尚未创建。")
             return
         }
         let current = selectedKindForA()
         let newKind = nextKind(current)
         let interval: TimeInterval = (newKind == .displayLink) ? (1.0 / 30.0) : 1.0
-        uiBridge.setStatus("Replacing A...")
+        uiBridge.setStatus("正在保留同一个 identifier，并把 A 替换为 \(newKind) 内核…")
         do {
             let cfg = JobsSwiftTimerConfig(
                 interval: interval,
@@ -562,10 +805,10 @@ final class JobsTimerMgrDemoVC: BaseVC {
                 }
             }
             t.start()
-            uiBridge.log("Replace A ✅ same identifier / new core = \(newKind)")
-            uiBridge.setStatus("A replaced. Same identifier, different core.")
+            uiBridge.log("A 同 ID 替换成功 ✅ 新内核=\(newKind)")
+            uiBridge.setStatus("A 已完成原位替换：identifier 不变，底层内核已切换为 \(newKind)。")
         } catch {
-            uiBridge.log("Replace A ❌ \(error)")
+            uiBridge.log("A 替换失败 ❌ \(error)")
         }
     }
 
@@ -574,17 +817,18 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerMgrDemoID.A_pauseResume.identifier!
         guard JobsSwiftTimerMgr.shared.timer(for: id) != nil else {
-            uiBridge.log("Pause A ❌（A 不存在）")
+            uiBridge.log("暂停 A 失败：A 尚未创建")
+            uiBridge.setStatus("操作未执行：请先在实验 1 创建 A。")
             return
         }
         do {
             _ = try JobsSwiftTimerMgr.shared.act(.pause, identifier: id)
             aManuallyPaused = true
             aAutoPausedInBackground = false
-            uiBridge.log("Pause A ✅（手动暂停：回前台不会自动恢复）")
-            uiBridge.setStatus("A manual paused. Now background -> foreground: A should stay paused.")
+            uiBridge.log("A 已手动暂停 ✅ 回到前台时不会被自动恢复")
+            uiBridge.setStatus("A 处于手动暂停。现在切到后台再回来，计数应保持不变。")
         } catch {
-            uiBridge.log("Pause A ❌ \(error)")
+            uiBridge.log("A 暂停失败 ❌ \(error)")
         }
     }
 
@@ -593,16 +837,17 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerMgrDemoID.A_pauseResume.identifier!
         guard JobsSwiftTimerMgr.shared.timer(for: id) != nil else {
-            uiBridge.log("Resume A ❌（A 不存在）")
+            uiBridge.log("恢复 A 失败：A 尚未创建")
+            uiBridge.setStatus("操作未执行：请先在实验 1 创建 A。")
             return
         }
         do {
             _ = try JobsSwiftTimerMgr.shared.act(.resume, identifier: id)
             aManuallyPaused = false
-            uiBridge.log("Resume A ✅")
-            uiBridge.setStatus("A resumed.")
+            uiBridge.log("A 已恢复 ✅")
+            uiBridge.setStatus("A 已恢复运行，计数会继续增长。")
         } catch {
-            uiBridge.log("Resume A ❌ \(error)")
+            uiBridge.log("A 恢复失败 ❌ \(error)")
         }
     }
 
@@ -610,8 +855,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private func startOneShot() {
         let uiBridge = self.uiBridge
         let id = JobsTimerMgrDemoID.C_oneShot.identifier!
-        uiBridge.setOneShot("OneShot: running...")
-        uiBridge.setStatus("Starting OneShot...")
+        uiBridge.setOneShot("一次性任务\n等待触发…")
+        uiBridge.setStatus("一次性任务已启动，约 2 秒后只触发一次。")
         do {
             let cfg = JobsSwiftTimerConfig(
                 interval: 2.0,
@@ -632,22 +877,23 @@ final class JobsTimerMgrDemoVC: BaseVC {
             ) { [uiBridge] in
                 // 立刻 stop+remove
                 onMainAsync(self) { vc in
-                    uiBridge.log("OneShot tick ✅ (repeats=false) -> cancel(remove)")
-                    uiBridge.setOneShot("OneShot: fired ✅")
+                    uiBridge.log("一次性任务已触发 ✅ repeats=false")
+                    uiBridge.setOneShot("一次性任务\n已触发 ✅")
                     do {
                         _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
-                        uiBridge.setOneShot("OneShot: finished + removed")
+                        uiBridge.setOneShot("一次性任务\n完成并移除")
+                        uiBridge.setStatus("一次性任务已完成，并从 Manager 中自动移除。")
                     } catch {
-                        uiBridge.log("OneShot cancel failed ❌ \(error)")
+                        uiBridge.log("一次性任务移除失败 ❌ \(error)")
                     }
                 }
             }
             t.start()
-            uiBridge.log("Start OneShot ✅ interval=2s repeats=false kind=GCD")
-            uiBridge.setStatus("OneShot started. Wait ~2s.")
+            uiBridge.log("一次性任务启动成功 ✅ interval=2s，内核=GCD")
         } catch {
-            uiBridge.log("Start OneShot ❌ \(error)")
-            uiBridge.setOneShot("OneShot: failed")
+            uiBridge.log("一次性任务启动失败 ❌ \(error)")
+            uiBridge.setOneShot("一次性任务\n启动失败")
+            uiBridge.setStatus("一次性任务启动失败，请查看下方日志。")
         }
     }
 
@@ -656,16 +902,18 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let uiBridge = self.uiBridge
         let id = JobsTimerMgrDemoID.C_oneShot.identifier!
         guard JobsSwiftTimerMgr.shared.timer(for: id) != nil else {
-            uiBridge.log("Cancel OneShot ❌（不存在）")
-            uiBridge.setOneShot("OneShot: not exists")
+            uiBridge.log("取消一次性任务失败：当前没有可取消的实例")
+            uiBridge.setOneShot("一次性任务\n当前不存在")
+            uiBridge.setStatus("操作未执行：一次性任务尚未启动或已经完成。")
             return
         }
         do {
             _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
-            uiBridge.log("Cancel+Remove OneShot ✅")
-            uiBridge.setOneShot("OneShot: canceled + removed")
+            uiBridge.log("一次性任务已取消并移除 ✅")
+            uiBridge.setOneShot("一次性任务\n已取消并移除")
+            uiBridge.setStatus("一次性任务已在触发前停止，并从 Manager 中移除。")
         } catch {
-            uiBridge.log("Cancel OneShot ❌ \(error)")
+            uiBridge.log("一次性任务取消失败 ❌ \(error)")
         }
     }
 
@@ -678,7 +926,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
             JobsTimerMgrDemoID.C_oneShot.identifier!
         ]
         let alive = ids.filter { JobsSwiftTimerMgr.shared.timer(for: $0) != nil }
-        uiBridge.log("Active IDs: \(alive)")
+        uiBridge.log("当前活跃 ID：\(alive)")
+        uiBridge.setStatus(
+            alive.isEmpty
+            ? "Manager 当前没有托管任何 Demo Timer。"
+            : "Manager 当前托管 \(alive.count) 个 Demo Timer，详情见日志。"
+        )
     }
 
     @MainActor
@@ -687,8 +940,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
         JobsSwiftTimerMgr.shared.removeAll(stopAll: true)
         aManuallyPaused = false
         aAutoPausedInBackground = false
-        uiBridge.log("Stop All ✅")
-        uiBridge.setStatus("All stopped & removed.")
+        uiBridge.log("全部任务已停止并移除 ✅")
+        uiBridge.setStatus("Manager 已清空，所有计数归零。")
         uiBridge.resetCounters()
     }
 
@@ -703,19 +956,81 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }
 
     // MARK: - Helpers
+    private func makeCard() -> UIView {
+        UIView()
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            .byCornerRadius(16)
+    }
+
+    private func makeMetricView() -> UIView {
+        UIView()
+            .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
+            .byCornerRadius(12)
+    }
+
+    private func makeSectionTitle(_ text: String) -> UILabel {
+        UILabel()
+            .byText(text.tr)
+            .byNumberOfLines(0)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTextColor(JobsCor.label)
+    }
+
+    private func makeSectionDetail(_ text: String) -> UILabel {
+        UILabel()
+            .byText(text.tr)
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+    }
+
+    private func makeActionButton(_ title: String, color: UIColor) -> UIButton {
+        UIButton.sys()
+            .byBackgroundColor(color, for: .normal)
+            .byTitle(title.tr, for: .normal)
+            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTitleAdjustsFontSizeToFitWidth(YES)
+            .byTitleMinimumScaleFactor(0.75)
+            .byContentEdgeInsets(.init(top: 10, left: 8, bottom: 10, right: 8))
+            .byCornerRadius(12)
+    }
+
+    private func updateKindDescription() {
+        switch kindSegment.selectedSegmentIndex {
+        /// DisplayLink 跟随屏幕刷新节奏，适合逐帧任务
+        case 1:
+            kindFootnoteLabel.byText("当前 DisplayLink：跟随屏幕刷新节奏，适合动画或逐帧任务。".tr)
+        /// NSTimer 依赖 RunLoop，适合传统定时场景
+        case 2:
+            kindFootnoteLabel.byText("当前 NSTimer：依赖 RunLoop，适合传统 Foundation 定时场景。".tr)
+        /// GCD 是默认内核，适合普通周期任务
+        default:
+            kindFootnoteLabel.byText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
+        }
+    }
+
     private func selectedKindForA() -> JobsTimerKind {
         switch kindSegment.selectedSegmentIndex {
+        /// 处理 数值 1 分支
         case 1: return .displayLink
+        /// 处理 数值 2 分支
         case 2: return .foundation
+        /// 未匹配已知分支时执行兜底处理
         default: return .gcd
         }
     }
 
     private func nextKind(_ kind: JobsTimerKind) -> JobsTimerKind {
         switch kind {
+        /// 处理 .gcd 分支
         case .gcd: return .displayLink
+        /// 处理 .displayLink 分支
         case .displayLink: return .foundation
+        /// 处理 .foundation 分支
         case .foundation: return .gcd
+        /// 未匹配已知分支时执行兜底处理
         default: return .gcd
         }
     }

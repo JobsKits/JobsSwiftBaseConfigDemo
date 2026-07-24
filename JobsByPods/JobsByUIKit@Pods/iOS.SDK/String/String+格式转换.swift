@@ -61,10 +61,13 @@ extension String {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
         switch trimmedString {
+        /// 合并处理 "true"、"yes"、"1" 分支
         case "true", "yes", "1":
             return true
+        /// 合并处理 "false"、"no"、"0" 分支
         case "false", "no", "0":
             return false
+        /// 未匹配已知分支时执行兜底处理
         default:
             return nil
         }

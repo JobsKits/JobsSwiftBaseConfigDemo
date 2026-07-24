@@ -245,6 +245,7 @@ extension UIButton {
                                           text: String) {
         // 缓存最新文本
         switch kind {
+        /// 处理 .title 分支
         case .title:
             objc_setAssociatedObject(
                 self,
@@ -252,6 +253,7 @@ extension UIButton {
                 text,
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC
             )
+        /// 处理 .subTitle 分支
         case .subTitle:
             objc_setAssociatedObject(
                 self,
@@ -614,7 +616,9 @@ private final class JobsButtonNumberAnimRunner: NSObject {
 
     private func currentText(button: UIButton) -> String? {
         switch kind {
+        /// 处理 .title 分支
         case .title: return button.title
+        /// 处理 .subTitle 分支
         case .subTitle: return button.subTitle
         }
     }
@@ -649,11 +653,13 @@ private final class JobsButtonNumberAnimRunner: NSObject {
         )
         // 1) 先写 plain（保持你原有 DSL 行为）
         switch kind {
+        /// 处理 .title 分支
         case .title:
             button.byTitle(formatted.text, for: .normal)
             button.byTitle(formatted.text, for: .selected)
             button.byTitle(formatted.text, for: .highlighted)
             button.byTitle(formatted.text, for: .disabled)
+        /// 处理 .subTitle 分支
         case .subTitle:
             button.bySubTitle(formatted.text, for: .normal)
             button.bySubTitle(formatted.text, for: .selected)
@@ -678,9 +684,11 @@ private final class JobsButtonNumberAnimRunner: NSObject {
             let baseFont: UIFont
             let baseColor: UIColor
             switch kind {
+            /// 处理 .title 分支
             case .title:
                 baseFont = titleBaseFont(button: button)
                 baseColor = titleBaseColor(button: button)
+            /// 处理 .subTitle 分支
             case .subTitle:
                 baseFont = subTitleBaseFont(button: button)
                 baseColor = subTitleBaseColor(button: button)
@@ -708,8 +716,10 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                                          decimalsRange: NSRange?,
                                          value: Double) -> NSAttributedString? {
         switch kind {
+        /// 处理 .title 分支
         case .title:
             return snapshot.titleAttributedBuilder?(text, decimalsRange, value)
+        /// 处理 .subTitle 分支
         case .subTitle:
             return snapshot.subTitleAttributedBuilder?(text, decimalsRange, value)
         }
@@ -717,6 +727,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
     /// 统一写入 attributed：主标题 legacy 多状态 + iOS15 configuration；副标题走 byAttributedSubTitle 多状态
     private func writeAttributed(button: UIButton, attributed: NSAttributedString, plain: String) {
         switch kind {
+        /// 处理 .title 分支
         case .title:
             button.byAttributedTitle(attributed, for: .normal)
             button.byAttributedTitle(attributed, for: .selected)
@@ -729,6 +740,7 @@ private final class JobsButtonNumberAnimRunner: NSObject {
                     button.configuration = cfg
                 }
             }
+        /// 处理 .subTitle 分支
         case .subTitle:
             // ✅ 关键：副标题富文本走你 Subtitle 扩展的 byAttributedSubTitle（iOS15+ 会写 attributedSubtitle，iOS15- 会 legacy 合成）
             button.byAttributedSubTitle(attributed, for: .normal)

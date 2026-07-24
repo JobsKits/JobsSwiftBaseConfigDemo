@@ -24,19 +24,25 @@ final class HomeLinkageDemoListVC: BaseVC {
         case linkageMenu
         var title: String {
             switch self {
+            /// 处理 .cashback 分支
             case .cashback: return "🏠 首页联动"
+            /// 处理 .linkageMenu 分支
             case .linkageMenu: return "🧭 首页联动切换子页面@Pod"
             }
         }
         var subtitle: String {
             switch self {
+            /// 处理 .cashback 分支
             case .cashback: return "JXSegmentedView 页签联动示例"
+            /// 处理 .linkageMenu 分支
             case .linkageMenu: return "JobsSwiftLinkageMenuView 子页面切换示例"
             }
         }
         var vcType: UIViewController.Type {
             switch self {
+            /// 处理 .cashback 分支
             case .cashback: return CashbackRootVC.self
+            /// 处理 .linkageMenu 分支
             case .linkageMenu: return JobsSwiftLinkageMenuViewDemoVC.self
             }
         }

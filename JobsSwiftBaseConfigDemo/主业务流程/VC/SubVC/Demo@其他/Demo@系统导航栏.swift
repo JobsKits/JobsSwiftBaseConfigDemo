@@ -21,6 +21,7 @@ import JobsInheritance
 import JobsSwiftBaseDefines
 import RxSwift
 import RxCocoa
+import SnapKit
 
 final class JobsNavigationDemoVC: BaseVC {
     // MARK: - 左侧：自定义返回按钮
@@ -76,6 +77,84 @@ final class JobsNavigationDemoVC: BaseVC {
                 }
             }
     }()
+    // MARK: - 导航栏标题视图
+    private lazy var singleLineTitleLabel: UILabel = {
+        UILabel()
+            .byTextAlignment(.center)
+            .byBackgroundColor(JobsCor.clear)
+            .byNumberOfLines(1)
+    }()
+
+    private lazy var mainTitleLabel: UILabel = {
+        UILabel()
+            .byTextAlignment(.center)
+            .byBackgroundColor(JobsCor.clear)
+            .byNumberOfLines(1)
+    }()
+
+    private lazy var subTitleLabel: UILabel = {
+        UILabel()
+            .byTextAlignment(.center)
+            .byBackgroundColor(JobsCor.clear)
+            .byNumberOfLines(1)
+    }()
+
+    private lazy var titleStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [
+            mainTitleLabel,
+            subTitleLabel
+        ])
+        .byAxis(.vertical)
+        .byAlignment(.center)
+        .byDistribution(.fill)
+        .bySpacing(0)
+    }()
+    // MARK: - 内容区标题切换按钮
+    private lazy var singleLinePlainTitleButton: UIButton = {
+        Self.makeTitleModeButton("单行标题 · 普通文本".tr)
+            .onTap { [weak self] _ in
+                self?.showSingleLinePlainTitle()
+            }
+    }()
+
+    private lazy var singleLineRichTitleButton: UIButton = {
+        Self.makeTitleModeButton("单行标题 · 富文本".tr)
+            .onTap { [weak self] _ in
+                self?.showSingleLineRichTitle()
+            }
+    }()
+
+    private lazy var mainSubPlainTitleButton: UIButton = {
+        Self.makeTitleModeButton("主副标题 · 普通文本".tr)
+            .onTap { [weak self] _ in
+                self?.showMainSubPlainTitle()
+            }
+    }()
+
+    private lazy var mainSubRichTitleButton: UIButton = {
+        Self.makeTitleModeButton("主副标题 · 富文本".tr)
+            .onTap { [weak self] _ in
+                self?.showMainSubRichTitle()
+            }
+    }()
+
+    private lazy var titleModeStackView: UIStackView = {
+        UIStackView(arrangedSubviews: [
+            singleLinePlainTitleButton,
+            singleLineRichTitleButton,
+            mainSubPlainTitleButton,
+            mainSubRichTitleButton
+        ])
+        .byAxis(.vertical)
+        .byAlignment(.fill)
+        .byDistribution(.fillEqually)
+        .bySpacing(14)
+        .byAddTo(view) { [unowned self] make in
+            make.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+            make.left.right.equalToSuperview().inset(32)
+            make.height.equalTo(234)
+        }
+    }()
     // MARK: - 状态栏样式
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -83,7 +162,7 @@ final class JobsNavigationDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.lightGray)
+        view.byBackgroundColor(JobsCor.systemBackground)
         // MARK: - 外观：背景图、底色、tintColor 等
         configureNavigationBarAppearance()
         self.title = "系统导航栏 Demo".tr // 普通文本的优先级低于富文本。title的优先级低于navigationItem.titleView
@@ -93,25 +172,8 @@ final class JobsNavigationDemoVC: BaseVC {
 //        navigationItem.tr_setBackButtonTitle("KEY".tr)/// 返回按钮文字
 //        navigationItem.rightBarButtonItem = UIBarButtonItem.make(title: nil)
 //        navigationItem.rightBarButtonItem?.tr_setTitle("KEY".tr)
-        // MARK: - 标题：富文本（JobsRichRun）
-        navigationItem.titleView = UILabel()
-            .byTextAlignment(.center)
-            .byBgCor(JobsCor.clear)
-            .byNumberOfLines(1)
-            .richTextBy([
-                JobsRichRun(.text("合理".tr))
-                    .font(JobsFont.systemFont(ofSize: 12, weight: .regular))
-                    .color(JobsCor.systemBlue),
-                JobsRichRun(.text("的".tr))
-                    .font(JobsFont.systemFont(ofSize: 13, weight: .semibold))
-                    .color(JobsCor.white),
-                JobsRichRun(.text("语法糖".tr))
-                    .font(JobsFont.systemFont(ofSize: 14, weight: .ultraLight))
-                    .color(JobsCor.red)
-            ], paragraphStyle: jobsMakeParagraphStyle {
-                $0.alignment = .center
-                $0.lineSpacing = 0
-        }).bySizeToFit()
+        // MARK: - 默认展示：单行富文本标题
+        showSingleLineRichTitle()
         navigationItem.hidesBackButton = true
         // MARK: - 左边：按钮 DSL 嵌进导航栏
         navigationItem.leftBarButtonItem = UIBarButtonItem.make(customView: backButton)
@@ -127,6 +189,7 @@ final class JobsNavigationDemoVC: BaseVC {
                     "点击了右侧\(item.title!)按钮".toast
                 },
             UIBarButtonItem.make(customView: bellButton)]
+        titleModeStackView.byVisible(YES)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -142,6 +205,102 @@ final class JobsNavigationDemoVC: BaseVC {
 }
 
 extension JobsNavigationDemoVC {
+    private static func makeTitleModeButton(_ title: String) -> UIButton {
+        UIButton.sys()
+            .byConfiguration(
+                UIButton.Configuration.filled()
+                    .byTitle(title)
+                    .byCornerStyle(.medium)
+                    .byBaseForegroundColor(JobsCor.white)
+                    .byBaseBackgroundColor(JobsCor.systemBlue)
+                    .byContentInsets(
+                        NSDirectionalEdgeInsets(
+                            top: 12,
+                            leading: 18,
+                            bottom: 12,
+                            trailing: 18
+                        )
+                    )
+            )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+    }
+    // MARK: - 单行标题
+    private func showSingleLinePlainTitle() {
+        navigationItem.titleView = singleLineTitleLabel
+            .byAttributedString(nil)
+            .byText("系统导航栏 Demo".tr)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTextColor(JobsCor.systemBlue)
+            .bySizeToFit()
+    }
+
+    private func showSingleLineRichTitle() {
+        navigationItem.titleView = singleLineTitleLabel
+            .richTextBy([
+                JobsRichRun(.text("合理".tr))
+                    .font(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                    .color(JobsCor.systemBlue),
+                JobsRichRun(.text("的".tr))
+                    .font(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+                    .color(JobsCor.white),
+                JobsRichRun(.text("语法糖".tr))
+                    .font(JobsFont.systemFont(ofSize: 14, weight: .ultraLight))
+                    .color(JobsCor.red)
+            ], paragraphStyle: jobsMakeParagraphStyle {
+                $0.alignment = .center
+                $0.lineSpacing = 0
+            })
+            .bySizeToFit()
+    }
+    // MARK: - 主副标题上下结构
+    private func showMainSubPlainTitle() {
+        mainTitleLabel
+            .byAttributedString(nil)
+            .byText("系统导航栏".tr)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.systemBlue)
+            .bySizeToFit()
+        subTitleLabel
+            .byAttributedString(nil)
+            .byText("主标题 / 副标题".tr)
+            .byFont(JobsFont.systemFont(ofSize: 10, weight: .medium))
+            .byTextColor(JobsCor.red)
+            .bySizeToFit()
+        navigationItem.titleView = titleStackView.bySizeToFit()
+    }
+
+    private func showMainSubRichTitle() {
+        mainTitleLabel
+            .richTextBy([
+                JobsRichRun(.text("系统".tr))
+                    .font(JobsFont.systemFont(ofSize: 14, weight: .bold))
+                    .color(JobsCor.systemBlue),
+                JobsRichRun(.text("导航栏".tr))
+                    .font(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+                    .color(JobsCor.red)
+            ], paragraphStyle: jobsMakeParagraphStyle {
+                $0.alignment = .center
+                $0.lineSpacing = 0
+            })
+            .bySizeToFit()
+        subTitleLabel
+            .richTextBy([
+                JobsRichRun(.text("主标题".tr))
+                    .font(JobsFont.systemFont(ofSize: 10, weight: .medium))
+                    .color(JobsCor.white),
+                JobsRichRun(.text(" · ".tr))
+                    .font(JobsFont.systemFont(ofSize: 9, weight: .regular))
+                    .color(JobsCor.systemBlue),
+                JobsRichRun(.text("副标题".tr))
+                    .font(JobsFont.systemFont(ofSize: 10, weight: .medium))
+                    .color(JobsCor.red)
+            ], paragraphStyle: jobsMakeParagraphStyle {
+                $0.alignment = .center
+                $0.lineSpacing = 0
+            })
+            .bySizeToFit()
+        navigationItem.titleView = titleStackView.bySizeToFit()
+    }
     // MARK: - 导航栏外观
     private func configureNavigationBarAppearance() {
         guard let navBar = navigationController?.navigationBar else { return }

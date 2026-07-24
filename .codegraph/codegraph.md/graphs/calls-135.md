@@ -13,79 +13,79 @@
 ```mermaid
 flowchart LR
   S1["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
-  T1["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
+  T1["function:UIEdgeInsetRotateVertical<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:32"]
   S1 -->|calls| T1
   S2["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
-  T2["function:UIEdgeInsetRotateVertical<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:32"]
+  T2["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
   S2 -->|calls| T2
-  S3["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
-  T3["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
+  S3["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
+  T3["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
   S3 -->|calls| T3
   S4["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
   T4["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
   S4 -->|calls| T4
   S5["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T5["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
+  T5["function:ASTextCGFloatToPixel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:224"]
   S5 -->|calls| T5
   S6["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T6["function:ASTextCGFloatToPixel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:224"]
+  T6["function:ASTextCGFloatPixelHalf<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:234"]
   S6 -->|calls| T6
   S7["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T7["function:ASTextCGFloatPixelHalf<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:234"]
+  T7["function:ASFloorPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:209"]
   S7 -->|calls| T7
   S8["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T8["function:ASFloorPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:209"]
+  T8["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
   S8 -->|calls| T8
   S9["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T9["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
+  T9["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
   S9 -->|calls| T9
   S10["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
   T10["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
   S10 -->|calls| T10
   S11["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T11["function:ASRoundPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:250"]
+  T11["function:ASTextCGFloatToPixel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:224"]
   S11 -->|calls| T11
   S12["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T12["function:ASTextCGFloatToPixel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:224"]
+  T12["function:ASTextCGFloatPixelHalf<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:234"]
   S12 -->|calls| T12
   S13["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T13["function:ASTextCGFloatPixelHalf<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:234"]
+  T13["function:ASFloorPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:209"]
   S13 -->|calls| T13
   S14["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T14["function:ASFloorPixelValue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:209"]
+  T14["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
   S14 -->|calls| T14
-  S15["function:ASTextLayout::ASTextDrawLineStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2607"]
-  T15["function:ASTextLayout::ASTextSetLinePatternInContext<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2461"]
+  S15["function:ASTextLayout::ASTextDrawText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2690"]
+  T15["function:ASTextLayout::ASTextDrawRun<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2315"]
   S15 -->|calls| T15
   S16["function:ASTextLayout::ASTextDrawText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2690"]
-  T16["function:ASTextLayout::ASTextDrawRun<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2315"]
+  T16["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S16 -->|calls| T16
-  S17["function:ASTextLayout::ASTextDrawText<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2690"]
+  S17["function:ASTextLayout::ASTextDrawBlockBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2724"]
   T17["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S17 -->|calls| T17
   S18["function:ASTextLayout::ASTextDrawBlockBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2724"]
-  T18["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  T18["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
   S18 -->|calls| T18
-  S19["function:ASTextLayout::ASTextDrawBlockBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2724"]
-  T19["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
+  S19["function:ASTextLayout::ASTextDrawBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2797"]
+  T19["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S19 -->|calls| T19
   S20["function:ASTextLayout::ASTextDrawBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2797"]
-  T20["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  T20["function:ASTextLayout::ASTextMergeRectInSameLine<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2277"]
   S20 -->|calls| T20
   S21["function:ASTextLayout::ASTextDrawBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2797"]
   T21["function:ASTextLayout::ASTextMergeRectInSameLine<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2277"]
   S21 -->|calls| T21
   S22["function:ASTextLayout::ASTextDrawBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2797"]
-  T22["function:ASTextLayout::ASTextMergeRectInSameLine<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2277"]
+  T22["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
   S22 -->|calls| T22
-  S23["function:ASTextLayout::ASTextDrawBorder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2797"]
-  T23["function:ASTextLayout::ASTextDrawBorderRects<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2491"]
+  S23["function:ASTextLayout::ASTextDrawDecoration<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2927"]
+  T23["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
   S23 -->|calls| T23
   S24["function:ASTextLayout::ASTextDrawDecoration<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2927"]
-  T24["method:ASBasicImageDownloaderContext::cancel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:97"]
+  T24["function:ASTextIsLinebreakString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:58"]
   S24 -->|calls| T24
   S25["function:ASTextLayout::ASTextDrawDecoration<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2927"]
-  T25["function:ASTextIsLinebreakString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:58"]
+  T25["function:ASTextLayout::ASTextGetRunsMaxMetric<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:2291"]
   S25 -->|calls| T25
 ```
 

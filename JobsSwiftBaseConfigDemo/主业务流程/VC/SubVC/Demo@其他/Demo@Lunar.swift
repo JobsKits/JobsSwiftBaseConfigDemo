@@ -229,16 +229,22 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
+        /// 处理 .example 分支
         case .example:     return exampleRows.count
+        /// 处理 .today 分支
         case .today:       return todayRows.count
+        /// 处理 .interactive 分支
         case .interactive: return interactiveRows.count
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Section(rawValue: section)! {
+        /// 处理 .example 分支
         case .example:     return "示例：农历→公历（README 同款）"
+        /// 处理 .today 分支
         case .today:       return "今天"
+        /// 处理 .interactive 分支
         case .interactive: return "选择公历日期（公历→农历）"
         }
     }
@@ -247,8 +253,11 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
         let cell: UITableViewCell = tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
         let row: Row
         switch Section(rawValue: indexPath.section)! {
+        /// 处理 .example 分支
         case .example:     row = exampleRows[indexPath.row]
+        /// 处理 .today 分支
         case .today:       row = todayRows[indexPath.row]
+        /// 处理 .interactive 分支
         case .interactive: row = interactiveRows[indexPath.row]
         }
         if #available(iOS 14.0, *) {

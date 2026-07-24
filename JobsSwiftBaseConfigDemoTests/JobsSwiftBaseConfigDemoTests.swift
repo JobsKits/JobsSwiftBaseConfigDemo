@@ -54,6 +54,20 @@ private final class JobsTimerTestClock: @unchecked Sendable {
 }
 
 final class JobsSwiftBaseConfigDemoTests: XCTestCase {
+    func testGestureUnlockDemoLoadsWithoutException() throws {
+        let className = "JobsSwiftBaseConfigDemo.GestureUnlockDemoVC"
+        guard let controllerClass = NSClassFromString(className) as? NSObject.Type else {
+            XCTFail("未找到 \(className)")
+            return
+        }
+        guard let controller = controllerClass.init() as? UIViewController else {
+            XCTFail("\(className) 必须是 UIViewController")
+            return
+        }
+        controller.loadViewIfNeeded()
+        XCTAssertNotNil(controller.view)
+    }
+
     func testTimerConfigNormalizesInvalidValues() {
         let config = JobsSwiftTimerConfig(
             interval: .infinity,
@@ -281,10 +295,13 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
             queue.async {
                 defer { group.leave() }
                 switch index % 3 {
+                /// 处理 数值 0 分支
                 case 0:
                     timer.start()
+                /// 处理 数值 1 分支
                 case 1:
                     timer.pause()
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     timer.resume()
                 }

@@ -653,12 +653,6 @@ extension UIView {
             setNeedsLayout()
         };return self
     }
-     /// 激活约束（链式）
-    @discardableResult
-    public func byConstraints(_ block: (Self) -> [NSLayoutConstraint]) -> Self {
-        NSLayoutConstraint.activate(block(self))
-        return self
-    }
 }
 // MARK: 修改背景色
 private var kBgColorMapKey: UInt8 = 0

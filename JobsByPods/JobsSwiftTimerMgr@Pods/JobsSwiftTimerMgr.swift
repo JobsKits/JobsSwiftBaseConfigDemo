@@ -75,8 +75,10 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
                     identifier: identifier,
                     expectedTimer: lifecycleTimer
                 ) {
+                /// 合并处理 .performed、.stale 分支
                 case .performed, .stale:
                     return self
+                /// 处理 .detached 分支
                 case .detached:
                     break
                 }
@@ -109,20 +111,26 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
                     identifier: identifier,
                     expectedTimer: lifecycleTimer
                 ) {
+                /// 合并处理 .performed、.stale 分支
                 case .performed, .stale:
                     return
+                /// 处理 .detached 分支
                 case .detached:
                     break
                 }
             }
             let work = { [lifecycleTimer] in
                 switch action {
+                /// 处理 .start 分支
                 case .start:
                     _ = lifecycleTimer.start()
+                /// 处理 .pause 分支
                 case .pause:
                     _ = lifecycleTimer.pause()
+                /// 处理 .resume 分支
                 case .resume:
                     _ = lifecycleTimer.resume()
+                /// 合并处理 .stop、.cancel 分支
                 case .stop, .cancel:
                     _ = lifecycleTimer.stop()
                 }
@@ -234,11 +242,14 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         lock.lock()
         if let existing = entries[identifier] {
             switch policy {
+            /// 处理 .keepExisting 分支
             case .keepExisting:
                 selectedTimer = existing.timer
+            /// 处理 .replace 分支
             case .replace:
                 entries[identifier] = newEntry
                 replacedEntry = existing
+            /// 处理 .error 分支
             case .error:
                 registrationError = .duplicatedIdentifier(identifier)
             }
@@ -349,17 +360,21 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
             defer { entry.actionLock.unlock() }
             guard self.isCurrent(identifier: identifier, entry: entry) else { return false }
             switch action {
+            /// 处理 .start 分支
             case .start:
                 _ = entry.lifecycleTimer.start()
                 self.applyPostStartState(appState, identifier: identifier, entry: entry)
+            /// 处理 .pause 分支
             case .pause:
                 _ = entry.lifecycleTimer.pause()
                 if entry.pauseState != .stopped {
                     entry.pauseState = .manualPaused
                 }
+            /// 处理 .resume 分支
             case .resume:
                 _ = entry.lifecycleTimer.resume()
                 self.applyPostStartState(appState, identifier: identifier, entry: entry)
+            /// 合并处理 .stop、.cancel 分支
             case .stop, .cancel:
                 if action == .cancel {
                     _ = self.removeIfCurrent(identifier: identifier, entry: entry)
@@ -378,15 +393,19 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
     ) {
         guard entry.lifecycleTimer.isRunning else { return }
         switch entry.backgroundPolicy {
+        /// 处理 .ignore 分支
         case .ignore:
             entry.pauseState = .running
+        /// 处理 .pauseAndResume 分支
         case .pauseAndResume where appState != .active:
             _ = entry.lifecycleTimer.pause()
             entry.pauseState = .autoPaused
+        /// 处理 .cancel 分支
         case .cancel where appState == .background:
             _ = removeIfCurrent(identifier: identifier, entry: entry)
             _ = entry.lifecycleTimer.stop()
             entry.pauseState = .stopped
+        /// 合并处理 .pauseAndResume、.cancel 分支
         case .pauseAndResume, .cancel:
             entry.pauseState = .running
         }
@@ -478,12 +497,16 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
             }
         }
         switch state {
+        /// 处理 .active 分支
         case .active:
             return .active
+        /// 处理 .inactive 分支
         case .inactive:
             return .inactive
+        /// 处理 .background 分支
         case .background:
             return .background
+        /// 处理系统后续新增的未知枚举值
         @unknown default:
             return .inactive
         }
@@ -502,17 +525,21 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
                 defer { entry.actionLock.unlock() }
                 guard self.isCurrent(identifier: identifier, entry: entry) else { return }
                 switch entry.backgroundPolicy {
+                /// 处理 .ignore 分支
                 case .ignore:
                     break
+                /// 处理 .pauseAndResume 分支
                 case .pauseAndResume:
                     guard entry.lifecycleTimer.isRunning,
                           entry.pauseState == .running else { break }
                     _ = entry.lifecycleTimer.pause()
                     entry.pauseState = .autoPaused
+                /// 处理 .cancel 分支
                 case .cancel where isBackground:
                     _ = self.removeIfCurrent(identifier: identifier, entry: entry)
                     _ = entry.lifecycleTimer.stop()
                     entry.pauseState = .stopped
+                /// 处理 .cancel 分支
                 case .cancel:
                     break
                 }

@@ -1,4 +1,9 @@
 #!/bin/zsh
+# 脚本自述：
+# - 脚本名称：【MacOS】🧠编译通过方可集成进SPM.command
+# - 核心用途：递归验证 Jobs Swift Package，并按产品能力运行演示 Client。
+# - 影响范围：更新 SwiftPM 构建缓存；只有显式设置 DO_RESET=1 才重置缓存。
+# - 运行提示：运行后先展示内置自述；按回车继续，按 Ctrl+C 取消。
 
 setopt NO_NOMATCH
 
@@ -23,7 +28,7 @@ highlight_echo() { log "\033[1;36m🔹 $1\033[0m"; }
 show_script_intro_and_wait() {
   highlight_echo "============================== SPM 编译门禁 =============================="
   info_echo "用途：依次执行 package resolve、build、test，并运行演示 Client。"
-  info_echo "范围：${SCRIPT_DIR} 下包含 Package.swift 的直接子目录。"
+  info_echo "范围：${SCRIPT_DIR} 下的本地 Package，包括嵌套的独立 Macro Demo。"
   warn_echo "默认不执行 swift package reset；如需清缓存，请显式设置 DO_RESET=1。"
   info_echo "日志：${LOG_FILE}"
   highlight_echo "============================================================================"
@@ -46,9 +51,17 @@ check_environment() {
 
 # 输出所有直接子目录中的本地 Swift Package。
 discover_packages() {
-  find "$SCRIPT_DIR" -mindepth 2 -maxdepth 2 -name Package.swift -print \
+  find "$SCRIPT_DIR" -mindepth 2 -maxdepth 4 -name Package.swift \
+    -not -path "*/.build/*" -print \
     | while IFS= read -r package_file; do dirname "$package_file"; done \
     | sort -u
+}
+
+# 判断当前 Package 是否公开演示 Client 产品。
+package_has_demo_client() {
+  local package_dir="$1"
+  (cd "$package_dir" && swift package dump-package) 2>/dev/null \
+    | grep -Fq '"name" : "JobsSPMDemoClient"'
 }
 
 # 对单个 Package 执行完整、可重复的构建验证。
@@ -65,7 +78,7 @@ validate_package() {
   (cd "$package_dir" && swift build) 2>&1 | tee -a "$LOG_FILE" || return 1
   (cd "$package_dir" && swift test) 2>&1 | tee -a "$LOG_FILE" || return 1
 
-  if [[ "$RUN_CLIENT" == "1" ]]; then
+  if [[ "$RUN_CLIENT" == "1" ]] && package_has_demo_client "$package_dir"; then
     (cd "$package_dir" && swift run JobsSPMDemoClient) 2>&1 | tee -a "$LOG_FILE" || return 1
   fi
   success_echo "验证通过：${package_dir}"
@@ -97,8 +110,7 @@ run_main_flow() {
 }
 
 main() {
-  # 主入口只委托完整验证流程，保持职责清晰。
-  run_main_flow "$@"
+  run_main_flow "$@" # 发现并验证基础库 Package 与独立 Macro Demo。
 }
 
 main "$@"

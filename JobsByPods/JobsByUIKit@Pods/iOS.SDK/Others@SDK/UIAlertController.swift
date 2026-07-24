@@ -250,18 +250,22 @@ extension UIAlertController {
     public func byAnchor(_ anchor: Anchor, host: UIViewController) -> Self {
         guard let pop = self.popoverPresentationController else { return self }
         switch anchor {
+        /// 处理 .barButton 分支
         case .barButton(let item):
             pop.barButtonItem = item
+        /// 处理 .view 分支
         case .view(let v, let rect, let arrows):
             pop.sourceView = v
             pop.sourceRect = rect ?? v.bounds
             pop.permittedArrowDirections = arrows
+        /// 处理 .auto 分支
         case .auto:
             pop.sourceView = host.view
             pop.sourceRect = CGRect(x: host.view.bounds.midX,
                                     y: host.view.bounds.maxY - 1,
                                     width: 1, height: 1)
             pop.permittedArrowDirections = []
+        /// 处理 .center 分支
         case .center:
             pop.sourceView = host.view
             pop.sourceRect = CGRect(x: host.view.bounds.midX,
@@ -278,7 +282,9 @@ extension UIAlertController {
                           completion: (jobsByVoidBlock)? = nil) -> Self {
         let isSheet: Bool = {
             switch vc.modalPresentationStyle {
+            /// 合并处理 .pageSheet、.formSheet、.automatic 分支
             case .pageSheet, .formSheet, .automatic: return true
+            /// 未匹配已知分支时执行兜底处理
             default: return false
             }
         }()
@@ -442,8 +448,10 @@ extension UIAlertController {
                             onMainAsync(self) { _ in
                                 let img: UIImage
                                 switch result {
+                                /// 处理 .success 分支
                                 case .success(let value):
                                     img = value
+                                /// 处理 .failure 分支
                                 case .failure:
                                     img = placeholder
                                 }

@@ -252,25 +252,11 @@ final class MomentPostUIKitCellNode: ASCellNode {
             .byContentInset(.zero)
         cv.reloadData()
         cv.layoutIfNeeded()
-        // 按 3 列算高度，顺便把 MomentMediaView 的 height 约束改掉
+        // 按 3 列算高度，并通过 MomentPostCell 内部的 SnapKit 约束入口更新
         let side = floor((w - 2 * spacing) / 3.0)
         let rows = Int(ceil(Double(mediaCount) / 3.0))
         let mediaHeight = CGFloat(rows) * side + CGFloat(max(0, rows - 1)) * spacing
-        if let mediaView = cell.contentView.findSubviews(ofType: MomentMediaView.self).first {
-            // 找到 SnapKit 那条 height == xx 的约束，把 constant 改成我们算出来的
-            if let heightC = mediaView.constraints.first(where: {
-                $0.firstAttribute == .height && $0.relation == .equal && $0.secondItem == nil
-            }) {
-                heightC.constant = mediaHeight
-            } else {
-                // 实在找不到就补一条（优先级稍低避免打架）
-                let c = mediaView.heightAnchor.constraint(equalToConstant: mediaHeight)
-                c.priority = UILayoutPriority(999)
-                c.isActive = true
-            }
-            mediaView.setNeedsLayout()
-            mediaView.layoutIfNeeded()
-        }
+        cell.byMediaHeight(mediaHeight)
         didApplyMediaGridFix = true
         lastGridWidth = w
         return true

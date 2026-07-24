@@ -32,6 +32,7 @@ public enum JobsWorkflow {
         failurePolicy: JobsBatchFailurePolicy = .failFast
     ) async throws -> JobsBatchResult<Value> {
         switch failurePolicy {
+        /// 处理 .failFast 分支
         case .failFast:
             let values = try await withThrowingTaskGroup(of: (Int, Value).self) { group in
                 for (index, task) in tasks.enumerated() {
@@ -42,6 +43,7 @@ public enum JobsWorkflow {
                     output[index] = value
                 };return output.compactMap { $0 }
             };return .init(values: values, errors: [])
+        /// 处理 .collect 分支
         case .collect:
             return await withTaskGroup(of: Result<(Int, Value), JobsError>.self) { group in
                 for (index, task) in tasks.enumerated() {
@@ -59,8 +61,10 @@ public enum JobsWorkflow {
                 var errors: [JobsError] = []
                 for await result in group {
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let pair):
                         values[pair.0] = pair.1
+                    /// 处理 .failure 分支
                     case .failure(let error):
                         errors.append(error)
                     }

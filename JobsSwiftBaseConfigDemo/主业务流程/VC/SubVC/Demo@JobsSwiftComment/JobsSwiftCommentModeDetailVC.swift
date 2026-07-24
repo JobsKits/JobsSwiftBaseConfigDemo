@@ -31,6 +31,17 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 
     private var demoRefreshCount = 0
     private var demoLoadMoreCount = 0
+    private var replyDetailViewController: JobsSwiftCommentModeDetailVC?
+    private lazy var closeButton: UIButton = {
+        UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 44.w, height: 44.h))
+            .byTintColor(JobsCor.label)
+            .byImage("xmark".sysImg.withRenderingMode(.alwaysTemplate), for: .normal)
+            .byContentEdgeInsets(.zero)
+            .onTap { [weak self] _ in
+                self?.dismiss(animated: true)
+            }
+    }()
 
     private lazy var commentView: JobsSwiftCommentView = {
         JobsSwiftCommentView(config: commentConfig())
@@ -61,17 +72,11 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 
 private extension JobsSwiftCommentModeDetailVC {
     func setupNavigation() {
+        byTitle(titleText)
         if popupStyle {
             jobsSetupGKNav(
                 title: titleText,
-                rightButtons: [
-                    UIButton.sys()
-                        .byTitle("关闭".tr, for: .normal)
-                        .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-                        .onTap { [weak self] _ in
-                            self?.dismiss(animated: true)
-                        }
-                ]
+                rightButtons: [closeButton]
             )
         } else {
             jobsSetupGKNav(title: titleText)
@@ -159,11 +164,13 @@ private extension JobsSwiftCommentModeDetailVC {
     }
 
     func openReplyPage(by comment: JobsSwiftCommentModel) {
-        let vc = JobsSwiftCommentModeDetailVC()
-        vc.mode = .toutiao
-        vc.replyDetailStyle = true
-        vc.commentArr = [comment]
-        navigationController?.pushViewController(vc, animated: true)
+        replyDetailViewController = JobsSwiftCommentModeDetailVC()
+        replyDetailViewController?.mode = .toutiao
+        replyDetailViewController?.replyDetailStyle = true
+        replyDetailViewController?.commentArr = [comment]
+        if let replyDetailViewController {
+            navigationController?.pushViewController(replyDetailViewController, animated: true)
+        }
     }
 
     var titleText: String {

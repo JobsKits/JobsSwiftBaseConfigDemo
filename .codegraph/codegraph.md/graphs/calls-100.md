@@ -52,10 +52,10 @@ flowchart LR
   T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S13 -->|calls| T13
   S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h:1"]
-  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  T14["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
   S14 -->|calls| T14
   S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h:1"]
-  T15["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
+  T15["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S15 -->|calls| T15
   S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/UIView+ASConvenience.h:1"]
   T16["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]

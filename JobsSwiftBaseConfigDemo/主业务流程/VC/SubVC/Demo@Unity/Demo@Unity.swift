@@ -44,7 +44,7 @@ final class UnityDemoVC: BaseVC {
     /// 顶部提示 Unity 真机集成边界。
     private lazy var tipLabel: UILabel = {
         UILabel()
-            .byText("Unity 仅在真机运行；编译时会自动构建并嵌入 UnityFramework".tr)
+            .byText("Unity 仅在真机运行；首次冷启动会同步初始化，后续默认暂停并隐藏以避免重复冷启动".tr)
             .byTextColor(JobsCor.systemRed)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(0)
@@ -107,11 +107,11 @@ final class UnityDemoVC: BaseVC {
                 // 先清理可能存在的 JobsSwiftTimer
                 self.unityAutoCloseTimer?.stop()
                 self.unityAutoCloseTimer = nil
-                // 打开 Unity（UnityManager 自带 autoCloseAfter：你想继续用它也OK）
+                // 自动关闭时只暂停并隐藏，避免反复触发 Unity 纹理冷启动。
                 UnityManager.shared.showUnity(
                     from: self,
                     autoCloseAfter: self.unityAutoCloseSeconds,
-                    unloadOnClose: true
+                    unloadOnClose: false
                 )
                 // 如果你想改成“完全由 JobsSwiftTimer 负责关闭”，就启用下面这句：
                 // self.scheduleUnityAutoClose()

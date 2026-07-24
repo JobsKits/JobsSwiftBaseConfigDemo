@@ -10,5 +10,7 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/JobsKits/JobsAudioRecorder.git', :tag => s.version.to_s }
   s.source_files = 'Core/**/*.swift'
   s.frameworks = 'AVFoundation', 'UIKit'
+  s.dependency 'JobsFuseAnimation'
+  s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftTimer'
 end

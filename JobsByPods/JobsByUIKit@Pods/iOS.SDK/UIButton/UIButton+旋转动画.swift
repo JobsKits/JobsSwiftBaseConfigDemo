@@ -21,8 +21,11 @@ extension UIButton {
 
     private func targetLayer(for scope: RotationScope) -> CALayer? {
         switch scope {
+        /// 处理 .imageView 分支
         case .imageView: return self.imageView?.layer ?? self.layer
+        /// 处理 .wholeButton 分支
         case .wholeButton: return self.layer
+        /// 处理 .layer 分支
         case .layer(let l): return l
         }
     }
@@ -57,8 +60,11 @@ extension UIButton {
             tl.removeAnimation(forKey: key)
             if resetTransformOnStop {
                 switch scope {
+                /// 处理 .imageView 分支
                 case .imageView: self.imageView?.transform = .identity
+                /// 处理 .wholeButton 分支
                 case .wholeButton: self.transform = .identity
+                /// 处理 .layer 分支
                 case .layer: break
                 }
             }

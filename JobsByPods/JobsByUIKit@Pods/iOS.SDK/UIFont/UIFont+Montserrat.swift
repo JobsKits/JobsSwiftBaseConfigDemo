@@ -15,48 +15,64 @@ extension UIFont {
     public enum Montserrat {
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
+            /// 合并处理 .vietnamese、.turkish 分支
             case .vietnamese, .turkish:
                 return UIFont.Roboto.Regular(size)
+            /// 处理 .thai 分支
             case .thai:
                 return UIFont.Mitr.Regular(size)
+            /// 处理 .arabic 分支
             case .arabic:
                 return UIFont.SFArabic.Regular(size)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 return make("Montserrat-Regular", size, fallback: .regular)
             }
         }
         public static func Medium(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
+            /// 合并处理 .vietnamese、.turkish 分支
             case .vietnamese, .turkish:
                 return UIFont.Roboto.Regular(size)
+            /// 处理 .thai 分支
             case .thai:
                 return UIFont.Mitr.Regular(size)
+            /// 处理 .arabic 分支
             case .arabic:
                 return UIFont.SFArabic.Regular(size)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 return make("Montserrat-Medium", size, fallback: .medium)
             }
         }
         public static func Semibold(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
+            /// 合并处理 .vietnamese、.turkish 分支
             case .vietnamese, .turkish:
                 return UIFont.Roboto.Regular(size)
+            /// 处理 .thai 分支
             case .thai:
                 return UIFont.Mitr.Regular(size)
+            /// 处理 .arabic 分支
             case .arabic:
                 return UIFont.SFArabic.Regular(size)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 return make("Montserrat-SemiBold", size, fallback: .semibold)
             }
         }
         public static func SemiboldItalic(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
+            /// 合并处理 .vietnamese、.turkish 分支
             case .vietnamese, .turkish:
                 return UIFont.Roboto.Regular(size)
+            /// 处理 .thai 分支
             case .thai:
                 return UIFont.Mitr.Regular(size)
+            /// 处理 .arabic 分支
             case .arabic:
                 return UIFont.SFArabic.Regular(size)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 return make("Montserrat-SemiBoldItalic", size, fallback: .semibold)
             }

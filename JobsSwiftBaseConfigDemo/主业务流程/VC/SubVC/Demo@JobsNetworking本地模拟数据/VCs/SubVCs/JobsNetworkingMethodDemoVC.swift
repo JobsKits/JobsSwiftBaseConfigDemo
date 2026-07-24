@@ -232,11 +232,13 @@ extension JobsNetworkingMethodDemoVC {
             } catch let error as JobsError {
                 let message: String
                 switch error {
+                /// 处理 .transport 分支
                 case let .transport(underlying):
                     message = """
                     JobsError.transport
                     underlying = \(underlying)
                     """
+                /// 处理 .http 分支
                 case let .http(statusCode, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -245,6 +247,7 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
+                /// 处理 .server 分支
                 case let .server(statusCode, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -253,6 +256,7 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
+                /// 处理 .decode 分支
                 case let .decode(underlying, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -261,6 +265,7 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
+                /// 处理 .business 分支
                 case let .business(code, msg, data):
                     let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
                     message = """
@@ -270,17 +275,22 @@ extension JobsNetworkingMethodDemoVC {
                     raw =
                     \(raw)
                     """
+                /// 处理 .cacheMiss 分支
                 case .cacheMiss:
                     message = "JobsError.cacheMiss"
+                /// 处理 .cancelled 分支
                 case .cancelled:
                     message = "JobsError.cancelled"
+                /// 处理 .invalidRequest 分支
                 case let .invalidRequest(reason):
                     message = """
                     JobsError.invalidRequest
                     reason = \(reason)
                     """
+                /// 处理 .emptyResponse 分支
                 case .emptyResponse:
                     message = "JobsError.emptyResponse"
+                /// 处理 .unknown 分支
                 case let .unknown(underlying):
                     message = """
                     JobsError.unknown

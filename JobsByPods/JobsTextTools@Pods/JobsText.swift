@@ -65,8 +65,10 @@ public extension JobsText {
     /// ⬆️ 不管 plain/attributed，都给 NSAttributedString
     var asAttributed: NSAttributedString {
         switch storage {
+        /// 处理 .plain 分支
         case .plain(let s):
             return NSAttributedString(string: s)
+        /// 处理 .attributed 分支
         case .attributed(let at):
             return at
         }
@@ -74,14 +76,18 @@ public extension JobsText {
     /// ⬇️ 不管 plain/attributed，都给String（富文本会丢失样式，只保留 .string）
     var asString: String {
         switch storage {
+        /// 处理 .plain 分支
         case .plain(let s): return s
+        /// 处理 .attributed 分支
         case .attributed(let a): return a.string
         }
     }
     /// 只关心富文本时用；纯文本则返回 nil
     var attributed: NSAttributedString? {
         switch storage {
+        /// 处理 .plain 分支
         case .plain:              return nil
+        /// 处理 .attributed 分支
         case .attributed(let at): return at
         }
     }
@@ -89,12 +95,14 @@ public extension JobsText {
     /// - Parameter baseAttributes: 若本体是纯文本，应用这些基础属性生成富文本；若本体是富文本则忽略。
     func asAttributedString(baseAttributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
         switch storage {
+        /// 处理 .plain 分支
         case .plain(let s):
             if let attrs = baseAttributes, !attrs.isEmpty {
                 return NSAttributedString(string: s, attributes: attrs)
             } else {
                 return NSAttributedString(string: s)
             }
+        /// 处理 .attributed 分支
         case .attributed(let a):
             // 返回不可变副本，保持跨线程只读语义
             return a.copy() as! NSAttributedString
@@ -109,8 +117,10 @@ public extension JobsText {
     func applying(_ new: [NSAttributedString.Key: Any]) -> JobsText {
         guard !new.isEmpty else { return self }
         switch storage {
+        /// 处理 .plain 分支
         case .plain(let s):
             return JobsText(NSAttributedString(string: s, attributes: new))
+        /// 处理 .attributed 分支
         case .attributed(let a):
             let m = NSMutableAttributedString(attributedString: a)
             let full = NSRange(location: 0, length: m.length)
@@ -124,8 +134,10 @@ public extension JobsText {
     /// 自定义映射到底层 NSAttributedString（给完全控制权）
     func mapAttributed(_ transform: (NSAttributedString) -> NSAttributedString) -> JobsText {
         switch storage {
+        /// 处理 .plain 分支
         case .plain(let s):
             return JobsText(transform(NSAttributedString(string: s)))
+        /// 处理 .attributed 分支
         case .attributed(let a):
             return JobsText(transform(a))
         }
@@ -133,8 +145,10 @@ public extension JobsText {
     /// 拼接
     static func + (lhs: JobsText, rhs: JobsText) -> JobsText {
         switch (lhs.storage, rhs.storage) {
+        /// 处理 .plain 分支
         case (.plain(let l), .plain(let r)):
             return JobsText(l + r)
+        /// 未匹配已知分支时执行兜底处理
         default:
             let lm = NSMutableAttributedString(attributedString: lhs.asAttributedString())
             lm.append(rhs.asAttributedString())
@@ -146,8 +160,10 @@ public extension JobsText {
 extension JobsText: Equatable {
     public static func == (l: JobsText, r: JobsText) -> Bool {
         switch (l.storage, r.storage) {
+        /// 处理 .plain 分支
         case (.plain(let ls), .plain(let rs)):
             return ls == rs
+        /// 未匹配已知分支时执行兜底处理
         default:
             return l.asAttributedString().isEqual(r.asAttributedString())
         }

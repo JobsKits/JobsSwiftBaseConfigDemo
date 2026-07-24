@@ -983,8 +983,8 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byBorderColor(JobsCor.systemGray3)
                     .byTitle("我是UIButton主标题@SDWebImage".tr)
                     .bySubTitle("我是UIButton副标题@SDWebImage".tr)
-                    .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
-                    .sd_placeholderImage(nil)
+                    .sd_imageURL("https://picsum.photos/seed/jobs-marquee-sd-1/900/180")
+                    .sd_placeholderImage("唐老鸭".img)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
                     .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                     .byTapSound("Sound.wav")
@@ -1005,8 +1005,8 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byBorderColor(JobsCor.systemGray3)
                     .byTitle("我是UIButton主标题@SDWebImage".tr)
                     .bySubTitle("我是UIButton副标题@SDWebImage".tr)
-                    .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
-                    .sd_placeholderImage(nil)
+                    .sd_imageURL("https://picsum.photos/seed/jobs-marquee-sd-2/900/180")
+                    .sd_placeholderImage("米老鼠".img)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
                     .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                     .byTapSound("Sound.wav")
@@ -1027,8 +1027,8 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .byBorderColor(JobsCor.systemGray3)
                     .byTitle("我是UIButton主标题@SDWebImage".tr)
                     .bySubTitle("我是UIButton副标题@SDWebImage".tr)
-                    .sd_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
-                    .sd_placeholderImage(nil)
+                    .sd_imageURL("https://picsum.photos/seed/jobs-marquee-sd-3/900/180")
+                    .sd_placeholderImage("迪斯尼".img)
                     .sd_options([.retryFailed, .highPriority, .scaleDownLargeImages])
                     .sd_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
                     .byTapSound("Sound.wav")
@@ -1075,7 +1075,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
                     .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
-                    .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
+                    .kf_imageURL("https://picsum.photos/seed/jobs-marquee-kf-1/900/180")
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
@@ -1102,7 +1102,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
                     .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
-                    .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
+                    .kf_imageURL("https://picsum.photos/seed/jobs-marquee-kf-2/900/180")
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
@@ -1129,7 +1129,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher".tr).byTitleColor(JobsCor.red)
                     .bySubTitle("我是UIButton副标题@Kingfisher".tr).bySubTitleColor(JobsCor.yellow)
-                    .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
+                    .kf_imageURL("https://picsum.photos/seed/jobs-marquee-kf-3/900/180")
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),

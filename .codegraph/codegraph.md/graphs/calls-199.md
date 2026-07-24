@@ -12,7 +12,7 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayViewAccessibilityTests::testThatAccessibilityElementsOverrideWorks<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:285"]
+  S1["method:ASDisplayViewAccessibilityTests::testHiddenAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:310"]
   T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S1 -->|calls| T1
   S2["method:ASDisplayViewAccessibilityTests::testHiddenAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:310"]
@@ -21,7 +21,7 @@ flowchart LR
   S3["method:ASDisplayViewAccessibilityTests::testHiddenAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:310"]
   T3["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S3 -->|calls| T3
-  S4["method:ASDisplayViewAccessibilityTests::testHiddenAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:310"]
+  S4["method:ASDisplayViewAccessibilityTests::testTransparentAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:338"]
   T4["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S4 -->|calls| T4
   S5["method:ASDisplayViewAccessibilityTests::testTransparentAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:338"]
@@ -30,7 +30,7 @@ flowchart LR
   S6["method:ASDisplayViewAccessibilityTests::testTransparentAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:338"]
   T6["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S6 -->|calls| T6
-  S7["method:ASDisplayViewAccessibilityTests::testTransparentAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:338"]
+  S7["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:365"]
   T7["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S7 -->|calls| T7
   S8["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:365"]
@@ -51,7 +51,7 @@ flowchart LR
   S13["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:365"]
   T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S13 -->|calls| T13
-  S14["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:365"]
+  S14["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindowButInScrollView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:415"]
   T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S14 -->|calls| T14
   S15["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindowButInScrollView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:415"]
@@ -72,7 +72,7 @@ flowchart LR
   S20["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindowButInScrollView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:415"]
   T20["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S20 -->|calls| T20
-  S21["method:ASDisplayViewAccessibilityTests::testAccessibilityElementsNotInAppWindowButInScrollView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:415"]
+  S21["method:ASDisplayViewAccessibilityTests::testAccessibilitySort<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:469"]
   T21["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S21 -->|calls| T21
   S22["method:ASDisplayViewAccessibilityTests::testAccessibilitySort<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:469"]
@@ -85,7 +85,7 @@ flowchart LR
   T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
   S24 -->|calls| T24
   S25["method:ASDisplayViewAccessibilityTests::testAccessibilitySort<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayViewAccessibilityTests.mm:469"]
-  T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  T25["function:SortAccessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayViewAccessiblity.mm:33"]
   S25 -->|calls| T25
 ```
 

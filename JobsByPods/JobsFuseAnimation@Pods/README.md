@@ -1,6 +1,38 @@
 # JobsFuseAnimation
 
-本地 Pod：收口任意 `UIView` 的长按导火索、按压缩放、持续冒泡、分格充电和抖音风格双球刷新动画。业务层只提供手势、内容或动画配置。
+本地 Pod：收口任意 `UIView` 的长按导火索、按压缩放、持续冒泡、分格充电和品牌刷新动画。业务层只提供手势、内容或动画配置。
+
+组件内所有 Auto Layout 约束统一使用 `SnapKit`，不直接创建或激活系统 `NSLayoutConstraint`。
+
+## 刷新动画插件协议
+
+- `JobsRefreshAnimatorProtocol` 统一消费下拉进度和刷新阶段，动画框架不依赖具体刷新状态机。
+- `JobsSystemRefreshView` 把系统菊花也纳入同一插件协议。
+- `JobsImageRefreshView` 支持单图静态展示，多图使用 `JobsTimer` 定时轮播。
+- `JobsGIFRefreshView` 支持资源名、文件路径和 `Data`。
+- `JobsLottieRefreshView` 在下拉时同步 Lottie 进度，进入刷新后循环播放。
+- `JobsTodayNewsRefreshView` 按真实录屏实现单条红色闭合轮廓的连续形变。
+- `JobsDouyinRefreshView` 与今日头条插件遵循同一协议，可被刷新宿主原位替换。
+- 今日头条单轮默认 `0.65s`：蝴蝶结 → 左尖三角 → 四边形 → 右尖三角 → 蝴蝶结。
+
+```swift
+let todayNews = JobsTodayNewsRefreshView(
+    config: JobsTodayNewsRefreshConfig(cycleDuration: 0.65)
+)
+
+todayNews.refreshAnimatorApply(phase: .pulling, progress: 0.6)
+todayNews.refreshAnimatorApply(phase: .refreshing, progress: 1)
+```
+
+其它渲染类型与品牌动画使用同一协议：
+
+```swift
+let singleImage = JobsImageRefreshView(image: UIImage(named: "菊花加载")!)
+let imageSequence = JobsImageRefreshView(images: frames, frameInterval: 0.08)
+let gif = JobsGIFRefreshView(gifNamed: "refresh.gif")
+let lottie = JobsLottieRefreshView(animationNamed: "LottieLogo1")
+let system = JobsSystemRefreshView()
+```
 
 ## 抖音风格双球刷新动画
 
@@ -50,6 +82,8 @@ cell.byChargingAnimationStop()
 - `JobsFuseBubbleConfig` 管理发射间隔、上浮距离、水平漂移、缩放和并发上限。
 - `byFuseBubbleStart` 只管动画，`bubbleProvider` 由外层提供任意 `UIView`。
 - `byFuseBubbleStop` 停止继续发射，已发射的气泡会自然播放完并回收。
+- `byFusePlaySound` 从 App 或内嵌资源 Bundle 查找音频，并缓存 `SystemSoundID` 供连续反馈复用。
+- `byFusePlaySystemSound` 仅播放调用方已创建并负责管理的有效 `SystemSoundID`。
 - 系统开启“减少动态效果”时，自动降级为短距离淡出。
 
 ```swift
@@ -66,6 +100,7 @@ sourceView.byFuseBubbleStop()
 - 即使按钮设置了 `byMasksToBounds(true)`，导火索外圈也不会被裁剪。
 - 默认线圈颜色改成白色，并增加浅色底圈，避免和紫色按钮背景混在一起看不见。
 - 进度增长由 `JobsSwiftTimer` 驱动。
+- `thresholdProgress` 可在外圈叠加白色门槛刻度，用于表达最短有效进度等业务边界。
 - 视图和 `CALayer` 属性通过 `JobsSwiftDSL` 链式配置。
 - 引火索路径通过 `JobsByUIKit.UIBezierPath.make(...)` 创建。
 - UIKit 基础色通过 `JobsSwiftBaseDefines.JobsCor` 统一提供。
@@ -79,13 +114,15 @@ btn.byFusePressStart(
         strokeColor: JobsCor.white,
         trackColor: JobsCor.white.withAlphaComponent(0.22),
         growDuration: 1.2,
-        repeatsWhileHolding: false
+        repeatsWhileHolding: false,
+        thresholdProgress: 0.25,
+        thresholdColor: JobsCor.white
     ),
     scale: 1.18
 )
 
 btn.byFusePressStop()
-btn.byFusePlaySystemSound()
+btn.byFusePlaySound("Sound.wav")
 ```
 
 

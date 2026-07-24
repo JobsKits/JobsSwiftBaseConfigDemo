@@ -172,6 +172,7 @@ extension JobsTask {
         let timer = self.timer
         lock.unlock()
         switch current {
+        /// 处理 .suspended 分支
         case .suspended:
             _ = updateState(to: .running, allowed: { $0 == .suspended })
             // 恢复时重新计算预估执行时间
@@ -182,8 +183,10 @@ extension JobsTask {
             }
             lock.unlock()
             timer?.resume()
+        /// 处理 .idle 分支
         case .idle:
             scheduleInitialIfNeeded()
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

@@ -41,6 +41,7 @@ public struct JobsChaCha20Poly1305Box {
         }
         let ver = blob[blob.startIndex]
         switch ver {
+        /// 处理 0x11 分支
         case 0x11:
             // ChaCha20-Poly1305
             guard #available(iOS 13.0, *) else {
@@ -55,6 +56,7 @@ public struct JobsChaCha20Poly1305Box {
             let sealed = try ChaChaPoly.SealedBox(nonce: nonce, ciphertext: cipherData, tag: tagData)
             let plain = try ChaChaPoly.open(sealed, using: SymmetricKey(data: key))
             return String(data: plain, encoding: .utf8) ?? ""
+        /// 处理 0x02 分支
         case 0x02:
             // AES-CBC-PKCS7
             guard blob.count >= 1 + 16 else { throw CryptoError.invalidData }
@@ -62,6 +64,7 @@ public struct JobsChaCha20Poly1305Box {
             let cipher = blob.subdata(in: 17 ..< blob.count)
             let plain = try aesCBCDecrypt(data: cipher, key: key, iv: iv)
             return String(data: plain, encoding: .utf8) ?? ""
+        /// 未匹配已知分支时执行兜底处理
         default:
             throw CryptoError.invalidData
         }

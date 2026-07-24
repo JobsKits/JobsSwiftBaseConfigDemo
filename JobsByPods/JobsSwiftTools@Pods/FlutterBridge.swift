@@ -164,6 +164,7 @@ public final class FlutterBridge {
         ch.setMethodCallHandler { [weak self] call, result in
             guard let self else { return }
             switch call.method {
+            /// 处理 "result" 分支
             case "result":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
@@ -172,11 +173,13 @@ public final class FlutterBridge {
                 }
                 self.closeFlutterPage(requestId: requestId)
                 result(true)
+            /// 处理 "close" 分支
             case "close":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
                 self.closeFlutterPage(requestId: requestId)
                 result(true)
+            /// 未匹配已知分支时执行兜底处理
             default:
                 result(FlutterMethodNotImplemented)
             }

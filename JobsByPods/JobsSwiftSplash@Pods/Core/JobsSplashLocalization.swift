@@ -24,12 +24,22 @@ enum JobsSplashLocalization {
         return String(format: format, locale: bundle.preferredLocalizations.first.map(Locale.init(identifier:)), skip, remainingSeconds)
     }
 
+    static func remoteVideoWiFiDownloadNotice(language: JobsSplashLanguage) -> String {
+        localizedBundle(language: language).localizedString(
+            forKey: "jobs_splash_remote_video_wifi_notice",
+            value: "Video downloads on Wi-Fi only",
+            table: nil
+        )
+    }
+
     private static func localizedBundle(language: JobsSplashLanguage) -> Bundle {
         let resourceBundle = jobsResourceBundle()
         let languageCode: String
         switch language {
+        /// 处理 .system 分支
         case .system:
             languageCode = Locale.preferredLanguages.first ?? "en"
+        /// 处理 .code 分支
         case let .code(code):
             languageCode = code
         }

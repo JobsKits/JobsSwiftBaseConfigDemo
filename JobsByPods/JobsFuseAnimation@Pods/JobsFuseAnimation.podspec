@@ -1,11 +1,12 @@
 Pod::Spec.new do |s|
   s.name         = 'JobsFuseAnimation'
   s.version      = '0.2.0'
-  s.summary      = 'Reusable fuse, bubble, charging and dual-dot refresh animations for UIView.'
+  s.summary      = 'Reusable UIView animations and pluggable refresh renderers for Swift.'
   s.description  = <<-DESC
                     JobsFuseAnimation provides chainable UIView animations for
                     long-press fuse ring growth, press-scale feedback, reusable bubble emission,
-                    segmented charging indicators, dual-dot refresh indicators and tap sound.
+                    segmented charging indicators, tap sound and protocol-driven refresh
+                    renderers for image sequences, GIF, Lottie, Today News and Douyin styles.
                    DESC
 
   s.homepage     = 'https://github.com/JobsKits/JobsFuseAnimation'
@@ -25,10 +26,12 @@ Pod::Spec.new do |s|
   ]
 
   s.source_files = '**/*.{swift,h,m,mm}'
-  s.ios.frameworks = 'UIKit', 'QuartzCore', 'AudioToolbox'
+  s.ios.frameworks = 'UIKit', 'QuartzCore', 'AudioToolbox', 'ImageIO'
 
+  s.dependency 'SnapKit'
   s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftDSL'
   s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'lottie-ios'
 end

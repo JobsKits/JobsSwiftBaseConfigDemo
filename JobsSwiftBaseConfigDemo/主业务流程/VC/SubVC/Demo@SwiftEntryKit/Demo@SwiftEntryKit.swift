@@ -24,16 +24,32 @@ import SwiftEntryKit
 import GKNavigationBarSwift
 
 // MARK: - 内置消息工厂（颜色用 EKColor 包装）
-private func makeMessageView(title: String, desc: String, systemImage: String) -> UIView {
+private func makeMessageView(title: String,
+                             desc: String,
+                             systemImage: String,
+                             foregroundColor: EKColor = .standardContent,
+                             displayMode: EKAttributes.DisplayMode = .inferred) -> UIView {
     let titleLabel = EKProperty.LabelContent(
         text: title,
-        style: .init(font: JobsFont.boldSystemFont(ofSize: 16), color: EKColor(JobsCor.label))
+        style: .init(
+            font: JobsFont.boldSystemFont(ofSize: 16),
+            color: foregroundColor,
+            displayMode: displayMode
+        )
     )
     let descLabel = EKProperty.LabelContent(
         text: desc,
-        style: .init(font: JobsFont.systemFont(ofSize: 14), color: EKColor(JobsCor.secondaryLabel))
+        style: .init(
+            font: JobsFont.systemFont(ofSize: 14),
+            color: foregroundColor.with(alpha: 0.72),
+            displayMode: displayMode
+        )
     )
-    let image = EKProperty.ImageContent(image: UIImage(systemName: systemImage)!)
+    let image = EKProperty.ImageContent(
+        image: systemImage.sysImg,
+        displayMode: displayMode,
+        tint: foregroundColor
+    )
     let simple = EKSimpleMessage(image: image, title: titleLabel, description: descLabel)
     let notification = EKNotificationMessage(simpleMessage: simple)
     return EKNotificationMessageView(with: notification)
@@ -65,7 +81,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                 var attr = EKAttributes()
                     .byPosition(.top)
                     .byDuration(2)
-                    .byBackground(.visualEffect(style: .dark))
+                    .byBackground(.visualEffect(style: .standard))
                     .byScreen(.color(color: EKColor(JobsCor.clear)))
                     .byCorner(radius: 14)
                     .byShadow()
@@ -92,12 +108,12 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .bySize(width: .constant(value: 340.w), height: .constant(value: 270.h))
                     .byPosition(.center)
                     .byDuration(1.6)
-                    .byBackground(.color(color: EKColor(JobsCor.label)))
+                    .byBackground(.color(color: .standardBackground))
                     .byScreen(.color(color: EKColor(JobsCor.clear)))
                     .byCorner(radius: 12)
                     .byHaptic(.warning)
                     .byAbsorbTouches(false)
-                    .byDisplayMode(.light)
+                    .byDisplayMode(.inferred)
                     .byStatusBar(.inferred)
                     .byEntrance(anim.entrance)
                     .byExit(anim.exit)
@@ -116,7 +132,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                 var attr = EKAttributes()
                     .byPosition(.bottom)
                     .byDuration(.infinity)
-                    .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
+                    .byBackground(.color(color: .standardBackground))
                     .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.35))))
                     .byCorner(radius: 18, edges: .top(radius: 18))
                     .byShadow()
@@ -176,7 +192,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byPosition(.center)
                     .byDuration(.infinity)  // 交互型：不自动消失
                     // 统一交给 EK 控制外观
-                    .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
+                    .byBackground(.color(color: .standardBackground))
                     .byCorner(radius: 14)
                     .byShadow()
                     // 外部点击无效，必须点按钮
@@ -203,7 +219,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     var a = EKAttributes()
                         .byPosition(.top)
                         .byDuration(1.2)
-                        .byBackground(.visualEffect(style: .dark))
+                        .byBackground(.visualEffect(style: .standard))
                         .byCorner(radius: 12)
                         .byShadow()
                         .byQueue(priority: priority, dropEnqueuedEntries: false)
@@ -226,7 +242,10 @@ final class SwiftEntryKitDemoVC: BaseVC {
                         .byQueue(priority: .max, dropEnqueuedEntries: false)
                         .byHaptic(.success)
                         .byEntrance(anim.entrance).byExit(anim.exit)
-                    SwiftEntryKit.display(entry: makeMessageView(title: "⚡️ 高优先级覆盖".tr, desc: "precedence.override", systemImage: "bolt.fill"),
+                    SwiftEntryKit.display(entry: makeMessageView(title: "⚡️ 高优先级覆盖".tr,
+                                                                 desc: "precedence.override",
+                                                                 systemImage: "bolt.fill",
+                                                                 foregroundColor: .black),
                                           using: a)
                 }
             }
@@ -246,7 +265,10 @@ final class SwiftEntryKitDemoVC: BaseVC {
                     .byHaptic(.success)
                     .byEntrance(t.entrance)
                     .byExit(t.exit)
-                SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Light".tr, desc: "statusBar = .light", systemImage: "sun.max.fill"),
+                SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Light".tr,
+                                                             desc: "statusBar = .light",
+                                                             systemImage: "sun.max.fill",
+                                                             foregroundColor: .white),
                                       using: a1)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     let tt = EKAttributes.animTranslationInOut
@@ -255,11 +277,16 @@ final class SwiftEntryKitDemoVC: BaseVC {
                         .byDuration(1.4)
                         .byBackground(.color(color: EKColor(JobsCor.systemGray6)))
                         .byCorner(radius: 12)
+                        .byDisplayMode(.light)
                         .byStatusBar(.dark)
                         .byHaptic(.warning)
                         .byEntrance(tt.entrance)
                         .byExit(tt.exit)
-                    SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Dark".tr, desc: "statusBar = .dark", systemImage: "moon.fill"),
+                    SwiftEntryKit.display(entry: makeMessageView(title: "状态栏：Dark".tr,
+                                                                 desc: "statusBar = .dark",
+                                                                 systemImage: "moon.fill",
+                                                                 foregroundColor: .black,
+                                                                 displayMode: .light),
                                           using: a2)
                 }
             }

@@ -21,17 +21,6 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftSearcherDemoVC: BaseVC {
-    private lazy var themeButton: UIButton = {
-        UIButton.sys()
-            .byTintColor(JobsCor.label)
-            .byImage("moon.circle.fill".sysImg.withRenderingMode(.alwaysTemplate), for: .normal)
-            .byImage("sun.max.circle.fill".sysImg.withRenderingMode(.alwaysTemplate), for: .selected)
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                toggleTheme(using: sender)
-            }
-    }()
-
     private lazy var searchView: JobsSwiftSearcherView = {
         JobsSwiftSearcherView(config: demoSearchConfig())
             .byRecommendSearches(Self.recommendTexts)
@@ -49,19 +38,8 @@ final class JobsSwiftSearcherDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "JobsSwiftSearcher",
-            rightButtons: [themeButton]
-        )
-        syncThemeButton()
+        jobsSetupGKNav(title: "JobsSwiftSearcher")
         searchView.byVisible(true)
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        guard #available(iOS 13.0, *),
-              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
-        syncThemeButton()
     }
 }
 
@@ -76,18 +54,6 @@ private extension JobsSwiftSearcherDemoVC {
         "SnapKit",
         "JobsSwiftSearcher"
     ]
-
-    func toggleTheme(using sender: UIButton) {
-        guard #available(iOS 13.0, *) else { return }
-        let enablesDarkMode = traitCollection.userInterfaceStyle != .dark
-        byOverrideUserInterfaceStyle(enablesDarkMode ? .dark : .light)
-        sender.bySelected(enablesDarkMode)
-    }
-
-    func syncThemeButton() {
-        guard #available(iOS 13.0, *) else { return }
-        themeButton.bySelected(traitCollection.userInterfaceStyle == .dark)
-    }
 
     func demoSearchConfig() -> JobsSwiftSearcherConfig {
         let config = JobsSwiftSearcherConfig.defaultConfig

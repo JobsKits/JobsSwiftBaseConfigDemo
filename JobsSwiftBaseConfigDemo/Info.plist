@@ -73,12 +73,12 @@
 	</array>
 
     <!-- 相册读取权限：从系统相册中选择、读取照片或视频 -->
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>NSPhotoLibraryUsageDescription</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>需要访问相册以选择和管理图片或视频。</string>
 
     <!-- 相册写入权限：将拍摄或编辑后的图片/视频保存到系统相册 -->
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>NSPhotoLibraryAddUsageDescription</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>需要添加截图、图片或视频到相册。</string>
 
     <!-- ====== 定位（使用期间 / 始终 / 临时精确） ====== -->
 

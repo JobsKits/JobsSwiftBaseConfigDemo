@@ -113,12 +113,16 @@ extension UIButton {
         let title = _legacyRichTitleMap[k]
         let sub   = _legacyRichSubMap[k]
         switch (title, sub) {
+        /// 处理 (nil, nil) 分支
         case (nil, nil):
             setAttributedTitle(nil, for: state)
+        /// 处理 (t?, nil) 分支
         case let (t?, nil):
             setAttributedTitle(t, for: state)
+        /// 处理 (nil, s?) 分支
         case let (nil, s?):
             setAttributedTitle(s, for: state)
+        /// 处理 (t?, s?) 分支
         case let (t?, s?):
             titleLabel?
                 .byNumberOfLines(0)

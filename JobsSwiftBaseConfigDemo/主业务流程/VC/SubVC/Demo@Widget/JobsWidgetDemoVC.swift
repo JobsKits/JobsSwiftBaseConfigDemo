@@ -11,6 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
+
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsInheritance
@@ -26,10 +30,13 @@ final class JobsWidgetDemoVC: BaseVC {
 
         var summary: String {
             switch self {
+            /// 处理 .small 分支
             case .small:
                 return "小号：一眼读取核心状态".tr
+            /// 处理 .medium 分支
             case .medium:
                 return "中号：展示状态与下一步行动".tr
+            /// 处理 .large 分支
             case .large:
                 return "大号：承载更完整的信息层级与时间线摘要".tr
             }
@@ -37,7 +44,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }
 
     private var widgetFamily = WidgetFamily.medium
-    private var counter = 8
+    private var counter = JobsWidgetSharedStore.counter
 
     private lazy var scrollView: UIScrollView = {
         UIScrollView()
@@ -162,7 +169,7 @@ final class JobsWidgetDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 counter = counter >= 12 ? 1 : counter + 1
-                refreshPreview(status: "宿主状态：计数已更新".tr)
+                syncHomeScreenWidget(status: "桌面 Widget：计数已同步".tr)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.previewCard.snp.bottom).offset(16)
@@ -180,7 +187,7 @@ final class JobsWidgetDemoVC: BaseVC {
             .byBackgroundColor(JobsCor.systemPurple)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
-                self?.refreshPreview(status: "时间线：已手动重载预览".tr)
+                self?.syncHomeScreenWidget(status: "桌面 Widget：时间线已重载".tr)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.previewCard.snp.bottom).offset(16)
@@ -203,7 +210,7 @@ final class JobsWidgetDemoVC: BaseVC {
 
     private lazy var footnoteLabel: UILabel = {
         UILabel()
-            .byText("真正上桌面：在 Xcode 新建 Widget Extension → 宿主与 Extension 配置 App Group → 写入共享数据 → 通过 WidgetCenter 重载时间线 → 长按桌面添加。\n\niOS 不允许 App 直接弹出系统小组件库；本页专注演示 family 自适应、状态更新和时间线节奏。".tr)
+            .byText("已接入真实 Widget Extension 与 App Group。真机运行宿主 App 一次后：回到系统桌面 → 长按空白处 → 点击“+” 或“添加小组件” → 搜索“SwiftDemo”（进入后显示“演武堂小组件”） → 选择尺寸并添加。\n\n本页“计数 +1”和“刷新时间线”会重载桌面 Widget；iOS 不允许 App 直接弹出系统小组件库。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byNumberOfLines(0)
@@ -220,6 +227,7 @@ final class JobsWidgetDemoVC: BaseVC {
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         setupUI()
         apply(.medium, status: "时间线：已生成当前快照".tr)
+        syncHomeScreenWidget(status: "桌面 Widget：共享状态已就绪".tr)
     }
 }
 
@@ -257,7 +265,7 @@ private extension JobsWidgetDemoVC {
             }
         }
         refreshPreview(status: status)
-        UIView.animate(withDuration: 0.24) { [weak self] in
+        UIView.jobsAnimate(0.24) { [weak self] in
             self?.view.layoutIfNeeded()
         }
     }
@@ -268,6 +276,14 @@ private extension JobsWidgetDemoVC {
         previewCounterLabel.byText("今日进度 \(counter) / 12".tr)
         previewDescriptionLabel.byText(widgetFamily.summary)
         timelineLabel.byText("\(status) · \(time)")
+    }
+
+    private func syncHomeScreenWidget(status: String) {
+        JobsWidgetSharedStore.save(counter: counter)
+#if canImport(WidgetKit)
+        WidgetCenter.shared.reloadTimelines(ofKind: JobsWidgetSharedStore.widgetKind)
+#endif
+        refreshPreview(status: status)
     }
 
     private func currentTimeText() -> String {

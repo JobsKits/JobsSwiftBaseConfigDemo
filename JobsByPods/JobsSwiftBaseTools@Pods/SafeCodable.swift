@@ -221,29 +221,35 @@ private func fromString<T: SafeDefault & Codable>(
     treatEmptyURLNil: Bool
 ) -> T? {
     switch T.self {
+    /// 处理 String.Type 类型分支
     case is String.Type:
         report(.coerced(from: "String", to: "\(T.self)", codingPath: codingPath, rawSample: s))
         return (s as! T)
+    /// 处理 Int.Type 类型分支
     case is Int.Type where cfg.allowStringToNumber:
         if let v = Int(s) {
             report(.coerced(from: "String", to: "Int", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
+    /// 处理 Double.Type 类型分支
     case is Double.Type where cfg.allowStringToNumber:
         if let v = Double(s) {
             report(.coerced(from: "String", to: "Double", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
+    /// 处理 Float.Type 类型分支
     case is Float.Type where cfg.allowStringToNumber:
         if let v = Float(s) {
             report(.coerced(from: "String", to: "Float", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
+    /// 处理 Decimal.Type 类型分支
     case is Decimal.Type where cfg.allowStringToNumber:
         if let v = Decimal(string: s) {
             report(.coerced(from: "String", to: "Decimal", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
+    /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowStringToBool:
         let lowered = s.lowercased()
         if cfg.boolTrueLiterals.contains(lowered) {
@@ -263,6 +269,7 @@ private func fromString<T: SafeDefault & Codable>(
             report(.coerced(from: "String(number)", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: s))
             return ((d != 0) as! T)
         }
+    /// 处理 Date.Type 类型分支
     case is Date.Type:
         // 1) ISO8601
         if cfg.allowISO8601Date {
@@ -284,6 +291,7 @@ private func fromString<T: SafeDefault & Codable>(
         if cfg.allowStringifiedTimestamp, let ts = Double(s) {
             if let v: T = fromDouble(ts, cfg: cfg, codingPath: codingPath) { return v }
         }
+    /// 处理 URL.Type 类型分支
     case is URL.Type where cfg.allowURLFromString:
         if s.isEmpty, treatEmptyURLNil {
             // Optional 包装器会保留为 nil；非 Optional 由上层落默认值
@@ -293,6 +301,7 @@ private func fromString<T: SafeDefault & Codable>(
             report(.coerced(from: "String", to: "URL", codingPath: codingPath, rawSample: s))
             return (url as! T)
         }
+    /// 未匹配已知分支时执行兜底处理
     default:
         break
     };return nil
@@ -304,26 +313,34 @@ private func fromInt<T: SafeDefault & Codable>(
     codingPath: [String]
 ) -> T? {
     switch T.self {
+    /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowNumberToString:
         report(.coerced(from: "Int", to: "String", codingPath: codingPath, rawSample: "\(i)"))
         return (String(i) as! T)
+    /// 处理 Int.Type 类型分支
     case is Int.Type:
         return (i as! T)
+    /// 处理 Double.Type 类型分支
     case is Double.Type:
         return (Double(i) as! T)
+    /// 处理 Float.Type 类型分支
     case is Float.Type:
         return (Float(i) as! T)
+    /// 处理 Decimal.Type 类型分支
     case is Decimal.Type:
         return (Decimal(i) as! T)
+    /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowNumberToBool:
         report(.coerced(from: "Int", to: "Bool(\(i != 0))", codingPath: codingPath, rawSample: "\(i)"))
         return ((i != 0) as! T)
+    /// 处理 Date.Type 类型分支
     case is Date.Type:
         if cfg.allowUnixTimestampSeconds {
             let v = Date(timeIntervalSince1970: TimeInterval(i))
             report(.coerced(from: "Int(timestamp_sec)", to: "Date", codingPath: codingPath, rawSample: "\(i)"))
             return (v as! T)
         }
+    /// 未匹配已知分支时执行兜底处理
     default:
         break
     };return nil
@@ -335,20 +352,27 @@ private func fromDouble<T: SafeDefault & Codable>(
     codingPath: [String]
 ) -> T? {
     switch T.self {
+    /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowNumberToString:
         report(.coerced(from: "Double", to: "String", codingPath: codingPath, rawSample: "\(d)"))
         return (String(d) as! T)
+    /// 处理 Int.Type 类型分支
     case is Int.Type:
         return (Int(d) as! T)
+    /// 处理 Double.Type 类型分支
     case is Double.Type:
         return (d as! T)
+    /// 处理 Float.Type 类型分支
     case is Float.Type:
         return (Float(d) as! T)
+    /// 处理 Decimal.Type 类型分支
     case is Decimal.Type:
         return (Decimal(d) as! T)
+    /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowNumberToBool:
         report(.coerced(from: "Double", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: "\(d)"))
         return ((d != 0) as! T)
+    /// 处理 Date.Type 类型分支
     case is Date.Type:
         // 识别秒/毫秒
         if cfg.allowUnixTimestampMilliseconds, d >= 1_000_000_000_000 {
@@ -361,6 +385,7 @@ private func fromDouble<T: SafeDefault & Codable>(
             report(.coerced(from: "Double(timestamp_sec)", to: "Date", codingPath: codingPath, rawSample: "\(d)"))
             return (v as! T)
         }
+    /// 未匹配已知分支时执行兜底处理
     default:
         break
     };return nil
@@ -372,19 +397,26 @@ private func fromBool<T: SafeDefault & Codable>(
     codingPath: [String]
 ) -> T? {
     switch T.self {
+    /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowBoolToString:
         report(.coerced(from: "Bool", to: "String", codingPath: codingPath, rawSample: "\(b)"))
         return ((b ? "true" : "false") as! T)
+    /// 处理 Int.Type 类型分支
     case is Int.Type where cfg.allowBoolToNumber:
         return ((b ? 1 : 0) as! T)
+    /// 处理 Double.Type 类型分支
     case is Double.Type where cfg.allowBoolToNumber:
         return ((b ? 1.0 : 0.0) as! T)
+    /// 处理 Float.Type 类型分支
     case is Float.Type where cfg.allowBoolToNumber:
         return ((b ? 1.0 : 0.0) as! T)
+    /// 处理 Decimal.Type 类型分支
     case is Decimal.Type where cfg.allowBoolToNumber:
         return (Decimal(b ? 1 : 0) as! T)
+    /// 处理 Bool.Type 类型分支
     case is Bool.Type:
         return (b as! T)
+    /// 未匹配已知分支时执行兜底处理
     default:
         break
     };return nil

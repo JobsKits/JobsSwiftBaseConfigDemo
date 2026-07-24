@@ -162,8 +162,11 @@ extension String {
     public var isPureChineseHan: Bool {
         guard !isEmpty else { return false };return unicodeScalars.allSatisfy { scalar in
             switch scalar.value {
-            case 0x4E00...0x9FFF: return true        // CJK Unified Ideographs
-            case 0x3400...0x4DBF: return true        // CJK Unified Ideographs Extension A
+            /// CJK Unified Ideographs
+            case 0x4E00...0x9FFF: return true
+            /// CJK Unified Ideographs Extension A
+            case 0x3400...0x4DBF: return true
+            /// 未匹配已知分支时执行兜底处理
             default: return false
             }
         }

@@ -249,4 +249,13 @@ extension GKNavigationBarConfigure {
         if let backStyle { self.backStyle = backStyle };return self
     }
 }
+
+public extension UIViewController {
+    /// 将全屏返回限制在左边缘，避免抢占页面内横向滚动视图的右滑手势。
+    @discardableResult
+    func byGKMaxPopDistance(_ distance: CGFloat) -> Self {
+        gk_maxPopDistance = max(0, distance)
+        return self
+    }
+}
 #endif

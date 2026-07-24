@@ -89,8 +89,10 @@ final class JobsSysProgressDemoVC: BaseVC {
                 guard let self else { return }
                 // 切换模式本身
                 switch progressMode {
+                /// 处理 .countUp 分支
                 case .countUp:
                     progressMode = .countDown
+                /// 处理 .countDown 分支
                 case .countDown:
                     progressMode = .countUp
                 }
@@ -148,7 +150,9 @@ final class JobsSysProgressDemoVC: BaseVC {
                 // 根据进度模式设置起点
                 let initialRatio: Float = {
                     switch self.progressMode {
+                    /// 处理 .countUp 分支
                     case .countUp:   return 0.0
+                    /// 处理 .countDown 分支
                     case .countDown: return 1.0
                     }
                 }()
@@ -179,7 +183,9 @@ final class JobsSysProgressDemoVC: BaseVC {
                     onMainAsync(self) { vc in
                         let finalRatio: Float = {
                             switch strongSelf.progressMode {
+                            /// 处理 .countUp 分支
                             case .countUp:   return 1.0
+                            /// 处理 .countDown 分支
                             case .countDown: return 0.0
                             }
                         }()
@@ -254,7 +260,9 @@ extension JobsSysProgressDemoVC {
         timeLabel.byText(String(format: "准备开始：%.0f 秒", duration))
         let initialRatio: Float = {
             switch progressMode {
+            /// 处理 .countUp 分支
             case .countUp:   return 0.0
+            /// 处理 .countDown 分支
             case .countDown: return 1.0
             }
         }()
@@ -269,8 +277,10 @@ extension JobsSysProgressDemoVC {
     /// 模式按钮标题
     private func modeButtonTitle() -> String {
         switch progressMode {
+        /// 处理 .countUp 分支
         case .countUp:
             return "模式：0% → 100%".tr
+        /// 处理 .countDown 分支
         case .countDown:
             return "模式：100% → 0%".tr
         }

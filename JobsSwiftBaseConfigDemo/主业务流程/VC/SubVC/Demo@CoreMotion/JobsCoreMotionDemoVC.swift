@@ -42,6 +42,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private var smoothedIntensity = 0.0
     private var currentPose = MotionPose.waiting
     private var lastHapticTime: TimeInterval = 0
+    private var metricTitleLabels: [UILabel] = []
 
     private lazy var scrollView: UIScrollView = {
         UIScrollView()
@@ -470,7 +471,7 @@ private extension JobsCoreMotionDemoVC {
             .byCornerRadius(16)
             .byBorderColor(color.withAlphaComponent(0.28))
             .byBorderWidth(1)
-        UILabel()
+        let titleLabel = UILabel()
             .byText(title)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .semibold))
             .byTextColor(color)
@@ -481,6 +482,7 @@ private extension JobsCoreMotionDemoVC {
                 make.top.equalToSuperview().offset(12)
                 make.left.right.equalToSuperview().inset(5)
             }
+        metricTitleLabels.append(titleLabel)
         valueLabel.byAddTo(cardView) { make in
             make.left.right.equalToSuperview().inset(5)
             make.bottom.equalToSuperview().inset(13)
@@ -646,10 +648,13 @@ private extension JobsCoreMotionDemoVC {
 
     private func presentation(for pose: MotionPose) -> (icon: String, title: String, detail: String, color: UIColor) {
         switch pose {
+        /// 处理 .waiting 分支
         case .waiting:
             return ("👋", "正在感知你的动作…".tr, "保持当前握姿，马上就能开始互动。".tr, JobsCor.systemBlue)
+        /// 处理 .steady 分支
         case .steady:
             return ("🧘", "稳住了".tr, "手机回到中心圆，试试向任意方向压腕。".tr, JobsCor.systemGreen)
+        /// 处理 .left 分支
         case .left:
             return (
                 "🙆",
@@ -657,6 +662,7 @@ private extension JobsCoreMotionDemoVC {
                 String(format: "横滚 %.0f° · 让小圆点回中心即可归位".tr, abs(degrees(smoothedRoll))),
                 JobsCor.systemBlue
             )
+        /// 处理 .right 分支
         case .right:
             return (
                 "🙆",
@@ -664,6 +670,7 @@ private extension JobsCoreMotionDemoVC {
                 String(format: "横滚 %.0f° · 画面正在跟随你的手腕".tr, abs(degrees(smoothedRoll))),
                 JobsCor.systemTeal
             )
+        /// 处理 .lift 分支
         case .lift:
             return (
                 "🙋",
@@ -671,6 +678,7 @@ private extension JobsCoreMotionDemoVC {
                 String(format: "俯仰 %.0f° · 继续抬腕看看空间变化".tr, abs(degrees(smoothedPitch))),
                 JobsCor.systemPurple
             )
+        /// 处理 .lower 分支
         case .lower:
             return (
                 "🤳",
@@ -678,6 +686,7 @@ private extension JobsCoreMotionDemoVC {
                 String(format: "俯仰 %.0f° · 放松手腕即可回正".tr, abs(degrees(smoothedPitch))),
                 JobsCor.systemOrange
             )
+        /// 处理 .spinning 分支
         case .spinning:
             return ("🏃", "检测到快速转动".tr, "动作越快，下面的强度条越长。".tr, JobsCor.systemPink)
         }
@@ -685,12 +694,16 @@ private extension JobsCoreMotionDemoVC {
 
     func intensityDescription(_ intensity: Double) -> String {
         switch intensity {
+        /// 处理 ..<0.08 范围 分支
         case ..<0.08:
             return "静止".tr
+        /// 处理 ..<0.28 范围 分支
         case ..<0.28:
             return "轻柔".tr
+        /// 处理 ..<0.58 范围 分支
         case ..<0.58:
             return "明显".tr
+        /// 未匹配已知分支时执行兜底处理
         default:
             return "强烈".tr
         }

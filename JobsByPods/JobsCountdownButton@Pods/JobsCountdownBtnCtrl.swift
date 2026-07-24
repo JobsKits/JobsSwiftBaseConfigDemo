@@ -175,7 +175,9 @@ extension JobsCountdownBtnCtrl {
     // MARK: - 内部流程
     private func initialValue() -> Int {
         switch config.mode {
+        /// 处理 .down 分支
         case .down(let from): return from
+        /// 处理 .up 分支
         case .up:             return 0
         }
     }
@@ -188,6 +190,7 @@ extension JobsCountdownBtnCtrl {
             return
         }
         switch config.mode {
+        /// 处理 .down 分支
         case .down:
             current -= 1
             let sec = max(0, current)
@@ -196,6 +199,7 @@ extension JobsCountdownBtnCtrl {
             if sec <= 0 {
                 finishMainActor()
             }
+        /// 处理 .up 分支
         case .up(let to):
             current += 1
             let sec = min(to, current)

@@ -22,28 +22,28 @@ flowchart LR
   T3["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S3 -->|calls| T3
   S4["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T4["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
+  T4["function:ASTextIsLinebreakString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:58"]
   S4 -->|calls| T4
   S5["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T5["function:ASTextIsLinebreakString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:58"]
+  T5["function:ASTextIsLinebreakChar<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:23"]
   S5 -->|calls| T5
   S6["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
   T6["function:ASTextIsLinebreakChar<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:23"]
   S6 -->|calls| T6
   S7["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T7["function:ASTextIsLinebreakChar<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:23"]
+  T7["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
   S7 -->|calls| T7
   S8["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T8["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
+  T8["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
   S8 -->|calls| T8
   S9["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T9["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
+  T9["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S9 -->|calls| T9
   S10["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T10["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
+  T10["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
   S10 -->|calls| T10
-  S11["method:ASTextLayout::closestPositionToPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1444"]
-  T11["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
+  S11["method:ASTextLayout::positionForPoint:oldPosition:otherPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1634"]
+  T11["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
   S11 -->|calls| T11
   S12["method:ASTextLayout::positionForPoint:oldPosition:otherPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1634"]
   T12["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
@@ -54,38 +54,38 @@ flowchart LR
   S14["method:ASTextLayout::positionForPoint:oldPosition:otherPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1634"]
   T14["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
   S14 -->|calls| T14
-  S15["method:ASTextLayout::positionForPoint:oldPosition:otherPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1634"]
-  T15["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
+  S15["method:ASTextLayout::textRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1682"]
+  T15["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
   S15 -->|calls| T15
   S16["method:ASTextLayout::textRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1682"]
-  T16["method:ASTextLayout::textPositionForPoint:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1380"]
+  T16["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
   S16 -->|calls| T16
   S17["method:ASTextLayout::textRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1682"]
-  T17["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
+  T17["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
   S17 -->|calls| T17
   S18["method:ASTextLayout::textRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1682"]
   T18["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
   S18 -->|calls| T18
-  S19["method:ASTextLayout::textRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1682"]
-  T19["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
+  S19["method:ASTextLayout::closestTextRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1704"]
+  T19["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
   S19 -->|calls| T19
   S20["method:ASTextLayout::closestTextRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1704"]
-  T20["method:ASTextLayout::_isRightToLeftInLine:atPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1241"]
+  T20["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
   S20 -->|calls| T20
-  S21["method:ASTextLayout::closestTextRangeAtPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1704"]
-  T21["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
+  S21["method:ASTextLayout::textRangeByExtendingPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1739"]
+  T21["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
   S21 -->|calls| T21
   S22["method:ASTextLayout::textRangeByExtendingPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1739"]
-  T22["method:ASTextLayout::_insideEmoji:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1196"]
+  T22["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
   S22 -->|calls| T22
   S23["method:ASTextLayout::textRangeByExtendingPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1739"]
-  T23["method:ASTextLayout::_insideComposedCharacterSequences:position:block:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1159"]
+  T23["function:ASTextIsLinebreakChar<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:23"]
   S23 -->|calls| T23
   S24["method:ASTextLayout::textRangeByExtendingPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1739"]
-  T24["function:ASTextIsLinebreakChar<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:23"]
+  T24["function:ASTextLinebreakTailLength<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:74"]
   S24 -->|calls| T24
-  S25["method:ASTextLayout::textRangeByExtendingPosition:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1739"]
-  T25["function:ASTextLinebreakTailLength<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h:74"]
+  S25["method:ASTextLayout::textRangeByExtendingPosition:inDirection:offset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1801"]
+  T25["method:ASTextLayout::offsetForTextPosition:lineIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:1370"]
   S25 -->|calls| T25
 ```
 

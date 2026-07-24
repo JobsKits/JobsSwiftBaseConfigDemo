@@ -60,15 +60,18 @@ extension UIColor {
         var value: UInt64 = 0
         guard Scanner(string: hex).scanHexInt64(&value) else { return nil }
         switch hex.count {
-        case 6: // RRGGBB
+        /// RRGGBB
+        case 6:
             r = CGFloat((value & 0xFF0000) >> 16) / 255.0
             g = CGFloat((value & 0x00FF00) >> 8)  / 255.0
             b = CGFloat( value & 0x0000FF)        / 255.0
-        case 8: // AARRGGBB
+        /// AARRGGBB
+        case 8:
             a = CGFloat((value & 0xFF000000) >> 24) / 255.0
             r = CGFloat((value & 0x00FF0000) >> 16) / 255.0
             g = CGFloat((value & 0x0000FF00) >> 8)  / 255.0
             b = CGFloat( value & 0x000000FF)        / 255.0
+        /// 未匹配已知分支时执行兜底处理
         default:
             return nil
         };self.init(red: r, green: g, blue: b, alpha: a)

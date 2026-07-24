@@ -33,19 +33,29 @@ final class PromiseKitDemoVC: BaseVC {
         case timeoutRace
         var title: String {
             switch self {
+            /// 处理 .serial 分支
             case .serial: "串行依赖：登录 → 用户资料 → 权益"
+            /// 处理 .parallel 分支
             case .parallel: "并发聚合：首页多接口一起拉"
+            /// 处理 .fallback 分支
             case .fallback: "失败回退：主链路失败 → recover 缓存"
+            /// 处理 .partialSuccess 分支
             case .partialSuccess: "部分成功：when(resolved:)"
+            /// 处理 .timeoutRace 分支
             case .timeoutRace: "竞争/超时：race + after"
             }
         }
         var subtitle: String {
             switch self {
+            /// 处理 .serial 分支
             case .serial: "then 把前一个结果自然传给下一个请求"
+            /// 处理 .parallel 分支
             case .parallel: "when(fulfilled:) 解决回调地狱和收口问题"
+            /// 处理 .fallback 分支
             case .fallback: "recover 把兜底逻辑写平，不用层层 else"
+            /// 处理 .partialSuccess 分支
             case .partialSuccess: "一个失败不影响其它成功结果落地"
+            /// 处理 .timeoutRace 分支
             case .timeoutRace: "超时不是到处手写 Timer，而是直接组合"
             }
         }
@@ -56,7 +66,9 @@ final class PromiseKitDemoVC: BaseVC {
         case logs
         var title: String {
             switch self {
+            /// 处理 .actions 分支
             case .actions: "PromiseKit 场景"
+            /// 处理 .logs 分支
             case .logs: "运行日志"
             }
         }
@@ -139,6 +151,8 @@ final class PromiseKitDemoVC: BaseVC {
         UITableView(frame: .zero, style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
+            .byRowHeight(UITableView.automaticDimension)
+            .byEstimatedRowHeight(84)
             .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
@@ -207,14 +221,19 @@ extension PromiseKitDemoVC {
 
     private func runDemo(_ row: Row) {
         switch row {
+        /// 处理 .serial 分支
         case .serial:
             上一个请求的产物给下一个请求继续用()
+        /// 处理 .parallel 分支
         case .parallel:
             多个互不依赖的请求同时发最后一次性收口()
+        /// 处理 .fallback 分支
         case .fallback:
             主链路挂了以后不把页面打死直接切缓存()
+        /// 处理 .partialSuccess 分支
         case .partialSuccess:
             一个接口失败不影响其它接口的成功结果展示()
+        /// 处理 .timeoutRace 分支
         case .timeoutRace:
             哪个先完成就用哪个()
         }
@@ -302,8 +321,10 @@ extension PromiseKitDemoVC {
             var failureLogs = [String]()
             results.forEach { result in
                 switch result {
+                /// 处理 .fulfilled 分支
                 case .fulfilled(let value):
                     successLogs.append(value)
+                /// 处理 .rejected 分支
                 case .rejected(let error):
                     failureLogs.append(error.localizedDescription)
                 }
@@ -367,8 +388,10 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
         guard let sec = Section(rawValue: section) else { return 0 }
         let count: Int
         switch sec {
+        /// 处理 .actions 分支
         case .actions:
             count = Row.allCases.count
+        /// 处理 .logs 分支
         case .logs:
             count = logs.count
         };return count
@@ -376,10 +399,6 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         Section(rawValue: section)?.title
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        68
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -408,7 +427,9 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
             cell.accessoryType = .none
         }
         config.textProperties.numberOfLines = 0
+        config.textProperties.lineBreakMode = .byWordWrapping
         config.secondaryTextProperties.numberOfLines = 0
+        config.secondaryTextProperties.lineBreakMode = .byWordWrapping
         cell.contentConfiguration = config
         return cell
     }

@@ -210,12 +210,14 @@ extension UIView {
                                 let container = self.superview
                             else { return }
                             switch pan.state {
+                            /// 处理 .changed 分支
                             case .changed:
                                 let delta = pan.translation(in: container)
                                 self.frame.origin.x += delta.x
                                 self.frame.origin.y += delta.y
                                 pan.setTranslation(.zero, in: container)
                                 if cfg.confineInContainer { self._clampFrameWithinContainer() }
+                            /// 合并处理 .ended、.cancelled、.failed 分支
                             case .ended, .cancelled, .failed:
                                 let mode = self._effectiveDocking(cfg)
                                 let target = self._snapOrigin(for: mode, in: container, cfg: cfg, currentFrame: self.frame)
@@ -235,6 +237,7 @@ extension UIView {
                                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                                     }
                                 }
+                            /// 未匹配已知分支时执行兜底处理
                             default:
                                 break
                             }
@@ -301,16 +304,22 @@ extension UIView {
     /// 根据 start & 可用区域推导初始 origin
     private func _origin(for start: Start, size: CGSize, in bounds: CGRect) -> CGPoint {
         switch start {
+        /// 处理 .bottomRight 分支
         case .bottomRight:
             return CGPoint(x: bounds.maxX - size.width, y: bounds.maxY - size.height)
+        /// 处理 .bottomLeft 分支
         case .bottomLeft:
             return CGPoint(x: bounds.minX, y: bounds.maxY - size.height)
+        /// 处理 .topRight 分支
         case .topRight:
             return CGPoint(x: bounds.maxX - size.width, y: bounds.minY)
+        /// 处理 .topLeft 分支
         case .topLeft:
             return CGPoint(x: bounds.minX, y: bounds.minY)
+        /// 处理 .center 分支
         case .center:
             return CGPoint(x: bounds.midX - size.width * 0.5, y: bounds.midY - size.height * 0.5)
+        /// 处理 .point 分支
         case .point(let p):
             // “可用区域”坐标（(0,0) 即 safeArea 左上角）
             return CGPoint(x: bounds.minX + p.x, y: bounds.minY + p.y)
@@ -319,13 +328,17 @@ extension UIView {
     /// `.auto` → 用 start 推导实际吸附模式
     private func _effectiveDocking(_ cfg: UIView.SuspendConfig) -> UIView.SuspendDocking {
         switch cfg.docking {
+        /// 处理 .auto 分支
         case .auto:
             switch cfg.start {
+            /// 合并处理 .topLeft、.topRight、.bottomLeft、.bottomRight 分支
             case .topLeft, .topRight, .bottomLeft, .bottomRight:
                 return .nearestCorner        // 角起步 → 吸角
+            /// 合并处理 .center、.point 分支
             case .center, .point:
                 return .nearestEdge          // 中心/点起步 → 吸边
             }
+        /// 未匹配已知分支时执行兜底处理
         default:
             return cfg.docking
         }
@@ -339,8 +352,10 @@ extension UIView {
         let w = f.width, h = f.height
         let center = CGPoint(x: f.midX, y: f.midY)
         switch mode {
+        /// 处理 .none 分支
         case .none:
             return _clamped(f.origin, size: f.size, in: b, clamp: cfg.confineInContainer)
+        /// 处理 .nearestEdge 分支
         case .nearestEdge:
             let dLeft   = abs(center.x - b.minX)
             let dRight  = abs(b.maxX - center.x)
@@ -351,6 +366,7 @@ extension UIView {
             if minD == dRight  { return CGPoint(x: b.maxX - w,      y: min(max(b.minY, f.origin.y), b.maxY - h)) }
             if minD == dTop    { return CGPoint(x: min(max(b.minX, f.origin.x), b.maxX - w), y: b.minY) }
             /* minD == dBottom */ return CGPoint(x: min(max(b.minX, f.origin.x), b.maxX - w), y: b.maxY - h)
+        /// 合并处理 .nearestCorner、.auto 分支
         case .nearestCorner, .auto:
             let corners: [CGPoint] = [
                 CGPoint(x: b.minX,       y: b.minY),

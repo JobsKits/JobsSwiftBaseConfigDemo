@@ -148,7 +148,7 @@ extension UIView {
             fuseLayer = CAShapeLayer()
                 .byFillColor(JobsCor.clear)
                 .byLineCap(.round)
-                .byAddSublayer(layer)
+                .byAddTo(layer)
             jobs_fuseLayer = fuseLayer
         }
         let inset = config.inset + config.lineWidth / 2.0
@@ -176,8 +176,10 @@ extension UIView {
             } else {
                 // 不移除时，保持最终状态
                 switch config.direction {
+                /// 处理 .counterClockwise 分支
                 case .counterClockwise:
                     self.jobs_fuseLayer?.strokeEnd = 0
+                /// 处理 .clockwise 分支
                 case .clockwise:
                     self.jobs_fuseLayer?.strokeStart = 1
                 }
@@ -187,9 +189,11 @@ extension UIView {
         }
         let anim: CABasicAnimation
         switch config.direction {
+        /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 旧行为：尾巴往回缩，视觉上逆时针烧
             anim = CABasicAnimation(keyPath: "strokeEnd").byFromValue(1.0).byToValue(0.0)
+        /// 处理 .clockwise 分支
         case .clockwise:
             // 固定 end = 1，头往前推，视觉上顺时针烧
             anim = CABasicAnimation(keyPath: "strokeStart").byFromValue(0.0).byToValue(1.0)
@@ -251,7 +255,7 @@ extension UIView {
             fuseLayer = CAShapeLayer()
                 .byFillColor(JobsCor.clear)
                 .byLineCap(.round)
-                .byAddSublayer(layer)
+                .byAddTo(layer)
             jobs_fuseLayer = fuseLayer
         }
         // 配置几何与样式（复用你倒计时的 path 计算方式）
@@ -267,9 +271,11 @@ extension UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         switch config.direction {
+        /// 处理 .clockwise 分支
         case .clockwise:
             fuseLayer.strokeStart = 0
             fuseLayer.strokeEnd = 0
+        /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 反向增长：先“空”出来（start=end=1）
             fuseLayer.strokeStart = 1
@@ -294,9 +300,11 @@ extension UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(!animated)
         switch config.direction {
+        /// 处理 .clockwise 分支
         case .clockwise:
             fuseLayer.byStrokeStart(0)
                 .byStrokeEnd(p)
+        /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 反向增长：露出“尾部”那一段
             fuseLayer.byStrokeStart(1 - p).byStrokeEnd(1)

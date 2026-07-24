@@ -52,12 +52,15 @@ public enum AppLaunchManager {
     ) -> LaunchKind {
         let kind = LaunchChecker.markAndClassifyThisLaunch()
         switch kind {
+        /// 处理 .firstInstallLaunch 分支
         case .firstInstallLaunch:
             print("🎉 首次安装启动")
             firstInstall?()
+        /// 处理 .firstLaunchToday 分支
         case .firstLaunchToday:
             print("🌅 当日首次启动")
             firstToday?()
+        /// 处理 .normal 分支
         case .normal:
             print("📦 普通启动")
             normal?()
@@ -179,10 +182,13 @@ extension LaunchChecker {
             }
         }
         switch kind {
+        /// 处理 .firstInstallLaunch 分支
         case .firstInstallLaunch:
             log("🎉 [Launch] 首次安装启动 @ \(stamp)")
+        /// 处理 .firstLaunchToday 分支
         case .firstLaunchToday:
             log("🌅 [Launch] 当日首次启动 @ \(stamp)（上次记录：\(desc(last))）")
+        /// 处理 .normal 分支
         case .normal:
             log("➡️ [Launch] 普通启动 @ \(stamp)（最近启动日：\(desc(last))）")
         }

@@ -177,7 +177,6 @@ public final class JobsWorkerDemoVC: BaseVC {
                 make.top.equalTo(countTitleLabel.snp.bottom).offset(10)
                 make.left.equalToSuperview().offset(16)
                 make.height.equalTo(42)
-                make.width.equalTo(96)
             }
     }()
 
@@ -191,7 +190,7 @@ public final class JobsWorkerDemoVC: BaseVC {
                 make.left.equalTo(increaseButton.snp.right).offset(12)
                 make.centerY.equalTo(increaseButton)
                 make.height.equalTo(42)
-                make.width.equalTo(96)
+                make.width.equalTo(increaseButton)
             }
     }()
 
@@ -205,8 +204,8 @@ public final class JobsWorkerDemoVC: BaseVC {
                 make.left.equalTo(burstButton.snp.right).offset(12)
                 make.centerY.equalTo(increaseButton)
                 make.height.equalTo(42)
-                make.width.equalTo(96)
-                make.right.lessThanOrEqualToSuperview().inset(16)
+                make.width.equalTo(increaseButton)
+                make.right.equalToSuperview().inset(16)
             }
     }()
 
@@ -220,7 +219,7 @@ public final class JobsWorkerDemoVC: BaseVC {
                 make.top.equalTo(increaseButton.snp.bottom).offset(12)
                 make.left.equalToSuperview().offset(16)
                 make.height.equalTo(42)
-                make.width.equalTo(96)
+                make.width.equalTo(increaseButton)
                 make.bottom.equalToSuperview().inset(16)
             }
     }()
@@ -485,7 +484,12 @@ private extension JobsWorkerDemoVC {
     func makeActionButton(title: String) -> UIButton {
         UIButton.sys()
             .byTitle(title, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold), for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold), for: .normal)
+            .byNumberOfLines(1)
+            .byLineBreakMode(.byClipping)
+            .byTitleAdjustsFontSizeToFitWidth(YES)
+            .byTitleMinimumScaleFactor(0.82)
+            .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
             .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.1))
             .byCornerRadius(10)
             .byMasksToBounds(true)

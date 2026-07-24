@@ -11,6 +11,13 @@
 		9D5E6CAF8403FCF2B26E7397 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34998114A0CA715D378B5528 /* EntityInfo-JobsSwiftBaseConfigDemo.generated.swift */; };
 		A10C00012F20000100C0DE01 /* JobsSPMDemoKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10C00042F20000100C0DE01 /* JobsSPMDemoKit */; };
 		A20C00012F21000100C0DE01 /* UnityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C00022F21000100C0DE01 /* UnityManager.swift */; };
+		F10000012F22000100C0DE01 /* JobsWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F10000122F22000100C0DE01 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10000142F22000100C0DE01 /* SwiftUI.framework */; };
+		F10000132F22000100C0DE01 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10000152F22000100C0DE01 /* WidgetKit.framework */; };
+		F20000012F23000100C0DE01 /* JobsAlternateComposerIcon-Shake.icon in Resources */ = {isa = PBXBuildFile; fileRef = F20000112F23000100C0DE01 /* JobsAlternateComposerIcon-Shake.icon */; };
+		F20000022F23000100C0DE01 /* JobsAlternateComposerIcon-Gyroscope.icon in Resources */ = {isa = PBXBuildFile; fileRef = F20000122F23000100C0DE01 /* JobsAlternateComposerIcon-Gyroscope.icon */; };
+		F20000032F23000100C0DE01 /* JobsAlternateComposerIcon-Rocket.icon in Resources */ = {isa = PBXBuildFile; fileRef = F20000132F23000100C0DE01 /* JobsAlternateComposerIcon-Rocket.icon */; };
+		F20000042F23000100C0DE01 /* JobsAlternateComposerIcon-Planet.icon in Resources */ = {isa = PBXBuildFile; fileRef = F20000142F23000100C0DE01 /* JobsAlternateComposerIcon-Planet.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +35,28 @@
 			remoteGlobalIDString = C59C65352F1BFB1A0060EEAD;
 			remoteInfo = JobsSwiftBaseConfigDemo;
 		};
+		F10000032F22000100C0DE01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C59C652E2F1BFB190060EEAD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F100000A2F22000100C0DE01;
+			remoteInfo = JobsWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F10000062F22000100C0DE01 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F10000012F22000100C0DE01 /* JobsWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -40,6 +68,13 @@
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65732F1BFC1C0060EEAD /* 未尽事宜.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "未尽事宜.md"; sourceTree = "<group>"; };
+		F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JobsWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000142F22000100C0DE01 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F10000152F22000100C0DE01 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		F20000112F23000100C0DE01 /* JobsAlternateComposerIcon-Shake.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "JobsAlternateComposerIcon-Shake.icon"; sourceTree = "<group>"; };
+		F20000122F23000100C0DE01 /* JobsAlternateComposerIcon-Gyroscope.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "JobsAlternateComposerIcon-Gyroscope.icon"; sourceTree = "<group>"; };
+		F20000132F23000100C0DE01 /* JobsAlternateComposerIcon-Rocket.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "JobsAlternateComposerIcon-Rocket.icon"; sourceTree = "<group>"; };
+		F20000142F23000100C0DE01 /* JobsAlternateComposerIcon-Planet.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "JobsAlternateComposerIcon-Planet.icon"; sourceTree = "<group>"; };
 		F47AD0EC0F98FA24BDB4EE3B /* JobsSwiftLinkageMenuViewDemoVC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JobsSwiftLinkageMenuViewDemoVC.swift; path = "JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@首页联动切换子页面/JobsSwiftLinkageMenuViewDemoVC.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,12 +84,30 @@
 			membershipExceptions = (
 				"主业务流程/VC/TODO/Demo@自定义注解.swift",
 				Info.plist,
+				"Resources/AppIcons/JobsAlternateComposerIcon-Gyroscope.icon",
+				"Resources/AppIcons/JobsAlternateComposerIcon-Planet.icon",
+				"Resources/AppIcons/JobsAlternateComposerIcon-Rocket.icon",
+				"Resources/AppIcons/JobsAlternateComposerIcon-Shake.icon",
 			);
 			target = C59C65352F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */;
+		};
+		F10000072F22000100C0DE01 /* Exceptions for "JobsWidgetExtension" folder in "JobsWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F100000A2F22000100C0DE01 /* JobsWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		C51D9D1330124DD800ACBEEE /* JobsWidgetShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = JobsWidgetShared;
+			sourceTree = "<group>";
+		};
 		C59C65382F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -75,6 +128,14 @@
 			exceptions = (
 			);
 			path = JobsSwiftBaseConfigDemoUITests;
+			sourceTree = "<group>";
+		};
+		F10000082F22000100C0DE01 /* JobsWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F10000072F22000100C0DE01 /* Exceptions for "JobsWidgetExtension" folder in "JobsWidgetExtension" target */,
+			);
+			path = JobsWidgetExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -103,12 +164,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F10000092F22000100C0DE01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F10000122F22000100C0DE01 /* SwiftUI.framework in Frameworks */,
+				F10000132F22000100C0DE01 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F10000142F22000100C0DE01 /* SwiftUI.framework */,
+				F10000152F22000100C0DE01 /* WidgetKit.framework */,
 				847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */,
 			);
 			name = Frameworks;
@@ -146,10 +218,13 @@
 				C59C65382F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */,
 				C59C65482F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests */,
 				C59C65522F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */,
+				F10000082F22000100C0DE01 /* JobsWidgetExtension */,
+				C51D9D1330124DD800ACBEEE /* JobsWidgetShared */,
 				C59C65372F1BFB1A0060EEAD /* Products */,
 				A015FC91762D3615F9A4CAC5 /* Pods */,
 				0F6B5FF2C1DF6D4E9EDE8980 /* Frameworks */,
 				A20C00032F21000100C0DE01 /* Unity Host Support */,
+				F20000202F23000100C0DE01 /* Alternate App Icons */,
 				BE84CCA99B4FD97FE1349FAC /* generated */,
 				F47AD0EC0F98FA24BDB4EE3B /* JobsSwiftLinkageMenuViewDemoVC.swift */,
 			);
@@ -161,9 +236,22 @@
 				C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */,
 				C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */,
 				C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */,
+				F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		F20000202F23000100C0DE01 /* Alternate App Icons */ = {
+			isa = PBXGroup;
+			children = (
+				F20000112F23000100C0DE01 /* JobsAlternateComposerIcon-Shake.icon */,
+				F20000122F23000100C0DE01 /* JobsAlternateComposerIcon-Gyroscope.icon */,
+				F20000132F23000100C0DE01 /* JobsAlternateComposerIcon-Rocket.icon */,
+				F20000142F23000100C0DE01 /* JobsAlternateComposerIcon-Planet.icon */,
+			);
+			name = "Alternate App Icons";
+			path = JobsSwiftBaseConfigDemo/Resources/AppIcons;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -182,14 +270,18 @@
 				C59C65342F1BFB1A0060EEAD /* Resources */,
 				C57D6C202F1DDCDB0093F898 /* ShellScript */,
 				6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */,
+				F20000302F23000100C0DE01 /* Recompile Assets with Alternate Icons */,
 				7F9C6F4C7E5585F935602E59 /* [CP-User] Embed Flutter Build my_flutter Script */,
 				D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */,
+				F10000062F22000100C0DE01 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F100000D2F22000100C0DE01 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				C51D9D1330124DD800ACBEEE /* JobsWidgetShared */,
 				C59C65382F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */,
 			);
 			name = JobsSwiftBaseConfigDemo;
@@ -242,6 +334,27 @@
 			productReference = C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		F100000A2F22000100C0DE01 /* JobsWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F10000102F22000100C0DE01 /* Build configuration list for PBXNativeTarget "JobsWidgetExtension" */;
+			buildPhases = (
+				F100000C2F22000100C0DE01 /* Sources */,
+				F10000092F22000100C0DE01 /* Frameworks */,
+				F100000B2F22000100C0DE01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C51D9D1330124DD800ACBEEE /* JobsWidgetShared */,
+				F10000082F22000100C0DE01 /* JobsWidgetExtension */,
+			);
+			name = JobsWidgetExtension;
+			productName = JobsWidgetExtension;
+			productReference = F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -262,6 +375,9 @@
 					C59C654E2F1BFB1A0060EEAD = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = C59C65352F1BFB1A0060EEAD;
+					};
+					F100000A2F22000100C0DE01 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -288,6 +404,7 @@
 				C59C65352F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */,
 				C59C65442F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests */,
 				C59C654E2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests */,
+				F100000A2F22000100C0DE01 /* JobsWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -297,6 +414,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F20000012F23000100C0DE01 /* JobsAlternateComposerIcon-Shake.icon in Resources */,
+				F20000022F23000100C0DE01 /* JobsAlternateComposerIcon-Gyroscope.icon in Resources */,
+				F20000032F23000100C0DE01 /* JobsAlternateComposerIcon-Rocket.icon in Resources */,
+				F20000042F23000100C0DE01 /* JobsAlternateComposerIcon-Planet.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +429,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C59C654D2F1BFB1A0060EEAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F100000B2F22000100C0DE01 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -466,6 +594,26 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F20000302F23000100C0DE01 /* Recompile Assets with Alternate Icons */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Recompile Assets with Alternate Icons";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "# Xcode 自动构建阶段：在 CocoaPods 覆盖 Assets.car 后，重新合并主工程、Pods 资源和备用 App 图标。\n# 初始化非交互构建所需的 zsh 严格模式。\ninitialize_shell() {\n  set -euo pipefail\n  setopt NO_NOMATCH\n}\n# 收集 CocoaPods 既有图集和主工程 Icon Composer 资源。\ncollect_asset_inputs() {\n  typeset -ga JOBS_ASSET_INPUTS\n  JOBS_ASSET_INPUTS=()\n\n  local bmplayer_assets=\"${PODS_ROOT}/BMPlayer/Source/Pod_Asset_BMPlayer.xcassets\"\n  if [[ -d \"${bmplayer_assets}\" ]]; then\n    JOBS_ASSET_INPUTS+=(\"${bmplayer_assets}\")\n  fi\n\n  local asset_path=\"\"\n  while IFS= read -r -d '' asset_path; do\n    JOBS_ASSET_INPUTS+=(\"${asset_path}\")\n  done < <(\n    /usr/bin/find -L \"${SRCROOT}\" \\\n      \\( -path \"${PODS_ROOT}\" -o -name .git -o -name node_modules -o -name .dart_tool -o -name build -o -name DerivedData -o -name .build -o -name .DerivedDataUnity \\) -prune -o \\\n      -type d -name \"*.xcassets\" -print0\n  )\n\n  local icon_path=\"\"\n  while IFS= read -r -d '' icon_path; do\n    JOBS_ASSET_INPUTS+=(\"${icon_path}\")\n  done < <(\n    /usr/bin/find \"${SRCROOT}/JobsSwiftBaseConfigDemo/Resources/AppIcons\" \\\n      -maxdepth 1 -type d -name \"*.icon\" -print0\n  )\n\n  if (( ${#JOBS_ASSET_INPUTS[@]} == 0 )); then\n    echo \"error: 未找到可编译的 xcassets 或 Icon Composer 资源。\"\n    return 1\n  fi\n}\n# 根据当前 Target 构建 actool 参数，确保 Debug 和 Release 共用同一流程。\nbuild_actool_arguments() {\n  typeset -ga JOBS_ACTOOL_ARGUMENTS\n  JOBS_ACTOOL_ARGUMENTS=(\n    --output-format human-readable-text\n    --notices\n    --warnings\n    --platform \"${PLATFORM_NAME}\"\n    --minimum-deployment-target \"${IPHONEOS_DEPLOYMENT_TARGET}\"\n    --compress-pngs\n    --compile \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n    --app-icon \"${ASSETCATALOG_COMPILER_APPICON_NAME}\"\n    --output-partial-info-plist \"${TARGET_TEMP_DIR}/assetcatalog_generated_info_jobs_alternate_icons.plist\"\n  )\n\n  if [[ \",${TARGETED_DEVICE_FAMILY},\" == *,1,* ]]; then\n    JOBS_ACTOOL_ARGUMENTS+=(--target-device iphone)\n  fi\n  if [[ \",${TARGETED_DEVICE_FAMILY},\" == *,2,* ]]; then\n    JOBS_ACTOOL_ARGUMENTS+=(--target-device ipad)\n  fi\n\n  local alternate_icon_names=\"${ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES:-}\"\n  local icon_name=\"\"\n  local icon_count=0\n  for icon_name in ${=alternate_icon_names}; do\n    JOBS_ACTOOL_ARGUMENTS+=(--alternate-app-icon \"${icon_name}\")\n    icon_count=$((icon_count + 1))\n  done\n\n  if (( icon_count == 0 )); then\n    echo \"error: ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES 为空。\"\n    return 1\n  fi\n}\n# 在 CocoaPods 资源阶段之后生成包含备用图标的最终 Assets.car。\nrecompile_asset_catalog() {\n  echo \"▶︎ AppIcon：合并 ${#JOBS_ASSET_INPUTS[@]} 组资源并重新生成 Assets.car\"\n  /usr/bin/xcrun actool \"${JOBS_ACTOOL_ARGUMENTS[@]}\" \"${JOBS_ASSET_INPUTS[@]}\"\n  echo \"✅ AppIcon：备用图标已写入最终 Assets.car\"\n}\n# 编排 Xcode 非交互构建流程。\nmain() {\n  initialize_shell # 启用严格模式并避免空通配符中断资源扫描。\n  collect_asset_inputs # 汇总 CocoaPods 既有图集与主工程 Icon Composer 包。\n  build_actool_arguments # 绑定当前配置、设备族、主图标和全部备用图标名。\n  recompile_asset_catalog # 在 CocoaPods 覆盖后生成最终完整 Assets.car。\n}\n\nmain \"$@\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -492,6 +640,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F100000C2F22000100C0DE01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -504,6 +659,11 @@
 			isa = PBXTargetDependency;
 			target = C59C65352F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */;
 			targetProxy = C59C65502F1BFB1A0060EEAD /* PBXContainerItemProxy */;
+		};
+		F100000D2F22000100C0DE01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F100000A2F22000100C0DE01 /* JobsWidgetExtension */;
+			targetProxy = F10000032F22000100C0DE01 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -637,8 +797,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "JobsAlternateComposerIcon-Shake JobsAlternateComposerIcon-Gyroscope JobsAlternateComposerIcon-Rocket JobsAlternateComposerIcon-Planet";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "JobsAppIconRibbon-Debug";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = JobsSwiftBaseConfigDemo/JobsSwiftBaseConfigDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K5692KLW75;
@@ -677,8 +840,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "JobsAlternateComposerIcon-Shake JobsAlternateComposerIcon-Gyroscope JobsAlternateComposerIcon-Rocket JobsAlternateComposerIcon-Planet";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "JobsAppIconRibbon-Release";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = JobsSwiftBaseConfigDemo/JobsSwiftBaseConfigDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K5692KLW75;
@@ -809,6 +975,66 @@
 			};
 			name = Release;
 		};
+		F100000E2F22000100C0DE01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = JobsWidgetExtension/JobsWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K5692KLW75;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = JobsWidgetExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				JOBS_UNITY_FRAMEWORK_SEARCH_PATHS = "";
+				JOBS_UNITY_OTHER_LDFLAGS = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo.JobsWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F100000F2F22000100C0DE01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = JobsWidgetExtension/JobsWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K5692KLW75;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = JobsWidgetExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				JOBS_UNITY_FRAMEWORK_SEARCH_PATHS = "";
+				JOBS_UNITY_OTHER_LDFLAGS = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo.JobsWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -844,6 +1070,15 @@
 			buildConfigurations = (
 				C59C65602F1BFB1A0060EEAD /* Debug */,
 				C59C65612F1BFB1A0060EEAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F10000102F22000100C0DE01 /* Build configuration list for PBXNativeTarget "JobsWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F100000E2F22000100C0DE01 /* Debug */,
+				F100000F2F22000100C0DE01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

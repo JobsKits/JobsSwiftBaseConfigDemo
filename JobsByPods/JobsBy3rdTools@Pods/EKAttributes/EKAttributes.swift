@@ -27,7 +27,9 @@ public extension EKAttributes {
     func byCorner(radius: CGFloat, edges: EKAttributes.RoundCorners = .all(radius: 0)) -> Self {
         var a = self
         switch edges {
+        /// 处理 .all 分支
         case .all: a.roundCorners = .all(radius: radius)
+        /// 未匹配已知分支时执行兜底处理
         default:   a.roundCorners = edges
         };return a
     }

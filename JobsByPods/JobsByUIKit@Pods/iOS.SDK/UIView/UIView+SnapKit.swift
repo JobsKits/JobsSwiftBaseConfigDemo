@@ -196,6 +196,7 @@ extension UIView {
             };return self
         }
         switch model.axis {
+        /// 处理 .horizontal 分支
         case .horizontal:
             // 头尾
             views.first!.snp.makeConstraints { make in
@@ -237,6 +238,7 @@ extension UIView {
                     if let h = model.crossSize { make.height.equalTo(h) }
                 }
             }
+        /// 处理 .vertical 分支
         case .vertical:
             views.first!.snp.makeConstraints { make in
                 make.top.equalToSuperview().inset(model.leadSpacing)

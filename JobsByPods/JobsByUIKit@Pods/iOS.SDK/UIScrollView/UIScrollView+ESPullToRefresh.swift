@@ -224,15 +224,19 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     public func refresh(view: ESRefreshComponent, stateDidChange state: ESRefreshViewState) {
         self.state = state
         switch state {
+        /// 处理 .pullToRefresh 分支
         case .pullToRefresh:
             titleLabel.byText(idleDescription)
             indicator.stopAnimating()
+        /// 处理 .releaseToRefresh 分支
         case .releaseToRefresh:
             titleLabel.byText(releaseToRefreshDescription)
             indicator.stopAnimating()
+        /// 合并处理 .refreshing、.autoRefreshing 分支
         case .refreshing, .autoRefreshing:
             titleLabel.byText(loadingDescription)
             indicator.startAnimating()
+        /// 处理 .noMoreData 分支
         case .noMoreData:
             titleLabel.byText(noMoreDataDescription)
             indicator.stopAnimating()
@@ -313,15 +317,19 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     public func refresh(view: ESRefreshComponent, stateDidChange state: ESRefreshViewState) {
         self.state = state
         switch state {
+        /// 处理 .pullToRefresh 分支
         case .pullToRefresh:
             titleLabel.byText(idleDescription)
             indicator.stopAnimating()
+        /// 处理 .releaseToRefresh 分支
         case .releaseToRefresh:
             titleLabel.byText(releaseToRefreshDescription)
             indicator.stopAnimating()
+        /// 合并处理 .refreshing、.autoRefreshing 分支
         case .refreshing, .autoRefreshing:
             titleLabel.byText(loadingMoreDescription)
             indicator.startAnimating()
+        /// 处理 .noMoreData 分支
         case .noMoreData:
             titleLabel.byText(noMoreDataDescription)
             indicator.stopAnimating()

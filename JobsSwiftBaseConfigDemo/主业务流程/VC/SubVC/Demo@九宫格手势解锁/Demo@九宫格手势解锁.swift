@@ -101,10 +101,12 @@ final class GestureUnlockDemoVC: BaseVC {
                 guard let self else { return }
                 unlockView.reset()
                 switch flowState {
+                /// 处理 .confirmFirst 分支
                 case .confirmFirst:
                     flowState = .createFirst
                     hintLabel.byText("请重新设置手势（至少 4 个点 ）".tr)
                     unlockView.reset()
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     if store.hasPattern {
                         hintLabel.byText("请输入手势解锁".tr)
@@ -143,11 +145,13 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
             return
         }
         switch flowState {
+        /// 处理 .createFirst 分支
         case .createFirst:
             flowState = .confirmFirst(temp: pattern)
             view.showSelected()
             hintLabel.byText("请再绘制一次进行确认".tr)
             delayedReset()
+        /// 处理 .confirmFirst 分支
         case .confirmFirst(let temp):
             if temp == pattern {
                 store.save(pattern: pattern)
@@ -161,6 +165,7 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
                 // ✅ 两次不一致：提示完成后清除之前手势痕迹
                 toastErrorAndClear("两次不一致，请重新设置")
             }
+        /// 处理 .verify 分支
         case .verify:
             guard store.hasPattern else {
                 "还没设置手势，先去“设置/重置”".tr.toast

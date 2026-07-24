@@ -107,6 +107,8 @@ final class LuckyWheelView: UIView {
     }()
     // MARK: - 绘制相关 ==============================
     private var sliceLayers: [CAShapeLayer] = []
+    private var segmentLabels: [UILabel] = []
+    private var segmentImageViews: [UIImageView] = []
     // MARK: - 旋转状态 / JobsSwiftTimer ====================
     private var currentAngle: CGFloat = 0              // 当前盘面角度（rad）
     private var decelerator: ScrollDecelerator?
@@ -208,7 +210,10 @@ extension LuckyWheelView {
         sliceLayers.forEach { $0.removeFromSuperlayer() }
         sliceLayers.removeAll()
         // 清掉旧的文字 label / 图片
-        plateView.subviews.forEach { $0.removeFromSuperview() }
+        segmentLabels.forEach { $0.removeFromSuperview() }
+        segmentLabels.removeAll()
+        segmentImageViews.forEach { $0.removeFromSuperview() }
+        segmentImageViews.removeAll()
         guard !segments.isEmpty,
               plateView.bounds.width > 0,
               plateView.bounds.height > 0 else { return }
@@ -267,6 +272,7 @@ extension LuckyWheelView {
                 let rotation = midAngle - CGFloat.pi / 2
                 label.transform = CGAffineTransform(rotationAngle: rotation)
                 label.byAddTo(plateView)
+                segmentLabels.append(label)
             }
             // ==== 图片：文字外侧的圆形 ImageView ===================
             if let placeholder = segment.placeholderImage,
@@ -278,7 +284,7 @@ extension LuckyWheelView {
                     y: center.y + sin(midAngle) * imageRadius
                 )
                 let imageSize = radius * 0.22
-                UIImageView()
+                let imageView = UIImageView()
                     .jobs_setImage(url,
                                    fallback: placeholder,
                                    shimmerConfig: nil,
@@ -290,6 +296,7 @@ extension LuckyWheelView {
                     .byCenter(imageCenter)
                     .byCornerRadius(imageSize / 2.0)
                     .byAddTo(plateView)
+                segmentImageViews.append(imageView)
             }
         }
         // 中心点方便观察
@@ -388,10 +395,12 @@ extension LuckyWheelView {
         let angle = atan2(dy, dx)
         let now = CACurrentMediaTime()
         switch gesture.state {
+        /// 处理 .began 分支
         case .began:
             lastTouchAngle = angle
             lastTouchTimestamp = now
             angularVelocityFromPan = 0
+        /// 处理 .changed 分支
         case .changed:
             var step = angle - lastTouchAngle
             let pi = CGFloat.pi
@@ -405,6 +414,7 @@ extension LuckyWheelView {
             }
             lastTouchAngle = angle
             lastTouchTimestamp = now
+        /// 合并处理 .ended、.cancelled、.failed 分支
         case .ended, .cancelled, .failed:
             let v = angularVelocityFromPan
             angularVelocityFromPan = 0
@@ -413,6 +423,7 @@ extension LuckyWheelView {
                     self.startSpinWithScrollLikeDeceleration(initialVelocity: v)
                 }
             }
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }
@@ -421,7 +432,6 @@ extension LuckyWheelView {
     /// 外部也可以直接调用这个方法来启动
     @MainActor
     func startSpinWithScrollLikeDeceleration(initialVelocity: CGFloat? = nil) {
-        guard timer == nil else { return }
         let v0: CGFloat
         if let v = initialVelocity {
             v0 = v
@@ -431,11 +441,12 @@ extension LuckyWheelView {
             v0 = velocityForTargetDuration(spinDuration)
         }
         centerButton.bySelected(true)
-        centerButton.isUserInteractionEnabled = false
         decelerator = ScrollDecelerator(
             velocity: v0,
             decelerationRate: decelerationRate
         )
+        /// 旋转中重复启动只重置减速器，继续复用已有 Timer
+        guard timer == nil else { return }
         // ✅ displayLink 属于非 GCD 内核：JobsSwiftTimer 强制主线程 + RunLoop.main（默认就是 .main）:contentReference[oaicite:0]{index=0}
         let config = JobsSwiftTimerConfig(
             interval: TimeInterval(timerInterval),
@@ -497,7 +508,6 @@ extension LuckyWheelView {
         timer = nil
         decelerator = nil
         centerButton.bySelected(false)
-        centerButton.isUserInteractionEnabled = true
     }
 
     private func currentSegmentIndex(_ direction: PointerDirection) -> Int? {
@@ -509,12 +519,16 @@ extension LuckyWheelView {
         let inset: CGFloat = 1
         let point: CGPoint
         switch direction {
+        /// 处理 .up 分支
         case .up:
             point = CGPoint(x: center.x, y: center.y - radius + inset)
+        /// 处理 .down 分支
         case .down:
             point = CGPoint(x: center.x, y: center.y + radius - inset)
+        /// 处理 .left 分支
         case .left:
             point = CGPoint(x: center.x - radius + inset, y: center.y)
+        /// 处理 .right 分支
         case .right:
             point = CGPoint(x: center.x + radius - inset, y: center.y)
         };return segmentIndex(point)

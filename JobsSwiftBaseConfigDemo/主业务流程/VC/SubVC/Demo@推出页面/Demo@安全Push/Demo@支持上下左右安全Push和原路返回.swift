@@ -22,24 +22,22 @@ import SnapKit
 final class SafetyPushDemoVC: BaseVC {
     // MARK: - Buttons（逐个老老实实创建，链式 + 就地约束）
     private lazy var topButton: UIButton = {
-        UIButton.sys()
-            .byTitle("从上进入".tr, for: .normal)
-            .byTitle("从上进入 ✓".tr, for: .selected)
+        let mainTitle = "从上进入"
+        return UIButton.sys()
+            .byTitle(mainTitle.tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleColor(JobsCor.systemRed,  for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .bySubTitle("Push from Top".tr, for: .normal)
             .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
             .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("arrow.down.to.line".sysImg, for: .normal)
-            .byImage("arrow.down.to.line.compact".sysImg, for: .selected)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
             .byTapSound("Sound.wav")
-            .onTap { [unowned self] b in
-                b.byToggleSelected()
+            .onTap { [unowned self] _ in
                 DemoDetailVC()
                     .byData("https://www.baidu.com")
+                    .byNavigationTitle(mainTitle)
                     .byDirection(.fromTop)      // 👈 上
                     .byPush(self)
                     .byCompletion { print("❤️结束❤️ fromTop") }
@@ -60,24 +58,22 @@ final class SafetyPushDemoVC: BaseVC {
     }()
 
     private lazy var bottomButton: UIButton = {
-        UIButton.sys()
-            .byTitle("从下进入".tr, for: .normal)
-            .byTitle("从下进入 ✓".tr, for: .selected)
+        let mainTitle = "从下进入"
+        return UIButton.sys()
+            .byTitle(mainTitle.tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleColor(JobsCor.systemRed,  for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .bySubTitle("Push from Bottom".tr, for: .normal)
             .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
             .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("arrow.up.to.line".sysImg, for: .normal)
-            .byImage("arrow.up.to.line.compact".sysImg, for: .selected)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
             .byTapSound("Sound.wav")
-            .onTap { [unowned self] b in
-                b.byToggleSelected()
+            .onTap { [unowned self] _ in
                 DemoDetailVC()
                     .byData("https://www.baidu.com")
+                    .byNavigationTitle(mainTitle)
                     .byDirection(.fromBottom)   // 👈 下
                     .byPush(self)
                     .byCompletion { print("❤️结束❤️ fromBottom") }
@@ -98,24 +94,22 @@ final class SafetyPushDemoVC: BaseVC {
     }()
 
     private lazy var leftButton: UIButton = {
-        UIButton.sys()
-            .byTitle("从左进入".tr, for: .normal)
-            .byTitle("从左进入 ✓".tr, for: .selected)
+        let mainTitle = "从左进入"
+        return UIButton.sys()
+            .byTitle(mainTitle.tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleColor(JobsCor.systemRed,  for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .bySubTitle("Push from Left".tr, for: .normal)
             .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
             .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("arrow.right.to.line".sysImg, for: .normal)
-            .byImage("arrow.right.to.line.compact".sysImg, for: .selected)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
             .byTapSound("Sound.wav")
-            .onTap { [unowned self] b in
-                b.byToggleSelected()
+            .onTap { [unowned self] _ in
                 DemoDetailVC()
                     .byData("https://www.baidu.com")
+                    .byNavigationTitle(mainTitle)
                     .byDirection(.fromLeft)     // 👈 左
                     .byPush(self)
                     .byCompletion { print("❤️结束❤️ fromLeft") }
@@ -136,24 +130,22 @@ final class SafetyPushDemoVC: BaseVC {
     }()
 
     private lazy var rightButton: UIButton = {
-        UIButton.sys()
-            .byTitle("从右进入（系统默认）".tr, for: .normal)
-            .byTitle("从右进入 ✓".tr, for: .selected)
+        let mainTitle = "从右进入（系统默认）"
+        return UIButton.sys()
+            .byTitle(mainTitle.tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleColor(JobsCor.systemRed,  for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .bySubTitle("Push from Right".tr, for: .normal)
             .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
             .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("arrow.left.to.line".sysImg, for: .normal)
-            .byImage("arrow.left.to.line.compact".sysImg, for: .selected)
             .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
             .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
             .byTapSound("Sound.wav")
-            .onTap { [unowned self] b in
-                b.byToggleSelected()
+            .onTap { [unowned self] _ in
                 DemoDetailVC()
                     .byData("https://www.baidu.com")
+                    .byNavigationTitle(mainTitle)
                     .byDirection(.fromRight)    // 👈 右（等同系统默认）
                     .byPush(self)
                     .byCompletion { print("❤️结束❤️ fromRight") }

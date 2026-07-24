@@ -42,11 +42,17 @@ extension UIFont {
             case semibold   = "Semibold"
             var uiWeight: UIFont.Weight {
                 switch self {
+                /// 处理 .ultralight 分支
                 case .ultralight: return .ultraLight
+                /// 处理 .thin 分支
                 case .thin:       return .thin
+                /// 处理 .light 分支
                 case .light:      return .light
+                /// 处理 .regular 分支
                 case .regular:    return .regular
+                /// 处理 .medium 分支
                 case .medium:     return .medium
+                /// 处理 .semibold 分支
                 case .semibold:   return .semibold
                 }
             };var fontName: String { "PingFangSC-\(rawValue)" }

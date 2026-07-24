@@ -134,11 +134,13 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
     private func applyLayoutMode() {
         // ⚠️ ASTableNode 的底层依旧是 UITableView，所以这些设置仍然有效
         switch layoutMode {
+        /// 处理 .noEstimated_manualHeight 分支
         case .noEstimated_manualHeight:
             tableNode.view
                 .byEstimatedRowHeight(0)
                 .byEstimatedSectionHeaderHeight(0)
                 .byEstimatedSectionFooterHeight(0)
+        /// 处理 .estimated_autoDimension 分支
         case .estimated_autoDimension:
             tableNode.view
                 .byEstimatedRowHeight(240)

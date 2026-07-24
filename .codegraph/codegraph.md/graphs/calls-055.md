@@ -12,79 +12,79 @@
 
 ```mermaid
 flowchart LR
-  S1["method:_ASTablePendingState::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:90"]
-  T1["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S1["method:ASTableNode::initWithStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:114"]
+  T1["method:ASTableNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:127"]
   S1 -->|calls| T1
   S2["method:ASTableNode::initWithStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:114"]
-  T2["method:ASTableNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:127"]
+  T2["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
   S2 -->|calls| T2
-  S3["method:ASTableNode::initWithStyle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:114"]
-  T3["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
+  S3["method:ASTableNode::dealloc<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:133"]
+  T3["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S3 -->|calls| T3
-  S4["method:ASTableNode::dealloc<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:133"]
-  T4["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S4["method:ASTableNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:146"]
+  T4["method:ASTableNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:146"]
   S4 -->|calls| T4
-  S5["method:ASTableNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:146"]
-  T5["method:ASTableNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:146"]
+  S5["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
+  T5["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
   S5 -->|calls| T5
-  S6["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
-  T6["method:ASTableNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:200"]
+  S6["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
+  T6["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
   S6 -->|calls| T6
-  S7["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
-  T7["method:ASTableNode::clearContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:205"]
+  S7["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
+  T7["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
   S7 -->|calls| T7
   S8["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
-  T8["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
+  T8["method:ASRangeController::layoutDebugOverlayIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:254"]
   S8 -->|calls| T8
-  S9["method:ASTableNode::interfaceStateDidChange:fromState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:211"]
-  T9["method:ASRangeController::layoutDebugOverlayIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.mm:254"]
+  S9["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
+  T9["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
   S9 -->|calls| T9
-  S10["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
-  T10["method:ASTableNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:217"]
+  S10["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
+  T10["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
   S10 -->|calls| T10
-  S11["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
-  T11["method:ASTableNode::didEnterVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:226"]
+  S11["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
+  T11["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
   S11 -->|calls| T11
-  S12["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
-  T12["method:ASTableNode::didExitVisibleState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:232"]
+  S12["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
+  T12["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
   S12 -->|calls| T12
-  S13["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
-  T13["method:ASTableNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:239"]
+  S13["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  T13["method:ASTableNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:127"]
   S13 -->|calls| T13
-  S14["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
-  T14["method:ASTableNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:127"]
+  S14["method:ASTableNode::setInverted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:262"]
+  T14["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S14 -->|calls| T14
-  S15["method:ASTableNode::setInverted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:262"]
+  S15["method:ASTableNode::inverted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:273"]
   T15["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S15 -->|calls| T15
-  S16["method:ASTableNode::inverted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:273"]
-  T16["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  S16["method:ASTableNode::setContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:324"]
+  T16["method:ASTableNode::setContentOffset:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:329"]
   S16 -->|calls| T16
-  S17["method:ASTableNode::setContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:324"]
-  T17["method:ASTableNode::setContentOffset:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:329"]
+  S17["method:ASTableNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:396"]
+  T17["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S17 -->|calls| T17
   S18["method:ASTableNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:396"]
-  T18["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  T18["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S18 -->|calls| T18
-  S19["method:ASTableNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:396"]
-  T19["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S19["method:ASTableNode::delegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:414"]
+  T19["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S19 -->|calls| T19
-  S20["method:ASTableNode::delegate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:414"]
+  S20["method:ASTableNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:423"]
   T20["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S20 -->|calls| T20
   S21["method:ASTableNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:423"]
-  T21["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
+  T21["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
   S21 -->|calls| T21
-  S22["method:ASTableNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:423"]
-  T22["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S22["method:ASTableNode::dataSource<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:441"]
+  T22["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S22 -->|calls| T22
-  S23["method:ASTableNode::dataSource<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:441"]
+  S23["method:ASTableNode::setAllowsSelection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:451"]
   T23["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S23 -->|calls| T23
-  S24["method:ASTableNode::setAllowsSelection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:451"]
+  S24["method:ASTableNode::allowsSelection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:461"]
   T24["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S24 -->|calls| T24
-  S25["method:ASTableNode::allowsSelection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:461"]
+  S25["method:ASTableNode::setAllowsSelectionDuringEditing:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:470"]
   T25["method:ASTableNode::pendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableNode.mm:253"]
   S25 -->|calls| T25
 ```

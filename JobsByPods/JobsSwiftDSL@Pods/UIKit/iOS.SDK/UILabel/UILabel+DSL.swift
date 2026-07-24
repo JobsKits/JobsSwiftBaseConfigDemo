@@ -87,6 +87,20 @@ extension UILabel {
         return self
     }
 
+    /// UILabel 自身的文字阴影颜色；区别于 UIView DSL 的 CALayer 阴影颜色。
+    @discardableResult
+    public func byLabelShadowColor(_ color: UIColor?) -> Self {
+        self.shadowColor = color
+        return self
+    }
+
+    /// UILabel 自身的文字阴影偏移；区别于 UIView DSL 的 CALayer 阴影偏移。
+    @discardableResult
+    public func byLabelShadowOffset(_ offset: CGSize = .zero) -> Self {
+        self.shadowOffset = offset
+        return self
+    }
+
     @discardableResult
     public func byNextText(_ str: String?) -> Self {
         self.text = (self.text ?? "") + (str ?? "")

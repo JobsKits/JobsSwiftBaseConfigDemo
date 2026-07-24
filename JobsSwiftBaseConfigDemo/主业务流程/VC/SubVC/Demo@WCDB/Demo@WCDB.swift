@@ -65,7 +65,6 @@ final class WCDBDemoVC: BaseVC {
             .byTitle("Query Latest 20")
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.byToggleSelected()
                 do {
                     let list = try DemoDB.shared.fetchLatest(limit: 20)
                     // 5) 用的时候，用 .byVisible(YES) 来唤起
@@ -94,7 +93,6 @@ final class WCDBDemoVC: BaseVC {
             .byTitle("Clear Table")
             .onTap { [weak self] sender in
                 guard let self else { return }
-                sender.byToggleSelected()
                 do {
                     try DemoDB.shared.clear()
                     player.byVisible(YES)

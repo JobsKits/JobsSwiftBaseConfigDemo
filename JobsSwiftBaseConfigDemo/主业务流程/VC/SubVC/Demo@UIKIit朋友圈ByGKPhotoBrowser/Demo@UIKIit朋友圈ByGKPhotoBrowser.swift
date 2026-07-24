@@ -109,11 +109,13 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
 
     private func applyLayoutMode() {
         switch layoutMode {
+        /// 处理 .noEstimated_manualHeight 分支
         case .noEstimated_manualHeight:
             tableView
                 .byEstimatedRowHeight(0)
                 .byEstimatedSectionHeaderHeight(0)
                 .byEstimatedSectionFooterHeight(0)
+        /// 处理 .estimated_autoDimension 分支
         case .estimated_autoDimension:
             tableView
                 .byEstimatedRowHeight(240)

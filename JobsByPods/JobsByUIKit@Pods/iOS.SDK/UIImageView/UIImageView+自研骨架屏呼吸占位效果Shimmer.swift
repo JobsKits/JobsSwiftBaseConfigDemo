@@ -23,7 +23,9 @@ public enum JobsImageFallbackMode {
     @inline(__always)
     var image: UIImage? {
         switch self {
+        /// 处理 .shimmerOnly 分支
         case .shimmerOnly: return nil
+        /// 处理 .fallback 分支
         case .fallback(let image): return image
         }
     }
@@ -101,10 +103,12 @@ public extension UIImageView {
             return self
         }
         switch source {
+        /// 处理 .local 分支
         case .local:
             jobs_remoteURL = nil
             jobs_loadingURL = nil
             jobs_imageLoaderKind = .unknown
+        /// 处理 .remote 分支
         case .remote(let url):
             jobs_remoteURL = url
             jobs_loadingURL = url
@@ -124,12 +128,14 @@ public extension UIImageView {
             if case .remote(let url) = source, self.jobs_loadingURL != url { return }
             self.jobs_runOnMain { iv in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value):
                     iv.jobs_remoteURL = value.url
                     iv.jobs_imageLoaderKind = value.loaderKind
                     iv.jobs_loadingURL = value.url
                     iv.jobs_transition(to: value.image, fade: fade)
                     iv.jobs_endShimmerLoading()
+                /// 处理 .failure 分支
                 case .failure:
                     iv.jobs_handleImageLoadFailure(mode: mode, shimmerConfig: shimmerConfig)
                 }

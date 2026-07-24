@@ -35,6 +35,7 @@ extension JobsDefaultAgent: JobsDownloadCapable {
         ) { [weak self] result in
             guard let self else { return }
             switch result {
+            /// 处理 .success 分支
             case .success(let (url, response)):
                 self.config.logger.log(.info, "Download success", meta: [
                     "requestId": request.trace.requestId,
@@ -42,6 +43,7 @@ extension JobsDefaultAgent: JobsDownloadCapable {
                     "file": url.lastPathComponent
                 ])
                 completion(.success(url))
+            /// 处理 .failure 分支
             case .failure(let error):
                 self.config.logger.log(.error, "Download failed", meta: [
                     "requestId": request.trace.requestId,

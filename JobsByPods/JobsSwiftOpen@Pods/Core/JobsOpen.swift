@@ -20,8 +20,10 @@ public final class JobsOpen: NSObject {
         from sourceViewController: UIViewController? = nil
     ) {
         switch configuration.mode {
+        /// 处理 .inApp 分支
         case .inApp:
             openInsideApp(configuration, from: sourceViewController)
+        /// 处理 .externalBrowser 分支
         case .externalBrowser:
             openInExternalBrowser(configuration)
         }

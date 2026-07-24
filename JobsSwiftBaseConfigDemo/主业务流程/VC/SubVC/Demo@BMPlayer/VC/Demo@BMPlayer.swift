@@ -26,9 +26,13 @@ final class BMPlayerDemoVC: BaseVC {
         case local, remote, feed, float
         var title: String {
             switch self {
+            /// 处理 .local 分支
             case .local:  return "本地视频：welcome_video.mp4（单独播放）".tr
+            /// 处理 .remote 分支
             case .remote: return "网络视频：中国频道优先 · 多信号源可切换（单独播放）".tr
+            /// 处理 .feed 分支
             case .feed:   return "抖音风：列表预览 → 详情页独立播放".tr
+            /// 处理 .float 分支
             case .float:  return "悬浮窗口播放（直播）".tr
             }
         }
@@ -74,10 +78,14 @@ extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Row(rawValue: indexPath.row)! {
+        /// 处理 .remote 分支
         case .remote: PlayerRemoteVC().byPush(self)
+        /// 处理 .feed 分支
         case .feed:   FeedListVC().byPush(self)
 #if canImport(BMPlayer)
+        /// 处理 .local 分支
         case .local:  PlayerLocalVC().byPush(self)
+        /// 处理 .float 分支
         case .float:  JobsLiveFloatPlayer.shared.showRemoteLive()
 #endif
         }

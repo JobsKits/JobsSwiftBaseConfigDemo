@@ -53,10 +53,15 @@ public typealias TimerStateChangeHandler = (_ button: UIButton,
 public extension JobsTimerKind {
     var displayName: String {
         switch self {
+        /// 处理 .gcd 分支
         case .gcd:          return "GCD"
+        /// 处理 .foundation 分支
         case .foundation:   return "NSTimer"
+        /// 处理 .displayLink 分支
         case .displayLink:  return "DisplayLink"
+        /// 处理 .runLoop 分支
         case .runLoop:      return "RunLoop"
+        /// 处理系统后续新增的未知枚举值
         @unknown default:   return "Unknown"
         }
     }

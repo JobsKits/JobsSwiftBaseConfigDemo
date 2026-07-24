@@ -13,6 +13,7 @@ import WebKit
 import JobsInheritance
 import JobsByUIKit
 import GKNavigationBarSwift
+import SnapKit
 
 public final class JobsOpenWebViewController: BaseVC {
     private let url: URL
@@ -50,15 +51,11 @@ public final class JobsOpenWebViewController: BaseVC {
         super.viewDidLoad()
         title = pageTitle ?? url.host
         jobsSetupGKNav(title: title ?? "网页", leftButton: backButton)
-        webView
-            .byAutoLayout()
-            .byAddTo(view)
-        NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: gk_navigationBar.bottomAnchor),
-            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+        webView.byAddTo(view)
+        webView.snp.makeConstraints { make in
+            make.top.equalTo(gk_navigationBar.snp.bottom)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
         webView.load(URLRequest(url: url))
     }
 

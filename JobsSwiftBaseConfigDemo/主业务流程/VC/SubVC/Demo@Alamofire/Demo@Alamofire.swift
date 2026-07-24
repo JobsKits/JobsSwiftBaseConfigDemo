@@ -83,9 +83,11 @@ final class AFDemoVC: BaseVC {
                 api.request(.ghZen) { [weak self] res in
                     guard let self else { return }
                     switch res {
+                    /// 处理 .success 分支
                     case .success(let data):
                         let text = String(data: data, encoding: .utf8) ?? ""
                         show(title: "GET /zen ✅", body: text)
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "GET /zen ❌", body: "\(e)")
                     }
@@ -111,6 +113,7 @@ final class AFDemoVC: BaseVC {
                 api.request(.ghUser(username: "apple")) { [weak self] res in
                     guard let self else { return }
                     switch res {
+                    /// 处理 .success 分支
                     case .success(let data):
                         do {
                             let user = try JSONDecoder().decode(GHUser.self, from: data)
@@ -121,6 +124,7 @@ final class AFDemoVC: BaseVC {
                         } catch {
                             show(title: "解析失败 ❌".tr, body: "\(error)")
                         }
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "GET /users/apple ❌", body: "\(e)")
                     }
@@ -146,8 +150,10 @@ final class AFDemoVC: BaseVC {
                 api.request(.login(email: "eve.holt@reqres.in", password: "cityslicka")) { [weak self] res in
                     guard let self else { return }
                     switch res {
+                    /// 处理 .success 分支
                     case .success(let data):
                         show(title: "POST /login ✅", body: self.prettyJSON(data))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "POST /login ❌", body: "\(e)")
                     }
@@ -176,8 +182,10 @@ final class AFDemoVC: BaseVC {
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
+                    /// 处理 .success 分支
                     case .success(let data):
                         show(title: "UPLOAD ✅", body: self.prettyJSON(data))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "UPLOAD ❌", body: "\(e)")
                     }
@@ -205,8 +213,10 @@ final class AFDemoVC: BaseVC {
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
+                    /// 处理 .success 分支
                     case .success(let url):
                         show(title: "DOWNLOAD PNG ✅", body: "保存至：\(url.path)")
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "DOWNLOAD PNG ❌", body: "\(e)")
                     }
@@ -234,8 +244,10 @@ final class AFDemoVC: BaseVC {
                 }, jobsByVoidBlock: { [weak self] r in
                     guard let self else { return }
                     switch r {
+                    /// 处理 .success 分支
                     case .success(let url):
                         show(title: "DOWNLOAD BYTES ✅", body: "保存至：\(url.path)")
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "DOWNLOAD BYTES ❌", body: "\(e)")
                     }
@@ -331,8 +343,10 @@ final class AFDemoVC: BaseVC {
                 stub.request(.ghZen) { [weak self] r in
                     guard let self else { return }
                     switch r {
+                    /// 处理 .success 分支
                     case .success(let data):
                         show(title: "Stub /zen ✅", body: String(data: data, encoding: .utf8))
+                    /// 处理 .failure 分支
                     case .failure(let e):
                         show(title: "Stub /zen ❌", body: "\(e)")
                     }

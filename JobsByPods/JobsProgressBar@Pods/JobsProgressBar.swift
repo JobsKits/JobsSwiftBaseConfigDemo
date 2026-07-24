@@ -28,6 +28,13 @@ public enum JobsProgressLabelPlacement {
     case bottom
     case hidden
 }
+
+public typealias JobsProgressBubblePlacement = JobsProgressLabelPlacement
+
+public enum JobsProgressBubbleDisplayMode {
+    case always
+    case whileChanging
+}
 // MARK: - JobsProgressBar
 open class JobsProgressBar: UIView {
     // MARK: - Public API
@@ -72,6 +79,26 @@ open class JobsProgressBar: UIView {
         }
     }
     public var progressLabelSpacing: CGFloat = 6 {
+        didSet { setNeedsLayout() }
+    }
+
+    /// 默认仅在进度发生变化时显示，避免静止状态长期遮挡内容
+    public var progressBubbleDisplayMode: JobsProgressBubbleDisplayMode = .whileChanging {
+        didSet {
+            progressBubbleHideWorkItem?.cancel()
+            progressBubbleHideWorkItem = nil
+            isProgressBubbleChangeVisible = false
+            setNeedsLayout()
+        }
+    }
+
+    public var progressBubbleHideDelay: TimeInterval = 0.8
+
+    public var progressBubbleBackgroundColor: UIColor = JobsCor.secondarySystemBackground {
+        didSet { setNeedsLayout() }
+    }
+
+    public var progressBubbleCornerRadius: CGFloat = 8 {
         didSet { setNeedsLayout() }
     }
 
@@ -193,6 +220,8 @@ open class JobsProgressBar: UIView {
     private var autoTimer: JobsSwiftTimerProtocol?
     private var autoStep: CGFloat = 0.01
     private var _isAutoTick: Bool = false
+    private var progressBubbleHideWorkItem: DispatchWorkItem?
+    private var isProgressBubbleChangeVisible = false
     // MARK: - Views
     private lazy var trackView: UIView = {
         UIView()
@@ -223,6 +252,17 @@ open class JobsProgressBar: UIView {
             .byBorderColor(JobsCor.white.withAlphaComponent(0.9))
             .byBorderWidth(pressedHighlightWidth)
     }()
+    /// 带小三角的进度气泡背景
+    private lazy var progressBubbleLayer: CAShapeLayer = {
+        CAShapeLayer()
+            .byFillColor(progressBubbleBackgroundColor)
+            .byMasksToBounds(NO)
+            .byShadowColor(JobsCor.black)
+            .byShadowOpacity(0.18)
+            .byShadowRadius(6)
+            .byShadowOffset(CGSize(width: 0, height: 2))
+            .byHidden(YES)
+    }()
 
     private lazy var panGesture: UIPanGestureRecognizer = {
         UIPanGestureRecognizer
@@ -239,6 +279,7 @@ open class JobsProgressBar: UIView {
                 smoothedDragSpeed = smoothedDragSpeed + (axisV - smoothedDragSpeed) * rotationSpeedSmoothing
                 let rotDuration = rotationDuration(forSpeed: smoothedDragSpeed)
                 switch gr.state {
+                /// 处理 .began 分支
                 case .began:
                     isUserDragging = true
                     setThumbDraggingUI(true)
@@ -246,6 +287,7 @@ open class JobsProgressBar: UIView {
                     updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: rotDuration)
                     setProgress(newRaw, animated: false)
                     onDragBegan?(newRaw)
+                /// 处理 .changed 分支
                 case .changed:
                     // ✅ 没滑动就不转：用“速度 + 显示进度 delta”双阈值判断
                     let old = lastDisplayProgress ?? newDisplay
@@ -259,6 +301,7 @@ open class JobsProgressBar: UIView {
                     }
                     setProgress(newRaw, animated: false)
                     onDragChanged?(newRaw)
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: rotDuration)
                     setProgress(newRaw, animated: false)
@@ -268,6 +311,7 @@ open class JobsProgressBar: UIView {
                     if isAutoAnimating == false {
                         spinDownAndStop(sign: lastRotationSign)
                     }
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
@@ -276,6 +320,7 @@ open class JobsProgressBar: UIView {
     }()
 
     deinit {
+        progressBubbleHideWorkItem?.cancel()
         stopAutoProgress()
     }
     // MARK: - Init
@@ -295,10 +340,13 @@ open class JobsProgressBar: UIView {
         self.byBackgroundColor(JobsCor.clear)
         trackView.byVisible(true)
         fillView.byVisible(true)
-        progressLabel.byVisible(true)
+        progressLabel.byHidden(YES)
+        if progressBubbleLayer.superlayer == nil {
+            layer.byInsertSublayer(progressBubbleLayer, below: progressLabel.layer)
+        }
         thumbImageView.byHidden((thumbImage == nil))
         if thumbImageView.layer.sublayers?.contains(thumbHighlightLayer) != true {
-            thumbImageView.layer.addSublayer(thumbHighlightLayer)
+            thumbImageView.layer.byAddSublayer(thumbHighlightLayer)
         }
         updateDragGestureEnabled()
     }
@@ -316,8 +364,10 @@ open class JobsProgressBar: UIView {
         let raw = max(0, min(_progress, 1))
         let displayProgress: CGFloat
         switch valueMode {
+        /// 处理 .countUp 分支
         case .countUp:
             displayProgress = raw
+        /// 处理 .countDown 分支
         case .countDown:
             displayProgress = 1 - raw
         }
@@ -327,6 +377,7 @@ open class JobsProgressBar: UIView {
         let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
         let preferredThickness: CGFloat = trackThickness ?? bounds.height
         switch direction {
+        /// 合并处理 .leftToRight、.rightToLeft 分支
         case .leftToRight, .rightToLeft:
             let trackWidth = max(0, bounds.width - 2 * hInset)
             let availableHeight = max(0, bounds.height - 2 * vInset)
@@ -351,6 +402,7 @@ open class JobsProgressBar: UIView {
                 trackFrame: trackFrame
             )
             layoutProgressLabelForHorizontal(endpointX: endpointX, trackFrame: trackFrame)
+        /// 合并处理 .bottomToTop、.topToBottom 分支
         case .bottomToTop, .topToBottom:
             let availableWidth = max(0, bounds.width - 2 * hInset)
             let trackWidth = min(max(0, preferredThickness), availableWidth)
@@ -385,6 +437,33 @@ open class JobsProgressBar: UIView {
         guard _isAutoTick == false else { return }
         stopAutoProgress()
     }
+
+    private func updateProgressBubbleChangeState(from oldValue: CGFloat,
+                                                 to newValue: CGFloat) {
+        guard abs(newValue - oldValue) > 0.000_001 else { return }
+        progressBubbleHideWorkItem?.cancel()
+        progressBubbleHideWorkItem = nil
+        switch progressBubbleDisplayMode {
+        /// 常显模式由布局阶段持续保持可见
+        case .always:
+            setNeedsLayout()
+        /// 变化模式在最后一次更新后延迟隐藏
+        case .whileChanging:
+            isProgressBubbleChangeVisible = true
+            setNeedsLayout()
+            let workItem = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.isProgressBubbleChangeVisible = false
+                self.progressBubbleHideWorkItem = nil
+                self.setNeedsLayout()
+            }
+            progressBubbleHideWorkItem = workItem
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + max(0.05, progressBubbleHideDelay),
+                execute: workItem
+            )
+        }
+    }
     // MARK: - Auto Progress
     @discardableResult
     public func startAutoProgress(fromZero: Bool = true,
@@ -411,7 +490,6 @@ open class JobsProgressBar: UIView {
         let t = JobsTimer(kind: .gcd, config: config) { [weak self] in
             onMainAsync(self) { bar in
                 let next = min(1, max(0, bar._progress + bar.autoStep))
-                bar._progress = next
                 bar._isAutoTick = true
                 bar.setProgress(next, animated: animated, duration: interval)
                 bar._isAutoTick = false
@@ -441,7 +519,9 @@ open class JobsProgressBar: UIView {
                             duration: TimeInterval = 0.25) {
         autoStopIfNeeded()
         let clamped = max(0, min(progress, 1))
+        let oldProgress = _progress
         _progress = clamped
+        updateProgressBubbleChangeState(from: oldProgress, to: clamped)
         if animated {
             let newDisplay = displayProgressValue(forRaw: clamped)
             updateRotationDirectionByDisplayDelta(newDisplay: newDisplay, duration: autoRotationDuration)
@@ -484,8 +564,10 @@ open class JobsProgressBar: UIView {
         let displayRatio = clampedPercent / 100.0
         let raw: CGFloat
         switch valueMode {
+        /// 处理 .countUp 分支
         case .countUp:
             raw = displayRatio
+        /// 处理 .countDown 分支
         case .countDown:
             raw = 1 - displayRatio
         }
@@ -508,11 +590,13 @@ extension JobsProgressBar {
         let vInset: CGFloat = max(0, trackVerticalInset ?? 0)
         let preferredThickness: CGFloat = trackThickness ?? bounds.height
         switch direction {
+        /// 合并处理 .leftToRight、.rightToLeft 分支
         case .leftToRight, .rightToLeft:
             let trackWidth = max(0, bounds.width - 2 * hInset)
             let availableHeight = max(0, bounds.height - 2 * vInset)
             let trackHeight = min(max(0, preferredThickness), availableHeight)
             return CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
+        /// 合并处理 .bottomToTop、.topToBottom 分支
         case .bottomToTop, .topToBottom:
             let availableWidth = max(0, bounds.width - 2 * hInset)
             let trackWidth = min(max(0, preferredThickness), availableWidth)
@@ -524,8 +608,10 @@ extension JobsProgressBar {
     fileprivate func displayProgressValue(forRaw raw: CGFloat) -> CGFloat {
         let clamped = max(0, min(raw, 1))
         switch valueMode {
+        /// 处理 .countUp 分支
         case .countUp:
             return clamped
+        /// 处理 .countDown 分支
         case .countDown:
             return 1 - clamped
         }
@@ -534,8 +620,10 @@ extension JobsProgressBar {
     private func rawProgressValue(fromDisplay display: CGFloat) -> CGFloat {
         let clamped = max(0, min(display, 1))
         switch valueMode {
+        /// 处理 .countUp 分支
         case .countUp:
             return clamped
+        /// 处理 .countDown 分支
         case .countDown:
             return 1 - clamped
         }
@@ -545,12 +633,16 @@ extension JobsProgressBar {
         let tf = currentTrackFrame()
         guard tf.width > 0, tf.height > 0 else { return displayProgressValue(forRaw: _progress) }
         switch direction {
+        /// 处理 .leftToRight 分支
         case .leftToRight:
             return max(0, min(1, (location.x - tf.minX) / tf.width))
+        /// 处理 .rightToLeft 分支
         case .rightToLeft:
             return max(0, min(1, (tf.maxX - location.x) / tf.width))
+        /// 处理 .topToBottom 分支
         case .topToBottom:
             return max(0, min(1, (location.y - tf.minY) / tf.height))
+        /// 处理 .bottomToTop 分支
         case .bottomToTop:
             return max(0, min(1, (tf.maxY - location.y) / tf.height))
         }
@@ -558,8 +650,10 @@ extension JobsProgressBar {
 
     private func axisSpeed(from velocity: CGPoint) -> CGFloat {
         switch direction {
+        /// 合并处理 .leftToRight、.rightToLeft 分支
         case .leftToRight, .rightToLeft:
             return abs(velocity.x)
+        /// 合并处理 .topToBottom、.bottomToTop 分支
         case .topToBottom, .bottomToTop:
             return abs(velocity.y)
         }
@@ -718,23 +812,31 @@ extension JobsProgressBar {
         let eps: CGFloat = 0.0001
         if displayProgress <= eps {
             switch direction {
+            /// 处理 .leftToRight 分支
             case .leftToRight:
                 c.x = max(c.x, trackFrame.minX + halfW)
+            /// 处理 .rightToLeft 分支
             case .rightToLeft:
                 c.x = min(c.x, trackFrame.maxX - halfW)
+            /// 处理 .topToBottom 分支
             case .topToBottom:
                 c.y = max(c.y, trackFrame.minY + halfH)
+            /// 处理 .bottomToTop 分支
             case .bottomToTop:
                 c.y = min(c.y, trackFrame.maxY - halfH)
             }
         } else if displayProgress >= 1 - eps {
             switch direction {
+            /// 处理 .leftToRight 分支
             case .leftToRight:
                 c.x = min(c.x, trackFrame.maxX - halfW)
+            /// 处理 .rightToLeft 分支
             case .rightToLeft:
                 c.x = max(c.x, trackFrame.minX + halfW)
+            /// 处理 .topToBottom 分支
             case .topToBottom:
                 c.y = min(c.y, trackFrame.maxY - halfH)
+            /// 处理 .bottomToTop 分支
             case .bottomToTop:
                 c.y = max(c.y, trackFrame.minY + halfH)
             }
@@ -845,6 +947,30 @@ extension JobsProgressBar {
     }
 
     @discardableResult
+    public func byProgressBubblePlacement(_ placement: JobsProgressBubblePlacement) -> Self {
+        self.progressLabelPlacement = placement
+        return self
+    }
+
+    @discardableResult
+    public func byProgressBubbleDisplayMode(_ mode: JobsProgressBubbleDisplayMode) -> Self {
+        self.progressBubbleDisplayMode = mode
+        return self
+    }
+
+    @discardableResult
+    public func byProgressBubbleHideDelay(_ delay: TimeInterval) -> Self {
+        self.progressBubbleHideDelay = max(0, delay)
+        return self
+    }
+
+    @discardableResult
+    public func byProgressBubbleCornerRadius(_ radius: CGFloat) -> Self {
+        self.progressBubbleCornerRadius = max(0, radius)
+        return self
+    }
+
+    @discardableResult
     public func byAutoHideLabel(_ v: Bool) -> Self {
         self.autoHideLabel = v
         return self
@@ -870,7 +996,7 @@ extension JobsProgressBar {
 
     @discardableResult
     public func byLabelBackgroundColor(_ color: UIColor) -> Self {
-        self.progressLabel.byBackgroundColor(color)
+        self.progressBubbleBackgroundColor = color
         return self
     }
 
@@ -976,9 +1102,8 @@ extension JobsProgressBar {
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byText("0%")
-            .byBackgroundColor(JobsCor.secondarySystemBackground)
-            .byCornerRadius(10)
-            .byMasksToBounds(YES)
+            .byBackgroundColor(JobsCor.clear)
+            .byMasksToBounds(NO)
             .byUserInteractionEnabled(NO)
             .byAddTo(self)
         objc_setAssociatedObject(
@@ -995,76 +1120,124 @@ extension JobsProgressBar {
     }
 
     fileprivate func layoutProgressLabelForHorizontal(endpointX: CGFloat,trackFrame: CGRect) {
-        switch progressLabelPlacement {
-        case .hidden:
-            progressLabel.byHidden(YES)
-            return
-        case .top, .bottom:
-            break
-        }
-        if autoHideLabel, bounds.height < labelMinVisibleHeight {
-            progressLabel.byHidden(YES)
-            return
-        } else {
-            progressLabel.byHidden(NO)
-        }
-        progressLabel.sizeToFit()
-        let labelSize = CGSize(
-            width: progressLabel.bounds.width + 8,
-            height: progressLabel.bounds.height + 4
-        )
-        progressLabel.bounds.size = labelSize
-        var centerX = endpointX
-        let minX = trackFrame.minX + labelSize.width / 2
-        let maxX = trackFrame.maxX - labelSize.width / 2
-        centerX = min(max(centerX, minX), maxX)
-        let spacing = max(0, progressLabelSpacing)
-        let centerY: CGFloat = {
-            switch progressLabelPlacement {
-            case .top:
-                return trackFrame.minY - spacing - labelSize.height / 2
-            case .bottom:
-                return trackFrame.maxY + spacing + labelSize.height / 2
-            case .hidden:
-                return 0
-            }
-        }()
-        progressLabel.byCenter(CGPoint(x: centerX, y: centerY))
+        let anchor = thumbImageView.isHidden
+        ? CGPoint(x: endpointX, y: trackFrame.midY)
+        : thumbImageView.center
+        let headFrame = thumbImageView.isHidden
+        ? CGRect(x: endpointX, y: trackFrame.minY, width: 0, height: trackFrame.height)
+        : thumbImageView.frame
+        layoutProgressBubble(anchor: anchor, headFrame: headFrame)
     }
 
     fileprivate func layoutProgressLabelForVertical(endpointY: CGFloat,
                                                    trackFrame: CGRect) {
-        switch progressLabelPlacement {
-        case .hidden:
-            progressLabel.byHidden(YES)
-            return
-        case .top, .bottom:
-            break
-        }
-        if autoHideLabel, bounds.height < labelMinVisibleHeight {
-            progressLabel.byHidden(YES)
-            return
-        } else {
-            progressLabel.byHidden(NO)
-        }
+        let anchor = thumbImageView.isHidden
+        ? CGPoint(x: trackFrame.midX, y: endpointY)
+        : thumbImageView.center
+        let headFrame = thumbImageView.isHidden
+        ? CGRect(x: trackFrame.minX, y: endpointY, width: trackFrame.width, height: 0)
+        : thumbImageView.frame
+        layoutProgressBubble(anchor: anchor, headFrame: headFrame)
+    }
+
+    private func layoutProgressBubble(anchor: CGPoint,
+                                      headFrame: CGRect) {
         progressLabel.sizeToFit()
-        let labelSize = CGSize(
-            width: progressLabel.bounds.width + 8,
-            height: progressLabel.bounds.height + 4
+        let horizontalMargin: CGFloat = 4
+        let availableWidth = max(0, bounds.width - horizontalMargin * 2)
+        let bubbleWidth = min(
+            max(44, progressLabel.bounds.width + 20),
+            availableWidth
         )
-        progressLabel.bounds.size = labelSize
-        let centerX = trackFrame.midX
+        let bubbleHeight = max(28, progressLabel.bounds.height + 10)
+        let halfBubbleWidth = bubbleWidth / 2
+        let minimumCenterX = bounds.minX + horizontalMargin + halfBubbleWidth
+        let maximumCenterX = bounds.maxX - horizontalMargin - halfBubbleWidth
+        let centerX = maximumCenterX >= minimumCenterX
+        ? min(max(anchor.x, minimumCenterX), maximumCenterX)
+        : bounds.midX
         let spacing = max(0, progressLabelSpacing)
-        let centerY: CGFloat = {
-            switch progressLabelPlacement {
-            case .top:
-                return endpointY - spacing - labelSize.height / 2
-            case .bottom:
-                return endpointY + spacing + labelSize.height / 2
-            case .hidden:
-                return 0
-            }
-        }()
-        progressLabel.center = CGPoint(x: centerX, y: centerY)
+        let arrowHeight: CGFloat = 6
+        let arrowHalfWidth: CGFloat = 5
+        let bubbleFrame: CGRect
+        let arrowPath: UIBezierPath
+        switch progressLabelPlacement {
+        /// 气泡位于进度头上方，小三角向下指向进度头
+        case .top:
+            let arrowTipY = headFrame.minY - spacing
+            bubbleFrame = CGRect(
+                x: centerX - halfBubbleWidth,
+                y: arrowTipY - arrowHeight - bubbleHeight,
+                width: bubbleWidth,
+                height: bubbleHeight
+            )
+            let arrowTipX = min(
+                max(anchor.x, bubbleFrame.minX + arrowHalfWidth),
+                bubbleFrame.maxX - arrowHalfWidth
+            )
+            arrowPath = UIBezierPath.make()
+                .byMove(to: CGPoint(x: arrowTipX - arrowHalfWidth, y: bubbleFrame.maxY))
+                .byAddLine(to: CGPoint(x: arrowTipX, y: arrowTipY))
+                .byAddLine(to: CGPoint(x: arrowTipX + arrowHalfWidth, y: bubbleFrame.maxY))
+                .byClose()
+        /// 气泡位于进度头下方，小三角向上指向进度头
+        case .bottom:
+            let arrowTipY = headFrame.maxY + spacing
+            bubbleFrame = CGRect(
+                x: centerX - halfBubbleWidth,
+                y: arrowTipY + arrowHeight,
+                width: bubbleWidth,
+                height: bubbleHeight
+            )
+            let arrowTipX = min(
+                max(anchor.x, bubbleFrame.minX + arrowHalfWidth),
+                bubbleFrame.maxX - arrowHalfWidth
+            )
+            arrowPath = UIBezierPath.make()
+                .byMove(to: CGPoint(x: arrowTipX - arrowHalfWidth, y: bubbleFrame.minY))
+                .byAddLine(to: CGPoint(x: arrowTipX, y: arrowTipY))
+                .byAddLine(to: CGPoint(x: arrowTipX + arrowHalfWidth, y: bubbleFrame.minY))
+                .byClose()
+        /// 隐藏模式保留进度更新，但不绘制气泡
+        case .hidden:
+            setProgressBubbleVisible(NO)
+            return
+        }
+        let cornerRadius = min(
+            max(0, progressBubbleCornerRadius),
+            min(bubbleFrame.width, bubbleFrame.height) / 2
+        )
+        let bubblePath = UIBezierPath
+            .make(roundedRect: bubbleFrame, cornerRadius: cornerRadius)
+            .byAppend(arrowPath)
+        let resolvedBackgroundColor: UIColor
+        if #available(iOS 13.0, *) {
+            resolvedBackgroundColor = progressBubbleBackgroundColor.resolvedColor(with: traitCollection)
+        } else {
+            resolvedBackgroundColor = progressBubbleBackgroundColor
+        }
+        progressLabel.byFrame(bubbleFrame)
+        progressBubbleLayer
+            .byFrame(bounds)
+            .byPath(bubblePath.cgPath)
+            .byFillColor(resolvedBackgroundColor)
+        setProgressBubbleVisible(shouldShowProgressBubble)
+    }
+
+    private var shouldShowProgressBubble: Bool {
+        if autoHideLabel, bounds.height < labelMinVisibleHeight { return false }
+        switch progressBubbleDisplayMode {
+        /// 常显模式只受 placement 和最小高度规则控制
+        case .always:
+            return true
+        /// 变化模式由最近一次进度更新激活
+        case .whileChanging:
+            return isProgressBubbleChangeVisible
+        }
+    }
+
+    private func setProgressBubbleVisible(_ visible: Bool) {
+        progressLabel.byHidden(!visible)
+        progressBubbleLayer.byHidden(!visible)
     }
 }

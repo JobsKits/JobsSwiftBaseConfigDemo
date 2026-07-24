@@ -77,15 +77,18 @@ public final class JobsViewPushPresentation: NSObject {
         }
         isPresented = false
         isAnimatingTransition = true
-        presentedView.layer.removeAllAnimations()
-        transitionView.layer.removeAllAnimations()
         let visibleFrame = visibleFrameForTransitionBounds()
-        presentedView.transform = .identity
-        presentedView.byFrame(visibleFrame)
-        presentedView.superview?.layoutIfNeeded()
+        let targetFrame = hiddenFrame(for: visibleFrame)
+        let currentFrame = presentedView.layer.presentation()?.frame ?? presentedView.frame
+        let remainingDistance = max(
+            abs(targetFrame.origin.x - currentFrame.origin.x),
+            abs(targetFrame.origin.y - currentFrame.origin.y)
+        )
+        let remainingRatio = min(remainingDistance / interactiveDistance(), 1)
+        let remainingDuration = configuration.animationDuration * TimeInterval(remainingRatio)
         let animations = { [weak self] in
             guard let self else { return }
-            presentedView.byFrame(self.hiddenFrame(for: visibleFrame))
+            presentedView.byFrame(targetFrame)
             self.transitionView.byBackgroundColor(JobsCor.clear)
             presentedView.layoutIfNeeded()
         }
@@ -98,13 +101,13 @@ public final class JobsViewPushPresentation: NSObject {
             self.onDismiss?()
             completion?()
         }
-        guard animated, configuration.animationDuration > 0 else {
+        guard animated, remainingDuration > 0 else {
             animations()
             finish(true)
             return
         }
         UIView.jobsAnimateWithOptions(
-            configuration.animationDuration,
+            remainingDuration,
             delay: 0,
             options: [.curveEaseInOut, .beginFromCurrentState],
             animations: animations,
@@ -203,13 +206,17 @@ private extension JobsViewPushPresentation {
         let bounds = transitionView.bounds
         let ratio = configuration.presentedRatio
         switch configuration.direction {
+        /// 处理 .top 分支
         case .top:
             return CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height * ratio)
+        /// 处理 .bottom 分支
         case .bottom:
             let height = bounds.height * ratio
             return CGRect(x: 0, y: bounds.height - height, width: bounds.width, height: height)
+        /// 处理 .left 分支
         case .left:
             return CGRect(x: 0, y: 0, width: bounds.width * ratio, height: bounds.height)
+        /// 处理 .right 分支
         case .right:
             let width = bounds.width * ratio
             return CGRect(x: bounds.width - width, y: 0, width: width, height: bounds.height)
@@ -219,12 +226,16 @@ private extension JobsViewPushPresentation {
     func hiddenFrame(for visibleFrame: CGRect) -> CGRect {
         var hiddenFrame = visibleFrame
         switch configuration.direction {
+        /// 处理 .top 分支
         case .top:
             hiddenFrame.origin.y = -visibleFrame.height
+        /// 处理 .bottom 分支
         case .bottom:
             hiddenFrame.origin.y = transitionView.bounds.maxY
+        /// 处理 .left 分支
         case .left:
             hiddenFrame.origin.x = -visibleFrame.width
+        /// 处理 .right 分支
         case .right:
             hiddenFrame.origin.x = transitionView.bounds.maxX
         };return hiddenFrame
@@ -233,8 +244,10 @@ private extension JobsViewPushPresentation {
     func interactiveDistance() -> CGFloat {
         guard let presentedView else { return 1 }
         switch configuration.direction {
+        /// 合并处理 .top、.bottom 分支
         case .top, .bottom:
             return max(presentedView.bounds.height, 1)
+        /// 合并处理 .left、.right 分支
         case .left, .right:
             return max(presentedView.bounds.width, 1)
         }
@@ -242,12 +255,16 @@ private extension JobsViewPushPresentation {
 
     func interactiveOffset(for translation: CGPoint) -> CGFloat {
         switch configuration.direction {
+        /// 处理 .top 分支
         case .top:
             return min(translation.y, 0)
+        /// 处理 .bottom 分支
         case .bottom:
             return max(translation.y, 0)
+        /// 处理 .left 分支
         case .left:
             return min(translation.x, 0)
+        /// 处理 .right 分支
         case .right:
             return max(translation.x, 0)
         }
@@ -255,12 +272,16 @@ private extension JobsViewPushPresentation {
 
     func interactiveVelocity(for velocity: CGPoint) -> CGFloat {
         switch configuration.direction {
+        /// 处理 .top 分支
         case .top:
             return -velocity.y
+        /// 处理 .bottom 分支
         case .bottom:
             return velocity.y
+        /// 处理 .left 分支
         case .left:
             return -velocity.x
+        /// 处理 .right 分支
         case .right:
             return velocity.x
         }
@@ -273,12 +294,16 @@ private extension JobsViewPushPresentation {
         let progress = min(abs(offset) / distance, 1)
         let limitedOffset = distance * progress
         switch configuration.direction {
+        /// 处理 .top 分支
         case .top:
             presentedView.byFrame(visibleFrame.offsetBy(dx: 0, dy: -limitedOffset))
+        /// 处理 .bottom 分支
         case .bottom:
             presentedView.byFrame(visibleFrame.offsetBy(dx: 0, dy: limitedOffset))
+        /// 处理 .left 分支
         case .left:
             presentedView.byFrame(visibleFrame.offsetBy(dx: -limitedOffset, dy: 0))
+        /// 处理 .right 分支
         case .right:
             presentedView.byFrame(visibleFrame.offsetBy(dx: limitedOffset, dy: 0))
         }
@@ -319,8 +344,10 @@ private extension JobsViewPushPresentation {
         guard presentedView != nil else { return }
         let offset = interactiveOffset(for: gesture.translation(in: transitionView))
         switch gesture.state {
+        /// 合并处理 .began、.changed 分支
         case .began, .changed:
             applyInteractiveOffset(offset)
+        /// 合并处理 .ended、.cancelled、.failed 分支
         case .ended, .cancelled, .failed:
             let progress = min(abs(offset) / interactiveDistance(), 1)
             let velocity = interactiveVelocity(for: gesture.velocity(in: transitionView))
@@ -330,6 +357,7 @@ private extension JobsViewPushPresentation {
             } else {
                 restoreAfterInteractiveDismiss()
             }
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

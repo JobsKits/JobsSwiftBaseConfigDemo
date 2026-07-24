@@ -16,52 +16,52 @@ flowchart LR
   T1["method:Mutex::try_lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:147"]
   S1 -->|calls| T1
   S2["method:Mutex::try_lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:147"]
-  T2["method:Mutex::try_lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:147"]
+  T2["function:ASRecursiveUnfairLockTryLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:57"]
   S2 -->|calls| T2
   S3["method:Mutex::try_lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:147"]
-  T3["function:ASRecursiveUnfairLockTryLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:57"]
+  T3["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
   S3 -->|calls| T3
-  S4["method:Mutex::try_lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:147"]
-  T4["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
+  S4["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
+  T4["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
   S4 -->|calls| T4
   S5["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
   T5["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
   S5 -->|calls| T5
   S6["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
-  T6["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
+  T6["function:ASRecursiveUnfairLockLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:38"]
   S6 -->|calls| T6
   S7["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
-  T7["function:ASRecursiveUnfairLockLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:38"]
+  T7["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
   S7 -->|calls| T7
-  S8["method:Mutex::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:169"]
-  T8["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
+  S8["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
+  T8["method:Mutex::WillUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:248"]
   S8 -->|calls| T8
   S9["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
-  T9["method:Mutex::WillUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:248"]
+  T9["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
   S9 -->|calls| T9
   S10["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
   T10["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
   S10 -->|calls| T10
   S11["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
-  T11["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
+  T11["function:ASRecursiveUnfairLockUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:73"]
   S11 -->|calls| T11
-  S12["method:Mutex::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:187"]
-  T12["function:ASRecursiveUnfairLockUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRecursiveUnfairLock.mm:73"]
+  S12["method:Mutex::WillUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:248"]
+  T12["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
   S12 -->|calls| T12
-  S13["method:Mutex::WillUnlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:248"]
+  S13["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
   T13["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
   S13 -->|calls| T13
-  S14["method:Mutex::DidLock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:261"]
-  T14["function:ASLockingLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:53"]
+  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h:1"]
+  T14["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
   S14 -->|calls| T14
   S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h:1"]
-  T15["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
+  T15["function:ASPrimitiveTraitCollectionFromUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:51"]
   S15 -->|calls| T15
   S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h:1"]
-  T16["function:ASPrimitiveTraitCollectionFromUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:51"]
+  T16["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
   S16 -->|calls| T16
   S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h:1"]
-  T17["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  T17["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
   S17 -->|calls| T17
   S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.h:1"]
   T18["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]

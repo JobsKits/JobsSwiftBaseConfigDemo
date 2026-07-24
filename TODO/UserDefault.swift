@@ -104,6 +104,7 @@ extension UserDefaults {
     /// 判断是否是 UserDefaults 可直接存储的类型
     static func isPlistSafeType(_ value: Any) -> Bool {
         switch value {
+        /// 合并处理 String 类型、Int 类型、Bool 类型、Double 类型、Float 类型、Data 类型 等 分支
         case is String,
              is Int,
              is Bool,
@@ -117,6 +118,7 @@ extension UserDefaults {
              is [Float],
              is [AnyHashable: Any]:
             return true
+        /// 未匹配已知分支时执行兜底处理
         default:
             return false
         }

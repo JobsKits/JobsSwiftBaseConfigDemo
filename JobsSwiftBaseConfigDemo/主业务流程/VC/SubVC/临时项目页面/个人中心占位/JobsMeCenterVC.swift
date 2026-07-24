@@ -30,19 +30,29 @@ final class JobsMeCenterVC: BaseVC {
         case about
         var title: String {
             switch self {
+            /// 处理 .userInfo 分支
             case .userInfo:  return "用户信息".tr
+            /// 处理 .crashLog 分支
             case .crashLog:  return "崩溃日志".tr
+            /// 处理 .favorites 分支
             case .favorites: return "收藏".tr
+            /// 处理 .settings 分支
             case .settings:  return "设置".tr
+            /// 处理 .about 分支
             case .about:     return "关于".tr
             }
         }
         var symbolName: String {
             switch self {
+            /// 处理 .userInfo 分支
             case .userInfo:  return "person.text.rectangle"
+            /// 处理 .crashLog 分支
             case .crashLog:  return "exclamationmark.triangle"
+            /// 处理 .favorites 分支
             case .favorites: return "star"
+            /// 处理 .settings 分支
             case .settings:  return "gearshape"
+            /// 处理 .about 分支
             case .about:     return "info.circle"
             }
         }
@@ -117,16 +127,19 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Row(rawValue: indexPath.row)! {
+        /// 处理 .userInfo 分支
         case .userInfo:
             JobsSwiftUserInfoVC().byPush(self)
+        /// 处理 .crashLog 分支
         case .crashLog:
             CrashLogDemoVC().byPush(self)
+        /// 处理 .favorites 分支
         case .favorites:
             "收藏".tr.toast
-            // FavoritesVC().byPush(self)
+        /// FavoritesVC().byPush(self)
         case .settings:
             "设置".tr.toast
-            // SettingsVC().byPush(self)
+        /// SettingsVC().byPush(self)
         case .about:
             "关于".tr.toast
             // AboutVC().byPush(self)

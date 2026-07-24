@@ -56,7 +56,10 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
-    private lazy var durationRow = UIStackView(arrangedSubviews: [durationTitleLabel, UIView(), durationField, durationUnitLabel])
+    private lazy var durationSpacerView = UIView()
+    private lazy var durationRow = UIStackView(
+        arrangedSubviews: [durationTitleLabel, durationSpacerView, durationField, durationUnitLabel]
+    )
     private lazy var settingsStack = UIStackView(arrangedSubviews: [modeControl, durationRow, hintLabel])
     private lazy var settingsCard = UIView()
     private lazy var listTitleLabel: UILabel = {
@@ -75,21 +78,25 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         return label
     }()
     private lazy var recordButton = JobsAudioRecordButton()
+    private lazy var longRecordButtonOuterRingView: UIView = {
+        UIView()
+            .byBackgroundColor(JobsCor.clear)
+            .byBorderColor(JobsCor.white)
+            .byBorderWidth(4)
+            .byCornerRadius(48)
+            .byUserInteractionEnabled(false)
+    }()
     private lazy var longRecordButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.backgroundColor = JobsCor.systemBlue
-        button.setImage(UIImage(systemName: "mic.fill"), for: .normal)
-        button.setPreferredSymbolConfiguration(
-            UIImage.SymbolConfiguration(pointSize: 29, weight: .semibold),
-            forImageIn: .normal
-        )
-        button.layer.cornerRadius = 40
-        button.layer.borderWidth = 7
-        button.layer.borderColor = JobsCor.systemBlue.withAlphaComponent(0.18).cgColor
-        button.accessibilityLabel = "开始长时间录音".tr
-        button.addTarget(self, action: #selector(toggleLongRecording), for: .touchUpInside)
-        return button
+        UIButton.sys()
+            .byTitle("开始长时间录音".tr, for: .normal)
+            .byTitle("停止并保存长时间录音".tr, for: .selected)
+            .byTitleColor(JobsCor.clear, for: .normal)
+            .byTitleColor(JobsCor.clear, for: .selected)
+            .byBackgroundColor(JobsCor.white, for: .normal)
+            .byCornerRadius(35)
+            .onTap { [weak self] _ in
+                self?.toggleLongRecording()
+            }
     }()
     private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
@@ -97,6 +104,11 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         table.delegate = self
         table.register(UITableViewCell.self, forCellReuseIdentifier: "AudioCell")
         return table
+    }()
+    private lazy var messageAlertController: UIAlertController = {
+        let alertController = UIAlertController(title: "提示", message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "知道了", style: .default))
+        return alertController
     }()
 
     override func viewDidLoad() {
@@ -143,6 +155,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         view.addSubview(capturePanel)
         capturePanel.addSubview(captureHintLabel)
         capturePanel.addSubview(recordButton)
+        capturePanel.addSubview(longRecordButtonOuterRingView)
         capturePanel.addSubview(longRecordButton)
 
         settingsCard.snp.makeConstraints { make in
@@ -180,9 +193,13 @@ final class JobsAudioRecorderDemoVC: BaseVC {
             make.top.equalTo(captureHintLabel.snp.bottom).offset(10)
             make.size.equalTo(CGSize(width: 96, height: 96))
         }
-        longRecordButton.snp.makeConstraints { make in
+        longRecordButtonOuterRingView.snp.makeConstraints { make in
             make.center.equalTo(recordButton)
-            make.size.equalTo(CGSize(width: 80, height: 80))
+            make.size.equalTo(CGSize(width: 96, height: 96))
+        }
+        longRecordButton.snp.makeConstraints { make in
+            make.center.equalTo(longRecordButtonOuterRingView)
+            make.size.equalTo(CGSize(width: 70, height: 70))
         }
         tableView.snp.makeConstraints { make in
             make.top.equalTo(listTitleLabel.snp.bottom).offset(4)
@@ -221,11 +238,12 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         let shortMode = modeControl.selectedSegmentIndex == 0
         durationRow.isHidden = !shortMode
         recordButton.isHidden = !shortMode
+        longRecordButtonOuterRingView.isHidden = shortMode
         longRecordButton.isHidden = shortMode
         modeControl.isEnabled = !recorder.isRecording
         if shortMode {
             hintLabel.text = String(
-                format: "至少录制 %.0f 秒；手指移出按钮即取消，计时环走满后自动保存。".tr,
+                format: "白色刻度前不算有效录音；至少录制 %.0f 秒，手指移出按钮即取消，计时环走满后自动保存。".tr,
                 recordButton.minimumValidDuration
             )
             captureHintLabel.text = "按住录音".tr
@@ -233,12 +251,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
             hintLabel.text = "开始后可离开本页或让 App 进入后台，返回后轻触按钮停止并保存。".tr
             let recording = recorder.isRecording
             captureHintLabel.text = recording ? "正在录音，轻触停止并保存".tr : "轻触开始长时间录音".tr
-            longRecordButton.backgroundColor = recording ? JobsCor.systemRed : JobsCor.systemBlue
-            longRecordButton.layer.borderColor = (recording ? JobsCor.systemRed : JobsCor.systemBlue)
-                .withAlphaComponent(0.18)
-                .cgColor
-            longRecordButton.setImage(UIImage(systemName: recording ? "stop.fill" : "mic.fill"), for: .normal)
-            longRecordButton.accessibilityLabel = captureHintLabel.text
+            longRecordButton.bySelected(recording)
         }
     }
 
@@ -250,9 +263,9 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private func showPermissionAlert() { show("请在系统设置中允许麦克风权限") }
 
     private func show(_ message: String) {
-        let alert = UIAlertController(title: "提示", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "知道了", style: .default))
-        present(alert, animated: true)
+        messageAlertController.message = message
+        guard presentedViewController !== messageAlertController else { return }
+        present(messageAlertController, animated: true)
     }
 }
 

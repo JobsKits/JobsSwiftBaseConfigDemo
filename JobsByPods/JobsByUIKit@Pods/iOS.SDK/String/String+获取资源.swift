@@ -77,10 +77,12 @@ extension String {
     public var img: UIImage {
         guard let source = imageSource else { return UIImage.make() }
         switch source {
+        /// 处理 .remote 分支
         case .remote:
             // 同步返回不支持网络加载，避免阻塞
             print("🚫 检测到网络 URL：\(self)，无法同步返回图片")
             return UIImage.make()
+        /// 处理 .local 分支
         case .local(let name):
             return UIImage(named: name) ?? UIImage.make()
         }
@@ -115,6 +117,7 @@ extension String {
     public func kfLoadImage() async throws -> UIImage {
         guard let source = imageSource else { throw KFError.badURL }
         switch source {
+        /// 处理 .remote 分支
         case .remote(let url):
             // 关键：这里不要直接写 try await retrieveImage(...)，
             // 因为你当前 KF 版本可能没有 async overload。
@@ -122,13 +125,16 @@ extension String {
             return try await withCheckedThrowingContinuation { cont in
                 KingfisherManager.shared.retrieveImage(with: url) { result in
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let value):
                         cont.resume(returning: value.image)   // value 是 RetrieveImageResult
+                    /// 处理 .failure 分支
                     case .failure(let err):
                         cont.resume(throwing: err)            // err 是 KingfisherError
                     }
                 }
             }
+        /// 处理 .local 分支
         case .local(let name):
             if let img = UIImage(named: name) { return img }
             throw KFError.notFound
@@ -142,15 +148,19 @@ extension String {
             return
         }
         switch source {
+        /// 处理 .remote 分支
         case .remote(let url):
             KingfisherManager.shared.retrieveImage(with: url) { result in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value):
                     completion(.success(value.image))
+                /// 处理 .failure 分支
                 case .failure(let err):
                     completion(.failure(err))
                 }
             }
+        /// 处理 .local 分支
         case .local(let name):
             if let img = UIImage(named: name) {
                 completion(.success(img))
@@ -184,6 +194,7 @@ extension String {
                           userInfo: [NSLocalizedDescriptionKey: "Bad URL string"])
         }
         switch source {
+        /// 处理 .remote 分支
         case .remote(let url):
             return try await withCheckedThrowingContinuation { cont in
                 var didResume = false
@@ -208,6 +219,7 @@ extension String {
                     }
                 }
             }
+        /// 处理 .local 分支
         case .local(let name):
             if let img = UIImage(named: name) {
                 return img
@@ -237,6 +249,7 @@ extension String {
             return
         }
         switch source {
+        /// 处理 .remote 分支
         case .remote(let url):
             var didFinish = false
             SDWebImageManager.shared.loadImage(
@@ -248,6 +261,7 @@ extension String {
                 didFinish = true
                 completion(image ?? placeholder)
             }
+        /// 处理 .local 分支
         case .local(let name):
             completion(UIImage(named: name) ?? placeholder)
         }

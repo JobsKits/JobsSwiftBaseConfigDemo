@@ -246,10 +246,13 @@ public final class GestureUnlockView: UIView {
         lineLayer.path = path.cgPath
         lineLayer.lineWidth = configuration.lineWidth
         switch visualState {
+        /// 处理 .normal 分支
         case .normal:
             lineLayer.strokeColor = configuration.lineSelectedColor.cgColor
+        /// 处理 .selected 分支
         case .selected:
             lineLayer.strokeColor = configuration.lineSelectedColor.cgColor
+        /// 处理 .error 分支
         case .error:
             lineLayer.strokeColor = configuration.lineErrorColor.cgColor
         }

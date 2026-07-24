@@ -264,7 +264,9 @@ extension UIPageControl {
         KingfisherManager.shared.retrieveImage(with: url) { result in
             onMainAsync {
                 switch result {
+                /// 处理 .success 分支
                 case .success(let value): completion(value.image)
+                /// 处理 .failure 分支
                 case .failure: completion(fallback)
                 }
             }

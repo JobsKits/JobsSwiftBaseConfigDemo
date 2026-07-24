@@ -14,13 +14,16 @@
 
 - 内容支持本地静态图、本地 GIF、远程图片、本地视频和远程视频。
 - 远程视频首次下载到 `Caches/JobsSwiftSplash`，后续直接读取本地缓存。
+- 远程视频采用预加载策略：缓存完整时才播放远程文件；未缓存时立即播放配置的本地视频兜底，并在倒计时按钮左侧显示“仅在 Wi-Fi 环境下下载视频”。预加载只允许非蜂窝网络，任务由缓存单例持有，开屏倒计时结束或用户手动移除覆盖层都不会取消；失败后退避重试并跨启动恢复待下载 URL，直到缓存成功。
 - 跳过按钮默认显示在安全区右上角，也可以通过 `bySkipButtonFrame` 使用指定 Frame。
 - 默认没有倒计时；配置倒计时后，时间结束与用户手动点击都会执行同一套跳过行为。
 - 跳过文案默认跟随系统语言，也可以通过 `.code("zh-Hans")` 等语言码固定语言。
 - 点击开屏和摇一摇默认通过 `JobsSwiftOpen` 在应用内打开百度，也可以分别替换成自定义闭包或关闭行为。
 - 开屏覆盖展示期间会暂停宿主根视图已有的手势，开屏结束后按原状态恢复，避免侧滑抽屉等父级手势穿透触发。
 - `JobsSplashPreferences.isEnabledForNextLaunch` 持久化记录下次启动是否展示开屏，首次使用默认为开启。
+- `JobsSplashPreferences.contentTypeForNextLaunch` 持久化记录下次启动采用的内容类型，覆盖本地图片、本地 GIF、远程图片、本地视频和远程视频，首次使用默认为本地图片。
 - 本 Pod 直接依赖 `JobsSwiftBaseDefines`，系统字体统一由 `JobsFont` 工厂提供。
+- Wi-Fi 下载提示与倒计时按钮的位置关系使用 `SnapKit` 约束，Podspec 显式声明直接依赖。
 
 ## 二、接入示例 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -50,9 +53,16 @@ JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 ```swift
 .localImage(name: "Splash")
 .localGIF(name: "SplashAnimation")
+.localGIF(fileURL: localGIFFileURL)
 .remoteImage(URL(string: "https://example.com/splash.jpg")!)
 .localVideo(name: "SplashVideo", fileExtension: "mp4")
-.remoteVideo(URL(string: "https://example.com/splash.mp4")!)
+.remoteVideo(
+    URL(string: "https://example.com/splash.mp4")!,
+    fallbackName: "SplashVideo",
+    fallbackFileExtension: "mp4"
+)
 ```
+
+业务设置页应使用 `JobsSplashContentType.allCases` 完整展示五种内容类型，并把用户选择写入 `JobsSplashPreferences.contentTypeForNextLaunch`；启动入口读取该设置后，再为所选类型提供实际资源名或 URL。Swift Demo 会复用“米老鼠 / 唐老鸭 / 迪斯尼”图片生成本地 GIF 文件，再通过 `.localGIF(fileURL:)` 展示，不依赖额外占位素材。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

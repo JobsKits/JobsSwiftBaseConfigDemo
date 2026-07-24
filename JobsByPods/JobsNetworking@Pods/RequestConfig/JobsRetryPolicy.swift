@@ -73,12 +73,15 @@ public struct JobsRetryPolicy: Sendable {
             return .init(shouldRetry: false)
         }
         switch context.error {
+        /// 合并处理 .http、.server 分支
         case let .http(statusCode, _), let .server(statusCode, _):
             guard retriableStatusCodes.contains(statusCode) else {
                 return .init(shouldRetry: false)
             }
+        /// 处理 .transport 分支
         case .transport:
             break
+        /// 未匹配已知分支时执行兜底处理
         default:
             guard context.error.retryCategory != .doNotRetry else {
                 return .init(shouldRetry: false)

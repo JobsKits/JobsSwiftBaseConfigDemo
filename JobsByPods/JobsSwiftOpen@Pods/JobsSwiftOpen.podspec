@@ -14,6 +14,7 @@ Pod::Spec.new do |spec|
   spec.source_files  = 'Core/**/*.swift'
   spec.frameworks    = ['UIKit', 'WebKit', 'SafariServices']
 
+  spec.dependency 'SnapKit'
   spec.dependency 'JobsInheritance'
   spec.dependency 'JobsByUIKit'
   spec.dependency 'GKNavigationBarSwift'

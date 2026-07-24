@@ -152,8 +152,9 @@ final class BaseWebViewDemoVC: BaseVC {
             }
             /// 以下是依据前端暴露的自定义方法进行的JS交互
             .registerMobileAction("navigateToHome") {  [weak self] body, reply in
+                guard let self else { return }
                 /// 跳转到首页
-                self!.goBack("")
+                self.goBack("")
                 reply(nil)
             }
             .registerMobileAction("getToken") {  [weak self] body, reply in
@@ -198,8 +199,8 @@ final class BaseWebViewDemoVC: BaseVC {
             rightButtons: [
                 UIButton.sys()
                     /// 按钮图片@图文关系
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
+                    .byImage("play.rectangle".sysImg, for: .normal)
+                    .byImage("play.rectangle.fill".sysImg, for: .selected)
                     /// 事件触发@点按
                     .onTap { [weak self] sender in
                         guard let self else { return }

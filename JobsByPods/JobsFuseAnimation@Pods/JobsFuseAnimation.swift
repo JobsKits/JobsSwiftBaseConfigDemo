@@ -18,6 +18,43 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsSwiftTimer
+import SnapKit
+
+private enum JobsFuseSoundStore {
+    private static let lock = NSLock()
+    private static var soundIDs = [String: SystemSoundID]()
+
+    static func soundID(fileFullName: String, bundle: Bundle) -> SystemSoundID? {
+        guard let soundURL = soundURL(fileFullName: fileFullName, bundle: bundle) else { return nil }
+        let cacheKey = soundURL.absoluteString
+        lock.lock()
+        defer { lock.unlock() }
+        if let soundID = soundIDs[cacheKey] { return soundID }
+        var soundID = SystemSoundID(0)
+        guard AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID) == kAudioServicesNoError,
+              soundID != 0 else { return nil }
+        soundIDs[cacheKey] = soundID
+        return soundID
+    }
+
+    private static func soundURL(fileFullName: String, bundle: Bundle) -> URL? {
+        guard !fileFullName.isEmpty else { return nil }
+        let fileName = fileFullName as NSString
+        let resourceName = fileName.deletingPathExtension
+        let resourceExtension = fileName.pathExtension
+        if let soundURL = bundle.url(
+            forResource: resourceName,
+            withExtension: resourceExtension.isEmpty ? nil : resourceExtension
+        ) { return soundURL }
+        for bundleURL in bundle.urls(forResourcesWithExtension: "bundle", subdirectory: nil) ?? [] {
+            guard let resourceBundle = Bundle(url: bundleURL),
+                  let soundURL = resourceBundle.url(
+                    forResource: resourceName,
+                    withExtension: resourceExtension.isEmpty ? nil : resourceExtension
+                  ) else { continue };return soundURL
+        };return nil
+    }
+}
 
 // MARK: - 长按导火索外圈配置
 public struct JobsFuseOuterRingConfig {
@@ -48,6 +85,10 @@ public struct JobsFuseOuterRingConfig {
     public var inset: CGFloat
     /// 是否从 -90° 开始，也就是 12 点钟方向开始增长。
     public var startsFromTop: Bool
+    /// 可选门槛位置，取值 0...1。用于提示进度到达该位置后才算有效。
+    public var thresholdProgress: CGFloat?
+    /// 门槛刻度颜色。
+    public var thresholdColor: UIColor
 
     public init(
         lineWidth: CGFloat = 4,
@@ -62,7 +103,9 @@ public struct JobsFuseOuterRingConfig {
         retreatDuration: TimeInterval = 0.28,
         fadeOutDuration: TimeInterval = 0.08,
         inset: CGFloat = 1,
-        startsFromTop: Bool = true
+        startsFromTop: Bool = true,
+        thresholdProgress: CGFloat? = nil,
+        thresholdColor: UIColor = JobsCor.white
     ) {
         self.lineWidth = max(0.5, lineWidth)
         self.strokeColor = strokeColor
@@ -77,12 +120,15 @@ public struct JobsFuseOuterRingConfig {
         self.fadeOutDuration = max(0, fadeOutDuration)
         self.inset = max(0, inset)
         self.startsFromTop = startsFromTop
+        self.thresholdProgress = thresholdProgress.map { max(0, min(1, $0)) }
+        self.thresholdColor = thresholdColor
     }
 }
 
 // MARK: - Associated Keys
 private var _jobsFuseRingLayerKey: UInt8 = 0
 private var _jobsFuseTrackLayerKey: UInt8 = 0
+private var _jobsFuseThresholdLayerKey: UInt8 = 0
 private var _jobsFuseRingTimerKey: UInt8 = 0
 private var _jobsFuseRingStartTSKey: UInt8 = 0
 private var _jobsFuseRingConfigKey: UInt8 = 0
@@ -114,6 +160,11 @@ extension UIView {
     private var jobs_fuseTrackLayer: CAShapeLayer? {
         get { objc_getAssociatedObject(self, &_jobsFuseTrackLayerKey) as? CAShapeLayer }
         set { objc_setAssociatedObject(self, &_jobsFuseTrackLayerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+
+    private var jobs_fuseThresholdLayer: CAShapeLayer? {
+        get { objc_getAssociatedObject(self, &_jobsFuseThresholdLayerKey) as? CAShapeLayer }
+        set { objc_setAssociatedObject(self, &_jobsFuseThresholdLayerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
     private var jobs_fuseRingTimer: JobsSwiftTimerProtocol? {
@@ -174,8 +225,28 @@ extension UIView {
             ring.strokeEnd = 0.001      // 不是 0，长按 began 的瞬间也能看到起点
             ring.opacity = config.fromOpacity
             self.layer.addSublayer(ring)
+            let thresholdLayer: CAShapeLayer?
+            if let thresholdProgress = config.thresholdProgress {
+                let markerHalfLength: CGFloat = 0.007
+                let marker = CAShapeLayer()
+                marker.name = "jobs.fuse.outerRing.threshold"
+                marker.contentsScale = UIScreen.main.scale
+                marker.fillColor = config.fillColor.cgColor
+                marker.strokeColor = config.thresholdColor.cgColor
+                marker.lineWidth = config.lineWidth + 3
+                marker.lineCap = .butt
+                marker.lineJoin = .round
+                marker.strokeStart = max(0, thresholdProgress - markerHalfLength)
+                marker.strokeEnd = min(1, thresholdProgress + markerHalfLength)
+                marker.opacity = 1
+                self.layer.addSublayer(marker)
+                thresholdLayer = marker
+            } else {
+                thresholdLayer = nil
+            }
             self.jobs_fuseTrackLayer = trackLayer
             self.jobs_fuseRingLayer = ring
+            self.jobs_fuseThresholdLayer = thresholdLayer
             self.jobs_layoutFuseOuterRingLayers()
             self.jobs_updateFuseOuterRing(progress: 0.001)
             let timer = JobsTimer(
@@ -206,14 +277,18 @@ extension UIView {
             self.jobs_fuseRingTimer = nil
             guard let ring = self.jobs_fuseRingLayer else { return }
             let track = self.jobs_fuseTrackLayer
+            let threshold = self.jobs_fuseThresholdLayer
             let config = self.jobs_fuseRingConfig
-            let removeBlock = { [weak self, weak ring, weak track] in
+            let removeBlock = { [weak self, weak ring, weak track, weak threshold] in
                 ring?.removeAllAnimations()
                 track?.removeAllAnimations()
+                threshold?.removeAllAnimations()
                 ring?.removeFromSuperlayer()
                 track?.removeFromSuperlayer()
+                threshold?.removeFromSuperlayer()
                 self?.jobs_fuseRingLayer = nil
                 self?.jobs_fuseTrackLayer = nil
+                self?.jobs_fuseThresholdLayer = nil
             }
             let currentStrokeEnd = CGFloat(
                 max(0, min(1, ring.presentation()?.strokeEnd ?? ring.strokeEnd))
@@ -225,12 +300,14 @@ extension UIView {
             // 固定当前展示进度，避免从 presentation layer 切回 model layer 时跳帧。
             let currentRingOpacity = ring.presentation()?.opacity ?? ring.opacity
             let currentTrackOpacity = track?.presentation()?.opacity ?? track?.opacity ?? 1
+            let currentThresholdOpacity = threshold?.presentation()?.opacity ?? threshold?.opacity ?? 1
             CATransaction.begin()
             CATransaction.setDisableActions(true)
             ring.strokeStart = 0
             ring.strokeEnd = currentStrokeEnd
             ring.opacity = currentRingOpacity
             track?.opacity = currentTrackOpacity
+            threshold?.opacity = currentThresholdOpacity
             CATransaction.commit()
             let retreatStartTS = CACurrentMediaTime()
             let retreatTimer = JobsTimer(
@@ -242,7 +319,7 @@ extension UIView {
                     queue: .main,
                     pauseInBackground: true
                 )
-            ) { [weak self, weak ring, weak track] in
+            ) { [weak self, weak ring, weak track, weak threshold] in
                 guard let self, let ring else { return }
                 let elapsed = max(0, CACurrentMediaTime() - retreatStartTS)
                 let raw = min(1.0, elapsed / max(0.001, config.retreatDuration))
@@ -256,6 +333,7 @@ extension UIView {
                 ring.strokeEnd = strokeEnd
                 ring.opacity = currentRingOpacity
                 track?.opacity = currentTrackOpacity * Float(1.0 - p)
+                threshold?.opacity = currentThresholdOpacity * Float(1.0 - p)
                 CATransaction.commit()
                 guard raw >= 1.0 else { return }
                 self.jobs_fuseRingTimer?.stop()
@@ -318,6 +396,10 @@ extension UIView {
             layer.path = path
             layer.lineWidth = config.lineWidth
         }
+        jobs_fuseThresholdLayer?
+            .byFrame(bounds)
+            .byPath(path)
+            .byLineWidth(config.lineWidth + 3)
         CATransaction.commit()
     }
 
@@ -439,11 +521,21 @@ extension UIView {
         return self
     }
 
-    /// 短按播放一个系统音。默认 1104 比较像轻点反馈；如需换音效，传 SystemSoundID。
+    /// 从 App 或内嵌资源 Bundle 播放音频文件，并复用已创建的 SystemSoundID。
     @discardableResult
-    public func byFusePlaySystemSound(_ soundID: SystemSoundID = 1104) -> Self {
-        AudioServicesPlaySystemSound(soundID)
-        return self
+    public func byFusePlaySound(
+        _ fileFullName: String = "Sound.wav",
+        bundle: Bundle = .main
+    ) -> Self {
+        if let soundID = JobsFuseSoundStore.soundID(fileFullName: fileFullName, bundle: bundle) {
+            AudioServicesPlaySystemSound(soundID)
+        };return self
+    }
+
+    /// 播放调用方已创建并负责管理的 SystemSoundID。
+    @discardableResult
+    public func byFusePlaySystemSound(_ soundID: SystemSoundID) -> Self {
+        if soundID != 0 { AudioServicesPlaySystemSound(soundID) };return self
     }
 }
 
@@ -759,13 +851,10 @@ extension UITableViewCell {
             } else {
                 chargingView = JobsChargingAnimationView(config: config)
                     .byAddTo(self.contentView)
-                chargingView.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    chargingView.leadingAnchor.constraint(
-                        equalTo: self.contentView.layoutMarginsGuide.leadingAnchor
-                    ),
-                    chargingView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-                ])
+                chargingView.snp.makeConstraints { make in
+                    make.leading.equalTo(self.contentView.layoutMarginsGuide.snp.leading)
+                    make.centerY.equalToSuperview()
+                }
                 self.jobs_chargingAnimationView = chargingView
             }
             self.byImage(Self.jobs_chargingPlaceholderImage(size: config.indicatorSize))

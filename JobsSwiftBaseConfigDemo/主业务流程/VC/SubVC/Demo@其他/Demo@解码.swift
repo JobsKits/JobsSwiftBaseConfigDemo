@@ -64,10 +64,13 @@ final class SafeCodableDemoVC: BaseVC {
             DispatchQueue.main.async {
                 guard let o = self.owner else { return }
                 switch event {
+                /// 处理 .coerced 分支
                 case let .coerced(from, to, path, raw):
                     o.appendLog("➡️ coerced \(path.joined(separator: ".")) \(from) -> \(to) raw=\(raw ?? "nil")")
+                /// 处理 .defaulted 分支
                 case let .defaulted(expected, path, reason):
                     o.appendLog("⚠️ defaulted \(path.joined(separator: ".")) to \(expected) because \(reason)")
+                /// 处理 .failed 分支
                 case let .failed(expected, path, reason):
                     o.appendLog("❌ failed \(path.joined(separator: ".")) expected \(expected): \(reason)")
                 }

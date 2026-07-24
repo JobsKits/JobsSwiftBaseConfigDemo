@@ -110,6 +110,7 @@ func pick() async {
 - 内核稳定
 - 结构清晰
 - 可长期维护
+- 面板内容区的 Auto Layout 统一使用 `SnapKit`，不直接创建系统 `NSLayoutConstraint`
 
 ## 八、特别鸣谢
 

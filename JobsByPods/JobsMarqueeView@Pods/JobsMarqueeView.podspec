@@ -32,5 +32,7 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftTimer'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftDSL'
+  s.dependency 'Kingfisher'
+  s.dependency 'SDWebImage'
 
 end

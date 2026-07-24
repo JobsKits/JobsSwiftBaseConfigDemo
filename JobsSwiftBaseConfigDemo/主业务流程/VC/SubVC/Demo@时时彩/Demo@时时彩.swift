@@ -36,6 +36,40 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     private let rowHeight: CGFloat = 56
     private var data: [JobsCountdownItem] = []
 
+    private lazy var navigationMainTitleLabel: UILabel = {
+        UILabel()
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTextAlignment(.center)
+            .byNumberOfLines(1)
+            .byAdjustsFontSizeToFitWidth(YES)
+            .byMinimumScaleFactor(0.8)
+            .byLineBreakMode(.byClipping)
+    }()
+
+    private lazy var navigationSubTitleLabel: UILabel = {
+        UILabel()
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
+            .byTextAlignment(.center)
+            .byNumberOfLines(1)
+            .byAdjustsFontSizeToFitWidth(YES)
+            .byMinimumScaleFactor(0.75)
+            .byLineBreakMode(.byClipping)
+    }()
+
+    private lazy var navigationTitleView: UIStackView = {
+        UIStackView()
+            .byAxis(.vertical)
+            .byAlignment(.center)
+            .byDistribution(.fill)
+            .bySpacing(1)
+            .byAddArrangedSubviews([
+                navigationMainTitleLabel,
+                navigationSubTitleLabel
+            ])
+    }()
+
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .bySeparatorStyle(.singleLine)
@@ -46,7 +80,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
                 } else {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
@@ -55,7 +89,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     // ============================== Life Cycle ==============================
     public override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: "时时彩".tr)
+        setupNavigationBar()
         tableView.byVisible(YES)
         data = (0..<60).map { i in
             let remain = Int.random(in: 8...300)                 // 每行剩余时间不同
@@ -68,6 +102,26 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
             )
         }
         tableView.reloadData()
+    }
+
+    private func setupNavigationBar() {
+        let inheritedTitle = title?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let fullTitle = inheritedTitle?.isEmpty == false
+            ? inheritedTitle ?? "时时彩".tr
+            : "时时彩".tr
+        let titleParts = fullTitle.split(separator: "@",
+                                         maxSplits: 1,
+                                         omittingEmptySubsequences: false)
+        let mainTitle = String(titleParts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
+        let subTitle = titleParts.count > 1
+            ? String(titleParts[1]).trimmingCharacters(in: .whitespacesAndNewlines)
+            : ""
+        navigationMainTitleLabel.byText(mainTitle)
+        navigationSubTitleLabel
+            .byText(subTitle)
+            .byVisible(!subTitle.isEmpty)
+        jobsSetupGKNav(title: fullTitle)
+        gk_navTitleView = navigationTitleView
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate

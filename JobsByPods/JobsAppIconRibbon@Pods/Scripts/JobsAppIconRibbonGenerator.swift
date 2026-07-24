@@ -18,14 +18,19 @@ private enum RibbonGeneratorError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        /// 处理 .invalidArguments 分支
         case .invalidArguments:
             return "参数错误：需要 --project-root、--config 和 --configuration。"
+        /// 处理 .missingConfiguration 分支
         case .missingConfiguration(let path):
             return "找不到配置文件：\(path)"
+        /// 处理 .missingSource 分支
         case .missingSource(let path):
             return "找不到源 AppIcon：\(path)"
+        /// 处理 .invalidColor 分支
         case .invalidColor(let value):
             return "颜色格式无效：\(value)，请使用 #RRGGBB 或 #RRGGBBAA。"
+        /// 处理 .invalidImage 分支
         case .invalidImage(let path):
             return "无法读取图标：\(path)"
         }

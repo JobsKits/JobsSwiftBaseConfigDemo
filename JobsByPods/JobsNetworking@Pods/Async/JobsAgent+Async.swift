@@ -19,8 +19,10 @@ public extension JobsAgent {
             try await withCheckedThrowingContinuation { continuation in
                 token = send(request, as: type) { result in
                     switch result {
+                    /// 处理 .success 分支
                     case .success(let value):
                         continuation.resume(returning: value)
+                    /// 处理 .failure 分支
                     case .failure(let error):
                         continuation.resume(throwing: error)
                     }
@@ -40,8 +42,10 @@ public extension JobsAgent {
         AsyncThrowingStream { continuation in
             let token = observe(request, as: type, onEvent: { result in
                 switch result {
+                /// 处理 .success 分支
                 case .success(let tuple):
                     continuation.yield(tuple)
+                /// 处理 .failure 分支
                 case .failure(let error):
                     continuation.finish(throwing: error)
                 }

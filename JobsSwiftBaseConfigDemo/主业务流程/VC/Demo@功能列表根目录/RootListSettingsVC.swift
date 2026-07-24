@@ -26,7 +26,6 @@ import JobsViewPush
 
 enum RootListPreferences {
     private static let returnToTopAndRefreshKey = "RootList.returnToTopAndRefresh"
-    private static let darkModeKey = "RootList.darkModeEnabled"
     private static let sideDrawerContentModeKey = "RootList.sideDrawerContentMode"
     private static let usesTabBarEntryKey = "RootList.usesTabBarEntry"
     private static let showsSuspendTimeButtonKey = "com.jobs.demoList.showsSuspendTimeButton"
@@ -150,18 +149,9 @@ enum RootListPreferences {
     }
 
     static var darkModeEnabled: Bool {
-        get {
-            if UserDefaults.standard.object(forKey: darkModeKey) != nil {
-                return UserDefaults.standard.bool(forKey: darkModeKey)
-            }
-            if #available(iOS 13.0, tvOS 13.0, *) {
-                return UITraitCollection.current.userInterfaceStyle == .dark
-            };return false
-        }
+        get { UIApplication.jobsGlobalDarkModeEnabled }
         set {
-            UserDefaults.standard.set(newValue, forKey: darkModeKey)
-            UserDefaults.standard.synchronize()
-            applyPreferredInterfaceStyle()
+            UIApplication.jobsGlobalDarkModeEnabled = newValue
         }
     }
 
@@ -218,18 +208,11 @@ enum RootListPreferences {
 
     @discardableResult
     static func toggleDarkMode() -> Bool {
-        darkModeEnabled.toggle()
-        return darkModeEnabled
+        UIApplication.jobsToggleGlobalTheme()
     }
 
     static func applyPreferredInterfaceStyle() {
-        if #available(iOS 13.0, tvOS 13.0, *) {
-            let style: UIUserInterfaceStyle = darkModeEnabled ? .dark : .light
-            UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap(\.windows)
-                .forEach { $0.overrideUserInterfaceStyle = style }
-        }
+        UIApplication.jobsApplyGlobalTheme()
         applyNavigationAndTabBarAppearance()
     }
 
@@ -356,6 +339,7 @@ enum RootListPreferences {
 final class RootListSettingsVC: BaseVC {
     private enum SettingSection: Int, CaseIterable {
         case general
+        case splashContent
         case language
     }
 
@@ -375,20 +359,26 @@ final class RootListSettingsVC: BaseVC {
         case tagalog
         var languageCode: String {
             switch self {
+            /// 处理 .chinese 分支
             case .chinese:
                 return "zh-Hans"
+            /// 处理 .english 分支
             case .english:
                 return "en"
+            /// 处理 .tagalog 分支
             case .tagalog:
                 return "tl"
             }
         }
         var title: String {
             switch self {
+            /// 处理 .chinese 分支
             case .chinese:
                 return "中文".tr
+            /// 处理 .english 分支
             case .english:
                 return "英文".tr
+            /// 处理 .tagalog 分支
             case .tagalog:
                 return "他加禄语".tr
             }
@@ -463,20 +453,47 @@ private extension RootListSettingsVC {
 
     private func generalTitle(for item: GeneralSettingItem) -> String {
         switch item {
+        /// 处理 .splash 分支
         case .splash:
             return JobsSplashPreferences.isEnabledForNextLaunch ? "下次开屏：开".tr : "下次开屏：关".tr
+        /// 处理 .returnBehavior 分支
         case .returnBehavior:
             return RootListPreferences.returnToTopAndRefreshEnabled ? "返回：回顶部并刷新".tr : "返回：保持原样".tr
+        /// 处理 .suspendTimeButton 分支
         case .suspendTimeButton:
             return RootListPreferences.showsSuspendTimeButton ? "悬浮时间：开".tr : "悬浮时间：关".tr
+        /// 处理 .theme 分支
         case .theme:
             return RootListPreferences.darkModeEnabled ? "主题切换：黑夜".tr : "主题切换：白天".tr
+        /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
             return RootListPreferences.sideDrawerContentMode == .following ? "侧滑菜单：内容跟随".tr : "侧滑菜单：内容固定".tr
+        /// 处理 .appEntry 分支
         case .appEntry:
             return RootListPreferences.usesTabBarEntry ? "启动入口：TabBar".tr : "启动入口：Demo 列表".tr
+        /// 处理 .deinitTips 分支
         case .deinitTips:
             return VCDebugDeallocDebug.showsDeinitTips ? "销毁提示：开".tr : "销毁提示：关".tr
+        }
+    }
+
+    private func splashContentTitle(for contentType: JobsSplashContentType) -> String {
+        switch contentType {
+        /// 本地静态图片
+        case .localImage:
+            return "本地图片".tr
+        /// 本地 GIF 动图
+        case .localGIF:
+            return "本地 GIF".tr
+        /// 远程图片
+        case .remoteImage:
+            return "远程图片".tr
+        /// 本地视频
+        case .localVideo:
+            return "本地视频".tr
+        /// 远程视频
+        case .remoteVideo:
+            return "远程视频".tr
         }
     }
 
@@ -487,26 +504,33 @@ private extension RootListSettingsVC {
 
     private func handleGeneralItem(_ item: GeneralSettingItem) {
         switch item {
+        /// 处理 .splash 分支
         case .splash:
             let enabled = JobsSplashPreferences.toggleForNextLaunch()
             (enabled ? "下次启动展示开屏".tr : "下次启动不展示开屏".tr).toast
+        /// 处理 .returnBehavior 分支
         case .returnBehavior:
             let enabled = RootListPreferences.toggleReturnToTopAndRefresh()
             (enabled ? "返回主列表：回顶部并刷新".tr : "返回主列表：保持原样".tr).toast
+        /// 处理 .suspendTimeButton 分支
         case .suspendTimeButton:
             RootListPreferences.showsSuspendTimeButton.toggle()
             (RootListPreferences.showsSuspendTimeButton ? "悬浮时间按钮已显示".tr : "悬浮时间按钮已隐藏".tr).toast
+        /// 处理 .theme 分支
         case .theme:
             let dark = RootListPreferences.toggleDarkMode()
             applySettingsTheme()
             (dark ? "主题已切换：黑夜".tr : "主题已切换：白天".tr).toast
+        /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
             RootListPreferences.sideDrawerContentMode = RootListPreferences.sideDrawerContentMode == .following ? .fixed : .following
             (RootListPreferences.sideDrawerContentMode == .following ? "侧滑内容已设为跟随".tr : "侧滑内容已设为固定".tr).toast
+        /// 处理 .appEntry 分支
         case .appEntry:
             RootListPreferences.usesTabBarEntry.toggle()
             shouldApplyAppEntryAfterReturning = true
             (RootListPreferences.usesTabBarEntry ? "返回后从 TabBar 进入".tr : "返回后直接进入 Demo 列表".tr).toast
+        /// 处理 .deinitTips 分支
         case .deinitTips:
             VCDebugDeallocDebug.showsDeinitTips.toggle()
             (VCDebugDeallocDebug.showsDeinitTips ? "控制器销毁提示已开启".tr : "控制器销毁提示已关闭".tr).toast
@@ -523,15 +547,31 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let settingSection = SettingSection(rawValue: section) else { return 0 }
         switch settingSection {
+        /// 处理 .general 分支
         case .general:
             return GeneralSettingItem.allCases.count
+        /// 处理 .splashContent 分支
+        case .splashContent:
+            return JobsSplashContentType.allCases.count
+        /// 处理 .language 分支
         case .language:
             return LanguageSettingItem.allCases.count
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard SettingSection(rawValue: section) == .language else { return nil };return "应用语言".tr
+        guard let settingSection = SettingSection(rawValue: section) else { return nil }
+        switch settingSection {
+        /// 通用设置不显示分组标题
+        case .general:
+            return nil
+        /// 显示开屏内容类型标题
+        case .splashContent:
+            return "开屏内容".tr
+        /// 显示应用语言标题
+        case .language:
+            return "应用语言".tr
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -548,10 +588,17 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
         cell.byTintColor(RootListPreferences.selectedTintColor)
         cell.selectionStyle = .default
         switch settingSection {
+        /// 处理 .general 分支
         case .general:
             let item = GeneralSettingItem.allCases[indexPath.row]
             cell.textLabel?.byText(generalTitle(for: item))
             cell.accessoryType = .disclosureIndicator
+        /// 处理 .splashContent 分支
+        case .splashContent:
+            let contentType = JobsSplashContentType.allCases[indexPath.row]
+            cell.textLabel?.byText(splashContentTitle(for: contentType))
+            cell.accessoryType = contentType == JobsSplashPreferences.contentTypeForNextLaunch ? .checkmark : .none
+        /// 处理 .language 分支
         case .language:
             let item = LanguageSettingItem.allCases[indexPath.row]
             cell.textLabel?.byText(item.title)
@@ -563,8 +610,16 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let settingSection = SettingSection(rawValue: indexPath.section) else { return }
         switch settingSection {
+        /// 处理 .general 分支
         case .general:
             handleGeneralItem(GeneralSettingItem.allCases[indexPath.row])
+        /// 处理 .splashContent 分支
+        case .splashContent:
+            let contentType = JobsSplashContentType.allCases[indexPath.row]
+            JobsSplashPreferences.contentTypeForNextLaunch = contentType
+            String(format: "下次开屏内容已设为：%@".tr, splashContentTitle(for: contentType)).toast
+            tableView.reloadData()
+        /// 处理 .language 分支
         case .language:
             let item = LanguageSettingItem.allCases[indexPath.row]
             LanguageManager.shared.switchTo(item.languageCode)

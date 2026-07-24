@@ -20,12 +20,16 @@ import JobsSwiftBaseDefines
 public extension JobsPushDirection {
     var _caSubtype: CATransitionSubtype {
         switch self {
+        /// 合并处理 .system、.fromRight 分支
         case .system, .fromRight:
             return .fromRight            // 系统默认右进
+        /// 处理 .fromLeft 分支
         case .fromLeft:
             return .fromLeft
+        /// 处理 .fromTop 分支
         case .fromTop:
             return .fromBottom           // ✅ 修正：互换上下（视觉为“自上而下”进入）
+        /// 处理 .fromBottom 分支
         case .fromBottom:
             return .fromTop              // ✅ 修正：互换上下（视觉为“自下而上”进入）
         }
@@ -33,18 +37,27 @@ public extension JobsPushDirection {
     // 反向用于 pop：与上面的 subtype 取互逆
     var _reverseCASubtype: CATransitionSubtype {
         switch self {
+        /// 合并处理 .system、.fromRight 分支
         case .system, .fromRight: return .fromLeft
+        /// 处理 .fromLeft 分支
         case .fromLeft:           return .fromRight
-        case .fromTop:            return .fromTop     // push 用了 .fromBottom，pop 用 .fromTop
-        case .fromBottom:         return .fromBottom  // push 用了 .fromTop，pop 用 .fromBottom
+        /// push 用了 .fromBottom，pop 用 .fromTop
+        case .fromTop:            return .fromTop
+        /// push 用了 .fromTop，pop 用 .fromBottom
+        case .fromBottom:         return .fromBottom
         }
     }
     var _debugKey: String {
         switch self {
+        /// 处理 .system 分支
         case .system:     return "system"
+        /// 处理 .fromLeft 分支
         case .fromLeft:   return "fromLeft"
+        /// 处理 .fromRight 分支
         case .fromRight:  return "fromRight"
+        /// 处理 .fromTop 分支
         case .fromTop:    return "fromTop"
+        /// 处理 .fromBottom 分支
         case .fromBottom: return "fromBottom"
         }
     }
@@ -269,10 +282,12 @@ extension UIViewController {
         guard host.viewIfLoaded?.window != nil, host.isBeingDismissed == false else { return self }
         // 策略
         switch policy {
+        /// 处理 .ignoreIfBusy 分支
         case .ignoreIfBusy:
             if let presented = host.presentedViewController, presented.isBeingDismissed == false {
                 if jobs_isSameDestination(as: presented) { return self };return self
             }
+        /// 处理 .presentOnTopMost 分支
         case .presentOnTopMost:
             while let top = UIApplication.jobsTopMostVC(from: host, ignoreAlert: true),
                   top.isBeingDismissed == false, top !== host { host = top }

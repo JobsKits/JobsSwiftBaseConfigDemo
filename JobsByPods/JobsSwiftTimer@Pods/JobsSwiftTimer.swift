@@ -130,8 +130,10 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
         defer { lifecycleLock.unlock() }
         let token = stateLock.jobs_withLock { () -> UInt64? in
             switch state {
+            /// 处理 .running 分支
             case .running:
                 return nil
+            /// 合并处理 .paused、.idle 分支
             case .paused, .idle:
                 generation &+= 1
                 pendingCallbackToken = nil
@@ -143,18 +145,23 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
                 state = .running
                 autoPausedByAppState = false
                 return generation
+            /// 处理 .stopped 分支
             case .stopped:
                 return nil
             }
         }
         guard let token else { return self }
         switch kind {
+        /// 处理 .gcd 分支
         case .gcd:
             startGCD(token: token)
+        /// 处理 .foundation 分支
         case .foundation:
             startFoundationTimer(token: token)
+        /// 处理 .displayLink 分支
         case .displayLink:
             startDisplayLink(token: token)
+        /// 处理 .runLoop 分支
         case .runLoop:
             startRunLoopTimer(token: token)
         };return self
@@ -187,14 +194,18 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
         }
         guard shouldPause else { return self}
         switch kind {
+        /// 处理 .gcd 分支
         case .gcd:
             pauseGCD()
+        /// 处理 .foundation 分支
         case .foundation:
             foundationTimer?.invalidate()
             foundationTimer = nil
+        /// 处理 .displayLink 分支
         case .displayLink:
             displayLink?.invalidate()
             displayLink = nil
+        /// 处理 .runLoop 分支
         case .runLoop:
             if let t = rlTimer {
                 CFRunLoopTimerInvalidate(t)
@@ -230,12 +241,16 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
         }
         guard let token else { return self}
         switch kind {
+        /// 处理 .gcd 分支
         case .gcd:
             resumeGCD(token: token)
+        /// 处理 .foundation 分支
         case .foundation:
             startFoundationTimer(token: token)
+        /// 处理 .displayLink 分支
         case .displayLink:
             startDisplayLink(token: token)
+        /// 处理 .runLoop 分支
         case .runLoop:
             startRunLoopTimer(token: token)
         };return self
@@ -301,14 +316,18 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
     // MARK: - Stop internals
     private func stopInternal() {
         switch kind {
+        /// 处理 .gcd 分支
         case .gcd:
             stopGCDSafely()
+        /// 处理 .foundation 分支
         case .foundation:
             foundationTimer?.invalidate()
             foundationTimer = nil
+        /// 处理 .displayLink 分支
         case .displayLink:
             displayLink?.invalidate()
             displayLink = nil
+        /// 处理 .runLoop 分支
         case .runLoop:
             if let t = rlTimer {
                 CFRunLoopTimerInvalidate(t)
@@ -377,6 +396,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
         snapshotTick: @escaping JobsTimerCallback
     ) {
         switch config.callbackDeliveryPolicy {
+        /// 处理 .enqueue 分支
         case .enqueue:
             config.queue.async { [weak self] in
                 let isStillValid = self?.stateLock.jobs_withLock {
@@ -385,6 +405,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
                 guard isStillValid else { return }
                 snapshotTick()
             }
+        /// 合并处理 .dropIfBusy、.coalesceLatest 分支
         case .dropIfBusy, .coalesceLatest:
             let shouldSchedule = stateLock.jobs_withLock { () -> Bool in
                 guard state == .running, generation == token else { return false }
@@ -557,7 +578,9 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
             action: { [weak self] action in
                 guard let self else { return }
                 switch action {
+                /// 处理 .pauseForAppState 分支
                 case .pauseForAppState: self.pause(markedAsAutoPause: true)
+                /// 处理 .resumeFromAppState 分支
                 case .resumeFromAppState: self.resume(onlyIfAutoPaused: true)
                 }
             }

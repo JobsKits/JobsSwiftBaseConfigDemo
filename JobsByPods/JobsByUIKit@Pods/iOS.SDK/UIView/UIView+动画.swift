@@ -193,6 +193,7 @@ extension UIView {
         guard let sizeConstraint else { completion?(); return }
         superview.layoutIfNeeded()
         switch slide {
+        /// 处理 .show 分支
         case let .show(from: _, size: size):
             isHidden = false
             if fade { alpha = 0 }
@@ -205,6 +206,7 @@ extension UIView {
             } completion: { _ in
                 completion?()
             }
+        /// 处理 .hide 分支
         case .hide(to: _):
             sizeConstraint.update(offset: collapsedSize)
             UIView.animate(withDuration: duration,

@@ -103,12 +103,16 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     // MARK: - 文案分流（按 position）
     private func idleText() -> String {
         switch position {
+        /// 处理 .header 分支
         case .header:
             return JobsRefreshConfig.v.header.idle
+        /// 处理 .footer 分支
         case .footer:
             return JobsRefreshConfig.v.footer.idle
+        /// 处理 .left 分支
         case .left:
             return JobsRefreshConfig.h.header.idle
+        /// 处理 .right 分支
         case .right:
             return JobsRefreshConfig.h.footer.idle
         }
@@ -116,12 +120,16 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
 
     private func goOnText() -> String {
         switch position {
+        /// 处理 .header 分支
         case .header:
             return JobsRefreshConfig.v.header.goOn
+        /// 处理 .footer 分支
         case .footer:
             return JobsRefreshConfig.v.footer.goOn
+        /// 处理 .left 分支
         case .left:
             return JobsRefreshConfig.h.header.goOn
+        /// 处理 .right 分支
         case .right:
             return JobsRefreshConfig.h.footer.goOn
         }
@@ -130,8 +138,10 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     private func readyText() -> String {
         // ✅ header/left = refresh；footer/right = loading
         switch position {
+        /// 合并处理 .header、.left 分支
         case .header, .left:
             return JobsRefreshConfig.common.readyRefresh
+        /// 合并处理 .footer、.right 分支
         case .footer, .right:
             return JobsRefreshConfig.common.readyLoading
         }
@@ -140,8 +150,10 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     private func refreshingText() -> String {
         // ✅ header/left = refreshing；footer/right = loading
         switch position {
+        /// 合并处理 .header、.left 分支
         case .header, .left:
             return JobsRefreshConfig.common.refreshing
+        /// 合并处理 .footer、.right 分支
         case .footer, .right:
             return JobsRefreshConfig.common.readyLoading
         }
@@ -153,7 +165,9 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     // ✅ 只对“刷新语义”（header/left）展示上次刷新时间
     private func shouldShowLastRefreshTime() -> Bool {
         switch position {
+        /// 合并处理 .header、.left 分支
         case .header, .left: return true
+        /// 合并处理 .footer、.right 分支
         case .footer, .right: return false
         }
     }
@@ -179,9 +193,11 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
 
     public func apply(state: JobsState) {
         switch state {
+        /// 处理 .idle 分支
         case .idle:
             indicator.stopAnimating()
             displayText(decorate(idleText()))
+        /// 处理 .pulling 分支
         case .pulling(let p):
             indicator.stopAnimating()
             if p >= 1 {
@@ -190,24 +206,31 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
                 let main = String(format: "%@ %.0f%%", goOnText(), min(1, p) * 100)
                 displayText(decorate(main))
             }
+        /// 处理 .ready 分支
         case .ready:
             indicator.stopAnimating()
             displayText(decorate(readyText()))
+        /// 处理 .refreshing 分支
         case .refreshing:
             indicator.startAnimating()
             displayText(decorate(refreshingText()))
+        /// 处理 .ending 分支
         case .ending:
             indicator.stopAnimating()
             displayText(decorate(refreshingText()))
+        /// 处理 .failed 分支
         case .failed:
             indicator.stopAnimating()
             displayText(JobsRefreshConfig.common.failed)
+        /// 处理 .disabled 分支
         case .disabled:
             indicator.stopAnimating()
             displayText(JobsRefreshConfig.common.disabled)
+        /// 处理 .noMore 分支
         case .noMore:
             indicator.stopAnimating()
             displayText(decorate(noMoreText()))
+        /// 处理 .removed 分支
         case .removed:
             indicator.stopAnimating()
             label.byText(nil)

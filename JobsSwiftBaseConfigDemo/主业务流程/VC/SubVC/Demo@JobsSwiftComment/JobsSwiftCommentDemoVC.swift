@@ -23,6 +23,8 @@ import GKNavigationBarSwift
 final class JobsSwiftCommentDemoVC: BaseVC {
     private let modeArr: [JobsSwiftCommentMode] = [.netEase, .toutiao, .custom]
     private lazy var commentArr = makeDemoComments()
+    private var popupDetailViewController: JobsSwiftCommentModeDetailVC?
+    private var pushedDetailViewController: JobsSwiftCommentModeDetailVC?
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
@@ -33,6 +35,7 @@ final class JobsSwiftCommentDemoVC: BaseVC {
             .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
+            .bySectionHeaderHeight(.leastNormalMagnitude)
             .bySectionHeaderTopPadding(0)
             .byContentInset(UIEdgeInsets(top: 12.h, left: 0, bottom: 0, right: 0))
             .byContentInsetAdjustmentBehavior(.never)
@@ -96,25 +99,34 @@ private extension JobsSwiftCommentDemoVC {
 
     func presentPopupMode(_ mode: JobsSwiftCommentMode) {
         guard presentedViewController == nil else { return }
-        let vc = JobsSwiftCommentModeDetailVC()
-        vc.mode = mode
-        vc.popupStyle = true
-        vc.commentArr = commentArr
-        vc.popUpHeight = UIScreen.main.bounds.height * 0.62
-        vc.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: vc.popUpHeight)
-        vc.modalPresentationStyle = .pageSheet
-        if #available(iOS 15.0, *), let sheet = vc.sheetPresentationController {
+        popupDetailViewController = JobsSwiftCommentModeDetailVC()
+            .byTitle(JobsSwiftCommentConfig.title(by: mode))
+        popupDetailViewController?.mode = mode
+        popupDetailViewController?.popupStyle = true
+        popupDetailViewController?.commentArr = commentArr
+        popupDetailViewController?.popUpHeight = UIScreen.main.bounds.height * 0.62
+        popupDetailViewController?.preferredContentSize = CGSize(
+            width: UIScreen.main.bounds.width,
+            height: popupDetailViewController?.popUpHeight ?? 0
+        )
+        popupDetailViewController?.modalPresentationStyle = .pageSheet
+        if #available(iOS 15.0, *), let sheet = popupDetailViewController?.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
             sheet.prefersGrabberVisible = true
         }
-        present(vc, animated: true)
+        if let popupDetailViewController {
+            present(popupDetailViewController, animated: true)
+        }
     }
 
     func pushMode(_ mode: JobsSwiftCommentMode) {
-        let vc = JobsSwiftCommentModeDetailVC()
-        vc.mode = mode
-        vc.commentArr = commentArr
-        navigationController?.pushViewController(vc, animated: true)
+        pushedDetailViewController = JobsSwiftCommentModeDetailVC()
+            .byTitle(JobsSwiftCommentConfig.title(by: mode))
+        pushedDetailViewController?.mode = mode
+        pushedDetailViewController?.commentArr = commentArr
+        if let pushedDetailViewController {
+            navigationController?.pushViewController(pushedDetailViewController, animated: true)
+        }
     }
 
     func makeDemoComments() -> [JobsSwiftCommentModel] {

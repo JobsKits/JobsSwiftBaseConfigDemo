@@ -31,23 +31,33 @@ final class JobsNetworkingListDemoVC : BaseVC {
         case generalRequest
         var title: String {
             switch self {
+            /// 处理 .requestAPI 分支
             case .requestAPI: return "Demo@ 请求接口.swift"
+            /// 处理 .uploadFile 分支
             case .uploadFile: return "Demo@ 上传文件.swift"
+            /// 处理 .concurrentRequests 分支
             case .concurrentRequests: return "Demo@ 同步并发请求.swift"
+            /// 处理 .downloadToLocal 分支
             case .downloadToLocal: return "Demo@ 下载文件到本地.swift"
+            /// 处理 .generalRequest 分支
             case .generalRequest: return "Demo@ 一般数据请求.swift"
             }
         }
         func makeViewController() -> UIViewController {
             switch self {
+            /// 处理 .requestAPI 分支
             case .requestAPI:
                 return RequestAPIDemoVC()
+            /// 处理 .uploadFile 分支
             case .uploadFile:
                 return UploadFileDemoVC()
+            /// 处理 .concurrentRequests 分支
             case .concurrentRequests:
                 return ConcurrentRequestsDemoVC()
+            /// 处理 .downloadToLocal 分支
             case .downloadToLocal:
                 return DownloadToLocalDemoVC()
+            /// 处理 .generalRequest 分支
             case .generalRequest:
                 return GeneralRequestDemoVC()
             }

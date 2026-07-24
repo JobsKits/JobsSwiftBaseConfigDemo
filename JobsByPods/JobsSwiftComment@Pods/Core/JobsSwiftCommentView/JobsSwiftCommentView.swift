@@ -9,6 +9,7 @@ import UIKit
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
+import SnapKit
 
 public final class JobsSwiftCommentView: UIView {
     public private(set) var tableView = UITableView(frame: .zero, style: .plain)
@@ -148,19 +149,15 @@ private extension JobsSwiftCommentView {
             .byRowHeight(UITableView.automaticDimension)
             .byKeyboardDismissMode(.onDrag)
             .byContentInset(UIEdgeInsets(top: 6, left: 0, bottom: 10, right: 0))
-            .byTranslatesAutoresizingMaskIntoConstraints(false)
             .byRegisterCellOnID(CellCls: JobsSwiftCommentCell.self,
                                 ID: JobsSwiftCommentCell.reuseIdentifier)
         if #available(iOS 15.0, *) {
             tableView.bySectionHeaderTopPadding(0)
         }
         tableView.byAddTo(self)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.leftAnchor.constraint(equalTo: leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         refreshControlView.byAddTarget(self,
                                        action: #selector(pullRefreshTriggered),
                                        for: .valueChanged)

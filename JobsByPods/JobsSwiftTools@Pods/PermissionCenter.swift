@@ -43,10 +43,15 @@ public final class PermissionCenter: NSObject {
                               from presenter: UIViewController?,
                               onAuthorized: @escaping jobsByVoidBlock) {
         switch permission {
+        /// 处理 .camera 分支
         case .camera:               ensureCamera(from: presenter, onAuthorized: onAuthorized)
+        /// 处理 .photoLibraryReadWrite 分支
         case .photoLibraryReadWrite:ensurePhotoLibrary(from: presenter, onAuthorized: onAuthorized)
+        /// 处理 .microphone 分支
         case .microphone:           ensureMicrophone(from: presenter, onAuthorized: onAuthorized)
+        /// 处理 .locationWhenInUse 分支
         case .locationWhenInUse:    ensureLocationWhenInUse(from: presenter, onAuthorized: onAuthorized)
+        /// 处理 .bluetooth 分支
         case .bluetooth:            ensureBluetooth(from: presenter, onAuthorized: onAuthorized)
         }
     }
@@ -54,14 +59,18 @@ public final class PermissionCenter: NSObject {
     private static func ensureCamera(from presenter: UIViewController?, onAuthorized: @escaping jobsByVoidBlock) {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
+        /// 处理 .authorized 分支
         case .authorized:
             onMainAsync { onAuthorized() }
+        /// 处理 .notDetermined 分支
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
             }
+        /// 合并处理 .denied、.restricted 分支
         case .denied, .restricted:
             showNoPermissionToast(in: presenter)
+        /// 处理系统后续新增的未知枚举值
         @unknown default:
             showNoPermissionToast(in: presenter)
         }
@@ -71,29 +80,38 @@ public final class PermissionCenter: NSObject {
         if #available(iOS 14, *) {
             let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
             switch status {
+            /// 合并处理 .authorized、.limited 分支
             case .authorized, .limited:
                 onMainAsync { onAuthorized() }   // limited 也放行
+            /// 处理 .notDetermined 分支
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
                     switch newStatus {
+                    /// 合并处理 .authorized、.limited 分支
                     case .authorized, .limited: onMainAsync { onAuthorized() }
+                    /// 未匹配已知分支时执行兜底处理
                     default: showNoPermissionToast(in: presenter)
                     }
                 }
+            /// 合并处理 .denied、.restricted 分支
             case .denied, .restricted:
                 showNoPermissionToast(in: presenter)
+            /// 处理系统后续新增的未知枚举值
             @unknown default:
                 showNoPermissionToast(in: presenter)
             }
         } else {
             let status = PHPhotoLibrary.authorizationStatus()
             switch status {
+            /// 处理 .authorized 分支
             case .authorized:
                 onMainAsync { onAuthorized() }
+            /// 处理 .notDetermined 分支
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization { newStatus in
                     newStatus == .authorized ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
+            /// 未匹配已知分支时执行兜底处理
             default:
                 showNoPermissionToast(in: presenter)
             }
@@ -104,28 +122,36 @@ public final class PermissionCenter: NSObject {
         if #available(iOS 17.0, *) {
             let p = AVAudioApplication.shared.recordPermission
             switch p {
+            /// 处理 .granted 分支
             case .granted:
                 onMainAsync { onAuthorized() }
+            /// 处理 .undetermined 分支
             case .undetermined:
                 AVAudioApplication.requestRecordPermission { granted in
                     granted ? onMainAsync {onAuthorized()} : showNoPermissionToast(in: presenter)
                 }
+            /// 处理 .denied 分支
             case .denied:
                 showNoPermissionToast(in: presenter)
+            /// 处理系统后续新增的未知枚举值
             @unknown default:
                 showNoPermissionToast(in: presenter)
             }
         } else {
             let p = AVAudioSession.sharedInstance().recordPermission
             switch p {
+            /// 处理 .granted 分支
             case .granted:
                 onMainAsync { onAuthorized() }
+            /// 处理 .undetermined 分支
             case .undetermined:
                 AVAudioSession.sharedInstance().requestRecordPermission { granted in
                     granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
+            /// 处理 .denied 分支
             case .denied:
                 showNoPermissionToast(in: presenter)
+            /// 处理系统后续新增的未知枚举值
             @unknown default:
                 showNoPermissionToast(in: presenter)
             }
@@ -141,14 +167,18 @@ public final class PermissionCenter: NSObject {
             status = CLLocationManager.authorizationStatus()
         }
         switch status {
+        /// 合并处理 .authorizedWhenInUse、.authorizedAlways 分支
         case .authorizedWhenInUse, .authorizedAlways:
             onMainAsync { onAuthorized() }
+        /// 处理 .notDetermined 分支
         case .notDetermined:
             locProxy.requestWhenInUse { granted in
                 granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
             }
+        /// 合并处理 .denied、.restricted 分支
         case .denied, .restricted:
             showNoPermissionToast(in: presenter)
+        /// 处理系统后续新增的未知枚举值
         @unknown default:
             showNoPermissionToast(in: presenter)
         }
@@ -159,14 +189,18 @@ public final class PermissionCenter: NSObject {
         if #available(iOS 13.1, *) {
             let auth = CBCentralManager.authorization
             switch auth {
+            /// 处理 .allowedAlways 分支
             case .allowedAlways:
                 onMainAsync { onAuthorized() }
+            /// 处理 .notDetermined 分支
             case .notDetermined:
                 btProxy.request { granted in
                     granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter)
                 }
+            /// 合并处理 .denied、.restricted 分支
             case .denied, .restricted:
                 showNoPermissionToast(in: presenter)
+            /// 处理系统后续新增的未知枚举值
             @unknown default:
                 showNoPermissionToast(in: presenter)
             }
@@ -212,9 +246,13 @@ private final class LocationProxy: NSObject, CLLocationManagerDelegate {
 
     private func handle(_ status: CLAuthorizationStatus) {
         switch status {
+        /// 合并处理 .authorizedAlways、.authorizedWhenInUse 分支
         case .authorizedAlways, .authorizedWhenInUse: jobsByVoidBlock?(true)
+        /// 合并处理 .denied、.restricted 分支
         case .denied, .restricted:                   jobsByVoidBlock?(false)
+        /// 处理 .notDetermined 分支
         case .notDetermined:                          return
+        /// 处理系统后续新增的未知枚举值
         @unknown default:                             jobsByVoidBlock?(false)
         }
         jobsByVoidBlock = nil

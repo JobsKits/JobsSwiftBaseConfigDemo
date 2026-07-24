@@ -513,14 +513,18 @@ extension UIButton {
             byUpdateConfig()
         } else {
             switch placement {
+            /// 处理 .leading 分支
             case .leading:  semanticContentAttribute = .forceLeftToRight
+            /// 处理 .trailing 分支
             case .trailing: semanticContentAttribute = .forceRightToLeft
+            /// 合并处理 .top、.bottom 分支
             case .top, .bottom:
                 let inset = pad / 2
                 contentEdgeInsets = UIEdgeInsets(top: inset,
                                                  left: inset,
                                                  bottom: inset,
                                                  right: inset)
+            /// 未匹配已知分支时执行兜底处理
             default: break
             }
         };return self
@@ -552,6 +556,7 @@ extension UIButton {
         let ttl = safeTitleSize()
         _jobsLegacyImagePlacement = .none
         switch placement {
+        /// 处理 .left 分支
         case .left:
             _jobsLegacyImagePlacement = .left
             _jobsLegacyImagePlacement = .none
@@ -565,6 +570,7 @@ extension UIButton {
                                              left: padding / 2,
                                              bottom: 0,
                                              right: padding / 2)
+        /// 处理 .right 分支
         case .right:
             _jobsLegacyImagePlacement = .right
             _jobsLegacyImagePlacement = .none
@@ -578,6 +584,7 @@ extension UIButton {
                                            bottom: 0,
                                            right: img.w + padding / 2)
             contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
+        /// 处理 .top 分支
         case .top:
             _jobsLegacyImagePlacement = .top
             _jobsLegacyImagePlacement = .top
@@ -596,6 +603,7 @@ extension UIButton {
                                              left: hPad / 2,
                                              bottom: vPad / 2,
                                              right: hPad / 2)
+        /// 处理 .bottom 分支
         case .bottom:
             _jobsLegacyImagePlacement = .bottom
             _jobsLegacyImagePlacement = .bottom
@@ -671,17 +679,20 @@ extension UIButton {
     /// changing contentEdgeInsets should also shift image/title insets, otherwise the legacy negative offsets can "push back".
     private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets, new: UIEdgeInsets) {
         switch _jobsLegacyImagePlacement {
+        /// 合并处理 .top、.bottom 分支
         case .top, .bottom:
             let dy = new.top - old.top
             guard dy != 0 else { return }
             self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: 0, dy: dy)
             self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: 0, dy: dy)
+        /// 处理 .left 分支
         case .left:
             _jobsLegacyImagePlacement = .left
             let dx = new.left - old.left
             guard dx != 0 else { return }
             self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
             self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+        /// 处理 .right 分支
         case .right:
             _jobsLegacyImagePlacement = .right
             // Increasing right inset should shift content to the left (negative dx)
@@ -689,6 +700,7 @@ extension UIButton {
             guard dx != 0 else { return }
             self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
             self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+        /// 处理 .none 分支
         case .none:
             return
         }
@@ -777,10 +789,15 @@ extension UIButton {
             // （其它 state 仍由 configurationUpdateHandler 统一兜底）
             let stateIsActive: Bool = {
                 switch state {
+                /// 处理 .disabled 分支
                 case .disabled:   return !self.isEnabled
+                /// 处理 .selected 分支
                 case .selected:   return self.isSelected
+                /// 处理 .highlighted 分支
                 case .highlighted:return self.isHighlighted
+                /// 处理 .normal 分支
                 case .normal:     return self.isEnabled && !self.isSelected && !self.isHighlighted
+                /// 未匹配已知分支时执行兜底处理
                 default:          return false
                 }
             }()

@@ -71,11 +71,11 @@ public class SlideToUnlockView: UIView {
         let view = UIView()
             .byShimmerColors(
                 base: JobsCor.systemGray5,                 // 与轨道底色一致
-                highlight: JobsCor.white.withAlphaComponent(0.9)
+                highlight: JobsCor.white.withAlphaComponent(0.42)
             )
-            .byShimmerDuration(1.35)
-            .byShimmerPauseDuration(1.8)
-            .byShimmerHighlightWidthRatio(0.12)
+            .byShimmerDuration(2.4)
+            .byShimmerPauseDuration(3.0)
+            .byShimmerHighlightWidthRatio(0.05)
         view.byAddTo(trackView)
         view.byFrame(trackView.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -115,26 +115,32 @@ public class SlideToUnlockView: UIView {
                             1
                         )
                         switch pan.state {
+                        /// 处理 .began 分支
                         case .began:
                             self.panStartProgress = self.progress
+                        /// 处理 .changed 分支
                         case .changed:
                             let rawDelta = translation.x / dragWidth
                             let delta: CGFloat
                             switch self.direction {
+                            /// 处理 .leftToRight 分支
                             case .leftToRight:
                                 delta = rawDelta
+                            /// 处理 .rightToLeft 分支
                             case .rightToLeft:
                                 delta = -rawDelta
                             }
                             self.progress = self.panStartProgress + delta
                             self.layoutIfNeeded()
                             self.updateShimmerMask()
+                        /// 合并处理 .ended、.cancelled、.failed 分支
                         case .ended, .cancelled, .failed:
                             if self.progress > 0.85 {
                                 self.completeUnlock()
                             } else {
                                 self.reset(animated: true)
                             }
+                        /// 未匹配已知分支时执行兜底处理
                         default:
                             break
                         }
@@ -190,7 +196,9 @@ public class SlideToUnlockView: UIView {
     private func updateDirectionUI() {
         let symbolName: String
         switch direction {
+        /// 处理 .leftToRight 分支
         case .leftToRight: symbolName = "chevron.right"
+        /// 处理 .rightToLeft 分支
         case .rightToLeft: symbolName = "chevron.left"
         }
         if #available(iOS 13.0, *) {
@@ -207,8 +215,10 @@ public class SlideToUnlockView: UIView {
         let maxOffset = bounds.width - thumbInset - thumbSize.width
         let positionFactor: CGFloat
         switch direction {
+        /// 处理 .leftToRight 分支
         case .leftToRight:
             positionFactor = _progress
+        /// 处理 .rightToLeft 分支
         case .rightToLeft:
             positionFactor = 1 - _progress
         }
@@ -248,6 +258,7 @@ public class SlideToUnlockView: UIView {
         let thumbFrameInTrack = trackView.convert(thumbView.frame, from: self)
         let maskRect: CGRect
         switch direction {
+        /// 处理 .leftToRight 分支
         case .leftToRight:
             // 左->右：分界线在圆心位置，右侧保留呼吸屏
             var startX = thumbFrameInTrack.midX        // 圆心
@@ -257,6 +268,7 @@ public class SlideToUnlockView: UIView {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
             };maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
+        /// 处理 .rightToLeft 分支
         case .rightToLeft:
             // 右->左：分界线在圆心位置，左侧保留呼吸屏
             var endX = thumbFrameInTrack.midX          // 圆心

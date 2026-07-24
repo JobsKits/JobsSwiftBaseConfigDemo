@@ -103,6 +103,27 @@ extension UIImage {
 }
 /// 功能性方法
 extension UIImage {
+    /// 居中裁成正方形；像素边长超限时同步缩小，不放大小图。
+    public func squareCropped(maximumPixelLength: CGFloat) -> UIImage? {
+        let shortest = min(size.width, size.height)
+        guard shortest > 0, scale > 0, maximumPixelLength > 0 else { return nil }
+        let sourcePixelLength = shortest * scale
+        let shouldDownsample = sourcePixelLength > maximumPixelLength
+        let outputLength = shouldDownsample ? maximumPixelLength : shortest
+        let outputScale = shouldDownsample ? 1.0 : scale
+        let drawingScale = outputLength / shortest
+        let outputSize = CGSize(width: outputLength, height: outputLength)
+        UIGraphicsBeginImageContextWithOptions(outputSize, false, outputScale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(
+            x: (outputLength - size.width * drawingScale) / 2,
+            y: (outputLength - size.height * drawingScale) / 2,
+            width: size.width * drawingScale,
+            height: size.height * drawingScale
+        ))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+
     // MARK: - 拉伸适配（默认边距）
     func byResizable(edge: UIEdgeInsets = UIEdgeInsets(top: 10,
                                                        left: 20,

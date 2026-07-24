@@ -256,9 +256,13 @@ public final class CrashLogCenter {
 
     private func currentAppState() -> String {
         switch UIApplication.shared.applicationState {
+        /// 处理 .active 分支
         case .active: return "active"
+        /// 处理 .inactive 分支
         case .inactive: return "inactive"
+        /// 处理 .background 分支
         case .background: return "background"
+        /// 处理系统后续新增的未知枚举值
         @unknown default: return "unknown"
         }
     }
@@ -530,12 +534,19 @@ private func jobs_installSignalHandlers() {
 /// 信号名（用于日志）
 private func jobs_signalName(_ signo: Int32) -> String {
     switch signo {
+    /// 处理 SIGABRT 分支
     case SIGABRT: return "SIGABRT"
+    /// 处理 SIGILL 分支
     case SIGILL:  return "SIGILL"
+    /// 处理 SIGSEGV 分支
     case SIGSEGV: return "SIGSEGV"
+    /// 处理 SIGFPE 分支
     case SIGFPE:  return "SIGFPE"
+    /// 处理 SIGBUS 分支
     case SIGBUS:  return "SIGBUS"
+    /// 处理 SIGPIPE 分支
     case SIGPIPE: return "SIGPIPE"
+    /// 未匹配已知分支时执行兜底处理
     default:      return "SIG(\(signo))"
     }
 }

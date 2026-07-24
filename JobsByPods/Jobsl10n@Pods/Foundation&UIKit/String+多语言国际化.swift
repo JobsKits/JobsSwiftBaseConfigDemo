@@ -60,6 +60,7 @@ extension String {
         if let s = script, let hit = pick("\(language)-\(s)") { return hit }
         // 2) 语言定制规则（你提到的目标语言）
         switch language {
+        /// 处理 "zh" 分支
         case "zh":
             // 没给 script 时按 region 推断
             let preferHansRegions: Set<String> = ["CN", "SG", "MY"]
@@ -72,16 +73,22 @@ extension String {
                 if preferHansRegions.contains(r), let hit = pick("zh-Hans") { return hit }
                 if preferHantRegions.contains(r), let hit = pick("zh-Hant") { return hit }
             };return pick("zh-Hans") ?? fallback// 默认给简体（按你项目常见诉求）
+        /// 处理 "en" 分支
         case "en":
             if region == "PH", let hit = pick("en-PH") { return hit };return pick("en") ?? fallback
+        /// 合并处理 "fil"、"tl" 分支
         case "fil", "tl":
             return pick("tl") ?? fallback
+        /// 处理 "ar" 分支
         case "ar":
             if region == "EG", let hit = pick("ar-EG") { return hit };return pick("ar") ?? fallback
+        /// 处理 "pt" 分支
         case "pt":
             if region == "BR", let hit = pick("pt-BR") { return hit };return pick("pt") ?? fallback
+        /// 处理 "es" 分支
         case "es":
             if region == "MX", let hit = pick("es-MX") { return hit };return pick("es") ?? fallback
+        /// 未匹配已知分支时执行兜底处理
         default:
             break
         }

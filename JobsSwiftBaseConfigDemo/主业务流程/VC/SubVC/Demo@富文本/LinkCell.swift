@@ -29,6 +29,7 @@ public extension NSAttributedString.Key {
 // MARK: - 单一 Cell（支持 Delegate / RAC / RightAligned）
 final class LinkCell: UITableViewCell, HasDisposeBag {
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned
+    private var simulatorAlertController: UIAlertController?
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
         UILabel()
@@ -138,6 +139,7 @@ extension LinkCell {
             .byTaps(1)
             .byTouches(1))
         switch mode {
+        /// 处理 .delegate 分支
         case .delegate:
             // 仅处理自定义“电话”；系统 link（专属客服）交给 UITextViewDelegate
             tap!.event
@@ -149,6 +151,7 @@ extension LinkCell {
                 })
                 .disposed(by: disposeBag)
             textView.byDelegate(vc)
+        /// 处理 .rac 分支
         case .rac:
             // 自管“专属客服”+“电话”
             tap!.event
@@ -158,6 +161,7 @@ extension LinkCell {
                     self.handle(url: url, on: vc, racCustomerAlert: true)
                 })
                 .disposed(by: disposeBag)
+        /// 处理 .rightAligned 分支
         case .rightAligned:
             // 和 delegate 一致：系统 link 仍走 UITextViewDelegate；自定义电话走手势
             tap!.event
@@ -225,11 +229,13 @@ extension LinkCell {
         }
         if url.scheme == "tel" || url.scheme == "telprompt" {
             #if targetEnvironment(simulator)
-            let ac = UIAlertController(title: "提示".tr,
-                                       message: "模拟器不支持拨号：\(url.absoluteString)",
-                                       preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "确定".tr, style: .default))
-            vc.present(ac, animated: true)
+            simulatorAlertController = UIAlertController(title: "提示".tr,
+                                                         message: "模拟器不支持拨号：\(url.absoluteString)",
+                                                         preferredStyle: .alert)
+            simulatorAlertController?.addAction(UIAlertAction(title: "确定".tr, style: .default))
+            if let simulatorAlertController {
+                vc.present(simulatorAlertController, animated: true)
+            }
             #else
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             #endif

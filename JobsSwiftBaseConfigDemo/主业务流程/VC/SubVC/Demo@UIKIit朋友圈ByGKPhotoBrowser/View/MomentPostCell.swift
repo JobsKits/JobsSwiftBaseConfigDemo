@@ -291,6 +291,14 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     func mediaSourceImageView(at index: Int) -> UIImageView? {
         mediaView.imageView(at: index)
     }
+
+    @discardableResult
+    func byMediaHeight(_ height: CGFloat) -> Self {
+        mediaHeightConstraint?.update(offset: height)
+        mediaView.setNeedsLayout()
+        mediaView.layoutIfNeeded()
+        return self
+    }
     // ============================== Inline “全文/收起” ==============================
     private static let toggleURL = URL(string: "https://github.com/JobsKits/JobsSwiftBaseConfigDemo")!
     func textView(_ textView: UITextView,

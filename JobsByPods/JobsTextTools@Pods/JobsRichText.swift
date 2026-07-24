@@ -69,12 +69,14 @@ public struct JobsRichText {
         var cursor = 0
         for run in runs {
             switch run.payload {
+            /// 处理 .text 分支
             case .text(let s):
                 let length = (s as NSString).length
                 let range = NSRange(location: cursor, length: length)
                 pieces.append((range, run))
                 finalString += s
                 cursor += length
+            /// 处理 .attachment 分支
             case .attachment:
                 // attachment 使用特殊占位符（Object Replacement Character）
                 finalString += "\u{FFFC}"
@@ -91,11 +93,13 @@ public struct JobsRichText {
         // 2) 逐段落下发属性
         for (range, run) in pieces {
             switch run.payload {
+            /// 处理 .attachment 分支
             case .attachment(let att, let size):
                 if let size {
                     att.bounds = CGRect(origin: .zero, size: size)
                 }
                 ms.addAttribute(.attachment, value: att, range: range)
+            /// 处理 .text 分支
             case .text:
                 if let font = run.font {
                     ms.addAttribute(.font, value: font, range: range)

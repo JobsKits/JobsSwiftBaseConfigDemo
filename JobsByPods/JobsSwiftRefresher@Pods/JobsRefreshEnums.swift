@@ -25,7 +25,9 @@ public enum JobsPosition {
     case right
     public var axis: JobsAxis {
         switch self {
+        /// 合并处理 .header、.footer 分支
         case .header, .footer: return .vertical
+        /// 合并处理 .left、.right 分支
         case .left, .right:    return .horizontal
         }
     }
@@ -51,13 +53,17 @@ public enum JobsRefreshHorizontalMode: Equatable {
 
     public func role(for position: JobsPosition) -> JobsRefreshRole {
         switch (self, position) {
+        /// 处理 .header 分支
         case (_, .header):
             return .refresh
+        /// 处理 .footer 分支
         case (_, .footer):
             return .loadMore
+        /// 合并处理 .refreshRightLoadLeft、.loadRightRefreshLeft 分支
         case (.refreshRightLoadLeft, .left),
              (.loadRightRefreshLeft, .right):
             return .refresh
+        /// 合并处理 .refreshRightLoadLeft、.loadRightRefreshLeft 分支
         case (.refreshRightLoadLeft, .right),
              (.loadRightRefreshLeft, .left):
             return .loadMore

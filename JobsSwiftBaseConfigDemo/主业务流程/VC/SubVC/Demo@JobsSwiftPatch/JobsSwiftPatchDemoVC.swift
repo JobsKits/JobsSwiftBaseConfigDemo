@@ -88,7 +88,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var hotRefreshButton: UIButton = {
         UIButton.sys()
             .byTitle("开始热更新演示".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleColor(JobsCor.systemBackground, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byBackgroundColor(JobsCor.label)
             .byCornerRadius(8)

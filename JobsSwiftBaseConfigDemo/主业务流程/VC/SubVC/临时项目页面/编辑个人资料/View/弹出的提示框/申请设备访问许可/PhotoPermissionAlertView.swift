@@ -48,7 +48,7 @@ final class PhotoPermissionAlertView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("要允许“AC”访问此设备的照片和视频吗?".tr)
-            .byTextColor(.init(r: 0.039, g: 0.063, b: 0.059))
+            .byTextColor(JobsCor.label)
             .byFont(.init(regular: 16)!)
             .byNumberOfLines(0)
             .byTextAlignment(.center)
@@ -77,7 +77,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var limitedButton: UIButton = {
         makeActionButton("允许有限访问")
-            .byNormalBgColor(JobsCor.white)
+            .byNormalBgColor(JobsCor.systemBackground)
             .onTap { [weak self] _ in
                 self?.limitedHandler?()
             }
@@ -85,7 +85,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var fullButton: UIButton = {
         makeActionButton("全部允许")
-            .byNormalBgColor(JobsCor.white)
+            .byNormalBgColor(JobsCor.systemBackground)
             .onTap { [weak self] _ in
                 self?.fullHandler?()
             }
@@ -93,7 +93,7 @@ final class PhotoPermissionAlertView: UIView {
 
     private lazy var denyButton: UIButton = {
         makeActionButton("不允许")
-            .byNormalBgColor(JobsCor.white)
+            .byNormalBgColor(JobsCor.systemBackground)
             .onTap { [weak self] _ in
                 self?.denyHandler?()
             }

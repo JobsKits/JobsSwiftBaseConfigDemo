@@ -81,10 +81,12 @@ final class AnimationEffectLabelDemoVC: BaseVC {
         JobsTextField()
             .byTextFieldConfig({ textField in
                 textField
-                    .byPlaceholder("    ".add("起点（默认 \(Int(defaultStart))）"))
+                    .byPlaceholder("起点（默认 \(Int(defaultStart))）")
                     .byPlaceholderFont(.PingFangSC.Regular(14))
                     .byPlaceholderColor("#BBBBBB".cor)
                     .byFont(.PingFangSC.Regular(14))
+                    .byAdjustsFontSizeToFitWidth(YES)
+                    .byMinimumFontSize(12)
                     .byTextColor("#BBBBBB".cor)
                     .byKeyboardType(.default)
                     .byReturnKeyType(.next)
@@ -130,10 +132,12 @@ final class AnimationEffectLabelDemoVC: BaseVC {
         JobsTextField()
             .byTextFieldConfig({ textField in
                 textField
-                    .byPlaceholder("    ".add("终点（默认 \(Int(defaultEnd))）"))
+                    .byPlaceholder("终点（默认 \(Int(defaultEnd))）")
                     .byPlaceholderFont(.PingFangSC.Regular(14))
                     .byPlaceholderColor("#BBBBBB".cor)
                     .byFont(.PingFangSC.Regular(14))
+                    .byAdjustsFontSizeToFitWidth(YES)
+                    .byMinimumFontSize(12)
                     .byTextColor("#BBBBBB".cor)
                     .byKeyboardType(.default)
                     .byReturnKeyType(.next)

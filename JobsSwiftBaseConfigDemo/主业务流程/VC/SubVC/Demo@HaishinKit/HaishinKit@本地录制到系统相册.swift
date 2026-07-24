@@ -55,27 +55,38 @@ final class HKLocalRecordVC: BaseVC {
             .byText("准备就绪".tr)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
-                make.bottom.equalTo(recordButton.snp.top).offset(-12)
+                make.bottom.equalTo(recordButtonOuterRingView.snp.top).offset(-12)
             }
     }()
-    /// 开始/停止录制按钮（形态对齐给的 exampleButton）
+    /// 微信风格白色外圈
+    private lazy var recordButtonOuterRingView: UIView = {
+        UIView()
+            .byBackgroundColor(JobsCor.clear)
+            .byBorderColor(JobsCor.white)
+            .byBorderWidth(4)
+            .byCornerRadius(44)
+            .byUserInteractionEnabled(false)
+            .byAddTo(view) { [unowned self] make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(32)
+                make.size.equalTo(CGSize(width: 88, height: 88))
+            }
+    }()
+    /// 开始/停止录制按钮
     private lazy var recordButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemRed, for: .normal)
-            .byBackgroundColor(JobsCor.systemGray, for: .disabled)
             .byTitle("开始录制".tr, for: .normal)
             .byTitle("停止录制".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            .byContentEdgeInsets(.init(top: 10, left: 20, bottom: 10, right: 20))
-            .byCornerDot(diameter: 10, offset: .init(horizontal: -6, vertical: 6)) // 红点提示
+            .byTitleColor(JobsCor.clear, for: .normal)
+            .byTitleColor(JobsCor.clear, for: .selected)
+            .byBackgroundColor(JobsCor.white, for: .normal)
+            .byCornerRadius(32)
             .onTap { [weak self] btn in
                 self?.toggleRecord(btn)
             }
-            .byAddTo(view) { [unowned self] make in
-                make.left.right.equalToSuperview().inset(24)
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(32)
-                make.height.equalTo(44)
+            .byAddTo(recordButtonOuterRingView) { make in
+                make.center.equalToSuperview()
+                make.size.equalTo(CGSize(width: 64, height: 64))
             }
     }()
     /// 切换前后摄像头按钮
@@ -119,6 +130,7 @@ final class HKLocalRecordVC: BaseVC {
         view.byBackgroundColor(JobsCor.black)
         // 触发懒加载
         previewView.byVisible(YES)
+        recordButtonOuterRingView.byVisible(YES)
         recordButton.byVisible(YES)
         switchCameraButton.byVisible(YES)
         statusLabel.byVisible(YES)

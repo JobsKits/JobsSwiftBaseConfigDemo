@@ -73,6 +73,11 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
     private let vm: MVVMUserListViewModel
     private let tableView = UITableView(frame: .zero, style: .plain)
     private var data: [MVVMUser] = []
+    private lazy var errorAlertController: UIAlertController = {
+        let alertController = UIAlertController(title: "Error", message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        return alertController
+    }()
 
     init(vm: MVVMUserListViewModel) {
         self.vm = vm
@@ -89,17 +94,21 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
         vm.onStateChange = { [weak self] state in
             guard let self else { return }
             switch state {
+            /// 处理 .loading 分支
             case .loading:
                 self.navigationItem.prompt = "Loading..."
+            /// 处理 .content 分支
             case .content(let list):
                 self.navigationItem.prompt = nil
                 self.data = list
                 self.tableView.reloadData()
+            /// 处理 .error 分支
             case .error(let msg):
                 self.navigationItem.prompt = nil
-                let ac = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "OK", style: .default))
-                self.present(ac, animated: true)
+                self.errorAlertController.message = msg
+                if self.presentedViewController !== self.errorAlertController {
+                    self.present(self.errorAlertController, animated: true)
+                }
             }
         }
         vm.load()

@@ -130,6 +130,7 @@ final class LottieDemoVC: BaseVC {
             .byTextAlignment(.right)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
     }()
+    private var rowTitleLabels: [UILabel] = []
     // 行：按钮
     private lazy var buttonsRow: UIStackView = {
         UIStackView()
@@ -190,6 +191,7 @@ final class LottieDemoVC: BaseVC {
     // MARK: - Helpers（行工厂，用 UIStackView DSL）
     private func makeRow(title: String, control: UIView) -> UIStackView {
         let label = UILabel().byText(title)
+        rowTitleLabels.append(label)
         return UIStackView()
             .byAxis(.horizontal)
             .byAlignment(.center)
@@ -200,6 +202,7 @@ final class LottieDemoVC: BaseVC {
 
     private func makeRow2(title: String, left: UIView, right: UIView) -> UIStackView {
         let label = UILabel().byText(title)
+        rowTitleLabels.append(label)
         return UIStackView()
             .byAxis(.horizontal)
             .byAlignment(.center)
@@ -210,8 +213,11 @@ final class LottieDemoVC: BaseVC {
 
     private func resolvedLoopMode() -> LottieLoopMode {
         switch loopSegment.selectedSegmentIndex {
+        /// 处理 数值 0 分支
         case 0: return .playOnce
+        /// 处理 数值 1 分支
         case 1: return .loop
+        /// 未匹配已知分支时执行兜底处理
         default: return .autoReverse
         }
     }

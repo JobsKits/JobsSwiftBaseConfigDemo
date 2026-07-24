@@ -654,21 +654,32 @@ private extension TaskCenterComponentDemoVC {
 
     func describeLifecycle(_ lifecycle: JobsTaskLifecycle) -> String {
         switch lifecycle {
+        /// 处理 .idle 分支
         case .idle: return "idle / 待启动"
+        /// 处理 .running 分支
         case .running: return "running / 运行中"
+        /// 处理 .suspended 分支
         case .suspended: return "suspended / 已挂起"
+        /// 处理 .cancelled 分支
         case .cancelled: return "cancelled / 已取消"
+        /// 处理 .finished 分支
         case .finished: return "finished / 已结束"
         }
     }
 
     func describeStatus(_ status: JobsTaskStatus) -> String {
         switch status {
+        /// 处理 .expire 分支
         case .expire: return "expire / 过期"
+        /// 处理 .suspend 分支
         case .suspend: return "suspend / 暂停"
+        /// 处理 .prepare 分支
         case .prepare: return "prepare / 准备"
+        /// 处理 .execute 分支
         case .execute: return "excute / 执行中"
+        /// 处理 .ended 分支
         case .ended: return "ended / 已结束"
+        /// 处理 .background 分支
         case .background: return "background / 后台"
         }
     }

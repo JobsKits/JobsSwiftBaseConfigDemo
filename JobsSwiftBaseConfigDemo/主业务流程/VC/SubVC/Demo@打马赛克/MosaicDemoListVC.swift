@@ -25,19 +25,25 @@ final class MosaicDemoListVC: BaseVC {
         case brush
         var title: String {
             switch self {
+            /// 处理 .wholeImage 分支
             case .wholeImage: return "整图粗细马赛克"
+            /// 处理 .brush 分支
             case .brush: return "手势涂抹马赛克"
             }
         }
         var subtitle: String {
             switch self {
+            /// 处理 .wholeImage 分支
             case .wholeImage: return "右侧拖动开关控制马赛克块大小，图片经 SDWebImage 封装加载"
+            /// 处理 .brush 分支
             case .brush: return "右上角开关开启后，手指划过的位置局部马赛克，图片经 Kingfisher 封装加载"
             }
         }
         var vcType: UIViewController.Type {
             switch self {
+            /// 处理 .wholeImage 分支
             case .wholeImage: return MosaicWholeImageDemoVC.self
+            /// 处理 .brush 分支
             case .brush: return MosaicBrushDemoVC.self
             }
         }

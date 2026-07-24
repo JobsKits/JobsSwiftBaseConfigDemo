@@ -26,18 +26,25 @@ final class AFService {
             AFStubURLProtocol.handler = { req in
                 guard let url = req.url else { return nil }
                 switch (url.host, url.path) {
+                /// 处理 ("api.github.com", "/zen") 分支
                 case ("api.github.com", "/zen"):
                     return (200, ["Content-Type":"text/plain; charset=utf-8"], AFRoute.ghZen.sampleData)
+                /// 处理 ("api.github.com", p) 分支
                 case let ("api.github.com", p) where p.hasPrefix("/users/"):
                     return (200, ["Content-Type":"application/json"], AFRoute.ghUser(username: "").sampleData)
+                /// 处理 ("api.github.com", "/search/users") 分支
                 case ("api.github.com", "/search/users"):
                     return (200, ["Content-Type":"application/json"], AFRoute.ghSearchUsers(q: "", page: nil).sampleData)
+                /// 处理 ("reqres.in", "/api/login") 分支
                 case ("reqres.in", "/api/login"):
                     return (200, ["Content-Type":"application/json"], AFRoute.login(email: "", password: "").sampleData)
+                /// 处理 ("httpbin.org", "/post") 分支
                 case ("httpbin.org", "/post"):
                     return (200, ["Content-Type":"application/json"], AFRoute.uploadAvatar(Data()).sampleData)
+                /// 处理 ("httpbin.org", "/image/png") 分支
                 case ("httpbin.org", "/image/png"):
                     return (200, ["Content-Type":"image/png"], Data())
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     return (404, ["Content-Type":"application/json"],
                             #"{"message":"stub not found"}"#.data(using: .utf8)!)
@@ -80,7 +87,9 @@ final class AFService {
             .validate()
             .responseURL { resp in
                 switch resp.result {
+                /// 处理 .success 分支
                 case .success(let url): jobsByVoidBlock(.success(url))
+                /// 处理 .failure 分支
                 case .failure(let err): jobsByVoidBlock(.failure(err))
                 }
             }

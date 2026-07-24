@@ -119,16 +119,25 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
     private func runFeature() {
         appendLog("执行：\(featureTitle)")
         switch featureIndex {
+        /// 合并处理 0...3 范围、数值 21 分支
         case 0...3, 21: manager.startScan()
+        /// 处理 4...6 范围 分支
         case 4...6:
             manager.startScan()
             if let peripheral = manager.discoveredPeripherals.first { manager.connect(identifier: peripheral.identifier) }
+        /// 处理 数值 7 分支
         case 7: manager.read();appendLog("已提交 Read 请求；真实设备需要配置 FFF3 特征。")
+        /// 处理 数值 10 分支
         case 10: manager.setNotifyEnabled(true);appendLog("已提交 Notify 开启请求。")
+        /// 处理 数值 11 分支
         case 11: appendLog("MTU 与分包由 maximumWriteValueLength 决定，协议层不写死长度。")
+        /// 处理 数值 15 分支
         case 15: manager.disconnect()
+        /// 处理 数值 16 分支
         case 16: appendLog("状态恢复由 Manager 收口；宿主显式声明 bluetooth-central。")
+        /// 合并处理 数值 17、数值 24 分支
         case 17, 24: appendLog("Profile、Manager、Command 已全部通过 byXxx / onXxx DSL 配置。")
+        /// 未匹配已知分支时执行兜底处理
         default:
             let command = JobsBluetoothCommand()
                 .byIdentifier("demo.\(featureIndex)")

@@ -38,7 +38,7 @@ public class JobsEmptyView: UIView {
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byAddTo(self) { [unowned self] make in
-                make.center.equalToSuperview()
+                make.edges.equalToSuperview().inset(12)
             }
     }()
 

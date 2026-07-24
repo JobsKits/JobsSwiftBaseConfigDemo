@@ -179,23 +179,7 @@ final class YTKNetworkDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         setupYTKNetworkBaseURL()
-        jobsSetupGKNav(
-            title: "YTKNetwork Swift Demo",
-            rightButtons: [
-                UIButton.sys()
-                    /// 按钮图片@图文关系
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
-                    .bySelected(RootListPreferences.darkModeEnabled)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        let isDarkMode = RootListPreferences.toggleDarkMode()
-                        sender.bySelected(isDarkMode)
-                        appendLog("🌗 主题已切换 -> \(isDarkMode ? "Dark" : "Light")")
-                    }
-            ]
-        )
+        jobsSetupGKNav(title: "YTKNetwork Swift Demo")
         // 触发懒加载 & 约束
         singleRequestButton.byVisible(YES)
         batchRequestButton.byVisible(YES)

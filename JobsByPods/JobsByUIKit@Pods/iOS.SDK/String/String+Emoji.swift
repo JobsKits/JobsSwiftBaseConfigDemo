@@ -68,9 +68,13 @@ extension String {
     /// 说明：这是工程化的“Strong 倾向”加权，不等价于 Unicode 全量数据表，但对产品判定很实用。
     private static func isLikelyStrongEmojiScalar(_ s: UnicodeScalar) -> Bool {
         switch s.value {
-        case 0x1F300...0x1FAFF: return true   // 大量 emoji 区（含扩展）
-        case 0x2600...0x26FF:   return true   // Misc symbols（含部分 emoji，⚠️也含非emoji符号）
-        case 0x2700...0x27BF:   return true   // Dingbats
+        /// 大量 emoji 区（含扩展）
+        case 0x1F300...0x1FAFF: return true
+        /// Misc symbols（含部分 emoji，⚠️也含非emoji符号）
+        case 0x2600...0x26FF:   return true
+        /// Dingbats
+        case 0x2700...0x27BF:   return true
+        /// 未匹配已知分支时执行兜底处理
         default: return false
         }
     }

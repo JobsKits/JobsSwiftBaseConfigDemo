@@ -78,8 +78,10 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             let cacheKey = makeCacheKey(for: request, prepared: prepared)
             let policy = request.cachePolicy
             switch policy {
+            /// 合并处理 .disabled、.networkOnly 分支
             case .disabled, .networkOnly:
                 fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
+            /// 处理 .cacheOnly 分支
             case .cacheOnly:
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -87,6 +89,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 } else {
                     completion(.failure(.cacheMiss))
                 }
+            /// 处理 .cacheElseLoad 分支
             case let .cacheElseLoad(ttl):
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -94,6 +97,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 } else {
                     fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: ttl, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
                 }
+            /// 处理 .staleWhileRevalidate 分支
             case let .staleWhileRevalidate(ttl):
                 if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
                     onEvent(.success((decoded, .cache)))
@@ -127,6 +131,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 return
             }
             switch result {
+            /// 处理 .success 分支
             case .success(let (data, response)):
                 let event = JobsResponseEvent(source: .network, request: request, response: response, data: data)
                 self.config.observer.didReceive(event)
@@ -144,6 +149,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                     let wrapped = JobsError.unknown(underlying: error.localizedDescription)
                     self.handle(error: wrapped, request: request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt, onEvent: onEvent, completion: completion)
                 }
+            /// 处理 .failure 分支
             case .failure(let error):
                 self.handle(error: error, request: request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt, onEvent: onEvent, completion: completion)
             }
@@ -200,6 +206,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         var afHeaders: HTTPHeaders = [:]
         headers.forEach { afHeaders.add(name: $0.key, value: $0.value) }
         switch rule {
+        /// 处理 .urlQuery 分支
         case .urlQuery:
             return JobsPreparedRequest(
                 url: absoluteURL,
@@ -211,6 +218,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 rawBody: nil,
                 trace: request.trace
             )
+        /// 处理 .jsonBody 分支
         case .jsonBody:
             afHeaders.add(name: "Content-Type", value: "application/json")
             return JobsPreparedRequest(
@@ -223,6 +231,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 rawBody: nil,
                 trace: request.trace
             )
+        /// 处理 .formURLEncoded 分支
         case .formURLEncoded:
             afHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded; charset=utf-8")
             return JobsPreparedRequest(
@@ -235,6 +244,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 rawBody: nil,
                 trace: request.trace
             )
+        /// 处理 .rawData 分支
         case .rawData(let data):
             return JobsPreparedRequest(
                 url: absoluteURL,
@@ -246,6 +256,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 rawBody: data,
                 trace: request.trace
             )
+        /// 处理 .multipart 分支
         case .multipart:
             throw JobsError.invalidRequest(reason: "Use upload(_:as:completion:) for multipart requests")
         }
@@ -316,8 +327,10 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             }
         }
         switch config.envelopeStrategy {
+        /// 处理 .none 分支
         case .none:
             return try decodePlain(data: data, as: type)
+        /// 处理 .standard 分支
         case let .standard(successCodes):
             return try decodeWithEnvelope(data: data, as: type, successCodes: successCodes)
         }

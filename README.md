@@ -1623,6 +1623,8 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
   JobsBySwiftPackageManager/JobsSPMDemoPackage
   ```
 
+  App 只链接该目录下零远程依赖的 `JobsSPMDemoKit`；`swift-syntax`、Macro、Client 与宏测试位于 `JobsSPMDemoPackage/MacroDemo`，不会进入 App 的 Clean / Build 依赖图。
+
 * 完整验证（解析、构建、测试并运行命令行 Client）：
 
   ```shell
@@ -1631,7 +1633,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
   该脚本也由 `pod install` 的 `pre_install` 阶段可选唤起：直接回车执行，输入任意字符后回车跳过。脚本缺失或主动跳过不影响 Pods 安装；一旦选择执行，验证失败会停止集成。
 
-* 宏依赖 [**swift-syntax**](https://github.com/swiftlang/swift-syntax) 由 SwiftPM 锁定官方精确版本，不再依赖容易丢失的同级本地源码目录。完整说明见 [`SwiftPackageDependence使用指南🧭.md`](./SwiftDoc.md/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md)。
+* 独立 Macro Demo 的宏依赖 [**swift-syntax**](https://github.com/swiftlang/swift-syntax) 由 SwiftPM 锁定官方精确版本，不再依赖容易丢失的同级本地源码目录，也不会影响 App 离线构建。完整说明见 [`SwiftPackageDependence使用指南🧭.md`](./SwiftDoc.md/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md)。
 
 * 通过Xcode添加进 [**Swift**](https://developer.apple.com/swift/)项目中👇
 
@@ -2407,6 +2409,17 @@ private lazy var countdownButton: UIButton = {
 
 ##### 2.2.4、🔘 旋转按钮（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+按钮前景图或任意 `UIView` 的定时旋转统一使用 `JobsImageRotation`。默认方向为 `.clockwise`，默认速度为 `JobsImageRotator.defaultInterval`（`1.0 / 60.0` 秒）；业务倒计时结束时调用 `stop()` 即可复位图标。
+
+```swift
+let rotator = JobsImageRotator(
+    targetView: button.imageView ?? button,
+    direction: .counterclockwise,
+    interval: 1.0 / 60.0
+)
+rotator.start()
+```
+
 ```swift
 private lazy var suspendSpinBtn: UIButton = {
     UIButton(type: .system)
@@ -2836,6 +2849,30 @@ private lazy var tableView: UITableView = {
       return CGSize(width: w, height: 64)
   }
   ```
+
+##### 2.4.1、钱包卡片堆叠 ➤ `JobsWalletCard`
+
+`JobsWalletCard` 把银行卡 Cell、Header、添加入口、堆叠布局、动画和开合状态统一放入本地 Pod。业务层只传 `JobsWalletCardModel` 与回调，不再自行维护 `UICollectionViewDataSource` / `UICollectionViewDelegate`。
+
+```swift
+private lazy var walletCardView: JobsWalletCardView = {
+    JobsWalletCardView()
+        .byCards(cards)
+        .byExpansionMode(.individual) // 缺省值，可省略
+        .onSelectCard { card, index in
+            print(card.bankName, index)
+        }
+        .onAddCard {
+            print("添加银行卡")
+        }
+        .byAddTo(view) { make in
+            make.edges.equalToSuperview()
+        }
+}()
+```
+
+- `.individual`：只开合当前点击卡片与下一张卡片之间的间距，是缺省模式。
+- `.all`：点击任意银行卡都会统一切换全部展开 / 全部收起。
 
 #### 2.5、<font id=UICollectionViewFlowLayout>`UICollectionViewFlowLayout`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -3584,6 +3621,8 @@ private lazy var tvBlue: UITextView = { [unowned self] in
 
 #### 2.13、`GKNavigationBarSwift` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路自动在导航栏最右侧补全全局主题切换按钮，并保留页面已有的右侧业务按钮。
+
 ```swift
 jobsSetupGKNav(
     title: "Demo 列表",
@@ -3616,20 +3655,6 @@ jobsSetupGKNav(
              }
         },
     rightButtons: [
-        UIButton.sys()
-            /// 按钮图片@图文关系
-            .byImage("moon.circle.fill".sysImg)
-            .byImage("moon.circle.fill".sysImg, for: .selected)
-            /// 事件触发@点按
-            .onTap { [weak self] sender in
-                guard let self else { return }
-                sender.isSelected.toggle()
-                guard let ws = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let win = ws.windows.first else { return }
-                win.overrideUserInterfaceStyle =
-                    (win.overrideUserInterfaceStyle == .dark) ? .light : .dark
-                print("🌓 主题已切换 -> \(win.overrideUserInterfaceStyle == .dark ? "Dark" : "Light")")
-            },
         UIButton.sys()
             /// 按钮图片@图文关系
             .byImage("globe".sysImg)
@@ -3896,16 +3921,19 @@ private lazy var progressView: JobsProgressBar = {
     JobsProgressBar()
         .byDirection(.leftToRight)
         .byValueMode(.countDown)           // 初始：显示为 100→0
-        .byTrackColor(.systemGray5)        // 你外层灰条在父视图，这里清空即可
+        .byTrackColor(JobsCor.systemGray5) // 你外层灰条在父视图，这里清空即可
         .byTrackHorizontalInset(0)         // ✅ 不要内部留边
         .byTrackVerticalInset(0)           // ✅ 不要内部留边
         .byTrackThickness(nil)             // ✅ 厚度 = JobsProgressBar.height（也就是父视图高度）
-        .byAutoHideLabel(true)             // ✅ 小高度自动隐藏 label（12 高会隐藏）
+        .byProgressBubblePlacement(.top)   // 气泡也可放在 .bottom
+        .byProgressBubbleDisplayMode(.whileChanging) // 默认仅在进度变化时显示；.always 为常显
+        .byProgressBubbleHideDelay(0.8)
+        .byAutoHideLabel(false)
         .byLabelMinVisibleHeight(18)
-        .byLabelBackgroundColor(.secondarySystemBackground)
-        .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+        .byLabelBackgroundColor(JobsCor.secondarySystemBackground)
+        .byLabelFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
         .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
+            make.top.equalTo(modeToggleButton.snp.bottom).offset(48.h)
             make.left.equalToSuperview().offset(40.w)
             make.right.equalToSuperview().inset(40.w)
             make.height.equalTo(20.h)
@@ -4298,6 +4326,8 @@ required init?(coder: NSCoder) {
   ```
 
 * 使用
+
+  Demo 根列表导航流中的子页面及类名以 `DemoVC` 结尾的独立演示页会自动获得全局主题切换按钮，无需在 `rightButtons` 中重复创建。
 
   ```swift
   if (r0.code == JXAuthCode.tokenEmpty // 令牌为空
@@ -5089,16 +5119,6 @@ required init?(coder: NSCoder) {
                        }
                   },
               rightButtons: [
-                  UIButton.sys()
-                      /// 按钮图片@图文关系
-                      .byImage(UIImage(systemName: "moon.circle.fill"))
-                      .byImage(UIImage(systemName: "moon.circle.fill"), for: .selected)
-                      /// 事件触发@点按
-                      .onTap { [weak self] sender in
-                          guard let self else { return }
-                          sender.isSelected.toggle()
-                          print("🌓 主题已切换 -> \(win.overrideUserInterfaceStyle == .dark ? "Dark" : "Light")")
-                      },
                   UIButton.sys()
                       /// 按钮图片@图文关系
                       .byImage(UIImage(systemName: "globe"))
@@ -6071,19 +6091,23 @@ deinit {
 * 快捷创建
 
   ```swift
-  /// 自定义进度条：实时进度值、前进方向
-  private lazy var progressView: JobsProgressView = {
-      JobsProgressView()
+  /// 自定义进度条：实时进度值、前进方向、进度头气泡
+  private lazy var progressView: JobsProgressBar = {
+      JobsProgressBar()
           .byDirection(.leftToRight)
           .byValueMode(.countDown)   // 初始：显示为 100→0
-          .byTrackColor(.systemGray5)
-          .byLabelBackgroundColor(.secondarySystemBackground)
-          .byLabelFont(.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
+          .byTrackColor(JobsCor.systemGray5)
+          .byProgressBubblePlacement(.top)
+          .byProgressBubbleDisplayMode(.whileChanging)
+          .byProgressBubbleHideDelay(0.8)
+          .byAutoHideLabel(false)
+          .byLabelBackgroundColor(JobsCor.secondarySystemBackground)
+          .byLabelFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
           .byAddTo(view) { [unowned self] make in
-              make.top.equalTo(modeToggleButton.snp.bottom).offset(24.h)
+              make.top.equalTo(modeToggleButton.snp.bottom).offset(48.h)
               make.left.equalToSuperview().offset(40.w)
               make.right.equalToSuperview().inset(40.w)
-              make.height.equalTo(80.h) /// 给点高度让上方 label 有空间移动
+              make.height.equalTo(20.h)
           }
   }()
   ```

@@ -16,107 +16,176 @@ import JobsByUIKit
 import JobsInheritance
 import JobsSwiftDSL
 import JobsSwiftGraphicCaptcha
+import JobsSwiftNumberStepper
 import GKNavigationBarSwift
 import SnapKit
 
-private enum JobsSwiftGraphicCaptchaTwoMixedOption: Int, CaseIterable {
+private enum JobsSwiftGraphicCaptchaDemoOption: Int, CaseIterable {
+    case uppercaseLetter
+    case lowercaseLetter
+    case number
+    case chinese
     case uppercaseLowercase
     case uppercaseNumber
-    case lowercaseNumber
     case uppercaseChinese
+    case lowercaseNumber
     case lowercaseChinese
-    case chineseNumber
+    case numberChinese
+    case uppercaseLowercaseNumber
+    case lowercaseNumberChinese
+    case uppercaseLowercaseChinese
+    case uppercaseNumberChinese
+    case all
 
     var title: String {
         switch self {
+        /// 单项：英文大写
+        case .uppercaseLetter:
+            return "英文大写"
+        /// 单项：英文小写
+        case .lowercaseLetter:
+            return "英文小写"
+        /// 单项：阿拉伯数字
+        case .number:
+            return "阿拉伯数字"
+        /// 单项：汉字
+        case .chinese:
+            return "汉字"
+        /// 两两混合：英文大写和英文小写
         case .uppercaseLowercase:
-            return "英文大写+英文小写"
+            return "英文大写 + 英文小写"
+        /// 两两混合：英文大写和阿拉伯数字
         case .uppercaseNumber:
-            return "英文大写+数字"
-        case .lowercaseNumber:
-            return "英文小写+数字"
+            return "英文大写 + 阿拉伯数字"
+        /// 两两混合：英文大写和汉字
         case .uppercaseChinese:
-            return "英文大写+汉字"
+            return "英文大写 + 汉字"
+        /// 两两混合：英文小写和阿拉伯数字
+        case .lowercaseNumber:
+            return "英文小写 + 阿拉伯数字"
+        /// 两两混合：英文小写和汉字
         case .lowercaseChinese:
-            return "英文小写+汉字"
-        case .chineseNumber:
-            return "汉字+数字"
+            return "英文小写 + 汉字"
+        /// 两两混合：阿拉伯数字和汉字
+        case .numberChinese:
+            return "阿拉伯数字 + 汉字"
+        /// 三三混合：英文大写、英文小写和阿拉伯数字
+        case .uppercaseLowercaseNumber:
+            return "英文大写 + 英文小写 + 阿拉伯数字"
+        /// 三三混合：英文小写、阿拉伯数字和汉字
+        case .lowercaseNumberChinese:
+            return "英文小写 + 阿拉伯数字 + 汉字"
+        /// 三三混合：英文大写、英文小写和汉字
+        case .uppercaseLowercaseChinese:
+            return "英文大写 + 英文小写 + 汉字"
+        /// 三三混合：英文大写、阿拉伯数字和汉字
+        case .uppercaseNumberChinese:
+            return "英文大写 + 阿拉伯数字 + 汉字"
+        /// 全部混合：四种字符单位
+        case .all:
+            return "英文大写 + 英文小写 + 阿拉伯数字 + 汉字"
         }
     }
 
     var characterUnits: JobsSwiftGraphicCaptchaCharacterUnit {
         switch self {
+        /// 单项：英文大写
+        case .uppercaseLetter:
+            return .uppercaseLetter
+        /// 单项：英文小写
+        case .lowercaseLetter:
+            return .lowercaseLetter
+        /// 单项：阿拉伯数字
+        case .number:
+            return .number
+        /// 单项：汉字
+        case .chinese:
+            return .chinese
+        /// 两两混合：英文大写和英文小写
         case .uppercaseLowercase:
             return [.uppercaseLetter, .lowercaseLetter]
+        /// 两两混合：英文大写和阿拉伯数字
         case .uppercaseNumber:
             return [.uppercaseLetter, .number]
-        case .lowercaseNumber:
-            return [.lowercaseLetter, .number]
+        /// 两两混合：英文大写和汉字
         case .uppercaseChinese:
             return [.uppercaseLetter, .chinese]
+        /// 两两混合：英文小写和阿拉伯数字
+        case .lowercaseNumber:
+            return [.lowercaseLetter, .number]
+        /// 两两混合：英文小写和汉字
         case .lowercaseChinese:
             return [.lowercaseLetter, .chinese]
-        case .chineseNumber:
-            return [.chinese, .number]
+        /// 两两混合：阿拉伯数字和汉字
+        case .numberChinese:
+            return [.number, .chinese]
+        /// 三三混合：英文大写、英文小写和阿拉伯数字
+        case .uppercaseLowercaseNumber:
+            return [.uppercaseLetter, .lowercaseLetter, .number]
+        /// 三三混合：英文小写、阿拉伯数字和汉字
+        case .lowercaseNumberChinese:
+            return [.lowercaseLetter, .number, .chinese]
+        /// 三三混合：英文大写、英文小写和汉字
+        case .uppercaseLowercaseChinese:
+            return [.uppercaseLetter, .lowercaseLetter, .chinese]
+        /// 三三混合：英文大写、阿拉伯数字和汉字
+        case .uppercaseNumberChinese:
+            return [.uppercaseLetter, .number, .chinese]
+        /// 全部混合：四种字符单位
+        case .all:
+            return [.uppercaseLetter, .lowercaseLetter, .number, .chinese]
         }
     }
 
     var config: JobsSwiftGraphicCaptchaConfig {
-        JobsSwiftGraphicCaptchaConfig(caseSensitive: true,
-                                      characterUnits: characterUnits,
-                                      mixedGroupCount: 2)
+        let groupCount = characterUnits.rawValue.nonzeroBitCount
+        return JobsSwiftGraphicCaptchaConfig(
+            caseSensitive: true,
+            characterUnits: characterUnits,
+            mixedGroupCount: groupCount > 1 ? groupCount : 0
+        )
     }
 }
 
 final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
-    private var mixedModeTopConstraint: Constraint?
-    private var mixedModeHeightConstraint: Constraint?
-    private var twoMixedOptionsTopConstraint: Constraint?
-    private var twoMixedOptionsHeightConstraint: Constraint?
-    private var captchaTopConstraint: Constraint?
-    private var selectedTwoMixedOption = JobsSwiftGraphicCaptchaTwoMixedOption.uppercaseLowercase
-
-    private lazy var modeControl: UISegmentedControl = {
-        UISegmentedControl(items: ["混合", "大小写", "不敏感", "数字", "汉字"])
-            .bySelectedSegmentIndex(0)
-            .byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
-    }()
-
-    private lazy var mixedModeControl: UISegmentedControl = {
-        UISegmentedControl(items: ["两两混合", "三三混合", "全部混合"])
-            .bySelectedSegmentIndex(2)
-            .byAddTarget(self, action: #selector(mixedModeChanged(_:)), for: .valueChanged)
-    }()
-
-    private lazy var twoMixedFirstRowControl: UISegmentedControl = {
-        UISegmentedControl(items: Array(JobsSwiftGraphicCaptchaTwoMixedOption.allCases.prefix(3)).map(\.title))
-            .bySelectedSegmentIndex(0)
-            .byAddTarget(self, action: #selector(twoMixedFirstRowChanged(_:)), for: .valueChanged)
-    }()
-
-    private lazy var twoMixedSecondRowControl: UISegmentedControl = {
-        UISegmentedControl(items: Array(JobsSwiftGraphicCaptchaTwoMixedOption.allCases.suffix(3)).map(\.title))
-            .bySelectedSegmentIndex(UISegmentedControl.noSegment)
-            .byAddTarget(self, action: #selector(twoMixedSecondRowChanged(_:)), for: .valueChanged)
-    }()
-
-    private lazy var twoMixedOptionsStackView: UIStackView = {
-        UIStackView(arrangedSubviews: [twoMixedFirstRowControl, twoMixedSecondRowControl])
-            .byAxis(.vertical)
-            .byDistribution(.fillEqually)
-            .bySpacing(10)
-    }()
+    private var selectedOption = JobsSwiftGraphicCaptchaDemoOption.all
+    private var optionButtons: [UIButton] = []
+    private var optionRowViews: [UIView] = []
+    private var optionScrollViews: [UIScrollView] = []
+    private var optionStackViews: [UIStackView] = []
+    private var optionTitleLabels: [UILabel] = []
 
     private lazy var captchaView: JobsSwiftGraphicCaptchaView = {
-        let view = JobsSwiftGraphicCaptchaView()
-        view.byCornerRadius(12)
-        view.byMasksToBounds(true)
-        view.byBorderColor(JobsCor.systemGray4)
-        view.byBorderWidth(0.5)
-        view.refreshHandler = { [weak self] text in
-            self?.resultLabel.byText("当前验证码：\(text)")
-            self?.resultLabel.byTextColor(JobsCor.secondaryLabel)
-        };return view
+        let captchaView = JobsSwiftGraphicCaptchaView()
+            .byCornerRadius(12)
+            .byMasksToBounds(true)
+            .byBorderColor(JobsCor.systemGray4)
+            .byBorderWidth(0.5)
+        captchaView.refreshHandler = { [weak self] text in
+            self?.resultLabel
+                .byText("当前验证码：\(text)")
+                .byTextColor(JobsCor.secondaryLabel)
+        };return captchaView
+    }()
+
+    private lazy var optionRowsView: UIView = {
+        UIView()
+            .byBackgroundColor(JobsCor.clear)
+    }()
+
+    private lazy var lengthLabel: UILabel = {
+        UILabel()
+            .byText("长度：".tr)
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 15))
+    }()
+
+    private lazy var lengthStepper: JobsSwiftNumberStepper = {
+        JobsSwiftNumberStepper()
+            .configure(value: 4, minimumValue: 4, maximumValue: 8)
+            .onJobsChange { [weak self] (stepper: JobsSwiftNumberStepper) in
+                self?.lengthChanged(stepper)
+            }
     }()
 
     private lazy var inputField: UITextField = {
@@ -125,28 +194,39 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
             .byClearButtonMode(.whileEditing)
             .byAutocapitalizationType(.none)
             .byAutocorrectionType(.no)
-            .byPlaceholder("输入验证码".tr)
+            .byPlaceholder("输入图形验证码".tr)
     }()
 
     private lazy var resultLabel: UILabel = {
         UILabel()
-            .byText("当前验证码：".tr)
+            .byText("等待输入校验".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTextAlignment(.center)
             .byNumberOfLines(2)
     }()
 
     private lazy var refreshButton: UIButton = {
         UIButton.sys()
-            .byTitle("刷新".tr, for: .normal)
+            .byConfiguration(
+                UIButton.Configuration.filled()
+                    .byTitle("刷新".tr)
+                    .byCornerStyle(.medium)
+            )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .onTap { [weak self] _ in
-                self?.captchaView.refreshCaptcha()
+                self?.refreshCaptcha()
             }
     }()
 
     private lazy var validateButton: UIButton = {
         UIButton.sys()
-            .byTitle("校验".tr, for: .normal)
+            .byConfiguration(
+                UIButton.Configuration.filled()
+                    .byTitle("校验".tr)
+                    .byCornerStyle(.medium)
+            )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .onTap { [weak self] _ in
                 self?.validateCaptcha()
             }
@@ -157,135 +237,201 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "图形验证码".tr)
         setupSubviews()
-        applyMode(index: modeControl.selectedSegmentIndex)
+        buildOptionRows(in: optionRowsView)
+        applyOption(.all)
     }
 }
 
 private extension JobsSwiftGraphicCaptchaDemoVC {
+    var optionGroups: [(title: String, options: [JobsSwiftGraphicCaptchaDemoOption])] {
+        [
+            ("单个演示", [.uppercaseLetter, .lowercaseLetter, .number, .chinese]),
+            ("两两混合", [.uppercaseLowercase, .uppercaseNumber, .uppercaseChinese,
+                         .lowercaseNumber, .lowercaseChinese, .numberChinese]),
+            ("三三混合", [.uppercaseLowercaseNumber, .lowercaseNumberChinese,
+                         .uppercaseLowercaseChinese, .uppercaseNumberChinese]),
+            ("全部混合", [.all])
+        ]
+    }
+
     func setupSubviews() {
-        modeControl.byAddTo(view)
-        mixedModeControl.byAddTo(view)
-        twoMixedOptionsStackView.byAddTo(view)
-        captchaView.byAddTo(view)
-        inputField.byAddTo(view)
-        resultLabel.byAddTo(view)
-        refreshButton.byAddTo(view)
-        validateButton.byAddTo(view)
-        modeControl.snp.makeConstraints { [unowned self] make in
-            make.left.right.equalToSuperview().inset(16)
+        captchaView.byAddTo(view) { [unowned self] make in
+            make.left.right.equalToSuperview().inset(32)
             if view.jobs_hasVisibleTopBar() {
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(18)
             } else {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(18)
             }
-            make.height.equalTo(34)
-        }
-        mixedModeControl.snp.makeConstraints { make in
-            mixedModeTopConstraint = make.top.equalTo(modeControl.snp.bottom).offset(10).constraint
-            make.left.right.equalTo(modeControl)
-            mixedModeHeightConstraint = make.height.equalTo(34).constraint
-        }
-        twoMixedOptionsStackView.snp.makeConstraints { make in
-            twoMixedOptionsTopConstraint = make.top.equalTo(mixedModeControl.snp.bottom).constraint
-            make.left.right.equalTo(modeControl)
-            twoMixedOptionsHeightConstraint = make.height.equalTo(0).constraint
-        }
-        captchaView.snp.makeConstraints { make in
-            captchaTopConstraint = make.top.equalTo(twoMixedOptionsStackView.snp.bottom).offset(22).constraint
-            make.left.right.equalToSuperview().inset(32)
             make.height.equalTo(72)
         }
-        inputField.snp.makeConstraints { make in
+        optionRowsView.byAddTo(view) { [unowned self] make in
             make.top.equalTo(captchaView.snp.bottom).offset(18)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(166)
+        }
+        lengthLabel.byAddTo(view) { [unowned self] make in
+            make.top.equalTo(optionRowsView.snp.bottom).offset(14)
+            make.left.equalTo(captchaView)
+            make.height.equalTo(32)
+        }
+        lengthStepper.byAddTo(view) { [unowned self] make in
+            make.right.equalTo(captchaView)
+            make.centerY.equalTo(lengthLabel)
+            make.width.equalTo(170)
+            make.height.equalTo(44)
+        }
+        inputField.byAddTo(view) { [unowned self] make in
+            make.top.equalTo(lengthLabel.snp.bottom).offset(14)
             make.left.right.equalTo(captchaView)
             make.height.equalTo(44)
         }
-        resultLabel.snp.makeConstraints { make in
-            make.top.equalTo(inputField.snp.bottom).offset(12)
+        resultLabel.byAddTo(view) { [unowned self] make in
+            make.top.equalTo(inputField.snp.bottom).offset(10)
             make.left.right.equalTo(inputField)
+            make.height.equalTo(36)
         }
-        refreshButton.snp.makeConstraints { make in
-            make.top.equalTo(resultLabel.snp.bottom).offset(18)
+        refreshButton.byAddTo(view) { [unowned self] make in
+            make.top.equalTo(resultLabel.snp.bottom).offset(14)
             make.left.equalTo(inputField)
-            make.height.equalTo(42)
             make.width.equalTo(inputField).multipliedBy(0.45)
+            make.height.equalTo(42)
         }
-        validateButton.snp.makeConstraints { make in
-            make.top.height.width.equalTo(refreshButton)
+        validateButton.byAddTo(view) { [unowned self] make in
+            make.top.width.height.equalTo(refreshButton)
             make.right.equalTo(inputField)
         }
     }
 
-    @objc func modeChanged(_ sender: UISegmentedControl) {
-        applyMode(index: sender.selectedSegmentIndex)
-    }
-
-    @objc func mixedModeChanged(_ sender: UISegmentedControl) {
-        modeControl.bySelectedSegmentIndex(0)
-        applyMode(index: 0)
-    }
-
-    @objc func twoMixedFirstRowChanged(_ sender: UISegmentedControl) {
-        guard let option = JobsSwiftGraphicCaptchaTwoMixedOption(rawValue: sender.selectedSegmentIndex) else { return }
-        selectedTwoMixedOption = option
-        twoMixedSecondRowControl.bySelectedSegmentIndex(UISegmentedControl.noSegment)
-        activateTwoMixedMode()
-    }
-
-    @objc func twoMixedSecondRowChanged(_ sender: UISegmentedControl) {
-        let rawValue = sender.selectedSegmentIndex + 3
-        guard let option = JobsSwiftGraphicCaptchaTwoMixedOption(rawValue: rawValue) else { return }
-        selectedTwoMixedOption = option
-        twoMixedFirstRowControl.bySelectedSegmentIndex(UISegmentedControl.noSegment)
-        activateTwoMixedMode()
-    }
-
-    func activateTwoMixedMode() {
-        modeControl.bySelectedSegmentIndex(0)
-        mixedModeControl.bySelectedSegmentIndex(0)
-        applyMode(index: 0)
-    }
-
-    func applyMode(index: Int) {
-        let isMixedMode = index == 0
-        let isTwoMixedMode = isMixedMode && mixedModeControl.selectedSegmentIndex == 0
-        mixedModeControl.byHidden(!isMixedMode)
-        twoMixedOptionsStackView.byHidden(!isTwoMixedMode)
-        mixedModeTopConstraint?.update(offset: isMixedMode ? 10 : 0)
-        mixedModeHeightConstraint?.update(offset: isMixedMode ? 34 : 0)
-        twoMixedOptionsTopConstraint?.update(offset: isTwoMixedMode ? 10 : 0)
-        twoMixedOptionsHeightConstraint?.update(offset: isTwoMixedMode ? 78 : 0)
-        captchaTopConstraint?.update(offset: isMixedMode ? 22 : 18)
-        switch index {
-        case 1:
-            captchaView.config = .letterCaseSensitiveConfig
-        case 2:
-            captchaView.config = .letterCaseInsensitiveConfig
-        case 3:
-            captchaView.config = .numberConfig
-        case 4:
-            captchaView.config = .chineseConfig
-        default:
-            captchaView.config = currentMixedConfig()
+    func buildOptionRows(in containerView: UIView) {
+        optionRowViews.forEach { $0.byRemoveFromSuperview() }
+        optionButtons.removeAll()
+        optionRowViews.removeAll()
+        optionScrollViews.removeAll()
+        optionStackViews.removeAll()
+        optionTitleLabels.removeAll()
+        let groups = optionGroups
+        var previousRow: UIView?
+        for (index, group) in groups.enumerated() {
+            let rowView = UIView()
+                .byBackgroundColor(JobsCor.clear)
+            optionRowViews.append(rowView)
+            let titleLabel = UILabel()
+                .byText(group.title.tr)
+                .byTextColor(JobsCor.secondaryLabel)
+                .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+                .byTextAlignment(.left)
+            optionTitleLabels.append(titleLabel)
+            let scrollView = UIScrollView()
+                .byAlwaysBounceHorizontal(true)
+                .byAlwaysBounceVertical(false)
+                .byShowsHorizontalScrollIndicator(false)
+                .byShowsVerticalScrollIndicator(false)
+                .byDirectionalLockEnabled(true)
+                .byContentInsetAdjustmentBehavior(.never)
+            optionScrollViews.append(scrollView)
+            let stackView = UIStackView()
+                .byAxis(.horizontal)
+                .byDistribution(.fill)
+                .byAlignment(.fill)
+                .bySpacing(8)
+            optionStackViews.append(stackView)
+            group.options.forEach { option in
+                stackView.byAddArrangedSubview(optionButton(for: option))
+            }
+            rowView.byAddTo(containerView) { make in
+                make.left.right.equalToSuperview()
+                make.height.equalTo(34)
+                if let previousRow {
+                    make.top.equalTo(previousRow.snp.bottom).offset(10)
+                } else {
+                    make.top.equalToSuperview()
+                }
+                if index == groups.count - 1 {
+                    make.bottom.equalToSuperview()
+                }
+            }
+            titleLabel.byAddTo(rowView) { make in
+                make.left.top.bottom.equalToSuperview()
+                make.width.equalTo(72)
+            }
+            scrollView.byAddTo(rowView) { make in
+                make.left.equalTo(titleLabel.snp.right).offset(8)
+                make.top.right.bottom.equalToSuperview()
+            }
+            stackView.byAddTo(scrollView) { make in
+                make.edges.equalTo(scrollView.contentLayoutGuide)
+                make.height.equalTo(scrollView.frameLayoutGuide)
+            }
+            previousRow = rowView
         }
+    }
+
+    func optionButton(for option: JobsSwiftGraphicCaptchaDemoOption) -> UIButton {
+        let button = UIButton.sys()
+            .byConfiguration(
+                UIButton.Configuration.plain()
+                    .byTitle(option.title.tr)
+                    .byBaseForegroundColor(JobsCor.secondaryLabel)
+                    .byBackground(
+                        UIBackgroundConfiguration.clear()
+                            .byBackgroundColor(JobsCor.systemGray6)
+                            .byCornerRadius(8)
+                    )
+                    .byContentInsets(NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14))
+            )
+            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .onTap { [weak self] _ in
+                self?.applyOption(option)
+            }
+        optionButtons.append(button)
+        return button
+    }
+
+    func applyOption(_ option: JobsSwiftGraphicCaptchaDemoOption) {
+        selectedOption = option
+        let groupCount = option.characterUnits.rawValue.nonzeroBitCount
+        if lengthStepper.value < groupCount {
+            lengthStepper.setValue(groupCount)
+        }
+        var config = option.config
+        config.length = lengthStepper.value
+        captchaView.config = config
         inputField.byText(nil)
-        view.bySetNeedsLayout()
+        resultLabel
+            .byText("等待输入校验".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+        for (index, button) in optionButtons.enumerated() {
+            let selected = JobsSwiftGraphicCaptchaDemoOption.allCases[index] == option
+            button
+                .bySelected(selected)
+                .byConfiguration { configuration in
+                    configuration
+                        .byBaseForegroundColor(selected ? JobsCor.white : JobsCor.secondaryLabel)
+                        .byBackground(
+                            configuration.background
+                                .byBackgroundColor(selected ? JobsCor.systemBlue : JobsCor.systemGray6)
+                                .byCornerRadius(8)
+                        )
+                }
+        }
     }
 
-    func currentMixedConfig() -> JobsSwiftGraphicCaptchaConfig {
-        switch mixedModeControl.selectedSegmentIndex {
-        case 0:
-            return selectedTwoMixedOption.config
-        case 1:
-            return .threeMixedConfig
-        default:
-            return .fullMixedConfig
-        }
+    func lengthChanged(_ stepper: JobsSwiftNumberStepper) {
+        applyOption(selectedOption)
+    }
+
+    func refreshCaptcha() {
+        captchaView.refreshCaptcha()
+        inputField.byText(nil)
+        resultLabel
+            .byText("已刷新".tr)
+            .byTextColor(JobsCor.systemBlue)
     }
 
     func validateCaptcha() {
         let passed = captchaView.validateInput(inputField.text)
-        resultLabel.byText(passed ? "校验通过" : "校验失败：\(captchaView.captchaText)")
-        resultLabel.byTextColor(passed ? JobsCor.systemGreen : JobsCor.systemRed)
+        resultLabel
+            .byText(passed ? "校验通过".tr : "校验失败".tr)
+            .byTextColor(passed ? JobsCor.systemGreen : JobsCor.systemRed)
     }
 }

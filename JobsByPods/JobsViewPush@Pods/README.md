@@ -37,6 +37,7 @@
 | `interactiveVelocityThreshold` | `360` | 超过该速度后按甩动方向直接决定结果 |
 | `interactiveProjectionTime` | `0.18` | 松手速度参与进度预测的时间窗口 |
 | `interactiveAxisDominanceRatio` | `0.8` | 主轴相对副轴达到多少比例后接管手势 |
+| `onDidClose` | `nil` | 抽屉完成关闭后回调；全屏模态预览可在此退出承载页面 |
 
 ```swift
 let configuration = JobsSideDrawerConfiguration(

@@ -20,7 +20,7 @@ import GKNavigationBarSwift
 
 final class JobsLongPressLikeDemoVC: BaseVC {
     private var likeLongPressConsumed = false
-    private lazy var hapticFeedback = UIImpactFeedbackGenerator(style: .light)
+    private lazy var hapticFeedback = UIImpactFeedbackGenerator(style: .medium)
 
     private lazy var hintLabel: UILabel = {
         UILabel()
@@ -59,14 +59,17 @@ final class JobsLongPressLikeDemoVC: BaseVC {
             .onLongPress(minimumPressDuration: 0.32) { [weak self] button, gesture in
                 guard let self else { return }
                 switch gesture.state {
+                /// 处理 .began 分支
                 case .began:
                     likeLongPressConsumed = true
                     beginLike(on: button)
+                /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     endLike(on: button)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
                         self?.likeLongPressConsumed = false
                     }
+                /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
@@ -119,7 +122,7 @@ final class JobsLongPressLikeDemoVC: BaseVC {
                 onEmit: { [weak self, weak button] in
                     self?.hapticFeedback.impactOccurred()
                     self?.hapticFeedback.prepare()
-                    button?.byFusePlaySystemSound()
+                    button?.byFusePlaySound()
                 }
             )
     }

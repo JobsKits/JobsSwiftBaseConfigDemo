@@ -12,298 +12,126 @@ import AppKit
 import UIKit
 #endif
 
-import AVFoundation
-import JobsInheritance
+import GKNavigationBarSwift
+import JobsAppDoor
 import JobsByUIKit
-import JobsSwiftDSL
+import JobsInheritance
 import JobsSwiftBaseDefines
-import JobsBy3rdTools
+import JobsSwiftDSL
 import SnapKit
 
-#if canImport(BMPlayer)
-import BMPlayer
-import JobsToast
-#endif
-
-// MARK: 模型
-private enum PanelKind { case login, register }
-private enum EntranceStyle {
-    case circularReveal(from: CGPoint, startRadius: CGFloat)   // 从一个小点炸开
-    case springPop                                             // 弹性放大
-}
-// MARK: - Demo
 final class JobsAppDoorDemoVC: BaseVC {
-    deinit {
-        if let o = loopObserver { NotificationCenter.default.removeObserver(o) }
-    }
-    // 当前展示的面板
-    private var current: PanelKind = .login
-    private var loopObserver: NSObjectProtocol?
-    // MARK: UI
-#if canImport(BMPlayer)
-    private lazy var player: BMPlayer = {
-        // 注意：把 "welcome_video.mp4" 放到主 bundle
-        BMPlayer()
-            .byResource(
-                BMPlayerResource(
-                    name: "播放视频".tr,
-                    definitions: [
-                        .init(url: "welcome_video.mp4".bundleMediaURLRequire, definition: "本地")
-                    ],
-                    cover: nil,
-                    subtitles: nil
-                ),
-                definitionIndex: 0,
-                autoPlay: true
+    private lazy var titleLabel: UILabel = {
+        UILabel()
+            .byText("JobsAppDoor")
+            .byTextColor(JobsCor.label)
+            .byTextAlignment(.center)
+            .byFont(JobsFont.boldSystemFont(ofSize: 28))
+    }()
+
+    private lazy var detailLabel: UILabel = {
+        UILabel()
+            .byText("同一套登录 / 注册 / 找回密码能力\n分别演示单面板换轨与独立卡片横滑")
+            .byTextColor(JobsCor.secondaryLabel)
+            .byTextAlignment(.center)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byNumberOfLines(0)
+    }()
+
+    private lazy var style1Button: UIButton = {
+        UIButton.sys()
+            .byJobsAppDoorAppearance(
+                title: "Style1 · 单面板左右换轨",
+                titleColor: JobsCor.white,
+                font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
+                backgroundColor: JobsCor.systemPink,
+                cornerRadius: 26
             )
-            .byBack({ [weak self] s in
+            .onTap { [weak self] _ in
                 guard let self else { return }
-                self.goBack("") // 系统通用返回
-            })
-            .byVideoGravity(.resizeAspectFill)
-            .byPanGestureEnabled(false)
-            .byAddTo(view) { make in
-                make.edges.equalToSuperview()
-            }
-    }()
-#endif
-    /// 居中承载面板的容器（加圆角/毛玻璃都可以放这层）
-    private lazy var panelHost: UIView = {
-        UIView()
-            .byBackgroundColor(UIColor(gray: 255, alpha: 0.08))
-            .byCornerRadius(14)
-            .byAlpha(0)
-            .byTransform(CGAffineTransform(scaleX: 0.001, y: 0.001)) // 进场起态（春
-            .byAddTo(view) { [unowned self] make in
-                make.center.equalToSuperview()
-                make.width.equalTo(view.snp.width).offset(-100)      // 屏宽-100
-                make.height.equalTo(view.snp.height).multipliedBy(0.48)
-            }
-    }()
-    /// 登录面板（把真实的登录表单塞进来即可）
-    private lazy var loginPanel: UIView = {
-        UIView()
-            .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.75))
-            .byCornerRadius(14)
-            .byAddTo(panelHost) { [unowned self] make in
-                make.edges.equalToSuperview()
-            }
-    }()
-    /// 注册面板（同理，塞自己的注册表单）
-    private lazy var registerPanel: UIView = {
-        UIView()
-            .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.75))
-            .byCornerRadius(14)
-            .byHidden(YES)
-            .byAddTo(panelHost) { [unowned self] make in
-                make.edges.equalToSuperview()
+                openAppDoor(JobsAppDoorVC(configuration: .fullConfig))
             }
     }()
 
-    private lazy var switchButtons: UISegmentedControl = {
-        UISegmentedControl(items: ["登录".tr, "注册".tr])
-            .bySelectedSegmentIndex(1) // 默认 GCD
-            .onJobsChange { [weak self] (seg: UISegmentedControl) in
+    private lazy var style2Button: UIButton = {
+        UIButton.sys()
+            .byJobsAppDoorAppearance(
+                title: "Style2 · 独立卡片弹簧横滑",
+                titleColor: JobsCor.white,
+                font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
+                backgroundColor: JobsCor.systemIndigo,
+                cornerRadius: 26
+            )
+            .onTap { [weak self] _ in
                 guard let self else { return }
-                let target: PanelKind = (seg.selectedSegmentIndex == 0) ? .login : .register
-                self.switchPanel(to: target, direction: (target == .login ? .toLeft : .toRight))
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-                make.centerX.equalToSuperview()
+                openAppDoor(JobsAppDoorStyle2VC(configuration: .fullConfig))
             }
     }()
-    /// 右下角客服按钮（与 OC 的 alpha 动画保持“平行”）
-//    private lazy var customerServiceBtn: UIButton = {
-//        UIButton.sys()
-//            .byTitle("客服".tr, for: .normal)
-//            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-//            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.35))
-//            .byCornerRadius(10)
-//            .byContentEdgeInsets(.init(top: 8, left: 12, bottom: 8, right: 12))
-//            .byAddTo(view) { make in
-//                make.right.equalTo(view.safeAreaLayoutGuide).inset(16)
-//                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
-//            }
-//    }()
+
+    private lazy var contentStack: UIStackView = {
+        UIStackView(arrangedSubviews: [titleLabel, detailLabel, style1Button, style2Button])
+            .byAxis(.vertical)
+            .byAlignment(.fill)
+            .byDistribution(.fill)
+            .bySpacing(18)
+            .byAddTo(view) { make in
+                make.center.equalToSuperview()
+                make.left.equalToSuperview().offset(28)
+                make.right.equalToSuperview().inset(28)
+            }
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black)
-        panelHost.byVisible(YES)
-        loginPanel.byVisible(YES)
-        registerPanel.byVisible(YES)
-//        customerServiceBtn.byVisible(YES)
-#if canImport(BMPlayer)
-        player.byVisible(YES)
-        // MARK: - 接收通知@视频循环
-        self.on(Notification.Name.AVPlayerItemDidPlayToEndTime.rawValue) { [weak self] noti, obj, userInfo in
-            guard let self else { return }
-            guard let av = self.player.playerLayer?.player else { return }
-            av.seek(to: .zero)
-            av.play()
+        jobsSetupGKNav(title: "JobsAppDoor")
+        view.byBackgroundColor(JobsCor.systemBackground)
+        contentStack.byVisible(true)
+        style1Button.snp.makeConstraints { make in
+            make.height.equalTo(52)
         }
-#endif
-        switchButtons.byVisible(YES) // Demo：顶部切换按钮（替换为真实跳转入口即可）
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // 选择要的进场效果（和视频里的“从点炸开”对齐）
-        runEntranceAnimation(
-            style: .circularReveal(
-                from: view.center,     // 也可以传点击的坐标
-                startRadius: 6
-            )
-        )
-        // 如果更想保守/平行 OC 的 spring:
-        // runEntranceAnimation(style: .springPop)
-    }
-}
-
-extension JobsAppDoorDemoVC {
-    // MARK: 进场动画
-    private func runEntranceAnimation(style: EntranceStyle) {
-        // 轻透视（后面切换面板也会用到）
-        panelHost.enablePerspective(-1/800)
-        switch style {
-        case let .circularReveal(from, startRadius):
-            view.layoutIfNeeded()
-            // 1) 先把整体缩放态复位到 1（不然 mask 看起来会“收缩”）
-            panelHost.transform = .identity
-            panelHost.byAlpha(1)
-            // 2) 给 panelHost 做圆形揭示 mask
-            let local = panelHost.convert(from, from: view)
-            let endR = maxDistanceToCorner(from: local, in: panelHost.bounds.size) + 20
-            let startPath = UIBezierPath.make(
-                arcCenter: local, radius: startRadius,
-                startAngle: 0, endAngle: .pi * 2, clockwise: true
-            )
-            let endPath = UIBezierPath.make(
-                arcCenter: local, radius: endR,
-                startAngle: 0, endAngle: .pi * 2, clockwise: true
-            )
-            let mask = CAShapeLayer()
-            mask.fillColor = JobsCor.black.cgColor
-            mask.path = endPath.cgPath
-            panelHost.layer.mask = mask
-            let anim = CABasicAnimation(keyPath: "path")
-            anim.fromValue = startPath.cgPath
-            anim.toValue = endPath.cgPath
-            anim.duration = 0.52
-            anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            mask.add(anim, forKey: "circularReveal")
-            // 客服按钮与 OC 保持“渐显”
-//            UIView.jobsAnimateWithSpring(
-//                0.60,
-//                delay: 0.05,
-//                dampingRatio: 0.85,
-//                initialVelocity: 0.6,
-//                options: [.curveEaseOut],
-//                animations: {
-//                    self.customerServiceBtn.byAlpha(1)
-//                }
-//            )
-        case .springPop:
-            panelHost.byAlpha(0)
-            panelHost.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
-            UIView.jobsAnimateWithSpring(
-                0.50,
-                delay: 0.05,
-                dampingRatio: 0.82,
-                initialVelocity: 0.5,
-                options: [.curveEaseOut],
-                animations: {
-                    self.panelHost.byAlpha(1)
-                    self.panelHost.transform = .identity
-                }
-            )
-//            UIView.jobsAnimateWithOptions(
-//                0.60,
-//                delay: 0.10,
-//                options: [.curveEaseOut],
-//                animations: {
-//                    self.customerServiceBtn.byAlpha(1)
-//                }
-//            )
+        style2Button.snp.makeConstraints { make in
+            make.height.equalTo(52)
         }
     }
-    /// 计算到四角最远距离（为圆形揭示提供终点半径）
-    private func maxDistanceToCorner(from p: CGPoint, in size: CGSize) -> CGFloat {
-        [
-            CGPoint(x: 0, y: 0),
-            CGPoint(x: size.width, y: 0),
-            CGPoint(x: 0, y: size.height),
-            CGPoint(x: size.width, y: size.height)
-        ].map { hypot($0.x - p.x, $0.y - p.y) }.max() ?? 0
-    }
-    // MARK: 面板切换（与 OC 路数平行：轻 3D + 位移缩放 + 淡入淡出）
-    private enum SwitchDirection { case toLeft, toRight }
-    private func switchPanel(to target: PanelKind, direction: SwitchDirection) {
-        guard target != current else { return }
-        let fromView = (current == .login) ? loginPanel : registerPanel
-        let toView   = (target == .login) ? loginPanel : registerPanel
-        // 起态准备
-        toView.byAlpha(0)
-        toView.byHidden(false)
-        toView.transform = make2DTransform(
-            translateX: (direction == .toRight ? panelHost.bounds.width * 0.12 : -panelHost.bounds.width * 0.12),
-            scale: 0.96
-        )
-        // 为了立体感：容器统一加透视（只需设一次，但在这里再设一遍也无伤）
-        panelHost.enablePerspective(-1/800)
-        let total: TimeInterval = 0.42
-        UIView.jobsAnimateKeyframes(
-            total,
-            options: [.calculationModeCubic],
-            animations: {
-                // fromView 退场（轻后退 + 轻缩 + 淡出）
-                UIView.jobsAddKeyframe(
-                    withRelativeStartTime: 0.00,
-                    relativeDuration: 0.35,
-                    animations: {
-                        fromView.byAlpha(0)
-                        fromView.transform = self.make2DTransform(
-                            translateX: (direction == .toRight ? -18 : 18),
-                            scale: 0.96
-                        )
-                    }
-                )
-                // toView 进场（从侧面靠近 + 放大到 1 + 淡入）
-                UIView.jobsAddKeyframe(
-                    withRelativeStartTime: 0.25,
-                    relativeDuration: 0.75,
-                    animations: {
-                        toView.byAlpha(1)
-                        toView.transform = .identity
-                    }
-                )
-            },
-            completion: { _ in
-                fromView.byHidden(true)
-                fromView.byAlpha(1)
-                fromView.transform = .identity
-                self.current = target
-                // 与 OC 一样：非登录页隐藏客服按钮（举例）
-                onMainAsync {
-                    _ = (target == .login)
-                }
-//            UIView.jobsAnimate(0.28) {
-//                self.customerServiceBtn.byAlpha(shouldShowService ? 1 : 0)
-//            }
-            }
-        )
-    }
-
-    private func make2DTransform(translateX: CGFloat, scale: CGFloat) -> CGAffineTransform {
-        CGAffineTransform.identity.translatedBy(x: translateX, y: 0).scaledBy(x: scale, y: scale)
-    }
-}
-// MARK: - 小工具
-private extension CATransform3D {
-    static func m34(_ v: CGFloat) -> CATransform3D { var t = CATransform3DIdentity; t.m34 = v; return t }
 }
 
-private extension UIView {
-    /// 给容器加一点透视（越小越夸张，-1/800 ~ -1/500 之间比较自然）
-    func enablePerspective(_ m34: CGFloat = -1/800) { layer.sublayerTransform = .m34(m34) }
+private extension JobsAppDoorDemoVC {
+    func openAppDoor(_ controller: JobsAppDoorBaseVC) {
+        controller.submitHandler = { [weak controller, weak self] mode, values in
+            let alertController = UIAlertController(
+                title: self?.modeTitle(mode),
+                message: "username: \(values.username)\nphone: \(values.countryCode) \(values.phone)",
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            controller?.present(alertController, animated: true)
+        }
+        controller.customerServiceHandler = { [weak controller] in
+            let alertController = UIAlertController(
+                title: "在线客服".tr,
+                message: "7×24小时".tr,
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            controller?.present(alertController, animated: true)
+        }
+        controller.verificationCodeHandler = { values in
+            print("📨 JobsAppDoor verification request:", values.countryCode, values.phone)
+        }
+        controller.byPush(self)
+    }
+
+    func modeTitle(_ mode: JobsAppDoorMode) -> String {
+        switch mode {
+        /// 登录提交结果
+        case .login:
+            return "登录".tr
+        /// 注册提交结果
+        case .register:
+            return "注册".tr
+        /// 找回密码提交结果
+        case .forgotPassword:
+            return "重置密码".tr
+        }
+    }
 }

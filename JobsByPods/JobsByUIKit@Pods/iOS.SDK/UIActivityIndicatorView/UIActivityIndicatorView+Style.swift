@@ -17,8 +17,10 @@ public enum JobsIndicatorStyle {
 
     var uiStyle: UIActivityIndicatorView.Style {
         switch self {
+        /// 处理 .medium 分支
         case .medium:
             if #available(iOS 13.0, *) { return .medium };return .gray
+        /// 处理 .large 分支
         case .large:
             if #available(iOS 13.0, *) { return .large };return .whiteLarge
         }

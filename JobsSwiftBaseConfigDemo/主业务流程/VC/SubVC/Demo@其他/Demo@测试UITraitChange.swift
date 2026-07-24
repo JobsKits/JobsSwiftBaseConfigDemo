@@ -145,24 +145,7 @@ final class TraitChangeDemoVC: BaseVC {
                 .onTap { [weak self] _ in
                     guard let self else { return }
                     self.goBack("")
-                },
-            rightButtons: [
-                UIButton.sys()
-                    /// 按钮图片@图文关系
-                    .byImage("moon.circle.fill".sysImg, for: .normal)
-                    .byImage("moon.circle.fill".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        let nextStyle: UIUserInterfaceStyle =
-                            self.traitCollection.userInterfaceStyle == .dark ? .light : .dark
-                        sender.bySelected(nextStyle == .dark)
-                        // 在当前实际样式的反向值之间切换，避免深色系统下 `.unspecified` 仍是深色。
-                        self.overrideUserInterfaceStyle = nextStyle
-                        // 保底刷新（即使 trait 回调还没到）
-                        self.updateColors()
-                    }
-            ]
+                }
         )
         // 组装 UI
         swatch.layer.addSublayer(gradientLayer)
@@ -201,11 +184,6 @@ final class TraitChangeDemoVC: BaseVC {
         rightBox.byAlpha(1)
         dynamicText.byAlpha(1)
         stack.byAlpha(1)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        overrideUserInterfaceStyle = .dark
     }
 
     override func viewDidLayoutSubviews() {
@@ -288,8 +266,11 @@ extension TraitChangeDemoVC {
     // MARK: - Helpers
     private func gamutString(_ g: UIDisplayGamut) -> String {
         switch g {
+        /// 处理 .P3 分支
         case .P3:   return "P3"
+        /// 处理 .SRGB 分支
         case .SRGB: return "sRGB"
+        /// 未匹配已知分支时执行兜底处理
         default:    return "Unspecified"
         }
     }

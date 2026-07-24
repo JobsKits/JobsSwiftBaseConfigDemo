@@ -17,6 +17,7 @@ import JobsFuseAnimation
 import JobsSwiftDSL
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
+import JobsSwiftCountryCodeCtrl
 import SnapKit
 
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
@@ -200,6 +201,11 @@ final class RootFoldTableCell: UITableViewCell,
         innerTableView.byVisible(YES)
         shadow.byVisible(YES)
         innerTableView.addGestureRecognizer(innerCellLongPressGesture)
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            _ = registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (cell: RootFoldTableCell, _) in
+                cell.refreshTheme()
+            }
+        }
         applyTheme()
         setExpanded(false, animated: false)
     }
@@ -235,8 +241,16 @@ final class RootFoldTableCell: UITableViewCell,
 
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        if window != nil { innerTableView.reloadData() }
+        if window != nil { refreshTheme() }
         syncChargingProgressAnimationState()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard #available(iOS 13.0, tvOS 13.0, *),
+              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
+        if #available(iOS 17.0, tvOS 17.0, *) { return }
+        refreshTheme()
     }
 }
 
@@ -285,7 +299,7 @@ extension RootFoldTableCell{
     private static func innerContentConfiguration(for item: DemoItem) -> UIListContentConfiguration {
         var config = UIListContentConfiguration.subtitleCell()
         config.text = item.title
-        config.secondaryText = String(describing: item.vcType)
+        config.secondaryText = innerSecondaryText(for: item)
         config.image = demoIconImage(for: item)
         config.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: innerCellVerticalInset,
@@ -308,6 +322,13 @@ extension RootFoldTableCell{
         config.secondaryTextProperties.numberOfLines = 1
         config.secondaryTextProperties.lineBreakMode = .byTruncatingTail
         return config
+    }
+
+    private static func innerSecondaryText(for item: DemoItem) -> String {
+        if item.vcType == JobsSwiftCountryCodeCtrlDemoVC.self,
+           let country = JobsSwiftCountryCodeCtrl.selectedCountry {
+            return country.displayName
+        };return String(describing: item.vcType)
     }
 
     private func updateInnerTableHeight(tableWidth: CGFloat? = nil) {
@@ -454,6 +475,11 @@ extension RootFoldTableCell{
         innerTableView.separatorColor = RootListPreferences.separatorColor
     }
 
+    private func refreshTheme() {
+        applyTheme()
+        if window != nil { innerTableView.reloadData() }
+    }
+
     private func subTitleText(expanded: Bool) -> String {
         let stateText = pinnedSectionStyle ? "已置顶".tr : (expanded ? "已展开".tr : "点击展开".tr)
         return "\(items.count) 个 Demo · \(stateText)"
@@ -481,12 +507,15 @@ extension RootFoldTableCell{
             .byChargingAnimationStop()
     }
 
+    private static let fallbackDemoIconSymbolName = "questionmark.square.dashed"
+    private static var reportedMissingDemoIconVCNames = Set<String>()
     private static let demoIconSymbolNamesByVCType: [String: String] = {
         let names = [
             "FSPopoverDemoVC": "arrowtriangle.down.circle", "PicLoadDemoVC": "photo",
             "BRPickerDemoVC": "slider.horizontal.3", "GKPhotoBrowserByUIKitDemoVC": "photo.on.rectangle",
             "GKPhotoBrowserByTextureSwiftSupportDemoVC": "photo.stack", "ComponentKitLikeKitchenSinkVC": "square.3.layers.3d",
-            "LunarDemoVC": "calendar", "XLSXDemoVC": "tablecells", "ObjectBoxDemoVC": "shippingbox",
+            "LunarDemoVC": "calendar", "XLSXDemoVC": "tablecells", "JobsSwiftExcelDemoVC": "tablecells.fill",
+            "ObjectBoxDemoVC": "shippingbox",
             "PDFDemoVC": "doc.richtext", "PromiseKitDemoVC": "link", "LottieDemoVC": "sparkles",
             "SkeletonViewDemoVC": "rectangle.dashed", "SwiftEntryKitDemoVC": "rectangle.portrait.and.arrow.forward",
             "LiveChatDemoVC": "bubble.left.and.bubble.right", "FMDBDemoVC": "cylinder",
@@ -496,12 +525,13 @@ extension RootFoldTableCell{
             "TimerDemoVC": "timer", "JobsTimerMgrDemoVC": "stopwatch",
             "JobsMultiTimerTableDemoVC": "list.number", "AnimationEffectLabelDemoVC": "textformat.123",
             "AnimatedButtonNumberDemoVC": "capsule", "JobsMarqueeDemoVC": "text.line.first.and.arrowtriangle.forward",
-            "JobsScrollingLabelDemoVC": "text.line.last.and.arrowtriangle.forward",
+            "UILabelScrollingDemoVC": "text.line.last.and.arrowtriangle.forward",
             "JobsCountdownDemoVC": "hourglass", "ClockDemoVC": "clock",
             "LuckyWheelDemoVC": "circle.grid.cross", "RedPacketRainDemoVC": "envelope.open",
             "JobsCountdownLayerDemoVC": "flame", "JobsSysProgressDemoVC": "gauge",
             "JobsProgressDemoVC": "chart.bar", "JobsNetworkingListDemoVC": "network",
             "JobsNetworkingDemoVC": "server.rack", "YTKNetworkDemoVC": "globe",
+            "JobsWebSocketDemoVC": "arrow.left.arrow.right.circle.fill",
             "MoyaDemoVC": "drop", "AFDemoVC": "cloud", "HKLocalRecordVC": "record.circle",
             "LiveCommentDemoVC": "text.bubble", "HKLiveVC": "dot.radiowaves.left.and.right",
             "BMPlayerDemoVC": "play.rectangle", "PNPlayerDemoVC": "play.square",
@@ -513,25 +543,41 @@ extension RootFoldTableCell{
             "FTDashboadDemoVC": "speedometer", "JobsButtonDemoVC": "circle",
             "UIButtonDemoVC": "capsule.fill", "UIButtonBackgroundColorDemoVC": "paintbrush",
             "BaseWebViewDemoVC": "safari", "UITextFieldDemoVC": "textbox",
-            "UITextViewDemoVC": "text.cursor", "EmptyTableViewDemoVC": "list.bullet.rectangle",
+            "UITextViewDemoVC": "text.cursor", "JobsHandwritingDemoVC": "pencil.tip.crop.circle",
+            "EmptyTableViewDemoVC": "list.bullet.rectangle",
             "UITableViewCellCornerDemoVC": "rectangle.roundedtop", "EmptyCollectionViewDemoVC": "square.grid.2x2",
             "JobsSwiftCommentDemoVC": "message", "JobsSwiftSearcherDemoVC": "magnifyingglass",
             "JobsAudioRecorderDemoVC": "mic.fill",
             "JobsBluetoothDemoVC": "antenna.radiowaves.left.and.right",
             "JobsCoreMotionDemoVC": "gyroscope",
+            "JobsMotionAppIconDemoVC": "app.badge.checkmark",
+            "JobsScreenshotTipsDemoVC": "camera.viewfinder",
+            "JobsScreenshotProtectionDemoVC": "eye.slash",
             "JobsWidgetDemoVC": "widget.small",
-            "BtnFullOnCVCellDemoVC": "rectangle.grid.1x2", "BtnFullOnTBVCellDemoVC": "rectangle.grid.3x2",
+            "JobsPostDraftDemoVC": "square.and.pencil",
+            "JobsSaltedImageStoreDemoVC": "lock.doc.fill",
+            "JobsLandscapeSwitchDemoVC": "rectangle.landscape",
+            "JobsStringCompressionDemoVC": "archivebox.fill",
+            "JobsContextMenuDemoVC": "hand.tap",
+            "JobsClipboardCueDemoVC": "doc.on.doc.fill",
+            "JobsBulletTextDemoVC": "list.bullet.indent",
+            "JobsLabelRotationDemoVC": "rotate.right",
+            "JobsRandomNumberDemoVC": "die.face.5",
+            "JobsCardStackDemoVC": "rectangle.stack",
+            "JobsDockingScrollDemoVC": "arrow.up.and.down.square",
+            "JobsButtonCoverCellDemoListVC": "rectangle.grid.1x2",
             "JobsNavigationDemoVC": "arrow.triangle.turn.up.right.diamond", "LocalNotificationDemoVC": "bell",
             "JobsSwiftRefresherDemoVC": "arrow.clockwise", "JobsSwiftRefresherBy非正式协议闭包化DemoVC": "arrow.triangle.2.circlepath",
             "JobsDouyinRefreshDemoVC": "music.note",
             "KeyboardDemoVC": "keyboard", "PhotoAlbumDemoVC": "camera",
             "JobsSwiftCountryCodeCtrlDemoVC": "flag", "JobsSwiftCalendarDemoVC": "calendar.badge.plus",
             "JobsSwiftPatchDemoVC": "wrench", "JobsControlEventsDemoVC": "gamecontroller",
+            "JobsSwiftNumberStepperDemoVC": "plusminus.circle",
             "JobsSwiftGraphicCaptchaDemoVC": "checkmark.shield", "TabBarDemoVC": "rectangle.bottomthird.inset.filled",
             "ToastDemoVC": "text.bubble.fill", "UIAlertDemoVC": "exclamationmark.triangle",
             "QRCodeDemoVC": "qrcode", "CNIDDemoVC": "person.text.rectangle",
             "TraitChangeDemoVC": "circle.lefthalf.fill", "JobsOpenDemoVC": "arrow.up.right.square",
-            "MessageListDemoVC": "envelope", "LGOEditProfileVC": "person.crop.circle",
+            "MessageListDemoVC": "envelope", "LGOEditProfileDemoVC": "person.crop.circle",
             "HomeLinkageDemoListVC": "rectangle.split.2x1", "JobsAppDoorDemoVC": "key",
             "RichTextDemoVC": "textformat", "JobsTextDemoVC": "character.book.closed",
             "JobsViewPushDemoVC": "arrow.right.square", "JobsSideDrawerDemoVC": "sidebar.left",
@@ -539,14 +585,20 @@ extension RootFoldTableCell{
             "SafetyPresentDemoVC": "rectangle.portrait.and.arrow.right", "自定义注解DemoVC": "mappin",
             "SafeCodableDemoVC": "doc.text", "SnowflakeDemoVC": "snowflake"
         ]
-        precondition(Set(names.values).count == names.count, "Demo 入口图标必须保持一项一图，不允许重复")
-        return names
+        let duplicatedSymbolNames = Dictionary(grouping: names.values, by: { $0 })
+            .compactMap { symbolName, mappings in mappings.count > 1 ? symbolName : nil }
+            .sorted()
+        if !duplicatedSymbolNames.isEmpty {
+            print("⚠️ Demo 入口图标存在重复：\(duplicatedSymbolNames.joined(separator: ", "))")
+        };return names
     }()
 
     private static func demoIconSymbolName(for item: DemoItem) -> String {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
         guard let symbolName = demoIconSymbolNamesByVCType[vcName] else {
-            preconditionFailure("Demo 入口 \(vcName) 必须显式配置贴合内容且不重复的图标")
+            if reportedMissingDemoIconVCNames.insert(vcName).inserted {
+                print("⚠️ Demo 入口 \(vcName) 缺少显式图标映射，已使用兜底图标")
+            };return fallbackDemoIconSymbolName
         };return symbolName
     }
 

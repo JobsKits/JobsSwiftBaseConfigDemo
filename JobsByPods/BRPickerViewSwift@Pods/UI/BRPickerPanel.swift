@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import SnapKit
+
 public final class BRPickerPanel: UIView {
     public var strongOwner: AnyObject?
     public var theme: BRPickerTheme = BRPickerTheme()
@@ -72,13 +74,9 @@ public final class BRPickerPanel: UIView {
     public func embed(_ view: UIView) {
         contentContainer.subviews.forEach { $0.removeFromSuperview() }
         contentContainer.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            view.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
-            view.topAnchor.constraint(equalTo: contentContainer.topAnchor),
-            view.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor)
-        ])
+        view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     public func present(in containerView: UIView?) {

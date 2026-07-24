@@ -28,6 +28,54 @@ final class PDFDemoVC: BaseVC {
     private let fileExtension: String = "pdf"
     private var document: PDFDocument?
     private var loadedURL: URL?
+    private var shareViewController: UIActivityViewController?
+
+    private lazy var previousPageButton: UIButton = {
+        UIButton.sys()
+            .byTitle("上一页".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
+            .byImage("chevron.up.circle".sysImg, for: .normal)
+            .byImage("chevron.up.circle.fill".sysImg, for: .selected)
+            .byImagePlacement(.top)
+            .onTap { [weak self] _ in
+                self?.pdfView.goToPreviousPage(nil)
+            }
+            .byAdd { make in
+                make.size.equalTo(CGSize(width: 50, height: 44))
+            }
+    }()
+
+    private lazy var nextPageButton: UIButton = {
+        UIButton.sys()
+            .byTitle("下一页".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
+            .byImage("chevron.down.circle".sysImg, for: .normal)
+            .byImage("chevron.down.circle.fill".sysImg, for: .selected)
+            .byImagePlacement(.top)
+            .onTap { [weak self] _ in
+                self?.pdfView.goToNextPage(nil)
+            }
+            .byAdd { make in
+                make.size.equalTo(CGSize(width: 50, height: 44))
+            }
+    }()
+
+    private lazy var shareButton: UIButton = {
+        UIButton.sys()
+            .byTitle("分享".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
+            .byImage("globe".sysImg, for: .normal)
+            .byImage("globe".sysImg, for: .selected)
+            .byImagePlacement(.top)
+            .onTap { [weak self] _ in
+                guard let self, let url = loadedURL else { return }
+                shareViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                shareViewController?.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItems?.first
+                if let shareViewController {
+                    present(shareViewController, animated: true)
+                }
+            }
+    }()
 
     private lazy var pdfView: PDFView = {
         PDFView()
@@ -58,48 +106,7 @@ final class PDFDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav( title: "PDF",
-                        rightButtons: [
-                            UIButton.sys()
-                                .byTitle("上一页".tr, for: .normal)
-                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-                                .byImage("moon.circle.fill".sysImg, for: .normal)
-                                .byImage("moon.circle.fill".sysImg, for: .selected)
-                                .byImagePlacement(.top)
-                                .onTap { [weak self] sender in
-                                    guard let self else { return }
-                                    pdfView.goToPreviousPage(nil)
-                                }
-                                .byAdd({ make in
-                                    make.size.equalTo(CGSize(width: 50, height: 44))
-                                }),
-                            UIButton.sys()
-                                .byTitle("下一页".tr, for: .normal)
-                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-                                .byImage("tray".sysImg, for: .normal)
-                                .byImage("tray".sysImg, for: .selected)
-                                .byImagePlacement(.top)
-                                .onTap { [weak self] sender in
-                                    guard let self else { return }
-                                    pdfView.goToNextPage(nil)
-                                }
-                                .byAdd({ make in
-                                    make.size.equalTo(CGSize(width: 50, height: 44))
-                                }),
-                            UIButton.sys()
-                                .byTitle("分享".tr, for: .normal)
-                                .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-                                .byImage("globe".sysImg, for: .normal)
-                                .byImage("globe".sysImg, for: .selected)
-                                .byImagePlacement(.top)
-                                .onTap { [weak self] sender in
-                                    guard let self else { return }
-                                    guard let url = loadedURL else { return }
-                                    let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                                    if let pop = vc.popoverPresentationController {
-                                        pop.barButtonItem = navigationItem.rightBarButtonItems?.first
-                                    };present(vc, animated: true)
-                                }])
+        jobsSetupGKNav(title: "PDF", rightButtons: [previousPageButton, nextPageButton, shareButton])
         thumbnailView.byPDFView(to: pdfView)
         loadDocumentOrFail()
     }

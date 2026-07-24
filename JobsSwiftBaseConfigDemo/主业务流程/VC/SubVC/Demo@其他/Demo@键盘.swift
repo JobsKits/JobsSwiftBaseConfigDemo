@@ -18,14 +18,11 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsInheritance
-import RxSwift
-import RxCocoa
 import SnapKit
-import NSObject_Rx
+import IQKeyboardManagerSwift
 import GKNavigationBarSwift
 
 final class KeyboardDemoVC: BaseVC {
-    private let bag = DisposeBag()
     // 输入框
     private lazy var textField: UITextField = {
         UITextField()
@@ -44,7 +41,7 @@ final class KeyboardDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
                 make.height.equalTo(60)
-                make.bottom.equalToSuperview() // 初始状态贴底
+                make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
             }
     }()
 
@@ -61,29 +58,24 @@ final class KeyboardDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
+        disableIQKeyboardDistanceHandling()
         jobsSetupGKNav(
             title: "Keyboard Height Demo"
         )
-        textField.byAlpha(1)
-        bottomBar.byAlpha(1)
-        label.byAlpha(1)
+        textField.byVisible(YES)
+        bottomBar.byVisible(YES)
+        label.byVisible(YES)
     }
+}
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // ✅ 核心：监听键盘高度
-        view.keyboardHeight
-            .subscribe(onNext: { [weak self] height in
-                guard let self else { return }
-                print("🧠 当前键盘高度: \(height)")
-                // 更新底部 bar 位置
-                self.bottomBar.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview().inset(height)
-                }
-                UIView.jobsAnimate(0.25) {
-                    self.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: bag)
+private extension KeyboardDemoVC {
+    /// 该页交给 keyboardLayoutGuide 跟踪键盘，避免根视图被额外平移。
+    func disableIQKeyboardDistanceHandling() {
+        let manager = IQKeyboardManager.shared
+        let currentType = ObjectIdentifier(KeyboardDemoVC.self)
+        guard !manager.disabledDistanceHandlingClasses.contains(where: {
+            ObjectIdentifier($0) == currentType
+        }) else { return }
+        manager.disabledDistanceHandlingClasses.append(KeyboardDemoVC.self)
     }
 }

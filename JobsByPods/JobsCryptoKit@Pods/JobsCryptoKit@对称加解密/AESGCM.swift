@@ -43,6 +43,7 @@ public struct JobsAES {
         guard blob.count >= 1 else { throw CryptoError.invalidData }
         let version = blob[blob.startIndex]
         switch version {
+        /// 处理 0x01 分支
         case 0x01:
             // ===== v1: AES-GCM =====
             guard #available(iOS 13.0, *) else {
@@ -57,6 +58,7 @@ public struct JobsAES {
             let sealed = try AES.GCM.SealedBox(nonce: nonce, ciphertext: cipherData, tag: tagData)
             let plain = try AES.GCM.open(sealed, using: try makeSymmetricKey(key))
             return String(data: plain, encoding: .utf8) ?? ""
+        /// 处理 0x02 分支
         case 0x02:
             // ===== v2: AES-CBC-PKCS7 =====
             guard blob.count >= 1 + 16 else { throw CryptoError.invalidData }
@@ -64,6 +66,7 @@ public struct JobsAES {
             let cipher = blob.subdata(in: 17 ..< blob.count)
             let plain = try aesCBCDecrypt(data: cipher, key: key, iv: iv)
             return String(data: plain, encoding: .utf8) ?? ""
+        /// 未匹配已知分支时执行兜底处理
         default:
             throw CryptoError.invalidData
         }

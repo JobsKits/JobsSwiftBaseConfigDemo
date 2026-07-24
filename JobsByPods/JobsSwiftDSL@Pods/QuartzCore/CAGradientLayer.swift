@@ -86,30 +86,39 @@ extension CAGradientLayer {
     @discardableResult
     public func byDirection(_ d: JobsGradientDirection) -> Self {
         switch d {
+        /// 处理 .leftToRight 分支
         case .leftToRight:
             startPoint = .init(x: 0, y: 0.5)
             endPoint   = .init(x: 1, y: 0.5)
+        /// 处理 .rightToLeft 分支
         case .rightToLeft:
             startPoint = .init(x: 1, y: 0.5)
             endPoint   = .init(x: 0, y: 0.5)
+        /// 处理 .topToBottom 分支
         case .topToBottom:
             startPoint = .init(x: 0.5, y: 0)
             endPoint   = .init(x: 0.5, y: 1)
+        /// 处理 .bottomToTop 分支
         case .bottomToTop:
             startPoint = .init(x: 0.5, y: 1)
             endPoint   = .init(x: 0.5, y: 0)
+        /// 处理 .topLeftToBottomRight 分支
         case .topLeftToBottomRight:
             startPoint = .init(x: 0, y: 0)
             endPoint   = .init(x: 1, y: 1)
+        /// 处理 .bottomRightToTopLeft 分支
         case .bottomRightToTopLeft:
             startPoint = .init(x: 1, y: 1)
             endPoint   = .init(x: 0, y: 0)
+        /// 处理 .topRightToBottomLeft 分支
         case .topRightToBottomLeft:
             startPoint = .init(x: 1, y: 0)
             endPoint   = .init(x: 0, y: 1)
+        /// 处理 .bottomLeftToTopRight 分支
         case .bottomLeftToTopRight:
             startPoint = .init(x: 0, y: 1)
             endPoint   = .init(x: 1, y: 0)
+        /// 处理 .custom 分支
         case let .custom(start, end):
             startPoint = start
             endPoint   = end
