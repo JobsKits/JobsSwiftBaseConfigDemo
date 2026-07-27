@@ -1386,6 +1386,8 @@
 "从左进入" = "Pumasok mula sa kaliwa";
 "朋友圈" = "Kaibigan.";
 "二维码 + 条形码" = "2D + kodigo ng bar";
+"带中心 Logo 的二维码" = "QR code na may logo sa gitna";
+"Code128 条形码" = "Code 128 barcode";
 "导出为 RTF" = "Ipinadala sa RTF";
 "从 RTF 导入" = "Mula sa RTF";
 "数据刷新" = "Nakapagpapasigla ang mga Data";

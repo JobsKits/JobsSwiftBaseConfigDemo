@@ -17,6 +17,10 @@ import JobsTextTools
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
+#if canImport(SnapKit)
+import SnapKit
+#endif
+
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 
@@ -24,6 +28,9 @@ private let jobsGlobalDarkModeDefaultsKey = "RootList.darkModeEnabled"
 private let jobsDemoThemeButtonTag = 0x4A54484D
 private var jobsDemoThemeButtonAssociatedKey: UInt8 = 0
 private var jobsDemoThemeBarButtonItemAssociatedKey: UInt8 = 0
+private var jobsDemoBusinessButtonsAssociatedKey: UInt8 = 0
+private var jobsDemoActionMenuOverlayAssociatedKey: UInt8 = 0
+private var jobsDemoThemeButtonOpensMenuAssociatedKey: UInt8 = 0
 
 public extension UIApplication {
     static var jobsGlobalDarkModeEnabled: Bool {
@@ -65,6 +72,15 @@ public extension UIApplication {
                                                    isDarkMode: Bool) {
         if let button = view as? UIButton, button.tag == jobsDemoThemeButtonTag {
             button.bySelected(isDarkMode)
+            let opensMenu = objc_getAssociatedObject(
+                button,
+                &jobsDemoThemeButtonOpensMenuAssociatedKey
+            ) as? Bool ?? false
+            if !opensMenu {
+                button.accessibilityLabel = isDarkMode
+                    ? "切换为白天".tr
+                    : "切换为黑夜".tr
+            }
         }
         view.subviews.forEach {
             jobsSyncGlobalThemeButtons(in: $0, isDarkMode: isDarkMode)
@@ -128,8 +144,14 @@ extension UIViewController {
                 for: .selected
             )
             .bySelected(UIApplication.jobsGlobalDarkModeEnabled)
-            .onTap { sender in
-                sender.bySelected(UIApplication.jobsToggleGlobalTheme())
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                if jobsDemoBusinessButtons.isEmpty {
+                    _ = UIApplication.jobsToggleGlobalTheme()
+                    jobsUpdateDemoTriggerPresentation()
+                } else {
+                    jobsShowDemoActionMenu(jobsDemoActionMenuOverlay == nil)
+                }
             }
         objc_setAssociatedObject(
             self,
@@ -137,6 +159,7 @@ extension UIViewController {
             button,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
+        jobsUpdateDemoTriggerPresentation()
         return button
     }
     /// 主题按钮对应的 BarButtonItem 与控制器同生命周期，避免重复插入。
@@ -155,6 +178,83 @@ extension UIViewController {
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         return item
+    }
+    /// 页面业务按钮不再并排占用导航栏，统一由主题入口下拉列表承载。
+    private var jobsDemoBusinessButtons: [UIButton] {
+        get {
+            objc_getAssociatedObject(
+                self,
+                &jobsDemoBusinessButtonsAssociatedKey
+            ) as? [UIButton] ?? []
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &jobsDemoBusinessButtonsAssociatedKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+            jobsUpdateDemoTriggerPresentation()
+        }
+    }
+    /// 下拉列表遮罩与控制器同生命周期；移除后释放，避免遮挡页面交互。
+    private var jobsDemoActionMenuOverlay: UIView? {
+        get {
+            objc_getAssociatedObject(
+                self,
+                &jobsDemoActionMenuOverlayAssociatedKey
+            ) as? UIView
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &jobsDemoActionMenuOverlayAssociatedKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+            jobsUpdateDemoTriggerPresentation()
+        }
+    }
+    /// 按钮前景图和无障碍文案始终描述下一次点击会执行的真实动作。
+    private func jobsUpdateDemoTriggerPresentation() {
+        guard let button = objc_getAssociatedObject(
+            self,
+            &jobsDemoThemeButtonAssociatedKey
+        ) as? UIButton else { return }
+        let opensMenu = !jobsDemoBusinessButtons.isEmpty
+        objc_setAssociatedObject(
+            button,
+            &jobsDemoThemeButtonOpensMenuAssociatedKey,
+            opensMenu,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        if opensMenu {
+            let expanded = jobsDemoActionMenuOverlay != nil
+            let image = (
+                expanded ? "ellipsis.circle.fill" : "ellipsis.circle"
+            ).sysImg.withRenderingMode(.alwaysTemplate)
+            button
+                .byImage(image, for: .normal)
+                .byImage(image, for: .selected)
+                .bySelected(NO)
+            button.accessibilityLabel = expanded
+                ? "收起主题与页面操作".tr
+                : "展开主题与页面操作".tr
+            return
+        }
+        button
+            .byImage(
+                "moon.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
+                for: .normal
+            )
+            .byImage(
+                "sun.max.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
+                for: .selected
+            )
+            .bySelected(UIApplication.jobsGlobalDarkModeEnabled)
+        button.accessibilityLabel = UIApplication.jobsGlobalDarkModeEnabled
+            ? "切换为白天".tr
+            : "切换为黑夜".tr
     }
     /// 为导航栈和模态子页面补齐 Jobs/GK 导航栏、导航标题与 Jobs 返回按钮。
     @discardableResult
@@ -215,7 +315,7 @@ extension UIViewController {
     /// - Parameters:
     ///   - title: JobsText（支持纯文本/富文本，这里取 rawString 写到 gk_navTitle）
     ///   - leftButton: 左侧按钮（UIButton）。nil → 使用默认“< 返回”
-    ///   - rightButtons: 右侧按钮组（[UIButton]）。nil 或空 → 不创建
+    ///   - rightButtons: 页面业务动作组；Demo 页会收进主题入口下拉列表。nil 或空 → 不创建
     public func jobsSetupGKNav(
         title: JobsText,
         leftButton: UIButton? = nil,
@@ -293,7 +393,7 @@ extension UIViewController {
         v.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         #endif
     }
-    /// 保留页面原有右侧按钮，并把全局主题入口固定在最右侧。
+    /// 导航栏右侧只保留主题入口；页面业务动作合并进同入口下拉列表。
     private func jobsEnsureDemoThemeButton() {
         guard #available(iOS 13.0, tvOS 13.0, *),
               jobsIsStandaloneDemoPage else { return }
@@ -302,20 +402,180 @@ extension UIViewController {
         jobs_prepareNavRightButtonSizeIfNeeded(themeButton)
         let themeItem = jobsDemoThemeBarButtonItem
         if jobsIsSystemNavigationBarDemo {
-            let items = navigationItem.rightBarButtonItems ?? []
-            guard !items.contains(where: { $0 === themeItem }) else { return }
-            navigationItem.rightBarButtonItems = [themeItem] + items
+            let items = navigationItem.rightBarButtonItems ??
+                navigationItem.rightBarButtonItem.map { [$0] } ?? []
+            jobsUpdateDemoBusinessButtons(from: items, themeItem: themeItem)
+            navigationItem.rightBarButtonItem = nil
+            navigationItem.rightBarButtonItems = [themeItem]
             return
         }
-        if let items = gk_navRightBarButtonItems {
-            guard !items.contains(where: { $0 === themeItem }) else { return }
-            gk_navRightBarButtonItems = [themeItem] + items
-        } else if let item = gk_navRightBarButtonItem {
-            gk_navRightBarButtonItem = nil
-            gk_navRightBarButtonItems = [themeItem, item]
-        } else {
-            gk_navRightBarButtonItems = [themeItem]
+        let items = gk_navRightBarButtonItems ??
+            gk_navRightBarButtonItem.map { [$0] } ?? []
+        jobsUpdateDemoBusinessButtons(from: items, themeItem: themeItem)
+        gk_navRightBarButtonItem = nil
+        gk_navRightBarButtonItems = [themeItem]
+    }
+    /// 重新配置导航栏时更新业务动作；仅重复注入主题按钮时保留已收集动作。
+    private func jobsUpdateDemoBusinessButtons(
+        from items: [UIBarButtonItem],
+        themeItem: UIBarButtonItem
+    ) {
+        let containsThemeItem = items.contains { $0 === themeItem }
+        let businessItems = items.filter { $0 !== themeItem }
+        guard !containsThemeItem || !businessItems.isEmpty else { return }
+        jobsDemoBusinessButtons = businessItems.flatMap {
+            jobsDemoBusinessButtons(from: $0)
         }
+        jobsShowDemoActionMenu(false)
+    }
+    /// 将 Jobs 导航按钮、系统 BarButtonItem 和 StackView 按钮统一转成可触发源。
+    private func jobsDemoBusinessButtons(from item: UIBarButtonItem) -> [UIButton] {
+        if let customView = item.customView {
+            return jobsDemoBusinessButtons(in: customView)
+        }
+        let sourceButton = UIButton.sys()
+            .byTitle(item.title, for: .normal)
+            .byImage(item.image, for: .normal)
+        if #available(iOS 14.0, *), let primaryAction = item.primaryAction {
+            sourceButton.addAction(primaryAction, for: .touchUpInside)
+        } else if let action = item.action {
+            sourceButton.onTap { [item] _ in
+                UIApplication.shared.sendAction(
+                    action,
+                    to: item.target,
+                    from: item,
+                    for: nil
+                )
+            }
+        };return [sourceButton]
+    }
+    /// StackView 只负责导航栏排版，菜单动作需要递归提取其中的真实按钮。
+    private func jobsDemoBusinessButtons(in view: UIView) -> [UIButton] {
+        if let button = view as? UIButton {
+            return button.tag == jobsDemoThemeButtonTag ? [] : [button]
+        }
+        let subviews = (view as? UIStackView)?.arrangedSubviews ?? view.subviews
+        return subviews.flatMap { jobsDemoBusinessButtons(in: $0) }
+    }
+    /// 使用与 Demo 总入口一致的 44pt 行高、210pt 宽度和导航栏下方定位。
+    private func jobsShowDemoActionMenu(_ visible: Bool) {
+        jobsDemoActionMenuOverlay?.byRemoveFromSuperview()
+        jobsDemoActionMenuOverlay = nil
+        guard visible, !jobsDemoBusinessButtons.isEmpty else { return }
+        let overlay = UIView()
+            .byBackgroundColor(JobsCor.clear)
+            .byAddTo(view) { make in
+                make.edges.equalToSuperview()
+            }
+        let rowHeight: CGFloat = 44
+        let rowCount = jobsDemoBusinessButtons.count + 1
+        let menuContainer = UIView()
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(8)
+            .byClipsToBounds()
+            .byAddTo(overlay) { [unowned self] make in
+                if jobsIsSystemNavigationBarDemo {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(6)
+                } else {
+                    make.top.equalTo(gk_navigationBar.snp.bottom).offset(6)
+                }
+                make.right.equalToSuperview().inset(12)
+                make.width.equalTo(210)
+                make.height.equalTo(CGFloat(rowCount) * rowHeight)
+            }
+        overlay.addTapAction(cancelsTouchesInView: false) { [weak self, weak overlay, weak menuContainer] gesture in
+            guard let self,
+                  let overlay,
+                  let menuContainer else { return }
+            let point = gesture.location(in: overlay)
+            guard !menuContainer.frame.contains(point) else { return }
+            jobsShowDemoActionMenu(false)
+        }
+        jobsDemoActionMenuOverlay = overlay
+        let darkModeEnabled = UIApplication.jobsGlobalDarkModeEnabled
+        jobsAddDemoActionMenuRow(
+            to: menuContainer,
+            title: darkModeEnabled ? "切换为白天".tr : "切换为黑夜".tr,
+            image: (
+                darkModeEnabled ? "sun.max.circle.fill" : "moon.circle.fill"
+            ).sysImg.withRenderingMode(.alwaysTemplate),
+            index: 0,
+            rowCount: rowCount
+        ) { [weak self] in
+            guard let self else { return }
+            _ = UIApplication.jobsToggleGlobalTheme()
+            jobsShowDemoActionMenu(false)
+        }
+        jobsDemoBusinessButtons.enumerated().forEach { index, sourceButton in
+            jobsAddDemoActionMenuRow(
+                to: menuContainer,
+                title: jobsDemoActionTitle(for: sourceButton, index: index),
+                image: sourceButton.jobs_foregroundImage(
+                    for: sourceButton.jobs_effectiveState
+                ),
+                index: index + 1,
+                rowCount: rowCount
+            ) { [weak self, weak sourceButton] in
+                self?.jobsShowDemoActionMenu(false)
+                sourceButton?.performTap()
+            }
+        }
+        view.bringSubviewToFront(overlay)
+    }
+    /// 优先展示页面显式声明的语义标题，纯图标按钮则给出稳定的操作序号。
+    private func jobsDemoActionTitle(
+        for sourceButton: UIButton,
+        index: Int
+    ) -> String {
+        let candidates = [
+            sourceButton.accessibilityLabel,
+            sourceButton.jobs_title(for: sourceButton.jobs_effectiveState),
+            sourceButton.jobs_title(for: .normal)
+        ]
+        if let title = candidates
+            .compactMap({ $0?.trimmingCharacters(in: .whitespacesAndNewlines) })
+            .first(where: { !$0.isEmpty }) {
+            return title
+        };return "\("页面操作".tr) \(index + 1)"
+    }
+    /// 菜单行复用原按钮图标，点按后先收起列表再执行对应动作。
+    private func jobsAddDemoActionMenuRow(
+        to menuContainer: UIView,
+        title: String,
+        image: UIImage?,
+        index: Int,
+        rowCount: Int,
+        action: @escaping () -> Void
+    ) {
+        let rowButton = UIButton.sys()
+            .byTitle(title, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitleColor(JobsCor.label, for: .normal)
+            .byImage(image?.withRenderingMode(.alwaysTemplate), for: .normal)
+            .byImagePlacement(.leading, padding: 8)
+            .byTintColor(JobsCor.label)
+            .byContentHorizontalAlignment(.leading)
+            .byContentEdgeInsets(
+                UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+            )
+            .byBackgroundColor(JobsCor.secondarySystemBackground, for: .normal)
+            .byBackgroundColor(JobsCor.tertiarySystemBackground, for: .highlighted)
+            .onTap { _ in
+                action()
+            }
+            .byAddTo(menuContainer) { make in
+                make.top.equalToSuperview().offset(CGFloat(index) * 44)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(44)
+            }
+        guard index < rowCount - 1 else { return }
+        UIView()
+            .byBackgroundColor(JobsCor.separator)
+            .byAddTo(rowButton) { make in
+                make.left.equalToSuperview().inset(12)
+                make.right.bottom.equalToSuperview()
+                make.height.equalTo(1 / UIScreen.main.scale)
+            }
     }
     // MARK: - 内置：默认“< 返回”按钮（SF Symbol: chevron.left）
     private func makeDefaultBackButton() -> UIButton {

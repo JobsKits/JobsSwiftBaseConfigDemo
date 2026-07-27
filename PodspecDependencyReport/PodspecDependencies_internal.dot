@@ -20,6 +20,7 @@ digraph PodspecDependencies {
   "JobsFuseAnimation";
   "JobsGestureUnlock";
   "JobsGetWindow";
+  "JobsIconfont";
   "JobsImageRotation";
   "JobsImageTools";
   "JobsInheritance";
@@ -124,6 +125,7 @@ digraph PodspecDependencies {
   "JobsGestureUnlock" -> "JobsSwiftBaseDefines";
   "JobsGestureUnlock" -> "JobsSwiftBlock";
   "JobsGestureUnlock" -> "JobsSwiftDSL";
+  "JobsIconfont" -> "JobsImageTools";
   "JobsImageRotation" -> "JobsSwiftTimer";
   "JobsImageTools" -> "JobsSwiftBaseDefines";
   "JobsImageTools" -> "JobsSwiftBlock";

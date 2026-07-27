@@ -14,10 +14,12 @@ import UIKit
 
 import JobsByUIKit
 import JobsFuseAnimation
+import JobsIconfont
 import JobsSwiftDSL
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
 import JobsSwiftCountryCodeCtrl
+import JobsSwiftUILabelScrolling
 import SnapKit
 
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
@@ -40,21 +42,13 @@ final class RootFoldTableCell: UITableViewCell,
     private static let subTitleHeight = ceil(subTitleFont.lineHeight)
     private static let headerSubTitleTop = headerTitleTop + titleHeight + headerTitleGap
     private static let headerH = max(64, headerTitleTop + titleHeight + headerTitleGap + subTitleHeight + headerTitleBottom)
-    private static let innerMinimumRowH: CGFloat = 50
+    private static let innerRowH: CGFloat = 50
     private static let innerTitleFont = JobsFont.systemFont(ofSize: 15, weight: .regular)
     private static let innerSubTitleFont = JobsFont.systemFont(ofSize: 11, weight: .regular)
-    private static let innerCellVerticalInset: CGFloat = 7
-    private static let innerCellHorizontalInset: CGFloat = 16
-    private static let innerCellImageWidth: CGFloat = 30
-    private static let innerCellImageToTextPadding: CGFloat = 10
-    /// 给 disclosure / 置顶按钮预留完整布局区，包含系统在 accessory 前自动加入的间距。
-    private static let innerCellAccessoryReservedWidth: CGFloat = 56
-    private static let innerCellTitleSubTitleGap: CGFloat = 2
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
     private static let innerCellReuseID = "RootFoldInnerCell"
     private static let chargingAnimationConfig = JobsChargingAnimationConfig()
-    private static var innerRowHeightCache: [String: CGFloat] = [:]
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
@@ -63,9 +57,6 @@ final class RootFoldTableCell: UITableViewCell,
     private var pinnedSectionStyle = false
     private var isExpanded: Bool = false
     private var innerTableHeight: Constraint?
-    private var expandedHeightDidChange: ((CGFloat) -> Void)?
-    private var lastInnerTableWidth: CGFloat = 0
-    private var lastReportedExpandedHeight: CGFloat = 0
     // MARK: - Lazy UI
     private lazy var card: UIView = {
         UIView()
@@ -149,10 +140,10 @@ final class RootFoldTableCell: UITableViewCell,
             .byBackgroundColor(JobsCor.clear)
             .bySeparatorStyle(.singleLine)
             .bySeparatorColor(RootListPreferences.separatorColor)
-            .byRowHeight(UITableView.automaticDimension)
+            .byRowHeight(Self.innerRowH)
             .byScrollEnabled(NO)
             .byBounces(NO)
-            .byEstimatedRowHeight(Self.innerMinimumRowH)
+            .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
             .byContentInsetAdjustmentBehavior(.never)
@@ -216,11 +207,8 @@ final class RootFoldTableCell: UITableViewCell,
         items = []
         onSelectItem = nil
         onPinItem = nil
-        expandedHeightDidChange = nil
         pinAccessoryIndex = nil
         pinnedSectionStyle = false
-        lastInnerTableWidth = 0
-        lastReportedExpandedHeight = 0
         subTitleLab.byVisible(YES)
         chevron.byVisible(YES)
         chevron.byImage("chevron.right".sysImg)
@@ -232,11 +220,6 @@ final class RootFoldTableCell: UITableViewCell,
         super.layoutSubviews()
         applyInsets()      // 水平边距@距离TableView
         applyCornerStyle() // 圆角
-        let currentWidth = contentView.bounds.width - Self.cardHorizontalInset * 2
-        guard currentWidth > 0,
-              abs(currentWidth - lastInnerTableWidth) > 0.5 else { return }
-        lastInnerTableWidth = currentWidth
-        updateInnerTableHeight(tableWidth: currentWidth)
     }
 
     override func didMoveToWindow() {
@@ -259,69 +242,11 @@ extension RootFoldTableCell{
         headerH + vInset * 2
     }
 
-    static func expandedHeight(items: [DemoItem], tableWidth: CGFloat) -> CGFloat {
+    static func expandedHeight(itemCount: Int) -> CGFloat {
         collapsedHeight()
         + innerTop
-        + innerTableContentHeight(
-            items: items,
-            tableWidth: max(tableWidth - cardHorizontalInset * 2, 0)
-        )
+        + CGFloat(itemCount) * innerRowH
         + innerBottom
-    }
-
-    private static func innerTableContentHeight(items: [DemoItem],
-                                                tableWidth: CGFloat) -> CGFloat {
-        items.reduce(0) { partialResult, item in
-            partialResult + innerRowHeight(for: item, tableWidth: tableWidth)
-        }
-    }
-
-    private static func innerRowHeight(for item: DemoItem,
-                                       tableWidth: CGFloat) -> CGFloat {
-        guard tableWidth > 0 else { return innerMinimumRowH }
-        let widthKey = Int((tableWidth * 100).rounded())
-        let cacheKey = "\(widthKey)|\(item.title)|\(String(reflecting: item.vcType))"
-        if let cachedHeight = innerRowHeightCache[cacheKey] { return cachedHeight }
-        let contentView = innerContentConfiguration(for: item).makeContentView()
-        let fittedSize = contentView.systemLayoutSizeFitting(
-            CGSize(
-                width: max(tableWidth - innerCellAccessoryReservedWidth, 1),
-                height: UIView.layoutFittingCompressedSize.height
-            ),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        )
-        let resolvedHeight = max(innerMinimumRowH, ceil(fittedSize.height))
-        innerRowHeightCache[cacheKey] = resolvedHeight
-        return resolvedHeight
-    }
-
-    private static func innerContentConfiguration(for item: DemoItem) -> UIListContentConfiguration {
-        var config = UIListContentConfiguration.subtitleCell()
-        config.text = item.title
-        config.secondaryText = innerSecondaryText(for: item)
-        config.image = demoIconImage(for: item)
-        config.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: innerCellVerticalInset,
-            leading: innerCellHorizontalInset,
-            bottom: innerCellVerticalInset,
-            trailing: innerCellHorizontalInset
-        )
-        config.imageProperties.maximumSize = CGSize(
-            width: innerCellImageWidth,
-            height: innerCellImageWidth
-        )
-        config.imageToTextPadding = innerCellImageToTextPadding
-        config.textToSecondaryTextVerticalPadding = innerCellTitleSubTitleGap
-        config.textProperties.font = innerTitleFont
-        config.textProperties.color = RootListPreferences.foldPrimaryTextColor
-        config.textProperties.numberOfLines = 0
-        config.textProperties.lineBreakMode = .byWordWrapping
-        config.secondaryTextProperties.font = innerSubTitleFont
-        config.secondaryTextProperties.color = RootListPreferences.foldSecondaryTextColor
-        config.secondaryTextProperties.numberOfLines = 1
-        config.secondaryTextProperties.lineBreakMode = .byTruncatingTail
-        return config
     }
 
     private static func innerSecondaryText(for item: DemoItem) -> String {
@@ -331,37 +256,20 @@ extension RootFoldTableCell{
         };return String(describing: item.vcType)
     }
 
-    private func updateInnerTableHeight(tableWidth: CGFloat? = nil) {
-        guard isExpanded else {
-            innerTableHeight?.update(offset: 0)
-            return
-        }
-        let resolvedWidth = tableWidth
-        ?? contentView.bounds.width - Self.cardHorizontalInset * 2
-        guard resolvedWidth > 0 else { return }
-        let contentHeight = Self.innerTableContentHeight(items: items, tableWidth: resolvedWidth)
+    private func updateInnerTableHeight() {
+        let contentHeight = isExpanded ? CGFloat(items.count) * Self.innerRowH : 0
         innerTableHeight?.update(offset: contentHeight)
-        let expandedHeight = Self.collapsedHeight()
-            + Self.innerTop
-            + contentHeight
-            + Self.innerBottom
-        guard abs(expandedHeight - lastReportedExpandedHeight) > 0.5 else { return }
-        lastReportedExpandedHeight = expandedHeight
-        expandedHeightDidChange?(expandedHeight)
     }
 
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
-                   expandedHeightDidChange: @escaping (CGFloat) -> Void,
                    onSelectItem: @escaping (Int) -> Void,
                    pinItem: @escaping (Int) -> Void) {
         pinnedSectionStyle = false
         self.items = items
-        self.expandedHeightDidChange = expandedHeightDidChange
         self.onSelectItem = onSelectItem
         self.onPinItem = pinItem
-        lastReportedExpandedHeight = 0
         pinAccessoryIndex = nil
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
@@ -374,15 +282,12 @@ extension RootFoldTableCell{
 
     func configurePinned(groupTitle: String,
                          items: [DemoItem],
-                         expandedHeightDidChange: @escaping (CGFloat) -> Void,
                          selectItem: @escaping (Int) -> Void,
                          unpinItem: @escaping (Int) -> Void) {
         pinnedSectionStyle = true
         self.items = items
-        self.expandedHeightDidChange = expandedHeightDidChange
         self.onSelectItem = selectItem
         self.onPinItem = unpinItem
-        lastReportedExpandedHeight = 0
         pinAccessoryIndex = nil
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
@@ -512,6 +417,7 @@ extension RootFoldTableCell{
     private static let demoIconSymbolNamesByVCType: [String: String] = {
         let names = [
             "FSPopoverDemoVC": "arrowtriangle.down.circle", "PicLoadDemoVC": "photo",
+            "JobsIconfontDemoListVC": "square.text.square.fill",
             "BRPickerDemoVC": "slider.horizontal.3", "GKPhotoBrowserByUIKitDemoVC": "photo.on.rectangle",
             "GKPhotoBrowserByTextureSwiftSupportDemoVC": "photo.stack", "ComponentKitLikeKitchenSinkVC": "square.3.layers.3d",
             "LunarDemoVC": "calendar", "XLSXDemoVC": "tablecells", "JobsSwiftExcelDemoVC": "tablecells.fill",
@@ -560,6 +466,8 @@ extension RootFoldTableCell{
             "JobsStringCompressionDemoVC": "archivebox.fill",
             "JobsContextMenuDemoVC": "hand.tap",
             "JobsClipboardCueDemoVC": "doc.on.doc.fill",
+            "JobsLabelBehaviorDemoVC": "character.textbox",
+            "JobsInteractiveLabelDemoVC": "hand.tap.fill",
             "JobsBulletTextDemoVC": "list.bullet.indent",
             "JobsLabelRotationDemoVC": "rotate.right",
             "JobsRandomNumberDemoVC": "die.face.5",
@@ -603,7 +511,15 @@ extension RootFoldTableCell{
     }
 
     private static func demoIconImage(for item: DemoItem) -> UIImage {
-        demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
+        let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
+        if vcName == "JobsIconfontDemoListVC" {
+            return JobsIconfont.shared.iconImage(
+                .component,
+                size: CGSize(width: 30, height: 30),
+                color: JobsCor.systemBlue
+            ).withRenderingMode(.alwaysOriginal)
+        }
+        return demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
     }
 
     private func pinAccessoryButton(index: Int) -> UIButton {
@@ -642,9 +558,19 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.innerCellReuseID) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
         cell.byChargingAnimationStop()
-            .byContentConfiguration { config in
-                config = Self.innerContentConfiguration(for: item)
-        }
+        /// 复用旧 Cell 时先退出动态 UIListContentConfiguration，恢复可直接配置的 UILabel。
+        cell.contentConfiguration = nil
+        cell.textLabel?
+            .byText(item.title)
+            .byFont(Self.innerTitleFont)
+            .byTextColor(RootListPreferences.foldPrimaryTextColor)
+            .byTextDisplayMode(.scaleToFit, minimumScaleFactor: 0.5)
+        cell.detailTextLabel?
+            .byText(Self.innerSecondaryText(for: item))
+            .byFont(Self.innerSubTitleFont)
+            .byTextColor(RootListPreferences.foldSecondaryTextColor)
+            .byTextDisplayMode(.singleLineTailTruncation)
+        cell.imageView?.byImage(Self.demoIconImage(for: item))
         cell.byBackgroundColor(JobsCor.clear)
         cell.contentView.byBackgroundColor(JobsCor.clear)
         cell.byTintColor(RootListPreferences.foldSecondaryTextColor)
@@ -668,7 +594,7 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard items.indices.contains(indexPath.row) else { return Self.innerMinimumRowH };return Self.innerRowHeight(for: items[indexPath.row], tableWidth: tableView.bounds.width)
+        Self.innerRowH
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

@@ -87,12 +87,12 @@ final class RootListVC: BaseVC {
     /// 展开状态（一级目录展开行）
     private var expandedGroups = Set<Int>()
     private var pinnedDemoItems: [DemoItem] = []
-    private var demoExpandedHeightCache: [String: (tableWidth: CGFloat, height: CGFloat)] = [:]
-    private var demoExpandedHeightRefreshScheduled = false
     /// 防抖标记（原逻辑不动）
     private var isPullRefreshing = false
     private var isLoadingMore    = false
     private var demoListHasAppeared = false
+    private var didInstallTableRefreshControls = false
+    private var pendingDemoListAppearanceUpdate = false
 
     // ================================== 数据源（唯一） ==================================
     private typealias DemoItem  = (title: String, vcType: UIViewController.Type)
@@ -182,8 +182,13 @@ final class RootListVC: BaseVC {
             (title: "Label".tr, items: [
                 ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
                 ("🏷️ UILabel+Scrolling｜四种定尺寸文字策略", UILabelScrollingDemoVC.self),
+                ("🏷️ UILabel / UIButton.titleLabel 表现列表", JobsLabelBehaviorDemoVC.self),
+                ("🏷️ 可交互自定义 Label", JobsInteractiveLabelDemoVC.self),
                 ("• 带小圆点文本及对齐", JobsBulletTextDemoVC.self),
                 ("🔄 UILabel 文字旋转", JobsLabelRotationDemoVC.self)
+            ]),
+            (title: "阿里巴巴矢量图标库".tr, items: [
+                ("JobsIconfont｜图片、图标字体与文字字体", JobsIconfontDemoListVC.self)
             ]),
             (title: "Pods集成@其他外源框架使用示例".tr, items: g0),
             (title: "Pods集成@网络请求适用示例".tr, items: [
@@ -357,9 +362,22 @@ final class RootListVC: BaseVC {
             .byAccessibilityIdentifier("RootListVC.suspendFuseBtn")
             .onTap { [weak self] sender in
                 guard let self else { return }
-                // 短按：只播放声音；长按结束后可能冒出来的 tap 直接吞掉
+                // 短按：播放声音并在列表顶部、尾部之间切换；长按结束后可能冒出来的 tap 直接吞掉
                 guard !self.suspendFuseLongPressConsumed else { return }
                 sender.byFusePlaySound()
+                sender.byToggleSelected()
+                let tableView = self.tableView
+                let topOffsetY = -tableView.adjustedContentInset.top
+                let bottomOffsetY = max(
+                    topOffsetY,
+                    tableView.contentSize.height
+                        - tableView.bounds.height
+                        + tableView.adjustedContentInset.bottom
+                )
+                tableView.byContentOffsetByAnimated(
+                    CGPoint(x: tableView.contentOffset.x,
+                            y: sender.isSelected ? bottomOffsetY : topOffsetY)
+                )
             }
             .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
                 guard let self else { return }
@@ -460,8 +478,10 @@ final class RootListVC: BaseVC {
         return gesture
     }()
 
+    private weak var loadedFunctionMenuTableView: UITableView?
+
     private lazy var functionMenuTableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        let tableView = UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -485,6 +505,8 @@ final class RootListVC: BaseVC {
                 make.width.equalTo(210)
                 make.height.equalTo(FunctionMenuAction.allCases.count * 44)
             }
+        loadedFunctionMenuTableView = tableView
+        return tableView
     }()
 
     private lazy var demoSearchCancelButton: UIButton = {
@@ -560,32 +582,6 @@ final class RootListVC: BaseVC {
             .byContentInset(UIEdgeInsets(
                 top: 8,left: 0, bottom: 0, right: 0
             ))
-            .setHeaderRefreshFeedback(
-                JobsRefreshFeedback(
-                    enablesHaptics: true,
-                    soundFileName: "Sound.wav"
-                )
-            )
-            // 下拉刷新 Header
-            .byRefreshHeader(component: JobsDefaultHeader(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
-                Task { @MainActor in
-                    self.tableView.byReloadData()
-                    self.tableView.switchRefreshHeader(to: .normal)
-                    self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
-                }
-            }
-            // 上拉加载 Footer
-            .byRefreshFooter(component: JobsDefaultFooter(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
-                Task { @MainActor in
-                    self.tableView.switchRefreshFooter(to: .noMoreData)
-                }
-            }
             .byAddTo(view) {[unowned self] make in
                 make.left.bottom.right.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
@@ -607,8 +603,14 @@ final class RootListVC: BaseVC {
             self.reloadDemoDataFromSource()
             self.refreshLocalizedContent()
             self.applyDemoListThemeChrome()
-            self.tableView.reloadData()
-            self.functionMenuTableView.reloadData()
+            if self.tableView.window != nil {
+                self.tableView.reloadData()
+            }
+            if let functionMenuTableView = self.loadedFunctionMenuTableView,
+               functionMenuTableView.window != nil,
+               !functionMenuTableView.isHidden {
+                functionMenuTableView.reloadData()
+            }
         }
     }
 
@@ -651,7 +653,6 @@ final class RootListVC: BaseVC {
         demoSearchBar.byVisible(NO)
         demoSearchCancelButton.byVisible(NO)
         tableView.byVisible(YES)
-        functionMenuTableView.byVisible(NO)
         applyDemoListThemeChrome()
         view.addGestureRecognizer(functionMenuDismissTapGesture)
         updateFooterAvailability()
@@ -670,8 +671,28 @@ final class RootListVC: BaseVC {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard tableView.window != nil else {
+            guard !pendingDemoListAppearanceUpdate else { return }
+            pendingDemoListAppearanceUpdate = true
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.pendingDemoListAppearanceUpdate = false
+                self.performDemoListAppearanceUpdate()
+            }
+            return
+        }
+        performDemoListAppearanceUpdate()
+    }
+}
+
+extension RootListVC{
+    /// 侧滑容器首次装配时，子控制器可能先收到 viewDidAppear，再真正进入 Window。
+    private func performDemoListAppearanceUpdate() {
+        guard tableView.window != nil else { return }
+        installTableRefreshControlsIfNeeded()
         tableView.beginUpdates()
         tableView.endUpdates()
+        updateFooterAvailability()
         if demoListHasAppeared && RootListPreferences.returnToTopAndRefreshEnabled {
             reloadDemoListToTopAndRefresh()
         }
@@ -679,9 +700,39 @@ final class RootListVC: BaseVC {
         refreshSuspendTimeButtonVisibility()
         suspendSpinBtnTimer?.resume()
     }
-}
 
-extension RootListVC{
+    /// 刷新 Footer 会读取表格尺寸，必须等主表进入 Window 后再挂载。
+    private func installTableRefreshControlsIfNeeded() {
+        guard !didInstallTableRefreshControls,
+              tableView.window != nil else { return }
+        didInstallTableRefreshControls = true
+        tableView
+            .setHeaderRefreshFeedback(
+                JobsRefreshFeedback(
+                    enablesHaptics: true,
+                    soundFileName: "Sound.wav"
+                )
+            )
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.tableView.byReloadData()
+                    self.tableView.switchRefreshHeader(to: .normal)
+                    self.tableView.switchRefreshFooter(to: .normal)
+                }
+            }
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.tableView.switchRefreshFooter(to: .noMoreData)
+                }
+            }
+    }
+
     private func showSuspendTimeButtonVisibilityAlert() {
         UIAlertController
             .makeAlert("隐藏悬浮时间？".tr,
@@ -734,8 +785,9 @@ extension RootListVC{
         demoNavigationTitleLabel.byTextColor(RootListPreferences.primaryTextColor)
         demoNavigationProjectLabel.byTextColor(RootListPreferences.secondaryTextColor)
         functionMenuButton.byTintColor(RootListPreferences.primaryTextColor)
-        functionMenuTableView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-        functionMenuTableView.bySeparatorColor(RootListPreferences.separatorColor)
+        loadedFunctionMenuTableView?
+            .byBackgroundColor(RootListPreferences.cardBackgroundColor)
+            .bySeparatorColor(RootListPreferences.separatorColor)
         demoSearchBar.byBarTintColor(RootListPreferences.pageBackgroundColor)
         demoSearchBar.byTintColor(RootListPreferences.selectedTintColor)
         demoSearchBar.byBackgroundColor(JobsCor.clear)
@@ -768,8 +820,7 @@ extension RootListVC{
             demoSearchBar.searchTextField.leftView?.byTintColor(RootListPreferences.secondaryTextColor)
         }
         #endif
-        if view.window != nil {
-            functionMenuTableView.reloadData()
+        if tableView.window != nil {
             tableView.reloadData()
         }
     }
@@ -831,7 +882,7 @@ extension RootListVC{
     }
 
     private var hasPinnedDemoSection: Bool {
-        !pinnedDemoItems.isEmpty
+        !demoSearchActive && !pinnedDemoItems.isEmpty
     }
 
     private var demoGroupTableSection: Int {
@@ -866,63 +917,6 @@ extension RootListVC{
 
     private func demoPersistentKey(for item: DemoItem) -> String {
         "cls:\(String(reflecting: item.vcType))"
-    }
-
-    private func demoExpandedHeightCacheKey(groupTitle: String,
-                                            items: [DemoItem]) -> String {
-        let itemKeys = items.map {
-            "\($0.title)#\(demoPersistentKey(for: $0))"
-        }.joined(separator: "|")
-        return "\(groupTitle)|\(itemKeys)"
-    }
-
-    private func cachedDemoExpandedHeight(groupTitle: String,
-                                          items: [DemoItem],
-                                          tableView: UITableView) -> CGFloat? {
-        let key = demoExpandedHeightCacheKey(groupTitle: groupTitle, items: items)
-        guard let cached = demoExpandedHeightCache[key],
-              abs(cached.tableWidth - tableView.bounds.width) <= 0.5 else { return nil };return cached.height
-    }
-
-    private func cacheDemoExpandedHeight(_ height: CGFloat,
-                                         for key: String) {
-        guard height > 0 else { return }
-        let tableWidth = tableView.bounds.width
-        if let cached = demoExpandedHeightCache[key],
-           abs(cached.tableWidth - tableWidth) <= 0.5,
-           abs(cached.height - height) <= 0.5 {
-            return
-        }
-        demoExpandedHeightCache[key] = (tableWidth: tableWidth, height: height)
-        scheduleDemoExpandedHeightRefresh()
-    }
-
-    private func scheduleDemoExpandedHeightRefresh() {
-        guard tableView.window != nil,
-              !demoExpandedHeightRefreshScheduled else { return }
-        demoExpandedHeightRefreshScheduled = true
-        onMainAsync(self) { vc in
-            guard vc.tableView.window != nil else {
-                vc.demoExpandedHeightRefreshScheduled = false
-                return
-            }
-            guard !vc.tableView.hasUncommittedUpdates else {
-                vc.demoExpandedHeightRefreshScheduled = false
-                vc.scheduleDemoExpandedHeightRefresh()
-                return
-            }
-            UIView.jobsPerformWithoutAnimation {
-                vc.tableView.beginUpdates()
-                vc.tableView.endUpdates()
-            }
-            vc.demoExpandedHeightRefreshScheduled = false
-            vc.updateFooterAvailability()
-        }
-    }
-
-    private func fallbackDemoFoldCellWidth(in tableView: UITableView) -> CGFloat {
-        let layoutWidth = tableView.layoutMarginsGuide.layoutFrame.width
-        guard layoutWidth > 0 else { return max(tableView.bounds.width, 0) };return layoutWidth
     }
 
     private func isPinnedDemoItem(_ item: DemoItem) -> Bool {
@@ -991,22 +985,34 @@ extension RootListVC{
         guard let titles = UserDefaults.standard.array(forKey: Self.demoSectionOrderUserDefaultsKey) as? [String] else { return [] };return titles.filter { !$0.isEmpty }
     }
 
+    private func isOtherDemoGroup(_ group: DemoGroup) -> Bool {
+        group.title == "其他".tr
+    }
+
+    private func demoGroupsKeepingOtherLast(_ groups: [DemoGroup]) -> [DemoGroup] {
+        let regularGroups = groups.filter { !isOtherDemoGroup($0) }
+        let otherGroups = groups.filter { isOtherDemoGroup($0) };return regularGroups + otherGroups
+    }
+
     private func applySavedDemoSectionOrderIfNeeded() {
         let titles = savedDemoSectionOrder()
-        guard !titles.isEmpty, allDemo2D.count > 1 else { return }
-        var unorderedGroups = allDemo2D
-        var orderedGroups: [DemoGroup] = []
-        for title in titles {
-            guard let index = unorderedGroups.firstIndex(where: { $0.title == title }) else { continue }
-            orderedGroups.append(unorderedGroups.remove(at: index))
+        if !titles.isEmpty, allDemo2D.count > 1 {
+            var unorderedGroups = allDemo2D
+            var orderedGroups: [DemoGroup] = []
+            for title in titles {
+                guard let index = unorderedGroups.firstIndex(where: { $0.title == title }) else { continue }
+                orderedGroups.append(unorderedGroups.remove(at: index))
+            }
+            orderedGroups.append(contentsOf: unorderedGroups)
+            if orderedGroups.count == allDemo2D.count {
+                allDemo2D = orderedGroups
+            }
         }
-        orderedGroups.append(contentsOf: unorderedGroups)
-        if orderedGroups.count == allDemo2D.count {
-            allDemo2D = orderedGroups
-        }
+        allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
     }
 
     private func saveDemoSectionOrder() {
+        allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
         UserDefaults.standard.set(allDemo2D.map { $0.title }, forKey: Self.demoSectionOrderUserDefaultsKey)
         UserDefaults.standard.synchronize()
     }
@@ -1025,13 +1031,12 @@ extension RootListVC{
             return
         }
         demo2D = allDemo2D.compactMap { group in
-            let unpinnedItems = group.items.filter { !isPinnedDemoItem($0) }
-            let matchedItems = unpinnedItems.filter {
+            let matchedItems = group.items.filter {
                 demoSearchKeyword.inStr($0.title)
                     || demoSearchKeyword.inStr(String(describing: $0.vcType))
             }
             if demoSearchKeyword.inStr(group.title) {
-                return unpinnedItems.isEmpty ? nil : (title: group.title, items: unpinnedItems)
+                return group.items.isEmpty ? nil : (title: group.title, items: group.items)
             };return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
         }
         expandedGroups = Set(demo2D.indices)
@@ -1123,7 +1128,8 @@ extension RootListVC{
         if !pointInSearchBar {
             jobsDismissKeyboard()
         }
-        guard !functionMenuTableView.isHidden else { return }
+        guard let functionMenuTableView = loadedFunctionMenuTableView,
+              !functionMenuTableView.isHidden else { return }
         let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds, to: view)
         if functionMenuTableView.frame.contains(point) || buttonFrame.contains(point) {
             return
@@ -1134,6 +1140,7 @@ extension RootListVC{
     private func canDragDemoGroup(at indexPath: IndexPath) -> Bool {
         indexPath.section == demoGroupTableSection &&
         demo2D.indices.contains(indexPath.row) &&
+        !isOtherDemoGroup(demo2D[indexPath.row]) &&
         demo2D.count > 1
     }
 
@@ -1151,6 +1158,8 @@ extension RootListVC{
         demo2D.insert(visibleGroup, at: destinationRow)
         let group = allDemo2D.remove(at: sourceIndex)
         allDemo2D.insert(group, at: min(destinationIndex, allDemo2D.count))
+        demo2D = demoGroupsKeepingOtherLast(demo2D)
+        allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
         moveExpandedDemoGroupState(from: sourceRow, to: destinationRow)
     }
 
@@ -1209,11 +1218,13 @@ extension RootListVC{
 
     private func toggleFunctionMenu(_ visible: Bool) {
         functionMenuButton.bySelected(visible)
-        functionMenuTableView.byVisible(visible)
         if visible {
+            functionMenuTableView.byVisible(YES)
             applyDemoListThemeChrome()
             functionMenuTableView.reloadData()
             view.bringSubviewToFront(functionMenuTableView)
+        } else {
+            loadedFunctionMenuTableView?.byVisible(NO)
         }
     }
 
@@ -1260,6 +1271,7 @@ extension RootListVC{
 
     // MARK: - Footer 自动显隐逻辑
     private func updateFooterAvailability() {
+        guard tableView.window != nil else { return }
         guard !demoSearchEnabled else {
             tableView.mj_footer?.byHidden(true)
             return
@@ -1350,13 +1362,8 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
             let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
-            let heightCacheKey = demoExpandedHeightCacheKey(groupTitle: "置顶".tr,
-                                                            items: pinnedDemoItems)
             cell.configurePinned(groupTitle: "置顶".tr,
-                                 items: pinnedDemoItems,
-                                 expandedHeightDidChange: { [weak self] height in
-                self?.cacheDemoExpandedHeight(height, for: heightCacheKey)
-            }) { [weak self] itemIndex in
+                                 items: pinnedDemoItems) { [weak self] itemIndex in
                 guard let self,
                       self.pinnedDemoItems.indices.contains(itemIndex) else { return }
                 let item = self.pinnedDemoItems[itemIndex]
@@ -1373,14 +1380,9 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         let row = indexPath.row
         let g = demo2D[row]
         let expanded = expandedGroups.contains(row)
-        let heightCacheKey = demoExpandedHeightCacheKey(groupTitle: g.title,
-                                                        items: g.items)
         cell.configure(groupTitle: g.title,
                        items: g.items,
-                       expanded: expanded,
-                       expandedHeightDidChange: { [weak self] height in
-            self?.cacheDemoExpandedHeight(height, for: heightCacheKey)
-        }) { [weak self] itemIndex in
+                       expanded: expanded) { [weak self] itemIndex in
             guard let self else { return }
             if self.demoSearchActive {
                 self.saveDemoSearchHistory(self.demoSearchKeyword)
@@ -1400,28 +1402,13 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         if tableView === functionMenuTableView { return 44 }
         if demoSearchLandingActive { return 54 }
         if hasPinnedDemoSection && indexPath.section == 0 {
-            if let cachedHeight = cachedDemoExpandedHeight(groupTitle: "置顶".tr,
-                                                           items: pinnedDemoItems,
-                                                           tableView: tableView) {
-                return cachedHeight
-            };return RootFoldTableCell.expandedHeight(
-                items: pinnedDemoItems,
-                tableWidth: fallbackDemoFoldCellWidth(in: tableView)
-            )
+            return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count)
         }
         guard indexPath.section == demoGroupTableSection,
               demo2D.indices.contains(indexPath.row) else { return .leastNonzeroMagnitude }
         let row = indexPath.row
         guard expandedGroups.contains(row) else { return RootFoldTableCell.collapsedHeight() }
-        let group = demo2D[row]
-        if let cachedHeight = cachedDemoExpandedHeight(groupTitle: group.title,
-                                                       items: group.items,
-                                                       tableView: tableView) {
-            return cachedHeight
-        };return RootFoldTableCell.expandedHeight(
-            items: group.items,
-            tableWidth: fallbackDemoFoldCellWidth(in: tableView)
-        )
+        return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -1551,7 +1538,12 @@ extension RootListVC: UITableViewDragDelegate, UITableViewDropDelegate {
         let section = proposedIndexPath?.section ?? demoGroupTableSection
         guard section == demoGroupTableSection else { return nil }
         let proposedRow = proposedIndexPath?.row ?? (demo2D.count - 1)
-        return IndexPath(row: min(max(proposedRow, 0), demo2D.count - 1), section: section)
+        let lastRow = demo2D.count - 1
+        let maximumRow = isOtherDemoGroup(demo2D[lastRow]) ? lastRow - 1 : lastRow
+        guard maximumRow >= 0 else { return nil };return IndexPath(
+            row: min(max(proposedRow, 0), maximumRow),
+            section: section
+        )
     }
 }
 

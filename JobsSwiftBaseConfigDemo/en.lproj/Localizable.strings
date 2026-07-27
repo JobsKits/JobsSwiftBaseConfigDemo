@@ -1387,6 +1387,8 @@
 "从左进入" = "Enter from left";
 "朋友圈" = "Friends.";
 "二维码 + 条形码" = "2D + bar code";
+"带中心 Logo 的二维码" = "QR code with center logo";
+"Code128 条形码" = "Code 128 barcode";
 "导出为 RTF" = "Export to RTF";
 "从 RTF 导入" = "Import from RTF";
 "数据刷新" = "Data Refresh";

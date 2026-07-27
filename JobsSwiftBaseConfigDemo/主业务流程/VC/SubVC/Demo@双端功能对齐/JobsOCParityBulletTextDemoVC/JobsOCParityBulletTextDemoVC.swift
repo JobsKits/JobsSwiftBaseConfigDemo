@@ -70,7 +70,7 @@ final class JobsBulletTextDemoVC: BaseVC {
             string: text,
             attributes: [
                 .font: JobsFont.systemFont(ofSize: 12),
-                .foregroundColor: UIColor(hex: 0xD0D0D0),
+                .foregroundColor: JobsCor.label,
                 .paragraphStyle: paragraph
             ]
         )
@@ -81,7 +81,7 @@ final class JobsBulletTextDemoVC: BaseVC {
         )
         attributedText.addAttribute(
             .foregroundColor,
-            value: JobsCor.systemYellow,
+            value: JobsCor.systemBlue,
             range: (text as NSString).range(of: "•", options: [], range: NSRange(location: first.count, length: text.count - first.count))
         );return attributedText
     }
@@ -110,7 +110,7 @@ final class JobsBulletTextDemoVC: BaseVC {
         attributedText.addAttributes(
             [
                 .font: JobsFont.systemFont(ofSize: 12),
-                .foregroundColor: UIColor(hex: 0xD0D0D0),
+                .foregroundColor: JobsCor.label,
                 .paragraphStyle: paragraph
             ],
             range: NSRange(location: 0, length: attributedText.length)

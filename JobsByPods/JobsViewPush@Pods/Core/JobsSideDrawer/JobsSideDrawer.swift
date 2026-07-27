@@ -81,8 +81,22 @@ public final class JobsSideDrawerVC: UIViewController {
 
     private let drawerVC: UIViewController?
     private let mainVC: UIViewController?
-    private let drawerContentView: UIView
-    private let mainContentView: UIView
+    private let providedDrawerContentView: UIView?
+    private let providedMainContentView: UIView?
+    /// 子控制器完成父子关系装配后再读取 view，避免导航容器在零尺寸阶段提前布局。
+    private lazy var drawerContentView: UIView = {
+        if let providedDrawerContentView { return providedDrawerContentView }
+        guard let drawerVC else {
+            preconditionFailure("JobsSideDrawerVC 缺少抽屉内容")
+        };return drawerVC.view
+    }()
+    /// 子控制器完成父子关系装配后再读取 view，避免导航容器在零尺寸阶段提前布局。
+    private lazy var mainContentView: UIView = {
+        if let providedMainContentView { return providedMainContentView }
+        guard let mainVC else {
+            preconditionFailure("JobsSideDrawerVC 缺少主内容")
+        };return mainVC.view
+    }()
     private let drawerContainerView = UIView()
     private let contentContainerView = UIView()
     private lazy var openGesture: UIScreenEdgePanGestureRecognizer = {
@@ -106,6 +120,7 @@ public final class JobsSideDrawerVC: UIViewController {
     private var interactionIntent: InteractionIntent?
     private var isAnimatingTransition = false
     private var transitionGeneration = 0
+    private var didInstallContentViews = false
     private lazy var dimControl: UIControl = {
         let control = UIControl()
             .byBackgroundColor(configuration.dimColor)
@@ -120,8 +135,8 @@ public final class JobsSideDrawerVC: UIViewController {
                 configuration: JobsSideDrawerConfiguration = .init()) {
         drawerVC = drawerViewController
         mainVC = mainViewController
-        drawerContentView = drawerViewController.view
-        mainContentView = mainViewController.view
+        providedDrawerContentView = nil
+        providedMainContentView = nil
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
@@ -140,8 +155,8 @@ public final class JobsSideDrawerVC: UIViewController {
                 configuration: JobsSideDrawerConfiguration = .init()) {
         drawerVC = nil
         mainVC = nil
-        drawerContentView = drawerView
-        mainContentView = mainView
+        providedDrawerContentView = drawerView
+        providedMainContentView = mainView
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
@@ -155,26 +170,17 @@ public final class JobsSideDrawerVC: UIViewController {
         installChildren()
         contentContainerView.byAddTo(view)
         drawerContainerView.byAddTo(view)
-        mainContentView.byAddTo(contentContainerView)
-        dimControl.byAddTo(contentContainerView)
-        drawerContentView.byAddTo(drawerContainerView)
         view.jobs_addGestureRetView(openGesture)
             .jobs_addGestureRetView(closeGesture)
         updateGestureConfiguration()
-        mainContentView.byFrame(contentContainerView.bounds)
-        drawerContentView.byFrame(drawerContainerView.bounds)
-        dimControl.byFrame(contentContainerView.bounds)
-        [mainContentView, drawerContentView, dimControl].forEach {
-            $0.byAutoresizingMask([.flexibleWidth, .flexibleHeight])
-        }
-        mainVC?.didMove(toParent: self)
-        drawerVC?.didMove(toParent: self)
     }
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let progress = interactionStartProgress == nil ? (isOpen ? 1 : 0) : currentProgress
         layoutDrawer(progress: progress)
+        installContentViewsIfNeeded()
+        layoutContentViewsIfNeeded()
     }
 
     public func applyConfiguration(animated: Bool = false) {
@@ -199,6 +205,30 @@ public final class JobsSideDrawerVC: UIViewController {
     private func installChildren() {
         if let drawerVC { addChild(drawerVC) }
         if let mainVC { addChild(mainVC) }
+    }
+
+    /// 等父容器拿到真实尺寸后再装配导航子控制器，避开 UIKit 的零尺寸临时布局阶段。
+    private func installContentViewsIfNeeded() {
+        guard !didInstallContentViews,
+              view.bounds.width > 0,
+              view.bounds.height > 0 else { return }
+        didInstallContentViews = true
+        mainContentView.byAddTo(contentContainerView)
+        dimControl.byAddTo(contentContainerView)
+        drawerContentView.byAddTo(drawerContainerView)
+        [mainContentView, drawerContentView, dimControl].forEach {
+            $0.byAutoresizingMask([.flexibleWidth, .flexibleHeight])
+        }
+        mainVC?.didMove(toParent: self)
+        drawerVC?.didMove(toParent: self)
+    }
+
+    /// 容器旋转或尺寸变化时只更新 frame，不触发子导航栏额外的强制布局。
+    private func layoutContentViewsIfNeeded() {
+        guard didInstallContentViews else { return }
+        mainContentView.byFrame(contentContainerView.bounds)
+        drawerContentView.byFrame(drawerContainerView.bounds)
+        dimControl.byFrame(contentContainerView.bounds)
     }
 
     private func setDrawer(open: Bool,

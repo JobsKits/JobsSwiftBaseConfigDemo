@@ -70,26 +70,22 @@ enum RootListPreferences {
         }
     }
 
-    static func makeAppRootViewController(in initialBounds: CGRect = UIScreen.main.bounds) -> UIViewController {
+    static func makeAppRootViewController() -> UIViewController {
         let demoListEntry = makeDemoListEntryViewController()
-        demoListEntry.view.byFrame(initialBounds)
         guard usesTabBarEntry else { return demoListEntry }
         let tabBarController = UITabBarController()
-        tabBarController.view.byFrame(initialBounds)
         demoListEntry.tabBarItem = UITabBarItem(
             title: "Demo".tr,
             image: "list.bullet".sysImg,
             selectedImage: "list.bullet.rectangle.fill".sysImg
         )
         let messageViewController = MessageListDemoVC().jobsNav.jobsNavContainer
-        messageViewController.view.byFrame(initialBounds)
         messageViewController.tabBarItem = UITabBarItem(
             title: "消息".tr,
             image: "envelope".sysImg,
             selectedImage: "envelope.fill".sysImg
         )
         let profileViewController = JobsMeCenterVC().jobsNav.jobsNavContainer
-        profileViewController.view.byFrame(initialBounds)
         profileViewController.tabBarItem = UITabBarItem(
             title: "我的".tr,
             image: "person".sysImg,
@@ -105,7 +101,7 @@ enum RootListPreferences {
             .filter { $0.activationState != .unattached }
             .flatMap(\.windows)
             .forEach {
-                $0.byRootViewController(makeAppRootViewController(in: $0.bounds))
+                $0.byRootViewController(makeAppRootViewController())
                     .byMakeKeyAndVisible()
             }
     }

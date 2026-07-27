@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LiveChat.windowScene = windowScene
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        let homeViewController = RootListPreferences.makeAppRootViewController(in: window.bounds)
+        let homeViewController = RootListPreferences.makeAppRootViewController()
         window
             .byRootViewController(homeViewController)
             .byMakeKeyAndVisible()

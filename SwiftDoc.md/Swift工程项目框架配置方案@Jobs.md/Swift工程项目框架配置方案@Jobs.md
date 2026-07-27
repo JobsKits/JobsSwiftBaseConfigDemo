@@ -1,92 +1,88 @@
 # [**Swift**](https://www.swift.org/)工程项目框架配置方案@JobsKits
 
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
 [toc]
+
+---
+
+## 🔥 <font id=前言>前言</font>
+
+> 本文以 `JobsSwiftBaseConfigDemo` 当前可运行工程为样板，说明一个 Jobs [**Swift**](https://www.swift.org/) 项目从宿主、启动、基础 Pod、功能 Pod、资源、扩展到验证工具的完整配置方案。文中的代码不是脱离工程的 API 摘抄，凡与当前源码冲突时，以自建 Pod 实现、`*.podspec`、`Podfile.deps`、`Podfile` 和 Xcode target 配置为准。
+
+- 权威源优先级：
+
+  1. `JobsByPods/` 下 Jobs 自建 Pod 的当前实现与 `*.podspec`。
+  2. 宿主工程源码、`Podfile.deps`、`Podfile`、Xcode target 与 Build Phase。
+  3. 对应 Pod 的 `README.md`、本 `SwiftDoc` 和 Xcode CodeSnippets。
+
+- 扫描和修改边界：
+
+  - 可以维护：`JobsSwiftBaseConfigDemo/` 与 `JobsByPods/` 下 Jobs 自建、已明确接管的源码和文档。
+  - 默认排除：根目录 `Pods/`、`JobsByPods/ManualBySwiftPods@Pods/`、`generated/`、Flutter 生成目录、Unity 导出产物、构建缓存和所有权不明源码。
+  - 生成物只由对应流程刷新，不手工改 `Podfile.lock`、Pods 工程、依赖报告或最终构建产物。
+
+- 当前宿主基线：
+
+  - App、Unit Tests、UI Tests、Widget Extension 共同组成工程 target。
+  - 宿主部署目标为 iOS 15，使用 Swift 5 和 CocoaPods 静态 framework 链接。
+  - 自建 Pod 可以按自身能力保留更低部署目标；新旧系统兼容必须在封装层消化，不能把 `#available` 和已废弃系统 API 泄漏到业务调用方。
 
 ## 一、<font id=一些基本的原则>一些基本的原则</font>
 
-### 1、不到万不得已，不要用**Objc**库
+### 1.1、Swift 优先，但不把语言纯度当成架构目标
 
-* 既然是[**Swift**](https://www.swift.org/)工程，那么就尽可能的不要调用**Objc**库，否则我们为什么不用**Objc**写工程项目？**不要既当又立**。特别是在有优秀平替的情况下。相信互联网是在不断向前发展的，新出的轮子可能稳定性来讲可能不如老旧的（特别是那种很多年不更新的库，不到万不得已，慎用！），但是从调用和内存包括向前兼容等方面，一定是优于老旧框架的。否则为什么要开发新版本？即便是**Apple**公司，也是看到了**Objc**的一些不足，所以才下了很大的决心从**Objc**迁移到[**Swift**](https://www.swift.org/)，相信迁移所造成的各方损耗和带来的优势，也是经过各方多轮评估后才做的取舍！
-* **Objc**库需要导入头文件，而且头文件的导入在编译阶段同样存在循环引用的问题（编译的时候，一定是按照加载的顺序，自上而下的编译），那么在某些极端的情况下，引入的位置不对，就会造成编译不通过（亲测）。而[**Swift**](https://www.swift.org/)在工程内部不需要导入文件，除非在不同工程（跨域），比如利用[**CocoaPods**](https://cocoapods.org/)管理的第三方才需要进行导入。所以，既然是系统做了优化的，我们就要顺势而为。
-* 导入库，一般情况下，它会向后兼容，导入一些老旧的`*.framework`库，造成打包体积过大的隐患（并不能每次都精确复现，这里只是讲风险与隐患）。这里的一个例子就是[**过期的模拟器配件**](https://github.com/295060456/Xcode_Sys_lib)。老旧的Api只要你调用了就一定会指向老旧的`*.framework`，**会影响打包大小，但是不一定影响运行时的内存情况**
-* 对于一些老旧库（超过5年不维护的库）如果实在要用，就需要手动集成自项目，而不是[**CocoaPods**](https://cocoapods.org/)管理
+- Jobs 新写的宿主和自建组件优先使用 [**Swift**](https://www.swift.org/)，让类型系统、并发能力、模块化和 Apple 新 API 成为默认路径。
+- 依赖选择看维护状态、源码可审计性、许可证、二进制体积、最低系统版本、能力完整度和替换成本，不按“Swift / Objective-C”单一条件决策。
+- 对仍有稳定价值的 Objective-C / C / C++ 能力，统一隔离在 `JobsBy3rdTools`、`JobsNetworking` 或明确的功能 Pod 中；业务页面不直接到处散落第三方 API。
+- 第三方依赖通过 [**CocoaPods**](https://cocoapods.org/) 或 [**Swift Package Manager**](https://www.swift.org/package-manager/) 固定版本和依赖图。不要因为库较旧就把源码复制进主工程，更不能直接修改根目录 `Pods/` 或手工第三方目录。
+- 评估体积时以链接结果、最终 App 包和 `Assets.car` 为证据；“调用旧 API 就一定额外打入旧 framework”不是通用结论。
 
-### 2、用开源播放器
+### 1.2、播放器与音视频能力按边界选型
 
-* 市面上，有开源的音视频播放器
-* 强烈建议不要用腾讯等中国大陆大厂出品的播放器
-  * 魔改同样需要学习成本
-  * 对核心的部分做了不同程度的封装
-  * 内容过滤（可能今天有种声音是说海外版不管，但是如果收紧，是不是我们全不要推翻重来？）
-* 播放器用大厂SDK的支持方观点：能最小成本接入
-* 坚持自研播放器的观点：
-  * 播放器的目的：对特定格式里面蕴含的信息，进行编解码。播放的特效，是一个文件（或许是`*.json`格式，亦或许是特有格式）
-  * 能完全从底层开始修改，方便未来对视频流进行**加/解密** （反爬，反编译）
-  * 大厂播放器，可能也不方便魔改（可能关键部分早已封装成`*.framework`或者`*.a`）
-  * 如果大厂播放器政策有所改变，进行业务收紧，我们也需要较大开销去应对这种变化（iOS/Android2端）如果多个App，每个App内部我们都需要进行替换
+- 播放器选型至少检查：协议和封装格式、硬解支持、直播 / 点播、缓存、首帧、Seek、倍速、字幕、后台音频、AirPlay、日志、许可证和维护频率。
+- 当前工程用 `BMPlayer` 展示播放器能力，用 `HaishinKit` 承接采集编码类能力；业务层仍应通过 Jobs 包装层或独立功能 Pod 接入，避免页面直接绑定某一家实现。
+- 自研适合强定制协议、端到端加密、专有缓存或多端统一内核；普通播放场景优先复用成熟内核，把精力放在稳定性、观测和替换边界上。
+- 闭源 SDK 不是绝对禁用，但必须记录隐私、合规、符号可见性、二进制架构、离线能力和退出方案。无法审计或无法替换的能力不能下沉成全局基础层。
 
 ## 二、我对iOS开发的认知
 
-* 方向隶属于大前端
-* 前端相对于后段的特点
-  * 数据轻量级，一般不负责存储，或者是只存储轻量级的数据。除非那种国民级App（但他们都有架构组，框架内部维护使用，极少公开）
-  * 后端的语言可以万年Java8（语言IDE、SDK层面）相对于前端更加的稳定（前端3个月一次小更新，5个月一次大更新）
-  * 每个人对于需求理解的方式，包括二次封装的Api粒度认识不统一
-  * 前端对于一些业务层面的数据计算不需要太关心，主要精力应该集中于UI绘制渲染上
-  * 后端原则情况下，是不信任前端发送的任何数据的（看具体项目的安全阀值，容错度）
-* 充分利用**UIButton**的便捷性，使其作为一个UI容器，合理的利用此UI控件的内部子控件，有利于去节省代码，方便拓展。内部携带：
-  * 背景图层、
-  * 一个子**UIImageView**
-  * 主标题**Label**
-  * 副标题**Label**
-* 绘制UI + 数据请求 + 数据处理 == 成品
-  * 数据处理：[利用[**quicktype**](https://github.com/glideapps/quicktype)自动建立数据模型]()
+- iOS 是客户端工程，不只是“画 UI”。完整交付至少包含视图、状态、数据、生命周期、权限、错误恢复、缓存、日志、可测试性和发布配置。
+- 数据可以来自网络、数据库、App Group、Keychain、文件缓存和系统框架；轻重由业务决定，不预设“客户端只存轻量数据”。
+- 服务端不能信任客户端输入；客户端也不能假设服务端响应永远正确。两侧都要做校验、超时、幂等、降级和可观测性。
+- `UIButton` 可以承载图片、主标题、副标题和配置背景，但它有独立的 `UIButton.Configuration` 状态管线；可见背景和圆角不能再当普通 `UIView.layer` 处理。
+- 推荐交付公式：
+
+  ```text
+  成品 = UI + 状态机 + 数据流 + 生命周期 + 异常与降级 + 日志与测试
+  ```
+
+- 数据模型生成工具只能减少样板代码；字段语义、可选性、日期格式、兼容策略和业务校验仍需人工确认。
 
 ## 三、我的构架方案
 
-### 1、选用的（外源）第三方框架
+### 3.1、外部依赖分层
 
-* 基础配置框架
-  * [**ReactiveSwift**](https://github.com/ReactiveCocoa/ReactiveSwift) 新版本支持 arm64 模拟器
-  * [**RxCocoa**](https://github.com/ReactiveX/RxSwift)
-  * [**RxRelay**](https://cocoapods.org/pods/RxRelay)
-  * [**NSObject+Rx**](https://github.com/RxSwiftCommunity/NSObject-Rx)
+> 下面只列工程中具有代表性的依赖类别，不复制完整 `Podfile.deps`。依赖是否真实接入、版本和 subspec 选择始终以 `Podfile.deps` 与 `Podfile.lock` 为准。
 
-* UI约束
-  * [**SnapKit**](https://github.com/SnapKit/SnapKit)：[**Swift**](https://www.swift.org/) 平台上的 [**Masonry**](https://github.com/SnapKit/Masonry) 平替（arm64 模拟器 OK）
+| 层级 | 代表依赖 | 接入原则 |
+| --- | --- | --- |
+| UI 与布局 | [**SnapKit**](https://github.com/SnapKit/SnapKit)、[**GKNavigationBarSwift**](https://github.com/QuintGao/GKNavigationBarSwift)、[**JXSegmentedView**](https://github.com/pujiaxin33/JXSegmentedView)、[**SwiftEntryKit**](https://github.com/huri000/SwiftEntryKit) | 页面优先使用 Jobs 二次封装，布局统一走 SnapKit。 |
+| 网络与接口 | [**Alamofire**](https://github.com/Alamofire/Alamofire)、[**Moya**](https://github.com/Moya/Moya)、[**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork) | 统一经 `JobsNetworking` 或功能层适配，不让请求头、BaseURL、缓存和错误映射散落到页面。 |
+| 响应式与异步 | [**RxSwift**](https://github.com/ReactiveX/RxSwift)、[**PromiseKit**](https://github.com/mxcl/PromiseKit) | 按模块选择，不在同一条业务链中无意义混用多套异步模型。 |
+| 图片与媒体 | [**Kingfisher**](https://github.com/onevcat/Kingfisher)、[**SDWebImage**](https://github.com/SDWebImage/SDWebImage)、[**lottie-ios**](https://github.com/airbnb/lottie-ios)、[**BMPlayer**](https://github.com/BrikerMan/BMPlayer)、[**HaishinKit**](https://github.com/HaishinKit/HaishinKit.swift) | 资源加载、缓存、占位、取消、复用防串图和播放器生命周期由包装层统一。 |
+| 数据与安全 | [**WCDB**](https://github.com/Tencent/wcdb)、[**ObjectBox**](https://github.com/objectbox/objectbox-swift)、[**Cache**](https://github.com/hyperoslo/Cache)、[**KeychainAccess**](https://github.com/kishikawakatsumi/KeychainAccess) | 数据所有权、迁移、线程模型、加密和清理策略由具体模块声明。 |
+| 工程工具 | [**CocoaLumberjack**](https://github.com/CocoaLumberjack/CocoaLumberjack)、[**DeviceKit**](https://github.com/devicekit/DeviceKit)、[**PhoneNumberKit**](https://github.com/marmelroy/PhoneNumberKit) | 基础能力只暴露稳定门面，第三方类型不向业务模型扩散。 |
 
-* 网络请求框架（多线程异步二次封装）
-  * [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)：**Objc**库，并不建议用，但是他对[**AFNetworking(已永久停更)**](https://github.com/AFNetworking/AFNetworking)进行了一个很好的二次封装（封装点在于开辟多线程以应对一个页面上多个请求的特殊局面）。而[**Swift**](https://www.swift.org/)平台上的请求框架[**Alamofire**](https://github.com/Alamofire/Alamofire)还未对此场景进行深入的兼容
-* 图片处理（异步）
-  * [**Kingfisher**](https://github.com/onevcat/Kingfisher) [**Swift**](https://www.swift.org/) 平台上对于的 [**SDWebImage**](https://github.com/SDWebImage/SDWebImage) 平替
+- `swiftAppCommon` 管理通用外部依赖，`byJobs` 管理 Jobs 自建 Pod；新依赖先判断归属，再加入对应函数。
+- 页面已经有 Jobs 封装时，不直接导入第三方实现。确实需要第三方类型作为公开参数时，由功能 Pod 明确承担耦合。
+- `inhibit_all_warnings!` 只隐藏第三方告警，不是忽略 Jobs 自维护源码问题的理由。
 
-* 动画（播放器）
-  * [**lottie-ios**](https://github.com/airbnb/lottie-ios)
-* 音视频播放器
-  * [**BMPlayer**](https://github.com/BrikerMan/BMPlayer)：播放器（参照 [**ZFPlayer**](https://github.com/renzifeng/ZFPlayer)）
+### 3.2、我的封装（重点）
 
-* 聊天工具
-  * [**LiveChat**](https://github.com/livechat/chat-window-ios) <font color=red>**需付费**</font>
+下列片段默认已在所属 target 引入 `JobsByUIKit`、`JobsSwiftDSL`、`JobsSwiftBaseDefines` 与 `SnapKit`；为突出调用方式，不在每段代码里重复书写 import。
 
-* 一些工具类
-  * 一些优秀的UI库
-    * [**JXSegmentedView**](https://github.com/pujiaxin33/JXSegmentedView)： 子控制器切换
-    * [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh)：[**Swift**](https://www.swift.org/) 平台 [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh) 平替（暂不支持水平特征）
-    * [**JXBanner**](https://github.com/Coder-TanJX/JXBanner)：轮播图
-    * [**LunarSwift**](https://github.com/6tail/lunar-swift )：无第三方依赖的日历工具
-    * [**CoreXLSX**](https://github.com/3973770/SwiftXLSX)：**Excel**
-    * [**FSPopoverView**](https://github.com/lifution/FSPopoverView)：下拉三角小菜单
-    * [**SwiftEntryKit**](https://github.com/huri000/SwiftEntryKit)：用 [**Swift**](https://www.swift.org/) 编写的简单而功能强大的内容展示器
-    * [**AMPopTip**](https://github.com/andreamazz/AMPopTip)：自定义弹出框的弹出方向以及指向其原点的箭头、颜色、边框半径和字体
-    * [**SkeletonView**](https://github.com/Juanpe/SkeletonView)：骨架屏/闪动占位
-    * [**SwiftMessages**](https://github.com/SwiftKickMobile/SwiftMessages)：非常灵活的 **UIKit** 和 **SwiftUI** 视图和视图控制器展示库
-  * [**ScreenProtectorKit**](https://github.com/prongbang/ScreenProtectorKit)：防止屏幕截图并保护后台应用程序快照
-  * [**PhoneNumberKit**](https://github.com/marmelroy/PhoneNumberKit)：电话号码工具包：用于解析、格式化和验证国际电话号码。灵感来源：`Google.libphonenumber`
-  * [**IQKeyboardManagerSwift**](https://github.com/hackiftekhar/IQKeyboardManager)
-
-### 2、我的封装（重点）
-
-#### 2.1、对`UIViewController`的封装
+#### 3.2.1、对`UIViewController`的封装
 
 <img src="./assets/image-20260221233907415.png" alt="image-20260221233907415" style="zoom:50%;" />
 
@@ -117,7 +113,7 @@
       }
   ```
 
-#### 2.2、对`UIView`层的封装格式
+#### 3.2.2、对`UIView`层的封装格式
 
 <img src="./assets/image-20260221233840263.png" alt="image-20260221233840263" style="zoom:50%;" />
 
@@ -131,24 +127,24 @@
           .byAttributedText(NSMutableAttributedString(
               string: "🔗 默认蓝色链接（系统样式）：",
               attributes: [
-                  .font: UIFont.systemFont(ofSize: 15),
-                  .foregroundColor: UIColor.secondaryLabel
+                  .font: JobsFont.systemFont(ofSize: 15),
+                  .foregroundColor: JobsCor.secondaryLabel
               ])
               .add(NSAttributedString(
                   string: " Apple 官网",
                   attributes: [
                       .link: URL(string: "https://www.apple.com")!,
-                      .font: UIFont.boldSystemFont(ofSize: 16)
+                      .font: JobsFont.boldSystemFont(ofSize: 16)
                   ]))
               .add(NSAttributedString(
                   string: "\n客服电话：400-123-4567",
-                  attributes: [.font: UIFont.systemFont(ofSize: 15)]
+                  attributes: [.font: JobsFont.systemFont(ofSize: 15)]
               )))
           .byEditable(false)
           .bySelectable(true)
           .byDataDetectorTypes([.link, .phoneNumber])   // 系统自动识别
           .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-          .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+          .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
           .byAddTo(self.view) { [unowned self] make in
               make.top.equalTo(self.tv.snp.bottom).offset(12)   // 紧跟在 tv 下面
               make.centerX.equalToSuperview()
@@ -171,7 +167,7 @@
              // 如果你有封装方法，则用：btn.pauseTimer()
              JobsToast.show(
                  text: "已暂停旋转 & 计时",
-                 config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                 config: .init().byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
              )
          } else {
              // 恢复旋转
@@ -181,7 +177,7 @@
              // 如果你有封装方法，则用：btn.resumeTimer()
              JobsToast.show(
                  text: "继续旋转 & 计时",
-                 config: .init().byBackgroundColor(.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
+                 config: .init().byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9)).byCornerRadius(12)
              )
          }
   }
@@ -221,9 +217,9 @@
       UIView().byCornerBadgeText("NEW") { cfg in
                   cfg.byOffset(.init(horizontal: -6, vertical: 6))
                       .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                      .byBackgroundColor(.systemRed)
-                      .byFont(.systemFont(ofSize: 11, weight: .bold))
-                      .byShadow(color: UIColor.black.withAlphaComponent(0.25),
+                      .byBackgroundColor(JobsCor.systemRed)
+                      .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
+                      .byShadow(color: JobsCor.black.withAlphaComponent(0.25),
                                 radius: 2,
                                 opacity: 0.6,
                                 offset: .init(width: 0, height: 1))
@@ -239,11 +235,11 @@
   * 关闭
 
     ```swift
-    UIButton(type: .system)
+    UIButton.sys()
         /// 事件触发@点按
         .onTap { [weak self] sender in
             guard let self else { return }
-            sender.isSelected.toggle()
+            sender.byToggleSelected()
             if sender.isSelected {
                 sender.byCornerDot(diameter: 10, offset: .init(horizontal: -4, vertical: 4))
             } else {
@@ -252,15 +248,15 @@
             JobsToast.show(
                 text: "优惠@点按事件",
                 config: JobsToast.Config()
-                    .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
+                    .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9))
                     .byCornerRadius(12)
             )
         }
     ```
 
-#### 2.3、对`UIButton`按钮的封装
+#### 3.2.3、对`UIButton`按钮的封装
 
-##### 2.3.1、利用分类作用于`UIButton`
+##### 3.2.3.1、利用分类作用于`UIButton`
 
 <img src="./assets/image-20260221233801095.png" alt="image-20260221233801095" style="zoom:50%;" />
 
@@ -268,15 +264,15 @@
 private lazy var exampleButton: UIButton = {
     UIButton.sys()
         /// 锁死标题颜色：任何 state 都保持同一种颜色，不跟 tint / 系统态自动变化
-        .byLockTitleColor(.red)
+        .byLockTitleColor(JobsCor.red)
         /// 图片吃 tint，但 tint 锁死为某个颜色
-        .byLockTintColor(.red)
+        .byLockTintColor(JobsCor.red)
         /// 只锁 Background（背景色不随状态变）
-        .byLockBackgroundColor(.red)
+        .byLockBackgroundColor(JobsCor.red)
         /// 只锁 Border（边框色不随状态变，iOS 15+）
-        .byLockBorderColor(.red)
+        .byLockBorderColor(JobsCor.red)
         /// 背景色@按照不同的状态
-        .byBackgroundColor(.systemGreen)
+        .byBackgroundColor(JobsCor.systemGreen)
         .byBackgroundColor("#2F2F2F".cor, for: .disabled) // 对应按钮不可点击的状态
         /// 背景图片
         .byBackgroundImage("背景图片".img, for: .normal)
@@ -292,22 +288,22 @@ private lazy var exampleButton: UIButton = {
         /// 字体颜色@按照不同的状态
         .byTitleColor("#2F2F2F".cor)
         .byTitleColor("#BBBBBB".cor, for: .disabled) // 对应按钮不可点击的状态
-        .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
         /// 普通字符串@设置副标题
         .bySubTitle("显示")
         .bySubTitle("隐藏", for: .selected)
-        .bySubTitleColor(.systemBlue)
-        .bySubTitleColor(.systemRed, for: .selected)
-        .bySubTitleFont(.systemFont(ofSize: 16, weight: .medium))
+        .bySubTitleColor(JobsCor.systemBlue)
+        .bySubTitleColor(JobsCor.systemRed, for: .selected)
+        .bySubTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
         /// 富文本字@设置主标题
         .byRichTitle(JobsRichText.make([
-            JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+            JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18, weight: .semibold)).color(JobsCor.systemRed),
+            JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
         ]))
          /// 富文本字@设置副标题
         .byRichSubTitle(JobsRichText.make([
-            JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-            JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
+            JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.white.withAlphaComponent(0.8)),
+            JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
         ]))
         /// 主标题和副标题之间的距离（兼容 iOS12+）
         .byTitlePadding(4.h)
@@ -328,7 +324,7 @@ private lazy var exampleButton: UIButton = {
         /// 普通@点按事件触发
         .onTap { [weak self] sender in
             guard let self else { return }
-            sender.isSelected.toggle()
+            sender.byToggleSelected()
             // 文字与图标自动切换
             self.passwordTF.isSecureTextEntry.toggle()
             self.passwordTF.togglePasswordVisibility()
@@ -344,9 +340,9 @@ private lazy var exampleButton: UIButton = {
         .byCornerBadgeText("NEW") { cfg in
             cfg.byOffset(.init(horizontal: -6, vertical: 6))
                 .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
-                .byBackgroundColor(.systemRed)
-                .byFont(.systemFont(ofSize: 11, weight: .bold))
-                .byShadow(color: UIColor.black.withAlphaComponent(0.25),
+                .byBackgroundColor(JobsCor.systemRed)
+                .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
+                .byShadow(color: JobsCor.black.withAlphaComponent(0.25),
                           radius: 2,
                           opacity: 0.6,
                           offset: .init(width: 0, height: 1))
@@ -354,10 +350,10 @@ private lazy var exampleButton: UIButton = {
         /// 普通@长按事件触发
         .onLongPress(minimumPressDuration: 0.8) { btn, gr in
              if gr.state == .began {
-                 btn.alpha = 0.6
+                 btn.byAlpha(0.6)
                  print("长按开始 on \(btn)")
              } else if gr.state == .ended || gr.state == .cancelled {
-                 btn.alpha = 1.0
+                 btn.byAlpha(1.0)
                  print("长按结束")
              }
          }
@@ -365,36 +361,32 @@ private lazy var exampleButton: UIButton = {
         .onLongPressAppend(minimumPressDuration: 0.8) { btn, gr in
             print("追加的长按事件")
         }
+        /// UIButton.Configuration 管可见背景、圆角和描边，避免被配置态覆盖
+        .byConfiguration { configuration in
+            configuration
+                .byTitle("背景图：Base64 / URL")
+                .byBaseForegroundColor(JobsCor.white)
+                .byContentInsets(.init(top: 16, leading: 16, bottom: 16, trailing: 16))
+                .byCornerStyle(.fixed)
+                .byImagePlacement(.trailing)
+                .byImagePadding(8)
+                .byBackground(
+                    configuration.background
+                        .byBackgroundColor(JobsCor.systemBlue)
+                        .byCornerRadius(8.h)
+                        .byStrokeColor(JobsCor.cyan)
+                        .byStrokeWidth(0.5)
+                )
+        }
         .byAddTo(view) { [unowned self] make in
             make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(40)
             make.left.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        .byBorderColor(.cyan)
-        .byBorderWidth(0.5)
-        .byMasksToBounds(YES)
-        .byClipsToBounds(YES)
-        .byCornerRadius(8.h)
-        /// UIButtonConfiguration
-        if #available(iOS 15.0, *) {
-            b.byConfiguration { c in
-                c.byTitle("背景图：Base64 / URL")
-                    .byBaseForegroundCor(.white)
-                    .byContentInsets(.init(top: 16, leading: 16, bottom: 16, trailing: 16))
-                    .byCornerStyle(.large)
-                    .byImagePlacement(.trailing)
-                    .byImagePadding(8)
-            }
-        } else {
-            b.byTitle("背景图：Base64 / URL")
-                .byTitleColor(.white)
-                .byContentEdgeInsets(.init(top: 16, left: 16, bottom: 16, right: 16))
-                .byBackgroundColor(.systemBlue)
-        }
 }()
 ```
 
-* <font color=red>风险提示：一旦用了最新的 `UIButtonConfiguration` 可能影响到老旧的Api的使用（直观感受，老旧Api配置的按钮将会不起效）</font>
+* <font color=red>风险提示：`UIButton.Configuration` 会参与标题、背景和状态更新；启用以后，同一项视觉不要再同时依赖旧式 `setTitle`、`backgroundColor` 或只改 `layer.cornerRadius`，统一从 Jobs 的按钮配置管线写入。</font>
 
 * 可视**UI**（向下兼容，且启用`UIButtonConfiguration`）
 
@@ -427,10 +419,10 @@ private lazy var exampleButton: UIButton = {
     private let defaultStart: Double = 1234567890
     /// 数字动效按钮@主标题（普通文本）
     private lazy var btn_1: UIButton = {
-        UIButton()
-            .byLockBackgroundColor(.clear)
+        UIButton.sys()
+            .byLockBackgroundColor(JobsCor.clear)
             .byTitle("\(Int(defaultStart))")
-            .byTitleColor(.white)
+            .byTitleColor(JobsCor.white)
             .byTitleFont(.DINPro.Bold(14.fz))
             .byImage("钱".img)
             .byImagePlacement(.right ,padding: 5.w)        // 通用（向下兼容）
@@ -438,7 +430,7 @@ private lazy var exampleButton: UIButton = {
             .byAnimationTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .byTitleColor(.white)
+                    .byTitleColor(JobsCor.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Int(0))") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Int(1000))") // 如果这个地方没有配置，则从按钮的主标题取值
@@ -470,13 +462,13 @@ private lazy var exampleButton: UIButton = {
         UIButton.sys()
             // 初始展示：你原来的 rich title 仍然可以保留（首次显示用）
             .byRichTitle(JobsRichText.make([
-                JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-                JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+                JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18, weight: .semibold)).color(JobsCor.systemRed),
+                JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
             ]))
-            .byTitleColor(.white)
+            .byTitleColor(JobsCor.white)
             .byImage("star.fill".sysImg)
             .byImagePlacement(.leading, padding: 8)
-            .byBackgroundColor(.systemGreen)
+            .byBackgroundColor(JobsCor.systemGreen)
             /// 数字动效按钮@关键配置➤主标题富文本Builder
             .byAnimationTitleConfig { cfg in
                 cfg.byDuration(10)
@@ -487,7 +479,7 @@ private lazy var exampleButton: UIButton = {
                     .bySeparate(",")
                     .byDecimals(2)
                     // 如果仍然希望 plain/fallback 的字体颜色也一致，可以保留
-                    .byTitleColor(.white)
+                    .byTitleColor(JobsCor.white)
                     .byTitleFont(.DINPro.Bold(14.fz))
                     .byTitleDecimalsCor(.red)
                     .byTitleDecimalsFont(.DINPro.Bold(12.fz))
@@ -499,15 +491,15 @@ private lazy var exampleButton: UIButton = {
                         // 数字段（含 ¥）：红色 18 semibold
                         let numberRange = NSRange(location: 0, length: 1 + (text as NSString).length) // "¥" + text
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
-                            .foregroundColor: UIColor.systemRed
+                            .font: JobsFont.systemFont(ofSize: 18, weight: .semibold),
+                            .foregroundColor: JobsCor.systemRed
                         ], range: numberRange)
                         // 后缀段：白色 16
                         let suffixStart = numberRange.length
                         let suffixRange = NSRange(location: suffixStart, length: (full as NSString).length - suffixStart)
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 16),
-                            .foregroundColor: UIColor.white
+                            .font: JobsFont.systemFont(ofSize: 16),
+                            .foregroundColor: JobsCor.white
                         ], range: suffixRange)
                         // 小数段（如果存在）：DINPro 12 + 红色（只改小数部分，不影响整数）
                         if let dr = decimalsRange {
@@ -515,7 +507,7 @@ private lazy var exampleButton: UIButton = {
                             let shifted = NSRange(location: 1 + dr.location, length: dr.length)
                             attr.addAttributes([
                                 .font: UIFont.DINPro.Bold(12.fz),
-                                .foregroundColor: UIColor.red
+                                .foregroundColor: JobsCor.red
                             ], range: shifted)
                         };return attr
                     }
@@ -545,17 +537,17 @@ private lazy var exampleButton: UIButton = {
     private lazy var btn_3: UIButton = {
         UIButton.sys()
             .byTitle("会员价格")
-            .byTitleColor(.white)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .bySubTitle("原价 ¥199 /月")
-            .bySubTitleColor(.white.withAlphaComponent(0.85))
-            .bySubTitleFont(.systemFont(ofSize: 13))
+            .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85))
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byBackgroundColor("#2F2F2F".cor)
             /// 数字动效按钮@关键配置
             .byAnimationSubTitleConfig({ cfg in
                 cfg.byDuration(10) // 动画的作用时间
                     .byFps(60) //
-                    .bySubTitleColor(.blue)
+                    .bySubTitleColor(JobsCor.blue)
                     .bySubTitleFont(.DINPro.Bold(14.fz))
                     .byStartValue("\(Double(tf1Start.text ?? "") ?? 99)") // 如果这个地方没有配置，则从按钮的主标题取值
                     .byEndValue("\(Double(tf1End.text ?? "") ?? 199)") // 如果这个地方没有配置，则从按钮的主标题取值
@@ -588,15 +580,15 @@ private lazy var exampleButton: UIButton = {
     private lazy var btn_4: UIButton = {
         UIButton.sys()
             .byTitle("限时折扣")
-            .byTitleColor(.white)
-            .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
+            .byTitleColor(JobsCor.white)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             // 初始展示：先给一个普通副标题（首次显示用）
             .bySubTitle("倒计时 199 秒")
-            .bySubTitleColor(.white.withAlphaComponent(0.85))
-            .bySubTitleFont(.systemFont(ofSize: 13))
+            .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85))
+            .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
             .byImage("clock".sysImg)
             .byImagePlacement(.leading, padding: 8)
-            .byBackgroundColor(.systemPurple)
+            .byBackgroundColor(JobsCor.systemPurple)
             .byCornerRadius(10)
             /// 数字动效按钮@关键配置➤副标题富文本Builder
             .byAnimationSubTitleConfig { cfg in
@@ -611,8 +603,8 @@ private lazy var exampleButton: UIButton = {
                     .byShowsDecimals(false)
     
                     // 可选：给副标题的基础样式（非 builder 场景兜底）
-                    .bySubTitleColor(.white.withAlphaComponent(0.85))
-                    .bySubTitleFont(.systemFont(ofSize: 13))
+                    .bySubTitleColor(JobsCor.white.withAlphaComponent(0.85))
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 13))
     
                     // ✅ 副标题整体富文本： "倒计时 199 秒"
                     .bySubTitleAttributedBuilder { text, _, _ in
@@ -623,16 +615,16 @@ private lazy var exampleButton: UIButton = {
     
                         // 全段默认（灰白 13）
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 13),
-                            .foregroundColor: UIColor.white.withAlphaComponent(0.85)
+                            .font: JobsFont.systemFont(ofSize: 13),
+                            .foregroundColor: JobsCor.white.withAlphaComponent(0.85)
                         ], range: NSRange(location: 0, length: (full as NSString).length))
     
                         // 数字段强调（白色 13 medium，或你想要的高亮色）
                         let numberRange = NSRange(location: (prefix as NSString).length,
                                                   length: (text as NSString).length)
                         attr.addAttributes([
-                            .font: UIFont.systemFont(ofSize: 13, weight: .semibold),
-                            .foregroundColor: UIColor.white
+                            .font: JobsFont.systemFont(ofSize: 13, weight: .semibold),
+                            .foregroundColor: JobsCor.white
                         ], range: numberRange)
     
                         return attr
@@ -659,7 +651,7 @@ private lazy var exampleButton: UIButton = {
     }()
     ```
 
-##### 2.3.2、利用继承作用于`JobsButton`
+##### 3.2.3.2、利用继承作用于`JobsButton`
 
 > 解决在某些iOS版本向下兼容的情况下，无法把握`UIButton`内部控件的生命周期，导致UI错版的问题
 
@@ -669,11 +661,11 @@ private lazy var btn1: JobsButton = {
         .byMode(.imageTopTextBottom)
         .byTitleLabel { lab in
             lab.byText("上图下文")
-                .byTextColor(.red)
+                .byTextColor(JobsCor.red)
         }
         .bySubTitleLabel { lab in
             lab.byText("image -> title -> subtitle")
-                .byTextColor(.blue)
+                .byTextColor(JobsCor.blue)
         }
         // 前景图：内部 foregroundImageView（链式不丢 self）
         .byForegroundImageView { iv in
@@ -707,7 +699,7 @@ private lazy var btn1: JobsButton = {
             print("btn1 longPress #2 began (append)")
             "长按了悬浮按钮：上图下文（longPress #2 叠加）".toast
         }
-        .byBorderColor(.cyan)
+        .byBorderColor(JobsCor.cyan)
         .byBorderWidth(0.5)
         .byMasksToBounds(YES)
         .byClipsToBounds(YES)
@@ -721,7 +713,7 @@ private lazy var btn1: JobsButton = {
 }()
 ```
 
-#### 2.4、对`UIGestureRecognizer`手势的封装
+#### 3.2.4、对`UIGestureRecognizer`手势的封装
 
 <p align="center">
   <img src="./assets/image-20251206153407706.png" width="45%">
@@ -865,25 +857,25 @@ private lazy var btn1: JobsButton = {
         }
     ```
 
-#### 2.5、对`UITextView`的封装（含输入监控过滤）
+#### 3.2.5、对`UITextView`的封装（含输入监控过滤）
 
 * 输入监控 + 退格监控
 
   ```swift
   private lazy var tv1: UITextView = {
       UITextView()
-          .byFont(.systemFont(ofSize: 16))
+          .byFont(JobsFont.systemFont(ofSize: 16))
           .byKeyboardType(.default)
           .byEditable(true)
           .bySelectable(true)
           .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-          .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+          .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
           .byPlaceHolder("哈哈哈哈".tr)
           .byPlaceHolderCor(.blue)
-          .byPlaceHolderFont(.boldSystemFont(ofSize: 15))
+          .byPlaceHolderFont(JobsFont.boldSystemFont(ofSize: 15))
           .byHintLimit(12) { lb in
               lb.byFont(.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
-                  .byTextColor(.red)
+                  .byTextColor(JobsCor.red)
           }
           .byOnInput(limit: nil) { [unowned self] char, value, mode, isLimited, text ,tv in
               // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
@@ -915,25 +907,25 @@ private lazy var btn1: JobsButton = {
       UITextView()
           .byAttributedText(NSMutableAttributedString(
               string: "🔴 自定义红色链接：",
-              attributes: [.font: UIFont.systemFont(ofSize: 15),
-                           .foregroundColor: UIColor.secondaryLabel]
+              attributes: [.font: JobsFont.systemFont(ofSize: 15),
+                           .foregroundColor: JobsCor.secondaryLabel]
           ).byAdd(NSAttributedString(
               string: " Jobs 官网",
               attributes: [.link: URL(string: "https://www.google.com")!,
-                           .font: UIFont.boldSystemFont(ofSize: 16)]
+                           .font: JobsFont.boldSystemFont(ofSize: 16)]
           )).byAdd(NSAttributedString(
               string: "\n客服电话：400-123-4567",
-              attributes: [.font: UIFont.systemFont(ofSize: 15)]
+              attributes: [.font: JobsFont.systemFont(ofSize: 15)]
           )))
           .byEditable(false)
           .bySelectable(true)
           .byDataDetectorTypes([.link, .phoneNumber])
           .byLinkTextAttributes([
-              .foregroundColor: UIColor.systemRed,
+              .foregroundColor: JobsCor.systemRed,
               .underlineStyle: NSUnderlineStyle.single.rawValue
           ])
           .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-          .byRoundedBorder(color: .systemGray4, width: 1, radius: 8)
+          .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
           .byBeginEditing { value in
               print("✍️ begin:", value)
           }
@@ -948,9 +940,9 @@ private lazy var btn1: JobsButton = {
   }()
   ```
 
-#### 2.6、对`UITextField`输入框的封装
+#### 3.2.6、对`UITextField`输入框的封装
 
-##### 2.6.1、利用分类，对`UITextField`输入框的封装（含输入监控过滤）
+##### 3.2.6.1、利用分类，对`UITextField`输入框的封装（含输入监控过滤）
 
 * 密码输入框
 
@@ -959,8 +951,8 @@ private lazy var btn1: JobsButton = {
   private lazy var passwordTF: UITextField = {
       UITextField()
           .byPlaceholder("请输入密码（最长 5）")
-          .byFont(.systemFont(ofSize: 16))
-          .byTextColor(.label)
+          .byFont(JobsFont.systemFont(ofSize: 16))
+          .byTextColor(JobsCor.label)
           .byKeyboardType(.default)
           .byReturnKeyType(.done)
           .byClearButtonMode(.whileEditing)
@@ -984,7 +976,7 @@ private lazy var btn1: JobsButton = {
               make.top.equalTo(emailTF.snp.bottom).offset(16)
               make.left.right.height.equalTo(emailTF)
           }
-          .byBorderColor(.cyan)
+          .byBorderColor(JobsCor.cyan)
           .byBorderWidth(0.5)
           .byMasksToBounds(YES)
           .byClipsToBounds(YES)
@@ -999,8 +991,8 @@ private lazy var btn1: JobsButton = {
   private lazy var emailTF: UITextField = {
       UITextField()
           .byPlaceholder("请输入邮箱（去空格 / 最长 8）")
-          .byFont(.systemFont(ofSize: 16))
-          .byTextColor(.label)
+          .byFont(JobsFont.systemFont(ofSize: 16))
+          .byTextColor(JobsCor.label)
           .byKeyboardType(.emailAddress)
           .byReturnKeyType(.next)
           .byClearButtonMode(.whileEditing)
@@ -1034,7 +1026,7 @@ private lazy var btn1: JobsButton = {
                   make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
               }
           }
-          .byBorderColor(.cyan)
+          .byBorderColor(JobsCor.cyan)
           .byBorderWidth(0.5)
           .byMasksToBounds(YES)
           .byClipsToBounds(YES)
@@ -1042,7 +1034,7 @@ private lazy var btn1: JobsButton = {
   }()
   ```
 
-##### 2.6.2、利用继承，对`UITextField`输入框的封装 ➤ `JobsTextField`
+##### 3.2.6.2、利用继承，对`UITextField`输入框的封装 ➤ `JobsTextField`
 
 > 在`UITextField`下面加了一个`UImageView`作为父视图，方便设置边距
 
@@ -1069,7 +1061,7 @@ private lazy var titleTF: JobsTextField = {
                                 /// 普通@点按事件触发
                                 .onTap { [weak self] sender in
                                     guard let self else { return }
-                                    sender.isSelected.toggle()
+                                    sender.byToggleSelected()
                                     titleTF.text = ""
                                 }
                         )
@@ -1110,7 +1102,7 @@ private lazy var titleTF: JobsTextField = {
     }()
 ```
 
-#### 2.7、对`UIImageView`的封装（暂时只展示[**Kingfisher**](https://github.com/onevcat/Kingfisher) ,当然 [**SDWebImage **](https://github.com/SDWebImage/SDWebImage)也有）
+#### 3.2.7、对`UIImageView`的封装（暂时只展示[**Kingfisher**](https://github.com/onevcat/Kingfisher) ,当然 [**SDWebImage **](https://github.com/SDWebImage/SDWebImage)也有）
 
 * `UIImageView`@**字符串本地图**
 
@@ -1205,7 +1197,7 @@ private lazy var titleTF: JobsTextField = {
   }()
   ```
 
-#### 2.8、对`UICollectionView`的封装
+#### 3.2.8、对`UICollectionView`的封装
 
 ![image-20251206153328096](./assets/image-20251206153328096.png)
 
@@ -1359,15 +1351,15 @@ func collectionView(_ collectionView: UICollectionView,
         label = UILabel()
             .byNumberOfLines(1)
             .byTextAlignment(.center)
-            .byFont(.systemFont(ofSize: 16, weight: .medium))
-            .byTextColor(.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTextColor(JobsCor.label)
             .byTag(1001)
             .byAddTo(cell.contentView) { make in     // ✅ 加到 contentView
                 make.edges.equalToSuperview().inset(8)
             }
 
         // 背景 & 圆角（只需设一次）
-        cell.contentView.byBackgroundColor(.secondarySystemBackground)
+        cell.contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byMasksToBounds(true)
     }
@@ -1403,7 +1395,7 @@ func collectionView(_ collectionView: UICollectionView,
 }
 ```
 
-#### 2.9、对`UITableView`的封装
+#### 3.2.9、对`UITableView`的封装
 
 * 没数据时，自动显示空态图（是一个按钮）
 * 封装了**拉新/刷新** 功能 ➤ 基于[**JobsSwiftRefresher**](https://github.com/JobsKits/JobsSwiftRefresher)
@@ -1422,7 +1414,7 @@ private lazy var tableView: UITableView = {
         .byTableHeaderView(
           UIView()
               .byHeight(65)
-              .byBackgroundColor(.clear)
+              .byBackgroundColor(JobsCor.clear)
         )
         // 非正式协议闭包化
         .byTarget(self)
@@ -1443,7 +1435,7 @@ private lazy var tableView: UITableView = {
         }
          // 空态按钮
         .byEmptyButtonProvider { [unowned self] in
-            UIButton(type: .system)
+            UIButton.sys()
                 .byTitle("暂无数据")
                 .bySubTitle("点我填充示例数据")
                 .byImage("tray".sysImg)
@@ -1556,18 +1548,18 @@ extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
 }
 ```
 
-#### 2.10、对`UILabel`的封装
+#### 3.2.10、对`UILabel`的封装
 
 <img src="./assets/image-20260221234038355.png" alt="image-20260221234038355" style="zoom:50%;" />
 
-##### 2.10.1、动效数字标签（内核基于`JobsSwiftTimer`）
+##### 3.2.10.1、动效数字标签（内核基于`JobsSwiftTimer`）
 
 ```swift
 private lazy var valueLabel: UILabel = {
     UILabel()
         .byTextAlignment(.center)
-        .byFont(.systemFont(ofSize: 52, weight: .bold))
-        .byTextColor(.label)
+        .byFont(JobsFont.systemFont(ofSize: 52, weight: .bold))
+        .byTextColor(JobsCor.label)
         .byText("\(Int(defaultStart))")
         .byNumberOfLines(1)
         /// 配置@数字动效
@@ -1594,11 +1586,11 @@ self.valueLabel
     .byStartAnimatedTextNumber(endText)
 ```
 
-#### 2.11、对`UIScrollView`的封装
+#### 3.2.11、对`UIScrollView`的封装
 
 <img src="./assets/image-20260221234116329.png" alt="image-20260221234116329" style="zoom:50%;" />
 
-#### 2.12、<font id=UIAlertController>对`UIAlertController`的封装</font>
+#### 3.2.12、<font id=UIAlertController>对`UIAlertController`的封装</font>
 
 * 最简单的 Alert
 
@@ -1630,7 +1622,7 @@ self.valueLabel
   //                         image: "唐老鸭".img,
   //                         hideSystemBackdrop: true)
           .byBgImage("唐老鸭".img)                      // 本地图背景（同步阶段，无动画）
-          .byCardBorder(width: 1, color: .systemBlue)   // 外层卡片描边
+          .byCardBorder(width: 1, color: JobsCor.systemBlue)   // 外层卡片描边
           .byAddTextField(placeholder: "新名称",
                           borderWidth: nil,             // ← 不给 tf 自身描边
                           borderColor: nil,
@@ -1640,7 +1632,7 @@ self.valueLabel
           }
           .byTextFieldOuterBorder(at: 0,
                                   width: 1,
-                                  color: .systemBlue,
+                                  color: JobsCor.systemBlue,
                                   cornerRadius: 10,
                                   insets: .init(top: 6, left: 12, bottom: 6, right: 12)) // ← 给灰色容器描边
           .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
@@ -1650,7 +1642,7 @@ self.valueLabel
               let name = alert.textField(at: 0)?.text ?? ""
               print("new name =", name)
           }
-          .byTintColor(.systemBlue)
+          .byTintColor(JobsCor.systemBlue)
           .byPresent(self)
   }()
   ```
@@ -1686,14 +1678,14 @@ self.valueLabel
   }()
   ```
 
-#### 2.13、对`WebView`的封装
+#### 3.2.13、对`WebView`的封装
 
 * `registerMobileAction`后的名字即为和前端联调对准的方法名
 
   ```swift
   private lazy var web: BaseWebView = { [unowned self] in
           return BaseWebView()
-              .byBackgroundColor(.clear)
+              .byBackgroundColor(JobsCor.clear)
               .byAllowedHosts([])                  // 不限域
               .byOpenBlankInPlace(true)
               .byDisableSelectionAndCallout(false)
@@ -1720,17 +1712,17 @@ self.valueLabel
               .byNavBarEnabled(true)
               .byNavBarStyle { s in
                   s.byHairlineHidden(false)
-                   .byBackgroundColor(.systemBackground)
+                   .byBackgroundColor(JobsCor.systemBackground)
                    .byTitleAlignmentCenter(true)
               }
               /// 自定义返回键（想隐藏就：.byNavBarBackButtonProvider { nil }）
               .byNavBarBackButtonProvider {
-                  UIButton(type: .system)
-                      .byBackgroundColor(.clear)
+                  UIButton.sys()
+                      .byBackgroundColor(JobsCor.clear)
                       .byImage(UIImage(systemName: "chevron.left"))
                       .byTitle("返回")
-                      .byTitleFont(.systemFont(ofSize: 16, weight: .medium))
-                      .byTitleColor(.label)
+                      .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+                      .byTitleColor(JobsCor.label)
                       .byContentEdgeInsets(.init(top: 6, left: 10, bottom: 6, right: 10))
                       .byTapSound("Sound.wav")
               }
@@ -1773,7 +1765,7 @@ self.valueLabel
                   JobsToast.show(
                       text: body.stringValue(for: "message") ?? "",
                       config: JobsToast.Config()
-                          .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
+                          .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9))
                           .byCornerRadius(12)
                   )
                   reply(nil)
@@ -1803,12 +1795,12 @@ self.valueLabel
   }()
   ```
 
-#### 2.14、带箭头的对话框
+#### 3.2.14、带箭头的对话框
 
 ```swift
 UIView().byDialogBoxContent { dialogBoxView in
     UITextView()
-        .byBackgroundColor(.clear)
+        .byBackgroundColor(JobsCor.clear)
         .byText(
             "1.电话、QQ、微信号、乱码、全数字皆、不雅字眼、辱骂 词汇带、负面情绪字眼、标点符号皆会审核失败"
                 .add("\n")
@@ -1816,8 +1808,8 @@ UIView().byDialogBoxContent { dialogBoxView in
                 .add("\n")
                 .add("3. 昵称30日内仅能更改一次")
         )
-        .byTextColor(.white)
-        .byFont(.systemFont(ofSize: 16))
+        .byTextColor(JobsCor.white)
+        .byFont(JobsFont.systemFont(ofSize: 16))
         .byEditable(NO)
         .byAddTo(dialogBoxView) { [unowned self] make in
             make.edges.equalToSuperview()
@@ -1825,7 +1817,7 @@ UIView().byDialogBoxContent { dialogBoxView in
 }
 ```
 
-#### 2.15、对计时器的封装`JobsSwiftTimer`
+#### 3.2.15、对计时器的封装`JobsSwiftTimer`
 
 <img src="./assets/image-20260221234215242.png" alt="image-20260221234215242" style="zoom:50%;" />
 
@@ -1899,7 +1891,7 @@ UIView().byDialogBoxContent { dialogBoxView in
     * 是否是正计时/是否是倒计时
     * 。。。
 
-##### 2.15.1、倒计时按钮
+##### 3.2.15.1、倒计时按钮
 
 * 创建方案一
 
@@ -1907,11 +1899,11 @@ UIView().byDialogBoxContent { dialogBoxView in
   import JobsByUIKit
   
   private lazy var startButton: UIButton = {
-      UIButton(type: .system)
+      UIButton.sys()
           .byTitle("开始")
-          .byTitleFont(.systemFont(ofSize: 22, weight: .bold))
-          .byTitleColor(.white)
-          .byBackgroundColor(.systemBlue)
+          .byTitleFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
+          .byTitleColor(JobsCor.white)
+          .byBackgroundColor(JobsCor.systemBlue)
           .byCornerRadius(10)
           .byMasksToBounds(true)
           // 每 tick：更新时间 & 最近触发时间
@@ -1950,7 +1942,7 @@ UIView().byDialogBoxContent { dialogBoxView in
   import JobsCountdownButton
   
   private lazy var countdownButton: UIButton = {
-      UIButton()
+      UIButton.sys()
           /// 倒计时按钮核心配置
           .byCountdown { cfg in
               cfg.mode = .down(from: 12)
@@ -1987,7 +1979,7 @@ UIView().byDialogBoxContent { dialogBoxView in
           .byAddTo(self) { [unowned self] make in
               /// TODO
           }
-          .byBorderColor(.cyan)
+          .byBorderColor(JobsCor.cyan)
           .byBorderWidth(0.5)
           .byMasksToBounds(YES)
           .byClipsToBounds(YES)
@@ -2000,7 +1992,7 @@ UIView().byDialogBoxContent { dialogBoxView in
   }()
   ```
 
-##### 2.15.2、跑马灯（实际展现的控件是按钮）
+##### 3.2.15.2、跑马灯（实际展现的控件是按钮）
 
 ```swift
 // MARK: - 1. 向上连续滚动
@@ -2011,13 +2003,13 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
             .byItemSizeMode(.fitContent)   // 典型公告跑马灯
             .byDataSourceButtons([
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                     .byTitle("向上连续 · 公告 1")
-                    .byTitleColor(.label)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                    .byTitleColor(JobsCor.label)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                     .bySubTitle("更多内容 1")
-                    .bySubTitleColor(.secondaryLabel)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .bySubTitleColor(JobsCor.secondaryLabel)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -2028,21 +2020,21 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                     .byTitle("向上连续 · 公告 2")
-                    .byTitleColor(.label)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                    .byTitleColor(JobsCor.label)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                     .bySubTitle("更多内容 2")
-                    .bySubTitleColor(.secondaryLabel)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .bySubTitleColor(JobsCor.secondaryLabel)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -2053,21 +2045,21 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     },
                 UIButton.sys()
-                    .byBackgroundColor(.systemYellow.withAlphaComponent(0.2))
+                    .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2))
                     .byTitle("向上连续 · 公告 3")
-                    .byTitleColor(.label)
-                    .byTitleFont(.systemFont(ofSize: 14, weight: .medium))
+                    .byTitleColor(JobsCor.label)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                     .bySubTitle("更多内容 3")
-                    .bySubTitleColor(.secondaryLabel)
-                    .bySubTitleFont(.systemFont(ofSize: 11, weight: .regular))
+                    .bySubTitleColor(JobsCor.secondaryLabel)
+                    .bySubTitleFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
                     .byImage("megaphone.fill".sysImg)
                     .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
                     .byTitleEdgeInsets(UIEdgeInsets(top: 0, left: 6, bottom: 0, right: -6))
@@ -2078,31 +2070,25 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
                     }
                     .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                         if gr.state == .began {
-                            btn.alpha = 0.6
+                            btn.byAlpha(0.6)
                             print("长按开始 on \(btn)")
                         } else if gr.state == .ended || gr.state == .cancelled {
-                            btn.alpha = 1.0
+                            btn.byAlpha(1.0)
                             print("长按结束")
                         }
                     }
             ])
             .byBackgroundColor(.randomColor)
             .byAddTo(self.scrollView) { [unowned self] make in
-                if #available(iOS 11.0, *) {
-                    make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
-                    make.left.equalTo(self.scrollView.frameLayoutGuide.snp.left).offset(self.horizontalInset)
-                    make.right.equalTo(self.scrollView.frameLayoutGuide.snp.right).inset(self.horizontalInset)
-                } else {
-                    make.top.equalTo(self.scrollView.snp.top).offset(10)
-                    make.left.equalTo(self.scrollView).offset(self.horizontalInset)
-                    make.right.equalTo(self.scrollView).inset(self.horizontalInset)
-                }
+                make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
+                make.left.equalTo(self.scrollView.frameLayoutGuide.snp.left).offset(self.horizontalInset)
+                make.right.equalTo(self.scrollView.frameLayoutGuide.snp.right).inset(self.horizontalInset)
                 make.height.equalTo(self.marqueeHeight)
             }
     }()
 ```
 
-##### 2.15.3、轮播图（实际展现的控件是按钮）
+##### 3.2.15.3、轮播图（实际展现的控件是按钮）
 
 ```swift
 // MARK: - 13. Kingfisher@背景图
@@ -2113,8 +2099,8 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
         .byItemSizeMode(.fillBounds)
         .byDataSourceButtons ([
             UIButton.sys()
-                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                 .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                 .kf_placeholderImage("唐老鸭".img)
                 .kf_options([
@@ -2132,16 +2118,16 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
                 }
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                     if gr.state == .began {
-                        btn.alpha = 0.6
+                        btn.byAlpha(0.6)
                         print("长按开始 on \(btn)")
                     } else if gr.state == .ended || gr.state == .cancelled {
-                        btn.alpha = 1.0
+                        btn.byAlpha(1.0)
                         print("长按结束")
                     }
                 },
             UIButton.sys()
-                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                 .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                 .kf_placeholderImage("唐老鸭".img)
                 .kf_options([
@@ -2159,16 +2145,16 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
                 }
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                     if gr.state == .began {
-                        btn.alpha = 0.6
+                        btn.byAlpha(0.6)
                         print("长按开始 on \(btn)")
                     } else if gr.state == .ended || gr.state == .cancelled {
-                        btn.alpha = 1.0
+                        btn.byAlpha(1.0)
                         print("长按结束")
                     }
                 },
             UIButton.sys()
-                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(.red)
-                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(.yellow)
+                .byTitle("我是UIButton主标题@Kingfisher").byTitleColor(JobsCor.red)
+                .bySubTitle("我是UIButton副标题@Kingfisher").bySubTitleColor(JobsCor.yellow)
                 .kf_imageURL("https://picsum.photos/" + ScreenWidth().toString(0) + "/" + self.marqueeHeight.toString(0))
                 .kf_placeholderImage("唐老鸭".img)
                 .kf_options([
@@ -2186,10 +2172,10 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
                 }
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                     if gr.state == .began {
-                        btn.alpha = 0.6
+                        btn.byAlpha(0.6)
                         print("长按开始 on \(btn)")
                     } else if gr.state == .ended || gr.state == .cancelled {
-                        btn.alpha = 1.0
+                        btn.byAlpha(1.0)
                         print("长按结束")
                     }
                 },
@@ -2199,16 +2185,12 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
             make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
             make.left.right.height.equalTo(self.upContinuousMarquee)
             // 🔚 最后一条封底，决定 scrollView.contentSize.height
-            if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.scrollView.contentLayoutGuide.snp.bottom).inset(20)
-            } else {
-                make.bottom.equalTo(self.scrollView.snp.bottom).inset(20)
-            }
+            make.bottom.equalTo(self.scrollView.contentLayoutGuide.snp.bottom).inset(20)
         }
 }()
 ```
 
-##### 2.15.4、计划任务（内核基于`JobsSwiftTimer`）
+##### 3.2.15.4、计划任务（内核基于`JobsSwiftTimer`）
 
 ```swift
 import JobsSwiftTaskCenter
@@ -2218,7 +2200,7 @@ let task = JobsPlan.after(.second * 2).do {
 }
 ```
 
-##### 2.15.5、红包雨
+##### 3.2.15.5、红包雨
 
 ```swift
 private lazy var rainView: RedPacketRainView = {
@@ -2247,7 +2229,7 @@ private lazy var rainView: RedPacketRainView = {
   }()
 ```
 
-##### 2.15.6、网络数据的监听
+##### 3.2.15.6、网络数据的监听
 
 ![image-20260315180854842](./assets/image-20260315180854842.png)
 
@@ -2286,32 +2268,32 @@ private lazy var rainView: RedPacketRainView = {
   }
   ```
 
-##### 2.15.7、旋转的抽奖轮盘
+##### 3.2.15.7、旋转的抽奖轮盘
 
 * ```swift
   private lazy var wheelView: LuckyWheelView = {
       LuckyWheelView()
           .bySegments([
               .init(text: "一等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                     textColor: .randomColor,
                     backgroundColor: .randomColor,
                     placeholderImage: "globe".sysImg,
                     imageURLString:"https://picsum.photos/30"),
               .init(text: "二等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                     textColor: .randomColor,
                     backgroundColor: .randomColor,
                     placeholderImage: "plus".sysImg,
                     imageURLString:"https://picsum.photos/30"),
               .init(text: "三等奖".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                     textColor: .randomColor,
                     backgroundColor: .randomColor,
                     placeholderImage: "message".sysImg,
                     imageURLString:"https://picsum.photos/30"),
               .init(text: "谢谢参与".tr,
-                    textFont: .systemFont(ofSize: 12, weight: .medium),
+                    textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
                     textColor: .randomColor,
                     backgroundColor: .randomColor,
                     placeholderImage: "tray".sysImg,
@@ -2341,9 +2323,9 @@ private lazy var rainView: RedPacketRainView = {
   wheelView.stopSpin() // 停止
   ```
 
-#### 2.16、进度条
+#### 3.2.16、进度条
 
-##### 2.16.1、系统进度条
+##### 3.2.16.1、系统进度条
 
 ```swift
 /// 进度条（显示剩余/已完成比例，取决于 progressMode）
@@ -2358,7 +2340,7 @@ private lazy var progressView: UIProgressView = {
 }()
 ```
 
-##### 2.16.2、自定义进度条（内核基于`JobsSwiftTimer`）  ➤ `JobsProgressBar` 
+##### 3.2.16.2、自定义进度条（内核基于`JobsSwiftTimer`）  ➤ `JobsProgressBar`
 
 ```swift
 /// 自定义进度条
@@ -2383,21 +2365,21 @@ private lazy var progressView: JobsProgressBar = {
 }()
 ```
 
-#### 2.17、雪花算法的[**Swift**](https://www.swift.org/)实践
+#### 3.2.17、雪花算法的[**Swift**](https://www.swift.org/)实践
 
 ```swift
 SnowflakeSwift(IDCID: 4, machineID: 30).nextID() 
 ```
 
-#### 2.18、对字符串的封装
+#### 3.2.18、对字符串的封装
 
-##### 2.18.1、多语言化
+##### 3.2.18.1、多语言化
 
 ```swift
 "🔑 注册登录".tr
 ```
 
-##### 2.18.2、通用格式的转换 
+##### 3.2.18.2、通用格式的转换
 
 ```swift
  "123".toInt()   
@@ -2438,14 +2420,14 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
  // 📘 说明：将普通字符串转为富文本（无样式）
  
  "红色加粗".rich([
-     .foregroundColor: UIColor.red,
-     .font: UIFont.boldSystemFont(ofSize: 18)
+     .foregroundColor: JobsCor.red,
+     .font: JobsFont.boldSystemFont(ofSize: 18)
  ])
  // ✅ 输出：红色加粗（富文本样式）
  // 📘 说明：附加字体与颜色属性
 ```
 
-##### 2.18.3、字符串加载图片资源
+##### 3.2.18.3、字符串加载图片资源
 
 * 取本地图片
 
@@ -2496,7 +2478,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   }()
   ```
 
-##### 2.18.4、字符串打开
+##### 3.2.18.4、字符串打开
 
 * 打开网站 / **`Scheme`**（带参）
 
@@ -2536,7 +2518,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   }
   ```
 
-##### 2.18.5、🍡 字符串取色🎨（校验规定格式）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.5、🍡 字符串取色🎨（校验规定格式）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 支持格式：
@@ -2555,9 +2537,9 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
 "垃圾".cor(.black)        // 非法 → black
 ```
 
-##### 2.18.6、[**对全局普通的字符串进行多语言国际化的处理**](#国际化) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.6、<font id=国际化>对全局普通的字符串进行多语言国际化的处理</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-##### 2.18.7、[**富文本相关**](#富文本) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.7、<font id=富文本>富文本相关</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 数据层（转换）
 
@@ -2583,13 +2565,13 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
     UIButton.sys()
         /// 富文本字@设置主标题
         .byRichTitle(JobsRichText.make([
-            JobsRichRun(.text("¥99")).font(.systemFont(ofSize: 18, weight: .semibold)).color(.systemRed),
-            JobsRichRun(.text(" /月")).font(.systemFont(ofSize: 16)).color(.white)
+            JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18, weight: .semibold)).color(JobsCor.systemRed),
+            JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
         ]))
          /// 富文本字@设置副标题
         .byRichSubTitle(JobsRichText.make([
-            JobsRichRun(.text("原价 ")).font(.systemFont(ofSize: 12)).color(.white.withAlphaComponent(0.8)),
-            JobsRichRun(.text("¥199")).font(.systemFont(ofSize: 12, weight: .medium)).color(.systemYellow)
+            JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.white.withAlphaComponent(0.8)),
+            JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
         ]))
     ```
 
@@ -2602,18 +2584,18 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
             .byAttributedText(NSMutableAttributedString(
                 string: "🔗 默认蓝色链接（系统样式）：",
                 attributes: [
-                    .font: UIFont.systemFont(ofSize: 15),
-                    .foregroundColor: UIColor.secondaryLabel
+                    .font: JobsFont.systemFont(ofSize: 15),
+                    .foregroundColor: JobsCor.secondaryLabel
                 ])
                 .byAdd(NSAttributedString(
                     string: " Apple 官网",
                     attributes: [
                         .link: URL(string: "https://www.apple.com")!,
-                        .font: UIFont.boldSystemFont(ofSize: 16)
+                        .font: JobsFont.boldSystemFont(ofSize: 16)
                     ]))
                 .byAdd(NSAttributedString(
                     string: "\n客服电话：400-123-4567",
-                    attributes: [.font: UIFont.systemFont(ofSize: 15)]
+                    attributes: [.font: JobsFont.systemFont(ofSize: 15)]
                 )))
     ```
 
@@ -2639,8 +2621,8 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
     let runs: [JobsRichRun] = [
         JobsRichRun(.attachment(att, CGSize(width: 16, height: 16))),
         JobsRichRun(.text("  附件说明"))
-            .font(.systemFont(ofSize: 15))
-            .color(.secondaryLabel)
+            .font(JobsFont.systemFont(ofSize: 15))
+            .color(JobsCor.secondaryLabel)
     ]
 
   * 下划线
@@ -2654,17 +2636,17 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
     // 富文本配置数组
     let runs: [JobsRichRun] = [
         JobsRichRun(.text("欢迎使用 "))
-            .font(.systemFont(ofSize: 18))
-            .color(.secondaryLabel),
+            .font(JobsFont.systemFont(ofSize: 18))
+            .color(JobsCor.secondaryLabel),
     
         JobsRichRun(.text("JobsRichText "))
-            .font(.boldSystemFont(ofSize: 18))
-            .color(.systemBlue)
-            .underline(.single, color: .systemBlue),
+            .font(JobsFont.boldSystemFont(ofSize: 18))
+            .color(JobsCor.systemBlue)
+            .underline(.single, color: JobsCor.systemBlue),
     
         JobsRichRun(.text("封装示例"))
-            .font(.systemFont(ofSize: 18))
-            .strike(.single, color: .systemRed)
+            .font(JobsFont.systemFont(ofSize: 18))
+            .strike(.single, color: JobsCor.systemRed)
     ]
     ```
 
@@ -2678,12 +2660,12 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
     
     let runs: [JobsRichRun] = [
         JobsRichRun(.text("如需帮助，请联系 "))
-            .font(.systemFont(ofSize: 15))
-            .color(.secondaryLabel),
+            .font(JobsFont.systemFont(ofSize: 15))
+            .color(JobsCor.secondaryLabel),
     
         JobsRichRun(.text("专属客服"))
-            .font(.systemFont(ofSize: 15))
-            .color(.systemBlue)
+            .font(JobsFont.systemFont(ofSize: 15))
+            .color(JobsCor.systemBlue)
             .link("click://customer")
     ]
     ```
@@ -2950,11 +2932,11 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
                 	/// 富文本
                   return JobsText(JobsRichText.make([
                       JobsRichRun(.text("等级达到2级才能修改昵称"))
-                          .font(.systemFont(ofSize: 14))
-                          .color(.systemRed),
+                          .font(JobsFont.systemFont(ofSize: 14))
+                          .color(JobsCor.systemRed),
                       JobsRichRun(.text("Eric"))
-                          .font(.systemFont(ofSize: 14, weight: .semibold))
-                          .color(.secondaryLabel)
+                          .font(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+                          .color(JobsCor.secondaryLabel)
                   ]))
               case .gender:
                   /// 普通文本
@@ -2967,8 +2949,8 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   
     ```swift
     tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
-        .byTitleFont(.systemFont(ofSize: 16))
-        .byDetailTitleFont((.systemFont(ofSize: 14)))
+        .byTitleFont(JobsFont.systemFont(ofSize: 16))
+        .byDetailTitleFont((JobsFont.systemFont(ofSize: 14)))
         .bySelectionStyle(.none)
         .byAccessoryType(.disclosureIndicator)
         .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
@@ -3024,7 +3006,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
       ```
 
 
-##### 2.18.8、条形码 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.8、条形码 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * `Code128 条形码`（可指定目标尺寸；自动无插值放大）
 
@@ -3038,7 +3020,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   UIImageView().byImage(barContent.code128ByText(width: 260, barHeight: 100))
   ```
 
-##### 2.18.9、二维码 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.9、二维码 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 纯二维码（中间无Logo）
 
@@ -3062,7 +3044,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   )
   ```
 
-##### 2.18.10、裁剪 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 3.2.18.10、裁剪 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 去掉首尾空白 / 换行
 
@@ -3104,9 +3086,9 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   let httpString2 = input2.asHttpURLOrNil // -> "https://example.com"
   ```
 
-#### 2.19、对点击事件的封装
+#### 3.2.19、对点击事件的封装
 
-##### 2.19.1、封装在`UIControl` 层的点击事件
+##### 3.2.19.1、封装在`UIControl` 层的点击事件
 
 * ```swift
   private lazy var toggle: UISwitch = {
@@ -3160,17 +3142,17 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   }()
   ```
 
-##### 2.19.2、**封装在`UIButton` 层的点击事件**
+##### 3.2.19.2、**封装在`UIButton` 层的点击事件**
 
 ```swift
-let button = UIButton(type: .system)
+let button = UIButton.sys()
     .byTitle("提交")
     .onTap { btn in
         print("✅ 使用 UIButton 专属 UIAction 实现")
     }
 ```
 
-#### 2.20、对弹出框的封装
+#### 3.2.20、对弹出框的封装
 
 * [**UIAlertController**](#UIAlertController)
 
@@ -3182,7 +3164,7 @@ let button = UIButton(type: .system)
     JobsToast.show(
         text: "当前控制器销毁成功",
         config: JobsToast.Config()
-            .byBackgroundColor(.systemGreen.withAlphaComponent(0.9))
+            .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.9))
             .byCornerRadius(12)
             .duration = 2.5       // ⬅️ 停留 2.5s
     )
@@ -3209,7 +3191,7 @@ let button = UIButton(type: .system)
     )
     ```
 
-#### 2.21、安全取Cell
+#### 3.2.21、安全取Cell
 
 > 通过数组下标安全取**Cell**，即使越界也不会奔溃（只是去不到**Cell**值返回nil）
 
@@ -3218,9 +3200,9 @@ let cell = collectionView[section: 0, item: 3]
 let cell = tableView[section: 0, row: 3]
 ```
 
-#### 2.22、（全局）协议传参（支持不定参数）
+#### 3.2.22、（全局）协议传参（支持不定参数）
 
-##### 2.22.1、正向传参数：<font size=5>**`byData`**</font>
+##### 3.2.22.1、正向传参数：<font size=5>**`byData`**</font>
 
 * **VC / View**
 
@@ -3254,8 +3236,8 @@ let cell = tableView[section: 0, row: 3]
       default:
           /// 用系统默认的 UITableViewCell，在分类中统一处理数据
           return tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
-              .byTitleFont(.systemFont(ofSize: 16))
-              .byDetailTitleFont((.systemFont(ofSize: 14)))
+              .byTitleFont(JobsFont.systemFont(ofSize: 16))
+              .byDetailTitleFont((JobsFont.systemFont(ofSize: 14)))
               .bySelectionStyle(.none)
               .byAccessoryType(.disclosureIndicator)
               .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
@@ -3310,7 +3292,7 @@ let cell = tableView[section: 0, row: 3]
   }
   ```
 
-##### 2.22.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font>
+##### 3.2.22.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font>
 
 ```swift
 /// 逆向传入
@@ -3321,7 +3303,7 @@ DemoDetailVC().onResult { name in
 }
 ```
 
-#### 2.23、Debug模式下弹窗检测是否释放`UIViewController`
+#### 3.2.23、Debug模式下弹窗检测是否释放`UIViewController`
 
 * 引入框架 **`JobsSwiftDebugTools`**
 
@@ -3339,97 +3321,96 @@ DemoDetailVC().onResult { name in
   #endif
   ```
 
-### 3、对抗记忆衰弱
+### 3.3、对抗记忆衰弱
 
-* 使用**Xcode**代码块的方式👉[**`JobsCodeSnippets`**](https://github.com/JobsKits/JobsCodeSnippets)脚本安装，自动注入系统指定目录，只需要重启**Xcode**即可使用
+- 使用 [**Xcode**](https://developer.apple.com/xcode) CodeSnippets 固化高频模板；代码块只记录使用方式，真实 API 仍以自建 Pod 当前实现为准。
+- 调整 `JobsSwiftDSL`、`JobsByUIKit`、导航、事件闭包或固定写法后，要同步检查 CodeSnippets，避免片段继续传播旧 API。
 
   ![image-20251206164503864](./assets/image-20251206164503864.png)
 
-### 4、一些脚本库[JobsGenesis](https://github.com/JobsKits/JobsGenesis)
+### 3.4、工程脚本与 JobsGenesis
 
-> 原则上拒绝python，直接用Shell调用系统底层SDK来完成（高效）
+- `ScriptsByDevTools/`：面向开发机环境、Xcode 配件、打包和效率工具。
+- `ScriptsByPods/`：由 `Podfile` 可选调用的 Flutter、Unity、SPM、依赖图和 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 工程脚本。
+- 简单系统编排优先使用 zsh；结构化解析、跨平台数据处理或现有工具链更适合 [**Python**](https://www.python.org) 时可以使用 Python，不把语言偏好凌驾于可维护性和验证性。
+- 每个双击脚本需要配套 README、内置自述、防误触、日志和语法检查。
 
-### 5、将组件库Pod化
+### 3.5、将组件库 Pod 化
 
-```ruby
-def byJobs
-    
-  pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
-#  pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
-#  pod 'JobsNetworking/AF4',                 :path => 'JobsByPods/JobsNetworking@Pods'
-  pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个
-  pod 'JobsNetworking/AF5',                 :path => 'JobsByPods/JobsNetworking@Pods'
-  
-  pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
-  pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
-  pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
-  pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
-  pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
-  pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
-  pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
-  pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
-  pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
-  pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'
-  pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
-  pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
-  pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
-  pod 'JobsSwiftRefresher',                      :path => 'JobsByPods/JobsSwiftRefresher@Pods'
-  pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
-  pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
-  pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'
-  pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods'
-  pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods'
-  pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods'
-  pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods'
-  pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
-  pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
-  pod 'JobsSwiftStandardLibrary_extension', :path => 'JobsByPods/JobsSwiftStandardLibrary_extension@Pods'
-  pod 'JobsSwiftFoundation_extensions',     :path => 'JobsByPods/Foundation@Pods'                     # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-  pod 'JobsSwiftMetalKit_extensions',       :path => 'JobsByPods/MetalKit@Pods'                       # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
-  pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods'                 # https://github.com/JobsKits/JobsSwiftBlock
-  pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods'                   # https://github.com/JobsKits/JobsSwiftBaseDefines
-  pod 'JobsSwiftBaseTools',                 :path => 'JobsByPods/JobsSwiftBaseTools@Pods'             # https://github.com/JobsKits/JobsSwiftBaseTools
-end
-```
+- `Podfile.deps` 只维护依赖声明；完整清单直接读取 `swiftAppCommon`、`debugPods`、`testPods` 和 `byJobs`，不要在文档里复制一份很快过期的全量列表。
+- `Podfile` 负责安装策略、静态 framework、统一部署目标、Build Settings、Flutter/Unity/SPM 可选脚本和安装后的依赖报告。
+- 最小结构示意：
 
-## 四、BaseURL构架
+  ```ruby
+  def byJobs
+    pod 'JobsSwiftBaseDefines', :path => 'JobsByPods/JobsSwiftBaseDefines@Pods'
+    pod 'JobsSwiftDSL',         :path => 'JobsByPods/JobsSwiftDSL@Pods'
+    pod 'JobsByUIKit',          :path => 'JobsByPods/JobsByUIKit@Pods'
+    pod 'JobsInheritance',      :path => 'JobsByPods/JobsInheritance@Pods'
+    pod 'JobsNetworking/Async', :path => 'JobsByPods/JobsNetworking@Pods'
+  end
 
-* 移动端App需要预埋一组URL
-  * 每次发包的时候，可以进行更替/每次启动移动端App也可以进行更新（具体看具体业务场景设计）
-  * 这一组URL的请求结果➤**拿到真实的移动端App请求的BaseURL**
-  * 这一组URL实际上是**服务器矩阵**（以应对IP封锁）
-* 真实的App里面具体请求对应的**BaseURl**程序员都不知是什么。前端开发人员只需要面对接口，而不需要关心**BaseURL**
-* 那么在移动端App开屏进入页面的时候，就需要有自检环节（前端配合进度条等UI反馈）
-  * 先测试预埋的一组URL的可达性（本地开启轮询测试）
-  * 然后再通过这一组URL拉取实际请求的**BaseURL**（可以是一个组）
-  * 自检环节，之前亚博是控制在10～15秒
-* 全局的**BaseURL**是浮动的，内部需要有一个实时监控机制，如果在使用过程中BaseURL变的不可达，那么就需要在这一组**BaseURL**去找可用的**BaseURL**顶上
+  target 'JobsSwiftBaseConfigDemo' do
+    swiftAppCommon
+    debugPods
+    testPods
+    byJobs
+  end
+  ```
+
+- 新建 Pod 时，代码放 `Core/`，资源放平级 `Resource/`，必要的兼容文件放 `Support/`；禁止出现磁盘 `Core/Core/`。
+- Pod 的直接依赖写进自己的 `*.podspec`，调用方显式导入直接消费的模块，不依赖偶然的转导出。
+
+## 四、网络环境与 BaseURL 架构
+
+- `JobsNetworking/Core` 承担请求模型、RequestConfig、Agent、上传、下载、缓存和统一错误；`AF5` 是兼容适配，`Async` 提供 iOS 13+ async/await，`PromiseKit` 按需接入。
+- 当前宿主同时选择 `JobsNetworking/Async` 与 `JobsNetworking/AF5`。业务页只描述接口和展示状态，不自行拼接 BaseURL、请求头、Token、重试和缓存键。
+- BaseURL 至少按 Debug、Test、Release 或真实业务环境配置；切换入口、持久化、日志脱敏和发布默认值必须可审计。
+- 多入口探活与动态路由是可选容灾能力，不是所有 App 的默认前提。需要时按以下顺序处理：
+
+  1. 从签名或可信配置中读取候选服务端。
+  2. 并发探活并设置总超时，不让启动页无限等待。
+  3. 选出健康节点并记录失效时间、失败原因和回退顺序。
+  4. 运行中出现可恢复网络错误时切换节点；鉴权失败、业务错误不能误判为节点不可达。
+  5. 所有候选均失败时进入明确的离线 / 重试 / 客服降级，不静默卡死。
+
+- 动态域名不能代替安全设计。TLS、证书策略、请求签名、Token 生命周期、重放保护和敏感日志脱敏仍需独立完成。
+- 完整调用示例以 `JobsNetworking@Pods/README.md` 和宿主 `Demo@JobsNetworking共用网络接口/` 为准。
 
 ## 五、快速 UI DSL 全配置
 
-### 1、书写约定
+### 5.1、书写约定
 
-- 所有 UI 配置优先使用 JobsSwiftDSL 点语法链式写法。
+- 所有 UI 配置优先使用 `JobsSwiftDSL` 点语法链式写法。
 - 点语法以行为最小单位提行书写，方便复制后按行删除或注释。
 - 跟在某一行 DSL 后面的说明统一用两根双斜杠 `//`；单独成行的说明统一用三根双斜杠 `///`。
 - 颗粒度要细：标题、颜色、字体、图片、状态、事件、装配、约束分别独立成行，不合并表达。
 - 同一 DSL 同时存在单参数和二参数写法时，默认首选单参数写法；二参数写法只用于 `.selected`、`.disabled`、`.highlighted` 等非默认状态差异。
 - 调用顺序固定为：当前 UI 类型本层 DSL、父类公共 DSL、事件 DSL、`byAddTo` + SnapKit 约束。
+- 示例默认运行在当前 iOS 15 宿主。若同一封装要下沉到更低部署目标，兼容分支写进 `JobsSwiftDSL` / `JobsByUIKit`，调用方保持同一套 Jobs API。
+- 使用 `JobsCor`、`JobsFont`、`YES` / `NO` 时显式导入 `JobsSwiftBaseDefines`：
 
-### 2、`UILabel`
+  ```swift
+  import JobsByUIKit
+  import JobsSwiftBaseDefines
+  import JobsSwiftDSL
+  import SnapKit
+  ```
+
+### 5.2、`UILabel`
 
 ```swift
 private lazy var titleLab: UILabel = { [unowned self] in
     UILabel()
         .byText("标题") // 设置文本
-        .byFont(.boldSystemFont(ofSize: 16)) // 设置字体
-        .byTextColor(.label) // 设置文字颜色
+        .byFont(JobsFont.boldSystemFont(ofSize: 16)) // 设置字体
+        .byTextColor(JobsCor.label) // 设置文字颜色
         .byTextAlignment(.center) // 设置对齐方式
         .byNumberOfLines(1) // 设置行数
         .byLineBreakMode(.byTruncatingTail) // 设置截断方式
-        .byBackgroundColor(.clear) // 设置背景色
+        .byBackgroundColor(JobsCor.clear) // 设置背景色
         .byCornerRadius(8) // 设置圆角
-        .byClipsToBounds(true) // 裁剪圆角
+        .byClipsToBounds(YES) // 裁剪圆角
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.top.equalToSuperview().offset(16)
             make.left.right.equalToSuperview().inset(16)
@@ -3438,22 +3419,28 @@ private lazy var titleLab: UILabel = { [unowned self] in
 }()
 ```
 
-### 3、`UIButton`
+### 5.3、`UIButton`
 
 ```swift
 private lazy var submitBtn: UIButton = { [unowned self] in
-    UIButton(type: .custom)
+    UIButton.sys()
         .byTitle("确认") // 设置标题
-        .byTitleColor(.white) // 设置标题颜色
-        .byTitleFont(.boldSystemFont(ofSize: 16)) // 设置标题字体
+        .byTitleColor(JobsCor.white) // 设置标题颜色
+        .byTitleFont(JobsFont.boldSystemFont(ofSize: 16)) // 设置标题字体
         .byImage("icon_submit".img) // 设置图片
         .byImage("icon_submit_selected".img, for: .selected) // 设置选中图片
-        .byBackgroundColor(.systemBlue) // 设置背景色
+        .byConfiguration( // UIButton 可见背景与圆角统一进入配置管线
+            UIButton.Configuration.filled()
+                .byBaseForegroundColor(JobsCor.white)
+                .byBackground(
+                    UIBackgroundConfiguration.byClear()
+                        .byBackgroundColor(JobsCor.systemBlue)
+                        .byCornerRadius(10)
+                )
+        )
         .byContentEdgeInsets(.init(top: 0, left: 16, bottom: 0, right: 16)) // 设置内容边距
-        .byCornerRadius(10) // 设置圆角
-        .byClipsToBounds(true) // 裁剪圆角
         .onTap { btn in // 设置点按事件
-            btn.isSelected.toggle()
+            btn.byToggleSelected()
         }
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.left.right.equalToSuperview().inset(16)
@@ -3463,23 +3450,23 @@ private lazy var submitBtn: UIButton = { [unowned self] in
 }()
 ```
 
-### 4、`UITextField`
+### 5.4、`UITextField`
 
 ```swift
 private lazy var nameTextField: UITextField = { [unowned self] in
     UITextField()
         .byText("") // 设置文本
-        .byFont(.systemFont(ofSize: 15)) // 设置字体
-        .byTextColor(.label) // 设置文字颜色
+        .byFont(JobsFont.systemFont(ofSize: 15)) // 设置字体
+        .byTextColor(JobsCor.label) // 设置文字颜色
         .byTextAlignment(.left) // 设置对齐方式
         .byPlaceholder("请输入名称") // 设置占位文字
         .byKeyboardType(.default) // 设置键盘类型
         .byReturnKeyType(.done) // 设置返回键
         .byClearButtonMode(.whileEditing) // 设置清除按钮
         .byDelegate(self) // 设置代理
-        .byBackgroundColor(.secondarySystemBackground) // 设置背景色
+        .byBackgroundColor(JobsCor.secondarySystemBackground) // 设置背景色
         .byCornerRadius(8) // 设置圆角
-        .byClipsToBounds(true) // 裁剪圆角
+        .byClipsToBounds(YES) // 裁剪圆角
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.top.equalTo(self.titleLab.snp.bottom).offset(12)
             make.left.right.equalToSuperview().inset(16)
@@ -3488,23 +3475,23 @@ private lazy var nameTextField: UITextField = { [unowned self] in
 }()
 ```
 
-### 5、`UITextView`
+### 5.5、`UITextView`
 
 ```swift
 private lazy var remarkTextView: UITextView = { [unowned self] in
     UITextView()
         .byText("备注") // 设置文本
-        .byFont(.systemFont(ofSize: 15)) // 设置字体
-        .byTextColor(.label) // 设置文字颜色
+        .byFont(JobsFont.systemFont(ofSize: 15)) // 设置字体
+        .byTextColor(JobsCor.label) // 设置文字颜色
         .byTextAlignment(.left) // 设置对齐方式
-        .byEditable(true) // 允许编辑
-        .bySelectable(true) // 允许选择
+        .byEditable(YES) // 允许编辑
+        .bySelectable(YES) // 允许选择
         .byDataDetectorTypes([]) // 设置数据识别
         .byKeyboardType(.default) // 设置键盘类型
         .byDelegate(self) // 设置代理
-        .byBackgroundColor(.secondarySystemBackground) // 设置背景色
+        .byBackgroundColor(JobsCor.secondarySystemBackground) // 设置背景色
         .byCornerRadius(8) // 设置圆角
-        .byClipsToBounds(true) // 裁剪圆角
+        .byClipsToBounds(YES) // 裁剪圆角
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.top.equalTo(self.nameTextField.snp.bottom).offset(12)
             make.left.right.equalToSuperview().inset(16)
@@ -3513,7 +3500,7 @@ private lazy var remarkTextView: UITextView = { [unowned self] in
 }()
 ```
 
-### 6、`UIImageView`
+### 5.6、`UIImageView`
 
 ```swift
 private lazy var avatarImgView: UIImageView = { [unowned self] in
@@ -3521,10 +3508,10 @@ private lazy var avatarImgView: UIImageView = { [unowned self] in
         .byImage("avatar_placeholder".img) // 设置图片
         .byHighlightedImage("avatar_selected".img) // 设置高亮图片
         .byContentMode(.scaleAspectFill) // 设置填充模式
-        .byUserInteractionEnabled(true) // 开启交互
-        .byBackgroundColor(.tertiarySystemBackground) // 设置背景色
+        .byUserInteractionEnabled(YES) // 开启交互
+        .byBackgroundColor(JobsCor.tertiarySystemBackground) // 设置背景色
         .byCornerRadius(32) // 设置圆角
-        .byClipsToBounds(true) // 裁剪圆角
+        .byClipsToBounds(YES) // 裁剪圆角
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.top.equalTo(self.remarkTextView.snp.bottom).offset(12)
             make.left.equalToSuperview().offset(16)
@@ -3533,7 +3520,7 @@ private lazy var avatarImgView: UIImageView = { [unowned self] in
 }()
 ```
 
-### 7、`UITableView`
+### 5.7、`UITableView`
 
 ```swift
 private lazy var tableView: UITableView = { [unowned self] in
@@ -3542,39 +3529,429 @@ private lazy var tableView: UITableView = { [unowned self] in
         .byEstimatedRowHeight(56) // 设置预估行高
         .bySeparatorStyle(.singleLine) // 设置分割线
         .byKeyboardDismissMode(.onDrag) // 拖拽收键盘
-        .byShowsVerticalScrollIndicator(true) // 显示纵向滚动条
-        .byAlwaysBounceVertical(true) // 允许纵向回弹
+        .byShowsVerticalScrollIndicator(YES) // 显示纵向滚动条
+        .byAlwaysBounceVertical(YES) // 允许纵向回弹
         .byDelegate(self) // 设置代理
         .byDataSource(self) // 设置数据源
-        .byBackgroundColor(.systemBackground) // 设置背景色
+        .byBackgroundColor(JobsCor.systemBackground) // 设置背景色
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.edges.equalToSuperview()
         }
 }()
 ```
 
-### 8、`UICollectionView`
+### 5.8、`UICollectionView`
 
 ```swift
 private lazy var collectionView: UICollectionView = { [unowned self] in
     UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
         .byCollectionViewLayout(self.flowLayout) // 设置布局对象
-        .byShowsVerticalScrollIndicator(false) // 隐藏纵向滚动条
-        .byAlwaysBounceVertical(true) // 允许纵向回弹
+        .byShowsVerticalScrollIndicator(NO) // 隐藏纵向滚动条
+        .byAlwaysBounceVertical(YES) // 允许纵向回弹
         .byKeyboardDismissMode(.onDrag) // 拖拽收键盘
         .byDelegate(self) // 设置代理
         .byDataSource(self) // 设置数据源
-        .byBackgroundColor(.systemBackground) // 设置背景色
+        .byBackgroundColor(JobsCor.systemBackground) // 设置背景色
         .byAddTo(self.view) { make in // 加入父视图并部署约束
             make.edges.equalToSuperview()
         }
 }()
 ```
 
-<a id="🔚" href="#一些基本的原则" style="font-size:17px; color:green; font-weight:bold;">我是有底线的👉点我回到首页</a>
+## 六、成熟工程总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+### 6.1、工程基线
 
+| 维度 | 当前方案 | 维护边界 |
+| --- | --- | --- |
+| 宿主 | `JobsSwiftBaseConfigDemo` | 业务装配、Demo 入口、宿主资源与启动配置。 |
+| 工程入口 | `JobsSwiftBaseConfigDemo.xcworkspace` | 集成 Pods 后统一从 workspace 打开和构建。 |
+| 部署与语言 | iOS 15、Swift 5 | 自建 Pod 可保留更低部署目标，兼容由 Pod 内部承担。 |
+| 链接方式 | CocoaPods 静态 framework | `use_frameworks! :linkage => :static`，避免业务自行切换。 |
+| Targets | App、Unit Tests、UI Tests、Widget Extension | 新 target 同步检查 Bundle ID、Info、Entitlements、资源与依赖。 |
+| 本地组件 | `JobsByPods/*@Pods` | Jobs 自建 Pod；`Pods/` 与 `ManualBySwiftPods@Pods/` 不属于维护源。 |
+| 可选跨栈 | Flutter、Unity、本地 SPM | 通过安全脚本和明确入口接入，缺失时默认不阻塞主流程。 |
+| 自动化 | GitHub Actions Simulator Build | 安装 Pods、构建 workspace、打包模拟器 `.app` 产物。 |
 
+### 6.2、目录职责
 
+以下路径均以仓库根目录为基准：
 
+```text
+.
+├── JobsSwiftBaseConfigDemo/        # App 宿主：启动、主业务、资源、多语言
+├── JobsByPods/                     # Jobs 自建本地 Pods 与手工第三方隔离区
+├── JobsBySwiftPackageManager/      # 本地 SPM Library、Macro Demo 与验证脚本
+├── JobsWidgetExtension/            # WidgetKit Extension
+├── JobsWidgetShared/               # App 与 Widget 共享状态
+├── ScriptsByPods/                  # Podfile 可选调用的工程脚本
+├── ScriptsByDevTools/              # 开发机环境与效率脚本
+├── Podfile                         # 安装策略、脚本、Build Settings、安装钩子
+├── Podfile.deps                    # 外部依赖与 Jobs 本地 Pod 声明
+├── PodspecDependencyReport/        # 自动生成的 Pod 依赖分析产物
+├── SwiftDoc.md/                    # 可直接复用的 Swift 工程文档
+└── .github/workflows/              # CI
+```
 
+- 宿主 `Resources/` 统一承载 AppIcons、数据模型、JSON、Lottie、PDF、SVG、Storyboard、Assets、声音、字体、网页和视频。
+- 主业务按 `VC`、`View` 与功能 Demo 组织；可复用能力达到稳定边界后下沉本地 Pod，不在多个页面复制。
+- 一个类型或一组成套文件用同名目录包裹；控制器不顺手塞入独立 Model、Cell、View 或 Helper。
+
+### 6.3、分层关系
+
+```mermaid
+flowchart TD
+    App["宿主 App / Demo 页面"] --> Feature["功能 Pod"]
+    App --> Inheritance["JobsInheritance / BaseVC"]
+    App --> UIKit["JobsByUIKit"]
+    Feature --> UIKit
+    Feature --> Service["网络、计时、任务、资源等基础能力"]
+    Inheritance --> UIKit
+    UIKit --> DSL["JobsSwiftDSL"]
+    UIKit --> Defines["JobsSwiftBaseDefines"]
+    Service --> DSL
+    Service --> Defines
+    DSL --> Block["JobsSwiftBlock"]
+    DSL --> Apple["Apple SDK"]
+    UIKit --> ThirdParty["经评估的第三方依赖"]
+    Feature --> Resource["Pod Resource Bundle"]
+```
+
+- `JobsSwiftBaseDefines`：`JobsCor`、`JobsFont`、`YES` / `NO` 等跨模块基础定义。
+- `JobsSwiftBlock`：闭包类型和跨框架事件语义。
+- `JobsSwiftDSL`：系统 API 与 Jobs Model 的链式属性 / 方法封装。
+- `JobsByUIKit`：UIKit 工厂、事件、装配、SnapKit 约束、导航与主题等上层 UI 能力。
+- `JobsInheritance`：`BaseVC`、通用控制器 / View 基座和统一生命周期。
+- 功能 Pod：只组合完成本功能所需的直接依赖，不反向污染基础层。
+
+### 6.4、权威源与所有权
+
+- 自建 API 的唯一权威源是 `JobsByUIKit`、`JobsSwiftDSL` 等当前实现；README、本文和 CodeSnippets 都是消费说明。
+- 文件位于 `JobsByPods/` 不代表一定属于 Jobs。文件头、版权、上游路径或仓库历史显示为第三方时仍然排除。
+- 依赖关系以 `*.podspec` 和自动生成的 `PodspecDependencyReport` 为证据；文档不维护第二份全量依赖图。
+- 未执行 `pod install` 时，不手工修改 `Podfile.lock`、Pods 工程和安装后生成的报告。
+
+## 七、启动、根容器与全局 UI <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 7.1、启动链路
+
+```mermaid
+sequenceDiagram
+    participant App as AppDelegate
+    participant Scene as SceneDelegate
+    participant Root as RootListPreferences
+    participant Window as UIWindow
+    participant Splash as JobsSwiftSplash
+
+    App->>App: CrashLog 监控与 SA() 全局配置
+    App->>Scene: 返回 UISceneConfiguration
+    Scene->>Root: makeAppRootViewController(in:)
+    Root-->>Scene: 侧滑抽屉 + 导航容器 / 可选 TabBar
+    Scene->>Window: byRootViewController + byMakeKeyAndVisible
+    Scene->>Splash: 恢复远程视频预加载
+    opt 下次启动允许展示开屏
+        Scene->>Splash: 覆盖在根控制器上展示
+    end
+```
+
+- Flutter 可用时，`AppDelegate` 继承 `FlutterAppDelegate` 并持有长生命周期 `FlutterEngine`；Flutter 不可用时走普通 `UIApplicationDelegate` 分支。
+- `AppDelegate` 只做进程级配置：崩溃监控、本地通知、日志、多语言、导航、比例尺、键盘、Flutter 引擎和第三方全局初始化。
+- `SceneDelegate` 只做窗口级配置：创建 `UIWindow`、装配根控制器、恢复开屏缓存、展示开屏覆盖层和记录 Scene 前后台安全点。
+- 新业务初始化不要继续堆进 `SA()`；能模块化的能力放到对应 Pod 或独立启动任务，再由入口编排。
+
+### 7.2、根容器
+
+- `RootListPreferences.makeAppRootViewController(in:)` 是根页面权威入口。
+- 默认结构是 `RootListVC → Jobs Navigation Container → JobsSideDrawerVC`。
+- 设置允许切换为 TabBar 入口时，Demo、消息、我的三个根项各自持有导航容器。
+- 修改根入口、抽屉模式或 TabBar 形态时，通过 `connectedScenes` 更新全部有效 Window，不只处理第一个 Scene。
+- 根列表新增、删除或重命名 Demo 时，同时对账 section、路由、图标映射、资源和独立 DemoVC；同一能力不因 Table / Collection 两种表现重复占用根入口。
+
+### 7.3、`BaseVC` 与导航
+
+- Jobs 自维护页面默认继承 `BaseVC`，不要直接继承 `UIViewController`。
+- `BaseVC.viewWillAppear` / `viewDidAppear` 统一补齐导航默认项、返回按钮和侧滑返回能力。
+- 页面通过 `jobsSetupGKNav(title:leftButton:rightButtons:)` 配置导航；`@` 标题按第一个 `@` 拆成主、副标题。
+- 具体 Demo 右上角只保留一个入口：
+
+  - 没有业务动作时，入口直接切换主题。
+  - 有业务动作时，入口展开主题与页面动作菜单。
+  - 原有业务按钮先配置，再由公共导航层收纳，不能被主题按钮覆盖。
+
+### 7.4、全局主题
+
+- 主题状态持久化在 `UIApplication.jobsGlobalDarkModeEnabled`。
+- 切换时遍历 `UIApplication.shared.connectedScenes` 下全部 Window，并同步主题按钮选中态和无障碍文案。
+- 页面使用 `JobsCor.label`、`JobsCor.secondaryLabel`、`JobsCor.systemBackground` 等语义色；硬编码白底、黑字或单页主题补丁会破坏全局切换。
+- 自定义绘制、Popup、键盘、图片模板色和第三方容器也要验证明暗主题，不以“按钮能点”代替页面换肤完成。
+
+### 7.5、页面标准骨架
+
+```swift
+#if os(OSX)
+import AppKit
+#elseif os(iOS) || os(tvOS)
+import UIKit
+#endif
+
+import JobsByUIKit
+import JobsInheritance
+import JobsSwiftBaseDefines
+import JobsSwiftDSL
+import SnapKit
+
+final class FeatureDemoVC: BaseVC {
+    private lazy var contentView: UIView = {
+        UIView()
+            .byBackgroundColor(JobsCor.systemBackground)
+            .byAddTo(view) { make in
+                make.edges.equalToSuperview()
+            }
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        jobsSetupGKNav(title: "功能演示".tr)
+        contentView.byVisible(YES)
+    }
+}
+```
+
+- 长期进入视图层级、绑定事件 / 约束 / delegate 或可能刷新换肤的对象，必须是类型属性并使用懒加载。
+- UI 布局统一使用 [**SnapKit**](https://github.com/SnapKit/SnapKit)；首次约束 `makeConstraints`，常量变化 `update`，结构变化才 `remake`。
+- `viewDidLoad` 只编排导航、唤醒 UI、绑定数据和首屏请求，不承载大段创建与业务状态机。
+- UI 验证覆盖初始、布局、交互、刷新 / 停止、前后台、明暗主题、键盘、弹层和自定义绘制状态。
+
+## 八、本地 Pod 与依赖治理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 8.1、标准目录
+
+```text
+JobsByPods/FeatureName@Pods/
+├── Core/                      # Swift / Objective-C / C 系统源码
+├── Resource/                  # 图片、字体、音视频、JSON、strings、xcprivacy
+├── Support/                   # 必要的兼容或桥接实现
+├── FeatureName.podspec
+├── README.md
+└── LICENSE
+```
+
+- `Core` 只保留一层真实目录；不要再虚拟套一层同名 `Core`。
+- `Resource` 与 `Core` 平级，没有资源时不强制创建。
+- 聚合入口、README、podspec、Package 清单和发布脚本可以留在根部。
+- Pod 内一个主类型及其 extension、资源适配文件用同名目录成组，避免大量源码平铺在功能根目录。
+
+### 8.2、Podspec 职责
+
+| 配置 | 规则 |
+| --- | --- |
+| `source_files` | 只覆盖真实源码，排除 README、脚本、样例和生成物。 |
+| `resource_bundles` | 自建资源使用独立 Bundle 名，调用方不假设 `Bundle.main`。 |
+| `dependency` | 写完整的直接依赖，不能依赖宿主碰巧已经安装。 |
+| `platform` | 取本 Pod 能力真实最低版本，不机械复制宿主版本。 |
+| `swift_version` | 与当前工具链和源码语法一致。 |
+| `subspec` | 只为真实可选能力拆分，不用 subspec 掩盖循环依赖。 |
+
+- `JobsAppDoor` 使用 `Core / Resource` subspec 与独立资源 Bundle。
+- `JobsNetworking` 使用 `Core / AF5 / Async / PromiseKit` 表达兼容与并发模型边界。
+- `JobsSwiftRefresher` 使用 `Core / Lottie / SDWebImage` 让动画素材能力按需安装。
+- `JobsBluetooth` 将 `PrivacyInfo.xcprivacy` 通过资源 Bundle 交付。
+
+### 8.3、依赖方向
+
+- 基础定义层不能依赖 UI 业务层；功能 Pod 可以依赖基础层，基础层不能反向依赖功能 Pod。
+- 链式 DSL 默认返回当前具体对象类型；子类专属能力不能接在会把静态类型降为父类的 DSL 后面。
+- 业务层不直接调用已纳入 Jobs 封装的系统 API；封装缺失时先补 `JobsSwiftDSL` / `JobsByUIKit`，再回到调用方。
+- Apple API 的版本差异和 deprecated 回退在封装内部处理；业务调用方不重复写新旧分支。
+- 使用 `JobsCor`、`JobsFont`、`YES` / `NO` 的文件显式导入 `JobsSwiftBaseDefines`，使用纯 DSL 的 Pod 显式依赖并导入 `JobsSwiftDSL`。
+
+### 8.4、`Podfile` 与脚本边界
+
+- `Podfile.deps` 不执行外部脚本，只声明 Pods。
+- `Podfile` 中脚本统一经 `jobs_run_external_script(...)`，调用前检查文件、解释器、权限和执行条件。
+- Flutter、Unity、SPM、依赖报告与 CodeGraph 默认属于可选增强；脚本缺失、权限失败或主动跳过时不阻塞 `pod install`。
+- 用户明确选择执行 SPM 门禁后，构建或测试失败可以停止集成，因为这是已选择的验证动作。
+- `post_install` 统一宿主与 Pods Build Settings，`post_integrate` 再处理安装完成后的 CodeGraph。
+
+### 8.5、修改本地 Pod 后的同步扫描
+
+- 同步检查宿主 import、类型 / 方法调用、Demo 入口、其它 Pod 的依赖、`Podfile.deps`、README、SwiftDoc 和 CodeSnippets。
+- 删除或重命名时同时处理目录、文件、公开类型、菜单文案、资源名和依赖声明。
+- 资源变化同步检查 resource bundle、podspec、访问 helper 和最终构建产物。
+- 没有执行依赖生成流程时，最终说明 `Podfile.lock`、Pods 工程和依赖报告仍待刷新，不手工伪造一致。
+
+## 九、资源、多语言、隐私与系统扩展 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 9.1、宿主资源
+
+- App 通用资源放 `JobsSwiftBaseConfigDemo/Resources/`，按类型分目录；不要把图片、JSON、字体和视频散落在控制器目录。
+- 颜色优先使用语义 Asset 或 `JobsCor`；系统字体使用 `JobsFont`，不拿某个语言字体替代系统 fallback 语义。
+- 本地图、网络图、SVG、Icon Font 和 Unicode 图标优先通过 `JobsImageTools` / `JobsIconfont` 等统一门面访问。
+- 新增入口图标先从 [**iconfont**](https://www.iconfont.cn/) 选择语义匹配资源，落入实际使用的 Assets 或 Pod Resource Bundle；业务代码不散落远程 URL 和 codepoint。
+
+### 9.2、Pod 资源
+
+- 功能资源跟随功能 Pod，通过 `resource_bundles` 交付。
+- Bundle 名是公开契约，重命名时同步修改 podspec、访问 helper、README、Demo 和测试。
+- 资源访问失败必须有可见兜底或明确错误，不能因为图片缺失直接崩溃。
+- 动图、视频和大 JSON 需要评估首屏解码、内存峰值、后台行为和缓存清理。
+
+### 9.3、多语言
+
+- App 文案使用 `Localizable.strings` 与 `.tr`；`Info.plist` 展示名和权限文案使用各语言 `InfoPlist.strings`。
+- 当前宿主声明 `en`、`zh-Hans` 等本地化资源；新增语言时同步 target membership、`CFBundleLocalizations` 和缺失 key 检查。
+- `jobsSetupGKNav` 支持翻译绑定，切换语言后导航标题也要刷新。
+- 不把服务端原始错误、硬编码 Toast 或按钮下一步行为留在单一语言。
+
+### 9.4、权限、Entitlements 与 Privacy Manifest
+
+- 权限 key 只在真实能力需要时启用，文案说明“为什么需要”和“用户会得到什么”，不写空泛占位。
+- `Info.plist`、`InfoPlist.strings`、target capabilities 和调用代码必须成套存在。
+- App Group、后台音频、本地网络、Bonjour、相册、相机、麦克风、蓝牙等能力分别核对系统版本和审核边界。
+- 使用 Required Reason API 的自建 Pod，在自己的 `Resource/PrivacyInfo.xcprivacy` 中声明并由 podspec 打包；第三方清单不手工改写。
+
+### 9.5、Widget Extension 与 App Group
+
+- `JobsWidgetExtension/` 承载 WidgetKit target；`JobsWidgetShared/JobsWidgetSharedStore.swift` 是宿主与 Widget 的共享状态入口。
+- App 与 Widget 的 Entitlements 必须使用完全相同的 App Group。
+- 宿主写入共享状态后调用 `WidgetCenter.reloadTimelines`；Extension 只读取共享模型并生成 Timeline。
+- Widget target 保持 `APPLICATION_EXTENSION_API_ONLY = YES`，不能引用仅 App 可用的 API 或把宿主 Pod 全量拖入扩展。
+- 验证需要真机 / 模拟器桌面添加 Widget，不以宿主页预览卡片代替系统 Widget 运行证据。
+
+### 9.6、AppIcon 与最终资源
+
+- 备用 AppIcon 是编译期资源，名称必须与 Build Settings 和 Info 配置一致。
+- 当前工程在 CocoaPods 资源阶段后重新合并主工程、Pods Assets 和 Icon Composer `*.icon`，生成最终 `Assets.car`。
+- 相册照片只能作为 App 内副本；要成为桌面图标，必须制作无透明通道的 `1024×1024` 编译期资源并重新构建安装。
+- 排查空白图标时检查最终安装包的 `Assets.car`，不能只看 `setAlternateIconName` 回调或中间 actool 输出。
+
+## 十、跨栈能力、工具链与 CI <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 10.1、网络、数据、日志与崩溃
+
+- 网络统一经 `JobsNetworking`；页面状态至少区分加载、成功、空、可重试失败、不可恢复失败和取消。
+- 数据层按业务选择 WCDB、ObjectBox、文件 Cache、UserDefaults 或 Keychain，不把所有状态塞进单例。
+- `CocoaLumberjack` 承担结构化日志，敏感字段必须脱敏；Debug 打印不能成为 Release 唯一观测手段。
+- `CrashLogCenter` 在 App / Scene 生命周期标记启动、安全退出与后台点，避免把正常后台误报为上次崩溃。
+- 定时器、录音录像、网络帧队列、WebView、通知和观察者都要有停止、清理和后台策略。
+
+### 10.2、Flutter Module
+
+- `my_flutter/` 是可选 Flutter module；`Podfile` 先检查生成的 `podhelper.rb` 与 `Generated.xcconfig`。
+- 环境或生成文件缺失时，通过 `ScriptsByPods/配置Flutter环境.sh/` 和 `拉取Flutter侧三方资源.sh/` 尝试准备；失败默认降级为占位 helper，不阻塞原生主流程。
+- `FlutterEngine` 由 `AppDelegate` 长期持有并注册 `FlutterBridge`，避免页面每次进入重复冷启动。
+- Flutter 生成目录不作为手工维护源码；业务桥接协议放在 Jobs 自维护边界。
+
+### 10.3、Unity
+
+- Unity 导出和 `.DerivedDataUnity` 是可选集成，不属于普通 Swift 页面源码。
+- `pre_install` 仅在检测到 Unity 痕迹时清理 Bee / Tundra 中间缓存并解压大资源。
+- 清理脚本要有范围保护，不对仓库根目录、用户目录或未知路径做递归删除。
+- Unity 生成源码和缓存不做 Jobs Swift 风格批改；桥接层与宿主装配才进入维护范围。
+
+### 10.4、本地 Swift Package Manager
+
+- `JobsSPMDemoPackage/` 是宿主可引用的零远程依赖 Library。
+- `MacroDemo/` 独立承载 `swift-syntax`、Macro、Client 与宏测试，不进入 App 的默认依赖图。
+- 验证脚本依次执行解析、构建、测试和 Client；`pod install` 只提供一次可选门禁，不强制所有环境下载宏依赖。
+- Pod 和 SPM 不重复维护同一模块；选择一种分发形态后明确权威源。
+
+### 10.5、依赖图、CodeGraph 与 CI
+
+- `PodspecDependencyReport` 在安装后生成 Markdown、Mermaid、DOT、PNG 和交互 HTML，并检查 Pod 间循环依赖。
+- 仓库存在 `.codegraph/` 时，理解符号和调用路径优先使用 CodeGraph；索引是辅助证据，编译器和测试仍是正确性门禁。
+- GitHub Actions 使用 workspace + App scheme 构建 iOS Simulator，并打包 `.app`；本地仅打开 `.xcodeproj` 不能代表集成构建成功。
+- CI 应保持依赖安装、构建命令和产物路径可复现，避免写死个人证书、Cookie、Token 或开发机缓存。
+
+## 十一、新项目落地清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 11.1、先复制骨架，再做减法
+
+- [ ] 修改 App、Tests、UITests、Extension target 名称和 Scheme。
+- [ ] 修改 Bundle ID、Display Name、Development Team、版本号和 AppIcon。
+- [ ] 统一部署目标、Swift 版本、静态链接和 User Script Sandboxing。
+- [ ] 在 `Podfile.deps` 修改 target 名，并删除新项目不需要的外部依赖与功能 Pod。
+- [ ] 保留 `JobsSwiftBaseDefines → JobsSwiftDSL → JobsByUIKit → JobsInheritance` 的基础依赖方向。
+- [ ] 按真实需求决定 Flutter、Unity、SPM、Widget 和 App Group，不把演示能力全部带进生产项目。
+
+### 11.2、启动与根页面
+
+- [ ] `AppDelegate` 只保留生产需要的全局初始化，Demo 数据解析和测试打印迁出。
+- [ ] `SceneDelegate` 创建 Window，并通过唯一工厂返回根容器。
+- [ ] 根容器决定 Navigation / SideDrawer / TabBar，不让业务页私自重建应用根层级。
+- [ ] 开屏、深链、推送和登录态跳转都通过可测试的路由 / 配置入口编排。
+- [ ] 多 Scene 场景下，主题、语言、根切换和全局浮层覆盖全部 Window。
+
+### 11.3、资源与系统能力
+
+- [ ] 整理 `Resources/`，删除靶场无关大资源和未引用字体 / 视频。
+- [ ] 对账 `Info.plist`、`InfoPlist.strings`、`Localizable.strings` 与权限调用。
+- [ ] 对账 Entitlements、Capabilities、App Group、后台模式和 Extension Bundle ID。
+- [ ] 自建 Pod 资源使用独立 Bundle；Privacy Manifest 跟随真实使用 API 的模块。
+- [ ] AppIcon、备用图标和最终 `Assets.car` 在 Debug / Release 都能生成。
+
+### 11.4、组件与业务
+
+- [ ] 页面继承 `BaseVC`，导航统一 `jobsSetupGKNav`。
+- [ ] UI 使用属性 + 懒加载 + Jobs DSL + SnapKit。
+- [ ] 按钮创建用 `UIButton.sys()` / `custom()`；背景与圆角走按钮专用配置管线。
+- [ ] 颜色 / 字体使用 `JobsCor` / `JobsFont`，业务不依赖传递 import。
+- [ ] 网络、缓存、日志、计时器、权限和通知分别通过稳定门面接入。
+- [ ] 每个独立功能有独立 Demo / Feature 页面，空壳和聚合 Workbench 不作为完成标准。
+
+### 11.5、测试与交付
+
+- [ ] Unit Tests 覆盖纯逻辑、解析、缓存键和状态机。
+- [ ] UI Tests 覆盖启动、根入口、关键导航、主题和语言切换。
+- [ ] CI 使用 workspace 构建，依赖和脚本在无个人环境时可以安全降级。
+- [ ] README、SwiftDoc、Pod README、CodeSnippets 与真实 API 对齐。
+- [ ] 删除、重命名或拆 Pod 后重新生成依赖图，并确认无循环依赖。
+
+## 十二、验证与持续维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 12.1、低副作用静态检查
+
+```shell
+git diff --check -- \
+  'SwiftDoc.md/Swift工程项目框架配置方案@Jobs.md/Swift工程项目框架配置方案@Jobs.md'
+
+plutil -lint \
+  JobsSwiftBaseConfigDemo/Info.plist \
+  JobsSwiftBaseConfigDemo/JobsSwiftBaseConfigDemo.entitlements \
+  JobsWidgetExtension/Info.plist \
+  JobsWidgetExtension/JobsWidgetExtension.entitlements
+
+ruby -c Podfile
+ruby -c Podfile.deps
+```
+
+- Markdown 还要检查标题层级、代码围栏、相对图片、内部锚点、专有名词链接和列表缩进。
+- 改动 Swift 文件时，对变更文件执行 `xcrun swiftc -frontend -parse`；这只能证明语法可解析，不能替代模块编译。
+- 改动 podspec 时先做语法 / spec 解析，再生成依赖报告；不把旧报告当当前证据。
+
+### 12.2、按风险升级验证
+
+| 变更类型 | 最低验证 | 完整验证 |
+| --- | --- | --- |
+| 纯文档 | 标题、围栏、链接、图片、`git diff --check` | 人工通读代码示例与当前 API。 |
+| Swift 源码 | Parse + 定向静态扫描 | 对应 Pod / Scheme 编译与相关测试。 |
+| Pod / podspec | spec 解析、直接依赖扫描 | `pod install`、workspace `-list`、真实 Scheme 构建。 |
+| 资源 / AppIcon | 路径、声明、尺寸、透明通道 | 检查最终 Bundle / `Assets.car` 并安装验证。 |
+| UI / 主题 / 生命周期 | 静态调用链与约束检查 | 模拟器 / 真机覆盖全状态，不以静态检查冒充视觉证据。 |
+| Widget / App Group | Entitlements 与共享 key 一致 | 系统桌面添加 Widget、写入共享状态并刷新 Timeline。 |
+| Flutter / Unity / SPM | 脚本语法与路径检查 | 选择执行对应门禁、构建或运行示例。 |
+
+- `pod install`、`xcodebuild`、清缓存、下载依赖等有副作用命令，只在任务确实需要时执行并明确范围。
+- workspace 构建失败时区分本轮改动、项目格式 / 缓存、第三方依赖和既有环境错误，不把所有失败都归因于当前文档或组件。
+- 静态通过、模块编译通过、App 编译通过、模拟器表现和真机表现是五种不同证据，交付时分别说明。
+
+### 12.3、文档防漂移
+
+- 新增或修改 Swift 底层自建 API：同步 Swift 对应实现、公开入口、相关 Pod / 根 README、宿主示例、本文相关章节以及公共 Xcode 代码块目录 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets`；没有对应项也要完成检索并在交付中说明。
+- OC 底层自建 API 按相同流程同步 OC 新老工程对应实现、相关 README / Demo、两份《OC工程项目框架配置方案@Jobs.md》和同一个公共 Xcode CodeSnippets 目录。
+- 修改 `Podfile` / `Podfile.deps`：更新依赖分层、脚本边界和新项目落地说明，不在文档复制完整依赖清单。
+- 修改启动、根容器、导航、主题、语言或 Widget：同步更新调用流程与全生命周期验证项。
+- 生成报告只记录生成器真实输出；人工结论放在非生成文档中，避免下次生成被覆盖。
+- 文档示例应能直接复制，但仍需按使用模块保留最小必要 import、依赖和系统版本边界。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

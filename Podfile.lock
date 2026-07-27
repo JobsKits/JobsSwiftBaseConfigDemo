@@ -236,6 +236,8 @@ PODS:
     - JobsSwiftDSL
     - SnapKit
   - JobsGetWindow (0.1.14)
+  - JobsIconfont (1.0.0):
+    - JobsImageTools
   - JobsImageRotation (1.0.0):
     - JobsSwiftTimer
   - JobsImageTools (0.1.14):
@@ -665,6 +667,7 @@ DEPENDENCIES:
   - "JobsFuseAnimation (from `JobsByPods/JobsFuseAnimation@Pods`)"
   - "JobsGestureUnlock (from `JobsByPods/JobsGestureUnlock@Pods`)"
   - "JobsGetWindow (from `JobsByPods/JobsGetWindow@Pods`)"
+  - "JobsIconfont (from `JobsByPods/JobsIconfont@Pods`)"
   - "JobsImageRotation (from `JobsByPods/JobsImageRotation@Pods`)"
   - "JobsImageTools (from `JobsByPods/JobsImageTools@Pods`)"
   - "JobsInheritance (from `JobsByPods/JobsInheritance@Pods`)"
@@ -864,6 +867,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsGestureUnlock@Pods"
   JobsGetWindow:
     :path: "JobsByPods/JobsGetWindow@Pods"
+  JobsIconfont:
+    :path: "JobsByPods/JobsIconfont@Pods"
   JobsImageRotation:
     :path: "JobsByPods/JobsImageRotation@Pods"
   JobsImageTools:
@@ -1010,6 +1015,7 @@ SPEC CHECKSUMS:
   JobsFuseAnimation: 1aea1eec9433f1a203a7986cdcde5147f44fa11b
   JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
   JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
+  JobsIconfont: dcb4e97576328d578288af67751909bc0b07fe0b
   JobsImageRotation: 1834170a54c67bf26ef2108771e588a2c25f4617
   JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
   JobsInheritance: 2a48bc8e2d7dae3643ad2668803c8a1b773dbba0

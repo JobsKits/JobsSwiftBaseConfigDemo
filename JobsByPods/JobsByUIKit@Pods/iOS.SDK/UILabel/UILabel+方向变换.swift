@@ -19,10 +19,15 @@ extension UILabel {
     @discardableResult
     public func transformLayer(_ direction: TransformLayerDirectionType) -> Self {
         superview?.layoutIfNeeded()
-        // 清理旧 layer（避免重复叠加）
-        layer.sublayers?
-            .filter { $0 is CATextLayer && $0.name == "JobsTextLayer" }
-            .forEach { $0.removeFromSuperlayer() }
+        let oldTextLayers = layer.sublayers?
+            .compactMap { $0 as? CATextLayer }
+            .filter { $0.name == "JobsTextLayer" } ?? []
+        let currentTextColor = textColor.cgColor
+        /// UILabel 已隐藏原始文字时，沿用旧文字层颜色，保证重复布局后仍然可见
+        let textLayerColor = currentTextColor.alpha == 0
+        ? (oldTextLayers.first?.foregroundColor ?? currentTextColor)
+        : currentTextColor
+        oldTextLayers.forEach { $0.removeFromSuperlayer() }
         let textLayer = CATextLayer()
             .byName("JobsTextLayer")
             .byContentsScale(UIScreen.main.scale)
@@ -35,7 +40,7 @@ extension UILabel {
             textLayer.byString(attributed)
         } else {
             textLayer.byString(text ?? "")
-                .byForegroundColor(textColor.cgColor)
+                .byForegroundColor(textLayerColor)
                 .byFont(font)
                 .byFontSize(font.pointSize)
         }

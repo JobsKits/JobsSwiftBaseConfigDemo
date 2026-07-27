@@ -39,7 +39,7 @@ final class JobsProgressDemoVC: BaseVC {
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byText("""
             ✅ 用法：
-            1）点「开始」：自动播放进度（头部持续旋转）
+            1）点「开始」：从当前进度继续自动播放（头部持续旋转）
             2）点「停止」：停止播放（头部停止旋转）
             3）输入 0~100 点「设置」：动画到指定百分比（动画期间旋转）
             4）直接拖动进度条：实时更新进度（前进顺时针 / 后退逆时针）
@@ -79,6 +79,7 @@ final class JobsProgressDemoVC: BaseVC {
                 /// 未匹配已知分支时执行兜底处理
                 default: break
                 }
+                updateProgressLayout()
                 // ✅ 换方向：停掉自动动画 & 进度归零
                 progressView.stopAutoProgress()
                 progressView.setProgress(0, animated: false)
@@ -274,18 +275,15 @@ final class JobsProgressDemoVC: BaseVC {
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.view.endEditing(true)
-                // ✅ 自动播放前：停掉旧动画，归零更直观
+                // 从随机、设置或拖动后的当前位置继续播放
                 self.progressView.stopAutoProgress()
-                    .setProgress(0, animated: false)
-                self.lastAppliedPercent = 0
-                self.percentTextField.byText("0")
                 self.progressView.startAutoProgress(
-                    fromZero: true,
+                    fromZero: false,
                     step: 0.01,
                     interval: 0.03,
                     animated: true
                 )
-                self.stateLabel.byText("自动播放中...".tr)
+                self.stateLabel.byText("从当前进度自动播放中...".tr)
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(percentTextField.snp.bottom).offset(18)
@@ -388,6 +386,22 @@ final class JobsProgressDemoVC: BaseVC {
 }
 // MARK: - 工具
 extension JobsProgressDemoVC{
+    /// 横向使用短轨道，纵向改成长轨道；下方控制区会随进度条底部自然下移
+    private func updateProgressLayout() {
+        let isVertical = progressView.direction == .bottomToTop || progressView.direction == .topToBottom
+        progressView.snp.remakeConstraints { [unowned self] make in
+            make.top.equalTo(stateLabel.snp.bottom).offset(48.h)
+            if isVertical {
+                make.centerX.equalToSuperview()
+                make.width.equalTo(20.h)
+                make.height.equalTo(180.h)
+            } else {
+                make.left.equalToSuperview().offset(40.w)
+                make.right.equalToSuperview().inset(40.w)
+                make.height.equalTo(20.h)
+            }
+        }
+    }
     /// 把 raw(0~1) 映射成 “显示百分比”(0~100)
     private func displayPercent(fromRaw raw: CGFloat) -> CGFloat {
         let clamped = max(0, min(raw, 1))

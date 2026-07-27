@@ -120,6 +120,7 @@ def byJobs
     pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
     pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'
     pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
+    pod 'JobsIconfont',                       :path => 'JobsByPods/JobsIconfont@Pods'
     pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
     pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
     pod 'JobsSwiftRefresher/Lottie',          :path => 'JobsByPods/JobsSwiftRefresher@Pods'

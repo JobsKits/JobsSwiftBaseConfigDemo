@@ -550,9 +550,29 @@ final class JobsTimerMgrDemoVC: BaseVC {
             .byText("实验日志".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
-            .byAddTo(logCard) { make in
+            .byAddTo(logCard) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
-                make.left.right.equalToSuperview().inset(16)
+                make.left.equalToSuperview().offset(16)
+                make.right.lessThanOrEqualTo(self.clearLogBtn.snp.left).offset(-8)
+            }
+    }()
+
+    private lazy var clearLogBtn: UIButton = {
+        UIButton.sys()
+            .byTitle("清除日志".tr)
+            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
+            .byTitleColor(JobsCor.systemRed)
+            .byContentEdgeInsets(.init(top: 6, left: 12, bottom: 6, right: 12))
+            .onTap { [weak self] _ in
+                guard let self else { return }
+                onMainAsync(self) { vc in
+                    vc.clearLog()
+                }
+            }
+            .byAddTo(logCard) { make in
+                make.top.equalToSuperview().offset(8)
+                make.right.equalToSuperview().inset(12)
+                make.height.equalTo(32)
             }
     }()
 
@@ -600,7 +620,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
             lifecycleTitleLabel, lifecycleDetailLabel, lifecycleButtonsStackView,
             oneShotTitleLabel, oneShotDetailLabel, oneShotButtonsStackView,
             managerTitleLabel, managerDetailLabel, managerButtonsStackView,
-            logTitleLabel, logHintLabel, logView
+            logTitleLabel, clearLogBtn, logHintLabel, logView
         ].forEach { $0.byVisible(YES) }
         updateKindDescription()
         appendLog("页面已就绪：建议按“实验 1 → 实验 2 → 实验 3 → 实验 4”的顺序操作。")
@@ -946,6 +966,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }
 
     // MARK: - Log
+    @MainActor
+    private func clearLog() {
+        logView
+            .byText("")
+            .byContentOffsetBy(.zero)
+    }
+
     @MainActor
     fileprivate func appendLog(_ s: String) {
         let t = ISO8601DateFormatter().string(from: Date())

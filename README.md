@@ -3621,7 +3621,7 @@ private lazy var tvBlue: UITextView = { [unowned self] in
 
 #### 2.13、`GKNavigationBarSwift` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路自动在导航栏最右侧补全全局主题切换按钮，并保留页面已有的右侧业务按钮。
+从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路统一管理右上角：导航栏最多只显示一个主题入口；页面没有业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案描述下一次点击会切换到的主题；存在业务动作时则使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作放进列表。
 
 ```swift
 jobsSetupGKNav(
@@ -4327,7 +4327,11 @@ required init?(coder: NSCoder) {
 
 * 使用
 
-  Demo 根列表导航流中的子页面及类名以 `DemoVC` 结尾的独立演示页会自动获得全局主题切换按钮，无需在 `rightButtons` 中重复创建。
+  Demo 根列表导航流中的子页面及类名以 `DemoVC` 结尾的独立演示页会自动获得唯一的全局主题入口，无需在 `rightButtons` 中重复创建。传入的 `rightButtons` 会作为页面业务动作收进该入口的下拉列表，不再并排占用导航栏；入口图标和无障碍文案始终表达下一次点击的切换主题、展开或收起动作。
+
+  Demo 根列表支持拖拽调整普通分组顺序；“其他”作为兜底分组始终固定在列表末尾，不参与拖拽，也不会因历史持久化顺序恢复到中间。
+
+  Demo 根列表的二级入口统一使用 `50pt` 固定行高：主标题复用 `UILabel+Scrolling` 的缩放适配策略，副标题使用单行尾部截断，不再按设备宽度动态测量 Cell 高度。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
 
   ```swift
   if (r0.code == JXAuthCode.tokenEmpty // 令牌为空
@@ -5370,6 +5374,21 @@ localImageView.image = "Ani".img
   }()
   ```
 
+#### 18.4、[**JobsIconfont**](https://www.iconfont.cn/) 全功能门面 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+`JobsIconfont` 由本地 Pod 管理。业务层只选择语义资源或语义图标，不直接维护远程 URL、Unicode、字体文件名、加载框架与失败兜底：
+
+```swift
+imageView.byJobsIconfont(.logo) { event in
+    print(event)
+}
+glyphLabel.byJobsIconfont(.verified, size: 28, color: .systemBlue)
+titleLabel.byJobsIconfontText(size: 32)
+JobsIconfont.shared.clearImageCache()
+```
+
+Demo 总入口下包含远程成功 / 错误 URL、本地占位、列表复用防串图、缓存清理与重载、Icon Font / Unicode / UIImage，以及阿里妈妈文字字体六类场景。框架运行时只访问内置资源清单里的公开静态地址，不抓取 iconfont 网页，也不依赖登录态或未公开接口。
+
 ### 19、点击事件的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 #### 19.1、封装在`UIControl` 层的点击事件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -6392,6 +6411,8 @@ pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
   * 超大、超长动图仍会吃 CPU，必要时**限制尺寸/帧率或懒加载**。
 
 ### 33、悬浮视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+Demo 根列表左下角显示“按”的悬浮按钮，短按会保留原有声音反馈，并使用滚动 DSL 在列表顶部与尾部之间动画切换；首次短按前往尾部，长按手写动画保持不变。
 
 ```swift
 UIView().bySuspend { cfg in
