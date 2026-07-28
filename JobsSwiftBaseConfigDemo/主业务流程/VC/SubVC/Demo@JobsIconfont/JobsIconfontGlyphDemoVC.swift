@@ -36,7 +36,7 @@ final class JobsIconfontGlyphDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "Icon Font / Unicode / UIImage".tr)
+        jobsSetupGKNav(title: title ?? "Icon Font / Unicode / UIImage".tr)
         tableView.byVisible(true)
     }
 }

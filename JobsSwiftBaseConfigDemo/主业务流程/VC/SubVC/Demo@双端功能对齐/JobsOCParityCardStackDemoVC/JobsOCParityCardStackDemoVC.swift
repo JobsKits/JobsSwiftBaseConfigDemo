@@ -34,7 +34,7 @@ final class JobsCardStackDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemRed)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "GXCard 式滑动卡片堆".tr)
         installCards()
     }

@@ -53,7 +53,7 @@ final class TransparentRegionVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemYellow)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "镂空效果".tr)
         titleLabel.byVisible(YES)
         overlayView.byVisible(YES)

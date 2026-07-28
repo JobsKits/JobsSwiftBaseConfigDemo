@@ -58,7 +58,7 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xF6F7FB))
+        view.byBackgroundColor(JobsCor.systemBackground)
         setupNavigation()
         updatePreferredContentSizeIfNeeded()
         commentView.byVisible(true)

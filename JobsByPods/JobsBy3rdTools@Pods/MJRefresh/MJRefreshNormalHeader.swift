@@ -29,9 +29,9 @@ extension MJRefreshNormalHeader {
         }
         // 可选：调整字体和颜色
         header.stateLabel?.byFont(UIFont.systemFont(ofSize: 12))
-        header.stateLabel?.byTextColor(JobsCor.gray)
+        header.stateLabel?.byTextColor(JobsCor.secondaryLabel)
         header.lastUpdatedTimeLabel?.byFont(UIFont.systemFont(ofSize: 12))
-        header.lastUpdatedTimeLabel?.byTextColor(JobsCor.lightGray)
+        header.lastUpdatedTimeLabel?.byTextColor(JobsCor.secondaryLabel)
         return header
     }
 }

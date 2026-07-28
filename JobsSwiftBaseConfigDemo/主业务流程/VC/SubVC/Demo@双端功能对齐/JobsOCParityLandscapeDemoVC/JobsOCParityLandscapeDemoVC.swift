@@ -99,7 +99,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xFCFBFB))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "全局横竖屏切换".tr)
         scrollView.byVisible(YES)
         contentView.byVisible(YES)

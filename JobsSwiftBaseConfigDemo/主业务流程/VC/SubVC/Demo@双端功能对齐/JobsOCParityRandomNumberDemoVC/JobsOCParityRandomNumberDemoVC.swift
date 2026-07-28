@@ -65,7 +65,7 @@ final class JobsRandomNumberDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xFFEEDD))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "随机数测试模块".tr, rightButtons: [refreshButton])
         tableView.byVisible(YES)
         reloadRandomValues()

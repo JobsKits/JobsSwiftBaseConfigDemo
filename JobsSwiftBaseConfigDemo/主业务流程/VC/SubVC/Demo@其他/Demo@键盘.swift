@@ -48,7 +48,7 @@ final class KeyboardDemoVC: BaseVC {
     private lazy var label: UILabel = {
         UILabel()
             .byText("我是底部栏，会跟随键盘上移".tr)
-            .byTextColor(JobsCor.darkGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAddTo(bottomBar) { make in
                 make.edges.equalToSuperview()

@@ -95,7 +95,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black.withAlphaComponent(0.92))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "按钮完全盖在UITableViewCell上".tr)
         tableView.reloadData()
 //        tableView.contentInset.top = 100

@@ -31,7 +31,7 @@ final class FeedVideoCell: UITableViewCell {
 
     private lazy var subtitleLabel: UILabel = { [unowned self] in
         UILabel()
-            .byTextColor(JobsCor.lightGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(2)
             .byAddTo(contentView) { make in

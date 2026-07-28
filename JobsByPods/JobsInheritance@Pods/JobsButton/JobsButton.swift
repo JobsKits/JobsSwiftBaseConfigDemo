@@ -64,7 +64,7 @@ public final class JobsButton: UIImageView {
             .byNumberOfLines(1)
             .byBackgroundColor(JobsCor.clear)
             .byFont(JobsFont.systemFont(ofSize: 17))
-            .byTextColor(JobsCor.black)
+            .byTextColor(JobsCor.label)
     }()
     /// 对标 UIButton.subtitle（拟合系统风格）
     public lazy var subtitleLabel: UILabel = {

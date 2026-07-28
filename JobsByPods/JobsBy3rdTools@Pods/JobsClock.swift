@@ -67,14 +67,14 @@ open class JobsClockView: UIView {
     // MARK: - 指针层（懒加载）
     private lazy var hourHand: CALayer = {
         CALayer()
-            .byBackgroundColor(JobsCor.black)
+            .byBackgroundColor(JobsCor.label)
             .byCornerRadius(3)
             .byAddTo(layer)
     }()
 
     private lazy var minuteHand: CALayer = {
         CALayer()
-            .byBackgroundColor(JobsCor.darkGray)
+            .byBackgroundColor(JobsCor.secondaryLabel)
             .byCornerRadius(2)
             .byAddTo(layer)
     }()
@@ -99,10 +99,19 @@ open class JobsClockView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
+        applyTheme()
         layoutDialAndNumbers()
         layoutHandLayers()
         updateHands(animated: false)  // 布局完成后对齐当前时间
     }
+
+    #if os(iOS) || os(tvOS)
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) != false else { return }
+        applyTheme()
+    }
+    #endif
 }
 
 extension JobsClockView {
@@ -111,6 +120,19 @@ extension JobsClockView {
         dialLayer.byHidden(NO)
         tickLayer.byHidden(NO)
         centerDotLayer.byHidden(NO)
+        applyTheme()
+    }
+
+    private func applyTheme() {
+        #if os(iOS) || os(tvOS)
+        let labelColor = JobsCor.label.resolvedColor(with: traitCollection)
+        let secondaryLabelColor = JobsCor.secondaryLabel.resolvedColor(with: traitCollection)
+        dialLayer.strokeColor = labelColor.withAlphaComponent(0.2).cgColor
+        tickLayer.strokeColor = labelColor.cgColor
+        centerDotLayer.fillColor = labelColor.cgColor
+        hourHand.backgroundColor = labelColor.cgColor
+        minuteHand.backgroundColor = secondaryLabelColor.cgColor
+        #endif
     }
     /// 布局表盘 + 刻度 + 数字
     private func layoutDialAndNumbers() {

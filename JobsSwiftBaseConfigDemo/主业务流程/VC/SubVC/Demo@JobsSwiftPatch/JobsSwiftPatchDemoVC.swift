@@ -164,7 +164,6 @@ private extension JobsSwiftPatchDemoVC {
             "subTitle": "这份数据原本可以来自服务端；Demo 中改为本地预置，点击后临时替换方法实现并刷新 UI。",
             "status": "补丁加载完成：Swift 页面 UI 已被本地补丁接管",
             "buttonTitle": "重新演示 Swift 热更新",
-            "backgroundHex": "#101820",
             "cardHex": "#FEE715",
             "titleHex": "#101820",
             "subTitleHex": "#243447",
@@ -184,8 +183,7 @@ private extension JobsSwiftPatchDemoVC {
 
     func applyPatchPayload(_ payload: NSDictionary) {
         guard payload.count > 0 else { return }
-        view.byBackgroundColor(color(hex: payload["backgroundHex"] as? String,
-                                     defaultColor: JobsCor.systemBackground))
+        view.byBackgroundColor(JobsCor.systemBackground)
         patchCardView.byBackgroundColor(color(hex: payload["cardHex"] as? String,
                                               defaultColor: JobsCor.secondarySystemBackground))
         titleLabel

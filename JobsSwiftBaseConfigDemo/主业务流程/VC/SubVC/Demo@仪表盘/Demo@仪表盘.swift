@@ -27,7 +27,7 @@ final class FTDashboadDemoVC: BaseVC {
     private lazy var dashboardView: FTDashboardView = {
         FTDashboardView()
             .byLineWidth(16)
-            .byTrackColor(JobsCor.white.withAlphaComponent(0.18))
+            .byTrackColor(JobsCor.label.withAlphaComponent(0.18))
             .byProgressColor(JobsCor.systemGreen)
             .byTickCount(11)
             .byNeedleInnerRadiusRatio(0.42)
@@ -70,7 +70,7 @@ final class FTDashboadDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(r: 18, g: 22, b: 32))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "仪表盘".tr)
         dashboardView.byVisible(YES)
         slider.byVisible(YES)

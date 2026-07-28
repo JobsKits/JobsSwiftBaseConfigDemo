@@ -25,7 +25,7 @@ extension MJRefreshAutoNormalFooter {
         footer.setTitle("MJRefreshBackFooterNoMoreDataText".tr, for: .noMoreData)        // 没有更多数据状态
         // 可选：调整样式
         footer.stateLabel?.byFont(UIFont.systemFont(ofSize: 12))
-        footer.stateLabel?.byTextColor(JobsCor.gray)
+        footer.stateLabel?.byTextColor(JobsCor.secondaryLabel)
         footer.stateLabel?.byTextAlignment(.center)
         // 设置是否自动隐藏（例如没有更多数据时隐藏 Footer）
         footer.byHidden(false) // 默认显示，可以根据需求设置隐藏逻辑

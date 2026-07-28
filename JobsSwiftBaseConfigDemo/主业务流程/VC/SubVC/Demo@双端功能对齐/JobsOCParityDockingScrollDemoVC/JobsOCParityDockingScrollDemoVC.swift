@@ -142,7 +142,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xF3F6FA))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "指定 Y 区间拖动并吸附".tr)
         topRegionView.byVisible(YES)
         usageCard.byVisible(YES)

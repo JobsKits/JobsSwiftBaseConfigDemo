@@ -119,6 +119,9 @@ extension JobsIconfontDemoListVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        Row.allCases[indexPath.row].vcType.init().byPush(self)
+        let row = Row.allCases[indexPath.row]
+        let demoVC = row.vcType.init()
+        demoVC.title = row.title
+        demoVC.byPush(self)
     }
 }

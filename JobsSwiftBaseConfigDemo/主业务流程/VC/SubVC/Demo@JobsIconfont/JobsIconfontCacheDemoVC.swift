@@ -46,7 +46,7 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "缓存命中、清理与重载".tr)
+        jobsSetupGKNav(title: title ?? "缓存命中、清理与重载".tr)
         layoutUI()
         loadImage(forceRefresh: true, phase: "首次网络加载")
     }

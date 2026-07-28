@@ -72,7 +72,7 @@ final class EmptyTableViewDemoVC: BaseVC {
     // ================================== 生命周期 ==================================
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.cyan)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "UITableView@空态刷新".tr,
             rightButtons: [

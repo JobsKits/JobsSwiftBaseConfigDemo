@@ -127,7 +127,7 @@ final class HKLiveVC: BaseVC {
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black)
+        view.byBackgroundColor(JobsCor.systemBackground)
         /// 开启屏幕常亮
         keepScreenOn()
         /// 流量监控@上行下载

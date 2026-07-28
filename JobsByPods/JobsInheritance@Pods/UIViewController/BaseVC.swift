@@ -27,7 +27,7 @@ open class BaseVC: UIViewController,UIViewControllerDebugDeinitProtocol {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.white)
+        view.byBackgroundColor(JobsCor.systemBackground)
 //        jobsSetupGKNav(title: "定义当前的标题")
     }
     /// 所有导航栈和模态子页面统一补齐导航栏、返回键及标题，根页面和自定义导航不受影响。

@@ -62,7 +62,7 @@ final class JobsLabelRotationDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xFFEEDD))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "UILabel 文字旋转".tr)
         previewCard.byVisible(YES)
         rotatingLabel.byVisible(YES)

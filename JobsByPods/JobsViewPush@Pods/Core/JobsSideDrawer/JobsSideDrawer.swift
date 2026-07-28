@@ -166,7 +166,7 @@ public final class JobsSideDrawerVC: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black)
+        view.byBackgroundColor(JobsCor.systemBackground)
         installChildren()
         contentContainerView.byAddTo(view)
         drawerContainerView.byAddTo(view)

@@ -52,7 +52,7 @@ final class JobsIconfontTextFontDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "阿里妈妈文字字体".tr)
+        jobsSetupGKNav(title: title ?? "阿里妈妈文字字体".tr)
         layoutUI()
     }
 

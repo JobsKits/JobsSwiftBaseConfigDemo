@@ -65,4 +65,10 @@ JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 
 业务设置页应使用 `JobsSplashContentType.allCases` 完整展示五种内容类型，并把用户选择写入 `JobsSplashPreferences.contentTypeForNextLaunch`；启动入口读取该设置后，再为所选类型提供实际资源名或 URL。Swift Demo 会复用“米老鼠 / 唐老鸭 / 迪斯尼”图片生成本地 GIF 文件，再通过 `.localGIF(fileURL:)` 展示，不依赖额外占位素材。
 
+## 明暗主题契约
+
+- 页面、列表和弹框的普通承载面使用 `JobsCor.systemBackground` / `JobsCor.secondarySystemBackground`，正文、说明和占位文字使用 `JobsCor.label` / `JobsCor.secondaryLabel` / `JobsCor.placeholderText`，确保白天浅底深字、黑夜深底浅字。
+- 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要在主题 Trait 变化后重新解析和绘制。
+- 验证时从 Demo 全局主题入口分别切换白天和黑夜，检查组件的背景、文字、禁用态、占位态与弹出层对比度。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -85,7 +85,7 @@ public class SlideToUnlockView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel()
             .byText("滑动以解锁".tr)
-            .byTextColor(JobsCor.darkGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(self) { [unowned self] make in
@@ -95,7 +95,7 @@ public class SlideToUnlockView: UIView {
     /// 滑块视图
     private lazy var thumbView: UIView = { [unowned self] in
         UIView()
-            .byBackgroundColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(thumbSize.height / 2)
             .byMasksToBounds(YES)
             .byShadowOpacity(0.15)

@@ -40,14 +40,14 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private lazy var callbackLabel: UILabel = {
         UILabel()
             .byText("当前菜单：日常.1".tr)
-            .byTextColor(JobsCor.darkGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(1)
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.white)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "首页联动切换子页面".tr)
         mountControls()
         rebuildLinkageView()
@@ -168,7 +168,7 @@ private final class ActivityListView: UIView {
         self.sectionTitle = sectionTitle
         self.menuTitle = menuTitle
         super.init(frame: .zero)
-        self.byBackgroundColor(JobsCor.white)
+        self.byBackgroundColor(JobsCor.secondarySystemBackground)
         for index in 0..<5 {
             let card = makeCard(index: index)
             cards.append(card)
@@ -217,7 +217,7 @@ private final class ActivityListView: UIView {
         let subtitleLabel = UILabel()
         subtitleLabels.append(subtitleLabel)
         subtitleLabel.byText("神秘彩金等你来拿".tr)
-        subtitleLabel.byTextColor(JobsCor.darkGray)
+        subtitleLabel.byTextColor(JobsCor.secondaryLabel)
         subtitleLabel.byFont(JobsFont.systemFont(ofSize: 15))
         iconLabel.byAddTo(card)
         titleLabel.byAddTo(card)

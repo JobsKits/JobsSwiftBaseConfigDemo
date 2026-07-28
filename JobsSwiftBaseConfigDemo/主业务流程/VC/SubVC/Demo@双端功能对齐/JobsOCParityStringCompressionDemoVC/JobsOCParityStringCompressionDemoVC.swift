@@ -182,7 +182,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xF6F8FC))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "字符串压缩 / 解压".tr)
         scrollView.byVisible(YES)
         contentView.byVisible(YES)

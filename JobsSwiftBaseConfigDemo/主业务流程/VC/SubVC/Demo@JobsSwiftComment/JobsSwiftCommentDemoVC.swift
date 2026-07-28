@@ -52,7 +52,7 @@ final class JobsSwiftCommentDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(UIColor(hex: 0xF6F7FB))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "JobsSwiftComment")
         tableView.byVisible(true)
     }
@@ -71,13 +71,13 @@ extension JobsSwiftCommentDemoVC: UITableViewDelegate, UITableViewDataSource {
         let mode = modeArr[indexPath.row]
         cell.textLabel?.byText(JobsSwiftCommentConfig.title(by: mode))
         cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-        cell.textLabel?.byTextColor(UIColor(hex: 0x2D3642))
+        cell.textLabel?.byTextColor(JobsCor.label)
         cell.detailTextLabel?.byText(JobsSwiftCommentConfig.subtitle(by: mode))
         cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
-        cell.detailTextLabel?.byTextColor(UIColor(hex: 0x7A8491))
+        cell.detailTextLabel?.byTextColor(JobsCor.secondaryLabel)
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .default
-        cell.byBackgroundColor(JobsCor.white)
+        cell.byBackgroundColor(JobsCor.secondarySystemBackground)
         return cell
     }
 

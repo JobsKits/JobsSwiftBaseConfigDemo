@@ -86,7 +86,7 @@ final class JobsMeCenterVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemGray6)
+        view.byBackgroundColor(JobsCor.systemBackground)
         tableView.byVisible(YES)
     }
 }

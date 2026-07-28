@@ -36,7 +36,7 @@ final class JobsIconfontReuseListDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "列表复用与防串图".tr)
+        jobsSetupGKNav(title: title ?? "列表复用与防串图".tr)
         tableView.byVisible(true)
     }
 }
@@ -125,7 +125,6 @@ private final class JobsIconfontReuseCell: UITableViewCell {
             case .failure:
                 self?.stateLabel.byText("失败兜底")
             }
-        }
-        return self
+        };return self
     }
 }

@@ -13,7 +13,6 @@ import UIKit
 #endif
 
 import JobsByUIKit
-import JobsFuseAnimation
 import JobsIconfont
 import JobsSwiftDSL
 import JobsSwiftAppTools
@@ -48,7 +47,7 @@ final class RootFoldTableCell: UITableViewCell,
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
     private static let innerCellReuseID = "RootFoldInnerCell"
-    private static let chargingAnimationConfig = JobsChargingAnimationConfig()
+    private static let chargingProgressStates = ["🟩⬜⬜", "🟩🟩⬜", "🟩🟩🟩"]
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
@@ -56,6 +55,7 @@ final class RootFoldTableCell: UITableViewCell,
     private var pinAccessoryIndex: Int?
     private var pinnedSectionStyle = false
     private var isExpanded: Bool = false
+    private var chargingProgressPhase = 0
     private var innerTableHeight: Constraint?
     // MARK: - Lazy UI
     private lazy var card: UIView = {
@@ -203,8 +203,9 @@ final class RootFoldTableCell: UITableViewCell,
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        stopChargingProgressAnimation()
+        stopVisibleInnerTextScrolling()
         items = []
+        innerTableView.reloadData()
         onSelectItem = nil
         onPinItem = nil
         pinAccessoryIndex = nil
@@ -225,7 +226,7 @@ final class RootFoldTableCell: UITableViewCell,
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil { refreshTheme() }
-        syncChargingProgressAnimationState()
+        syncVisibleInnerTextScrollingState()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -350,7 +351,7 @@ extension RootFoldTableCell{
                 detailClip.byVisible(NO) // ✅ 非动画折叠：直接隐藏
             }
         }
-        syncChargingProgressAnimationState()
+        syncVisibleInnerTextScrollingState()
     }
 
     @objc private func handleInnerCellLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -390,26 +391,69 @@ extension RootFoldTableCell{
         return "\(items.count) 个 Demo · \(stateText)"
     }
 
-    private var chargingProgressIndexPath: IndexPath? {
-        guard let row = items.firstIndex(where: { $0.vcType == JobsSysProgressDemoVC.self }) else {
-            return nil
-        };return IndexPath(row: row, section: 0)
+    private func displayTitle(for item: DemoItem) -> String {
+        guard item.vcType == JobsProgressDemoVC.self else { return item.title };return "\(Self.chargingProgressStates[chargingProgressPhase]) \(item.title)"
     }
 
-    private func syncChargingProgressAnimationState() {
-        guard let chargingProgressIndexPath,
-              let cell = innerTableView.cellForRow(at: chargingProgressIndexPath) else { return }
-        if window != nil, isExpanded {
-            cell.byChargingAnimationResume()
-        } else {
-            cell.byChargingAnimationPause()
+    func updateChargingProgress(phase: Int) {
+        chargingProgressPhase = max(0, phase) % Self.chargingProgressStates.count
+        for indexPath in innerTableView.indexPathsForVisibleRows ?? [] {
+            guard items.indices.contains(indexPath.row),
+                  items[indexPath.row].vcType == JobsProgressDemoVC.self,
+                  let titleLabel = innerTableView.cellForRow(at: indexPath)?.textLabel else { continue }
+            titleLabel
+                .byText(displayTitle(for: items[indexPath.row]))
+                .byReloadTextScroll()
         }
     }
 
-    private func stopChargingProgressAnimation() {
-        guard let chargingProgressIndexPath else { return }
-        innerTableView.cellForRow(at: chargingProgressIndexPath)?
-            .byChargingAnimationStop()
+    private func syncVisibleInnerTextScrollingState() {
+        innerTableView.visibleCells.forEach(syncTextScrollingState(for:))
+    }
+
+    private func applyTextDisplayStrategy(to label: UILabel?) {
+        guard let label else { return }
+        switch RootListPreferences.cellTextDisplayStrategy {
+        /// 处理 .normal 分支
+        case .normal:
+            label
+                .byStopTextScroll()
+                .byNumberOfLines(1)
+                .byAdjustsFontSizeToFitWidth(false)
+                .byMinimumScaleFactor(1)
+                .byLineBreakMode(.byClipping)
+        /// 处理 .tailTruncation 分支
+        case .tailTruncation:
+            label.byTextDisplayMode(.singleLineTailTruncation)
+        /// 处理 .scaleToFit 分支
+        case .scaleToFit:
+            label.byTextDisplayMode(.scaleToFit, minimumScaleFactor: 0.5)
+        /// 处理 .continuous 分支
+        case .continuous:
+            label.byTextDisplayMode(.scrolling, scrollConfiguration: .continuous())
+        /// 处理 .pingPong 分支
+        case .pingPong:
+            label.byTextDisplayMode(.scrolling, scrollConfiguration: .pingPong())
+        }
+    }
+
+    private func syncTextScrollingState(for cell: UITableViewCell) {
+        [cell.textLabel, cell.detailTextLabel]
+            .compactMap { $0 }
+            .forEach { label in
+                if window != nil, isExpanded {
+                    label.byResumeTextScroll()
+                } else {
+                    label.byPauseTextScroll()
+                }
+            }
+    }
+
+    private func stopVisibleInnerTextScrolling() {
+        innerTableView.visibleCells.forEach { cell in
+            cell.textLabel?.byStopTextScroll()
+            cell.detailTextLabel?.byStopTextScroll()
+        }
     }
 
     private static let fallbackDemoIconSymbolName = "questionmark.square.dashed"
@@ -518,8 +562,7 @@ extension RootFoldTableCell{
                 size: CGSize(width: 30, height: 30),
                 color: JobsCor.systemBlue
             ).withRenderingMode(.alwaysOriginal)
-        }
-        return demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
+        };return demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
     }
 
     private func pinAccessoryButton(index: Int) -> UIButton {
@@ -554,22 +597,31 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.innerCellReuseID) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
-        cell.byChargingAnimationStop()
+        guard items.indices.contains(indexPath.row) else {
+            cell.contentConfiguration = nil
+            cell.textLabel?.byText(nil)
+            cell.detailTextLabel?.byText(nil)
+            cell.detailTextLabel?.attributedText = nil
+            cell.imageView?.byImage(nil)
+            cell.accessoryView = nil
+            cell.byAccessoryType(.none)
+            return cell
+        }
+        let item = items[indexPath.row]
         /// 复用旧 Cell 时先退出动态 UIListContentConfiguration，恢复可直接配置的 UILabel。
         cell.contentConfiguration = nil
         cell.textLabel?
-            .byText(item.title)
+            .byText(displayTitle(for: item))
             .byFont(Self.innerTitleFont)
             .byTextColor(RootListPreferences.foldPrimaryTextColor)
-            .byTextDisplayMode(.scaleToFit, minimumScaleFactor: 0.5)
         cell.detailTextLabel?
             .byText(Self.innerSecondaryText(for: item))
             .byFont(Self.innerSubTitleFont)
             .byTextColor(RootListPreferences.foldSecondaryTextColor)
-            .byTextDisplayMode(.singleLineTailTruncation)
+        applyTextDisplayStrategy(to: cell.textLabel)
+        applyTextDisplayStrategy(to: cell.detailTextLabel)
         cell.imageView?.byImage(Self.demoIconImage(for: item))
         cell.byBackgroundColor(JobsCor.clear)
         cell.contentView.byBackgroundColor(JobsCor.clear)
@@ -584,20 +636,28 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
         } else {
             cell.byAccessoryType(.disclosureIndicator)
         }
-        if item.vcType == JobsSysProgressDemoVC.self {
-            cell.byChargingAnimationStart(Self.chargingAnimationConfig)
-            if window == nil || !isExpanded {
-                cell.byChargingAnimationPause()
-            }
-        };return cell
+        syncTextScrollingState(for: cell)
+        return cell
     }
 
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         Self.innerRowH
     }
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        syncTextScrollingState(for: cell)
+    }
+    func tableView(_ tableView: UITableView,
+                   didEndDisplaying cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        cell.textLabel?.byPauseTextScroll()
+        cell.detailTextLabel?.byPauseTextScroll()
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard items.indices.contains(indexPath.row) else { return }
         onSelectItem?(indexPath.row)
     }
 }

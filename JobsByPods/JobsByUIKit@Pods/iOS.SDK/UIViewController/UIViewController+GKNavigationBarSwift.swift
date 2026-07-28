@@ -32,6 +32,10 @@ private var jobsDemoBusinessButtonsAssociatedKey: UInt8 = 0
 private var jobsDemoActionMenuOverlayAssociatedKey: UInt8 = 0
 private var jobsDemoThemeButtonOpensMenuAssociatedKey: UInt8 = 0
 
+public extension Notification.Name {
+    static let JobsGlobalThemeDidChange = Notification.Name("JobsGlobalThemeDidChange")
+}
+
 public extension UIApplication {
     static var jobsGlobalDarkModeEnabled: Bool {
         get {
@@ -46,6 +50,11 @@ public extension UIApplication {
             UserDefaults.standard.set(newValue, forKey: jobsGlobalDarkModeDefaultsKey)
             UserDefaults.standard.synchronize()
             jobsApplyGlobalTheme()
+            NotificationCenter.default.post(
+                name: .JobsGlobalThemeDidChange,
+                object: nil,
+                userInfo: ["darkModeEnabled": newValue]
+            )
         }
     }
 
@@ -58,6 +67,7 @@ public extension UIApplication {
             .flatMap(\.windows)
             .forEach { window in
                 window.overrideUserInterfaceStyle = style
+                jobsNormalizeViewControllerRoots(in: window.rootViewController)
                 jobsSyncGlobalThemeButtons(in: window, isDarkMode: isDarkMode)
             }
     }
@@ -85,6 +95,20 @@ public extension UIApplication {
         view.subviews.forEach {
             jobsSyncGlobalThemeButtons(in: $0, isDarkMode: isDarkMode)
         }
+    }
+
+    private static func jobsNormalizeViewControllerRoots(in viewController: UIViewController?) {
+        guard let viewController else { return }
+        if !(viewController is UIAlertController) {
+            viewController.viewIfLoaded?.byBackgroundColor(JobsCor.systemBackground)
+            viewController.gk_navBackgroundColor = JobsCor.systemBackground
+            viewController.gk_navBackgroundImage = nil
+            viewController.gk_navTitleColor = JobsCor.label
+        }
+        viewController.children.forEach {
+            jobsNormalizeViewControllerRoots(in: $0)
+        }
+        jobsNormalizeViewControllerRoots(in: viewController.presentedViewController)
     }
 }
 
@@ -265,6 +289,7 @@ extension UIViewController {
         let isPresentedPage = presentingViewController != nil ||
             (navigationController?.viewControllers.first === self && navigationController?.presentingViewController != nil)
         guard isNavigationChild || isPresentedPage else { return self }
+        view.byBackgroundColor(JobsCor.systemBackground)
 
         if jobsIsSystemNavigationBarDemo {
             navigationController?
@@ -275,6 +300,9 @@ extension UIViewController {
             return self
         }
 
+        gk_navBackgroundColor = JobsCor.systemBackground
+        gk_navBackgroundImage = nil
+        gk_navTitleColor = JobsCor.label
         if gk_navTitle?.isEmpty != false,gk_navTitleView == nil {
             if let titleView = navigationItem.titleView {
                 gk_navTitleView = titleView

@@ -100,7 +100,7 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
     /// LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black.withAlphaComponent(0.92))
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "按钮完全盖在UICollectionViewCell上".tr)
         collectionView.byReloadData()
     }

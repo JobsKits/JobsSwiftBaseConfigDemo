@@ -29,7 +29,7 @@ final class FMDBDemoVC: BaseVC {
             .byText("FMDB Demo：新增 / 查询 / 更新首条 / 删除末条 / 清空".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
-            .byTextColor(JobsCor.darkGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(horizontalInset)
                 make.right.equalToSuperview().inset(horizontalInset)
@@ -176,7 +176,7 @@ final class FMDBDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.white)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "FMDB@Demo")
         hintLabel.byVisible(YES)
         nameField.byVisible(YES)

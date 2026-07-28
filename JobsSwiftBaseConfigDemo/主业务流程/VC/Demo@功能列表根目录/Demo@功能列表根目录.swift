@@ -59,9 +59,11 @@ final class RootListVC: BaseVC {
     private let timerMgr = JobsSwiftTimerMgr.shared
     private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
     private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
+    private let progressIndicatorTimerID = "RootListVC.progressIndicator.timer"
 
     private var suspendBtnTimer: JobsSwiftTimerProtocol?
     private var suspendSpinBtnTimer: JobsSwiftTimerProtocol?
+    private var progressIndicatorTimer: JobsSwiftTimerProtocol?
     private var suspendFuseTimer: JobsSwiftTimerProtocol?
     private var suspendFuseStartTS: CFTimeInterval = 0
     private var suspendFuseProgress: CGFloat = 0
@@ -71,19 +73,27 @@ final class RootListVC: BaseVC {
 
     /// 旧版 onTimerTick 给 elapsed；新版不再给，自己计数即可
     private var spinSeconds: Int = 0
+    private var progressIndicatorPhase = 0
 
     deinit {
         suspendBtnTimer?.stop()
         suspendSpinBtnTimer?.stop()
+        progressIndicatorTimer?.stop()
         suspendFuseTimer?.stop()
         try? timerMgr.remove(identifier: suspendBtnTimerID)
         try? timerMgr.remove(identifier: suspendSpinBtnTimerID)
+        try? timerMgr.remove(identifier: progressIndicatorTimerID)
         if let langToken {
             NotificationCenter.default.removeObserver(langToken)
+        }
+        if let themeToken {
+            NotificationCenter.default.removeObserver(themeToken)
         }
     }
 
     private var langToken: NSObjectProtocol?
+    private var themeToken: NSObjectProtocol?
+    private var appliedCellTextDisplayStrategy = RootListPreferences.cellTextDisplayStrategy
     /// 展开状态（一级目录展开行）
     private var expandedGroups = Set<Int>()
     private var pinnedDemoItems: [DemoItem] = []
@@ -612,6 +622,13 @@ final class RootListVC: BaseVC {
                 functionMenuTableView.reloadData()
             }
         }
+        themeToken = NotificationCenter.default.addObserver(
+            forName: .JobsGlobalThemeDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.applyDemoListThemeChrome()
+        }
     }
 
     override func viewDidLoad() {
@@ -667,6 +684,13 @@ final class RootListVC: BaseVC {
         refreshLocalizedContent()
         applyDemoListThemeChrome()
         refreshSuspendTimeButtonVisibility()
+        let strategy = RootListPreferences.cellTextDisplayStrategy
+        if strategy != appliedCellTextDisplayStrategy {
+            appliedCellTextDisplayStrategy = strategy
+            if !RootListPreferences.returnToTopAndRefreshEnabled {
+                tableView.reloadData()
+            }
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -678,10 +702,14 @@ final class RootListVC: BaseVC {
                 guard let self else { return }
                 self.pendingDemoListAppearanceUpdate = false
                 self.performDemoListAppearanceUpdate()
-            }
-            return
+            };return
         }
         performDemoListAppearanceUpdate()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        progressIndicatorTimer?.pause()
     }
 }
 
@@ -699,6 +727,8 @@ extension RootListVC{
         demoListHasAppeared = true
         refreshSuspendTimeButtonVisibility()
         suspendSpinBtnTimer?.resume()
+        progressIndicatorTimer?.resume()
+        updateVisibleProgressIndicators()
     }
 
     /// 刷新 Footer 会读取表格尺寸，必须等主表进入 Window 后再挂载。
@@ -879,6 +909,35 @@ extension RootListVC{
         } catch {
             print("❌ create suspendSpinBtnTimer failed: \(error)")
         }
+        // 3) 自定义进度条入口：只更新当前可见标题，模拟三格电池循环充电
+        do {
+            progressIndicatorPhase = 0
+            let cfg = JobsSwiftTimerConfig(interval: 0.45,
+                                           repeats: true,
+                                           tolerance: 0.03,
+                                           queue: .main)
+            progressIndicatorTimer = try timerMgr.create(
+                kind: .gcd,
+                identifier: progressIndicatorTimerID,
+                config: cfg,
+                dedupPolicy: .replace
+            ) { [weak self] in
+                onMainAsync(self) { vc in
+                    vc.progressIndicatorPhase = (vc.progressIndicatorPhase + 1) % 3
+                    vc.updateVisibleProgressIndicators()
+                }
+            }
+            progressIndicatorTimer?.start()
+        } catch {
+            print("❌ create progressIndicatorTimer failed: \(error)")
+        }
+    }
+
+    private func updateVisibleProgressIndicators() {
+        let phase = UIAccessibility.isReduceMotionEnabled ? 2 : progressIndicatorPhase
+        tableView.visibleCells
+            .compactMap { $0 as? RootFoldTableCell }
+            .forEach { $0.updateChargingProgress(phase: phase) }
     }
 
     private var hasPinnedDemoSection: Bool {
@@ -1407,8 +1466,7 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         guard indexPath.section == demoGroupTableSection,
               demo2D.indices.contains(indexPath.row) else { return .leastNonzeroMagnitude }
         let row = indexPath.row
-        guard expandedGroups.contains(row) else { return RootFoldTableCell.collapsedHeight() }
-        return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
+        guard expandedGroups.contains(row) else { return RootFoldTableCell.collapsedHeight() };return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

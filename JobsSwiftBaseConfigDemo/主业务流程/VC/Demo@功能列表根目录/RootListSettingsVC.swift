@@ -24,11 +24,40 @@ import SnapKit
 import GKNavigationBarSwift
 import JobsViewPush
 
+enum RootListCellTextDisplayStrategy: Int, CaseIterable {
+    case normal
+    case tailTruncation
+    case scaleToFit
+    case continuous
+    case pingPong
+
+    var title: String {
+        switch self {
+        /// 处理 .normal 分支
+        case .normal:
+            return "一般模式".tr
+        /// 处理 .tailTruncation 分支
+        case .tailTruncation:
+            return "省略号模式".tr
+        /// 处理 .scaleToFit 分支
+        case .scaleToFit:
+            return "缩小字体模式".tr
+        /// 处理 .continuous 分支
+        case .continuous:
+            return "连续跑马灯".tr
+        /// 处理 .pingPong 分支
+        case .pingPong:
+            return "左右来回滚动".tr
+        }
+    }
+}
+
 enum RootListPreferences {
     private static let returnToTopAndRefreshKey = "RootList.returnToTopAndRefresh"
     private static let sideDrawerContentModeKey = "RootList.sideDrawerContentMode"
     private static let usesTabBarEntryKey = "RootList.usesTabBarEntry"
     private static let showsSuspendTimeButtonKey = "com.jobs.demoList.showsSuspendTimeButton"
+    private static let cellTextDisplayStrategyKey = "com.jobs.demoList.cellTextDisplayStrategy"
 
     static var usesTabBarEntry: Bool {
         get { UserDefaults.standard.bool(forKey: usesTabBarEntryKey) }
@@ -66,6 +95,19 @@ enum RootListPreferences {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: showsSuspendTimeButtonKey)
+            UserDefaults.standard.synchronize()
+        }
+    }
+
+    static var cellTextDisplayStrategy: RootListCellTextDisplayStrategy {
+        get {
+            guard UserDefaults.standard.object(forKey: cellTextDisplayStrategyKey) != nil else { return .continuous }
+            return RootListCellTextDisplayStrategy(
+                rawValue: UserDefaults.standard.integer(forKey: cellTextDisplayStrategyKey)
+            ) ?? .continuous
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: cellTextDisplayStrategyKey)
             UserDefaults.standard.synchronize()
         }
     }
@@ -152,27 +194,33 @@ enum RootListPreferences {
     }
 
     static var pageBackgroundColor: UIColor {
-        darkModeEnabled ? color(0x0F1115) : JobsCor.white
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground }
+        return darkModeEnabled ? color(0x0F1115) : JobsCor.white
     }
 
     static var settingsPageBackgroundColor: UIColor {
-        darkModeEnabled ? color(0x0F1115) : color(0xF4F5F8)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemGroupedBackground }
+        return darkModeEnabled ? color(0x0F1115) : color(0xF4F5F8)
     }
 
     static var navigationBackgroundColor: UIColor {
-        darkModeEnabled ? color(0x15171C) : UIColor(r: 255, g: 238, b: 221)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground }
+        return darkModeEnabled ? color(0x15171C) : JobsCor.white
     }
 
     static var primaryTextColor: UIColor {
-        darkModeEnabled ? color(0xF4F5F8) : color(0x3D4A58)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.label }
+        return darkModeEnabled ? color(0xF4F5F8) : color(0x3D4A58)
     }
 
     static var secondaryTextColor: UIColor {
-        darkModeEnabled ? color(0xA8AFBC) : color(0x8A93A1)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondaryLabel }
+        return darkModeEnabled ? color(0xA8AFBC) : color(0x8A93A1)
     }
 
     static var cardBackgroundColor: UIColor {
-        darkModeEnabled ? color(0x191B20) : JobsCor.white
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondarySystemGroupedBackground }
+        return darkModeEnabled ? color(0x191B20) : JobsCor.white
     }
 
     static var foldCardBackgroundColor: UIColor {
@@ -189,7 +237,8 @@ enum RootListPreferences {
     }
 
     static var separatorColor: UIColor {
-        darkModeEnabled ? color(0x30333A) : color(0xE5E7EB)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.separator }
+        return darkModeEnabled ? color(0x30333A) : color(0xE5E7EB)
     }
 
     static var selectedTintColor: UIColor {
@@ -337,6 +386,7 @@ final class RootListSettingsVC: BaseVC {
         case general
         case splashContent
         case language
+        case cellTextDisplayStrategy
     }
 
     private enum GeneralSettingItem: Int, CaseIterable {
@@ -382,7 +432,9 @@ final class RootListSettingsVC: BaseVC {
     }
 
     private var langToken: NSObjectProtocol?
+    private var themeToken: NSObjectProtocol?
     private var shouldApplyAppEntryAfterReturning = false
+    private var expandedSections = Set<SettingSection>()
 
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
@@ -406,6 +458,9 @@ final class RootListSettingsVC: BaseVC {
         if let langToken {
             NotificationCenter.default.removeObserver(langToken)
         }
+        if let themeToken {
+            NotificationCenter.default.removeObserver(themeToken)
+        }
     }
 
     override func viewDidLoad() {
@@ -423,6 +478,13 @@ final class RootListSettingsVC: BaseVC {
             guard let self else { return }
             self.updateLocalizedContent()
             self.applySettingsTheme()
+        }
+        themeToken = NotificationCenter.default.addObserver(
+            forName: .JobsGlobalThemeDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.applySettingsTheme()
         }
     }
 
@@ -493,6 +555,49 @@ private extension RootListSettingsVC {
         }
     }
 
+    private func expandableSectionTitle(for section: SettingSection) -> String {
+        switch section {
+        /// 通用设置没有二级选项
+        case .general:
+            return ""
+        /// 展示当前开屏内容类型
+        case .splashContent:
+            return String(
+                format: "开屏内容：%@".tr,
+                splashContentTitle(for: JobsSplashPreferences.contentTypeForNextLaunch)
+            )
+        /// 展示当前应用语言
+        case .language:
+            let currentTitle = LanguageSettingItem.allCases
+                .first { $0.languageCode == currentLanguageCode() }?
+                .title ?? "中文".tr
+            return String(format: "应用语言：%@".tr, currentTitle)
+        /// 展示当前列表文字策略
+        case .cellTextDisplayStrategy:
+            return String(
+                format: "列表主/副标题：%@".tr,
+                RootListPreferences.cellTextDisplayStrategy.title
+            )
+        }
+    }
+
+    private func expansionAccessoryView(for section: SettingSection) -> UIView {
+        UILabel(frame: CGRect(x: 0, y: 0, width: 76, height: 24))
+            .byText(expandedSections.contains(section) ? "收起".tr : "展开".tr)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTextColor(RootListPreferences.selectedTintColor)
+            .byTextAlignment(.right)
+    }
+
+    private func toggleExpansion(for section: SettingSection) {
+        if expandedSections.contains(section) {
+            expandedSections.remove(section)
+        } else {
+            expandedSections.insert(section)
+        }
+        tableView.reloadSections(IndexSet(integer: section.rawValue), with: .automatic)
+    }
+
     func currentLanguageCode() -> String {
         let code = LanguageManager.shared.currentLanguageCode
         if code == "fil" || code == "fil-PH" { return "tl" };return code
@@ -515,7 +620,6 @@ private extension RootListSettingsVC {
         /// 处理 .theme 分支
         case .theme:
             let dark = RootListPreferences.toggleDarkMode()
-            applySettingsTheme()
             (dark ? "主题已切换：黑夜".tr : "主题已切换：白天".tr).toast
         /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
@@ -548,26 +652,18 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
             return GeneralSettingItem.allCases.count
         /// 处理 .splashContent 分支
         case .splashContent:
-            return JobsSplashContentType.allCases.count
+            return expandedSections.contains(settingSection) ? JobsSplashContentType.allCases.count + 1 : 1
         /// 处理 .language 分支
         case .language:
-            return LanguageSettingItem.allCases.count
+            return expandedSections.contains(settingSection) ? LanguageSettingItem.allCases.count + 1 : 1
+        /// 处理 .cellTextDisplayStrategy 分支
+        case .cellTextDisplayStrategy:
+            return expandedSections.contains(settingSection) ? RootListCellTextDisplayStrategy.allCases.count + 1 : 1
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let settingSection = SettingSection(rawValue: section) else { return nil }
-        switch settingSection {
-        /// 通用设置不显示分组标题
-        case .general:
-            return nil
-        /// 显示开屏内容类型标题
-        case .splashContent:
-            return "开屏内容".tr
-        /// 显示应用语言标题
-        case .language:
-            return "应用语言".tr
-        }
+        nil
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -579,10 +675,18 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
         guard let settingSection = SettingSection(rawValue: indexPath.section) else { return cell }
         cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
         cell.textLabel?.byTextColor(RootListPreferences.primaryTextColor)
+        cell.textLabel?
+            .byNumberOfLines(1)
+            .byAdjustsFontSizeToFitWidth(settingSection != .general && indexPath.row == 0)
+            .byMinimumScaleFactor(settingSection != .general && indexPath.row == 0 ? 0.72 : 1)
         cell.byBackgroundColor(RootListPreferences.cardBackgroundColor)
         cell.contentView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
         cell.byTintColor(RootListPreferences.selectedTintColor)
         cell.selectionStyle = .default
+        cell.accessoryView = nil
+        cell.accessoryType = .none
+        cell.indentationLevel = 0
+        cell.indentationWidth = 20
         switch settingSection {
         /// 处理 .general 分支
         case .general:
@@ -591,14 +695,37 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
             cell.accessoryType = .disclosureIndicator
         /// 处理 .splashContent 分支
         case .splashContent:
-            let contentType = JobsSplashContentType.allCases[indexPath.row]
-            cell.textLabel?.byText(splashContentTitle(for: contentType))
-            cell.accessoryType = contentType == JobsSplashPreferences.contentTypeForNextLaunch ? .checkmark : .none
+            if indexPath.row == 0 {
+                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
+                cell.accessoryView = expansionAccessoryView(for: settingSection)
+            } else {
+                let contentType = JobsSplashContentType.allCases[indexPath.row - 1]
+                cell.textLabel?.byText(splashContentTitle(for: contentType))
+                cell.accessoryType = contentType == JobsSplashPreferences.contentTypeForNextLaunch ? .checkmark : .none
+                cell.indentationLevel = 1
+            }
         /// 处理 .language 分支
         case .language:
-            let item = LanguageSettingItem.allCases[indexPath.row]
-            cell.textLabel?.byText(item.title)
-            cell.accessoryType = item.languageCode == currentLanguageCode() ? .checkmark : .none
+            if indexPath.row == 0 {
+                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
+                cell.accessoryView = expansionAccessoryView(for: settingSection)
+            } else {
+                let item = LanguageSettingItem.allCases[indexPath.row - 1]
+                cell.textLabel?.byText(item.title)
+                cell.accessoryType = item.languageCode == currentLanguageCode() ? .checkmark : .none
+                cell.indentationLevel = 1
+            }
+        /// 处理 .cellTextDisplayStrategy 分支
+        case .cellTextDisplayStrategy:
+            if indexPath.row == 0 {
+                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
+                cell.accessoryView = expansionAccessoryView(for: settingSection)
+            } else {
+                let strategy = RootListCellTextDisplayStrategy.allCases[indexPath.row - 1]
+                cell.textLabel?.byText(strategy.title)
+                cell.accessoryType = strategy == RootListPreferences.cellTextDisplayStrategy ? .checkmark : .none
+                cell.indentationLevel = 1
+            }
         };return cell
     }
 
@@ -611,15 +738,33 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
             handleGeneralItem(GeneralSettingItem.allCases[indexPath.row])
         /// 处理 .splashContent 分支
         case .splashContent:
-            let contentType = JobsSplashContentType.allCases[indexPath.row]
+            guard indexPath.row > 0 else {
+                toggleExpansion(for: settingSection)
+                return
+            }
+            let contentType = JobsSplashContentType.allCases[indexPath.row - 1]
             JobsSplashPreferences.contentTypeForNextLaunch = contentType
             String(format: "下次开屏内容已设为：%@".tr, splashContentTitle(for: contentType)).toast
-            tableView.reloadData()
+            tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
         /// 处理 .language 分支
         case .language:
-            let item = LanguageSettingItem.allCases[indexPath.row]
+            guard indexPath.row > 0 else {
+                toggleExpansion(for: settingSection)
+                return
+            }
+            let item = LanguageSettingItem.allCases[indexPath.row - 1]
             LanguageManager.shared.switchTo(item.languageCode)
-            tableView.reloadData()
+            tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
+        /// 处理 .cellTextDisplayStrategy 分支
+        case .cellTextDisplayStrategy:
+            guard indexPath.row > 0 else {
+                toggleExpansion(for: settingSection)
+                return
+            }
+            let strategy = RootListCellTextDisplayStrategy.allCases[indexPath.row - 1]
+            RootListPreferences.cellTextDisplayStrategy = strategy
+            String(format: "列表主/副标题已设为：%@".tr, strategy.title).toast
+            tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
         }
     }
 }

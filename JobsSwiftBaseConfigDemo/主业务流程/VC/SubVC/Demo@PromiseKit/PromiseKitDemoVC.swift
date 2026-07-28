@@ -117,7 +117,7 @@ final class PromiseKitDemoVC: BaseVC {
             .byTextColor(.darkText)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
-            .byBackgroundColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
             .byAddTo(view) { [unowned self] make in

@@ -138,7 +138,7 @@ public final class JobsSplashVC: BaseVC {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black)
+        view.byBackgroundColor(JobsCor.systemBackground)
         imageView
             .byAddTo(view) { make in
                 make.edges.equalToSuperview()

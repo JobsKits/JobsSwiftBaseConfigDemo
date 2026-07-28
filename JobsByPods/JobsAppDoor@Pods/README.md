@@ -79,4 +79,10 @@ JobsAppDoor@Pods
 
 `JobsAppDoor.podspec` 通过同名 `Core`、`Resource` subspec 映射真实目录，确保 Swift 与 OC 在 Xcode 的 `Development Pods` 中都按 `Core / Resource / Pod / Support Files` 展开，不再把资源和源码平铺到 Pod 根层。
 
+## 明暗主题契约
+
+- 页面、列表和弹框的普通承载面使用 `JobsCor.systemBackground` / `JobsCor.secondarySystemBackground`，正文、说明和占位文字使用 `JobsCor.label` / `JobsCor.secondaryLabel` / `JobsCor.placeholderText`，确保白天浅底深字、黑夜深底浅字。
+- 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要在主题 Trait 变化后重新解析和绘制。
+- 验证时从 Demo 全局主题入口分别切换白天和黑夜，检查组件的背景、文字、禁用态、占位态与弹出层对比度。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

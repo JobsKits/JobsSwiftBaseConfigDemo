@@ -33,7 +33,7 @@ final class ClockDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.white)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "时钟".tr
         )

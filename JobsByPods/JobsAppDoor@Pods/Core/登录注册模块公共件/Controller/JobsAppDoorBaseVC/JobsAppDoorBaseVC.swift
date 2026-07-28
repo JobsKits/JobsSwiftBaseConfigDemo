@@ -149,7 +149,7 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.black)
+        view.byBackgroundColor(JobsCor.systemBackground)
         backgroundView.configure(configuration)
         backgroundView.byVisible(true)
         volumeButton.byHidden(configuration.backgroundType != .video)

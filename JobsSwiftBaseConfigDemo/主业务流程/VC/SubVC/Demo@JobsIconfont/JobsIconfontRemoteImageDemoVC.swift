@@ -65,7 +65,7 @@ final class JobsIconfontRemoteImageDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "远程图片与错误兜底".tr)
+        jobsSetupGKNav(title: title ?? "远程图片与错误兜底".tr)
         layoutUI()
         loadSelectedAsset(forceRefresh: false)
     }

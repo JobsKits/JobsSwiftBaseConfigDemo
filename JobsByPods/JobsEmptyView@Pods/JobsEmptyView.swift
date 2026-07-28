@@ -34,7 +34,7 @@ public class JobsEmptyView: UIView {
     private lazy var label: UILabel = {
         UILabel()
             .byText("暂无数据，点击重试".tr)
-            .byTextColor(JobsCor.lightGray)
+            .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byAddTo(self) { [unowned self] make in
@@ -45,7 +45,7 @@ public class JobsEmptyView: UIView {
     required init?(coder: NSCoder) { fatalError() }
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.byBackgroundColor(JobsCor.white)
+        self.byBackgroundColor(JobsCor.secondarySystemBackground)
         label.byVisible(YES)
         jobs_addGesture(tapGR)
     }

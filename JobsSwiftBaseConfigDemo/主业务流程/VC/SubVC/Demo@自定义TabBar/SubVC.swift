@@ -31,7 +31,7 @@ final class HomeVC: BaseVC {
 final class DiscountVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemMint)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "优惠".tr)
     }
 }
@@ -39,7 +39,7 @@ final class DiscountVC: BaseVC {
 final class WalletVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemYellow)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "钱包".tr)
     }
 }
@@ -74,7 +74,7 @@ final class FriendsVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemTeal)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "好友".tr)
         exampleButton.byAlpha(1)
     }
@@ -83,7 +83,7 @@ final class FriendsVC: BaseVC {
 final class ActivityVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemPurple)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "活动".tr)
     }
 }
@@ -91,7 +91,7 @@ final class ActivityVC: BaseVC {
 final class ServiceVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemOrange)
+        view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "客服".tr)
     }
 }

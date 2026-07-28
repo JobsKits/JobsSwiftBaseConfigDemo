@@ -127,7 +127,7 @@ final class HKLocalRecordVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
-        view.byBackgroundColor(JobsCor.black)
+        view.byBackgroundColor(JobsCor.systemBackground)
         // 触发懒加载
         previewView.byVisible(YES)
         recordButtonOuterRingView.byVisible(YES)

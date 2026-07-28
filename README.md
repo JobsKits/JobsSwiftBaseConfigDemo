@@ -3623,6 +3623,8 @@ private lazy var tvBlue: UITextView = { [unowned self] in
 
 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路统一管理右上角：导航栏最多只显示一个主题入口；页面没有业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案描述下一次点击会切换到的主题；存在业务动作时则使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作放进列表。
 
+主题入口切换后会同步所有已连接 Scene 的 Window，并递归校正当前控制器树的页面根承载和 GK 导航栏：白天使用浅色系统背景配深色语义文字，黑夜使用深色系统背景配浅色语义文字；卡片、输入区、弹框和列表容器使用次级系统背景，正文、说明与占位文字分别使用 `JobsCor.label`、`JobsCor.secondaryLabel` 和 `JobsCor.placeholderText`。品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色，不参与无差别反色；缓存到 `CGColor`、`CALayer` 或自绘上下文的颜色必须在主题 Trait 变化后重新解析和绘制。
+
 ```swift
 jobsSetupGKNav(
     title: "Demo 列表",
@@ -4331,7 +4333,7 @@ required init?(coder: NSCoder) {
 
   Demo 根列表支持拖拽调整普通分组顺序；“其他”作为兜底分组始终固定在列表末尾，不参与拖拽，也不会因历史持久化顺序恢复到中间。
 
-  Demo 根列表的二级入口统一使用 `50pt` 固定行高：主标题复用 `UILabel+Scrolling` 的缩放适配策略，副标题使用单行尾部截断，不再按设备宽度动态测量 Cell 高度。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
+  Demo 根列表的二级入口统一使用 `50pt` 固定行高；主标题和副标题由“设置 → 列表主/副标题”统一选择一般裁切、省略号、缩小字体、连续跑马灯或左右来回滚动，短文仍走 UILabel 原生绘制，深浅色下与同层普通 Label 保持同色。设置中的开屏内容、应用语言和列表文字策略均以一级 Cell 展示当前值，点击展开缩进的二级选项后再点选。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
 
   ```swift
   if (r0.code == JXAuthCode.tokenEmpty // 令牌为空
@@ -5387,7 +5389,7 @@ titleLabel.byJobsIconfontText(size: 32)
 JobsIconfont.shared.clearImageCache()
 ```
 
-Demo 总入口下包含远程成功 / 错误 URL、本地占位、列表复用防串图、缓存清理与重载、Icon Font / Unicode / UIImage，以及阿里妈妈文字字体六类场景。框架运行时只访问内置资源清单里的公开静态地址，不抓取 iconfont 网页，也不依赖登录态或未公开接口。
+Demo 总入口下包含远程成功 / 错误 URL、本地占位、列表复用防串图、缓存清理与重载、Icon Font / Unicode / UIImage，以及阿里妈妈文字字体六类场景。每个具体 Demo 页的导航栏主标题直接继承所点击入口 Cell 的主标题。框架运行时只访问内置资源清单里的公开静态地址，不抓取 iconfont 网页，也不依赖登录态或未公开接口。
 
 ### 19、点击事件的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
