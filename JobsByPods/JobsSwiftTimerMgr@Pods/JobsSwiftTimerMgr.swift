@@ -20,6 +20,7 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         case running
         case manualPaused
         case autoPaused
+        case scopePaused
         case stopped
     }
 
@@ -150,17 +151,20 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
     private final class Entry: @unchecked Sendable {
         let timer: ManagedTimer
         let lifecycleTimer: JobsSwiftTimerProtocol
+        let scopeIdentifier: String?
         let backgroundPolicy: JobsTimerBackgroundPolicy
         let actionLock = NSRecursiveLock()
         var pauseState: PauseState
         init(
             timer: ManagedTimer,
             lifecycleTimer: JobsSwiftTimerProtocol,
+            scopeIdentifier: String?,
             backgroundPolicy: JobsTimerBackgroundPolicy,
             pauseState: PauseState = .idle
         ) {
             self.timer = timer
             self.lifecycleTimer = lifecycleTimer
+            self.scopeIdentifier = scopeIdentifier
             self.backgroundPolicy = backgroundPolicy
             self.pauseState = pauseState
         }
@@ -169,6 +173,7 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
     public static let shared = JobsSwiftTimerMgr()
     private let lock = NSLock()
     private var entries: [String: Entry] = [:]
+    private var pausedScopeIdentifiers: Set<String> = []
     private var defaultDedupPolicy: JobsTimerDedupPolicy = .replace
     private let managesAppState: Bool
     #if canImport(UIKit)
@@ -206,6 +211,7 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         config: JobsSwiftTimerConfig,
         dedupPolicy: JobsTimerDedupPolicy? = nil,
         backgroundPolicy: JobsTimerBackgroundPolicy? = nil,
+        scopeIdentifier: String? = nil,
         onTick: @escaping JobsTimerCallback
     ) throws -> JobsSwiftTimerProtocol {
         guard let identifier, !identifier.isEmpty else {
@@ -234,6 +240,7 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         let newEntry = Entry(
             timer: timer,
             lifecycleTimer: lifecycleTimer,
+            scopeIdentifier: normalizedScopeIdentifier(scopeIdentifier),
             backgroundPolicy: resolvedBackgroundPolicy
         )
         var selectedTimer: JobsSwiftTimerProtocol = timer
@@ -291,6 +298,7 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         lock.lock()
         let all = entries
         entries.removeAll()
+        pausedScopeIdentifiers.removeAll()
         lock.unlock()
         if stopAll {
             all.values.forEach(stopDetachedEntry)
@@ -300,6 +308,58 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
     // iOS 12 及以下：同步
     public func stopAndRemove(identifier: String) {
         stopAndRemoveSync(identifier: identifier)
+    }
+    /// 仅当 identifier 仍指向 expectedTimer 时才移除，避免旧 Cell 的延迟清理误杀复用后的新 Timer
+    @discardableResult
+    public func stopAndRemove(
+        identifier: String,
+        expectedTimer: JobsSwiftTimerProtocol
+    ) -> Bool {
+        lock.lock()
+        let entry = entries[identifier]
+        guard let entry, entry.timer === expectedTimer else {
+            lock.unlock()
+            _ = expectedTimer.stop()
+            return false
+        }
+        entries.removeValue(forKey: identifier)
+        lock.unlock()
+        stopDetachedEntry(entry);return true
+    }
+    /// 暂停页面 / 业务域内的 Timer；手动暂停的 Timer 不会被改写为 Scope 暂停
+    @discardableResult
+    public func pause(scopeIdentifier: String) -> Int {
+        guard let scopeIdentifier = normalizedScopeIdentifier(scopeIdentifier) else { return 0 }
+        lock.lock()
+        pausedScopeIdentifiers.insert(scopeIdentifier)
+        let snapshot = entries.filter { $0.value.scopeIdentifier == scopeIdentifier }
+        lock.unlock()
+        snapshot.forEach { identifier, entry in
+            pauseForScope(identifier: identifier, entry: entry)
+        };return snapshot.count
+    }
+    /// 只恢复由 Scope 暂停的 Timer，不会误恢复业务主动暂停的 Timer
+    @discardableResult
+    public func resume(scopeIdentifier: String) -> Int {
+        guard let scopeIdentifier = normalizedScopeIdentifier(scopeIdentifier) else { return 0 }
+        lock.lock()
+        pausedScopeIdentifiers.remove(scopeIdentifier)
+        let snapshot = entries.filter { $0.value.scopeIdentifier == scopeIdentifier }
+        lock.unlock()
+        snapshot.forEach { identifier, entry in
+            resumeFromScope(identifier: identifier, entry: entry)
+        };return snapshot.count
+    }
+    /// 停止并移除页面 / 业务域内的全部 Timer
+    @discardableResult
+    public func stopAndRemove(scopeIdentifier: String) -> Int {
+        guard let scopeIdentifier = normalizedScopeIdentifier(scopeIdentifier) else { return 0 }
+        lock.lock()
+        let matched = entries.filter { $0.value.scopeIdentifier == scopeIdentifier }
+        matched.keys.forEach { entries.removeValue(forKey: $0) }
+        pausedScopeIdentifiers.remove(scopeIdentifier)
+        lock.unlock()
+        matched.values.forEach(stopDetachedEntry);return matched.count
     }
     // iOS 13+：保留 async 入口（其实内部仍是同步逻辑）
     @available(iOS 13.0, *)
@@ -311,6 +371,47 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         do {
             _ = try act(.cancel, identifier: identifier)
         } catch {}
+    }
+
+    private func normalizedScopeIdentifier(_ scopeIdentifier: String?) -> String? {
+        guard let scopeIdentifier = scopeIdentifier?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !scopeIdentifier.isEmpty else { return nil }
+        return scopeIdentifier
+    }
+
+    private func isScopePaused(_ scopeIdentifier: String?) -> Bool {
+        guard let scopeIdentifier else { return false }
+        lock.lock()
+        defer { lock.unlock() };return pausedScopeIdentifiers.contains(scopeIdentifier)
+    }
+
+    private func pauseForScope(identifier: String, entry: Entry) {
+        runOnRequiredThread(for: entry.lifecycleTimer) {
+            entry.actionLock.lock()
+            defer { entry.actionLock.unlock() }
+            guard self.isCurrent(identifier: identifier, entry: entry) else { return }
+            switch entry.pauseState {
+            /// 仅 Scope 接管正在运行或系统自动暂停的 Timer
+            case .running, .autoPaused:
+                _ = entry.lifecycleTimer.pause()
+                entry.pauseState = .scopePaused
+            /// 手动暂停、未启动和已停止状态保持原语义
+            case .idle, .manualPaused, .scopePaused, .stopped:
+                break
+            }
+        }
+    }
+
+    private func resumeFromScope(identifier: String, entry: Entry) {
+        let appState = currentApplicationState()
+        runOnRequiredThread(for: entry.lifecycleTimer) {
+            entry.actionLock.lock()
+            defer { entry.actionLock.unlock() }
+            guard self.isCurrent(identifier: identifier, entry: entry),
+                  entry.pauseState == .scopePaused else { return }
+            _ = entry.lifecycleTimer.resume()
+            self.applyPostStartState(appState, identifier: identifier, entry: entry)
+        }
     }
 
     private func performManagedAction(
@@ -392,6 +493,17 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
         entry: Entry
     ) {
         guard entry.lifecycleTimer.isRunning else { return }
+        if entry.backgroundPolicy == .cancel, appState == .background {
+            _ = removeIfCurrent(identifier: identifier, entry: entry)
+            _ = entry.lifecycleTimer.stop()
+            entry.pauseState = .stopped
+            return
+        }
+        if isScopePaused(entry.scopeIdentifier) {
+            _ = entry.lifecycleTimer.pause()
+            entry.pauseState = .scopePaused
+            return
+        }
         switch entry.backgroundPolicy {
         /// 处理 .ignore 分支
         case .ignore:
@@ -401,10 +513,6 @@ public final class JobsSwiftTimerMgr: @unchecked Sendable {
             _ = entry.lifecycleTimer.pause()
             entry.pauseState = .autoPaused
         /// 处理 .cancel 分支
-        case .cancel where appState == .background:
-            _ = removeIfCurrent(identifier: identifier, entry: entry)
-            _ = entry.lifecycleTimer.stop()
-            entry.pauseState = .stopped
         /// 合并处理 .pauseAndResume、.cancel 分支
         case .pauseAndResume, .cancel:
             entry.pauseState = .running

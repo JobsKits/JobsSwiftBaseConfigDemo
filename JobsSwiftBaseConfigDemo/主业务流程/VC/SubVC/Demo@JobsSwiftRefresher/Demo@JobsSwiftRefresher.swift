@@ -126,6 +126,7 @@ final class JobsSwiftRefresherDemoVC: BaseVC {
             .byEstimatedRowHeight(68)
             .byDataSource(self)
             .byDelegate(self)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(collectionView.snp.bottom)
                 make.left.right.equalToSuperview()
@@ -236,15 +237,20 @@ extension JobsSwiftRefresherDemoVC: UITableViewDataSource {
             return cell
                 .byText(animatorTitles[indexPath.row].tr)
                 .bySecondaryText(animatorDetails[indexPath.row].tr)
+                .byTitleCor(JobsCor.label)
+                .byDetailTitleCor(JobsCor.secondaryLabel)
                 .bySelectionStyle(.default)
                 .byAccessoryType(indexPath.row == selectedAnimatorIndex ? .checkmark : .none)
+                .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         }
         let reuseIdentifier = "ContentCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
             UITableViewCell.make(style: .default, reuseIdentifier: reuseIdentifier)
         return cell
             .byText("Row \(indexPath.row)")
+            .byTitleCor(JobsCor.label)
             .bySelectionStyle(.none)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 }
 // MARK: - UITableViewDelegate

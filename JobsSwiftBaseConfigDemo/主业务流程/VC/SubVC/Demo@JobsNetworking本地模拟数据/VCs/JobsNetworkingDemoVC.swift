@@ -36,6 +36,7 @@ final class JobsNetworkingDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
             .byRegisterCell(MethodTBVCell.self)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()

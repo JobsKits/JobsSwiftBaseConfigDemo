@@ -101,6 +101,13 @@ class AppDelegate: FlutterAppDelegate {
         config.delegateClass = SceneDelegate.self
         return config
     }
+
+    override func application(
+        _ application: UIApplication,
+        didDiscardSceneSessions sceneSessions: Set<UISceneSession>
+    ) {
+        JobsSceneCoordinator.discard(sceneSessions)
+    }
 }
 
 #else
@@ -125,7 +132,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+        let config = UISceneConfiguration(
+            name: "Default Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+        config.delegateClass = SceneDelegate.self
+        return config
+    }
+
+    func application(
+        _ application: UIApplication,
+        didDiscardSceneSessions sceneSessions: Set<UISceneSession>
+    ) {
+        JobsSceneCoordinator.discard(sceneSessions)
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
     override func applicationDidBecomeActive(_ application: UIApplication) {
@@ -219,6 +238,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 #endif
 extension AppDelegate {
     func SA() {
+        do {
+            try JobsThemeCenter.shared.configure(resource: "JobsThemeResources")
+        } catch {
+            NSLog("JobsTheme 数据包加载失败：%@", error.localizedDescription)
+        }
         setupLocalNotificationsIfNeeded()
         _ = flutterEngine
         if let (minV, maxV) = [3, 1, 9, 7].minMax() {

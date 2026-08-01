@@ -58,6 +58,7 @@ digraph PodspecDependencies {
   "JobsSwiftFoundation";
   "JobsSwiftGraphicCaptcha";
   "JobsSwiftLinkageMenuView";
+  "JobsSwiftMarkdown";
   "JobsSwiftMetalKit";
   "JobsSwiftNumberStepper";
   "JobsSwiftOpen";
@@ -294,6 +295,9 @@ digraph PodspecDependencies {
   "JobsSwiftGraphicCaptcha" -> "JobsSwiftDSL";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
+  "JobsSwiftMarkdown" -> "JobsSwiftBaseDefines";
+  "JobsSwiftMarkdown" -> "JobsSwiftDSL";
+  "JobsSwiftMarkdown" -> "SnapKit";
   "JobsSwiftMetalKit" -> "JobsSwiftDSL";
   "JobsSwiftNumberStepper" -> "JobsByUIKit";
   "JobsSwiftNumberStepper" -> "JobsSwiftBaseDefines";

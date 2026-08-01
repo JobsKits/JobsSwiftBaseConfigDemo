@@ -43,7 +43,15 @@ extension UITextField {
 
     @discardableResult
     public func byTextColor(_ color: UIColor?) -> Self {
-        self.textColor = color
+        let slot = "UITextField.textColor"
+        if let key = color?.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                (object as? UITextField)?.textColor = center.resolvedColor(key)
+            }
+        } else {
+            JobsThemeCenter.shared.unbind(self, slot: slot)
+            textColor = color
+        }
         return self
     }
 
@@ -300,8 +308,7 @@ extension UITextField {
 
     @discardableResult
     public func byTextColor(_ builder: () -> UIColor?) -> Self {
-        self.textColor = builder()
-        return self
+        byTextColor(builder())
     }
 
     @discardableResult

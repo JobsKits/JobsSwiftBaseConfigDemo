@@ -30,6 +30,7 @@ final class LeftMenuView: UIView {
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(LeftMenuCell.self)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .bySeparatorStyle(.none)
             .byNoContentInsetAdjustment()
             .byAddTo(self) { make in make.edges.equalToSuperview() }
@@ -39,10 +40,10 @@ final class LeftMenuView: UIView {
         self.items = items
         self.selectedIndex = defaultIndex
         super.init(frame: .zero)
-        self.byBackgroundColor(JobsCor.systemGray6)
+        self.byBackgroundColor(JobsCor.secondarySystemBackground)
         // 右侧 0.5 分隔线
         UIView()
-            .byBackgroundColor(JobsCor.separator)
+            .byBackgroundColor(JobsCor.quaternaryLabel)
             .byAddTo(self) { make in
                 make.top.bottom.trailing.equalToSuperview()
                 make.width.equalTo(0.5)

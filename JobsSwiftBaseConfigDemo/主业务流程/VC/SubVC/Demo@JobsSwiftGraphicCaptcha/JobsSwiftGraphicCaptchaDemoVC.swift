@@ -20,135 +20,34 @@ import JobsSwiftNumberStepper
 import GKNavigationBarSwift
 import SnapKit
 
-private enum JobsSwiftGraphicCaptchaDemoOption: Int, CaseIterable {
-    case uppercaseLetter
-    case lowercaseLetter
-    case number
-    case chinese
-    case uppercaseLowercase
-    case uppercaseNumber
-    case uppercaseChinese
-    case lowercaseNumber
-    case lowercaseChinese
-    case numberChinese
-    case uppercaseLowercaseNumber
-    case lowercaseNumberChinese
-    case uppercaseLowercaseChinese
-    case uppercaseNumberChinese
-    case all
+private struct JobsSwiftGraphicCaptchaDemoUnit {
+    let title: String
+    let characterUnit: JobsSwiftGraphicCaptchaCharacterUnit
+}
 
-    var title: String {
-        switch self {
-        /// 单项：英文大写
-        case .uppercaseLetter:
-            return "英文大写"
-        /// 单项：英文小写
-        case .lowercaseLetter:
-            return "英文小写"
-        /// 单项：阿拉伯数字
-        case .number:
-            return "阿拉伯数字"
-        /// 单项：汉字
-        case .chinese:
-            return "汉字"
-        /// 两两混合：英文大写和英文小写
-        case .uppercaseLowercase:
-            return "英文大写 + 英文小写"
-        /// 两两混合：英文大写和阿拉伯数字
-        case .uppercaseNumber:
-            return "英文大写 + 阿拉伯数字"
-        /// 两两混合：英文大写和汉字
-        case .uppercaseChinese:
-            return "英文大写 + 汉字"
-        /// 两两混合：英文小写和阿拉伯数字
-        case .lowercaseNumber:
-            return "英文小写 + 阿拉伯数字"
-        /// 两两混合：英文小写和汉字
-        case .lowercaseChinese:
-            return "英文小写 + 汉字"
-        /// 两两混合：阿拉伯数字和汉字
-        case .numberChinese:
-            return "阿拉伯数字 + 汉字"
-        /// 三三混合：英文大写、英文小写和阿拉伯数字
-        case .uppercaseLowercaseNumber:
-            return "英文大写 + 英文小写 + 阿拉伯数字"
-        /// 三三混合：英文小写、阿拉伯数字和汉字
-        case .lowercaseNumberChinese:
-            return "英文小写 + 阿拉伯数字 + 汉字"
-        /// 三三混合：英文大写、英文小写和汉字
-        case .uppercaseLowercaseChinese:
-            return "英文大写 + 英文小写 + 汉字"
-        /// 三三混合：英文大写、阿拉伯数字和汉字
-        case .uppercaseNumberChinese:
-            return "英文大写 + 阿拉伯数字 + 汉字"
-        /// 全部混合：四种字符单位
-        case .all:
-            return "英文大写 + 英文小写 + 阿拉伯数字 + 汉字"
-        }
-    }
+private struct JobsSwiftGraphicCaptchaDemoOption: Equatable {
+    let title: String
+    let characterUnits: JobsSwiftGraphicCaptchaCharacterUnit
 
-    var characterUnits: JobsSwiftGraphicCaptchaCharacterUnit {
-        switch self {
-        /// 单项：英文大写
-        case .uppercaseLetter:
-            return .uppercaseLetter
-        /// 单项：英文小写
-        case .lowercaseLetter:
-            return .lowercaseLetter
-        /// 单项：阿拉伯数字
-        case .number:
-            return .number
-        /// 单项：汉字
-        case .chinese:
-            return .chinese
-        /// 两两混合：英文大写和英文小写
-        case .uppercaseLowercase:
-            return [.uppercaseLetter, .lowercaseLetter]
-        /// 两两混合：英文大写和阿拉伯数字
-        case .uppercaseNumber:
-            return [.uppercaseLetter, .number]
-        /// 两两混合：英文大写和汉字
-        case .uppercaseChinese:
-            return [.uppercaseLetter, .chinese]
-        /// 两两混合：英文小写和阿拉伯数字
-        case .lowercaseNumber:
-            return [.lowercaseLetter, .number]
-        /// 两两混合：英文小写和汉字
-        case .lowercaseChinese:
-            return [.lowercaseLetter, .chinese]
-        /// 两两混合：阿拉伯数字和汉字
-        case .numberChinese:
-            return [.number, .chinese]
-        /// 三三混合：英文大写、英文小写和阿拉伯数字
-        case .uppercaseLowercaseNumber:
-            return [.uppercaseLetter, .lowercaseLetter, .number]
-        /// 三三混合：英文小写、阿拉伯数字和汉字
-        case .lowercaseNumberChinese:
-            return [.lowercaseLetter, .number, .chinese]
-        /// 三三混合：英文大写、英文小写和汉字
-        case .uppercaseLowercaseChinese:
-            return [.uppercaseLetter, .lowercaseLetter, .chinese]
-        /// 三三混合：英文大写、阿拉伯数字和汉字
-        case .uppercaseNumberChinese:
-            return [.uppercaseLetter, .number, .chinese]
-        /// 全部混合：四种字符单位
-        case .all:
-            return [.uppercaseLetter, .lowercaseLetter, .number, .chinese]
-        }
+    var characterGroupCount: Int {
+        characterUnits.rawValue.nonzeroBitCount
     }
 
     var config: JobsSwiftGraphicCaptchaConfig {
-        let groupCount = characterUnits.rawValue.nonzeroBitCount
         return JobsSwiftGraphicCaptchaConfig(
             caseSensitive: true,
             characterUnits: characterUnits,
-            mixedGroupCount: groupCount > 1 ? groupCount : 0
+            mixedGroupCount: characterGroupCount > 1 ? characterGroupCount : 0
         )
     }
 }
 
 final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
-    private var selectedOption = JobsSwiftGraphicCaptchaDemoOption.all
+    private var selectedOption = JobsSwiftGraphicCaptchaDemoOption(
+        title: "英文大写 + 英文小写 + 阿拉伯数字 + 简体汉字 + 繁体汉字",
+        characterUnits: [.uppercaseLetter, .lowercaseLetter, .number,
+                         .simplifiedChinese, .traditionalChinese]
+    )
     private var optionButtons: [UIButton] = []
     private var optionRowViews: [UIView] = []
     private var optionScrollViews: [UIScrollView] = []
@@ -238,20 +137,43 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
         jobsSetupGKNav(title: "图形验证码".tr)
         setupSubviews()
         buildOptionRows(in: optionRowsView)
-        applyOption(.all)
+        applyOption(selectedOption)
     }
 }
 
 private extension JobsSwiftGraphicCaptchaDemoVC {
     var optionGroups: [(title: String, options: [JobsSwiftGraphicCaptchaDemoOption])] {
-        [
-            ("单个演示", [.uppercaseLetter, .lowercaseLetter, .number, .chinese]),
-            ("两两混合", [.uppercaseLowercase, .uppercaseNumber, .uppercaseChinese,
-                         .lowercaseNumber, .lowercaseChinese, .numberChinese]),
-            ("三三混合", [.uppercaseLowercaseNumber, .lowercaseNumberChinese,
-                         .uppercaseLowercaseChinese, .uppercaseNumberChinese]),
-            ("全部混合", [.all])
+        let units = [
+            JobsSwiftGraphicCaptchaDemoUnit(title: "英文大写", characterUnit: .uppercaseLetter),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "英文小写", characterUnit: .lowercaseLetter),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "阿拉伯数字", characterUnit: .number),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "简体汉字", characterUnit: .simplifiedChinese),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "繁体汉字", characterUnit: .traditionalChinese)
         ]
+        let groupTitles = ["单个演示", "两两混合", "三三混合", "四四混合", "全部混合"]
+        return groupTitles.enumerated().map { index, groupTitle in
+            let groupCount = index + 1
+            let options = combinations(units, count: groupCount).map { combination in
+                JobsSwiftGraphicCaptchaDemoOption(
+                    title: combination.map(\.title).joined(separator: " + "),
+                    characterUnits: combination.reduce(into: []) { result, unit in
+                        result.formUnion(unit.characterUnit)
+                    }
+                )
+            };return (groupTitle, options)
+        }
+    }
+
+    func combinations(_ units: [JobsSwiftGraphicCaptchaDemoUnit],
+                      count: Int) -> [[JobsSwiftGraphicCaptchaDemoUnit]] {
+        guard count > 0 else { return [[]] }
+        guard units.count >= count else { return [] }
+        if count == units.count { return [units] }
+        let head = units[0]
+        let tail = Array(units.dropFirst())
+        let includingHead = combinations(tail, count: count - 1).map { [head] + $0 }
+        let excludingHead = combinations(tail, count: count)
+        return includingHead + excludingHead
     }
 
     func setupSubviews() {
@@ -267,7 +189,7 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         optionRowsView.byAddTo(view) { [unowned self] make in
             make.top.equalTo(captchaView.snp.bottom).offset(18)
             make.left.right.equalToSuperview().inset(16)
-            make.height.equalTo(166)
+            make.height.equalTo(210)
         }
         lengthLabel.byAddTo(view) { [unowned self] make in
             make.top.equalTo(optionRowsView.snp.bottom).offset(14)
@@ -383,13 +305,14 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
             .onTap { [weak self] _ in
                 self?.applyOption(option)
             }
+            .byTag(option.characterUnits.rawValue)
         optionButtons.append(button)
         return button
     }
 
     func applyOption(_ option: JobsSwiftGraphicCaptchaDemoOption) {
         selectedOption = option
-        let groupCount = option.characterUnits.rawValue.nonzeroBitCount
+        let groupCount = option.characterGroupCount
         if lengthStepper.value < groupCount {
             lengthStepper.setValue(groupCount)
         }
@@ -400,8 +323,8 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         resultLabel
             .byText("等待输入校验".tr)
             .byTextColor(JobsCor.secondaryLabel)
-        for (index, button) in optionButtons.enumerated() {
-            let selected = JobsSwiftGraphicCaptchaDemoOption.allCases[index] == option
+        for button in optionButtons {
+            let selected = button.tag == option.characterUnits.rawValue
             button
                 .bySelected(selected)
                 .byConfiguration { configuration in

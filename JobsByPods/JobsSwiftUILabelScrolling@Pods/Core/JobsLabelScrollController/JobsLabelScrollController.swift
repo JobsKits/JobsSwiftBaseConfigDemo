@@ -141,7 +141,8 @@ private extension JobsLabelScrollController {
             height: size.height,
             duplicateSpacing: configuration.mode == .continuous ? configuration.spacing : nil
         )
-        guard textLayer.textWidth > size.width + 0.5,
+        /// 光学字形画布会额外扩展以防绘制裁切，不能拿它判断 UILabel 是否容纳得下文案。
+        guard textLayer.textLayoutWidth > size.width + 0.5,
               !(configuration.respectsReduceMotion && UIAccessibility.isReduceMotionEnabled) else {
             stopForStaticText()
             return

@@ -1732,12 +1732,6 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
     install-time: 1758341956
     ```
   
-* **ObjC**和[**Swift**](https://developer.apple.com/swift/)混编以后，📦打包的体积会变大
-  
-  * [**Swift**](https://developer.apple.com/swift/) 标准库要随 App 打包：iOS 系统里不内置 [**Swift**](https://developer.apple.com/swift/) 标准库（至少不能依赖它一定存在），只要项目里用了 [**Swift**](https://developer.apple.com/swift/)，就得把 `libswift*.dylib` 一起带上。**体感增量：~2–7 MB/架构（压缩后更小）**，取决于用到的模块数量
-  * 混编本身不会重复打包 **ObjC** 运行时：**ObjC** Runtime 属于系统，纯 **ObjC** 和混编在这方面没差
-  * 链接器选项可能放大：比如 `-ObjC` 可能把静态库里很多不需要的对象一起拉进来，造成膨胀（和是否混编无关，但混编项目更容易“全都要”）
-
 ## 三、💻代码讲解 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ### 1、平台区分引用库 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -1840,7 +1834,7 @@ private lazy var exampleButton: UIButton = {
         /// 按钮图片@图文关系
         .byImage("eye.slash".sysImg)                // 未选中图标
         .byImage("eye".sysImg, for: .selected)                    // 选中图标
-        /// iOS15专用@清除偏移
+        /// 清除所有状态下的按钮配置背景
         .byClearConfigurationBackground() 
         /// 按钮@图文位置关系
         .byImagePlacement(.top ,padding: 5)        // 通用（向下兼容）
@@ -2407,9 +2401,9 @@ private lazy var countdownButton: UIButton = {
   }()
   ```
 
-##### 2.2.4、🔘 旋转按钮（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+##### 2.2.4、🔘 旋转图形与动态时钟图标（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-按钮前景图或任意 `UIView` 的定时旋转统一使用 `JobsImageRotation`。默认方向为 `.clockwise`，默认速度为 `JobsImageRotator.defaultInterval`（`1.0 / 60.0` 秒）；业务倒计时结束时调用 `stop()` 即可复位图标。
+按钮前景图或任意 `UIView` 的定时旋转统一使用 `JobsImageRotation`。默认方向为 `.clockwise`，默认速度为 `JobsImageRotator.defaultInterval`（`1.0 / 60.0` 秒）；业务倒计时结束时调用 `stop()` 即可复位图标。无数字、无刻度、固定时针且只旋转分针的入口图标使用 `JobsClockIconView`，外界可传顺 / 逆时针和 tick 间隔。
 
 ```swift
 let rotator = JobsImageRotator(
@@ -2418,6 +2412,14 @@ let rotator = JobsImageRotator(
     interval: 1.0 / 60.0
 )
 rotator.start()
+```
+
+```swift
+let clockIcon = JobsClockIconView(
+    direction: .counterclockwise,
+    interval: JobsClockIconView.defaultInterval
+)
+clockIcon.start()
 ```
 
 ```swift
@@ -3621,9 +3623,9 @@ private lazy var tvBlue: UITextView = { [unowned self] in
 
 #### 2.13、`GKNavigationBarSwift` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路统一管理右上角：导航栏最多只显示一个主题入口；页面没有业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案描述下一次点击会切换到的主题；存在业务动作时则使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作放进列表。
+从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路统一管理右上角：导航栏最多只显示一个透明背景的主题入口；页面没有业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案描述下一次点击会切换到的主题；存在业务动作时则使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作放进列表。
 
-主题入口切换后会同步所有已连接 Scene 的 Window，并递归校正当前控制器树的页面根承载和 GK 导航栏：白天使用浅色系统背景配深色语义文字，黑夜使用深色系统背景配浅色语义文字；卡片、输入区、弹框和列表容器使用次级系统背景，正文、说明与占位文字分别使用 `JobsCor.label`、`JobsCor.secondaryLabel` 和 `JobsCor.placeholderText`。品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色，不参与无差别反色；缓存到 `CGColor`、`CALayer` 或自绘上下文的颜色必须在主题 Trait 变化后重新解析和绘制。
+主题入口调用 `JobsThemeCenter.shared.toggle()`；公共能力位于 `JobsSwiftBaseDefines` / `JobsSwiftDSL`，主工程在 `Resources/Json文件/JobsThemeResources.json` 维护业务色值和显式主题图片映射。切换时只重放通过 `JobsCor` / `byTheme*` 标记过的背景色、文字色和主题图片，不遍历 Scene、Window 或控制器树，也不改布局与 `overrideUserInterfaceStyle`。缓存到 `CGColor`、`CALayer` 或自绘上下文的背景 / 文字颜色，需要用 `JobsThemeCenter.bind(...)` 显式登记。
 
 ```swift
 jobsSetupGKNav(
@@ -4335,6 +4337,10 @@ required init?(coder: NSCoder) {
 
   Demo 根列表的二级入口统一使用 `50pt` 固定行高；主标题和副标题由“设置 → 列表主/副标题”统一选择一般裁切、省略号、缩小字体、连续跑马灯或左右来回滚动，短文仍走 UILabel 原生绘制，深浅色下与同层普通 Label 保持同色。设置中的开屏内容、应用语言和列表文字策略均以一级 Cell 展示当前值，点击展开缩进的二级选项后再点选。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
 
+  根列表可点击的二级 Cell 与右上角功能菜单 Cell 使用主题语义选中背景；功能菜单常态使用次级背景，与主页面形成层次，主题切换时同步刷新。
+
+  进度条相关二级入口（系统、自定义与兼容入口）的主标题前展示三格循环充电动效，只刷新当前可见入口，折叠或离屏时不更新不可见 Cell。
+
   ```swift
   if (r0.code == JXAuthCode.tokenEmpty // 令牌为空
    || r0.code == 10007 // 令牌错误
@@ -4800,6 +4806,21 @@ required init?(coder: NSCoder) {
           }
       }
       ```
+
+#### 8.5、Markdown 文档浏览器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+`JobsSwiftMarkdown` 通过 `WKWebView` 组合本地固化的 Markdown、代码高亮、Mermaid、KaTeX 和 HTML 净化运行时，支持 `[toc]`、表格、任务列表、代码块、数学公式、Mermaid、常用 HTML、深浅色及自定义 CSS。它不是读取开发机目录：App 构建阶段会把当前仓库内 Jobs 自有 `*.md` 及其相对本地资源打入 `JobsMarkdownDocuments.bundle`，设备端再通过 `JobsMarkdownCatalog` 读取清单。
+
+Demo 根列表中的“Markdown 文档浏览器”会展示每一份已打包文档；Cell 标题按 YAML `title`、首个一级标题、文件名依次回退，副标题显示仓库相对路径，点按态使用主题语义背景色。点击后详情导航栏显示当前文档标题，正文经 UTF-8 安全传输后渲染；原有 Typora 主题可以把 CSS 作为 `JobsMarkdownConfiguration.customCSS` 继续适配。
+
+```swift
+import JobsSwiftMarkdown
+
+let catalog = try JobsMarkdownCatalog.bundled()
+let markdownView = JobsMarkdownView()
+    .byConfiguration(.init())
+    .byLoad(catalog.documents[0])
+```
 
 ### 9、<font id=弱引用的等价写法>**弱引用的等价写法**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -5760,7 +5781,15 @@ timer = t
 t.start()
 ```
 
-#### 22.3、[计数按钮](#计数按钮)（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 22.3、`JobsSwiftTimerMgr` 列表与页面生命周期治理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- Cell 复用清理使用 `stopAndRemove(identifier:expectedTimer:)`，同时核对 Model ID 与 Timer 实例，旧 Cell 不会取消同 ID 的新注册项。
+- 页面为同组 Timer 传入唯一 `scopeIdentifier`；`viewWillDisappear` 暂停 Scope，`viewWillAppear` 只恢复 Scope 暂停项，`deinit` 整组停止并移除。
+- 倒计时 Model 保存绝对 `endAt`，每次刷新重新计算剩余时间，页面隐藏、系统调度延迟和不同 tick 间隔都不会把开奖时间向后推。
+
+对应可见 Demo 为根列表“时时彩”，一行一个 Model、可见 Cell 持有自己的受管 Timer。
+
+#### 22.4、[计数按钮](#计数按钮)（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ### 23、跑马灯+轮播图（内核基于`JobsSwiftTimer`）  <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -6596,6 +6625,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
+#### 39.1、SceneDelegate 多场景与窗口会话 Demo
+
+* 根列表“系统能力与硬件通信”提供独立入口 `JobsSceneDelegateDemoVC`，不是静态说明页：
+  * 新建 Scene 窗口，并通过 `NSUserActivity` 直接路由到 Demo
+  * 激活已有 Scene、关闭当前 Scene、请求刷新 `UISceneSession`
+  * 展示 `supportsMultipleScenes`、`connectedScenes`、`openSessions`、会话 ID、角色和激活状态
+  * 用每个 Scene 独立计数验证状态隔离，并由 `stateRestorationActivity(for:)` 恢复
+  * 实时记录连接、前后台、活跃、失活、断开等 Scene 生命周期事件
+* 进程级启动能力仍由 `AppDelegate` 管理；每个窗口的 `UIWindow` 和 UI 生命周期归自己的 `SceneDelegate`。
+* `JobsSceneCoordinator` 只按 `UISceneSession.persistentIdentifier` 管理 Demo 状态，不缓存全局 `SceneDelegate` 指针，也不通过 `connectedScenes.first` 猜测当前窗口。
+* `UIApplicationSupportsMultipleScenes` 只是声明；运行时还要以 `UIApplication.shared.supportsMultipleScenes` 为准。建议在支持多窗口的 iPad 环境验证完整流程。
+* 深入研究入口：[Supporting multiple windows on iPad](https://developer.apple.com/documentation/uikit/supporting-multiple-windows-on-ipad)、[Managing your app's life cycle](https://developer.apple.com/documentation/uikit/managing-your-app-s-life-cycle)、[UISceneSession](https://developer.apple.com/documentation/uikit/uiscenesession)。
+
 ### 40、**`NavigationBar`**的显隐控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 #### 40.1、对系统的导航栏 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -6902,7 +6944,7 @@ override func viewWillDisappear(_ animated: Bool) {
       <key>UIApplicationSceneManifest</key>
       <dict>
           <key>UIApplicationSupportsMultipleScenes</key>
-          <false/>
+          <true/>
           <key>UISceneConfigurations</key>
           <dict>
               <key>UIWindowSceneSessionRoleApplication</key>
@@ -12175,6 +12217,64 @@ flowchart TD
         RC -- 否 --> InPlace["独占缓冲<br/>原地修改"]
         RC -- 是 --> Copy["分配新缓冲<br/>拷贝后写入"]
     ```
+
+* [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 为主混编一部分 [**Swift**](https://www.swift.org/)，以及 [**Swift**](https://www.swift.org/) 为主混编一部分 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)，包体会变大吗❓
+
+  > **只要新增实现实际被链接、资源实际被复制，通常都会产生包体增量；但两种方向的增量往往不对称：[Objective-C](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 主工程首次引入 [Swift](https://www.swift.org/) 通常更明显，[Swift](https://www.swift.org/) 主工程加入少量 [Objective-C](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 通常较小。**
+
+  | 项目结构 | 常见包体变化 |
+  | --- | --- |
+  | [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 为主，首次加入 [**Swift**](https://www.swift.org/) | 通常更明显，可能存在一次性的 [**Swift**](https://www.swift.org/) 基础成本 |
+  | [**Swift**](https://www.swift.org/) 为主，加入部分 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) | 通常较小，主要增加 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 代码、元数据和资源 |
+  | 已经是 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) + [**Swift**](https://www.swift.org/) 混编 | 继续加入任一语言时，主要取决于新增代码、依赖和资源 |
+
+  * **[Objective-C](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 为主，首次加入 [Swift](https://www.swift.org/)**
+
+    * 除 [**Swift**](https://www.swift.org/) 业务代码外，还会增加 [**Swift**](https://www.swift.org/) 类型、协议、泛型、反射，以及与 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 互操作所需的元数据。
+    * [**Swift**](https://www.swift.org/) 5 的 ABI 稳定运行时从 iOS 12.2 开始作为系统组件提供。最低系统版本早于 iOS 12.2 时，面向旧系统的变体可能需要携带 [**Swift**](https://www.swift.org/) 运行库；运行在较新系统的 App Store 变体可通过 App Thinning 获得更小体积。
+    * 即使最低系统版本高于 iOS 12.2，Xcode 仍可能根据使用到的 [**Swift**](https://www.swift.org/) 特性、兼容库和嵌入产物决定需要随 App 携带的内容。`ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES` 用于控制包装类 Target 是否始终嵌入 [**Swift**](https://www.swift.org/) 标准库，不应仅为解决包体问题盲目开启。
+    * 因此，加入第一个 [**Swift**](https://www.swift.org/) 文件可能比继续加入第十个 [**Swift**](https://www.swift.org/) 文件更显著；但当前多数项目的最低系统版本已经高于 iOS 12.2，“首次加入 [**Swift**](https://www.swift.org/) 就固定增加数 MB”不能再作为通用结论。
+    * 参考：[**Swift ABI 稳定性说明**](https://www.swift.org/blog/abi-stability-and-apple/)、[**Swift 5 Release Notes for Xcode 10.2**](https://developer.apple.com/documentation/xcode-release-notes/swift-5-release-notes-for-xcode-10_2)、[**Xcode Build Settings Reference**](https://developer.apple.com/documentation/xcode/build-settings-reference)。
+
+  * **[Swift](https://www.swift.org/) 为主，加入部分 [Objective-C](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)**
+
+    * [**Swift**](https://www.swift.org/) 相关运行时与元数据成本已经存在，新增内容通常是 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 编译后的机器码、类、方法、Selector、Category 等元数据，以及依赖携带的资源。
+    * [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) Runtime、Foundation 和 UIKit 由系统提供，不会因为加入几个 `.m` 文件再给 App 打包一套 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 运行环境。
+    * 所以在代码规模、依赖和资源相近时，[**Swift**](https://www.swift.org/) 主工程加入少量 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 的额外成本，通常小于纯 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 工程首次加入 [**Swift**](https://www.swift.org/)。
+
+  * **真正决定包体增量的常见因素**
+
+    * [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 静态库为加载 Category 常配置 `-ObjC`，可能让链接器保留更多目标文件；`-all_load`、`-force_load` 的影响通常更明显。
+    * [**Swift**](https://www.swift.org/) 大量使用复杂泛型或跨模块特化时，编译器可能为不同类型生成多份机器码。
+    * 动态 Framework 会附带自身 Mach-O、签名和语言元数据；为了少量能力引入大型 SDK，往往比语言混编本身更占空间。
+    * 图片、Bundle、字体、音视频等资源，以及同一依赖被重复打包，常常比 [**Swift**](https://www.swift.org/) / [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 代码本身更大。
+    * Debug 包含更多符号和未优化代码，不能用来判断正式包体。
+
+  * **正确比较方式**
+
+    ```text
+    相同 Xcode、部署版本、架构和依赖
+    → 分别生成 Release Archive
+    → Distribute App 并生成 App Thinning Size Report
+    → 比较同一设备变体的下载大小与安装大小
+    ```
+
+    `.xcarchive`、导出的 `.ipa`、App Store 下载大小和安装后大小不是同一个指标。Xcode 报告适合本地对比，上传后的 App Store Connect 设备变体数据最接近用户实际结果。参考：[**Reducing your app’s size**](https://developer.apple.com/documentation/xcode/reducing-your-app-s-size)、[**App Store Connect 构建大小说明**](https://developer.apple.com/help/app-store-connect/manage-builds/view-builds-and-metadata/)。
+
+  * **结论速记**
+
+    ```text
+    纯 Objective-C → 首次加入 Swift：
+    可能支付一次 Swift 基础成本，增量相对明显。
+
+    纯 Swift → 加入 Objective-C：
+    通常只增加 Objective-C 代码、元数据和资源，增量相对较小。
+
+    已经混编 → 继续增加任一语言：
+    主要看新增代码、链接方式、第三方依赖和资源，不再有明显的首次混编成本。
+    ```
+
+    不需要仅为了包体刻意拒绝少量 [**Swift**](https://www.swift.org/) / [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 混编；优先检查大型 SDK、重复 Framework、资源文件、链接器加载参数、[**Swift**](https://www.swift.org/) 泛型特化和 Release 优化。
 
 ## 六、📎 附件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

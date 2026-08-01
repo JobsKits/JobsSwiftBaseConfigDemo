@@ -13,6 +13,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 final class MethodTBVCell: UITableViewCell {
@@ -20,7 +21,10 @@ final class MethodTBVCell: UITableViewCell {
     func byData(_ item: MethodDemoItem) -> Self {
         byText("\(item.methodType.title) Demo")
             .bySecondaryText("\(item.path)\n\(item.subTitle)")
+            .byTitleCor(JobsCor.label)
+            .byDetailTitleCor(JobsCor.secondaryLabel)
             .byAccessoryType(.disclosureIndicator)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     static func cellSizeByData(_ data: Any?) -> CGSize {

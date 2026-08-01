@@ -403,6 +403,64 @@ ensure
   log_io&.close
 end
 
+def jobs_configure_podfile_text_reference(file_ref, name, path)
+  file_ref.name = name
+  file_ref.path = path
+  file_ref.source_tree = 'SOURCE_ROOT'
+  file_ref.include_in_index = '1'
+  file_ref.explicit_file_type = 'text.script.ruby'
+  file_ref.last_known_file_type = 'text'
+  file_ref.xc_language_specification_identifier = 'xcode.lang.ruby'
+  file_ref.tab_width = '2'
+  file_ref.indent_width = '2'
+end
+
+# CocoaPods 每次重建 Pods 工程后，重新把两份依赖入口放回根分组。
+def jobs_patch_pods_project_podfile_references!(installer)
+  pods_project = installer.pods_project
+  project_file_path = File.join(pods_project.path.to_s, 'project.pbxproj')
+  original_project_text = File.binread(project_file_path) if File.file?(project_file_path)
+  root_group = pods_project.main_group
+  wanted_files = {
+    'Podfile' => '../Podfile',
+    'Podfile.deps' => '../Podfile.deps'
+  }
+
+  wanted_files.each do |name, path|
+    existing_refs = pods_project.files.select do |ref|
+      ref.path == path || ref.name == name
+    end
+    root_refs = root_group.children.grep(Xcodeproj::Project::Object::PBXFileReference)
+    file_ref = root_refs.find { |ref| ref.path == path || ref.name == name }
+    file_ref ||= root_group.new_file(path)
+
+    jobs_configure_podfile_text_reference(file_ref, name, path)
+    existing_refs.each do |ref|
+      next if ref == file_ref
+
+      ref.remove_from_project
+    end
+
+    root_group.children.delete(file_ref)
+    root_group.children.insert(name == 'Podfile' ? 0 : 1, file_ref)
+  end
+
+  pods_project.save
+  verified_project = Xcodeproj::Project.open(pods_project.path)
+  raise 'Pods.xcodeproj root object is not PBXProject' unless verified_project.root_object.isa == 'PBXProject'
+
+  wanted_files.each do |name, path|
+    matching_refs = verified_project.files.select do |ref|
+      ref.path == path || ref.name == name
+    end
+    raise "#{name} reference verification failed" unless matching_refs.one?
+  end
+  Pod::UI.puts '[PodfileRefs] Podfile and Podfile.deps are visible in the Pods root group' if defined?(Pod::UI)
+rescue => e
+  File.binwrite(project_file_path, original_project_text) if project_file_path && original_project_text
+  Pod::UI.puts "[PodfileRefs] ⚠️ enhancement skipped and original project restored: #{e}" if defined?(Pod::UI)
+end
+
 # 统一写入 build settings（对某个 target 的所有 config）
 def jobs_apply_build_settings!(target, settings)
   target.build_configurations.each do |config|
@@ -561,6 +619,7 @@ post_install do |installer|
   run_podspec_dependency_report_script
 end
 
-post_integrate do |_installer|
+post_integrate do |installer|
+  jobs_patch_pods_project_podfile_references!(installer)
   run_codegraph_init_script
 end

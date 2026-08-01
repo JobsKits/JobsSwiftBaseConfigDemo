@@ -89,7 +89,10 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
         super.viewDidLoad()
         title = "Users (MVVM)"
         view.byBackgroundColor(JobsCor.systemBackground)
-        tableView.byDataSource(self).byDelegate(self)
+        tableView
+            .byDataSource(self)
+            .byDelegate(self)
+            .byBackgroundColor(JobsCor.systemBackground)
         tableView.byAddTo(view); tableView.byFrame(view.bounds)
         vm.onStateChange = { [weak self] state in
             guard let self else { return }
@@ -122,6 +125,9 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
         c.textLabel?.byText(u.name)
         c.detailTextLabel?.byText("ID: \(u.id)")
         return c
+            .byTitleCor(JobsCor.label)
+            .byDetailTitleCor(JobsCor.secondaryLabel)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
     func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
         let u = data[ip.row]

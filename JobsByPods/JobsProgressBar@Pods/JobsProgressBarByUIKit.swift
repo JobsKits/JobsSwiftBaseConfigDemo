@@ -16,12 +16,6 @@ import SnapKit
 
 extension UIView {
     @discardableResult
-    func byBackgroundColor(_ color: UIColor?) -> Self {
-        backgroundColor = color
-        return self
-    }
-
-    @discardableResult
     func byMasksToBounds(_ masksToBounds: Bool?) -> Self {
         layer.masksToBounds = masksToBounds ?? false
         return self
@@ -86,12 +80,6 @@ extension UILabel {
     @discardableResult
     func byFont(_ font: UIFont) -> Self {
         self.font = font
-        return self
-    }
-
-    @discardableResult
-    func byTextColor(_ color: UIColor) -> Self {
-        self.textColor = color
         return self
     }
 

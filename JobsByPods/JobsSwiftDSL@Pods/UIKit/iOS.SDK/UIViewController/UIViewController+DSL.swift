@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsSwiftBlock
+import JobsSwiftBaseDefines
 
 @MainActor
 // MARK: - 直接赋值@单参数
@@ -26,7 +27,7 @@ extension UIViewController {
     @discardableResult
     public func byBackgroundColor(_ color: UIColor) -> Self {
         if viewIfLoaded == nil { loadViewIfNeeded() }
-        self.view.backgroundColor = color
+        view.byBackgroundColor(color)
         return self
     }
 

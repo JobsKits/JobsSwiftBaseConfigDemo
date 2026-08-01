@@ -126,6 +126,7 @@ final class MessageListDemoVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(MessageCell.self)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()

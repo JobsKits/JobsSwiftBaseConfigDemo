@@ -60,6 +60,8 @@ final class MessageCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+        contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         textStack.byVisible(YES)
     }
 

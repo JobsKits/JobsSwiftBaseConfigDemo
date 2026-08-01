@@ -251,6 +251,72 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
         XCTAssertTrue(currentTimer.isRunning)
     }
 
+    func testExpectedTimerCancelCannotRemoveReplacement() throws {
+        let identifier = "tests.expected-cancel.\(UUID().uuidString)"
+        let manager = JobsSwiftTimerMgr(managesAppState: false)
+        let config = JobsSwiftTimerConfig(
+            interval: 60,
+            queue: .main,
+            pauseInBackground: false
+        )
+        let oldTimer = try manager.create(
+            kind: .gcd,
+            identifier: identifier,
+            config: config,
+            backgroundPolicy: .ignore
+        ) {}
+        let currentTimer = try manager.create(
+            kind: .gcd,
+            identifier: identifier,
+            config: config,
+            backgroundPolicy: .ignore
+        ) {}
+        currentTimer.start()
+
+        XCTAssertFalse(manager.stopAndRemove(identifier: identifier, expectedTimer: oldTimer))
+        XCTAssertTrue(manager.timer(for: identifier) === currentTimer)
+        XCTAssertTrue(currentTimer.isRunning)
+        XCTAssertTrue(manager.stopAndRemove(identifier: identifier, expectedTimer: currentTimer))
+        XCTAssertNil(manager.timer(for: identifier))
+        XCTAssertFalse(currentTimer.isRunning)
+    }
+
+    func testTimerScopeResumesOnlyScopePausedTimers() throws {
+        let scopeIdentifier = "tests.scope.\(UUID().uuidString)"
+        let manager = JobsSwiftTimerMgr(managesAppState: false)
+        let config = JobsSwiftTimerConfig(
+            interval: 60,
+            queue: .main,
+            pauseInBackground: false
+        )
+        let scopeTimer = try manager.create(
+            kind: .gcd,
+            identifier: "\(scopeIdentifier).scope",
+            config: config,
+            backgroundPolicy: .ignore,
+            scopeIdentifier: scopeIdentifier
+        ) {}
+        let manuallyPausedTimer = try manager.create(
+            kind: .gcd,
+            identifier: "\(scopeIdentifier).manual",
+            config: config,
+            backgroundPolicy: .ignore,
+            scopeIdentifier: scopeIdentifier
+        ) {}
+        scopeTimer.start()
+        manuallyPausedTimer.start().pause()
+
+        XCTAssertEqual(manager.pause(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertFalse(scopeTimer.isRunning)
+        XCTAssertFalse(manuallyPausedTimer.isRunning)
+        XCTAssertEqual(manager.resume(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertTrue(scopeTimer.isRunning)
+        XCTAssertFalse(manuallyPausedTimer.isRunning)
+        XCTAssertEqual(manager.stopAndRemove(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertNil(manager.timer(for: "\(scopeIdentifier).scope"))
+        XCTAssertNil(manager.timer(for: "\(scopeIdentifier).manual"))
+    }
+
     func testManagedFireOnceRemovesRegistrationBeforeDelivery() throws {
         let identifier = "tests.fire-once.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)

@@ -22,6 +22,7 @@ private var _jobsConfigPatchHandlerInstalledKey: UInt8 = 0
 private var _jobsConfigPatchListKey: UInt8 = 0
 private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
+private var _jobsClearConfigurationBackgroundInstalledKey: UInt8 = 0
 
 extension UIButton {
     @discardableResult
@@ -421,12 +422,35 @@ extension UIButton {
 
     @discardableResult
     public func byClearConfigurationBackground() -> Self {
+        backgroundColor = JobsCor.clear
+        jobs_cfgBgImage = nil
+        [
+            UIControl.State.normal,
+            .highlighted,
+            .selected,
+            .disabled
+        ].forEach {
+            setBackgroundImage(nil, for: $0)
+        }
         if #available(iOS 15.0, *) {
-            return byConfiguration { cfg in
-                var c = cfg
-                c.background = .clear()
-                return c
+            if (objc_getAssociatedObject(
+                self,
+                &_jobsClearConfigurationBackgroundInstalledKey
+            ) as? Bool) != true {
+                objc_setAssociatedObject(
+                    self,
+                    &_jobsClearConfigurationBackgroundInstalledKey,
+                    true,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
+                ensureConfigUpdateHandler { configuration in
+                    var updatedConfiguration = configuration
+                    updatedConfiguration.baseBackgroundColor = JobsCor.clear
+                    updatedConfiguration.background = .clear()
+                    return updatedConfiguration
+                }
             }
+            byUpdateConfig()
         };return self
     }
 
@@ -778,39 +802,54 @@ extension UIButton {
     /// 因此这里除了记录到 dict（给 update handler 使用），也会在“当前正处于该 state”时同步写入 baseForegroundColor。
     @discardableResult
     public func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
-        if #available(iOS 15.0, tvOS 15.0, *) {
-            // iOS15+：不要 setTitleColor（会和 configuration 打架）
-            if let color {
-                _titleColorDict[state.rawValue] = color
-            } else {
-                _titleColorDict.removeValue(forKey: state.rawValue)
-            }
-            // 如果当前按钮“正处于”该 state，则立刻同步 baseForegroundColor，避免看起来丢字
-            // （其它 state 仍由 configurationUpdateHandler 统一兜底）
-            let stateIsActive: Bool = {
-                switch state {
-                /// 处理 .disabled 分支
-                case .disabled:   return !self.isEnabled
-                /// 处理 .selected 分支
-                case .selected:   return self.isSelected
-                /// 处理 .highlighted 分支
-                case .highlighted:return self.isHighlighted
-                /// 处理 .normal 分支
-                case .normal:     return self.isEnabled && !self.isSelected && !self.isHighlighted
-                /// 未匹配已知分支时执行兜底处理
-                default:          return false
+        let applyColor: (UIButton, UIColor?) -> Void = { button, resolvedColor in
+            if #available(iOS 15.0, tvOS 15.0, *) {
+                // iOS15+：不要 setTitleColor（会和 configuration 打架）
+                if let resolvedColor {
+                    button._titleColorDict[state.rawValue] = resolvedColor
+                } else {
+                    button._titleColorDict.removeValue(forKey: state.rawValue)
                 }
-            }()
-            if stateIsActive, let color {
-                var cfg = self.configuration ?? .plain()
-                cfg.baseForegroundColor = color
-                self.configuration = cfg
+                // 如果当前按钮“正处于”该 state，则立刻同步 baseForegroundColor，避免看起来丢字
+                // （其它 state 仍由 configurationUpdateHandler 统一兜底）
+                let stateIsActive: Bool = {
+                    switch state {
+                    /// 处理 .disabled 分支
+                    case .disabled:   return !button.isEnabled
+                    /// 处理 .selected 分支
+                    case .selected:   return button.isSelected
+                    /// 处理 .highlighted 分支
+                    case .highlighted:return button.isHighlighted
+                    /// 处理 .normal 分支
+                    case .normal:     return button.isEnabled && !button.isSelected && !button.isHighlighted
+                    /// 未匹配已知分支时执行兜底处理
+                    default:          return false
+                    }
+                }()
+                if stateIsActive, let resolvedColor {
+                    var cfg = button.configuration ?? .plain()
+                    cfg.baseForegroundColor = resolvedColor
+                    button.configuration = cfg
+                }
+                button._ensureUnifiedUpdateHandlerInstalled()
+                button.byUpdateConfig()
+            } else {
+                button.setTitleColor(resolvedColor, for: state)
             }
-            _ensureUnifiedUpdateHandlerInstalled()
-            byUpdateConfig()
-        } else {
-            setTitleColor(color, for: state)
-        };return self
+        }
+        let slot = "UIButton.titleColor.\(state.rawValue)"
+        if let key = color?.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(
+                self,
+                slot: slot
+            ) { object, center in
+                guard let button = object as? UIButton else { return }
+                applyColor(button, center.resolvedColor(key))
+            };return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
+        applyColor(self, color)
+        return self
     }
     /// 主标题和副标题之间的距离（兼容 iOS12+）
     @discardableResult
@@ -833,6 +872,23 @@ extension UIButton {
 
     @discardableResult
     public func byImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+        let slot = "UIButton.image.\(state.rawValue)"
+        if let key = image?.jobsThemeImageKey {
+            JobsThemeCenter.shared.bind(
+                self,
+                slot: slot
+            ) { object, center in
+                guard let button = object as? UIButton else { return }
+                let resolvedImage = center.resolvedImage(key)
+                button.setImage(resolvedImage, for: state)
+                if #available(iOS 15.0, *) {
+                    button.configuration = (button.configuration ?? .plain())
+                        .byImage(resolvedImage)
+                    button.setNeedsUpdateConfiguration()
+                }
+            };return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
         self.setImage(image, for: state)
         if #available(iOS 15.0, *) {
             self.configuration = (self.configuration ?? .plain()).byImage(self.image(for: self.isSelected ? .selected : .normal) ?? self.image(for: .normal) ?? image)

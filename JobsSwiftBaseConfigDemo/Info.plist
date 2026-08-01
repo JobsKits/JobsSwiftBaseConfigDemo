@@ -5,8 +5,8 @@
 
     <key>UIApplicationSceneManifest</key>
     <dict>
-        <key>UIApplicationSupportsMultipleScenes</key>
-        <false/>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
         <key>UISceneConfigurations</key>
         <dict>
             <key>UIWindowSceneSessionRoleApplication</key>

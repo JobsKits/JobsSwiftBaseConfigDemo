@@ -78,26 +78,26 @@ public extension JobsCor {
 }
 // MARK: - iOS 13+ Labels / Link / Placeholder / Separator
 public extension JobsCor {
-    static var label: UIColor { dynamic13("labelColor", fallbackRGB: (0, 0, 0)) }
-    static var secondaryLabel: UIColor { dynamic13("secondaryLabelColor", fallbackRGB: (60, 60, 67), a: 0.6) }
-    static var tertiaryLabel: UIColor { dynamic13("tertiaryLabelColor", fallbackRGB: (60, 60, 67), a: 0.3) }
-    static var quaternaryLabel: UIColor { dynamic13("quaternaryLabelColor", fallbackRGB: (60, 60, 67), a: 0.18) }
+    static var label: UIColor { JobsThemeCenter.shared.color(.textPrimary) }
+    static var secondaryLabel: UIColor { JobsThemeCenter.shared.color(.textSecondary) }
+    static var tertiaryLabel: UIColor { JobsThemeCenter.shared.color(.textTertiary) }
+    static var quaternaryLabel: UIColor { JobsThemeCenter.shared.color(.textQuaternary) }
 
     static var link: UIColor { dynamic13("linkColor", fallbackRGB: (0, 122, 255)) }
-    static var placeholderText: UIColor { dynamic13("placeholderTextColor", fallbackRGB: (60, 60, 67), a: 0.3) }
+    static var placeholderText: UIColor { JobsThemeCenter.shared.color(.textPlaceholder) }
 
     static var separator: UIColor { dynamic13("separatorColor", fallbackRGB: (60, 60, 67), a: 0.29) }
     static var opaqueSeparator: UIColor { dynamic13("opaqueSeparatorColor", fallbackRGB: (198, 198, 200)) }
 }
 // MARK: - iOS 13+ Backgrounds
 public extension JobsCor {
-    static var systemBackground: UIColor { dynamic13("systemBackgroundColor", fallbackRGB: (255, 255, 255)) }
-    static var secondarySystemBackground: UIColor { dynamic13("secondarySystemBackgroundColor", fallbackRGB: (242, 242, 247)) }
-    static var tertiarySystemBackground: UIColor { dynamic13("tertiarySystemBackgroundColor", fallbackRGB: (255, 255, 255)) }
+    static var systemBackground: UIColor { JobsThemeCenter.shared.color(.backgroundPrimary) }
+    static var secondarySystemBackground: UIColor { JobsThemeCenter.shared.color(.backgroundSecondary) }
+    static var tertiarySystemBackground: UIColor { JobsThemeCenter.shared.color(.backgroundTertiary) }
 
-    static var systemGroupedBackground: UIColor { dynamic13("systemGroupedBackgroundColor", fallbackRGB: (242, 242, 247)) }
-    static var secondarySystemGroupedBackground: UIColor { dynamic13("secondarySystemGroupedBackgroundColor", fallbackRGB: (255, 255, 255)) }
-    static var tertiarySystemGroupedBackground: UIColor { dynamic13("tertiarySystemGroupedBackgroundColor", fallbackRGB: (242, 242, 247)) }
+    static var systemGroupedBackground: UIColor { JobsThemeCenter.shared.color(.backgroundGrouped) }
+    static var secondarySystemGroupedBackground: UIColor { JobsThemeCenter.shared.color(.backgroundGroupedSecondary) }
+    static var tertiarySystemGroupedBackground: UIColor { JobsThemeCenter.shared.color(.backgroundGroupedTertiary) }
 }
 // MARK: - iOS 13+ Fills
 public extension JobsCor {

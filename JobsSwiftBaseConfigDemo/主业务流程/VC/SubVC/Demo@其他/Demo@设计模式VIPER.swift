@@ -122,7 +122,10 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
         super.viewDidLoad()
         title = "Users (VIPER)"
         view.byBackgroundColor(JobsCor.systemBackground)
-        tableView.byDataSource(self).byDelegate(self)
+        tableView
+            .byDataSource(self)
+            .byDelegate(self)
+            .byBackgroundColor(JobsCor.systemBackground)
         tableView.byAddTo(view); tableView.byFrame(view.bounds)
         presenter.onViewDidLoad()
     }
@@ -155,6 +158,9 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
         c.textLabel?.byText(r.title)
         c.detailTextLabel?.byText(r.subtitle)
         return c
+            .byTitleCor(JobsCor.label)
+            .byDetailTitleCor(JobsCor.secondaryLabel)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
     func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
         presenter.onSelect(id: rows[ip.row].id)

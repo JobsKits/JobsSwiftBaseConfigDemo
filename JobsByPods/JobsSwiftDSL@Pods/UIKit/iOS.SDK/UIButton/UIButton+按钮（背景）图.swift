@@ -33,6 +33,27 @@ extension UIButton {
         _ image: UIImage?,
         for state: UIControl.State = .normal
     ) -> Self {
+        let slot = "UIButton.backgroundImage.\(state.rawValue)"
+        if let key = image?.jobsThemeImageKey {
+            JobsThemeCenter.shared.bind(
+                self,
+                slot: slot
+            ) { object, center in
+                guard let button = object as? UIButton else { return }
+                let resolvedImage = center.resolvedImage(key)
+                button.setBackgroundImage(resolvedImage, for: state)
+                if #available(iOS 15.0, *) {
+                    var configuration = button.configuration ?? .plain()
+                    var background = configuration.background
+                    background.image = resolvedImage
+                    background.imageContentMode = .scaleAspectFill
+                    configuration.background = background
+                    button.configuration = configuration
+                }
+            }
+            return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
             var bg = cfg.background

@@ -11,9 +11,13 @@ public enum JobsSwiftGraphicCaptchaGenerator {
     public static let numberCharacters: [String] = Array("0123456789").map(String.init)
     public static let lowercaseLetterCharacters: [String] = Array("abcdefghijklmnopqrstuvwxyz").map(String.init)
     public static let uppercaseLetterCharacters: [String] = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init)
-    public static let chineseCharacters: [String] = (0x4E00...0x9FA5).compactMap {
-        UnicodeScalar($0).map { String(Character($0)) }
-    }
+    public static let simplifiedChineseCharacters: [String] = Array(
+        "汉语龙国风云书画网车门东乐气万与专业长时见学习爱宝贝发后会里这来"
+    ).map(String.init)
+    public static let traditionalChineseCharacters: [String] = Array(
+        "漢語龍國風雲書畫網車門東樂氣萬與專業長時見學習愛寶貝發後會裡這來"
+    ).map(String.init)
+    public static let chineseCharacters = simplifiedChineseCharacters + traditionalChineseCharacters
 
     public static func characters(for units: JobsSwiftGraphicCaptchaCharacterUnit) -> [String] {
         var characters: [String] = []
@@ -26,8 +30,11 @@ public enum JobsSwiftGraphicCaptchaGenerator {
         if units.contains(.uppercaseLetter) {
             characters.append(contentsOf: uppercaseLetterCharacters)
         }
-        if units.contains(.chinese) {
-            characters.append(contentsOf: chineseCharacters)
+        if units.contains(.simplifiedChinese) {
+            characters.append(contentsOf: simplifiedChineseCharacters)
+        }
+        if units.contains(.traditionalChinese) {
+            characters.append(contentsOf: traditionalChineseCharacters)
         };return characters
     }
 
@@ -76,8 +83,11 @@ private extension JobsSwiftGraphicCaptchaGenerator {
         if units.contains(.uppercaseLetter) {
             groups.append(uppercaseLetterCharacters)
         }
-        if units.contains(.chinese) {
-            groups.append(chineseCharacters)
+        if units.contains(.simplifiedChinese) {
+            groups.append(simplifiedChineseCharacters)
+        }
+        if units.contains(.traditionalChinese) {
+            groups.append(traditionalChineseCharacters)
         };return groups
     }
 
@@ -92,7 +102,7 @@ private extension JobsSwiftGraphicCaptchaGenerator {
         guard selectedGroupCount >= 2 else { return nil }
         let selectedGroups = Array(validGroups.shuffled().prefix(selectedGroupCount))
         var characters = selectedGroups.compactMap { $0.randomElement() }
-        let sourceCharacters = validGroups.flatMap { $0 }
+        let sourceCharacters = selectedGroups.flatMap { $0 }
         while characters.count < length {
             guard let character = sourceCharacters.randomElement() else { break }
             characters.append(character)

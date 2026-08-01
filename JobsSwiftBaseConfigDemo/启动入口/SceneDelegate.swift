@@ -31,12 +31,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("✅ SceneDelegate willConnect")
         guard let windowScene = (scene as? UIWindowScene) else { return }
         LiveChat.windowScene = windowScene
+        let restorationActivity = JobsSceneCoordinator.demoActivity(
+            from: connectionOptions,
+            session: session
+        )
+        let opensSceneDemo = restorationActivity != nil
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        let homeViewController = RootListPreferences.makeAppRootViewController()
+        let homeViewController: UIViewController
+        if let restorationActivity {
+            homeViewController = UINavigationController(
+                rootViewController: JobsSceneDelegateDemoVC(
+                    restorationActivity: restorationActivity
+                )
+            )
+        } else {
+            homeViewController = RootListPreferences.makeAppRootViewController()
+        }
         window
             .byRootViewController(homeViewController)
             .byMakeKeyAndVisible()
+        JobsSceneCoordinator.record("willConnect：创建独立 UIWindow", for: session)
+        guard !opensSceneDemo else { return }
         JobsSplashMediaCache.shared.resumePendingVideoPreloads()
         guard JobsSplashPreferences.isEnabledForNextLaunch else { return }
         let openConfiguration = JobsOpenConfiguration()
@@ -93,7 +109,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return .localVideo(name: "welcome_video", fileExtension: "mp4")
         /// 使用远程视频开屏
         case .remoteVideo:
-            guard let url = URL(string: "https://media.w3.org/2010/05/sintel/trailer.mp4") else {
+            guard let url = URL(
+                string: "https://raw.githubusercontent.com/JobsKits/JobsSwiftBaseConfigDemo/main/JobsSwiftBaseConfigDemo/Resources/%E8%A7%86%E9%A2%91/welcome_video.mp4"
+            ) else {
                 return .localVideo(name: "welcome_video", fileExtension: "mp4")
             };return .remoteVideo(
                 url,
@@ -134,13 +152,58 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         };return fileURL
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
+    func sceneDidDisconnect(_ scene: UIScene) {
+        JobsSceneCoordinator.record("didDisconnect：Scene 与会话暂时断开", for: scene.session)
+    }
+
     func sceneDidBecomeActive(_ scene: UIScene) {
+        JobsSceneCoordinator.record("didBecomeActive：开始接收用户事件", for: scene.session)
         // 回到前台，标记“正在运行中”
         CrashLogCenter.shared.markAppLaunched()
     }
 
+    func sceneWillResignActive(_ scene: UIScene) {
+        JobsSceneCoordinator.record("willResignActive：即将暂停交互", for: scene.session)
+    }
+
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        JobsSceneCoordinator.record("willEnterForeground：即将进入前台", for: scene.session)
+    }
+
     func sceneDidEnterBackground(_ scene: UIScene) {
+        JobsSceneCoordinator.record("didEnterBackground：进入后台安全点", for: scene.session)
         // 进入后台算安全点
         CrashLogCenter.shared.markSafeExitPoint()
+    }
+
+    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        guard let demoViewController = sceneDemoViewController() else {
+            return scene.userActivity.flatMap {
+                JobsSceneCoordinator.isDemoActivity($0) ? $0 : nil
+            }
+        };return demoViewController.sceneRestorationActivity()
+    }
+
+    func scene(_ scene: UIScene, restoreInteractionStateWith stateRestorationActivity: NSUserActivity) {
+        guard JobsSceneCoordinator.isDemoActivity(stateRestorationActivity) else { return }
+        sceneDemoViewController()?.restoreSceneInteractionState(with: stateRestorationActivity)
+        JobsSceneCoordinator.record("restoreInteractionState：恢复 Scene 独立计数", for: scene.session)
+    }
+
+    private func sceneDemoViewController() -> JobsSceneDelegateDemoVC? {
+        var currentViewController = window?.rootViewController
+        var keepsFinding = true
+        while let viewController = currentViewController, keepsFinding {
+            if let presentedViewController = viewController.presentedViewController {
+                currentViewController = presentedViewController
+            } else if let navigationController = viewController as? UINavigationController {
+                currentViewController = navigationController.visibleViewController
+            } else if let tabBarController = viewController as? UITabBarController {
+                currentViewController = tabBarController.selectedViewController
+            } else {
+                keepsFinding = false
+            }
+        }
+        return currentViewController as? JobsSceneDelegateDemoVC
     }
 }

@@ -101,8 +101,7 @@ enum RootListPreferences {
 
     static var cellTextDisplayStrategy: RootListCellTextDisplayStrategy {
         get {
-            guard UserDefaults.standard.object(forKey: cellTextDisplayStrategyKey) != nil else { return .continuous }
-            return RootListCellTextDisplayStrategy(
+            guard UserDefaults.standard.object(forKey: cellTextDisplayStrategyKey) != nil else { return .continuous };return RootListCellTextDisplayStrategy(
                 rawValue: UserDefaults.standard.integer(forKey: cellTextDisplayStrategyKey)
             ) ?? .continuous
         }
@@ -151,6 +150,8 @@ enum RootListPreferences {
     private static func makeDemoListEntryViewController() -> UIViewController {
         let rootListViewController = RootListVC()
         let mainNavigationController = rootListViewController.jobsNav.jobsNavContainer
+            .byNavBarHidden(true)
+            .byGKNavBarHidden(true)
         return JobsSideDrawerVC(
             drawerViewController: JobsMeCenterVC().jobsNav.jobsNavContainer,
             mainViewController: mainNavigationController,
@@ -167,6 +168,7 @@ enum RootListPreferences {
                 }
             )
         )
+        .byGKNavBarHidden(true)
     }
 
     private static func isDemoListCurrentViewController(
@@ -187,40 +189,34 @@ enum RootListPreferences {
     }
 
     static var darkModeEnabled: Bool {
-        get { UIApplication.jobsGlobalDarkModeEnabled }
+        get { JobsThemeCenter.shared.isDarkMode }
         set {
-            UIApplication.jobsGlobalDarkModeEnabled = newValue
+            JobsThemeCenter.shared.setStyle(newValue ? .dark : .light)
         }
     }
 
     static var pageBackgroundColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground }
-        return darkModeEnabled ? color(0x0F1115) : JobsCor.white
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground };return darkModeEnabled ? color(0x0F1115) : JobsCor.white
     }
 
     static var settingsPageBackgroundColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemGroupedBackground }
-        return darkModeEnabled ? color(0x0F1115) : color(0xF4F5F8)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemGroupedBackground };return darkModeEnabled ? color(0x0F1115) : color(0xF4F5F8)
     }
 
     static var navigationBackgroundColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground }
-        return darkModeEnabled ? color(0x15171C) : JobsCor.white
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.systemBackground };return darkModeEnabled ? color(0x15171C) : JobsCor.white
     }
 
     static var primaryTextColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.label }
-        return darkModeEnabled ? color(0xF4F5F8) : color(0x3D4A58)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.label };return darkModeEnabled ? color(0xF4F5F8) : color(0x3D4A58)
     }
 
     static var secondaryTextColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondaryLabel }
-        return darkModeEnabled ? color(0xA8AFBC) : color(0x8A93A1)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondaryLabel };return darkModeEnabled ? color(0xA8AFBC) : color(0x8A93A1)
     }
 
     static var cardBackgroundColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondarySystemGroupedBackground }
-        return darkModeEnabled ? color(0x191B20) : JobsCor.white
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.secondarySystemGroupedBackground };return darkModeEnabled ? color(0x191B20) : JobsCor.white
     }
 
     static var foldCardBackgroundColor: UIColor {
@@ -237,8 +233,7 @@ enum RootListPreferences {
     }
 
     static var separatorColor: UIColor {
-        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.separator }
-        return darkModeEnabled ? color(0x30333A) : color(0xE5E7EB)
+        if #available(iOS 13.0, tvOS 13.0, *) { return JobsCor.separator };return darkModeEnabled ? color(0x30333A) : color(0xE5E7EB)
     }
 
     static var selectedTintColor: UIColor {
@@ -253,21 +248,18 @@ enum RootListPreferences {
 
     @discardableResult
     static func toggleDarkMode() -> Bool {
-        UIApplication.jobsToggleGlobalTheme()
+        JobsThemeCenter.shared.toggle()
+        return JobsThemeCenter.shared.isDarkMode
     }
 
-    static func applyPreferredInterfaceStyle() {
-        UIApplication.jobsApplyGlobalTheme()
-        applyNavigationAndTabBarAppearance()
+    static func applyThemeColors(to viewController: UIViewController,
+                                 backgroundColor: UIColor? = nil) {
+        viewController.view.byBackgroundColor(backgroundColor ?? pageBackgroundColor)
     }
 
     static func applyThemeChrome(to viewController: UIViewController,
                                  backgroundColor: UIColor? = nil) {
-        applyPreferredInterfaceStyle()
-        viewController.view.byBackgroundColor(backgroundColor ?? pageBackgroundColor)
-        viewController.gk_navBackgroundColor = navigationBackgroundColor
-        viewController.gk_navBackgroundImage = nil
-        viewController.gk_navTitleColor = primaryTextColor
+        applyThemeColors(to: viewController, backgroundColor: backgroundColor)
         viewController.gk_navShadowColor = separatorColor
         viewController.gk_navLineHidden = false
         viewController.gk_navigationBar.byTintColor(primaryTextColor)
@@ -286,35 +278,6 @@ enum RootListPreferences {
                 g: CGFloat((hex >> 8) & 0xFF),
                 b: CGFloat(hex & 0xFF),
                 a: alpha)
-    }
-
-    private static func applyNavigationAndTabBarAppearance() {
-        #if os(iOS)
-        UINavigationBar.appearance().barTintColor = navigationBackgroundColor
-        UINavigationBar.appearance().byTintColor(primaryTextColor)
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: primaryTextColor]
-        UITabBar.appearance().barTintColor = navigationBackgroundColor
-        UITabBar.appearance().byTintColor(selectedTintColor)
-        if #available(iOS 10.0, *) {
-            UITabBar.appearance().unselectedItemTintColor = primaryTextColor
-        }
-        if #available(iOS 13.0, *) {
-            let navigationAppearance = UINavigationBarAppearance()
-            navigationAppearance.configureWithOpaqueBackground()
-            navigationAppearance.byBackgroundColor(navigationBackgroundColor)
-            navigationAppearance.shadowColor = separatorColor
-            navigationAppearance.titleTextAttributes = [.foregroundColor: primaryTextColor]
-            navigationAppearance.largeTitleTextAttributes = [.foregroundColor: primaryTextColor]
-            UINavigationBar.appearance().standardAppearance = navigationAppearance
-            UINavigationBar.appearance().compactAppearance = navigationAppearance
-            UINavigationBar.appearance().scrollEdgeAppearance = navigationAppearance
-            let tabBarAppearance = makeTabBarAppearance()
-            UITabBar.appearance().standardAppearance = tabBarAppearance
-            if #available(iOS 15.0, *) {
-                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-            }
-        }
-        #endif
     }
 
     #if os(iOS)
@@ -340,17 +303,23 @@ enum RootListPreferences {
 
     private static func applyTabBarTheme(_ tabBar: UITabBar?) {
         guard let tabBar else { return }
-        tabBar.byBackgroundColor(navigationBackgroundColor)
-        tabBar.barTintColor = navigationBackgroundColor
-        tabBar.byTintColor(selectedTintColor)
-        if #available(iOS 10.0, *) {
-            tabBar.unselectedItemTintColor = primaryTextColor
-        }
-        if #available(iOS 13.0, *) {
-            let appearance = makeTabBarAppearance()
-            tabBar.standardAppearance = appearance
-            if #available(iOS 15.0, *) {
-                tabBar.scrollEdgeAppearance = appearance
+        JobsThemeCenter.shared.bind(
+            tabBar,
+            slot: "RootList.UITabBar.colors"
+        ) { object, _ in
+            guard let tabBar = object as? UITabBar else { return }
+            tabBar.byBackgroundColor(navigationBackgroundColor)
+            tabBar.barTintColor = navigationBackgroundColor
+            tabBar.byTintColor(selectedTintColor)
+            if #available(iOS 10.0, *) {
+                tabBar.unselectedItemTintColor = primaryTextColor
+            }
+            if #available(iOS 13.0, *) {
+                let appearance = makeTabBarAppearance()
+                tabBar.standardAppearance = appearance
+                if #available(iOS 15.0, *) {
+                    tabBar.scrollEdgeAppearance = appearance
+                }
             }
         }
     }
@@ -465,7 +434,6 @@ final class RootListSettingsVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        RootListPreferences.applyPreferredInterfaceStyle()
         view.byBackgroundColor(RootListPreferences.settingsPageBackgroundColor)
         updateLocalizedContent()
         tableView.byVisible(YES)
@@ -480,7 +448,7 @@ final class RootListSettingsVC: BaseVC {
             self.applySettingsTheme()
         }
         themeToken = NotificationCenter.default.addObserver(
-            forName: .JobsGlobalThemeDidChange,
+            forName: .JobsThemeDidChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in
@@ -502,8 +470,10 @@ private extension RootListSettingsVC {
     }
 
     func applySettingsTheme() {
-        RootListPreferences.applyThemeChrome(to: self,
-                                             backgroundColor: RootListPreferences.settingsPageBackgroundColor)
+        RootListPreferences.applyThemeChrome(
+            to: self,
+            backgroundColor: RootListPreferences.settingsPageBackgroundColor
+        )
         tableView.byBackgroundColor(JobsCor.clear)
         tableView.separatorColor = RootListPreferences.separatorColor
         tableView.reloadData()

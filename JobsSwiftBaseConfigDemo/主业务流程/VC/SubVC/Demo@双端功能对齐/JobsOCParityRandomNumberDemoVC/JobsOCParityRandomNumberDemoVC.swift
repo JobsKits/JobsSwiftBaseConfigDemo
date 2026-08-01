@@ -55,6 +55,9 @@ final class JobsRandomNumberDemoVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(78)
+            .byNoContentInsetAdjustment()
+            .byNoSectionHeaderTopPadding()
+            .byContentInsetTop(8)
             .byBackgroundColor(JobsCor.clear)
             .byTableFooterView(UIView())
             .byAddTo(view) { [unowned self] make in
@@ -79,6 +82,18 @@ final class JobsRandomNumberDemoVC: BaseVC {
     private func reloadRandomValues() {
         values = items.map { $0.generator() }
         tableView.byReloadData()
+    }
+
+    private func reloadRandomValue(at indexPath: IndexPath) {
+        guard items.indices.contains(indexPath.row),
+              values.indices.contains(indexPath.row) else { return }
+        let oldValue = values[indexPath.row]
+        var newValue = oldValue
+        repeat {
+            newValue = items[indexPath.row].generator()
+        } while newValue == oldValue
+        values[indexPath.row] = newValue
+        tableView.byReloadRows(at: [indexPath], with: .automatic)
     }
 }
 
@@ -107,10 +122,10 @@ extension JobsRandomNumberDemoVC: UITableViewDataSource, UITableViewDelegate {
             .byTextColor(JobsCor.secondaryLabel)
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .none
-        return cell
+        return cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        reloadRandomValues()
+        reloadRandomValue(at: indexPath)
     }
 }

@@ -310,7 +310,7 @@ private lazy var exampleButton: UIButton = {
         /// 按钮图片@图文关系
         .byImage("eye.slash".sysImg)                // 未选中图标
         .byImage("eye".sysImg, for: .selected)                    // 选中图标
-        /// iOS15专用@清除偏移
+        /// 清除所有状态下的按钮配置背景
         .byClearConfigurationBackground() 
         /// 按钮@图文位置关系
         .byImagePlacement(.top ,padding: 5)        // 通用（向下兼容）
@@ -1592,6 +1592,10 @@ self.valueLabel
 
 #### 3.2.12、<font id=UIAlertController>对`UIAlertController`的封装</font>
 
+> `UIAlertController` 是系统弹框，不参与 Demo 导航栏和全局主题按钮注入；直接 `present` 即可。
+>
+> `JobsSwiftGraphicCaptchaCharacterUnit.simplifiedChinese` / `.traditionalChinese` 分别表示简体、繁体汉字，兼容值 `.chinese` 表示两者合集。英文大写、英文小写、阿拉伯数字、简体汉字、繁体汉字按五类独立组合；配置可使用 `twoMixedConfig`、`threeMixedConfig`、`fourMixedConfig`、`fullMixedConfig`。
+
 * 最简单的 Alert
 
   ```swift
@@ -1872,6 +1876,10 @@ UIView().byDialogBoxContent { dialogBoxView in
   timer = t
   t.start()
   ```
+
+* **列表多 Timer 与页面生命周期**
+
+  `JobsSwiftTimerMgr.create(...scopeIdentifier:)` 把同一页面的 Timer 纳入 Scope。Cell 在复用或离屏时保存并传回受管句柄，通过 `stopAndRemove(identifier:expectedTimer:)` 做实例安全取消；页面在 `viewWillDisappear` / `viewWillAppear` 调用 Scope 暂停恢复，在 `deinit` 整组清理。倒计时业务只把 `model.endAt` 作为时间真值，Timer tick 只触发刷新。
 
 * **iOS**系统中存在三大计时器核心，分别是：**NSTimer** / **GCD** / **CADisplayLink**。其间的差异在于精确粒度的区别，在大多数场景下都无差别，除非在特定场景下才会有分别
 * 在敏捷开发的基础下，我们只需要关心业务层，而不善于关心创建流程（期望快速一键创建），而偏偏系统的创建流程较为复杂。其难点在于计时器的销毁在不经意之间可能会引起循环引用问题，造成页面的不释放，导致内存泄露或者进数据异常
@@ -2200,7 +2208,29 @@ let task = JobsPlan.after(.second * 2).do {
 }
 ```
 
-##### 3.2.15.5、红包雨
+##### 3.2.15.5、动态时钟图标（内核基于`JobsSwiftTimer`）
+
+`JobsClockIconView` 只输出无数字、无刻度的时钟图形：时针固定，分针按固定步频绕圆心旋转；默认顺时针，外界可主动传入逆时针和 Timer tick 间隔。
+
+```swift
+import JobsImageRotation
+
+private lazy var clockIcon: JobsClockIconView = {
+    JobsClockIconView(
+        direction: .counterclockwise,
+        interval: JobsClockIconView.defaultInterval
+    )
+        .byTintColor(JobsCor.secondaryLabel)
+        .byAddTo(view) { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 84, height: 84))
+        }
+}()
+
+clockIcon.start()
+```
+
+##### 3.2.15.6、红包雨
 
 ```swift
 private lazy var rainView: RedPacketRainView = {
@@ -2229,7 +2259,7 @@ private lazy var rainView: RedPacketRainView = {
   }()
 ```
 
-##### 3.2.15.6、网络数据的监听
+##### 3.2.15.7、网络数据的监听
 
 ![image-20260315180854842](./assets/image-20260315180854842.png)
 
@@ -3670,20 +3700,21 @@ sequenceDiagram
 ### 7.3、`BaseVC` 与导航
 
 - Jobs 自维护页面默认继承 `BaseVC`，不要直接继承 `UIViewController`。
-- `BaseVC.viewWillAppear` / `viewDidAppear` 统一补齐导航默认项、返回按钮和侧滑返回能力。
+- `BaseVC.viewWillAppear` / `viewDidAppear` 统一补齐导航默认项、返回按钮和侧滑返回能力，不覆盖页面在 `viewDidLoad` 中声明的背景色。
 - 页面通过 `jobsSetupGKNav(title:leftButton:rightButtons:)` 配置导航；`@` 标题按第一个 `@` 拆成主、副标题。
 - 具体 Demo 右上角只保留一个入口：
 
+  - 入口按钮始终使用透明背景，不显示额外色块。
   - 没有业务动作时，入口直接切换主题。
   - 有业务动作时，入口展开主题与页面动作菜单。
   - 原有业务按钮先配置，再由公共导航层收纳，不能被主题按钮覆盖。
 
 ### 7.4、全局主题
 
-- 主题状态持久化在 `UIApplication.jobsGlobalDarkModeEnabled`。
-- 切换时遍历 `UIApplication.shared.connectedScenes` 下全部 Window，并同步主题按钮选中态和无障碍文案。
-- 页面使用 `JobsCor.label`、`JobsCor.secondaryLabel`、`JobsCor.systemBackground` 等语义色；硬编码白底、黑字或单页主题补丁会破坏全局切换。
-- 自定义绘制、Popup、键盘、图片模板色和第三方容器也要验证明暗主题，不以“按钮能点”代替页面换肤完成。
+- `JobsThemeCenter` 位于 `JobsSwiftBaseDefines`，负责读取主工程 `JobsThemeResources.json`、持久化主题状态、维护弱引用绑定并发布 `.JobsThemeDidChange`。
+- `JobsSwiftDSL` 在 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等入口识别 `JobsCor` 主题 Key；切换时只重放这些已标记资源，不遍历 Scene、Window 或控制器树，不写入 `overrideUserInterfaceStyle`。
+- 数据包属于 App 业务资源，不下沉到 Pod；框架只定义可扩展 Key、解析器和绑定机制。默认主题范围是背景色与文字色，图片只有显式使用 `byThemeImage(...)` 时才参与。
+- 自定义绘制、`CGColor`、`CALayer`、CoreText 和第三方容器使用 `JobsThemeCenter.bind(...)` 显式登记背景 / 文字资源，不以整页刷新代替资源绑定。
 
 ### 7.5、页面标准骨架
 
@@ -3795,6 +3826,7 @@ JobsByPods/FeatureName@Pods/
 - Bundle 名是公开契约，重命名时同步修改 podspec、访问 helper、README、Demo 和测试。
 - 资源访问失败必须有可见兜底或明确错误，不能因为图片缺失直接崩溃。
 - 动图、视频和大 JSON 需要评估首屏解码、内存峰值、后台行为和缓存清理。
+- Markdown 文档浏览功能由 `JobsSwiftMarkdown` 提供运行时资源；宿主 Build Phase 扫描仓库内 Jobs 自有 `*.md`，保留相对目录并复制本地引用资源到 `JobsMarkdownDocuments.bundle`。设备端只读取该构建产物，不依赖开发机文件路径。
 
 ### 9.3、多语言
 

@@ -17,7 +17,12 @@ public struct JobsSwiftGraphicCaptchaCharacterUnit: OptionSet, Sendable {
     public static let number = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 0)
     public static let lowercaseLetter = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 1)
     public static let uppercaseLetter = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 2)
-    public static let chinese = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 3)
+    public static let simplifiedChinese = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 3)
+    public static let traditionalChinese = JobsSwiftGraphicCaptchaCharacterUnit(rawValue: 1 << 4)
+    public static let chinese: JobsSwiftGraphicCaptchaCharacterUnit = [
+        .simplifiedChinese,
+        .traditionalChinese
+    ]
     public static let letter: JobsSwiftGraphicCaptchaCharacterUnit = [.lowercaseLetter, .uppercaseLetter]
     public static let `default`: JobsSwiftGraphicCaptchaCharacterUnit = [.number, .letter]
 }
@@ -55,6 +60,14 @@ public extension JobsSwiftGraphicCaptchaConfig {
         Self(characterUnits: .chinese)
     }
 
+    static var simplifiedChineseConfig: Self {
+        Self(characterUnits: .simplifiedChinese)
+    }
+
+    static var traditionalChineseConfig: Self {
+        Self(characterUnits: .traditionalChinese)
+    }
+
     static var letterCaseSensitiveConfig: Self {
         Self(caseSensitive: true, characterUnits: .letter)
     }
@@ -79,9 +92,15 @@ public extension JobsSwiftGraphicCaptchaConfig {
         return config
     }
 
-    static var fullMixedConfig: Self {
+    static var fourMixedConfig: Self {
         var config = twoMixedConfig
         config.mixedGroupCount = 4
+        return config
+    }
+
+    static var fullMixedConfig: Self {
+        var config = twoMixedConfig
+        config.mixedGroupCount = 5
         return config
     }
 }

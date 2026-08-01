@@ -45,7 +45,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
 
     private lazy var cardView: UIView = { [unowned self] in
         UIView()
-            .byBackgroundColor(JobsCor.systemGray6)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byClipsToBounds(true)
             .byAddTo(self.contentView) { make in
@@ -83,6 +83,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        byBackgroundColor(JobsCor.systemBackground)
         contentView.byBackgroundColor(JobsCor.clear)
         // 唤起懒加载（不改变视觉状态）
         titleLabel.byVisible(YES)

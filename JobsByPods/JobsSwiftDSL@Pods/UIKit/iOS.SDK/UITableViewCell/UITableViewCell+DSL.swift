@@ -18,6 +18,28 @@ import JobsSwiftBaseDefines
 #endif
 
 // MARK: - UITableViewCell · 基础状态 & 选择/高亮/编辑
+private extension UITableViewCell {
+    func jobsApplyTitleColor(_ color: UIColor) {
+        if #available(iOS 14.0, *) {
+            _ = byContentConfiguration { cfg in
+                cfg.textProperties.color = color
+            }
+        } else {
+            textLabel?.textColor = color
+        }
+    }
+
+    func jobsApplyDetailTitleColor(_ color: UIColor) {
+        if #available(iOS 14.0, *) {
+            _ = byContentConfiguration { cfg in
+                cfg.secondaryTextProperties.color = color
+            }
+        } else {
+            detailTextLabel?.textColor = color
+        }
+    }
+}
+
 extension UITableViewCell {
     /// selectionStyle
     @discardableResult
@@ -308,25 +330,33 @@ extension UITableViewCell {
     /// 标题颜色
     @discardableResult
     public func byTitleCor(_ cor: UIColor) -> Self {
-        if #available(iOS 14.0, *) {
-            return byContentConfiguration { cfg in
-                cfg.textProperties.color = cor
-            }
-        } else {
-            textLabel?.textColor = cor
-            return self
+#if canImport(JobsSwiftBaseDefines)
+        let slot = "UITableViewCell.titleColor"
+        if let key = cor.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                guard let cell = object as? UITableViewCell else { return }
+                cell.jobsApplyTitleColor(center.resolvedColor(key))
+            };return self
         }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
+#endif
+        jobsApplyTitleColor(cor)
+        return self
     }
     /// 副标题颜色
     @discardableResult
     public func byDetailTitleCor(_ cor: UIColor) -> Self {
-        if #available(iOS 14.0, *) {
-            return byContentConfiguration { cfg in
-                cfg.secondaryTextProperties.color = cor
-            }
-        } else {
-            detailTextLabel?.textColor = cor
-            return self
+#if canImport(JobsSwiftBaseDefines)
+        let slot = "UITableViewCell.detailTitleColor"
+        if let key = cor.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                guard let cell = object as? UITableViewCell else { return }
+                cell.jobsApplyDetailTitleColor(center.resolvedColor(key))
+            };return self
         }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
+#endif
+        jobsApplyDetailTitleColor(cor)
+        return self
     }
 }

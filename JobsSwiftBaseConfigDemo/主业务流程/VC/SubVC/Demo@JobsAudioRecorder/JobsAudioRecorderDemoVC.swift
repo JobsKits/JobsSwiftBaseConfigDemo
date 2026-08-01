@@ -29,7 +29,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var durationTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "录音时长".tr
-        label.textColor = JobsCor.label
+        label.byTextColor(JobsCor.label)
         label.font = JobsFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
@@ -45,14 +45,14 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var durationUnitLabel: UILabel = {
         let label = UILabel()
         label.text = "秒".tr
-        label.textColor = JobsCor.secondaryLabel
+        label.byTextColor(JobsCor.secondaryLabel)
         label.font = JobsFont.systemFont(ofSize: 15, weight: .regular)
         return label
     }()
     private lazy var hintLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = JobsCor.secondaryLabel
+        label.byTextColor(JobsCor.secondaryLabel)
         label.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
@@ -65,7 +65,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var listTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "本地录音".tr
-        label.textColor = JobsCor.label
+        label.byTextColor(JobsCor.label)
         label.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
         return label
     }()
@@ -73,7 +73,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var captureHintLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = JobsCor.secondaryLabel
+        label.byTextColor(JobsCor.secondaryLabel)
         label.font = JobsFont.systemFont(ofSize: 14, weight: .medium)
         return label
     }()
@@ -138,14 +138,14 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     }
 
     private func setupUI() {
-        settingsCard.backgroundColor = JobsCor.secondarySystemGroupedBackground
+        settingsCard.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         settingsCard.layer.cornerRadius = 18
         settingsStack.axis = .vertical
         settingsStack.spacing = 12
         durationRow.axis = .horizontal
         durationRow.alignment = .center
         durationRow.spacing = 8
-        capturePanel.backgroundColor = JobsCor.systemGroupedBackground
+        capturePanel.byBackgroundColor(JobsCor.systemGroupedBackground)
         tableView.backgroundColor = JobsCor.clear
 
         view.addSubview(settingsCard)

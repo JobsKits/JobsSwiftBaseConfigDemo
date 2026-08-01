@@ -41,6 +41,7 @@ final class RichTextDemoVC: BaseVC {
         UITableView(frame: .zero, style: .plain)
             .byDataSource(self)
             .byDelegate(self)
+            .byBackgroundColor(JobsCor.systemBackground)
             .bySeparatorStyle(.none)
             .byRowHeight(UITableView.automaticDimension)
             .byEstimatedRowHeight(120)

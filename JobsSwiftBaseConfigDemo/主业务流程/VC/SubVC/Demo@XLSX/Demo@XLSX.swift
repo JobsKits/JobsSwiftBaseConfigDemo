@@ -85,6 +85,7 @@ final class XLSXDemoVC: BaseVC {
             .byRegisterCell(RowCell.self)
             .byDataSource(self)
             .byDelegate(self)
+            .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { make in
                 make.top.equalTo(self.openButton.snp.bottom).offset(12)
                 make.left.right.bottom.equalToSuperview()
@@ -159,8 +160,7 @@ final class XLSXDemoVC: BaseVC {
                 documentPickerViewController?.byDelegate(self)
                 if let documentPickerViewController {
                     present(documentPickerViewController, animated: true)
-                }
-                return
+                };return
             }
         }
         #endif

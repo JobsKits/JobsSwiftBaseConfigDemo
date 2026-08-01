@@ -11,12 +11,22 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: - 直接赋值@单参数
 extension UIImageView {
     // MARK: 图片
     @discardableResult
     public func byImage(_ img: UIImage?) -> Self {
-        image = img
+        let slot = "UIImageView.image"
+        if let key = img?.jobsThemeImageKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                (object as? UIImageView)?.image = center.resolvedImage(key)
+            }
+        } else {
+            JobsThemeCenter.shared.unbind(self, slot: slot)
+            image = img
+        }
         return self
     }
     // MARK: 高亮图片
@@ -87,8 +97,7 @@ extension UIImageView {
 extension UIImageView {
     @discardableResult
     public func byImage(_ builder: () -> UIImage?) -> Self {
-        self.image = builder()
-        return self
+        byImage(builder())
     }
 
     @discardableResult

@@ -34,7 +34,8 @@ let timer = try JobsSwiftTimerMgr.shared.create(
     identifier: identifier,
     config: config,
     dedupPolicy: .replace,
-    backgroundPolicy: .pauseAndResume
+    backgroundPolicy: .pauseAndResume,
+    scopeIdentifier: "home.page"
 ) {
     // 更新倒计时 UI
 }
@@ -75,6 +76,8 @@ Manager 接管应用状态治理后，会关闭具体 `JobsTimer` 自己的监�
 
 - `defaultDedupPolicy` 与注册字典均在锁内访问。
 - `.cancel` 移除前会核对 Entry 身份，不会误删同 identifier 的并发替换项。
+- `stopAndRemove(identifier:expectedTimer:)` 同时核对 identifier 与受管句柄；旧 Cell 的延迟清理不会误杀复用后的新 Timer。
+- Scope 暂停使用独立的 `.scopePaused` 状态，只恢复 Scope 自己暂停的 Timer，不改变业务主动暂停状态。
 - 非 GCD timer 的生命周期动作由 Manager 路由到主线程；GCD timer 保持可跨线程调用。
 - 生命周期线程要求来自 `JobsSwiftTimerProtocol`，不再通过 `JobsTimer` 具体类型强转判断。
 - Manager、受管句柄和具体 Timer 都声明了受锁保护的并发边界，便于 Swift 6 严格并发检查继续收口。
@@ -84,18 +87,31 @@ Manager 接管应用状态治理后，会关闭具体 `JobsTimer` 自己的监�
 
 ```swift
 let identifier = "cell.\(model.id)"
+let scopeIdentifier = "countdown.page"
 
-try? JobsSwiftTimerMgr.shared.create(
+let timer = try? JobsSwiftTimerMgr.shared.create(
     kind: .foundation,
     identifier: identifier,
     config: JobsSwiftTimerConfig(interval: 1),
-    dedupPolicy: .replace
+    dedupPolicy: .replace,
+    scopeIdentifier: scopeIdentifier
 ) {
-    // 刷新 cell
-}.start()
+    // 用 model.endAt 重新计算剩余时间，不累计 tick
+}
+timer?.start()
 
 // prepareForReuse / didEndDisplaying
-JobsSwiftTimerMgr.shared.stopAndRemove(identifier: identifier)
+if let timer {
+    JobsSwiftTimerMgr.shared.stopAndRemove(
+        identifier: identifier,
+        expectedTimer: timer
+    )
+}
+
+// viewWillDisappear / viewWillAppear / deinit
+JobsSwiftTimerMgr.shared.pause(scopeIdentifier: scopeIdentifier)
+JobsSwiftTimerMgr.shared.resume(scopeIdentifier: scopeIdentifier)
+JobsSwiftTimerMgr.shared.stopAndRemove(scopeIdentifier: scopeIdentifier)
 ```
 
 iOS 13 以上也保留同名 `async` 入口；当前内部仍按同步生命周期语义执行。
@@ -110,4 +126,4 @@ xcrun swiftc -frontend -parse JobsSwiftTimerMgr.swift JobsSwiftTimerMgrDefs.swif
 xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimerMgr -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 ```
 
-应用测试 target 还覆盖受管句柄的手动暂停保护和并发替换后的旧句柄隔离。
+应用测试 target 还覆盖受管句柄的手动暂停保护、并发替换后的旧句柄隔离、实例安全取消与 Scope 暂停恢复。

@@ -24,93 +24,12 @@ import SnapKit
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 
-private let jobsGlobalDarkModeDefaultsKey = "RootList.darkModeEnabled"
 private let jobsDemoThemeButtonTag = 0x4A54484D
 private var jobsDemoThemeButtonAssociatedKey: UInt8 = 0
 private var jobsDemoThemeBarButtonItemAssociatedKey: UInt8 = 0
 private var jobsDemoBusinessButtonsAssociatedKey: UInt8 = 0
 private var jobsDemoActionMenuOverlayAssociatedKey: UInt8 = 0
 private var jobsDemoThemeButtonOpensMenuAssociatedKey: UInt8 = 0
-
-public extension Notification.Name {
-    static let JobsGlobalThemeDidChange = Notification.Name("JobsGlobalThemeDidChange")
-}
-
-public extension UIApplication {
-    static var jobsGlobalDarkModeEnabled: Bool {
-        get {
-            if UserDefaults.standard.object(forKey: jobsGlobalDarkModeDefaultsKey) != nil {
-                return UserDefaults.standard.bool(forKey: jobsGlobalDarkModeDefaultsKey)
-            }
-            if #available(iOS 13.0, tvOS 13.0, *) {
-                return UITraitCollection.current.userInterfaceStyle == .dark
-            };return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: jobsGlobalDarkModeDefaultsKey)
-            UserDefaults.standard.synchronize()
-            jobsApplyGlobalTheme()
-            NotificationCenter.default.post(
-                name: .JobsGlobalThemeDidChange,
-                object: nil,
-                userInfo: ["darkModeEnabled": newValue]
-            )
-        }
-    }
-
-    static func jobsApplyGlobalTheme() {
-        guard #available(iOS 13.0, tvOS 13.0, *) else { return }
-        let isDarkMode = jobsGlobalDarkModeEnabled
-        let style: UIUserInterfaceStyle = isDarkMode ? .dark : .light
-        shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .forEach { window in
-                window.overrideUserInterfaceStyle = style
-                jobsNormalizeViewControllerRoots(in: window.rootViewController)
-                jobsSyncGlobalThemeButtons(in: window, isDarkMode: isDarkMode)
-            }
-    }
-
-    @discardableResult
-    static func jobsToggleGlobalTheme() -> Bool {
-        jobsGlobalDarkModeEnabled.toggle()
-        return jobsGlobalDarkModeEnabled
-    }
-
-    private static func jobsSyncGlobalThemeButtons(in view: UIView,
-                                                   isDarkMode: Bool) {
-        if let button = view as? UIButton, button.tag == jobsDemoThemeButtonTag {
-            button.bySelected(isDarkMode)
-            let opensMenu = objc_getAssociatedObject(
-                button,
-                &jobsDemoThemeButtonOpensMenuAssociatedKey
-            ) as? Bool ?? false
-            if !opensMenu {
-                button.accessibilityLabel = isDarkMode
-                    ? "切换为白天".tr
-                    : "切换为黑夜".tr
-            }
-        }
-        view.subviews.forEach {
-            jobsSyncGlobalThemeButtons(in: $0, isDarkMode: isDarkMode)
-        }
-    }
-
-    private static func jobsNormalizeViewControllerRoots(in viewController: UIViewController?) {
-        guard let viewController else { return }
-        if !(viewController is UIAlertController) {
-            viewController.viewIfLoaded?.byBackgroundColor(JobsCor.systemBackground)
-            viewController.gk_navBackgroundColor = JobsCor.systemBackground
-            viewController.gk_navBackgroundImage = nil
-            viewController.gk_navTitleColor = JobsCor.label
-        }
-        viewController.children.forEach {
-            jobsNormalizeViewControllerRoots(in: $0)
-        }
-        jobsNormalizeViewControllerRoots(in: viewController.presentedViewController)
-    }
-}
 
 extension UIViewController {
     /// “系统导航栏@富文本标题”仅用于独立演示系统导航栏，其余 Demo 子页面统一使用 Jobs/GK 导航栏。
@@ -120,6 +39,7 @@ extension UIViewController {
     }
     /// DemoVC 与 Demo 根列表推进的导航子页面，统一展示全局主题切换入口。
     private var jobsIsStandaloneDemoPage: Bool {
+        if self is UIAlertController { return false }
         let className = NSStringFromClass(type(of: self))
             .split(separator: ".")
             .last
@@ -154,24 +74,21 @@ extension UIViewController {
             self,
             &jobsDemoThemeButtonAssociatedKey
         ) as? UIButton {
-            return button.bySelected(UIApplication.jobsGlobalDarkModeEnabled)
+            return button
+                .byClearConfigurationBackground()
+                .bySelected(JobsThemeCenter.shared.isDarkMode)
         }
-        let button = UIButton.sys()
+        let button = UIButton.custom()
             .byTag(jobsDemoThemeButtonTag)
             .byTintColor(JobsCor.label)
-            .byImage(
-                "moon.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
-                for: .normal
-            )
-            .byImage(
-                "sun.max.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
-                for: .selected
-            )
-            .bySelected(UIApplication.jobsGlobalDarkModeEnabled)
+            .byThemeImage(.themeToggle, for: .normal)
+            .byThemeImage(.themeToggle, for: .selected)
+            .byClearConfigurationBackground()
+            .bySelected(JobsThemeCenter.shared.isDarkMode)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 if jobsDemoBusinessButtons.isEmpty {
-                    _ = UIApplication.jobsToggleGlobalTheme()
+                    JobsThemeCenter.shared.toggle()
                     jobsUpdateDemoTriggerPresentation()
                 } else {
                     jobsShowDemoActionMenu(jobsDemoActionMenuOverlay == nil)
@@ -253,6 +170,10 @@ extension UIViewController {
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         if opensMenu {
+            JobsThemeCenter.shared.unbind(
+                button,
+                slot: "JobsByUIKit.themeButton.presentation"
+            )
             let expanded = jobsDemoActionMenuOverlay != nil
             let image = (
                 expanded ? "ellipsis.circle.fill" : "ellipsis.circle"
@@ -267,18 +188,57 @@ extension UIViewController {
             return
         }
         button
-            .byImage(
-                "moon.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
-                for: .normal
-            )
-            .byImage(
-                "sun.max.circle.fill".sysImg.withRenderingMode(.alwaysTemplate),
-                for: .selected
-            )
-            .bySelected(UIApplication.jobsGlobalDarkModeEnabled)
-        button.accessibilityLabel = UIApplication.jobsGlobalDarkModeEnabled
-            ? "切换为白天".tr
-            : "切换为黑夜".tr
+            .byThemeImage(.themeToggle, for: .normal)
+            .byThemeImage(.themeToggle, for: .selected)
+        JobsThemeCenter.shared.bind(
+            button,
+            slot: "JobsByUIKit.themeButton.presentation"
+        ) { object, center in
+            guard let button = object as? UIButton else { return }
+            button.bySelected(center.isDarkMode)
+            button.accessibilityLabel = center.isDarkMode
+                ? "切换为白天".tr
+                : "切换为黑夜".tr
+        }
+    }
+    /// 仅绑定 GK 导航栏背景色和标题色；主题切换不遍历 Scene，也不改布局层级。
+    private func jobsBindGKNavigationTheme() {
+        JobsThemeCenter.shared.bind(
+            self,
+            slot: "JobsByUIKit.GKNavigationBar.colors"
+        ) { object, center in
+            guard let viewController = object as? UIViewController else { return }
+            viewController.gk_navBackgroundColor = center.resolvedColor(.backgroundPrimary)
+            viewController.gk_navTitleColor = center.resolvedColor(.textPrimary)
+        }
+    }
+    /// 系统导航栏 Demo 同样只更新背景色和文字色。
+    private func jobsBindSystemNavigationTheme() {
+        guard let navigationBar = navigationController?.navigationBar else { return }
+        JobsThemeCenter.shared.bind(
+            navigationBar,
+            slot: "JobsByUIKit.UINavigationBar.colors"
+        ) { object, center in
+            guard let navigationBar = object as? UINavigationBar else { return }
+            let backgroundColor = center.resolvedColor(.backgroundPrimary)
+            let textColor = center.resolvedColor(.textPrimary)
+            navigationBar.barTintColor = backgroundColor
+            navigationBar.tintColor = textColor
+            var titleAttributes = navigationBar.titleTextAttributes ?? [:]
+            titleAttributes[.foregroundColor] = textColor
+            navigationBar.titleTextAttributes = titleAttributes
+            if #available(iOS 13.0, tvOS 13.0, *) {
+                let appearances = [
+                    navigationBar.standardAppearance,
+                    navigationBar.scrollEdgeAppearance,
+                    navigationBar.compactAppearance
+                ].compactMap { $0 }
+                appearances.forEach {
+                    $0.backgroundColor = backgroundColor
+                    $0.titleTextAttributes[.foregroundColor] = textColor
+                }
+            }
+        }
     }
     /// 为导航栈和模态子页面补齐 Jobs/GK 导航栏、导航标题与 Jobs 返回按钮。
     @discardableResult
@@ -289,9 +249,9 @@ extension UIViewController {
         let isPresentedPage = presentingViewController != nil ||
             (navigationController?.viewControllers.first === self && navigationController?.presentingViewController != nil)
         guard isNavigationChild || isPresentedPage else { return self }
-        view.byBackgroundColor(JobsCor.systemBackground)
 
         if jobsIsSystemNavigationBarDemo {
+            jobsBindSystemNavigationTheme()
             navigationController?
                 .byNavBarHidden(false)
                 .navigationBar
@@ -300,9 +260,8 @@ extension UIViewController {
             return self
         }
 
-        gk_navBackgroundColor = JobsCor.systemBackground
+        jobsBindGKNavigationTheme()
         gk_navBackgroundImage = nil
-        gk_navTitleColor = JobsCor.label
         if gk_navTitle?.isEmpty != false,gk_navTitleView == nil {
             if let titleView = navigationItem.titleView {
                 gk_navTitleView = titleView
@@ -348,13 +307,14 @@ extension UIViewController {
         title: JobsText,
         leftButton: UIButton? = nil,
         rightButtons: [UIButton]? = nil) {
+            jobsBindGKNavigationTheme()
             gk_navTitle = title.asString
             // 避免上游用 JobsText("xxx".tr) 这种写法时 marker 串台
             TRBind.consumeMarkerIfNeeded()
             let btn = leftButton ?? makeDefaultBackButton()
             gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: btn)
             if let items = rightButtons, !items.isEmpty {
-                items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
+                items.forEach { jobs_prepareNavRightButtonIfNeeded($0) }
                 /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
                 gk_navRightBarButtonItems = [UIBarButtonItem.make(customView: UIStackView(arrangedSubviews: items)
                     .byAxis(.horizontal)
@@ -375,12 +335,13 @@ extension UIViewController {
         title: String,
         leftButton: UIButton? = nil,
         rightButtons: [UIButton]? = nil) {
+            jobsBindGKNavigationTheme()
             // 让 GK 标题也具备自动刷新能力
             tr_setGKNavTitle(title)
             let btn = leftButton ?? makeDefaultBackButton()
             gk_navLeftBarButtonItem = UIBarButtonItem.make(customView: btn)
             if let items = rightButtons, !items.isEmpty {
-                items.forEach { jobs_prepareNavRightButtonSizeIfNeeded($0) }
+                items.forEach { jobs_prepareNavRightButtonIfNeeded($0) }
                 /// 用UIStackView来解决各个子控件的相距问题，以及数据源倒序问题
                 gk_navRightBarButtonItems = [UIBarButtonItem.make(customView: UIStackView(arrangedSubviews: items)
                     .byAxis(.horizontal)
@@ -421,13 +382,18 @@ extension UIViewController {
         v.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         #endif
     }
+    /// 导航栏右侧按钮只保留前景内容，不展示配置态或旧系统背景色。
+    private func jobs_prepareNavRightButtonIfNeeded(_ button: UIButton) {
+        button.byClearConfigurationBackground()
+        jobs_prepareNavRightButtonSizeIfNeeded(button)
+    }
     /// 导航栏右侧只保留主题入口；页面业务动作合并进同入口下拉列表。
     private func jobsEnsureDemoThemeButton() {
         guard #available(iOS 13.0, tvOS 13.0, *),
               jobsIsStandaloneDemoPage else { return }
         let themeButton = jobsDemoThemeButton
-        themeButton.bySelected(UIApplication.jobsGlobalDarkModeEnabled)
-        jobs_prepareNavRightButtonSizeIfNeeded(themeButton)
+        themeButton.bySelected(JobsThemeCenter.shared.isDarkMode)
+        jobs_prepareNavRightButtonIfNeeded(themeButton)
         let themeItem = jobsDemoThemeBarButtonItem
         if jobsIsSystemNavigationBarDemo {
             let items = navigationItem.rightBarButtonItems ??
@@ -492,8 +458,13 @@ extension UIViewController {
         guard visible, !jobsDemoBusinessButtons.isEmpty else { return }
         let overlay = UIView()
             .byBackgroundColor(JobsCor.clear)
-            .byAddTo(view) { make in
-                make.edges.equalToSuperview()
+            .byAddTo(view) { [unowned self] make in
+                if self.jobsIsSystemNavigationBarDemo {
+                    make.edges.equalToSuperview()
+                } else {
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
+                    make.left.right.bottom.equalToSuperview()
+                }
             }
         let rowHeight: CGFloat = 44
         let rowCount = jobsDemoBusinessButtons.count + 1
@@ -501,12 +472,8 @@ extension UIViewController {
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byClipsToBounds()
-            .byAddTo(overlay) { [unowned self] make in
-                if jobsIsSystemNavigationBarDemo {
-                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(6)
-                } else {
-                    make.top.equalTo(gk_navigationBar.snp.bottom).offset(6)
-                }
+            .byAddTo(overlay) { make in
+                make.top.equalToSuperview().offset(6)
                 make.right.equalToSuperview().inset(12)
                 make.width.equalTo(210)
                 make.height.equalTo(CGFloat(rowCount) * rowHeight)
@@ -520,19 +487,18 @@ extension UIViewController {
             jobsShowDemoActionMenu(false)
         }
         jobsDemoActionMenuOverlay = overlay
-        let darkModeEnabled = UIApplication.jobsGlobalDarkModeEnabled
+        let darkModeEnabled = JobsThemeCenter.shared.isDarkMode
         jobsAddDemoActionMenuRow(
             to: menuContainer,
             title: darkModeEnabled ? "切换为白天".tr : "切换为黑夜".tr,
-            image: (
-                darkModeEnabled ? "sun.max.circle.fill" : "moon.circle.fill"
-            ).sysImg.withRenderingMode(.alwaysTemplate),
+            image: JobsThemeCenter.shared.resolvedImage(.themeToggle)?
+                .withRenderingMode(.alwaysTemplate),
             index: 0,
             rowCount: rowCount
         ) { [weak self] in
             guard let self else { return }
-            _ = UIApplication.jobsToggleGlobalTheme()
             jobsShowDemoActionMenu(false)
+            JobsThemeCenter.shared.toggle()
         }
         jobsDemoBusinessButtons.enumerated().forEach { index, sourceButton in
             jobsAddDemoActionMenuRow(

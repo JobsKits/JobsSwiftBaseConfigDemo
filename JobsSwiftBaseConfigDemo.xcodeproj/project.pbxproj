@@ -270,6 +270,7 @@
 				C59C65342F1BFB1A0060EEAD /* Resources */,
 				C57D6C202F1DDCDB0093F898 /* ShellScript */,
 				6A6580F7810A6AB4F6389035 /* [CP] Copy Pods Resources */,
+				C7D030072026073000000001 /* Package Markdown Documents */,
 				F20000302F23000100C0DE01 /* Recompile Assets with Alternate Icons */,
 				7F9C6F4C7E5585F935602E59 /* [CP-User] Embed Flutter Build my_flutter Script */,
 				D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */,
@@ -578,6 +579,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\n";
+		};
+		C7D030072026073000000001 /* Package Markdown Documents */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Package Markdown Documents";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/JobsMarkdownDocuments.bundle/manifest.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/bin/ruby \"${SRCROOT}/JobsByPods/JobsSwiftMarkdown@Pods/Support/JobsMarkdownPackager.rb\" \"${SRCROOT}\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JobsMarkdownDocuments.bundle\" \"${PRODUCT_NAME}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		D3CE29130B6CF21ECD1F07F5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

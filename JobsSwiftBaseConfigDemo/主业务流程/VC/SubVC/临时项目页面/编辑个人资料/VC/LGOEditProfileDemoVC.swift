@@ -240,6 +240,9 @@ extension LGOEditProfileDemoVC: UITableViewDataSource {
                 .bySelectionStyle(.none)
                 .byAccessoryType(.disclosureIndicator)
                 .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
+                .byTitleCor(JobsCor.label)
+                .byDetailTitleCor(JobsCor.secondaryLabel)
+                .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
                 .byData(JobsBaseCellConfig(title: row.title, detail: detail))
         }
     }
@@ -375,7 +378,7 @@ public final class AvatarCell: UITableViewCell {
                            targetSize: CGSize(width: 44, height: 44))
             .byClipsToBounds(true)
             .byCornerRadius(22)
-            .byBackgroundColor(JobsCor.systemGray5)
+            .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byAddTo(contentView) { [unowned self] make in
                 make.size.equalTo(CGSize(width: 44, height: 44))
                 make.centerY.equalToSuperview()
@@ -390,6 +393,8 @@ public final class AvatarCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+        contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         textLabel?.byFont(JobsFont.systemFont(ofSize: 16)).byTextColor(JobsCor.label)
         detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 14)).byTextColor(JobsCor.secondaryLabel)
         avatarView.byVisible(YES)

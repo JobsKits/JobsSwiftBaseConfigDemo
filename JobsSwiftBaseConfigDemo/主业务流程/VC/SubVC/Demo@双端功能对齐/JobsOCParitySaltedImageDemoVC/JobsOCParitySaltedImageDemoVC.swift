@@ -91,7 +91,7 @@ extension JobsSaltedImageStoreDemoVC: UITableViewDataSource, UITableViewDelegate
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
         cell.accessoryType = .disclosureIndicator
-        return cell
+        return cell.byBackgroundColor(JobsCor.secondarySystemBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

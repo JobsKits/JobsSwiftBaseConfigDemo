@@ -6,16 +6,16 @@
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-07-28 14:13:45`
-- Podspec 数量：`67`
+- 生成时间：`2026-07-30 22:18:59`
+- Podspec 数量：`68`
 - 0 下游依赖 Pod 数量：`10`
-- 全部依赖边数量：`262`
-- 仓库内 Pod 依赖边数量：`182`
+- 全部依赖边数量：`265`
+- 仓库内 Pod 依赖边数量：`184`
 - Pod 间循环依赖数量：`0`
 - 已过滤同 Pod 内部 subspec 依赖数量：`15`
 - 外部依赖来源注释文件数量：`79`
 - 已识别外部依赖来源链接数量：`65`
-- DSL 执行式解析 Podspec 数量：`66`
+- DSL 执行式解析 Podspec 数量：`67`
 - 静态兜底解析 Podspec 数量：`1`
 
 > 更易读的动态关系图见：`PodspecDependencies_interactive.html`，其中默认保留 2D 关系图，并新增可拖动旋转的 3D 空间图。
@@ -65,18 +65,19 @@
 | [**JobsScale**](#JobsScale) | `JobsByPods/JobsScale@Pods/JobsScale.podspec` | 1 | [JobsGetWindow](#JobsGetWindow) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
 | [**JobsScreenCapture**](#JobsScreenCapture) | `JobsByPods/JobsScreenCapture@Pods/JobsScreenCapture.podspec` | 1 | [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
 | [**JobsSwiftAppTools**](#JobsSwiftAppTools) | `JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec` | 12 | [JobsBy3rdTools](#JobsBy3rdTools), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [JobsScale](#JobsScale), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBaseTools](#JobsSwiftBaseTools), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftDSL](#JobsSwiftDSL), [JobsSwiftTools](#JobsSwiftTools), [JobsTextTools](#JobsTextTools), [SnapKit](https://github.com/SnapKit/SnapKit), [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | 0 |  |
-| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | `JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec` | 2 | [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools) | 35 | [**JobsAppDoor**](#JobsAppDoor), [**JobsAudioRecorder**](#JobsAudioRecorder), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftCalendar**](#JobsSwiftCalendar), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftDSL**](#JobsSwiftDSL), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha), [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast), [**JobsViewPush**](#JobsViewPush), [**JobsWalletCard**](#JobsWalletCard) |
+| [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines) | `JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec` | 2 | [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools) | 36 | [**JobsAppDoor**](#JobsAppDoor), [**JobsAudioRecorder**](#JobsAudioRecorder), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftCalendar**](#JobsSwiftCalendar), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftDSL**](#JobsSwiftDSL), [**JobsSwiftDebugTools**](#JobsSwiftDebugTools), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha), [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView), [**JobsSwiftMarkdown**](#JobsSwiftMarkdown), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftStandardLibrary**](#JobsSwiftStandardLibrary), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast), [**JobsViewPush**](#JobsViewPush), [**JobsWalletCard**](#JobsWalletCard) |
 | [**JobsSwiftBaseTools**](#JobsSwiftBaseTools) | `JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec` | 9 | [Alamofire](https://github.com/Alamofire/Alamofire), [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsSwiftDSL](#JobsSwiftDSL), [NSObject+Rx](https://github.com/RxSwiftCommunity/NSObject-Rx), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxSwift](https://github.com/ReactiveX/RxSwift), [SnapKit](https://github.com/SnapKit/SnapKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) |
 | [**JobsSwiftBlock**](#JobsSwiftBlock) | `JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec` | 4 | [Kingfisher](https://github.com/onevcat/Kingfisher), [Moya](https://github.com/Moya/Moya), [SnapKit](https://github.com/SnapKit/SnapKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 14 | [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsEmptyView**](#JobsEmptyView), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsNavBar**](#JobsNavBar), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftDSL**](#JobsSwiftDSL), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsToast**](#JobsToast) |
 | [**JobsSwiftCalendar**](#JobsSwiftCalendar) | `JobsByPods/JobsSwiftCalendar@Pods/JobsSwiftCalendar.podspec` | 2 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL) | 0 |  |
 | [**JobsSwiftComment**](#JobsSwiftComment) | `JobsByPods/JobsSwiftComment@Pods/JobsSwiftComment.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
 | [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl) | `JobsByPods/JobsSwiftCountryCodeCtrl@Pods/JobsSwiftCountryCodeCtrl.podspec` | 5 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL), [Jobsl10n](#Jobsl10n), [SnapKit](https://github.com/SnapKit/SnapKit) | 1 | [**JobsAppDoor**](#JobsAppDoor) |
-| [**JobsSwiftDSL**](#JobsSwiftDSL) | `JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec` | 10 | AFNetworking, [BMPlayer](https://github.com/BrikerMan/BMPlayer), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxSwift](https://github.com/ReactiveX/RxSwift), [SnapKit](https://github.com/SnapKit/SnapKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 37 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsAppDoor**](#JobsAppDoor), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByPDFKit**](#JobsByPDFKit), [**JobsByPhotosUI**](#JobsByPhotosUI), [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsByWebKit**](#JobsByWebKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftCalendar**](#JobsSwiftCalendar), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftFoundation**](#JobsSwiftFoundation), [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha), [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView), [**JobsSwiftMetalKit**](#JobsSwiftMetalKit), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftUILabelScrolling**](#JobsSwiftUILabelScrolling), [**JobsToast**](#JobsToast), [**JobsViewPush**](#JobsViewPush), [**JobsWalletCard**](#JobsWalletCard) |
+| [**JobsSwiftDSL**](#JobsSwiftDSL) | `JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec` | 10 | AFNetworking, [BMPlayer](https://github.com/BrikerMan/BMPlayer), [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftBlock](#JobsSwiftBlock), [JobsTextTools](#JobsTextTools), [RxCocoa](https://github.com/ReactiveX/RxSwift), [RxSwift](https://github.com/ReactiveX/RxSwift), [SnapKit](https://github.com/SnapKit/SnapKit), [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 38 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsAppDoor**](#JobsAppDoor), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByPDFKit**](#JobsByPDFKit), [**JobsByPhotosUI**](#JobsByPhotosUI), [**JobsByQuartzCore**](#JobsByQuartzCore), [**JobsByUIKit**](#JobsByUIKit), [**JobsByWebKit**](#JobsByWebKit), [**JobsCountdownButton**](#JobsCountdownButton), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsImageTools**](#JobsImageTools), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftCalendar**](#JobsSwiftCalendar), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftFoundation**](#JobsSwiftFoundation), [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha), [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView), [**JobsSwiftMarkdown**](#JobsSwiftMarkdown), [**JobsSwiftMetalKit**](#JobsSwiftMetalKit), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftTools**](#JobsSwiftTools), [**JobsSwiftUILabelScrolling**](#JobsSwiftUILabelScrolling), [**JobsToast**](#JobsToast), [**JobsViewPush**](#JobsViewPush), [**JobsWalletCard**](#JobsWalletCard) |
 | [**JobsSwiftDebugTools**](#JobsSwiftDebugTools) | `JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec` | 3 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsToast](#JobsToast) | 1 | [**JobsInheritance**](#JobsInheritance) |
 | [**JobsSwiftExcel**](#JobsSwiftExcel) | `JobsByPods/JobsSwiftExcel@Pods/JobsSwiftExcel.podspec` | 5 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL), [JobsSwiftUILabelScrolling](#JobsSwiftUILabelScrolling), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
 | [**JobsSwiftFoundation**](#JobsSwiftFoundation) | `JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec` | 2 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftDSL](#JobsSwiftDSL) | 1 | [**JobsInheritance**](#JobsInheritance) |
 | [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha) | `JobsByPods/JobsSwiftGraphicCaptcha@Pods/JobsSwiftGraphicCaptcha.podspec` | 2 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL) | 1 | [**JobsAppDoor**](#JobsAppDoor) |
 | [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView) | `JobsByPods/JobsSwiftLinkageMenuView@Pods/JobsSwiftLinkageMenuView.podspec` | 2 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL) | 0 |  |
+| [**JobsSwiftMarkdown**](#JobsSwiftMarkdown) | `JobsByPods/JobsSwiftMarkdown@Pods/JobsSwiftMarkdown.podspec` | 3 | [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
 | [**JobsSwiftMetalKit**](#JobsSwiftMetalKit) | `JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec` | 1 | [JobsSwiftDSL](#JobsSwiftDSL) | 1 | [**JobsBy3rdTools**](#JobsBy3rdTools) |
 | [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper) | `JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec` | 4 | [JobsByUIKit](#JobsByUIKit), [JobsSwiftBaseDefines](#JobsSwiftBaseDefines), [JobsSwiftDSL](#JobsSwiftDSL), [SnapKit](https://github.com/SnapKit/SnapKit) | 0 |  |
 | [**JobsSwiftOpen**](#JobsSwiftOpen) | `JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec` | 4 | [GKNavigationBarSwift](https://github.com/QuintGao/GKNavigationBarSwift), [JobsByUIKit](#JobsByUIKit), [JobsInheritance](#JobsInheritance), [SnapKit](https://github.com/SnapKit/SnapKit) | 1 | [**JobsSwiftSplash**](#JobsSwiftSplash) |
@@ -279,6 +280,8 @@ flowchart LR
   N4766a6f4cf01["JobsSwiftGraphicCaptcha"] --> Nbd4d8031c54b["JobsSwiftDSL"]
   Ncf7cf96d5c5b["JobsSwiftLinkageMenuView"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   Ncf7cf96d5c5b["JobsSwiftLinkageMenuView"] --> Nbd4d8031c54b["JobsSwiftDSL"]
+  Nf1b61f57c95b["JobsSwiftMarkdown"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
+  Nf1b61f57c95b["JobsSwiftMarkdown"] --> Nbd4d8031c54b["JobsSwiftDSL"]
   N9ab5a04190d8["JobsSwiftMetalKit"] --> Nbd4d8031c54b["JobsSwiftDSL"]
   N85834c64f212["JobsSwiftNumberStepper"] --> N32038075ad22["JobsByUIKit"]
   N85834c64f212["JobsSwiftNumberStepper"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
@@ -531,6 +534,9 @@ flowchart LR
   N4766a6f4cf01["JobsSwiftGraphicCaptcha"] --> Nbd4d8031c54b["JobsSwiftDSL"]
   Ncf7cf96d5c5b["JobsSwiftLinkageMenuView"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
   Ncf7cf96d5c5b["JobsSwiftLinkageMenuView"] --> Nbd4d8031c54b["JobsSwiftDSL"]
+  Nf1b61f57c95b["JobsSwiftMarkdown"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
+  Nf1b61f57c95b["JobsSwiftMarkdown"] --> Nbd4d8031c54b["JobsSwiftDSL"]
+  Nf1b61f57c95b["JobsSwiftMarkdown"] --> N1f6f7544eaea["SnapKit"]
   N9ab5a04190d8["JobsSwiftMetalKit"] --> Nbd4d8031c54b["JobsSwiftDSL"]
   N85834c64f212["JobsSwiftNumberStepper"] --> N32038075ad22["JobsByUIKit"]
   N85834c64f212["JobsSwiftNumberStepper"] --> N8dbe54185e82["JobsSwiftBaseDefines"]
@@ -629,7 +635,7 @@ flowchart LR
 | [SDWebImage](https://github.com/SDWebImage/SDWebImage) | 4 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsImageTools**](#JobsImageTools), [**JobsMarqueeView**](#JobsMarqueeView), [**JobsSwiftRefresher**](#JobsSwiftRefresher) | [SDWebImage](https://github.com/SDWebImage/SDWebImage) |
 | [SVGKit](https://github.com/SVGKit/SVGKit) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [SVGKit](https://github.com/SVGKit/SVGKit) |
 | [SkeletonView](https://github.com/Juanpe/SkeletonView) | 1 | [**JobsByUIKit**](#JobsByUIKit) | [SkeletonView](https://github.com/Juanpe/SkeletonView) |
-| [SnapKit](https://github.com/SnapKit/SnapKit) | 27 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsAppDoor**](#JobsAppDoor), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsScreenCapture**](#JobsScreenCapture), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftBlock**](#JobsSwiftBlock), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftDSL**](#JobsSwiftDSL), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftOpen**](#JobsSwiftOpen), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast), [**JobsWalletCard**](#JobsWalletCard) | [SnapKit](https://github.com/SnapKit/SnapKit) |
+| [SnapKit](https://github.com/SnapKit/SnapKit) | 28 | [**BRPickerViewSwift**](#BRPickerViewSwift), [**JobsAppDoor**](#JobsAppDoor), [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsByUIKit**](#JobsByUIKit), [**JobsEmptyView**](#JobsEmptyView), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsGestureUnlock**](#JobsGestureUnlock), [**JobsInheritance**](#JobsInheritance), [**JobsLuckyEnvelopeRain**](#JobsLuckyEnvelopeRain), [**JobsNavBar**](#JobsNavBar), [**JobsProgressBar**](#JobsProgressBar), [**JobsScreenCapture**](#JobsScreenCapture), [**JobsSwiftAppTools**](#JobsSwiftAppTools), [**JobsSwiftBaseTools**](#JobsSwiftBaseTools), [**JobsSwiftBlock**](#JobsSwiftBlock), [**JobsSwiftComment**](#JobsSwiftComment), [**JobsSwiftCountryCodeCtrl**](#JobsSwiftCountryCodeCtrl), [**JobsSwiftDSL**](#JobsSwiftDSL), [**JobsSwiftExcel**](#JobsSwiftExcel), [**JobsSwiftMarkdown**](#JobsSwiftMarkdown), [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper), [**JobsSwiftOpen**](#JobsSwiftOpen), [**JobsSwiftRefresher**](#JobsSwiftRefresher), [**JobsSwiftSearcher**](#JobsSwiftSearcher), [**JobsSwiftSplash**](#JobsSwiftSplash), [**JobsSwiftWorker**](#JobsSwiftWorker), [**JobsToast**](#JobsToast), [**JobsWalletCard**](#JobsWalletCard) | [SnapKit](https://github.com/SnapKit/SnapKit) |
 | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) | 2 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftAppTools**](#JobsSwiftAppTools) | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) |
 | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) | 1 | [**JobsNavBar**](#JobsNavBar) | [SwiftMessages](https://github.com/SwiftKickMobile/SwiftMessages) |
 | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) | 3 | [**JobsBy3rdTools**](#JobsBy3rdTools), [**JobsSwiftBlock**](#JobsSwiftBlock), [**JobsSwiftDSL**](#JobsSwiftDSL) | [YTKNetwork](https://github.com/kanyun-inc/YTKNetwork) |
@@ -1159,6 +1165,7 @@ Podspec：`JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec`
   - [**JobsSwiftExcel**](#JobsSwiftExcel)
   - [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha)
   - [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView)
+  - [**JobsSwiftMarkdown**](#JobsSwiftMarkdown)
   - [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper)
   - [**JobsSwiftRefresher**](#JobsSwiftRefresher)
   - [**JobsSwiftSearcher**](#JobsSwiftSearcher)
@@ -1299,6 +1306,7 @@ Podspec：`JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec`
   - [**JobsSwiftFoundation**](#JobsSwiftFoundation)
   - [**JobsSwiftGraphicCaptcha**](#JobsSwiftGraphicCaptcha)
   - [**JobsSwiftLinkageMenuView**](#JobsSwiftLinkageMenuView)
+  - [**JobsSwiftMarkdown**](#JobsSwiftMarkdown)
   - [**JobsSwiftMetalKit**](#JobsSwiftMetalKit)
   - [**JobsSwiftNumberStepper**](#JobsSwiftNumberStepper)
   - [**JobsSwiftRefresher**](#JobsSwiftRefresher)
@@ -1390,7 +1398,18 @@ Podspec：`JobsByPods/JobsSwiftLinkageMenuView@Pods/JobsSwiftLinkageMenuView.pod
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 46、<font id="JobsSwiftMetalKit">JobsSwiftMetalKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 46、<font id="JobsSwiftMarkdown">JobsSwiftMarkdown</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+Podspec：`JobsByPods/JobsSwiftMarkdown@Pods/JobsSwiftMarkdown.podspec`
+
+- **下游依赖**
+
+  - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
+  - [**JobsSwiftDSL**](#JobsSwiftDSL)
+  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
+
+
+### 47、<font id="JobsSwiftMetalKit">JobsSwiftMetalKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec`
 
@@ -1403,7 +1422,7 @@ Podspec：`JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 47、<font id="JobsSwiftNumberStepper">JobsSwiftNumberStepper</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 48、<font id="JobsSwiftNumberStepper">JobsSwiftNumberStepper</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec`
 
@@ -1415,7 +1434,7 @@ Podspec：`JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 48、<font id="JobsSwiftOpen">JobsSwiftOpen</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 49、<font id="JobsSwiftOpen">JobsSwiftOpen</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec`
 
@@ -1431,12 +1450,12 @@ Podspec：`JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 49、<font id="JobsSwiftPatch">JobsSwiftPatch</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 50、<font id="JobsSwiftPatch">JobsSwiftPatch</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftPatch@Pods/JobsSwiftPatch.podspec`
 
 
-### 50、<font id="JobsSwiftRefresher">JobsSwiftRefresher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 51、<font id="JobsSwiftRefresher">JobsSwiftRefresher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec`
 
@@ -1456,7 +1475,7 @@ Podspec：`JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec`
   - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
 
 
-### 51、<font id="JobsSwiftSearcher">JobsSwiftSearcher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 52、<font id="JobsSwiftSearcher">JobsSwiftSearcher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftSearcher@Pods/JobsSwiftSearcher.podspec`
 
@@ -1469,7 +1488,7 @@ Podspec：`JobsByPods/JobsSwiftSearcher@Pods/JobsSwiftSearcher.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 52、<font id="JobsSwiftSplash">JobsSwiftSplash</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 53、<font id="JobsSwiftSplash">JobsSwiftSplash</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftSplash@Pods/JobsSwiftSplash.podspec`
 
@@ -1484,7 +1503,7 @@ Podspec：`JobsByPods/JobsSwiftSplash@Pods/JobsSwiftSplash.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 53、<font id="JobsSwiftStandardLibrary">JobsSwiftStandardLibrary</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 54、<font id="JobsSwiftStandardLibrary">JobsSwiftStandardLibrary</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec`
 
@@ -1498,7 +1517,7 @@ Podspec：`JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.pod
   - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
 
 
-### 54、<font id="JobsSwiftTaskCenter">JobsSwiftTaskCenter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 55、<font id="JobsSwiftTaskCenter">JobsSwiftTaskCenter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec`
 
@@ -1511,7 +1530,7 @@ Podspec：`JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 55、<font id="JobsSwiftTimer">JobsSwiftTimer</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 56、<font id="JobsSwiftTimer">JobsSwiftTimer</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec`
 
@@ -1531,7 +1550,7 @@ Podspec：`JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec`
   - [**JobsSwiftWorker**](#JobsSwiftWorker)
 
 
-### 56、<font id="JobsSwiftTimerMgr">JobsSwiftTimerMgr</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 57、<font id="JobsSwiftTimerMgr">JobsSwiftTimerMgr</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTimerMgr@Pods/JobsSwiftTimerMgr.podspec`
 
@@ -1540,7 +1559,7 @@ Podspec：`JobsByPods/JobsSwiftTimerMgr@Pods/JobsSwiftTimerMgr.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 57、<font id="JobsSwiftTools">JobsSwiftTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 58、<font id="JobsSwiftTools">JobsSwiftTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec`
 
@@ -1562,7 +1581,7 @@ Podspec：`JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec`
   - [**JobsToast**](#JobsToast)
 
 
-### 58、<font id="JobsSwiftUILabelScrolling">JobsSwiftUILabelScrolling</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 59、<font id="JobsSwiftUILabelScrolling">JobsSwiftUILabelScrolling</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftUILabelScrolling@Pods/JobsSwiftUILabelScrolling.podspec`
 
@@ -1576,12 +1595,12 @@ Podspec：`JobsByPods/JobsSwiftUILabelScrolling@Pods/JobsSwiftUILabelScrolling.p
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 59、<font id="JobsSwiftWebSocket">JobsSwiftWebSocket</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 60、<font id="JobsSwiftWebSocket">JobsSwiftWebSocket</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftWebSocket@Pods/JobsSwiftWebSocket.podspec`
 
 
-### 60、<font id="JobsSwiftWorker">JobsSwiftWorker</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 61、<font id="JobsSwiftWorker">JobsSwiftWorker</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec`
 
@@ -1596,7 +1615,7 @@ Podspec：`JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 61、<font id="JobsTextTools">JobsTextTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 62、<font id="JobsTextTools">JobsTextTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec`
 
@@ -1609,7 +1628,7 @@ Podspec：`JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 62、<font id="JobsToast">JobsToast</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 63、<font id="JobsToast">JobsToast</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsToast@Pods/JobsToast.podspec`
 
@@ -1628,7 +1647,7 @@ Podspec：`JobsByPods/JobsToast@Pods/JobsToast.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 63、<font id="JobsViewPush">JobsViewPush</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 64、<font id="JobsViewPush">JobsViewPush</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsViewPush@Pods/JobsViewPush.podspec`
 
@@ -1642,7 +1661,7 @@ Podspec：`JobsByPods/JobsViewPush@Pods/JobsViewPush.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 64、<font id="JobsWalletCard">JobsWalletCard</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 65、<font id="JobsWalletCard">JobsWalletCard</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec`
 
@@ -1654,7 +1673,7 @@ Podspec：`JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 65、<font id="Jobsl10n">Jobsl10n</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 66、<font id="Jobsl10n">Jobsl10n</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
 
@@ -1666,7 +1685,7 @@ Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
   - [**JobsSwiftWorker**](#JobsSwiftWorker)
 
 
-### 66、<font id="Texture">Texture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 67、<font id="Texture">Texture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec`
 
@@ -1683,7 +1702,7 @@ Podspec：`JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec`
   - **Yoga**
 
 
-### 67、<font id="TextureSwiftSupport">TextureSwiftSupport</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 68、<font id="TextureSwiftSupport">TextureSwiftSupport</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Podspec：`JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSupport.podspec`
 

@@ -16,6 +16,8 @@ final class JobsCoreTextScrollLayer: CALayer {
     private var duplicateOriginX: CGFloat?
 
     private(set) var textWidth: CGFloat = 0
+    /// CoreText 排版推进宽度；只用于判断 UILabel 是否真的容纳不下当前文案。
+    private(set) var textLayoutWidth: CGFloat = 0
 
     override init() {
         super.init()
@@ -32,6 +34,7 @@ final class JobsCoreTextScrollLayer: CALayer {
             baselineY = layer.baselineY
             duplicateOriginX = layer.duplicateOriginX
             textWidth = layer.textWidth
+            textLayoutWidth = layer.textLayoutWidth
         }
         super.init(layer: layer)
     }
@@ -66,6 +69,7 @@ final class JobsCoreTextScrollLayer: CALayer {
         textLine = line
         lineOriginX = -minimumX
         baselineY = max(0, (normalizedHeight - ascent - descent) * 0.5 + descent)
+        textLayoutWidth = max(0, typographicWidth)
         textWidth = ceil(measuredWidth)
 
         if let duplicateSpacing {

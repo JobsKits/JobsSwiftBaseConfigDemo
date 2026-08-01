@@ -79,7 +79,7 @@ extension JobsContextMenuDemoVC: UITableViewDataSource, UITableViewDelegate {
         cell.accessoryType = indexPath.row == selectedIndex ? .checkmark : .disclosureIndicator
         cell.tintColor = JobsCor.systemRed
         cell.selectionStyle = .none
-        return cell
+        return cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

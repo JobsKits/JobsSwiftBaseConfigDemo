@@ -28,7 +28,13 @@ final class CardNode: ASDisplayNode {
     // 背景卡片
     private let backgroundNode: ASDisplayNode = {
         let n = ASDisplayNode()
-        n.backgroundColor = JobsCor.secondarySystemBackground
+        JobsThemeCenter.shared.bind(
+            n,
+            slot: "CardNode.background"
+        ) { object, center in
+            (object as? ASDisplayNode)?.backgroundColor =
+                center.resolvedColor(.backgroundSecondary)
+        }
         n.cornerRadius = 12
         n.clipsToBounds = true
         return n
@@ -42,24 +48,27 @@ final class CardNode: ASDisplayNode {
         self.theme = theme
         super.init()
         automaticallyManagesSubnodes = true
-        titleNode.attributedText = NSAttributedString(
-            string: item.title,
-            attributes: [.font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
-                         .foregroundColor: JobsCor.label]
+        bindAttributedText(
+            item.title,
+            to: titleNode,
+            font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
+            color: JobsCor.label
         )
-        subtitleNode.attributedText = NSAttributedString(
-            string: item.subtitle,
-            attributes: [.font: JobsFont.systemFont(ofSize: 13),
-                         .foregroundColor: JobsCor.secondaryLabel]
+        bindAttributedText(
+            item.subtitle,
+            to: subtitleNode,
+            font: JobsFont.systemFont(ofSize: 13),
+            color: JobsCor.secondaryLabel
         )
         switch item.kind {
         /// 处理 .text 分支
         case .text:
             let text = ASTextNode()
-            text.attributedText = NSAttributedString(
-                string: "ASTextNode：字体/颜色/多行…（对应 CKLabelComponent）。",
-                attributes: [.font: JobsFont.systemFont(ofSize: 14),
-                             .foregroundColor: JobsCor.label]
+            bindAttributedText(
+                "ASTextNode：字体/颜色/多行…（对应 CKLabelComponent）。",
+                to: text,
+                font: JobsFont.systemFont(ofSize: 14),
+                color: JobsCor.label
             )
             contentNode = text
         /// 处理 .image 分支
@@ -183,8 +192,33 @@ final class CardNode: ASDisplayNode {
                           font: UIFont = JobsFont.systemFont(ofSize: 14),
                           color: UIColor = JobsCor.label) -> ASTextNode {
         let n = ASTextNode()
-        n.attributedText = NSAttributedString(string: s, attributes: [.font: font, .foregroundColor: color])
+        bindAttributedText(s, to: n, font: font, color: color)
         return n
+    }
+
+    private func bindAttributedText(_ string: String,
+                                    to node: ASTextNode,
+                                    font: UIFont,
+                                    color: UIColor) {
+        guard let key = color.jobsThemeColorKey else {
+            node.attributedText = NSAttributedString(
+                string: string,
+                attributes: [.font: font, .foregroundColor: color]
+            )
+            return
+        }
+        JobsThemeCenter.shared.bind(
+            node,
+            slot: "ASTextNode.attributedText"
+        ) { object, center in
+            (object as? ASTextNode)?.attributedText = NSAttributedString(
+                string: string,
+                attributes: [
+                    .font: font,
+                    .foregroundColor: center.resolvedColor(key)
+                ]
+            )
+        }
     }
     // 布局：标题 / 副标题 / 内容 + 背景 + 外层内边距（等价 Inset+Background+Overlay 组合）
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {

@@ -69,13 +69,13 @@ final class JobsProgressDemoVC: BaseVC {
                 guard let self else { return }
                 switch seg.selectedSegmentIndex {
                 /// 处理 数值 0 分支
-                case 0: progressView.direction = .leftToRight
+                case 0: progressView.direction = .rightToLeft
                 /// 处理 数值 1 分支
-                case 1: progressView.direction = .rightToLeft
+                case 1: progressView.direction = .leftToRight
                 /// 处理 数值 2 分支
-                case 2: progressView.direction = .bottomToTop
+                case 2: progressView.direction = .topToBottom
                 /// 处理 数值 3 分支
-                case 3: progressView.direction = .topToBottom
+                case 3: progressView.direction = .bottomToTop
                 /// 未匹配已知分支时执行兜底处理
                 default: break
                 }
@@ -147,7 +147,7 @@ final class JobsProgressDemoVC: BaseVC {
     /// 自定义进度条
     private lazy var progressView: JobsProgressBar = {
         JobsProgressBar()
-            .byDirection(.leftToRight)
+            .byDirection(.rightToLeft)
             .byValueMode(.countDown)
             .byTrackColor(JobsCor.systemGray5)
             .byTrackHorizontalInset(0)

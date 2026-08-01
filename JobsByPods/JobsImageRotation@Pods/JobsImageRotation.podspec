@@ -1,9 +1,10 @@
 Pod::Spec.new do |spec|
   spec.name          = 'JobsImageRotation'
   spec.version       = '1.0.0'
-  spec.summary       = 'Timer-driven clockwise and counterclockwise image rotation for Jobs projects.'
+  spec.summary       = 'Timer-driven view rotation and minimal animated clock icons for Jobs projects.'
   spec.description   = <<-DESC
-                         Rotates any UIKit view with a configurable direction and timer interval.
+                         Rotates any UIKit view and provides a no-tick clock icon whose fixed
+                         hour hand and rotating minute hand support configurable direction.
                        DESC
   spec.homepage      = 'https://example.local/JobsImageRotation'
   spec.license       = { :type => 'MIT' }

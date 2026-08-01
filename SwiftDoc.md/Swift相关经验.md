@@ -8,7 +8,7 @@
 
 ## 🔥 <font id=前言>前言</font>
 
-> 本文集中整理 Swift 基础语法、内存与数据结构、闭包、泛型、属性、协议、并发、网络及 SwiftUI 经验。语言规则以当前 [**The Swift Programming Language**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/) 为准；涉及 Apple 平台框架时，再以对应 SDK 文档和项目最低部署版本为准。
+> 本文集中整理 [**Swift**](https://www.swift.org/) 基础语法、内存与数据结构、闭包、泛型、属性、协议、并发、网络及 SwiftUI 经验。语言规则以当前 [**The Swift Programming Language**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/) 为准；涉及 Apple 平台框架时，再以对应 SDK 文档和项目最低部署版本为准。
 
 - 官方语言资料：
 
@@ -26,7 +26,7 @@
 
 - 阅读约定：
 
-  - 文中的 Swift / Objective-C 对比以“语言能力和工程使用边界”为主，不把实现细节误写成永远固定的 ABI 承诺。
+  - 文中的 [**Swift**](https://www.swift.org/) / Objective-C 对比以“语言能力和工程使用边界”为主，不把实现细节误写成永远固定的 ABI 承诺。
   - `async`、Task 与线程不是同义词；结构体 / 类的选择也不以“栈或堆”作为第一判断标准。
   - 代码示例保持极简，生产项目仍需补齐错误分类、日志、取消、限流、测试和部署版本处理。
 
@@ -274,13 +274,13 @@ lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过
 | 并行 | 多个任务在多个执行核心上同时运行 |
 | 线程 | 操作系统执行资源 |
 | 队列 | 提交工作的调度抽象，例如 GCD Queue |
-| Task | Swift 并发运行时管理的异步工作单元 |
+| Task | [**Swift**](https://www.swift.org/) 并发运行时管理的异步工作单元 |
 | Actor | 串行保护自身可变状态的引用类型 |
 | 隔离域 | 一组不能被其它并发域随意读写的状态与代码 |
 
 ### 5.2、核心能力速查
 
-| Swift 能力 | 用途 | Objective-C 常见对应 |
+| [**Swift**](https://www.swift.org/) 能力 | 用途 | Objective-C 常见对应 |
 | --- | --- | --- |
 | `async` / `await` | 线性表达可挂起操作 | completion Block |
 | `Task {}` | 从同步入口启动非结构化异步工作，并继承当前优先级、Actor 与 Task Local | `dispatch_async` |
@@ -307,6 +307,7 @@ struct User: Decodable, Sendable {
 func fetchUser(from url: URL) async throws -> User {
     let (data, response) = try await URLSession.shared.data(from: url)
     guard let httpResponse = response as? HTTPURLResponse,
+          // `~=` 是模式匹配运算符；这里等价于 `(200..<300).contains(httpResponse.statusCode)`。
           200..<300 ~= httpResponse.statusCode else {
         throw URLError(.badServerResponse)
     };return try JSONDecoder().decode(User.self, from: data)
@@ -387,35 +388,344 @@ func fetchTitles(ids: [Int]) async -> [String] {
 - 子任务完成顺序不保证等于添加顺序；需要稳定顺序时携带索引并在结果阶段排序。
 - 不要无限制添加数万任务；I/O、服务端限流与内存压力仍要控制。
 
-### 5.6、Actor：替代“串行队列保护属性”
+### 5.6、Actor 专题：使用方式、简单 Demo 与 Class 对比
+
+#### 5.6.1、先说结论
+
+**问题：Actor 和 Class 看起来很像，Actor 到底多解决了什么？**
+
+**可直接说出口的核心回答：**
+
+> Actor 和 Class 都是引用类型，都有身份、属性、方法、初始化器并由 ARC 管理生命周期。核心区别是：普通 Class 默认不保护共享可变状态；Actor 自带隔离域，编译器会限制外部代码直接读写它的隔离状态，跨隔离域调用通常需要 `await`，跨域传值还会结合 `Sendable` 检查。因此 Actor 主要解决并发环境中的共享可变状态，而不是替代所有 Class，也不是创建一条专属线程。
+
+再压缩成一句便于记忆的话：
+
+> Actor 是一种自带并发保护的引用类型，专门管理多个异步任务共同访问的可变数据。
+
+可以先把 Actor 理解成：
+
+```text
+Actor ≈ 引用语义 + 编译器检查的隔离域 + 串行访问自身状态
+```
+
+但它不完全等于“内部自带一把锁”或“内部自带一条串行队列”：Actor 与 [**Swift Concurrency**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) 的 Task、`await`、取消、优先级和 `Sendable` 属于同一套语言模型，而且 Actor 方法可以在挂起点发生可重入。语言设计细节可继续阅读 [**SE-0306：Actors**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md)。
+
+#### 5.6.2、Actor 与 Class 为什么看起来相近
+
+Actor 和 Class 都具备这些引用类型特征：
+
+- 实例有稳定身份，多个变量可以引用同一个实例。
+- 使用 ARC 管理生命周期。
+- 可以定义存储属性、计算属性、实例方法、类型方法、初始化器和 `deinit`。
+- 可以遵守协议、使用泛型和 Extension。
+- `let` 约束的是引用不能改指向，不代表实例内部状态永远不可变。
+
+真正的分界不在“长得像不像”，而在“谁负责并发安全”：
+
+| 对比项 | `class` | `actor` |
+| --- | --- | --- |
+| 类型语义 | 引用类型 | 引用类型 |
+| 默认状态保护 | 无；多个并发执行域可以同时碰到同一可变状态 | 实例拥有独立隔离域，隔离状态由 Actor 串行保护 |
+| 外部读取可变属性 | 普通同步访问 | 默认不能直接读取，通常通过方法并使用 `await` |
+| 外部调用隔离方法 | 普通同步调用 | 跨隔离域调用时通常需要 `await` |
+| 跨并发域传递 | 普通 Class 不会自动获得并发安全保证 | Actor 实例因隔离自身状态而可安全跨域传递 |
+| 继承 | 支持类继承 | 不参与类继承，优先使用协议与组合复用 |
+| 可重入 | 取决于自己使用的锁、队列和回调结构 | Actor 方法跨越 `await` 时默认允许其它任务进入该 Actor |
+| 常见用途 | UI 对象、需要继承的对象、同步模型、生命周期对象 | 缓存、计数器、下载账本、连接状态机等共享可变状态 |
+
+#### 5.6.3、基本声明和调用方式
+
+下面这个计数器同时演示了隔离属性、隔离方法、`nonisolated` 成员和跨 Actor 调用：
 
 ```swift
-actor DownloadLedger {
-    private var finishedIDs: Set<Int> = []
+struct CounterSnapshot: Sendable {
+    let name: String
+    let value: Int
+}
 
-    func markFinished(_ id: Int) {
-        finishedIDs.insert(id)
+actor SafeCounter {
+    nonisolated let name: String
+    private var value = 0
+
+    init(name: String) {
+        self.name = name
     }
 
-    func contains(_ id: Int) -> Bool {
-        finishedIDs.contains(id)
+    func increment(by amount: Int = 1) {
+        value += amount
+    }
+
+    func snapshot() -> CounterSnapshot {
+        CounterSnapshot(name: name, value: value)
+    }
+
+    nonisolated var debugName: String {
+        "SafeCounter<\(name)>"
     }
 }
 
-func recordDownload(id: Int, ledger: DownloadLedger) async {
-    await ledger.markFinished(id)
-    let exists = await ledger.contains(id)
-    print(exists)
+func runActorDemo() async {
+    let counter = SafeCounter(name: "Download")
+
+    await withTaskGroup(of: Void.self) { group in
+        for _ in 0..<1_000 {
+            group.addTask {
+                await counter.increment()
+            }
+        }
+    }
+
+    let snapshot = await counter.snapshot()
+    print(counter.debugName) // `nonisolated` 成员不需要 `await`
+    print(snapshot.value)    // 1000
 }
 ```
 
-- Actor 是引用类型，但其可变状态受 Actor 隔离保护。
-- Actor 同一时刻只执行一段隔离代码；跨 Actor 访问通常需要 `await`。
-- Actor 可重入：在 Actor 方法的 `await` 挂起期间，Actor 可能处理其它任务，因此不要假设挂起前后的状态绝对不变。
+这段 Demo 的关键点：
+
+- `value` 和默认的实例方法都属于 `counter` 的隔离域，外部不能直接执行 `counter.value += 1`。
+- `increment()` 本身没有声明 `async`，但从 Actor 外部跨隔离域调用时仍然需要 `await`。
+- 同一个 Actor 内部调用自己的同步隔离方法，不需要 `await`。
+- 每一个 Actor 实例都有自己的隔离域；即使两个实例类型相同，从 `self` 访问另一个实例的隔离成员仍然属于跨 Actor 调用。
+- `name` 是初始化后不再改变、可以安全公开的元数据，因此显式声明为 `nonisolated`。
+- `debugName` 只读取 `nonisolated` 数据，也可以声明为 `nonisolated`；它不能读取隔离属性 `value`。
+- `CounterSnapshot` 跨出 Actor 隔离域，使用只包含 `Sendable` 成员的值类型表达快照，比直接暴露内部可变引用更清楚。
+
+可以把访问规则记成：
+
+```text
+Actor 内部访问当前 self：同步访问
+Actor 外部访问隔离成员：通常 await
+Actor 内部访问另一个实例：仍然是跨 Actor，通常 await
+```
+
+> 外部代码只能请求 Actor 执行公开操作，不能绕过这些操作直接修改它的隔离状态。
+
+#### 5.6.4、如果使用普通 Class，需要自己完成状态保护
+
+下面这个 Class 和 Actor 在外形上很像，但它没有自动隔离：
+
+```swift
+final class UnsafeCounter {
+    private(set) var value = 0
+
+    func increment() {
+        value += 1
+    }
+}
+```
+
+`value += 1` 不是不可分割的原子操作，逻辑上至少包含：
+
+```text
+读取旧值 → 计算新值 → 写回新值
+```
+
+两个执行域可能同时读到相同旧值，分别加一后又写回相同新值，最终丢失一次更新。在 [**Swift**](https://www.swift.org/) 6 严格并发检查下，把这种非 `Sendable` Class 直接捕获进并发 Task 还可能先得到编译器诊断。
+
+如果必须保留同步 Class API，可以自己用锁保护全部状态：
+
+```swift
+import Foundation
+
+final class LockedCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+
+    func increment(by amount: Int = 1) {
+        lock.lock()
+        value += amount
+        lock.unlock()
+    }
+
+    func snapshot() -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
+}
+```
+
+这里的 `@unchecked Sendable` 是开发者作出的并发安全承诺：编译器不再替你验证全部细节，漏锁、锁顺序、死锁和在持锁期间调用外部代码等风险仍由实现者负责。Actor 则把“哪些状态属于同一隔离域、哪里必须跨域等待”提升到了语言和类型检查层。
+
+在 Objective-C 中，同类状态通常由 `dispatch_queue_t`、`NSLock`、`@synchronized` 或 `os_unfair_lock` 人工保护；这些工具本身没有问题，但能否覆盖每一个读写入口主要依赖封装纪律。Actor 的优势是把隔离规则写进声明，并由编译器阻止外部直接绕过。
+
+这不代表 Actor 永远优于锁：
+
+- 已有大量同步调用方，无法把调用链改成 `async` 时，锁或串行队列可能更适合。
+- 极底层、临界区极短且经过性能测试的同步组件，锁可能更直接。
+- 新的业务状态机、缓存、去重器和并发任务账本，优先评估 Actor。
+
+#### 5.6.5、Actor、Task 与线程不要混为一谈
+
+| 概念 | 回答的问题 | 核心职责 |
+| --- | --- | --- |
+| Task | 要执行哪一项异步工作 | 承载可挂起、恢复、取消的异步操作 |
+| Actor | 共享可变数据归谁管理 | 建立隔离域并串行保护自己的状态 |
+| 线程 | 代码最终使用什么执行资源 | 由系统与并发运行时调度 |
+
+可以形象地理解为：Task 是来办事的人，Actor 是有门禁的数据房间，线程是运行时临时安排的工作通道。很多 Task 可以请求同一个 Actor，但 Actor 关注的是状态隔离，不是把每个实例固定到一条线程。
+
+从 Actor 外部调用隔离成员时，调用方需要等待获得该 Actor 的执行机会：
+
+```swift
+actor Inventory {
+    private var count = 0
+
+    func add(_ amount: Int) {
+        count += amount
+    }
+
+    func addTwice(_ amount: Int) {
+        add(amount)
+        add(amount) // 已经处于同一个 Actor 内部，不需要 `await`
+    }
+
+    func currentCount() -> Int {
+        count
+    }
+
+    func replaceCount(from other: Inventory) async {
+        count = await other.currentCount()
+    }
+}
+
+func updateInventory(_ inventory: Inventory) async {
+    await inventory.addTwice(2)
+    let count = await inventory.currentCount()
+    print(count)
+}
+```
+
+- `await` 表示这里可能挂起，让运行时先执行其它工作；它不是“切换到后台线程”。
+- Actor 不绑定一条专属线程，也不保证 `await` 之后仍运行在原线程。
+- `replaceCount(from:)` 已经在当前 `self` 的隔离域中，但 `other` 是另一个 Actor 实例，因此读取它仍然需要 `await`。
+- Actor 保护的是隔离状态；它不会自动让 CPU 密集型工作变成并行计算。
+- 不要为了“少写一个 `await`”把大量无关状态塞进同一个 Actor，否则会形成不必要的串行瓶颈。
+
+#### 5.6.6、最重要的坑：Actor 可重入
+
+Actor 保证的是：同一个 Actor 在两个潜在挂起点之间，隔离代码不会与该 Actor 的另一段隔离代码并发执行。它不保证一个包含 `await` 的完整方法从头到尾独占 Actor。
+
+```swift
+func verifyEligibility() async -> Bool {
+    await Task.yield()
+    return true
+}
+
+actor CouponStore {
+    private var remaining = 1
+
+    func claim() async -> Bool {
+        guard remaining > 0 else { return false }
+
+        let allowed = await verifyEligibility()
+
+        // `await` 期间其它任务可能已经领取，因此必须重新验证 Actor 状态。
+        guard allowed, remaining > 0 else { return false }
+        remaining -= 1
+        return true
+    }
+}
+```
+
+如果在 `await verifyEligibility()` 之后直接执行 `remaining -= 1`，两个任务可能都在挂起前看到 `remaining > 0`，恢复后造成超发。
+
+处理原则：
+
+- 在 `await` 前完成必须原子发生的状态变更；失败时再设计明确的补偿。
+- 或者在 `await` 后重新验证所有依赖的状态，不能相信挂起前的判断仍然成立。
+- 尽量缩小 Actor 方法中的挂起点，把“读取状态 → 判断 → 修改状态”放在同一个无挂起片段内。
+- Actor 只能自动保护自己的隔离状态，不能自动提供跨多个 Actor、数据库和网络请求的分布式事务。
+
+#### 5.6.7、`nonisolated`、`@MainActor` 与 `Sendable` 的关系
+
+| 能力 | 解决什么 | 典型用法 |
+| --- | --- | --- |
+| 普通 `actor` | 每个实例分别保护自己的状态 | 缓存、下载账本、连接状态、请求去重 |
+| `@MainActor` | 把分散在多个类型和函数中的 UI 状态统一隔离到全局 Main Actor | ViewModel、控制器入口、UI 刷新 |
+| `nonisolated` | 明确某个成员不需要进入当前 Actor 隔离域 | 只读固定标识、纯计算、无需读取隔离状态的协议实现 |
+| `Sendable` | 描述值能否安全跨 Task 或 Actor 隔离域传递 | 不可变 DTO、Actor 输入参数、返回快照、`@Sendable` 闭包 |
+
+边界要记住：
+
+- `nonisolated` 不是关闭警告的万能开关；它不能直接读取或修改 Actor 隔离状态。
+- `@MainActor final class` 仍然是 Class，只是整个类型的实例状态统一受 Main Actor 隔离；它特别适合 UI，不等于每个实例各有一个 Actor。
+- Actor 类型因自身隔离机制可以安全跨隔离域传递，但从 Actor 方法传出去的参数和返回值仍要满足对应的并发安全要求。
+- `@unchecked Sendable` 只表示“安全性由我人工保证”，不会凭空把不安全代码变安全。
+
+#### 5.6.8、什么时候选 Actor，什么时候仍然选 Class
+
+```mermaid
+flowchart TD
+    A["对象是否需要共享身份"] -->|否| B["优先考虑 struct / enum"]
+    A -->|是| C["是否存在跨并发域共享的可变状态"]
+    C -->|否| D["普通 final class 通常足够"]
+    C -->|是| E["状态是否天然属于 UI"]
+    E -->|是| F["@MainActor class"]
+    E -->|否| G["调用链能否接受 async / await"]
+    G -->|是| H["优先评估 actor"]
+    G -->|否| I["Class + 锁 / 串行队列，并明确同步契约"]
+```
+
+优先使用 Actor：
+
+- 多个 Task 会读写同一份可变状态。
+- 希望编译器帮助约束访问边界和跨域传值。
+- API 可以自然表达为 `async` 调用。
+- 状态适合集中在一个清晰的所有者中。
+
+继续使用 Class：
+
+- 需要 UIKit / AppKit 对象、Objective-C 互操作或既有继承体系。
+- 对象虽然有身份，但没有跨并发域共享的可变状态。
+- 必须提供同步 API，或者已有成熟且完整的锁 / 队列同步方案。
+- 类型本身是 `@MainActor` 隔离的 UI 模型，不需要再包一层普通 Actor。
+
+不要使用 Actor：
+
+- 只是为了“把代码放到后台线程”。
+- 只是包装一个不可变数据值，此时通常应使用 `struct`。
+- 想依靠一个 Actor 自动获得内部任务的并行加速。
+- 需要在 Actor 方法里执行长时间阻塞调用；阻塞代码仍会占用并发运行时线程。
+
+#### 5.6.9、面试追问与答案
+
+1. **Actor 是线程吗？**
+
+   不是。Actor 是隔离域和引用类型抽象，运行时负责调度它的任务；Actor 不绑定一条专属线程。
+
+2. **Actor 方法为什么有时没写 `async`，调用时却要 `await`？**
+
+   方法体本身可以是同步的，但外部调用需要跨越 Actor 隔离域并等待执行机会，所以调用点是潜在挂起点；同一 Actor 内部调用则不需要 `await`。
+
+3. **Actor 能完全消灭数据竞争吗？**
+
+   Actor 能保护自身正确隔离的状态，但保护不了外部全局变量、Unsafe Pointer、错误的 `nonisolated(unsafe)`、不真实的 `@unchecked Sendable` 承诺或绕开并发模型的底层代码。
+
+4. **Actor 与串行队列最关键的区别是什么？**
+
+   串行队列主要是运行时调度工具，安全依赖封装纪律；Actor 是语言级隔离模型，编译器会检查隔离访问和大量跨域传值问题。Actor 还具有可重入语义，不能机械理解成 `queue.sync`。
+
+5. **Actor 里面执行到 `await` 时还一直占有 Actor 吗？**
+
+   不会。当前任务会挂起，Actor 可以继续处理其它任务；原任务恢复后必须把相关状态视为可能已经变化。
+
+6. **Actor 可以继承另一个 Actor 或 Class 吗？**
+
+   不可以参与普通类继承体系。Actor 之间优先通过协议、泛型和组合复用能力。
+
+7. **用了 Actor 是否就一定更快？**
+
+   不一定。Actor 的价值首先是正确的隔离模型；频繁跨 Actor 会产生调度开销，过大的 Actor 还会形成串行热点。性能结论必须结合真实负载测量。
+
+8. **UI 状态应该放普通 Actor 还是 `@MainActor class`？**
+
+   UI 本身天然属于 Main Actor，通常直接使用 `@MainActor class` 更清楚；普通 Actor 更适合不依赖 UI 的共享业务状态。
 
 ### 5.7、取消与超时意识
 
-Swift Task 的取消是协作式的：`cancel()` 只是发出请求，任务必须在合适位置响应。
+[**Swift**](https://www.swift.org/) Task 的取消是协作式的：`cancel()` 只是发出请求，任务必须在合适位置响应。
 
 ```swift
 func buildIndex(values: [Int]) async throws -> [Int] {
@@ -465,7 +775,7 @@ func loadData() async throws -> Data {
 - 优先使用 `withCheckedContinuation` / `withCheckedThrowingContinuation`，确认性能瓶颈后才考虑 unsafe 版本。
 - 一次性 completion 适合 Continuation；多次事件流应改成 `AsyncStream` / `AsyncThrowingStream`。
 
-### 5.9、Swift 与 Objective-C 极简对比
+### 5.9、[**Swift**](https://www.swift.org/) 与 Objective-C 极简对比
 
 - Objective-C + GCD：
 
@@ -481,13 +791,13 @@ func loadData() async throws -> Data {
   }
   ```
 
-- Swift Concurrency：
+- [**Swift**](https://www.swift.org/) Concurrency：
 
   ```swift
   func readData() async throws -> Data {
       try await storage.read()
   }
-
+  
   @MainActor
   func reload() async {
       do {
@@ -499,7 +809,7 @@ func loadData() async throws -> Data {
   }
   ```
 
-| 对比项 | Objective-C | Swift |
+| 对比项 | Objective-C | [**Swift**](https://www.swift.org/) |
 | --- | --- | --- |
 | 语言模型 | 没有原生 `async` / `await`；主要使用 GCD、`NSOperation`、Block | 语言级 Task、结构化并发、Actor、隔离与 `Sendable` |
 | 错误传播 | 常用 `NSError **` 或 completion 中的 error | `async throws` + `try await` |
@@ -511,7 +821,7 @@ func loadData() async throws -> Data {
 | 共享状态 | 串行队列、锁、原子操作 | 优先 Actor；底层同步原语仍可用 |
 | 线程假设 | Queue 与线程也不是一一对应 | Task 更不承诺固定线程；围绕隔离域思考 |
 
-### 5.10、GCD / `NSOperation` 到 Swift Concurrency 的迁移映射
+### 5.10、GCD / `NSOperation` 到 [**Swift**](https://www.swift.org/) Concurrency 的迁移映射
 
 | 旧写法 | 优先考虑 |
 | --- | --- |
@@ -522,7 +832,7 @@ func loadData() async throws -> Data {
 | 主队列刷新 UI | `@MainActor` |
 | 一次性初始化 + `dispatch_once` | `static let` |
 | delegate / Notification 多次回调 | `AsyncStream`，或保留 delegate |
-| `NSOperation` 依赖图、KVO 状态、复杂暂停恢复 | 评估后保留 `NSOperation`；Swift Concurrency 不要求机械替换 |
+| `NSOperation` 依赖图、KVO 状态、复杂暂停恢复 | 评估后保留 `NSOperation`；[**Swift**](https://www.swift.org/) Concurrency 不要求机械替换 |
 | 信号量把异步强行改同步 | 删除阻塞桥接，沿调用链自上而下改为 `async` |
 
 ### 5.11、常见误区
@@ -533,18 +843,52 @@ func loadData() async throws -> Data {
 - 不要在持有 `NSLock`、`pthread_mutex` 或信号量的临界区中跨越 `await`。
 - `Task.detached` 不继承调用方 Actor、优先级和 Task Local，只有在确实需要断开上下文时使用。
 - `@unchecked Sendable` 是安全承诺，不是关闭警告的捷径。
-- Swift 仍可调用 GCD / `NSOperation`；迁移目标是让生命周期、错误、取消与共享状态更清晰，而不是追求语法替换率。
+- [**Swift**](https://www.swift.org/) 仍可调用 GCD / `NSOperation`；迁移目标是让生命周期、错误、取消与共享状态更清晰，而不是追求语法替换率。
 
 ## 六、在[**Swift**](https://www.swift.org/)中，一个结构体（struct），占据多大的内存？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 在[**Swift**](https://www.swift.org/)中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
+- 在[**Swift**](https://www.swift.org/)中，结构体（*struct*）的大小取决于成员本身所需的空间、成员之间的填充，以及[字节对齐](#字节对齐)要求；
 
 - [**Swift**](https://www.swift.org/)的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
 
 - [**Swift**](https://www.swift.org/) 中结构体是值类型，简单局部值可能被优化到栈或寄存器，也可能因为逃逸、泛型存在类型、闭包捕获、类持有或桥接而装箱；这些因素会影响实现，但任何单一条件都不能证明实例“一定在堆上”。
 
-- 通常情况下，***结构体的内存布局是按照其成员变量的顺序依次排列的，并且可能会进行字节对齐***。这意味着如果结构体的成员包含不同类型的数据，编译器**可能会在其间插入一些填充字节以保持对齐**。
-  你可以使用[**Swift**](https://www.swift.org/) 的`MemoryLayout`来获取结构体的大小。例如：
+### 6.1、什么是字节对齐 <a id="字节对齐"></a>
+
+**字节对齐（Byte Alignment）**是类型对数据起始地址的约束。若某个类型的对齐值是 `N`，它的起始地址通常需要是 `N` 的整数倍。例如，对齐值为 `4` 的值适合从 `0`、`4`、`8` 等地址开始存放。
+
+- CPU 通常按固定宽度读取内存。地址满足[字节对齐](#字节对齐)要求时，一次读取更容易完成；[未对齐访问](#字节对齐)在部分架构上可能需要多次读取，甚至不被允许；
+- 为了让后续成员和连续数组元素都从合适的地址开始，编译器会在成员之间或实例尾部加入[填充字节](#字节对齐)（Padding）；
+- [字节对齐](#字节对齐)不是“所有成员都占相同字节数”，也不是“结构体大小等于各成员大小直接相加”，而是对成员起始位置和相邻实例间距的约束。
+
+以下结构体可以直观看出 `size`、`alignment` 和 `stride` 的区别：
+
+```swift
+struct ByteAlignmentDemo {
+    let count: UInt32 // 占 4 字节，对齐值通常为 4
+    let flag: UInt8   // 占 1 字节，对齐值为 1
+}
+
+print(MemoryLayout<ByteAlignmentDemo>.size)      // 当前常见结果：5
+print(MemoryLayout<ByteAlignmentDemo>.alignment) // 当前常见结果：4
+print(MemoryLayout<ByteAlignmentDemo>.stride)    // 当前常见结果：8
+```
+
+以这组常见结果为例：
+
+| 指标 | 值 | 含义 |
+| --- | ---: | --- |
+| `size` | `5` | 保存一个值实际需要的字节数，不包含实例末尾为下一个元素预留的补齐 |
+| `alignment` | `4` | 该类型实例起始地址需要满足的[字节对齐](#字节对齐)值 |
+| `stride` | `8` | 数组中相邻实例起始地址的间距；在 `size` 后补 `3` 字节，使下一个实例仍按[字节对齐](#字节对齐)值 `4` 对齐 |
+
+也就是：`size` 关注“一个值需要多少字节”，[`alignment`](#字节对齐) 关注“从什么地址开始”，`stride` 关注“连续存放时下一个值从哪里开始”。通常有 `stride >= size`，并且 `stride` 会补齐为 [`alignment`](#字节对齐) 的整数倍。
+
+> 上述数值用于解释概念，不应当作跨平台、跨编译器版本或跨模块的固定 ABI。需要真实结果时，应在目标构建环境中读取 `MemoryLayout<T>`。
+
+### 6.2、使用 `MemoryLayout` 查看真实布局
+
+你可以使用[**Swift**](https://www.swift.org/) 的 `MemoryLayout` 获取结构体在当前构建环境中的大小。例如：
 
   ```swift
   struct MyStruct {
@@ -557,7 +901,7 @@ func loadData() async throws -> Data {
   print("MyStruct 占用的内存大小为 \(size) 字节")
   ```
 
-  > 这将输出结构体 `MyStruct` 占用的字节数。请注意，实际的大小可能因为对齐而有所不同。如果你需要详细的信息，你还可以使用 `MemoryLayout<MyStruct>.alignment` 和 `MemoryLayout<MyStruct>.stride` 来获取对齐和步幅的信息。
+> 这将输出结构体 `MyStruct` 占用的字节数。实际大小可能因[字节对齐](#字节对齐)而不同；还可以使用 [`MemoryLayout<MyStruct>.alignment`](#字节对齐) 和 `MemoryLayout<MyStruct>.stride` 获取对齐值和步幅。
 
   ```swift
   let alignment = MemoryLayout<MyStruct>.alignment
@@ -567,14 +911,15 @@ func loadData() async throws -> Data {
   print("MyStruct 步幅为 \(stride) 字节")
   ```
 
-  总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`
+总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`。
+
 ## 七、[**Swift**](https://www.swift.org/) 结构体、类与 Objective-C 结构体 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > [**Swift Structures and Classes**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/) 的核心分界不是“结构体一定在栈、类一定在堆”，而是值语义与引用语义。存储位置由编译器、逃逸分析、泛型装箱和运行时上下文共同决定，不能作为选型规则。
 
-### 7.1、Swift 结构体与类的共同能力
+### 7.1、[**Swift**](https://www.swift.org/) 结构体与类的共同能力
 
-Swift 的 `struct` 与 `class` 都可以：
+[**Swift**](https://www.swift.org/) 的 `struct` 与 `class` 都可以：
 
 - 定义存储属性、计算属性和类型属性。
 - 定义实例方法、类型方法和下标。
@@ -583,7 +928,7 @@ Swift 的 `struct` 与 `class` 都可以：
 - 遵守协议并使用泛型。
 - 使用访问控制、属性包装器和嵌套类型。
 
-### 7.2、Swift 结构体与类的核心区别
+### 7.2、[**Swift**](https://www.swift.org/) 结构体与类的核心区别
 
 | 对比项 | `struct` | `class` |
 | --- | --- | --- |
@@ -596,7 +941,7 @@ Swift 的 `struct` 与 `class` 都可以：
 | 可变方法 | 修改自身的方法需要 `mutating` | 不需要 `mutating` |
 | `let` 实例 | 整个值不可变，变量存储属性不能修改 | 引用不可改指向，但实例的 `var` 属性仍可修改 |
 | 自动成员逐一初始化 | 未自定义冲突初始化器时可获得 | 不自动获得同等成员逐一初始化器 |
-| Objective-C Runtime | 任意 Swift 结构体不能直接作为 `@objc` 对象暴露 | `NSObject` 子类及兼容成员可暴露给 Objective-C |
+| Objective-C Runtime | 任意 [**Swift**](https://www.swift.org/) 结构体不能直接作为 `@objc` 对象暴露 | `NSObject` 子类及兼容成员可暴露给 Objective-C |
 | 常见用途 | 纯数据、配置、值对象、不可变快照、SwiftUI View | 共享身份、UIKit 控件、控制器、继承体系、资源生命周期 |
 
 ### 7.3、值语义 Demo
@@ -681,39 +1026,39 @@ JobsPoint pointB = pointA;
 pointB.x = 99.0;
 ```
 
-修改 `pointB.x` 不会改变 `pointA.x`，但 Objective-C `struct` 与 Swift `struct` 的表达能力完全不同。
+修改 `pointB.x` 不会改变 `pointA.x`，但 Objective-C `struct` 与 [**Swift**](https://www.swift.org/) `struct` 的表达能力完全不同。
 
-### 7.8、Swift `struct` 与 Objective-C `struct` 重点对比
+### 7.8、[**Swift**](https://www.swift.org/) `struct` 与 Objective-C `struct` 重点对比
 
-| 能力 | Swift `struct` | Objective-C / C `struct` |
+| 能力 | [**Swift**](https://www.swift.org/) `struct` | Objective-C / C `struct` |
 | --- | --- | --- |
 | 类型性质 | 完整命名类型、值语义 | C 聚合值类型 |
-| 属性 | 存储属性、计算属性、观察器、属性包装器 | 字段；没有 Swift 属性模型 |
+| 属性 | 存储属性、计算属性、观察器、属性包装器 | 字段；没有 [**Swift**](https://www.swift.org/) 属性模型 |
 | 方法 | 实例方法、`mutating` 方法、类型方法 | 不能在结构体体内声明 Objective-C 方法 |
 | 初始化 | 自定义 `init`、可失败初始化、泛型初始化 | 聚合初始化、函数辅助初始化 |
-| 协议 | 可遵守任意适用 Swift 协议 | 不能遵守 Objective-C Protocol |
+| 协议 | 可遵守任意适用 [**Swift**](https://www.swift.org/) 协议 | 不能遵守 Objective-C Protocol |
 | 扩展 | 可通过 `extension` 增加方法、计算属性、协议遵循 | 不能用 Category 扩展 C 结构体 |
-| 泛型 | 支持泛型结构体与条件遵循 | C `struct` 不支持 Swift 式泛型 |
+| 泛型 | 支持泛型结构体与条件遵循 | C `struct` 不支持 [**Swift**](https://www.swift.org/) 式泛型 |
 | 访问控制 | `private` 到 `public` / `package` | 依赖头文件可见性，没有同等成员级访问模型 |
 | 内存管理 | 字段可包含值或引用；引用字段仍由 ARC 管理 | 可包含对象指针，但所有权、复制和 C ABI 需要显式谨慎设计 |
 | 运行时 | 不是 Objective-C 对象，没有 `isa` | 不是 Objective-C 对象，没有 `isa` |
-| 消息发送 | 直接调用 Swift 方法 | 不能向结构体发送 Objective-C 消息 |
-| 桥接 | 任意 Swift 结构体不能直接暴露为 `@objc` 对象 | C 兼容结构体可被 Swift 导入，例如 `CGPoint` |
+| 消息发送 | 直接调用 [**Swift**](https://www.swift.org/) 方法 | 不能向结构体发送 Objective-C 消息 |
+| 桥接 | 任意 [**Swift**](https://www.swift.org/) 结构体不能直接暴露为 `@objc` 对象 | C 兼容结构体可被 [**Swift**](https://www.swift.org/) 导入，例如 `CGPoint` |
 
-### 7.9、Swift 结构体不等于“加强版 NSValue”
+### 7.9、[**Swift**](https://www.swift.org/) 结构体不等于“加强版 NSValue”
 
-- `CGPoint`、`CGSize`、`CGRect` 是 C 结构体，经模块导入后在 Swift 中获得更自然的 API。
-- 任意自定义 Swift `struct` 不能直接标记 `@objc` 并让 Objective-C 像对象一样使用。
-- Swift / Objective-C 公共边界需要值类型时，可使用双方都理解的 C 结构体；需要方法、协议、泛型或复杂所有权时，通常使用 `NSObject` 包装类。
-- `NSValue` 可装箱部分 C 结构体，但装箱后得到的是 Objective-C 对象语义，不会把 C 结构体变成 Swift 式结构体。
+- `CGPoint`、`CGSize`、`CGRect` 是 C 结构体，经模块导入后在 [**Swift**](https://www.swift.org/) 中获得更自然的 API。
+- 任意自定义 [**Swift**](https://www.swift.org/) `struct` 不能直接标记 `@objc` 并让 Objective-C 像对象一样使用。
+- [**Swift**](https://www.swift.org/) / Objective-C 公共边界需要值类型时，可使用双方都理解的 C 结构体；需要方法、协议、泛型或复杂所有权时，通常使用 `NSObject` 包装类。
+- `NSValue` 可装箱部分 C 结构体，但装箱后得到的是 Objective-C 对象语义，不会把 C 结构体变成 [**Swift**](https://www.swift.org/) 式结构体。
 
 ### 7.10、内存布局与桥接风险
 
 - `MemoryLayout<T>.size`：实例实际字段占用的字节数，不含尾部补齐。
-- `MemoryLayout<T>.alignment`：对齐要求。
-- `MemoryLayout<T>.stride`：数组中相邻元素的步幅，通常大于等于 `size`。
-- 不要把普通 Swift 结构体当前观察到的字段顺序和字节布局当成跨模块、跨编译器、跨语言 ABI 合同。
-- `@frozen` 服务 Swift Library Evolution，也不等于自动获得任意 C ABI 兼容布局。
+- [`MemoryLayout<T>.alignment`](#字节对齐)：类型的[字节对齐](#字节对齐)要求。
+- `MemoryLayout<T>.stride`：数组中相邻元素的步幅，通常大于等于 `size`，并包含为满足[字节对齐](#字节对齐)而加入的尾部填充。
+- 不要把普通 [**Swift**](https://www.swift.org/) 结构体当前观察到的字段顺序和字节布局当成跨模块、跨编译器、跨语言 ABI 合同。
+- `@frozen` 服务 [**Swift**](https://www.swift.org/) Library Evolution，也不等于自动获得任意 C ABI 兼容布局。
 - 和 C / Objective-C 交互时，优先使用已导入的 C 结构体、明确的 C 接口或对象包装层。
 
 ### 7.11、选型决策
@@ -746,13 +1091,13 @@ flowchart TD
 
   - **C/C++**：函数内的 `static` 局部变量具有静态存储期；文件作用域的 `static` 名称具有内部链接，只在当前翻译单元可见。
   - **Java**：`static` 成员属于类本身，由该类的实例共享，通过类名访问。
-  - **Swift**：`static` 声明类型属性或类型方法，适用于类、结构体和枚举；类成员若需要允许子类重写，应改用 `class`。
+  - [**Swift**](https://www.swift.org/)：`static` 声明类型属性或类型方法，适用于类、结构体和枚举；类成员若需要允许子类重写，应改用 `class`。
 
 - **`final`**
 
   - **C++**：C++11 起可用 `final` 禁止类继续派生，或禁止虚函数继续重写；C 语言没有对应关键字。
   - **Java**：可禁止类被继承、方法被重写，或让变量只能完成一次赋值。
-  - **Swift**：用于禁止类被继承，或禁止类中的方法、属性、下标继续重写。
+  - [**Swift**](https://www.swift.org/)：用于禁止类被继承，或禁止类中的方法、属性、下标继续重写。
 
 > `static` / `final` 描述的是语言语义，不能据此直接断定成员位于栈、堆或某个固定“常量池”；实际存储与优化由编译器和运行时决定。
 
@@ -799,7 +1144,7 @@ print(operation(2, 3)) // 6
 ## 十二、元组（Tuples）和结构体（Struct） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 都可以包含不同的数据类型；
-- 元组与普通 Swift 结构体的具体内存布局都由编译器决定；不能把某次 `MemoryLayout` 结果当成跨编译器、跨模块或跨语言的固定布局承诺；
+- 元组与普通 [**Swift**](https://www.swift.org/) 结构体的具体内存布局都由编译器决定；不能把某次 `MemoryLayout` 结果当成跨编译器、跨模块或跨语言的固定布局承诺；
 - 结构体是一种自定义数据类型，你需要在代码中明确定义它的结构，并为其提供属性和方法。结构体的成员可以是不同类型的数据；
 - 元组则是一种轻量级的数据结构，它不需要在代码中显式声明，而是通过在使用时直接定义。元组的主要用途是在**临时情况下组合**多个值，而不需要为其定义专门的结构；
 - 元组的比较需要遵循的规则
@@ -874,7 +1219,7 @@ print(operation(2, 3)) // 6
   }];
   ```
 
-- 逃逸闭包（Escaping Closure）：使用 `@escaping` 显示声明闭包可能在函数返回后才被调用，**类似于 OC 中将 block 保存为属性**。
+- 逃逸闭包（Escaping Closure）：使用 `@escaping` 显式声明闭包可能在函数返回后才被调用，**类似于 OC 中将 block 保存为属性**。
 
   - `completion`传进来以后被赋值给了`savedClosure`
   - `savedClosure` 是函数外部的变量
@@ -1205,7 +1550,7 @@ transformAndSort([true, false, true],
     let arr = [[1, 2], [3, 4], [5]]
     let flat = arr.joined()
     print(Array(flat)) // [1, 2, 3, 4, 5]
-    ```
+  ```
 
   - `joined` + `flatMap`
 
@@ -1717,7 +2062,7 @@ struct MyStruct {
 
 因此，看到一个 `@Xxx` 时先问三个问题：
 
-1. 它由 Swift 语言定义、标准库定义，还是某个框架定义？
+1. 它由 [**Swift**](https://www.swift.org/) 语言定义、标准库定义，还是某个框架定义？
 2. 它作用于声明、类型、属性，还是宏展开点？
 3. 它改变的是可用性、代码生成、并发隔离、桥接方式，还是数据存储？
 
@@ -1726,7 +2071,7 @@ struct MyStruct {
 | 标记 | 作用与使用边界 |
 | --- | --- |
 | `@attached(...)` | 声明附着宏的角色，例如 `peer`、`member`、`accessor`、`extension`、`body`；用于宏作者，不是普通业务调用标记 |
-| `@available(...)` | 声明 API 的平台 / Swift 版本生命周期，可表达 `introduced`、`deprecated`、`obsoleted`、`unavailable`、`noasync`、`message`、`renamed` |
+| `@available(...)` | 声明 API 的平台 / [**Swift**](https://www.swift.org/) 版本生命周期，可表达 `introduced`、`deprecated`、`obsoleted`、`unavailable`、`noasync`、`message`、`renamed` |
 | `@backDeployed(before:)` | 把较新平台 API 的实现发射进客户端，使指定旧系统也能使用；主要面向系统 / SDK / 库作者 |
 | `@discardableResult` | 允许调用方忽略函数返回值而不产生警告；不会改变返回值和执行逻辑 |
 | `@dynamicCallable` | 让类型实例能像函数一样被调用；类型必须实现 `dynamicallyCall(...)` |
@@ -1739,7 +2084,7 @@ struct MyStruct {
 | `@inlinable` | 把函数实现暴露为模块公开接口的一部分，允许客户端跨模块内联；会扩大 ABI / 源码兼容约束 |
 | `@main` | 声明可执行程序唯一入口；类型需提供符合要求的 `static main()`，框架也可通过协议扩展提供入口实现 |
 | `@nonobjc` | 阻止本可自动暴露给 Objective-C 的成员进入 Objective-C 运行时 |
-| `@NSApplicationMain` | 旧 macOS App 入口；已废弃，Swift 6 中会产生编译错误，改用 `@main` |
+| `@NSApplicationMain` | 旧 macOS App 入口；已废弃，[**Swift**](https://www.swift.org/) 6 中会产生编译错误，改用 `@main` |
 | `@NSCopying` | 对类的存储属性合成 copy 语义，效果接近 Objective-C 的 `copy` 属性 |
 | `@NSManaged` | 声明 Core Data 在运行时提供属性存储或方法实现，同时隐含 `@objc` |
 | `@objc` | 将可桥接声明暴露给 Objective-C，并可指定 Objective-C / Runtime 名称 |
@@ -1749,7 +2094,7 @@ struct MyStruct {
 | `@resultBuilder` | 定义结果构建器，用静态 `buildXxx` 方法把声明式代码块构造成结果；SwiftUI 的 `ViewBuilder` 属于此类 |
 | `@requires_stored_property_inits` | 要求类的所有存储属性在声明处给出默认值；继承 `NSManagedObject` 的类会推断该属性 |
 | `@testable` | 以测试可见性导入模块；被导入模块必须开启 testing |
-| `@UIApplicationMain` | 旧 iOS App 入口；已废弃，Swift 6 中会产生编译错误，改用 `@main` |
+| `@UIApplicationMain` | 旧 iOS App 入口；已废弃，[**Swift**](https://www.swift.org/) 6 中会产生编译错误，改用 `@main` |
 | `@unchecked Sendable` | 关闭编译器对 `Sendable` 的结构化验证，由开发者承担线程安全证明责任；不能当作“先让它编过” |
 | `@usableFromInline` | 允许同模块的 `@inlinable` 代码引用 `internal` 声明；声明仍不能在模块外按名字直接调用，但已进入模块 ABI |
 | `@warn_unqualified_access` | 未通过实例、类型或模块限定名调用时发出警告，用于避免同名 API 歧义 |
@@ -1769,16 +2114,16 @@ struct MyStruct {
 | 标记 | 作用 |
 | --- | --- |
 | `@autoclosure` | 把实参表达式自动包成无参闭包，实现延迟求值；应谨慎使用，避免隐藏执行成本 |
-| `@convention(swift)` | Swift 默认函数调用约定 |
+| `@convention(swift)` | [**Swift**](https://www.swift.org/) 默认函数调用约定 |
 | `@convention(block)` | Objective-C Block 调用约定 |
 | `@convention(c)` | C 函数指针调用约定；闭包不能捕获上下文 |
 | `@escaping` | 闭包参数可能在函数返回后继续存活，例如被保存或异步回调 |
 | `@Sendable` | 声明函数 / 闭包值可以安全跨并发隔离域传递；捕获值也必须满足并发安全要求 |
 | `@unknown default` | 处理当前 SDK 尚未知的未来枚举值，并让编译器继续提醒已知 case 未显式处理 |
 
-### 28.5、Swift 6 相关的补充标记
+### 28.5、[**Swift**](https://www.swift.org/) 6 相关的补充标记
 
-这些能力与 Swift 版本、语言模式或构建设置关系更紧，接入项目前必须以目标 [**Xcode**](https://developer.apple.com/xcode) / Swift 工具链为准：
+这些能力与 [**Swift**](https://www.swift.org/) 版本、语言模式或构建设置关系更紧，接入项目前必须以目标 [**Xcode**](https://developer.apple.com/xcode) / [**Swift**](https://www.swift.org/) 工具链为准：
 
 | 标记 | 作用 |
 | --- | --- |
@@ -1790,7 +2135,7 @@ struct MyStruct {
 
 ### 28.6、Apple 应用开发常见的自定义 `@Xxx`
 
-下表不是 Swift 语法关键字表，而是系统框架基于属性包装器或宏提供的常用标记。第三方库还可以继续定义自己的 `@Xxx`，所以框架层不存在永久封闭的“全世界所有标记”清单。
+下表不是 [**Swift**](https://www.swift.org/) 语法关键字表，而是系统框架基于属性包装器或宏提供的常用标记。第三方库还可以继续定义自己的 `@Xxx`，所以框架层不存在永久封闭的“全世界所有标记”清单。
 
 | 所属框架 | 标记 | 典型用途 |
 | --- | --- | --- |
@@ -1813,7 +2158,7 @@ struct MyStruct {
 | SwiftData | `@Model` | 宏生成 SwiftData 持久化模型 |
 | SwiftData | `@Query` | 在 SwiftUI 中订阅 SwiftData 查询 |
 | SwiftData | `@Attribute`、`@Relationship`、`@Transient` | 配置模型字段、关系和非持久化属性 |
-| Swift Testing | `@Test`、`@Suite` | 宏声明测试函数与测试套件 |
+| [**Swift**](https://www.swift.org/) Testing | `@Test`、`@Suite` | 宏声明测试函数与测试套件 |
 
 ### 28.7、高频标记的极简 Demo
 
@@ -1917,7 +2262,7 @@ struct MyStruct {
       func run(value: Int) {
           print(value)
       }
-
+  
       @nonobjc
       func swiftOnly<T>(_ value: T) {
           print(value)
@@ -1975,8 +2320,8 @@ public func normalized(_ value: Int) -> Int {
 
 | 对比项 | `@main` | `@UIApplicationMain` / `@NSApplicationMain` |
 | --- | --- | --- |
-| 状态 | 当前统一入口 | 已废弃；Swift 6 中编译报错 |
-| 平台 | Swift 可执行程序通用 | 分别绑定 UIKit / AppKit |
+| 状态 | 当前统一入口 | 已废弃；[**Swift**](https://www.swift.org/) 6 中编译报错 |
+| 平台 | [**Swift**](https://www.swift.org/) 可执行程序通用 | 分别绑定 UIKit / AppKit |
 | 作用类型 | 结构体、类或枚举 | AppDelegate 类 |
 | 入口要求 | 类型提供符合要求的 `static main()`；框架可通过协议扩展提供 | 编译器隐式调用 UIKit / AppKit 入口函数 |
 | 新项目选择 | 使用 | 不再使用 |
@@ -2002,7 +2347,7 @@ public func normalized(_ value: Int) -> Int {
 
   ```swift
   import UIKit
-
+  
   @main
   final class AppDelegate: UIResponder, UIApplicationDelegate {
       func application(
@@ -2017,38 +2362,71 @@ public func normalized(_ value: Int) -> Int {
 
 可执行 Target 只能存在一个顶层入口。若使用 `main.swift` 顶层代码，就不要再声明另一个 `@main`。
 
-## 三十、[**Swift**](https://www.swift.org/) 中 `Any` 和 `AnyObject` 的区别 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 三十、[**Swift**](https://www.swift.org/) 中 `Any` 🆚 `AnyObject` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-<font color=red>**Any**</font>
+> [**Swift 官方类型转换文档**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/typecasting/#Type-Casting-for-Any-and-AnyObject) 的核心定义是：`Any` 能表示任意类型的值，`AnyObject` 能表示任意类类型的实例。
 
-- `Any` 是 Swift 语言提供的特殊类型，可以保存值类型、引用类型、函数、元类型和元组等任意值；它不是“所有类型都遵守的普通协议”。
-- 从 `Any` 取回具体能力时，通常需要通过 `as?` / `as!` / `switch` 做类型转换。
-```swift
-var value: Any
-value = 42
-value = "Hello"
-value = [1, 2, 3]
+| 对比项 | `Any` | `AnyObject` |
+| --- | --- | --- |
+| 可表示范围 | 值类型、引用类型、函数、元类型、元组等任意值 | 任意类实例 |
+| 是否保证引用语义 | 否 | 是；但值类型经过桥接或装箱后也能转换成对象 |
+| 常见用途 | 异构容器、反射、无法提前确定类型的运行时边界 | 类专属泛型约束、`weak delegate`、Objective-C 对象边界 |
+| 取回具体能力 | 使用 `is`、`as?`、`as!` 或模式匹配 | 同样需要先转换为具体类或类专属协议 |
 
-if let intValue = value as? Int {
-    print("It's an Int: \(intValue)")
-}
-```
-<font color=red>**AnyObject**</font>
+### 30.1、`Any`
 
-- `AnyObject` 表示任意类实例，只接收引用类型；结构体、枚举和元组不能直接作为 `AnyObject`。
-- `AnyObject` 只保留“它是某个类实例”这一信息，不会自动暴露具体类的成员；调用具体 API 前仍应安全向下转型。
+- `Any` 是 [**Swift**](https://www.swift.org/) 语言提供的特殊类型，不是“所有类型都遵守的普通协议”。
+- 放入 `Any` 的值仍保留自身动态类型；读取时通常需要使用 `as?` 或 `switch` 恢复具体类型。
+- Optional 也能放入 `Any`，但编译器会提醒这种写法可能并非本意；确认需要时应显式写成 `optionalValue as Any`。
 
 ```swift
-let object: AnyObject = NSString(string: "Hello, AnyObject!")
-if let string = object as? NSString {
-    print(string.length)
+let values: [Any] = [
+    42,
+    "Jobs",
+    (x: 10, y: 20),
+    { (name: String) in "Hello, \(name)" }
+]
+
+for value in values {
+    if let intValue = value as? Int {
+        print("Int：\(intValue)")
+    }
 }
 ```
-**综上所述：**
 
-1. `Any` 可以保存任意值，`AnyObject` 只表示类实例。
-2. 只有在异构容器、反射、桥接或运行时边界确实需要时才使用它们。
-3. 业务 API 优先保留具体类型、泛型或协议约束，减少运行时转换。
+### 30.2、`AnyObject`
+
+- `AnyObject` 表示任意类实例；所有类都隐式满足 `AnyObject`。
+- 它只保留“这是某个对象”这一约束，不会自动暴露具体类成员，调用成员前仍应安全向下转型。
+- 协议继承 `AnyObject` 后会成为类专属协议，结构体和枚举不能遵守，因此可用于 `weak` 引用。
+
+```swift
+protocol SessionDelegate: AnyObject {
+    func sessionDidFinish()
+}
+
+final class SessionCoordinator {
+    weak var delegate: (any SessionDelegate)?
+}
+```
+
+### 30.3、值类型桥接到 `AnyObject` 的边界
+
+`Int`、`String` 等值可以在 Foundation 桥接或 [**Swift**](https://www.swift.org/) 运行时装箱后转换为 `AnyObject`，但这不代表值类型本身变成了类，也不代表结构体能够遵守类专属协议。
+
+```swift
+import Foundation
+
+let numberObject: AnyObject = 42 as NSNumber
+let boxedValue: AnyObject = 42 as AnyObject
+```
+
+### 30.4、选型建议
+
+1. 已知数据类型时优先使用具体类型。
+2. 需要“调用方决定类型且保持静态关系”时优先使用泛型或协议约束。
+3. 只有异构存储、反射、桥接或运行时替换确实需要类型擦除时，才使用 `Any` / `AnyObject`。
+4. 需要类专属约束或 `weak delegate` 时使用 `AnyObject`，不要用 `Any` 代替。
 
 ## 三十一、`var body: some View` 中的 `some` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -2072,7 +2450,7 @@ struct MyView: View {
 
 | 写法 | 位置 | 判断时机 | 作用 |
 | --- | --- | --- | --- |
-| `@available(...)` | 声明前 | 编译器检查声明与调用关系 | 描述 API 生命周期和平台 / Swift 版本要求 |
+| `@available(...)` | 声明前 | 编译器检查声明与调用关系 | 描述 API 生命周期和平台 / [**Swift**](https://www.swift.org/) 版本要求 |
 | `#available(...)` | `if` / `guard` 条件 | 运行时按当前系统版本选择分支 | 进入新 API 路径或回退路径 |
 | `#unavailable(...)` | `if` / `guard` 条件 | 运行时按当前系统版本选择分支 | 更直接表达“低于某版本”路径 |
 
@@ -2106,9 +2484,9 @@ func prepareLegacyState() {
 
 ## 三十三、[**Swift**](https://www.swift.org/) 协议与 Objective-C 协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-> [**Swift Protocols**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/) 是类型系统的一部分，不只是 Delegate 接口。类、结构体、枚举和 Actor 都可以遵守 Swift 协议；Objective-C Protocol 主要描述 Objective-C 对象可响应的方法与属性。
+> [**Swift Protocols**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/) 是类型系统的一部分，不只是 Delegate 接口。类、结构体、枚举和 Actor 都可以遵守 [**Swift**](https://www.swift.org/) 协议；Objective-C Protocol 主要描述 Objective-C 对象可响应的方法与属性。
 
-### 33.1、Swift 协议能表达什么
+### 33.1、[**Swift**](https://www.swift.org/) 协议能表达什么
 
 - 属性要求：`get` 或 `get set`，但协议不规定实现是存储属性还是计算属性。
 - 实例方法、类型方法、`mutating` 方法与初始化方法要求。
@@ -2120,7 +2498,7 @@ func prepareLegacyState() {
 - 类专属协议：继承 `AnyObject`，常用于 `weak delegate`。
 - `some Protocol` 不透明类型、`any Protocol` 存在类型和泛型约束三种抽象方式。
 
-### 33.2、Swift 极简 Demo
+### 33.2、[**Swift**](https://www.swift.org/) 极简 Demo
 
 ```swift
 protocol Named {
@@ -2159,28 +2537,75 @@ print(user.debugName)
 
 不要把 `any P` 当成泛型的机械简写。它换取运行时灵活性，也可能引入间接层和能力限制。
 
-### 33.4、关联类型 Demo
+### 33.4、`associatedtype`：由遵循者决定的关联类型
+
+> [**Swift 官方泛型文档**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/#Associated-Types) 将关联类型定义为协议中的类型占位名称；真正采用什么类型，要等具体类型遵守协议时才能确定。
+
+`associatedtype` 的重点不是“能放任意值”，而是把协议中多处出现的类型关系绑定到同一个名字。它与协议的 `Self` 关联：每个遵循者都可以选择自己的实际类型，但同一个遵循者必须在全部协议要求中保持一致。
+
+#### 33.4.1、声明与类型推断
 
 ```swift
 protocol Store {
-    associatedtype Value
-    func load() async throws -> Value
+    associatedtype Value: Equatable
+    func load() -> Value
 }
 
 struct NameStore: Store {
-    func load() async throws -> String {
+    func load() -> String {
+        "Jobs"
+    }
+}
+```
+
+- `Store` 不预先规定 `Value` 是什么，只要求它遵守 `Equatable`。
+- `NameStore.load()` 返回 `String`，编译器因此推断 `NameStore.Value == String`。
+- 也可以在 `NameStore` 中显式写 `typealias Value = String`；类型关系已经足够明确时通常不必重复声明。
+
+#### 33.4.2、通过泛型与 `where` 保留类型关系
+
+```swift
+func valuesMatch<L: Store, R: Store>(
+    _ lhs: L,
+    _ rhs: R
+) -> Bool where L.Value == R.Value {
+    lhs.load() == rhs.load()
+}
+
+let isSame = valuesMatch(NameStore(), NameStore())
+```
+
+这里的 `where L.Value == R.Value` 保证两个不同的 `Store` 遵循者返回同一种值；如果关联类型不同，调用会在编译期失败，而不是等到运行时再转换。
+
+#### 33.4.3、主关联类型与 `any Protocol`
+
+当某个关联类型是调用方最关心的类型参数时，可以把它声明为主关联类型：
+
+```swift
+protocol Readable<Value> {
+    associatedtype Value
+    func read() -> Value
+}
+
+struct NameReader: Readable {
+    func read() -> String {
         "Jobs"
     }
 }
 
-func printLoadedValue<S: Store>(
-    from store: S
-) async throws where S.Value: CustomStringConvertible {
-    print(try await store.load())
-}
+let reader: any Readable<String> = NameReader()
+print(reader.read())
 ```
 
-Objective-C Protocol 没有 `associatedtype` 的等价能力；通常只能用具体 Objective-C 类型、`id` 或轻量泛型容器表达较弱约束。
+- `Readable<Value>` 中尖括号里的 `Value` 必须由协议内部的 `associatedtype Value` 声明；这不是把协议改成普通泛型类型。
+- `any Readable<String>` 是约束了主关联类型的存在类型，适合运行时替换不同的读取器，同时固定读取结果为 `String`。
+- 如果还要在多个参数和返回值之间保留具体遵循者及关联类型关系，优先使用泛型 `R: Readable` 或 `some Readable<String>`。
+
+#### 33.4.4、常见误区
+
+- `associatedtype` 不是 `Any`，也不是枚举的 Associated Value（关联值）。
+- 不要沿用“含有关联类型的协议完全不能作为类型”的旧说法；当前 [**Swift**](https://www.swift.org/) 可以使用 `any Protocol`，但类型擦除后可用能力仍取决于关联类型是否被约束。
+- Objective-C Protocol 没有 `associatedtype` 的等价能力；通常只能使用具体 Objective-C 类型、`id` 或轻量泛型容器表达较弱约束。
 
 ### 33.5、Objective-C Protocol 极简 Demo
 
@@ -2206,26 +2631,26 @@ Objective-C Protocol 没有 `associatedtype` 的等价能力；通常只能用�
 - `@optional` 是 Objective-C Protocol 的运行时可选要求，调用前通常检查 `respondsToSelector:`。
 - Delegate 需要弱引用时，协议通常继承 `NSObject`，属性类型写成 `id<JobsLoaderDelegate>`。
 
-### 33.6、Swift 与 Objective-C 协议差异
+### 33.6、[**Swift**](https://www.swift.org/) 与 Objective-C 协议差异
 
-| 对比项 | Swift Protocol | Objective-C Protocol |
+| 对比项 | [**Swift**](https://www.swift.org/) Protocol | Objective-C Protocol |
 | --- | --- | --- |
 | 可遵守类型 | 类、结构体、枚举、Actor | Objective-C 对象类型；C `struct` 不能遵守 |
 | 派发与检查 | 以静态类型系统为主，也可形成存在类型 | Objective-C Runtime 消息派发 |
 | 默认实现 | 协议扩展可提供默认实现 | Protocol 本身不能提供实现；通常用基类、Category 或辅助对象 |
-| 可选要求 | 纯 Swift 协议通常用默认实现、可选闭包等建模；`@objc optional` 仅限 Objective-C 兼容协议 | 原生支持 `@optional` |
+| 可选要求 | 纯 [**Swift**](https://www.swift.org/) 协议通常用默认实现、可选闭包等建模；`@objc optional` 仅限 Objective-C 兼容协议 | 原生支持 `@optional` |
 | 关联类型 | 支持 `associatedtype` | 不支持 |
 | 泛型约束 | 强，支持 `where`、条件遵循 | 较弱，常用 `id<Protocol>` |
 | 值语义抽象 | 原生支持 | 不支持 C 结构体遵循 |
 | 协议组合 | `any A & B` 或泛型约束 | `id<A, B>` |
 | 类专属 | `protocol P: AnyObject` | Protocol 的使用对象本身就是 Objective-C 对象 |
 | 属性要求 | `var value: T { get set }`，不限定存储方式 | `@property` 要求，运行时表现为访问器方法 |
-| 初始化要求 | 支持 `init` 要求及 `required` 配合 | 可声明初始化方法，但没有 Swift 同等的值类型 / `required` 规则 |
-| ABI / 互操作 | 可包含 Swift-only 类型系统能力 | 天然服务 Objective-C Runtime |
+| 初始化要求 | 支持 `init` 要求及 `required` 配合 | 可声明初始化方法，但没有 [**Swift**](https://www.swift.org/) 同等的值类型 / `required` 规则 |
+| ABI / 互操作 | 可包含 [**Swift**](https://www.swift.org/)-only 类型系统能力 | 天然服务 Objective-C Runtime |
 
 ### 33.7、`@objc` 协议的桥接边界
 
-Swift 协议要暴露给 Objective-C 时需要满足 Objective-C 可表示性：
+[**Swift**](https://www.swift.org/) 协议要暴露给 Objective-C 时需要满足 Objective-C 可表示性：
 
 ```swift
 @objc
@@ -2236,8 +2661,8 @@ protocol JobsDownloadDelegate: AnyObject {
 ```
 
 - `@objc optional` 只用于需要 Objective-C Runtime 可选方法的协议。
-- `associatedtype`、泛型方法、元组、纯 Swift 枚举关联值等能力不能直接桥接为 Objective-C Protocol 要求。
-- 纯 Swift 新代码优先使用普通协议 + 协议扩展，不要为了“可选方法”无条件引入 `@objc`。
+- `associatedtype`、泛型方法、元组、纯 [**Swift**](https://www.swift.org/) 枚举关联值等能力不能直接桥接为 Objective-C Protocol 要求。
+- 纯 [**Swift**](https://www.swift.org/) 新代码优先使用普通协议 + 协议扩展，不要为了“可选方法”无条件引入 `@objc`。
 - Delegate 若声明为 `weak`，协议必须是类专属协议，即继承 `AnyObject`。
 
 ### 33.8、默认实现的静态与动态行为
@@ -2252,7 +2677,7 @@ protocol JobsDownloadDelegate: AnyObject {
 ### 33.9、选型建议
 
 - 只需要 Delegate 回调且必须被 Objective-C 调用：使用 `@objc` 类专属协议。
-- 需要结构体 / 枚举遵循、关联类型、默认实现或条件遵循：使用纯 Swift 协议。
+- 需要结构体 / 枚举遵循、关联类型、默认实现或条件遵循：使用纯 [**Swift**](https://www.swift.org/) 协议。
 - 只想复用代码：先判断是否真的需要协议；简单工具能力可能更适合泛型函数或 `extension`。
 - 协议不要过大。按职责拆成小协议，再通过组合表达能力。
 - 公共 API 中优先明确使用泛型、`some` 还是 `any`，不要让调用方猜测性能与类型擦除边界。

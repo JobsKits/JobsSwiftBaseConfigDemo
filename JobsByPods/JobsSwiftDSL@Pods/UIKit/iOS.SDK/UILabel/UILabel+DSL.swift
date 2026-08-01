@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsTextTools
+import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UILabel {
@@ -37,8 +38,14 @@ extension UILabel {
 
     @discardableResult
     public func byTextColor(_ color: UIColor?) -> Self {
-        if color != nil {
-            self.textColor = color
+        let slot = "UILabel.textColor"
+        if let key = color?.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                (object as? UILabel)?.textColor = center.resolvedColor(key)
+            }
+        } else if color != nil {
+            JobsThemeCenter.shared.unbind(self, slot: slot)
+            textColor = color
         };return self
     }
     /// 固定字号（严格设计稿）
@@ -250,10 +257,7 @@ extension UILabel {
 
     @discardableResult
     public func byTextColor(_ builder: () -> UIColor?) -> Self {
-        _byApplyOptional(builder) { [weak self] color in
-            guard let self else { return }
-            self.textColor = color
-        }
+        byTextColor(builder())
     }
 
     @discardableResult

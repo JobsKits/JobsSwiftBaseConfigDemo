@@ -14,6 +14,7 @@ import UIKit
 
 import JobsByUIKit
 import JobsIconfont
+import JobsImageRotation
 import JobsSwiftDSL
 import JobsSwiftAppTools
 import JobsSwiftBaseDefines
@@ -47,7 +48,11 @@ final class RootFoldTableCell: UITableViewCell,
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
     private static let innerCellReuseID = "RootFoldInnerCell"
-    private static let chargingProgressStates = ["🟩⬜⬜", "🟩🟩⬜", "🟩🟩🟩"]
+    private static let animatedTitleIconSize = CGSize(width: 22, height: 22)
+    private static let animatedTitleIconTextGap: CGFloat = 6
+    private static var animatedTitleTextLeadingInset: CGFloat {
+        animatedTitleIconSize.width + animatedTitleIconTextGap
+    }
     // MARK: - Data
     private var items: [DemoItem] = []
     private var onSelectItem: ((Int) -> Void)?
@@ -221,6 +226,7 @@ final class RootFoldTableCell: UITableViewCell,
         super.layoutSubviews()
         applyInsets()      // 水平边距@距离TableView
         applyCornerStyle() // 圆角
+        innerTableView.visibleCells.forEach(syncAnimatedTitleTextBoundary(for:))
     }
 
     override func didMoveToWindow() {
@@ -391,19 +397,42 @@ extension RootFoldTableCell{
         return "\(items.count) 个 Demo · \(stateText)"
     }
 
+    private func isChargingProgressItem(_ item: DemoItem) -> Bool {
+        item.vcType == JobsSysProgressDemoVC.self ||
+            item.vcType == JobsProgressDemoVC.self
+    }
+
+    private func hasAnimatedTitleIcon(_ item: DemoItem) -> Bool {
+        item.vcType == ClockDemoVC.self || isChargingProgressItem(item)
+    }
+
+    private static func animatedTitleTextPrefix(for font: UIFont) -> String {
+        let blank = "\u{00A0}"
+        let blankWidth = max(
+            1,
+            (blank as NSString).size(withAttributes: [.font: font]).width
+        )
+        let count = Int(ceil(animatedTitleTextLeadingInset / blankWidth))
+        return String(repeating: blank, count: count)
+    }
+
     private func displayTitle(for item: DemoItem) -> String {
-        guard item.vcType == JobsProgressDemoVC.self else { return item.title };return "\(Self.chargingProgressStates[chargingProgressPhase]) \(item.title)"
+        guard hasAnimatedTitleIcon(item) else { return item.title };return "\(Self.animatedTitleTextPrefix(for: Self.innerTitleFont))\(item.title)"
+    }
+
+    private func displaySecondaryText(for item: DemoItem) -> String {
+        let text = Self.innerSecondaryText(for: item)
+        guard hasAnimatedTitleIcon(item) else { return text };return "\(Self.animatedTitleTextPrefix(for: Self.innerSubTitleFont))\(text)"
     }
 
     func updateChargingProgress(phase: Int) {
-        chargingProgressPhase = max(0, phase) % Self.chargingProgressStates.count
+        chargingProgressPhase = max(0, phase) % 3
         for indexPath in innerTableView.indexPathsForVisibleRows ?? [] {
             guard items.indices.contains(indexPath.row),
-                  items[indexPath.row].vcType == JobsProgressDemoVC.self,
-                  let titleLabel = innerTableView.cellForRow(at: indexPath)?.textLabel else { continue }
-            titleLabel
-                .byText(displayTitle(for: items[indexPath.row]))
-                .byReloadTextScroll()
+                  isChargingProgressItem(items[indexPath.row]),
+                  let cell = innerTableView.cellForRow(at: indexPath),
+                  let progressIcon = chargingProgressIcon(in: cell) else { continue }
+            progressIcon.update(phase: chargingProgressPhase)
         }
     }
 
@@ -447,13 +476,105 @@ extension RootFoldTableCell{
                     label.byPauseTextScroll()
                 }
             }
+        syncAnimatedTitleIconState(for: cell)
+        syncAnimatedTitleTextBoundary(for: cell)
     }
 
     private func stopVisibleInnerTextScrolling() {
         innerTableView.visibleCells.forEach { cell in
             cell.textLabel?.byStopTextScroll()
             cell.detailTextLabel?.byStopTextScroll()
+            clockIcon(in: cell)?.stop(reset: false)
         }
+    }
+
+    private func installAnimatedTitleIcon(for item: DemoItem, in cell: UITableViewCell) {
+        removeAnimatedTitleIcons(from: cell)
+        guard let titleLabel = cell.textLabel else { return }
+        if item.vcType == ClockDemoVC.self {
+            JobsClockIconView(interval: JobsClockIconView.defaultInterval)
+                .byTintColor(RootListPreferences.foldSecondaryTextColor)
+                .byAddTo(cell.contentView) { make in
+                    make.left.centerY.equalTo(titleLabel)
+                    make.size.equalTo(Self.animatedTitleIconSize)
+                }
+        } else if isChargingProgressItem(item) {
+            JobsChargingProgressIconView()
+                .byTintColor(RootListPreferences.foldSecondaryTextColor)
+                .byAddTo(cell.contentView) { make in
+                    make.left.centerY.equalTo(titleLabel)
+                    make.size.equalTo(Self.animatedTitleIconSize)
+                }
+                .update(phase: chargingProgressPhase)
+        }
+        syncAnimatedTitleIconState(for: cell)
+        syncAnimatedTitleTextBoundary(for: cell)
+    }
+
+    private func removeAnimatedTitleIcons(from cell: UITableViewCell) {
+        [cell.textLabel, cell.detailTextLabel]
+            .compactMap { $0 }
+            .forEach { $0.layer.byMask(nil) }
+        cell.contentView.subviews.forEach { subview in
+            if let clockIcon = subview as? JobsClockIconView {
+                clockIcon.stop()
+                clockIcon.byRemoveFromSuperview()
+            } else if subview is JobsChargingProgressIconView {
+                subview.byRemoveFromSuperview()
+            }
+        }
+    }
+
+    private func clockIcon(in cell: UITableViewCell) -> JobsClockIconView? {
+        cell.contentView.subviews
+            .compactMap { $0 as? JobsClockIconView }
+            .first
+    }
+
+    private func chargingProgressIcon(in cell: UITableViewCell) -> JobsChargingProgressIconView? {
+        cell.contentView.subviews
+            .compactMap { $0 as? JobsChargingProgressIconView }
+            .first
+    }
+
+    private func syncAnimatedTitleIconState(for cell: UITableViewCell) {
+        guard let clockIcon = clockIcon(in: cell) else { return }
+        if window != nil,
+           isExpanded,
+           !UIAccessibility.isReduceMotionEnabled {
+            if !clockIcon.isRunning {
+                clockIcon.start()
+            }
+        } else {
+            clockIcon.stop(reset: false)
+        }
+    }
+
+    private func syncAnimatedTitleTextBoundary(for cell: UITableViewCell) {
+        let hasAnimatedIcon = clockIcon(in: cell) != nil ||
+            chargingProgressIcon(in: cell) != nil
+        [cell.textLabel, cell.detailTextLabel]
+            .compactMap { $0 }
+            .forEach { label in
+                guard hasAnimatedIcon,
+                      label.bounds.width > Self.animatedTitleTextLeadingInset,
+                      label.bounds.height > 0 else {
+                    label.layer.byMask(nil)
+                    return
+                }
+                label.layer.byMask(
+                    CALayer()
+                        .byFrame(
+                            CGRect(
+                                x: Self.animatedTitleTextLeadingInset,
+                                y: 0,
+                                width: label.bounds.width - Self.animatedTitleTextLeadingInset,
+                                height: label.bounds.height
+                            )
+                        )
+                        .byBackgroundColor(JobsCor.black)
+                )
+            }
     }
 
     private static let fallbackDemoIconSymbolName = "questionmark.square.dashed"
@@ -473,6 +594,7 @@ extension RootFoldTableCell{
             "UnityDemoVC": "cube", "SwiftPackageManagerDemoVC": "shippingbox.fill",
             "JobsWorkerDemoVC": "tortoise", "TaskCenterComponentDemoVC": "checklist",
             "TimerDemoVC": "timer", "JobsTimerMgrDemoVC": "stopwatch",
+            "JobsImageRotationDemoVC": "clock.arrow.circlepath",
             "JobsMultiTimerTableDemoVC": "list.number", "AnimationEffectLabelDemoVC": "textformat.123",
             "AnimatedButtonNumberDemoVC": "capsule", "JobsMarqueeDemoVC": "text.line.first.and.arrowtriangle.forward",
             "UILabelScrollingDemoVC": "text.line.last.and.arrowtriangle.forward",
@@ -500,13 +622,14 @@ extension RootFoldTableCell{
             "JobsAudioRecorderDemoVC": "mic.fill",
             "JobsBluetoothDemoVC": "antenna.radiowaves.left.and.right",
             "JobsCoreMotionDemoVC": "gyroscope",
+            "JobsSceneDelegateDemoVC": "macwindow.on.rectangle",
             "JobsMotionAppIconDemoVC": "app.badge.checkmark",
             "JobsScreenshotTipsDemoVC": "camera.viewfinder",
             "JobsScreenshotProtectionDemoVC": "eye.slash",
             "JobsWidgetDemoVC": "widget.small",
             "JobsPostDraftDemoVC": "square.and.pencil",
             "JobsSaltedImageStoreDemoVC": "lock.doc.fill",
-            "JobsLandscapeSwitchDemoVC": "rectangle.landscape",
+            "JobsLandscapeSwitchDemoVC": "rectangle.2.swap",
             "JobsStringCompressionDemoVC": "archivebox.fill",
             "JobsContextMenuDemoVC": "hand.tap",
             "JobsClipboardCueDemoVC": "doc.on.doc.fill",
@@ -531,6 +654,7 @@ extension RootFoldTableCell{
             "TraitChangeDemoVC": "circle.lefthalf.fill", "JobsOpenDemoVC": "arrow.up.right.square",
             "MessageListDemoVC": "envelope", "LGOEditProfileDemoVC": "person.crop.circle",
             "HomeLinkageDemoListVC": "rectangle.split.2x1", "JobsAppDoorDemoVC": "key",
+            "JobsMarkdownDocumentsDemoVC": "book.closed.fill",
             "RichTextDemoVC": "textformat", "JobsTextDemoVC": "character.book.closed",
             "JobsViewPushDemoVC": "arrow.right.square", "JobsSideDrawerDemoVC": "sidebar.left",
             "SafetyPushDemoVC": "shield.lefthalf.fill",
@@ -559,6 +683,12 @@ extension RootFoldTableCell{
         if vcName == "JobsIconfontDemoListVC" {
             return JobsIconfont.shared.iconImage(
                 .component,
+                size: CGSize(width: 30, height: 30),
+                color: JobsCor.systemBlue
+            ).withRenderingMode(.alwaysOriginal)
+        } else if vcName == "JobsSceneDelegateDemoVC" {
+            return JobsIconfont.shared.iconImage(
+                .switcher,
                 size: CGSize(width: 30, height: 30),
                 color: JobsCor.systemBlue
             ).withRenderingMode(.alwaysOriginal)
@@ -600,6 +730,7 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.innerCellReuseID) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
         guard items.indices.contains(indexPath.row) else {
+            removeAnimatedTitleIcons(from: cell)
             cell.contentConfiguration = nil
             cell.textLabel?.byText(nil)
             cell.detailTextLabel?.byText(nil)
@@ -617,18 +748,23 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
             .byFont(Self.innerTitleFont)
             .byTextColor(RootListPreferences.foldPrimaryTextColor)
         cell.detailTextLabel?
-            .byText(Self.innerSecondaryText(for: item))
+            .byText(displaySecondaryText(for: item))
             .byFont(Self.innerSubTitleFont)
             .byTextColor(RootListPreferences.foldSecondaryTextColor)
         applyTextDisplayStrategy(to: cell.textLabel)
         applyTextDisplayStrategy(to: cell.detailTextLabel)
         cell.imageView?.byImage(Self.demoIconImage(for: item))
-        cell.byBackgroundColor(JobsCor.clear)
+        cell
+            .bySelectionStyle(.default)
+            .bySelectedBackgroundView(
+                UIView().byBackgroundColor(JobsCor.tertiarySystemBackground)
+            )
+            .byTintColor(RootListPreferences.foldSecondaryTextColor)
+            .byBackgroundColor(JobsCor.clear)
         cell.contentView.byBackgroundColor(JobsCor.clear)
-        cell.byTintColor(RootListPreferences.foldSecondaryTextColor)
         cell.imageView?.byTintColor(RootListPreferences.foldSecondaryTextColor)
         cell.imageView?.byContentMode(.scaleAspectFit)
-        cell.selectionStyle = .default
+        installAnimatedTitleIcon(for: item, in: cell)
         cell.accessoryView = nil
         if pinAccessoryIndex == indexPath.row {
             cell.byAccessoryType(.none)
@@ -654,6 +790,7 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
                    forRowAt indexPath: IndexPath) {
         cell.textLabel?.byPauseTextScroll()
         cell.detailTextLabel?.byPauseTextScroll()
+        clockIcon(in: cell)?.stop(reset: false)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

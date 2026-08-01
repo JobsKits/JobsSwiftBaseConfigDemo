@@ -395,6 +395,10 @@ PODS:
   - JobsSwiftLinkageMenuView (0.0.1):
     - JobsSwiftBaseDefines
     - JobsSwiftDSL
+  - JobsSwiftMarkdown (1.0.0):
+    - JobsSwiftBaseDefines
+    - JobsSwiftDSL
+    - SnapKit
   - JobsSwiftMetalKit (0.1.0):
     - JobsSwiftDSL
   - JobsSwiftNumberStepper (1.0.0):
@@ -694,6 +698,7 @@ DEPENDENCIES:
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
   - "JobsSwiftGraphicCaptcha (from `JobsByPods/JobsSwiftGraphicCaptcha@Pods`)"
   - "JobsSwiftLinkageMenuView (from `JobsByPods/JobsSwiftLinkageMenuView@Pods`)"
+  - "JobsSwiftMarkdown (from `JobsByPods/JobsSwiftMarkdown@Pods`)"
   - "JobsSwiftMetalKit (from `JobsByPods/MetalKit@Pods`)"
   - "JobsSwiftNumberStepper (from `JobsByPods/JobsSwiftNumberStepper@Pods`)"
   - "JobsSwiftOpen (from `JobsByPods/JobsSwiftOpen@Pods`)"
@@ -919,6 +924,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftGraphicCaptcha@Pods"
   JobsSwiftLinkageMenuView:
     :path: "JobsByPods/JobsSwiftLinkageMenuView@Pods"
+  JobsSwiftMarkdown:
+    :path: "JobsByPods/JobsSwiftMarkdown@Pods"
   JobsSwiftMetalKit:
     :path: "JobsByPods/MetalKit@Pods"
   JobsSwiftNumberStepper:
@@ -1016,7 +1023,7 @@ SPEC CHECKSUMS:
   JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
   JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
   JobsIconfont: dcb4e97576328d578288af67751909bc0b07fe0b
-  JobsImageRotation: 1834170a54c67bf26ef2108771e588a2c25f4617
+  JobsImageRotation: a0a83f20c98ea5911b40457f69923559d365b54d
   JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
   JobsInheritance: 2a48bc8e2d7dae3643ad2668803c8a1b773dbba0
   Jobsl10n: 7dcc6eee8ebefe092b65bd16350bbb9a29460aa6
@@ -1041,6 +1048,7 @@ SPEC CHECKSUMS:
   JobsSwiftFoundation: 7850038734cf7f5b2154ca9ced57ae7d8bb6f618
   JobsSwiftGraphicCaptcha: bb851a79e6d850a79f34f564aa372f2a837e1a4e
   JobsSwiftLinkageMenuView: 62044cd7a4b49fec3b3795ad9f2c01f0acddd0a3
+  JobsSwiftMarkdown: 8ee0a89a34baa6ab19afa5bd0ffa2a4d28ec0741
   JobsSwiftMetalKit: e406ede5c7672e570e16a8dfb22d629c37bd2bb8
   JobsSwiftNumberStepper: e2f6664fc3f0f378437e7d65b53864a58d4528fb
   JobsSwiftOpen: 72f2fff9bd6df984246f66f53d7a8a8253e2d9f1
@@ -1106,6 +1114,6 @@ SPEC CHECKSUMS:
   YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: f20559c55204fffdff8e6c18a5e257da757600ec
+PODFILE CHECKSUM: dfec86a8a7b2eef2ff9b83dabdb7d5b1dd4b9148
 
 COCOAPODS: 1.17.0

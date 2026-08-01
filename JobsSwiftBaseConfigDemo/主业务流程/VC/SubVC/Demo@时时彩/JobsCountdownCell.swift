@@ -70,7 +70,10 @@ public final class JobsCountdownCell: UITableViewCell {
     // ============================== Public ==============================
     /// ✅ 强类型（在 VC 里传 JobsCountdownItem 时会优先命中这个）
     @discardableResult
-    public func byData(_ item: JobsCountdownItem) -> Self {
+    public func byData(
+        _ item: JobsCountdownItem,
+        scopeIdentifier: String? = nil
+    ) -> Self {
         // 复用：先停旧 timer（避免一个 cell 复用时还在跑旧的 tick）
         stopTimerIfNeeded()
         currentItem = item
@@ -78,7 +81,7 @@ public final class JobsCountdownCell: UITableViewCell {
         titleLabel.byText(item.title)
         renderCountdown()
         // 每个 item 一个 timerId（同屏多个 timer 并行）
-        startTimer(item: item)
+        startTimer(item: item, scopeIdentifier: scopeIdentifier)
         return self
     }
     /// 兼容老接口
@@ -87,22 +90,22 @@ public final class JobsCountdownCell: UITableViewCell {
     }
     /// 离屏 / 复用时调用：stop + remove
     public func stopTimerIfNeeded() {
-        // 先 stop 本地 timer（立即停止回调）
-        timer?.stop()
+        let expectedTimer = timer
+        let identifier = currentTimerId
         timer = nil
-        guard let id = currentTimerId else { return }
         currentTimerId = nil
-        // 再 cancel manager（stop + remove）
-        Task {
-            do {
-                _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
-            } catch {
-                // Demo：忽略（可能已被 cancel）
-            }
-        }
+        guard let expectedTimer, let identifier else { return }
+        // 同步比对 Timer 实例，旧 Cell 的清理永远不会取消同 ID 的新 Timer
+        JobsSwiftTimerMgr.shared.stopAndRemove(
+            identifier: identifier,
+            expectedTimer: expectedTimer
+        )
     }
     // ============================== Timer ==============================
-    private func startTimer(item: JobsCountdownItem) {
+    private func startTimer(
+        item: JobsCountdownItem,
+        scopeIdentifier: String?
+    ) {
         let id = item.timerIdentifier
         let interval = max(0.1, item.tickInterval)
         // 已结束就不启动
@@ -126,7 +129,8 @@ public final class JobsCountdownCell: UITableViewCell {
                 kind: .gcd,
                 identifier: id,
                 config: cfg,
-                dedupPolicy: .replace
+                dedupPolicy: .replace,
+                scopeIdentifier: scopeIdentifier
             ) { [weak self] in
                 // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
                 guard let strongSelf = self else { return }

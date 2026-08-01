@@ -92,6 +92,7 @@ def byJobs
     pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'
     pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
     pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods'
+    pod 'JobsSwiftMarkdown',                  :path => 'JobsByPods/JobsSwiftMarkdown@Pods'
     pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
     pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
     pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'

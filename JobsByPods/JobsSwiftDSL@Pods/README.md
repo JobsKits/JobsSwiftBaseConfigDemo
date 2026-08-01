@@ -14,6 +14,8 @@
 
 - 从 `JobsByPods` 内各个本地管理 Pod 抽出的系统 SDK / 第三方 SDK 二次封装。
 - Jobs 自维护的 Swift 主工程和本地 Pods 显式 `import JobsSwiftDSL` 后使用点语法，不在调用方回退到已有 DSL 覆盖的系统 API。
+- `JobsCor` 语义背景色、文字色经 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等 DSL 自动登记到 `JobsThemeCenter`；也可使用 `byThemeBackground(...)`、`byThemeTextColor(...)` 和 `byThemeImage(...)` 显式绑定主题 Key。
+- `UIButton.byClearConfigurationBackground()` 会持续清除普通、选中、高亮等状态下的配置背景，并在旧系统同步移除背景图，适合只保留前景图标 / 文字的导航按钮。
 - 发现封装缺口时先在本 Pod 的正确类型层补齐，再同步业务代码与 Xcode CodeSnippets。
 
 ## 二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -38,6 +40,7 @@ import JobsSwiftDSL
 
 let label = UILabel()
   .byText("Jobs")
+  .byThemeTextColor(.textPrimary)
   .byTextAlignment(.center)
   .byLabelShadowColor(.black)
   .byLabelShadowOffset(CGSize(width: 0, height: 1))

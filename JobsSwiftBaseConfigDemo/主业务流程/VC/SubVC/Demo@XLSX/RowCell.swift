@@ -52,6 +52,8 @@ final class RowCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        byBackgroundColor(JobsCor.secondarySystemBackground)
+        contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
         // ✅ 用 byVisible(YES) 唤起（触发 lazy init + addSubview + 约束）
         indexLabel.byVisible(YES)
         stack.byVisible(YES)
@@ -75,6 +77,7 @@ final class RowCell: UITableViewCell {
                         .byNumberOfLines(1)
                         .byFont(JobsFont.systemFont(ofSize: 15))
                         .byText(text)
+                        .byTextColor(JobsCor.label)
                         .byCompressionResistance(.defaultLow)
                 )
             }

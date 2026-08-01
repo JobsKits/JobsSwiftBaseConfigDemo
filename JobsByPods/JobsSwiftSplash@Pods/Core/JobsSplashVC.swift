@@ -175,14 +175,20 @@ public final class JobsSplashVC: BaseVC {
         refreshSkipButtonTitle()
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        byGKNavBarHidden(true)
+    }
+
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        byGKNavBarHidden(true)
         becomeFirstResponder()
     }
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        playerLayer?.byFrame(view.bounds)
+        playerLayer?.byFrame(imageView.bounds)
         if let customFrame = configuration.skipButtonFrame {
             skipButton.byFrame(customFrame)
         } else {
@@ -220,7 +226,14 @@ public final class JobsSplashVC: BaseVC {
         player?.pause()
         restoreHostGesturesIfNeeded()
         configuration.onSkip?(self)
-        if presentingViewController != nil {
+        let isNavigationStackMember = navigationController?.viewControllers.contains {
+            $0 === self
+        } == true
+        if parent != nil, !isNavigationStackMember {
+            willMove(toParent: nil)
+            view.removeFromSuperview()
+            removeFromParent()
+        } else if presentingViewController != nil {
             dismiss(animated: false)
         } else if let navigationController, navigationController.viewControllers.first !== self {
             navigationController.popViewController(animated: false)
@@ -306,8 +319,8 @@ public final class JobsSplashVC: BaseVC {
         let player = AVPlayer(url: url)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = configuration.videoGravity
-        playerLayer.byFrame(view.bounds)
-        view.layer.insertSublayer(playerLayer, above: imageView.layer)
+        playerLayer.byFrame(imageView.bounds)
+        imageView.layer.addSublayer(playerLayer)
         self.player = player
         self.playerLayer = playerLayer
         player.play()

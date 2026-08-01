@@ -29,6 +29,14 @@ extension UIView {
 
     @discardableResult
     public func byTintColor(_ color: UIColor?) -> Self {
+        let slot = "UIView.tintColor"
+        if let key = color?.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                guard let view = object as? UIView else { return }
+                view.tintColor = center.resolvedColor(key)
+            };return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
         self.tintColor = color
         return self
     }
@@ -246,8 +254,7 @@ extension UIView {
 
     @discardableResult
     public func byTintColor(_ builder: () -> UIColor?) -> Self {
-        self.tintColor = builder()
-        return self
+        byTintColor(builder())
     }
 
     @discardableResult
@@ -656,12 +663,11 @@ extension UIView {
 }
 // MARK: 修改背景色
 private var kBgColorMapKey: UInt8 = 0
-extension UIView {
-    @discardableResult
-    public func byBackgroundColor(
+private extension UIView {
+    func jobsApplyBackgroundColor(
         _ color: UIColor?,
-        for state: UIControl.State = .normal
-    ) -> Self {
+        for state: UIControl.State
+    ) {
         // ===== UIButton =====
         if let button = self as? UIButton {
             // -------- iOS 15+ --------
@@ -712,14 +718,37 @@ extension UIView {
                 }
                 // 4. 立刻生效
                 button.updateConfiguration()
-                return self
+                return
             }
             // -------- iOS14- --------
             button.byBackgroundImage(color?.byImage(), for: state)
-            return self
+            return
         }
         // ===== UIView（无状态）=====
-        self.backgroundColor = color
+        backgroundColor = color
+    }
+}
+
+extension UIView {
+    @discardableResult
+    public func byBackgroundColor(
+        _ color: UIColor?,
+        for state: UIControl.State = .normal
+    ) -> Self {
+        let slot = "UIView.backgroundColor.\(state.rawValue)"
+        if let key = color?.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(
+                self,
+                slot: slot
+            ) { object, center in
+                (object as? UIView)?.jobsApplyBackgroundColor(
+                    center.resolvedColor(key),
+                    for: state
+                )
+            };return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
+        jobsApplyBackgroundColor(color, for: state)
         return self
     }
 }
