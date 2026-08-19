@@ -37,14 +37,11 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
         n.dataSource = self
         n.delegate = self
         // Fix: avoid readable-width shrinking & unexpected insets
-        n.view.cellLayoutMarginsFollowReadableWidth = false
-        if #available(iOS 11.0, *) {
-            n.view.insetsContentViewsToSafeArea = false
-        }
-        n.view.layoutMargins = .zero
-        n.view.separatorInset = .zero
-        // 下面这些是原先 UITableView 的链式配置，直接作用到 n.view (UITableView) 就行
         n.view
+            .byCellLayoutMarginsFollowReadableWidth(false)
+            .byInsetsContentViewsToSafeArea(false)
+            .byLayoutMargins(.zero)
+            .bySeparatorInset(.zero)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()

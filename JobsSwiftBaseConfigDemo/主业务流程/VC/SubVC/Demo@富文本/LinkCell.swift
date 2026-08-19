@@ -32,7 +32,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     private var simulatorAlertController: UIAlertController?
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(1)
@@ -44,7 +44,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     }()
 
     private lazy var cardView: UIView = { [unowned self] in
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byClipsToBounds(true)
@@ -57,7 +57,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     }()
 
     private lazy var textView: UITextView = { [unowned self] in
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .bySelectable(true)               // 最终由 configure 调整
             .byTextAlignment(.center)
@@ -69,7 +69,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     }()
 
     private lazy var attachmentLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byAddTo(self.cardView) { make in
@@ -105,8 +105,9 @@ extension LinkCell {
                    mode: Mode,
                    vc: RichTextDemoVC) {
         // 懒加载可能尚未唤起，保险再“点”一次
-        titleLabel.byAlpha(1); cardView.byAlpha(1); textView.byAlpha(1); attachmentLabel.byAlpha(1)
-        titleLabel.byText(title)
+        titleLabel
+            .byAlpha(1); cardView.byAlpha(1); textView.byAlpha(1); attachmentLabel.byAlpha(1)
+            .byText(title)
         // 复用安全：清理旧状态
         textView.byDelegate(nil)
             .byDataDetectorTypes([])

@@ -79,7 +79,7 @@ final class SafeCodableDemoVC: BaseVC {
     }
     // MARK: - Lazy UI（全部懒加载，byAddTo + SnapKit）
     private lazy var jsonTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("JSON（可编辑）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -90,7 +90,7 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var jsonTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
@@ -133,7 +133,7 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var valuesTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("解析结果".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -151,7 +151,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var homepageLabel: UILabel  = makeValueLabel(baseline: createdAtLabel)
     private lazy var avatarURLLabel: UILabel = makeValueLabel(baseline: homepageLabel)
     private lazy var logTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("解码日志".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -162,7 +162,7 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
@@ -202,7 +202,7 @@ final class SafeCodableDemoVC: BaseVC {
 
 extension SafeCodableDemoVC {
     private func makeValueLabel(baseline: UILabel?) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
@@ -218,7 +218,7 @@ extension SafeCodableDemoVC {
     // MARK: - SafeCodable 引导
     private func bootstrapSafeCodable() {
         SafeCodableConfig.shared.customDateFormatters = [
-            DateFormatter()
+            DateFormatter.jobsMake { _ in }
                 .byLocale(Locale(identifier: "en_US_POSIX"))
                 .byTimeZone(TimeZone(secondsFromGMT: 0)!)
                 .byDateFormat("yyyy-MM-dd HH:mm:ss")]
@@ -244,7 +244,7 @@ extension SafeCodableDemoVC {
             return
         }
         do {
-            let user = try JSONDecoder().decode(User.self, from: data)
+            let user = try JSONDecoder.make { _ in }.decode(User.self, from: data)
             render(user)
             appendLog("✅ 解码成功")
         } catch {
@@ -257,7 +257,7 @@ extension SafeCodableDemoVC {
         nameLabel.byText("name: \(u.name)")
         vipLabel.byText("vip: \(u.vip)")
         scoreLabel.byText("score: \(u.score)")
-        createdAtLabel.byText("createdAt: " + DateFormatter()
+        createdAtLabel.byText("createdAt: " + DateFormatter.jobsMake { _ in }
             .byLocale(Locale(identifier: "en_US_POSIX"))
             .byTimeZone(TimeZone(secondsFromGMT: 0)!)
             .byDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'").string(from: u.createdAt))

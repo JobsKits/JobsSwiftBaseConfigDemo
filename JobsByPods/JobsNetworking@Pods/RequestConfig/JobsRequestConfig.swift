@@ -7,6 +7,8 @@
 
 import Foundation
 
+import JobsSwiftDSL
+
 public enum JobsEnvelopeStrategy: Sendable {
     case none
     case standard(successCodes: Set<Int>)
@@ -54,9 +56,9 @@ public struct JobsRequestConfig: Sendable {
 
 public extension JSONDecoder {
     static var jobsDefault: JSONDecoder {
-        let decoder = JSONDecoder()
+        let decoder = JSONDecoder.make { _ in }
         decoder.keyDecodingStrategy = .useDefaultKeys
-        decoder.dateDecodingStrategy = .deferredToDate
+        decoder.byDateDecodingStrategy(.deferredToDate)
         return decoder
     }
 }

@@ -32,7 +32,7 @@ final class JobsProgressDemoVC: BaseVC {
     // MARK: - UI 懒加载
     /// 使用说明（更直观，不再“单薄”）
     private lazy var tipsLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.left)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
@@ -132,7 +132,7 @@ final class JobsProgressDemoVC: BaseVC {
     }()
     /// 状态提示（拖动/播放/设置后的反馈）
     private lazy var stateLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byNumberOfLines(2)
             .byTextColor(JobsCor.secondaryLabel)
@@ -198,7 +198,7 @@ final class JobsProgressDemoVC: BaseVC {
     }()
     /// 输入百分比的文本框（0~100）
     private lazy var percentTextField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
             .byPlaceholder("输入 0~100".tr)
@@ -240,7 +240,7 @@ final class JobsProgressDemoVC: BaseVC {
     }()
     /// 拖动开关标题
     private lazy var dragTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("可拖动".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -251,7 +251,7 @@ final class JobsProgressDemoVC: BaseVC {
     }()
     /// 拖动开关
     private lazy var dragSwitch: UISwitch = {
-        UISwitch()
+        UISwitch.jobsMake { _ in }
             .byOn(YES)
             .byAddAction(for: .valueChanged) { [weak self] (sw: UISwitch) in
                 guard let self else { return }

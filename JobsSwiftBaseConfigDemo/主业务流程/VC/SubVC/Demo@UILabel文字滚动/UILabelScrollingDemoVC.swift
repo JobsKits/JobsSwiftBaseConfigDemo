@@ -22,7 +22,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     private var showsAlternateText = false
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(YES)
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
@@ -36,7 +36,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -44,7 +44,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("CoreText 完整排版 + CALayer 绘制 + JobsSwiftTimer 驱动。只有文字溢出时才进入滚动管线。")
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
@@ -73,7 +73,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var continuousLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。")
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
@@ -105,7 +105,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var pingPongLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byAttributedString(makePingPongText(alternate: false))
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
@@ -137,7 +137,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var shortLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("短文案：保持 UILabel 原生绘制")
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
@@ -193,7 +193,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var controlsStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .bySpacing(10)
             .byDistribution(.fillEqually)
@@ -280,14 +280,14 @@ private extension UILabelScrollingDemoVC {
     }
 
     func makeCardView() -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
     }
 
     func makeSectionTitle(_ text: String) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)

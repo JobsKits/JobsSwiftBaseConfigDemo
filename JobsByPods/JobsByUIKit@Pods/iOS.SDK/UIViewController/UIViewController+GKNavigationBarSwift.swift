@@ -222,11 +222,11 @@ extension UIViewController {
             guard let navigationBar = object as? UINavigationBar else { return }
             let backgroundColor = center.resolvedColor(.backgroundPrimary)
             let textColor = center.resolvedColor(.textPrimary)
-            navigationBar.barTintColor = backgroundColor
+            navigationBar.byBarTintColor(backgroundColor)
             navigationBar.tintColor = textColor
             var titleAttributes = navigationBar.titleTextAttributes ?? [:]
             titleAttributes[.foregroundColor] = textColor
-            navigationBar.titleTextAttributes = titleAttributes
+            navigationBar.byTitleTextAttributes(titleAttributes)
             if #available(iOS 13.0, tvOS 13.0, *) {
                 let appearances = [
                     navigationBar.standardAppearance,
@@ -379,7 +379,7 @@ extension UIViewController {
         }
         #else
         // 没 SnapKit 就退化成 frame
-        v.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        v.byFrame(CGRect(x: 0, y: 0, width: 44, height: 44))
         #endif
     }
     /// 导航栏右侧按钮只保留前景内容，不展示配置态或旧系统背景色。

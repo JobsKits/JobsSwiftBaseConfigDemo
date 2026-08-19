@@ -68,7 +68,7 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
     }()
 
     private lazy var emptyStateLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("还没有照片副本\n请返回上页，从相册选择并复制一张照片。".tr)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -124,8 +124,9 @@ private extension JobsCopiedAppIconPhotosVC {
     func reloadPhotos() {
         photos = photoStore.photos
         selectedPhotoIDs = selectedPhotoIDs.intersection(Set(photos.map(\.id)))
-        tableView.byBackgroundView(photos.isEmpty ? emptyStateLabel : nil)
-        tableView.byReloadData()
+        tableView
+            .byBackgroundView(photos.isEmpty ? emptyStateLabel : nil)
+            .byReloadData()
         updateNavigationButtons()
     }
 

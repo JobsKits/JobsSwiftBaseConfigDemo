@@ -17,10 +17,10 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsCopiedAppIconPhotoCell: UITableViewCell {
-    private static let dateFormatter = DateFormatter().byDateFormat("yyyy-MM-dd HH:mm")
+    private static let dateFormatter = DateFormatter.jobsMake { _ in }.byDateFormat("yyyy-MM-dd HH:mm")
 
     private lazy var photoImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
@@ -35,7 +35,7 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(1)
@@ -47,7 +47,7 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)

@@ -154,6 +154,7 @@ PODS:
   - JobsAudioRecorder (0.1.0):
     - JobsFuseAnimation
     - JobsSwiftBaseDefines
+    - JobsSwiftDSL
     - JobsSwiftTimer
   - JobsBluetooth (1.0.0)
   - JobsBy3rdTools (0.0.1):
@@ -238,7 +239,9 @@ PODS:
   - JobsGetWindow (0.1.14)
   - JobsIconfont (1.0.0):
     - JobsImageTools
+    - JobsSwiftDSL
   - JobsImageRotation (1.0.0):
+    - JobsSwiftDSL
     - JobsSwiftTimer
   - JobsImageTools (0.1.14):
     - JobsSwiftBaseDefines
@@ -288,6 +291,7 @@ PODS:
     - JobsNetworking/Core
   - JobsNetworking/Core (1.0.1):
     - Alamofire (~> 5.9)
+    - JobsSwiftDSL
   - JobsProgressBar (0.1.14):
     - JobsByUIKit
     - JobsSwiftBaseDefines
@@ -297,6 +301,7 @@ PODS:
   - JobsScale (0.1.14):
     - JobsGetWindow
   - JobsScreenCapture (1.0.0):
+    - JobsSwiftDSL
     - SnapKit
   - JobsSwiftAppTools (0.0.1):
     - JobsBy3rdTools
@@ -1008,7 +1013,7 @@ SPEC CHECKSUMS:
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
   JobsAppDoor: 4a68b05d38061f96d28dc0568dca1a4b44e97579
   JobsAppIconRibbon: ffa1614f80e480efc6d1f76749a1c938b0f638c9
-  JobsAudioRecorder: adcdf7276725a168cf33a85ccec38f4b66e2185f
+  JobsAudioRecorder: 2ada8d1f8fe3e0944905ea5c3e8cc0c4e590ba90
   JobsBluetooth: c4a3493d91388d005f41994441fbe42228bee202
   JobsBy3rdTools: 6ec5c901d29cc06770a1a733e4ff3e8d1ab39893
   JobsByPDFKit: 26daf711a18d487431bd2f9ca5cbf8cc38195ca4
@@ -1022,8 +1027,8 @@ SPEC CHECKSUMS:
   JobsFuseAnimation: 1aea1eec9433f1a203a7986cdcde5147f44fa11b
   JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
   JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
-  JobsIconfont: dcb4e97576328d578288af67751909bc0b07fe0b
-  JobsImageRotation: a0a83f20c98ea5911b40457f69923559d365b54d
+  JobsIconfont: 80dbe75751366c5a50dc106c29433588a7e3d784
+  JobsImageRotation: 017fac15e5b8171bd6cfba0e5aae46ed10eb516f
   JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
   JobsInheritance: 2a48bc8e2d7dae3643ad2668803c8a1b773dbba0
   Jobsl10n: 7dcc6eee8ebefe092b65bd16350bbb9a29460aa6
@@ -1031,10 +1036,10 @@ SPEC CHECKSUMS:
   JobsLuckyEnvelopeRain: 72c3d5a23c159413e0a4e57083937a7dcc62f790
   JobsMarqueeView: 1e721d87ad15b0ec12bcab3ee3c65acb5e6ab4dc
   JobsNavBar: 8e2d20df7de3e739edb457278920c44e72507047
-  JobsNetworking: 4dcb85f830623ba9105a3a2a73707a5eea41fec1
+  JobsNetworking: 2dd25981e2c61d3cc8cba9e0ff3906fce80a81b0
   JobsProgressBar: 18efb6cdb4d0f77739f12eed45ec6cc5d454f2c9
   JobsScale: 0455fa25096eae822c98ecb443122e6125053231
-  JobsScreenCapture: 01774956f2b06fcecdabd3a532bffa49841b6497
+  JobsScreenCapture: a2bd935eb70e864cf101c75c0db56221dba5526f
   JobsSwiftAppTools: e2d672d26bde70330c836809395058c76d9b28dc
   JobsSwiftBaseDefines: f75d5587dfe99fb44479aa4b23294d9484313884
   JobsSwiftBaseTools: 3f54c8cb79c9d84902deb474265d1c462a990dba
@@ -1114,6 +1119,6 @@ SPEC CHECKSUMS:
   YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: dfec86a8a7b2eef2ff9b83dabdb7d5b1dd4b9148
+PODFILE CHECKSUM: daa57249afc1de4d69d989b1459ff3dc75d69482
 
 COCOAPODS: 1.17.0

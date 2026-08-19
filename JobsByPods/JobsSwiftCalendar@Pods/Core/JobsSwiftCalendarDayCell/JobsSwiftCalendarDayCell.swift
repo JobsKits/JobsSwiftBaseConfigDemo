@@ -17,12 +17,12 @@ import JobsSwiftDSL
 public final class JobsSwiftCalendarDayCell: UIControl {
     public var date: Date?
     public var monthPosition = JobsSwiftCalendarMonthPosition.notFound
-    public private(set) var titleLabel = UILabel()
-    public private(set) var subtitleLabel = UILabel()
-    public private(set) var imageView = UIImageView()
-    public private(set) var eventDotView = UIView()
+    public private(set) var titleLabel = UILabel.jobsMake { _ in }
+    public private(set) var subtitleLabel = UILabel.jobsMake { _ in }
+    public private(set) var imageView = UIImageView.jobsMake { _ in }
+    public private(set) var eventDotView = UIView.jobsMake { _ in }
 
-    private var selectionView = UIView()
+    private var selectionView = UIView.jobsMake { _ in }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,10 +50,24 @@ public final class JobsSwiftCalendarDayCell: UIControl {
         titleLabel.byFrame(CGRect(x: 0, y: titleY, width: width, height: titleHeight))
         subtitleLabel.byFrame(CGRect(x: 0, y: titleLabel.frame.maxY - 1, width: width, height: 15))
         imageView.byFrame(CGRect(x: (width - 14) / 2, y: subtitleLabel.frame.maxY, width: 14, height: 14))
-        eventDotView.byFrame(CGRect(x: (width - 5) / 2, y: height - 8, width: 5, height: 5))
-        eventDotView.byCornerRadius(2.5)
+        eventDotView
+            .byFrame(CGRect(x: (width - 5) / 2, y: height - 8, width: 5, height: 5))
+            .byCornerRadius(2.5)
     }
 
+    @discardableResult
+    public func byDate(_ date: Date?) -> Self {
+        self.date = date
+        return self
+    }
+
+    @discardableResult
+    public func byMonthPosition(_ monthPosition: JobsSwiftCalendarMonthPosition) -> Self {
+        self.monthPosition = monthPosition
+        return self
+    }
+
+    @discardableResult
     public func jobsConfigure(title: String?,
                               subtitle: String?,
                               image: UIImage?,
@@ -66,45 +80,54 @@ public final class JobsSwiftCalendarDayCell: UIControl {
                               titleDefaultColor: UIColor? = nil,
                               titleSelectionColor: UIColor? = nil,
                               subtitleDefaultColor: UIColor? = nil,
-                              selectionColor: UIColor? = nil) {
-        self.monthPosition = monthPosition
-        self.byEnabled(enabled)
-        self.bySelected(selected)
+                              selectionColor: UIColor? = nil) -> Self {
         titleLabel.byText(title)
         subtitleLabel.byText(subtitle)
-        imageView.byImage(image)
-        imageView.byHidden(image == nil)
+        imageView
+            .byImage(image)
+            .byHidden(image == nil)
         titleLabel.byFont(appearance.titleFont)
         subtitleLabel.byFont(appearance.subtitleFont)
         let placeholder = monthPosition != .current
-        selectionView.byHidden(!(selected || today))
-        selectionView.byBackgroundColor(selected ? (selectionColor ?? appearance.selectionColor) : appearance.todayColor)
+        selectionView
+            .byHidden(!(selected || today))
+            .byBackgroundColor(selected ? (selectionColor ?? appearance.selectionColor) : appearance.todayColor)
         titleLabel.byTextColor(selected ? (titleSelectionColor ?? appearance.titleSelectionColor) : (today ? appearance.titleTodayColor : (placeholder ? appearance.titlePlaceholderColor : (titleDefaultColor ?? appearance.titleDefaultColor))))
         subtitleLabel.byTextColor(selected ? appearance.subtitleSelectionColor : (placeholder ? appearance.subtitlePlaceholderColor : (subtitleDefaultColor ?? appearance.subtitleDefaultColor)))
-        eventDotView.byHidden(eventsCount <= 0)
-        eventDotView.byBackgroundColor(selected ? appearance.eventSelectionColor : appearance.eventDefaultColor)
-        self.byAlpha(enabled ? 1 : 0.35)
-        setNeedsLayout()
+        eventDotView
+            .byHidden(eventsCount <= 0)
+            .byBackgroundColor(selected ? appearance.eventSelectionColor : appearance.eventDefaultColor)
+        return self
+            .byMonthPosition(monthPosition)
+            .byEnabled(enabled)
+            .bySelected(selected)
+            .byAlpha(enabled ? 1 : 0.35)
+            .bySetNeedsLayout()
     }
 }
 
 private extension JobsSwiftCalendarDayCell {
     func jobsCommonInit() {
         self.byBackgroundColor(JobsCor.clear)
-        selectionView.isUserInteractionEnabled = false
-        selectionView.byHidden(true)
-        selectionView.byAddTo(self)
-        titleLabel.byTextAlignment(.center)
-        titleLabel.isUserInteractionEnabled = false
-        titleLabel.byAddTo(self)
-        subtitleLabel.byTextAlignment(.center)
-        subtitleLabel.isUserInteractionEnabled = false
-        subtitleLabel.byAddTo(self)
-        imageView.byContentMode(.scaleAspectFit)
-        imageView.isUserInteractionEnabled = false
-        imageView.byAddTo(self)
-        eventDotView.isUserInteractionEnabled = false
-        eventDotView.byHidden(true)
-        eventDotView.byAddTo(self)
+        selectionView
+            .byUserInteractionEnabled(false)
+            .byHidden(true)
+            .byAddTo(self)
+        titleLabel
+            .byTextAlignment(.center)
+            .byUserInteractionEnabled(false)
+            .byAddTo(self)
+        subtitleLabel
+            .byTextAlignment(.center)
+            .byUserInteractionEnabled(false)
+            .byAddTo(self)
+        imageView
+            .byContentMode(.scaleAspectFit)
+            .byUserInteractionEnabled(false)
+            .byAddTo(self)
+        eventDotView
+            .byUserInteractionEnabled(false)
+            .byHidden(true)
+            .byAddTo(self)
     }
 }

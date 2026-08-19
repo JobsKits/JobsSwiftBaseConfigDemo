@@ -69,16 +69,16 @@ extension JobsSwiftCommentDemoVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
         let mode = modeArr[indexPath.row]
-        cell.textLabel?.byText(JobsSwiftCommentConfig.title(by: mode))
-        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-        cell.textLabel?.byTextColor(JobsCor.label)
-        cell.detailTextLabel?.byText(JobsSwiftCommentConfig.subtitle(by: mode))
-        cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
-        cell.detailTextLabel?.byTextColor(JobsCor.secondaryLabel)
-        cell.accessoryType = .disclosureIndicator
-        cell.selectionStyle = .default
-        cell.byBackgroundColor(JobsCor.secondarySystemBackground)
         return cell
+            .byText(JobsSwiftCommentConfig.title(by: mode))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleCor(JobsCor.label)
+            .byDetailText(JobsSwiftCommentConfig.subtitle(by: mode))
+            .byDetailTitleFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byDetailTitleCor(JobsCor.secondaryLabel)
+            .byAccessoryType(.disclosureIndicator)
+            .bySelectionStyle(.default)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
 
     func tableView(_ tableView: UITableView,

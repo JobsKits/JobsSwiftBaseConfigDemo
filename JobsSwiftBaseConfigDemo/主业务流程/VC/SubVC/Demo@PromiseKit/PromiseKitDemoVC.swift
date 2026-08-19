@@ -108,7 +108,7 @@ final class PromiseKitDemoVC: BaseVC {
     }
     // MARK: - UI
     private lazy var tipsLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("""
                     PromiseKit 这个库确实不轻，但它有几个 callback / GCD 很难写得这么平的地方：
                     串行依赖、并发聚合、失败回退、部分成功、超时竞争。
@@ -131,7 +131,7 @@ final class PromiseKitDemoVC: BaseVC {
     }()
 
     private lazy var loadingLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Idle")
             .byTextAlignment(.center)
             .byTextColor(JobsCor.white)
@@ -375,7 +375,7 @@ extension PromiseKitDemoVC {
     }
 
     private static let timeFormatter: DateFormatter = {
-        DateFormatter().byDateFormat("HH:mm:ss")
+        DateFormatter.jobsMake { _ in }.byDateFormat("HH:mm:ss")
     }()
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
@@ -412,26 +412,18 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView
+        let row = indexPath.section == Section.actions.rawValue ? Row(rawValue: indexPath.row) : nil
+        return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
-            .byAccessoryType(.none)
-        var config = cell.defaultContentConfiguration()
-        if indexPath.section == Section.actions.rawValue,
-           let row = Row(rawValue: indexPath.row) {
-            config.text = row.title
-            config.secondaryText = row.subtitle
-            cell.accessoryType = .disclosureIndicator
-        } else {
-            config.text = logs[indexPath.row]
-            config.secondaryText = nil
-            cell.accessoryType = .none
-        }
-        config.textProperties.numberOfLines = 0
-        config.textProperties.lineBreakMode = .byWordWrapping
-        config.secondaryTextProperties.numberOfLines = 0
-        config.secondaryTextProperties.lineBreakMode = .byWordWrapping
-        cell.contentConfiguration = config
-        return cell
+            .byAccessoryType(row == nil ? .none : .disclosureIndicator)
+            .byListConfig {
+                $0.byText(row?.title ?? logs[indexPath.row])
+                    .bySecondaryText(row?.subtitle)
+                    .byTextLines(0)
+                    .byTextLineBreakMode(.byWordWrapping)
+                    .bySecondaryLines(0)
+                    .bySecondaryLineBreakMode(.byWordWrapping)
+            }
     }
 }
 // MARK: - Mock Service

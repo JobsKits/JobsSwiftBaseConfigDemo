@@ -60,8 +60,9 @@ extension UIView {
     @MainActor
     @discardableResult
     func byVisible(_ visible: Bool) -> Self {
-        self.byHidden(!visible)
-        self.byAlpha(visible ? 1 : 0)
+        self
+            .byHidden(!visible)
+            .byAlpha(visible ? 1 : 0)
         return self
     }
 }

@@ -26,7 +26,7 @@ final class SnowflakeDemoVC: BaseVC {
     private let general = SnowflakeSwift(IDCID: 4, machineID: 30)
     // 结果展示
     private lazy var resultLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("未开始".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -82,8 +82,9 @@ final class SnowflakeDemoVC: BaseVC {
     // MARK: - 生成逻辑（放后台，避免卡 UI）
     private func runBenchmark() {
         guard genButton.jobs_effectiveState != .selected else { return } // 防抖
-        genButton.bySelected(true)
-        genButton.byUserInteractionEnabled(false)
+        genButton
+            .bySelected(true)
+            .byUserInteractionEnabled(false)
         let total = 1_000_000
         let start = Date()
         let startTS = Date().timeIntervalSince1970
@@ -108,8 +109,9 @@ final class SnowflakeDemoVC: BaseVC {
             let endTS = end.timeIntervalSince1970
             let elapsed = end.timeIntervalSince(start)
             DispatchQueue.main.async {
-                self.genButton.bySelected(false)
-                self.genButton.isUserInteractionEnabled = true
+                self.genButton
+                    .bySelected(false)
+                    .byUserInteractionEnabled(true)
                 var text = ""
                 text += "开始：\(startTS)\n结束：\(endTS)\n"
                 text += String(format: "耗时：%.3f s\n", elapsed)

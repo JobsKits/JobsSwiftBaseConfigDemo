@@ -181,7 +181,7 @@ extension UIPageControl {
         guard let stack = objc_getAssociatedObject(self, &kJobsPCStackKey) as? UIStackView else { return }
         let dotDiameter = (objc_getAssociatedObject(self, &kJobsPCDotDiameterKey) as? CGFloat) ?? 10
         let dotSpacing = (objc_getAssociatedObject(self, &kJobsPCDotSpacingKey) as? CGFloat) ?? 6
-        stack.spacing = dotSpacing
+        stack.bySpacing(dotSpacing)
         let pages = max(0, self.numberOfPages)
         let currentIndex = max(0, min(self.currentPage, max(0, pages - 1)))
         // 拿到旧数组

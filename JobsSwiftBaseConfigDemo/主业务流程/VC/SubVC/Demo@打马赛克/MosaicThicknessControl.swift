@@ -19,9 +19,9 @@ final class MosaicThicknessControl: UIControl {
     private let minBlockSize: CGFloat = 4
     private let maxBlockSize: CGFloat = 52
 
-    private let trackView = UIView()
-    private let thumbView = UIView()
-    private let valueLabel = UILabel()
+    private let trackView = UIView.jobsMake { _ in }
+    private let thumbView = UIView.jobsMake { _ in }
+    private let valueLabel = UILabel.jobsMake { _ in }
 
     private(set) var value: CGFloat = 18
     private var onValueChanged: ((CGFloat) -> Void)?

@@ -148,9 +148,10 @@ public extension UIView {
 private extension JobsViewPushPresentation {
     func install() {
         guard let sourceView, let presentedView else { return }
-        transitionView.byFrame(sourceView.bounds)
-        transitionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        transitionView.byBackgroundColor(JobsCor.clear)
+        transitionView
+            .byFrame(sourceView.bounds)
+            .byAutoresizingMask([.flexibleWidth, .flexibleHeight])
+            .byBackgroundColor(JobsCor.clear)
         transitionView.layoutHandler = { [weak self] in
             self?.layoutPresentedView()
         }
@@ -175,8 +176,9 @@ private extension JobsViewPushPresentation {
         isPresented = true
         isAnimatingTransition = true
         let visibleFrame = visibleFrameForTransitionBounds()
-        presentedView.transform = .identity
-        presentedView.byFrame(hiddenFrame(for: visibleFrame))
+        presentedView
+            .byTransform(.identity)
+            .byFrame(hiddenFrame(for: visibleFrame))
         UIView.jobsAnimateWithOptions(
             configuration.animationDuration,
             delay: 0,
@@ -198,8 +200,9 @@ private extension JobsViewPushPresentation {
         guard let presentedView else { return }
         guard !isAnimatingTransition else { return }
         let visibleFrame = visibleFrameForTransitionBounds()
-        presentedView.transform = .identity
-        presentedView.byFrame(isPresented ? visibleFrame : hiddenFrame(for: visibleFrame))
+        presentedView
+            .byTransform(.identity)
+            .byFrame(isPresented ? visibleFrame : hiddenFrame(for: visibleFrame))
     }
 
     func visibleFrameForTransitionBounds() -> CGRect {
@@ -322,8 +325,9 @@ private extension JobsViewPushPresentation {
             options: [.curveEaseOut, .beginFromCurrentState],
             animations: { [weak self] in
                 guard let self else { return }
-                presentedView.transform = .identity
-                presentedView.byFrame(self.visibleFrameForTransitionBounds())
+                presentedView
+                    .byTransform(.identity)
+                    .byFrame(self.visibleFrameForTransitionBounds())
                 self.transitionView.byBackgroundColor(self.configuration.backgroundColor)
                 presentedView.layoutIfNeeded()
             }

@@ -76,7 +76,7 @@ extension BaseWebView: WKUIDelegate {
         var types: [UTType] = [.item]
         if parameters.allowsDirectories { types = [.folder] }
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
-        picker.allowsMultipleSelection = parameters.allowsMultipleSelection
+        picker.byAllowsMultipleSelection(parameters.allowsMultipleSelection)
         let proxy = DocumentPickerDelegateProxy { [weak self] urls in
             completionHandler(urls)
             self?.docPickerDelegate = nil

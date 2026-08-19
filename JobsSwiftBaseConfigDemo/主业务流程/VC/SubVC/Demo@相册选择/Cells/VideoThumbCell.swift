@@ -21,7 +21,7 @@ import SnapKit
 
 public final class VideoThumbCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byAddTo(contentView) { [unowned self] make in
@@ -35,8 +35,9 @@ public final class VideoThumbCell: UICollectionViewCell {
         contentView.byClipsToBounds(YES).byCornerRadius(8)
         iv.byVisible(YES)
         if #available(iOS 13.0, *) { playBadge.byTintColor(JobsCor.white) }
-        playBadge.byAlpha(0.9)
-        playBadge.byAddTo(contentView)
+        playBadge
+            .byAlpha(0.9)
+            .byAddTo(contentView)
         playBadge.snp.makeConstraints { make in make.center.equalToSuperview(); make.width.height.equalTo(28) }
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

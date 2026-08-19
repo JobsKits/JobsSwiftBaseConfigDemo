@@ -27,7 +27,7 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
         }
     }
 
-    private let imageView = UIImageView()
+    private let imageView = UIImageView.jobsMake { _ in }
     private var animatedImage: UIImage?
     private var firstFrame: UIImage?
     private var wantsAnimating = false

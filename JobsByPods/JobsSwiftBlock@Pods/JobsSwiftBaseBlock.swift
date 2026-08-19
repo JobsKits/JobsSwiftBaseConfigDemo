@@ -70,7 +70,9 @@ public typealias jobsByGRBlock = (UIGestureRecognizer) -> Void
 public typealias jobsByWKWebConfigurationBlock = (WKWebViewConfiguration?) -> Void
 @available(iOS 8.0, *)
 public typealias jobsByWKWebConfigBlock = (WKWebViewConfiguration) -> Void
+public typealias jobsByDateFormatterBlock = (DateFormatter) -> Void
 public typealias jobsByNumberFormatterBlock = (NumberFormatter) -> Void
+public typealias jobsByNSUserActivityBlock = (NSUserActivity) -> Void
 @available(iOS 13.0, *)
 public typealias jobsByNavigationBarAppearanceBlock = (UINavigationBarAppearance) -> Void
 @available(iOS 13.0, *)

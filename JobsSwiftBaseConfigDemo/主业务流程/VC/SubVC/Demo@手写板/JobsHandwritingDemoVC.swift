@@ -48,7 +48,7 @@ final class JobsHandwritingDemoVC: BaseVC {
     }()
 
     private lazy var tipLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("可使用手指或 Apple Pencil 书写；右上角保存后，下次进入会恢复笔迹。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -80,7 +80,7 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var canvasView: JobsHandwritingCanvasView = {
         let canvasView = JobsHandwritingCanvasView()
-            .byBackgroundColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byBorderColor(JobsCor.systemGray4)
             .byBorderWidth(1)

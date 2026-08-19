@@ -101,13 +101,14 @@ public final class JobsDialogBoxBuilder {
         let dialog = JobsDialogBoxView()
         dialog.byBackgroundColor(JobsCor.clear)
         dialog.bubbleColor = bubbleColor
-        dialog.cornerRadius = cornerRadius
+        dialog.byCornerRadius(cornerRadius)
         dialog.arrowSize = arrowSize
         dialog.contentPadding = contentPadding
-        dialog.layer.shadowColor = shadowColor.cgColor
-        dialog.layer.shadowOpacity = shadowOpacity
-        dialog.layer.shadowRadius = shadowRadius
-        dialog.layer.shadowOffset = shadowOffset
+        dialog
+            .byShadowColor(shadowColor)
+            .byShadowOpacity(shadowOpacity)
+            .byShadowRadius(shadowRadius)
+            .byShadowOffset(shadowOffset)
         // direction resolved (supports RTL, no iOS13 type used)
         let resolved = direction.resolved(for: container.effectiveUserInterfaceLayoutDirection)
         dialog.resolvedEdge = resolved
@@ -138,11 +139,13 @@ public final class JobsDialogBoxBuilder {
         // outside tap dismiss（可按需删）
         dialog.installOutsideTapDismiss(in: container)
         // 动画
-        dialog.byAlpha(0)
-        dialog.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+        dialog
+            .byAlpha(0)
+            .byTransform(CGAffineTransform(scaleX: 0.98, y: 0.98))
         UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseOut]) {
-            dialog.byAlpha(1)
-            dialog.transform = .identity
+            dialog
+                .byAlpha(1)
+                .byTransform(.identity)
         };return dialog
     }
     // MARK: - Positioning
@@ -226,17 +229,18 @@ public final class JobsDialogBoxView: UIControl {
     fileprivate var bubbleColor: UIColor = UIColor(white: 0.15, alpha: 0.95)
     fileprivate var contentPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12)
 
-    private let shapeLayer = CAShapeLayer()
-    public let contentView = UIView()
+    private let shapeLayer = CAShapeLayer.jobsMake { _ in }
+    public let contentView = UIView.jobsMake { _ in }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = true
         self.byBackgroundColor(JobsCor.clear)
         layer.insertSublayer(shapeLayer, at: 0)
-        shapeLayer.fillColor = bubbleColor.cgColor
-        contentView.byBackgroundColor(JobsCor.clear)
-        contentView.byAddTo(self)
+        shapeLayer.byFillColor(bubbleColor)
+        contentView
+            .byBackgroundColor(JobsCor.clear)
+            .byAddTo(self)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -247,9 +251,10 @@ public final class JobsDialogBoxView: UIControl {
     }
 
     fileprivate func updateShape() {
-        shapeLayer.fillColor = bubbleColor.cgColor
-        shapeLayer.byFrame(bounds)
-        shapeLayer.path = makePath().cgPath
+        shapeLayer
+            .byFillColor(bubbleColor)
+            .byFrame(bounds)
+            .byPath(makePath().cgPath)
     }
 
     private func layoutContent() {

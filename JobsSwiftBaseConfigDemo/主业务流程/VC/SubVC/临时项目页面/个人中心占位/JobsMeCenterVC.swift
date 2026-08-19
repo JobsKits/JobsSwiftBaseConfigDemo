@@ -59,7 +59,7 @@ final class JobsMeCenterVC: BaseVC {
     }
 
     private lazy var headerView: UIView = {
-        UIView().byBackgroundColor(JobsCor.systemBackground)
+        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.systemBackground)
     }()
 
     private lazy var tableView: UITableView = {
@@ -97,25 +97,20 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row(rawValue: indexPath.row)!
-        let cell = tableView
+        return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byText(row.title)
             .byImage(row.symbolName.sysImg.withRenderingMode(.alwaysTemplate))
             .byAccessoryType(.disclosureIndicator)
             .byBackgroundColor(JobsCor.clear)
-        cell.contentView.byBackgroundColor(JobsCor.clear)
-        if #available(iOS 14.0, *) {
-            cell.byBackgroundConfiguration { backgroundConfiguration in
+            .byContentView { $0.byBackgroundColor(JobsCor.clear) }
+            .byTitleCor(JobsCor.label)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byImageView { $0.byTintColor(JobsCor.secondaryLabel) }
+            .byBackgroundConfiguration { backgroundConfiguration in
                 backgroundConfiguration.backgroundColor = JobsCor.clear
                 backgroundConfiguration.cornerRadius = 0
             }
-        }
-        cell.textLabel?
-            .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-        cell.imageView?
-            .byTintColor(JobsCor.secondaryLabel)
-        return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

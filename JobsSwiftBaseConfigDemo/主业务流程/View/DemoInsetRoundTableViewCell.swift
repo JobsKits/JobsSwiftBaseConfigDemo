@@ -24,11 +24,11 @@ final class DemoInsetRoundTableViewCell: UITableViewCell,
     private var sectionPosition: SectionCellPosition = .single
 
     private lazy var selectedCardView: UIView = {
-        UIView().byBackgroundColor(JobsCor.systemGray5)
+        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.systemGray5)
     }()
 
     private lazy var accentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBlue)
             .byAddTo(contentView) { make in
                 make.top.left.bottom.equalToSuperview()
@@ -37,7 +37,7 @@ final class DemoInsetRoundTableViewCell: UITableViewCell,
     }()
 
     private lazy var separatorView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(contentView) { make in
                 make.left.equalToSuperview().offset(20)

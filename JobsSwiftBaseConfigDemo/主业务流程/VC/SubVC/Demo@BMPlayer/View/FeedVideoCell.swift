@@ -21,7 +21,7 @@ final class FeedVideoCell: UITableViewCell {
     // MARK: - UI（懒加载）
     /// 播放器真正挂载到这个容器（PlayerCenter 负责把 BMPlayer 迁移到这里）
     lazy var playerHost: UIView = { [unowned self] in
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview()
             }
@@ -30,7 +30,7 @@ final class FeedVideoCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(2)
@@ -41,7 +41,7 @@ final class FeedVideoCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byAddTo(contentView) { make in

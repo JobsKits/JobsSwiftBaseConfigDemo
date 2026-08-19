@@ -34,7 +34,7 @@ final class MomentMediaView: UIView {
     private let spacing: CGFloat = 6
 
     private lazy var flowLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+        UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(spacing)
             .byMinimumInteritemSpacing(spacing)

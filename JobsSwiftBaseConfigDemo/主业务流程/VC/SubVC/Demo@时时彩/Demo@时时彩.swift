@@ -74,7 +74,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var wisdomOverlayView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(UIColor(white: 0, alpha: 0.35))
             .byHidden(true)
             .byAddTo(view) { [unowned self] make in
@@ -104,7 +104,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationMainTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextAlignment(.center)
@@ -115,7 +115,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationSubTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
             .byTextAlignment(.center)
@@ -126,7 +126,7 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationTitleView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.center)
             .byDistribution(.fill)
@@ -250,31 +250,29 @@ extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate 
                 UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
             let isCloseRow = indexPath.row == wisdomItems.count
             if isCloseRow {
-                cell.textLabel?
+                return cell
                     .byText("关闭".tr)
-                    .byTextColor(JobsCor.systemBlue)
-                    .byTextAlignment(.center)
-                    .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-                cell.detailTextLabel?.byText(nil)
-                cell.selectionStyle = .default
-            } else {
-                let item = wisdomItems[indexPath.row]
-                cell.textLabel?
-                    .byText(item.title.tr)
-                    .byTextColor(JobsCor.label)
-                    .byTextAlignment(.left)
-                    .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-                    .byNumberOfLines(1)
-                cell.detailTextLabel?
-                    .byText(item.detail.tr)
-                    .byTextColor(JobsCor.secondaryLabel)
-                    .byTextAlignment(.left)
-                    .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
-                    .byNumberOfLines(0)
-                cell.selectionStyle = .none
+                    .byTitleCor(JobsCor.systemBlue)
+                    .byTitleTextAlignment(.center)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+                    .byDetailText(nil)
+                    .bySelectionStyle(.default)
+                    .byBackgroundColor(JobsCor.systemBackground)
             }
-            cell.byBackgroundColor(JobsCor.systemBackground)
+            let item = wisdomItems[indexPath.row]
             return cell
+                .byText(item.title.tr)
+                .byTitleCor(JobsCor.label)
+                .byTitleTextAlignment(.left)
+                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+                .byTitleNumberOfLines(1)
+                .byDetailText(item.detail.tr)
+                .byDetailTitleCor(JobsCor.secondaryLabel)
+                .byDetailTitleTextAlignment(.left)
+                .byDetailTitleFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                .byDetailTitleNumberOfLines(0)
+                .bySelectionStyle(.none)
+                .byBackgroundColor(JobsCor.systemBackground)
         };return tableView
             .byDequeueReusableCell(withType: JobsCountdownCell.self, for: indexPath)
             .byData(data[indexPath.row], scopeIdentifier: timerScopeIdentifier)

@@ -35,7 +35,7 @@ class MosaicBaseDemoVC: BaseVC {
     private var exitAlertController: UIAlertController?
 
     lazy var imageContainerView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.black)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -58,7 +58,7 @@ class MosaicBaseDemoVC: BaseVC {
     }()
 
     lazy var loadingLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("图片加载中...".tr)
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))

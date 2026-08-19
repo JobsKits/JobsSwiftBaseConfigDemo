@@ -18,7 +18,7 @@ enum TextKitMeasure {
     static func fits(_ attr: NSAttributedString, width: CGFloat, maxLines: Int) -> Bool {
         guard width > 0, maxLines > 0 else { return true }
         let storage = NSTextStorage(attributedString: attr)
-        let layout = NSLayoutManager()
+        let layout = NSLayoutManager.jobsMake { _ in }
         let container = NSTextContainer(size: CGSize(width: width, height: .greatestFiniteMagnitude))
         container.lineFragmentPadding = 0
         container.maximumNumberOfLines = maxLines

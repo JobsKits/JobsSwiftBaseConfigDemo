@@ -24,7 +24,7 @@ final class HUDHelper {
 
     func show(_ message: String, duration: TimeInterval = 2.0) {
         guard let window = jobsGetMainWindow() else { return }
-        let label = UILabel()
+        let label = UILabel.jobsMake { _ in }
             .byText(message)
             .byTextColor(JobsCor.white)
             .byFont(.systemFont(ofSize: 15))

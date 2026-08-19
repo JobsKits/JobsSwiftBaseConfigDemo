@@ -103,7 +103,7 @@ final class RxDataSourcesDemoVC: BaseVC {
 
     // ============================== Collection Layout ==============================
     private lazy var flowLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+        UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)

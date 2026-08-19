@@ -51,4 +51,8 @@ private lazy var progressView: JobsProgressBar = {
 progressView.setDisplayPercent(text: "20", animated: true)
 ```
 
+## Jobs DSL 调用约定
+
+Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

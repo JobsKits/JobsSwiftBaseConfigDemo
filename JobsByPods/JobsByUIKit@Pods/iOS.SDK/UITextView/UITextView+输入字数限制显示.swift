@@ -199,13 +199,13 @@ extension UITextView {
         guard let sv = superview else { return }
         if lb.superview === sv {
             sv.bringSubviewToFront(lb)
-            lb.layer.zPosition = .greatestFiniteMagnitude
+            lb.byZPosition(.greatestFiniteMagnitude)
             return
         }
         lb.removeFromSuperview()
         sv.addSubview(lb)
         sv.bringSubviewToFront(lb)
-        lb.layer.zPosition = .greatestFiniteMagnitude
+        lb.byZPosition(.greatestFiniteMagnitude)
         lb.snp.remakeConstraints { make in
             make.right.equalTo(self.snp.right).offset(-6)
             make.bottom.equalTo(self.snp.bottom).offset(-6)
@@ -238,7 +238,7 @@ extension UITextView {
     fileprivate func jobs_updateHintLabel() {
         guard let lb = jobs_hintLabel else { return }
         let current = (text ?? "").count
-        lb.text = "\(current)/\(jobs_hintLimitLocked ?? 0)"
+        lb.byText("\(current)/\(jobs_hintLimitLocked ?? 0)")
         jobs_attachHintLabelIfPossible()
         // ✅ 再兜底一次：永远保持 observer.limit 与 hintLock 同步
         if let locked = jobs_hintLimitLocked {

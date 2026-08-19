@@ -27,7 +27,7 @@ import GKNavigationBarSwift
 final class CrashLogDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 12
     private lazy var tv: UITextView = { [unowned self] in
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byEditable(false)

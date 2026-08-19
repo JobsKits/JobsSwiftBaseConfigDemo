@@ -161,6 +161,6 @@ public final class JobsLottieRefreshView: UIView, JobsRefreshAnimatorProtocol {
                 make.edges.equalToSuperview()
             }
         lottieView.loopMode = .loop
-        lottieView.backgroundBehavior = .pauseAndRestore
+        lottieView.byBackgroundBehavior(.pauseAndRestore)
     }
 }

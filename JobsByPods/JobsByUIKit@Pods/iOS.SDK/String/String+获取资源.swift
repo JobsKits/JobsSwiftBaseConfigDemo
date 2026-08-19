@@ -75,16 +75,16 @@ extension String {
     }
     /// 本地同步图（仅当来源是 .local 时有意义）
     public var img: UIImage {
-        guard let source = imageSource else { return UIImage.make() }
+        guard let source = imageSource else { return UIImage.make { _ in } }
         switch source {
         /// 处理 .remote 分支
         case .remote:
             // 同步返回不支持网络加载，避免阻塞
             print("🚫 检测到网络 URL：\(self)，无法同步返回图片")
-            return UIImage.make()
+            return UIImage.make { _ in }
         /// 处理 .local 分支
         case .local(let name):
-            return UIImage(named: name) ?? UIImage.make()
+            return UIImage(named: name) ?? UIImage.make { _ in }
         }
     }
 

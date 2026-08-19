@@ -52,7 +52,7 @@ open class PlayerControlsView: UIView {
     }()
 
     private lazy var progressSlider: UISlider = {
-        let v = UISlider()
+        let v = UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0)
@@ -86,7 +86,7 @@ open class PlayerControlsView: UIView {
     }()
 
     private lazy var currentTimeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("00:00")
             .byTextColor(JobsCor.white)
             .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
@@ -96,7 +96,7 @@ open class PlayerControlsView: UIView {
     }()
 
     private lazy var durationLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("00:00")
             .byTextColor(JobsCor.white)
             .byFont(.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
@@ -106,7 +106,7 @@ open class PlayerControlsView: UIView {
     }()
 
     private lazy var controlsStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.center)
             .byDistribution(.fill)

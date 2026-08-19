@@ -24,17 +24,17 @@ extension String {
         guard !isEmpty,
               // Code128 推荐 ASCII；退化到 UTF8 也给过
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
-              let f = CIFilter(name: "CICode128BarcodeGenerator") else { return UIImage.make() }
+              let f = CIFilter(name: "CICode128BarcodeGenerator") else { return UIImage.make { _ in } }
         f.setDefaults()
         f.setValue(msg, forKey: "inputMessage")
         f.setValue(quietSpace, forKey: "inputQuietSpace") // 左右静区
-        guard let out = f.outputImage, size.width > 0, size.height > 0 else { return UIImage.make() }
+        guard let out = f.outputImage, size.width > 0, size.height > 0 else { return UIImage.make { _ in } }
         // 非等比缩放到目标尺寸（条形码需要明确宽高）
         let scaleX: CGFloat = size.width  / out.extent.width
         let scaleY: CGFloat = size.height / out.extent.height
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
         let ctx = CIContext()
-        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cg)
+        guard let cg = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make { _ in } };return UIImage(cgImage: cg)
     }
     /// 生成带底部文字的人类可读 Code128 条形码
     /// - Parameters:
@@ -58,18 +58,18 @@ extension String {
               let msg = (self.data(using: .ascii) ?? self.data(using: .utf8)),
               let f = CIFilter(name: "CICode128BarcodeGenerator"),
               width > 0, barHeight > 0
-        else { return UIImage.make() }
+        else { return UIImage.make { _ in } }
         // 1) 生成条形码 CIImage
         f.setDefaults()
         f.setValue(msg, forKey: "inputMessage")
         f.setValue(quietSpace, forKey: "inputQuietSpace")
-        guard let out = f.outputImage else { return UIImage.make() }
+        guard let out = f.outputImage else { return UIImage.make { _ in } }
         // 2) 放大到目标条码尺寸（非等比按宽/高分别缩放）
         let scaleX = width  / out.extent.width
         let scaleY = barHeight / out.extent.height
         let scaled = out.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
         let ctx = CIContext()
-        guard let cgBar = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
+        guard let cgBar = ctx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make { _ in } }
         // 3) 计算文字区域高度（先用行高；若太宽会缩放字体）
         _ = font.lineHeight
         var drawFont = font

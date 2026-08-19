@@ -18,7 +18,7 @@ import SnapKit
 
 final class JobsMotionAppIconCell: UICollectionViewCell {
     private lazy var iconImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byCornerRadius(17)
@@ -30,7 +30,7 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
@@ -41,7 +41,7 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var sourceLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 9, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
@@ -54,7 +54,7 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var currentBadgeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前".tr)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .bold))
             .byTextColor(JobsCor.white)

@@ -23,12 +23,20 @@ import GKNavigationBarSwift
 
 final class ObjectBoxDemoVC: BaseVC {
     // MARK: - Data
-    private let personBox = ObjectBoxManager.shared.humanBox
+    private lazy var personBox: Box<Human>? = {
+        switch ObjectBoxManager.sharedResult {
+        case .success(let manager):
+            return manager.humanBox
+        case .failure(let error):
+            "ObjectBox 初始化失败: \(error)".toast
+            return nil
+        }
+    }()
     private var dataSource: [Human] = []
     private var selectedPerson: Human?
     // MARK: - UI
     private lazy var nameTextField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("输入姓名".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
@@ -44,7 +52,7 @@ final class ObjectBoxDemoVC: BaseVC {
     }()
 
     private lazy var ageTextField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("输入年龄".tr)
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
@@ -56,9 +64,10 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var addButton: UIButton = {
         UIButton.sys()
-            .byTitle("新增".tr, for: .normal)
+            .byTitle("新增".tr)
             .onTap { [weak self] _ in
                 guard let self else { return }
+                guard let personBox else { return }
                 guard let input = buildInputPerson() else { return }
                 do {
                     try personBox.put(input)
@@ -79,9 +88,10 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var updateButton: UIButton = {
         UIButton.sys()
-            .byTitle("修改选中项".tr, for: .normal)
+            .byTitle("修改选中项".tr)
             .onTap { [weak self] _ in
                 guard let self else { return }
+                guard let personBox else { return }
                 guard let selectedPerson else {
                     "请先在列表里选中一条数据".tr.toast
                     return
@@ -118,9 +128,10 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var deleteButton: UIButton = {
         UIButton.sys()
-            .byTitle("删除选中项".tr, for: .normal)
+            .byTitle("删除选中项".tr)
             .onTap { [weak self] _ in
                 guard let self else { return }
+                guard let personBox else { return }
                 guard let selectedPerson else {
                     "请先在列表里选中一条数据".tr.toast
                     return
@@ -144,7 +155,7 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var queryButton: UIButton = {
         UIButton.sys()
-            .byTitle("查询全部".tr, for: .normal)
+            .byTitle("查询全部".tr)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.loadAllPersons()
@@ -158,7 +169,7 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var clearInputButton: UIButton = {
         UIButton.sys()
-            .byTitle("清空输入".tr, for: .normal)
+            .byTitle("清空输入".tr)
             .onTap { [weak self] _ in
                 guard let self else { return }
                 self.clearInput()
@@ -174,7 +185,7 @@ final class ObjectBoxDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView.jobsMake { _ in }
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -192,6 +203,7 @@ final class ObjectBoxDemoVC: BaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "ObjectBox CRUD Demo".tr)
         view.byBackgroundColor(JobsCor.systemBackground)
+        _ = personBox
         nameTextField.byVisible(YES)
         ageTextField.byVisible(YES)
         addButton.byVisible(YES)
@@ -221,6 +233,11 @@ private extension ObjectBoxDemoVC {
     }
 
     func loadAllPersons() {
+        guard let personBox else {
+            dataSource.removeAll()
+            tableView.reloadData()
+            return
+        }
         do {
             let persons = try personBox.all()
             dataSource = persons.sorted { $0.id > $1.id }
@@ -242,24 +259,22 @@ extension ObjectBoxDemoVC: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let Human = dataSource[indexPath.row]
+        let human = dataSource[indexPath.row]
         return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
-            .byText("\(Human.name) - \(Human.age)岁")
-            .bySecondaryText("id: \(Human.id)")
-            .byAccessoryType(Human.id == selectedPerson?.id ? .checkmark : .none)
-            .onResult { _ in
-            }
+            .byText("\(human.name) - \(human.age)岁")
+            .bySecondaryText("id: \(human.id)")
+            .byAccessoryType(human.id == selectedPerson?.id ? .checkmark : .none)
     }
 }
 // MARK: - UITableViewDelegate
 extension ObjectBoxDemoVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let Human = dataSource[indexPath.row]
-        selectedPerson = Human
-        nameTextField.byText(Human.name)
-        ageTextField.byText("\(Human.age)")
+        let human = dataSource[indexPath.row]
+        selectedPerson = human
+        nameTextField.byText(human.name)
+        ageTextField.byText("\(human.age)")
         tableView.reloadData()
     }
 

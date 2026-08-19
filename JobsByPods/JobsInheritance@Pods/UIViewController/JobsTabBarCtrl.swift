@@ -26,7 +26,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     /// 只允许横向翻页（默认 true）
     public var horizontalOnly: Bool = true {
         didSet {
-            contentScrollView.alwaysBounceVertical = !horizontalOnly
+            contentScrollView.byAlwaysBounceVertical(!horizontalOnly)
             contentScrollView.isDirectionalLockEnabled = horizontalOnly
         }
     }
@@ -69,11 +69,11 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     private(set) var selectedIndex: Int = 0
     // MARK: - UI
     private lazy var bgImageView: UIImageView = {
-        UIImageView().byContentMode(.scaleToFill)
+        UIImageView.jobsMake { _ in }.byContentMode(.scaleToFill)
     }()
     /// 满足 `JobsTabBarCtrl().TabBar.byAlpha(1)` 的链式风格
     public lazy var TabBar: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsHorizontalScrollIndicator(NO)
             .byAlwaysBounceHorizontal(YES)
             .byClipsToBounds(NO)
@@ -81,7 +81,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }()
 
     private lazy var contentScrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byPagingEnabled(YES)
             .byBounces(NO)
             .byShowsHorizontalScrollIndicator(NO)
@@ -256,7 +256,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     private func layoutPages() {
         let pageCount = min(buttons.count, controllers.count)
         guard pageCount > 0 else {
-            contentScrollView.contentSize = .zero
+            contentScrollView.byContentSize(.zero)
             return
         }
         let pageW = contentScrollView.bounds.width
@@ -265,7 +265,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             let vc = children[i]
             vc.view.byFrame(CGRect(x: CGFloat(i) * pageW, y: 0, width: pageW, height: pageH))
         }
-        contentScrollView.contentSize = CGSize(width: pageW * CGFloat(pageCount), height: pageH)
+        contentScrollView.byContentSize(CGSize(width: pageW * CGFloat(pageCount), height: pageH))
     }
     // MARK: - 交互
     public func handleTap(at index: Int) {
@@ -307,23 +307,27 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     // MARK: - 子 VC 内纵向滚动禁用（可选启用）
     private func suppressVertical(in root: UIView) {
         if let tv = root as? UITableView {
-            tv.isScrollEnabled = false
-            tv.showsVerticalScrollIndicator = false
-            tv.alwaysBounceVertical = false
+            tv
+                .byScrollEnabled(false)
+                .byShowsVerticalScrollIndicator(false)
+                .byAlwaysBounceVertical(false)
         } else if let cv = root as? UICollectionView {
             if let flow = cv.collectionViewLayout as? UICollectionViewFlowLayout,
                flow.scrollDirection == .horizontal {
                 // 保留横向
-                cv.showsVerticalScrollIndicator = false
-                cv.alwaysBounceVertical = false
+                cv
+                    .byShowsVerticalScrollIndicator(false)
+                    .byAlwaysBounceVertical(false)
             } else {
-                cv.isScrollEnabled = false
-                cv.showsVerticalScrollIndicator = false
-                cv.alwaysBounceVertical = false
+                cv
+                    .byScrollEnabled(false)
+                    .byShowsVerticalScrollIndicator(false)
+                    .byAlwaysBounceVertical(false)
             }
         } else if let sv = root as? UIScrollView {
-            sv.showsVerticalScrollIndicator = false
-            sv.alwaysBounceVertical = false
+            sv
+                .byShowsVerticalScrollIndicator(false)
+                .byAlwaysBounceVertical(false)
             // 如需“一刀切完全不滚”，可加：sv.isScrollEnabled = false
         }
         root.subviews.forEach { suppressVertical(in: $0) }

@@ -33,7 +33,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private let iconOptions = JobsMotionAppIconOption.allCases
     private let photoStore = JobsCopiedAppIconPhotoStore.shared
     private let motionManager = CMMotionManager.make()
-    private lazy var hapticFeedback = UINotificationFeedbackGenerator()
+    private lazy var hapticFeedback = UINotificationFeedbackGenerator.jobsMake { _ in }
     private var isPageVisible = false
     private var iconChangeInFlight = false
     private var hasGravitySample = false
@@ -51,7 +51,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(NO)
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
@@ -65,7 +65,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -73,7 +73,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var introTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("摇一摇，切换 App 图标".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
@@ -84,7 +84,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var introDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Demo 只读取加速度计：高通滤波去掉重力后识别手摇动作。每次有效摇动只请求切换一次，最终仍需确认 iOS 系统弹窗。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -96,7 +96,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var featureCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(18)
             .byAddTo(contentView) { [unowned self] make in
@@ -107,7 +107,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var featureTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("启用手摇自动切换".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -119,7 +119,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var featureSwitchContainerView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(featureCardView) { make in
                 make.top.bottom.right.equalToSuperview()
                 make.width.equalTo(88)
@@ -127,7 +127,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var featureDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("关闭后停止加速度计；下方仍可手动选图标。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -140,7 +140,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var featureSwitch: UISwitch = {
-        UISwitch()
+        UISwitch.jobsMake { _ in }
             .byOn(isShakeFeatureEnabled)
             .byOnTintColor(JobsCor.systemGreen)
             .onJobsChange { [weak self] (toggle: UISwitch) in
@@ -152,7 +152,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var motionCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(18)
             .byAddTo(contentView) { [unowned self] make in
@@ -163,7 +163,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var motionStateIconLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("👋")
             .byFont(JobsFont.systemFont(ofSize: 31))
             .byTextAlignment(.center)
@@ -174,7 +174,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var motionStateTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待加速度计…".tr)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -186,7 +186,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var motionStateDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("握稳手机后快速左右摇动。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -199,7 +199,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var intensityProgressView: UIProgressView = {
-        UIProgressView()
+        UIProgressView.jobsMake { _ in }
             .byProgressViewStyle(.default)
             .byProgress(0)
             .byProgressTintColor(JobsCor.systemGreen)
@@ -214,7 +214,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var accelerationLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("加速度 x: --   y: --   z: --".tr)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -227,7 +227,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var currentIconLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前图标：读取中…".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -238,7 +238,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var iconStatusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("手摇功能已就绪。".tr)
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -250,7 +250,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var iconSelectorTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("手动选择预置图标".tr)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -261,7 +261,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var iconSelectorDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("点选也会调用公开 API，并弹出 iOS 的切换确认。备用素材均来自 iconfont。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -273,12 +273,13 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var iconCollectionLayout: UICollectionViewFlowLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 118, height: 138)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        let layout = UICollectionViewFlowLayout.jobsMake { _ in }
+        layout
+            .byScrollDirection(.horizontal)
+            .byItemSize(CGSize(width: 118, height: 138))
+            .byMinimumLineSpacing(10)
+            .byMinimumInteritemSpacing(10)
+            .bySectionInset(UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
         return layout
     }()
 
@@ -298,7 +299,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(18)
             .byAddTo(contentView) { [unowned self] make in
@@ -310,7 +311,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("从设备相册选择照片".tr)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -343,7 +344,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoPreviewImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
@@ -358,7 +359,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoPlaceholderLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("相册\n预览".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextColor(JobsCor.tertiaryLabel)
@@ -370,7 +371,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("选择后会居中裁成方形副本；过大时缩到 1024 × 1024，并保存在 App 私有目录。".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -423,7 +424,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     }()
 
     private lazy var photoLimitationLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("⚠️ iOS 不能把运行时相册照片直接设为桌面 AppIcon；点右上角“？”查看开发期接入步骤。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
             .byTextColor(JobsCor.systemOrange)
@@ -436,8 +437,9 @@ final class JobsMotionAppIconDemoVC: BaseVC {
 
     private lazy var photoPickerViewController: PHPickerViewController = {
         var configuration = PHPickerConfiguration(photoLibrary: .shared())
-        configuration.filter = .images
-        configuration.selectionLimit = 1
+        configuration
+            .byFilter(.images)
+            .bySelectionLimit(1)
         return PHPickerViewController(configuration: configuration)
             .byDelegate(self)
     }()

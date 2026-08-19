@@ -89,7 +89,7 @@ public extension UIView {
         lottieView.loopMode = loop
         lottieView.animationSpeed = speed
         lottieView.contentMode = contentMode
-        lottieView.backgroundBehavior = backgroundBehavior
+        lottieView.byBackgroundBehavior(backgroundBehavior)
         if lottieView.superview !== self {
             addSubview(lottieView)
         }

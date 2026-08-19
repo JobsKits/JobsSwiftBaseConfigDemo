@@ -20,8 +20,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     public private(set) var config: JobsTodayNewsRefreshConfig
     public private(set) var isAnimating = false
 
-    private let contentLayer = CALayer()
-    private let markLayer = CAShapeLayer()
+    private let contentLayer = CALayer.jobsMake { _ in }
+    private let markLayer = CAShapeLayer.jobsMake { _ in }
     private var wantsAnimating = false
     private var pausedTime: CFTimeInterval = 0
     private var lastAnimationBounds = CGRect.null
@@ -231,20 +231,21 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         let inset = config.lineWidth
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        contentLayer.frame = CGRect(origin: origin, size: indicatorSize)
+        contentLayer.byFrame(CGRect(origin: origin, size: indicatorSize))
         markLayer.frame = CGRect(
             x: inset,
             y: inset,
             width: indicatorSize.width - inset * 2,
             height: indicatorSize.height - inset * 2
         )
-        markLayer.fillColor = UIColor.clear.cgColor
-        markLayer.strokeColor = config.strokeColor.cgColor
-        markLayer.lineWidth = config.lineWidth
-        markLayer.lineCap = .round
-        markLayer.lineJoin = .round
-        markLayer.path = jobs_bowtiePath().cgPath
-        markLayer.opacity = 1
+        markLayer
+            .byFillColor(UIColor.clear)
+            .byStrokeColor(config.strokeColor)
+            .byLineWidth(config.lineWidth)
+            .byLineCap(.round)
+            .byLineJoin(.round)
+            .byPath(jobs_bowtiePath().cgPath)
+            .byOpacity(1)
         CATransaction.commit()
     }
 
@@ -252,10 +253,11 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         let normalizedProgress = min(1, max(0, progress))
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        markLayer.path = jobs_bowtiePath().cgPath
-        markLayer.strokeStart = 0
-        markLayer.strokeEnd = normalizedProgress
-        contentLayer.transform = CATransform3DIdentity
+        markLayer
+            .byPath(jobs_bowtiePath().cgPath)
+            .byStrokeStart(0)
+            .byStrokeEnd(normalizedProgress)
+        contentLayer.byTransform(CATransform3DIdentity)
         CATransaction.commit()
         byAlpha(0.25 + normalizedProgress * 0.75)
             .byTransform(CGAffineTransform(
@@ -279,12 +281,13 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         ]
         let linear = CAMediaTimingFunction(name: .linear)
         let pathAnimation = CAKeyframeAnimation(keyPath: "path")
-        pathAnimation.values = paths.map { $0.cgPath }
-        pathAnimation.keyTimes = [0, 0.15, 0.38, 0.46, 0.69, 0.85, 1]
-        pathAnimation.timingFunctions = [linear, linear, linear, linear, linear, linear]
+        pathAnimation
+            .byValues(paths.map { $0.cgPath })
+            .byKeyTimes([0, 0.15, 0.38, 0.46, 0.69, 0.85, 1])
+            .byTimingFunctions([linear, linear, linear, linear, linear, linear])
         pathAnimation.duration = config.cycleDuration
         pathAnimation.repeatCount = .infinity
-        pathAnimation.calculationMode = .linear
+        pathAnimation.byCalculationMode(.linear)
         pathAnimation.isRemovedOnCompletion = false
         pathAnimation.fillMode = .both
         markLayer.add(pathAnimation, forKey: "jobs.todaynews.path")

@@ -15,4 +15,5 @@ Pod::Spec.new do |spec|
   spec.frameworks    = ['Photos', 'UIKit']
 
   spec.dependency 'SnapKit'
+  spec.dependency 'JobsSwiftDSL'
 end

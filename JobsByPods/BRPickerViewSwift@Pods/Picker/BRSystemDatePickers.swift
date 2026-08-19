@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 // MARK: - System UIDatePicker wrappers (iOS 12+)
 public final class BRSystemDatePicker: BRBasePicker<Date> {
     private var selectDate: Date = Date()
@@ -25,18 +27,18 @@ public final class BRSystemDatePicker: BRBasePicker<Date> {
     @discardableResult public func byMinuteInterval(_ v: Int) -> Self { minuteInterval = max(1, min(v, 30)); return self }
     @discardableResult public func byLocale(_ v: Locale) -> Self { locale = v; return self }
 
-    private let picker = UIDatePicker()
+    private let picker = UIDatePicker.jobsMake { _ in }
 
     public override func buildContentView() -> UIView {
-        picker.datePickerMode = .date
-        if #available(iOS 13.4, *) { picker.preferredDatePickerStyle = .wheels }
-        picker.locale = locale
-        picker.minuteInterval = minuteInterval
-        picker.date = selectDate
-        picker.minimumDate = minDate
-        picker.maximumDate = maxDate
-        picker.backgroundColor = theme.panelBackgroundColor
         return picker
+            .byDatePickerMode(.date)
+            .byWheelsStyleIfAvailable()
+            .byLocale(locale)
+            .byMinuteInterval(minuteInterval)
+            .byDate(selectDate)
+            .byMinimumDate(minDate)
+            .byMaximumDate(maxDate)
+            .byBackgroundColor(theme.panelBackgroundColor)
     }
 
     public override func confirmSelection() {
@@ -57,18 +59,18 @@ public final class BRSystemDateTimePicker: BRBasePicker<Date> {
     @discardableResult public func byMinuteInterval(_ v: Int) -> Self { minuteInterval = max(1, min(v, 30)); return self }
     @discardableResult public func byLocale(_ v: Locale) -> Self { locale = v; return self }
 
-    private let picker = UIDatePicker()
+    private let picker = UIDatePicker.jobsMake { _ in }
 
     public override func buildContentView() -> UIView {
-        picker.datePickerMode = .dateAndTime
-        if #available(iOS 13.4, *) { picker.preferredDatePickerStyle = .wheels }
-        picker.locale = locale
-        picker.minuteInterval = minuteInterval
-        picker.date = selectDate
-        picker.minimumDate = minDate
-        picker.maximumDate = maxDate
-        picker.backgroundColor = theme.panelBackgroundColor
         return picker
+            .byDatePickerMode(.dateAndTime)
+            .byWheelsStyleIfAvailable()
+            .byLocale(locale)
+            .byMinuteInterval(minuteInterval)
+            .byDate(selectDate)
+            .byMinimumDate(minDate)
+            .byMaximumDate(maxDate)
+            .byBackgroundColor(theme.panelBackgroundColor)
     }
 
     public override func confirmSelection() {
@@ -87,16 +89,16 @@ public final class BRSystemTimePicker: BRBasePicker<Date> {
     @discardableResult public func byLocale(_ v: Locale) -> Self { locale = v; return self }
     @discardableResult public func byUse12HourClock(_ v: Bool) -> Self { use12HourClock = v; return self }
 
-    private let picker = UIDatePicker()
+    private let picker = UIDatePicker.jobsMake { _ in }
 
     public override func buildContentView() -> UIView {
-        picker.datePickerMode = .time
-        if #available(iOS 13.4, *) { picker.preferredDatePickerStyle = .wheels }
-        picker.minuteInterval = minuteInterval
-        picker.date = selectDate
-        picker.locale = use12HourClock ? Locale(identifier: "en_US_POSIX") : locale
-        picker.backgroundColor = theme.panelBackgroundColor
         return picker
+            .byDatePickerMode(.time)
+            .byWheelsStyleIfAvailable()
+            .byMinuteInterval(minuteInterval)
+            .byDate(selectDate)
+            .byLocale(use12HourClock ? Locale(identifier: "en_US_POSIX") : locale)
+            .byBackgroundColor(theme.panelBackgroundColor)
     }
 
     public override func confirmSelection() {
@@ -127,15 +129,15 @@ public final class BRSystemCountDownPicker: BRBasePicker<Date> {
 
     @discardableResult public func byMinuteInterval(_ v: Int) -> Self { minuteInterval = max(1, min(v, 30)); return self }
 
-    private let picker = UIDatePicker()
+    private let picker = UIDatePicker.jobsMake { _ in }
 
     public override func buildContentView() -> UIView {
-        picker.datePickerMode = .countDownTimer
-        if #available(iOS 13.4, *) { picker.preferredDatePickerStyle = .wheels }
-        picker.minuteInterval = minuteInterval
-        picker.countDownDuration = countDownDuration
-        picker.backgroundColor = theme.panelBackgroundColor
         return picker
+            .byDatePickerMode(.countDownTimer)
+            .byWheelsStyleIfAvailable()
+            .byMinuteInterval(minuteInterval)
+            .byCountDownDuration(countDownDuration)
+            .byBackgroundColor(theme.panelBackgroundColor)
     }
 
     public override func confirmSelection() {

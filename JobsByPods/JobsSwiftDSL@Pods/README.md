@@ -38,13 +38,15 @@
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
-let label = UILabel()
-  .byText("Jobs")
-  .byThemeTextColor(.textPrimary)
-  .byTextAlignment(.center)
-  .byLabelShadowColor(.black)
-  .byLabelShadowOffset(CGSize(width: 0, height: 1))
-  .byTintColor(JobsCor.systemBlue)
+let label = UILabel.jobsMake { label in
+  label
+    .byText("Jobs")
+    .byThemeTextColor(.textPrimary)
+    .byTextAlignment(.center)
+    .byLabelShadowColor(.black)
+    .byLabelShadowOffset(CGSize(width: 0, height: 1))
+    .byTintColor(JobsCor.systemBlue)
+}
 
 func togglePassword(_ textField: UITextField) {
   textField.byToggleSecureTextEntry()
@@ -98,5 +100,30 @@ let motionManager = CMMotionManager.make()
 - `UITextField.byPlaceholder(_:)` 由本 Pod 唯一承接；`JobsByUIKit` 只补充占位颜色、字体等增强能力，不重复声明基础文字 API。
 - 封装实现内部可以调用系统 API；上层调用方必须使用对应 `byXxx` / `onXxx` 入口。
 - 原 Pod 暂时保留薄桥接文件，便于老代码平滑迁移。
+
+## Jobs DSL 调用约定
+
+Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+- `NSObject` 子类的无参创建使用 `Type.jobsMake { object in ... }`；通用创建 Block 的底层实现位于 `JobsSwiftBlock`，由本 Pod 公开转出。
+- 带参系统初始化由真实类型提供 `make(arguments, configure:)`，例如 `NSUserActivity.make(activityType:configure:)`；系统构造器只留在工厂实现内。
+- 实例创建后，属性、无参实例方法和单参实例方法统一使用返回 `Self` 的 `byXxx(...)`；查询与明确终止动作除外。
+
+`UITableViewCell` 的标题、副标题、图片、`contentView` 与选择状态都从 `cell` 继续点出，不重新起 `cell.textLabel` / `cell.detailTextLabel` / `cell.imageView`：
+
+```swift
+return cell
+    .byText("关闭".tr)
+    .byTitleCor(JobsCor.systemBlue)
+    .byTitleTextAlignment(.center)
+    .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+    .byDetailText(nil)
+    .bySelectionStyle(.default)
+    .byContentView { $0.byBackgroundColor(JobsCor.systemBackground) }
+```
+
+- `UITableViewCell` 子对象闭包：`byTextLabel`、`byDetailTextLabel`、`byImageView`、`byContentView`。
+- `UITableViewCell` 文本收口：`byTitleTextAlignment`、`byTitleNumberOfLines`、`byDetailTitleTextAlignment`、`byDetailTitleNumberOfLines`。
+- `UIDatePicker` / `UIPickerView` 的模式、日期范围、代理和数据源配置统一由本 Pod 承接；需要兼容旧系统的滚轮样式使用 `byWheelsStyleIfAvailable()` 保持主链不断开，`JobsByUIKit` 通过公开桥接继续兼容原 import。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

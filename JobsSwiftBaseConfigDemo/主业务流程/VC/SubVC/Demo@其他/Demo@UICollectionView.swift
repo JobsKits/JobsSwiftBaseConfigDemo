@@ -33,7 +33,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
     private var isLoadingMoreH    = false
     // ============================== UI：上面的【竖向】CollectionView ==============================
     private lazy var collectionViewV: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)
@@ -90,7 +90,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
     }()
     // ============================== UI：下面的【横向】CollectionView ==============================
     private lazy var collectionViewH: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.horizontal)
             .byMinimumLineSpacing(12)
             .byMinimumInteritemSpacing(12)
@@ -173,15 +173,17 @@ extension EmptyCollectionViewDemoVC {
     func addVData() {
         let bV = itemsV.count
         itemsV += (1...6).map { "Item \(bV + $0)" }
-        collectionViewV.byReloadData()
-        collectionViewV.byReloadEmptyViewAuto()
+        collectionViewV
+            .byReloadData()
+            .byReloadEmptyViewAuto()
     }
     // 追加两个列表@横向
     func addHData() {
         let bH = itemsH.count
         itemsH += (1...5).map { "Card \(bH + $0)" }
-        collectionViewH.byReloadData()
-        collectionViewH.byReloadEmptyViewAuto()
+        collectionViewH
+            .byReloadData()
+            .byReloadEmptyViewAuto()
     }
 }
 // MARK: - UICollectionViewDataSource
@@ -200,7 +202,7 @@ extension EmptyCollectionViewDemoVC: UICollectionViewDataSource {
         if let exist = cell.contentView.viewWithTag(1001) as? UILabel {
             label = exist
         } else {
-            label = UILabel()
+            label = UILabel.jobsMake { _ in }
                 .byNumberOfLines(1)
                 .byTextAlignment(.center)
                 .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))

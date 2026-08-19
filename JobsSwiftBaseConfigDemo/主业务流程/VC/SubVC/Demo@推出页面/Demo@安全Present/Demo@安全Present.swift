@@ -27,7 +27,7 @@ final class SafetyPresentDemoVC: BaseVC {
     private let halfHeight: CGFloat = 320
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(false)
             .byBackgroundColor(JobsCor.clear)
@@ -43,21 +43,21 @@ final class SafetyPresentDemoVC: BaseVC {
     }()
 
     private lazy var heroCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.12))
             .byCornerRadius(22)
             .byClipsToBounds(true)
     }()
 
     private lazy var heroBadgeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("SAFE PRESENT")
             .byTextColor(JobsCor.systemBlue)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
     }()
 
     private lazy var heroTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("🛡️ 安全 Present")
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)
@@ -65,7 +65,7 @@ final class SafetyPresentDemoVC: BaseVC {
     }()
 
     private lazy var heroDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("防重入 · UIView 触发 · 320pt Half Sheet")
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)

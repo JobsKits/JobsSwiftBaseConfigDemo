@@ -22,7 +22,7 @@ import SnapKit
 
 final class JobsAppDoorDemoVC: BaseVC {
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("JobsAppDoor")
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
@@ -30,7 +30,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("同一套登录 / 注册 / 找回密码能力\n分别演示单面板换轨与独立卡片横滑")
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)

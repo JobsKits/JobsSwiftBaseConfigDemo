@@ -21,7 +21,7 @@ import SkeletonView
 final class SkeletonUserCell: UITableViewCell {
     // MARK: - UI（lazy）
     private lazy var avatar: UIImageView = {
-        let iv = UIImageView()
+        let iv = UIImageView.jobsMake { _ in }
             .bySkeletonable()
             .bySkeletonCornerRadius(24)
             .byAddTo(contentView) { make in
@@ -31,14 +31,15 @@ final class SkeletonUserCell: UITableViewCell {
                 make.top.greaterThanOrEqualToSuperview().offset(12)
                 make.bottom.lessThanOrEqualToSuperview().inset(12)
             }
-        iv.byContentMode(.scaleAspectFill)
-        iv.byClipsToBounds()
-        iv.byCornerRadius(24)
+        iv
+            .byContentMode(.scaleAspectFill)
+            .byClipsToBounds()
+            .byCornerRadius(24)
         return iv
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(1)
@@ -47,7 +48,7 @@ final class SkeletonUserCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
@@ -57,7 +58,7 @@ final class SkeletonUserCell: UITableViewCell {
     }()
 
     private lazy var stack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)

@@ -127,8 +127,9 @@ public enum JobsSkeletonPulse {
                             to: Float = 0.6) -> SkeletonLayerAnimation {
         { _ in
             let a = CABasicAnimation(keyPath: "opacity")
-            a.fromValue = from
-            a.toValue = to
+            a
+                .byFromValue(from)
+                .byToValue(to)
             a.duration = duration
             a.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             a.autoreverses = true

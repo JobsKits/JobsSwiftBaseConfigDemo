@@ -143,7 +143,7 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
         /// 处理 .error 分支
         case .error(let msg):
             navigationItem.prompt = nil
-            errorAlertController.message = msg
+            errorAlertController.byMessage(msg)
             if presentedViewController !== errorAlertController {
                 present(errorAlertController, animated: true)
             }
@@ -155,9 +155,9 @@ final class VIPERUserListVC: BaseVC, VIPERUserListView, UITableViewDataSource, U
     func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
         let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let r = rows[ip.row]
-        c.textLabel?.byText(r.title)
-        c.detailTextLabel?.byText(r.subtitle)
         return c
+            .byText(r.title)
+            .byDetailText(r.subtitle)
             .byTitleCor(JobsCor.label)
             .byDetailTitleCor(JobsCor.secondaryLabel)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -173,7 +173,7 @@ final class VIPERUserListRouter: VIPERUserListRouting {
     func toDetail(userID: String, from: UIViewController) {
         let vc = BaseVC()
         vc.view.byBackgroundColor(JobsCor.systemBackground)
-        vc.title = "Detail \(userID)"
+        vc.byTitle("Detail \(userID)")
         from.navigationController?.pushViewController(vc, animated: true)
     }
 }

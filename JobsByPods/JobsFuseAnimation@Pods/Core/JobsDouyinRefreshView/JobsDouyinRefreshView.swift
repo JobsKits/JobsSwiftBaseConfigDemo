@@ -19,8 +19,8 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     public private(set) var config: JobsDouyinRefreshConfig
     public private(set) var isAnimating = false
 
-    private let redDotLayer = CAShapeLayer()
-    private let greenDotLayer = CAShapeLayer()
+    private let redDotLayer = CAShapeLayer.jobsMake { _ in }
+    private let greenDotLayer = CAShapeLayer.jobsMake { _ in }
     private var wantsAnimating = false
     private var pausedTime: CFTimeInterval = 0
     private var lastAnimationBounds = CGRect.null
@@ -229,20 +229,22 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
         let greenCenter = CGPoint(x: bounds.midX + config.horizontalTravel / 2, y: midY)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        redDotLayer.bounds = CGRect(x: 0, y: 0, width: diameter, height: diameter)
-        redDotLayer.position = redCenter
-        redDotLayer.path = UIBezierPath.make(ovalIn: redDotLayer.bounds).cgPath
-        redDotLayer.fillColor = config.redColor.cgColor
-        redDotLayer.transform = CATransform3DIdentity
-        redDotLayer.opacity = 1
-        redDotLayer.zPosition = 1
-        greenDotLayer.bounds = CGRect(x: 0, y: 0, width: diameter, height: diameter)
-        greenDotLayer.position = greenCenter
-        greenDotLayer.path = UIBezierPath.make(ovalIn: greenDotLayer.bounds).cgPath
-        greenDotLayer.fillColor = config.greenColor.cgColor
-        greenDotLayer.transform = CATransform3DIdentity
-        greenDotLayer.opacity = 1
-        greenDotLayer.zPosition = 0
+        redDotLayer
+            .byBounds(CGRect(x: 0, y: 0, width: diameter, height: diameter))
+            .byPosition(redCenter)
+            .byPath(UIBezierPath.make(ovalIn: redDotLayer.bounds).cgPath)
+            .byFillColor(config.redColor)
+            .byTransform(CATransform3DIdentity)
+            .byOpacity(1)
+            .byZPosition(1)
+        greenDotLayer
+            .byBounds(CGRect(x: 0, y: 0, width: diameter, height: diameter))
+            .byPosition(greenCenter)
+            .byPath(UIBezierPath.make(ovalIn: greenDotLayer.bounds).cgPath)
+            .byFillColor(config.greenColor)
+            .byTransform(CATransform3DIdentity)
+            .byOpacity(1)
+            .byZPosition(0)
         CATransaction.commit()
     }
 
@@ -293,22 +295,26 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
         let keyTimes: [NSNumber] = [0, 0.25, 0.5, 0.75, 1]
         let timing = CAMediaTimingFunction(controlPoints: 0.45, 0, 0.2, 1)
         let position = CAKeyframeAnimation(keyPath: "position")
-        position.values = positions.map { NSValue(cgPoint: $0) }
-        position.keyTimes = keyTimes
-        position.timingFunctions = [timing, timing, timing, timing]
+        position
+            .byValues(positions.map { NSValue(cgPoint: $0) })
+            .byKeyTimes(keyTimes)
+            .byTimingFunctions([timing, timing, timing, timing])
         let scale = CAKeyframeAnimation(keyPath: "transform.scale")
-        scale.values = scales
-        scale.keyTimes = keyTimes
-        scale.timingFunctions = [timing, timing, timing, timing]
+        scale
+            .byValues(scales)
+            .byKeyTimes(keyTimes)
+            .byTimingFunctions([timing, timing, timing, timing])
         let opacity = CAKeyframeAnimation(keyPath: "opacity")
-        opacity.values = opacities
-        opacity.keyTimes = keyTimes
-        opacity.timingFunctions = [timing, timing, timing, timing]
+        opacity
+            .byValues(opacities)
+            .byKeyTimes(keyTimes)
+            .byTimingFunctions([timing, timing, timing, timing])
         let zPosition = CAKeyframeAnimation(keyPath: "zPosition")
-        zPosition.values = zPositions
-        zPosition.keyTimes = keyTimes
-        zPosition.calculationMode = .discrete
-        let group = CAAnimationGroup()
+        zPosition
+            .byValues(zPositions)
+            .byKeyTimes(keyTimes)
+            .byCalculationMode(.discrete)
+        let group = CAAnimationGroup.jobsMake { _ in }
         group.animations = [position, scale, opacity, zPosition]
         group.duration = config.cycleDuration
         group.repeatCount = .infinity

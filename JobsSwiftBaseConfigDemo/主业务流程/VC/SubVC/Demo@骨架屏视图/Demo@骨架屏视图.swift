@@ -92,8 +92,9 @@ final class SkeletonViewDemoVC: BaseVC {
                     }
             ]
         )
-        view.byBackgroundColor(JobsCor.systemBackground)
-        view.bySkeletonable(YES) // 容器也打标，避免传导问题
+        view
+            .byBackgroundColor(JobsCor.systemBackground)
+            .bySkeletonable(YES) // 容器也打标，避免传导问题
         startSkeleton()
     }
 

@@ -260,6 +260,11 @@ extension UIListContentConfiguration {
     }
 
     @discardableResult
+    public func bySecondaryLineBreakMode(_ mode: NSLineBreakMode) -> Self {
+        jobs_mutating { $0.secondaryTextProperties.lineBreakMode = mode }
+    }
+
+    @discardableResult
     public func bySecondaryTransform(_ transform: UIListContentConfiguration.TextProperties.TextTransform) -> Self {
         jobs_mutating { $0.secondaryTextProperties.transform = transform }
     }

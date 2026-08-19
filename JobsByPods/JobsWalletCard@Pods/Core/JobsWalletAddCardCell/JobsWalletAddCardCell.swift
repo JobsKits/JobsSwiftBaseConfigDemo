@@ -18,7 +18,7 @@ import SnapKit
 
 final class JobsWalletAddCardCell: UICollectionViewCell {
     private lazy var dashedBorder: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byStrokeColor(JobsCor.systemGray3)
             .byFillColor(JobsCor.clear)
             .byLineDashPattern([6, 4])
@@ -27,7 +27,7 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
     }()
 
     private lazy var iconView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage("plus.circle.fill".sysImg)
             .byTintColor(JobsCor.systemBlue)
             .byContentMode(.scaleAspectFit)
@@ -39,7 +39,7 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byTextColor(JobsCor.systemBlue)
             .byAddTo(contentView) { [unowned self] make in
@@ -60,15 +60,17 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        dashedBorder.path = UIBezierPath.make(roundedRect: bounds, cornerRadius: 14).cgPath
-        dashedBorder.byFrame(bounds)
+        dashedBorder
+            .byPath(UIBezierPath.make(roundedRect: bounds, cornerRadius: 14).cgPath)
+            .byFrame(bounds)
     }
 
     private func buildUI() {
         self.byBackgroundColor(JobsCor.clear)
-        contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
-        contentView.byCornerRadius(14)
-        contentView.byMasksToBounds(true)
+        contentView
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(14)
+            .byMasksToBounds(true)
         dashedBorder.byHidden(false)
         iconView.byVisible(true)
         titleLabel.byVisible(true)

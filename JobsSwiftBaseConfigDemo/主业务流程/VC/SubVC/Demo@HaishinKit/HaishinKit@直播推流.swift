@@ -58,7 +58,7 @@ final class HKLiveVC: BaseVC {
     }()
     /// 状态文案
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))

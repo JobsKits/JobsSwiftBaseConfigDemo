@@ -111,8 +111,9 @@ open class JobsProgressBar: UIView {
     // MARK: - Thumb Config
     public var thumbImage: UIImage? {
         didSet {
-            thumbImageView.byImage(thumbImage)
-            thumbImageView.byHidden((thumbImage == nil))
+            thumbImageView
+                .byImage(thumbImage)
+                .byHidden((thumbImage == nil))
             setNeedsLayout()
         }
     }
@@ -132,8 +133,9 @@ open class JobsProgressBar: UIView {
     public var thumbCornerRadius: CGFloat? {
         didSet {
             let r = thumbCornerRadius ?? 0
-            thumbImageView.byCornerRadius(r)
-            thumbImageView.byMasksToBounds(r > 0)
+            thumbImageView
+                .byCornerRadius(r)
+                .byMasksToBounds(r > 0)
             thumbHighlightLayer.byCornerRadius(r)
         }
     }
@@ -224,21 +226,21 @@ open class JobsProgressBar: UIView {
     private var isProgressBubbleChangeVisible = false
     // MARK: - Views
     private lazy var trackView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGray5)
             .byMasksToBounds(true)
             .byAddTo(self)
     }()
 
     private lazy var fillView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBlue)
             .byMasksToBounds(true)
             .byAddTo(trackView)
     }()
     /// 进度条“头”
     private lazy var thumbImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(thumbContentMode)
             .byHidden(YES)
             .byClipsToBounds(NO)
@@ -246,7 +248,7 @@ open class JobsProgressBar: UIView {
     }()
     /// 高光圈（按下显示）
     private lazy var thumbHighlightLayer: CALayer = {
-        CALayer()
+        CALayer.jobsMake { _ in }
             .byOpacity(0.0)
             .byMasksToBounds(YES)
             .byBorderColor(JobsCor.white.withAlphaComponent(0.9))
@@ -254,7 +256,7 @@ open class JobsProgressBar: UIView {
     }()
     /// 带小三角的进度气泡背景
     private lazy var progressBubbleLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(progressBubbleBackgroundColor)
             .byMasksToBounds(NO)
             .byShadowColor(JobsCor.black)
@@ -383,8 +385,9 @@ open class JobsProgressBar: UIView {
             let availableHeight = max(0, bounds.height - 2 * vInset)
             let trackHeight = min(max(0, preferredThickness), availableHeight)
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
-            trackView.byFrame(trackFrame)
-            trackView.byCornerRadius(trackHeight / 2)
+            trackView
+                .byFrame(trackFrame)
+                .byCornerRadius(trackHeight / 2)
             fillView.byCornerRadius(trackHeight / 2)
             let fillWidth = trackWidth * displayProgress
             if direction == .leftToRight {
@@ -408,8 +411,9 @@ open class JobsProgressBar: UIView {
             let trackWidth = min(max(0, preferredThickness), availableWidth)
             let trackHeight = max(0, bounds.height - 2 * vInset)
             let trackFrame = CGRect(x: hInset, y: vInset, width: trackWidth, height: trackHeight)
-            trackView.byFrame(trackFrame)
-            trackView.byCornerRadius(trackWidth / 2)
+            trackView
+                .byFrame(trackFrame)
+                .byCornerRadius(trackWidth / 2)
             fillView.byCornerRadius(trackWidth / 2)
             let fillHeight = trackHeight * displayProgress
             if direction == .bottomToTop {
@@ -703,13 +707,15 @@ extension JobsProgressBar {
         CATransaction.setAnimationDuration(dur)
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeOut))
         if dragging {
-            thumbImageView.layer.shadowOpacity = min(1, baseShadowOpacity + pressedShadowOpacityBoost)
-            thumbImageView.layer.shadowRadius = baseShadowRadius + pressedShadowRadiusBoost
-            thumbHighlightLayer.opacity = pressedHighlightOpacity
+            thumbImageView
+                .byShadowOpacity(min(1, baseShadowOpacity + pressedShadowOpacityBoost))
+                .byShadowRadius(baseShadowRadius + pressedShadowRadiusBoost)
+            thumbHighlightLayer.byOpacity(pressedHighlightOpacity)
         } else {
-            thumbImageView.layer.shadowOpacity = baseShadowOpacity
-            thumbImageView.layer.shadowRadius = baseShadowRadius
-            thumbHighlightLayer.opacity = 0
+            thumbImageView
+                .byShadowOpacity(baseShadowOpacity)
+                .byShadowRadius(baseShadowRadius)
+            thumbHighlightLayer.byOpacity(0)
         }
         CATransaction.commit()
     }
@@ -797,11 +803,12 @@ extension JobsProgressBar {
             thumbImageView.byHidden(true)
             return
         }
-        thumbImageView.byHidden(false)
-        thumbImageView.byContentMode(thumbContentMode)
+        thumbImageView
+            .byHidden(false)
+            .byContentMode(thumbContentMode)
         let defaultSide = max(0, thickness)
         let size = thumbSize ?? CGSize(width: defaultSide, height: defaultSide)
-        thumbImageView.bounds = CGRect(origin: .zero, size: size)
+        thumbImageView.byBounds(CGRect(origin: .zero, size: size))
         applyThumbStyleIfNeeded()
         var c = center
         c.x += thumbOffset.horizontal
@@ -844,10 +851,11 @@ extension JobsProgressBar {
         // 你原来的 clamp（可保留，避免 thumbOffset 推太离谱）
         c.x = min(max(c.x, bounds.minX - halfW), bounds.maxX + halfW)
         c.y = min(max(c.y, bounds.minY - halfH), bounds.maxY + halfH)
-        thumbImageView.center = c
-        thumbHighlightLayer.byFrame(thumbImageView.bounds)
-        thumbHighlightLayer.byCornerRadius(thumbCornerRadius ?? min(size.width, size.height) / 2)
-        thumbHighlightLayer.byBorderWidth(pressedHighlightWidth)
+        thumbImageView.byCenter(c)
+        thumbHighlightLayer
+            .byFrame(thumbImageView.bounds)
+            .byCornerRadius(thumbCornerRadius ?? min(size.width, size.height) / 2)
+            .byBorderWidth(pressedHighlightWidth)
     }
 
     fileprivate func applyThumbStyleIfNeeded() {
@@ -875,22 +883,24 @@ extension JobsProgressBar {
             shadowRadius = max(0, thumbShadowRadius)
             shadowOffset = thumbShadowOffset
         }
-        thumbImageView.byBackgroundColor(bgColor)
-        thumbImageView.byBorderColor(borderColor)
-        thumbImageView.byBorderWidth(borderWidth)
-        thumbImageView.layer.shadowColor = (shadowColor ?? JobsCor.black).cgColor
-        thumbImageView.layer.shadowOpacity = shadowOpacity
-        thumbImageView.layer.shadowRadius = shadowRadius
-        thumbImageView.layer.shadowOffset = shadowOffset
-        thumbImageView.byMasksToBounds(false)
+        thumbImageView
+            .byBackgroundColor(bgColor)
+            .byBorderColor(borderColor)
+            .byBorderWidth(borderWidth)
+            .byShadowColor((shadowColor ?? JobsCor.black))
+            .byShadowOpacity(shadowOpacity)
+            .byShadowRadius(shadowRadius)
+            .byShadowOffset(shadowOffset)
+            .byMasksToBounds(false)
         baseShadowColor = shadowColor
         baseShadowOpacity = shadowOpacity
         baseShadowRadius = shadowRadius
         baseShadowOffset = shadowOffset
         if isUserDragging, pressEnhancesShadowAndHighlight {
-            thumbImageView.layer.shadowOpacity = min(1, baseShadowOpacity + pressedShadowOpacityBoost)
-            thumbImageView.layer.shadowRadius = baseShadowRadius + pressedShadowRadiusBoost
-            thumbHighlightLayer.opacity = pressedHighlightOpacity
+            thumbImageView
+                .byShadowOpacity(min(1, baseShadowOpacity + pressedShadowOpacityBoost))
+                .byShadowRadius(baseShadowRadius + pressedShadowRadiusBoost)
+            thumbHighlightLayer.byOpacity(pressedHighlightOpacity)
         }
     }
 }
@@ -1097,7 +1107,7 @@ extension JobsProgressBar {
         if let v = objc_getAssociatedObject(self, &_JobsProgressBarAssociatedKeys.progressLabelKey) as? UILabel {
             return v
         }
-        let v = UILabel()
+        let v = UILabel.jobsMake { _ in }
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)

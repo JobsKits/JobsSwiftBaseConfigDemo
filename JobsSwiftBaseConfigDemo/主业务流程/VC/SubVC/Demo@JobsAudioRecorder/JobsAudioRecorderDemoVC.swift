@@ -22,64 +22,70 @@ final class JobsAudioRecorderDemoVC: BaseVC {
 
     private lazy var modeControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["短暂录音".tr, "长时间录音".tr])
-        control.selectedSegmentIndex = 0
+        control.bySelectedSegmentIndex(0)
         control.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
         return control
     }()
     private lazy var durationTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "录音时长".tr
-        label.byTextColor(JobsCor.label)
-        label.font = JobsFont.systemFont(ofSize: 16, weight: .medium)
+        let label = UILabel.jobsMake { _ in }
+        label
+            .byText("录音时长".tr)
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
         return label
     }()
     private lazy var durationField: UITextField = {
-        let field = UITextField()
-        field.borderStyle = .roundedRect
-        field.keyboardType = .numberPad
-        field.textAlignment = .center
-        field.text = "60"
-        field.placeholder = "60"
+        let field = UITextField.jobsMake { _ in }
+        field
+            .byBorderStyle(.roundedRect)
+            .byKeyboardType(.numberPad)
+            .byTextAlignment(.center)
+            .byText("60")
+            .byPlaceholder("60")
         return field
     }()
     private lazy var durationUnitLabel: UILabel = {
-        let label = UILabel()
-        label.text = "秒".tr
-        label.byTextColor(JobsCor.secondaryLabel)
-        label.font = JobsFont.systemFont(ofSize: 15, weight: .regular)
+        let label = UILabel.jobsMake { _ in }
+        label
+            .byText("秒".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
         return label
     }()
     private lazy var hintLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.byTextColor(JobsCor.secondaryLabel)
-        label.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
+        let label = UILabel.jobsMake { _ in }
+        label
+            .byNumberOfLines(0)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
         return label
     }()
-    private lazy var durationSpacerView = UIView()
+    private lazy var durationSpacerView = UIView.jobsMake { _ in }
     private lazy var durationRow = UIStackView(
         arrangedSubviews: [durationTitleLabel, durationSpacerView, durationField, durationUnitLabel]
     )
     private lazy var settingsStack = UIStackView(arrangedSubviews: [modeControl, durationRow, hintLabel])
-    private lazy var settingsCard = UIView()
+    private lazy var settingsCard = UIView.jobsMake { _ in }
     private lazy var listTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "本地录音".tr
-        label.byTextColor(JobsCor.label)
-        label.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
+        let label = UILabel.jobsMake { _ in }
+        label
+            .byText("本地录音".tr)
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
         return label
     }()
-    private lazy var capturePanel = UIView()
+    private lazy var capturePanel = UIView.jobsMake { _ in }
     private lazy var captureHintLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.byTextColor(JobsCor.secondaryLabel)
-        label.font = JobsFont.systemFont(ofSize: 14, weight: .medium)
+        let label = UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
         return label
     }()
     private lazy var recordButton = JobsAudioRecordButton()
     private lazy var longRecordButtonOuterRingView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byBorderColor(JobsCor.white)
             .byBorderWidth(4)
@@ -100,8 +106,9 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     }()
     private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
-        table.dataSource = self
-        table.delegate = self
+        table
+            .byDataSource(self)
+            .byDelegate(self)
         table.register(UITableViewCell.self, forCellReuseIdentifier: "AudioCell")
         return table
     }()
@@ -138,15 +145,18 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     }
 
     private func setupUI() {
-        settingsCard.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-        settingsCard.layer.cornerRadius = 18
-        settingsStack.axis = .vertical
-        settingsStack.spacing = 12
-        durationRow.axis = .horizontal
-        durationRow.alignment = .center
-        durationRow.spacing = 8
+        settingsCard
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            .byCornerRadius(18)
+        settingsStack
+            .byAxis(.vertical)
+            .bySpacing(12)
+        durationRow
+            .byAxis(.horizontal)
+            .byAlignment(.center)
+            .bySpacing(8)
         capturePanel.byBackgroundColor(JobsCor.systemGroupedBackground)
-        tableView.backgroundColor = JobsCor.clear
+        tableView.byBackgroundColor(JobsCor.clear)
 
         view.addSubview(settingsCard)
         settingsCard.addSubview(settingsStack)
@@ -236,21 +246,21 @@ final class JobsAudioRecorderDemoVC: BaseVC {
 
     private func refreshState() {
         let shortMode = modeControl.selectedSegmentIndex == 0
-        durationRow.isHidden = !shortMode
-        recordButton.isHidden = !shortMode
-        longRecordButtonOuterRingView.isHidden = shortMode
-        longRecordButton.isHidden = shortMode
+        durationRow.byHidden(!shortMode)
+        recordButton.byHidden(!shortMode)
+        longRecordButtonOuterRingView.byHidden(shortMode)
+        longRecordButton.byHidden(shortMode)
         modeControl.isEnabled = !recorder.isRecording
         if shortMode {
             hintLabel.text = String(
                 format: "白色刻度前不算有效录音；至少录制 %.0f 秒，手指移出按钮即取消，计时环走满后自动保存。".tr,
                 recordButton.minimumValidDuration
             )
-            captureHintLabel.text = "按住录音".tr
+            captureHintLabel.byText("按住录音".tr)
         } else {
-            hintLabel.text = "开始后可离开本页或让 App 进入后台，返回后轻触按钮停止并保存。".tr
+            hintLabel.byText("开始后可离开本页或让 App 进入后台，返回后轻触按钮停止并保存。".tr)
             let recording = recorder.isRecording
-            captureHintLabel.text = recording ? "正在录音，轻触停止并保存".tr : "轻触开始长时间录音".tr
+            captureHintLabel.byText(recording ? "正在录音，轻触停止并保存".tr : "轻触开始长时间录音".tr)
             longRecordButton.bySelected(recording)
         }
     }
@@ -263,7 +273,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private func showPermissionAlert() { show("请在系统设置中允许麦克风权限") }
 
     private func show(_ message: String) {
-        messageAlertController.message = message
+        messageAlertController.byMessage(message)
         guard presentedViewController !== messageAlertController else { return }
         present(messageAlertController, animated: true)
     }
@@ -283,13 +293,13 @@ extension JobsAudioRecorderDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = recordings[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "AudioCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        content.image = UIImage(systemName: item.mode == .long ? "waveform.badge.mic" : "waveform")
-        content.text = item.mode == .long ? "长时间录音" : "短暂录音"
-        content.secondaryText = String(format: "%.1f 秒 · %.1f KB · %@", item.duration, Double(item.fileSize) / 1024, item.url.lastPathComponent)
-        cell.contentConfiguration = content
-        cell.accessoryType = .detailButton
         return cell
+            .byContentConfiguration { content in
+                content.image = UIImage(systemName: item.mode == .long ? "waveform.badge.mic" : "waveform")
+                content.text = item.mode == .long ? "长时间录音" : "短暂录音"
+                content.secondaryText = String(format: "%.1f 秒 · %.1f KB · %@", item.duration, Double(item.fileSize) / 1024, item.url.lastPathComponent)
+            }
+            .byAccessoryType(.detailButton)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

@@ -33,7 +33,7 @@ final class UnityDemoVC: BaseVC {
     // ===== UI =====
     /// 中间用来放 Unity 的容器（现在只是占位，如果以后要全屏可以不用它）
     private lazy var unityContainerView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byCornerRadius(8)
             .byAddTo(view) { make in
@@ -43,7 +43,7 @@ final class UnityDemoVC: BaseVC {
     }()
     /// 顶部提示 Unity 真机集成边界。
     private lazy var tipLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Unity 仅在真机运行；首次冷启动会同步初始化，后续默认暂停并隐藏以避免重复冷启动".tr)
             .byTextColor(JobsCor.systemRed)
             .byFont(JobsFont.systemFont(ofSize: 13))
@@ -67,7 +67,7 @@ final class UnityDemoVC: BaseVC {
     }()
     /// 输入自动关闭时间（秒）
     private lazy var closeTimeTextField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.decimalPad)
             .byTextAlignment(.center)

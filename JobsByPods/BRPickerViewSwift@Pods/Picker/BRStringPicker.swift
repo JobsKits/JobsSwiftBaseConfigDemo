@@ -11,10 +11,12 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRStringPicker: BRBasePicker<String>, UIPickerViewDelegate, UIPickerViewDataSource {
     private var data: [String] = []
     private var selectedIndex: Int = 0
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
     private var lastSelected: Int = 0
     private var hasUserInteracted: Bool = false
 
@@ -22,8 +24,9 @@ public final class BRStringPicker: BRBasePicker<String>, UIPickerViewDelegate, U
     @discardableResult public func bySelectedIndex(_ idx: Int) -> Self { selectedIndex = max(0, min(idx, max(0, data.count-1))); return self }
 
     public override func buildContentView() -> UIView {
-        picker.delegate = self
-        picker.dataSource = self
+        picker
+            .byDelegate(self)
+            .byDataSource(self)
         picker.selectRow(selectedIndex, inComponent: 0, animated: false)
         // Default state: no highlight until user scrolls.
         lastSelected = picker.selectedRow(inComponent: 0)
@@ -41,12 +44,13 @@ public final class BRStringPicker: BRBasePicker<String>, UIPickerViewDelegate, U
     public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { theme.pickerHeight / 5.0 }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.text = data[row]
-        label.backgroundColor = .clear
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byText(data[row])
+            .byBackgroundColor(.clear)
         return label
     }
 
@@ -67,6 +71,6 @@ public final class BRStringPicker: BRBasePicker<String>, UIPickerViewDelegate, U
 
     private func applyRowColor(_ pickerView: UIPickerView, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: 0) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

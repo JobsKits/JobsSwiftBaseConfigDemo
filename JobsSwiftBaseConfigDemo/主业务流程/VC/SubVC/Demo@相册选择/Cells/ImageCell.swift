@@ -19,7 +19,7 @@ import SnapKit
 
 public final class ImageCell: UICollectionViewCell {
     private lazy var iv: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byAddTo(contentView) { [unowned self] make in

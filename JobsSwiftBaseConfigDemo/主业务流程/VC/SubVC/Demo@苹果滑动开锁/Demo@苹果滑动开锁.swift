@@ -39,7 +39,7 @@ final class SlideToUnlockDemoVC: BaseVC {
     }()
 
     private lazy var dependencyCard: UIView = { [unowned self] in
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byMasksToBounds(YES)
@@ -50,7 +50,7 @@ final class SlideToUnlockDemoVC: BaseVC {
     }()
 
     private lazy var dependencyLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("""
             ① Demo 页面 · SlideToUnlockDemoVC
             ② 交互组件 · JobsGestureUnlock / SlideToUnlockView

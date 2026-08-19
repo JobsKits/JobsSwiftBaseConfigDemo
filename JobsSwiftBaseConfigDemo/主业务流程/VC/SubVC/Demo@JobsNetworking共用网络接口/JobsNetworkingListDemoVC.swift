@@ -75,15 +75,13 @@ final class JobsNetworkingListDemoVC : BaseVC {
                 self?.items.count ?? 0
             }
             .cellForRowAt { [weak self] _, tv, indexPath in
-                let cell = tv.dequeueReusableCell(withIdentifier: "cell") ??
-                    UITableViewCell(style: .default, reuseIdentifier: "cell")
-                guard let self else { return cell }
-                var cfg = cell.defaultContentConfiguration()
-                cfg.text = self.items[indexPath.row].title
-                cfg.textProperties.font = JobsFont.systemFont(ofSize: 16, weight: .medium)
-                cell.contentConfiguration = cfg
-                cell.accessoryType = .disclosureIndicator
-                return cell
+                tv.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                    .byListConfig {
+                        guard let self else { return $0 };return $0
+                            .byText(self.items[indexPath.row].title)
+                            .byTextFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+                    }
+                    .byAccessoryType(.disclosureIndicator)
             }
             .didSelectRowAt { [weak self] _, tv, indexPath in
                 guard let self else { return }

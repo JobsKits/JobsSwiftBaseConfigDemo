@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 #if os(iOS) || os(tvOS)
 public final class JobsClockIconView: UIView {
     /// 默认每 0.1 秒前进 6°，6 秒完成一周。
@@ -34,11 +36,11 @@ public final class JobsClockIconView: UIView {
     }
     public private(set) var isRunning = false
 
-    private let dialLayer = CAShapeLayer()
-    private let hourHandLayer = CAShapeLayer()
-    private let minuteHandLayer = CAShapeLayer()
-    private let centerDotLayer = CAShapeLayer()
-    private let minuteHandContainer = UIView()
+    private let dialLayer = CAShapeLayer.jobsMake { _ in }
+    private let hourHandLayer = CAShapeLayer.jobsMake { _ in }
+    private let minuteHandLayer = CAShapeLayer.jobsMake { _ in }
+    private let centerDotLayer = CAShapeLayer.jobsMake { _ in }
+    private let minuteHandContainer = UIView.jobsMake { _ in }
     private var rotationDirection: JobsImageRotationDirection
     private var tickInterval: TimeInterval
     private var rotator: JobsImageRotator?
@@ -63,8 +65,9 @@ public final class JobsClockIconView: UIView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        minuteHandContainer.bounds = CGRect(origin: .zero, size: bounds.size)
-        minuteHandContainer.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        minuteHandContainer
+            .byBounds(CGRect(origin: .zero, size: bounds.size))
+            .byCenter(CGPoint(x: bounds.midX, y: bounds.midY))
         layoutIcon()
     }
 
@@ -114,13 +117,14 @@ private extension JobsClockIconView {
         layer.addSublayer(dialLayer)
         layer.addSublayer(hourHandLayer)
         addSubview(minuteHandContainer)
-        minuteHandContainer.isUserInteractionEnabled = false
+        minuteHandContainer.byUserInteractionEnabled(false)
         minuteHandContainer.layer.addSublayer(minuteHandLayer)
         layer.addSublayer(centerDotLayer)
         [dialLayer, hourHandLayer, minuteHandLayer].forEach { shapeLayer in
-            shapeLayer.fillColor = UIColor.clear.cgColor
-            shapeLayer.lineCap = .round
-            shapeLayer.lineJoin = .round
+            shapeLayer
+                .byFillColor(UIColor.clear)
+                .byLineCap(.round)
+                .byLineJoin(.round)
         }
         rotator = JobsImageRotator(
             targetView: minuteHandContainer,
@@ -133,10 +137,10 @@ private extension JobsClockIconView {
 
     func applyTintColor() {
         let color = tintColor ?? UIColor.darkGray
-        dialLayer.strokeColor = color.withAlphaComponent(0.72).cgColor
-        hourHandLayer.strokeColor = color.cgColor
-        minuteHandLayer.strokeColor = color.cgColor
-        centerDotLayer.fillColor = color.cgColor
+        dialLayer.byStrokeColor(color.withAlphaComponent(0.72))
+        hourHandLayer.byStrokeColor(color)
+        minuteHandLayer.byStrokeColor(color)
+        centerDotLayer.byFillColor(color)
     }
 
     func layoutIcon() {
@@ -146,8 +150,9 @@ private extension JobsClockIconView {
         let lineWidth = max(1.35, side * 0.075)
         let radius = max(0, side / 2 - lineWidth / 2)
 
-        dialLayer.frame = bounds
-        dialLayer.lineWidth = lineWidth
+        dialLayer
+            .byFrame(bounds)
+            .byLineWidth(lineWidth)
         dialLayer.path = UIBezierPath(
             ovalIn: CGRect(
                 x: center.x - radius,
@@ -159,7 +164,7 @@ private extension JobsClockIconView {
 
         let hourLength = side * 0.22
         let hourAngle = -CGFloat.pi / 3
-        let hourPath = UIBezierPath()
+        let hourPath = UIBezierPath.jobsMake { _ in }
         hourPath.move(to: center)
         hourPath.addLine(
             to: CGPoint(
@@ -167,19 +172,21 @@ private extension JobsClockIconView {
                 y: center.y - cos(hourAngle) * hourLength
             )
         )
-        hourHandLayer.frame = bounds
-        hourHandLayer.lineWidth = lineWidth
-        hourHandLayer.path = hourPath.cgPath
+        hourHandLayer
+            .byFrame(bounds)
+            .byLineWidth(lineWidth)
+            .byPath(hourPath.cgPath)
 
-        let minutePath = UIBezierPath()
+        let minutePath = UIBezierPath.jobsMake { _ in }
         minutePath.move(to: center)
         minutePath.addLine(to: CGPoint(x: center.x, y: center.y - side * 0.34))
-        minuteHandLayer.frame = minuteHandContainer.bounds
-        minuteHandLayer.lineWidth = max(1.1, lineWidth * 0.72)
-        minuteHandLayer.path = minutePath.cgPath
+        minuteHandLayer
+            .byFrame(minuteHandContainer.bounds)
+            .byLineWidth(max(1.1, lineWidth * 0.72))
+            .byPath(minutePath.cgPath)
 
         let dotRadius = max(1.2, lineWidth * 0.72)
-        centerDotLayer.frame = bounds
+        centerDotLayer.byFrame(bounds)
         centerDotLayer.path = UIBezierPath(
             ovalIn: CGRect(
                 x: center.x - dotRadius,

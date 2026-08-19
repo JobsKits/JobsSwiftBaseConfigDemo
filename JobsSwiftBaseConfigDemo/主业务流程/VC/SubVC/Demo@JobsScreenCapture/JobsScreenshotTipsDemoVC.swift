@@ -28,7 +28,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     private var activeScreenshotCount = 0
 
     private lazy var statusCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(20)
             .byAddTo(view) { [unowned self] make in
@@ -38,7 +38,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusIconLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("📸")
             .byFont(JobsFont.systemFont(ofSize: 42, weight: .regular))
             .byTextAlignment(.center)
@@ -49,7 +49,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待截屏操作".tr)
             .byFont(JobsFont.systemFont(ofSize: 21, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -61,7 +61,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("系统截屏 0 次 · 按钮截屏 0 次".tr)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -75,7 +75,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var guideLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("真机可同时按下侧边键与音量加键；也可以点击下方按钮主动截取当前页面并保存到相册。程序主动截屏不会触发系统截屏通知，因此这里分开计数。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

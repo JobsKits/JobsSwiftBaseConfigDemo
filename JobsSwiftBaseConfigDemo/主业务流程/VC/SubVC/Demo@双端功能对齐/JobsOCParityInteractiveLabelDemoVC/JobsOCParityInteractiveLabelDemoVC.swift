@@ -23,7 +23,7 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
     private var tapCount = 0
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("对齐 OC 的 JobsBaseLabel / BaseLabel：展示内边距、背景、异形圆角，以及轻点和长按手势。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -69,7 +69,7 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("状态：等待轻点或长按".tr)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
@@ -134,10 +134,11 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
             byRoundingCorners: [.topLeft, .bottomRight],
             cornerRadii: CGSize(width: 12, height: 12)
         )
-        let mask = decoratedLabel.layer.mask as? CAShapeLayer ?? CAShapeLayer()
-        mask.frame = decoratedLabel.bounds
-        mask.path = path.cgPath
-        decoratedLabel.layer.mask = mask
+        let mask = decoratedLabel.layer.mask as? CAShapeLayer ?? CAShapeLayer.jobsMake { _ in }
+        mask
+            .byFrame(decoratedLabel.bounds)
+            .byPath(path.cgPath)
+        decoratedLabel.layer.byMask(mask)
     }
 }
 

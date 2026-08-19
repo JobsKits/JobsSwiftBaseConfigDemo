@@ -58,7 +58,7 @@ public class SlideToUnlockView: UIView {
     private var thumbLeadingConstraint: Constraint?
     /// 背景轨道（灰色圆角条）
     private lazy var trackView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGray5)
             .byCornerRadius(28)
             .byMasksToBounds(YES)
@@ -68,7 +68,7 @@ public class SlideToUnlockView: UIView {
     }()
     /// 轨道内部的“骨架屏效果”闪动条（覆盖整个父视图）
     private lazy var shimmerView: UIView = { [unowned self] in
-        let view = UIView()
+        let view = UIView.jobsMake { _ in }
             .byShimmerColors(
                 base: JobsCor.systemGray5,                 // 与轨道底色一致
                 highlight: JobsCor.white.withAlphaComponent(0.42)
@@ -76,14 +76,15 @@ public class SlideToUnlockView: UIView {
             .byShimmerDuration(2.4)
             .byShimmerPauseDuration(3.0)
             .byShimmerHighlightWidthRatio(0.05)
-        view.byAddTo(trackView)
-        view.byFrame(trackView.bounds)
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view
+            .byAddTo(trackView)
+            .byFrame(trackView.bounds)
+            .byAutoresizingMask([.flexibleWidth, .flexibleHeight])
         return view
     }()
     /// 中间文字：“滑动以解锁”
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("滑动以解锁".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
@@ -94,7 +95,7 @@ public class SlideToUnlockView: UIView {
     }()
     /// 滑块视图
     private lazy var thumbView: UIView = { [unowned self] in
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(thumbSize.height / 2)
             .byMasksToBounds(YES)
@@ -159,7 +160,7 @@ public class SlideToUnlockView: UIView {
     }()
 
     private lazy var arrow: UIImageView = { [unowned self] in
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byTintColor(JobsCor.systemBlue)
             .byAddTo(thumbView) { [unowned self] make in
                 make.center.equalToSuperview()
@@ -281,9 +282,10 @@ public class SlideToUnlockView: UIView {
         }
         // 纯矩形遮罩，靠近滑块是笔直的直角边
         let path = UIBezierPath.make(rect: maskRect)
-        let maskLayer = CAShapeLayer()
-        maskLayer.byFrame(shimmerView.bounds)
-        maskLayer.path  = path.cgPath
+        let maskLayer = CAShapeLayer.jobsMake { _ in }
+        maskLayer
+            .byFrame(shimmerView.bounds)
+            .byPath(path.cgPath)
         shimmerView.jobs_setShimmerMask(maskLayer)
     }
 

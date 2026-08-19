@@ -43,7 +43,7 @@ class JobsNetworkingDemoBaseVC: BaseVC {
     }()
 
     lazy var textView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byKeyboardType(.default)
             .byEditable(NO)

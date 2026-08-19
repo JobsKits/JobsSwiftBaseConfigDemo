@@ -52,7 +52,7 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
         }
         .onLog { [weak self] message in self?.appendLog(message) }
     private lazy var descriptionLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前演示：\(featureTitle)\n默认启用 Mock Transport，可在模拟器直接验证点击链路和数据回调。")
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byNumberOfLines(0)
@@ -77,7 +77,7 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
             }
     }()
     private lazy var logTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.label)

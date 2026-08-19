@@ -27,11 +27,20 @@ final class JobsHandwritingCanvasView: UIView {
     private var normalizedStrokes: [[NormalizedPoint]] = []
     private var strokeLayers: [CAShapeLayer] = []
     private var lastLayoutSize = CGSize.zero
+    private var strokeColor = JobsThemeCenter.shared.resolvedColor(.textPrimary)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         byMultipleTouchEnabled(false)
             .byExclusiveTouch(true)
+        JobsThemeCenter.shared.bind(
+            self,
+            slot: "JobsHandwritingCanvasView.strokeColor"
+        ) { object, center in
+            guard let canvasView = object as? JobsHandwritingCanvasView else { return }
+            canvasView.strokeColor = center.resolvedColor(.textPrimary)
+            canvasView.strokeLayers.forEach { $0.byStrokeColor(canvasView.strokeColor) }
+        }
     }
 
     @available(*, unavailable)
@@ -86,7 +95,7 @@ final class JobsHandwritingCanvasView: UIView {
     }
 
     func loadEncodedStrokes(_ data: Data) throws {
-        normalizedStrokes = try JSONDecoder().decode([[NormalizedPoint]].self, from: data)
+        normalizedStrokes = try JSONDecoder.make { _ in }.decode([[NormalizedPoint]].self, from: data)
             .map { stroke in
                 stroke.filter { (0...1).contains($0.x) && (0...1).contains($0.y) }
             }
@@ -95,7 +104,7 @@ final class JobsHandwritingCanvasView: UIView {
     }
 
     func encodedStrokes() throws -> Data {
-        try JSONEncoder().encode(normalizedStrokes)
+        try JSONEncoder.make { _ in }.encode(normalizedStrokes)
     }
 
     func clearCanvas(notifyChange: Bool = true) {
@@ -135,10 +144,10 @@ private extension JobsHandwritingCanvasView {
     }
 
     func makeStrokeLayer() -> CAShapeLayer {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFrame(bounds)
             .byFillColor(JobsCor.clear)
-            .byStrokeColor(JobsCor.black)
+            .byStrokeColor(strokeColor)
             .byLineWidth(4)
             .byLineCap(.round)
             .byLineJoin(.round)

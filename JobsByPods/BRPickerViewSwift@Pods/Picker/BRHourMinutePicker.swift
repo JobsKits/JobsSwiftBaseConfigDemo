@@ -11,11 +11,13 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
     private var selectDate: Date = Date()
     private var minuteInterval: Int = 5
 
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
     private var hours: [Int] = Array(0...23)
     private var minutes: [Int] = Array(0...59)
 
@@ -27,8 +29,9 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
     @discardableResult public func byMinuteInterval(_ v: Int) -> Self { minuteInterval = max(1, min(v, 30)); return self }
 
     public override func buildContentView() -> UIView {
-        picker.delegate = self
-        picker.dataSource = self
+        picker
+            .byDelegate(self)
+            .byDataSource(self)
         let cal = BRCalendar.gregorian
         let h = cal.component(.hour, from: selectDate)
         let m = cal.component(.minute, from: selectDate)
@@ -74,16 +77,17 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
     }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.backgroundColor = .clear
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byBackgroundColor(.clear)
         if component == 0 {
-            label.text = "\(hours[row])时"
+            label.byText("\(hours[row])时")
         } else {
             let step = minuteInterval
-            label.text = String(format: "%02d分", row * step)
+            label.byText(String(format: "%02d分", row * step))
         };return label
     }
 
@@ -110,6 +114,6 @@ public final class BRHourMinutePicker: BRBasePicker<Date>, UIPickerViewDelegate,
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

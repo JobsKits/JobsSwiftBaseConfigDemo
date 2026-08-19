@@ -23,7 +23,7 @@ import GKNavigationBarSwift
 final class LGOEditNicknameVC: BaseVC {
     /// 昵称输入框
     private lazy var nicknameField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             // 基础视觉
             .byAttributedPlaceholder(
                 NSAttributedString(
@@ -95,7 +95,7 @@ final class LGOEditNicknameVC: BaseVC {
     }()
     /// 底部说明文字
     private lazy var tipLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("长度限制12个字节，仅免费修改1次".tr)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.red)

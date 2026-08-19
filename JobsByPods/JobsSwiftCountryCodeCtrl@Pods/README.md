@@ -31,3 +31,7 @@ if let country = JobsSwiftCountryCodeCtrl.selectedCountry {
 ruby -c JobsSwiftCountryCodeCtrl.podspec
 pod install --no-repo-update
 ```
+
+## Jobs DSL 调用约定
+
+Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。

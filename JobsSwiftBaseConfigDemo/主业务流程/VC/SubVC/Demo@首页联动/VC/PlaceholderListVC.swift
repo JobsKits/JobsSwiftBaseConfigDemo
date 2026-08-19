@@ -24,7 +24,7 @@ final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate 
     init(title: String) { self.titleText = title; super.init(nibName: nil, bundle: nil) }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     private lazy var tipLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这里是「\(titleText)」示例页面")
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)

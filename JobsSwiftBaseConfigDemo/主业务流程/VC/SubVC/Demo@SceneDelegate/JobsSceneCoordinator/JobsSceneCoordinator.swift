@@ -7,6 +7,9 @@
 
 import UIKit
 
+import JobsByUIKit
+import JobsSwiftDSL
+
 enum JobsSceneCoordinator {
     static let activityType = "com.jobs.scene-delegate-demo"
     static let didChangeNotification = Notification.Name("JobsSceneCoordinatorDidChangeNotification")
@@ -17,26 +20,28 @@ enum JobsSceneCoordinator {
     private static var countersBySessionIdentifier: [String: Int] = [:]
     private static var eventsBySessionIdentifier: [String: [String]] = [:]
     private static let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_Hans_CN")
-        formatter.dateFormat = "HH:mm:ss.SSS"
-        return formatter
+        DateFormatter.make { formatter in
+            formatter
+                .byLocale(Locale(identifier: "zh_Hans_CN"))
+                .byDateFormat("HH:mm:ss.SSS")
+        }
     }()
 
     static func demoActivity(
         counter: Int,
         sourceSession: UISceneSession? = nil
     ) -> NSUserActivity {
-        let activity = NSUserActivity(activityType: activityType)
-        activity.title = "SceneDelegate 多场景 Demo"
-        activity.targetContentIdentifier = activityType
-        activity.userInfo = [
-            counterUserInfoKey: counter,
-            sourceSessionIdentifierUserInfoKey: sourceSession?.persistentIdentifier ?? ""
-        ]
-        activity.isEligibleForHandoff = false
-        activity.isEligibleForPrediction = false
-        return activity
+        NSUserActivity.make(activityType: activityType) { activity in
+            activity
+                .byTitle("SceneDelegate 多场景 Demo")
+                .byTargetContentIdentifier(activityType)
+                .byUserInfo([
+                    counterUserInfoKey: counter,
+                    sourceSessionIdentifierUserInfoKey: sourceSession?.persistentIdentifier ?? ""
+                ])
+                .byEligibleForHandoff(false)
+                .byEligibleForPrediction(false)
+        }
     }
 
     static func demoActivity(

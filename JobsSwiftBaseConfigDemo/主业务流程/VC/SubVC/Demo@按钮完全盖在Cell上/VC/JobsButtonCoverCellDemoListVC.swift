@@ -86,17 +86,16 @@ extension JobsButtonCoverCellDemoListVC: UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
-        let cell = tableView
+        return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byAccessoryType(.disclosureIndicator)
-        var configuration = cell.defaultContentConfiguration()
-        configuration.text = row.title
-        configuration.secondaryText = row.subtitle
-        configuration.textProperties.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
-        configuration.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
-        configuration.secondaryTextProperties.numberOfLines = 0
-        cell.contentConfiguration = configuration
-        return cell
+            .byListConfig {
+                $0.byText(row.title)
+                    .bySecondaryText(row.subtitle)
+                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .bySecondaryLines(0)
+            }
     }
 
     func tableView(_ tableView: UITableView,

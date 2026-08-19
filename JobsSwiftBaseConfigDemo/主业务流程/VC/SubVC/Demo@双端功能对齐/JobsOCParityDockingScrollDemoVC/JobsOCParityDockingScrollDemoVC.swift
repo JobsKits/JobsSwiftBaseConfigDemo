@@ -27,7 +27,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }
 
     private lazy var topRegionView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.22))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -37,7 +37,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.88))
             .byCornerRadius(12)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.10))
@@ -51,7 +51,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("JobsScrollViewVC")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -62,7 +62,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageDescriptionLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(
                 "演示“只允许在指定 y 区间内上下滑动”的吸附效果："
                 + "拖拽绿色区域，上滑释放会吸附到最高点，下滑释放会回到底部初始位置。"
@@ -78,7 +78,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var topAnchorLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("最高点：上滑后吸附到这里".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.systemBlue)
@@ -89,7 +89,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var bottomAnchorLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("最低点：下滑释放回到初始位置".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.systemOrange)
@@ -100,7 +100,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var draggableView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.92))
             .byUserInteractionEnabled(YES)
             .addPanAction { [weak self] gesture in
@@ -117,7 +117,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var dragHintCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.88))
             .byCornerRadius(12)
             .byAddTo(draggableView) { make in
@@ -129,7 +129,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var dragHintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("按住绿色区域上下拖动\n上滑吸顶，下滑回到底部".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)

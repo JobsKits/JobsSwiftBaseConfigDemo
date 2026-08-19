@@ -23,9 +23,9 @@ extension MJRefreshNormalHeader {
         header.setTitle("MJRefreshHeaderRefreshingText".tr, for: .refreshing)  // 正在刷新状态
         header.lastUpdatedTimeText = { (lastUpdatedTime) -> String in
             guard let time = lastUpdatedTime else { return "MJRefreshHeaderNoneLastDateText".tr } // 没有更新时间时显示
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm"
-            return "MJRefreshHeaderLastTimeText".tr + formatter.string(from: time)
+            let formatter = DateFormatter.make {
+                $0.byDateFormat("yyyy-MM-dd HH:mm")
+            };return "MJRefreshHeaderLastTimeText".tr + formatter.string(from: time)
         }
         // 可选：调整字体和颜色
         header.stateLabel?.byFont(UIFont.systemFont(ofSize: 12))

@@ -166,7 +166,7 @@ extension JobsWalletCardView: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let section = Section(rawValue: indexPath.section) else {
-            return UICollectionViewCell()
+            return UICollectionViewCell.jobsMake { _ in }
         }
         switch section {
         /// 渲染银行卡
@@ -187,7 +187,7 @@ extension JobsWalletCardView: UICollectionViewDataSource {
                                at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader,
               let section = Section(rawValue: indexPath.section) else {
-            return UICollectionReusableView()
+            return UICollectionReusableView.jobsMake { _ in }
         }
         let header = collectionView.byDequeueSupplementary(
             JobsWalletSectionHeaderView.self,

@@ -24,7 +24,7 @@ import GKNavigationBarSwift
 final class JobsControlEventsDemoVC: BaseVC {
     // 统一用一个垂直栈承载所有 Demo
     private lazy var stack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .bySpacing(14)
@@ -67,7 +67,7 @@ extension JobsControlEventsDemoVC {
     /// UISwitch → onJobsChange
     private func demo_Switch_onJobsChange() {
         addSectionTitle("26.1-1️⃣  UISwitch：onJobsChange(.valueChanged)")
-        stack.addArrangedSubview(UISwitch()
+        stack.addArrangedSubview(UISwitch.jobsMake { _ in }
             .onJobsChange { (sw: UISwitch) in
                 print("开关状态：\(sw.isOn)")
             })
@@ -75,7 +75,7 @@ extension JobsControlEventsDemoVC {
     /// UIDatePicker → onJobsChange
     private func demo_DatePicker_onJobsChange() {
         addSectionTitle("26.1-2️⃣  UIDatePicker：onJobsChange(.valueChanged)")
-        stack.addArrangedSubview(UIDatePicker()
+        stack.addArrangedSubview(UIDatePicker.jobsMake { _ in }
             .byDatePickerMode(.date)
             .byPreferredDatePickerStyle(.wheels)
             .onJobsChange { (picker :UIDatePicker) in
@@ -85,7 +85,7 @@ extension JobsControlEventsDemoVC {
     /// UISlider → onJobsChange
     private func demo_Slider_onJobsChange() {
         addSectionTitle("26.1-3️⃣  UISlider：onJobsChange(.valueChanged)")
-        stack.addArrangedSubview(UISlider()
+        stack.addArrangedSubview(UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(100)
             .byValue(30)
@@ -96,7 +96,7 @@ extension JobsControlEventsDemoVC {
     /// UITextField → onJobsEvent(.editingChanged)
     private func demo_TextField_onJobsEvent() {
         addSectionTitle("26.1-4️⃣  UITextField：onJobsEvent(.editingChanged)")
-        stack.addArrangedSubview(UITextField()
+        stack.addArrangedSubview(UITextField.jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byPlaceholder("输入点什么…".tr)
             .onJobsEvent(.editingChanged) { (tf:UITextField) in
@@ -132,7 +132,7 @@ extension JobsControlEventsDemoVC {
     }
     // MARK: - Helpers
     private func addSectionTitle(_ text: String) {
-        stack.addArrangedSubview(UILabel().byText(text)
+        stack.addArrangedSubview(UILabel.jobsMake { _ in }.byText(text)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel))
     }

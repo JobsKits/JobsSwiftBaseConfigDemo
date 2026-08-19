@@ -8,6 +8,7 @@
 
 import ObjectBox
 
+// 该标记由 ObjectBox Sourcery 扫描，生成 EntityInfo 时不可删除。
 // objectbox: entity
 final class Human: Entity {
     var id: Id = 0

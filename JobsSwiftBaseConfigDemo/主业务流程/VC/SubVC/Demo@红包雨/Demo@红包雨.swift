@@ -59,7 +59,7 @@ final class RedPacketRainDemoVC: BaseVC {
     }()
     /// 显示累计点击次数
     private lazy var countLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 18, weight: .medium))
             .byTextColor(JobsCor.white)

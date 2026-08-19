@@ -32,7 +32,7 @@ open class JobsClockView: UIView {
     // MARK: - 表盘 & 刻度
     /// 外圈表盘
     private lazy var dialLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label.withAlphaComponent(0.2))
             .byLineWidth(2)
@@ -40,7 +40,7 @@ open class JobsClockView: UIView {
     }()
     /// 12 个整点刻度
     private lazy var tickLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label)
             .byLineWidth(2)
@@ -48,7 +48,7 @@ open class JobsClockView: UIView {
     }()
     /// 中心小圆点
     private lazy var centerDotLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.label)
             .byStrokeColor(JobsCor.clear)
             .byAddTo(layer)
@@ -56,7 +56,7 @@ open class JobsClockView: UIView {
     /// 1～12 的数字标签
     private lazy var numberLabels: [UILabel] = {
         (1...12).map { value in
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byText("\(value)")
                 .byFont(.systemFont(ofSize: 12, weight: .medium))
                 .byTextColor(JobsCor.label)
@@ -66,21 +66,21 @@ open class JobsClockView: UIView {
     }()
     // MARK: - 指针层（懒加载）
     private lazy var hourHand: CALayer = {
-        CALayer()
+        CALayer.jobsMake { _ in }
             .byBackgroundColor(JobsCor.label)
             .byCornerRadius(3)
             .byAddTo(layer)
     }()
 
     private lazy var minuteHand: CALayer = {
-        CALayer()
+        CALayer.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondaryLabel)
             .byCornerRadius(2)
             .byAddTo(layer)
     }()
 
     private lazy var secondHand: CALayer = {
-        CALayer()
+        CALayer.jobsMake { _ in }
             .byBackgroundColor(JobsCor.red)
             .byCornerRadius(1)
             .byAddTo(layer)
@@ -127,11 +127,11 @@ extension JobsClockView {
         #if os(iOS) || os(tvOS)
         let labelColor = JobsCor.label.resolvedColor(with: traitCollection)
         let secondaryLabelColor = JobsCor.secondaryLabel.resolvedColor(with: traitCollection)
-        dialLayer.strokeColor = labelColor.withAlphaComponent(0.2).cgColor
-        tickLayer.strokeColor = labelColor.cgColor
-        centerDotLayer.fillColor = labelColor.cgColor
-        hourHand.backgroundColor = labelColor.cgColor
-        minuteHand.backgroundColor = secondaryLabelColor.cgColor
+        dialLayer.byStrokeColor(labelColor.withAlphaComponent(0.2))
+        tickLayer.byStrokeColor(labelColor)
+        centerDotLayer.byFillColor(labelColor)
+        hourHand.byBackgroundColor(labelColor)
+        minuteHand.byBackgroundColor(secondaryLabelColor)
         #endif
     }
     /// 布局表盘 + 刻度 + 数字
@@ -149,7 +149,7 @@ extension JobsClockView {
             height: radius * 2
         )
         let circlePath = UIBezierPath.make(ovalIn: circleRect)
-        dialLayer.path = circlePath.cgPath
+        dialLayer.byPath(circlePath.cgPath)
         // 12 个整点刻度
         let tickPath = UIBezierPath.make()
         let tickLen: CGFloat = 8
@@ -168,7 +168,7 @@ extension JobsClockView {
                 .byMove(to: inner)
                 .byAddLine(to: outer)
         }
-        tickLayer.path = tickPath.cgPath
+        tickLayer.byPath(tickPath.cgPath)
         // 中心小圆点
         let dotRadius: CGFloat = 4
         let dotRect = CGRect(
@@ -178,7 +178,7 @@ extension JobsClockView {
             height: dotRadius * 2
         )
         let dotPath = UIBezierPath.make(ovalIn: dotRect)
-        centerDotLayer.path = dotPath.cgPath
+        centerDotLayer.byPath(dotPath.cgPath)
         // 1～12 数字布局
         let numberRadius = radius - 20
         for (index, label) in numberLabels.enumerated() {
@@ -207,9 +207,9 @@ extension JobsClockView {
         let minuteLen: CGFloat = size * 0.35
         let secondLen: CGFloat = size * 0.40
         // 触发布局时，顺便触发懒加载
-        hourHand.bounds   = CGRect(x: 0, y: 0, width: 6, height: hourLen)
-        minuteHand.bounds = CGRect(x: 0, y: 0, width: 4, height: minuteLen)
-        secondHand.bounds = CGRect(x: 0, y: 0, width: 2, height: secondLen)
+        hourHand.byBounds(CGRect(x: 0, y: 0, width: 6, height: hourLen))
+        minuteHand.byBounds(CGRect(x: 0, y: 0, width: 4, height: minuteLen))
+        secondHand.byBounds(CGRect(x: 0, y: 0, width: 2, height: secondLen))
         // 以底部为 anchor，position 放在表盘中心，这样旋转就是绕表心转
         [hourHand, minuteHand, secondHand].forEach { hand in
             hand.anchorPoint = CGPoint(x: 0.5, y: 1.0)
@@ -266,9 +266,9 @@ extension JobsClockView {
                           + minute / 60.0
                           + second / 3600.0) / 12.0) * 2.0 * .pi
         let apply = {
-            self.hourHand.transform   = CATransform3DMakeRotation(hourAngle, 0, 0, 1)
-            self.minuteHand.transform = CATransform3DMakeRotation(minAngle, 0, 0, 1)
-            self.secondHand.transform = CATransform3DMakeRotation(secAngle, 0, 0, 1)
+            self.hourHand.byTransform(CATransform3DMakeRotation(hourAngle, 0, 0, 1))
+            self.minuteHand.byTransform(CATransform3DMakeRotation(minAngle, 0, 0, 1))
+            self.secondHand.byTransform(CATransform3DMakeRotation(secAngle, 0, 0, 1))
         }
         if animated {
             CATransaction.begin()

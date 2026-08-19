@@ -138,7 +138,7 @@ public final class BaseWebView: UIView {
     }()
 
     lazy var refresher: UIRefreshControl = {
-        UIRefreshControl()
+        UIRefreshControl.jobsMake { _ in }
             .onJobsChange { [weak self] (_: UIRefreshControl) in
                 guard let self else { return }
                 self.handlePullToRefresh()
@@ -193,8 +193,9 @@ public final class BaseWebView: UIView {
         kvoTitle?.invalidate()
         kvoTitle = nil
         webView.stopLoading()
-        webView.byNavigationDelegate(nil)
-        webView.byUIDelegate(nil)
+        webView
+            .byNavigationDelegate(nil)
+            .byUIDelegate(nil)
         let ucc = webView.configuration.userContentController
         ucc.removeAllUserScripts()
         ucc.removeScriptMessageHandler(forName: bridgeName)
@@ -234,7 +235,7 @@ private extension BaseWebView {
                 if p >= 1.0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
                         guard let self else { return }
-                        self.progressView.progress = 0
+                        self.progressView.byProgress(0)
                     }
                 }
             }
@@ -369,7 +370,7 @@ public extension BaseWebView {
     func evalAsync<T: Decodable>(_ js: String,
                                  as type: T.Type = T.self,
                                  timeout: TimeInterval = 8,
-                                 decoder: JSONDecoder = JSONDecoder()) async throws -> T {
+                                 decoder: JSONDecoder = JSONDecoder.make { _ in }) async throws -> T {
         let raw = try await evalAsyncRaw(js, timeout: timeout)
         return try Self.decodeJSResult(raw, as: T.self, decoder: decoder)
     }

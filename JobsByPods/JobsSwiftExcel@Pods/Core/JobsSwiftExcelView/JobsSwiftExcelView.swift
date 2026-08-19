@@ -28,12 +28,12 @@ public final class JobsSwiftExcelView: UIView {
     }
 
     private lazy var frozenPaneView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byClipsToBounds(true)
             .byAddTo(self)
     }()
     private lazy var horizontalScrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byDelegate(self)
             .byShowsVerticalScrollIndicator(false)
             .byAlwaysBounceVertical(false)
@@ -41,7 +41,7 @@ public final class JobsSwiftExcelView: UIView {
             .byAddTo(self)
     }()
     private lazy var scrollContentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(horizontalScrollView)
     }()
     private var generatedLabels: [UILabel] = []
@@ -115,7 +115,7 @@ private extension JobsSwiftExcelView {
     }
 
     func jobsMakeLabel() -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byBorderWidth(style.gridLineWidth)
             .byBorderColor(style.gridLineColor)

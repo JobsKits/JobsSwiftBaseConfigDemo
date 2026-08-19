@@ -191,9 +191,9 @@ private extension JobsMarkdownView {
     func jobsMakeWebView() -> WKWebView {
         let userContentController = WKUserContentController()
         let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.userContentController = userContentController
+        webConfiguration.byUserContentController(userContentController)
         webConfiguration.defaultWebpagePreferences.allowsContentJavaScript = true
-        webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.byAllowsInlineMediaPlayback(true)
         let view = WKWebView(frame: .zero, configuration: webConfiguration)
             .byNavigationDelegate(self)
             .byUIDelegate(self)
@@ -215,7 +215,7 @@ private extension JobsMarkdownView {
     func jobsRenderPendingPayload() {
         guard isRuntimeReady, let pendingPayload else { return }
         do {
-            let data = try JSONEncoder().encode(pendingPayload)
+            let data = try JSONEncoder.make { _ in }.encode(pendingPayload)
             let base64 = data.base64EncodedString()
             webView.evaluateJavaScript(
                 "window.JobsMarkdownRuntime.renderBase64('\(base64)');"

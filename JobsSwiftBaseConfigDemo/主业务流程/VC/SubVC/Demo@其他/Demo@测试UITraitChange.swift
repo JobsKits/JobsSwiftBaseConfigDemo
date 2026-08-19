@@ -26,7 +26,7 @@ import GKNavigationBarSwift
 final class TraitChangeDemoVC: BaseVC {
     // MARK: UI（全部懒加载，byAddTo + SnapKit）
     private lazy var titleLabel : UILabel = {
-        UILabel().byText("Trait 变化监听 Demo".tr)
+        UILabel.jobsMake { _ in }.byText("Trait 变化监听 Demo".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.natural)              // ✅ 新增
             .byTextColor(JobsCor.label)
@@ -37,7 +37,7 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var subtitleLabel : UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
@@ -49,7 +49,7 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var infoLabel :UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
@@ -61,7 +61,7 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var swatch : UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.infoLabel.snp.bottom).offset(16)
@@ -71,14 +71,15 @@ final class TraitChangeDemoVC: BaseVC {
     }()
     /// 演示“不会自动随外观变化”的资源：Layer 需要手动刷新 CGColor
     private let gradientLayer: CAGradientLayer = {
-        let g = CAGradientLayer()
-        g.startPoint = CGPoint(x: 0, y: 0.5)
-        g.endPoint   = CGPoint(x: 1, y: 0.5)
+        let g = CAGradientLayer.jobsMake { _ in }
+        g
+            .byStartPoint(CGPoint(x: 0, y: 0.5))
+            .byEndPoint(CGPoint(x: 1, y: 0.5))
         return g
     }()
     /// 尺寸类切换时改变轴向
     private lazy var stack : UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.swatch.snp.bottom).offset(16)
                 make.leading.trailing.equalToSuperview().inset(16)
@@ -86,19 +87,19 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var leftBox : UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byCornerRadius(10)
             .byAddTo(stack) { _ in }
     }()
 
     private lazy var rightBox : UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byCornerRadius(10)
             .byAddTo(stack) { _ in }
     }()
 
     private lazy var dynamicText :UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)
@@ -149,9 +150,10 @@ final class TraitChangeDemoVC: BaseVC {
         )
         // 组装 UI
         swatch.layer.addSublayer(gradientLayer)
-        stack.axis = .horizontal
-        stack.distribution = .fillEqually
-        stack.spacing = 12
+        stack
+            .byAxis(.horizontal)
+            .byDistribution(.fillEqually)
+            .bySpacing(12)
         leftBox.snp.makeConstraints { make in make.height.equalTo(80) }
         rightBox.snp.makeConstraints { make in make.height.equalTo(80) }
         // 初次同步
@@ -219,7 +221,7 @@ extension TraitChangeDemoVC {
             leftBox.byBackgroundColor(JobsCor.systemFill)
             rightBox.byBackgroundColor(JobsCor.secondarySystemFill)
         }
-        gradientLayer.colors = [c1.cgColor, c2.cgColor]
+        gradientLayer.byColors([c1.cgColor, c2.cgColor])
         infoLabel.byText("""
         当前 Traits
         Style: \(style == .dark ? "Dark" : "Light")
@@ -230,7 +232,7 @@ extension TraitChangeDemoVC {
 
     private func reflowForSizeClass() {
         let h = traitCollection.horizontalSizeClass
-        stack.axis = (h == .compact) ? .vertical : .horizontal
+        stack.byAxis((h == .compact) ? .vertical : .horizontal)
     }
 
     private func applyDynamicType() {

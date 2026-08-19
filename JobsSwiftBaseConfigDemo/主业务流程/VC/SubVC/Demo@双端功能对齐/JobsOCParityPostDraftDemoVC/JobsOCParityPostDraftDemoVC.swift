@@ -63,7 +63,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -73,7 +73,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -81,7 +81,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var postTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byDelegate(self)
@@ -94,7 +94,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var placeholderLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("撩骚内容，写在这里哦~".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.placeholderText)
@@ -105,7 +105,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var countLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("0/\(maximumTextCount)")
             .byFont(JobsFont.systemFont(ofSize: 11))
             .byTextColor(JobsCor.secondaryLabel)
@@ -115,7 +115,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var tipsLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(
                 "1、内容不允许出现纯数字，英文字母；\n"
                 + "2、图片/视频(图片最多9张/仅上传一段视频，大小不超100M)。"
@@ -132,7 +132,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var mediaGridView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tipsLabel.snp.bottom).offset(12)
@@ -156,7 +156,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var deleteZoneLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("拖到这里删除".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.white)
@@ -248,8 +248,9 @@ final class JobsPostDraftDemoVC: BaseVC {
             return
         }
         var configuration = PHPickerConfiguration(photoLibrary: .shared())
-        configuration.selectionLimit = 1
-        configuration.filter = .videos
+        configuration
+            .bySelectionLimit(1)
+            .byFilter(.videos)
         PHPickerViewController(configuration: configuration)
             .byDelegate(self)
             .byPresent(self)
@@ -381,7 +382,7 @@ final class JobsPostDraftDemoVC: BaseVC {
 
     private func loadDraft() {
         guard let data = UserDefaults.standard.data(forKey: draftKey),
-              let draft = try? JSONDecoder().decode(Draft.self, from: data) else {
+              let draft = try? JSONDecoder.make { _ in }.decode(Draft.self, from: data) else {
             snapshot = currentDraft()
             return
         }
@@ -408,7 +409,7 @@ final class JobsPostDraftDemoVC: BaseVC {
 
     private func saveDraft() {
         let draft = currentDraft()
-        if let data = try? JSONEncoder().encode(draft) {
+        if let data = try? JSONEncoder.make { _ in }.encode(draft) {
             UserDefaults.standard.set(data, forKey: draftKey)
             snapshot = draft
         }

@@ -51,21 +51,20 @@ extension JobsIconfontGlyphDemoVC: UITableViewDataSource, UITableViewDelegate {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let glyph = glyphs[indexPath.row]
-        let cell = tableView.byDequeueReusableCell(
-            withType: UITableViewCell.self,
-            for: indexPath
-        )
-        var config = cell.defaultContentConfiguration()
-        config.image = JobsIconfont.shared.iconImage(
-            glyph,
-            size: CGSize(width: 38, height: 38),
-            color: JobsCor.systemIndigo
-        )
-        config.text = glyph.title
-        config.secondaryText = "语义枚举 → UILabel / UIButton / UIImage"
-        config.textProperties.font = JobsFont.systemFont(ofSize: 16, weight: .semibold)
-        config.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 12, weight: .regular)
-        cell.contentConfiguration = config
-        return cell
+        return tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byListConfig {
+                $0.byImage(
+                    JobsIconfont.shared.iconImage(
+                        glyph,
+                        size: CGSize(width: 38, height: 38),
+                        color: JobsCor.systemIndigo
+                    )
+                )
+                .byText(glyph.title)
+                .bySecondaryText("语义枚举 → UILabel / UIButton / UIImage")
+                .byTextFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+                .bySecondaryFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            }
     }
 }

@@ -79,7 +79,7 @@ class HalfSheetDemoVC: DemoDetailVC{
         view.byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(16)
             .byClipsToBounds(true)
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.center)

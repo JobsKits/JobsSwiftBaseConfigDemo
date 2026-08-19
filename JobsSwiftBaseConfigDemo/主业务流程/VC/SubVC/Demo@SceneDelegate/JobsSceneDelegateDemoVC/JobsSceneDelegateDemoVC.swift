@@ -12,6 +12,7 @@ import JobsByUIKit
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
+import JobsToast
 import SnapKit
 
 final class JobsSceneDelegateDemoVC: BaseVC {
@@ -20,7 +21,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     private var counter: Int
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
@@ -34,7 +35,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }()
 
     private lazy var contentStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -55,7 +56,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     private lazy var sessionLabel: UILabel = makeCardLabel()
 
     private lazy var counterLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.systemBlue)
             .byFont(UIFont.monospacedDigitSystemFont(ofSize: 28, weight: .bold))
             .byTextAlignment(.center)
@@ -88,7 +89,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
 
     private lazy var refreshButton: UIButton = {
         makeButton(title: "刷新会话快照", color: JobsCor.systemGray) { [weak self] in
-            self?.refreshSnapshot(requestSystemRefresh: true)
+            self?.requestSnapshotRefresh()
         }
     }()
 
@@ -100,7 +101,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
 
     private lazy var actionTipLabel: UILabel = {
         makeBodyLabel(
-            "多窗口能力由 Info.plist 声明和当前设备环境共同决定。iPad 最适合验证；不支持时按钮会禁用并说明原因。"
+            "多窗口能力由 Info.plist 声明和当前设备环境共同决定。iPad 最适合验证；操作按钮始终可点，不支持时会通过 Toast 说明原因。"
         )
     }()
 
@@ -109,7 +110,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }()
 
     private lazy var logLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待 Scene 生命周期事件…".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(UIFont.monospacedSystemFont(ofSize: 12, weight: .regular))
@@ -206,7 +207,7 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func makeSectionTitleLabel(_ text: String) -> UILabel {
-        return UILabel()
+        return UILabel.jobsMake { _ in }
             .byText(text.tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
@@ -214,7 +215,7 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func makeBodyLabel(_ text: String) -> UILabel {
-        return UILabel()
+        return UILabel.jobsMake { _ in }
             .byText(text.tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -222,7 +223,7 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func makeCardLabel() -> UILabel {
-        return UILabel()
+        return UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.label)
             .byFont(UIFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byNumberOfLines(0)
@@ -276,10 +277,7 @@ private extension JobsSceneDelegateDemoVC {
 
     func requestNewScene() {
         guard UIApplication.shared.supportsMultipleScenes else {
-            showMessage(
-                title: "当前环境不支持多窗口",
-                message: "工程已经声明多场景；请在支持多窗口的 iPad 环境中验证。"
-            )
+            showToast("当前环境不支持多窗口，请在支持多窗口的 iPad 上验证")
             return
         }
         JobsSceneCoordinator.requestNewDemoScene(from: currentScene?.session) { [weak self] error in
@@ -293,9 +291,16 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func activateOtherScene() {
-        guard let session = currentScene?.session,
-              let otherSession = JobsSceneCoordinator.otherOpenSession(excluding: session) else {
-            showMessage(title: "没有其它 Scene", message: "请先新建一个 Scene 窗口。")
+        guard UIApplication.shared.supportsMultipleScenes else {
+            showToast("当前环境不支持多窗口，请在支持多窗口的 iPad 上验证")
+            return
+        }
+        guard let session = currentScene?.session else {
+            showToast("当前页面尚未绑定 Scene，暂时无法激活其它窗口")
+            return
+        }
+        guard let otherSession = JobsSceneCoordinator.otherOpenSession(excluding: session) else {
+            showToast("没有其它 Scene，请先新建一个 Scene 窗口")
             return
         }
         JobsSceneCoordinator.requestActivation(for: otherSession) { [weak self] error in
@@ -309,12 +314,16 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func closeCurrentScene() {
-        guard let session = currentScene?.session else { return }
+        guard UIApplication.shared.supportsMultipleScenes else {
+            showToast("当前环境不支持多窗口，无法关闭独立 Scene")
+            return
+        }
+        guard let session = currentScene?.session else {
+            showToast("当前页面尚未绑定 Scene，暂时无法关闭")
+            return
+        }
         guard UIApplication.shared.openSessions.count > 1 else {
-            showMessage(
-                title: "保留最后一个 Scene",
-                message: "请先新建另一个 Scene，再关闭当前 Scene。"
-            )
+            showToast("这是最后一个 Scene，请先新建另一个 Scene 再关闭")
             return
         }
         JobsSceneCoordinator.requestDestruction(for: session) { [weak self] error in
@@ -324,6 +333,14 @@ private extension JobsSceneDelegateDemoVC {
                 }
             }
         }
+    }
+
+    func requestSnapshotRefresh() {
+        guard currentScene != nil else {
+            showToast("当前页面尚未绑定 Scene，暂时无法刷新会话快照")
+            return
+        }
+        refreshSnapshot(requestSystemRefresh: true)
     }
 
     func refreshSnapshot(requestSystemRefresh: Bool) {
@@ -354,6 +371,7 @@ private extension JobsSceneDelegateDemoVC {
         if requestSystemRefresh {
             application.requestSceneSessionRefresh(session)
             JobsSceneCoordinator.record("请求系统刷新 SceneSession", for: session)
+            showToast("会话快照已刷新")
         }
         let events = JobsSceneCoordinator.events(for: session)
         logLabel.byText(events.isEmpty ? "等待 Scene 生命周期事件…".tr : events.joined(separator: "\n"))
@@ -361,15 +379,11 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func updateButtons() {
-        let application = UIApplication.shared
-        let currentSession = currentScene?.session
-        newSceneButton.byEnabled(application.supportsMultipleScenes)
-        activateSceneButton.byEnabled(
-            currentSession.map { JobsSceneCoordinator.otherOpenSession(excluding: $0) != nil } ?? false
-        )
-        closeSceneButton.byEnabled(currentSession != nil && application.openSessions.count > 1)
-        incrementButton.byEnabled(currentSession != nil)
-        refreshButton.byEnabled(currentSession != nil)
+        incrementButton.byEnabled(currentScene != nil)
+        newSceneButton.byEnabled(YES)
+        activateSceneButton.byEnabled(YES)
+        refreshButton.byEnabled(YES)
+        closeSceneButton.byEnabled(YES)
     }
 
     @objc
@@ -386,5 +400,9 @@ private extension JobsSceneDelegateDemoVC {
                 .byAddOK("知道了".tr),
             animated: true
         )
+    }
+
+    func showToast(_ text: String) {
+        JobsToast.show(text: text.tr, in: view.window)
     }
 }

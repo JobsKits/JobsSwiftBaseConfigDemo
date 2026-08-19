@@ -148,8 +148,9 @@ extension UIViewController {
             mainNav._jobs_lockPushing(for: 0.2)
             if useCustom {
                 let tr = CATransition()
-                tr.type = .push
-                tr.subtype = dir._caSubtype
+                tr
+                    .byType(.push)
+                    .bySubtype(dir._caSubtype)
                 tr.duration = duration
                 tr.timingFunction = CAMediaTimingFunction(name: timing)
                 mainNav.view.layer.add(tr, forKey: "jobs.push.main.\(dir._debugKey)")
@@ -189,8 +190,9 @@ extension UIViewController {
             if useCustom {
                 // 用 CATransition 模拟进入方向；push 本身必须设为非动画
                 let tr = CATransition()
-                tr.type = .push
-                tr.subtype = dir._caSubtype
+                tr
+                    .byType(.push)
+                    .bySubtype(dir._caSubtype)
                 tr.duration = duration
                 tr.timingFunction = CAMediaTimingFunction(name: timing)
                 nav.view.layer.add(tr, forKey: "jobs.push.\(dir._debugKey)")

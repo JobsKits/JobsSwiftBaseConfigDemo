@@ -62,12 +62,13 @@ private struct JobsLegacyButtonState {
         } else {
             button.byTitle(titleSelected, for: .selected)
         }
-        button.byTitleColor(titleColorNormal, for: .normal)
-        button.byTitleColor(titleColorSelected, for: .selected)
-        button.byImage(imageNormal, for: .normal)
-        button.byImage(imageSelected, for: .selected)
-        button.byBgImage(backgroundImageNormal, for: .normal)
-        button.byBgImage(backgroundImageSelected, for: .selected)
+        button
+            .byTitleColor(titleColorNormal, for: .normal)
+            .byTitleColor(titleColorSelected, for: .selected)
+            .byImage(imageNormal, for: .normal)
+            .byImage(imageSelected, for: .selected)
+            .byBgImage(backgroundImageNormal, for: .normal)
+            .byBgImage(backgroundImageSelected, for: .selected)
     }
 }
 

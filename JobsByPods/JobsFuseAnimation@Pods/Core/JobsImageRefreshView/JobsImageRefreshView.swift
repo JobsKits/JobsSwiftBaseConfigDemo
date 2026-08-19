@@ -29,7 +29,7 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
         }
     }
 
-    private let imageView = UIImageView()
+    private let imageView = UIImageView.jobsMake { _ in }
     private var frameTimer: JobsTimer?
     private var frameIndex = 0
     private var wantsAnimating = false

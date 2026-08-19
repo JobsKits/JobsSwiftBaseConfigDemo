@@ -26,13 +26,13 @@ public final class JobsAppDoorFormView: UIView {
     private var remembersPassword = true
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(self)
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .regular))
@@ -40,7 +40,7 @@ public final class JobsAppDoorFormView: UIView {
     }()
 
     private lazy var fieldsStack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -154,7 +154,7 @@ public final class JobsAppDoorFormView: UIView {
     }()
 
     private lazy var validationLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsAppDoorPalette.gold)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .medium))

@@ -11,8 +11,10 @@ import UIKit
 
 import SnapKit
 
+import JobsSwiftDSL
+
 public final class JobsScreenshotProtectionView: UIView {
-    public let contentView = UIView()
+    public let contentView = UIView.jobsMake { _ in }
 
     public private(set) var isProtectionAvailable = false
 
@@ -20,7 +22,7 @@ public final class JobsScreenshotProtectionView: UIView {
         secureTextField.isSecureTextEntry && isProtectionAvailable
     }
 
-    private let secureTextField = UITextField()
+    private let secureTextField = UITextField.jobsMake { _ in }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,7 +36,7 @@ public final class JobsScreenshotProtectionView: UIView {
 
     @discardableResult
     public func setProtectionEnabled(_ enabled: Bool) -> Self {
-        secureTextField.isSecureTextEntry = enabled && isProtectionAvailable
+        secureTextField.bySecureTextEntry(enabled && isProtectionAvailable)
         return self
     }
 
@@ -42,13 +44,14 @@ public final class JobsScreenshotProtectionView: UIView {
         backgroundColor = .clear
         clipsToBounds = true
 
-        secureTextField.backgroundColor = .clear
-        secureTextField.textColor = .clear
-        secureTextField.tintColor = .clear
-        secureTextField.borderStyle = .none
-        secureTextField.isSecureTextEntry = true
-        secureTextField.text = " "
-        secureTextField.isUserInteractionEnabled = true
+        secureTextField
+            .byBackgroundColor(.clear)
+            .byTextColor(.clear)
+            .byTintColor(.clear)
+            .byBorderStyle(.none)
+            .bySecureTextEntry(true)
+            .byText(" ")
+            .byUserInteractionEnabled(true)
         addSubview(secureTextField)
         secureTextField.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -72,7 +75,7 @@ public final class JobsScreenshotProtectionView: UIView {
             contentView.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
-            secureTextField.isSecureTextEntry = false
+            secureTextField.bySecureTextEntry(false)
             isProtectionAvailable = false
         }
     }

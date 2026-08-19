@@ -40,7 +40,7 @@ public final class GestureUnlockView: UIView {
     private var selected: [Int] = []
     private var currentTouchPoint: CGPoint?
 
-    private let lineLayer = CAShapeLayer()
+    private let lineLayer = CAShapeLayer.jobsMake { _ in }
     private var visualState: VisualState = .normal
 
     private let impact = UIImpactFeedbackGenerator(style: .light)
@@ -58,9 +58,10 @@ public final class GestureUnlockView: UIView {
     private func commonInit() {
         isMultipleTouchEnabled = false
         self.byBackgroundColor(JobsCor.clear)
-        lineLayer.fillColor = JobsCor.clear.cgColor
-        lineLayer.lineCap = .round
-        lineLayer.lineJoin = .round
+        lineLayer
+            .byFillColor(JobsCor.clear)
+            .byLineCap(.round)
+            .byLineJoin(.round)
         layer.addSublayer(lineLayer)
         rebuildNodes()
     }
@@ -243,18 +244,19 @@ public final class GestureUnlockView: UIView {
             for p in points.dropFirst() { path.byAddLine(to: p) }
             if let finger = currentTouchPoint { path.byAddLine(to: finger) }
         }
-        lineLayer.path = path.cgPath
-        lineLayer.lineWidth = configuration.lineWidth
+        lineLayer
+            .byPath(path.cgPath)
+            .byLineWidth(configuration.lineWidth)
         switch visualState {
         /// 处理 .normal 分支
         case .normal:
-            lineLayer.strokeColor = configuration.lineSelectedColor.cgColor
+            lineLayer.byStrokeColor(configuration.lineSelectedColor)
         /// 处理 .selected 分支
         case .selected:
-            lineLayer.strokeColor = configuration.lineSelectedColor.cgColor
+            lineLayer.byStrokeColor(configuration.lineSelectedColor)
         /// 处理 .error 分支
         case .error:
-            lineLayer.strokeColor = configuration.lineErrorColor.cgColor
+            lineLayer.byStrokeColor(configuration.lineErrorColor)
         }
     }
 

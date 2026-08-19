@@ -655,16 +655,18 @@ private final class JobsButtonNumberAnimRunner: NSObject {
         switch kind {
         /// 处理 .title 分支
         case .title:
-            button.byTitle(formatted.text, for: .normal)
-            button.byTitle(formatted.text, for: .selected)
-            button.byTitle(formatted.text, for: .highlighted)
-            button.byTitle(formatted.text, for: .disabled)
+            button
+                .byTitle(formatted.text, for: .normal)
+                .byTitle(formatted.text, for: .selected)
+                .byTitle(formatted.text, for: .highlighted)
+                .byTitle(formatted.text, for: .disabled)
         /// 处理 .subTitle 分支
         case .subTitle:
-            button.bySubTitle(formatted.text, for: .normal)
-            button.bySubTitle(formatted.text, for: .selected)
-            button.bySubTitle(formatted.text, for: .highlighted)
-            button.bySubTitle(formatted.text, for: .disabled)
+            button
+                .bySubTitle(formatted.text, for: .normal)
+                .bySubTitle(formatted.text, for: .selected)
+                .bySubTitle(formatted.text, for: .highlighted)
+                .bySubTitle(formatted.text, for: .disabled)
         }
         // 2) 如果配置了整体富文本 Builder：优先使用（避免和 decimals 样式互相覆盖）
         if let attr = buildAttributedIfNeeded(text: formatted.text,
@@ -729,24 +731,26 @@ private final class JobsButtonNumberAnimRunner: NSObject {
         switch kind {
         /// 处理 .title 分支
         case .title:
-            button.byAttributedTitle(attributed, for: .normal)
-            button.byAttributedTitle(attributed, for: .selected)
-            button.byAttributedTitle(attributed, for: .highlighted)
-            button.byAttributedTitle(attributed, for: .disabled)
+            button
+                .byAttributedTitle(attributed, for: .normal)
+                .byAttributedTitle(attributed, for: .selected)
+                .byAttributedTitle(attributed, for: .highlighted)
+                .byAttributedTitle(attributed, for: .disabled)
             if #available(iOS 15.0, *) {
                 if var cfg = button.configuration {
                     cfg.title = plain
                     cfg.attributedTitle = AttributedString(attributed)
-                    button.configuration = cfg
+                    button.byConfiguration(cfg)
                 }
             }
         /// 处理 .subTitle 分支
         case .subTitle:
             // ✅ 关键：副标题富文本走你 Subtitle 扩展的 byAttributedSubTitle（iOS15+ 会写 attributedSubtitle，iOS15- 会 legacy 合成）
-            button.byAttributedSubTitle(attributed, for: .normal)
-            button.byAttributedSubTitle(attributed, for: .selected)
-            button.byAttributedSubTitle(attributed, for: .highlighted)
-            button.byAttributedSubTitle(attributed, for: .disabled)
+            button
+                .byAttributedSubTitle(attributed, for: .normal)
+                .byAttributedSubTitle(attributed, for: .selected)
+                .byAttributedSubTitle(attributed, for: .highlighted)
+                .byAttributedSubTitle(attributed, for: .disabled)
         }
     }
 

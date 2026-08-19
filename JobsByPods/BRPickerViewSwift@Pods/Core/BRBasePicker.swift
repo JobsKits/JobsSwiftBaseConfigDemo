@@ -125,7 +125,7 @@ open class BRBasePicker<Result>: NSObject {
     #endif
 
 // MARK: - Override points
-    open func buildContentView() -> UIView { UIView() }
+    open func buildContentView() -> UIView { UIView.jobsMake { _ in } }
     open func confirmSelection() { /* subclasses should call send(...) */ }
     open func cancelSelection() { /* optional */ }
 

@@ -25,11 +25,11 @@ final class HollowOverlayView: UIView {
     var holeRect: CGRect = .zero { didSet { setNeedsLayout() } }
     var holeShape: HoleShape = .oval { didSet { setNeedsLayout() } }
     private let shapeLayer: CAShapeLayer = {
-        CAShapeLayer().byFillRule(.evenOdd)
+        CAShapeLayer.jobsMake { _ in }.byFillRule(.evenOdd)
     }()
     /// 半透明遮罩颜色
     var overlayColor: UIColor = JobsCor.white.withAlphaComponent(0.5) {
-        didSet { shapeLayer.fillColor = overlayColor.cgColor }
+        didSet { shapeLayer.byFillColor(overlayColor) }
     }
     /// 是否允许拖动镂空区域
     var enableDrag: Bool = true {
@@ -68,7 +68,7 @@ final class HollowOverlayView: UIView {
         isUserInteractionEnabled = true
         self.byBackgroundColor(JobsCor.clear)
         layer.addSublayer(shapeLayer)
-        shapeLayer.fillColor = overlayColor.cgColor
+        shapeLayer.byFillColor(overlayColor)
         jobs_addGesture(panGR)
     }
 
@@ -88,7 +88,7 @@ final class HollowOverlayView: UIView {
         path
             .byAppend(holePath)
             .byUsesEvenOddFillRule(true)
-        shapeLayer.path = path.cgPath
+        shapeLayer.byPath(path.cgPath)
     }
     // 关键：只在“洞附近”吃掉触摸，其它区域放行给下面的 scrollView 等
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -140,7 +140,18 @@ extension HollowOverlayView {
 
     @discardableResult
     func byOverlayColor(_ color: UIColor, alpha: CGFloat? = nil) -> Self {
-        overlayColor = alpha == nil ? color : color.withAlphaComponent(alpha!)
+        let slot = "HollowOverlayView.overlayColor"
+        if let key = color.jobsThemeColorKey {
+            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+                guard let overlayView = object as? HollowOverlayView else { return }
+                let resolvedColor = center.resolvedColor(key)
+                overlayView.overlayColor = alpha.map {
+                    resolvedColor.withAlphaComponent($0)
+                } ?? resolvedColor
+            };return self
+        }
+        JobsThemeCenter.shared.unbind(self, slot: slot)
+        overlayColor = alpha.map { color.withAlphaComponent($0) } ?? color
         return self
     }
 

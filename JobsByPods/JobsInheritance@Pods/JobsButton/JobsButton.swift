@@ -41,13 +41,13 @@ public final class JobsButton: UIImageView {
     public var showsForegroundImage: Bool = true { didSet { refreshUI() } }
     // MARK: - Subviews (lazy)
     private lazy var contentContainer: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byUserInteractionEnabled(false)
     }()
     /// 对标 UIButton 的前景图
     public lazy var foregroundImageView: UIImageView = {
-        let iv = UIImageView()
+        let iv = UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)
@@ -60,7 +60,7 @@ public final class JobsButton: UIImageView {
     }()
     /// 对标 UIButton.titleLabel
     public lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(1)
             .byBackgroundColor(JobsCor.clear)
             .byFont(JobsFont.systemFont(ofSize: 17))
@@ -68,7 +68,7 @@ public final class JobsButton: UIImageView {
     }()
     /// 对标 UIButton.subtitle（拟合系统风格）
     public lazy var subtitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(1)
             .byBackgroundColor(JobsCor.clear)
             .byFont(JobsFont.systemFont(ofSize: 12))

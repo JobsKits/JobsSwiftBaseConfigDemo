@@ -25,7 +25,7 @@ final class FoldCell: UITableViewCell {
 
     private var isExpanded: Bool = false
     private lazy var cardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byAddTo(contentView) { make in
@@ -37,15 +37,16 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var headerView: UIView = {
-        UIView().byAddTo(cardView) { make in
+        UIView.jobsMake { _ in }.byAddTo(cardView) { make in
             make.top.left.right.equalToSuperview()
             make.height.equalTo(Self.headerHeight)
         }
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
+            .byTextColor(JobsCor.label)
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
                 make.left.equalToSuperview().offset(16)
@@ -54,7 +55,7 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(headerView) { [unowned self] make in
@@ -77,7 +78,7 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var detailClipView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byClipsToBounds(YES)
             .byAddTo(cardView) { [unowned self] make in
                 make.top.equalTo(self.headerView.snp.bottom)
@@ -86,7 +87,7 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var detailContentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(detailClipView) { make in
                make.edges.equalToSuperview()
             }
@@ -94,9 +95,10 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.label)
             .byAddTo(detailContentView) { make in
                 make.top.equalToSuperview().offset(12)
                 make.left.equalToSuperview().offset(16)
@@ -106,7 +108,7 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var foldShadowView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.black)
             .byAlpha(0.22)
             .byAddTo(detailClipView) { make in
@@ -166,10 +168,11 @@ extension FoldCell {
         let targetShadowAlpha: CGFloat = expanded ? 0.0 : 0.22
         let targetChevron = expanded ? CGAffineTransform(rotationAngle: .pi) : .identity
         let apply = { [self] in
-            detailContentView.layer.transform = targetTransform
-            detailContentView.byAlpha(targetAlpha)
+            detailContentView
+                .byLayer { $0.byTransform(targetTransform) }
+                .byAlpha(targetAlpha)
             foldShadowView.byAlpha(targetShadowAlpha)
-            chevron.transform = targetChevron
+            chevron.byTransform(targetChevron)
         }
         if animated {
             UIView.jobsAnimateWithSpring(

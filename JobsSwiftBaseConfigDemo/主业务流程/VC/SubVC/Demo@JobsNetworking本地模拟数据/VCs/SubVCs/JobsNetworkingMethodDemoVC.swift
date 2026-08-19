@@ -41,7 +41,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -54,7 +54,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -62,7 +62,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(item.subTitle)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byNumberOfLines(0)
@@ -73,7 +73,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var pathLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("接口：\(item.path)")
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byNumberOfLines(0)
@@ -84,7 +84,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("状态：\(statusText)")
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -345,14 +345,14 @@ extension JobsNetworkingMethodDemoVC {
     }
 
     private func sectionTitleLabel(_ text: String) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byNumberOfLines(1)
     }
 
     private func sectionTextView() -> UITextView {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)

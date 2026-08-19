@@ -16,7 +16,7 @@ private enum JobsLabelScrollAttribute {
 
 final class JobsLabelScrollController: @unchecked Sendable {
     private weak var label: UILabel?
-    private let viewportLayer = CALayer()
+    private let viewportLayer = CALayer.jobsMake { _ in }
     private let textLayer = JobsCoreTextScrollLayer()
 
     private var configuration: JobsLabelScrollConfiguration = .continuous()
@@ -46,8 +46,9 @@ final class JobsLabelScrollController: @unchecked Sendable {
 
     init(label: UILabel) {
         self.label = label
-        viewportLayer.masksToBounds = true
-        viewportLayer.contentsScale = UIScreen.main.scale
+        viewportLayer
+            .byMasksToBounds(true)
+            .byContentsScale(UIScreen.main.scale)
         viewportLayer.addSublayer(textLayer)
     }
 
@@ -152,12 +153,12 @@ private extension JobsLabelScrollController {
         concealSourceText()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        viewportLayer.frame = label.bounds
+        viewportLayer.byFrame(label.bounds)
         if viewportLayer.superlayer !== label.layer {
             viewportLayer.removeFromSuperlayer()
             label.layer.addSublayer(viewportLayer)
         }
-        textLayer.isHidden = false
+        textLayer.byHidden(false)
         offsetX = 0
         travelDirection = 1
         delayRemaining = configuration.startDelay
@@ -380,7 +381,7 @@ private extension JobsLabelScrollController {
             .foregroundColor: resolvedColor(sourceTextColor)
         ]
         if let sourceShadowColor, let label {
-            let shadow = NSShadow()
+            let shadow = NSShadow.jobsMake { _ in }
             shadow.shadowColor = resolvedColor(sourceShadowColor)
             shadow.shadowOffset = label.shadowOffset
             attributes[.shadow] = shadow
@@ -416,7 +417,7 @@ private extension JobsLabelScrollController {
               renderedText.length > 0 else { return }
         let hiddenText = NSMutableAttributedString(attributedString: renderedText)
         let fullRange = NSRange(location: 0, length: hiddenText.length)
-        let hiddenShadow = NSShadow()
+        let hiddenShadow = NSShadow.jobsMake { _ in }
         hiddenShadow.shadowColor = UIColor.clear
         hiddenShadow.shadowOffset = .zero
         hiddenShadow.shadowBlurRadius = 0
@@ -464,7 +465,7 @@ private extension JobsLabelScrollController {
     func isSystemPlainTextRepresentation(_ attributedText: NSAttributedString,
                                          for label: UILabel) -> Bool {
         guard attributedText.string == label.text else { return false }
-        let referenceLabel = UILabel()
+        let referenceLabel = UILabel.jobsMake { _ in }
             .byFont(label.font)
             .byTextColor(label.textColor)
             .byTextAlignment(label.textAlignment)

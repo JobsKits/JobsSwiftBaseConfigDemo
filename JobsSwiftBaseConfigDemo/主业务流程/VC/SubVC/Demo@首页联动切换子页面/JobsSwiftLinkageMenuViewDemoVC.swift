@@ -32,13 +32,14 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
 
     private lazy var modeControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["菜单固定", "内容固定", "比例"])
-        control.selectedSegmentIndex = LayoutMode.fixedMenu.rawValue
-        control.byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
+        control
+            .bySelectedSegmentIndex(LayoutMode.fixedMenu.rawValue)
+            .byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
         return control
     }()
 
     private lazy var callbackLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前菜单：日常.1".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
@@ -146,7 +147,7 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         path.byClose()
         color.setFill()
         path.byFill()
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make()
+        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make { _ in }
         UIGraphicsEndImageContext()
         return image
     }
@@ -192,33 +193,37 @@ private final class ActivityListView: UIView {
     }
 
     private func makeCard(index: Int) -> UIView {
-        let card = UIView()
-        card.byBackgroundColor(UIColor(r: 0.86 * 255, g: 0.72 * 255, b: 0.91 * 255))
-        card.byCornerRadius(12)
-        card.layer.shadowColor = JobsCor.black.cgColor
-        card.layer.shadowOpacity = 0.15
-        card.layer.shadowOffset = CGSize(width: 0, height: 3)
-        card.layer.shadowRadius = 6
-        let iconLabel = UILabel()
+        let card = UIView.jobsMake { _ in }
+        card
+            .byBackgroundColor(UIColor(r: 0.86 * 255, g: 0.72 * 255, b: 0.91 * 255))
+            .byCornerRadius(12)
+            .byShadowColor(JobsCor.black)
+            .byShadowOpacity(0.15)
+            .byShadowOffset(CGSize(width: 0, height: 3))
+            .byShadowRadius(6)
+        let iconLabel = UILabel.jobsMake { _ in }
         iconLabels.append(iconLabel)
-        iconLabel.byText("✉")
-        iconLabel.byTextAlignment(.center)
-        iconLabel.byTextColor(JobsCor.white)
-        iconLabel.byFont(JobsFont.boldSystemFont(ofSize: 34))
-        iconLabel.byBackgroundColor(UIColor(r: 255, g: 0.32 * 255, b: 0.13 * 255))
-        iconLabel.byCornerRadius(8)
-        iconLabel.byMasksToBounds(true)
-        let titleLabel = UILabel()
+        iconLabel
+            .byText("✉")
+            .byTextAlignment(.center)
+            .byTextColor(JobsCor.white)
+            .byFont(JobsFont.boldSystemFont(ofSize: 34))
+            .byBackgroundColor(UIColor(r: 255, g: 0.32 * 255, b: 0.13 * 255))
+            .byCornerRadius(8)
+            .byMasksToBounds(true)
+        let titleLabel = UILabel.jobsMake { _ in }
         titleLabels.append(titleLabel)
-        titleLabel.byText("\(sectionTitle) - \(menuTitle) 活动 \(index + 1)")
-        titleLabel.byTextColor(JobsCor.label)
-        titleLabel.byFont(JobsFont.boldSystemFont(ofSize: 18))
-        titleLabel.byNumberOfLines(2)
-        let subtitleLabel = UILabel()
+        titleLabel
+            .byText("\(sectionTitle) - \(menuTitle) 活动 \(index + 1)")
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.boldSystemFont(ofSize: 18))
+            .byNumberOfLines(2)
+        let subtitleLabel = UILabel.jobsMake { _ in }
         subtitleLabels.append(subtitleLabel)
-        subtitleLabel.byText("神秘彩金等你来拿".tr)
-        subtitleLabel.byTextColor(JobsCor.secondaryLabel)
-        subtitleLabel.byFont(JobsFont.systemFont(ofSize: 15))
+        subtitleLabel
+            .byText("神秘彩金等你来拿".tr)
+            .byTextColor(JobsCor.secondaryLabel)
+            .byFont(JobsFont.systemFont(ofSize: 15))
         iconLabel.byAddTo(card)
         titleLabel.byAddTo(card)
         subtitleLabel.byAddTo(card)

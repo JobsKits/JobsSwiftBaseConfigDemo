@@ -1454,7 +1454,15 @@ tableView.es.addInfiniteScrolling {
     ```
   
 
-#### 4.8、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 4.8、[**ObjectBox Swift**](https://github.com/objectbox/objectbox-swift) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- ObjectBox 的 Apple SDK 是 Swift 实现，本工程只维护 Swift Demo，不在 OC 新/旧工程伪造 Objective-C Demo。
+- CocoaPods 依赖声明位于 `Podfile.deps`，实际锁定版本以 `Podfile.lock` 为准。
+- 工程已包含 `[OBX] Update Sourcery Generated Files` 构建阶段，并对 App Target 关闭 `ENABLE_USER_SCRIPT_SANDBOXING`，保证 ObjectBox 代码生成器可以更新实体信息。
+- CRUD Demo 位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`，入口为功能列表中的“🗃️ ObjectBox”，覆盖新增、查询、修改和删除。
+- `model-JobsSwiftBaseConfigDemo.json` 与 `generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，必须随实体变更一起提交，不能作为普通缓存删除。
+
+#### 4.9、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++ **的代码热重载工具！
   * [**InjectionIII**](https://github.com/johnno1962/InjectionIII)
@@ -6635,7 +6643,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   * 实时记录连接、前后台、活跃、失活、断开等 Scene 生命周期事件
 * 进程级启动能力仍由 `AppDelegate` 管理；每个窗口的 `UIWindow` 和 UI 生命周期归自己的 `SceneDelegate`。
 * `JobsSceneCoordinator` 只按 `UISceneSession.persistentIdentifier` 管理 Demo 状态，不缓存全局 `SceneDelegate` 指针，也不通过 `connectedScenes.first` 猜测当前窗口。
+* `NSUserActivity` 使用 `NSUserActivity.make(activityType:configure:)` 完成带参创建，并在 closure 内继续 `byTitle`、`byUserInfo`、handoff / prediction 等实例 DSL；`DateFormatter` 使用 `DateFormatter.make(configure:)`，调用方不直接写系统构造器。
 * `UIApplicationSupportsMultipleScenes` 只是声明；运行时还要以 `UIApplication.shared.supportsMultipleScenes` 为准。建议在支持多窗口的 iPad 环境验证完整流程。
+* 场景操作按钮始终保留点击能力；当前设备不支持多窗口、没有可激活的其它 Scene、只剩最后一个 Scene，或页面尚未绑定当前 Scene 时，会立即通过 Toast 说明原因，不再静默禁用。
 * 深入研究入口：[Supporting multiple windows on iPad](https://developer.apple.com/documentation/uikit/supporting-multiple-windows-on-ipad)、[Managing your app's life cycle](https://developer.apple.com/documentation/uikit/managing-your-app-s-life-cycle)、[UISceneSession](https://developer.apple.com/documentation/uikit/uiscenesession)。
 
 ### 40、**`NavigationBar`**的显隐控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -7272,6 +7282,19 @@ jobsDismissKeyboard()
 ```
 
 ### 46、`UITableViewCell`  的数据配置体系（`UICollectionViewCell` 同理）<a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* Jobs 应用层配置 `UITableViewCell` 时使用“一镜到底”：`cell` 只作为链起点出现一次，标题、副标题、图片、`contentView` 和选择状态继续从 Cell 级 DSL 点出。
+
+  ```swift
+  return cell
+      .byText("关闭".tr)
+      .byTitleCor(JobsCor.systemBlue)
+      .byTitleTextAlignment(.center)
+      .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+      .byDetailText(nil)
+      .bySelectionStyle(.default)
+      .byContentView { $0.byBackgroundColor(JobsCor.systemBackground) }
+  ```
 
 * 此协议用于 `UITableViewCell` 亦可用于`UICollectionViewCell` 
 

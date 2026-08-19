@@ -25,7 +25,7 @@ import GKNavigationBarSwift
 
 final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
@@ -38,7 +38,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
@@ -47,7 +47,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     }()
 
     private lazy var titleLab1: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("① 无图：主标题（普通字符串）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -78,7 +78,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     }()
 
     private lazy var titleLab2: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("② 无图：副标题（富文本，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -109,7 +109,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     }()
 
     private lazy var titleLab3: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -140,7 +140,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     }()
 
     private lazy var titleLab4: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("④ 有图：副标题（普通字符串，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -507,12 +507,13 @@ private extension AnimatedButtonNumberDemoVC {
         gk_navBackgroundColor = JobsCor.systemBackground
         gk_navTitleColor = JobsCor.label
         gk_navShadowColor = JobsCor.separator
-        gk_navigationBar.byBackgroundColor(JobsCor.systemBackground)
-        gk_navigationBar.byTintColor(JobsCor.label)
+        gk_navigationBar
+            .byBackgroundColor(JobsCor.systemBackground)
+            .byTintColor(JobsCor.label)
     }
 
     private func _makeTF(ph: String) -> UITextField {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byAttributedPlaceholder(
                 NSAttributedString(
                     string: ph,

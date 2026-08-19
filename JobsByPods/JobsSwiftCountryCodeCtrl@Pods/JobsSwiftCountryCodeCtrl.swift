@@ -260,16 +260,16 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
             ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
         let country = countryInfo(at: indexPath)
-        cell.bySelectionStyle(.none)
-        cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-        cell.contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-        cell.textLabel?.byText(country?.displayName)
-        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
-        cell.textLabel?.byTextColor(JobsCor.label)
-        cell.detailTextLabel?.byText(country.map { "+\($0.code)" })
-        cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
-        cell.detailTextLabel?.byTextColor(JobsCor.secondaryLabel)
         return cell
+            .bySelectionStyle(.none)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            .byContentView { $0.byBackgroundColor(JobsCor.secondarySystemGroupedBackground) }
+            .byText(country?.displayName)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byTitleCor(JobsCor.label)
+            .byDetailText(country.map { "+\($0.code)" })
+            .byDetailTitleFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byDetailTitleCor(JobsCor.secondaryLabel)
     }
 
     public func sectionIndexTitles(for tableView: UITableView) -> [String]? {

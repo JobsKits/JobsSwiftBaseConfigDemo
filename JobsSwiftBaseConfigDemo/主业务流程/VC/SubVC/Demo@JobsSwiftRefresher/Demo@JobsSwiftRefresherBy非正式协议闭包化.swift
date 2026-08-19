@@ -29,7 +29,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
     private var hItems = 18
     private var rows = 20
     private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout()
+        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.horizontal)
             .byMinimumLineSpacing(12)
             .byMinimumInteritemSpacing(12)
@@ -96,7 +96,7 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .plain)
             .byRowHeight(52)
-            .byTableFooterView(UIView())
+            .byTableFooterView(UIView.jobsMake { _ in })
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(collectionView.snp.bottom)
                 make.left.right.equalToSuperview()
@@ -108,12 +108,10 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                 self?.rows ?? 0
             }
             .cellForRowAt { _, tv, indexPath in
-                let c = tv.dequeueReusableCell(withIdentifier: "cell") ??
-                        UITableViewCell(style: .default, reuseIdentifier: "cell")
-                var cfg = c.defaultContentConfiguration()
-                cfg.text = "Row \(indexPath.row)"
-                c.contentConfiguration = cfg
-                return c
+                tv.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                    .byListConfig {
+                        $0.byText("Row \(indexPath.row)")
+                    }
             }
             .didSelectRowAt { _, tv, indexPath in
                 tv.deselectRow(at: indexPath, animated: true)

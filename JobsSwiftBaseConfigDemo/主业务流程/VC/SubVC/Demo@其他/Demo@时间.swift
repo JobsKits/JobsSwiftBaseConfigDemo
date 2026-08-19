@@ -77,7 +77,7 @@ final class TimerDemoVC: BaseVC {
         }
 
     // MARK: - 最近一次触发时间
-    private lazy var lastFireLabel = UILabel()
+    private lazy var lastFireLabel = UILabel.jobsMake { _ in }
         .byText("Last: -")
         .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular))
         .byTextColor(JobsCor.secondaryLabel)
@@ -88,7 +88,7 @@ final class TimerDemoVC: BaseVC {
         }
 
     // MARK: - 步长输入框（修改 interval）
-    private lazy var intervalField = UITextField()
+    private lazy var intervalField = UITextField.jobsMake { _ in }
         .byText("1.0")
         .byKeyboardType(.decimalPad)
         .byBorderStyle(.roundedRect)
@@ -110,7 +110,7 @@ final class TimerDemoVC: BaseVC {
         }
 
     // MARK: - 倒计时峰值输入框（只允许数字）
-    private lazy var countdownField = UITextField()
+    private lazy var countdownField = UITextField.jobsMake { _ in }
         .byText("10")
         .byKeyboardType(.numberPad)
         .byBorderStyle(.roundedRect)
@@ -193,7 +193,7 @@ final class TimerDemoVC: BaseVC {
 
     // MARK: - 说明 Fire 与 Stop 的区别
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Fire：触发回调后销毁定时器；\n停止：销毁但不触发回调。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)

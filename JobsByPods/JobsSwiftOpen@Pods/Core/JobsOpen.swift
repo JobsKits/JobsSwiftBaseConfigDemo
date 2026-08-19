@@ -47,7 +47,7 @@ public final class JobsOpen: NSObject {
             navigationController.pushViewController(webViewController, animated: configuration.animated)
         } else {
             let navigationController = UINavigationController(rootViewController: webViewController)
-            navigationController.modalPresentationStyle = .fullScreen
+            navigationController.byModalPresentationStyle(.fullScreen)
             source.present(navigationController, animated: configuration.animated)
         }
         configuration.completion?(true)

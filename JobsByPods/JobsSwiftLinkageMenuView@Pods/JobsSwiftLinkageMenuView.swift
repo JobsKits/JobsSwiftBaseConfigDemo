@@ -64,8 +64,8 @@ public final class JobsSwiftLinkageMenuViewConfig {
 }
 
 private final class JobsSwiftLinkageMenuButton: UIControl {
-    private let imageView = UIImageView()
-    private let titleLabel = UILabel()
+    private let imageView = UIImageView.jobsMake { _ in }
+    private let titleLabel = UILabel.jobsMake { _ in }
     private var item = JobsSwiftLinkageMenuItem(title: "")
     private var normalTintColor: UIColor = JobsCor.secondaryLabel
     private var selectedTintColor: UIColor = JobsCor.systemOrange
@@ -79,9 +79,10 @@ private final class JobsSwiftLinkageMenuButton: UIControl {
         super.init(frame: frame)
         clipsToBounds = true
         imageView.byContentMode(.scaleAspectFit)
-        titleLabel.byTextAlignment(.center)
-        titleLabel.byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
-        titleLabel.byNumberOfLines(2)
+        titleLabel
+            .byTextAlignment(.center)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byNumberOfLines(2)
         imageView.byAddTo(self)
         titleLabel.byAddTo(self)
     }
@@ -137,10 +138,10 @@ public final class JobsSwiftLinkageMenuView: UIView {
         }
     }
     public private(set) var selectedIndex: Int = 0
-    public let menuScrollView = UIScrollView()
-    public let contentContainerView = UIView()
-    private let lineView = UIView()
-    private let indicatorView = UIView()
+    public let menuScrollView = UIScrollView.jobsMake { _ in }
+    public let contentContainerView = UIView.jobsMake { _ in }
+    private let lineView = UIView.jobsMake { _ in }
+    private let indicatorView = UIView.jobsMake { _ in }
     private var buttons: [JobsSwiftLinkageMenuButton] = []
 
     public init(menuItems: [JobsSwiftLinkageMenuItem],
@@ -219,9 +220,10 @@ public final class JobsSwiftLinkageMenuView: UIView {
 
     private func setup() {
         clipsToBounds = true
-        menuScrollView.scrollsToTop = false
-        menuScrollView.showsVerticalScrollIndicator = false
-        menuScrollView.byAddTo(self)
+        menuScrollView
+            .byScrollsToTop(false)
+            .byShowsVerticalScrollIndicator(false)
+            .byAddTo(self)
         lineView.byAddTo(self)
         contentContainerView.byAddTo(self)
         indicatorView.byAddTo(menuScrollView)
@@ -232,8 +234,9 @@ public final class JobsSwiftLinkageMenuView: UIView {
         menuScrollView.byBackgroundColor(config.menuBackgroundColor)
         contentContainerView.byBackgroundColor(config.contentBackgroundColor)
         lineView.byBackgroundColor(config.lineColor)
-        indicatorView.byBackgroundColor(config.selectedTintColor)
-        indicatorView.byCornerRadius(max(1, config.indicatorWidth / 2))
+        indicatorView
+            .byBackgroundColor(config.selectedTintColor)
+            .byCornerRadius(max(1, config.indicatorWidth / 2))
         for (index, button) in buttons.enumerated() {
             button.render(item: menuItems[index],
                           normalTintColor: config.normalTintColor,
@@ -263,7 +266,7 @@ public final class JobsSwiftLinkageMenuView: UIView {
             button.byFrame(CGRect(x: 0, y: y, width: menuWidth, height: height))
             y += height
         }
-        menuScrollView.contentSize = CGSize(width: menuWidth, height: y)
+        menuScrollView.byContentSize(CGSize(width: menuWidth, height: y))
         moveIndicator(to: selectedIndex, animated: false)
     }
 
@@ -281,9 +284,10 @@ public final class JobsSwiftLinkageMenuView: UIView {
 
     private func showContentView(_ contentView: UIView) {
         contentContainerView.subviews.forEach { $0.removeFromSuperview() }
-        contentView.byFrame(contentContainerView.bounds)
-        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentView.byAddTo(contentContainerView)
+        contentView
+            .byFrame(contentContainerView.bounds)
+            .byAutoresizingMask([.flexibleWidth, .flexibleHeight])
+            .byAddTo(contentContainerView)
     }
 
     @objc private func menuButtonTapped(_ sender: JobsSwiftLinkageMenuButton) {

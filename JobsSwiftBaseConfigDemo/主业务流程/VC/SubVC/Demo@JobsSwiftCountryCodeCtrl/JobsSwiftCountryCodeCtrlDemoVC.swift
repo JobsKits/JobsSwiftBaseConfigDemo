@@ -24,7 +24,7 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     private lazy var countryCodeController = JobsSwiftCountryCodeCtrl()
 
     private lazy var countryCodeTextField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byText("")
             .byPlaceholder("请选择国家 / 地区代码".tr)
             .byTextColor(JobsCor.label)
@@ -82,8 +82,9 @@ private extension JobsSwiftCountryCodeCtrlDemoVC {
         gk_navBackgroundColor = JobsCor.systemBackground
         gk_navTitleColor = JobsCor.label
         gk_navShadowColor = JobsCor.separator
-        gk_navigationBar.byBackgroundColor(JobsCor.systemBackground)
-        gk_navigationBar.byTintColor(JobsCor.label)
+        gk_navigationBar
+            .byBackgroundColor(JobsCor.systemBackground)
+            .byTintColor(JobsCor.label)
     }
 
     func pushCountryCodeCtrl() {

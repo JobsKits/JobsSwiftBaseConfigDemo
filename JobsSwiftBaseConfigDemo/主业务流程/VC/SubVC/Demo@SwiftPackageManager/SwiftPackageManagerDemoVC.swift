@@ -21,7 +21,7 @@ import GKNavigationBarSwift
 
 final class SwiftPackageManagerDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("一个本地 Package，同时演示 Library Product、资源 Bundle、泛型 API、actor 并发、Swift Macro、Executable 与测试。App 页面只负责调用公开 API。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
@@ -67,7 +67,7 @@ final class SwiftPackageManagerDemoVC: BaseVC {
     }()
 
     private lazy var resultView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.label)

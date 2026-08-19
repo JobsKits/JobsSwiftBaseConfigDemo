@@ -13,15 +13,17 @@ import UIKit
 
 import SnapKit
 
+import JobsSwiftDSL
+
 public final class BRPickerPanel: UIView {
     public var strongOwner: AnyObject?
     public var theme: BRPickerTheme = BRPickerTheme()
     public var animator: BRPanelAnimatable = BRSlideAnimation()
 
-    private let dimmingControl = UIControl()
-    private let panelView = UIView()
+    private let dimmingControl = UIControl.jobsMake { _ in }
+    private let panelView = UIView.jobsMake { _ in }
     private let toolbar = BRPickerToolbar()
-    private let contentContainer = UIView()
+    private let contentContainer = UIView.jobsMake { _ in }
 
     private var panelHeight: CGFloat = 0
     private weak var hostView: UIView?
@@ -44,13 +46,15 @@ public final class BRPickerPanel: UIView {
 
     public func applyTheme() {
         backgroundColor = .clear
-        dimmingControl.backgroundColor = theme.maskColor
-        panelView.backgroundColor = theme.panelBackgroundColor
-        panelView.layer.cornerRadius = theme.cornerRadius
-        panelView.clipsToBounds = true
-        toolbar.backgroundColor = theme.toolbarBackgroundColor
-        toolbar.titleLabel.textColor = theme.titleColor
-        toolbar.titleLabel.font = theme.titleFont
+        dimmingControl.byBackgroundColor(theme.maskColor)
+        panelView
+            .byBackgroundColor(theme.panelBackgroundColor)
+            .byCornerRadius(theme.cornerRadius)
+            .byClipsToBounds(true)
+        toolbar.byBackgroundColor(theme.toolbarBackgroundColor)
+        toolbar.titleLabel
+            .byTextColor(theme.titleColor)
+            .byFont(theme.titleFont)
         toolbar.cancelButton.setTitleColor(theme.buttonColor, for: .normal)
         toolbar.confirmButton.setTitleColor(theme.buttonColor, for: .normal)
         toolbar.cancelButton.titleLabel?.font = theme.buttonFont
@@ -62,7 +66,7 @@ public final class BRPickerPanel: UIView {
                                  confirmText: String = "Done",
                                  onCancel: @escaping () -> Void,
                                  onConfirm: @escaping () -> Void) {
-        toolbar.titleLabel.text = title
+        toolbar.titleLabel.byText(title)
         toolbar.cancelButton.setTitle(cancelText, for: .normal)
         toolbar.confirmButton.setTitle(confirmText, for: .normal)
         toolbar.onCancel = onCancel
@@ -85,7 +89,7 @@ public final class BRPickerPanel: UIView {
         hostView = host
         host.addSubview(self)
         frame = host.bounds
-        dimmingControl.frame = bounds
+        dimmingControl.byFrame(bounds)
         // Height adaptive
         let safeBottom = host.safeAreaInsets.bottom
         let desired = theme.toolBarHeight + theme.pickerHeight + safeBottom + theme.panelBottomOffset
@@ -97,7 +101,7 @@ public final class BRPickerPanel: UIView {
             width: bounds.width,
             height: panelHeight
         )
-        panelView.frame = finalFrame
+        panelView.byFrame(finalFrame)
         layoutPanelSubviews()
         animator.animateIn(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame)
     }
@@ -126,7 +130,7 @@ public final class BRPickerPanel: UIView {
     }
 
     private func layoutPanelSubviews() {
-        toolbar.frame = CGRect(x: 0, y: 0, width: panelView.bounds.width, height: theme.toolBarHeight)
+        toolbar.byFrame(CGRect(x: 0, y: 0, width: panelView.bounds.width, height: theme.toolBarHeight))
         contentContainer.frame = CGRect(
             x: 0,
             y: theme.toolBarHeight,
@@ -137,7 +141,7 @@ public final class BRPickerPanel: UIView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        dimmingControl.frame = bounds
+        dimmingControl.byFrame(bounds)
         // Keep panel pinned to bottom on rotations
         if panelView.superview != nil, panelView.frame.width != bounds.width {
             // recompute

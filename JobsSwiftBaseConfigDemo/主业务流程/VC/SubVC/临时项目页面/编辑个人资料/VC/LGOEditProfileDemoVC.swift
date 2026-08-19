@@ -128,7 +128,7 @@ final class LGOEditProfileDemoVC: BaseVC {
             .byScrollEnabled(NO)
             .byNoContentInsetAdjustment()
             .byNoSectionHeaderTopPadding()
-            .byTableFooterView(UIView())
+            .byTableFooterView(UIView.jobsMake { _ in })
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
@@ -262,7 +262,7 @@ extension LGOEditProfileDemoVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
-        UIView().byBackgroundColor(JobsCor.clear)
+        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.clear)
     }
 
     func tipsGrantPermission(){
@@ -369,7 +369,7 @@ extension LGOEditProfileDemoVC: UITableViewDelegate {
 // MARK: - 头像 cell
 public final class AvatarCell: UITableViewCell {
     private lazy var avatarView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds()
             .jobs_setImage("https://picsum.photos/200",

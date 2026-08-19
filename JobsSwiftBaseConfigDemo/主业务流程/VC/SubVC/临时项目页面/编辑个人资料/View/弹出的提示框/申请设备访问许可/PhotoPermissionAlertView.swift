@@ -46,7 +46,7 @@ final class PhotoPermissionAlertView: UIView {
     }
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("要允许“AC”访问此设备的照片和视频吗?".tr)
             .byTextColor(JobsCor.label)
             .byFont(.init(regular: 16)!)
@@ -60,7 +60,7 @@ final class PhotoPermissionAlertView: UIView {
     }()
 
     private lazy var buttonsStack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)   // 改成等分

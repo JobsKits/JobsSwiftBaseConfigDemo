@@ -57,7 +57,7 @@ final class JobsCountdownDemoVC: BaseVC {
     }
     /// 外层滚动视图
     private lazy var scrollView: UIScrollView = { [unowned self] in
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
                 make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -65,7 +65,7 @@ final class JobsCountdownDemoVC: BaseVC {
     }()
     /// 内容容器，用来放所有标题和按钮
     private lazy var contentView: UIView = { [unowned self] in
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
                 make.width.equalTo(scrollView.snp.width)
@@ -111,7 +111,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 1️⃣ 基础 60s（控制台打印）
     @available(iOS 15.0, *)
     private lazy var title1Label: UILabel = { [unowned self] in
-        UILabel().byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("1️⃣ 基础 60s（控制台打印）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -152,7 +152,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 2️⃣ 每秒闪烁（背景交替颜色）
     @available(iOS 15.0, *)
     private lazy var title2Label: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("2️⃣ 每秒换色闪烁".tr)
             .byTextColor(JobsCor.secondaryLabel)
@@ -195,7 +195,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 3️⃣ 0.5s 间隔上数
     @available(iOS 15.0, *)
     private lazy var title3Label: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("3️⃣ 上数到 10（0.5s 间隔）".tr)
             .byTextColor(JobsCor.secondaryLabel)
@@ -238,7 +238,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 4️⃣ 进入即渲染（renderOnInit）
     @available(iOS 15.0, *)
     private lazy var title4Label: UILabel = { [unowned self] in
-        UILabel().byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("4️⃣ 进入即渲染（renderOnInit）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -277,7 +277,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 5️⃣ 富文本标题（JobsRichText）
     @available(iOS 15.0, *)
     private lazy var title5Label: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("5️⃣ 富文本标题（JobsRichText）".tr)
             .byTextColor(JobsCor.secondaryLabel)
@@ -334,7 +334,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 6️⃣ 图标附件 + 文本富文本
     @available(iOS 15.0, *)
     private lazy var title6Label: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("6️⃣ 附件 + 文本富文本".tr)
             .byTextColor(JobsCor.secondaryLabel)
@@ -385,7 +385,7 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 7️⃣ 运行中允许点击（弹 Toast 提示）
     @available(iOS 15.0, *)
     private lazy var title7Label: UILabel = { [unowned self] in
-        UILabel().byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byText("7️⃣ 运行中允许点击（弹 Toast 提示）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -465,7 +465,7 @@ final class JobsCountdownDemoVC: BaseVC {
             title7Label.byVisible(YES)
             button7Tappable.byVisible(YES)
         } else {
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byText("需要 iOS 15+ 的 UIButton.Configuration".tr)
                 .byTextColor(JobsCor.secondaryLabel)
                 .byTextAlignment(.center)

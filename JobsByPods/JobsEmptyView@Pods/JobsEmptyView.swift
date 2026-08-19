@@ -32,7 +32,7 @@ public class JobsEmptyView: UIView {
     }()
 
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("暂无数据，点击重试".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)

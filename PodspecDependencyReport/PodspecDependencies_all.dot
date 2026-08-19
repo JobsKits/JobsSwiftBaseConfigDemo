@@ -113,6 +113,7 @@ digraph PodspecDependencies {
   "JobsAppDoor" -> "SnapKit";
   "JobsAudioRecorder" -> "JobsFuseAnimation";
   "JobsAudioRecorder" -> "JobsSwiftBaseDefines";
+  "JobsAudioRecorder" -> "JobsSwiftDSL";
   "JobsAudioRecorder" -> "JobsSwiftTimer";
   "JobsBy3rdTools" -> "BMPlayer";
   "JobsBy3rdTools" -> "GKNavigationBarSwift";
@@ -183,6 +184,8 @@ digraph PodspecDependencies {
   "JobsGestureUnlock" -> "JobsSwiftDSL";
   "JobsGestureUnlock" -> "SnapKit";
   "JobsIconfont" -> "JobsImageTools";
+  "JobsIconfont" -> "JobsSwiftDSL";
+  "JobsImageRotation" -> "JobsSwiftDSL";
   "JobsImageRotation" -> "JobsSwiftTimer";
   "JobsImageTools" -> "JobsSwiftBaseDefines";
   "JobsImageTools" -> "JobsSwiftBlock";
@@ -220,6 +223,7 @@ digraph PodspecDependencies {
   "JobsNavBar" -> "SnapKit";
   "JobsNavBar" -> "SwiftMessages";
   "JobsNetworking" -> "Alamofire";
+  "JobsNetworking" -> "JobsSwiftDSL";
   "JobsNetworking" -> "PromiseKit";
   "JobsOCDSL" -> "JobsBlock";
   "JobsOCDSL" -> "JobsOCDefs";
@@ -232,6 +236,7 @@ digraph PodspecDependencies {
   "JobsProgressBar" -> "JobsSwiftTimer";
   "JobsProgressBar" -> "SnapKit";
   "JobsScale" -> "JobsGetWindow";
+  "JobsScreenCapture" -> "JobsSwiftDSL";
   "JobsScreenCapture" -> "SnapKit";
   "JobsSwiftAppTools" -> "JobsBy3rdTools";
   "JobsSwiftAppTools" -> "JobsByUIKit";

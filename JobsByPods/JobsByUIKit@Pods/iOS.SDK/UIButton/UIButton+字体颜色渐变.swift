@@ -62,8 +62,9 @@ extension UIButton {
     /// DSL：设置副标题文本（不做渐变，只管 text/font）
     @discardableResult
     public func jobs_setSubtitle(_ text: String?, font: UIFont? = nil) -> Self {
-        jobs_subtitleLabel.byText(text)
-        jobs_subtitleLabel.byFont(font)
+        jobs_subtitleLabel
+            .byText(text)
+            .byFont(font)
         return self
     }
 }

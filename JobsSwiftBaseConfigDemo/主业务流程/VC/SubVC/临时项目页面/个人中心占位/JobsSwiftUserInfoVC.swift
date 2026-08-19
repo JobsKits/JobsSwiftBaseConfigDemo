@@ -85,18 +85,18 @@ extension JobsSwiftUserInfoVC: UITableViewDataSource, UITableViewDelegate {
         let field = fields[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.cellReuseIdentifier) ??
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.cellReuseIdentifier)
-        cell.textLabel?.byText(field.name)
-        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-        cell.textLabel?.byTextColor(RootListPreferences.foldPrimaryTextColor)
-        cell.detailTextLabel?.byText(field.value)
-        cell.detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
-        cell.detailTextLabel?.byTextColor(RootListPreferences.foldSecondaryTextColor)
-        cell.detailTextLabel?.byNumberOfLines(3)
-        cell.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-        cell.contentView.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-        cell.accessoryType = .none
-        cell.selectionStyle = .default
         return cell
+            .byText(field.name)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleCor(RootListPreferences.foldPrimaryTextColor)
+            .byDetailText(field.value)
+            .byDetailTitleFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byDetailTitleCor(RootListPreferences.foldSecondaryTextColor)
+            .byDetailTitleNumberOfLines(3)
+            .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+            .byContentView { $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor) }
+            .byAccessoryType(.none)
+            .bySelectionStyle(.default)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

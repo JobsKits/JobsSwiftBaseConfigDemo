@@ -161,7 +161,7 @@ final class PlayerRemoteVC: BaseVC {
             }
     }()
     private lazy var statusLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(statusText("正在准备播放"))
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
@@ -172,7 +172,7 @@ final class PlayerRemoteVC: BaseVC {
             }
     }()
     private lazy var sourceScrollView: UIScrollView = { [unowned self] in
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
             .byContentInsetAdjustmentBehavior(.never)
@@ -183,7 +183,7 @@ final class PlayerRemoteVC: BaseVC {
             }
     }()
     private lazy var sourceStack: UIStackView = { [unowned self] in
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .bySpacing(10)

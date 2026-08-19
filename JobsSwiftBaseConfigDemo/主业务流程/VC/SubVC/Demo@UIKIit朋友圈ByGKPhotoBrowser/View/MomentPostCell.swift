@@ -50,7 +50,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // constraints
     private var mediaHeightConstraint: Constraint?
     private lazy var card: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
@@ -62,7 +62,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
 
     private lazy var avatar: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemFill)
             .byCornerRadius(20)
             .byMasksToBounds(YES)
@@ -74,7 +74,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
 
     private lazy var rightStack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -95,13 +95,13 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
 
     private lazy var nameLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.label)
     }()
     /// ✅ 用 UITextView 做“末尾内联 全文/收起”
     private lazy var contentTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byEditable(NO)
             .byScrollEnabled(NO)
@@ -137,14 +137,14 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
     /// ✅ bottomBar：不要在这里触发 timeLabel/like/comment 的 lazy
     private lazy var bottomBar: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAdd { make in
                 make.height.equalTo(22)
             }
     }()
 
     private lazy var timeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(bottomBar) { make in
@@ -184,14 +184,14 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
     /// ✅ commentsBG：不要在这里触发 commentsStack 的 lazy
     private lazy var commentsBG: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
     }()
 
     private lazy var commentsStack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -386,7 +386,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         commentsBG.byVisible(true)
         for c in list {
             commentsStack.addArrangedSubview(
-                UILabel()
+                UILabel.jobsMake { _ in }
                     .byNumberOfLines(0)
                     .byFont(JobsFont.systemFont(ofSize: 13))
                     .byTextColor(JobsCor.label)

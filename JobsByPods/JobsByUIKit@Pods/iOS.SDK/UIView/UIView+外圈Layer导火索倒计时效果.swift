@@ -273,13 +273,15 @@ extension UIView {
         switch config.direction {
         /// 处理 .clockwise 分支
         case .clockwise:
-            fuseLayer.strokeStart = 0
-            fuseLayer.strokeEnd = 0
+            fuseLayer
+                .byStrokeStart(0)
+                .byStrokeEnd(0)
         /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 反向增长：先“空”出来（start=end=1）
-            fuseLayer.strokeStart = 1
-            fuseLayer.strokeEnd = 1
+            fuseLayer
+                .byStrokeStart(1)
+                .byStrokeEnd(1)
         }
         CATransaction.commit()
     }

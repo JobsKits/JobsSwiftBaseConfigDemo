@@ -96,7 +96,7 @@ final class MessageListDemoVC: BaseVC {
     }()
     // MARK: - BottomBar
     private lazy var bottomBar: UIView = {
-        let v = UIView()
+        let v = UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.10))
             .byShadowOpacity(1)
@@ -242,11 +242,11 @@ final class MessageListDemoVC: BaseVC {
         tableView.byContentInset(inset)
         if #available(iOS 13.0, *) {
             var v = baseVerticalIndicatorInsets
-            v.bottom = baseVerticalIndicatorInsets.bottom + extra
-            tableView.verticalScrollIndicatorInsets = v
+            v.byBottom(baseVerticalIndicatorInsets.bottom + extra)
+            tableView.byVerticalScrollIndicatorInsets(v)
             var h = baseHorizontalIndicatorInsets
             h.bottom = baseHorizontalIndicatorInsets.bottom + extra
-            tableView.horizontalScrollIndicatorInsets = h
+            tableView.byHorizontalScrollIndicatorInsets(h)
         } else {
             var s = baseIndicatorInsetsLegacy
             s.bottom = baseIndicatorInsetsLegacy.bottom + extra
@@ -319,7 +319,7 @@ extension MessageListDemoVC: UITableViewDelegate {
 extension MessageListDemoVC {
     // MARK: - Editing
     private func applyEditingMode(_ editing: Bool) {
-        tableView.allowsMultipleSelectionDuringEditing = true
+        tableView.byAllowsMultipleSelectionDuringEditing(true)
         tableView.setEditing(editing, animated: true)
         if editing {
             syncSelectionToUI()
@@ -349,8 +349,9 @@ extension MessageListDemoVC {
 
     private func updateBottomBarUI() {
         bottomSelectAllButton.bySelected(isAllSelected)
-        bottomDeleteButton.byEnabled(!selectedIDs.isEmpty)
-        bottomDeleteButton.byAlpha(selectedIDs.isEmpty ? 0.35 : 1)
+        bottomDeleteButton
+            .byEnabled(!selectedIDs.isEmpty)
+            .byAlpha(selectedIDs.isEmpty ? 0.35 : 1)
     }
 
     private func syncSelectionToUI() {

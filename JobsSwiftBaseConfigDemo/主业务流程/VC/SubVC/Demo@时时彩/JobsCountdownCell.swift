@@ -25,7 +25,7 @@ public final class JobsCountdownCell: UITableViewCell {
     private var timer: JobsSwiftTimerProtocol?
     // ============================== UI (Lazy) ==============================
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.label)
@@ -37,7 +37,7 @@ public final class JobsCountdownCell: UITableViewCell {
     }()
 
     private lazy var countdownLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(1)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .semibold))
             .byTextAlignment(.right)
@@ -110,8 +110,9 @@ public final class JobsCountdownCell: UITableViewCell {
         let interval = max(0.1, item.tickInterval)
         // 已结束就不启动
         if item.remainSeconds() <= 0 {
-            countdownLabel.byText(Self.format(0))
-            countdownLabel.byTextColor(JobsCor.secondaryLabel)
+            countdownLabel
+                .byText(Self.format(0))
+                .byTextColor(JobsCor.secondaryLabel)
             return
         }
         let cfg = JobsSwiftTimerConfig(
@@ -149,8 +150,9 @@ public final class JobsCountdownCell: UITableViewCell {
             t.start()
         } catch {
             // 创建失败：一般是 manager 状态不对 / id 重复但 replace 失败
-            countdownLabel.byText("--:--")
-            countdownLabel.byTextColor(JobsCor.secondaryLabel)
+            countdownLabel
+                .byText("--:--")
+                .byTextColor(JobsCor.secondaryLabel)
         }
     }
 
@@ -158,8 +160,9 @@ public final class JobsCountdownCell: UITableViewCell {
     private func renderCountdown() {
         guard let item = currentItem else { return }
         let remain = item.remainSeconds()
-        countdownLabel.byText(Self.format(remain))
-        countdownLabel.byTextColor((remain <= 0) ? JobsCor.secondaryLabel : JobsCor.systemRed)
+        countdownLabel
+            .byText(Self.format(remain))
+            .byTextColor((remain <= 0) ? JobsCor.secondaryLabel : JobsCor.systemRed)
     }
 
     private static func format(_ seconds: Int) -> String {

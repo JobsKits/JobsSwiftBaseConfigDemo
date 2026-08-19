@@ -20,7 +20,7 @@ import SnapKit
 final class JobsBulletTextDemoVC: BaseVC {
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(28)
                 make.centerX.equalToSuperview()
@@ -29,7 +29,7 @@ final class JobsBulletTextDemoVC: BaseVC {
     }()
 
     private lazy var chineseLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.25))
             .byAttributedString(makeChineseText())
@@ -39,7 +39,7 @@ final class JobsBulletTextDemoVC: BaseVC {
     }()
 
     private lazy var englishLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.25))
             .byAttributedString(makeEnglishText())
@@ -59,7 +59,7 @@ final class JobsBulletTextDemoVC: BaseVC {
     }
 
     private func makeChineseText() -> NSAttributedString {
-        let paragraph = NSMutableParagraphStyle()
+        let paragraph = NSMutableParagraphStyle.jobsMake { _ in }
         paragraph.headIndent = 18
         paragraph.firstLineHeadIndent = 0
         paragraph.paragraphSpacing = 9
@@ -87,7 +87,7 @@ final class JobsBulletTextDemoVC: BaseVC {
     }
 
     private func makeEnglishText() -> NSAttributedString {
-        let paragraph = NSMutableParagraphStyle()
+        let paragraph = NSMutableParagraphStyle.jobsMake { _ in }
         paragraph.headIndent = 18
         paragraph.firstLineHeadIndent = 0
         paragraph.paragraphSpacing = 9
@@ -96,14 +96,15 @@ final class JobsBulletTextDemoVC: BaseVC {
             "In case you meet any problem in deposit, please contact our CS.",
             "Additional information can be found on our website."
         ]
-        let attributedText = NSMutableAttributedString()
+        let attributedText = NSMutableAttributedString.jobsMake { _ in }
         lines.enumerated().forEach { index, line in
             if index > 0 {
                 attributedText.append(NSAttributedString(string: "\n"))
             }
-            let attachment = NSTextAttachment()
-            attachment.image = makeBulletImage()
-            attachment.bounds = CGRect(x: 0, y: 1, width: 8, height: 8)
+            let attachment = NSTextAttachment.jobsMake { _ in }
+            attachment
+                .byImage(makeBulletImage())
+                .byBounds(CGRect(x: 0, y: 1, width: 8, height: 8))
             attributedText.append(NSAttributedString(attachment: attachment))
             attributedText.append(NSAttributedString(string: " \(line)"))
         }

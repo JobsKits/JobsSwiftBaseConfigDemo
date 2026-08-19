@@ -18,7 +18,7 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     private var automaticSecondLoadPending = true
 
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFit)
             .byCornerRadius(16)
@@ -26,7 +26,7 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("首次加载准备中".tr)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byTextColor(JobsCor.label)

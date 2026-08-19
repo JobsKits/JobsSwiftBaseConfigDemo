@@ -51,7 +51,7 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensityTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("强度 100%".tr)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -62,7 +62,7 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensityRowView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(20)
                 make.bottom.equalTo(saveButton.snp.top).offset(-12)
@@ -71,7 +71,7 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensitySlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(1)
@@ -98,7 +98,7 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(sourceImage)
             .byContentMode(.scaleAspectFit)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -112,7 +112,7 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("原图 · 100%".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.white)

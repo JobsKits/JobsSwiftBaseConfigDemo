@@ -82,17 +82,16 @@ extension MosaicDemoListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
-        let cell = tableView
+        return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byAccessoryType(.disclosureIndicator)
-        var config = cell.defaultContentConfiguration()
-        config.text = row.title
-        config.secondaryText = row.subtitle
-        config.textProperties.font = JobsFont.systemFont(ofSize: 17, weight: .semibold)
-        config.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 13, weight: .regular)
-        config.secondaryTextProperties.numberOfLines = 0
-        cell.contentConfiguration = config
-        return cell
+            .byListConfig {
+                $0.byText(row.title)
+                    .bySecondaryText(row.subtitle)
+                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .bySecondaryLines(0)
+            }
     }
 
     func tableView(_ tableView: UITableView,

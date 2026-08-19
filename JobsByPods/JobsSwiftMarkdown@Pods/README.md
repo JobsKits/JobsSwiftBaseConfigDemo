@@ -46,3 +46,7 @@ markdownView.load(document)
 资源包内原样包含 `markdown-it`、`highlight.js`、`Mermaid`、`KaTeX` 和
 `DOMPurify` 的浏览器发行文件。版本与许可证见 `ThirdPartyLicenses`，Jobs 自有
 代码不修改这些第三方文件。
+
+## Jobs DSL 调用约定
+
+Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。

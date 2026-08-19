@@ -154,13 +154,13 @@ private extension JobsCopiedAppIconPhotoStore {
     }
 
     func loadIndex() throws -> [JobsCopiedAppIconPhoto] {
-        guard fileManager.fileExists(atPath: indexURL.path) else { return [] };return try JSONDecoder().decode(
+        guard fileManager.fileExists(atPath: indexURL.path) else { return [] };return try JSONDecoder.make { _ in }.decode(
             [JobsCopiedAppIconPhoto].self,
             from: Data(contentsOf: indexURL)
         )
     }
 
     func writeIndex(_ photos: [JobsCopiedAppIconPhoto]) throws {
-        try JSONEncoder().encode(photos).write(to: indexURL, options: .atomic)
+        try JSONEncoder.make { _ in }.encode(photos).write(to: indexURL, options: .atomic)
     }
 }

@@ -60,7 +60,7 @@ final class JobsSwiftRefresherDemoVC: BaseVC {
     private lazy var animators = jobs_makeAnimators()
 
     private lazy var hLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+        UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.horizontal)
             .byMinimumLineSpacing(12)
             .byMinimumInteritemSpacing(12)
@@ -173,7 +173,7 @@ final class JobsSwiftRefresherDemoVC: BaseVC {
     }()
 
     private lazy var instructionsTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.label)
             .byEditable(false)
@@ -301,7 +301,7 @@ private extension JobsSwiftRefresherDemoVC {
 
     func jobs_makeAnimators() -> [JobsRefreshAnimatorProtocol] {
         let frames = jobs_makeRefreshFrames()
-        let firstFrame = frames.first ?? UIImage(named: "菊花加载") ?? UIImage.make()
+        let firstFrame = frames.first ?? UIImage(named: "菊花加载") ?? UIImage.make { _ in }
         return [
             JobsTodayNewsRefreshView(
                 config: JobsTodayNewsRefreshConfig(
@@ -352,7 +352,7 @@ private extension JobsSwiftRefresherDemoVC {
     }
 
     func jobs_makeGIFData(frames: [UIImage]) -> Data {
-        let data = NSMutableData()
+        let data = NSMutableData.jobsMake { _ in }
         guard !frames.isEmpty,
               let destination = CGImageDestinationCreateWithData(
                 data,

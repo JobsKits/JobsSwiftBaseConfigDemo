@@ -47,7 +47,7 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var previewLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byAddTo(view) { make in
                 make.top.equalTo(self.sourceControl.snp.bottom).offset(12)
@@ -56,7 +56,7 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var rawLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
@@ -135,7 +135,7 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var debugTextView: UITextView = { [unowned self] in
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)

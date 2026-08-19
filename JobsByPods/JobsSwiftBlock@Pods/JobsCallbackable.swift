@@ -15,7 +15,7 @@ extension JobsCallbackable {
         if let dict = objc_getAssociatedObject(self, &storeKey) as? NSMutableDictionary {
             return dict
         }
-        let dict = NSMutableDictionary()
+        let dict = NSMutableDictionary.jobsMake { _ in }
         objc_setAssociatedObject(
             self,
             &storeKey,

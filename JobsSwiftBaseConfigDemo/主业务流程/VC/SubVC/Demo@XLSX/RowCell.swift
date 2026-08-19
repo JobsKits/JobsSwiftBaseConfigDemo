@@ -21,7 +21,7 @@ import SnapKit
 final class RowCell: UITableViewCell {
     // MARK: - UI
     private lazy var indexLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.left)
             .byHugging(.required)
             .byCompressionResistance(.required)
@@ -35,7 +35,7 @@ final class RowCell: UITableViewCell {
     }()
 
     private lazy var stack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.firstBaseline)
             .byDistribution(.fillProportionally)
@@ -73,7 +73,7 @@ final class RowCell: UITableViewCell {
             }
             for text in values {
                 stack.addArrangedSubview(
-                    UILabel()
+                    UILabel.jobsMake { _ in }
                         .byNumberOfLines(1)
                         .byFont(JobsFont.systemFont(ofSize: 15))
                         .byText(text)

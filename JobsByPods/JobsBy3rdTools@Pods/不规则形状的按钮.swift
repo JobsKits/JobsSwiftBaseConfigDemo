@@ -21,8 +21,8 @@ public class IrregularButton: UIButton {
     var points: [CGPoint] = [] { didSet { setNeedsLayout() } }
     var designSize: CGSize? { didSet { setNeedsLayout() } }
 
-    private let maskLayer = CAShapeLayer()
-    private let strokeLayer = CAShapeLayer()
+    private let maskLayer = CAShapeLayer.jobsMake { _ in }
+    private let strokeLayer = CAShapeLayer.jobsMake { _ in }
     private var cachedPath: CGPath?
 
     override init(frame: CGRect) {
@@ -38,12 +38,13 @@ public class IrregularButton: UIButton {
     private func setup() {
         // ✅ 关键：把“整个视图”裁成不规则形状
         layer.mask = maskLayer
-        maskLayer.fillColor = JobsCor.black.cgColor
+        maskLayer.byFillColor(JobsCor.black)
         // 描边层（可选）
         layer.addSublayer(strokeLayer)
-        strokeLayer.fillColor = JobsCor.clear.cgColor
-        strokeLayer.strokeColor = JobsCor.clear.cgColor
-        strokeLayer.lineWidth = 0
+        strokeLayer
+            .byFillColor(JobsCor.clear)
+            .byStrokeColor(JobsCor.clear)
+            .byLineWidth(0)
         // 不要系统按钮那套高亮干预
 //        adjustsImageWhenHighlighted = false
 //        showsTouchWhenHighlighted = false
@@ -53,10 +54,12 @@ public class IrregularButton: UIButton {
         super.layoutSubviews()
         let path = buildPath().cgPath
         cachedPath = path
-        maskLayer.byFrame(bounds)
-        maskLayer.path = path
-        strokeLayer.byFrame(bounds)
-        strokeLayer.path = path
+        maskLayer
+            .byFrame(bounds)
+            .byPath(path)
+        strokeLayer
+            .byFrame(bounds)
+            .byPath(path)
     }
     // ✅ 点击区域也按不规则形状来
     public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -90,8 +93,9 @@ extension IrregularButton {
     }
     @discardableResult
     public func byStroke(_ c: UIColor, _ w: CGFloat) -> Self {
-        strokeLayer.strokeColor = c.cgColor
-        strokeLayer.lineWidth = w
+        strokeLayer
+            .byStrokeColor(c)
+            .byLineWidth(w)
         return self
     }
 }

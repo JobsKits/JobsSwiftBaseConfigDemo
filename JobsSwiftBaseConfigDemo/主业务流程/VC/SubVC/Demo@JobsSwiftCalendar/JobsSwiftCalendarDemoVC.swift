@@ -22,23 +22,26 @@ import GKNavigationBarSwift
 
 final class JobsSwiftCalendarDemoVC: BaseVC {
     private lazy var dayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd"
-        formatter.locale = .current
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter
+            .byDateFormat("dd")
+            .byLocale(.current)
         return formatter
     }()
 
     private lazy var holidayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM"
-        formatter.locale = .current
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter
+            .byDateFormat("dd/MM")
+            .byLocale(.current)
         return formatter
     }()
 
     private lazy var selectedFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy年MM月dd日"
-        formatter.locale = .current
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter
+            .byDateFormat("yyyy年MM月dd日")
+            .byLocale(.current)
         return formatter
     }()
 
@@ -88,7 +91,7 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
     }()
 
     private lazy var selectedLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("请选择日期".tr)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

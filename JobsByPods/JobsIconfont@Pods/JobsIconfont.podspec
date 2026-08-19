@@ -26,4 +26,5 @@ Pod::Spec.new do |spec|
   ]
 
   spec.dependency 'JobsImageTools'
+  spec.dependency 'JobsSwiftDSL'
 end

@@ -23,10 +23,11 @@ final class TransparentRegionVC: BaseVC {
     private let horizontalInset: CGFloat = 16
     private var didInitHoleRect = false
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("iOS-UIView设置阴影效果".tr)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
+            .byTextColor(JobsCor.label)
             .byBgCor(JobsCor.systemYellow)
             .byShadowColor(JobsCor.systemBlue)
             .byShadowOpacity(0.8)
@@ -43,12 +44,12 @@ final class TransparentRegionVC: BaseVC {
     }()
 
     private lazy var overlayView: HollowOverlayView = {
-        let v = HollowOverlayView()
-        v.overlayColor = JobsCor.white.withAlphaComponent(0.5)
-        v.holeShape = .oval              // 想要圆角矩形：.roundedRect(12)
-        return v.byAddTo(view) { make in
-            make.edges.equalToSuperview()
-        }
+        HollowOverlayView()
+            .byOverlayColor(JobsCor.label, alpha: 0.5)
+            .byHoleShape(.oval) // 想要圆角矩形：.roundedRect(12)
+            .byAddTo(view) { make in
+                make.edges.equalToSuperview()
+            }
     }()
 
     override func viewDidLoad() {

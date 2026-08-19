@@ -22,7 +22,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     private var simulatedRefreshWorkItem: DispatchWorkItem?
 
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("红、绿双球交叉换位并错峰跳跃；组件可独立用于下拉刷新、加载态或空白页。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
@@ -39,7 +39,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var animationCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(24)
             .byShadowColor(JobsCor.black)
@@ -69,7 +69,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("正在刷新…".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
@@ -114,7 +114,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var controlsStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)

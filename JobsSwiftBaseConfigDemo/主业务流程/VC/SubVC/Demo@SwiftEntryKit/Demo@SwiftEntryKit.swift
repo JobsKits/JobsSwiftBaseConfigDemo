@@ -57,7 +57,7 @@ private func makeMessageView(title: String,
 
 final class SwiftEntryKitDemoVC: BaseVC {
     private lazy var stack: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -301,11 +301,11 @@ final class SwiftEntryKitDemoVC: BaseVC {
     }()
 
     private lazy var container: UIView = {
-        UIView().byBackgroundColor(JobsCor.black.withAlphaComponent(0.88))
+        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.black.withAlphaComponent(0.88))
     }()
 
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("📢 这是一则全屏公告\n点空白可关闭".tr)
             .byTextAlignment(.center)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))

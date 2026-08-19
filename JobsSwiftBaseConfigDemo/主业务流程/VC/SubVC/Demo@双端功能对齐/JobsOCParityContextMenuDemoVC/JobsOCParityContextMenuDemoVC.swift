@@ -32,7 +32,7 @@ final class JobsContextMenuDemoVC: BaseVC {
     private var selectedIndex = 0
 
     private lazy var headerLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("選擇場館".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -46,8 +46,8 @@ final class JobsContextMenuDemoVC: BaseVC {
             .byDelegate(self)
             .byRowHeight(58)
             .byScrollEnabled(false)
-            .byBackgroundColor(JobsCor.systemBackground)
-            .byTableFooterView(UIView())
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
+            .byTableFooterView(UIView.jobsMake { _ in })
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
                 make.left.right.bottom.equalToSuperview()
@@ -56,7 +56,7 @@ final class JobsContextMenuDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.byBackgroundColor(JobsCor.systemBackground)
+        view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(title: "3D Touch / Context Menu".tr)
         tableView.byVisible(YES)
     }
@@ -72,14 +72,14 @@ extension JobsContextMenuDemoVC: UITableViewDataSource, UITableViewDelegate {
         let reuseIdentifier = "JobsContextMenuCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
             ?? UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-        cell.textLabel?
+        return cell
             .byText(venues[indexPath.row])
-            .byFont(JobsFont.systemFont(ofSize: 16))
-            .byTextColor(JobsCor.label)
-        cell.accessoryType = indexPath.row == selectedIndex ? .checkmark : .disclosureIndicator
-        cell.tintColor = JobsCor.systemRed
-        cell.selectionStyle = .none
-        return cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16))
+            .byTitleCor(JobsCor.label)
+            .byAccessoryType(indexPath.row == selectedIndex ? .checkmark : .disclosureIndicator)
+            .byTintColor(JobsCor.systemRed)
+            .bySelectionStyle(.none)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -122,7 +122,7 @@ private final class JobsContextMenuPreviewVC: BaseVC {
     private let row: Int
 
     private lazy var previewLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Preview for row \(row)")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)

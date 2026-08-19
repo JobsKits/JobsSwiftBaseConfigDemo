@@ -47,7 +47,7 @@ final class HKLocalRecordVC: BaseVC {
     }()
     /// 状态文案
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -60,7 +60,7 @@ final class HKLocalRecordVC: BaseVC {
     }()
     /// 微信风格白色外圈
     private lazy var recordButtonOuterRingView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byBorderColor(JobsCor.white)
             .byBorderWidth(4)

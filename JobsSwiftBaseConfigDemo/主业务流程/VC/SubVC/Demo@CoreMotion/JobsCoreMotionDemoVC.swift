@@ -45,7 +45,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private var metricTitleLabels: [UILabel] = []
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(NO)
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
@@ -59,7 +59,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -67,7 +67,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var introTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("握住手机，动一动你的手腕".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
@@ -78,7 +78,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var introDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("倾斜、抬腕和转身都会得到画面反馈；三轴数字只作为辅助读数。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -90,7 +90,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var motionCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(24)
             .byAddTo(contentView) { [unowned self] make in
@@ -101,7 +101,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var stateIconLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("👋")
             .byFont(JobsFont.systemFont(ofSize: 32, weight: .regular))
             .byTextAlignment(.center)
@@ -112,7 +112,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var stateTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("正在建立你的中心姿势…".tr)
             .byFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -124,7 +124,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var stateDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("保持当前握姿一秒，画面会把这里当成原点。".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -137,7 +137,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var attitudeRingView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byCornerRadius(110)
             .byBorderColor(JobsCor.separator)
@@ -151,7 +151,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var horizontalGuideView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(attitudeRingView) { make in
                 make.center.equalToSuperview()
@@ -161,7 +161,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var verticalGuideView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(attitudeRingView) { make in
                 make.center.equalToSuperview()
@@ -195,7 +195,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
         }
 
     private lazy var phoneView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(21)
             .byBorderColor(JobsCor.systemBlue)
@@ -212,7 +212,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var phoneNotchView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiaryLabel)
             .byCornerRadius(2.5)
             .byAddTo(phoneView) { make in
@@ -224,7 +224,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var avatarImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage("person.fill".sysImg(pointSize: 50, weight: .semibold))
             .byTintColor(JobsCor.systemBlue)
             .byContentMode(.scaleAspectFit)
@@ -236,7 +236,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var avatarCaptionLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这是你".tr)
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -248,7 +248,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var balanceDotView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGreen)
             .byCornerRadius(8)
             .byShadowColor(JobsCor.systemGreen)
@@ -262,7 +262,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var compassArrowLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("▲")
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.systemOrange)
@@ -275,7 +275,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var intensityTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("动作强度 0% · 静止".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -286,7 +286,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var intensityProgressView: UIProgressView = {
-        UIProgressView()
+        UIProgressView.jobsMake { _ in }
             .byProgressViewStyle(.default)
             .byProgress(0)
             .byProgressTintColor(JobsCor.systemGreen)
@@ -323,7 +323,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     )
 
     private lazy var metricsStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)
@@ -337,7 +337,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var rawDataCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byAddTo(contentView) { [unowned self] make in
@@ -348,7 +348,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var rawDataTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("陀螺仪角速度 · rad/s".tr)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -359,7 +359,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     }()
 
     private lazy var rawDataLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("x: --    y: --    z: --")
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium))
             .byTextColor(JobsCor.label)
@@ -448,7 +448,7 @@ private extension JobsCoreMotionDemoVC {
     }
 
     func makeDirectionLabel(_ text: String) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text.tr)
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .semibold))
             .byTextColor(JobsCor.tertiaryLabel)
@@ -456,7 +456,7 @@ private extension JobsCoreMotionDemoVC {
     }
 
     func makeMetricValueLabel() -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("0.0°")
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -466,12 +466,12 @@ private extension JobsCoreMotionDemoVC {
     }
 
     func makeMetricCard(title: String, valueLabel: UILabel, color: UIColor) -> UIView {
-        let cardView = UIView()
+        let cardView = UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byBorderColor(color.withAlphaComponent(0.28))
             .byBorderWidth(1)
-        let titleLabel = UILabel()
+        let titleLabel = UILabel.jobsMake { _ in }
             .byText(title)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .semibold))
             .byTextColor(color)
@@ -572,8 +572,9 @@ private extension JobsCoreMotionDemoVC {
         stateTitleLabel.byTextColor(presentation.color)
         avatarImageView.byTintColor(presentation.color)
         phoneView.byBorderColor(presentation.color)
-        balanceDotView.byBackgroundColor(presentation.color)
-        balanceDotView.byShadowColor(presentation.color)
+        balanceDotView
+            .byBackgroundColor(presentation.color)
+            .byShadowColor(presentation.color)
         intensityProgressView.byProgressTintColor(presentation.color)
 
         let percent = Int((smoothedIntensity * 100).rounded())
@@ -619,7 +620,7 @@ private extension JobsCoreMotionDemoVC {
                 compassArrowLabel.byTransform(.identity)
             }
         )
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        UINotificationFeedbackGenerator.jobsMake { _ in }.notificationOccurred(.success)
         stateIconLabel.byText("🎯")
         stateTitleLabel.byText("中心姿势已更新".tr)
         stateDetailLabel.byText("现在从这个握姿继续倾斜或转动手机。".tr)
@@ -629,8 +630,9 @@ private extension JobsCoreMotionDemoVC {
         motionManager.byStopAllUpdates()
         currentPose = .waiting
         stateIconLabel.byText("⚠️")
-        stateTitleLabel.byText("暂时无法参与体感互动".tr)
-        stateTitleLabel.byTextColor(JobsCor.systemOrange)
+        stateTitleLabel
+            .byText("暂时无法参与体感互动".tr)
+            .byTextColor(JobsCor.systemOrange)
         stateDetailLabel.byText(message)
         rawDataLabel.byText("x: --    y: --    z: --")
         intensityTitleLabel.byText("动作强度 --".tr)

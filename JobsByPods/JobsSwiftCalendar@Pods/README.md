@@ -65,6 +65,8 @@ calendar.allowsMultipleSelection = true
 | `jobsReloadDataSafely()` | 主线程安全刷新日历 |
 | `setCurrentPage(_:animated:)` | 切换当前月份 |
 | `selectDate(_:)` / `deselectDate(_:)` | 主动选中或取消日期 |
+| `JobsSwiftCalendarDayCell.byDate(_:)` / `byMonthPosition(_:)` | 在同一 Cell 链中配置日期与月份位置 |
+| `JobsSwiftCalendarDayCell.jobsConfigure(...) -> Self` | 完成日期 Cell 配置后继续返回当前具体对象 |
 
 ## 四、验证方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -77,5 +79,9 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftBaseC
 
 - 当前主打月历稳定渲染、翻页、选择、范围限制和基础外观；复杂农历、跨时区业务规则、深度自定义 cell 可继续沿 Jobs API 扩展。
 - 如果业务页设置超过父视图宽度的固定约束，控件会尽量稳定内部布局，但正确做法仍是限制在 safe area / 父视图宽度内。
+
+## Jobs DSL 调用约定
+
+Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -21,7 +21,7 @@ import JobsSwiftTimer
 import SnapKit
 
 private enum JobsFuseSoundStore {
-    private static let lock = NSLock()
+    private static let lock = NSLock.jobsMake { _ in }
     private static var soundIDs = [String: SystemSoundID]()
 
     static func soundID(fileFullName: String, bundle: Bundle) -> SystemSoundID? {
@@ -197,48 +197,51 @@ extension UIView {
             self.jobs_fuseRingStartTS = CACurrentMediaTime()
             let trackLayer: CAShapeLayer?
             if let trackColor = config.trackColor {
-                let t = CAShapeLayer()
-                t.name = "jobs.fuse.outerRing.track"
-                t.contentsScale = UIScreen.main.scale
-                t.fillColor = config.fillColor.cgColor
-                t.strokeColor = trackColor.cgColor
-                t.lineWidth = config.lineWidth
-                t.lineCap = .round
-                t.lineJoin = .round
-                t.strokeStart = 0
-                t.strokeEnd = 1
-                t.opacity = 1
+                let t = CAShapeLayer.jobsMake { _ in }
+                t
+                    .byName("jobs.fuse.outerRing.track")
+                    .byContentsScale(UIScreen.main.scale)
+                    .byFillColor(config.fillColor)
+                    .byStrokeColor(trackColor)
+                    .byLineWidth(config.lineWidth)
+                    .byLineCap(.round)
+                    .byLineJoin(.round)
+                    .byStrokeStart(0)
+                    .byStrokeEnd(1)
+                    .byOpacity(1)
                 self.layer.addSublayer(t)
                 trackLayer = t
             } else {
                 trackLayer = nil
             }
-            let ring = CAShapeLayer()
-            ring.name = "jobs.fuse.outerRing.progress"
-            ring.contentsScale = UIScreen.main.scale
-            ring.fillColor = config.fillColor.cgColor
-            ring.strokeColor = config.strokeColor.cgColor
-            ring.lineWidth = config.lineWidth
-            ring.lineCap = .round
-            ring.lineJoin = .round
-            ring.strokeStart = 0
-            ring.strokeEnd = 0.001      // 不是 0，长按 began 的瞬间也能看到起点
-            ring.opacity = config.fromOpacity
+            let ring = CAShapeLayer.jobsMake { _ in }
+            ring
+                .byName("jobs.fuse.outerRing.progress")
+                .byContentsScale(UIScreen.main.scale)
+                .byFillColor(config.fillColor)
+                .byStrokeColor(config.strokeColor)
+                .byLineWidth(config.lineWidth)
+                .byLineCap(.round)
+                .byLineJoin(.round)
+                .byStrokeStart(0)
+                .byStrokeEnd(0.001) // 不是 0，长按 began 的瞬间也能看到起点
+                .byOpacity(config.fromOpacity)
             self.layer.addSublayer(ring)
             let thresholdLayer: CAShapeLayer?
             if let thresholdProgress = config.thresholdProgress {
                 let markerHalfLength: CGFloat = 0.007
-                let marker = CAShapeLayer()
-                marker.name = "jobs.fuse.outerRing.threshold"
-                marker.contentsScale = UIScreen.main.scale
-                marker.fillColor = config.fillColor.cgColor
-                marker.strokeColor = config.thresholdColor.cgColor
-                marker.lineWidth = config.lineWidth + 3
-                marker.lineCap = .butt
-                marker.lineJoin = .round
-                marker.strokeStart = max(0, thresholdProgress - markerHalfLength)
-                marker.strokeEnd = min(1, thresholdProgress + markerHalfLength)
-                marker.opacity = 1
+                let marker = CAShapeLayer.jobsMake { _ in }
+                marker
+                    .byName("jobs.fuse.outerRing.threshold")
+                    .byContentsScale(UIScreen.main.scale)
+                    .byFillColor(config.fillColor)
+                    .byStrokeColor(config.thresholdColor)
+                    .byLineWidth(config.lineWidth + 3)
+                    .byLineCap(.butt)
+                    .byLineJoin(.round)
+                    .byStrokeStart(max(0, thresholdProgress - markerHalfLength))
+                    .byStrokeEnd(min(1, thresholdProgress + markerHalfLength))
+                    .byOpacity(1)
                 self.layer.addSublayer(marker)
                 thresholdLayer = marker
             } else {
@@ -303,9 +306,10 @@ extension UIView {
             let currentThresholdOpacity = threshold?.presentation()?.opacity ?? threshold?.opacity ?? 1
             CATransaction.begin()
             CATransaction.setDisableActions(true)
-            ring.strokeStart = 0
-            ring.strokeEnd = currentStrokeEnd
-            ring.opacity = currentRingOpacity
+            ring
+                .byStrokeStart(0)
+                .byStrokeEnd(currentStrokeEnd)
+                .byOpacity(currentRingOpacity)
             track?.opacity = currentTrackOpacity
             threshold?.opacity = currentThresholdOpacity
             CATransaction.commit()
@@ -329,9 +333,10 @@ extension UIView {
                 let strokeEnd = max(0.0001, currentStrokeEnd * (1.0 - CGFloat(eased)))
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
-                ring.strokeStart = 0
-                ring.strokeEnd = strokeEnd
-                ring.opacity = currentRingOpacity
+                ring
+                    .byStrokeStart(0)
+                    .byStrokeEnd(strokeEnd)
+                    .byOpacity(currentRingOpacity)
                 track?.opacity = currentTrackOpacity * Float(1.0 - p)
                 threshold?.opacity = currentThresholdOpacity * Float(1.0 - p)
                 CATransaction.commit()
@@ -344,8 +349,9 @@ extension UIView {
                     return
                 }
                 let fadeRing = CABasicAnimation(keyPath: "opacity")
-                fadeRing.fromValue = ring.presentation()?.opacity ?? ring.opacity
-                fadeRing.toValue = 0
+                fadeRing
+                    .byFromValue(ring.presentation()?.opacity ?? ring.opacity)
+                    .byToValue(0)
                 fadeRing.duration = fadeDuration
                 fadeRing.fillMode = .forwards
                 fadeRing.isRemovedOnCompletion = false
@@ -423,9 +429,10 @@ extension UIView {
         let opacity = config.fromOpacity + (config.toOpacity - config.fromOpacity) * Float(p)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        ring.strokeStart = 0
-        ring.strokeEnd = p
-        ring.opacity = opacity
+        ring
+            .byStrokeStart(0)
+            .byStrokeEnd(p)
+            .byOpacity(opacity)
         CATransaction.commit()
     }
 }
@@ -728,7 +735,7 @@ public final class JobsChargingAnimationView: UIView {
     private func jobs_rebuildChargingSegments() {
         segmentLayers.forEach { $0.removeFromSuperlayer() }
         segmentLayers = (0..<config.segmentCount).map { _ in
-            CALayer()
+            CALayer.jobsMake { _ in }
                 .byBackgroundColor(config.emptyColor)
                 .byCornerRadius(config.segmentCornerRadius)
         }

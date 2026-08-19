@@ -27,7 +27,7 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     private var numberSteppers: [JobsSwiftNumberStepper] = []
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(false)
             .byKeyboardDismissMode(.interactive)
@@ -42,7 +42,7 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     }()
 
     private lazy var contentStackView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -54,7 +54,7 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("减号 + 整数输入框 + 加号。上下限均为可选配置；到达已设置的边界时，对应按钮会自动禁用并置灰。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -103,19 +103,19 @@ private extension JobsSwiftNumberStepperDemoVC {
                      value: Int,
                      minimumValue: Int? = nil,
                      maximumValue: Int? = nil) {
-        let cardView = UIView()
+        let cardView = UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
-        let titleLabel = UILabel()
+        let titleLabel = UILabel.jobsMake { _ in }
             .byText(title.tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-        let detailLabel = UILabel()
+        let detailLabel = UILabel.jobsMake { _ in }
             .byText(detail.tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(0)
-        let valueLabel = UILabel()
+        let valueLabel = UILabel.jobsMake { _ in }
             .byText("当前值：\(value)")
             .byTextColor(JobsCor.systemBlue)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium))

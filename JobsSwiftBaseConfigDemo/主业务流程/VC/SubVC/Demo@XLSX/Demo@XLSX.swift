@@ -124,7 +124,7 @@ final class XLSXDemoVC: BaseVC {
             title: "CoreXLSX"
         )
         sheetControl.apportionsSegmentWidthsByContent = true
-        spinner.hidesWhenStopped = true
+        spinner.byHidesWhenStopped(true)
         // 可选：如果 Bundle 里有 sample.xlsx，自动加载
         if let url = Bundle.main.url(forResource: "sample", withExtension: "xlsx") {
             loadXLSX(from: url)
@@ -226,9 +226,10 @@ final class XLSXDemoVC: BaseVC {
         if let ss = sharedStrings, let s = cell.stringValue(ss) { return s }
         if let inline = cell.inlineString?.text { return inline }
         if let d = cell.dateValue {
-            let df = DateFormatter()
-            df.dateStyle = .medium
-            df.timeStyle = .none
+            let df = DateFormatter.jobsMake { _ in }
+            df
+                .byDateStyle(.medium)
+                .byTimeStyle(.none)
             return df.string(from: d)
         };return cell.value ?? ""
     }
@@ -249,10 +250,10 @@ final class XLSXDemoVC: BaseVC {
         }
         if preserveSelection, let sel = selectedName,
            let idx = allSheets.firstIndex(where: { $0.name == sel }) {
-            sheetControl.selectedSegmentIndex = idx
+            sheetControl.bySelectedSegmentIndex(idx)
             currentSheetIndex = idx
         } else {
-            sheetControl.selectedSegmentIndex = 0
+            sheetControl.bySelectedSegmentIndex(0)
             currentSheetIndex = 0
         }
     }
@@ -307,7 +308,7 @@ extension XLSXDemoVC {
                 /// 处理 String 类型分支
                 case let s as String: return s
                 /// 处理 Date 类型分支
-                case let d as Date:   return DateFormatter().byDateStyle(.medium).byTimeStyle(.short).string(from: d)
+                case let d as Date:   return DateFormatter.jobsMake { _ in }.byDateStyle(.medium).byTimeStyle(.short).string(from: d)
                 /// 处理 Bool 类型分支
                 case let b as Bool:   return b ? "true" : "false"
                 /// 处理 NSNumber 类型分支

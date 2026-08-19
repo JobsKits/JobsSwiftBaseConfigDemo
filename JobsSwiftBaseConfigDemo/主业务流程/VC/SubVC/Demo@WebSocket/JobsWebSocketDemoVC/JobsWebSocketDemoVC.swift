@@ -25,13 +25,13 @@ final class JobsWebSocketDemoVC: BaseVC {
     private let client = JobsSwiftWebSocketClient()
     private let horizontalInset: CGFloat = 16
     private lazy var timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter.byDateFormat("HH:mm:ss")
         return formatter
     }()
     // MARK: - UI
     private lazy var endpointTF: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byText(defaultEndpoint)
             .byPlaceholder("请输入 ws:// 或 wss:// 地址".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -96,7 +96,7 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var messageTF: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byText("Hello WebSocket")
             .byPlaceholder("输入要发送的文本消息".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -114,7 +114,7 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var statusLab: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("状态：未连接".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -127,7 +127,7 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byText("操作日志".tr)
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))

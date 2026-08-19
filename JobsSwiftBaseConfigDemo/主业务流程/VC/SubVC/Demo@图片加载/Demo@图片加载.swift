@@ -34,7 +34,7 @@ import SDWebImage
 
 final class PicLoadDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsIndicators(vertical: true, horizontal: false)
             .byAlwaysBounceVertical(true)
             .byContentInset(.init(top: 0, left: 0, bottom: 24, right: 0))
@@ -50,7 +50,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     // MARK: - UIImageView
     private lazy var localImgLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIImageView（可点击、长按）➤ 字符串本地图".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -63,7 +63,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIImageView@字符串本地图
     private lazy var localImgView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage("Ani".img)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
@@ -94,7 +94,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var asyncImgLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -107,7 +107,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIImageView字符串网络图@自动加载
     private lazy var asyncImgView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             /// 如果图片URL为空 ==> 执行兜底图
             /// 如果图片URL不为空，请求阶段是呼吸效果，请求失败 ==> 执行兜底图
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img)
@@ -140,7 +140,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var asyncImgSDLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -153,7 +153,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIImageView字符串网络图@指定 SDWebImage
     private lazy var asyncImgViewSD: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, preferredLoader: .sdwebimage)
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
@@ -184,7 +184,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var wrapperImgKFLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -197,7 +197,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIImageView网络图（不带呼吸效果、失败兜底）@指定 Kingfisher
     private lazy var wrapperImgView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, shimmerConfig: nil, preferredLoader: .kingfisher)
@@ -228,7 +228,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var wrapperImgSDLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -241,7 +241,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     /// UIImageView网络图（不带呼吸效果、失败兜底）@指定 URLSession
     private lazy var wrapperImgViewSD: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleToFill)
             .byClipsToBounds()
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300, fallback: "Ani".img, shimmerConfig: nil, preferredLoader: .urlSession)
@@ -273,7 +273,7 @@ final class PicLoadDemoVC: BaseVC {
     }()
     // MARK: - UIButton
     private lazy var btnBGLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIButton背景图(主副标题) ➤ 字符串网络图（带呼吸效果、失败兜底）@SDWebImage".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -316,7 +316,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var btnImageLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -366,7 +366,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var btnBGKFLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIButton背景图(主副标题) ➤ 字符串网络图（呼吸效果、失败兜底）@Kingfisher".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
@@ -415,7 +415,7 @@ final class PicLoadDemoVC: BaseVC {
             }
     }()
     private lazy var btnImageKFLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))

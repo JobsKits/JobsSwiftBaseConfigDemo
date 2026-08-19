@@ -20,7 +20,7 @@ import SnapKit
 // MARK: - Cell
 public final class HCell: UICollectionViewCell {
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextAlignment(.center)
             .byTextColor(JobsCor.label)

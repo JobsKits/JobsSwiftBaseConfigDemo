@@ -31,8 +31,9 @@ public final class JobsOpenWebViewController: BaseVC {
 
     private lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-        webView.navigationDelegate = self
-        webView.allowsBackForwardNavigationGestures = true
+        webView
+            .byNavigationDelegate(self)
+            .byAllowsBackForwardNavigationGestures(true)
         return webView
     }()
 

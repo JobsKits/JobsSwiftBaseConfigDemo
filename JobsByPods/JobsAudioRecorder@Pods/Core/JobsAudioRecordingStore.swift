@@ -8,6 +8,8 @@
 import AVFoundation
 import Foundation
 
+import JobsSwiftDSL
+
 public final class JobsAudioRecordingStore {
     public static let shared = JobsAudioRecordingStore()
     public let directoryURL: URL
@@ -19,8 +21,8 @@ public final class JobsAudioRecordingStore {
     }
 
     public func makeURL(mode: JobsAudioRecordingMode) -> URL {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd_HHmmss_SSS"
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter.byDateFormat("yyyyMMdd_HHmmss_SSS")
         return directoryURL.appendingPathComponent("\(mode.rawValue)_\(formatter.string(from: Date())).m4a")
     }
 

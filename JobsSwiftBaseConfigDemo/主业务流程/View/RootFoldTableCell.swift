@@ -64,7 +64,7 @@ final class RootFoldTableCell: UITableViewCell,
     private var innerTableHeight: Constraint?
     // MARK: - Lazy UI
     private lazy var card: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
             .byCornerRadius(cornerRadius)
             .byClipsToBounds(YES)
@@ -77,14 +77,14 @@ final class RootFoldTableCell: UITableViewCell,
     }()
 
     private lazy var header: UIView = {
-        UIView().byAddTo(card) { make in
+        UIView.jobsMake { _ in }.byAddTo(card) { make in
             make.top.left.right.equalToSuperview()
             make.height.equalTo(Self.headerH).priority(999)
         }
     }()
 
     private lazy var titleLab: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(Self.titleFont)
             .byTextColor(RootListPreferences.foldPrimaryTextColor)
             .byNumberOfLines(1)
@@ -98,7 +98,7 @@ final class RootFoldTableCell: UITableViewCell,
     }()
 
     private lazy var subTitleLab: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(Self.subTitleFont)
             .byTextColor(RootListPreferences.foldSecondaryTextColor)
             .byNumberOfLines(1)
@@ -123,7 +123,7 @@ final class RootFoldTableCell: UITableViewCell,
     }()
 
     private lazy var detailClip: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byClipsToBounds(YES)
             .byVisible(NO)
             .byAddTo(card) { [unowned self] make in
@@ -133,7 +133,7 @@ final class RootFoldTableCell: UITableViewCell,
     }()
 
     private lazy var detailContent: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byVisible(NO) // 默认折叠
             .byAddTo(detailClip) { make in
                 make.edges.equalToSuperview()
@@ -173,7 +173,7 @@ final class RootFoldTableCell: UITableViewCell,
     }()
 
     private lazy var shadow: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.black)
             .byVisible(NO)
             .byAddTo(detailClip) { make in
@@ -216,8 +216,9 @@ final class RootFoldTableCell: UITableViewCell,
         pinAccessoryIndex = nil
         pinnedSectionStyle = false
         subTitleLab.byVisible(YES)
-        chevron.byVisible(YES)
-        chevron.byImage("chevron.right".sysImg)
+        chevron
+            .byVisible(YES)
+            .byImage("chevron.right".sysImg)
         applyTheme()
         setExpanded(false, animated: false)
     }
@@ -226,7 +227,10 @@ final class RootFoldTableCell: UITableViewCell,
         super.layoutSubviews()
         applyInsets()      // 水平边距@距离TableView
         applyCornerStyle() // 圆角
-        innerTableView.visibleCells.forEach(syncAnimatedTitleTextBoundary(for:))
+        innerTableView.visibleCells.forEach {
+            positionAnimatedTitleIcon(in: $0)
+            syncAnimatedTitleTextBoundary(for: $0)
+        }
     }
 
     override func didMoveToWindow() {
@@ -268,11 +272,12 @@ extension RootFoldTableCell{
         innerTableHeight?.update(offset: contentHeight)
     }
 
+    @discardableResult
     func configure(groupTitle: String,
                    items: [DemoItem],
                    expanded: Bool,
                    onSelectItem: @escaping (Int) -> Void,
-                   pinItem: @escaping (Int) -> Void) {
+                   pinItem: @escaping (Int) -> Void) -> Self {
         pinnedSectionStyle = false
         self.items = items
         self.onSelectItem = onSelectItem
@@ -281,16 +286,19 @@ extension RootFoldTableCell{
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
         subTitleLab.byText(subTitleText(expanded: expanded))
-        chevron.byImage("chevron.right".sysImg)
-        chevron.byVisible(YES)
+        chevron
+            .byImage("chevron.right".sysImg)
+            .byVisible(YES)
         if window != nil { innerTableView.reloadData() }
         setExpanded(expanded, animated: false)
+        return self
     }
 
+    @discardableResult
     func configurePinned(groupTitle: String,
                          items: [DemoItem],
                          selectItem: @escaping (Int) -> Void,
-                         unpinItem: @escaping (Int) -> Void) {
+                         unpinItem: @escaping (Int) -> Void) -> Self {
         pinnedSectionStyle = true
         self.items = items
         self.onSelectItem = selectItem
@@ -299,10 +307,12 @@ extension RootFoldTableCell{
         applyTheme()
         titleLab.byText("\(groupTitle)  (\(items.count))")
         subTitleLab.byText(subTitleText(expanded: true))
-        chevron.byImage(nil)
-        chevron.byVisible(NO)
+        chevron
+            .byImage(nil)
+            .byVisible(NO)
         if window != nil { innerTableView.reloadData() }
         setExpanded(true, animated: false)
+        return self
     }
 
     /// 展开/收起的核心方法
@@ -326,9 +336,10 @@ extension RootFoldTableCell{
         let targetAlpha: CGFloat = targetExpanded ? 1.0 : 0.0
         let targetChevron = targetExpanded ? CGAffineTransform(rotationAngle: .pi / 2) : .identity
         let apply = { [self] in
-            detailContent.layer.transform = targetTransform
-            detailContent.byAlpha(targetAlpha)
-            chevron.transform = targetChevron
+            detailContent
+                .byLayer { $0.byTransform(targetTransform) }
+                .byAlpha(targetAlpha)
+            chevron.byTransform(targetChevron)
             // ✅ shadow 永远不参与显示（彻底消灭“灰条”）
             shadow.byVisible(NO)
         }
@@ -383,8 +394,9 @@ extension RootFoldTableCell{
         titleLab.byTextColor(RootListPreferences.foldPrimaryTextColor)
         subTitleLab.byTextColor(RootListPreferences.foldSecondaryTextColor)
         chevron.byTintColor(RootListPreferences.foldSecondaryTextColor)
-        innerTableView.byBackgroundColor(JobsCor.clear)
-        innerTableView.separatorColor = RootListPreferences.separatorColor
+        innerTableView
+            .byBackgroundColor(JobsCor.clear)
+            .bySeparatorColor(RootListPreferences.separatorColor)
     }
 
     private func refreshTheme() {
@@ -482,33 +494,61 @@ extension RootFoldTableCell{
 
     private func stopVisibleInnerTextScrolling() {
         innerTableView.visibleCells.forEach { cell in
-            cell.textLabel?.byStopTextScroll()
-            cell.detailTextLabel?.byStopTextScroll()
+            cell
+                .byTextLabel { $0.byStopTextScroll() }
+                .byDetailTextLabel { $0.byStopTextScroll() }
             clockIcon(in: cell)?.stop(reset: false)
         }
     }
 
     private func installAnimatedTitleIcon(for item: DemoItem, in cell: UITableViewCell) {
         removeAnimatedTitleIcons(from: cell)
-        guard let titleLabel = cell.textLabel else { return }
+        guard cell.textLabel != nil else { return }
         if item.vcType == ClockDemoVC.self {
             JobsClockIconView(interval: JobsClockIconView.defaultInterval)
                 .byTintColor(RootListPreferences.foldSecondaryTextColor)
                 .byAddTo(cell.contentView) { make in
-                    make.left.centerY.equalTo(titleLabel)
+                    make.left.top.equalToSuperview()
                     make.size.equalTo(Self.animatedTitleIconSize)
                 }
         } else if isChargingProgressItem(item) {
             JobsChargingProgressIconView()
                 .byTintColor(RootListPreferences.foldSecondaryTextColor)
                 .byAddTo(cell.contentView) { make in
-                    make.left.centerY.equalTo(titleLabel)
+                    make.left.top.equalToSuperview()
                     make.size.equalTo(Self.animatedTitleIconSize)
                 }
                 .update(phase: chargingProgressPhase)
         }
+        positionAnimatedTitleIcon(in: cell)
         syncAnimatedTitleIconState(for: cell)
         syncAnimatedTitleTextBoundary(for: cell)
+    }
+
+    private func positionAnimatedTitleIcon(in cell: UITableViewCell,
+                                           retryIfNeeded: Bool = true) {
+        guard let titleLabel = cell.textLabel,
+              let animatedIcon = (clockIcon(in: cell) as UIView?) ?? chargingProgressIcon(in: cell)
+        else { return }
+        guard titleLabel.bounds.width > 0,
+              titleLabel.bounds.height > 0 else {
+            guard retryIfNeeded else { return }
+            DispatchQueue.main.async { [weak self, weak cell] in
+                guard let self,
+                      let cell,
+                      cell.window != nil else { return }
+                self.positionAnimatedTitleIcon(in: cell, retryIfNeeded: false)
+            };return
+        }
+        let titleFrame = cell.contentView.convert(titleLabel.bounds, from: titleLabel)
+        let iconOrigin = CGPoint(
+            x: titleFrame.minX,
+            y: titleFrame.midY - Self.animatedTitleIconSize.height / 2
+        )
+        animatedIcon.snp.updateConstraints { make in
+            make.left.equalToSuperview().offset(iconOrigin.x)
+            make.top.equalToSuperview().offset(iconOrigin.y)
+        }
     }
 
     private func removeAnimatedTitleIcons(from cell: UITableViewCell) {
@@ -563,7 +603,7 @@ extension RootFoldTableCell{
                     return
                 }
                 label.layer.byMask(
-                    CALayer()
+                    CALayer.jobsMake { _ in }
                         .byFrame(
                             CGRect(
                                 x: Self.animatedTitleTextLeadingInset,
@@ -731,44 +771,45 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
             UITableViewCell(style: .subtitle, reuseIdentifier: Self.innerCellReuseID)
         guard items.indices.contains(indexPath.row) else {
             removeAnimatedTitleIcons(from: cell)
-            cell.contentConfiguration = nil
-            cell.textLabel?.byText(nil)
-            cell.detailTextLabel?.byText(nil)
-            cell.detailTextLabel?.attributedText = nil
-            cell.imageView?.byImage(nil)
-            cell.accessoryView = nil
-            cell.byAccessoryType(.none)
             return cell
+                .byContentConfiguration(nil)
+                .byText(nil)
+                .byDetailText(nil)
+                .byDetailAttributedText(nil)
+                .byImage(nil)
+                .byAccessoryView(nil)
+                .byAccessoryType(.none)
         }
         let item = items[indexPath.row]
         /// 复用旧 Cell 时先退出动态 UIListContentConfiguration，恢复可直接配置的 UILabel。
-        cell.contentConfiguration = nil
-        cell.textLabel?
-            .byText(displayTitle(for: item))
-            .byFont(Self.innerTitleFont)
-            .byTextColor(RootListPreferences.foldPrimaryTextColor)
-        cell.detailTextLabel?
-            .byText(displaySecondaryText(for: item))
-            .byFont(Self.innerSubTitleFont)
-            .byTextColor(RootListPreferences.foldSecondaryTextColor)
-        applyTextDisplayStrategy(to: cell.textLabel)
-        applyTextDisplayStrategy(to: cell.detailTextLabel)
-        cell.imageView?.byImage(Self.demoIconImage(for: item))
         cell
+            .byContentConfiguration(nil)
+            .byText(displayTitle(for: item))
+            .byTitleFont(Self.innerTitleFont)
+            .byTitleCor(RootListPreferences.foldPrimaryTextColor)
+            .byDetailText(displaySecondaryText(for: item))
+            .byDetailTitleFont(Self.innerSubTitleFont)
+            .byDetailTitleCor(RootListPreferences.foldSecondaryTextColor)
+            .byTextLabel { applyTextDisplayStrategy(to: $0) }
+            .byDetailTextLabel { applyTextDisplayStrategy(to: $0) }
+            .byImage(Self.demoIconImage(for: item))
             .bySelectionStyle(.default)
             .bySelectedBackgroundView(
-                UIView().byBackgroundColor(JobsCor.tertiarySystemBackground)
+                UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)
             )
             .byTintColor(RootListPreferences.foldSecondaryTextColor)
             .byBackgroundColor(JobsCor.clear)
-        cell.contentView.byBackgroundColor(JobsCor.clear)
-        cell.imageView?.byTintColor(RootListPreferences.foldSecondaryTextColor)
-        cell.imageView?.byContentMode(.scaleAspectFit)
+            .byContentView { $0.byBackgroundColor(JobsCor.clear) }
+            .byImageView {
+                $0.byTintColor(RootListPreferences.foldSecondaryTextColor)
+                    .byContentMode(.scaleAspectFit)
+            }
+            .byAccessoryView(nil)
         installAnimatedTitleIcon(for: item, in: cell)
-        cell.accessoryView = nil
         if pinAccessoryIndex == indexPath.row {
-            cell.byAccessoryType(.none)
-            cell.accessoryView = pinAccessoryButton(index: indexPath.row)
+            cell
+                .byAccessoryType(.none)
+                .byAccessoryView(pinAccessoryButton(index: indexPath.row))
         } else {
             cell.byAccessoryType(.disclosureIndicator)
         }
@@ -783,13 +824,15 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    willDisplay cell: UITableViewCell,
                    forRowAt indexPath: IndexPath) {
+        positionAnimatedTitleIcon(in: cell)
         syncTextScrollingState(for: cell)
     }
     func tableView(_ tableView: UITableView,
                    didEndDisplaying cell: UITableViewCell,
                    forRowAt indexPath: IndexPath) {
-        cell.textLabel?.byPauseTextScroll()
-        cell.detailTextLabel?.byPauseTextScroll()
+        cell
+            .byTextLabel { $0.byPauseTextScroll() }
+            .byDetailTextLabel { $0.byPauseTextScroll() }
         clockIcon(in: cell)?.stop(reset: false)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

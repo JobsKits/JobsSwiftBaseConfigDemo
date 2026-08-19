@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
     private var selectDate: Date = Date()
     private var minDate: Date?
@@ -19,7 +21,7 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
     private var months: [Int] = Array(1...12)
     private var days: [Int] = Array(1...31)
 
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
     private var lastSelectedRow: [Int: Int] = [:]
     /// Only highlight the component(s) that the user has actually scrolled.
     private var touchedComponents: Set<Int> = []
@@ -29,8 +31,9 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
     @discardableResult public func byMaxDate(_ d: Date?) -> Self { maxDate = d; return self }
 
     public override func buildContentView() -> UIView {
-        picker.delegate = self
-        picker.dataSource = self
+        picker
+            .byDelegate(self)
+            .byDataSource(self)
         rebuildDays(month: BRCalendar.gregorian.component(.month, from: selectDate))
         let m = BRCalendar.gregorian.component(.month, from: selectDate)
         let d = BRCalendar.gregorian.component(.day, from: selectDate)
@@ -79,12 +82,13 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
     }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.backgroundColor = .clear
-        label.text = component == 0 ? "\(months[row])月" : "\(days[row])日"
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byBackgroundColor(.clear)
+            .byText(component == 0 ? "\(months[row])月" : "\(days[row])日")
         return label
     }
 
@@ -133,6 +137,6 @@ public final class BRMonthDayPicker: BRBasePicker<Date>, UIPickerViewDelegate, U
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

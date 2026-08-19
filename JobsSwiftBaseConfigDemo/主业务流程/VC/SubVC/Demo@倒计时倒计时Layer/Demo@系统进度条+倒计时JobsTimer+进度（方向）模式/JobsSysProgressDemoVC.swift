@@ -53,8 +53,9 @@ final class JobsSysProgressDemoVC: BaseVC {
     // MARK: - UI
     /// 显示剩余时间
     private lazy var timeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("剩余：-- 秒".tr)
+            .byTextColor(JobsCor.label)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 18, weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -232,7 +233,7 @@ final class JobsSysProgressDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
-            title: "JobsSwiftTimer 倒计时 Demo".tr
+            title: "系统进度条".tr
         )
         timeLabel.byVisible(YES)
         progressView.byVisible(YES)
@@ -271,8 +272,9 @@ extension JobsSysProgressDemoVC {
     }
     /// 统一控制“开始倒计时”按钮的可用状态和样式
     private func setStartButton(_ enabled: Bool) {
-        startButton.byEnabled(enabled)
-        startButton.byAlpha(enabled ? 1.0 : 0.5)
+        startButton
+            .byEnabled(enabled)
+            .byAlpha(enabled ? 1.0 : 0.5)
     }
     /// 模式按钮标题
     private func modeButtonTitle() -> String {

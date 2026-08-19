@@ -35,4 +35,18 @@ extension UIEdgeInsets {
         right = value
         return self
     }
+
+    @discardableResult
+    public mutating func byHorizontal(_ value: CGFloat) -> Self {
+        left = value
+        right = value
+        return self
+    }
+
+    @discardableResult
+    public mutating func byVertical(_ value: CGFloat) -> Self {
+        top = value
+        bottom = value
+        return self
+    }
 }

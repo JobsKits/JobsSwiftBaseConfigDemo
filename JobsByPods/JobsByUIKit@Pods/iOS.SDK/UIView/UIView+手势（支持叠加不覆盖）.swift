@@ -508,7 +508,7 @@ extension UIView {
     ) -> Self {
         isUserInteractionEnabled = true
         if let swipe = objc_getAssociatedObject(self, &GestureKeys.swipeKey) as? UISwipeGestureRecognizer {
-            swipe.direction = direction
+            swipe.byDirection(direction)
             swipe.numberOfTouchesRequired = numberOfTouchesRequired
             let oldAction = (objc_getAssociatedObject(swipe, &GestureKeys.swipeKey) as? _GestureActionBox)?.action
             let composed: jobsByGRBlock = { gr in

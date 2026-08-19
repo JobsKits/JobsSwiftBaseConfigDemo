@@ -69,7 +69,7 @@ final class CashbackRootVC: BaseVC {
     }()
     // 顶部分隔线
     private lazy var segmentedHairline: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(segmentedView) { make in
                 make.bottom.leading.trailing.equalToSuperview()

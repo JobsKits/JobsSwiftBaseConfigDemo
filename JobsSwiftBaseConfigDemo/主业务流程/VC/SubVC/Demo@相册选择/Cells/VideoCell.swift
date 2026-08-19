@@ -100,14 +100,16 @@ public final class VideoCell: UICollectionViewCell {
         self.player = player
         let layer = AVPlayerLayer(player: player)
         layer.videoGravity = .resizeAspectFill
-        layer.byFrame(contentView.bounds)
-        layer.zPosition = -1                    // ⬅︎ 永远在按钮下面
+        layer
+            .byFrame(contentView.bounds)
+            .byZPosition(-1) // ⬅︎ 永远在按钮下面
         contentView.layer.addSublayer(layer)
         playerLayer = layer
         // 再兜底把按钮提到最上
         contentView.bringSubviewToFront(playOverlay)
-        playOverlay.layer.zPosition = 9999
-        playOverlay.byHidden(true)
+        playOverlay
+            .byZPosition(9999)
+            .byHidden(true)
         // 结束后显示按钮 —— object 用 nil 更稳
         endObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
@@ -133,6 +135,6 @@ public final class VideoCell: UICollectionViewCell {
         playerLayer?.byFrame(contentView.bounds)
         // 再次确保覆盖层在最顶
         if let pl = playerLayer { pl.zPosition = -1 }
-        playOverlay.layer.zPosition = 9999
+        playOverlay.byZPosition(9999)
     }
 }

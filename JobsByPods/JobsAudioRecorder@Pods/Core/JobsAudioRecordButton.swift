@@ -11,6 +11,8 @@ import JobsFuseAnimation
 import JobsSwiftBaseDefines
 import JobsSwiftTimer
 
+import JobsSwiftDSL
+
 public final class JobsAudioRecordButton: UIButton {
     public var duration: TimeInterval = 60
     public var minimumValidDuration: TimeInterval = 3
@@ -19,8 +21,8 @@ public final class JobsAudioRecordButton: UIButton {
     public var onCancel: (() -> Void)?
     public var onTooShort: (() -> Void)?
 
-    private let outerRingLayer = CAShapeLayer()
-    private let innerLayer = CAShapeLayer()
+    private let outerRingLayer = CAShapeLayer.jobsMake { _ in }
+    private let innerLayer = CAShapeLayer.jobsMake { _ in }
     private var countdown: JobsSwiftTimerCountdown?
     private var active = false
     private var recordingStartedAt: TimeInterval = 0
@@ -31,11 +33,12 @@ public final class JobsAudioRecordButton: UIButton {
         accessibilityLabel = "按住录音"
         layer.insertSublayer(innerLayer, at: 0)
         layer.addSublayer(outerRingLayer)
-        outerRingLayer.fillColor = JobsCor.clear.cgColor
-        outerRingLayer.strokeColor = JobsCor.white.cgColor
-        outerRingLayer.lineWidth = 4
-        outerRingLayer.lineCap = .round
-        innerLayer.fillColor = JobsCor.white.cgColor
+        outerRingLayer
+            .byFillColor(JobsCor.clear)
+            .byStrokeColor(JobsCor.white)
+            .byLineWidth(4)
+            .byLineCap(.round)
+        innerLayer.byFillColor(JobsCor.white)
         addTarget(self, action: #selector(touchDown), for: .touchDown)
         addTarget(self, action: #selector(touchUpInside), for: .touchUpInside)
         addTarget(self, action: #selector(touchCancelled), for: [.touchDragExit, .touchCancel, .touchUpOutside])
@@ -45,10 +48,10 @@ public final class JobsAudioRecordButton: UIButton {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        outerRingLayer.frame = bounds
-        innerLayer.frame = bounds
-        outerRingLayer.path = UIBezierPath(ovalIn: bounds.insetBy(dx: 4, dy: 4)).cgPath
-        innerLayer.path = UIBezierPath(ovalIn: bounds.insetBy(dx: 14, dy: 14)).cgPath
+        outerRingLayer.byFrame(bounds)
+        innerLayer.byFrame(bounds)
+        outerRingLayer.byPath(UIBezierPath(ovalIn: bounds.insetBy(dx: 4, dy: 4)).cgPath)
+        innerLayer.byPath(UIBezierPath(ovalIn: bounds.insetBy(dx: 14, dy: 14)).cgPath)
         byFuseOuterRingLayoutIfNeeded()
     }
 

@@ -100,7 +100,7 @@ public final class JobsMarqueeView: UIView {
     }
     // ================================== ScrollView ==================================
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsHorizontalScrollIndicator(false)
             .byShowsVerticalScrollIndicator(false)
             .byBounces(false)
@@ -140,7 +140,7 @@ public final class JobsMarqueeView: UIView {
     }
     /// 懒加载点语法：独立对象，但挂在 JobsMarqueeView 上
     public private(set) lazy var pageControl: UIPageControl = {
-        UIPageControl()
+        UIPageControl.jobsMake { _ in }
             .byHidden(true)
             .byUserInteractionEnabled(false)
             .byAddTo(self)
@@ -181,8 +181,9 @@ public final class JobsMarqueeView: UIView {
 
     private func commonInit() {
         clipsToBounds = true
-        scrollView.byAddTo(self)
-        scrollView.byDelegate(self)
+        scrollView
+            .byAddTo(self)
+            .byDelegate(self)
         applyManualScrollConfig()
     }
     // ================================== Layout ==================================
@@ -209,7 +210,7 @@ public final class JobsMarqueeView: UIView {
         continuousLoopLength = 0
         lastContinuousTickTimestamp = nil
         guard !dataSourceButtons.isEmpty else {
-            scrollView.contentSize = bounds.size
+            scrollView.byContentSize(bounds.size)
             if isPageControlEnabled {
                 updatePageControlPages()
                 updatePageControlConstraintsIfNeeded()
@@ -266,8 +267,9 @@ public final class JobsMarqueeView: UIView {
                 if itemSizeMode == .fillBounds {
                     size.width = bounds.width
                 }
-                button.byFrame(CGRect(x: x, y: 0, width: size.width, height: size.height))
-                button.byAddTo(scrollView)
+                button
+                    .byFrame(CGRect(x: x, y: 0, width: size.width, height: size.height))
+                    .byAddTo(scrollView)
                 x += size.width
                 if index + 1 == sourceCount {
                     continuousLoopLength = x
@@ -285,8 +287,9 @@ public final class JobsMarqueeView: UIView {
                 if itemSizeMode == .fillBounds {
                     size.height = bounds.height
                 }
-                button.byFrame(CGRect(x: 0, y: y, width: size.width, height: size.height))
-                button.byAddTo(scrollView)
+                button
+                    .byFrame(CGRect(x: 0, y: y, width: size.width, height: size.height))
+                    .byAddTo(scrollView)
                 y += size.height
                 if index + 1 == sourceCount {
                     continuousLoopLength = y
@@ -295,7 +298,7 @@ public final class JobsMarqueeView: UIView {
             contentHeight = max(bounds.height, y)
             contentWidth = bounds.width
         }
-        scrollView.contentSize = CGSize(width: contentWidth, height: contentHeight)
+        scrollView.byContentSize(CGSize(width: contentWidth, height: contentHeight))
         if itemSizeMode == .fillBounds {
             stepLength = isHorizontal ? bounds.width : bounds.height
         } else {
@@ -676,9 +679,10 @@ public final class JobsMarqueeView: UIView {
             .bySemanticContentAttribute(source.semanticContentAttribute)
             .byTintColor(source.tintColor)
         // 4) layer 外观
-        button.byCornerRadius(source.layer.cornerRadius)
-        button.byMasksToBounds(source.layer.masksToBounds)
-        button.byBorderWidth(source.layer.borderWidth)
+        button
+            .byCornerRadius(source.layer.cornerRadius)
+            .byMasksToBounds(source.layer.masksToBounds)
+            .byBorderWidth(source.layer.borderWidth)
         button.layer.byBorderCGColor(source.layer.borderColor)
         // 5) 网络背景图只沿用源按钮实际选择的加载器，避免两个框架争抢同一背景状态
         #if canImport(Kingfisher)
@@ -742,7 +746,7 @@ public final class JobsMarqueeView: UIView {
         if let recognizers = source.gestureRecognizers {
             for recognizer in recognizers {
                 guard let lp = recognizer as? UILongPressGestureRecognizer else { continue }
-                let cloneGR = UILongPressGestureRecognizer()
+                let cloneGR = UILongPressGestureRecognizer.jobsMake { _ in }
                 cloneGR.minimumPressDuration    = lp.minimumPressDuration
                 cloneGR.numberOfTapsRequired    = lp.numberOfTapsRequired
                 cloneGR.numberOfTouchesRequired = lp.numberOfTouchesRequired
@@ -881,8 +885,9 @@ private extension JobsMarqueeView {
 
     func updatePageControlPages() {
         guard isPageControlEnabled else { return }
-        pageControl.numberOfPages = max(0, realPageCount)
-        pageControl.currentPage = 0
+        pageControl
+            .byNumberOfPages(max(0, realPageCount))
+            .byCurrentPage(0)
         pageControl.setNeedsLayout()
         pageControl.layoutIfNeeded()
         pageControl.jobs_applyIndicatorImagesIfNeeded()
@@ -891,7 +896,7 @@ private extension JobsMarqueeView {
     func updatePageControlCurrentPage() {
         guard isPageControlEnabled else { return }
         guard realPageCount > 0, stepLength > 0 else {
-            pageControl.currentPage = 0
+            pageControl.byCurrentPage(0)
             pageControl.jobs_applyIndicatorImagesIfNeeded()
             return
         }
@@ -910,7 +915,7 @@ private extension JobsMarqueeView {
         } else {
             page = max(0, min(realPageCount - 1, page))
         }
-        pageControl.currentPage = page
+        pageControl.byCurrentPage(page)
         pageControl.jobs_applyIndicatorImagesIfNeeded()
     }
 }

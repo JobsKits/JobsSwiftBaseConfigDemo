@@ -68,12 +68,12 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     }()
 
     private lazy var optionRowsView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
     }()
 
     private lazy var lengthLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("长度：".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15))
@@ -88,7 +88,7 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     }()
 
     private lazy var inputField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
             .byAutocapitalizationType(.none)
@@ -97,7 +97,7 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待输入校验".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
@@ -234,16 +234,16 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         let groups = optionGroups
         var previousRow: UIView?
         for (index, group) in groups.enumerated() {
-            let rowView = UIView()
+            let rowView = UIView.jobsMake { _ in }
                 .byBackgroundColor(JobsCor.clear)
             optionRowViews.append(rowView)
-            let titleLabel = UILabel()
+            let titleLabel = UILabel.jobsMake { _ in }
                 .byText(group.title.tr)
                 .byTextColor(JobsCor.secondaryLabel)
                 .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
                 .byTextAlignment(.left)
             optionTitleLabels.append(titleLabel)
-            let scrollView = UIScrollView()
+            let scrollView = UIScrollView.jobsMake { _ in }
                 .byAlwaysBounceHorizontal(true)
                 .byAlwaysBounceVertical(false)
                 .byShowsHorizontalScrollIndicator(false)
@@ -251,7 +251,7 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
                 .byDirectionalLockEnabled(true)
                 .byContentInsetAdjustmentBehavior(.never)
             optionScrollViews.append(scrollView)
-            let stackView = UIStackView()
+            let stackView = UIStackView.jobsMake { _ in }
                 .byAxis(.horizontal)
                 .byDistribution(.fill)
                 .byAlignment(.fill)

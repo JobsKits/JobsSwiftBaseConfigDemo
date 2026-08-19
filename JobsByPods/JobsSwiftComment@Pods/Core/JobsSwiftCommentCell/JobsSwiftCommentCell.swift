@@ -19,16 +19,16 @@ final class JobsSwiftCommentCell: UITableViewCell {
     private var currentComment: JobsSwiftCommentModel?
     private var contentLeadingConstraint: Constraint?
 
-    private let avatarLabel = UILabel()
-    private let nicknameLabel = UILabel()
-    private let timeLabel = UILabel()
-    private let contentLabel = UILabel()
-    private let replyHintLabel = UILabel()
-    private let metaLabel = UILabel()
+    private let avatarLabel = UILabel.jobsMake { _ in }
+    private let nicknameLabel = UILabel.jobsMake { _ in }
+    private let timeLabel = UILabel.jobsMake { _ in }
+    private let contentLabel = UILabel.jobsMake { _ in }
+    private let replyHintLabel = UILabel.jobsMake { _ in }
+    private let metaLabel = UILabel.jobsMake { _ in }
     private let replyButton = UIButton.sys()
-    private let verticalStack = UIStackView()
-    private let topStack = UIStackView()
-    private let contentStack = UIStackView()
+    private let verticalStack = UIStackView.jobsMake { _ in }
+    private let topStack = UIStackView.jobsMake { _ in }
+    private let contentStack = UIStackView.jobsMake { _ in }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -57,8 +57,9 @@ final class JobsSwiftCommentCell: UITableViewCell {
         replyHintLabel.byHidden(false)
         metaLabel.byHidden(false)
         replyButton.byHidden(true)
-        contentLabel.byTextColor(JobsCor.label)
-        contentLabel.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+        contentLabel
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
         let displayDepth = config.mode == .custom ? min(depth, 2) : min(depth, 1)
         contentLeadingConstraint?.update(offset: 16 + CGFloat(displayDepth) * 22)
         avatarLabel.byText(avatarText(by: comment.nickname))
@@ -66,16 +67,19 @@ final class JobsSwiftCommentCell: UITableViewCell {
         timeLabel.byText(comment.publishTime)
         contentLabel.byText(comment.content)
         if depth >= 2, let replyUserName = parentComment?.nickname, !replyUserName.isEmpty {
-            replyHintLabel.byText("回复 \(replyUserName)")
-            replyHintLabel.byHidden(false)
+            replyHintLabel
+                .byText("回复 \(replyUserName)")
+                .byHidden(false)
         } else if let replyUserName = comment.replyUserName, depth > 0 {
-            replyHintLabel.byText("回复 \(replyUserName)")
-            replyHintLabel.byHidden(false)
+            replyHintLabel
+                .byText("回复 \(replyUserName)")
+                .byHidden(false)
         } else {
             replyHintLabel.byHidden(true)
         }
-        metaLabel.byText(metaText(by: comment, config: config))
-        metaLabel.byHidden(metaLabel.text?.isEmpty ?? true)
+        metaLabel
+            .byText(metaText(by: comment, config: config))
+            .byHidden(metaLabel.text?.isEmpty ?? true)
         let showsReplyEntrance = config.showsReplyEntrance && !comment.children.isEmpty && depth == 0
         replyButton.byHidden(!showsReplyEntrance)
         if showsReplyEntrance {
@@ -92,9 +96,10 @@ final class JobsSwiftCommentCell: UITableViewCell {
         metaLabel.byHidden(true)
         replyButton.byHidden(true)
         contentLeadingConstraint?.update(offset: 16 + CGFloat(min(depth, 2)) * 22)
-        contentLabel.byText(text)
-        contentLabel.byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
-        contentLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+        contentLabel
+            .byText(text)
+            .byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
     }
 }
 
@@ -102,47 +107,56 @@ private extension JobsSwiftCommentCell {
     func setupViews() {
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
-        avatarLabel.byTextAlignment(.center)
-        avatarLabel.byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
-        avatarLabel.byTextColor(JobsCor.white)
-        avatarLabel.byBackgroundColor(UIColor(r: 0.70 * 255, g: 0.45 * 255, b: 0.22 * 255))
-        avatarLabel.byCornerRadius(18)
-        avatarLabel.byMasksToBounds(true)
-        nicknameLabel.byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-        nicknameLabel.byTextColor(JobsCor.label)
+        avatarLabel
+            .byTextAlignment(.center)
+            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTextColor(JobsCor.white)
+            .byBackgroundColor(UIColor(r: 0.70 * 255, g: 0.45 * 255, b: 0.22 * 255))
+            .byCornerRadius(18)
+            .byMasksToBounds(true)
+        nicknameLabel
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTextColor(JobsCor.label)
         nicknameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        timeLabel.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
-        timeLabel.byTextColor(JobsCor.secondaryLabel)
-        timeLabel.byTextAlignment(.right)
-        contentLabel.byNumberOfLines(0)
-        contentLabel.byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-        contentLabel.byTextColor(JobsCor.label)
-        replyHintLabel.byNumberOfLines(1)
-        replyHintLabel.byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
-        replyHintLabel.byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
-        metaLabel.byNumberOfLines(1)
-        metaLabel.byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
-        metaLabel.byTextColor(JobsCor.secondaryLabel)
+        timeLabel
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byTextAlignment(.right)
+        contentLabel
+            .byNumberOfLines(0)
+            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byTextColor(JobsCor.label)
+        replyHintLabel
+            .byNumberOfLines(1)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
+        metaLabel
+            .byNumberOfLines(1)
+            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byTextColor(JobsCor.secondaryLabel)
         replyButton
             .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byContentHorizontalAlignment(.left)
             .byTitleColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
             .byAddTarget(self, action: #selector(replyButtonTapped), for: .touchUpInside)
-        topStack.axis = .horizontal
-        topStack.alignment = .firstBaseline
-        topStack.spacing = 8
+        topStack
+            .byAxis(.horizontal)
+            .byAlignment(.firstBaseline)
+            .bySpacing(8)
         topStack.addArrangedSubview(nicknameLabel)
         topStack.addArrangedSubview(timeLabel)
-        contentStack.axis = .vertical
-        contentStack.spacing = 6
+        contentStack
+            .byAxis(.vertical)
+            .bySpacing(6)
         contentStack.addArrangedSubview(topStack)
         contentStack.addArrangedSubview(replyHintLabel)
         contentStack.addArrangedSubview(contentLabel)
         contentStack.addArrangedSubview(metaLabel)
         contentStack.addArrangedSubview(replyButton)
-        verticalStack.axis = .horizontal
-        verticalStack.alignment = .top
-        verticalStack.spacing = 10
+        verticalStack
+            .byAxis(.horizontal)
+            .byAlignment(.top)
+            .bySpacing(10)
         verticalStack.addArrangedSubview(avatarLabel)
         verticalStack.addArrangedSubview(contentStack)
         verticalStack.byAddTo(contentView)

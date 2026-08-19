@@ -162,7 +162,7 @@ public final class PermissionCenter: NSObject {
     private static func ensureLocationWhenInUse(from presenter: UIViewController?, onAuthorized: @escaping jobsByVoidBlock) {
         let status: CLAuthorizationStatus
         if #available(iOS 14.0, *) {
-            status = CLLocationManager().authorizationStatus
+            status = CLLocationManager.jobsMake { _ in }.authorizationStatus
         } else {
             status = CLLocationManager.authorizationStatus()
         }
@@ -224,7 +224,7 @@ private final class LocationProxy: NSObject, CLLocationManagerDelegate {
 
     func requestWhenInUse(_ jobsByVoidBlock: @escaping (Bool)->Void) {
         self.jobsByVoidBlock = jobsByVoidBlock
-        let m = CLLocationManager()
+        let m = CLLocationManager.jobsMake { _ in }
         self.manager = m
         m.delegate = self
         m.requestWhenInUseAuthorization()

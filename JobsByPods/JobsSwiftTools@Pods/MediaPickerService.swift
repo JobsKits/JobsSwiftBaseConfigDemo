@@ -38,7 +38,7 @@ public final class MediaPickerService: NSObject {
             onMainAsync {
                 let proxy = CameraProxy(allowsEditing: allowsEditing, jobsByVoidBlock: onImage)
                 attachProxy(proxy, to: presenter)
-                presenter.present(UIImagePickerController()
+                presenter.present(UIImagePickerController.jobsMake { _ in }
                     .bySourceType(.camera)
                     .byAllowsEditing(allowsEditing)
                     .byDelegate(proxy), animated: true)
@@ -54,8 +54,9 @@ public final class MediaPickerService: NSObject {
             onMainAsync {
                 if #available(iOS 14, *) {
                     var config = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
-                    config.selectionLimit = maxSelection <= 0 ? 0 : maxSelection // 0=不限制
-                    config.filter = imagesOnly ? .images : .any(of: [.images, .livePhotos, .videos])
+                    config
+                        .bySelectionLimit(maxSelection <= 0 ? 0 : maxSelection) // 0=不限制
+                        .byFilter(imagesOnly ? .images : .any(of: [.images, .livePhotos, .videos]))
                     let proxy = PHPickerProxy(jobsByVoidBlock: onImages)
                     attachProxy(proxy, to: presenter)
                     presenter.present(PHPickerViewController(configuration: config).byDelegate(proxy), animated: true)
@@ -65,7 +66,7 @@ public final class MediaPickerService: NSObject {
                         onImages(img.map { [$0] } ?? [])
                     }
                     attachProxy(proxy, to: presenter)
-                    presenter.present(UIImagePickerController()
+                    presenter.present(UIImagePickerController.jobsMake { _ in }
                         .bySourceType(.photoLibrary)
                         .byAllowsEditing(false)
                         .byDelegate(proxy), animated: true)
@@ -119,7 +120,7 @@ public final class MediaPickerService: NSObject {
                 // 3) 顺序很重要：先 mediaTypes，后 cameraCaptureMode
                 onMainAsync {
                     let proxy = VideoCameraProxy { url in onVideoURL(url) }
-                    let picker = UIImagePickerController()
+                    let picker = UIImagePickerController.jobsMake { _ in }
                         .bySourceType(.camera)
                         .byCameraDevice(device)
                         .byVideoQuality(quality)
@@ -127,9 +128,9 @@ public final class MediaPickerService: NSObject {
                         .byCameraCaptureMode(.video) // ✅ 再切视频模式
                         .byDelegate(proxy)
                     if #available(iOS 14.0, *) {
-                        picker.mediaTypes = [UTType.movie.identifier]   // ✅ 先设类型
+                        picker.byMediaTypes([UTType.movie.identifier]) // ✅ 先设类型
                     } else {
-                        picker.mediaTypes = ["public.movie"]
+                        picker.byMediaTypes(["public.movie"])
                     }
                     attachProxy(proxy, to: presenter)
                     presenter.present(picker, animated: true)

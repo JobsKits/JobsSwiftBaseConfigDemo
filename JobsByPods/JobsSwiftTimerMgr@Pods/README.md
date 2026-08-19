@@ -127,3 +127,51 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 ```
 
 应用测试 target 还覆盖受管句柄的手动暂停保护、并发替换后的旧句柄隔离、实例安全取消与 Scope 暂停恢复。
+
+## 七、系统计时机制对比与 Manager 选型
+
+### 7.1、Manager 不替代内核选择
+
+`JobsSwiftTimerMgr` 解决的是“谁拥有 Timer、如何查找、去重、暂停、恢复和清理”，不是把所有系统计时机制抹成同一种行为。日常所说的“iOS 系统 Timer”实际分属多个框架：
+
+- `Timer` 位于 [**Foundation**](https://developer.apple.com/documentation/foundation/timer)，Objective-C 名称是 `NSTimer`。
+- `DispatchSourceTimer` 位于 [**Dispatch**](https://developer.apple.com/documentation/dispatch/dispatchsourcetimer)。
+- `CADisplayLink` 位于 [**QuartzCore**](https://developer.apple.com/documentation/quartzcore/cadisplaylink)。
+- `CFRunLoopTimer` 位于 [**Core Foundation**](https://developer.apple.com/documentation/corefoundation/cfrunlooptimer)，并与 `Timer/NSTimer` toll-free bridged。
+
+它们都不是硬实时机制，也都不会赋予 App 后台保活能力。Manager 创建 Timer 时仍要先按场景选择 `kind`。
+
+### 7.2、四种内核怎么选
+
+| 系统机制 | 调度模型 | 优势 | 代价与风险 | 推荐场景 | `JobsTimerKind` |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| `Timer/NSTimer` | 依赖指定线程的 RunLoop 与 Mode | API 简单；适合 UI 低频刷新；支持 `tolerance` 节能 | RunLoop 忙或 Mode 不匹配会延后；不是实时计时器；需处理失效与引用关系 | 轮播、验证码、普通 UI 倒计时 | `.foundation` |
+| `DispatchSourceTimer` | 在指定 GCD Queue 上投递事件，不依赖 RunLoop | 可选择串行/并发队列；适合非 UI 调度；`leeway` 可平衡功耗 | suspend/resume/cancel 状态必须配平；仍受 QoS、系统负载和队列阻塞影响 | 心跳、轮询、缓存清理、工作队列节拍 | `.gcd` |
+| `CADisplayLink` | 跟随显示刷新周期回调 | 与屏幕刷新协调；提供 `timestamp` / `targetTimestamp`；适配高刷屏 | 实际帧率会受硬件、低电量、温控和主线程负载影响；不适合业务倒计时 | 逐帧动画、进度绘制、视觉插值 | `.displayLink` |
+| `CFRunLoopTimer` | Core Foundation 级 RunLoop Timer | 可显式控制 RunLoop、Mode、下一次触发时间与上下文 | C API 更冗长；所有权与线程亲和更容易出错；仍受 RunLoop 延迟 | 基础设施、需要精细 RunLoop 集成或 C/CF 互操作 | `.runLoop` |
+
+### 7.3、经常被误当成 Timer 的 API
+
+| API | 适合 | 不适合 |
+| ---- | ---- | ---- |
+| `DispatchQueue.asyncAfter` | 一次性延迟执行 | 重复、暂停、恢复、统一生命周期管理 |
+| `Task.sleep` / `Clock.sleep` | Swift 并发流程中的一次性、可取消等待；等待时不阻塞线程 | 页面多 Timer 注册表、OC 调用、天然重复调度 |
+| `BGTaskScheduler` | 由系统择机执行后台刷新或维护任务 | 秒级准点触发、常驻后台 Timer |
+
+### 7.4、场景决策顺序
+
+1. 屏幕逐帧刷新选择 `.displayLink`。
+2. 非 UI 工作队列、心跳或轮询选择 `.gcd`。
+3. 主线程低频 UI 刷新选择 `.foundation`，并使用 `.common` Mode。
+4. 需要直接控制 RunLoop Timer 或进行 Core Foundation 互操作时选择 `.runLoop`。
+5. 只有一次延迟等待时使用 `Task.sleep` 或 `DispatchQueue.asyncAfter`，不创建受管重复 Timer。
+6. App 被系统挂起后需要执行工作时，改用匹配业务资格的后台系统机制；任何 `kind` 都不是后台保活方案。
+
+### 7.5、什么时候必须上 Manager
+
+- 单个对象私有、生命周期清楚、无需跨对象查找时，直接使用 `JobsTimer`。
+- 同一业务可能重复创建 Timer 时，用 identifier + `dedupPolicy`。
+- 列表复用时，用稳定 Model identifier，并使用 `expectedTimer` 精准解绑。
+- 页面或业务域有多条 Timer 时，用 `scopeIdentifier` 整组 pause/resume/remove。
+- 倒计时把绝对 `endAt` 作为时间真值，Timer 只触发重算；Manager 管物理 Timer，不承担业务时间真值。
+- “更准”不等于硬实时；选择 GCD 只能避开 RunLoop Mode 影响，仍需面对队列阻塞、QoS、系统负载和 `leeway`。

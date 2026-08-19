@@ -38,7 +38,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     // MARK: - UI
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -51,7 +51,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { make in
                 make.edges.equalToSuperview()
                 make.width.equalToSuperview()
@@ -60,7 +60,7 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     /// 页面自述
     private lazy var introTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -84,7 +84,7 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     /// 演示区容器
     private lazy var demoCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
@@ -95,7 +95,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var demoTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("交互演示区".tr)
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -106,7 +106,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var demoDescLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这里不是功能列表页，而是行为演示页。你只需要点按钮、输入文字，然后观察最下面的日志输出。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -118,7 +118,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var summaryLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前状态：count = 0，keyword = <empty>".tr)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
             .byTextColor(JobsCor.systemBlue)
@@ -130,7 +130,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var inputTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("关键词输入（观察 debounce / distinctUntilChanged / combineLatest）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -141,7 +141,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var inputViewField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("请输入搜索词，例如：会员、折扣、年卡".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
@@ -157,7 +157,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var countTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("计数操作（观察 ever / once / interval / skip / take / everAll / combineLatest）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -226,7 +226,7 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     /// 重点说明区
     private lazy var capabilityCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
@@ -237,7 +237,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var capabilityTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("本页重点".tr)
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -248,7 +248,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var capabilityTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.clear)
@@ -271,7 +271,7 @@ public final class JobsWorkerDemoVC: BaseVC {
 
     /// 日志结果区
     private lazy var logCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byMasksToBounds(true)
@@ -283,7 +283,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var logTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("实时日志".tr)
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -294,7 +294,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var logDescLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这里会倒序输出 Worker 的实际触发结果。看这里，比看代码更直观。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -306,7 +306,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.systemBackground)

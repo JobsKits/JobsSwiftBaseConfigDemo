@@ -79,21 +79,21 @@ final class JobsNavigationDemoVC: BaseVC {
     }()
     // MARK: - 导航栏标题视图
     private lazy var singleLineTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.clear)
             .byNumberOfLines(1)
     }()
 
     private lazy var mainTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.clear)
             .byNumberOfLines(1)
     }()
 
     private lazy var subTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.clear)
             .byNumberOfLines(1)
@@ -307,7 +307,7 @@ extension JobsNavigationDemoVC {
         navBar.byTintColor(JobsCor.black)
         let bgImage = "导航栏背景图".img
         if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
+            let appearance = UINavigationBarAppearance.jobsMake { _ in }
                 .byLargeTitleAttributes([
                     .foregroundColor: JobsCor.cyan,
                     .font: JobsFont.boldSystemFont(ofSize: 30)
@@ -332,7 +332,7 @@ extension JobsNavigationDemoVC {
                 .byBackgroundImage(bgImage, for: .default)
                 .byBarTintColor(JobsCor.yellow)
                 .byTranslucent(NO)
-                .byShadowImage(.make())
+                .byShadowImage(.make { _ in })
                 .byTitleTextAttributes([
                     .foregroundColor: JobsCor.red,
                     .font: JobsFont.boldSystemFont(ofSize: 18)

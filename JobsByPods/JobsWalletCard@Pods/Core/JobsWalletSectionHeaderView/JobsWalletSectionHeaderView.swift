@@ -18,7 +18,7 @@ import SnapKit
 final class JobsWalletSectionHeaderView: UICollectionReusableView {
     private let horizontalInset: CGFloat = 20
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(self) { [unowned self] make in
@@ -28,7 +28,7 @@ final class JobsWalletSectionHeaderView: UICollectionReusableView {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(self) { [unowned self] make in
@@ -38,7 +38,7 @@ final class JobsWalletSectionHeaderView: UICollectionReusableView {
     }()
 
     private lazy var separator: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.label.withAlphaComponent(0.06))
             .byAddTo(self) { [unowned self] make in
                 make.left.equalToSuperview().offset(self.horizontalInset)
@@ -68,8 +68,9 @@ final class JobsWalletSectionHeaderView: UICollectionReusableView {
     @discardableResult
     func byTitle(_ title: String, subtitle: String) -> Self {
         titleLabel.byText(title)
-        subtitleLabel.byText(subtitle)
-        subtitleLabel.byVisible(!subtitle.isEmpty)
+        subtitleLabel
+            .byText(subtitle)
+            .byVisible(!subtitle.isEmpty)
         return self
     }
 }

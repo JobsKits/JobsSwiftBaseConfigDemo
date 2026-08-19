@@ -69,7 +69,7 @@ final class LuckyWheelView: UIView {
     private var stopThreshold: CGFloat = 0.05
     // MARK: - 子视图 ==============================
     /// 真正画轮盘的盘面 view（我们只旋转它）
-    private let plateView = UIView()
+    private let plateView = UIView.jobsMake { _ in }
     /// 中央按钮（用的 UIButton DSL）
     private lazy var centerButton: UIButton = {
         UIButton.sys()
@@ -189,8 +189,9 @@ extension LuckyWheelView {
         self.byBackgroundColor(JobsCor.clear)
         clipsToBounds = false
         /// 盘面铺满整个 LuckyWheelView
-        plateView.byAddTo(self)
-        plateView.byBackgroundColor(JobsCor.clear)
+        plateView
+            .byAddTo(self)
+            .byBackgroundColor(JobsCor.clear)
         plateView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -236,7 +237,7 @@ extension LuckyWheelView {
                     clockwise: true
                 )
                 .byClose()
-            let layer = CAShapeLayer()
+            let layer = CAShapeLayer.jobsMake { _ in }
                 .byPath(path.cgPath)
                 .byFillColor(segment.backgroundColor)
             plateView.layer.addSublayer(layer)
@@ -244,7 +245,7 @@ extension LuckyWheelView {
             // ==== 文本：整体“对准圆心” ===========================
             let midAngle = (startAngle + endAngle) / 2
             if let attr = makeSegmentAttributedText(for: segment) {
-                let label = UILabel()
+                let label = UILabel.jobsMake { _ in }
                     .byNumberOfLines(0)
                     .byTextAlignment(.center)
                     .byBgCor(JobsCor.clear)
@@ -266,12 +267,14 @@ extension LuckyWheelView {
                 )
                 let w = min(maxTextWidth, ceil(rect.width))
                 let h = min(maxTextHeight, ceil(rect.height))
-                label.bounds = CGRect(x: 0, y: 0, width: w, height: h)
-                label.center = textCenter
+                label
+                    .byBounds(CGRect(x: 0, y: 0, width: w, height: h))
+                    .byCenter(textCenter)
                 // 让 label 的纵向轴沿着圆心连线方向
                 let rotation = midAngle - CGFloat.pi / 2
-                label.transform = CGAffineTransform(rotationAngle: rotation)
-                label.byAddTo(plateView)
+                label
+                    .byTransform(CGAffineTransform(rotationAngle: rotation))
+                    .byAddTo(plateView)
                 segmentLabels.append(label)
             }
             // ==== 图片：文字外侧的圆形 ImageView ===================
@@ -284,7 +287,7 @@ extension LuckyWheelView {
                     y: center.y + sin(midAngle) * imageRadius
                 )
                 let imageSize = radius * 0.22
-                let imageView = UIImageView()
+                let imageView = UIImageView.jobsMake { _ in }
                     .jobs_setImage(url,
                                    fallback: placeholder,
                                    shimmerConfig: nil,
@@ -307,7 +310,7 @@ extension LuckyWheelView {
             width: dotRadius * 2,
             height: dotRadius * 2
         ))
-        let dotLayer = CAShapeLayer()
+        let dotLayer = CAShapeLayer.jobsMake { _ in }
             .byPath(dotPath.cgPath)
             .byFillColor(JobsCor.white)
         plateView.layer.addSublayer(dotLayer)
@@ -407,7 +410,7 @@ extension LuckyWheelView {
             if step > pi { step -= 2 * pi }
             if step < -pi { step += 2 * pi }
             currentAngle += step
-            plateView.transform = CGAffineTransform(rotationAngle: currentAngle)
+            plateView.byTransform(CGAffineTransform(rotationAngle: currentAngle))
             let dt = now - lastTouchTimestamp
             if dt > 0 {
                 angularVelocityFromPan = step / CGFloat(dt)
@@ -490,7 +493,7 @@ extension LuckyWheelView {
         let deltaAngle = dec.step(dt: dt)
         decelerator = dec
         currentAngle += deltaAngle
-        plateView.transform = CGAffineTransform(rotationAngle: currentAngle)
+        plateView.byTransform(CGAffineTransform(rotationAngle: currentAngle))
         if dec.isStopped(threshold: stopThreshold) {
             stopSpin()
             print("✅ 减速结束，最终角度 = \(currentAngle)")

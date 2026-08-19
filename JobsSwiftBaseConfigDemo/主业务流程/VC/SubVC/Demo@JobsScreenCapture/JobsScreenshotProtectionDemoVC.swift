@@ -35,7 +35,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemIndigo)
             .byCornerRadius(22)
             .byAddTo(protectionView.contentView) { make in
@@ -44,7 +44,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("敏感内容安全区".tr)
             .byFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
             .byTextColor(JobsCor.white)
@@ -56,7 +56,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveValueLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("账号：Jobs\n授权码：2026-0721-DEMO".tr)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 17, weight: .semibold))
             .byTextColor(JobsCor.white)
@@ -69,7 +69,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var protectionStateLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
@@ -146,8 +146,9 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     private func refreshProtectionState() {
         guard protectionView.isProtectionAvailable else {
             protectionStateLabel.byText("当前系统未识别到安全渲染容器，内容按普通视图显示。".tr)
-            toggleProtectionButton.byTitle("保护不可用".tr)
-            toggleProtectionButton.byEnabled(false)
+            toggleProtectionButton
+                .byTitle("保护不可用".tr)
+                .byEnabled(false)
             return
         }
         if protectionView.isProtectionEnabled {

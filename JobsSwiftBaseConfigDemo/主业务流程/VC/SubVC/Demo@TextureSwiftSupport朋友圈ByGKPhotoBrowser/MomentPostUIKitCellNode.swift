@@ -61,9 +61,10 @@ final class MomentPostUIKitCellNode: ASCellNode {
         self.post = p
         self.layoutMode = layoutMode
         self.containerNode = ASDisplayNode(viewBlock: {
-            let v = UIView()
-            v.byBackgroundColor(JobsCor.clear)
-            v.byClipsToBounds(false)
+            let v = UIView.jobsMake { _ in }
+            v
+                .byBackgroundColor(JobsCor.clear)
+                .byClipsToBounds(false)
             return v
         })
         super.init()
@@ -98,14 +99,16 @@ final class MomentPostUIKitCellNode: ASCellNode {
             })
             .byData(self.post, layoutMode: layoutMode)
         // ⚠️ 不要动 UITableViewCell.translatesAutoresizingMaskIntoConstraints
-        cell.byBackgroundColor(JobsCor.clear)
-        cell.contentView.byBackgroundColor(JobsCor.clear)
-        cell.byClipsToBounds(false)
+        cell
+            .byBackgroundColor(JobsCor.clear)
+            .byContentView { $0.byBackgroundColor(JobsCor.clear) }
+            .byClipsToBounds(false)
         hostCell = cell
         let host = containerNode.view
-        cell.byAddTo(host)
-        cell.byFrame(host.bounds)
-        cell.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cell
+            .byAddTo(host)
+            .byFrame(host.bounds)
+            .byAutoresizingMask([.flexibleWidth, .flexibleHeight])
         // 首次进来测一次真实高度（用 sizingCell，不会影响屏幕上的 cell）
         DispatchQueue.main.async { [weak self] in
             self?.requestHeightUpdateIfNeeded()
@@ -189,10 +192,12 @@ final class MomentPostUIKitCellNode: ASCellNode {
         let cell = sizingCell
         _ = cell.byData(self.post, layoutMode: layoutMode)
         // 给一个足够大的高度承载约束（离屏，不会影响 UI）
-        cell.bounds = CGRect(x: 0, y: 0, width: w, height: 10_000)
-        cell.contentView.bounds = cell.bounds
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
+        let measurementBounds = CGRect(x: 0, y: 0, width: w, height: 10_000)
+        cell
+            .byBounds(measurementBounds)
+            .byContentView { $0.byBounds(measurementBounds) }
+            .bySetNeedsLayout()
+            .byLayoutIfNeeded()
         let target = CGSize(width: w, height: UIView.layoutFittingCompressedSize.height)
         let size = cell.contentView.systemLayoutSizeFitting(
             target,

@@ -27,7 +27,7 @@ final class QRCodeDemoVC: BaseVC {
     private let barcodeContent = "JOBS-2025-10-18"
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -40,7 +40,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byAddTo(scrollView) { [unowned self] make in
@@ -52,7 +52,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var qrImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(qrContent.qrcodeImage(180, correction: "M"))
             .byContentMode(.scaleAspectFit)
             .addTapAction { [weak self] (_: UIImageView) in
@@ -67,7 +67,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var qrLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(qrContent)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
@@ -80,7 +80,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var logoQRImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(
                 logoQRContent.qrcodeImage(
                     180,
@@ -105,7 +105,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var logoQRLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("带中心 Logo 的二维码".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
@@ -118,7 +118,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var barcodeImageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(
                 barcodeContent.code128ByText(
                     width: 260,
@@ -144,7 +144,7 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var barcodeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Code128 条形码".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))

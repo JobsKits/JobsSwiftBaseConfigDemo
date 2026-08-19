@@ -211,7 +211,7 @@ extension UIAlertController {
             if let c = borderColor { tf.layer.borderColor = c.cgColor; didStyle = true }
             if let r = cornerRadius { tf.layer.cornerRadius = r; didStyle = true }
             if didStyle {
-                tf.layer.masksToBounds = true
+                tf.byMasksToBounds(true)
                 if #available(iOS 13.0, *) { tf.layer.cornerCurve = .continuous }
             }
             guard let alert = self else { return }
@@ -402,14 +402,14 @@ extension UIAlertController {
                             let img = await trimmed.sdLoadImage(fallbackImage: placeholder)
                             if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
                             else { iv.image = img }
-                            iv.layer.cornerRadius = card.layer.cornerRadius
+                            iv.byCornerRadius(card.layer.cornerRadius)
                         }
                     } else {
                         trimmed.sdLoadImage(fallbackImage: placeholder) { img in
                             onMainAsync(self) { _ in
                                 if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
                                 else { iv.image = img }
-                                iv.layer.cornerRadius = card.layer.cornerRadius
+                                iv.byCornerRadius(card.layer.cornerRadius)
                             }
                         }
                     }
@@ -441,7 +441,7 @@ extension UIAlertController {
                             let img = await trimmed.kfLoadImage(fallbackImage: placeholder)
                             if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
                             else { iv.image = img }
-                            iv.layer.cornerRadius = card.layer.cornerRadius
+                            iv.byCornerRadius(card.layer.cornerRadius)
                         }
                     } else {
                         trimmed.kfLoadImage { result in
@@ -457,7 +457,7 @@ extension UIAlertController {
                                 }
                                 if crossfade > 0 { alert._crossfade(iv, to: img, duration: crossfade) }
                                 else { iv.image = img }
-                                iv.layer.cornerRadius = card.layer.cornerRadius
+                                iv.byCornerRadius(card.layer.cornerRadius)
                             }
                         }
                     }
@@ -474,10 +474,11 @@ extension UIAlertController {
         _enqueueBGTask(preTransition: true) { alert in
             onMainAsync(self) { vc in
                 alert._withAlertCard { card in
-                    card.layer.borderWidth = width
-                    card.layer.borderColor = color.cgColor
+                    card
+                        .byBorderWidth(width)
+                        .byBorderColor(color)
                     if let r = cornerRadius { card.layer.cornerRadius = r }
-                    card.layer.masksToBounds = true
+                    card.byMasksToBounds(true)
                     if #available(iOS 13.0, *) { card.layer.cornerCurve = .continuous }
                 }
             }
@@ -501,17 +502,19 @@ extension UIAlertController {
                         borderView = exist
                     } else {
                         let v = UIView()
-                        v.isUserInteractionEnabled = false
-                        v.backgroundColor = JobsCor.clear
-                        v.tag = tag
+                        v
+                            .byUserInteractionEnabled(false)
+                            .byBackgroundColor(JobsCor.clear)
+                            .byTag(tag)
                         box.insertSubview(v, belowSubview: tf)
                         v.snp.makeConstraints { make in make.edges.equalToSuperview().inset(insets) }
                         borderView = v
                     }
-                    borderView.layer.borderWidth = width
-                    borderView.layer.borderColor = color.cgColor
-                    borderView.layer.cornerRadius = cornerRadius ?? box.layer.cornerRadius
-                    borderView.layer.masksToBounds = true
+                    borderView
+                        .byBorderWidth(width)
+                        .byBorderColor(color)
+                        .byCornerRadius(cornerRadius ?? box.layer.cornerRadius)
+                        .byMasksToBounds(true)
                     if #available(iOS 13.0, *) { borderView.layer.cornerCurve = .continuous }
                 }
             }
@@ -614,11 +617,12 @@ extension UIAlertController {
             if self._localBGHideBackdrop { self._hideBackdropAll(in: card) }
             let iv = self._ensureBGImageView(in: card)
             // 整卡片裁剪，背景图按圆角贴合整张卡片
-            card.layer.masksToBounds = true
-            iv.layer.cornerRadius = card.layer.cornerRadius
-            iv.layer.masksToBounds = true
+            card.byMasksToBounds(true)
+            iv
+                .byCornerRadius(card.layer.cornerRadius)
+                .byMasksToBounds(true)
             UIView.performWithoutAnimation {
-                iv.image = img
+                iv.byImage(img)
                 iv.layoutIfNeeded()
             }
             did = true
@@ -662,7 +666,7 @@ extension UIAlertController {
             v.subviews.forEach(hideEffect)
         }
         hideEffect(in: card)
-        card.backgroundColor = JobsCor.clear
+        card.byBackgroundColor(JobsCor.clear)
         view.backgroundColor = JobsCor.clear
     }
 
@@ -672,7 +676,7 @@ extension UIAlertController {
                                 duration: TimeInterval) {
         guard duration > 0 else { iv.image = image; return }
         UIView.transition(with: iv, duration: duration, options: .transitionCrossDissolve) {
-            iv.image = image
+            iv.byImage(image)
         }
     }
     /// 找到 UITextField 外层的“灰底容器”（用于描边等）

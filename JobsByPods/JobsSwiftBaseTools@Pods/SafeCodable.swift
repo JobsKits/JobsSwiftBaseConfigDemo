@@ -7,6 +7,8 @@
 
 import Foundation
 
+import JobsSwiftDSL
+
 // ================================== SafeDefault：类型级默认值 ==================================
 public protocol SafeDefault {
     static var defaultValue: Self { get }
@@ -86,7 +88,7 @@ private func report(_ event: SafeCodableEvent) {
 // 小工具：共享 ISO8601 格式器（减少分配）
 private enum _DateParsers {
     static let iso8601: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
+        let f = ISO8601DateFormatter.jobsMake { _ in }
         // 默认行为已够用，如需要微调（.withFractionalSeconds）可在这里配置
         return f
     }()
@@ -428,9 +430,10 @@ private func fromBool<T: SafeDefault & Codable>(
      enum SafeCodableBootstrap {
          static func configure() {
              var fmt = DateFormatter()
-             fmt.locale = Locale(identifier: "en_US_POSIX")
-             fmt.timeZone = TimeZone(secondsFromGMT: 0)
-             fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
+             fmt
+                 .byLocale(Locale(identifier: "en_US_POSIX"))
+                 .byTimeZone(TimeZone(secondsFromGMT: 0))
+                 .byDateFormat("yyyy-MM-dd HH:mm:ss")
 
              SafeCodableConfig.shared.customDateFormatters = [fmt]
              SafeCodableConfig.shared.treatEmptyStringAsNilForURL = true

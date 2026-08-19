@@ -19,7 +19,7 @@ import SnapKit
 final class JobsWalletCardCell: UICollectionViewCell {
     private let horizontalInset: CGFloat = 16
     private lazy var gradientLayer: CAGradientLayer = {
-        let layer = CAGradientLayer()
+        let layer = CAGradientLayer.jobsMake { _ in }
             .byStartPoint(CGPoint(x: 0, y: 0))
             .byEndPoint(CGPoint(x: 1, y: 1))
             .byCornerRadius(14)
@@ -28,7 +28,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     }()
 
     private lazy var logoView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFit)
             .byTintColor(JobsCor.white.withAlphaComponent(0.9))
             .byImage("creditcard.fill".sysImg)
@@ -41,7 +41,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     }()
 
     private lazy var bankLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
             .byTextColor(JobsCor.white)
             .byAddTo(contentView) { [unowned self] make in
@@ -51,7 +51,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     }()
 
     private lazy var numberLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .medium))
             .byTextColor(JobsCor.white.withAlphaComponent(0.95))
             .byAddTo(contentView) { [unowned self] make in
@@ -61,7 +61,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     }()
 
     private lazy var holderLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.white.withAlphaComponent(0.8))
             .byAddTo(contentView) { [unowned self] make in
@@ -71,7 +71,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     }()
 
     private lazy var brandLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.white.withAlphaComponent(0.9))
             .byTextAlignment(.right)
@@ -114,13 +114,15 @@ final class JobsWalletCardCell: UICollectionViewCell {
 
     private func buildUI() {
         self.byBackgroundColor(JobsCor.clear)
-        contentView.byBackgroundColor(JobsCor.clear)
-        contentView.byCornerRadius(14)
-        contentView.byMasksToBounds(true)
-        layer.shadowColor = JobsCor.black.cgColor
-        layer.shadowOpacity = 0.18
-        layer.shadowRadius = 8
-        layer.shadowOffset = CGSize(width: 0, height: 6)
+        contentView
+            .byBackgroundColor(JobsCor.clear)
+            .byCornerRadius(14)
+            .byMasksToBounds(true)
+        layer
+            .byShadowColor(JobsCor.black)
+            .byShadowOpacity(0.18)
+            .byShadowRadius(8)
+            .byShadowOffset(CGSize(width: 0, height: 6))
         gradientLayer.byHidden(false)
         logoView.byVisible(true)
         bankLabel.byVisible(true)
@@ -132,7 +134,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
     private func applyHighlight(_ highlighted: Bool, animated: Bool) {
         let changes = {
             self.transform = highlighted ? CGAffineTransform(scaleX: 1.02, y: 1.02) : .identity
-            self.layer.shadowOpacity = highlighted ? 0.3 : 0.18
+            self.layer.byShadowOpacity(highlighted ? 0.3 : 0.18)
         }
         if animated {
             UIView.jobsAnimateWithOptions(
@@ -151,7 +153,7 @@ final class JobsWalletCardCell: UICollectionViewCell {
         numberLabel.byText("**** \(model.lastDigits)")
         holderLabel.byText(model.holder)
         brandLabel.byText(model.brand)
-        gradientLayer.colors = model.gradientColors.map { $0.cgColor }
+        gradientLayer.byColors(model.gradientColors.map { $0.cgColor })
         applyHighlight(highlighted, animated: false)
         return self
     }

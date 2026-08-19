@@ -19,7 +19,7 @@ import SnapKit
 
 final class LiveMsgCell: UITableViewCell {
     private lazy var bubble: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(true)
@@ -31,7 +31,7 @@ final class LiveMsgCell: UITableViewCell {
             }
     }()
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)

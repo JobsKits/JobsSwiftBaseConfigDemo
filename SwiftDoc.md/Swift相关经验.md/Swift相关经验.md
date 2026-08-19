@@ -3279,4 +3279,144 @@ struct IntStack: Container {
   - [**Swift**](https://www.swift.org/)中的<font color=red>**protocol**</font>还可以实现面向协议；
   - [**Swift**](https://www.swift.org/)中<font color=red>**protocol**</font>的还可以用于值类型、结构体（<font color=red>**Struct**</font>）、枚举（<font color=red>**enum**</font>）；
 
+## 四十二、iOS 系统计时机制与 `JobsSwiftTimer` 选型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+### 42.1、先分清：它们不是同一种 Timer
+
+日常所说的“UIKit Timer”是 iOS 业务语境下的统称，严格来说这些 API 分属不同框架：
+
+- [**Foundation.Timer**](https://developer.apple.com/documentation/foundation/timer)：Objective-C 名称是 `NSTimer`，依赖 RunLoop。
+- [**DispatchSourceTimer**](https://developer.apple.com/documentation/dispatch/dispatchsourcetimer)：由 GCD 在指定队列投递事件，不依赖 RunLoop。
+- [**CADisplayLink**](https://developer.apple.com/documentation/quartzcore/cadisplaylink)：跟随显示刷新节奏，用于视觉更新。
+- [**CFRunLoopTimer**](https://developer.apple.com/documentation/corefoundation/cfrunlooptimer)：Core Foundation 级 RunLoop Timer，与 `Timer/NSTimer` toll-free bridged。
+
+系统提供多种计时机制，是因为“UI 低频刷新、工作队列调度、逐帧渲染、RunLoop 基础设施”不是同一个问题。选择的第一依据是调度模型，不是 API 看起来短不短。
+
+### 42.2、核心对比
+
+| 机制 | 依赖与回调位置 | 优势 | 劣势 | 首选场景 | Jobs 映射 |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| `Timer/NSTimer` | 注册到某个 RunLoop 的一个或多个 Mode；通常在主线程回调 | 简单；适合 UI；支持一次性/重复与 `tolerance` | RunLoop 忙、Mode 不匹配或主线程阻塞时会延后；不是实时机制；需正确 `invalidate` | 轮播、验证码、普通倒计时、UI 状态轮询 | `JobsTimerKind.foundation` |
+| `DispatchSourceTimer` | 在指定 Dispatch Queue 上投递；不依赖 RunLoop | 队列可控；适合非 UI；`leeway` 允许系统合并唤醒 | suspend/resume/cancel 状态容易失衡；队列阻塞照样延迟；不是硬实时 | 心跳、轮询、缓存维护、工作队列节拍 | `JobsTimerKind.gcd` |
+| `CADisplayLink` | 挂到 RunLoop，回调与显示刷新周期协调 | 视觉节奏最匹配；提供 `timestamp`、`targetTimestamp` 与首选帧率 | 实际帧率会受设备、低电量、温控、辅助功能和主线程负载影响；不适合业务计时 | 逐帧动画、进度绘制、交互视觉插值 | `JobsTimerKind.displayLink` |
+| `CFRunLoopTimer` | Core Foundation RunLoop + Mode | 可控制下一次触发时间、Mode、上下文和底层 RunLoop 互操作 | C API 冗长；所有权、线程亲和与上下文管理复杂；仍不是实时机制 | RunLoop 基础设施、C/CF 互操作、特殊 Mode 调度 | `JobsTimerKind.runLoop` |
+
+#### 42.2.1、`Timer/NSTimer`
+
+- Apple 明确说明它不是实时机制：RunLoop 无法及时处理时，实际回调可以明显晚于计划时间。
+- 重复 Timer 按“原计划触发时间”继续排期；错过多个周期时只回调一次，不会补发每个丢失 tick。
+- `tolerance` 只允许晚触发，不允许早触发。允许合理容差可以减少 CPU 唤醒并改善功耗。
+- `.default` Mode 下，滚动等 Mode 切换可能让回调暂时不被处理；需要滚动期间继续刷新时使用 `.common`。
+- target-selector 形态要注意 Timer、RunLoop、target 之间的持有关系；`JobsSwiftTimer` 已把 Foundation 内核收口为弱捕获回调。
+
+#### 42.2.2、`DispatchSourceTimer`
+
+- `deadline` 使用单调的 `DispatchTime`，适合“经过多久”的间隔调度；`wallDeadline` 使用墙上时间，系统时间调整时语义不同。
+- `leeway` 是允许系统延后投递的窗口，用于功耗与及时性的折中。
+- 不依赖 RunLoop，不代表一定更准；目标队列被阻塞、QoS 较低、系统繁忙时仍会延后。
+- 原生 Dispatch Source 在激活、挂起、恢复、取消之间有严格状态要求；`JobsSwiftTimer` 负责配平并用 generation token 拦截旧回调。
+
+#### 42.2.3、`CADisplayLink`
+
+- 它表达“下一帧应该更新视觉状态”，而不是“每隔固定毫秒执行业务”。
+- 首选帧率只是请求。系统会结合最大刷新率、低电量模式、温度与用户设置选择实际帧率。
+- 动画进度应使用时间戳或单调时钟计算；按回调次数累加会在掉帧、高刷或刷新率变化时产生速度漂移。
+- 回调中只做轻量状态更新与绘制准备；重计算会直接制造卡顿。
+
+#### 42.2.4、`CFRunLoopTimer`
+
+- 它和 `Timer/NSTimer` 共享 RunLoop 计时语义，不是一个“天然更精准”的替代品。
+- 价值在于更底层的 C 接口：明确指定 RunLoop、Mode、Context、Order 和下一次触发时间。
+- 普通业务没有 Core Foundation 互操作需求时，优先使用 `Timer` 或 Jobs 封装，避免无意义增加所有权复杂度。
+
+### 42.3、非 Timer，但经常用于“等一会儿”
+
+| API | 特点 | 应该使用的场景 | 不应替代的能力 |
+| ---- | ---- | ---- | ---- |
+| `DispatchQueue.asyncAfter` | 一次性延迟向队列提交闭包 | 简单延迟、轻量防抖尾部动作 | 重复 tick、暂停、恢复、集中管理 |
+| [**Task.sleep / Clock.sleep**](https://developer.apple.com/documentation/swift/task/) | 挂起当前 Task，不阻塞底层线程；取消时抛出 `CancellationError` | Swift 并发流程里的超时、重试间隔、一次性等待 | OC 调用、页面多 Timer 注册表、天然重复调度 |
+| [**BGTaskScheduler**](https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler) | 系统根据资源与策略择机运行 | App 被挂起后的内容刷新、维护与长任务 | 秒级准点回调、常驻后台 Timer |
+
+没有任何普通 Timer 能保证 App 被系统挂起后继续每秒回调。`DispatchSourceTimer` 的“后台队列”只是非主队列，不等于 iOS 后台执行资格。
+
+### 42.4、选型决策
+
+1. 需要和屏幕逐帧同步：选 `CADisplayLink` / `.displayLink`。
+2. 需要脱离 RunLoop，在工作队列做心跳、轮询或维护：选 `DispatchSourceTimer` / `.gcd`。
+3. 只是在主线程低频更新普通 UI：选 `Timer` / `.foundation`，Mode 使用 `.common`。
+4. 需要直接控制 RunLoop Timer 的 Mode、Context 或下一次触发：选 `CFRunLoopTimer` / `.runLoop`。
+5. 只需要延迟一次：选 `Task.sleep` 或 `DispatchQueue.asyncAfter`。
+6. 需要系统挂起后执行：选符合业务资格的 Background Tasks、后台传输、定位或音频等机制，不选普通 Timer。
+
+### 42.5、原生最小代码：只用于理解系统差异
+
+Jobs 应用层生产代码优先使用 `JobsSwiftTimer` / `JobsSwiftTimerMgr`。下面的原生代码用于理解系统模型，不作为绕开 Jobs 封装的推荐写法。
+
+- RunLoop Timer：
+
+  ```swift
+  private var foundationTimer: Timer?
+
+  func startFoundationTimer() {
+      let timer = Timer(timeInterval: 1, repeats: true) { _ in
+          // 主线程 UI 刷新
+      }
+      timer.tolerance = 0.1
+      RunLoop.main.add(timer, forMode: .common)
+      foundationTimer = timer
+  }
+  ```
+
+- GCD Timer：
+
+  ```swift
+  private let timerQueue = DispatchQueue(label: "com.jobs.timer.example")
+  private var sourceTimer: DispatchSourceTimer?
+
+  func startSourceTimer() {
+      let timer = DispatchSource.makeTimerSource(queue: timerQueue)
+      timer.schedule(
+          deadline: .now() + .seconds(1),
+          repeating: .seconds(1),
+          leeway: .milliseconds(100)
+      )
+      timer.setEventHandler {
+          // 非 UI 工作；更新 UI 时再切回主线程
+      }
+      timer.activate()
+      sourceTimer = timer
+  }
+  ```
+
+- Swift 并发的一次性等待：
+
+  ```swift
+  private var delayTask: Task<Void, Never>?
+
+  func scheduleOnce() {
+      delayTask?.cancel()
+      delayTask = Task {
+          do {
+              try await Task.sleep(for: .seconds(1))
+              guard !Task.isCancelled else { return }
+              // 一次性后续动作
+          } catch {
+              // Task 被取消
+          }
+      }
+  }
+  ```
+
+### 42.6、为什么还需要 `JobsSwiftTimer` / `JobsSwiftTimerMgr`
+
+- `JobsSwiftTimer` 用同一协议统一四个内核的 `start/pause/resume/fireOnce/stop`、回调队列、前后台策略、一次性完成顺序和回调防穿透。
+- `JobsSwiftTimerMgr` 在内核之上治理 identifier、去重、受管句柄、Scope、前后台状态机和批量清理。
+- 单个对象私有、生命周期清晰时用 `JobsTimer`；多个 Timer、列表复用或需要跨对象治理时用 Manager。
+- Cell 复用使用稳定 Model identifier，并通过 `expectedTimer` 精准移除；页面只持有 Scope，不持有“最后一个 Timer”。
+- 倒计时以绝对 `endAt` 为时间真值，每次 tick 根据当前时间重算剩余值。Timer 只负责唤醒刷新，不负责代表真实经过时间。
+
+  ```swift
+  let remaining = max(0, model.endAt.timeIntervalSinceNow)
+  ```
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -24,7 +24,7 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
     private var visibleDocuments: [JobsMarkdownDocument] = []
     private var catalogError: Error?
     private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
+        let searchBar = UISearchBar.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -34,11 +34,12 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
                 }
                 make.left.right.equalToSuperview()
             }
-        searchBar.placeholder = "按标题或工程相对路径搜索".tr
-        searchBar.searchBarStyle = .minimal
+        searchBar
+            .byPlaceholder("按标题或工程相对路径搜索".tr)
+            .bySearchBarStyle(.minimal)
         searchBar.autocapitalizationType = .none
         searchBar.autocorrectionType = .no
-        searchBar.delegate = self
+        searchBar.byDelegate(self)
         return searchBar
     }()
     private lazy var tableView: UITableView = {
@@ -149,7 +150,7 @@ private final class JobsMarkdownDocumentCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         bySelectedBackgroundView(
-            UIView().byBackgroundColor(JobsCor.tertiarySystemBackground)
+            UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)
         )
     }
 

@@ -21,21 +21,22 @@ import SnapKit
 final class CashbackCardCell: UITableViewCell {
     private let corner: CGFloat = 22
     private lazy var cardView: UIView = {
-        var cardView =  UIView()
+        var cardView =  UIView.jobsMake { _ in }
             .byCornerRadius(corner)
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
             }
         cardView.layer.insertSublayer(gradient, at: 0)
-        cardView.layer.shadowColor = JobsCor.black.withAlphaComponent(0.08).cgColor
-        cardView.layer.shadowOpacity = 1
-        cardView.layer.shadowRadius = 10
-        cardView.layer.shadowOffset = .init(width: 0, height: 3)
+        cardView
+            .byShadowColor(JobsCor.black.withAlphaComponent(0.08))
+            .byShadowOpacity(1)
+            .byShadowRadius(10)
+            .byShadowOffset(.init(width: 0, height: 3))
         return cardView
     }()
 
     private lazy var iconWrap: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemOrange)
             .byCornerRadius(12)
             .byAddTo(cardView) { make in
@@ -55,7 +56,7 @@ final class CashbackCardCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("——")
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -67,7 +68,7 @@ final class CashbackCardCell: UITableViewCell {
     }()
 
     private lazy var subLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("神秘彩金等你来拿".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.secondaryLabel)
@@ -80,7 +81,7 @@ final class CashbackCardCell: UITableViewCell {
     }()
 
     private lazy var gradient:CAGradientLayer = {
-        CAGradientLayer()
+        CAGradientLayer.jobsMake { _ in }
             .byCGColors([
                 UIColor(hex: 0xE6C7F7).cgColor,
                 UIColor(hex: 0xD1B7F3).cgColor

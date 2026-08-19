@@ -45,29 +45,30 @@ extension JXSegmentedListContainerView {
     // MARK: Scroll 属性（scrollView/collectionView 统一写）
     @discardableResult
     public func byPagingEnabled(_ on: Bool = true) -> Self {
-        self.scrollView.isPagingEnabled = on; return self
+        self.scrollView.byPagingEnabled(on); return self
     }
 
     @discardableResult
     public func byBounces(_ on: Bool = false) -> Self {
-        self.scrollView.bounces = on; return self
+        self.scrollView.byBounces(on); return self
     }
 
     @discardableResult
     public func byShowsIndicators(horizontal: Bool = false, vertical: Bool = false) -> Self {
-        self.scrollView.showsHorizontalScrollIndicator = horizontal
-        self.scrollView.showsVerticalScrollIndicator = vertical
+        self.scrollView
+            .byShowsHorizontalScrollIndicator(horizontal)
+            .byShowsVerticalScrollIndicator(vertical)
         return self
     }
 
     @discardableResult
     public func byScrollsToTop(_ on: Bool = false) -> Self {
-        self.scrollView.scrollsToTop = on; return self
+        self.scrollView.byScrollsToTop(on); return self
     }
 
     @discardableResult
     public func byDecelerationRate(_ rate: UIScrollView.DecelerationRate) -> Self {
-        self.scrollView.decelerationRate = rate; return self
+        self.scrollView.byDecelerationRate(rate); return self
     }
 
     @discardableResult

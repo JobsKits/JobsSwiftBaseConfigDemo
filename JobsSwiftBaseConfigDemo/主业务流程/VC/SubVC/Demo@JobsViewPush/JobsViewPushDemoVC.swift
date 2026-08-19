@@ -36,7 +36,7 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var ratioLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("覆盖比例：65%".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -47,7 +47,7 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var ratioSlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0.25)
             .byMaximumValue(1)
             .byValue(0.65)
@@ -61,7 +61,7 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var tipLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -133,7 +133,7 @@ private final class JobsViewPushDemoPanel: UIView {
     var closeHandler: (() -> Void)?
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("BView")
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 32, weight: .black))

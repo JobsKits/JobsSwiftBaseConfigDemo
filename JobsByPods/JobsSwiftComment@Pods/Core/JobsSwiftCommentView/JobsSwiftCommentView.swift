@@ -18,7 +18,7 @@ public final class JobsSwiftCommentView: UIView {
 
     private var renderRows: [RenderRow] = []
     private var expandedRootIDs = Set<String>()
-    private let refreshControlView = UIRefreshControl()
+    private let refreshControlView = UIRefreshControl.jobsMake { _ in }
     private let loadMoreButton = UIButton.sys()
     private var isLoadingMore = false
     private var noMoreData = false
@@ -253,11 +253,11 @@ private extension JobsSwiftCommentView {
 
     func updateRefreshers() {
         if shouldEnableRefreshByMode(), config.enablesPullRefresh {
-            tableView.refreshControl = refreshControlView
+            tableView.byRefreshControl(refreshControlView)
         } else {
-            tableView.refreshControl = nil
+            tableView.byRefreshControl(nil)
         }
-        tableView.tableFooterView = shouldEnableRefreshByMode() && config.enablesLoadMore ? loadMoreButton : UIView(frame: .zero)
+        tableView.byTableFooterView(shouldEnableRefreshByMode() && config.enablesLoadMore ? loadMoreButton : UIView(frame: .zero))
         updateLoadMoreTitle()
     }
 

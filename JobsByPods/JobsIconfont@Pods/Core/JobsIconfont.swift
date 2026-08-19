@@ -10,6 +10,8 @@ import JobsImageTools
 import ObjectiveC
 import UIKit
 
+import JobsSwiftDSL
+
 public enum JobsIconfontRemoteAsset: CaseIterable {
     case logo
     case fontBanner
@@ -93,7 +95,7 @@ public final class JobsIconfont {
     private static var loadTokenKey: UInt8 = 0
     private let iconFontPostScriptName = "iconfontyyy"
     private let textFontPostScriptName = "AlimamaShuZhiTiVF-Regular"
-    private let fontLock = NSLock()
+    private let fontLock = NSLock.jobsMake { _ in }
     private var registeredFontFiles = Set<String>()
 
     public init() {}
@@ -174,7 +176,7 @@ public final class JobsIconfont {
             representedAsset,
             .OBJC_ASSOCIATION_COPY_NONATOMIC
         )
-        imageView.image = placeholder
+        imageView.byImage(placeholder)
         event?(.placeholder)
 
         let imageToken = JobsImageLoader.shared.load(
@@ -192,13 +194,13 @@ public final class JobsIconfont {
                   ) as? String == representedAsset else { return }
             switch result {
             case .success(let value):
-                imageView.image = value.image
+                imageView.byImage(value.image)
                 event?(.success(
                     loader: JobsIconfontLoader(value.loaderKind),
                     isCacheHit: value.isCacheHit
                 ))
             case .failure(let error):
-                imageView.image = placeholder
+                imageView.byImage(placeholder)
                 event?(.failure(error))
             }
         }
@@ -301,8 +303,7 @@ private extension JobsIconfont {
         ]
         for url in urls.compactMap({ $0 }) {
             if let bundle = Bundle(url: url) { return bundle }
-        }
-        return ownerBundle
+        };return ownerBundle
     }
 
     func registerFont(filename: String) {

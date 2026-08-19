@@ -11,8 +11,10 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRPickerToolbar: UIView {
-    public let titleLabel = UILabel()
+    public let titleLabel = UILabel.jobsMake { _ in }
     public let cancelButton = UIButton(type: .system)
     public let confirmButton = UIButton(type: .system)
 
@@ -26,7 +28,7 @@ public final class BRPickerToolbar: UIView {
         addSubview(titleLabel)
         cancelButton.addTarget(self, action: #selector(tapCancel), for: .touchUpInside)
         confirmButton.addTarget(self, action: #selector(tapConfirm), for: .touchUpInside)
-        titleLabel.textAlignment = .center
+        titleLabel.byTextAlignment(.center)
         isAccessibilityElement = false
         titleLabel.isAccessibilityElement = true
         cancelButton.isAccessibilityElement = true
@@ -38,9 +40,9 @@ public final class BRPickerToolbar: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         let h = bounds.height
-        cancelButton.frame = CGRect(x: 12, y: 0, width: 80, height: h)
-        confirmButton.frame = CGRect(x: bounds.width - 92, y: 0, width: 80, height: h)
-        titleLabel.frame = CGRect(x: 96, y: 0, width: bounds.width - 192, height: h)
+        cancelButton.byFrame(CGRect(x: 12, y: 0, width: 80, height: h))
+        confirmButton.byFrame(CGRect(x: bounds.width - 92, y: 0, width: 80, height: h))
+        titleLabel.byFrame(CGRect(x: 96, y: 0, width: bounds.width - 192, height: h))
     }
 
     @objc private func tapCancel() { onCancel?() }

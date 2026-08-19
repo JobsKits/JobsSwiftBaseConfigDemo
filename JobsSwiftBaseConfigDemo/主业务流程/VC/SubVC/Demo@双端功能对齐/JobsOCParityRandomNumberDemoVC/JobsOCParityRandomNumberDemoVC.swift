@@ -59,7 +59,7 @@ final class JobsRandomNumberDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byContentInsetTop(8)
             .byBackgroundColor(JobsCor.clear)
-            .byTableFooterView(UIView())
+            .byTableFooterView(UIView.jobsMake { _ in })
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
                 make.left.right.bottom.equalToSuperview()
@@ -111,18 +111,17 @@ extension JobsRandomNumberDemoVC: UITableViewDataSource, UITableViewDelegate {
         let value = values.indices.contains(indexPath.row)
             ? values[indexPath.row]
             : item.generator()
-        cell.textLabel?
+        return cell
             .byText(item.title)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byTextColor(JobsCor.label)
-            .byNumberOfLines(0)
-        cell.detailTextLabel?
-            .byText("\(item.range)   结果：\(value)")
-            .byFont(JobsFont.systemFont(ofSize: 13))
-            .byTextColor(JobsCor.secondaryLabel)
-        cell.accessoryType = .disclosureIndicator
-        cell.selectionStyle = .none
-        return cell.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleCor(JobsCor.label)
+            .byTitleNumberOfLines(0)
+            .byDetailText("\(item.range)   结果：\(value)")
+            .byDetailTitleFont(JobsFont.systemFont(ofSize: 13))
+            .byDetailTitleCor(JobsCor.secondaryLabel)
+            .byAccessoryType(.disclosureIndicator)
+            .bySelectionStyle(.none)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

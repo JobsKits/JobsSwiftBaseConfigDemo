@@ -51,7 +51,7 @@ final class LunarDemoVC: BaseVC {
     private var isLoadingMore = false
     // MARK: - UI
     private lazy var datePicker: UIDatePicker = {
-       UIDatePicker()
+       UIDatePicker.jobsMake { _ in }
             .byDatePickerMode(.dateAndTime)
             .byPreferredDatePickerStyle(.inline)
             .byLocale(Locale(identifier: "zh-Hans"))
@@ -129,7 +129,7 @@ final class LunarDemoVC: BaseVC {
         jobsSetupGKNav(
             title: "日历".tr
         )
-        let header = UIView()
+        let header = UIView.jobsMake { _ in }
         datePicker.byAddTo(header) { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
         }
@@ -250,7 +250,6 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
         let row: Row
         switch Section(rawValue: indexPath.section)! {
         /// 处理 .example 分支
@@ -261,17 +260,21 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
         case .interactive: row = interactiveRows[indexPath.row]
         }
         if #available(iOS 14.0, *) {
-            var cfg = cell.defaultContentConfiguration()
-            cfg.text = row.title
-            cfg.secondaryText = row.value
-            cfg.secondaryTextProperties.numberOfLines = 0
-            cell.contentConfiguration = cfg
+            return tableView
+                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                .byListConfig {
+                    $0.byText(row.title)
+                        .bySecondaryText(row.value)
+                        .bySecondaryLines(0)
+                }
+                .bySelectionStyle(.none)
         } else {
             // 老系统：避免 subtitle 样式需求，直接合并成一行
-            cell.textLabel?.byNumberOfLines(0)
-            cell.textLabel?.byText("\(row.title)  \(row.value)")
+            return tableView
+                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                .byText("\(row.title)  \(row.value)")
+                .byTitleNumberOfLines(0)
+                .bySelectionStyle(.none)
         }
-        cell.selectionStyle = .none
-        return cell
     }
 }

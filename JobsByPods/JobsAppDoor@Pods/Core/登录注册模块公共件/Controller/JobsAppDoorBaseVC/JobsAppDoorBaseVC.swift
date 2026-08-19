@@ -83,7 +83,7 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumePanelView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsAppDoorPalette.cardBackground.withAlphaComponent(0.92))
             .byCornerRadius(14)
             .byClipsToBounds(true)
@@ -100,7 +100,7 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumePercentLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsAppDoorPalette.gold)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .medium))
@@ -114,7 +114,7 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumeSlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(backgroundView.currentVolume)

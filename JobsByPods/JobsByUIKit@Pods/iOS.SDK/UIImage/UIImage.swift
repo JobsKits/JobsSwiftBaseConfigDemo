@@ -17,8 +17,10 @@ import CoreGraphics
 
 extension UIImage {
     /// 创建空图片；调用侧不直接使用 UIKit 空初始化器。
-    public static func make() -> UIImage {
-        UIImage()
+    public static func make(_ configure: (UIImage) -> Void) -> UIImage {
+        let image = UIImage()
+        configure(image)
+        return image
     }
 
     // MARK: - 绘制渐变色图片：任意方向线性渐变
@@ -66,7 +68,7 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()
         UIRectFill(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make()
+        let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
         UIGraphicsEndImageContext()
         return image.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     }
@@ -98,7 +100,7 @@ extension UIImage {
         defer { UIGraphicsEndImageContext() }
         color.setFill()
         UIRectFill(rect)
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make()
+        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
     }
 }
 /// 功能性方法
@@ -171,10 +173,10 @@ extension UIImage {
         let size = CGSize(width: diameter, height: diameter)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         defer { UIGraphicsEndImageContext() }
-        guard let ctx = UIGraphicsGetCurrentContext() else { return UIImage.make() }
+        guard let ctx = UIGraphicsGetCurrentContext() else { return UIImage.make { _ in } }
         ctx.setFillColor(color.cgColor)
         ctx.fillEllipse(in: CGRect(origin: .zero, size: size))
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make()
+        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
     }
     // MARK: - 图片叠加（overlay 居中 + 左右间距）
     func overlayed(with overlay: UIImage, horizontalInset: CGFloat = 2) -> UIImage {

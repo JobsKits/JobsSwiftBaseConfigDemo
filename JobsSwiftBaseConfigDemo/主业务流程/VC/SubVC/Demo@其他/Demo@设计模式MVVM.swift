@@ -108,7 +108,7 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
             /// 处理 .error 分支
             case .error(let msg):
                 self.navigationItem.prompt = nil
-                self.errorAlertController.message = msg
+                self.errorAlertController.byMessage(msg)
                 if self.presentedViewController !== self.errorAlertController {
                     self.present(self.errorAlertController, animated: true)
                 }
@@ -122,9 +122,9 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
         let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let u = data[ip.row]
-        c.textLabel?.byText(u.name)
-        c.detailTextLabel?.byText("ID: \(u.id)")
         return c
+            .byText(u.name)
+            .byDetailText("ID: \(u.id)")
             .byTitleCor(JobsCor.label)
             .byDetailTitleCor(JobsCor.secondaryLabel)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -133,7 +133,7 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
         let u = data[ip.row]
         let vc = BaseVC()
         vc.view.byBackgroundColor(JobsCor.systemBackground)
-        vc.title = "Detail \(u.name)"
+        vc.byTitle("Detail \(u.name)")
         navigationController?.pushViewController(vc, animated: true)
     }
 }

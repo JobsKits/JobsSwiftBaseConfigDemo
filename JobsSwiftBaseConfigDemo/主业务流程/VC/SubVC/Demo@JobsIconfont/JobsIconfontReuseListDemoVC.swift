@@ -59,7 +59,7 @@ extension JobsIconfontReuseListDemoVC: UITableViewDataSource, UITableViewDelegat
 
 private final class JobsIconfontReuseCell: UITableViewCell {
     private lazy var iconView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFit)
             .byCornerRadius(10)
@@ -72,7 +72,7 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
@@ -83,7 +83,7 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     }()
 
     private lazy var stateLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in

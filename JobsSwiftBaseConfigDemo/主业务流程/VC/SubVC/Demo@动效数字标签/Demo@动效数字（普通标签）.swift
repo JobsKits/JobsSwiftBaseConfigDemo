@@ -31,7 +31,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private let defaultEnd: Double = 0
     // MARK: - UI
     private lazy var cardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byAddTo(view) { [unowned self] make in
@@ -46,7 +46,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     }()
 
     private lazy var valueLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 52, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -62,7 +62,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     }()
 
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)

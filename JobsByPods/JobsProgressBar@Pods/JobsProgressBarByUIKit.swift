@@ -40,14 +40,14 @@ extension UIView {
                 var bg = cfg.background
                 bg.cornerRadius = r
                 cfg.background = bg
-                btn.configuration = cfg
+                btn.byConfiguration(cfg)
             }
-            btn.layer.cornerRadius = r
+            btn.byCornerRadius(r)
             if #available(iOS 13.0, *) {
-                btn.layer.cornerCurve = .continuous
+                btn.layer.byCornerCurve(.continuous)
             }
             // maskedCorners 默认不传（等同 nil），因此这里不改 maskedCorners
-            btn.clipsToBounds = (r > 0)
+            btn.byClipsToBounds((r > 0))
             return self
         }
         // === 非按钮 ===
@@ -70,8 +70,9 @@ extension UIView {
     @MainActor
     @discardableResult
     func byVisible(_ visible: Bool) -> Self {
-        self.byHidden(!visible)
-        self.byAlpha(visible ? 1 : 0)
+        self
+            .byHidden(!visible)
+            .byAlpha(visible ? 1 : 0)
         return self
     }
 }

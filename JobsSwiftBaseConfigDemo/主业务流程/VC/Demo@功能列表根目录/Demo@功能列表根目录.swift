@@ -130,7 +130,7 @@ final class RootListVC: BaseVC {
             ("📖 Texture", ComponentKitLikeKitchenSinkVC.self),
             ("📅 日历", LunarDemoVC.self),
             ("📊 Excel", XLSXDemoVC.self),
-//            ("🗃️ ObjectBox", ObjectBoxDemoVC.self),
+            ("🗃️ ObjectBox", ObjectBoxDemoVC.self),
             ("🪵 PDF", PDFDemoVC.self),
             ("😝 PromiseKit", PromiseKitDemoVC.self),
             ("🧒 Lottie动画", LottieDemoVC.self),
@@ -376,8 +376,9 @@ final class RootListVC: BaseVC {
                 guard let self else { return }
                 // 短按：播放声音并在列表顶部、尾部之间切换；长按结束后可能冒出来的 tap 直接吞掉
                 guard !self.suspendFuseLongPressConsumed else { return }
-                sender.byFusePlaySound()
-                sender.byToggleSelected()
+                sender
+                    .byFusePlaySound()
+                    .byToggleSelected()
                 let tableView = self.tableView
                 let topOffsetY = -tableView.adjustedContentInset.top
                 let bottomOffsetY = max(
@@ -437,7 +438,7 @@ final class RootListVC: BaseVC {
     }()
     // ================================== TableView（一级目录） ==================================
     private lazy var demoNavigationTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .tr_setText("演武堂".tr)
             .byTextColor(RootListPreferences.primaryTextColor)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .medium))
@@ -446,7 +447,7 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var demoNavigationProjectLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(Self.demoProjectFolderName)
             .byTextColor(RootListPreferences.secondaryTextColor)
             .byFont(JobsFont.systemFont(ofSize: 10, weight: .regular))
@@ -458,7 +459,7 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var demoNavigationTitleView: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.center)
             .byDistribution(.fill)
@@ -553,13 +554,13 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var demoSearchBar: UISearchBar = {
-        UISearchBar()
+        UISearchBar.jobsMake { _ in }
             .byPlaceholder("输入关键词搜索 Demo".tr)
             .byDelegate(self)
             .byShowsCancelButton(false)
             .bySearchBarStyle(.minimal)
             .byTranslucent(true)
-            .byBackgroundImage(UIImage.make())
+            .byBackgroundImage(UIImage.make { _ in })
             .byBarTintColor(RootListPreferences.pageBackgroundColor)
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] make in
@@ -825,8 +826,9 @@ extension RootListVC{
                 functionMenuTableView.reloadData()
             }
         }
-        demoSearchBar.byBarTintColor(RootListPreferences.pageBackgroundColor)
-        demoSearchBar.byBackgroundColor(JobsCor.clear)
+        demoSearchBar
+            .byBarTintColor(RootListPreferences.pageBackgroundColor)
+            .byBackgroundColor(JobsCor.clear)
         demoSearchCancelButton
             .byTitleColor(JobsCor.white, for: .normal)
             .byTitleColor(JobsCor.white.withAlphaComponent(0.78), for: .highlighted)
@@ -861,7 +863,7 @@ extension RootListVC{
         gk_navShadowColor = JobsCor.clear
         gk_navLineHidden = true
         gk_navigationBar.byShadowOpacity(0)
-        tableView.separatorColor = RootListPreferences.separatorColor
+        tableView.bySeparatorColor(RootListPreferences.separatorColor)
         functionMenuButton.byTintColor(RootListPreferences.primaryTextColor)
         loadedFunctionMenuTableView?
             .bySeparatorColor(RootListPreferences.separatorColor)
@@ -901,8 +903,9 @@ extension RootListVC{
                     if btn.title(for: .normal) != "当前时间" {
                         btn.byTitle("当前时间".tr, for: .normal)
                     }
-                    btn.bySubTitle(nowClock(), for: .normal)
-                    btn.bySetNeedsUpdateConfiguration()
+                    btn
+                        .bySubTitle(nowClock(), for: .normal)
+                        .bySetNeedsUpdateConfiguration()
                 }
             }
             suspendBtnTimer?.start()
@@ -1175,9 +1178,9 @@ extension RootListVC{
     }
 
     private func demoSearchHistoryHeaderView() -> UIView {
-        let headerView = UIView()
+        let headerView = UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("搜索历史".tr)
             .byTextColor(RootListPreferences.primaryTextColor)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
@@ -1410,83 +1413,86 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         if tableView === loadedFunctionMenuTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
             let action = FunctionMenuAction.allCases[indexPath.row]
-            cell.textLabel?.byText(menuTitle(for: action))
-            cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            cell.textLabel?.byTextColor(RootListPreferences.primaryTextColor)
-            cell
+            return cell
+                .byText(menuTitle(for: action))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleCor(RootListPreferences.primaryTextColor)
                 .bySelectionStyle(.default)
                 .bySelectedBackgroundView(
-                    UIView().byBackgroundColor(JobsCor.tertiarySystemBackground)
+                    UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)
                 )
                 .byTintColor(RootListPreferences.selectedTintColor)
                 .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-            cell.contentView.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-            cell.accessoryType = .none
-            return cell
+                .byContentView { $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor) }
+                .byAccessoryType(.none)
         }
         if demoSearchLandingActive {
-            let cell: UITableViewCell = tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             let historyText = demoSearchHistory.indices.contains(indexPath.row) ? demoSearchHistory[indexPath.row] : ""
-            let deleteButton = UIButton.sys()
-                .byImage("xmark.circle.fill".sysImg.withRenderingMode(.alwaysTemplate))
-                .byTintColor(RootListPreferences.secondaryTextColor)
-                .byFrame(CGRect(x: 0, y: 0, width: 38, height: 38))
-                .byImageEdgeInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-                .onTap { [weak self] _ in
-                    self?.deleteDemoSearchHistory(at: indexPath.row)
+            return tableView
+                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                .byContentView { $0.byBackgroundColor(RootListPreferences.cardBackgroundColor) }
+                .byImageView {
+                    $0.byTintColor(RootListPreferences.secondaryTextColor)
+                        .byContentMode(.scaleAspectFit)
                 }
-            cell.contentView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-            cell.imageView?
-                .byTintColor(RootListPreferences.secondaryTextColor)
-                .byContentMode(.scaleAspectFit)
-            return cell
                 .byText(historyText)
                 .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
                 .byTitleCor(RootListPreferences.primaryTextColor)
                 .byImage("clock".sysImg.withRenderingMode(.alwaysTemplate))
                 .byAccessoryType(.none)
-                .byAccessoryView(deleteButton)
+                .byAccessoryView(
+                    UIButton.sys()
+                        .byImage("xmark.circle.fill".sysImg.withRenderingMode(.alwaysTemplate))
+                        .byTintColor(RootListPreferences.secondaryTextColor)
+                        .byFrame(CGRect(x: 0, y: 0, width: 38, height: 38))
+                        .byImageEdgeInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+                        .onTap { [weak self] _ in
+                            self?.deleteDemoSearchHistory(at: indexPath.row)
+                        }
+                )
                 .bySelectionStyle(.default)
                 .byBackgroundColor(RootListPreferences.cardBackgroundColor)
                 .byTintColor(RootListPreferences.secondaryTextColor)
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
-            let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
-            cell.configurePinned(groupTitle: "置顶".tr,
+            return tableView
+                .byDequeueReusableCell(withType: RootFoldTableCell.self, for: indexPath)
+                .configurePinned(groupTitle: "置顶".tr,
                                  items: pinnedDemoItems) { [weak self] itemIndex in
-                guard let self,
-                      self.pinnedDemoItems.indices.contains(itemIndex) else { return }
-                let item = self.pinnedDemoItems[itemIndex]
-                item.vcType.init()
-                    .byTitle(item.title)
-                    .byPush(self)
-            } unpinItem: { [weak self] itemIndex in
-                self?.unpinPinnedDemo(at: itemIndex)
-            };return cell
+                    guard let self,
+                          self.pinnedDemoItems.indices.contains(itemIndex) else { return }
+                    let item = self.pinnedDemoItems[itemIndex]
+                    item.vcType.init()
+                        .byTitle(item.title)
+                        .byPush(self)
+                } unpinItem: { [weak self] itemIndex in
+                    self?.unpinPinnedDemo(at: itemIndex)
+                }
         }
         guard indexPath.section == demoGroupTableSection,
-              demo2D.indices.contains(indexPath.row) else { return UITableViewCell() }
-        let cell: RootFoldTableCell = tableView.byDequeueReusableCell(withType: RootFoldTableCell.self,for: indexPath)
+              demo2D.indices.contains(indexPath.row) else { return UITableViewCell.jobsMake { _ in } }
         let row = indexPath.row
         let g = demo2D[row]
         let expanded = expandedGroups.contains(row)
-        cell.configure(groupTitle: g.title,
+        return tableView
+            .byDequeueReusableCell(withType: RootFoldTableCell.self, for: indexPath)
+            .configure(groupTitle: g.title,
                        items: g.items,
                        expanded: expanded) { [weak self] itemIndex in
-            guard let self else { return }
-            if self.demoSearchActive {
-                self.saveDemoSearchHistory(self.demoSearchKeyword)
+                guard let self else { return }
+                if self.demoSearchActive {
+                    self.saveDemoSearchHistory(self.demoSearchKeyword)
+                }
+                let item = g.items[itemIndex]
+                /// 这里推入控制器
+                item.vcType.init()
+                    .byTitle(item.title)
+                    .byPush(self)
+            } pinItem: { [weak self] itemIndex in
+                guard let self,
+                      g.items.indices.contains(itemIndex) else { return }
+                self.pinDemoItem(g.items[itemIndex])
             }
-            let item = g.items[itemIndex]
-            /// 这里推入控制器
-            item.vcType.init()
-                .byTitle(item.title)
-                .byPush(self)
-        } pinItem: { [weak self] itemIndex in
-            guard let self,
-                  g.items.indices.contains(itemIndex) else { return }
-            self.pinDemoItem(g.items[itemIndex])
-        };return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView === loadedFunctionMenuTableView { return 44 }

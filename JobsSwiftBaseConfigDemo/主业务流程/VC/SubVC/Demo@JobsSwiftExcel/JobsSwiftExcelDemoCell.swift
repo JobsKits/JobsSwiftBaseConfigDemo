@@ -16,7 +16,7 @@ import SnapKit
 
 final class JobsSwiftExcelDemoCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)

@@ -40,7 +40,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     private var orientationMask: UIInterfaceOrientationMask = .all
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -50,7 +50,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -78,7 +78,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("请选择上方功能".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)

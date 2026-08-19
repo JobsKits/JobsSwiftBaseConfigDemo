@@ -27,7 +27,7 @@ final class YTKNetworkDemoVC: BaseVC {
     private var currentChainRequest: YTKChainRequest?
     /// 输出日志
     private lazy var logTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(NO)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -216,7 +216,7 @@ extension YTKNetworkDemoVC: YTKChainRequestDelegate {
             return
         }
         do {
-            let person = try JSONDecoder().decode(Person.self, from: data)
+            let person = try JSONDecoder.make { _ in }.decode(Person.self, from: data)
             let h = person.headers
             appendLog("✅ JSON 解析成功")
             appendLog("Accept = \(h.accept)")

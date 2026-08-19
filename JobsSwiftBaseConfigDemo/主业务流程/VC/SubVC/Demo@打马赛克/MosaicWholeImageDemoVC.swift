@@ -18,11 +18,27 @@ import JobsImageTools
 import SnapKit
 import GKNavigationBarSwift
 
-final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
+final class MosaicWholeImageDemoVC: MosaicBaseDemoVC, UIGestureRecognizerDelegate {
     override var pageTitle: String { "整图粗细马赛克" }
     override var preferredLoader: JobsImageLoaderPreference { .sdwebimage }
 
     private var renderVersion = 0
+
+    private lazy var thicknessButton: UIButton = {
+        UIButton.sys()
+            .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
+            .byImage("slider.vertical.3".sysImg, for: .normal)
+            .byImage("slider.vertical.3".sysImg, for: .selected)
+            .onTap { [weak self] sender in
+                guard let self else { return }
+                sender.byToggleSelected()
+                let isSelected = sender.isSelected
+                self.toggleThicknessControl(isSelected)
+                if isSelected {
+                    self.applyMosaic(blockSize: self.thicknessControl.value)
+                }
+            }
+    }()
 
     private lazy var thicknessControl: MosaicThicknessControl = {
         MosaicThicknessControl()
@@ -39,22 +55,34 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
             }
     }()
 
+    private lazy var dismissThicknessControlTapGesture: UITapGestureRecognizer = {
+        UITapGestureRecognizer
+            .byConfig { [weak self] (gesture: UITapGestureRecognizer) in
+                guard let self, self.thicknessButton.isSelected else { return }
+                let location = gesture.location(in: self.thicknessControl)
+                guard self.thicknessControl.bounds.contains(location) == false else { return }
+                self.thicknessButton.bySelected(false)
+                self.toggleThicknessControl(false)
+            }
+            .byCancelsTouchesInView(false)
+            .byDelegate(self)
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.jobs_addGestureRetView(dismissThicknessControlTapGesture)
+    }
+
     override func makeRightButtons() -> [UIButton] {
-        [
-            UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-                .byImage("slider.vertical.3".sysImg, for: .normal)
-                .byImage("slider.vertical.3".sysImg, for: .selected)
-                .onTap { [weak self] sender in
-                    guard let self else { return }
-                    sender.byToggleSelected()
-                    let isSelected = sender.isSelected
-                    self.toggleThicknessControl(isSelected)
-                    if isSelected {
-                        self.applyMosaic(blockSize: self.thicknessControl.value)
-                    }
-                }
-        ]
+        [thicknessButton]
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        gestureRecognizer === dismissThicknessControlTapGesture ||
+            otherGestureRecognizer === dismissThicknessControlTapGesture
     }
 
     private func toggleThicknessControl(_ visible: Bool) {
@@ -67,9 +95,10 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC {
                 self?.thicknessControl.byAlpha(visible ? 1 : 0)
             },
             completion: { [weak self] _ in
-                if visible == false {
-                    self?.thicknessControl.byHidden(true)
-                }
+                guard let self,
+                      visible == false,
+                      self.thicknessButton.isSelected == false else { return }
+                self.thicknessControl.byHidden(true)
             }
         )
     }

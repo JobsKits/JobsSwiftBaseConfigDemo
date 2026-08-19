@@ -29,7 +29,7 @@ public final class JobsAppDoorInputView: UIView {
     private var captchaView: JobsSwiftGraphicCaptchaView?
 
     private lazy var iconView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFit)
             .byTintColor(JobsAppDoorPalette.gold)
             .byAddTo(self) { make in
@@ -47,7 +47,7 @@ public final class JobsAppDoorInputView: UIView {
         self.field = field
         self.captchaConfig = captchaConfig
         self.verificationCodeDuration = max(1, verificationCodeDuration)
-        self.textField = UITextField()
+        self.textField = UITextField.jobsMake { _ in }
         super.init(frame: .zero)
         setupView()
     }

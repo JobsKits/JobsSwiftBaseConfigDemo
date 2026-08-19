@@ -99,22 +99,23 @@ extension JobsIconfontDemoListVC: UITableViewDataSource, UITableViewDelegate {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
-        let cell = tableView
+        return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
             .byAccessoryType(.disclosureIndicator)
-        var config = cell.defaultContentConfiguration()
-        config.image = JobsIconfont.shared.iconImage(
-            row.glyph,
-            size: CGSize(width: 34, height: 34),
-            color: JobsCor.systemBlue
-        )
-        config.text = row.title
-        config.secondaryText = row.subtitle
-        config.textProperties.font = JobsFont.systemFont(ofSize: 16, weight: .semibold)
-        config.secondaryTextProperties.font = JobsFont.systemFont(ofSize: 12, weight: .regular)
-        config.secondaryTextProperties.numberOfLines = 0
-        cell.contentConfiguration = config
-        return cell
+            .byListConfig {
+                $0.byImage(
+                    JobsIconfont.shared.iconImage(
+                        row.glyph,
+                        size: CGSize(width: 34, height: 34),
+                        color: JobsCor.systemBlue
+                    )
+                )
+                .byText(row.title)
+                .bySecondaryText(row.subtitle)
+                .byTextFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+                .bySecondaryFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                .bySecondaryLines(0)
+            }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

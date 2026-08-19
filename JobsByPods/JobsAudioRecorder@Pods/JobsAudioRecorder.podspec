@@ -12,5 +12,6 @@ Pod::Spec.new do |s|
   s.frameworks = 'AVFoundation', 'UIKit'
   s.dependency 'JobsFuseAnimation'
   s.dependency 'JobsSwiftBaseDefines'
+  s.dependency 'JobsSwiftDSL'
   s.dependency 'JobsSwiftTimer'
 end

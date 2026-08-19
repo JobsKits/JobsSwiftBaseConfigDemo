@@ -24,7 +24,7 @@ import GKNavigationBarSwift
 final class UIButtonDemoVC: BaseVC {
     // 滚动容器
     private lazy var scroll: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
             .byContentInsetAdjustmentBehavior(.automatic)   // iOS 11+
@@ -32,7 +32,7 @@ final class UIButtonDemoVC: BaseVC {
     }()
     // 用垂直栈统一承载所有演示按钮，便于扩展/复制
     private lazy var stack: UIStackView = {
-        return UIStackView()
+        return UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .bySpacing(12)
@@ -231,7 +231,13 @@ extension UIButtonDemoVC {
                 _ = btnUpdate
                     .byAutomaticallyUpdatesConfiguration(true)
                     .byConfigurationUpdateHandler { btn in
-                        btn.byAlpha(btn.jobs_effectiveState == .highlighted ? 0.6 : 1.0)
+                        btn
+                            .byConfiguration(
+                                (btn.configuration ?? .filled())
+                                    .byBaseForegroundColor(JobsCor.white)
+                                    .byBaseBackgroundColor(JobsCor.systemBlue)
+                            )
+                            .byAlpha(btn.jobs_effectiveState == .highlighted ? 0.6 : 1.0)
                     }
             }
             addDemoButton(btnUpdate)

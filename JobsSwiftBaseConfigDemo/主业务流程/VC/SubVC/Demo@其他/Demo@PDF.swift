@@ -78,7 +78,7 @@ final class PDFDemoVC: BaseVC {
     }()
 
     private lazy var pdfView: PDFView = {
-        PDFView()
+        PDFView.jobsMake { _ in }
             .byAutoScales(NO) // 交给我们手动控制
             .byDisplayMode(.singlePageContinuous)
             .byDisplayDirection(.vertical)
@@ -91,7 +91,7 @@ final class PDFDemoVC: BaseVC {
     }()
 
     private lazy var thumbnailView: PDFThumbnailView = { [unowned self] in
-        PDFThumbnailView()
+        PDFThumbnailView.jobsMake { _ in }
             .byLayoutMode(.horizontal)
             .byThumbnailSize(CGSize(width: 60, height: 80))
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
@@ -144,7 +144,7 @@ final class PDFDemoVC: BaseVC {
         }
         loadedURL = url
         document = doc
-        pdfView.document = doc
+        pdfView.byDocument(doc)
         if let first = doc.page(at: 0) { pdfView.go(to: first) }
     }
 }

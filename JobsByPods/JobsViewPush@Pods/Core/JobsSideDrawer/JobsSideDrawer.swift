@@ -97,8 +97,8 @@ public final class JobsSideDrawerVC: UIViewController {
             preconditionFailure("JobsSideDrawerVC 缺少主内容")
         };return mainVC.view
     }()
-    private let drawerContainerView = UIView()
-    private let contentContainerView = UIView()
+    private let drawerContainerView = UIView.jobsMake { _ in }
+    private let contentContainerView = UIView.jobsMake { _ in }
     private lazy var openGesture: UIScreenEdgePanGestureRecognizer = {
         UIScreenEdgePanGestureRecognizer
             .byConfig { [weak self] (gesture: UIScreenEdgePanGestureRecognizer) in
@@ -122,7 +122,7 @@ public final class JobsSideDrawerVC: UIViewController {
     private var transitionGeneration = 0
     private var didInstallContentViews = false
     private lazy var dimControl: UIControl = {
-        let control = UIControl()
+        let control = UIControl.jobsMake { _ in }
             .byBackgroundColor(configuration.dimColor)
             .byAlpha(0)
             .byHidden(true)

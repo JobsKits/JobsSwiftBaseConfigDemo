@@ -19,7 +19,7 @@ import SnapKit
 
 final class LeftMenuCell: UITableViewCell {
     private lazy var indicator: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemOrange)
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview()
@@ -41,7 +41,7 @@ final class LeftMenuCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("--")
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

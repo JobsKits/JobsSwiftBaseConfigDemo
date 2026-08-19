@@ -114,7 +114,7 @@ enum RootListPreferences {
     static func makeAppRootViewController() -> UIViewController {
         let demoListEntry = makeDemoListEntryViewController()
         guard usesTabBarEntry else { return demoListEntry }
-        let tabBarController = UITabBarController()
+        let tabBarController = UITabBarController.jobsMake { _ in }
         demoListEntry.tabBarItem = UITabBarItem(
             title: "Demo".tr,
             image: "list.bullet".sysImg,
@@ -132,7 +132,7 @@ enum RootListPreferences {
             image: "person".sysImg,
             selectedImage: "person.fill".sysImg
         )
-        tabBarController.viewControllers = [demoListEntry, messageViewController, profileViewController]
+        tabBarController.byViewControllers([demoListEntry, messageViewController, profileViewController])
         return tabBarController
     }
 
@@ -262,8 +262,9 @@ enum RootListPreferences {
         applyThemeColors(to: viewController, backgroundColor: backgroundColor)
         viewController.gk_navShadowColor = separatorColor
         viewController.gk_navLineHidden = false
-        viewController.gk_navigationBar.byTintColor(primaryTextColor)
-        viewController.gk_navigationBar.byBackgroundColor(navigationBackgroundColor)
+        viewController.gk_navigationBar
+            .byTintColor(primaryTextColor)
+            .byBackgroundColor(navigationBackgroundColor)
         applyTintColor(primaryTextColor, to: viewController.gk_navigationItem.leftBarButtonItem)
         applyTintColor(primaryTextColor, to: viewController.gk_navigationItem.rightBarButtonItem)
         applyTintColor(primaryTextColor, to: viewController.gk_navigationItem.leftBarButtonItems)
@@ -283,7 +284,7 @@ enum RootListPreferences {
     #if os(iOS)
     @available(iOS 13.0, *)
     private static func makeTabBarAppearance() -> UITabBarAppearance {
-        let appearance = UITabBarAppearance()
+        let appearance = UITabBarAppearance.jobsMake { _ in }
         appearance.configureWithOpaqueBackground()
         appearance.byBackgroundColor(navigationBackgroundColor)
         appearance.shadowColor = separatorColor
@@ -474,8 +475,9 @@ private extension RootListSettingsVC {
             to: self,
             backgroundColor: RootListPreferences.settingsPageBackgroundColor
         )
-        tableView.byBackgroundColor(JobsCor.clear)
-        tableView.separatorColor = RootListPreferences.separatorColor
+        tableView
+            .byBackgroundColor(JobsCor.clear)
+            .bySeparatorColor(RootListPreferences.separatorColor)
         tableView.reloadData()
     }
 
@@ -643,58 +645,67 @@ extension RootListSettingsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
         guard let settingSection = SettingSection(rawValue: indexPath.section) else { return cell }
-        cell.textLabel?.byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
-        cell.textLabel?.byTextColor(RootListPreferences.primaryTextColor)
-        cell.textLabel?
-            .byNumberOfLines(1)
-            .byAdjustsFontSizeToFitWidth(settingSection != .general && indexPath.row == 0)
-            .byMinimumScaleFactor(settingSection != .general && indexPath.row == 0 ? 0.72 : 1)
-        cell.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-        cell.contentView.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-        cell.byTintColor(RootListPreferences.selectedTintColor)
-        cell.selectionStyle = .default
-        cell.accessoryView = nil
-        cell.accessoryType = .none
-        cell.indentationLevel = 0
-        cell.indentationWidth = 20
+        cell
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byTitleCor(RootListPreferences.primaryTextColor)
+            .byTextLabel {
+                $0.byNumberOfLines(1)
+                    .byAdjustsFontSizeToFitWidth(settingSection != .general && indexPath.row == 0)
+                    .byMinimumScaleFactor(settingSection != .general && indexPath.row == 0 ? 0.72 : 1)
+            }
+            .byBackgroundColor(RootListPreferences.cardBackgroundColor)
+            .byContentView { $0.byBackgroundColor(RootListPreferences.cardBackgroundColor) }
+            .byTintColor(RootListPreferences.selectedTintColor)
+            .bySelectionStyle(.default)
+            .byAccessoryView(nil)
+            .byAccessoryType(.none)
+            .byIndentationLevel(0)
+            .byIndentationWidth(20)
         switch settingSection {
         /// 处理 .general 分支
         case .general:
             let item = GeneralSettingItem.allCases[indexPath.row]
-            cell.textLabel?.byText(generalTitle(for: item))
-            cell.accessoryType = .disclosureIndicator
+            cell
+                .byText(generalTitle(for: item))
+                .byAccessoryType(.disclosureIndicator)
         /// 处理 .splashContent 分支
         case .splashContent:
             if indexPath.row == 0 {
-                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
-                cell.accessoryView = expansionAccessoryView(for: settingSection)
+                cell
+                    .byText(expandableSectionTitle(for: settingSection))
+                    .byAccessoryView(expansionAccessoryView(for: settingSection))
             } else {
                 let contentType = JobsSplashContentType.allCases[indexPath.row - 1]
-                cell.textLabel?.byText(splashContentTitle(for: contentType))
-                cell.accessoryType = contentType == JobsSplashPreferences.contentTypeForNextLaunch ? .checkmark : .none
-                cell.indentationLevel = 1
+                cell
+                    .byText(splashContentTitle(for: contentType))
+                    .byAccessoryType(contentType == JobsSplashPreferences.contentTypeForNextLaunch ? .checkmark : .none)
+                    .byIndentationLevel(1)
             }
         /// 处理 .language 分支
         case .language:
             if indexPath.row == 0 {
-                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
-                cell.accessoryView = expansionAccessoryView(for: settingSection)
+                cell
+                    .byText(expandableSectionTitle(for: settingSection))
+                    .byAccessoryView(expansionAccessoryView(for: settingSection))
             } else {
                 let item = LanguageSettingItem.allCases[indexPath.row - 1]
-                cell.textLabel?.byText(item.title)
-                cell.accessoryType = item.languageCode == currentLanguageCode() ? .checkmark : .none
-                cell.indentationLevel = 1
+                cell
+                    .byText(item.title)
+                    .byAccessoryType(item.languageCode == currentLanguageCode() ? .checkmark : .none)
+                    .byIndentationLevel(1)
             }
         /// 处理 .cellTextDisplayStrategy 分支
         case .cellTextDisplayStrategy:
             if indexPath.row == 0 {
-                cell.textLabel?.byText(expandableSectionTitle(for: settingSection))
-                cell.accessoryView = expansionAccessoryView(for: settingSection)
+                cell
+                    .byText(expandableSectionTitle(for: settingSection))
+                    .byAccessoryView(expansionAccessoryView(for: settingSection))
             } else {
                 let strategy = RootListCellTextDisplayStrategy.allCases[indexPath.row - 1]
-                cell.textLabel?.byText(strategy.title)
-                cell.accessoryType = strategy == RootListPreferences.cellTextDisplayStrategy ? .checkmark : .none
-                cell.indentationLevel = 1
+                cell
+                    .byText(strategy.title)
+                    .byAccessoryType(strategy == RootListPreferences.cellTextDisplayStrategy ? .checkmark : .none)
+                    .byIndentationLevel(1)
             }
         };return cell
     }

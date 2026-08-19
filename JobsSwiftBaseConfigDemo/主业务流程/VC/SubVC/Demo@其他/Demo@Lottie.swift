@@ -26,7 +26,7 @@ final class LottieDemoVC: BaseVC {
     private let alternateAnimationName = "LottieLogo1"         // 用于替换演示
     // MARK: - UI（lazy：只配置，不 add/约束）
     private lazy var containerView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
@@ -89,7 +89,7 @@ final class LottieDemoVC: BaseVC {
 
     private lazy var loopSegment: UISegmentedControl = {
         let seg = UISegmentedControl(items: ["once", "loop", "auto"])
-        seg.selectedSegmentIndex = 1
+        seg.bySelectedSegmentIndex(1)
         seg.onJobsChange { [weak self] (sender: UISegmentedControl) in
             guard let self else { return }
             let mode = self.resolvedLoopMode()
@@ -102,7 +102,7 @@ final class LottieDemoVC: BaseVC {
     }()
 
     private lazy var progressSlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0)
@@ -112,7 +112,7 @@ final class LottieDemoVC: BaseVC {
     }()
 
     private lazy var speedSlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0.25)
             .byMaximumValue(3.0)
             .byValue(1.0)
@@ -125,7 +125,7 @@ final class LottieDemoVC: BaseVC {
     }()
 
     private lazy var speedLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("1.00×")
             .byTextAlignment(.right)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
@@ -133,7 +133,7 @@ final class LottieDemoVC: BaseVC {
     private var rowTitleLabels: [UILabel] = []
     // 行：按钮
     private lazy var buttonsRow: UIStackView = {
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)
@@ -154,7 +154,7 @@ final class LottieDemoVC: BaseVC {
     }()
     // 垂直面板：
     private lazy var controlsPanel: UIStackView = { [unowned self] in
-        UIStackView()
+        UIStackView.jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -190,9 +190,9 @@ final class LottieDemoVC: BaseVC {
     }
     // MARK: - Helpers（行工厂，用 UIStackView DSL）
     private func makeRow(title: String, control: UIView) -> UIStackView {
-        let label = UILabel().byText(title)
+        let label = UILabel.jobsMake { _ in }.byText(title)
         rowTitleLabels.append(label)
-        return UIStackView()
+        return UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.center)
             .byDistribution(.fill)
@@ -201,9 +201,9 @@ final class LottieDemoVC: BaseVC {
     }
 
     private func makeRow2(title: String, left: UIView, right: UIView) -> UIStackView {
-        let label = UILabel().byText(title)
+        let label = UILabel.jobsMake { _ in }.byText(title)
         rowTitleLabels.append(label)
-        return UIStackView()
+        return UIStackView.jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.center)
             .byDistribution(.fill)

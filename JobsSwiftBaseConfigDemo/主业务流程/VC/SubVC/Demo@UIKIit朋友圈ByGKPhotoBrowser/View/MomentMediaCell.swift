@@ -20,7 +20,7 @@ import SnapKit
 
 final class MomentMediaCell: UICollectionViewCell {
     public lazy var imageViewRef: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemFill)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
@@ -32,7 +32,7 @@ final class MomentMediaCell: UICollectionViewCell {
     }()
 
     private lazy var playBadge: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFit)
             .byTintColor(JobsCor.white)
             .byImage("play.circle.fill".sysImg)

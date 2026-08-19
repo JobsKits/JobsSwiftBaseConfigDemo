@@ -21,8 +21,9 @@ final class HalfSheetPresentationController: UIPresentationController {
     private let height: CGFloat
     private lazy var dimmingView: UIView = {
         let v = UIView(frame: containerView?.bounds ?? .zero)
-        v.byBackgroundColor(JobsCor.black.withAlphaComponent(0.38))
-        v.byAlpha(1)
+        v
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.38))
+            .byAlpha(1)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTapDim)))
         return v
     }()
@@ -42,8 +43,9 @@ final class HalfSheetPresentationController: UIPresentationController {
 
     override func presentationTransitionWillBegin() {
         guard let container = containerView else { return }
-        dimmingView.byFrame(container.bounds)
-        dimmingView.byAddTo(container)
+        dimmingView
+            .byFrame(container.bounds)
+            .byAddTo(container)
         // 跟随系统转场动画
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
             self.dimmingView.byAlpha(1)

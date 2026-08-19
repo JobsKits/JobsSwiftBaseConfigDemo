@@ -52,7 +52,7 @@ public final class FTDashboardView: UIView {
     private var progressChangedAction: ((CGFloat) -> Void)?
 
     private lazy var valueLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byTextColor(valueTextColor)
             .byFont(valueFont)
@@ -64,7 +64,7 @@ public final class FTDashboardView: UIView {
     }()
 
     private lazy var trackLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(trackColor)
             .byLineCap(.round)
@@ -72,7 +72,7 @@ public final class FTDashboardView: UIView {
     }()
 
     private lazy var progressLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(progressColor)
             .byLineCap(.round)
@@ -81,7 +81,7 @@ public final class FTDashboardView: UIView {
     }()
 
     private lazy var tickLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(tickColor)
             .byLineCap(.round)
@@ -89,11 +89,11 @@ public final class FTDashboardView: UIView {
     }()
     /// 关键：容器层（锁死中心），只旋转它
     private lazy var needleContainerLayer: CALayer = {
-        CALayer().byAddTo(self.layer)
+        CALayer.jobsMake { _ in }.byAddTo(self.layer)
     }()
 
     private lazy var needleLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(needleColor)
             .byLineCap(.round)
@@ -101,7 +101,7 @@ public final class FTDashboardView: UIView {
     }()
 
     private lazy var centerDotLayer: CAShapeLayer = {
-        CAShapeLayer()
+        CAShapeLayer.jobsMake { _ in }
             .byFillColor(centerDotColor)
             .byAddTo(self.layer)
     }()
@@ -125,15 +125,16 @@ public final class FTDashboardView: UIView {
         // strokeEnd
         if animated {
             let anim = CABasicAnimation(keyPath: "strokeEnd")
-            anim.fromValue = progressLayer.presentation()?.strokeEnd ?? progressLayer.strokeEnd
-            anim.toValue = clamped
+            anim
+                .byFromValue(progressLayer.presentation()?.strokeEnd ?? progressLayer.strokeEnd)
+                .byToValue(clamped)
             anim.duration = duration
             anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            progressLayer.strokeEnd = clamped
+            progressLayer.byStrokeEnd(clamped)
             progressLayer.add(anim, forKey: "ft.strokeEnd")
         } else {
             progressLayer.removeAnimation(forKey: "ft.strokeEnd")
-            progressLayer.strokeEnd = clamped
+            progressLayer.byStrokeEnd(clamped)
         }
         // needle (关键：只旋转 needleContainerLayer，避免乱飞)
         let angle = needleAngle(for: clamped)
@@ -141,14 +142,15 @@ public final class FTDashboardView: UIView {
         needleContainerLayer.removeAnimation(forKey: "ft.needle")
         if animated {
             let anim = CABasicAnimation(keyPath: "transform")
-            anim.fromValue = needleContainerLayer.presentation()?.transform ?? needleContainerLayer.transform
-            anim.toValue = toTransform
+            anim
+                .byFromValue(needleContainerLayer.presentation()?.transform ?? needleContainerLayer.transform)
+                .byToValue(toTransform)
             anim.duration = duration
             anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            needleContainerLayer.transform = toTransform
+            needleContainerLayer.byTransform(toTransform)
             needleContainerLayer.add(anim, forKey: "ft.needle")
         } else {
-            needleContainerLayer.transform = toTransform
+            needleContainerLayer.byTransform(toTransform)
         }
     }
 
@@ -176,25 +178,30 @@ public final class FTDashboardView: UIView {
         // 禁用隐式动画，避免 layout 时抖动
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        trackLayer.byFrame(b)
-        trackLayer.lineWidth = lineWidth
-        trackLayer.path = arcPath
-        progressLayer.byFrame(b)
-        progressLayer.lineWidth = lineWidth
-        progressLayer.path = arcPath
-        progressLayer.strokeEnd = progress
-        tickLayer.byFrame(b)
-        tickLayer.lineWidth = tickWidth
-        tickLayer.path = makeTicksPath(center: center, radius: radius).cgPath
+        trackLayer
+            .byFrame(b)
+            .byLineWidth(lineWidth)
+            .byPath(arcPath)
+        progressLayer
+            .byFrame(b)
+            .byLineWidth(lineWidth)
+            .byPath(arcPath)
+            .byStrokeEnd(progress)
+        tickLayer
+            .byFrame(b)
+            .byLineWidth(tickWidth)
+            .byPath(makeTicksPath(center: center, radius: radius).cgPath)
         // ===== needle container 固定几何（关键：锁死旋转中心）=====
-        needleContainerLayer.bounds = b
-        needleContainerLayer.position = CGPoint(x: b.midX, y: b.midY)
-        needleContainerLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        needleContainerLayer
+            .byBounds(b)
+            .byPosition(CGPoint(x: b.midX, y: b.midY))
+            .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
         // needleLayer 只负责画“水平基准指针”，容器负责旋转
-        needleLayer.byFrame(b)
-        needleLayer.lineWidth = needleWidth
-        needleLayer.path = makeNeedleBasePath(center: center, radius: radius).cgPath
-        needleContainerLayer.transform = CATransform3DMakeRotation(needleAngle(for: progress), 0, 0, 1)
+        needleLayer
+            .byFrame(b)
+            .byLineWidth(needleWidth)
+            .byPath(makeNeedleBasePath(center: center, radius: radius).cgPath)
+        needleContainerLayer.byTransform(CATransform3DMakeRotation(needleAngle(for: progress), 0, 0, 1))
         // center dot
         centerDotLayer.byFrame(b)
         let dotRect = CGRect(
@@ -203,7 +210,7 @@ public final class FTDashboardView: UIView {
             width: centerDotRadius * 2,
             height: centerDotRadius * 2
         )
-        centerDotLayer.path = UIBezierPath.make(ovalIn: dotRect).cgPath
+        centerDotLayer.byPath(UIBezierPath.make(ovalIn: dotRect).cgPath)
         CATransaction.commit()
     }
 

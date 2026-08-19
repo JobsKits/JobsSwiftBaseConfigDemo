@@ -26,7 +26,7 @@ import GKNavigationBarSwift
 
 final class CNIDDemoVC: BaseVC {
     private lazy var textField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("请输入身份证号码".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
@@ -77,7 +77,7 @@ final class CNIDDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byNumberOfLines(0)
@@ -107,8 +107,9 @@ final class CNIDDemoVC: BaseVC {
     }
     // MARK: - 更新显示结果
     private func updateResult(_ text: String, success: Bool) {
-        resultLabel.byText(text)
-        resultLabel.byTextColor(success ? JobsCor.systemGreen : JobsCor.systemRed)
+        resultLabel
+            .byText(text)
+            .byTextColor(success ? JobsCor.systemGreen : JobsCor.systemRed)
     }
     // MARK: - 打印示例
     private func printDemo() {

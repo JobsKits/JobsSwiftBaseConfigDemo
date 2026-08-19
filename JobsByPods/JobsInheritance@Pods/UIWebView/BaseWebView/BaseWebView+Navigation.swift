@@ -96,7 +96,7 @@ extension BaseWebView: WKNavigationDelegate {
             if desired != lastAppliedUASuffix {
                 lastAppliedUASuffix = desired
                 webView.configuration.applicationNameForUserAgent = desired
-                webView.customUserAgent = nil
+                webView.byCustomUserAgent(nil)
                 decisionHandler(.cancel)
                 webView.load(makeNoCache(action.request))
                 return

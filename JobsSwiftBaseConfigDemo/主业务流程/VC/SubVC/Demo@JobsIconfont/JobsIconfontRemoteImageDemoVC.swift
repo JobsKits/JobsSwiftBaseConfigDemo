@@ -28,7 +28,7 @@ final class JobsIconfontRemoteImageDemoVC: BaseVC {
     }()
 
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFit)
             .byCornerRadius(16)
@@ -36,7 +36,7 @@ final class JobsIconfontRemoteImageDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待加载".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)

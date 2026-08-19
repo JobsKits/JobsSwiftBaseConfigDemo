@@ -247,7 +247,7 @@ final class BRPickerDemoVC: BaseVC {
     }()
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
                 make.edges.equalTo(self.view.safeAreaLayoutGuide)
@@ -255,7 +255,7 @@ final class BRPickerDemoVC: BaseVC {
     }()
     /// ScrollView 内容承载视图（替代 UIStackView，所有 UI 直接添加到该视图上）
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [weak self] make in
                 guard let self else { return }
                 if view.jobs_hasVisibleTopBar() {
@@ -270,7 +270,7 @@ final class BRPickerDemoVC: BaseVC {
     }()
 
     private lazy var secText: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("文本选择器（BRTextPickerView）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -282,7 +282,7 @@ final class BRPickerDemoVC: BaseVC {
     }()
 
     private lazy var secSys: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("日期选择器（系统样式）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -294,7 +294,7 @@ final class BRPickerDemoVC: BaseVC {
     }()
 
     private lazy var secCustom: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("日期选择器（自定义样式）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)

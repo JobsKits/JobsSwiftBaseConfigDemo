@@ -81,6 +81,7 @@ digraph PodspecDependencies {
   "JobsAppDoor" -> "JobsSwiftGraphicCaptcha";
   "JobsAudioRecorder" -> "JobsFuseAnimation";
   "JobsAudioRecorder" -> "JobsSwiftBaseDefines";
+  "JobsAudioRecorder" -> "JobsSwiftDSL";
   "JobsAudioRecorder" -> "JobsSwiftTimer";
   "JobsBy3rdTools" -> "JobsByUIKit";
   "JobsBy3rdTools" -> "JobsInheritance";
@@ -127,6 +128,8 @@ digraph PodspecDependencies {
   "JobsGestureUnlock" -> "JobsSwiftBlock";
   "JobsGestureUnlock" -> "JobsSwiftDSL";
   "JobsIconfont" -> "JobsImageTools";
+  "JobsIconfont" -> "JobsSwiftDSL";
+  "JobsImageRotation" -> "JobsSwiftDSL";
   "JobsImageRotation" -> "JobsSwiftTimer";
   "JobsImageTools" -> "JobsSwiftBaseDefines";
   "JobsImageTools" -> "JobsSwiftBlock";
@@ -154,12 +157,14 @@ digraph PodspecDependencies {
   "JobsNavBar" -> "JobsSwiftBaseDefines";
   "JobsNavBar" -> "JobsSwiftBlock";
   "JobsNavBar" -> "JobsSwiftDSL";
+  "JobsNetworking" -> "JobsSwiftDSL";
   "JobsOCDSL" -> "Texture";
   "JobsProgressBar" -> "JobsByUIKit";
   "JobsProgressBar" -> "JobsSwiftBaseDefines";
   "JobsProgressBar" -> "JobsSwiftDSL";
   "JobsProgressBar" -> "JobsSwiftTimer";
   "JobsScale" -> "JobsGetWindow";
+  "JobsScreenCapture" -> "JobsSwiftDSL";
   "JobsSwiftAppTools" -> "JobsBy3rdTools";
   "JobsSwiftAppTools" -> "JobsByUIKit";
   "JobsSwiftAppTools" -> "JobsInheritance";

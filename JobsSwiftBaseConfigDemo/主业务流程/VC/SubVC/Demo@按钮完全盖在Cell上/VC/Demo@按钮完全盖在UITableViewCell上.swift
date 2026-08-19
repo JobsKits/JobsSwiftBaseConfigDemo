@@ -124,9 +124,9 @@ extension BtnFullOnTBVCellDemoVC: UITableViewDataSource, UITableViewDelegate {
     }
     // 行间距：用 footer 做 10pt 间隔（你原文件也是这样）:contentReference[oaicite:4]{index=4}
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { 10 }
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { UIView() }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { UIView.jobsMake { _ in } }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { .leastNormalMagnitude }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { UIView() }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { UIView.jobsMake { _ in } }
 }
 
 extension BtnFullOnTBVCellDemoVC {

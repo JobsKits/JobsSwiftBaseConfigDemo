@@ -401,7 +401,7 @@ extension AppDelegate {
             }
         }
         do {
-            let user = try JSONDecoder().decode(User.self, from: json)
+            let user = try JSONDecoder.make { _ in }.decode(User.self, from: json)
             print(user.userId, user.userName) // 1 Jobs true
         } catch {
             print("❌ 解析失败：\(error)")
@@ -420,7 +420,7 @@ extension AppDelegate {
             let userName: String
         }
         do {
-            let user = try JSONDecoder()
+            let user = try JSONDecoder.make { _ in }
                 .bykeyDecodingStrategy(.convertFromSnakeCase) // 👈 关键
                 .decode(User.self, from: json)
             print(user.userId, user.userName) // 1 Jobs true
@@ -440,10 +440,10 @@ extension AppDelegate {
             let id: Int
             let createdAt: Date
         }
-        let decoder = JSONDecoder()
+        let decoder = JSONDecoder.make { _ in }
             .bykeyDecodingStrategy(.convertFromSnakeCase)
             .byDateDecodingStrategy(
-                .formatted(DateFormatter()
+                .formatted(DateFormatter.jobsMake { _ in }
                     .byDateFormat("yyyy-MM-dd HH:mm:ss")
                     .byLocale(Locale(identifier: "en_US_POSIX"))))
         do {
@@ -466,7 +466,7 @@ extension AppDelegate {
             let name: String
         }
         do {
-            let users = try JSONDecoder().decode([User].self, from: json)
+            let users = try JSONDecoder.make { _ in }.decode([User].self, from: json)
             print(users.count) // 2
         } catch {
             print("❌ 解析失败：\(error)")
@@ -494,7 +494,7 @@ extension AppDelegate {
             let name: String
         }
         do {
-            let resp = try JSONDecoder().decode(APIResponse<User>.self, from: json)
+            let resp = try JSONDecoder.make { _ in }.decode(APIResponse<User>.self, from: json)
             let user = resp.data
             print(user) // 2
         } catch {

@@ -24,7 +24,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private static let patchID = "com.jobs.demo.swiftpatch.payload"
 
     private lazy var patchCardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(false)
@@ -36,7 +36,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("Swift 热更新 Demo".tr)
             .byFont(JobsFont.systemFont(ofSize: 24, weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -49,7 +49,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -61,7 +61,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待开始".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
             .byTextColor(JobsCor.tertiaryLabel)
@@ -123,7 +123,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }
 
     @objc dynamic func hotRefreshPatchPayload() -> NSDictionary {
-        NSDictionary()
+        NSDictionary.jobsMake { _ in }
     }
 }
 

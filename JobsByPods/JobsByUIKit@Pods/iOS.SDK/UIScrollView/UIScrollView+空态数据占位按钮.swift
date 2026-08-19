@@ -203,8 +203,9 @@ extension UIScrollView {
         if animated {
             if isEmpty {
                 if displayView.isHidden {
-                    displayView.byAlpha(0)
-                    displayView.byHidden(false)
+                    displayView
+                        .byAlpha(0)
+                        .byHidden(false)
                 }
                 bringSubviewToFront(displayView)
                 UIView.animate(withDuration: 0.15) {

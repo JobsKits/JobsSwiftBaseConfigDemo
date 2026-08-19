@@ -21,10 +21,11 @@ import JobsSwiftDSL
 /**【用法示例】
      /// 悬浮（可按需指定 container）
      UIView().bySuspend { cfg in
-         cfg.fallbackSize = CGSize(width: 88, height: 44)   // 给标题/副标题更宽松的空间
-         cfg.docking = .nearestEdge
+         cfg
+             .byFallbackSize(CGSize(width: 88, height: 44)) // 给标题/副标题更宽松的空间
+             .byDocking(.nearestEdge)
          cfg.insets = UIEdgeInsets(top: 20, left: 16, bottom: 34, right: 16)
-         cfg.hapticOnDock = true
+         cfg.byHapticOnDock(true)
      }
  */
 // MARK: - 悬浮视图@配置
@@ -421,14 +422,14 @@ extension UIView {
                 .byWindowLevel(.alert + 1)
                 .byHidden(false)
             if win.rootViewController == nil {
-                win.rootViewController = UIViewController()
+                win.byRootViewController(UIViewController())
             };return win
         } else {
             let win = UIWindow(frame: UIScreen.main.bounds)
                 .byWindowLevel(.alert + 1)
                 .byHidden(false)
             if win.rootViewController == nil {
-                win.rootViewController = UIViewController()
+                win.byRootViewController(UIViewController())
             };return win
         }
     }

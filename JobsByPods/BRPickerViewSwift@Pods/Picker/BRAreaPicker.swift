@@ -11,9 +11,11 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDelegate, UIPickerViewDataSource {
     private var data: [BRAreaNode] = []
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
 
     private var provinces: [BRAreaNode] = []
     private var cities: [BRAreaNode] = []
@@ -41,8 +43,9 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     private var _pendingSelection: BRAreaSelection?
 
     public override func buildContentView() -> UIView {
-        picker.delegate = self
-        picker.dataSource = self
+        picker
+            .byDelegate(self)
+            .byDataSource(self)
         provinces = data
         cities = provinces.first?.children ?? []
         districts = cities.first?.children ?? []
@@ -83,11 +86,12 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.backgroundColor = .clear
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byBackgroundColor(.clear)
         switch component {
         case 0: label.text = provinces[row].name
         case 1: label.text = cities[row].name
@@ -182,6 +186,6 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

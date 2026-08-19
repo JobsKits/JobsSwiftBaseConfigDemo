@@ -25,7 +25,7 @@ import GKNavigationBarSwift
 final class KeyboardDemoVC: BaseVC {
     // 输入框
     private lazy var textField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("请输入文字，弹出键盘试试".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
@@ -36,7 +36,7 @@ final class KeyboardDemoVC: BaseVC {
     }()
     // 底部工具栏（跟随键盘上移）
     private lazy var bottomBar: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGray6)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
@@ -46,7 +46,7 @@ final class KeyboardDemoVC: BaseVC {
     }()
 
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("我是底部栏，会跟随键盘上移".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)

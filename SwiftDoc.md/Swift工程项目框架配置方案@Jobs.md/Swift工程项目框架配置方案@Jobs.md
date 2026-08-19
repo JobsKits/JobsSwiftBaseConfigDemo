@@ -74,6 +74,14 @@
 | 数据与安全 | [**WCDB**](https://github.com/Tencent/wcdb)、[**ObjectBox**](https://github.com/objectbox/objectbox-swift)、[**Cache**](https://github.com/hyperoslo/Cache)、[**KeychainAccess**](https://github.com/kishikawakatsumi/KeychainAccess) | 数据所有权、迁移、线程模型、加密和清理策略由具体模块声明。 |
 | 工程工具 | [**CocoaLumberjack**](https://github.com/CocoaLumberjack/CocoaLumberjack)、[**DeviceKit**](https://github.com/devicekit/DeviceKit)、[**PhoneNumberKit**](https://github.com/marmelroy/PhoneNumberKit) | 基础能力只暴露稳定门面，第三方类型不向业务模型扩散。 |
 
+#### 3.1.1、ObjectBox Swift 集成基线
+
+- ObjectBox Apple SDK 按其 Swift 语言边界接入；当前只在 Swift 工程提供 CRUD Demo，OC 新/旧工程无需创建无官方语言基础的占位实现。
+- `Podfile.deps` 负责声明 `ObjectBox`，`Podfile.lock` 负责记录实际版本；首次或依赖结构变化后按官方 `Pods/ObjectBox/setup.rb` 结果维护 `[OBX] Update Sourcery Generated Files` 构建阶段。
+- App Target 必须保持 `ENABLE_USER_SCRIPT_SANDBOXING = NO`，否则构建阶段无法更新生成文件。
+- `Human.swift` 的 `// objectbox: entity` 是代码生成标记；`model-JobsSwiftBaseConfigDemo.json` 和 `generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 是稳定实体 ID 的工程基线，实体变更时三者一起复核并提交。
+- Demo 代码统一位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`；数据库初始化以 `Result` 暴露失败，不用 `try!` 把存储目录或 Store 初始化错误升级为启动崩溃。
+
 - `swiftAppCommon` 管理通用外部依赖，`byJobs` 管理 Jobs 自建 Pod；新依赖先判断归属，再加入对应函数。
 - 页面已经有 Jobs 封装时，不直接导入第三方实现。确实需要第三方类型作为公开参数时，由功能 Pod 明确承担耦合。
 - `inhibit_all_warnings!` 只隐藏第三方告警，不是忽略 Jobs 自维护源码问题的理由。
@@ -81,6 +89,12 @@
 ### 3.2、我的封装（重点）
 
 下列片段默认已在所属 target 引入 `JobsByUIKit`、`JobsSwiftDSL`、`JobsSwiftBaseDefines` 与 `SnapKit`；为突出调用方式，不在每段代码里重复书写 import。
+
+#### 3.2.0、系统类创建与实例 DSL
+
+- `NSObject` 子类的无参构造统一使用 `Type.jobsMake { object in ... }`；带参初始化由真实类型提供 `Type.make(arguments, configure:)`，例如 `NSUserActivity.make(activityType:configure:)`。
+- 原生系统构造器只存在于创建工厂底层；实例生成后，属性、无参实例方法和单参实例方法统一使用返回 `Self` 的 `byXxx(...)`，查询与明确终止动作除外。
+- `JobsSwiftBlock` 提供最低层通用创建 Block，`JobsSwiftDSL` 公开转出，`JobsByUIKit` 提供具体 UIKit / Foundation 工厂；低层 Pod 不反向依赖高层 UI Pod。
 
 #### 3.2.1、对`UIViewController`的封装
 
@@ -3412,6 +3426,8 @@ DemoDetailVC().onResult { name in
 ### 5.1、书写约定
 
 - 所有 UI 配置优先使用 `JobsSwiftDSL` 点语法链式写法。
+- 同一配置语义必须“一镜到底”：主对象只作为链起点出现一次，后续属性、子对象和终止动作继续从当前链点出；缺 API 时先补返回 `Self` 的底层 DSL。
+- `UITableViewCell` 不重新起 `cell.textLabel`、`cell.detailTextLabel`、`cell.imageView` 或 `cell.contentView`；优先使用 Cell 级标题/副标题/图片 API，特殊子对象配置使用 `byTextLabel`、`byDetailTextLabel`、`byImageView`、`byContentView` 闭包。
 - 点语法以行为最小单位提行书写，方便复制后按行删除或注释。
 - 跟在某一行 DSL 后面的说明统一用两根双斜杠 `//`；单独成行的说明统一用三根双斜杠 `///`。
 - 颗粒度要细：标题、颜色、字体、图片、状态、事件、装配、约束分别独立成行，不合并表达。
@@ -3425,6 +3441,17 @@ DemoDetailVC().onResult { name in
   import JobsSwiftBaseDefines
   import JobsSwiftDSL
   import SnapKit
+  ```
+
+  ```swift
+  return cell
+      .byText("关闭".tr)
+      .byTitleCor(JobsCor.systemBlue)
+      .byTitleTextAlignment(.center)
+      .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+      .byDetailText(nil)
+      .bySelectionStyle(.default)
+      .byContentView { $0.byBackgroundColor(JobsCor.systemBackground) }
   ```
 
 ### 5.2、`UILabel`

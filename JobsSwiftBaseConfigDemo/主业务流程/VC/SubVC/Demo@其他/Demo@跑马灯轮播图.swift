@@ -71,7 +71,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     }
     /// 所有 JobsMarqueeView 统一加在这个 scrollView 上
     private lazy var scrollView: UIScrollView = { [unowned self] in
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byShowsVerticalScrollIndicator(YES)
             .byAlwaysBounceVertical(YES)
             .byAddTo(self.view) { [unowned self] make in

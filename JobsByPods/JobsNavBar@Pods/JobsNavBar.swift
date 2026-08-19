@@ -69,14 +69,14 @@ public class JobsNavBar: UIView {
     public var onBack: jobsByVoidBlock?
     // ===== 懒加载子视图（外部可直接链式修改，比如 navBar.hairline.byVisible(true））=====
     public private(set) lazy var backgroundView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(self) { v, make in
                 make.edges.equalToSuperview()
             }
     }()
 
     public private(set) lazy var hairline: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byVisible(!style.hairlineHidden)
             .byBackgroundColor(style.hairlineColor)
             .byAddTo(self) { v, make in
@@ -86,7 +86,7 @@ public class JobsNavBar: UIView {
     }()
 
     public private(set) lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(1)
             .byTextAlignment(.center)
             .byAddTo(self) { [unowned self] v, make in
@@ -95,7 +95,7 @@ public class JobsNavBar: UIView {
     }()
     private var _leftContainerH: Constraint?
     public private(set) lazy var leftContainer: UIView = {
-        UIView().byAddTo(self) { [unowned self] v, make in
+        UIView.jobsMake { _ in }.byAddTo(self) { [unowned self] v, make in
             make.left.equalToSuperview().offset(8)
             make.bottom.equalToSuperview() // 贴底
             _leftContainerH = make.height.equalTo(self.style.contentHeight).constraint // 固定“内容区”高

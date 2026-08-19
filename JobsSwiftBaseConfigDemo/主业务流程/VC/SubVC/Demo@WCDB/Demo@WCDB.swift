@@ -24,7 +24,7 @@ import GKNavigationBarSwift
 final class WCDBDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 16
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byBgCor(JobsCor.systemCyan)
             .byText("WCDB Demo\nDB: \(DemoDB.shared.dbPath)")
@@ -109,7 +109,7 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var player: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(UIColor(gray: 0.96 * 255))
             .byCornerRadius(12)
             .byVisible(NO)
@@ -122,7 +122,7 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var resultTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(NO)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byAddTo(player) { make in

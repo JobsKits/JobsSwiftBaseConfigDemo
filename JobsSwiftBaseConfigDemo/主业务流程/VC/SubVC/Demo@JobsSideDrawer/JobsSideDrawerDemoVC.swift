@@ -30,7 +30,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }()
 
     private lazy var ratioSlider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0.2)
             .byMaximumValue(0.9)
             .byValue(0.5)
@@ -38,7 +38,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }()
 
     private lazy var ratioLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
     }()
 
     private lazy var previewButton: UIButton = {
@@ -106,9 +106,9 @@ final class JobsSideDrawerDemoVC: BaseVC {
         mainPage = makePage(text: "底部内容", color: JobsCor.systemBackground)
         guard let drawerPage, let mainPage else { return }
         if carrierControl.selectedSegmentIndex == 0 {
-            drawerPageController = UIViewController()
+            drawerPageController = UIViewController.jobsMake { _ in }
             drawerPageController?.view = drawerPage
-            mainPageController = UIViewController()
+            mainPageController = UIViewController.jobsMake { _ in }
             mainPageController?.view = mainPage
             guard let drawerPageController, let mainPageController else { return }
             sideDrawerController = JobsSideDrawerVC(
@@ -126,7 +126,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
             )
         }
         guard let sideDrawerController else { return }
-        sideDrawerController.modalPresentationStyle = .fullScreen
+        sideDrawerController.byModalPresentationStyle(.fullScreen)
         present(sideDrawerController, animated: false) { sideDrawerController.openDrawer() }
     }
 
@@ -147,10 +147,10 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }
 
     private func makePage(text: String, color: UIColor) -> UIView {
-        let page = UIView()
+        let page = UIView.jobsMake { _ in }
             .byBackgroundColor(color)
         pageViews.append(page)
-        let label = UILabel()
+        let label = UILabel.jobsMake { _ in }
             .byText(text)
             .byNumberOfLines(0)
             .byTextAlignment(.center)

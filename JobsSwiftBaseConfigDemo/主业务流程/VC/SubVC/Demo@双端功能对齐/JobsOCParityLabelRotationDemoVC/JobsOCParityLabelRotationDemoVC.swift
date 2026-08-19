@@ -20,7 +20,7 @@ import SnapKit
 final class JobsLabelRotationDemoVC: BaseVC {
 
     private lazy var previewCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(10)
             .byBorderWidth(1)
@@ -33,7 +33,7 @@ final class JobsLabelRotationDemoVC: BaseVC {
     }()
 
     private lazy var rotatingLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("输入的内容".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byTextColor(JobsCor.systemBlue)
@@ -49,7 +49,7 @@ final class JobsLabelRotationDemoVC: BaseVC {
     }()
 
     private lazy var directionLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("文字方向：朝左".tr)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)

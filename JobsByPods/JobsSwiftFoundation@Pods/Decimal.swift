@@ -66,7 +66,7 @@ extension Decimal {
                           locale: Locale = .current) -> String {
         let rounded = self.rounded(scale: scale, mode: mode)
         // 直接用 NSDecimalNumber 包装以避免 Double 精度丢失
-        return NumberFormatter()
+        return NumberFormatter.jobsMake { _ in }
             .byLocale(locale)
             .byNumberStyle(.decimal)
             .byUsesGroupingSeparator(usesGroupingSeparator)

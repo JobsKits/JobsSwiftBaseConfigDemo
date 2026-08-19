@@ -99,10 +99,11 @@ final class JobsLoadingIndicator: UIView {
     }()
 
     private let imageView: UIImageView = {
-        let v = UIImageView()
-        v.byContentMode(.scaleAspectFit)
-        v.byClipsToBounds()
-        v.byHidden(true)
+        let v = UIImageView.jobsMake { _ in }
+        v
+            .byContentMode(.scaleAspectFit)
+            .byClipsToBounds()
+            .byHidden(true)
         return v
     }()
 
@@ -177,9 +178,10 @@ final class JobsLoadingIndicator: UIView {
             return
         }
         imageView.stopAnimating()
-        imageView.animationImages = nil
-        imageView.byImage(nil)
-        imageView.byHidden(true)
+        imageView
+            .byAnimationImages(nil)
+            .byImage(nil)
+            .byHidden(true)
         let resolved = resolveLottieSetting()
         #if canImport(Lottie) && JOBS_MODERN_LOTTIE
         if let setting = resolved, let anim = loadAnimation(setting) {
@@ -259,7 +261,7 @@ final class JobsLoadingIndicator: UIView {
 
     private func applyImage(_ setting: JobsRefreshImageSetting) -> Bool {
         imageView.stopAnimating()
-        imageView.animationImages = nil
+        imageView.byAnimationImages(nil)
         switch setting.source {
         /// 处理 .gif 分支
         case .gif(let name, let bundle):
@@ -273,10 +275,11 @@ final class JobsLoadingIndicator: UIView {
                 UIImage(named: $0, in: bundle, compatibleWith: nil)
             }
             guard !images.isEmpty else { return false }
-            imageView.animationImages = images
-            imageView.animationDuration = max(0.02, interval) * Double(images.count)
-            imageView.animationRepeatCount = 0
-            imageView.byImage(images.first)
+            imageView
+                .byAnimationImages(images)
+                .byAnimationDuration(max(0.02, interval) * Double(images.count))
+                .byAnimationRepeatCount(0)
+                .byImage(images.first)
             imageView.startAnimating()
             return true
         /// 处理 .network 分支
@@ -404,7 +407,7 @@ public class JobsArrowIndicatorView: UIView,
         if #available(iOS 13.0, *) {
             iv = UIImageView(image: UIImage(systemName: "arrow.up"))
         } else {
-            iv = UIImageView()
+            iv = UIImageView.jobsMake { _ in }
         };return self.byAddSubviewRetSub(iv.byContentMode(.scaleAspectFit).byTintColor(JobsCor.secondaryLabel))
     }()
 
@@ -419,7 +422,7 @@ public class JobsArrowIndicatorView: UIView,
 
     private lazy var label: UILabel = {
         self.byAddSubviewRetSub(
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
@@ -431,13 +434,13 @@ public class JobsArrowIndicatorView: UIView,
     private var isArrowInReadyDirection: Bool = false
 
     private static let timeFormatter: DateFormatter = {
-        DateFormatter()
+        DateFormatter.jobsMake { _ in }
             .byLocale(.current)
             .byTimeZone(.current)
             .byDateFormat("HH:mm")
     }()
     private static let dateTimeFormatter: DateFormatter = {
-        DateFormatter()
+        DateFormatter.jobsMake { _ in }
             .byLocale(.current)
             .byTimeZone(.current)
             .byDateFormat("yyyy-MM-dd HH:mm")
@@ -625,7 +628,7 @@ public class JobsArrowIndicatorView: UIView,
                 animations: { self.arrow.transform = target }
             )
         } else {
-            arrow.transform = target
+            arrow.byTransform(target)
         }
         isArrowInReadyDirection = willBeReadyDirection
     }
@@ -677,7 +680,7 @@ public class JobsSideIndicatorView: UIView,
         if #available(iOS 13.0, *) {
             iv = UIImageView(image: UIImage(systemName: "arrow.left"))
         } else {
-            iv = UIImageView()
+            iv = UIImageView.jobsMake { _ in }
         };return self.byAddSubviewRetSub(iv.byContentMode(.scaleAspectFit).byTintColor(JobsCor.secondaryLabel))
     }()
 
@@ -692,7 +695,7 @@ public class JobsSideIndicatorView: UIView,
 
     private lazy var statusLabel: UILabel = {
         self.byAddSubviewRetSub(
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
@@ -702,7 +705,7 @@ public class JobsSideIndicatorView: UIView,
     // “更新：”单独一列 + “今天 22:05”一列
     private lazy var updatePrefixLabel: UILabel = {
         self.byAddSubviewRetSub(
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
@@ -712,7 +715,7 @@ public class JobsSideIndicatorView: UIView,
 
     private lazy var updateValueLabel: UILabel = {
         self.byAddSubviewRetSub(
-            UILabel()
+            UILabel.jobsMake { _ in }
                 .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
                 .byTextColor(JobsCor.secondaryLabel)
                 .byNumberOfLines(0)
@@ -724,13 +727,13 @@ public class JobsSideIndicatorView: UIView,
     private var isArrowInReadyDirection: Bool = false
 
     private static let timeFormatter: DateFormatter = {
-        DateFormatter()
+        DateFormatter.jobsMake { _ in }
             .byLocale(.current)
             .byTimeZone(.current)
             .byDateFormat("HH:mm")
     }()
     private static let dateTimeFormatter: DateFormatter = {
-        DateFormatter()
+        DateFormatter.jobsMake { _ in }
             .byLocale(.current)
             .byTimeZone(.current)
             .byDateFormat("yyyy-MM-dd HH:mm")
@@ -981,7 +984,7 @@ public class JobsSideIndicatorView: UIView,
                 animations: { self.arrow.transform = target }
             )
         } else {
-            arrow.transform = target
+            arrow.byTransform(target)
         };isArrowInReadyDirection = willBeReadyDirection
     }
 }

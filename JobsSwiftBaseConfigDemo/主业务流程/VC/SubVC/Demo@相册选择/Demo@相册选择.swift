@@ -186,7 +186,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
     // MARK: - Preview
     private lazy var previewContainer: UIView = { [unowned self] in
-        UIView().byBackgroundColor(JobsCor.secondarySystemBackground)
+        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] v, make in
                 make.top.equalTo(self.pickMultiVideoBtn.snp.bottom).offset(16)
@@ -196,7 +196,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
 
     private lazy var collectionView: UICollectionView = { [unowned self] in
-        UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout().byScrollDirection(.vertical).byMinimumInteritemSpacing(gridSpacing).byMinimumLineSpacing(gridSpacing))
+        UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.jobsMake { _ in }.byScrollDirection(.vertical).byMinimumInteritemSpacing(gridSpacing).byMinimumLineSpacing(gridSpacing))
             .byBackgroundColor(JobsCor.clear)
             .byScrollEnabled(NO)
             .byShowsVerticalScrollIndicator(NO)
@@ -212,7 +212,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     }()
 
     private lazy var filterHintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("点击照片进入滤镜工作台".tr)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byTextColor(JobsCor.white)
@@ -275,20 +275,23 @@ final class PhotoAlbumDemoVC: BaseVC {
         switch mode {
         /// 合并处理 .cameraPhoto、.cameraVideo、.none 分支
         case .cameraPhoto, .cameraVideo, .none:
-            collectionView.isScrollEnabled = false
-            collectionView.showsVerticalScrollIndicator = false
+            collectionView
+                .byScrollEnabled(false)
+                .byShowsVerticalScrollIndicator(false)
         /// 处理 .albumImages 分支
         case .albumImages:
             let disable = images.count <= 9
-            collectionView.isScrollEnabled = !disable
-            collectionView.showsVerticalScrollIndicator = !disable
+            collectionView
+                .byScrollEnabled(!disable)
+                .byShowsVerticalScrollIndicator(!disable)
         /// 处理 .albumVideos 分支
         case .albumVideos:
             let disable = albumVideoURLs.count <= 9
-            collectionView.isScrollEnabled = !disable
-            collectionView.showsVerticalScrollIndicator = !disable
+            collectionView
+                .byScrollEnabled(!disable)
+                .byShowsVerticalScrollIndicator(!disable)
         }
-        collectionView.alwaysBounceVertical = collectionView.isScrollEnabled
+        collectionView.byAlwaysBounceVertical(collectionView.isScrollEnabled)
     }
 }
 // MARK: - UICollectionViewDataSource
@@ -401,8 +404,9 @@ private extension PhotoAlbumDemoVC {
             guard let self else { return }
             if #available(iOS 14, *) {
                 var config = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
-                config.selectionLimit = maxSelection <= 0 ? 0 : maxSelection  // 0 = 不限制
-                config.filter = .videos
+                config
+                    .bySelectionLimit(maxSelection <= 0 ? 0 : maxSelection) // 0 = 不限制
+                    .byFilter(.videos)
                 let proxy = PHPickerVideoProxy { [weak self] urls in
                     jobsByVoidBlock(urls); self?.pickerHold = nil
                 }
@@ -419,7 +423,7 @@ private extension PhotoAlbumDemoVC {
                 let proxy = LegacyVideoLibraryProxy { [weak self] url in
                     jobsByVoidBlock(url.map { [$0] } ?? []); self?.pickerHold = nil
                 }
-                legacyVideoPickerController = UIImagePickerController()
+                legacyVideoPickerController = UIImagePickerController.jobsMake { _ in }
                 legacyVideoPickerController?.sourceType = .photoLibrary
                 legacyVideoPickerController?.mediaTypes = [UTType.movie.identifier]
                 legacyVideoPickerController?.byDelegate(proxy)

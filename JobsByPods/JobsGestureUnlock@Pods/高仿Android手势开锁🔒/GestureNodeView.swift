@@ -22,8 +22,8 @@ final class GestureNodeView: UIView {
         case error
     }
 
-    private let borderLayer = CAShapeLayer()
-    private let fillLayer = CAShapeLayer()
+    private let borderLayer = CAShapeLayer.jobsMake { _ in }
+    private let fillLayer = CAShapeLayer.jobsMake { _ in }
 
     var configuration: GestureUnlockConfiguration = .init() {
         didSet { apply(state: state) }
@@ -38,8 +38,8 @@ final class GestureNodeView: UIView {
         isUserInteractionEnabled = false
         layer.addSublayer(fillLayer)
         layer.addSublayer(borderLayer)
-        borderLayer.fillColor = JobsCor.clear.cgColor
-        fillLayer.fillColor = JobsCor.clear.cgColor
+        borderLayer.byFillColor(JobsCor.clear)
+        fillLayer.byFillColor(JobsCor.clear)
     }
 
     required init?(coder: NSCoder) {
@@ -49,28 +49,28 @@ final class GestureNodeView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let path = UIBezierPath.make(ovalIn: bounds).cgPath
-        borderLayer.path = path
-        fillLayer.path = path
+        borderLayer.byPath(path)
+        fillLayer.byPath(path)
         borderLayer.byFrame(bounds)
         fillLayer.byFrame(bounds)
     }
 
     func apply(state: State) {
         self.state = state
-        borderLayer.lineWidth = configuration.nodeBorderWidth
+        borderLayer.byLineWidth(configuration.nodeBorderWidth)
         switch state {
         /// 处理 .normal 分支
         case .normal:
-            borderLayer.strokeColor = configuration.nodeNormalColor.cgColor
-            fillLayer.fillColor = JobsCor.clear.cgColor
+            borderLayer.byStrokeColor(configuration.nodeNormalColor)
+            fillLayer.byFillColor(JobsCor.clear)
         /// 处理 .selected 分支
         case .selected:
-            borderLayer.strokeColor = configuration.nodeSelectedColor.cgColor
-            fillLayer.fillColor = configuration.nodeFillSelectedColor.cgColor
+            borderLayer.byStrokeColor(configuration.nodeSelectedColor)
+            fillLayer.byFillColor(configuration.nodeFillSelectedColor)
         /// 处理 .error 分支
         case .error:
-            borderLayer.strokeColor = configuration.nodeErrorColor.cgColor
-            fillLayer.fillColor = configuration.nodeFillErrorColor.cgColor
+            borderLayer.byStrokeColor(configuration.nodeErrorColor)
+            fillLayer.byFillColor(configuration.nodeFillErrorColor)
         }
     }
 }

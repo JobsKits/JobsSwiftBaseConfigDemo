@@ -17,7 +17,7 @@ enum JobsAppDoorLogoStyle {
 
 final class JobsAppDoorLogoView: UIView {
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(JobsAppDoorResource.image(named: "MainLogo"))
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)

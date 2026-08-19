@@ -21,7 +21,7 @@ import SnapKit
 final class JobsStringCompressionDemoVC: BaseVC {
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -31,7 +31,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -39,7 +39,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var resultCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(14)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.12))
@@ -88,7 +88,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var sourceTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byText("这是一个需要压缩的字符串".tr)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextColor(JobsCor.label)
@@ -195,7 +195,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }
 
     private func makeSectionLabel(_ text: String, size: CGFloat = 16) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text)
             .byFont(JobsFont.boldSystemFont(ofSize: size))
             .byTextColor(JobsCor.label)

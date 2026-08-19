@@ -19,7 +19,7 @@ import SnapKit
 public final class JobsTextField: UIImageView {
     // MARK: - Public
     public lazy var textField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview().inset(textInsets)
             }
@@ -114,44 +114,42 @@ extension JobsTextField {
 
     @discardableResult
     public func byInsetTop(_ v: CGFloat) -> Self {
-        textInsets.top = v
+        textInsets.byTop(v)
         updateTextInsets()
         return self
     }
 
     @discardableResult
     public func byInsetLeft(_ v: CGFloat) -> Self {
-        textInsets.left = v
+        textInsets.byLeft(v)
         updateTextInsets()
         return self
     }
 
     @discardableResult
     public func byInsetBottom(_ v: CGFloat) -> Self {
-        textInsets.bottom = v
+        textInsets.byBottom(v)
         updateTextInsets()
         return self
     }
 
     @discardableResult
     public func byInsetRight(_ v: CGFloat) -> Self {
-        textInsets.right = v
+        textInsets.byRight(v)
         updateTextInsets()
         return self
     }
 
     @discardableResult
     public func byInsetHorizontal(_ v: CGFloat) -> Self {
-        textInsets.left = v
-        textInsets.right = v
+        textInsets.byHorizontal(v)
         updateTextInsets()
         return self
     }
 
     @discardableResult
     public func byInsetVertical(_ v: CGFloat) -> Self {
-        textInsets.top = v
-        textInsets.bottom = v
+        textInsets.byVertical(v)
         updateTextInsets()
         return self
     }

@@ -60,7 +60,7 @@ final class PlayerDetailVC: BaseVC {
     }()
     // MARK: - 懒加载：正文
     private lazy var contentLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byText(item.content.isEmpty ? " " : item.content)
             .byTextColor(JobsCor.label)

@@ -24,10 +24,12 @@ import GKNavigationBarSwift
 
 final class UITextFieldDemoVC: BaseVC {
     private lazy var emailTF: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("请输入邮箱（去空格 / 最长 8）".tr)
+            .byPlaceholderColor(JobsCor.placeholderText)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byKeyboardType(.emailAddress)
             .byReturnKeyType(.next)
             .byClearButtonMode(.whileEditing)
@@ -75,10 +77,12 @@ final class UITextFieldDemoVC: BaseVC {
     }()
 
     private lazy var passwordTF: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byPlaceholder("请输入密码（最长 5）".tr)
+            .byPlaceholderColor(JobsCor.placeholderText)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byKeyboardType(.default)
             .byReturnKeyType(.done)
             .byClearButtonMode(.whileEditing)
@@ -117,7 +121,7 @@ final class UITextFieldDemoVC: BaseVC {
 
     // 自定义 inputView（示例：日期选择器，只为展示 byInputView 用法）
     private lazy var datePicker: UIDatePicker = {
-        return UIDatePicker()
+        return UIDatePicker.jobsMake { _ in }
             .byPreferredDatePickerStyle(.wheels)
             .byDatePickerMode(.date)
     }()

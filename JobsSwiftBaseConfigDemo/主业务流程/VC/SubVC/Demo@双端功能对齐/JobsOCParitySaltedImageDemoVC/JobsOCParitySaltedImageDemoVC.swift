@@ -60,7 +60,7 @@ final class JobsSaltedImageStoreDemoVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(62)
-            .byTableFooterView(UIView())
+            .byTableFooterView(UIView.jobsMake { _ in })
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -86,12 +86,12 @@ extension JobsSaltedImageStoreDemoVC: UITableViewDataSource, UITableViewDelegate
         let reuseIdentifier = "JobsSaltedImageCodecCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
             ?? UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-        cell.textLabel?
+        return cell
             .byText(codecs[indexPath.row].title)
-            .byFont(JobsFont.systemFont(ofSize: 16))
-            .byTextColor(JobsCor.label)
-        cell.accessoryType = .disclosureIndicator
-        return cell.byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16))
+            .byTitleCor(JobsCor.label)
+            .byAccessoryType(.disclosureIndicator)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -152,7 +152,7 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
     }()
 
     private lazy var encodedTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byText("暂无编码数据！！！".tr)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byTextColor(JobsCor.label)

@@ -31,7 +31,7 @@ import GKNavigationBarSwift
 final class FSPopoverDemoVC: BaseVC {
     // MARK: - UI（by-DSL + 约束在 byAddTo 内）
     private lazy var dialogTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byText(
                 "1.电话、QQ、微信号、乱码、全数字皆、不雅字眼、辱骂 词汇带、负面情绪字眼、标点符号皆会审核失败"
@@ -53,7 +53,7 @@ final class FSPopoverDemoVC: BaseVC {
             .byMasksToBounds(YES)
     }()
     private lazy var popoverContentContainerView: UIView = {
-        let containerView = UIView().byBackgroundColor(JobsCor.clear)
+        let containerView = UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.clear)
         popoverContentTitleLabel.byAddTo(containerView) { make in
             make.top.equalToSuperview().offset(14)
             make.left.right.equalToSuperview().inset(16)
@@ -66,7 +66,7 @@ final class FSPopoverDemoVC: BaseVC {
         return containerView
     }()
     private lazy var popoverContentTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这是自定义内容".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextAlignment(.center)

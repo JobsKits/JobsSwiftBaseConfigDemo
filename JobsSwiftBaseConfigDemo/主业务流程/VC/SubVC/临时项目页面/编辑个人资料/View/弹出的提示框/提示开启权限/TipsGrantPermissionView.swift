@@ -23,7 +23,7 @@ import SnapKit
 final class TipsGrantPermissionView: UIView {
     /// 自适应主题卡片
     private lazy var cardView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byLayer { layer in
                 layer.byCornerRadius(14)
@@ -39,7 +39,7 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 标题：温馨提示
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("温馨提示".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
@@ -55,7 +55,7 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 主文案
     private lazy var messageLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -68,7 +68,7 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 灰色小字
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("设置-隐私安全-照片和视频".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 12))

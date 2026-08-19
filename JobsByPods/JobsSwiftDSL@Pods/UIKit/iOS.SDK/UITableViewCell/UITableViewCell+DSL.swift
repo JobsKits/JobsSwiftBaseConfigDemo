@@ -1,6 +1,6 @@
 //
 //  UITableViewCell+DSL.swift
-//  JobsByUIKit
+//  JobsSwiftDSL
 //
 //  Created by Jobs on 2026年5月13日，星期三.
 //
@@ -41,6 +41,34 @@ private extension UITableViewCell {
 }
 
 extension UITableViewCell {
+    /// 收口 Cell 子视图配置，保证调用端以 Cell 为唯一链起点。
+    @discardableResult
+    public func byTextLabel(_ build: (UILabel) -> Void) -> Self {
+        if let textLabel {
+            build(textLabel)
+        };return self
+    }
+
+    @discardableResult
+    public func byDetailTextLabel(_ build: (UILabel) -> Void) -> Self {
+        if let detailTextLabel {
+            build(detailTextLabel)
+        };return self
+    }
+
+    @discardableResult
+    public func byImageView(_ build: (UIImageView) -> Void) -> Self {
+        if let imageView {
+            build(imageView)
+        };return self
+    }
+
+    @discardableResult
+    public func byContentView(_ build: (UIView) -> Void) -> Self {
+        build(contentView)
+        return self
+    }
+
     /// selectionStyle
     @discardableResult
     public func bySelectionStyle(_ style: UITableViewCell.SelectionStyle) -> Self {
@@ -154,6 +182,14 @@ extension UITableViewCell {
 }
 // MARK: - iOS 14+ List Content（文本/副标题/图片 的统一配置）
 extension UITableViewCell {
+    /// 直接覆盖任意 contentConfiguration。
+    @available(iOS 14.0, *)
+    @discardableResult
+    public func byContentConfiguration(_ configuration: UIContentConfiguration?) -> Self {
+        contentConfiguration = configuration
+        return self
+    }
+
     /// 直接覆盖 contentConfiguration（默认会禁用自动更新，避免被系统覆盖）
     @available(iOS 14.0, *)
     @discardableResult
@@ -315,6 +351,34 @@ extension UITableViewCell {
             return self
         }
     }
+
+    /// 标题对齐；List Content 将 left / right 按语义方向收口为 natural
+    @discardableResult
+    public func byTitleTextAlignment(_ alignment: NSTextAlignment) -> Self {
+        if #available(iOS 14.0, *) {
+            return byContentConfiguration { cfg in
+                cfg.textProperties.alignment = alignment == .center
+                    ? .center
+                    : (alignment == .justified ? .justified : .natural)
+            }
+        } else {
+            textLabel?.textAlignment = alignment
+            return self
+        }
+    }
+
+    /// 标题行数
+    @discardableResult
+    public func byTitleNumberOfLines(_ numberOfLines: Int) -> Self {
+        if #available(iOS 14.0, *) {
+            return byContentConfiguration { cfg in
+                cfg.textProperties.numberOfLines = numberOfLines
+            }
+        } else {
+            textLabel?.numberOfLines = numberOfLines
+            return self
+        }
+    }
     /// 副标题字体
     @discardableResult
     public func byDetailTitleFont(_ font: UIFont) -> Self {
@@ -324,6 +388,34 @@ extension UITableViewCell {
             }
         } else {
             detailTextLabel?.font = font
+            return self
+        }
+    }
+
+    /// 副标题对齐；List Content 将 left / right 按语义方向收口为 natural
+    @discardableResult
+    public func byDetailTitleTextAlignment(_ alignment: NSTextAlignment) -> Self {
+        if #available(iOS 14.0, *) {
+            return byContentConfiguration { cfg in
+                cfg.secondaryTextProperties.alignment = alignment == .center
+                    ? .center
+                    : (alignment == .justified ? .justified : .natural)
+            }
+        } else {
+            detailTextLabel?.textAlignment = alignment
+            return self
+        }
+    }
+
+    /// 副标题行数
+    @discardableResult
+    public func byDetailTitleNumberOfLines(_ numberOfLines: Int) -> Self {
+        if #available(iOS 14.0, *) {
+            return byContentConfiguration { cfg in
+                cfg.secondaryTextProperties.numberOfLines = numberOfLines
+            }
+        } else {
+            detailTextLabel?.numberOfLines = numberOfLines
             return self
         }
     }

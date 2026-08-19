@@ -30,7 +30,7 @@ final class AFDemoVC: BaseVC {
 
     private var bag = Set<AnyCancellable>()
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
             .byKeyboardDismissMode(.onDrag)
@@ -45,7 +45,7 @@ final class AFDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -53,7 +53,7 @@ final class AFDemoVC: BaseVC {
     }()
     // ================= 回显区 =================
     private lazy var resultView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
@@ -116,7 +116,7 @@ final class AFDemoVC: BaseVC {
                     /// 处理 .success 分支
                     case .success(let data):
                         do {
-                            let user = try JSONDecoder().decode(GHUser.self, from: data)
+                            let user = try JSONDecoder.make { _ in }.decode(GHUser.self, from: data)
                             show(
                                 title: "GET /users/apple ✅",
                                 body: "login=\(user.login), id=\(user.id)\navatar=\(user.avatar_url)"

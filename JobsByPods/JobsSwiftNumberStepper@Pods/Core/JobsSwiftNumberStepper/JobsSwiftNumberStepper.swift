@@ -29,7 +29,7 @@ public final class JobsSwiftNumberStepper: UIControl {
     }()
 
     public private(set) lazy var textField: UITextField = {
-        UITextField()
+        UITextField.jobsMake { _ in }
             .byText("0")
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 17, weight: .semibold))

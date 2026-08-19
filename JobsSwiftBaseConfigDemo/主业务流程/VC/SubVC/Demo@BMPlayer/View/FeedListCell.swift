@@ -21,7 +21,7 @@ final class FeedListCell: UITableViewCell {
     private var task: URLSessionDataTask?
     // MARK: - 懒加载 UI
     private lazy var cover: UIImageView = { [unowned self] in
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
@@ -32,7 +32,7 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var playIcon: UIImageView = { [unowned self] in
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byImage(UIImage(systemName: "play.circle.fill"))
             .byTintColor(JobsCor.white)
             .byContentMode(.scaleAspectFit)
@@ -44,7 +44,7 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var nameLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
@@ -54,7 +54,7 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var contentLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)

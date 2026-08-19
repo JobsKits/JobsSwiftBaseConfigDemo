@@ -21,7 +21,7 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
     private var panelHeightConstraint: Constraint?
 
     private lazy var panelView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsAppDoorPalette.panelBackground)
             .byCornerRadius(8)
             .byClipsToBounds(true)

@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPickerViewDataSource {
     public enum Mode { case ymd, ym, y }
 
@@ -24,7 +26,7 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     private var months: [Int] = Array(1...12)
     private var days: [Int] = Array(1...31)
 
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
     private var lastSelectedRow: [Int: Int] = [:]
     /// Only highlight the component(s) that the user has actually scrolled.
     private var touchedComponents: Set<Int> = []
@@ -39,8 +41,9 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     // MARK: - Core overrides
     public override func buildContentView() -> UIView {
         configureData()
-        picker.dataSource = self
-        picker.delegate = self
+        picker
+            .byDataSource(self)
+            .byDelegate(self)
         // preselect
         preselect()
         // Default state: no highlight until user scrolls.
@@ -149,20 +152,21 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.backgroundColor = .clear
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byBackgroundColor(.clear)
         switch mode {
         case .ymd:
             if component == 0 { label.text = "\(years[row])年" }
             else if component == 1 { label.text = "\(months[row])月" }
             else { label.text = "\(days[row])日" }
         case .ym:
-            label.text = (component == 0) ? "\(years[row])年" : "\(months[row])月"
+            label.byText((component == 0) ? "\(years[row])年" : "\(months[row])月")
         case .y:
-            label.text = "\(years[row])年"
+            label.byText("\(years[row])年")
         }
         // iOS12: no selectedRow checks here (avoid flicker); color updated in didSelect
         return label
@@ -220,6 +224,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

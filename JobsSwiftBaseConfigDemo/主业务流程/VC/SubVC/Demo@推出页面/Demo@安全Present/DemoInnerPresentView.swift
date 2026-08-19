@@ -20,7 +20,7 @@ import SnapKit
 // MARK: - UIResponder 内触发 presentVC 示例
 final class DemoInnerPresentView: UIView {
     private lazy var titleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("👉 点我 (View 内触发 presentSafely)".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.systemGreen)
@@ -28,7 +28,7 @@ final class DemoInnerPresentView: UIView {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("👆 点击绿色区域也会触发 presentSafely".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)

@@ -23,7 +23,7 @@ final class JobsLongPressLikeDemoVC: BaseVC {
     private lazy var hapticFeedback = UIImpactFeedbackGenerator(style: .medium)
 
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("短按切换点赞状态；长按图标立即变红，持续冒泡并伴随震动与声音反馈".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
@@ -113,7 +113,7 @@ final class JobsLongPressLikeDemoVC: BaseVC {
                     maximumConcurrentCount: 10
                 ),
                 bubbleProvider: {
-                    UIImageView()
+                    UIImageView.jobsMake { _ in }
                         .byImage("hand.thumbsup.fill".sysImg)
                         .byContentMode(.scaleAspectFit)
                         .byFrame(CGRect(x: 0, y: 0, width: 34, height: 34))

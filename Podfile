@@ -3,6 +3,16 @@
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 require 'fileutils'
 require 'tmpdir'
+
+jobs_pod_install_guard_path = File.join(
+  __dir__,
+  'ScriptsByPods',
+  '【MacOS】📦Pod Install离线保护.command',
+  'jobs_pod_install_offline_guard.rb'
+)
+require jobs_pod_install_guard_path
+JobsPodInstallOfflineGuard.guard!(__dir__)
+
 source 'https://github.com/CocoaPods/Specs.git'
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
@@ -316,91 +326,32 @@ def run_spm_validation_script
 end
 
 
-# ===== PodspecDependencyReport: pod install 后自动生成 Podspec 依赖分析报告 =====
-# 路径：项目根目录/ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/【MacOS】🔍查询Xcode工程依赖关系.command
-# 风格与 OC 项目一致：先 chmod +x，再直接执行脚本；脚本工作目录为项目根目录。
-def run_podspec_dependency_report_script
+# 统一执行 pod install 后置脚本；子脚本失败只警告，不改变安装结果。
+def run_pod_install_post_scripts
   script_path = jobs_resolve_external_script_path(
-    File.join('ScriptsByPods', '【MacOS】🔍查询Xcode工程依赖关系.command'),
+    File.join('ScriptsByPods', '【MacOS】📦Pod Install离线保护.command'),
     base_dir: __dir__
   )
 
   unless File.file?(script_path)
-    Pod::UI.puts "[PodspecDependencyReport] skip, script not found: #{script_path}" if defined?(Pod::UI)
+    Pod::UI.puts "[PodInstallPostScripts] skip, script not found: #{script_path}" if defined?(Pod::UI)
     return
   end
 
-  Pod::UI.puts "[PodspecDependencyReport] chmod +x #{script_path}"
-  unless system('/bin/chmod', '+x', script_path)
-    Pod::UI.puts "[PodspecDependencyReport] ⚠️ chmod +x 执行失败，已跳过：#{script_path}" if defined?(Pod::UI)
-    return
-  end
-
-  command = jobs_external_script_command(script_path)
-  Pod::UI.puts "[PodspecDependencyReport] 执行 JOBS_SKIP_README=1 #{command.join(' ')}"
-  unless system({ 'JOBS_SKIP_README' => '1' }, *command, chdir: __dir__)
-    Pod::UI.puts "[PodspecDependencyReport] ⚠️ 脚本执行失败或被中断；pod install 主流程已完成" if defined?(Pod::UI)
-    return
-  end
-
-  Pod::UI.puts "[PodspecDependencyReport] ✅ 依赖关系报告已生成"
-end
-
-# ===== CodeGraph: pod install 完成后在后台生成 CodeGraph 索引 =====
-def run_codegraph_init_script
-  script_path = jobs_resolve_external_script_path(
-    File.join('ScriptsByPods', 'codegraph_init.command'),
-    base_dir: __dir__
-  )
-
-  unless File.file?(script_path)
-    Pod::UI.puts "[CodeGraph] skip, script not found: #{script_path}" if defined?(Pod::UI)
-    return
-  end
-
-  Pod::UI.puts "[CodeGraph] chmod +x #{script_path}"
-  unless system('/bin/chmod', '+x', script_path)
-    Pod::UI.puts "[CodeGraph] ⚠️ chmod +x 执行失败，已跳过：#{script_path}" if defined?(Pod::UI)
-    return
-  end
-
-  async_log = '/tmp/codegraph_init.async.log'
-  pid_dir = File.join(__dir__, '.codegraph')
-  pid_path = File.join(pid_dir, 'codegraph_init.pid')
-  existing_pid = Integer(File.read(pid_path).strip, exception: false) if File.file?(pid_path)
-
-  if existing_pid
-    begin
-      Process.kill(0, existing_pid)
-      Pod::UI.puts "[CodeGraph] 后台同步已在运行，PID=#{existing_pid}；pod install 直接结束" if defined?(Pod::UI)
-      return
-    rescue Errno::ESRCH
-      # PID 文件可以留存，进程不存在时直接启动新任务。
-    rescue Errno::EPERM
-      Pod::UI.puts "[CodeGraph] 后台同步已在运行，PID=#{existing_pid}；pod install 直接结束" if defined?(Pod::UI)
-      return
-    end
-  end
-
-  FileUtils.mkdir_p(pid_dir)
-  log_io = File.open(async_log, 'w')
-  pid = Process.spawn(
-    { 'CODEGRAPH_AUTO_INIT' => '1', 'CODEGRAPH_EXPORT_ASYNC' => '0' },
+  succeeded = system(
+    { 'JOBS_POD_INSTALL_HOOK' => '1', 'JOBS_SKIP_README' => '1' },
+    '/bin/zsh',
     script_path,
-    chdir: __dir__,
-    in: File::NULL,
-    out: log_io,
-    err: log_io,
-    pgroup: true
+    '--post-integrate',
+    '--project-root',
+    __dir__,
+    chdir: __dir__
   )
-  Process.detach(pid)
-  File.write(pid_path, "#{pid}\n")
-  Pod::UI.puts "[CodeGraph] 后台同步已启动，PID=#{pid}，日志=#{async_log}" if defined?(Pod::UI)
-  Pod::UI.puts '[CodeGraph] pod install 主流程已完成，无需等待 CodeGraph' if defined?(Pod::UI)
+  return if succeeded
+
+  Pod::UI.puts '[PodInstallPostScripts] ⚠️ 存在失败项；pod install 主流程已完成' if defined?(Pod::UI)
 rescue => e
-  Pod::UI.puts "[CodeGraph] ⚠️ 后台任务启动失败，已跳过：#{e.message}" if defined?(Pod::UI)
-ensure
-  log_io&.close
+  Pod::UI.puts "[PodInstallPostScripts] ⚠️ 后置脚本异常，已跳过：#{e.message}" if defined?(Pod::UI)
 end
 
 def jobs_configure_podfile_text_reference(file_ref, name, path)
@@ -615,11 +566,9 @@ post_install do |installer|
   jobs_patch_pods_project!(installer)
   patch_private_netinet6_header_imports
 
-  # -------- 2、pod install 完成后生成 Podspec 依赖分析报告 --------
-  run_podspec_dependency_report_script
 end
 
 post_integrate do |installer|
   jobs_patch_pods_project_podfile_references!(installer)
-  run_codegraph_init_script
+  run_pod_install_post_scripts
 end

@@ -13,17 +13,17 @@ import Jobsl10n
 import SnapKit
 
 public final class JobsSwiftSearcherView: UIView {
-    public private(set) var textField = UITextField()
+    public private(set) var textField = UITextField.jobsMake { _ in }
     public private(set) var config: JobsSwiftSearcherConfig
     public private(set) var historySearches: [String] = []
 
-    private let searchContainerView = UIView()
+    private let searchContainerView = UIView.jobsMake { _ in }
     private let searchButton = UIButton.sys()
-    private let recommendSectionView = UIView()
-    private let recommendTitleLabel = UILabel()
-    private let recommendTagContainerView = UIView()
+    private let recommendSectionView = UIView.jobsMake { _ in }
+    private let recommendTitleLabel = UILabel.jobsMake { _ in }
+    private let recommendTagContainerView = UIView.jobsMake { _ in }
     private let tableView = UITableView(frame: .zero, style: .plain)
-    private let blankTapGestureRecognizer = UITapGestureRecognizer()
+    private let blankTapGestureRecognizer = UITapGestureRecognizer.jobsMake { _ in }
     private var searchButtonLeftConstraint: Constraint?
     private var searchButtonWidthConstraint: Constraint?
     private var recommendSectionHeightConstraint: Constraint?
@@ -153,9 +153,9 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
     public func tableView(_ tableView: UITableView,
                           viewForHeaderInSection section: Int) -> UIView? {
         guard !historySearches.isEmpty else { return nil }
-        let headerView = UIView()
+        let headerView = UIView.jobsMake { _ in }
             .byBackgroundColor(backgroundColor)
-        let label = UILabel()
+        let label = UILabel.jobsMake { _ in }
             .byText(config.historyTitle)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -217,10 +217,11 @@ extension JobsSwiftSearcherView: UITableViewDataSource, UITableViewDelegate, UIT
 private extension JobsSwiftSearcherView {
     func setupViews() {
         self.byBackgroundColor(JobsCor.systemBackground)
-        searchContainerView.byBackgroundColor(JobsCor.secondarySystemBackground)
-        searchContainerView.byCornerRadius(16)
-        searchContainerView.byBorderWidth(0.5)
-        searchContainerView.byBorderColor(JobsCor.separator)
+        searchContainerView
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(16)
+            .byBorderWidth(0.5)
+            .byBorderColor(JobsCor.separator)
         textField
             .byDelegate(self)
             .byClearButtonMode(.whileEditing)
@@ -242,20 +243,22 @@ private extension JobsSwiftSearcherView {
             .onTap { [weak self] _ in
                 self?.searchButtonTapped()
             }
-        recommendTitleLabel.byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-        recommendTitleLabel.byTextColor(JobsCor.secondaryLabel)
-        recommendTitleLabel.byTranslatesAutoresizingMaskIntoConstraints(true)
+        recommendTitleLabel
+            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(JobsCor.secondaryLabel)
+            .byTranslatesAutoresizingMaskIntoConstraints(true)
         recommendTagContainerView.byTranslatesAutoresizingMaskIntoConstraints(true)
         tableView
             .byDelegate(self)
             .byDataSource(self)
         tableView.jobs_emptyAutoDisabled = true
-        tableView.separatorStyle = .singleLine
-        tableView.byBackgroundColor(JobsCor.clear)
-        tableView.keyboardDismissMode = .onDrag
-        tableView.tableFooterView = UIView(frame: .zero)
+        tableView
+            .bySeparatorStyle(.singleLine)
+            .byBackgroundColor(JobsCor.clear)
+            .byKeyboardDismissMode(.onDrag)
+            .byTableFooterView(UIView(frame: .zero))
         if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
+            tableView.bySectionHeaderTopPadding(0)
         }
         searchContainerView.byAddTo(self)
         textField.byAddTo(searchContainerView)
@@ -325,8 +328,9 @@ private extension JobsSwiftSearcherView {
 
     func updateSearchButtonEnabled(by text: String?) {
         let enabled = !normalizedText(by: text).isEmpty
-        searchButton.byEnabled(enabled)
-        searchButton.byAlpha(enabled || textField.isFirstResponder ? 1 : 0.55)
+        searchButton
+            .byEnabled(enabled)
+            .byAlpha(enabled || textField.isFirstResponder ? 1 : 0.55)
     }
 
     func readHistorySearches() -> [String] {
@@ -438,8 +442,9 @@ private extension JobsSwiftSearcherView {
 
     func searchIconLeftView() -> UIView {
         let imageView = UIImageView(image: searchIconImage(with: UIColor(r: 0.55 * 255, g: 0.42 * 255, b: 0.18 * 255)))
-        imageView.byFrame(CGRect(x: 0, y: 0, width: 24, height: 24))
-        imageView.byContentMode(.center)
+        imageView
+            .byFrame(CGRect(x: 0, y: 0, width: 24, height: 24))
+            .byContentMode(.center)
         return imageView
     }
 

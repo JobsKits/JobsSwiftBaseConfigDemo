@@ -27,7 +27,6 @@ final class FTDashboadDemoVC: BaseVC {
     private lazy var dashboardView: FTDashboardView = {
         FTDashboardView()
             .byLineWidth(16)
-            .byTrackColor(JobsCor.label.withAlphaComponent(0.18))
             .byProgressColor(JobsCor.systemGreen)
             .byTickCount(11)
             .byNeedleInnerRadiusRatio(0.42)
@@ -37,6 +36,21 @@ final class FTDashboadDemoVC: BaseVC {
             .byValueFormatter { p in
                 let value = Int(round(p * 100))
                 return "\(value)"
+            }
+            .byConfig { dashboard in
+                JobsThemeCenter.shared.bind(
+                    dashboard,
+                    slot: "FTDashboardDemo.themeColors"
+                ) { object, center in
+                    guard let dashboard = object as? FTDashboardView else { return }
+                    let foregroundColor = center.resolvedColor(.textPrimary)
+                    dashboard
+                        .byTrackColor(foregroundColor.withAlphaComponent(0.18))
+                        .byTickColor(foregroundColor.withAlphaComponent(0.48))
+                        .byNeedleColor(foregroundColor)
+                        .byCenterDotColor(foregroundColor)
+                        .byValueTextColor(foregroundColor)
+                }
             }
             .onProgressChanged { [weak self] progress in
                 self?.slider.byValue(Float(progress))
@@ -53,7 +67,7 @@ final class FTDashboadDemoVC: BaseVC {
     }()
 
     private lazy var slider: UISlider = {
-        UISlider()
+        UISlider.jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0.44)

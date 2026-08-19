@@ -11,10 +11,12 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDelegate, UIPickerViewDataSource {
     private var columns: [[String]] = []
     private var selectedRows: [Int] = []
-    private let picker = UIPickerView()
+    private let picker = UIPickerView.jobsMake { _ in }
     private var lastSelectedRow: [Int: Int] = [:]
     /// Only highlight the component(s) that the user has actually scrolled.
     private var touchedComponents: Set<Int> = []
@@ -35,8 +37,9 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     }
 
     public override func buildContentView() -> UIView {
-        picker.delegate = self
-        picker.dataSource = self
+        picker
+            .byDelegate(self)
+            .byDataSource(self)
         for (i,r) in selectedRows.enumerated() {
             picker.selectRow(r, inComponent: i, animated: false)
         }
@@ -63,12 +66,13 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
     public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { theme.pickerHeight / 5.0 }
 
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
-        label.textAlignment = .center
-        label.font = theme.pickerFont
-        label.textColor = theme.pickerTextColor
-        label.text = columns[component][row]
-        label.backgroundColor = .clear
+        let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
+        label
+            .byTextAlignment(.center)
+            .byFont(theme.pickerFont)
+            .byTextColor(theme.pickerTextColor)
+            .byText(columns[component][row])
+            .byBackgroundColor(.clear)
         return label
     }
 
@@ -96,6 +100,6 @@ public final class BRMultiColumnPicker: BRBasePicker<[String]>, UIPickerViewDele
 
     private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
         guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
-        label.textColor = selected ? theme.pickerSelectedTextColor : theme.pickerTextColor
+        label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

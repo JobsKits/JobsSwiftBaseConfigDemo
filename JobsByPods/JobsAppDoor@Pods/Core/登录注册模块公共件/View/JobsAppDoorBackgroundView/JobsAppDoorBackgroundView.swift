@@ -14,7 +14,7 @@ import SnapKit
 
 final class JobsAppDoorBackgroundView: UIView {
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
             .byAddTo(self) { make in
@@ -23,7 +23,7 @@ final class JobsAppDoorBackgroundView: UIView {
     }()
 
     private lazy var dimView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.black.withAlphaComponent(0.08))
             .byAddTo(self) { make in
                 make.edges.equalToSuperview()
@@ -104,7 +104,7 @@ private extension JobsAppDoorBackgroundView {
         player.isMuted = muted
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = .resizeAspectFill
-        playerLayer.frame = bounds
+        playerLayer.byFrame(bounds)
         layer.insertSublayer(playerLayer, below: dimView.layer)
         self.player = player
         self.playerLayer = playerLayer

@@ -147,8 +147,9 @@ public extension JobsToast {
             delay: showDelay,
             options: showOptions,
             animations: {
-                toast.byAlpha(1)
-                toast.byTransform(.identity)
+                toast
+                    .byAlpha(1)
+                    .byTransform(.identity)
             }
         )
         // 记录引用：每窗只保留一个

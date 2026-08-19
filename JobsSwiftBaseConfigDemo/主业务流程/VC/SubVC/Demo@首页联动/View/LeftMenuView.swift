@@ -42,7 +42,7 @@ final class LeftMenuView: UIView {
         super.init(frame: .zero)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
         // 右侧 0.5 分隔线
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.quaternaryLabel)
             .byAddTo(self) { make in
                 make.top.bottom.trailing.equalToSuperview()

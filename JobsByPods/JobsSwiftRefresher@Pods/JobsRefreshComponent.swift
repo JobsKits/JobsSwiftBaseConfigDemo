@@ -36,7 +36,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     // ✅ 有了刷新时间后固定两行高度，避免百分比变化时布局闪动
     private var fixedLabelHeight: CGFloat?
     private static let timeFormatter: DateFormatter = {
-        DateFormatter()
+        DateFormatter.jobsMake { _ in }
             .byLocale(.current)
             .byTimeZone(.current)
             .byDateFormat("HH:mm:ss")
@@ -53,7 +53,7 @@ public class JobsDefaultIndicatorView: UIView, JobsAnimatable, JobsRefreshTimeTr
     }()
 
     private lazy var label: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)          // ✅ 允许两行

@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftDSL
+
 public protocol BRPanelAnimatable {
     func animateIn(panel: UIView, dimming: UIView, finalFrame: CGRect)
     func animateOut(panel: UIView, dimming: UIView, finalFrame: CGRect, completion: @escaping () -> Void)
@@ -19,17 +21,17 @@ public protocol BRPanelAnimatable {
 public struct BRSlideAnimation: BRPanelAnimatable {
     public init() {}
     public func animateIn(panel: UIView, dimming: UIView, finalFrame: CGRect) {
-        panel.frame = finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80)
-        dimming.alpha = 0
+        panel.byFrame(finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80))
+        dimming.byAlpha(0)
         UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut]) {
-            panel.frame = finalFrame
-            dimming.alpha = 1
+            panel.byFrame(finalFrame)
+            dimming.byAlpha(1)
         }
     }
     public func animateOut(panel: UIView, dimming: UIView, finalFrame: CGRect, completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseIn]) {
-            panel.frame = finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80)
-            dimming.alpha = 0
+            panel.byFrame(finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80))
+            dimming.byAlpha(0)
         } completion: { _ in completion() }
     }
 }
@@ -37,21 +39,21 @@ public struct BRSlideAnimation: BRPanelAnimatable {
 public struct BRSpringAnimation: BRPanelAnimatable {
     public init() {}
     public func animateIn(panel: UIView, dimming: UIView, finalFrame: CGRect) {
-        panel.frame = finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 120)
-        dimming.alpha = 0
+        panel.byFrame(finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 120))
+        dimming.byAlpha(0)
         UIView.animate(withDuration: 0.45,
                        delay: 0,
                        usingSpringWithDamping: 0.86,
                        initialSpringVelocity: 0.8,
                        options: [.curveEaseOut]) {
-            panel.frame = finalFrame
-            dimming.alpha = 1
+            panel.byFrame(finalFrame)
+            dimming.byAlpha(1)
         }
     }
     public func animateOut(panel: UIView, dimming: UIView, finalFrame: CGRect, completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseIn]) {
-            panel.frame = finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80)
-            dimming.alpha = 0
+            panel.byFrame(finalFrame.offsetBy(dx: 0, dy: finalFrame.height + 80))
+            dimming.byAlpha(0)
         } completion: { _ in completion() }
     }
 }
@@ -59,18 +61,19 @@ public struct BRSpringAnimation: BRPanelAnimatable {
 public struct BRFadeAnimation: BRPanelAnimatable {
     public init() {}
     public func animateIn(panel: UIView, dimming: UIView, finalFrame: CGRect) {
-        panel.frame = finalFrame
-        panel.alpha = 0
-        dimming.alpha = 0
+        panel
+            .byFrame(finalFrame)
+            .byAlpha(0)
+        dimming.byAlpha(0)
         UIView.animate(withDuration: 0.25) {
-            panel.alpha = 1
-            dimming.alpha = 1
+            panel.byAlpha(1)
+            dimming.byAlpha(1)
         }
     }
     public func animateOut(panel: UIView, dimming: UIView, finalFrame: CGRect, completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0.2, animations: {
-            panel.alpha = 0
-            dimming.alpha = 0
+            panel.byAlpha(0)
+            dimming.byAlpha(0)
         }) { _ in completion() }
     }
 }

@@ -101,7 +101,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private var aAutoPausedInBackground = false
     // MARK: - UI
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byBackgroundColor(JobsCor.clear)
@@ -116,7 +116,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
@@ -125,7 +125,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var heroTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("一个管理器，统一驾驭三种计时内核".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
@@ -137,7 +137,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var heroDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(
                 "JobsSwiftTimerMgr 的价值不是“再造一个 Timer”，而是给 GCD、DisplayLink、NSTimer 加上统一的 identifier 管理、去重替换、暂停恢复、后台策略和集中清理。下面按步骤操作，状态与日志会同步变化。".tr
             )
@@ -158,7 +158,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var guideTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("这个 Demo 要证明什么？".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -169,7 +169,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var guideDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(
                 "① 同一个 identifier 只保留一个 Timer，新建时可原位替换旧实例。\n" +
                 "② A 支持暂停 / 恢复，并能区分“手动暂停”和“后台自动暂停”。\n" +
@@ -194,7 +194,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var kindTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("先选择 A 的计时内核".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -205,7 +205,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var kindDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("选择只影响 A；点击“同 ID 替换 A”会切换到下一个内核，但 identifier 保持不变。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
@@ -231,7 +231,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var kindFootnoteLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
@@ -250,7 +250,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var statusTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("实时实验状态".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -261,7 +261,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var statusLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("等待开始：先创建 A + B，再按下面的实验顺序操作。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
@@ -278,7 +278,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var oneShotMetricView: UIView = makeMetricView()
 
     fileprivate lazy var countALabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("A 持续任务\n0 次")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
@@ -290,7 +290,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var countBLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("B 后台取消\n0 次")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
@@ -302,7 +302,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var oneShotLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("一次性任务\n未启动")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
@@ -546,7 +546,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var logTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("实验日志".tr)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byTextColor(JobsCor.label)
@@ -577,7 +577,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var logHintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("每次操作、前后台切换和 Manager 状态变化都会记录在这里。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
@@ -589,7 +589,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var logView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(NO)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
@@ -975,7 +975,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     @MainActor
     fileprivate func appendLog(_ s: String) {
-        let t = ISO8601DateFormatter().string(from: Date())
+        let t = ISO8601DateFormatter.jobsMake { _ in }.string(from: Date())
         let line = "[\(t)] \(s)\n"
         logView.byText((logView.text ?? "") + line)
         let bottom = NSRange(location: max(0, (logView.text as NSString).length - 1), length: 1)
@@ -984,19 +984,19 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     // MARK: - Helpers
     private func makeCard() -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(16)
     }
 
     private func makeMetricView() -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
             .byCornerRadius(12)
     }
 
     private func makeSectionTitle(_ text: String) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text.tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
@@ -1004,7 +1004,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }
 
     private func makeSectionDetail(_ text: String) -> UILabel {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(text.tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)

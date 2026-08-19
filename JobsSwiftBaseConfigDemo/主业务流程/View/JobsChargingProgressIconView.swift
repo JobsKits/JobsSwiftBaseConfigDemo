@@ -82,7 +82,7 @@ final class JobsChargingProgressIconView: UIView {
 
 private extension JobsChargingProgressIconView {
     func makeSegment() -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byCornerRadius(1.5)
             .byClipsToBounds(YES)
     }

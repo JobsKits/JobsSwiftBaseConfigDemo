@@ -380,7 +380,7 @@ extension UIView {
         jobs_updateShimmerColors()
         // 动画
         jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: true)
-        layer.isHidden = false
+        layer.byHidden(false)
     }
     /// 停止呼吸效果
     public func jobs_stopShimmer() {
@@ -412,16 +412,16 @@ extension UIView {
         let h = bounds.height
         guard w > 0, h > 0 else { return }
         jobs_withoutImplicitAnimations {
-            containerLayer.frame = bounds
-            layer.frame = CGRect(x: -w, y: 0, width: w * 3, height: h)
+            containerLayer.byFrame(bounds)
+            layer.byFrame(CGRect(x: -w, y: 0, width: w * 3, height: h))
             // 复刻“bar view”常见的圆角效果：
             // - 如果外部已经给 view 配了 cornerRadius，则尊重外部
             // - 否则默认使用 pill（h/2）
             let baseCorner = jobs_originalCornerRadius ?? self.layer.cornerRadius
             let desiredCorner = max(baseCorner, h / 2)
-            containerLayer.cornerRadius = desiredCorner
-            layer.cornerRadius = desiredCorner
-            self.layer.cornerRadius = max(self.layer.cornerRadius, desiredCorner)
+            containerLayer.byCornerRadius(desiredCorner)
+            layer.byCornerRadius(desiredCorner)
+            self.layer.byCornerRadius(max(self.layer.cornerRadius, desiredCorner))
         }
         // ✅ 尺寸变化后，确保动画距离正确
         jobs_startShimmerAnimationIfNeeded(forceRestartIfWidthChanged: true)

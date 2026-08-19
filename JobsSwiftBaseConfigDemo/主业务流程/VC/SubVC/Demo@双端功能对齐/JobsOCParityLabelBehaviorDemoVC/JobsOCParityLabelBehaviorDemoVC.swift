@@ -188,7 +188,7 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     )
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(item.subtitle)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -200,7 +200,7 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     }()
 
     private lazy var previewCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(14)
             .byAddTo(view) { [unowned self] make in
@@ -211,7 +211,7 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     }()
 
     private lazy var demoLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextAlignment(.center)

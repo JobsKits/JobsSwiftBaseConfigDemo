@@ -45,7 +45,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     // MARK: - UI
     /// 提示文案
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("点击按钮：开始 / 暂停 / 继续（完成后再点 = 重新开始）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)

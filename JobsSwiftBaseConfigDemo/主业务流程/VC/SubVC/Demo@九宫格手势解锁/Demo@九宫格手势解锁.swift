@@ -70,7 +70,7 @@ final class GestureUnlockDemoVC: BaseVC {
     }()
 
     private lazy var hintLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
@@ -158,7 +158,7 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
                 view.showSelected()
                 hintLabel.byText("设置成功 ✅ 现在可以用它解锁了".tr)
                 flowState = .verify
-                modeControl.selectedSegmentIndex = 1
+                modeControl.bySelectedSegmentIndex(1)
                 delayedReset()
             } else {
                 flowState = .createFirst
@@ -198,13 +198,13 @@ extension GestureUnlockDemoVC{
         if store.hasPattern {
             flowState = .verify
             hintLabel.byText("请输入手势解锁".tr)
-            modeControl.selectedSegmentIndex = 1
+            modeControl.bySelectedSegmentIndex(1)
             unlockView.byVisible(YES)
             unlockView.isInputEnabled = true
             unlockView.reset()
         } else {
             flowState = .createFirst
-            modeControl.selectedSegmentIndex = 0
+            modeControl.bySelectedSegmentIndex(0)
             unlockView.byVisible(YES)
             unlockView.isInputEnabled = true
             showInfoHintAndClear("请先设置手势（至少 4 个点）".tr) // ✅ 提示后清痕

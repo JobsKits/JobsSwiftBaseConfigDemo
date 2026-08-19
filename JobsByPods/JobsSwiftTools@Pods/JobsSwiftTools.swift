@@ -205,7 +205,7 @@ public enum JobsLog {
     }
     // ---------- 基础工具 ----------
     private static func timeNow() -> String {
-        let f = DateFormatter(); f.dateFormat = "HH:mm:ss"; f.locale = Locale(identifier: "zh_CN")
+        let f = DateFormatter.jobsMake { _ in }; f.dateFormat = "HH:mm:ss"; f.locale = Locale(identifier: "zh_CN")
         return f.string(from: Date())
     }
     // 人类可读 stringify（递归容器 + Unicode 反转义）
@@ -328,12 +328,12 @@ public enum JobsLog {
         if depth <= 0 { return "<depth-limit>" }
         // 1) Optional
         let (isNil, unwrapped) = unwrapOptional(any)
-        if isNil { return NSNull() }
+        if isNil { return NSNull.jobsMake { _ in } }
         let value = unwrapped ?? any
         // 2) 基本/可序列化类型直接返回
         switch value {
         /// 处理 NSNull 类型分支
-        case is NSNull:               return NSNull()
+        case is NSNull:               return NSNull.jobsMake { _ in }
         /// 处理 String 类型分支
         case let x as String:         return x
         /// 处理 NSString 类型分支
@@ -367,7 +367,7 @@ public enum JobsLog {
         /// 处理 NSNumber 类型分支
         case let x as NSNumber:       return x
         /// 处理 Date 类型分支
-        case let x as Date:           return ISO8601DateFormatter().string(from: x)
+        case let x as Date:           return ISO8601DateFormatter.jobsMake { _ in }.string(from: x)
         /// 处理 URL 类型分支
         case let x as URL:            return x.absoluteString
         /// 避免巨型 base64
@@ -393,7 +393,7 @@ public enum JobsLog {
                 let pm = Mirror(reflecting: child.value)
                 let kv = pm.children.map { $0.value }
                 let k = kv.indices.contains(0) ? kv[0] : "<key>"
-                let v = kv.indices.contains(1) ? kv[1] : NSNull()
+                let v = kv.indices.contains(1) ? kv[1] : NSNull.jobsMake { _ in }
                 dict[String(describing: k)] = toJSONReady(v, depth: depth - 1, visited: &visited)
             };return dict
         }

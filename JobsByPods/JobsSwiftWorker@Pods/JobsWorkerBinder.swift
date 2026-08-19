@@ -48,7 +48,7 @@ public enum JobsWorkerBinder {
 private final class TextFieldTarget: NSObject {
     static let shared = TextFieldTarget()
 
-    private let lock = NSLock()
+    private let lock = NSLock.jobsMake { _ in }
     private var storage: [ObjectIdentifier: Entry] = [:]
 
     struct Entry {

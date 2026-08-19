@@ -47,7 +47,7 @@ final class JobsWidgetDemoVC: BaseVC {
     private var counter = JobsWidgetSharedStore.counter
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
@@ -61,7 +61,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -69,7 +69,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("宿主联调页：切换 Widget family，修改状态，观察时间线快照如何重新排版。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
@@ -96,7 +96,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewCard: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemIndigo)
             .byCornerRadius(22)
             .byClipsToBounds(YES)
@@ -108,7 +108,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewEyebrowLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("WIDGETKIT · PREVIEW")
             .byTextColor(JobsCor.white.withAlphaComponent(0.72))
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .semibold))
@@ -118,7 +118,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("演武堂 · 小组件".tr)
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
@@ -129,7 +129,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewTimeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("--:--:--")
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold))
@@ -140,7 +140,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewCounterLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white.withAlphaComponent(0.86))
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byAddTo(previewCard) { [unowned self] make in
@@ -150,7 +150,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewDescriptionLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.white.withAlphaComponent(0.72))
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
             .byNumberOfLines(2)
@@ -198,7 +198,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var timelineLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
             .byNumberOfLines(0)
@@ -209,7 +209,7 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var footnoteLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("已接入真实 Widget Extension 与 App Group。真机运行宿主 App 一次后：回到系统桌面 → 长按空白处 → 点击“+” 或“添加小组件” → 搜索“SwiftDemo”（进入后显示“演武堂小组件”） → 选择尺寸并添加。\n\n本页“计数 +1”和“刷新时间线”会重载桌面 Widget；iOS 不允许 App 直接弹出系统小组件库。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
@@ -287,8 +287,8 @@ private extension JobsWidgetDemoVC {
     }
 
     private func currentTimeText() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        let formatter = DateFormatter.jobsMake { _ in }
+        formatter.byDateFormat("HH:mm:ss")
         return formatter.string(from: Date())
     }
 }

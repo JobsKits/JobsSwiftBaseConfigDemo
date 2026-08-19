@@ -50,7 +50,7 @@ final class LiveInputBar: UIView {
     }()
 
     private lazy var textView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byKeyboardType(.default)
@@ -75,7 +75,7 @@ final class LiveInputBar: UIView {
     }()
 
     private lazy var topLine: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(self) { make in
                 make.top.leading.trailing.equalToSuperview()

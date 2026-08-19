@@ -60,7 +60,7 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private lazy var imageView: UIImageView = {
-        UIImageView()
+        UIImageView.jobsMake { _ in }
             .byContentMode(configuration.contentMode)
             .byClipsToBounds()
             .byUserInteractionEnabled(true)
@@ -70,7 +70,7 @@ public final class JobsSplashVC: BaseVC {
     }()
 
     private lazy var remoteVideoDownloadNoticeLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(JobsSplashLocalization.remoteVideoWiFiDownloadNotice(language: configuration.language))
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))

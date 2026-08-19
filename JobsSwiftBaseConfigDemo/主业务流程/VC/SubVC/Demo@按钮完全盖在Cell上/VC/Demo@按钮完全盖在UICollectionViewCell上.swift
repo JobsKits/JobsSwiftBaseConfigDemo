@@ -26,7 +26,7 @@ import SnapKit
 final class BtnFullOnCVCellDemoVC: BaseVC {
     private var items: [JobsBtnCellModel] = []
     private lazy var flowLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout()
+        UICollectionViewFlowLayout.jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)
@@ -114,7 +114,7 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
         let w = collectionView.bounds.width
         let total = inset.left + inset.right + (columns - 1) * spacing
         let itemW = floor((w - total) / columns)
-        flowLayout.itemSize = CGSize(width: itemW, height: 118)
+        flowLayout.byItemSize(CGSize(width: itemW, height: 118))
     }
 }
 

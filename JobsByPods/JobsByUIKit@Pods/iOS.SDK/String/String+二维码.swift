@@ -19,22 +19,22 @@ extension String {
     /// - Parameters:
     ///   - widthSize: 目标边长（正方形）
     ///   - correction: 纠错等级 L/M/Q/H（默认 M）
-    /// - Returns: 生成的二维码图片；失败返回空 `UIImage.make()`
+    /// - Returns: 生成的二维码图片；失败返回空 `UIImage.make { _ in }`
     @MainActor
     public func qrcodeImage(_ widthSize: CGFloat, correction: String = "M") -> UIImage {
         guard !self.isEmpty,
               let data = self.data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator")
-        else { return UIImage.make() }
+        else { return UIImage.make { _ in } }
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // "L" "M" "Q" "H"
-        guard let output = filter.outputImage, widthSize > 0 else { return UIImage.make() }
+        guard let output = filter.outputImage, widthSize > 0 else { return UIImage.make { _ in } }
         // 无插值等比放大
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make { _ in } };return UIImage(cgImage: cgImage)
     }
     /// 可选：着色版（前景/背景色）
     @MainActor
@@ -46,21 +46,21 @@ extension String {
               let data = self.data(using: .utf8),
               let gen = CIFilter(name: "CIQRCodeGenerator"),
               let falseColor = CIFilter(name: "CIFalseColor")
-        else { return UIImage.make() }
+        else { return UIImage.make { _ in } }
         gen.setDefaults()
         gen.setValue(data, forKey: "inputMessage")
         gen.setValue(correction, forKey: "inputCorrectionLevel")
-        guard let qr = gen.outputImage else { return UIImage.make() }
+        guard let qr = gen.outputImage else { return UIImage.make { _ in } }
         // 颜色映射
         falseColor.setValue(qr, forKey: kCIInputImageKey)
         falseColor.setValue(CIColor(color: foreground), forKey: "inputColor0")
         falseColor.setValue(CIColor(color: background), forKey: "inputColor1")
-        guard let colored = falseColor.outputImage else { return UIImage.make() }
+        guard let colored = falseColor.outputImage else { return UIImage.make { _ in } }
         // 无插值放大
         let scale = max(widthSize / colored.extent.width, widthSize / colored.extent.height)
         let scaled = colored.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() };return UIImage(cgImage: cgImage)
+        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return UIImage.make { _ in } };return UIImage(cgImage: cgImage)
     }
     /// 生成带中心 Logo 的二维码
     /// - Parameters:
@@ -87,15 +87,15 @@ extension String {
               let data = data(using: .utf8),
               let filter = CIFilter(name: "CIQRCodeGenerator"),
               widthSize > 0
-        else { return UIImage.make() }
+        else { return UIImage.make { _ in } }
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue(correction, forKey: "inputCorrectionLevel") // L/M/Q/H
-        guard let output = filter.outputImage else { return UIImage.make() }
+        guard let output = filter.outputImage else { return UIImage.make { _ in } }
         let scale = max(widthSize / output.extent.width, widthSize / output.extent.height)
         let scaled = output.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
         let ciCtx = CIContext()
-        guard let qrCG = ciCtx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make() }
+        guard let qrCG = ciCtx.createCGImage(scaled, from: scaled.extent) else { return UIImage.make { _ in } }
         let qrImage = UIImage(cgImage: qrCG)
         // 2) 若没有 Logo，直接返回
         guard let logo = logo else { return qrImage }

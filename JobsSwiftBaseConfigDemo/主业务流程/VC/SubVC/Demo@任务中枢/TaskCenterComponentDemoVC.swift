@@ -46,11 +46,11 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }
 
     private lazy var timestampFormatter: DateFormatter = {
-        DateFormatter().byDateFormat("HH:mm:ss")
+        DateFormatter.jobsMake { _ in }.byDateFormat("HH:mm:ss")
     }()
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView()
+        UIScrollView.jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(false)
             .byBackgroundColor(JobsCor.clear)
@@ -66,7 +66,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
@@ -76,7 +76,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText(
                 "这个页面不再只演示‘定时器会响’，而是把 JobsSwiftTaskCenter 的三层职责拆开看：\n" +
                 "1）JobsTaskCenterComponent 负责创建任务与配置调度计划。\n" +
@@ -94,7 +94,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     private lazy var conceptCard: UIView = makeCard(top: introLabel.snp.bottom, offset: 16)
 
     private lazy var conceptTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byText("框架定位".tr)
             .byAddTo(conceptCard) { [unowned self] make in
@@ -104,7 +104,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var conceptDetailLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byText(
@@ -123,7 +123,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     private lazy var heartbeatCard: UIView = makeCard(top: conceptCard.snp.bottom, offset: 16)
 
     private lazy var heartbeatTitleLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byText("演示一：心跳任务 = Component + Manager".tr)
             .byAddTo(heartbeatCard) { [unowned self] make in
@@ -133,7 +133,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var heartbeatExplainLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byText("配置：interval = 1s，initialDelay = 0，repeatCount = nil，fireImmediately = true。先 attach 到 Manager，再决定是否 resume。".tr)
@@ -145,7 +145,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var heartbeatStateLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byText("Component.lifecycle: --\nManager.status: --\nnextFireDate: --")
@@ -156,7 +156,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var heartbeatMetricsLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byText("累计执行：0 次\nattach tag：\(DemoTag.heartbeat)")
@@ -246,7 +246,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     private lazy var burstCard: UIView = makeCard(top: heartbeatCard.snp.bottom, offset: 16)
 
     private lazy var burstTitleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byText("演示二：有限计划任务 = Configuration 表达调度意图".tr)
             .byAddTo(burstCard) { make in
@@ -256,7 +256,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var burstExplainLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byText("配置：2 秒后开始，每 1 秒执行 1 次，总共执行 3 次。这个例子强调的是‘计划表达能力’，不是单纯的 timer。".tr)
@@ -268,7 +268,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var burstStateLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byText("状态：尚未创建".tr)
@@ -321,7 +321,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     private lazy var observerCard: UIView = makeCard(top: burstCard.snp.bottom, offset: 16)
 
     private lazy var observerTitleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
             .byText("演示三：观察流 = statusChanges + executionStream".tr)
             .byAddTo(observerCard) { make in
@@ -331,7 +331,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var observerExplainLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byText("打开观察后，这个页面会同时监听：\n• Manager 级状态变化流\n• heartbeat 的执行流\n• burst 的执行流\n这样你就能直观看到 TaskCenter 的真正价值：不只是调度，还有可观测性。".tr)
@@ -343,7 +343,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var observerStateLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
             .byText("观察状态：未开启".tr)
@@ -394,7 +394,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var logTitleLabel: UILabel = { [unowned self] in
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
             .byText("任务日志".tr)
             .byAddTo(contentView) { [unowned self] make in
@@ -404,7 +404,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = { [unowned self] in
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
@@ -445,7 +445,7 @@ final class TaskCenterComponentDemoVC: BaseVC {
 
 private extension TaskCenterComponentDemoVC {
     func makeCard(top: ConstraintItem, offset: CGFloat) -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byAddTo(contentView) { make in

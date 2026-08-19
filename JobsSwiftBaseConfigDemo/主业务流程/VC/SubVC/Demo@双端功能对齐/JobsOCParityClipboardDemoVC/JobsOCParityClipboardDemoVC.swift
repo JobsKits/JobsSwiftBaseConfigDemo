@@ -23,7 +23,7 @@ final class JobsClipboardCueDemoVC: BaseVC {
     private let copiedText = "财神到，四季发财！！！！"
 
     private lazy var copyLabel: UILabel = {
-        UILabel()
+        UILabel.jobsMake { _ in }
             .byText("请点击复制：\(copiedText)".tr)
             .byFont(JobsFont.systemFont(ofSize: 20))
             .byTextColor(JobsCor.systemRed)
@@ -49,7 +49,7 @@ final class JobsClipboardCueDemoVC: BaseVC {
     }()
 
     private lazy var pasteTextView: UITextView = {
-        UITextView()
+        UITextView.jobsMake { _ in }
             .byText("请粘贴！！！".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)

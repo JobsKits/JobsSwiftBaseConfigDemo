@@ -158,12 +158,13 @@ extension LaunchChecker {
     }
     /// “尽可能最全”的时间格式化（用于打印，而不是存储）
     static func fullFormatter() -> DateFormatter {
-        let f = DateFormatter()
+        let f = DateFormatter.jobsMake { _ in }
         // 年月日 时分秒.毫秒 时区 星期 以及具体时区名和公历
-        f.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ (VV) EEEE G"
-        f.calendar = Calendar(identifier: .gregorian)
-        f.locale = Locale(identifier: "zh_CN")
-        f.timeZone = .current
+        f
+            .byDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ (VV) EEEE G")
+            .byCalendar(Calendar(identifier: .gregorian))
+            .byLocale(Locale(identifier: "zh_CN"))
+            .byTimeZone(.current)
         return f
     }
     static func logLaunch(
@@ -196,7 +197,7 @@ extension LaunchChecker {
 }
 // MARK: - 关于时间格式化
 public func nowClock() -> String {
-    DateFormatter()
+    DateFormatter.jobsMake { _ in }
         .byLocale(.autoupdatingCurrent)
         .byTimeZone(.autoupdatingCurrent)
         .byDateFormat("HH:mm:ss")
@@ -204,7 +205,7 @@ public func nowClock() -> String {
 }
 
 public func fmt(_ d: Date) -> String {
-    DateFormatter().byDateFormat("HH:mm:ss.SSS").string(from: d)
+    DateFormatter.jobsMake { _ in }.byDateFormat("HH:mm:ss.SSS").string(from: d)
 }
 // MARK: - 判断目标字符串是否是URL
 @inline(__always)
@@ -219,11 +220,12 @@ public func isHttpURL(_ raw: String?) -> Bool {
 extension UITableView {
     @discardableResult
     public func register() -> Self{
-        self.byRegisterCell(UITableViewCell.self)
-        self.byRegisterCell(BaseTableViewCellByDefault.self)
-        self.byRegisterCell(BaseTableViewCellByValue1.self)
-        self.byRegisterCell(BaseTableViewCellByValue2.self)
-        self.byRegisterCell(BaseTableViewCellBySubtitle.self)
+        self
+            .byRegisterCell(UITableViewCell.self)
+            .byRegisterCell(BaseTableViewCellByDefault.self)
+            .byRegisterCell(BaseTableViewCellByValue1.self)
+            .byRegisterCell(BaseTableViewCellByValue2.self)
+            .byRegisterCell(BaseTableViewCellBySubtitle.self)
         return self;
     }
 }
@@ -257,14 +259,14 @@ public func makeEKAttributes() -> EKAttributes{
 }
 // MARK: - 时间格式化策略
 public func fmt(_ date: Date, _ f: String) -> String {
-    DateFormatter().byLocale(.current).byDateFormat(f).string(from: date)
+    DateFormatter.jobsMake { _ in }.byLocale(.current).byDateFormat(f).string(from: date)
 }
 // MARK: - 分割线
 extension UIView {
     /// 在指定 view 下方添加一条分割线，添加到当前 view（self）上
     @discardableResult
     public func makeBelowSeparatorBy(below anchor:UIView ,offset t:CGFloat = 0.0) -> UIView {
-        UIView()
+        UIView.jobsMake { _ in }
             .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(self) { make in
                 make.height.equalTo(0.6)
@@ -281,7 +283,7 @@ extension UIView {
             return nil
         }
         // 2️⃣ 分割线加到 hostView 上，约束基于“当前 guide(self)” 的 bottom
-        return UIView()
+        return UIView.jobsMake { _ in }
             .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(hostView) { make in
                 make.height.equalTo(0.6)
@@ -305,7 +307,7 @@ public extension UIView {
         }
         // 2️⃣ 第一次创建
         let container = containerView ?? self
-        let label = UILabel()
+        let label = UILabel.jobsMake { _ in }
             .byText("网络初始化中...".tr)
             .byFont(JobsFont.systemFont(ofSize: 11, weight: .medium))
             .byTextColor(JobsCor.white)
