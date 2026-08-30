@@ -372,6 +372,10 @@ func fetchTitle(id: Int) async -> String {
 }
 
 func fetchTitles(ids: [Int]) async -> [String] {
+    /// withTaskGroup 是 Swift Concurrency 提供的一个函数，用来创建一个任务组。
+    /// 可以理解成：现在要同时开 N 个异步任务，然后统一管理它们，最后把结果收集起来。
+    /// withTaskGroup 属于 Swift Concurrency / Swift 标准库，只要你的 Swift 版本和部署环境支持并发语法，就可以直接用
+    /// Swift Concurrency 是 Swift 5.5 引入的，iOS 项目里一般要求 iOS 13+ 才能使用相关并发能力。
     await withTaskGroup(of: String.self, returning: [String].self) { group in
         for id in ids {
             group.addTask {
@@ -388,7 +392,7 @@ func fetchTitles(ids: [Int]) async -> [String] {
 - 子任务完成顺序不保证等于添加顺序；需要稳定顺序时携带索引并在结果阶段排序。
 - 不要无限制添加数万任务；I/O、服务端限流与内存压力仍要控制。
 
-### 5.6、Actor 专题：使用方式、简单 Demo 与 Class 对比
+### 5.6、Actor（参与者）专题：使用方式、简单 Demo 与 Class 选型实战
 
 #### 5.6.1、先说结论
 
@@ -396,7 +400,7 @@ func fetchTitles(ids: [Int]) async -> [String] {
 
 **可直接说出口的核心回答：**
 
-> Actor 和 Class 都是引用类型，都有身份、属性、方法、初始化器并由 ARC 管理生命周期。核心区别是：普通 Class 默认不保护共享可变状态；Actor 自带隔离域，编译器会限制外部代码直接读写它的隔离状态，跨隔离域调用通常需要 `await`，跨域传值还会结合 `Sendable` 检查。因此 Actor 主要解决并发环境中的共享可变状态，而不是替代所有 Class，也不是创建一条专属线程。
+> Actor 和 Class 都是引用类型，都有身份、属性、方法、初始化器并由 ARC 管理生命周期。核心区别是：**普通 Class 默认不保护共享可变状态；Actor 自带隔离域**，编译器会限制外部代码直接读写它的隔离状态，跨隔离域调用通常需要 `await`，跨域传值还会结合 `Sendable` 检查。因此 Actor 主要解决并发环境中的共享可变状态，而不是替代所有 Class，也不是创建一条专属线程。
 
 再压缩成一句便于记忆的话：
 
@@ -426,7 +430,7 @@ Actor 和 Class 都具备这些引用类型特征：
 | --- | --- | --- |
 | 类型语义 | 引用类型 | 引用类型 |
 | 默认状态保护 | 无；多个并发执行域可以同时碰到同一可变状态 | 实例拥有独立隔离域，隔离状态由 Actor 串行保护 |
-| 外部读取可变属性 | 普通同步访问 | 默认不能直接读取，通常通过方法并使用 `await` |
+| 外部读取可变属性 | 普通同步访问 | 公开属性可以通过 `await` 读取；外部不能直接赋值，修改应通过隔离方法 |
 | 外部调用隔离方法 | 普通同步调用 | 跨隔离域调用时通常需要 `await` |
 | 跨并发域传递 | 普通 Class 不会自动获得并发安全保证 | Actor 实例因隔离自身状态而可安全跨域传递 |
 | 继承 | 支持类继承 | 不参与类继承，优先使用协议与组合复用 |
@@ -548,12 +552,12 @@ final class LockedCounter: @unchecked Sendable {
 
 这里的 `@unchecked Sendable` 是开发者作出的并发安全承诺：编译器不再替你验证全部细节，漏锁、锁顺序、死锁和在持锁期间调用外部代码等风险仍由实现者负责。Actor 则把“哪些状态属于同一隔离域、哪里必须跨域等待”提升到了语言和类型检查层。
 
-在 Objective-C 中，同类状态通常由 `dispatch_queue_t`、`NSLock`、`@synchronized` 或 `os_unfair_lock` 人工保护；这些工具本身没有问题，但能否覆盖每一个读写入口主要依赖封装纪律。Actor 的优势是把隔离规则写进声明，并由编译器阻止外部直接绕过。
+在 Objective-C 中，同类状态通常由 `dispatch_queue_t`、`NSLock`、`@synchronized` 或 `os_unfair_lock` 人工保护；这些工具本身没有问题，**但能否覆盖每一个读写入口主要依赖封装纪律**。Actor 的优势是把隔离规则写进声明，并由编译器阻止外部直接绕过。
 
-这不代表 Actor 永远优于锁：
+**这不代表 Actor 永远优于锁：**
 
 - 已有大量同步调用方，无法把调用链改成 `async` 时，锁或串行队列可能更适合。
-- 极底层、临界区极短且经过性能测试的同步组件，锁可能更直接。
+- 极底层、**临界区极短**且经过性能测试的同步组件，锁可能更直接。
 - 新的业务状态机、缓存、去重器和并发任务账本，优先评估 Actor。
 
 #### 5.6.5、Actor、Task 与线程不要混为一谈
@@ -605,23 +609,102 @@ func updateInventory(_ inventory: Inventory) async {
 
 #### 5.6.6、最重要的坑：Actor 可重入
 
-Actor 保证的是：同一个 Actor 在两个潜在挂起点之间，隔离代码不会与该 Actor 的另一段隔离代码并发执行。它不保证一个包含 `await` 的完整方法从头到尾独占 Actor。
+**这一节的灵魂：检查到“还有一张券”，不等于“这一张券已经归我”。**
+
+Actor 保证同一时刻只有一段代码访问它的隔离状态；它不保证一个包含挂起点的完整业务方法从头到尾独占 Actor。**读写没有同时发生，业务也可能因为前后交错而出错。** 这就是为什么“用了 Actor”与“领取流程正确”是两回事。语言规则见 [**SE-0306：Actor reentrancy**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy)。
+
+##### 5.6.6.1、先把业务和对象说清楚
+
+假设只有一个 `CouponStore` 实例，里面只剩一张券；用户 A、B 分别通过两个 Task 请求**同一个实例**，而且两人都有领取资格。
+
+| 代码里的东西 | 对应的业务含义 | 最容易误解的地方 |
+| --- | --- | --- |
+| `remaining = 1` | 店里还剩一张券 | A、B 共用这一份库存，不是每人各有一张 |
+| `claim()` | 某个人的一次领取申请 | 同一个方法可以有多次尚未完成的调用 |
+| `remaining > 0` | 看一眼此刻是否有库存 | 只是检查，没有扣减，也没有为当前申请预留 |
+| `verifyEligibility()` | 等待资格服务回答“这个人能不能领” | 有资格不等于有库存；示例没有实际发券 |
+| `await` | 这一调用在此处可能需要等待 | 等的是当前任务，不是让整个 Actor 停止接待其它任务 |
+
+就像一个只有一位店员的柜台：店员不会同时给两个人记账，但在等 A 的资格审核时，可以先处理 B 的申请。**柜台一次只办一段事，不等于必须办完一个人的全部流程，才接待下一个人。**
+
+##### 5.6.6.2、先看错误版：券到底是怎么超发的
+
+先故意去掉 `await` 后的库存复查，只保留资格判断：
 
 ```swift
 func verifyEligibility() async -> Bool {
+    /// 资格服务的教学替身：提供让出执行机会的可能，两个人都返回有资格。
     await Task.yield()
     return true
 }
 
-actor CouponStore {
+actor BuggyCouponStore {
     private var remaining = 1
 
     func claim() async -> Bool {
         guard remaining > 0 else { return false }
 
         let allowed = await verifyEligibility()
+        guard allowed else { return false }
 
-        // `await` 期间其它任务可能已经领取，因此必须重新验证 Actor 状态。
+        remaining -= 1 // 错误：没有确认等待结束时是否仍有库存
+        return true
+    }
+}
+```
+
+下面是**允许发生的一种执行顺序，不是每次运行必然出现的顺序**：
+
+| 步骤 | A 的领取调用 | B 的领取调用 | 共享库存 |
+| --- | --- | --- | --- |
+| 1 | 检查 `remaining > 0`，通过 | 尚未进入 | 1 |
+| 2 | 等待资格结果，挂起 | 可以进入同一个 Actor | 1 |
+| 3 | 仍在等待 | 检查 `remaining > 0`，也通过 | 1 |
+| 4 | 仍在等待 | 等待资格结果，挂起 | 1 |
+| 5 | 尚未恢复 | 资格通过，先恢复并扣减，返回 `true` | 0 |
+| 6 | 资格通过，恢复后继续扣减，返回 `true` | 已经结束 | -1 |
+
+结果：只有一张券，却有两个调用返回了领取成功。
+
+**盯住第 6 步：A 不是读到了缓存里的旧库存 `1`。它扣减时读到的可以就是最新的 `0`，然后把 `0` 减成 `-1`。过期的是“我已经检查过有库存，可以继续扣”的判断依据。**
+
+整个过程没有两段 Actor 隔离代码同时读写 `remaining`，所以这里不是隔离失效造成的数据竞争（data race），而是业务依赖执行顺序的逻辑竞态（race condition）。这是根据上表对示例的推演，不是一次实际运行日志。
+
+##### 5.6.6.3、“可重入”究竟重新进入了什么
+
+重新进入的是**同一个 Actor 的隔离域**：A 的 `claim()` 还没结束，B 就可以在 A 挂起期间进入这个 Actor，执行自己的 `claim()`，也可以执行其它隔离方法。
+
+它不是递归调用，不是把 A 的方法从头再跑一遍，也不是两段隔离代码并行执行。用“片段”理解最直接：
+
+```text
+A 的前半段：检查库存 ── 挂起等待 ────────────────── A 的后半段：扣库存
+B 的调用：                 检查库存 ── 等待 ── 扣库存并结束
+```
+
+这里有三个不同的东西：
+
+- **A 的执行位置会保留。** 等待结束后从 `await` 之后继续，不会自动重跑前面的 `guard`。
+- **每次调用的局部状态各自保留。** A、B 的 `allowed` 属于各自调用；这个布尔值也不承诺库存仍然存在。
+- **Actor 的共享状态不会为 A 冻结。** 同一实例中的 `remaining` 可能已被其它调用修改，恢复时必须重新判断相关条件。
+
+`await` 只标记潜在挂起点，不保证这次一定挂起，也不保证 B 一定先执行。原示例中的 [**Task.yield()**](https://developer.apple.com/documentation/swift/task/yield()) 只是主动给调度器一次执行其它任务的机会，当前任务也可能立即恢复；它不是强制线程切换，更不是“保证复现超发”的开关。
+
+**即使没有 `Task.yield()`，真实网络请求等异步调用一旦挂起，同样要面对可重入；不需要先发生线程切换，才可能出现这种逻辑交错。**
+
+##### 5.6.6.4、修正版：为什么必须再次检查，且检查后立刻扣减
+
+复用前面的 `verifyEligibility()`，把领取方法改成：
+
+```swift
+actor CouponStore {
+    private var remaining = 1
+
+    func claim() async -> Bool {
+        guard remaining > 0 else { return false } // 提前拒绝：已经没券就不查资格
+
+        let allowed = await verifyEligibility()
+
+        /// 真正决定能否领取：检查当前库存，并在没有挂起点的片段内完成扣减。
         guard allowed, remaining > 0 else { return false }
         remaining -= 1
         return true
@@ -629,14 +712,164 @@ actor CouponStore {
 }
 ```
 
-如果在 `await verifyEligibility()` 之后直接执行 `remaining -= 1`，两个任务可能都在挂起前看到 `remaining > 0`，恢复后造成超发。
+如果仍然是 B 先恢复：B 看到库存 `1`，扣成 `0` 并成功；A 恢复时重新检查，看到 `0`，直接失败，不再扣减。
 
-处理原则：
+**关键不是“检查了两次”这个次数，而是最终的“检查 → 扣减”之间没有挂起点。**
 
-- 在 `await` 前完成必须原子发生的状态变更；失败时再设计明确的补偿。
-- 或者在 `await` 后重新验证所有依赖的状态，不能相信挂起前的判断仍然成立。
-- 尽量缩小 Actor 方法中的挂起点，把“读取状态 → 判断 → 修改状态”放在同一个无挂起片段内。
-- Actor 只能自动保护自己的隔离状态，不能自动提供跨多个 Actor、数据库和网络请求的分布式事务。
+在同一个 Actor 的这一段同步隔离代码里，其它任务不能插入检查与扣减之间。它不能刚检查完 `remaining > 0`，就被 B 插进来抢走库存；如果在这两行之间再插入一个会挂起的 `await`，同一个漏洞就可能重新出现。Apple 在 [**WWDC21：Protect mutable state with Swift actors**](https://developer.apple.com/videos/play/wwdc2021/10133/) 中也用缓存示例说明了“等待后复核假设，把状态修改收进同步代码”的原则。
+
+两个 `guard` 的职责不同：
+
+- 第一个是**提前拒绝，减少无意义的资格请求**。对于这里“最多成功一次”的要求，去掉它仍可由后面的检查保证不超发。
+- 第二个是**提交前的最终校验**。删掉它的库存条件，前面的检查不能替它兜底。
+
+这段保护的是同一个 Actor 实例内的状态提交，不等于数据库事务，也不会自动回滚已经发生的外部副作用。
+
+##### 5.6.6.5、亲手运行：稳定对比错误版与修正版
+
+仅用 `Task.yield()` 或睡眠，可能因为调度顺序不同而看不到错误。下面的实验用一个**只服务于测试的资格闸门**：必须等两份资格请求都到达，才同时允许它们获得结果。
+
+这样可以确定 A、B 都已通过第一次库存检查，再让后半段继续。谁先恢复仍然不确定，但错误版与修正版的最终统计是确定的。闸门不属于生产领取流程，也不是修复手段。
+
+<details>
+<summary>展开完整可运行 Demo：错误版成功 2 次、库存 -1；修正版成功 1 次、库存 0</summary>
+
+将以下代码整体保存为 `ActorReentrancyDemo.swift`。这是独立的语言实验，不依赖项目 UI 或网络封装；代码块中的多个类型为方便复制而放在一起，工程落地时按类型拆文件。
+
+```swift
+//
+//  ActorReentrancyDemo.swift
+//  ActorReentrancyDemo
+//
+//  Created by Jobs on 2026年8月30日，星期日.
+//
+
+actor EligibilityGate {
+    private var waiters: [CheckedContinuation<Bool, Never>] = []
+
+    func verify() async -> Bool {
+        await withCheckedContinuation { continuation in
+            waiters.append(continuation)
+            guard waiters.count == 2 else { return }
+
+            let ready = waiters
+            waiters.removeAll()
+            for waiter in ready {
+                waiter.resume(returning: true)
+            }
+        }
+    }
+}
+
+actor CouponReentrancyDemoStore {
+    private var remaining = 1
+    private let gate: EligibilityGate
+    private let recheckAfterAwait: Bool
+
+    init(gate: EligibilityGate, recheckAfterAwait: Bool) {
+        self.gate = gate
+        self.recheckAfterAwait = recheckAfterAwait
+    }
+
+    func claim(_ user: String) async -> Bool {
+        print("\(user)：首次检查，库存 \(remaining)")
+        guard remaining > 0 else { return false }
+
+        let allowed = await gate.verify()
+        print("\(user)：资格返回，此刻库存 \(remaining)")
+        guard allowed else { return false }
+
+        /// 仅用于对照实验；生产代码不能提供关闭最终校验的开关。
+        if recheckAfterAwait {
+            guard remaining > 0 else {
+                print("\(user)：复查无库存，领取失败")
+                return false
+            }
+        }
+
+        remaining -= 1
+        print("\(user)：领取成功，剩余 \(remaining)")
+        return true
+    }
+
+    func remainingCount() -> Int {
+        remaining
+    }
+}
+
+@main
+struct ActorReentrancyDemo {
+    static func main() async {
+        await run(recheckAfterAwait: false)
+        await run(recheckAfterAwait: true)
+    }
+
+    static func run(recheckAfterAwait: Bool) async {
+        let title = recheckAfterAwait ? "修正版" : "错误版"
+        print("\n=== \(title) ===")
+
+        /// 每轮使用全新的库存和闸门，避免两轮实验相互影响。
+        let store = CouponReentrancyDemoStore(
+            gate: EligibilityGate(),
+            recheckAfterAwait: recheckAfterAwait
+        )
+
+        async let first = store.claim("A")
+        async let second = store.claim("B")
+        let (a, b) = await (first, second)
+        let successes = (a ? 1 : 0) + (b ? 1 : 0)
+        let remaining = await store.remainingCount()
+
+        print("\(title)：成功 \(successes) 次，库存 \(remaining)")
+        precondition(successes == (recheckAfterAwait ? 1 : 2))
+        precondition(remaining == (recheckAfterAwait ? 0 : -1))
+    }
+}
+```
+
+在保存文件的目录执行：
+
+```shell
+xcrun swiftc -swift-version 6 -parse-as-library ActorReentrancyDemo.swift -o ActorReentrancyDemo
+./ActorReentrancyDemo
+```
+
+`async let` 启动两份可以交错推进的子任务，随后一次性等待两个结果；不要改成先 `await store.claim("A")`、再调用 B，否则 A 会一直等尚未启动的第二份资格请求。
+
+只看两行最终汇总即可核对结论；中间 A、B 的具体先后顺序不属于保证：
+
+```text
+错误版：成功 2 次，库存 -1
+修正版：成功 1 次，库存 0
+```
+
+验证记录（2026年8月30日）：使用 Apple Swift 6.3.3、Swift 6 语言模式，以 `-strict-concurrency=complete -warnings-as-errors` 编译通过；连续运行 100 次，两种模式的汇总均与上面一致。前面的两个精简示例也通过相同严格级别的类型检查。
+
+闸门里的 `CheckedContinuation` 可以暂时理解成“稍后交付资格结果的凭条”：收齐两张后各交付一次。它让等待者挂起，不是用信号量阻塞线程。这个闸门假设恰好两个请求都会到达，没有超时和取消策略，不应直接作为生产组件；先理解上面的交错过程，再研究 continuation 细节。
+
+</details>
+
+##### 5.6.6.6、再往深一层：重新检查和提前占位，选的是业务规则
+
+如果业务允许“有资格，但回来时没库存，所以领取失败”，用上面的**等待后复查，再提交**即可。
+
+如果业务要求“受理申请时就先为它留一张”，就要**先检查并扣减可用库存，再等待资格结果**；资格不通过时释放预留。注意，这时提前扣减表达的是“预留”，不是“已经领取成功”。
+
+| 策略 | 等待资格时，最后一张券是什么状态 | 必须额外想清楚什么 |
+| --- | --- | --- |
+| 等待后复查 | 仍可被其它申请领取 | 谁先完成校验并执行提交，谁才可能成功；不承诺先申请先获得 |
+| 等待前预留 | 已从可用库存中扣掉 | 资格失败、抛错、取消时如何释放；预留记录怎样避免重复补偿 |
+
+复杂业务还需要预留 ID、请求 ID 或版本号。例如等待期间发生了清空库存、切账号或新一轮活动，旧请求不能只凭一个过期结果回来扣减或补回。**“重新校验”必须覆盖提交所依赖的相关状态，不只是机械补一行 `remaining > 0`。**
+
+本例的资格服务只返回布尔值，不会实际发券。如果服务端已经发券，本地再返回 `false` 并不能撤销它；真实跨设备库存必须由服务端原子操作、事务与幂等机制负责，客户端 Actor 不能替代这些保证。
+
+**为什么语言还要允许可重入？** 等网络时若整个 Actor 都不接待其它工作，查询、取消等操作也可能被拖住；Actor 之间互相调用并等待，还可能产生循环等待。允许挂起期间处理其它工作，是为了推进任务，但开发者必须维护跨挂起点的业务一致性。设计取舍见 [**SE-0306：Reentrancy Summary**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#reentrancy-summary)。
+
+**可直接说出口的核心回答：**
+
+> Actor 保护的是隔离状态的访问，不是包含 `await` 的整段业务流程。我在等待前检查了有库存，只能说明那一刻有，不能说明等完以后还有。任务挂起期间，别的调用可以进入同一个 Actor 改变库存，所以我要在恢复后重新检查，并把最终检查和扣减放在同一段没有挂起点的隔离代码里；如果业务需要提前保留名额，就先预留，再明确失败和取消时的补偿。
+
 
 #### 5.6.7、`nonisolated`、`@MainActor` 与 `Sendable` 的关系
 
@@ -655,6 +888,25 @@ actor CouponStore {
 - `@unchecked Sendable` 只表示“安全性由我人工保证”，不会凭空把不安全代码变安全。
 
 #### 5.6.8、什么时候选 Actor，什么时候仍然选 Class
+
+**问题：在真实项目中，什么情形下用 Actor 好于 Class？**
+
+**可直接说出口的核心回答：**
+
+> 当多个并发任务需要共同维护一份会变化的数据，而且调用方能接受 `await` 时，我会优先考虑 Actor。例如多个下载任务共同更新完成账本、多个页面共用缓存并合并重复请求、多个调用方争用一份本地限额。普通 Class 也能实现，但需要自己保证所有读写都经过同一套同步机制；Actor 可以让编译器检查隔离边界。UI 状态则通常交给 `@MainActor class`，没有共享可变状态也不用为了异步而强行引入 Actor。
+
+先把选型落到具体对象上：
+
+| 实际情形 | 共同修改的状态 | Actor 更合适的原因 | 必须保留的边界 |
+| --- | --- | --- | --- |
+| 多个下载任务同时完成 | 已完成 ID 集合、总字节数 | 把去重与累计放在同一个无挂起操作内，对外返回一致快照 | 下载可以并发，账本只处理短小的状态操作 |
+| 首页、详情页同时请求同一用户 | 缓存、正在执行的请求表 | 统一决定读缓存、创建请求或复用已有 Task | 仅换成 Actor 不会自动去重，要在 `await` 前登记请求 |
+| 多个接口发现登录凭据过期 | 当前凭据、正在刷新的 Task | 可以让同一会话中的请求共同等待一次刷新 | 登出、切账号后要用会话版本阻止旧结果覆盖新状态 |
+| 多个任务申请本地名额 | 剩余名额、已分配记录 | 统一执行“检查资格或余额 → 占用名额” | 一次原子决策要放在同一个无挂起方法中 |
+| 多处触发同一连接重连 | 连接状态、重试次数、进行中的连接 Task | 集中维护状态转换，减少重复连接和交错更新 | 仍需处理旧连接回调，Actor 不承诺请求按先来后到执行 |
+| 页面标题、加载态、列表数据 | 页面展示状态 | 通常使用 `@MainActor class` 更自然 | 页面状态已经隔离，不必额外搬进普通 Actor |
+
+下面三个示例分别展开“多任务记账”“共享请求”“检查并修改”。它们是独立的语言示例，不依赖项目里的 UI 或网络封装。
 
 ```mermaid
 flowchart TD
@@ -689,39 +941,254 @@ flowchart TD
 - 想依靠一个 Actor 自动获得内部任务的并行加速。
 - 需要在 Actor 方法里执行长时间阻塞调用；阻塞代码仍会占用并发运行时线程。
 
-#### 5.6.9、面试追问与答案
+#### 5.6.9、场景一：多个下载任务共同更新完成账本
 
-1. **Actor 是线程吗？**
+**实际问题：** 下载管理器同时下载多个文件。任务结束时要记录完成 ID、累计文件大小；重复回调不能重复计数，页面读取时还要拿到同一时刻的统计结果。
+
+**普通 Class 容易出错的地方：** 两个任务可能同时通过“还没记录过”的判断，或在累计字节数时丢失更新。`private` 只能限制可见性，不能阻止多个任务同时执行公开方法。
+
+```swift
+final class UnsafeDownloadLedger {
+    private var completedIDs: Set<String> = []
+    private var totalBytes = 0
+
+    func recordCompletion(id: String, bytes: Int) {
+        guard !completedIDs.contains(id) else { return }
+        completedIDs.insert(id)
+        totalBytes += bytes
+    }
+}
+```
+
+这里存在未同步的集合读写，后果不止是统计错误，也可能破坏内存安全。严格并发检查可能先拒绝不安全的共享方式，不应为了让这个反例运行而添加 `@unchecked Sendable`。
+
+**Actor 写法：** 由同一个账本接收所有完成事件，把去重和累计收进一个不含 `await` 的方法。
+
+```swift
+struct DownloadSummary: Sendable {
+    let completedCount: Int
+    let totalBytes: Int
+}
+
+actor DownloadLedger {
+    private var completedIDs: Set<String> = []
+    private var totalBytes = 0
+
+    func recordCompletion(id: String, bytes: Int) {
+        precondition(bytes >= 0)
+        guard completedIDs.insert(id).inserted else { return }
+        totalBytes += bytes
+    }
+
+    func snapshot() -> DownloadSummary {
+        DownloadSummary(
+            completedCount: completedIDs.count,
+            totalBytes: totalBytes
+        )
+    }
+}
+
+func runDownloadLedgerDemo() async {
+    let ledger = DownloadLedger()
+
+    await withTaskGroup(of: Void.self) { group in
+        for index in 0..<1_000 {
+            group.addTask {
+                let id = "file-\(index)"
+                await ledger.recordCompletion(id: id, bytes: 100)
+                await ledger.recordCompletion(id: id, bytes: 100) // 模拟重复完成回调
+            }
+        }
+    }
+
+    let summary = await ledger.snapshot()
+    print(summary.completedCount, summary.totalBytes) // 1000 100000
+}
+```
+
+**为什么这里用 Actor 更合适：**
+
+- 账本确实需要共享身份，不能让每个下载任务各拿一份独立统计。
+- 去重和累计在同一个无挂起片段完成，另一个任务不能插入这两步之间。
+- `snapshot()` 一次读取两个相关字段，避免调用方分两次 `await` 读到不同时间点的数据。
+- Class 加锁也能做到，但后续新增查询、重置或重试入口时必须继续正确加锁；Actor 的普通实例成员默认继续受到隔离检查。
+
+**适用边界：** 此处“完成”是针对稳定文件 ID 的一次性记录；同一文件的新版本应使用新的 ID。示例只模拟完成事件，不执行真实下载。不要把大文件解码、压缩或长时间阻塞 I/O 塞进账本方法，否则其它记账请求也会被拖住。
+
+#### 5.6.10、场景二：多个页面共用缓存，并合并重复请求
+
+**实际问题：** 首页和详情页同时读取用户 `1` 的资料。缓存还没建立时，希望只执行一次加载，其余调用方等待同一个结果。
+
+**普通 Class 需要自己保证：** 缓存和进行中的请求表都要同步保护，而且“查表 → 决定创建 → 登记请求”必须属于同一次决策。只分别给 getter、setter 加锁并不够。
+
+**容易误判的一点：即使用了 Actor，只缓存最终结果也可能重复请求。**
+
+```text
+任务 A：缓存未命中 → 开始加载 → await 挂起
+任务 B：进入同一个 Actor → 缓存仍未命中 → 又开始一次加载
+```
+
+这时 Actor 的状态读写可以没有数据竞争，但业务上的重复请求仍然存在。处理方式是**先保存正在执行的 Task，再等待结果**；可重入与挂起点的语言规则见 [**SE-0306：Actor reentrancy**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy)。
+
+```swift
+struct ProfileRecord: Sendable {
+    let id: Int
+    let nickname: String
+}
+
+actor ProfileRepository {
+    typealias Loader = @Sendable (Int) async throws -> ProfileRecord
+
+    private let load: Loader
+    private var cached: [Int: ProfileRecord] = [:]
+    private var inFlight: [Int: Task<ProfileRecord, Error>] = [:]
+
+    init(load: @escaping Loader) {
+        self.load = load
+    }
+
+    func profile(id: Int) async throws -> ProfileRecord {
+        if let record = cached[id] {
+            return record
+        }
+
+        if let request = inFlight[id] {
+            return try await request.value
+        }
+
+        let loader = load
+        let request = Task {
+            try await loader(id)
+        }
+        inFlight[id] = request // 第一次挂起前登记，其它调用方才能复用
+        defer { inFlight[id] = nil }
+
+        let record = try await request.value
+        cached[id] = record
+        return record
+    }
+}
+
+func runProfileRepositoryDemo() async throws {
+    let repository = ProfileRepository { id in
+        print("实际加载用户 \(id)")
+        try await Task.sleep(for: .milliseconds(50))
+        return ProfileRecord(id: id, nickname: "Jobs")
+    }
+
+    async let first = repository.profile(id: 1)
+    async let second = repository.profile(id: 1)
+    let (a, b) = try await (first, second)
+    print(a.nickname, b.nickname) // Jobs Jobs；实际加载只打印一次
+}
+```
+
+**为什么这里用 Actor 更合适：** 缓存命中判断、请求查重和登记都在同一个隔离域内完成；遇到异步加载时可以自然挂起，不必持锁等待网络。示例中只有创建请求的调用方负责清理 `inFlight`，成功后写入缓存，失败时也会通过 `defer` 移除失败请求，使后续调用能重新尝试。
+
+这套结构也适合图片缓存和登录凭据刷新：多个调用方复用一个正在执行的任务。Apple 在 [**WWDC21：Protect mutable state with Swift actors**](https://developer.apple.com/videos/play/wwdc2021/10133/) 中展示了通过保存进行中 Task 处理缓存重入的方式。
+
+**适用边界：**
+
+- 示例注入的是模拟加载器，不请求网络；实际项目应接入已有网络层，并选择能区分资源和会话的缓存键。
+- `Task { ... }` 不代表新开一条后台线程。这里依靠异步加载在等待时让出执行机会，CPU 密集工作需要另外设计执行位置。
+- 这里采用仓库持有共享请求的策略：单个等待者取消，不会自动取消共享请求，也不保证该等待者立即结束等待。生产代码必须明确取消策略。
+- 示例没有缓存失效、容量限制或登出功能。新增清空、强制刷新或切账号时，要用请求标识或版本校验，防止旧请求恢复后写回过期结果或清掉新请求。
+
+#### 5.6.11、场景三：多个任务争用同一份本地名额
+
+**实际问题：** App 内某个本地能力只剩一个名额，但多个任务可能同时尝试领取。要求最多一个任务成功。
+
+**普通 Class 的风险：** 两个并发调用都可能先读到 `remaining == 1`，都判断可以领取，然后分别扣减。问题在于“检查”和“修改”必须整体保护，单独保护每次属性读写仍然不够。
+
+**Actor 写法：** 对外提供一次完整的 `tryClaim()` 操作，不让调用方自己组合“查询剩余 → 扣减”。
+
+```swift
+actor LocalQuota {
+    private var remaining = 1
+
+    func tryClaim() -> Bool {
+        guard remaining > 0 else { return false }
+        remaining -= 1
+        return true
+    }
+
+    func remainingCount() -> Int {
+        remaining
+    }
+}
+
+func runLocalQuotaDemo() async {
+    let quota = LocalQuota()
+
+    let successes = await withTaskGroup(of: Bool.self, returning: Int.self) { group in
+        for _ in 0..<100 {
+            group.addTask {
+                await quota.tryClaim()
+            }
+        }
+
+        var count = 0
+        for await claimed in group {
+            if claimed { count += 1 }
+        };return count
+    }
+
+    let remaining = await quota.remainingCount()
+    print(successes, remaining) // 1 0
+}
+```
+
+**为什么这里用 Actor 更合适：** 100 个任务共同访问一个 `quota`，但每次检查与扣减都在同一段无挂起的隔离代码中执行。第一个实际执行成功的任务用掉名额，后续任务只能得到失败；具体哪个任务先执行不由 Actor 保证。
+
+**不能这样理解：** 如果把 API 拆成 `await quota.hasRemaining()` 和 `await quota.consume()`，其它任务就可能在两次调用之间完成领取。两个方法分别安全，不等于组合操作也是原子的。如果还需要异步资格校验，应在校验返回后重新检查，或先占位再设计失败补偿，参见 5.6.6。
+
+**适用边界：** 这里保护的是当前进程内同一个 Actor 实例的本地名额。真实优惠券、订单库存或跨设备配额仍需服务端的原子操作、事务与幂等控制，不能靠客户端 Actor 保证全局正确。
+
+#### 5.6.12、面试追问与答案
+
+1、**Actor 是线程吗？**
 
    不是。Actor 是隔离域和引用类型抽象，运行时负责调度它的任务；Actor 不绑定一条专属线程。
 
-2. **Actor 方法为什么有时没写 `async`，调用时却要 `await`？**
+2、**Actor 方法为什么有时没写 `async`，调用时却要 `await`？**
 
    方法体本身可以是同步的，但外部调用需要跨越 Actor 隔离域并等待执行机会，所以调用点是潜在挂起点；同一 Actor 内部调用则不需要 `await`。
 
-3. **Actor 能完全消灭数据竞争吗？**
+3、**Actor 能完全消灭数据竞争吗？**
 
    Actor 能保护自身正确隔离的状态，但保护不了外部全局变量、Unsafe Pointer、错误的 `nonisolated(unsafe)`、不真实的 `@unchecked Sendable` 承诺或绕开并发模型的底层代码。
 
-4. **Actor 与串行队列最关键的区别是什么？**
+4、**Actor 与串行队列最关键的区别是什么？**
 
    串行队列主要是运行时调度工具，安全依赖封装纪律；Actor 是语言级隔离模型，编译器会检查隔离访问和大量跨域传值问题。Actor 还具有可重入语义，不能机械理解成 `queue.sync`。
 
-5. **Actor 里面执行到 `await` 时还一直占有 Actor 吗？**
+5、**Actor 里面执行到 `await` 时还一直占有 Actor 吗？**
 
    不会。当前任务会挂起，Actor 可以继续处理其它任务；原任务恢复后必须把相关状态视为可能已经变化。
 
-6. **Actor 可以继承另一个 Actor 或 Class 吗？**
+6、**Actor 可以继承另一个 Actor 或 Class 吗？**
 
    不可以参与普通类继承体系。Actor 之间优先通过协议、泛型和组合复用能力。
 
-7. **用了 Actor 是否就一定更快？**
+7、**用了 Actor 是否就一定更快？**
 
    不一定。Actor 的价值首先是正确的隔离模型；频繁跨 Actor 会产生调度开销，过大的 Actor 还会形成串行热点。性能结论必须结合真实负载测量。
 
-8. **UI 状态应该放普通 Actor 还是 `@MainActor class`？**
+8、**UI 状态应该放普通 Actor 还是 `@MainActor class`？**
 
    UI 本身天然属于 Main Actor，通常直接使用 `@MainActor class` 更清楚；普通 Actor 更适合不依赖 UI 的共享业务状态。
+
+9、**举一个实际项目中 Actor 比普通 Class 更合适的例子？**
+
+   多个页面共用资料缓存时，我会让 Actor 同时管理缓存和进行中的请求。首次未命中时先登记 Task，再等待加载；其它请求复用这个 Task。这样隔离边界由编译器检查，业务层仍负责去重、失败清理和失效策略。
+
+10、**把 Class 的关键字改成 Actor，就不会重复请求了吗？**
+
+   不会。网络等待期间可以有其它任务进入，而结果缓存尚未写入；如果没有记录进行中的请求，后来的任务仍然可能重新加载。Actor 解决隔离，去重依然要明确建模。
+
+11、**一个 Class 内有异步网络方法，就应该改成 Actor 吗？**
+
+   不一定。如果它只转发请求、没有共同修改的缓存或会话状态，Actor 未必有收益。先找共享可变数据，再决定隔离方式；同步 API 可以采用 Class 加锁，UI 模型则通常采用 `@MainActor class`。
 
 ### 5.7、取消与超时意识
 
@@ -3392,7 +3859,7 @@ Jobs 应用层生产代码优先使用 `JobsSwiftTimer` / `JobsSwiftTimerMgr`。
 
   ```swift
   private var delayTask: Task<Void, Never>?
-
+  
   func scheduleOnce() {
       delayTask?.cancel()
       delayTask = Task {
