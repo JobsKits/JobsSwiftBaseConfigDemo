@@ -61,6 +61,37 @@ jobs:
           xcode-select -p
           pod --version
 
+      - name: Verify JobsSwiftBlock factory and callback regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Validate JobsSwiftBlock factory types, callback storage, and both Simulator architectures."
+          regression_dir="$(mktemp -d "${RUNNER_TEMP}/JobsSwiftBlockRegression.XXXXXX")"
+          block_dir="JobsByPods/JobsSwiftBlock@Pods"
+
+          xcrun swiftc -swift-version 5 -Onone -emit-library -emit-module \
+            -module-name JobsSwiftBlock \
+            "${block_dir}/NSObject+Make.swift" "${block_dir}/JobsCallbackable.swift" \
+            -emit-module-path "${regression_dir}/JobsSwiftBlock.swiftmodule" \
+            -o "${regression_dir}/libJobsSwiftBlock.dylib"
+          xcrun swiftc -swift-version 5 -Onone -parse-as-library \
+            -I "${regression_dir}" -L "${regression_dir}" -lJobsSwiftBlock \
+            .github/tests/JobsSwiftBlockRegression.swift \
+            -o "${regression_dir}/JobsSwiftBlockRegression"
+          "${regression_dir}/JobsSwiftBlockRegression"
+
+          simulator_sdk="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+          for simulator_arch in arm64 x86_64; do
+            echo "Generate JobsCallbackable IR for ${simulator_arch}."
+            xcrun swiftc -frontend -emit-ir -Onone -swift-version 5 \
+              -profile-generate -profile-coverage-mapping \
+              -target "${simulator_arch}-apple-ios15.0-simulator" -sdk "${simulator_sdk}" \
+              -module-name JobsSwiftBlock \
+              -primary-file "${block_dir}/JobsCallbackable.swift" \
+              "${block_dir}/NSObject+Make.swift" \
+              -o "${regression_dir}/JobsCallbackable-${simulator_arch}.ll"
+          done
+
       - name: Install CocoaPods dependencies
         env:
           JOBS_FLUTTER_AUTO_SETUP: "1"
@@ -78,22 +109,36 @@ jobs:
           sudo chmod +x /Users/jobs/.xcode-build-timer/xbt-build-hook.sh
 
       - name: Build Simulator app
+        id: build
+        shell: bash
         run: |
+          set -euo pipefail
           derived_data_path="${RUNNER_TEMP}/DerivedData"
 
           xcodebuild \
-            -quiet \
             -workspace "${WORKSPACE}" \
             -scheme "${SCHEME}" \
             -configuration "${CONFIGURATION}" \
             -sdk "${SDK}" \
             -destination "${DESTINATION}" \
             -derivedDataPath "${derived_data_path}" \
+            -resultBundlePath "${RUNNER_TEMP}/SimulatorBuild.xcresult" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             ONLY_ACTIVE_ARCH=NO \
-            build
+            build 2>&1 | tee "${RUNNER_TEMP}/simulator-build.log"
+
+      - name: Upload failed build diagnostics
+        if: ${{ failure() && steps.build.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/simulator-build.log
+            ${{ runner.temp }}/SimulatorBuild.xcresult
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Package Simulator app
         id: package

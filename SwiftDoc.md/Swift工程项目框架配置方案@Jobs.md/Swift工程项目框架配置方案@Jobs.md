@@ -95,6 +95,7 @@
 - `NSObject` 子类的无参构造统一使用 `Type.jobsMake { object in ... }`；带参初始化由真实类型提供 `Type.make(arguments, configure:)`，例如 `NSUserActivity.make(activityType:configure:)`。
 - 原生系统构造器只存在于创建工厂底层；实例生成后，属性、无参实例方法和单参实例方法统一使用返回 `Self` 的 `byXxx(...)`，查询与明确终止动作除外。
 - `JobsSwiftBlock` 提供最低层通用创建 Block，`JobsSwiftDSL` 公开转出，`JobsByUIKit` 提供具体 UIKit / Foundation 工厂；低层 Pod 不反向依赖高层 UI Pod。
+- `NSObject.jobsMake` 由 `JobsNSObjectMaking where Self: NSObject` 的协议扩展承载，保留配置参数与返回对象的具体类型，避免类扩展动态 `Self` 在旧 Swift 编译器的协议调用方中触发 IRGen 崩溃。调用方写法不变；CI 同时验证回调行为和 arm64 / x86_64 模拟器代码生成。
 
 #### 3.2.1、对`UIViewController`的封装
 

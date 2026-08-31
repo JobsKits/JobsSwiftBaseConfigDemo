@@ -873,6 +873,8 @@ xcrun swiftc -swift-version 6 -parse-as-library ActorReentrancyDemo.swift -o Act
 
 #### 5.6.7、`nonisolated`、`@MainActor` 与 `Sendable` 的关系
 
+**先记住：这三个东西回答的是不同问题，不是三种“锁”。**
+
 | 能力 | 解决什么 | 典型用法 |
 | --- | --- | --- |
 | 普通 `actor` | 每个实例分别保护自己的状态 | 缓存、下载账本、连接状态、请求去重 |
@@ -880,12 +882,521 @@ xcrun swiftc -swift-version 6 -parse-as-library ActorReentrancyDemo.swift -o Act
 | `nonisolated` | 明确某个成员不需要进入当前 Actor 隔离域 | 只读固定标识、纯计算、无需读取隔离状态的协议实现 |
 | `Sendable` | 描述值能否安全跨 Task 或 Actor 隔离域传递 | 不可变 DTO、Actor 输入参数、返回快照、`@Sendable` 闭包 |
 
-边界要记住：
+下面用三个独立的“下载进度”实验，把声明、调用、输出与错误用法连起来。每个正确 Demo 都自带 `@main` 入口，分别保存、分别编译；不要把三个入口一起放进同一个可执行文件。它们只演示语言机制，不执行真实下载，也不依赖项目 UI 封装。
 
-- `nonisolated` 不是关闭警告的万能开关；它不能直接读取或修改 Actor 隔离状态。
-- `@MainActor final class` 仍然是 Class，只是整个类型的实例状态统一受 Main Actor 隔离；它特别适合 UI，不等于每个实例各有一个 Actor。
-- Actor 类型因自身隔离机制可以安全跨隔离域传递，但从 Actor 方法传出去的参数和返回值仍要满足对应的并发安全要求。
-- `@unchecked Sendable` 只表示“安全性由我人工保证”，不会凭空把不安全代码变安全。
+##### 5.6.7.1、`nonisolated`：固定说明可以直接读，实时进度仍然要经过 Actor
+
+**实际需求：** 下载任务有一个创建后不变的名称，也有随下载变化的完成数量。日志想随时同步打印任务名称，不应该为了一个固定说明等待进度 Actor；但读取实时完成数仍要接受隔离保护。
+
+**写在哪里：** 把确定不依赖隔离可变状态的属性或方法标为 `nonisolated`。它不是“先取消保护，再随便访问”，而是“这个成员不需要访问受保护的数据”。规则见 [**SE-0313：Non-isolated declarations**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md#non-isolated-declarations)。
+
+保存为 `NonisolatedDemo.swift`：
+
+```swift
+//
+//  NonisolatedDemo.swift
+//  NonisolatedDemo
+//
+//  Created by Jobs on 2026年8月30日，星期日.
+//
+
+actor DownloadMeter: CustomStringConvertible {
+    nonisolated let name: String
+    private var completedFiles = 0
+
+    init(name: String) {
+        self.name = name
+    }
+
+    /// 同步协议要求：这里只使用不变且可安全共享的名称。
+    nonisolated var description: String {
+        "下载任务：\(name)"
+    }
+
+    func recordCompletion() {
+        completedFiles += 1
+    }
+
+    func completedCount() -> Int {
+        completedFiles
+    }
+}
+
+@main
+struct NonisolatedDemo {
+    static func main() async {
+        let meter = DownloadMeter(name: "安装资源")
+
+        print(meter.description) // 无需 await：不进入 meter 的隔离域
+
+        await meter.recordCompletion()
+        let count = await meter.completedCount()
+        print("完成数量：\(count)")
+
+        precondition(meter.description == "下载任务：安装资源")
+        precondition(count == 1)
+    }
+}
+```
+
+预期输出：
+
+```text
+下载任务：安装资源
+完成数量：1
+```
+
+**真正要看懂的是两条访问路径：**
+
+- `meter.description`：直接同步读取。`description` 虽写在 Actor 内，却明确不属于这个 Actor 的隔离成员；它只拼接 `nonisolated let name`，不接触实时进度。
+- `await meter.completedCount()`：经过 Actor 隔离读取。方法本身没有 `async`，但调用方在 `meter` 的隔离域之外，需要等待安全的访问机会。
+
+`CustomStringConvertible` 要求提供可同步读取的 `description`。这里用非隔离、只依赖固定数据的实现满足这个协议，才是 `nonisolated` 的实际用途之一，不只是为了少打几个 `await`。
+
+**错误反例：如果说明里需要实时完成数，就不能照搬同样写法。** 把下面的扩展追加到该 Demo 中，会被严格并发检查拒绝：
+
+```swift
+extension DownloadMeter {
+    nonisolated func unsafeCompletedCount() -> Int {
+        completedFiles // 错误：在非隔离方法里直接读取 Actor 隔离属性
+    }
+}
+```
+
+正确选择是保留前面的隔离方法 `completedCount()`，并在外部 `await` 它。**`nonisolated` 不代表“后台线程”，也不会替你加锁；它只是改变成员的隔离归属。** 本例特意使用同步成员，避免把异步非隔离函数的执行位置与编译器版本、默认隔离设置混在一起。
+
+##### 5.6.7.2、`Sendable`：传出进度快照，不是把内部可变对象交出去
+
+**实际需求：** 下载账本还会继续更新，另一个任务却需要拿到“刚才那一刻”的进度生成说明。它应该拿到一个可安全传递的值，而不是绕开账本去共同修改内部状态。
+
+**写在哪里：** 类型声明写 `: Sendable`，例如 `struct DownloadSnapshot: Sendable`。这是一份可由编译器检查的并发传递契约，不是自动加锁代码；成员也要满足相应的安全要求。声明与闭包规则见 [**SE-0302：Sendable 与 @Sendable**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md)。
+
+**问题：用了 `Sendable`，和不用到底差在哪里？**
+
+**期望回答：** 主要差在“类型有没有承诺可以安全跨隔离域传递，以及编译器会检查哪些要求”，不是运行时多了一把锁。对于本来就符合推断条件的纯值类型，不写与显式写出的运行结果可以完全相同；对于没有这个符合关系的类型，要求 `Sendable` 的接口会拒绝它。显式声明还能在以后误加不安全成员时，直接把错误指出来。
+
+| 对比点 | 显式声明 `: Sendable` | 不写 `: Sendable` |
+| --- | --- | --- |
+| 类型的承诺 | 明确承诺实例可安全跨隔离域传递，并接受符合性检查 | 不能只看有没有这行字；有些类型会被推断符合，有些不会 |
+| 能否传入 `T: Sendable` 接口 | 符合性检查通过后可以 | 已推断符合的可以；真正不符合的会报错 |
+| 以后加了非 Sendable 的可变引用成员 | 普通受检查的符合声明会报错，要求重新设计 | 类型定义本身可能仍合法，但不再具备安全传递契约；跨域使用可能被拒绝 |
+| 会不会自动加锁、深拷贝、切线程 | 都不会 | 也不会；这些行为不由这一行声明决定 |
+| 旧快照为什么不跟着账本变化 | 本例靠 `struct` 的值语义与 `Int` 字段 | 如果还是同样的值类型，旧快照同样不会变化 |
+
+下面分开看两个问题：**先只改声明，比较编译结果；再比较“返回快照”和“泄漏内部对象”的实际设计差异。**
+
+**1、只改 `Sendable` 声明：同一个类型，未声明失败，声明后通过。**
+
+保存为 `SendableContractDemo.swift`。这里故意使用没有标记 `@frozen` 的 `public struct`，避免普通内部 struct 的自动推断掩盖差异；`public` 是为了控制这个实验的条件，不是在建议所有模型都写成公开类型。
+
+```swift
+//
+//  SendableContractDemo.swift
+//  SendableContractDemo
+//
+//  Created by Jobs on 2026年8月31日，星期一.
+//
+
+public struct ProgressContract {
+    public let completedFiles: Int
+    public let totalFiles: Int
+}
+
+/// 这个接口只检查类型契约，不实际创建任务或切换线程。
+func requireSendable<T: Sendable>(_ value: T) {}
+
+func checkSnapshotContract() {
+    let snapshot = ProgressContract(completedFiles: 1, totalFiles: 3)
+    requireSendable(snapshot) // 错误：ProgressContract 未符合 Sendable
+}
+```
+
+执行类型检查，无需 `@main`：
+
+```shell
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -typecheck SendableContractDemo.swift
+```
+
+预期诊断的核心内容：
+
+```text
+type 'ProgressContract' does not conform to the 'Sendable' protocol
+```
+
+现在把同一文件中的类型声明替换成下面这一版，其他代码保持不变，再执行相同命令：
+
+```swift
+public struct ProgressContract: Sendable {
+    public let completedFiles: Int
+    public let totalFiles: Int
+}
+```
+
+**结果：编译通过。** 两个字段没有变，仍然是 `Int`；变化是这个类型现在显式建立了 `Sendable` 符合关系，编译器检查成员后，允许它满足 `T: Sendable` 的接口要求。`requireSendable` 是最小检查入口，方便只观察类型契约，不把某一次跨域调用的数据流推断混进来。
+
+**追问：为什么把原来 `DownloadSnapshot` 的 `: Sendable` 删掉，可能仍然通过？**
+
+因为后面的 `DownloadSnapshot` 是默认 `internal` 的 struct，两个存储属性都是 `Int`，符合隐式推断的条件。编译器已经知道它可以安全传递，删掉文字不等于删掉符合关系。对于本实验的普通非 frozen 公开 struct，则不会这样自动获得符合关系；精确条件见 [**SE-0302：隐式符合规则**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#implicit-structenum-conformance-to-sendable)。
+
+**2、实际使用：账本继续变化，另一个任务拿到的是旧快照。**
+
+保存为 `SendableDemo.swift`：
+
+```swift
+//
+//  SendableDemo.swift
+//  SendableDemo
+//
+//  Created by Jobs on 2026年8月30日，星期日.
+//
+
+struct DownloadSnapshot: Sendable {
+    let completedFiles: Int
+    let totalFiles: Int
+}
+
+actor DownloadSnapshotStore {
+    private var completedFiles = 0
+    private let totalFiles = 3
+
+    func recordCompletion() {
+        guard completedFiles < totalFiles else { return }
+        completedFiles += 1
+    }
+
+    func snapshot() -> DownloadSnapshot {
+        DownloadSnapshot(
+            completedFiles: completedFiles,
+            totalFiles: totalFiles
+        )
+    }
+}
+
+@main
+struct SendableDemo {
+    static func main() async {
+        let store = DownloadSnapshotStore()
+        await store.recordCompletion()
+
+        let earlier = await store.snapshot() // 从 Actor 传出 1/3 的值快照
+        await store.recordCompletion() // Actor 内部继续变化，达到 2/3
+
+        let prefix = "下载进度"
+        let format: @Sendable (DownloadSnapshot) -> String = { snapshot in
+            "\(prefix)：\(snapshot.completedFiles)/\(snapshot.totalFiles)"
+        }
+
+        /// 特意用 detached 显式建立另一任务边界，观察快照与闭包的传递。
+        let reader = Task.detached {
+            format(earlier)
+        }
+
+        let earlierText = await reader.value
+        let latest = await store.snapshot()
+        print("旧快照 → \(earlierText)")
+        print("新快照 → \(format(latest))")
+
+        precondition(earlier.completedFiles == 1)
+        precondition(latest.completedFiles == 2)
+        precondition(earlierText == "下载进度：1/3")
+    }
+}
+```
+
+预期输出：
+
+```text
+旧快照 → 下载进度：1/3
+新快照 → 下载进度：2/3
+```
+
+**这里发生了什么：**
+
+1、`snapshot()` 在账本 Actor 内把两个数字组装成一个值，一次性返回一致快照。
+
+2、`earlier` 已经拿到 `1/3`。之后账本变成 `2/3`，不会反过来改写这个旧值，所以另一个任务仍然打印 `1/3`。
+
+3、`Sendable` 表达这类值可以安全跨隔离域传递；**旧快照不变来自这里的值语义与不可变字段，不是 `Sendable` 在幕后自动深拷贝了一份对象。**
+
+4、`@Sendable` 修饰的是闭包的函数类型。这里 `format` 捕获了不可变的 `String` 值 `prefix`，并且不访问共享可变对象，因此可以传给另一个任务使用；它不表示“调用闭包时自动切后台”。
+
+`Task.detached` 在这里只用来把跨任务边界展示清楚，不承诺新建专属线程，也不是普通下载任务的必选写法。生产代码仍应优先按需要选择结构化任务或已有任务生命周期。
+
+**动手对比：** 单独复制一份这个正确 Demo，只删除 `DownloadSnapshot` 后面的 `: Sendable`，用第 5.6.7.4 节的相同命令重新编译运行。本例仍然通过，输出仍然是旧快照 `1/3`、新快照 `2/3`。这说明**快照语义没有变，编译器也仍然能推断它符合；不是“不用 Sendable 反而绕过了检查”。**
+
+**3、不传快照，改成把非 Sendable 内部对象交出去，会怎样？**
+
+保存为 `LeakySendableDemo.swift`。这是另一个独立反例：Actor 自己还持有可变对象，却把同一对象的引用返回给外部 MainActor 使用。
+
+```swift
+//
+//  LeakySendableDemo.swift
+//  LeakySendableDemo
+//
+//  Created by Jobs on 2026年8月31日，星期一.
+//
+
+final class MutableProgressBox {
+    var completedFiles = 0
+}
+
+actor LeakyDownloadStore {
+    private let progress = MutableProgressBox()
+
+    func recordCompletion() {
+        progress.completedFiles += 1
+    }
+
+    func exposeInternalObject() -> MutableProgressBox {
+        progress // 交出去的是同一个对象的引用，不是读取数字后组装的新快照
+    }
+}
+
+@MainActor
+func readLeakedProgress(from store: LeakyDownloadStore) async {
+    let shared = await store.exposeInternalObject() // 严格编译拒绝这次跨域返回
+    print(shared.completedFiles)
+}
+```
+
+使用实际编译流程检查跨域数据流，无需运行反例：
+
+```shell
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library -emit-sil LeakySendableDemo.swift -o LeakySendableDemo.sil
+```
+
+**预期：编译失败。** 诊断指出非 Sendable 的 `MutableProgressBox` 结果不能从这个 Actor 隔离方法返回到 MainActor 隔离上下文。`-emit-sil` 会走到相关的数据流检查；不要只用语法解析或一次 `-typecheck` 的结果判断所有并发用法都安全。
+
+| 返回方式 | 外部实际拿到什么 | Actor 后续更新时 | 本节实验结果 |
+| --- | --- | --- | --- |
+| `snapshot() -> DownloadSnapshot` | 读取当时数字后构造的值快照 | 已经拿到的旧值不变 | 编译通过，旧快照保持 `1/3` |
+| `exposeInternalObject() -> MutableProgressBox` | Actor 仍然持有的同一个可变对象 | 如果允许共享引用，后续读取就可能看到变化，并与 Actor 内部写入竞争 | 严格编译拒绝跨域返回，没有运行输出 |
+
+**关键点：** `private let progress` 只限制属性访问与引用重新绑定；它不会冻结 `progress.completedFiles`。外部一旦拿到这个对象，后续访问对象字段也不会自动回到原 Actor 排队。修复应像前面的正确 Demo 一样，在 Actor 内读取数字并返回值快照，或把操作继续留在隔离入口里。
+
+**4、显式声明的维护价值：有人误把可变对象塞进快照时，当场拦住。**
+
+下面是独立的类型检查反例，不与前面的同名类放在一个文件：
+
+```swift
+final class MutableProgressBox {
+    var completedFiles = 0
+}
+
+struct BrokenSnapshot: Sendable {
+    let progress: MutableProgressBox // 错误：字段类型不符合 Sendable
+}
+```
+
+**用了 `Sendable`：** 类型声明处就被拒绝。你原本承诺“这是可安全传递的快照”，但现在放进一个未受保护的可变引用，编译器要求修正这个矛盾。
+
+**不用 `Sendable`：** 只删掉 `BrokenSnapshot` 的 `: Sendable`，这段类型定义可以通过，因为普通 struct 允许存放 class 引用；但它不是可安全跨域传递的快照。仅在同一同步调用中追加下面代码，可观察到外层 `let` 并没有固定内部进度：
+
+```swift
+func observeSharedReference() {
+    let box = MutableProgressBox()
+    box.completedFiles = 1
+    let earlier = BrokenSnapshot(progress: box)
+
+    box.completedFiles = 2
+    print(earlier.progress.completedFiles) // 2，不是刚创建 earlier 时的 1
+}
+
+observeSharedReference()
+```
+
+这里没有运行数据竞争，只用顺序代码证明“外层 struct 里装的仍是共享引用”。**不声明不会把类型变坏，也不会关闭并发检查；只是没有主动要求这个类型始终满足 Sendable 契约。** 将它传给 `T: Sendable` 接口仍会失败，像上一反例那样泄漏跨域共享状态仍会被检查。
+
+**错误反例：给可变引用类型写上 `Sendable`，不会使它自动安全。** 下面应当单独验证，不加入正确 Demo：
+
+```swift
+final class UnsafeProgressBox: Sendable {
+    var completedFiles = 0 // 错误：普通 Sendable class 的这个可变存储未受保护
+}
+```
+
+多个任务持有这个 class 时，拿到的是同一个可变对象。应根据业务改成值快照、Actor，或真正实现并审核同步机制；不要为了消除诊断直接加 `@unchecked Sendable`。
+
+还要分清：
+
+- `Sendable` 不要求所有 struct 的字段都写 `let`。由可安全传递成员组成的可变值类型也可能符合；但多个任务直接竞争修改**同一个捕获变量**仍然不安全。
+- `let box = 某个可变对象` 只是不允许重新绑定引用，不会让对象内部一起不可变。
+- 某些非公开 struct / enum 可以被编译器推断为 `Sendable`；删除示例里的显式声明，不一定就报错。这里显式写出是为了说明快照的边界契约。
+- `@unchecked Sendable` 是人工承担安全责任；它不生成锁，也不替你验证内部同步是否正确。
+
+**5、什么时候推荐写，什么时候不必强求？**
+
+| 场景 | 推荐方式 | 理由与边界 |
+| --- | --- | --- |
+| 要跨 Actor / Task 使用的进度、配置、结果 DTO | 对设计为可安全传递的模型显式声明 `Sendable`，并检查所有成员 | 意图清楚，后续改动破坏契约时能及时发现 |
+| 模块对外提供的并发模型 | 在确实支持安全传递时公开 `Sendable` 符合关系 | 它属于 API 承诺，不能只因“现在字段碰巧安全”就随意承诺 |
+| 仅在一个隔离域内使用的可变辅助 class | 留在原隔离域，不必为了统一格式硬加 `Sendable` | 不跨域共享，就不需要把所有类型都改成可传递类型 |
+| 默认 internal、成员都符合的简单 struct | 可以依赖推断；承担明确并发边界时仍推荐显式写出 | 这两种写法通常没有本例运行行为上的差别 |
+| 实际需要多方共同操作同一份可变状态 | 设计 Actor / 全局 Actor 隔离，或经过验证的同步封装 | 单加协议声明不能替代状态管理 |
+
+**追问：真正不符合 `Sendable` 的值，就绝对不能跨隔离域吗？**
+
+也不能这么说。Swift 6 的区域隔离分析可以证明某个非 Sendable 实例的转移不会留下竞争访问，`sending` 可以表达相关的转移要求。这是对**某次值转移**的检查，不等于类型整体获得了 `Sendable` 符合关系；更不能据此把 Actor 还在使用的内部可变对象交给外部共同操作。参见 [**Swift 6：数据竞争安全与区域隔离**](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety/)。
+
+**可直接说出口的核心回答：**
+
+> Sendable 声明的是安全传递契约，不会自动加锁或深拷贝。用了它，编译器会检查这个类型是否满足要求，也允许它进入要求 Sendable 的接口；不显式写，有些值类型会被推断符合，行为一样，有些类型则不能满足这个接口。进度快照不跟着账本变化，靠的是这里的值语义。把可变 class 装进 struct 或标成 let，都不会自动得到真正独立的快照。
+
+本节补充验证（2026年8月31日，Apple Swift 6.3.3，Swift 6 语言模式、默认 `nonisolated`、严格并发检查）：原快照 Demo 的显式声明版与隐式推断版均编译运行通过，输出相同；公开类型仅补 `: Sendable` 后由失败变为通过；内部对象跨域泄漏、Sendable struct 含非 Sendable 成员、普通 Sendable class 含未保护的可变存储均触发预期诊断。去掉 `BrokenSnapshot` 符合声明后的顺序引用实验输出 `2`，没有绕过检查执行并发竞争。
+
+##### 5.6.7.3、`@MainActor`：页面状态归 MainActor，外部任务通过隔离入口更新
+
+**实际需求：** 下载进度由服务取得，页面的标题和 loading 状态统一在 MainActor 管理。调用者可能是其它任务，不能因为手里有 ViewModel 引用就随意修改页面状态。
+
+> `@MainActor` 不是“主线程加锁”，而是“把代码和状态划归 MainActor 管理，串行隔离访问”；效果类似自动加锁，但机制是 Actor 调度。
+
+这里“类似自动加锁”只类比互斥访问效果，**不代表给整个 `async` 方法持锁**；实际挂起后仍有前节介绍的可重入。MainActor 是全局 Actor，Apple 平台的执行器与主队列集成，而不是每个 ViewModel 各自创建一把主线程锁。规则见 [**SE-0316：Global actors**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md)。
+
+**写在哪里：** 整个页面模型可以声明 `@MainActor final class ...`；只想隔离某个入口时，也可以标在对应方法或属性上。下面直接隔离整个 ViewModel，减少漏标状态和方法的可能。
+
+保存为 `MainActorDemo.swift`：
+
+```swift
+//
+//  MainActorDemo.swift
+//  MainActorDemo
+//
+//  Created by Jobs on 2026年8月30日，星期日.
+//
+
+actor DownloadCountService {
+    func completedCount() async -> Int {
+        await Task.yield() // 异步服务的教学替身，不执行真实网络请求
+        return 3
+    }
+}
+
+@MainActor
+final class DownloadViewModel {
+    private(set) var title = "等待下载"
+    private(set) var isLoading = false
+
+    func reload(using service: DownloadCountService) async {
+        MainActor.assertIsolated()
+        isLoading = true
+        title = "正在读取进度"
+        print("开始：\(title)，loading = \(isLoading)")
+
+        let count = await service.completedCount()
+
+        MainActor.assertIsolated()
+        title = "已完成 \(count) 个文件"
+        isLoading = false
+        print("结束：\(title)，loading = \(isLoading)")
+    }
+
+    func reset() {
+        MainActor.assertIsolated()
+        title = "等待下载"
+        isLoading = false
+    }
+}
+
+@main
+struct MainActorDemo {
+    @MainActor
+    static func main() async {
+        let viewModel = DownloadViewModel() // 已在 MainActor 内，可直接创建和访问
+        let service = DownloadCountService()
+
+        /// 故意从不继承 MainActor 隔离的任务发起调用，演示外部入口。
+        let worker = Task.detached {
+            await viewModel.reload(using: service)
+
+            let title = await viewModel.title // 外部读取隔离属性也需要 await
+            print("跨域读取：\(title)")
+            precondition(title == "已完成 3 个文件")
+
+            await MainActor.run {
+                precondition(!viewModel.isLoading)
+                viewModel.reset() // 已进入 MainActor，不再写 await
+                print("重置：\(viewModel.title)，loading = \(viewModel.isLoading)")
+            }
+        }
+
+        await worker.value
+        precondition(viewModel.title == "等待下载")
+        precondition(!viewModel.isLoading)
+    }
+}
+```
+
+预期输出：
+
+```text
+开始：正在读取进度，loading = true
+结束：已完成 3 个文件，loading = false
+跨域读取：已完成 3 个文件
+重置：等待下载，loading = false
+```
+
+**沿着调用链看隔离归属：**
+
+| 位置 | 代码 | 为什么这样调用 |
+| --- | --- | --- |
+| MainActor 内的入口 | `DownloadViewModel()` | 创建与后续直接访问都在同一隔离域 |
+| 外部任务进入页面模型 | `await viewModel.reload(using: service)` | 进入 MainActor 执行页面状态逻辑，不是把方法放在调用者那里裸跑 |
+| ViewModel 等待服务 | `await service.completedCount()` | 去另一个 Actor 取数据；挂起期间 MainActor 可以处理其它工作 |
+| `reload` 的后半段 | `title = ...`、`isLoading = false` | 恢复后仍属于 MainActor 隔离代码，不用再包一层 `MainActor.run` |
+| 外部任务临时更新页面 | `await MainActor.run { viewModel.reset() }` | 把一小段同步状态操作放到 MainActor 内执行 |
+
+**拿到引用，不等于拿到任意修改权限。** `worker` 和入口持有同一个 ViewModel，不是各自复制一份；把引用交给外部任务，并不会把它的属性和方法从 MainActor 搬走。
+
+**`@MainActor` 与 `MainActor.run` 不是同一种写法的重复装饰：** 前者在声明处规定归属，让每个调用者都遵守；后者是在某个调用点进入 MainActor 执行同步闭包。已经处于 MainActor 的代码，直接调用 `reset()` 即可；外部也可以只写 `await viewModel.reset()`，不必为了单次方法调用套闭包。
+
+[**MainActor.run**](https://developer.apple.com/documentation/swift/mainactor/run(resulttype:body:)) 的闭包是同步的，不能把 `await service.completedCount()` 塞进它的闭包中。需要“先等待服务，再更新页面”时，可以像本例声明一个 `@MainActor async` 方法，或先取得结果，再进入 `MainActor.run`。
+
+[**MainActor.assertIsolated**](https://developer.apple.com/documentation/swift/mainactor/assertisolated(_:file:line:)) 用于验证当前是否处于正确的隔离执行上下文，**它本身不会切换执行器**。本例在加载前、加载后和重置时各验证一次，而不是仅凭打印线程名称来猜隔离是否正确。这个断言在 Debug / `-Onone` 构建中生效，`-O` 构建不执行检查，不能把它当作生产环境始终开启的门禁。
+
+**错误反例：外部同步代码直接调用隔离方法。** 把下面函数追加到该 Demo 中，会被编译器拒绝：
+
+```swift
+nonisolated func resetFromOutside(_ viewModel: DownloadViewModel) {
+    viewModel.reset() // 错误：非隔离同步函数不能直接调用 MainActor 隔离方法
+}
+```
+
+在异步调用链中应改为 `await viewModel.reset()`；如果调用者本来就是 UI 隔离逻辑，也可以把调用者声明为 `@MainActor`。不能靠 `nonisolated` 把页面状态的保护关闭。
+
+**这个 Demo 没有承诺的事情：**
+
+- `@MainActor` 不会把耗时同步计算自动放到后台。把大量解码、排序或阻塞 I/O 放进它的方法，仍然可能卡住 UI。
+- `Task { ... }` 可以继承创建位置的 Actor 隔离；写了 Task 不等于离开 MainActor。本例选用 `Task.detached` 是为了显式演示外部调用，不是在推荐每次刷新页面都这么创建任务。
+- 示例只触发一次加载。连续点击、旧请求晚返回、取消与失败都需要额外策略；MainActor 不会自动保证新结果胜过旧结果，也不会消灭跨 `await` 的逻辑竞态。
+- `private(set)` 只限制外部写入，`@MainActor` 才负责这里的隔离归属。实际绑定到 UILabel 或页面组件时，仍应在这个隔离域内完成 UI 更新。
+
+##### 5.6.7.4、怎样运行，以及怎样一起选用
+
+将三个**正确 Demo** 分别保存后，在文件所在目录运行下面命令。基线为 Swift 6 语言模式，命令显式把未标注声明的默认隔离设为 `nonisolated`，因此 `@MainActor` 的作用不会被项目隐含配置掩盖。
+
+```shell
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library NonisolatedDemo.swift -o NonisolatedDemo
+./NonisolatedDemo
+
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library SendableDemo.swift -o SendableDemo
+./SendableDemo
+
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library MainActorDemo.swift -o MainActorDemo
+./MainActorDemo
+```
+
+不同 Xcode 项目的默认隔离设置可能不同；复现实验时先用以上独立命令，不要通过关闭严格并发检查来绕过错误。代码块中的多个类型放在同一文件仅为方便复制，工程落地时按真实职责拆分。
+
+验证记录（2026年8月30日）：Apple Swift 6.3.3 下，三个正确 Demo 均通过上述严格编译，运行输出与断言符合预期；三个错误反例分别触发“非隔离读取 Actor 属性”“Sendable class 存在可变存储”“同步跨域调用 MainActor 方法”的预期诊断。
+
+回到同一个真实下载功能，它们可以这样配合：
+
+- 下载账本的可变进度：交给普通 Actor 管理。
+- 任务名称等固定说明：确实不依赖隔离可变状态时，提供 `nonisolated` 同步入口。
+- 传给页面或其它任务的进度结果：使用 `Sendable` 快照；需要安全传递的回调用 `@Sendable` 函数类型表达。
+- 页面标题、loading 与按钮状态：交给 `@MainActor` 模型管理。
+
+**最后一句话串起来：`nonisolated` 决定哪些成员不需要进入隔离域，`Sendable` 表达传递出去的值是否安全，`@MainActor` 决定页面代码与状态归哪个隔离域管理。** Actor 实例本身可以安全跨域传递，是因为它仍然保护自己的隔离状态；这不等于调用者拿到引用后就能绕过入口随意读写。
 
 #### 5.6.8、什么时候选 Actor，什么时候仍然选 Class
 
