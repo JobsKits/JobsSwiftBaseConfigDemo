@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -70,5 +72,56 @@ JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 - 页面、列表和弹框的普通承载面使用 `JobsCor.systemBackground` / `JobsCor.secondarySystemBackground`，正文、说明和占位文字使用 `JobsCor.label` / `JobsCor.secondaryLabel` / `JobsCor.placeholderText`，确保白天浅底深字、黑夜深底浅字。
 - 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要在主题 Trait 变化后重新解析和绘制。
 - 验证时从 Demo 全局主题入口分别切换白天和黑夜，检查组件的背景、文字、禁用态、占位态与弹出层对比度。
+
+<a id="jobs-architecture"></a>
+
+## 四、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 4.1、设计目的与职责划分
+
+用 Configuration 描述开屏媒体和跳过、点击、摇动等动作，Presenter 负责挂载展示，VC 组织播放及退出，MediaCache 管理远程资源和视频预加载，Preferences 与 Localization 管理独立状态。
+
+### 4.2、运行脉络
+
+配置开屏 → 选择本地资源或缓存 → 挂载展示并计时 → 响应跳过或动作 → 退出展示；预加载任务独立推进
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+flowchart TD
+    A["媒体与动作配置"] --> B["本地资源或已缓存媒体"]
+    A --> C["远程视频预加载待办"]
+    B --> D["开屏展示与倒计时"]
+    D --> E["跳过、动作或结束"]
+    E --> F["退出并清理展示"]
+    C --> G["下载成功保存缓存"]
+    C --> H["失败保留待办并重试"]
+    H --> C
+    G -.-> B
+```
+
+### 4.3、关键设计与边界
+
+- 展示生命周期与媒体缓存生命周期分离，页面退出不应被理解成所有预加载任务都结束。
+- 远程视频使用缓存及预加载策略，下载失败保留待办并退避重试；不能重建成每次进入都直接强制在线播放。
+- 倒计时、手势动作和媒体结束可能同时到达，退出路径应保持一次性收尾与宿主状态恢复。
+- resumePendingVideoPreloads 当前是空入口，实际恢复逻辑在缓存对象初始化及内部处理，不能按方法名虚构额外恢复行为。
+- GIF 帧时长、视频画面模式、跳过按钮布局与语言资源都有独立配置，不应只用一张静态图替代全部类型。
+
+### 4.4、阅读与重建顺序
+
+先读 Configuration 和 Presenter，再看 VC 的展示与关闭，最后追 MediaCache 的持久待办、缓存与重试。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsSplashConfiguration.swift](<./Core/JobsSplashConfiguration.swift>)
+- [Core/JobsSplashGIFDecoder.swift](<./Core/JobsSplashGIFDecoder.swift>)
+- [Core/JobsSplashLocalization.swift](<./Core/JobsSplashLocalization.swift>)
+- [Core/JobsSplashMediaCache.swift](<./Core/JobsSplashMediaCache.swift>)
+- [Core/JobsSplashPreferences.swift](<./Core/JobsSplashPreferences.swift>)
+
+依赖与编译入口：[JobsSwiftSplash.podspec](<./JobsSwiftSplash.podspec>)。其中显式依赖声明包括 `JobsInheritance`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsCountdownButton`、`JobsSwiftDSL`、`JobsSwiftOpen`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

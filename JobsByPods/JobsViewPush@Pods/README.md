@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -72,5 +74,38 @@ let drawer = JobsSideDrawerVC(
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 五、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 5.1、设计目的与职责划分
+
+提供视图推出便利能力和侧边抽屉控制器。抽屉将主内容与抽屉内容按子控制器关系装配，Configuration 描述方向、展示方式和手势阈值，进度统一驱动布局和遮罩。
+
+### 5.2、运行脉络
+
+安装子控制器 → 等待有效尺寸后挂载视图 → 手势或接口改变进度 → 判断完成方向 → 打开或关闭并回调
+
+### 5.3、关键设计与边界
+
+- 先完成父子控制器关系，再读取和布局子视图，避免导航容器在零尺寸阶段提前生成错误布局。
+- 左、右、上、下抽屉需把位移与速度转换到统一开合方向，不能全部按水平向右处理。
+- 低速按位移比例判断，快速甩动按方向及预测进度判断，同时协调主副轴手势竞争。
+- 禁止本次边缘打开不应影响已打开抽屉的关闭手势；关闭完成回调可供宿主退出承载页面。
+- 容器旋转或尺寸变化更新布局，不应无条件再次强制子导航栏布局或重复安装控制器。
+
+### 5.4、阅读与重建顺序
+
+先读 SideDrawerConfiguration 与子控制器装配，再看 progress 布局、交互判定和关闭回调，最后看 JobsViewPush.swift 便利入口。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsViewPush.swift](<./JobsViewPush.swift>)
+- [Core/JobsSideDrawer/JobsSideDrawer.swift](<./Core/JobsSideDrawer/JobsSideDrawer.swift>)
+
+依赖与编译入口：[JobsViewPush.podspec](<./JobsViewPush.podspec>)。其中显式依赖声明包括 `JobsSwiftDSL`、`JobsSwiftBaseDefines`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

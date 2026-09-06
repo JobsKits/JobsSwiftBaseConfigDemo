@@ -1,5 +1,7 @@
 # JobsSwiftNumberStepper
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ## 定位
 
 `JobsSwiftNumberStepper` 是可复用的整数步进输入组件，组合“减号按钮 + 整数输入框 + 加号按钮”。上下限均为可选；设置边界后，到达对应边界的按钮会自动置灰并禁止点击。
@@ -52,3 +54,34 @@ ruby -c JobsSwiftNumberStepper.podspec
 pod install --no-repo-update
 xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftNumberStepper -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' build
 ```
+
+<a id="jobs-architecture"></a>
+
+## 一、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 1.1、设计目的与职责划分
+
+将减号、整数输入框与加号收口为 UIControl，以当前整数值、可选上下界与步长作为共同状态。按钮和键盘输入最终进入同一收敛、渲染和事件路径。
+
+### 1.2、运行脉络
+
+点击加减或输入 → 校验整数 → 约束到有效范围 → 更新文字与可用状态 → 按策略发送事件
+
+### 1.3、关键设计与边界
+
+- 上下界可分别为 nil，省略表示该侧没有业务边界，但仍受 Int 范围约束。
+- 程序调用 setValue 默认不发送事件，需要通知时显式开启，避免双向回写造成循环。
+- 允许负数时键盘与临时输入状态不同于非负整数，编辑中的负号不能直接当最终有效值。
+- 到达边界后加减按钮状态必须同步，溢出不能以普通加减后再裁剪来掩盖。
+
+### 1.4、阅读与重建顺序
+
+先读 configure、setBounds 和 setValue，再看 bounded、输入校验与结束编辑收敛。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsSwiftNumberStepper/JobsSwiftNumberStepper.swift](<./Core/JobsSwiftNumberStepper/JobsSwiftNumberStepper.swift>)
+
+依赖与编译入口：[JobsSwiftNumberStepper.podspec](<./JobsSwiftNumberStepper.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

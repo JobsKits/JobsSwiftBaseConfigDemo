@@ -1,3 +1,5 @@
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 
 ## DSL 迁移说明
 
@@ -31,3 +33,38 @@
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 一、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 1.1、设计目的与职责划分
+
+以系统类型为组织轴，承载 Jobs 的对象创建工厂、UIKit 功能扩展与事件便利入口。纯配置型链式 DSL 归入 JobsSwiftDSL；本 Pod 的桥接入口与 iOS.SDK 下的类型目录连接这两层。
+
+### 1.2、运行脉络
+
+工厂创建系统对象 → DSL 配置基础属性 → 功能或事件扩展接入行为 → 宿主安装并管理对象
+
+### 1.3、关键设计与边界
+
+- 不要把 iOS.SDK 目录误当成 Apple 的 SDK 副本；其中包含本库自维护的系统类型扩展。
+- 纯属性配置与带 [**SnapKit**](https://github.com/SnapKit/SnapKit) 闭包的安装、事件绑定、图片加载等功能要分层；例如 byAddTo 的不同重载分布在不同模块。
+- 工厂、语言与主题辅助、图片加载器适配等各有依赖和系统版本边界，不能合并成一个万能扩展文件。
+- 复建链式入口时保持当前对象类型；处理子对象的配置闭包应明确作用对象，避免链条返回父类后丢失能力。
+
+### 1.4、阅读与重建顺序
+
+先读桥接入口明确 DSL 边界，再按 iOS.SDK 下的系统类型定位工厂、功能和事件实现，最后看调用方如何组合。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsByUIKitDSLBridge.swift](<./JobsByUIKitDSLBridge.swift>)
+- [iOS.SDK/Others@SDK/UIAlertController.swift](<./iOS.SDK/Others@SDK/UIAlertController.swift>)
+- [iOS.SDK/Others@SDK/UICollectionViewFlowLayout.swift](<./iOS.SDK/Others@SDK/UICollectionViewFlowLayout.swift>)
+- [iOS.SDK/Others@SDK/UIListContentConfiguration.swift](<./iOS.SDK/Others@SDK/UIListContentConfiguration.swift>)
+- [iOS.SDK/Others@SDK/UIPageViewController.swift](<./iOS.SDK/Others@SDK/UIPageViewController.swift>)
+
+依赖与编译入口：[JobsByUIKit.podspec](<./JobsByUIKit.podspec>)。其中显式依赖声明包括 `Kingfisher`、`GKNavigationBarSwift`、`SnapKit`、`SVGKit`、`ESPullToRefresh`、`RxSwift`、`RxCocoa`、`RxRelay`、`NSObject+Rx`、`SkeletonView`、`lottie-ios`、`Jobsl10n`、`JobsScale`、`JobsNavBar`、`JobsTextTools`、`JobsSwiftTimer`、`JobsSwiftBlock`、`JobsImageTools`、`JobsByQuartzCore`、`JobsSwiftBaseDefines`、`JobsViewPush`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

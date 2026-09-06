@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ## 一、简介
 
 * 定时器核心依托于 [<font size=5>**`JobsSwiftTimer`**</font>](https://github.com/JobsKits/JobsSwiftTimer)
@@ -613,3 +615,34 @@ public enum ItemSizeMode {
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 四、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 4.1、设计目的与职责划分
+
+以可配置内容单元组织跑马灯和轮播，方向、模式及单元尺寸策略决定布局和滚动，页面指示器独立配置，计时驱动与用户拖动需要协调。
+
+### 4.2、运行脉络
+
+提供内容与尺寸策略 → 布局单元 → 自动滚动或用户拖动 → 校正循环位置 → 更新页码
+
+### 4.3、关键设计与边界
+
+- fillBounds 模式会开启分页，不能把它和连续滚动视为同一种速度模型。
+- 页面指示器默认不开启，内置位置与外部 [**SnapKit**](https://github.com/SnapKit/SnapKit) 约束闭包属于不同配置路径。
+- 内容不足一屏、空内容、数据数量变化及 bounds 变化都会影响循环边界。
+- 更新配置时应保留是否正在运行的含义，不能每次改方向都叠加一个计时器。
+
+### 4.4、阅读与重建顺序
+
+先读方向、模式和 itemSizeMode，再看单元布局、滚动校正与 PageControl 更新。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsMarqueeView.swift](<./JobsMarqueeView.swift>)
+
+依赖与编译入口：[JobsMarqueeView.podspec](<./JobsMarqueeView.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftTimer`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`Kingfisher`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

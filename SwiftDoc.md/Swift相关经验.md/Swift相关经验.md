@@ -6,4395 +6,1987 @@
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## 🔥 <font id="前言">前言</font>
 
-> 本文集中整理 [**Swift**](https://www.swift.org/) 基础语法、内存与数据结构、闭包、泛型、属性、协议、并发、网络及 SwiftUI 经验。语言规则以当前 [**The Swift Programming Language**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/) 为准；涉及 Apple 平台框架时，再以对应 SDK 文档和项目最低部署版本为准。
+> 以生产开发为主：先掌握概念、选型和边界，再复制示例验证。面试问答集中在末尾 <a href="#FAQ" style="color:red;font-weight:bold;">FAQ</a>。
 
-- 官方语言资料：
+本文使用 Swift 6 语言模式；示例默认未标注声明的隔离为 <font color="red"><b><code>nonisolated</code></b></font>。<font color="red"><b><code>Task.sleep(for:)</code></b></font> 等示例按 iOS 16+ 使用，低版本需替换对应 API。Swift 6.2+ 的隔离选项单独说明，避免把项目配置当成语言恒定规则。
 
-  - [**Swift Attributes**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes/)
-  - [**Swift Concurrency**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
-  - [**Swift Protocols**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/)
-  - [**Swift Structures and Classes**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/)
-  - [**Choosing Between Structures and Classes**](https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes)
+示例用于独立验证语言机制，不依赖 Jobs UI 封装。合入工程时按类型拆文件、补 Jobs 文件头、接入既有 API。每个代码块独立使用；标明“接上例”的代码需合并前文定义。
 
-- 延伸资料：
+[**SwiftUI 相关经验**](/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo/SwiftUI相关经验.md/SwiftUI相关经验.md) 单独维护视图、状态包装器、布局和 UIKit 互操作；本文只保留通用语言知识。
 
-  - [**SnapKit**](https://github.com/SnapKit/SnapKit)
-  - [**JXSegmentedView**](https://github.com/pujiaxin33/JXSegmentedView)
-  - [**SwiftUI 与 UIKit 集成**](https://developer.apple.com/documentation/swiftui/uiviewrepresentable)
-
-- 阅读约定：
-
-  - 文中的 [**Swift**](https://www.swift.org/) / Objective-C 对比以“语言能力和工程使用边界”为主，不把实现细节误写成永远固定的 ABI 承诺。
-  - `async`、Task 与线程不是同义词；结构体 / 类的选择也不以“栈或堆”作为第一判断标准。
-  - 代码示例保持极简，生产项目仍需补齐错误分类、日志、取消、限流、测试和部署版本处理。
-
-## 一、网络分层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-最常见的网络分层是 **OSI**（***O**pen **S**ystems **I**nterconnection*）
-
-### 1.1、OSI 参考模型
-
-```mermaid
-flowchart TB
-    G["物理层<br/>Physical Layer<br/><br/>传输比特流（0 和 1）<br/>规定介质、电压等规范"]
-    F["数据链路层<br/>Data Link Layer<br/><br/>将比特流封装成数据帧<br/>负责差错检测"]
-    E["网络层<br/>Network Layer<br/><br/>负责跨网络传输<br/>路由选择、分组转发"]
-    D["传输层<br/>Transport Layer<br/><br/>提供端到端传输<br/>保证可靠性、流控、拥塞控制"]
-    C["会话层<br/>Session Layer<br/><br/>建立、维护、终止会话<br/>支持同步与恢复"]
-    B["表示层<br/>Presentation Layer<br/><br/>负责格式转换<br/>编码解码、加密解密"]
-    A["应用层<br/>Application Layer<br/><br/>提供网络服务接口<br/>如 HTTP、FTP、SMTP"]
-
-    G --> F --> E --> D --> C --> B --> A
-```
-
-### 1.2、参考模型和 TCP/IP 协议族
-
-- **应用层**：包含了 OSI 参考模型中的应用层、表示层和会话层
-- **传输层**：类似于 OSI 参考模型的传输层，提供了端到端的数据传输，如 TCP 和 UDP 协议
-- **网络层**：类似于 OSI 参考模型的网络层，负责数据包的传输和路由选择，如 IP 协议
-- **链路层**：类似于 OSI 参考模型的数据链路层和物理层，负责数据帧的传输和物理介质的规范
-
-## 二、内存区域分类 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> 不同操作系统和编程语言的实现可能会有所不同，下面的分类只是一种常见的划分方式；
-> **TCP/IP** 协议族中的层次结构并不是严格按照 OSI 参考模型来定义的，但它们都提供了类似的功能；
-> 网络分层的好处在于可以提高系统的模块化、灵活性和可维护性，同时也促进了不同厂商之间的互操作性
-
-```lua
-低地址
-+-----------------------------------------------------------------------------------------------------------+
-| 代码段（Text）只读，固定大小        																							                        
-| 		* 包括：程序代码、只读的常量（如 const 修饰的全局变量和字符串常量）。                                            
-+-----------------------------------------------------------------------------------------------------------+
-| 数据段 （Data）                                                             				                    
-| 		* 包括：已初始化的全局变量和已初始化的静态变量（包括全局和局部的静态变量）。                                       
-+-----------------------------------------------------------------------------------------------------------+
-| BSS 段（Block Started by Symbol）：未初始化的全局变量、未初始化的静态变量。                                      
-+-----------------------------------------------------------------------------------------------------------+
-| 常量区：字符串常量（如字面量字符串）和编译期决定的只读变量（大多数实现将其归于代码段）。                               
-| 		* 注：如果常量区与代码段分开，则可以单独列出。                                                                
-+-----------------------------------------------------------------------------------------------------------+
-| 堆（Heap） ◀️ 向高地址增长，动态分配内存（如 malloc 或 new 分配的内存）。   
-|			* 堆是动态分配的内存区域，用于存储程序运行时动态分配的内存；
-| 		* 堆上的内存可以通过函数如 `malloc()`、`calloc()` 或者 `new` 来分配，并通过 `free()` 或者 `delete` 函数来释放；
-+-----------------------------------------------------------------------------------------------------------+
-| 栈（Stack）◀️ 向低地址增长，用于局部变量、函数调用参数及返回地址等。   
-|			* 栈（Stack）用于存储函数的局部变量、函数参数、函数的返回地址等；
-|   	* 每次函数调用时，会在栈（Stack）上分配一块称为栈帧（Stack Frame）的内存，函数返回后，栈帧（Stack Frame）会被销毁；
-|     * 栈（Stack）的大小是有限的，通常比堆的大小小得多 ；栈（Stack）<< 堆（Heap）
-|     * 可以看作是一个容器；
-|       * 其中元素的添加和移除都发生在同一端，通常称为栈顶；
-|       * 向栈（Stack）中添加元素的操作称为“压栈”（Push），从栈中移除元素的操作称为“弹栈”（Pop）；
-|       * 在栈（Stack）中，最后压入的元素首先被弹出，这就是先进后出的特性；
-|     * 栈在计算机科学和软件工程中有广泛的应用，例如函数调用的过程、表达式求值、逆波兰表达式计算等场景都可以使用栈来实现。
-+-----------------------------------------------------------------------------------------------------------+
-高地址
-```
-
-- **全局区（*Global Segment*）**：
-   - 全局区存储全局变量，但是和数据区的区别是，它包含了**未初始化的全局变量**
-   - 在程序开始时，未初始化的全局变量会被初始化为默认值
-   - 已初始化的全局变量属于数据段
-   - 未初始化的全局变量属于 BSS 段
-   - 全局区实际上已经被包含在 **数据段** 和 **BSS 段** 中
-## 三、数据结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- **单向链表**是一种常见的链表数据结构
-
-  - 它由一系列节点组成，每个节点包含两部分：**数据部分**和**指向下一个节点的指针（或者称为链接或引用）**；
-  - 在单向链表中，每个节点只有一个指向下一个节点的指针，**而没有指向前一个节点的指针**；
-  - 单向链表的特点包括：
-
-    - **节点结构**：每个节点包含一个数据元素以及一个指向下一个节点的指针。
-    - **头节点**：链表的起始节点称为头节点。头节点不包含有效的数据元素，它的主要作用是指向链表的第一个节点。
-    - **尾节点**：链表的最后一个节点称为尾节点。尾节点的指针指向 NULL（或者称为 Nil、None），表示链表的结束。
-    - **动态内存分配**：单向链表中的节点是动态分配的，可以根据需要动态地添加或删除节点，因此单向链表具有灵活的内存管理特性。
-    - **顺序访问**：单向链表只能从头节点开始顺序访问，因为每个节点只有指向下一个节点的指针，无法直接访问前一个节点。
-  - **单向链表适用于需要频繁插入和删除操作的场景**，因为它们不需要像数组那样移动大量元素来进行插入和删除操作。然而，单向链表的缺点是访问任意位置的元素的效率较低，需要从头节点开始顺序遍历链表。
-  - 单向链表的环
-    - 链表中某个节点指向链表中的一个先前节点，从而形成了一个闭合的循环结构
-    - 链表中某个节点的 next 指针指向了链表中已经遍历过的节点，则称该链表中存在环；
-    - 如果链表中不存在环，则称其为单向链表；
-    - 如果链表中存在环，则称其为带环链表；
-    - 检测链表中是否存在环通常可以通过快慢指针的方法来实现：使用两个指针，一个快指针每次移动两步，一个慢指针每次移动一步。**如果链表中存在环，那么这两个指针最终会相遇**；**如果链表中不存在环，则快指针会先到达链表的末尾**。
-  - 带环链表：指链表中某个节点指向了链表中已经遍历过的节点，形成了一个闭合的循环结构。
-    - 可以通过快慢指针的方法进行检测：使用两个指针，一个快指针每次移动两步，一个慢指针每次移动一步，如果链表中存在环，那么这两个指针最终会相遇；如果链表中不存在环，则快指针会先到达链表的末尾。
-    - 带环链表的存在可能会导致一些问题，比如在遍历链表时可能陷入死循环，或者在执行某些操作时可能无法正确地终止。因此，在实现链表操作时，**需要特别注意处理带环链表的情况**。
-  - 无论是单向链表还是双向链表。带环链表是指链表中某个节点指向了链表中已经遍历过的节点，形成了一个闭合的循环结构
-- **双向链表**是一种链表数据结构，每个节点包含两个指针，分别**指向前一个节点和后一个节点**，因此可以从任一方向遍历整个链表。
-  - 双向链表的特点包括：
-    - **节点结构**：每个节点包含数据元素以及两个指针，分别指向前一个节点和后一个节点；
-    - **头节点和尾节点**：与单向链表类似，双向链表也可以有头节点和尾节点。头节点指向链表的第一个节点，尾节点指向链表的最后一个节点；
-    - **双向遍历**：由于每个节点都有指向前一个节点和后一个节点的指针，因此可以从头节点开始向后遍历，也可以从尾节点开始向前遍历；
-    - **动态内存分配**：双向链表中的节点也是动态分配的，可以根据需要动态地添加或删除节点；
-
-  - 双向链表相比于单向链表，提供了更灵活的遍历方式，可以从任一方向快速访问链表的元素；
-
-  - 然而，双向链表相对于单向链表，占用的空间更大，因为每个节点需要存储额外的指向前一个节点的指针；
-
-  - 双向链表的实现会避免出现环的情况。在某些特殊情况下，**双向链表也可能出现环，这通常是由于程序错误导致的**；
-- *堆(**Heap**)*
-
-  - <font color="red">***堆内存的分配和释放是由程序员手动管理的***</font>，通常通过 `malloc`、`calloc`、`realloc` 等函数进行分配，通过 `free` 函数进行释放；
-  - 堆区相对于栈区更靠内存高字节；（内存后部署堆区）
-  - 堆内存的分配不是连续的，它的分配由系统的内存管理器根据需要从堆中的空闲内存块中分配合适大小的内存；
-  - 堆内存是用于**存储动态分配的内存**，通常用于存储动态创建的对象、数据结构等；
-  - 在堆上分配的内存由 **ARC**（***A**utomatic **R**eference **C**ounting*）管理；
-  - 存储：<u>**类实例.方法**</u>、<u>**类实例.属性**</u>；
-  - **存放引用类型**：*Class*类型、闭包和函数；
-    - 浅拷贝；
-    - **堆操作牵涉到合并、移位、重新链接等**；
-- *栈(**Stack**)*
-
-  - <font color="red">***栈上的内存分配和释放由编译器（或操作系统）自动管理***</font>，通常以页为单位进行分配和管理；
-  - 数据先进后出（**L**ast-**I**n-**F**irst-**O**ut，**LIFO**）
-  - 栈内存通常是一块**固定大小**的内存区域，用于存储函数调用的**局部变量**、**函数参数**、**函数调用的返回地址**等信息；
-  - **栈内存是连续的**，即在栈中分配的内存地址是依次递增的；
-  - 栈区相对于堆区更靠内存低字节；（内存先部署栈区）
-  - 将*String*，*Array*，*Dictionary*设计成值类型，**大幅减少了堆上的内存分配和回收的次数**。同时[***C**opy-**O**n-**W**rite*](# Copy-On-Write)又将值传递和复制的开销降到了最低；
-  - **存放值类型**：结构体（*struct*）、枚举（*enum*）、元祖（*tuple*）；
-    - 深拷贝：可以确保在函数内部或者在其他变量中修改值类型的值时，不会影响到原始值；
-    - 性能优势：**仅仅是单个指针的上下移动**；
-    - 线程安全：直接存储于内存 ＋ 不需要引用（没有引用计数）和垃圾回收等操作 = 不会发生因为引用计数的增减而引起的竞态条件；
-- **队列（Queue）**
-  - 一种先进先出（**F**irst-**I**n-**F**irst-**O**ut，**FIFO**）的线性数据结构；
-  - 支持在一端进行插入操作，在另一端进行删除操作；
-  - 队列常用于实现任务调度、消息传递等场景；
-- **数组（Array）**
-
-  - 一种**线性数据结构**，由一组**连续的内存单元**组成，用于**存储相同类型的数据**元素；
-  - 数组支持随机访问，但插入和删除操作的效率较低；
-- 字符串 == 字符数组。可以使用下标索引来访问字符串中的字符。特别是在C语言中，字符串通常被存储为字符数组，**以 null 字符（'\0'）结尾**；
-- **哈希表（Hash Table）**
-
-  - 一种使用哈希函数来实现**键值对映射**的数据结构；
-  - 支持快速的查找、插入和删除操作；
-  - 哈希表常用于实现关联数组、集合等；
-- **哈希映射（HashMap）**
-
-  - 也称为关联数组、字典或映射，存储键值对的集合，通过键快速查找对应的值
-- **哈希集合（HashSet）**
-
-  - 类似于哈希表，但**只存储键而不存储值**，用于**存储不重复的元素集合**
-- **树（Tree）**
-
-  - 一种**非线性数据结构**；
-  - 由节点和边组成，每个节点可以有零个或多个子节点；
-  - 树常用于表示层次关系，如文件系统、组织结构等；
-- **二叉树（Binary Tree）**：一种特殊的树形数据结构，**每个节点最多有两个子节点**，分为**左子树**和**右子树**
-
-  - **红黑树（Red-Black Tree）**：一种自平衡的二叉查找树，保持良好的平衡性能，用于实现有序集合和映射；
-  - **AVL树**：一种高度平衡的二叉查找树，通过旋转操作来保持平衡，用于实现有序集合和映射。
-- **B树（B-Tree）**：一种多路搜索树，每个节点可以存储多个键值对，**用于实现数据库索引、文件系统**等。
-- **Trie树（Trie Tree）**：也称为字典树或前缀树，用于**高效地存储和检索字符串集合**。
-- **字典树（Suffix Tree）**：用于高效地存储和检索字符串集合的一种树形数据结构，通常**用于字符串匹配和搜索**。
-- **图（Graph）**
-
-  - 一种非线性数据结构；
-  - 由节点（顶点）和边组成，用于表示各种实体之间的关系；
-  - 图常用于网络分析、路由算法等场景。
-
-## 四、锁🔒 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-在操作系统中，常见的锁包括：
-
-- **互斥锁（Mutex Lock）：** 互斥锁是最基本的一种锁，用于保护临界区，确保在同一时刻只有一个线程可以访问共享资源。当一个线程持有互斥锁时，其他线程必须等待该线程释放锁才能访问共享资源。
-
-- **自旋锁（Spin Lock）：** 自旋锁是一种忙等待的锁，当线程尝试获取锁时，如果锁已被其他线程持有，则该线程会循环等待直到锁被释放。自旋锁适用于对临界区的访问时间很短的情况。
-
-- **读写锁（Read-Write Lock）：** 读写锁允许多个线程同时读取共享资源，但是在写操作时需要互斥访问。读写锁通过分离读操作和写操作来提高并发性能。
-
-- **条件变量（Condition Variable）：** 条件变量通常与互斥锁一起使用，用于实现线程间的同步。它允许线程在特定条件下等待并在条件满足时被唤醒。条件变量提供了 `wait`、`signal` 和 `broadcast` 等操作。
-
-- **信号量（Semaphore）：** 信号量是一种计数器，用于控制对共享资源的访问。它可以用于限制同时访问共享资源的线程数量，或者用于线程间的同步和通信。
-
-- **屏障（Barrier）：** 屏障用于在多线程环境下同步多个线程的执行顺序。它可以保证在达到屏障之前的所有线程都执行完毕后，再执行屏障之后的操作。
-
-这些锁和同步机制在操作系统中起着至关重要的作用，可以有效地控制对共享资源的访问，保证多个线程之间的协调和同步。不同的锁适用于不同的场景和需求，开发人员需要根据具体的应用场景选择合适的锁来实现线程安全和并发控制。
-
-```swift
-import Foundation
-
-class CustomLock {
-    private var lock = NSLock()
-    
-    func lock() {
-        lock.lock()
-    }
-    
-    func unlock() {
-        lock.unlock()
-    }
-}
-
-func testCustomLock() {
-    let lock = CustomLock()
-    
-    DispatchQueue.global().async {
-        lock.lock()
-        print("Thread 1: Lock acquired")
-        sleep(2) // 模拟一些工作
-        lock.unlock()
-        print("Thread 1: Lock released")
-    }
-    
-    DispatchQueue.global().async {
-        lock.lock()
-        print("Thread 2: Lock acquired")
-        sleep(2) // 模拟一些工作
-        lock.unlock()
-        print("Thread 2: Lock released")
-    }
-    
-    // 防止主线程结束
-    dispatchMain()
-}
-
-testCustomLock()
-/**
-在这个示例中，我们定义了一个名为 CustomLock 的类，它使用 NSLock 来实现互斥锁。
-lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过调用 NSLock 的 unlock 方法来释放锁。
-在 testCustomLock 函数中，我们创建了一个 CustomLock 对象，并在两个后台线程中分别调用 lock 和 unlock 方法来模拟锁的获取和释放。
-最后，我们调用 dispatchMain() 来防止主线程提前结束。
-*/
-```
-
-## 五、[**Swift**](https://www.swift.org/) 多线程与并发 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> [**Swift Concurrency**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) 构建在线程之上，但业务代码主要面对的是 Task、结构化并发和 Actor，而不是手工指定“这段代码永远跑在线程 X”。异步不等于并行，Task 也不等于线程；`await` 之后除 Actor 隔离等语义保证外，不应假设仍在原线程。
-
-### 5.1、基本概念
-
-| 概念 | 含义 |
+| 查阅目标 | 入口 |
 | --- | --- |
-| 同步 | 调用方等待当前工作完成后再继续 |
-| 异步 | 工作允许挂起，调用方可以先做其它事情 |
-| 并发 | 多个任务在时间上交错推进 |
-| 并行 | 多个任务在多个执行核心上同时运行 |
-| 线程 | 操作系统执行资源 |
-| 队列 | 提交工作的调度抽象，例如 GCD Queue |
-| Task | [**Swift**](https://www.swift.org/) 并发运行时管理的异步工作单元 |
-| Actor | 串行保护自身可变状态的引用类型 |
-| 隔离域 | 一组不能被其它并发域随意读写的状态与代码 |
+| 读懂语法与类型 | <a href="#语法" style="color:red;font-weight:bold;">语法</a>、<a href="#类型" style="color:red;font-weight:bold;">类型</a>、<a href="#闭包" style="color:red;font-weight:bold;">闭包</a> |
+| 处理集合与接口 | <a href="#集合" style="color:red;font-weight:bold;">集合</a>、<a href="#泛型" style="color:red;font-weight:bold;">泛型与协议</a> |
+| 处理异步与共享状态 | <a href="#Task" style="color:red;font-weight:bold;"><font color="red"><b>Task</b></font></a>、<a href="#Actor" style="color:red;font-weight:bold;">Actor</a>、<a href="#Combine" style="color:red;font-weight:bold;"><font color="red"><b>Combine</b></font></a> |
+| 排查生产问题 | <a href="#内存" style="color:red;font-weight:bold;">内存</a>、<a href="#网络请求" style="color:red;font-weight:bold;">网络与 JSON</a>、<a href="#计时" style="color:red;font-weight:bold;">计时</a> |
 
-### 5.2、核心能力速查
+## 一、<font id="语法">语法：先读懂声明</font>
 
-| [**Swift**](https://www.swift.org/) 能力 | 用途 | Objective-C 常见对应 |
+### 1、<font id="关键字">关键字与符号速查</font>
+
+| 写法 | 含义 |
+| --- | --- |
+| <font color="red"><b><code>let</code></b></font> / <font color="red"><b><code>var</code></b></font> | 不可重新赋值 / 可以重新赋值 |
+| <font color="red"><b><code>func</code></b></font> / <font color="red"><b><code>return</code></b></font> | 定义函数 / 返回结果 |
+| <font color="red"><b><code>struct</code></b></font> / <font color="red"><b><code>class</code></b></font> / <font color="red"><b><code>enum</code></b></font> / <font color="red"><b><code>actor</code></b></font> | 结构体 / 类 / 枚举 / 隔离状态的引用类型 |
+| <font color="red"><b><code>protocol</code></b></font> / <font color="red"><b><code>extension</code></b></font> | 约定能力 / 补充能力 |
+| <font color="red"><b><code>self</code></b></font> / <font color="red"><b><code>Self</code></b></font> | 当前实例 / 当前类型关系中的自身类型 |
+| `T.Type` / <font color="red"><b><code>T.self</code></b></font> | 类型值的类型 / 把类型本身作为值传递 |
+| `_` | 忽略值，或省略外部参数标签 |
+| `->` / <font color="red"><b><code>in</code></b></font> | 返回类型 / 分隔闭包参数与闭包体 |
+| `$0` / `$1` | 闭包的第一个 / 第二个参数，不限于单参数闭包 |
+| `\(表达式)` | 字符串插值：把结果放进字符串 |
+| `\.name` | KeyPath：描述从根值访问 `name` 的路径 |
+| <font color="red"><b><code>is</code></b></font> / <font color="red"><b><code>as?</code></b></font> / <font color="red"><b><code>as!</code></b></font> | 检查类型 / 尝试转换 / 强制转换，失败崩溃 |
+| `==` / `===` | 比较相等 / 判断两个类引用是否指向同一实例 |
+
+代码围栏保持原生语法高亮；正文中的关键字使用红色加粗，跨章节概念通过固定 ID 跳转。
+
+### 2、<font id="可选值">可选值：有值或无值</font>
+
+`Int?` 是 `Optional<Int>` 的简写；本质是枚举，包含 <font color="red"><b><code>.some(值)</code></b></font> 和 `.none`。<font color="red"><b><code>nil</code></b></font> 表示无值，不等于 `0`、空字符串或 `NSNull`。
+
+```swift
+let input: String? = "42"
+let number = input.flatMap(Int.init) // 有字符串才尝试转 Int；失败仍为 nil。
+let displayed = number ?? 0         // nil 才使用默认值 0。
+
+func printNumber(_ number: Int?) {
+    guard let number else { return } // 没值提前结束；后面得到非可选 Int。
+    print(number)
+}
+
+if let number {                     // 只在这个分支内使用解包后的值。
+    print(number + 1)               // 43
+}
+```
+
+可选链 `object?.method()` 在对象为空时跳过调用；强制解包 `value!` 要有可证明的不为空前提。外部输入、网络字段和用户数据使用安全解包。
+
+### 3、<font id="where"><font color="red"><b>where</b></font>：追加条件</font>
+
+运行时用在循环或模式匹配；编译期用在泛型约束。两者不能混为一类检查。
+
+```swift
+for number in 1...6 where number.isMultiple(of: 2) {
+    print(number) // 2、4、6；只执行满足条件的循环体。
+}
+
+let point = (2, -2)
+switch point {
+/// 两个坐标互为相反数
+case let (x, y) where x == -y:
+    print("位于 y = -x 上")
+/// 其它坐标
+default:
+    break
+}
+
+func equal<T>(_ lhs: T, _ rhs: T) -> Bool where T: Equatable {
+    lhs == rhs // 编译器已知 T 支持相等比较。
+}
+```
+
+### 4、<font id="访问控制">访问控制：限制使用范围</font>
+
+| 关键字 | 范围 |
+| --- | --- |
+| <font color="red"><b><code>private</code></b></font> | 当前声明及同文件内该类型的扩展 |
+| <font color="red"><b><code>fileprivate</code></b></font> | 当前源文件 |
+| <font color="red"><b><code>internal</code></b></font> | 当前模块，默认级别 |
+| <font color="red"><b><code>package</code></b></font> | 同一个 Swift Package 内的模块，需包身份配置 |
+| <font color="red"><b><code>public</code></b></font> | 模块外可使用；不开放模块外继承或重写 |
+| <font color="red"><b><code>open</code></b></font> | 类与类成员可在模块外继承或重写 |
+
+<font color="red"><b><code>private(set)</code></b></font> 限制 setter，不影响已声明的读取范围。访问控制不负责线程安全。<font color="red"><b><code>open</code></b></font> 与 <font color="red"><b><code>public</code></b></font> 的区别存在于模块边界，不取决于库以源码还是二进制交付。
+
+<a href="#FAQ-访问控制" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font></a>
+
+## 二、<font id="类型">类型：先选值还是引用</font>
+
+### 1、<font id="值与引用">结构体、类与枚举</font>
+
+**值类型表达内容；引用类型表达共同持有的实例。** 选择语义，再测性能。
+
+| 能力 | <font color="red"><b><code>struct</code></b></font> | <font color="red"><b><code>class</code></b></font> |
 | --- | --- | --- |
-| `async` / `await` | 线性表达可挂起操作 | completion Block |
-| `Task {}` | 从同步入口启动非结构化异步工作，并继承当前优先级、Actor 与 Task Local | `dispatch_async` |
-| `Task.detached {}` | 创建不继承当前 Actor / 优先级 / Task Local 的独立任务；谨慎使用 | 全局并发队列上的独立工作 |
-| `async let` | 并行启动数量已知的子任务 | `dispatch_group` + 多个 `dispatch_async` |
-| `withTaskGroup` | 动态数量的结构化子任务 | `dispatch_group` / `NSOperationQueue` |
-| `AsyncSequence` | 异步消费多次到达的值 | delegate / notification / stream callback |
-| `actor` | 隔离共享可变状态 | 私有串行队列 + 手工封装 |
-| `@MainActor` | 隔离 UI 与主执行域 | `dispatch_get_main_queue()` |
-| `Sendable` / `@Sendable` | 编译期检查跨隔离域传值与闭包捕获 | OC 无语言级等价物 |
-| Continuation | 把一次性 completion API 桥接成 `async` | 原 completion API |
-| 协作式取消 | 父子任务传播取消，任务主动检查并退出 | `NSOperation.cancel` + `isCancelled` |
+| 赋值 | 得到独立的外层值 | 复制引用，仍指向同一实例 |
+| 身份 | 不用 `===` 判断 | 用 `===` 判断 |
+| 继承 | 不支持 | 单继承 |
+| 修改自身 | 方法通常需 <font color="red"><b><code>mutating</code></b></font> | 修改实例属性不需 <font color="red"><b><code>mutating</code></b></font> |
+| <font color="red"><b><code>let</code></b></font> | 不能修改值的存储属性 | 引用不能换，实例中的可变属性仍可改 |
+| 生命周期 | 普通可复制值没有 <font color="red"><b><code>deinit</code></b></font> | 类可在 <font color="red"><b><code>deinit</code></b></font> 清理资源 |
+| 共通能力 | 属性、方法、下标、初始化、泛型、协议、扩展 | 同左 |
 
-### 5.3、极简 `async` / `await` Demo
+```swift
+struct Profile {
+    var name: String
+}
+
+var original = Profile(name: "Jobs")
+var copied = original
+copied.name = "New"
+print(original.name) // Jobs：修改副本不影响原值。
+
+final class ProfileBox {
+    var name = "Jobs"
+}
+
+let first = ProfileBox()
+let second = first
+second.name = "New"
+print(first.name)       // New：两个引用指向同一对象。
+print(first === second) // true
+```
+
+<font color="red"><b><code>enum</code></b></font> 表达有限状态；关联值保存当前状态的数据，原始值用于固定编码。避免用多个布尔值表达互斥状态。
+
+```swift
+enum LoadState {
+    case idle
+    case loading
+    case loaded([String]) // 关联值：这一次加载得到的数据。
+    case failed(String)
+}
+
+enum HTTPMethod: String {
+    case get = "GET"     // 原始值：case 的固定编码。
+    case post = "POST"
+}
+```
+
+模型、参数、快照优先使用结构体；需要身份、继承、共享生命周期时使用类；需要共享可变状态隔离时评估 <a href="#Actor" style="color:red;font-weight:bold;">Actor</a>。非可复制类型 `~Copyable` 有单独的所有权与析构规则，不套用普通结构体的复制结论。
+
+### 2、<font id="元组">元组：临时组合多个值</font>
+
+```swift
+func measure(_ text: String) -> (count: Int, isEmpty: Bool) {
+    (text.count, text.isEmpty)
+}
+
+let result = measure("Swift")
+print(result.count)   // 5；命名字段比 result.0 更明确。
+print(result.isEmpty) // false
+```
+
+一次性返回多个值使用元组；跨多处复用、需要方法或协议遵循时定义结构体。元组比较受元素能力与工具链支持约束；不能仅因两个元组形状相同就认定支持所有比较协议。
+
+### 3、<font id="static-final"><font color="red"><b>static</b></font> 与 <font color="red"><b>final</b></font></font>
+
+<font color="red"><b><code>static</code></b></font> 表示成员属于类型；<font color="red"><b><code>final</code></b></font> 禁止类继承或类成员重写；类中可重写的类型方法使用 <font color="red"><b><code>class func</code></b></font>。
+
+```swift
+class Formatter {
+    static let separator = ","        // 类型属性，不需要创建实例。
+    class func title() -> String { "默认" } // 允许子类 override。
+    final func version() -> Int { 1 }   // 子类不能重写。
+}
+
+final class CSVFormatter: Formatter {  // 禁止继续继承这个类。
+    override class func title() -> String { "CSV" }
+}
+```
+
+| 语言 | <font color="red"><b><code>static</code></b></font> | <font color="red"><b><code>final</code></b></font> |
+| --- | --- | --- |
+| Swift | 类型成员 | 禁止继承 / 重写 |
+| Java | 类成员 | 禁止继承 / 重写，或限制变量再次赋值 |
+| C / C++ | 静态存储期或内部链接；C++ 也有类静态成员 | C 没有；C++ 可限制派生 / 虚函数重写 |
+
+这些声明不等于指定栈、堆或常量池位置。
+
+### 4、<font id="Any-AnyObject"><font color="red"><b>Any</b></font> 与 <font color="red"><b>AnyObject</b></font></font>
+
+<font color="red"><b><code>Any</code></b></font> 可保存任意类型的值；<font color="red"><b><code>AnyObject</code></b></font> 限定类实例。两者都不承诺具体成员，需要已知能力时优先使用具体类型、泛型或协议。
 
 ```swift
 import Foundation
 
-struct User: Decodable, Sendable {
-    let id: Int
-    let name: String
+let values: [Any] = [42, "Jobs", (x: 1, y: 2)]
+for value in values {
+    if let number = value as? Int { // 转换成功才使用 Int 的能力。
+        print(number + 1)
+    }
 }
 
-func fetchUser(from url: URL) async throws -> User {
-    let (data, response) = try await URLSession.shared.data(from: url)
-    guard let httpResponse = response as? HTTPURLResponse,
-          // `~=` 是模式匹配运算符；这里等价于 `(200..<300).contains(httpResponse.statusCode)`。
-          200..<300 ~= httpResponse.statusCode else {
-        throw URLError(.badServerResponse)
-    };return try JSONDecoder().decode(User.self, from: data)
+let boxed: AnyObject = 42 as NSNumber // 桥接成对象，不是 Int 变成类。
+let optional: Int? = nil
+let stored: Any = optional as Any    // 明确保存 Optional，而非先解包。
+```
+
+所有类满足 <font color="red"><b>AnyObject</b></font>；协议继承 <font color="red"><b>AnyObject</b></font> 后可用于弱引用。值类型桥接或装箱后成为对象表示，不代表原类型能遵循类专属协议。
+
+### 5、<font id="OC互操作">Objective-C 互操作</font>
+
+[**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 中的结构体是 C 聚合值；不能像 Swift 结构体一样声明方法、泛型或协议遵循。`CGPoint` 等 C 结构体可被 Swift 导入；任意自定义 Swift 结构体不能直接变成 <font color="red"><b><code>@objc</code></b></font> 对象。
+
+需要公开复杂行为时使用 `NSObject` 包装类；需要共享简单二进制数据时使用明确的 C 接口。`NSValue` 是对象包装，不会赋予 C 结构体 Swift 的类型能力。
+
+<a href="#FAQ-值类型" style="color:red;font-weight:bold;">FAQ：值类型与引用类型</a>
+
+## 三、<font id="内存">内存：区分语义、布局与生命周期</font>
+
+### 1、<font id="内存区域">内存区域与执行上下文</font>
+
+| 区域 | 用途 |
+| --- | --- |
+| 代码区 | 可执行机器指令 |
+| 数据区 / BSS | 静态存储；传统映像中分别承载已初始化数据与零初始化数据 |
+| 栈 | 调用记录、局部数据等；随调用推进分配与回收 |
+| 堆 | 动态分配、生命周期可能跨越当前调用的数据 |
+
+**值类型不等于栈，引用类型也不能作为物理分配位置的绝对判断。** 编译器可优化、消除复制或装箱；结构体字段也能持有堆对象。不同平台的段布局和增长方向不作为业务依据。
+
+**上下文＝继续执行所需的信息。** 同步调用可能涉及参数、局部状态、返回地址和寄存器；闭包捕获的数据可比原函数活得更久；异步任务在挂起后仍需保存恢复位置与局部状态。
+
+### 2、<font id="字节对齐">字节对齐：起始地址满足倍数要求</font>
+
+对齐值为 `4`，起始地址需满足 `4` 的倍数。编译器为此可能在成员之间或末尾填充字节。
+
+```swift
+struct Packet {
+    let count: UInt32
+    let flag: UInt8
 }
 
-@MainActor
-final class UserScreenModel {
-    private(set) var user: User?
-    private(set) var errorMessage: String?
+print(MemoryLayout<Packet>.size)      // 常见结果 5：有效布局长度，包含内部填充。
+print(MemoryLayout<Packet>.alignment) // 常见结果 4：起始地址的对齐要求。
+print(MemoryLayout<Packet>.stride)    // 常见结果 8：连续存放时相邻起点的间距。
+```
 
-    func refresh(from url: URL) {
-        Task { [weak self] in
-            guard let self else { return }
-            do {
-                self.user = try await fetchUser(from: url)
-            } catch {
-                self.errorMessage = error.localizedDescription
-            }
+`size` 不含末尾为了下一个元素补齐的字节；`stride` 包含尾部补齐。以上数值只代表对应构建的结果。`MemoryLayout` 不递归统计字符串缓冲区或引用指向对象的总内存，普通 Swift 布局也不自动成为 C ABI 合同。
+
+### 3、<font id="COW">Copy-on-Write：共享到写入前</font>
+
+标准库 `Array`、`Dictionary`、`String` 等值类型可共享底层存储；写入时若需要保持其他值不变，再分离存储。自定义结构体不会仅因使用了 <font color="red"><b><code>struct</code></b></font> 就自动实现所有引用字段的深拷贝。
+
+```swift
+var source = [1, 2]
+var copy = source       // 语义上独立，物理缓冲区暂时可能共享。
+copy.append(3)          // 修改 copy，source 必须保持原内容。
+print(source)           // [1, 2]
+
+final class Item { var count = 0 }
+let list = [Item()]
+let copiedList = list
+copiedList[0].count = 9  // 修改的是共享 Item 对象，不是替换数组元素。
+print(list[0].count)    // 9；数组复制不等于元素对象深拷贝。
+```
+
+COW 不保护多个任务对同一个数组变量的并发写入。跨域传递仍按 <a href="#Sendable" style="color:red;font-weight:bold;"><font color="red"><b>Sendable</b></font></a> 与隔离规则处理。
+
+### 4、<font id="ARC">ARC：管理强引用，不自动打破环</font>
+
+强引用保留对象；<font color="red"><b><code>weak</code></b></font> 不保留对象，对象释放后变成 <font color="red"><b><code>nil</code></b></font>；<font color="red"><b><code>unowned</code></b></font> 不保留对象，访问时要求对象仍存活，否则可能崩溃。
+
+```swift
+final class EventOwner {
+    var onFinish: (() -> Void)?
+    var count = 0
+
+    func bind() {
+        onFinish = { [weak self] in // owner 持有闭包，闭包弱持有 owner。
+            self?.count += 1       // owner 已释放就跳过，避免强引用环。
         }
     }
 }
 ```
 
-- `URLSession.data(from:)` 挂起等待网络，不会用同步阻塞占住当前线程。
-- `UserScreenModel` 被 `@MainActor` 隔离，所以状态更新具有主 Actor 语义。
-- `Task` 继承创建点的 Actor；它不是“自动切到后台线程”的同义词。
-- CPU 密集型解析、压缩、图像处理要单独设计并发边界，不能因为函数写了 `async` 就认为已经离开主 Actor。
+根据持有关系选择捕获方式；没有环时不机械添加弱引用。<font color="red"><b><code>guard let self</code></b></font> 会在后续使用范围内建立强引用，跨长时间等待时要评估持有时长。内存中的强引用环与数据结构中的环不是同一个问题。
 
-### 5.4、固定数量并发：`async let`
+<a href="#FAQ-内存" style="color:red;font-weight:bold;">FAQ：布局与存储位置</a> · <a href="#FAQ-COW" style="color:red;font-weight:bold;">FAQ：COW 与深拷贝</a> · <a href="#FAQ-ARC" style="color:red;font-weight:bold;">FAQ：闭包循环引用</a>
+
+## 四、<font id="闭包">函数与闭包：把行为作为值传递</font>
+
+### 1、<font id="函数类型">函数类型与闭包简写</font>
+
+**闭包＝可携带上下文的代码块。** 可以保存、传参或返回；和 Objective-C Block 用途相近，不是标准 C 的普通函数指针。
 
 ```swift
-struct Dashboard: Sendable {
-    let profile: String
-    let messages: [String]
-}
+func add(_ lhs: Int, _ rhs: Int) -> Int { lhs + rhs }
 
-func loadProfile() async throws -> String {
-    "Jobs"
-}
+var operation: (Int, Int) -> Int = add // 两个 Int 输入，一个 Int 输出。
+print(operation(2, 3))                 // 5
+operation = { $0 * $1 }                // 换成相同签名的闭包。
+print(operation(2, 3))                 // 6
 
-func loadMessages() async throws -> [String] {
-    ["Hello", "Swift"]
+let full: (Int) -> String = { (value: Int) -> String in
+    return "值：\(value)"              // 完整声明，in 后是执行体。
 }
-
-func loadDashboard() async throws -> Dashboard {
-    async let profile = loadProfile()
-    async let messages = loadMessages()
-    return try await Dashboard(
-        profile: profile,
-        messages: messages
-    )
-}
+let named: (Int) -> String = { value in "值：\(value)" }
+let short: (Int) -> String = { "值：\($0)" }
 ```
 
-`async let` 创建结构化子任务：父任务离开作用域前必须等待或取消子任务，错误与取消也会沿父子关系传播。
+类型能推断时省类型，单表达式可省 <font color="red"><b><code>return</code></b></font>，匿名参数可用 `$0`、`$1`。多行闭包仍可使用匿名参数；复杂转换优先命名，避免多层 `$0` 难以辨认。
 
-### 5.5、动态数量并发：Task Group
+| Objective-C Block | Swift 函数类型 |
+| --- | --- |
+| `void (^)(void)` | `() -> Void` |
+| `void (^)(NSString *)` | `(String) -> Void` |
+| `int (^)(int, int)` | `(Int, Int) -> Int` |
+
+### 2、<font id="尾随闭包">尾随闭包：把末尾闭包放到括号外</font>
 
 ```swift
-func fetchTitle(id: Int) async -> String {
-    "Title-\(id)"
+func transformAndSort<T>(
+    _ input: [T],
+    using transform: (T) -> String,
+    sorter: (String, String) -> Bool
+) -> [String] {
+    input.map(transform).sorted(by: sorter)
 }
 
-func fetchTitles(ids: [Int]) async -> [String] {
-    /// withTaskGroup 是 Swift Concurrency 提供的一个函数，用来创建一个任务组。
-    /// 可以理解成：现在要同时开 N 个异步任务，然后统一管理它们，最后把结果收集起来。
-    /// withTaskGroup 属于 Swift Concurrency / Swift 标准库，只要你的 Swift 版本和部署环境支持并发语法，就可以直接用
-    /// Swift Concurrency 是 Swift 5.5 引入的，iOS 项目里一般要求 iOS 13+ 才能使用相关并发能力。
-    await withTaskGroup(of: String.self, returning: [String].self) { group in
-        for id in ids {
-            group.addTask {
-                await fetchTitle(id: id)
-            }
-        };return await group.reduce(into: []) { result, title in
-            result.append(title)
-        }
+let result = transformAndSort([2, 1], using: { number in
+    "编号\(number)"             // 每个 Int 转为 String。
+}, sorter: { left, right in
+    left < right              // 升序；比较规则必须一致，不能用 <=。
+})
+print(result)                 // ["编号1", "编号2"]
+
+let doubled = [1, 2].map { $0 * 2 } // 最后一个闭包参数的尾随写法。
+```
+
+多个尾随闭包中，第一个可省标签，后续闭包保留标签。可读性优先于省字符数量。
+
+### 3、<font id="逃逸与捕获">逃逸与捕获</font>
+
+<font color="red"><b><code>@escaping</code></b></font> 表示闭包参数可能在函数返回后继续存在；不等于异步、后台执行或一定发生循环引用。普通非可选闭包参数默认非逃逸。
+
+```swift
+final class CallbackStore {
+    private var callback: (() -> Void)?
+
+    func save(_ callback: @escaping () -> Void) {
+        self.callback = callback // 保存到属性，生命周期超出 save 调用。
+    }
+
+    func fire() {
+        callback?()
+        callback = nil           // 一次性回调执行后释放。
     }
 }
+
+func makeCounter() -> () -> Int {
+    var count = 0
+    return {
+        count += 1 // 捕获并保留 count；工厂返回后仍可修改。
+        return count
+    }
+}
+
+let counter = makeCounter()
+print(counter()) // 1
+print(counter()) // 2
 ```
 
-- Task Group 适合运行时才知道数量的同类任务。
-- 子任务完成顺序不保证等于添加顺序；需要稳定顺序时携带索引并在结果阶段排序。
-- 不要无限制添加数万任务；I/O、服务端限流与内存压力仍要控制。
+`[value]` 显式按捕获时的值建立绑定；捕获的值若是类引用，仍指向同一对象。Swift 修改捕获变量不需要 Objective-C 的 `__block`；OC Block 修改外部局部标量时通常需要 `__block`。
 
-### 5.6、Actor（参与者）专题：使用方式、简单 Demo 与 Class 选型实战
+### 4、<font id="自动闭包">autoclosure：把表达式延后求值</font>
 
-#### 5.6.1、先说结论
+```swift
+func log(_ enabled: Bool, message: @autoclosure () -> String) {
+    guard enabled else { return }
+    print(message()) // 到这里才计算传入的表达式。
+}
 
-**问题：Actor 和 Class 看起来很像，Actor 到底多解决了什么？**
-
-**可直接说出口的核心回答：**
-
-> Actor 和 Class 都是引用类型，都有身份、属性、方法、初始化器并由 ARC 管理生命周期。核心区别是：**普通 Class 默认不保护共享可变状态；Actor 自带隔离域**，编译器会限制外部代码直接读写它的隔离状态，跨隔离域调用通常需要 `await`，跨域传值还会结合 `Sendable` 检查。因此 Actor 主要解决并发环境中的共享可变状态，而不是替代所有 Class，也不是创建一条专属线程。
-
-再压缩成一句便于记忆的话：
-
-> Actor 是一种自带并发保护的引用类型，专门管理多个异步任务共同访问的可变数据。
-
-可以先把 Actor 理解成：
-
-```text
-Actor ≈ 引用语义 + 编译器检查的隔离域 + 串行访问自身状态
+log(false, message: "结果：\(Array(1...3))") // 不生成 message 字符串。
 ```
 
-但它不完全等于“内部自带一把锁”或“内部自带一条串行队列”：Actor 与 [**Swift Concurrency**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) 的 Task、`await`、取消、优先级和 `Sendable` 属于同一套语言模型，而且 Actor 方法可以在挂起点发生可重入。语言设计细节可继续阅读 [**SE-0306：Actors**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md)。
+用于短路、断言、轻量日志；不隐藏网络和磁盘副作用。<font color="red"><b><code>@autoclosure</code></b></font> 与 <font color="red"><b><code>@escaping</code></b></font> 是不同维度。
 
-#### 5.6.2、Actor 与 Class 为什么看起来相近
+### 5、<font id="mutating-inout"><font color="red"><b>mutating</b></font> 改自身，<font color="red"><b>inout</b></font> 改传入变量</font>
 
-Actor 和 Class 都具备这些引用类型特征：
+```swift
+struct Counter {
+    var value = 0
 
-- 实例有稳定身份，多个变量可以引用同一个实例。
-- 使用 ARC 管理生命周期。
-- 可以定义存储属性、计算属性、实例方法、类型方法、初始化器和 `deinit`。
-- 可以遵守协议、使用泛型和 Extension。
-- `let` 约束的是引用不能改指向，不代表实例内部状态永远不可变。
+    mutating func increment() {
+        value += 1 // 修改值类型自身，需要 mutating。
+    }
+}
 
-真正的分界不在“长得像不像”，而在“谁负责并发安全”：
+func increment(_ value: inout Int) {
+    value += 1     // 修改调用方交来的变量。
+}
 
-| 对比项 | `class` | `actor` |
+var counter = Counter()
+counter.increment()            // let counter 不能调用此 mutating 方法。
+increment(&counter.value)      // & 表示传入可修改的存储位置。
+print(counter.value)           // 2
+```
+
+<font color="red"><b><code>inout</code></b></font> 按“读入、修改、写回”理解；实现可优化为直接访问，不等于允许任意保存裸指针。访问期间要满足独占规则，不把同一变量重叠传给多个可修改参数，也不让逃逸闭包保留它。
+
+<a href="#FAQ-闭包" style="color:red;font-weight:bold;">FAQ：逃逸、捕获与简写</a> · <a href="#FAQ-mutating" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>mutating</b></font> 与 <font color="red"><b>inout</b></font></a>
+
+## 五、<font id="集合">集合：变换、筛选与展开</font>
+
+### 1、<font id="数组">数组、集合与字符串</font>
+
+`Array` 有序且可重复；`Set` 去重但不保证遍历顺序；`Dictionary` 按键取值。`[Int?]` 可以保存 <font color="red"><b><code>nil</code></b></font>，Objective-C 数组需使用 `NSNull` 等对象占位。
+
+```swift
+let values: [Int?] = [1, nil, 3]
+let numbers = Array(1...3)          // [1, 2, 3]；把序列收集成数组。
+let unique = Set([3, 1, 3])        // 去重；不要依赖打印顺序。
+let ordered = unique.sorted()     // [1, 3]；显式确定顺序。
+
+let text = "A👨‍👩‍👧‍👦"
+print(text.count)                  // 2 个 Character，不是 2 个字节。
+print(text[text.startIndex])       // A；String 不用整数下标直接索引。
+let characters = Array(text)      // [Character]，不是 UTF-8 字节数组。
+```
+
+数组下标越界会崩溃；优先用 `first`、`last` 或验证索引。`ArraySlice` 保留原索引并可能持有原缓冲区；长期保存小切片时评估转换为独立数组。大量先进先出操作不要反复 `removeFirst()` 搬移元素。
+
+### 2、<font id="map">map：逐个转换，保留数量</font>
+
+```swift
+let numbers = [1, 2, 3]
+let squares = numbers.map { number in // 每次收到一个 Int。
+    number * number                  // 这个表达式成为对应的新元素。
+}
+print(squares)                       // [1, 4, 9]；原数组不变。
+
+let inputs = ["1", "x", "3"]
+let attempted = inputs.map(Int.init)       // [Int?]：[1, nil, 3]。
+let successful = inputs.compactMap(Int.init) // [Int]：[1, 3]；去掉转换失败项。
+let selected = numbers.filter { $0 > 1 }   // [2, 3]；筛选，元素类型不变。
+```
+
+`compactMap` 只去掉转换得到的 <font color="red"><b><code>nil</code></b></font>，不会自动删掉 `0` 或空字符串。
+
+### 3、<font id="joined">joined：连接字符串，或展开一层序列</font>
+
+```swift
+let names = ["Jobs", "Swift"]
+let title = names.joined(separator: " / ") // String："Jobs / Swift"。
+
+let pages = [[1, 2], [3], [4, 5]]
+let flattened = pages.joined()             // 展开一层；尚未创建新的 Array。
+for number in flattened { print(number) }  // 可以直接遍历，无需先转数组。
+let saved = Array(flattened)               // 需要 [Int] 时再收集。
+print(saved)                              // [1, 2, 3, 4, 5]
+
+let expanded = pages.flatMap { page in
+    page.map { $0 * 10 }                   // 每页先转换成一组结果。
+}                                         // 再把各组展开一层。
+print(expanded)                           // [10, 20, 30, 40, 50]
+```
+
+嵌套序列的 `joined()` 返回扁平化序列视图；字符串序列的连接重载返回字符串。`flatMap` 是“转换后展开一层”，不是递归展开所有层级。
+
+### 4、<font id="集合链">组合处理：保留每一步的类型</font>
+
+```swift
+let inputs: [String?] = ["hello world", nil, "swift is fun", "", "  "]
+
+let words = inputs
+    .compactMap { $0 }                    // [String]：只去 nil。
+    .flatMap { text in                    // 每个字符串产生若干 Substring。
+        text.split(separator: " ")       // 默认已忽略空片段，无需再 filter。
+    }                                    // [Substring]：合并所有拆词结果。
+    .map(String.init)                     // [String]：独立保存，不长期依赖原字符串。
+
+let summary = words.joined(separator: ", ") // String：用逗号连接。
+print(summary) // hello, world, swift, is, fun
+
+let counts = words.reduce(into: [String: Int]()) { result, word in
+    result[word, default: 0] += 1          // 原位累计到结果字典，统计词频。
+}
+print(counts["swift", default: 0])         // 1
+```
+
+只执行副作用时用循环或 `forEach`；需要结果才用 `map`。`forEach` 内的 <font color="red"><b><code>return</code></b></font> 只结束当前闭包调用；需要 <font color="red"><b><code>break</code></b></font>、<font color="red"><b><code>continue</code></b></font> 或跨步骤控制时用 <font color="red"><b><code>for</code></b></font>。惰性链用 <font color="red"><b><code>.lazy</code></b></font> 可推迟计算，但最终收益需测量。
+
+### 5、<font id="同步序列">同步序列：每次计算下一个值</font>
+
+Swift 普通函数没有 Dart 风格的 `sync**` / <font color="red"><b><code>async**</code></b></font> 生成器语法。用 `Sequence` / `IteratorProtocol` 或 `sequence(state:next:)` 逐项产生值。
+
+```swift
+let evens = sequence(state: 0) { current -> Int? in
+    guard current <= 6 else { return nil } // nil 表示序列结束。
+    defer { current += 2 }                 // 交出当前值后，推进下次状态。
+    return current                        // 每次迭代只生成一个元素。
+}
+print(Array(evens))                        // [0, 2, 4, 6]
+```
+
+<font color="red"><b><code>Task.yield()</code></b></font> 是给调度器一次机会；`AsyncStream.Continuation.yield(_:)` 是发送事件；底层访问器中的 `yield` 又属于协程访问语法。不要仅凭同名就套用其他语言的生成器规则。
+
+<a href="#FAQ-map" style="color:red;font-weight:bold;">FAQ：map / compactMap / flatMap</a> · <a href="#FAQ-joined" style="color:red;font-weight:bold;">FAQ：joined 返回类型</a>
+
+## 六、<font id="泛型">泛型与协议：表达类型关系</font>
+
+### 1、<font id="类型参数化">泛型：类型参数化</font>
+
+把具体类型换成参数 `T`，同一份逻辑便能处理多种类型；重复出现的 `T` 表示同一个类型关系。
+
+```swift
+func echo<T>(_ value: T) -> T {
+    value // 输入什么类型，就返回同一个 T 类型。
+}
+
+let number: Int = echo(42)
+let name: String = echo("Jobs")
+
+func same<T: Equatable>(_ lhs: T, _ rhs: T) -> Bool {
+    lhs == rhs // 约束 T 支持 ==，函数体才可以比较。
+}
+print(same(1, 1)) // true；Int 与 String 不能在这里同时充当同一个 T。
+```
+
+| 约束 | 含义 |
+| --- | --- |
+| `T: P` | T 遵守协议 P |
+| `T: BaseClass` | T 是指定类或其子类 |
+| `T: A & B` | 同时具备两种能力 |
+| <font color="red"><b><code>where T.Element: Hashable</code></b></font> | 元素支持哈希 |
+| <font color="red"><b><code>where L.Value == R.Value</code></b></font> | 两个关联类型必须相同 |
+
+泛型函数体只使用约束保证的能力；调用方知道 T 是具体类型，不表示函数体能无条件访问该类型独有的属性。
+
+### 2、<font id="协议">协议：能力清单</font>
+
+<font color="red"><b><code>protocol</code></b></font> 列出必须提供的入口；具体类型实现入口；调用方只依赖清单。编译器检查声明的遵循关系，不根据“碰巧有同名方法”自动认定遵循。
+
+```swift
+protocol MessageChannel {
+    var name: String { get }            // 要求能读，不规定如何存储。
+    func send(_ text: String) -> String // 要求具备这个调用入口。
+}
+
+struct SMSChannel: MessageChannel {
+    let name = "短信"                  // let 存储属性也满足 get 要求。
+    let limit = 70
+    func send(_ text: String) -> String { "短信：\(text)" }
+}
+
+struct MailChannel: MessageChannel {
+    var name: String { "邮件" }         // 计算属性同样满足 get 要求。
+    func send(_ text: String) -> String { "邮件：\(text)" }
+}
+
+func notify(using channel: any MessageChannel) {
+    print(channel.send("订单已完成"))  // 依赖协议，不依赖短信的内部实现。
+}
+notify(using: SMSChannel())             // 模拟发送，只打印，不联网。
+```
+
+协议可用于函数参数、服务属性、工厂返回值、容器元素、泛型约束和组合能力。类、结构体、枚举与 Actor 都可遵循适用协议。
+
+| 协议要求 | 实现规则 |
+| --- | --- |
+| <font color="red"><b><code>var name: String { get }</code></b></font> | 至少可读，可用存储属性或计算属性；允许实现额外可写 |
+| <font color="red"><b><code>var name: String { get set }</code></b></font> | 必须可读写，不能仅提供 <font color="red"><b><code>let</code></b></font> |
+| <font color="red"><b><code>static func make() -&gt; Self</code></b></font> | 类型方法；类按是否可重写选择 <font color="red"><b><code>static</code></b></font> 或 <font color="red"><b><code>class</code></b></font> |
+| <font color="red"><b><code>mutating func advance()</code></b></font> | 允许值类型修改自身；类实现不写 <font color="red"><b><code>mutating</code></b></font> |
+| <font color="red"><b><code>init(text: String)</code></b></font> | 可按约定创建；非 <font color="red"><b>final</b></font> 类通常以 <font color="red"><b><code>required init</code></b></font> 满足 |
+| <font color="red"><b><code>subscript(index: Int) -&gt; String { get }</code></b></font> | 提供下标入口；索引合法性仍由接口约定 |
+| <font color="red"><b><code>func load() async throws -&gt; Value</code></b></font> | 调用方准备处理等待与错误 |
+
+协议本体不分配存储，也不实现计算属性；它声明 getter / setter 要求。实现体写在具体类型或协议扩展中。
+
+### 3、<font id="关联类型"><font color="red"><b>associatedtype</b></font>：协议中的类型占位</font>
+
+泛型由使用处确定类型参数；关联类型由遵循者确定。**同一个遵循关系里的同名关联类型必须一致。**
+
+```swift
+protocol Store<Value> {                 // 把 Value 列为主关联类型。
+    associatedtype Value: Equatable    // 真正声明类型占位与约束。
+    func load() -> Value
+}
+
+struct NameStore: Store {
+    func load() -> String { "Jobs" }    // 推断 Value == String。
+}
+
+struct DefaultNameStore: Store {
+    typealias Value = String           // 也可显式声明，含义相同。
+    func load() -> String { "Jobs" }
+}
+
+func valuesMatch<L: Store, R: Store>(_ lhs: L, _ rhs: R) -> Bool
+where L.Value == R.Value {              // 容器可以不同，读出的值必须同型。
+    lhs.load() == rhs.load()
+}
+
+print(valuesMatch(NameStore(), DefaultNameStore())) // true
+let store: any Store<String> = NameStore()          // 隐藏存储器类型，固定输出 String。
+print(store.load())                                // Jobs
+```
+
+`Store<Value>` 不是让协议变成普通泛型结构体；它允许使用处约束指定关联类型。关联类型也不是枚举的关联值：前者约定类型，后者保存某次枚举实例的数据。
+
+<a href="#FAQ-关联类型" style="color:red;font-weight:bold;">相关 FAQ</a>
+
+### 4、<font id="some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型</font>
+
+| 写法 | 类型由谁确定 | 适用场景 |
 | --- | --- | --- |
-| 类型语义 | 引用类型 | 引用类型 |
-| 默认状态保护 | 无；多个并发执行域可以同时碰到同一可变状态 | 实例拥有独立隔离域，隔离状态由 Actor 串行保护 |
-| 外部读取可变属性 | 普通同步访问 | 公开属性可以通过 `await` 读取；外部不能直接赋值，修改应通过隔离方法 |
-| 外部调用隔离方法 | 普通同步调用 | 跨隔离域调用时通常需要 `await` |
-| 跨并发域传递 | 普通 Class 不会自动获得并发安全保证 | Actor 实例因隔离自身状态而可安全跨域传递 |
-| 继承 | 支持类继承 | 不参与类继承，优先使用协议与组合复用 |
-| 可重入 | 取决于自己使用的锁、队列和回调结构 | Actor 方法跨越 `await` 时默认允许其它任务进入该 Actor |
-| 常见用途 | UI 对象、需要继承的对象、同步模型、生命周期对象 | 缓存、计数器、下载账本、连接状态机等共享可变状态 |
+| `<T: P>` | 调用方通过实参确定 | 需要命名并复用类型关系 |
+| 参数 <font color="red"><b><code>some P</code></b></font> | 调用方确定，是隐式泛型参数 | 参数只有一处使用，不需要给类型命名 |
+| 返回 <font color="red"><b><code>some P</code></b></font> | 实现方确定一个底层类型 | 隐藏实现名称，同时保留类型关系 |
+| <font color="red"><b><code>any P</code></b></font> | 运行时保存某个遵循 P 的值 | 混合容器、可替换服务、不同类型的分支返回 |
 
-#### 5.6.3、基本声明和调用方式
-
-下面这个计数器同时演示了隔离属性、隔离方法、`nonisolated` 成员和跨 Actor 调用：
+接前面的渠道定义：
 
 ```swift
-struct CounterSnapshot: Sendable {
-    let name: String
-    let value: Int
+func echoChannel<C: MessageChannel>(_ channel: C) -> C {
+    channel                           // 输入输出保持同型。
+}
+let sms = echoChannel(SMSChannel())
+print(sms.limit)                      // 返回类型仍是 SMSChannel。
+
+func label(_ channel: some MessageChannel) -> String {
+    channel.name                      // 参数 some 是泛型简写。
 }
 
-actor SafeCounter {
-    nonisolated let name: String
+func defaultChannel() -> some MessageChannel {
+    SMSChannel()                      // 这个声明固定返回一种底层类型。
+}
+
+var current: any MessageChannel = SMSChannel()
+current = MailChannel()               // 静态类型没变，内部换成另一种实现。
+let channels: [any MessageChannel] = [SMSChannel(), MailChannel()]
+print(channels.map(\.name))           // ["短信", "邮件"]
+
+if let sms = current as? SMSChannel {
+    print(sms.limit)                  // 转换成功后才有具体类型的独有能力。
+}
+```
+
+返回 <font color="red"><b><code>some P</code></b></font> 的普通函数不能在不同分支随意返回两个不相关类型。两个独立参数 <font color="red"><b><code>some P</code></b></font> 也不代表同型；需要同型就重复使用同一个 T。
+
+<font color="red"><b><code>any</code></b></font> 保留动态类型和协议能力，但不保留所有静态同型关系。因此两个独立的 <font color="red"><b><code>any Equatable</code></b></font> 不能直接用 `==` 比较。现代 Swift 能在部分泛型调用中临时打开存在类型；不代表 <font color="red"><b><code>any P</code></b></font> 在所有位置都等价于具体遵循者。
+
+存在类型容器可能内联保存小值，也可能间接存储大值；不保证每次都分配堆对象。泛型也不保证永远静态派发或零分配，性能依据真实热点测量。
+
+### 5、<font id="协议扩展">协议扩展、组合与条件遵循</font>
+
+```swift
+protocol Describable {
+    func summary() -> String          // 写进要求，允许通过协议入口多态替换。
+}
+
+extension Describable {
+    func summary() -> String { "默认" }
+    func hint() -> String { "扩展工具" } // 只在扩展中，不是协议要求。
+}
+
+struct Report: Describable {
+    func summary() -> String { "报告" }
+    func hint() -> String { "具体工具" }
+}
+
+let report = Report()
+let abstract: any Describable = report
+print(abstract.summary()) // 报告：走协议要求对应的实现。
+print(abstract.hint())    // 扩展工具：扩展独有方法不形成同样的多态入口。
+print(report.hint())      // 具体工具：具体类型直接调用。
+
+struct Box<Value> { let value: Value }
+extension Box: Equatable where Value: Equatable {} // 条件遵循，可合成 ==。
+print(Box(value: 1) == Box(value: 1))               // true
+```
+
+<font color="red"><b><code>protocol Downloadable: Named, Cancellable</code></b></font> 声明继承多份能力清单；`T: Named & Cancellable` 在当前使用处组合约束。协议继承不继承存储。
+
+### 6、<font id="代理协议">代理与隔离边界</font>
+
+```swift
+protocol DownloadDelegate: AnyObject {  // 限制为引用类型，才能使用 weak。
+    func didFinish()
+}
+
+final class Downloader {
+    weak var delegate: (any DownloadDelegate)?
+}
+
+protocol CountReading: Sendable {
+    func read() async -> Int            // 允许跨隔离域调用。
+}
+
+actor CountStore: CountReading {
     private var value = 0
+    func read() -> Int { value }        // Actor 的同步隔离实现可满足异步要求。
+}
+```
+
+Actor 的可变状态不能随意满足同步非隔离读取要求；应设计异步协议、全局 Actor 协议，或确实不读隔离状态的 <font color="red"><b><code>nonisolated</code></b></font> 实现。
+
+需要被 Objective-C 调用时才使用 <font color="red"><b><code>@objc</code></b></font> 协议；可选要求使用 <font color="red"><b><code>@objc optional</code></b></font>，调用时检查方法是否存在。关联类型、泛型方法和多数纯 Swift 类型能力不能直接桥接。纯 Swift 代码优先使用协议要求与默认实现。
+
+<a href="#FAQ-泛型" style="color:red;font-weight:bold;">FAQ：泛型</a> · <a href="#FAQ-协议" style="color:red;font-weight:bold;">FAQ：协议</a> · <a href="#FAQ-some-any" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>some</b></font> 与 <font color="red"><b>any</b></font></a> · <a href="#FAQ-协议派发" style="color:red;font-weight:bold;">FAQ：默认实现派发</a>
+
+## 七、<font id="属性与初始化">属性、初始化与扩展</font>
+
+### 1、<font id="属性">属性：存储、计算与观察</font>
+
+| 形式 | 职责 | 边界 |
+| --- | --- | --- |
+| 存储属性 | 保存值 | <font color="red"><b><code>let</code></b></font> 固定，<font color="red"><b><code>var</code></b></font> 可修改 |
+| 计算属性 | 通过 getter / setter 访问 | 不因为声明了 getter 就自动缓存 |
+| <font color="red"><b><code>willSet</code></b></font> / <font color="red"><b><code>didSet</code></b></font> | 在赋值前 / 后处理变化 | 不等于所有初始化赋值都会触发 |
+| <font color="red"><b><code>lazy var</code></b></font> | 第一次访问时初始化 | 不保证并发首次访问只执行一次 |
+| <font color="red"><b><code>static let</code></b></font> | 类型级按需初始化一次 | 只保证初始化，不保证实例后续可变状态安全 |
+
+```swift
+struct Rectangle {
+    var width: Double
+    var height: Double
+    var area: Double { width * height } // 每次访问计算，没有独立 area 存储。
+}
+```
+
+### 2、<font id="属性包装器">属性包装器：复用属性读写逻辑</font>
+
+`wrappedValue` 是外部读写的值；`projectedValue` 是包装器额外提供的能力，通过 `$属性名` 访问；`_属性名` 是合成的底层包装器存储，通常只在类型内部使用。
+
+```swift
+@propertyWrapper
+struct Clamped {
+    private var value: Int
+    private let range: ClosedRange<Int>
+
+    var wrappedValue: Int {
+        get { value }
+        set { value = min(max(newValue, range.lowerBound), range.upperBound) }
+    }
+    var projectedValue: ClosedRange<Int> { range }
+
+    init(wrappedValue: Int, _ range: ClosedRange<Int>) {
+        self.range = range
+        self.value = min(max(wrappedValue, range.lowerBound), range.upperBound)
+    }
+}
+
+struct Volume {
+    @Clamped(0...100) var value = 50 // 编译器经包装器读写 value。
+}
+
+var volume = Volume()
+volume.value = 200                  // 调用 wrappedValue 的 setter。
+print(volume.value)                // 100：已经限制在范围内。
+print(volume.$value)               // 0...100：读取 projectedValue。
+```
+
+属性包装器不等于 Objective-C 关联对象；它使用编译器合成的存储与访问入口。<font color="red"><b><code>@MainActor</code></b></font> 是隔离标记，<font color="red"><b><code>@Observable</code></b></font> 是宏，不能把所有 `@` 都叫包装器。
+
+### 3、<font id="初始化">初始化：建立可用实例</font>
+
+类可以有多个指定初始化器；每条路径都必须完成自身存储属性初始化，并在需要时调用父类指定初始化器，不要求所有路径最终汇入同一个指定初始化器。
+
+```swift
+class Person {
+    let name: String
+
+    required init(name: String) { // required 要求子类保持这条创建入口。
+        self.name = name
+    }
+
+    convenience init() {         // 便捷入口向同类其他初始化器委托。
+        self.init(name: "Jobs")   // 最终抵达本类的指定初始化器。
+    }
+}
+
+final class Employee: Person {
+    let identifier: Int
+
+    init(name: String, identifier: Int) {
+        self.identifier = identifier // 先完成当前类新增存储。
+        super.init(name: name)       // 再向父类指定初始化器委托。
+    }
+
+    required init(name: String) {
+        self.identifier = 0
+        super.init(name: name)
+    }
+}
+
+struct PositiveNumber {
+    let value: Int
+    init?(_ value: Int) {             // 可失败初始化，返回 Optional<Self>。
+        guard value > 0 else { return nil }
+        self.value = value
+    }
+}
+print(PositiveNumber(-1) == nil)      // true
+```
+
+非可选存储必须先有值，实例才能进入正常使用阶段。<font color="red"><b><code>convenience</code></b></font> 仅用于类；结构体与枚举没有父类初始化链。结构体在主声明中新增自定义初始化器可能失去自动成员初始化器；放到扩展中可保留符合条件的自动入口。
+
+### 4、<font id="extension"><font color="red"><b>extension</b></font>：补能力，不补实例存储</font>
+
+```swift
+struct Score { let value: Int }
+
+extension Score {
+    var passed: Bool { value >= 60 } // 计算属性，不增加实例字段。
+
+    init(clamping value: Int) {
+        self.init(value: min(max(value, 0), 100))
+    }
+}
+
+print(Score(clamping: 120).value) // 100
+print(Score(value: 60).passed)    // true；原自动成员初始化器仍在。
+```
+
+扩展可添加方法、计算属性、下标、嵌套类型和协议遵循；不能增加实例存储属性或随意重写已有实现。类扩展可添加便捷初始化器，不添加指定初始化器。不要重声明标准库已有签名，再从内部调用同名初始化器造成递归。
+
+### 5、<font id="单例">单例：统一入口，另管状态安全</font>
+
+```swift
+@MainActor
+final class AppSession {
+    static let shared = AppSession() // 初始化一次，使用同一实例。
+    private init() {}                // 外部不能直接创建。
+    var displayName = ""             // 本例由 MainActor 保护后续读写。
+}
+```
+
+<font color="red"><b><code>static let</code></b></font> 不会给实例自动加锁。跨任务业务状态使用 Actor 或完整同步方案；测试需要替换实现时，优先注入依赖，避免所有业务硬编码 `.shared`。
+
+<a href="#FAQ-初始化" style="color:red;font-weight:bold;">FAQ：初始化委托</a> · <a href="#FAQ-包装器" style="color:red;font-weight:bold;">FAQ：包装器与宏</a> · <a href="#FAQ-扩展" style="color:red;font-weight:bold;">FAQ：扩展存储</a> · <a href="#FAQ-单例" style="color:red;font-weight:bold;">FAQ：单例线程安全</a>
+
+## 八、<font id="Task">异步与 <font color="red"><b>Task</b></font>：管理工作及生命周期</font>
+
+### 1、<font id="async-await"><font color="red"><b>async</b></font> 可挂起，<font color="red"><b>await</b></font> 标出等待位置</font>
+
+同步调用执行完才返回；异步调用允许中途挂起。并发是交错推进，并行是同时执行；线程是执行资源，<font color="red"><b>Task</b></font> 是运行时调度的工作单元。
+
+```swift
+func loadName() async throws -> String {
+    try await Task.sleep(for: .milliseconds(10)) // 挂起任务，不阻塞线程。
+    return "Jobs"                               // 模拟结果，不发网络请求。
+}
+
+func printName() async {
+    do {
+        let name = try await loadName() // await：可能挂起；try：可能抛错。
+        print(name)                     // 结果回来以后继续。
+    } catch {
+        print(error)                    // 处理失败，包含取消造成的错误。
+    }
+}
+```
+
+<font color="red"><b><code>await</code></b></font> 不保证每次都挂起，也不保证切线程；<font color="red"><b><code>async</code></b></font> 不会自动把耗时同步代码搬离主 Actor。[**Swift 并发语义**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) 中的挂起恢复由运行时调度，代码应依赖隔离保证。
+
+### 2、<font id="Task生命周期"><font color="red"><b>Task</b></font>：从同步入口启动异步流程</font>
+
+接上例的 `loadName()`：
+
+```swift
+@MainActor
+final class NameModel {
+    private(set) var name = ""
+    private(set) var errorMessage: String?
+    private var loadingTask: Task<Void, Never>? // 保存句柄，便于明确取消。
+    private var revision = 0                   // 区分新旧加载。
+
+    func reload() {
+        loadingTask?.cancel()                  // 请求旧任务退出。
+        revision += 1
+        let requestRevision = revision
+        errorMessage = nil
+
+        loadingTask = Task { [weak self] in     // 继承此处的 MainActor 隔离。
+            do {
+                let result = try await loadName()
+                try Task.checkCancellation()   // 即使服务返回，也拒绝已取消结果。
+                guard let self, self.revision == requestRevision else { return }
+                self.name = result             // 仍在 MainActor 更新状态。
+            } catch {
+                guard !Task.isCancelled,
+                      let self, self.revision == requestRevision else { return }
+                self.errorMessage = String(describing: error)
+            }
+        }
+    }
+
+    func stop() {
+        revision += 1                          // 使旧请求立即失去提交资格。
+        loadingTask?.cancel()
+        loadingTask = nil
+    }
+}
+```
+
+页面离开或业务结束时调用 `stop()`。丢弃 <font color="red"><b>Task</b></font> 句柄不会自动取消任务；取消也不撤销已经完成的外部副作用。弱捕获放到等待之后再解包，避免为了等待而一直强持有模型。
+
+<font color="red"><b><code>Task {}</code></b></font> 是非结构化任务，通常继承创建点的 Actor、优先级和 <font color="red"><b>Task</b></font> Local；它不是父任务自动管理的结构化子任务。<font color="red"><b><code>Task.detached</code></b></font> 不继承这些上下文，只有确需独立边界时使用，并自行管理取消与结果。
+
+### 3、<font id="结构化并发">结构化并发：子任务不离开作用域</font>
+
+固定数量使用 <font color="red"><b><code>async let</code></b></font>；动态数量使用任务组。退出作用域前等待子任务结束；取消是请求，仍需子任务响应。
+
+```swift
+func loadPart(_ name: String) async throws -> String {
+    try await Task.sleep(for: .milliseconds(10))
+    return name
+}
+
+func loadDashboard() async throws -> [String] {
+    async let profile = loadPart("资料") // 先启动，不在这里等结果。
+    async let messages = loadPart("消息")
+    return try await [profile, messages] // 一起等待；结果按表达式位置组织。
+}
+```
+
+任务组按完成顺序交付结果；需要输入顺序时携带索引。以下限制同时在途任务数量，避免一次创建数万个任务：
+
+```swift
+func loadTitles(_ ids: [Int], limit: Int = 4) async throws -> [String] {
+    guard limit > 0, !ids.isEmpty else { return [] }
+    return try await withThrowingTaskGroup(of: (Int, String).self) { group in
+        var next = 0
+        var result = Array(repeating: "", count: ids.count)
+
+        for _ in 0..<min(limit, ids.count) {
+            let index = next
+            let id = ids[index]
+            group.addTask {
+                try Task.checkCancellation()
+                return (index, "标题\(id)") // 模拟异步任务的结果。
+            }
+            next += 1
+        }
+
+        while let (index, title) = try await group.next() {
+            result[index] = title           // 完成顺序不固定，按原索引放回。
+            if next < ids.count {
+                let index = next
+                let id = ids[index]
+                group.addTask {
+                    try Task.checkCancellation()
+                    return (index, "标题\(id)")
+                }
+                next += 1                   // 完成一个，再补一个。
+            }
+        };return result
+    }
+}
+```
+
+子任务抛错后，错误要经过 `next()`、异步遍历等被观察；不能概括为“任一子任务抛错就立刻停止所有任务”。错误传播出任务组作用域时会取消剩余子任务并等待退出。
+
+### 4、<font id="取消">取消与超时：主动检查，明确退出</font>
+
+- `cancel()` 设置取消请求；<font color="red"><b><code>Task.isCancelled</code></b></font> 读取状态，<font color="red"><b><code>Task.checkCancellation()</code></b></font> 抛出取消错误。
+- 长 CPU 循环在合适粒度检查取消；使用 <font color="red"><b><code>Task.sleep</code></b></font> 等可取消等待，不用 `Thread.sleep` 阻塞并发线程。
+- 以任务组竞速实现超时时，即使超时任务先完成，组退出仍需等待另一任务；不响应取消的工作无法保证立即停止。
+- 网络超时、总业务截止时间与任务取消分开设计；处理重试时核对幂等性。
+
+### 5、<font id="Continuation">Continuation：把一次回调接成异步返回</font>
+
+```swift
+func legacyLoad(_ completion: @escaping (Result<String, Error>) -> Void) {
+    completion(.success("Jobs")) // 教学回调；真实旧 API 可能稍后调用。
+}
+
+func loadWithAsync() async throws -> String {
+    try await withCheckedThrowingContinuation { continuation in
+        legacyLoad { result in
+            continuation.resume(with: result) // 成功返回值，失败抛出错误。
+        }
+    }
+}
+```
+
+每条路径必须且只能恢复一次；遗漏会一直等待，重复恢复会触发错误。Continuation 不自动把 <font color="red"><b>Task</b></font> 取消传给旧 API；需要专门接线。多次回调用 <a href="#AsyncStream" style="color:red;font-weight:bold;">AsyncStream</a>，不反复恢复同一个 Continuation。
+
+### 6、<font id="并发迁移">旧并发 API 的迁移方向</font>
+
+| 旧能力 | 对应方向 |
+| --- | --- |
+| completion Block | <font color="red"><b><code>async throws</code></b></font> |
+| 固定多请求与 Dispatch Group | <font color="red"><b><code>async let</code></b></font> |
+| 动态批量任务 | <font color="red"><b>Task</b></font> Group，并限制并发数量 |
+| 私有队列保护共享属性 | Actor，保留业务状态机 |
+| 主队列 UI 更新 | <font color="red"><b><code>@MainActor</code></b></font> |
+| 多次 delegate / notification | AsyncSequence、<font color="red"><b>Combine</b></font> 或保留原接口 |
+| Operation 依赖图、KVO、暂停恢复 | 按能力保留，不能只做语法替换 |
+| 信号量等待异步回调 | 沿调用链改异步，避免阻塞桥接 |
+
+<a href="#FAQ-Task" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>Task</b></font> 与线程</a> · <a href="#FAQ-结构化" style="color:red;font-weight:bold;">FAQ：结构化任务</a> · <a href="#FAQ-取消" style="color:red;font-weight:bold;">FAQ：取消与超时</a> · <a href="#FAQ-Continuation" style="color:red;font-weight:bold;">FAQ：回调桥接</a>
+
+## 九、<font id="Actor">Actor：隔离共享可变状态</font>
+
+### 1、<font id="Actor入门">声明、访问与返回快照</font>
+
+**Actor＝自带隔离边界的引用类型。** 多个任务可以持有同一个 Actor；同一实例的隔离代码不会同时读写其状态。它有属性、方法、初始化器、协议和 ARC 生命周期，但不参与普通类继承。
+
+```swift
+struct DownloadSnapshot: Sendable {
+    let completed: Int             // 两个字段都可安全跨隔离域传递。
+    let totalBytes: Int
+}
+
+actor DownloadLedger {
+    nonisolated let name: String   // 固定且安全的元数据，不访问可变账本。
+    private var ids: Set<String> = []
+    private var totalBytes = 0
 
     init(name: String) {
         self.name = name
     }
 
-    func increment(by amount: Int = 1) {
-        value += amount
+    func record(id: String, bytes: Int) {
+        guard bytes >= 0, ids.insert(id).inserted else { return }
+        totalBytes += bytes        // 去重与累计之间没有 await，整体提交。
     }
 
-    func snapshot() -> CounterSnapshot {
-        CounterSnapshot(name: name, value: value)
-    }
-
-    nonisolated var debugName: String {
-        "SafeCounter<\(name)>"
+    func snapshot() -> DownloadSnapshot {
+        DownloadSnapshot(completed: ids.count, totalBytes: totalBytes)
     }
 }
 
-func runActorDemo() async {
-    let counter = SafeCounter(name: "Download")
-
-    await withTaskGroup(of: Void.self) { group in
-        for _ in 0..<1_000 {
-            group.addTask {
-                await counter.increment()
-            }
-        }
-    }
-
-    let snapshot = await counter.snapshot()
-    print(counter.debugName) // `nonisolated` 成员不需要 `await`
-    print(snapshot.value)    // 1000
+func useLedger() async {
+    let ledger = DownloadLedger(name: "资源包") // 一个共享账本实例。
+    print(ledger.name)                          // nonisolated 固定信息可同步读取。
+    await ledger.record(id: "A", bytes: 100)   // 外部跨隔离域调用，需要 await。
+    let old = await ledger.snapshot()           // 一次取回相互一致的字段。
+    await ledger.record(id: "B", bytes: 200)
+    let new = await ledger.snapshot()
+    print(old.completed, old.totalBytes)        // 1 100；旧快照不会跟着变化。
+    print(new.completed, new.totalBytes)        // 2 300
 }
 ```
 
-这段 Demo 的关键点：
+`record()` 没有声明 <font color="red"><b><code>async</code></b></font>，外部仍需要 <font color="red"><b><code>await</code></b></font>，因为调用要进入另一个隔离域。同一 Actor 内部调用自己的同步方法不需要等待；同类型的另一个 Actor 实例仍是另一个隔离域。
 
-- `value` 和默认的实例方法都属于 `counter` 的隔离域，外部不能直接执行 `counter.value += 1`。
-- `increment()` 本身没有声明 `async`，但从 Actor 外部跨隔离域调用时仍然需要 `await`。
-- 同一个 Actor 内部调用自己的同步隔离方法，不需要 `await`。
-- 每一个 Actor 实例都有自己的隔离域；即使两个实例类型相同，从 `self` 访问另一个实例的隔离成员仍然属于跨 Actor 调用。
-- `name` 是初始化后不再改变、可以安全公开的元数据，因此显式声明为 `nonisolated`。
-- `debugName` 只读取 `nonisolated` 数据，也可以声明为 `nonisolated`；它不能读取隔离属性 `value`。
-- `CounterSnapshot` 跨出 Actor 隔离域，使用只包含 `Sendable` 成员的值类型表达快照，比直接暴露内部可变引用更清楚。
+外部不能直接赋值隔离属性；修改通过方法完成。相关字段一次返回快照，避免两次 <font color="red"><b><code>await</code></b></font> 取到不同时间点的数据。账本只做短状态操作，大文件处理放到合适的执行边界。
 
-可以把访问规则记成：
+<a href="#FAQ-Actor-await" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-```text
-Actor 内部访问当前 self：同步访问
-Actor 外部访问隔离成员：通常 await
-Actor 内部访问另一个实例：仍然是跨 Actor，通常 await
-```
+### 2、<font id="Actor重入">可重入：等待期间，共享状态仍可变化</font>
 
-> 外部代码只能请求 Actor 执行公开操作，不能绕过这些操作直接修改它的隔离状态。
-
-#### 5.6.4、如果使用普通 Class，需要自己完成状态保护
-
-下面这个 Class 和 Actor 在外形上很像，但它没有自动隔离：
-
-```swift
-final class UnsafeCounter {
-    private(set) var value = 0
-
-    func increment() {
-        value += 1
-    }
-}
-```
-
-`value += 1` 不是不可分割的原子操作，逻辑上至少包含：
-
-```text
-读取旧值 → 计算新值 → 写回新值
-```
-
-两个执行域可能同时读到相同旧值，分别加一后又写回相同新值，最终丢失一次更新。在 [**Swift**](https://www.swift.org/) 6 严格并发检查下，把这种非 `Sendable` Class 直接捕获进并发 Task 还可能先得到编译器诊断。
-
-如果必须保留同步 Class API，可以自己用锁保护全部状态：
-
-```swift
-import Foundation
-
-final class LockedCounter: @unchecked Sendable {
-    private let lock = NSLock()
-    private var value = 0
-
-    func increment(by amount: Int = 1) {
-        lock.lock()
-        value += amount
-        lock.unlock()
-    }
-
-    func snapshot() -> Int {
-        lock.lock()
-        defer { lock.unlock() }
-        return value
-    }
-}
-```
-
-这里的 `@unchecked Sendable` 是开发者作出的并发安全承诺：编译器不再替你验证全部细节，漏锁、锁顺序、死锁和在持锁期间调用外部代码等风险仍由实现者负责。Actor 则把“哪些状态属于同一隔离域、哪里必须跨域等待”提升到了语言和类型检查层。
-
-在 Objective-C 中，同类状态通常由 `dispatch_queue_t`、`NSLock`、`@synchronized` 或 `os_unfair_lock` 人工保护；这些工具本身没有问题，**但能否覆盖每一个读写入口主要依赖封装纪律**。Actor 的优势是把隔离规则写进声明，并由编译器阻止外部直接绕过。
-
-**这不代表 Actor 永远优于锁：**
-
-- 已有大量同步调用方，无法把调用链改成 `async` 时，锁或串行队列可能更适合。
-- 极底层、**临界区极短**且经过性能测试的同步组件，锁可能更直接。
-- 新的业务状态机、缓存、去重器和并发任务账本，优先评估 Actor。
-
-#### 5.6.5、Actor、Task 与线程不要混为一谈
-
-| 概念 | 回答的问题 | 核心职责 |
-| --- | --- | --- |
-| Task | 要执行哪一项异步工作 | 承载可挂起、恢复、取消的异步操作 |
-| Actor | 共享可变数据归谁管理 | 建立隔离域并串行保护自己的状态 |
-| 线程 | 代码最终使用什么执行资源 | 由系统与并发运行时调度 |
-
-可以形象地理解为：Task 是来办事的人，Actor 是有门禁的数据房间，线程是运行时临时安排的工作通道。很多 Task 可以请求同一个 Actor，但 Actor 关注的是状态隔离，不是把每个实例固定到一条线程。
-
-从 Actor 外部调用隔离成员时，调用方需要等待获得该 Actor 的执行机会：
-
-```swift
-actor Inventory {
-    private var count = 0
-
-    func add(_ amount: Int) {
-        count += amount
-    }
-
-    func addTwice(_ amount: Int) {
-        add(amount)
-        add(amount) // 已经处于同一个 Actor 内部，不需要 `await`
-    }
-
-    func currentCount() -> Int {
-        count
-    }
-
-    func replaceCount(from other: Inventory) async {
-        count = await other.currentCount()
-    }
-}
-
-func updateInventory(_ inventory: Inventory) async {
-    await inventory.addTwice(2)
-    let count = await inventory.currentCount()
-    print(count)
-}
-```
-
-- `await` 表示这里可能挂起，让运行时先执行其它工作；它不是“切换到后台线程”。
-- Actor 不绑定一条专属线程，也不保证 `await` 之后仍运行在原线程。
-- `replaceCount(from:)` 已经在当前 `self` 的隔离域中，但 `other` 是另一个 Actor 实例，因此读取它仍然需要 `await`。
-- Actor 保护的是隔离状态；它不会自动让 CPU 密集型工作变成并行计算。
-- 不要为了“少写一个 `await`”把大量无关状态塞进同一个 Actor，否则会形成不必要的串行瓶颈。
-
-#### 5.6.6、最重要的坑：Actor 可重入
-
-**这一节的灵魂：检查到“还有一张券”，不等于“这一张券已经归我”。**
-
-Actor 保证同一时刻只有一段代码访问它的隔离状态；它不保证一个包含挂起点的完整业务方法从头到尾独占 Actor。**读写没有同时发生，业务也可能因为前后交错而出错。** 这就是为什么“用了 Actor”与“领取流程正确”是两回事。语言规则见 [**SE-0306：Actor reentrancy**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy)。
-
-##### 5.6.6.1、先把业务和对象说清楚
-
-假设只有一个 `CouponStore` 实例，里面只剩一张券；用户 A、B 分别通过两个 Task 请求**同一个实例**，而且两人都有领取资格。
-
-| 代码里的东西 | 对应的业务含义 | 最容易误解的地方 |
-| --- | --- | --- |
-| `remaining = 1` | 店里还剩一张券 | A、B 共用这一份库存，不是每人各有一张 |
-| `claim()` | 某个人的一次领取申请 | 同一个方法可以有多次尚未完成的调用 |
-| `remaining > 0` | 看一眼此刻是否有库存 | 只是检查，没有扣减，也没有为当前申请预留 |
-| `verifyEligibility()` | 等待资格服务回答“这个人能不能领” | 有资格不等于有库存；示例没有实际发券 |
-| `await` | 这一调用在此处可能需要等待 | 等的是当前任务，不是让整个 Actor 停止接待其它任务 |
-
-就像一个只有一位店员的柜台：店员不会同时给两个人记账，但在等 A 的资格审核时，可以先处理 B 的申请。**柜台一次只办一段事，不等于必须办完一个人的全部流程，才接待下一个人。**
-
-##### 5.6.6.2、先看错误版：券到底是怎么超发的
-
-先故意去掉 `await` 后的库存复查，只保留资格判断：
-
-```swift
-func verifyEligibility() async -> Bool {
-    /// 资格服务的教学替身：提供让出执行机会的可能，两个人都返回有资格。
-    await Task.yield()
-    return true
-}
-
-actor BuggyCouponStore {
-    private var remaining = 1
-
-    func claim() async -> Bool {
-        guard remaining > 0 else { return false }
-
-        let allowed = await verifyEligibility()
-        guard allowed else { return false }
-
-        remaining -= 1 // 错误：没有确认等待结束时是否仍有库存
-        return true
-    }
-}
-```
-
-下面是**允许发生的一种执行顺序，不是每次运行必然出现的顺序**：
-
-| 步骤 | A 的领取调用 | B 的领取调用 | 共享库存 |
-| --- | --- | --- | --- |
-| 1 | 检查 `remaining > 0`，通过 | 尚未进入 | 1 |
-| 2 | 等待资格结果，挂起 | 可以进入同一个 Actor | 1 |
-| 3 | 仍在等待 | 检查 `remaining > 0`，也通过 | 1 |
-| 4 | 仍在等待 | 等待资格结果，挂起 | 1 |
-| 5 | 尚未恢复 | 资格通过，先恢复并扣减，返回 `true` | 0 |
-| 6 | 资格通过，恢复后继续扣减，返回 `true` | 已经结束 | -1 |
-
-结果：只有一张券，却有两个调用返回了领取成功。
-
-**盯住第 6 步：A 不是读到了缓存里的旧库存 `1`。它扣减时读到的可以就是最新的 `0`，然后把 `0` 减成 `-1`。过期的是“我已经检查过有库存，可以继续扣”的判断依据。**
-
-整个过程没有两段 Actor 隔离代码同时读写 `remaining`，所以这里不是隔离失效造成的数据竞争（data race），而是业务依赖执行顺序的逻辑竞态（race condition）。这是根据上表对示例的推演，不是一次实际运行日志。
-
-##### 5.6.6.3、“可重入”究竟重新进入了什么
-
-重新进入的是**同一个 Actor 的隔离域**：A 的 `claim()` 还没结束，B 就可以在 A 挂起期间进入这个 Actor，执行自己的 `claim()`，也可以执行其它隔离方法。
-
-它不是递归调用，不是把 A 的方法从头再跑一遍，也不是两段隔离代码并行执行。用“片段”理解最直接：
-
-```text
-A 的前半段：检查库存 ── 挂起等待 ────────────────── A 的后半段：扣库存
-B 的调用：                 检查库存 ── 等待 ── 扣库存并结束
-```
-
-这里有三个不同的东西：
-
-- **A 的执行位置会保留。** 等待结束后从 `await` 之后继续，不会自动重跑前面的 `guard`。
-- **每次调用的局部状态各自保留。** A、B 的 `allowed` 属于各自调用；这个布尔值也不承诺库存仍然存在。
-- **Actor 的共享状态不会为 A 冻结。** 同一实例中的 `remaining` 可能已被其它调用修改，恢复时必须重新判断相关条件。
-
-`await` 只标记潜在挂起点，不保证这次一定挂起，也不保证 B 一定先执行。原示例中的 [**Task.yield()**](https://developer.apple.com/documentation/swift/task/yield()) 只是主动给调度器一次执行其它任务的机会，当前任务也可能立即恢复；它不是强制线程切换，更不是“保证复现超发”的开关。
-
-**即使没有 `Task.yield()`，真实网络请求等异步调用一旦挂起，同样要面对可重入；不需要先发生线程切换，才可能出现这种逻辑交错。**
-
-##### 5.6.6.4、修正版：为什么必须再次检查，且检查后立刻扣减
-
-复用前面的 `verifyEligibility()`，把领取方法改成：
+**Actor 保护一次连续的隔离执行片段，不自动把跨等待的完整流程变成事务。**
 
 ```swift
 actor CouponStore {
     private var remaining = 1
 
-    func claim() async -> Bool {
-        guard remaining > 0 else { return false } // 提前拒绝：已经没券就不查资格
-
-        let allowed = await verifyEligibility()
-
-        /// 真正决定能否领取：检查当前库存，并在没有挂起点的片段内完成扣减。
-        guard allowed, remaining > 0 else { return false }
-        remaining -= 1
-        return true
-    }
-}
-```
-
-如果仍然是 B 先恢复：B 看到库存 `1`，扣成 `0` 并成功；A 恢复时重新检查，看到 `0`，直接失败，不再扣减。
-
-**关键不是“检查了两次”这个次数，而是最终的“检查 → 扣减”之间没有挂起点。**
-
-在同一个 Actor 的这一段同步隔离代码里，其它任务不能插入检查与扣减之间。它不能刚检查完 `remaining > 0`，就被 B 插进来抢走库存；如果在这两行之间再插入一个会挂起的 `await`，同一个漏洞就可能重新出现。Apple 在 [**WWDC21：Protect mutable state with Swift actors**](https://developer.apple.com/videos/play/wwdc2021/10133/) 中也用缓存示例说明了“等待后复核假设，把状态修改收进同步代码”的原则。
-
-两个 `guard` 的职责不同：
-
-- 第一个是**提前拒绝，减少无意义的资格请求**。对于这里“最多成功一次”的要求，去掉它仍可由后面的检查保证不超发。
-- 第二个是**提交前的最终校验**。删掉它的库存条件，前面的检查不能替它兜底。
-
-这段保护的是同一个 Actor 实例内的状态提交，不等于数据库事务，也不会自动回滚已经发生的外部副作用。
-
-##### 5.6.6.5、亲手运行：稳定对比错误版与修正版
-
-仅用 `Task.yield()` 或睡眠，可能因为调度顺序不同而看不到错误。下面的实验用一个**只服务于测试的资格闸门**：必须等两份资格请求都到达，才同时允许它们获得结果。
-
-这样可以确定 A、B 都已通过第一次库存检查，再让后半段继续。谁先恢复仍然不确定，但错误版与修正版的最终统计是确定的。闸门不属于生产领取流程，也不是修复手段。
-
-<details>
-<summary>展开完整可运行 Demo：错误版成功 2 次、库存 -1；修正版成功 1 次、库存 0</summary>
-
-将以下代码整体保存为 `ActorReentrancyDemo.swift`。这是独立的语言实验，不依赖项目 UI 或网络封装；代码块中的多个类型为方便复制而放在一起，工程落地时按类型拆文件。
-
-```swift
-//
-//  ActorReentrancyDemo.swift
-//  ActorReentrancyDemo
-//
-//  Created by Jobs on 2026年8月30日，星期日.
-//
-
-actor EligibilityGate {
-    private var waiters: [CheckedContinuation<Bool, Never>] = []
-
-    func verify() async -> Bool {
-        await withCheckedContinuation { continuation in
-            waiters.append(continuation)
-            guard waiters.count == 2 else { return }
-
-            let ready = waiters
-            waiters.removeAll()
-            for waiter in ready {
-                waiter.resume(returning: true)
-            }
-        }
-    }
-}
-
-actor CouponReentrancyDemoStore {
-    private var remaining = 1
-    private let gate: EligibilityGate
-    private let recheckAfterAwait: Bool
-
-    init(gate: EligibilityGate, recheckAfterAwait: Bool) {
-        self.gate = gate
-        self.recheckAfterAwait = recheckAfterAwait
-    }
-
-    func claim(_ user: String) async -> Bool {
-        print("\(user)：首次检查，库存 \(remaining)")
-        guard remaining > 0 else { return false }
-
-        let allowed = await gate.verify()
-        print("\(user)：资格返回，此刻库存 \(remaining)")
-        guard allowed else { return false }
-
-        /// 仅用于对照实验；生产代码不能提供关闭最终校验的开关。
-        if recheckAfterAwait {
-            guard remaining > 0 else {
-                print("\(user)：复查无库存，领取失败")
-                return false
-            }
-        }
-
-        remaining -= 1
-        print("\(user)：领取成功，剩余 \(remaining)")
-        return true
-    }
-
-    func remainingCount() -> Int {
-        remaining
-    }
-}
-
-@main
-struct ActorReentrancyDemo {
-    static func main() async {
-        await run(recheckAfterAwait: false)
-        await run(recheckAfterAwait: true)
-    }
-
-    static func run(recheckAfterAwait: Bool) async {
-        let title = recheckAfterAwait ? "修正版" : "错误版"
-        print("\n=== \(title) ===")
-
-        /// 每轮使用全新的库存和闸门，避免两轮实验相互影响。
-        let store = CouponReentrancyDemoStore(
-            gate: EligibilityGate(),
-            recheckAfterAwait: recheckAfterAwait
-        )
-
-        async let first = store.claim("A")
-        async let second = store.claim("B")
-        let (a, b) = await (first, second)
-        let successes = (a ? 1 : 0) + (b ? 1 : 0)
-        let remaining = await store.remainingCount()
-
-        print("\(title)：成功 \(successes) 次，库存 \(remaining)")
-        precondition(successes == (recheckAfterAwait ? 1 : 2))
-        precondition(remaining == (recheckAfterAwait ? 0 : -1))
-    }
-}
-```
-
-在保存文件的目录执行：
-
-```shell
-xcrun swiftc -swift-version 6 -parse-as-library ActorReentrancyDemo.swift -o ActorReentrancyDemo
-./ActorReentrancyDemo
-```
-
-`async let` 启动两份可以交错推进的子任务，随后一次性等待两个结果；不要改成先 `await store.claim("A")`、再调用 B，否则 A 会一直等尚未启动的第二份资格请求。
-
-只看两行最终汇总即可核对结论；中间 A、B 的具体先后顺序不属于保证：
-
-```text
-错误版：成功 2 次，库存 -1
-修正版：成功 1 次，库存 0
-```
-
-验证记录（2026年8月30日）：使用 Apple Swift 6.3.3、Swift 6 语言模式，以 `-strict-concurrency=complete -warnings-as-errors` 编译通过；连续运行 100 次，两种模式的汇总均与上面一致。前面的两个精简示例也通过相同严格级别的类型检查。
-
-闸门里的 `CheckedContinuation` 可以暂时理解成“稍后交付资格结果的凭条”：收齐两张后各交付一次。它让等待者挂起，不是用信号量阻塞线程。这个闸门假设恰好两个请求都会到达，没有超时和取消策略，不应直接作为生产组件；先理解上面的交错过程，再研究 continuation 细节。
-
-</details>
-
-##### 5.6.6.6、再往深一层：重新检查和提前占位，选的是业务规则
-
-如果业务允许“有资格，但回来时没库存，所以领取失败”，用上面的**等待后复查，再提交**即可。
-
-如果业务要求“受理申请时就先为它留一张”，就要**先检查并扣减可用库存，再等待资格结果**；资格不通过时释放预留。注意，这时提前扣减表达的是“预留”，不是“已经领取成功”。
-
-| 策略 | 等待资格时，最后一张券是什么状态 | 必须额外想清楚什么 |
-| --- | --- | --- |
-| 等待后复查 | 仍可被其它申请领取 | 谁先完成校验并执行提交，谁才可能成功；不承诺先申请先获得 |
-| 等待前预留 | 已从可用库存中扣掉 | 资格失败、抛错、取消时如何释放；预留记录怎样避免重复补偿 |
-
-复杂业务还需要预留 ID、请求 ID 或版本号。例如等待期间发生了清空库存、切账号或新一轮活动，旧请求不能只凭一个过期结果回来扣减或补回。**“重新校验”必须覆盖提交所依赖的相关状态，不只是机械补一行 `remaining > 0`。**
-
-本例的资格服务只返回布尔值，不会实际发券。如果服务端已经发券，本地再返回 `false` 并不能撤销它；真实跨设备库存必须由服务端原子操作、事务与幂等机制负责，客户端 Actor 不能替代这些保证。
-
-**为什么语言还要允许可重入？** 等网络时若整个 Actor 都不接待其它工作，查询、取消等操作也可能被拖住；Actor 之间互相调用并等待，还可能产生循环等待。允许挂起期间处理其它工作，是为了推进任务，但开发者必须维护跨挂起点的业务一致性。设计取舍见 [**SE-0306：Reentrancy Summary**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#reentrancy-summary)。
-
-**可直接说出口的核心回答：**
-
-> Actor 保护的是隔离状态的访问，不是包含 `await` 的整段业务流程。我在等待前检查了有库存，只能说明那一刻有，不能说明等完以后还有。任务挂起期间，别的调用可以进入同一个 Actor 改变库存，所以我要在恢复后重新检查，并把最终检查和扣减放在同一段没有挂起点的隔离代码里；如果业务需要提前保留名额，就先预留，再明确失败和取消时的补偿。
-
-
-#### 5.6.7、`nonisolated`、`@MainActor` 与 `Sendable` 的关系
-
-**先记住：这三个东西回答的是不同问题，不是三种“锁”。**
-
-| 能力 | 解决什么 | 典型用法 |
-| --- | --- | --- |
-| 普通 `actor` | 每个实例分别保护自己的状态 | 缓存、下载账本、连接状态、请求去重 |
-| `@MainActor` | 把分散在多个类型和函数中的 UI 状态统一隔离到全局 Main Actor | ViewModel、控制器入口、UI 刷新 |
-| `nonisolated` | 明确某个成员不需要进入当前 Actor 隔离域 | 只读固定标识、纯计算、无需读取隔离状态的协议实现 |
-| `Sendable` | 描述值能否安全跨 Task 或 Actor 隔离域传递 | 不可变 DTO、Actor 输入参数、返回快照、`@Sendable` 闭包 |
-
-下面用三个独立的“下载进度”实验，把声明、调用、输出与错误用法连起来。每个正确 Demo 都自带 `@main` 入口，分别保存、分别编译；不要把三个入口一起放进同一个可执行文件。它们只演示语言机制，不执行真实下载，也不依赖项目 UI 封装。
-
-##### 5.6.7.1、`nonisolated`：固定说明可以直接读，实时进度仍然要经过 Actor
-
-**实际需求：** 下载任务有一个创建后不变的名称，也有随下载变化的完成数量。日志想随时同步打印任务名称，不应该为了一个固定说明等待进度 Actor；但读取实时完成数仍要接受隔离保护。
-
-**写在哪里：** 把确定不依赖隔离可变状态的属性或方法标为 `nonisolated`。它不是“先取消保护，再随便访问”，而是“这个成员不需要访问受保护的数据”。规则见 [**SE-0313：Non-isolated declarations**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md#non-isolated-declarations)。
-
-保存为 `NonisolatedDemo.swift`：
-
-```swift
-//
-//  NonisolatedDemo.swift
-//  NonisolatedDemo
-//
-//  Created by Jobs on 2026年8月30日，星期日.
-//
-
-actor DownloadMeter: CustomStringConvertible {
-    nonisolated let name: String
-    private var completedFiles = 0
-
-    init(name: String) {
-        self.name = name
-    }
-
-    /// 同步协议要求：这里只使用不变且可安全共享的名称。
-    nonisolated var description: String {
-        "下载任务：\(name)"
-    }
-
-    func recordCompletion() {
-        completedFiles += 1
-    }
-
-    func completedCount() -> Int {
-        completedFiles
-    }
-}
-
-@main
-struct NonisolatedDemo {
-    static func main() async {
-        let meter = DownloadMeter(name: "安装资源")
-
-        print(meter.description) // 无需 await：不进入 meter 的隔离域
-
-        await meter.recordCompletion()
-        let count = await meter.completedCount()
-        print("完成数量：\(count)")
-
-        precondition(meter.description == "下载任务：安装资源")
-        precondition(count == 1)
-    }
-}
-```
-
-预期输出：
-
-```text
-下载任务：安装资源
-完成数量：1
-```
-
-**真正要看懂的是两条访问路径：**
-
-- `meter.description`：直接同步读取。`description` 虽写在 Actor 内，却明确不属于这个 Actor 的隔离成员；它只拼接 `nonisolated let name`，不接触实时进度。
-- `await meter.completedCount()`：经过 Actor 隔离读取。方法本身没有 `async`，但调用方在 `meter` 的隔离域之外，需要等待安全的访问机会。
-
-`CustomStringConvertible` 要求提供可同步读取的 `description`。这里用非隔离、只依赖固定数据的实现满足这个协议，才是 `nonisolated` 的实际用途之一，不只是为了少打几个 `await`。
-
-**错误反例：如果说明里需要实时完成数，就不能照搬同样写法。** 把下面的扩展追加到该 Demo 中，会被严格并发检查拒绝：
-
-```swift
-extension DownloadMeter {
-    nonisolated func unsafeCompletedCount() -> Int {
-        completedFiles // 错误：在非隔离方法里直接读取 Actor 隔离属性
-    }
-}
-```
-
-正确选择是保留前面的隔离方法 `completedCount()`，并在外部 `await` 它。**`nonisolated` 不代表“后台线程”，也不会替你加锁；它只是改变成员的隔离归属。** 本例特意使用同步成员，避免把异步非隔离函数的执行位置与编译器版本、默认隔离设置混在一起。
-
-##### 5.6.7.2、`Sendable`：传出进度快照，不是把内部可变对象交出去
-
-**实际需求：** 下载账本还会继续更新，另一个任务却需要拿到“刚才那一刻”的进度生成说明。它应该拿到一个可安全传递的值，而不是绕开账本去共同修改内部状态。
-
-**写在哪里：** 类型声明写 `: Sendable`，例如 `struct DownloadSnapshot: Sendable`。这是一份可由编译器检查的并发传递契约，不是自动加锁代码；成员也要满足相应的安全要求。声明与闭包规则见 [**SE-0302：Sendable 与 @Sendable**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md)。
-
-**问题：用了 `Sendable`，和不用到底差在哪里？**
-
-**期望回答：** 主要差在“类型有没有承诺可以安全跨隔离域传递，以及编译器会检查哪些要求”，不是运行时多了一把锁。对于本来就符合推断条件的纯值类型，不写与显式写出的运行结果可以完全相同；对于没有这个符合关系的类型，要求 `Sendable` 的接口会拒绝它。显式声明还能在以后误加不安全成员时，直接把错误指出来。
-
-| 对比点 | 显式声明 `: Sendable` | 不写 `: Sendable` |
-| --- | --- | --- |
-| 类型的承诺 | 明确承诺实例可安全跨隔离域传递，并接受符合性检查 | 不能只看有没有这行字；有些类型会被推断符合，有些不会 |
-| 能否传入 `T: Sendable` 接口 | 符合性检查通过后可以 | 已推断符合的可以；真正不符合的会报错 |
-| 以后加了非 Sendable 的可变引用成员 | 普通受检查的符合声明会报错，要求重新设计 | 类型定义本身可能仍合法，但不再具备安全传递契约；跨域使用可能被拒绝 |
-| 会不会自动加锁、深拷贝、切线程 | 都不会 | 也不会；这些行为不由这一行声明决定 |
-| 旧快照为什么不跟着账本变化 | 本例靠 `struct` 的值语义与 `Int` 字段 | 如果还是同样的值类型，旧快照同样不会变化 |
-
-下面分开看两个问题：**先只改声明，比较编译结果；再比较“返回快照”和“泄漏内部对象”的实际设计差异。**
-
-**1、只改 `Sendable` 声明：同一个类型，未声明失败，声明后通过。**
-
-保存为 `SendableContractDemo.swift`。这里故意使用没有标记 `@frozen` 的 `public struct`，避免普通内部 struct 的自动推断掩盖差异；`public` 是为了控制这个实验的条件，不是在建议所有模型都写成公开类型。
-
-```swift
-//
-//  SendableContractDemo.swift
-//  SendableContractDemo
-//
-//  Created by Jobs on 2026年8月31日，星期一.
-//
-
-public struct ProgressContract {
-    public let completedFiles: Int
-    public let totalFiles: Int
-}
-
-/// 这个接口只检查类型契约，不实际创建任务或切换线程。
-func requireSendable<T: Sendable>(_ value: T) {}
-
-func checkSnapshotContract() {
-    let snapshot = ProgressContract(completedFiles: 1, totalFiles: 3)
-    requireSendable(snapshot) // 错误：ProgressContract 未符合 Sendable
-}
-```
-
-执行类型检查，无需 `@main`：
-
-```shell
-xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -typecheck SendableContractDemo.swift
-```
-
-预期诊断的核心内容：
-
-```text
-type 'ProgressContract' does not conform to the 'Sendable' protocol
-```
-
-现在把同一文件中的类型声明替换成下面这一版，其他代码保持不变，再执行相同命令：
-
-```swift
-public struct ProgressContract: Sendable {
-    public let completedFiles: Int
-    public let totalFiles: Int
-}
-```
-
-**结果：编译通过。** 两个字段没有变，仍然是 `Int`；变化是这个类型现在显式建立了 `Sendable` 符合关系，编译器检查成员后，允许它满足 `T: Sendable` 的接口要求。`requireSendable` 是最小检查入口，方便只观察类型契约，不把某一次跨域调用的数据流推断混进来。
-
-**追问：为什么把原来 `DownloadSnapshot` 的 `: Sendable` 删掉，可能仍然通过？**
-
-因为后面的 `DownloadSnapshot` 是默认 `internal` 的 struct，两个存储属性都是 `Int`，符合隐式推断的条件。编译器已经知道它可以安全传递，删掉文字不等于删掉符合关系。对于本实验的普通非 frozen 公开 struct，则不会这样自动获得符合关系；精确条件见 [**SE-0302：隐式符合规则**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#implicit-structenum-conformance-to-sendable)。
-
-**2、实际使用：账本继续变化，另一个任务拿到的是旧快照。**
-
-保存为 `SendableDemo.swift`：
-
-```swift
-//
-//  SendableDemo.swift
-//  SendableDemo
-//
-//  Created by Jobs on 2026年8月30日，星期日.
-//
-
-struct DownloadSnapshot: Sendable {
-    let completedFiles: Int
-    let totalFiles: Int
-}
-
-actor DownloadSnapshotStore {
-    private var completedFiles = 0
-    private let totalFiles = 3
-
-    func recordCompletion() {
-        guard completedFiles < totalFiles else { return }
-        completedFiles += 1
-    }
-
-    func snapshot() -> DownloadSnapshot {
-        DownloadSnapshot(
-            completedFiles: completedFiles,
-            totalFiles: totalFiles
-        )
-    }
-}
-
-@main
-struct SendableDemo {
-    static func main() async {
-        let store = DownloadSnapshotStore()
-        await store.recordCompletion()
-
-        let earlier = await store.snapshot() // 从 Actor 传出 1/3 的值快照
-        await store.recordCompletion() // Actor 内部继续变化，达到 2/3
-
-        let prefix = "下载进度"
-        let format: @Sendable (DownloadSnapshot) -> String = { snapshot in
-            "\(prefix)：\(snapshot.completedFiles)/\(snapshot.totalFiles)"
-        }
-
-        /// 特意用 detached 显式建立另一任务边界，观察快照与闭包的传递。
-        let reader = Task.detached {
-            format(earlier)
-        }
-
-        let earlierText = await reader.value
-        let latest = await store.snapshot()
-        print("旧快照 → \(earlierText)")
-        print("新快照 → \(format(latest))")
-
-        precondition(earlier.completedFiles == 1)
-        precondition(latest.completedFiles == 2)
-        precondition(earlierText == "下载进度：1/3")
-    }
-}
-```
-
-预期输出：
-
-```text
-旧快照 → 下载进度：1/3
-新快照 → 下载进度：2/3
-```
-
-**这里发生了什么：**
-
-1、`snapshot()` 在账本 Actor 内把两个数字组装成一个值，一次性返回一致快照。
-
-2、`earlier` 已经拿到 `1/3`。之后账本变成 `2/3`，不会反过来改写这个旧值，所以另一个任务仍然打印 `1/3`。
-
-3、`Sendable` 表达这类值可以安全跨隔离域传递；**旧快照不变来自这里的值语义与不可变字段，不是 `Sendable` 在幕后自动深拷贝了一份对象。**
-
-4、`@Sendable` 修饰的是闭包的函数类型。这里 `format` 捕获了不可变的 `String` 值 `prefix`，并且不访问共享可变对象，因此可以传给另一个任务使用；它不表示“调用闭包时自动切后台”。
-
-`Task.detached` 在这里只用来把跨任务边界展示清楚，不承诺新建专属线程，也不是普通下载任务的必选写法。生产代码仍应优先按需要选择结构化任务或已有任务生命周期。
-
-**动手对比：** 单独复制一份这个正确 Demo，只删除 `DownloadSnapshot` 后面的 `: Sendable`，用第 5.6.7.4 节的相同命令重新编译运行。本例仍然通过，输出仍然是旧快照 `1/3`、新快照 `2/3`。这说明**快照语义没有变，编译器也仍然能推断它符合；不是“不用 Sendable 反而绕过了检查”。**
-
-**3、不传快照，改成把非 Sendable 内部对象交出去，会怎样？**
-
-保存为 `LeakySendableDemo.swift`。这是另一个独立反例：Actor 自己还持有可变对象，却把同一对象的引用返回给外部 MainActor 使用。
-
-```swift
-//
-//  LeakySendableDemo.swift
-//  LeakySendableDemo
-//
-//  Created by Jobs on 2026年8月31日，星期一.
-//
-
-final class MutableProgressBox {
-    var completedFiles = 0
-}
-
-actor LeakyDownloadStore {
-    private let progress = MutableProgressBox()
-
-    func recordCompletion() {
-        progress.completedFiles += 1
-    }
-
-    func exposeInternalObject() -> MutableProgressBox {
-        progress // 交出去的是同一个对象的引用，不是读取数字后组装的新快照
-    }
-}
-
-@MainActor
-func readLeakedProgress(from store: LeakyDownloadStore) async {
-    let shared = await store.exposeInternalObject() // 严格编译拒绝这次跨域返回
-    print(shared.completedFiles)
-}
-```
-
-使用实际编译流程检查跨域数据流，无需运行反例：
-
-```shell
-xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library -emit-sil LeakySendableDemo.swift -o LeakySendableDemo.sil
-```
-
-**预期：编译失败。** 诊断指出非 Sendable 的 `MutableProgressBox` 结果不能从这个 Actor 隔离方法返回到 MainActor 隔离上下文。`-emit-sil` 会走到相关的数据流检查；不要只用语法解析或一次 `-typecheck` 的结果判断所有并发用法都安全。
-
-| 返回方式 | 外部实际拿到什么 | Actor 后续更新时 | 本节实验结果 |
-| --- | --- | --- | --- |
-| `snapshot() -> DownloadSnapshot` | 读取当时数字后构造的值快照 | 已经拿到的旧值不变 | 编译通过，旧快照保持 `1/3` |
-| `exposeInternalObject() -> MutableProgressBox` | Actor 仍然持有的同一个可变对象 | 如果允许共享引用，后续读取就可能看到变化，并与 Actor 内部写入竞争 | 严格编译拒绝跨域返回，没有运行输出 |
-
-**关键点：** `private let progress` 只限制属性访问与引用重新绑定；它不会冻结 `progress.completedFiles`。外部一旦拿到这个对象，后续访问对象字段也不会自动回到原 Actor 排队。修复应像前面的正确 Demo 一样，在 Actor 内读取数字并返回值快照，或把操作继续留在隔离入口里。
-
-**4、显式声明的维护价值：有人误把可变对象塞进快照时，当场拦住。**
-
-下面是独立的类型检查反例，不与前面的同名类放在一个文件：
-
-```swift
-final class MutableProgressBox {
-    var completedFiles = 0
-}
-
-struct BrokenSnapshot: Sendable {
-    let progress: MutableProgressBox // 错误：字段类型不符合 Sendable
-}
-```
-
-**用了 `Sendable`：** 类型声明处就被拒绝。你原本承诺“这是可安全传递的快照”，但现在放进一个未受保护的可变引用，编译器要求修正这个矛盾。
-
-**不用 `Sendable`：** 只删掉 `BrokenSnapshot` 的 `: Sendable`，这段类型定义可以通过，因为普通 struct 允许存放 class 引用；但它不是可安全跨域传递的快照。仅在同一同步调用中追加下面代码，可观察到外层 `let` 并没有固定内部进度：
-
-```swift
-func observeSharedReference() {
-    let box = MutableProgressBox()
-    box.completedFiles = 1
-    let earlier = BrokenSnapshot(progress: box)
-
-    box.completedFiles = 2
-    print(earlier.progress.completedFiles) // 2，不是刚创建 earlier 时的 1
-}
-
-observeSharedReference()
-```
-
-这里没有运行数据竞争，只用顺序代码证明“外层 struct 里装的仍是共享引用”。**不声明不会把类型变坏，也不会关闭并发检查；只是没有主动要求这个类型始终满足 Sendable 契约。** 将它传给 `T: Sendable` 接口仍会失败，像上一反例那样泄漏跨域共享状态仍会被检查。
-
-**错误反例：给可变引用类型写上 `Sendable`，不会使它自动安全。** 下面应当单独验证，不加入正确 Demo：
-
-```swift
-final class UnsafeProgressBox: Sendable {
-    var completedFiles = 0 // 错误：普通 Sendable class 的这个可变存储未受保护
-}
-```
-
-多个任务持有这个 class 时，拿到的是同一个可变对象。应根据业务改成值快照、Actor，或真正实现并审核同步机制；不要为了消除诊断直接加 `@unchecked Sendable`。
-
-还要分清：
-
-- `Sendable` 不要求所有 struct 的字段都写 `let`。由可安全传递成员组成的可变值类型也可能符合；但多个任务直接竞争修改**同一个捕获变量**仍然不安全。
-- `let box = 某个可变对象` 只是不允许重新绑定引用，不会让对象内部一起不可变。
-- 某些非公开 struct / enum 可以被编译器推断为 `Sendable`；删除示例里的显式声明，不一定就报错。这里显式写出是为了说明快照的边界契约。
-- `@unchecked Sendable` 是人工承担安全责任；它不生成锁，也不替你验证内部同步是否正确。
-
-**5、什么时候推荐写，什么时候不必强求？**
-
-| 场景 | 推荐方式 | 理由与边界 |
-| --- | --- | --- |
-| 要跨 Actor / Task 使用的进度、配置、结果 DTO | 对设计为可安全传递的模型显式声明 `Sendable`，并检查所有成员 | 意图清楚，后续改动破坏契约时能及时发现 |
-| 模块对外提供的并发模型 | 在确实支持安全传递时公开 `Sendable` 符合关系 | 它属于 API 承诺，不能只因“现在字段碰巧安全”就随意承诺 |
-| 仅在一个隔离域内使用的可变辅助 class | 留在原隔离域，不必为了统一格式硬加 `Sendable` | 不跨域共享，就不需要把所有类型都改成可传递类型 |
-| 默认 internal、成员都符合的简单 struct | 可以依赖推断；承担明确并发边界时仍推荐显式写出 | 这两种写法通常没有本例运行行为上的差别 |
-| 实际需要多方共同操作同一份可变状态 | 设计 Actor / 全局 Actor 隔离，或经过验证的同步封装 | 单加协议声明不能替代状态管理 |
-
-**追问：真正不符合 `Sendable` 的值，就绝对不能跨隔离域吗？**
-
-也不能这么说。Swift 6 的区域隔离分析可以证明某个非 Sendable 实例的转移不会留下竞争访问，`sending` 可以表达相关的转移要求。这是对**某次值转移**的检查，不等于类型整体获得了 `Sendable` 符合关系；更不能据此把 Actor 还在使用的内部可变对象交给外部共同操作。参见 [**Swift 6：数据竞争安全与区域隔离**](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety/)。
-
-**可直接说出口的核心回答：**
-
-> Sendable 声明的是安全传递契约，不会自动加锁或深拷贝。用了它，编译器会检查这个类型是否满足要求，也允许它进入要求 Sendable 的接口；不显式写，有些值类型会被推断符合，行为一样，有些类型则不能满足这个接口。进度快照不跟着账本变化，靠的是这里的值语义。把可变 class 装进 struct 或标成 let，都不会自动得到真正独立的快照。
-
-本节补充验证（2026年8月31日，Apple Swift 6.3.3，Swift 6 语言模式、默认 `nonisolated`、严格并发检查）：原快照 Demo 的显式声明版与隐式推断版均编译运行通过，输出相同；公开类型仅补 `: Sendable` 后由失败变为通过；内部对象跨域泄漏、Sendable struct 含非 Sendable 成员、普通 Sendable class 含未保护的可变存储均触发预期诊断。去掉 `BrokenSnapshot` 符合声明后的顺序引用实验输出 `2`，没有绕过检查执行并发竞争。
-
-##### 5.6.7.3、`@MainActor`：页面状态归 MainActor，外部任务通过隔离入口更新
-
-**实际需求：** 下载进度由服务取得，页面的标题和 loading 状态统一在 MainActor 管理。调用者可能是其它任务，不能因为手里有 ViewModel 引用就随意修改页面状态。
-
-> `@MainActor` 不是“主线程加锁”，而是“把代码和状态划归 MainActor 管理，串行隔离访问”；效果类似自动加锁，但机制是 Actor 调度。
-
-这里“类似自动加锁”只类比互斥访问效果，**不代表给整个 `async` 方法持锁**；实际挂起后仍有前节介绍的可重入。MainActor 是全局 Actor，Apple 平台的执行器与主队列集成，而不是每个 ViewModel 各自创建一把主线程锁。规则见 [**SE-0316：Global actors**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md)。
-
-**写在哪里：** 整个页面模型可以声明 `@MainActor final class ...`；只想隔离某个入口时，也可以标在对应方法或属性上。下面直接隔离整个 ViewModel，减少漏标状态和方法的可能。
-
-保存为 `MainActorDemo.swift`：
-
-```swift
-//
-//  MainActorDemo.swift
-//  MainActorDemo
-//
-//  Created by Jobs on 2026年8月30日，星期日.
-//
-
-actor DownloadCountService {
-    func completedCount() async -> Int {
-        await Task.yield() // 异步服务的教学替身，不执行真实网络请求
-        return 3
-    }
-}
-
-@MainActor
-final class DownloadViewModel {
-    private(set) var title = "等待下载"
-    private(set) var isLoading = false
-
-    func reload(using service: DownloadCountService) async {
-        MainActor.assertIsolated()
-        isLoading = true
-        title = "正在读取进度"
-        print("开始：\(title)，loading = \(isLoading)")
-
-        let count = await service.completedCount()
-
-        MainActor.assertIsolated()
-        title = "已完成 \(count) 个文件"
-        isLoading = false
-        print("结束：\(title)，loading = \(isLoading)")
-    }
-
-    func reset() {
-        MainActor.assertIsolated()
-        title = "等待下载"
-        isLoading = false
-    }
-}
-
-@main
-struct MainActorDemo {
-    @MainActor
-    static func main() async {
-        let viewModel = DownloadViewModel() // 已在 MainActor 内，可直接创建和访问
-        let service = DownloadCountService()
-
-        /// 故意从不继承 MainActor 隔离的任务发起调用，演示外部入口。
-        let worker = Task.detached {
-            await viewModel.reload(using: service)
-
-            let title = await viewModel.title // 外部读取隔离属性也需要 await
-            print("跨域读取：\(title)")
-            precondition(title == "已完成 3 个文件")
-
-            await MainActor.run {
-                precondition(!viewModel.isLoading)
-                viewModel.reset() // 已进入 MainActor，不再写 await
-                print("重置：\(viewModel.title)，loading = \(viewModel.isLoading)")
-            }
-        }
-
-        await worker.value
-        precondition(viewModel.title == "等待下载")
-        precondition(!viewModel.isLoading)
-    }
-}
-```
-
-预期输出：
-
-```text
-开始：正在读取进度，loading = true
-结束：已完成 3 个文件，loading = false
-跨域读取：已完成 3 个文件
-重置：等待下载，loading = false
-```
-
-**沿着调用链看隔离归属：**
-
-| 位置 | 代码 | 为什么这样调用 |
-| --- | --- | --- |
-| MainActor 内的入口 | `DownloadViewModel()` | 创建与后续直接访问都在同一隔离域 |
-| 外部任务进入页面模型 | `await viewModel.reload(using: service)` | 进入 MainActor 执行页面状态逻辑，不是把方法放在调用者那里裸跑 |
-| ViewModel 等待服务 | `await service.completedCount()` | 去另一个 Actor 取数据；挂起期间 MainActor 可以处理其它工作 |
-| `reload` 的后半段 | `title = ...`、`isLoading = false` | 恢复后仍属于 MainActor 隔离代码，不用再包一层 `MainActor.run` |
-| 外部任务临时更新页面 | `await MainActor.run { viewModel.reset() }` | 把一小段同步状态操作放到 MainActor 内执行 |
-
-**拿到引用，不等于拿到任意修改权限。** `worker` 和入口持有同一个 ViewModel，不是各自复制一份；把引用交给外部任务，并不会把它的属性和方法从 MainActor 搬走。
-
-**`@MainActor` 与 `MainActor.run` 不是同一种写法的重复装饰：** 前者在声明处规定归属，让每个调用者都遵守；后者是在某个调用点进入 MainActor 执行同步闭包。已经处于 MainActor 的代码，直接调用 `reset()` 即可；外部也可以只写 `await viewModel.reset()`，不必为了单次方法调用套闭包。
-
-[**MainActor.run**](https://developer.apple.com/documentation/swift/mainactor/run(resulttype:body:)) 的闭包是同步的，不能把 `await service.completedCount()` 塞进它的闭包中。需要“先等待服务，再更新页面”时，可以像本例声明一个 `@MainActor async` 方法，或先取得结果，再进入 `MainActor.run`。
-
-[**MainActor.assertIsolated**](https://developer.apple.com/documentation/swift/mainactor/assertisolated(_:file:line:)) 用于验证当前是否处于正确的隔离执行上下文，**它本身不会切换执行器**。本例在加载前、加载后和重置时各验证一次，而不是仅凭打印线程名称来猜隔离是否正确。这个断言在 Debug / `-Onone` 构建中生效，`-O` 构建不执行检查，不能把它当作生产环境始终开启的门禁。
-
-**错误反例：外部同步代码直接调用隔离方法。** 把下面函数追加到该 Demo 中，会被编译器拒绝：
-
-```swift
-nonisolated func resetFromOutside(_ viewModel: DownloadViewModel) {
-    viewModel.reset() // 错误：非隔离同步函数不能直接调用 MainActor 隔离方法
-}
-```
-
-在异步调用链中应改为 `await viewModel.reset()`；如果调用者本来就是 UI 隔离逻辑，也可以把调用者声明为 `@MainActor`。不能靠 `nonisolated` 把页面状态的保护关闭。
-
-**这个 Demo 没有承诺的事情：**
-
-- `@MainActor` 不会把耗时同步计算自动放到后台。把大量解码、排序或阻塞 I/O 放进它的方法，仍然可能卡住 UI。
-- `Task { ... }` 可以继承创建位置的 Actor 隔离；写了 Task 不等于离开 MainActor。本例选用 `Task.detached` 是为了显式演示外部调用，不是在推荐每次刷新页面都这么创建任务。
-- 示例只触发一次加载。连续点击、旧请求晚返回、取消与失败都需要额外策略；MainActor 不会自动保证新结果胜过旧结果，也不会消灭跨 `await` 的逻辑竞态。
-- `private(set)` 只限制外部写入，`@MainActor` 才负责这里的隔离归属。实际绑定到 UILabel 或页面组件时，仍应在这个隔离域内完成 UI 更新。
-
-##### 5.6.7.4、怎样运行，以及怎样一起选用
-
-将三个**正确 Demo** 分别保存后，在文件所在目录运行下面命令。基线为 Swift 6 语言模式，命令显式把未标注声明的默认隔离设为 `nonisolated`，因此 `@MainActor` 的作用不会被项目隐含配置掩盖。
-
-```shell
-xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library NonisolatedDemo.swift -o NonisolatedDemo
-./NonisolatedDemo
-
-xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library SendableDemo.swift -o SendableDemo
-./SendableDemo
-
-xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -parse-as-library MainActorDemo.swift -o MainActorDemo
-./MainActorDemo
-```
-
-不同 Xcode 项目的默认隔离设置可能不同；复现实验时先用以上独立命令，不要通过关闭严格并发检查来绕过错误。代码块中的多个类型放在同一文件仅为方便复制，工程落地时按真实职责拆分。
-
-验证记录（2026年8月30日）：Apple Swift 6.3.3 下，三个正确 Demo 均通过上述严格编译，运行输出与断言符合预期；三个错误反例分别触发“非隔离读取 Actor 属性”“Sendable class 存在可变存储”“同步跨域调用 MainActor 方法”的预期诊断。
-
-回到同一个真实下载功能，它们可以这样配合：
-
-- 下载账本的可变进度：交给普通 Actor 管理。
-- 任务名称等固定说明：确实不依赖隔离可变状态时，提供 `nonisolated` 同步入口。
-- 传给页面或其它任务的进度结果：使用 `Sendable` 快照；需要安全传递的回调用 `@Sendable` 函数类型表达。
-- 页面标题、loading 与按钮状态：交给 `@MainActor` 模型管理。
-
-**最后一句话串起来：`nonisolated` 决定哪些成员不需要进入隔离域，`Sendable` 表达传递出去的值是否安全，`@MainActor` 决定页面代码与状态归哪个隔离域管理。** Actor 实例本身可以安全跨域传递，是因为它仍然保护自己的隔离状态；这不等于调用者拿到引用后就能绕过入口随意读写。
-
-#### 5.6.8、什么时候选 Actor，什么时候仍然选 Class
-
-**问题：在真实项目中，什么情形下用 Actor 好于 Class？**
-
-**可直接说出口的核心回答：**
-
-> 当多个并发任务需要共同维护一份会变化的数据，而且调用方能接受 `await` 时，我会优先考虑 Actor。例如多个下载任务共同更新完成账本、多个页面共用缓存并合并重复请求、多个调用方争用一份本地限额。普通 Class 也能实现，但需要自己保证所有读写都经过同一套同步机制；Actor 可以让编译器检查隔离边界。UI 状态则通常交给 `@MainActor class`，没有共享可变状态也不用为了异步而强行引入 Actor。
-
-先把选型落到具体对象上：
-
-| 实际情形 | 共同修改的状态 | Actor 更合适的原因 | 必须保留的边界 |
-| --- | --- | --- | --- |
-| 多个下载任务同时完成 | 已完成 ID 集合、总字节数 | 把去重与累计放在同一个无挂起操作内，对外返回一致快照 | 下载可以并发，账本只处理短小的状态操作 |
-| 首页、详情页同时请求同一用户 | 缓存、正在执行的请求表 | 统一决定读缓存、创建请求或复用已有 Task | 仅换成 Actor 不会自动去重，要在 `await` 前登记请求 |
-| 多个接口发现登录凭据过期 | 当前凭据、正在刷新的 Task | 可以让同一会话中的请求共同等待一次刷新 | 登出、切账号后要用会话版本阻止旧结果覆盖新状态 |
-| 多个任务申请本地名额 | 剩余名额、已分配记录 | 统一执行“检查资格或余额 → 占用名额” | 一次原子决策要放在同一个无挂起方法中 |
-| 多处触发同一连接重连 | 连接状态、重试次数、进行中的连接 Task | 集中维护状态转换，减少重复连接和交错更新 | 仍需处理旧连接回调，Actor 不承诺请求按先来后到执行 |
-| 页面标题、加载态、列表数据 | 页面展示状态 | 通常使用 `@MainActor class` 更自然 | 页面状态已经隔离，不必额外搬进普通 Actor |
-
-下面三个示例分别展开“多任务记账”“共享请求”“检查并修改”。它们是独立的语言示例，不依赖项目里的 UI 或网络封装。
-
-```mermaid
-flowchart TD
-    A["对象是否需要共享身份"] -->|否| B["优先考虑 struct / enum"]
-    A -->|是| C["是否存在跨并发域共享的可变状态"]
-    C -->|否| D["普通 final class 通常足够"]
-    C -->|是| E["状态是否天然属于 UI"]
-    E -->|是| F["@MainActor class"]
-    E -->|否| G["调用链能否接受 async / await"]
-    G -->|是| H["优先评估 actor"]
-    G -->|否| I["Class + 锁 / 串行队列，并明确同步契约"]
-```
-
-优先使用 Actor：
-
-- 多个 Task 会读写同一份可变状态。
-- 希望编译器帮助约束访问边界和跨域传值。
-- API 可以自然表达为 `async` 调用。
-- 状态适合集中在一个清晰的所有者中。
-
-继续使用 Class：
-
-- 需要 UIKit / AppKit 对象、Objective-C 互操作或既有继承体系。
-- 对象虽然有身份，但没有跨并发域共享的可变状态。
-- 必须提供同步 API，或者已有成熟且完整的锁 / 队列同步方案。
-- 类型本身是 `@MainActor` 隔离的 UI 模型，不需要再包一层普通 Actor。
-
-不要使用 Actor：
-
-- 只是为了“把代码放到后台线程”。
-- 只是包装一个不可变数据值，此时通常应使用 `struct`。
-- 想依靠一个 Actor 自动获得内部任务的并行加速。
-- 需要在 Actor 方法里执行长时间阻塞调用；阻塞代码仍会占用并发运行时线程。
-
-#### 5.6.9、场景一：多个下载任务共同更新完成账本
-
-**实际问题：** 下载管理器同时下载多个文件。任务结束时要记录完成 ID、累计文件大小；重复回调不能重复计数，页面读取时还要拿到同一时刻的统计结果。
-
-**普通 Class 容易出错的地方：** 两个任务可能同时通过“还没记录过”的判断，或在累计字节数时丢失更新。`private` 只能限制可见性，不能阻止多个任务同时执行公开方法。
-
-```swift
-final class UnsafeDownloadLedger {
-    private var completedIDs: Set<String> = []
-    private var totalBytes = 0
-
-    func recordCompletion(id: String, bytes: Int) {
-        guard !completedIDs.contains(id) else { return }
-        completedIDs.insert(id)
-        totalBytes += bytes
-    }
-}
-```
-
-这里存在未同步的集合读写，后果不止是统计错误，也可能破坏内存安全。严格并发检查可能先拒绝不安全的共享方式，不应为了让这个反例运行而添加 `@unchecked Sendable`。
-
-**Actor 写法：** 由同一个账本接收所有完成事件，把去重和累计收进一个不含 `await` 的方法。
-
-```swift
-struct DownloadSummary: Sendable {
-    let completedCount: Int
-    let totalBytes: Int
-}
-
-actor DownloadLedger {
-    private var completedIDs: Set<String> = []
-    private var totalBytes = 0
-
-    func recordCompletion(id: String, bytes: Int) {
-        precondition(bytes >= 0)
-        guard completedIDs.insert(id).inserted else { return }
-        totalBytes += bytes
-    }
-
-    func snapshot() -> DownloadSummary {
-        DownloadSummary(
-            completedCount: completedIDs.count,
-            totalBytes: totalBytes
-        )
-    }
-}
-
-func runDownloadLedgerDemo() async {
-    let ledger = DownloadLedger()
-
-    await withTaskGroup(of: Void.self) { group in
-        for index in 0..<1_000 {
-            group.addTask {
-                let id = "file-\(index)"
-                await ledger.recordCompletion(id: id, bytes: 100)
-                await ledger.recordCompletion(id: id, bytes: 100) // 模拟重复完成回调
-            }
-        }
-    }
-
-    let summary = await ledger.snapshot()
-    print(summary.completedCount, summary.totalBytes) // 1000 100000
-}
-```
-
-**为什么这里用 Actor 更合适：**
-
-- 账本确实需要共享身份，不能让每个下载任务各拿一份独立统计。
-- 去重和累计在同一个无挂起片段完成，另一个任务不能插入这两步之间。
-- `snapshot()` 一次读取两个相关字段，避免调用方分两次 `await` 读到不同时间点的数据。
-- Class 加锁也能做到，但后续新增查询、重置或重试入口时必须继续正确加锁；Actor 的普通实例成员默认继续受到隔离检查。
-
-**适用边界：** 此处“完成”是针对稳定文件 ID 的一次性记录；同一文件的新版本应使用新的 ID。示例只模拟完成事件，不执行真实下载。不要把大文件解码、压缩或长时间阻塞 I/O 塞进账本方法，否则其它记账请求也会被拖住。
-
-#### 5.6.10、场景二：多个页面共用缓存，并合并重复请求
-
-**实际问题：** 首页和详情页同时读取用户 `1` 的资料。缓存还没建立时，希望只执行一次加载，其余调用方等待同一个结果。
-
-**普通 Class 需要自己保证：** 缓存和进行中的请求表都要同步保护，而且“查表 → 决定创建 → 登记请求”必须属于同一次决策。只分别给 getter、setter 加锁并不够。
-
-**容易误判的一点：即使用了 Actor，只缓存最终结果也可能重复请求。**
-
-```text
-任务 A：缓存未命中 → 开始加载 → await 挂起
-任务 B：进入同一个 Actor → 缓存仍未命中 → 又开始一次加载
-```
-
-这时 Actor 的状态读写可以没有数据竞争，但业务上的重复请求仍然存在。处理方式是**先保存正在执行的 Task，再等待结果**；可重入与挂起点的语言规则见 [**SE-0306：Actor reentrancy**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy)。
-
-```swift
-struct ProfileRecord: Sendable {
-    let id: Int
-    let nickname: String
-}
-
-actor ProfileRepository {
-    typealias Loader = @Sendable (Int) async throws -> ProfileRecord
-
-    private let load: Loader
-    private var cached: [Int: ProfileRecord] = [:]
-    private var inFlight: [Int: Task<ProfileRecord, Error>] = [:]
-
-    init(load: @escaping Loader) {
-        self.load = load
-    }
-
-    func profile(id: Int) async throws -> ProfileRecord {
-        if let record = cached[id] {
-            return record
-        }
-
-        if let request = inFlight[id] {
-            return try await request.value
-        }
-
-        let loader = load
-        let request = Task {
-            try await loader(id)
-        }
-        inFlight[id] = request // 第一次挂起前登记，其它调用方才能复用
-        defer { inFlight[id] = nil }
-
-        let record = try await request.value
-        cached[id] = record
-        return record
-    }
-}
-
-func runProfileRepositoryDemo() async throws {
-    let repository = ProfileRepository { id in
-        print("实际加载用户 \(id)")
-        try await Task.sleep(for: .milliseconds(50))
-        return ProfileRecord(id: id, nickname: "Jobs")
-    }
-
-    async let first = repository.profile(id: 1)
-    async let second = repository.profile(id: 1)
-    let (a, b) = try await (first, second)
-    print(a.nickname, b.nickname) // Jobs Jobs；实际加载只打印一次
-}
-```
-
-**为什么这里用 Actor 更合适：** 缓存命中判断、请求查重和登记都在同一个隔离域内完成；遇到异步加载时可以自然挂起，不必持锁等待网络。示例中只有创建请求的调用方负责清理 `inFlight`，成功后写入缓存，失败时也会通过 `defer` 移除失败请求，使后续调用能重新尝试。
-
-这套结构也适合图片缓存和登录凭据刷新：多个调用方复用一个正在执行的任务。Apple 在 [**WWDC21：Protect mutable state with Swift actors**](https://developer.apple.com/videos/play/wwdc2021/10133/) 中展示了通过保存进行中 Task 处理缓存重入的方式。
-
-**适用边界：**
-
-- 示例注入的是模拟加载器，不请求网络；实际项目应接入已有网络层，并选择能区分资源和会话的缓存键。
-- `Task { ... }` 不代表新开一条后台线程。这里依靠异步加载在等待时让出执行机会，CPU 密集工作需要另外设计执行位置。
-- 这里采用仓库持有共享请求的策略：单个等待者取消，不会自动取消共享请求，也不保证该等待者立即结束等待。生产代码必须明确取消策略。
-- 示例没有缓存失效、容量限制或登出功能。新增清空、强制刷新或切账号时，要用请求标识或版本校验，防止旧请求恢复后写回过期结果或清掉新请求。
-
-#### 5.6.11、场景三：多个任务争用同一份本地名额
-
-**实际问题：** App 内某个本地能力只剩一个名额，但多个任务可能同时尝试领取。要求最多一个任务成功。
-
-**普通 Class 的风险：** 两个并发调用都可能先读到 `remaining == 1`，都判断可以领取，然后分别扣减。问题在于“检查”和“修改”必须整体保护，单独保护每次属性读写仍然不够。
-
-**Actor 写法：** 对外提供一次完整的 `tryClaim()` 操作，不让调用方自己组合“查询剩余 → 扣减”。
-
-```swift
-actor LocalQuota {
-    private var remaining = 1
-
-    func tryClaim() -> Bool {
-        guard remaining > 0 else { return false }
-        remaining -= 1
-        return true
-    }
-
-    func remainingCount() -> Int {
-        remaining
-    }
-}
-
-func runLocalQuotaDemo() async {
-    let quota = LocalQuota()
-
-    let successes = await withTaskGroup(of: Bool.self, returning: Int.self) { group in
-        for _ in 0..<100 {
-            group.addTask {
-                await quota.tryClaim()
-            }
-        }
-
-        var count = 0
-        for await claimed in group {
-            if claimed { count += 1 }
-        };return count
-    }
-
-    let remaining = await quota.remainingCount()
-    print(successes, remaining) // 1 0
-}
-```
-
-**为什么这里用 Actor 更合适：** 100 个任务共同访问一个 `quota`，但每次检查与扣减都在同一段无挂起的隔离代码中执行。第一个实际执行成功的任务用掉名额，后续任务只能得到失败；具体哪个任务先执行不由 Actor 保证。
-
-**不能这样理解：** 如果把 API 拆成 `await quota.hasRemaining()` 和 `await quota.consume()`，其它任务就可能在两次调用之间完成领取。两个方法分别安全，不等于组合操作也是原子的。如果还需要异步资格校验，应在校验返回后重新检查，或先占位再设计失败补偿，参见 5.6.6。
-
-**适用边界：** 这里保护的是当前进程内同一个 Actor 实例的本地名额。真实优惠券、订单库存或跨设备配额仍需服务端的原子操作、事务与幂等控制，不能靠客户端 Actor 保证全局正确。
-
-#### 5.6.12、面试追问与答案
-
-1、**Actor 是线程吗？**
-
-   不是。Actor 是隔离域和引用类型抽象，运行时负责调度它的任务；Actor 不绑定一条专属线程。
-
-2、**Actor 方法为什么有时没写 `async`，调用时却要 `await`？**
-
-   方法体本身可以是同步的，但外部调用需要跨越 Actor 隔离域并等待执行机会，所以调用点是潜在挂起点；同一 Actor 内部调用则不需要 `await`。
-
-3、**Actor 能完全消灭数据竞争吗？**
-
-   Actor 能保护自身正确隔离的状态，但保护不了外部全局变量、Unsafe Pointer、错误的 `nonisolated(unsafe)`、不真实的 `@unchecked Sendable` 承诺或绕开并发模型的底层代码。
-
-4、**Actor 与串行队列最关键的区别是什么？**
-
-   串行队列主要是运行时调度工具，安全依赖封装纪律；Actor 是语言级隔离模型，编译器会检查隔离访问和大量跨域传值问题。Actor 还具有可重入语义，不能机械理解成 `queue.sync`。
-
-5、**Actor 里面执行到 `await` 时还一直占有 Actor 吗？**
-
-   不会。当前任务会挂起，Actor 可以继续处理其它任务；原任务恢复后必须把相关状态视为可能已经变化。
-
-6、**Actor 可以继承另一个 Actor 或 Class 吗？**
-
-   不可以参与普通类继承体系。Actor 之间优先通过协议、泛型和组合复用能力。
-
-7、**用了 Actor 是否就一定更快？**
-
-   不一定。Actor 的价值首先是正确的隔离模型；频繁跨 Actor 会产生调度开销，过大的 Actor 还会形成串行热点。性能结论必须结合真实负载测量。
-
-8、**UI 状态应该放普通 Actor 还是 `@MainActor class`？**
-
-   UI 本身天然属于 Main Actor，通常直接使用 `@MainActor class` 更清楚；普通 Actor 更适合不依赖 UI 的共享业务状态。
-
-9、**举一个实际项目中 Actor 比普通 Class 更合适的例子？**
-
-   多个页面共用资料缓存时，我会让 Actor 同时管理缓存和进行中的请求。首次未命中时先登记 Task，再等待加载；其它请求复用这个 Task。这样隔离边界由编译器检查，业务层仍负责去重、失败清理和失效策略。
-
-10、**把 Class 的关键字改成 Actor，就不会重复请求了吗？**
-
-   不会。网络等待期间可以有其它任务进入，而结果缓存尚未写入；如果没有记录进行中的请求，后来的任务仍然可能重新加载。Actor 解决隔离，去重依然要明确建模。
-
-11、**一个 Class 内有异步网络方法，就应该改成 Actor 吗？**
-
-   不一定。如果它只转发请求、没有共同修改的缓存或会话状态，Actor 未必有收益。先找共享可变数据，再决定隔离方式；同步 API 可以采用 Class 加锁，UI 模型则通常采用 `@MainActor class`。
-
-### 5.7、取消与超时意识
-
-[**Swift**](https://www.swift.org/) Task 的取消是协作式的：`cancel()` 只是发出请求，任务必须在合适位置响应。
-
-```swift
-func buildIndex(values: [Int]) async throws -> [Int] {
-    var result: [Int] = []
-    result.reserveCapacity(values.count)
-
-    for value in values {
+    func claim(
+        verify: @Sendable () async throws -> Bool // 注入异步资格检查。
+    ) async throws -> Bool {
+        guard remaining > 0 else { return false } // 提前拒绝，减少无效请求。
+        let allowed = try await verify()          // 等待期间，其他调用可改库存。
         try Task.checkCancellation()
-        result.append(value * value)
-    };return result
-}
-
-let task = Task {
-    try await buildIndex(values: Array(0..<100_000))
-}
-
-task.cancel()
-```
-
-- 会挂起的标准异步 API 通常能响应取消，但自写 CPU 循环要调用 `Task.checkCancellation()` 或检查 `Task.isCancelled`。
-- 取消后可能返回部分结果、`nil` 或抛出 `CancellationError`，API 应明确约定。
-- 不要用 `Thread.sleep` 阻塞并发线程池；异步上下文使用 `Task.sleep(...)`。
-
-### 5.8、completion API 桥接到 `async`
-
-```swift
-enum LegacyError: Error {
-    case missingData
-}
-
-func legacyLoad(
-    completion: @escaping (Result<Data, Error>) -> Void
-) {
-    completion(.failure(LegacyError.missingData))
-}
-
-func loadData() async throws -> Data {
-    try await withCheckedThrowingContinuation { continuation in
-        legacyLoad { result in
-            continuation.resume(with: result)
-        }
+        guard allowed, remaining > 0 else { return false } // 恢复后重新确认。
+        remaining -= 1                            // 最终检查与扣减之间不再等待。
+        return true
     }
 }
 ```
 
-- Continuation 必须且只能恢复一次；漏恢复会让任务永久挂起，重复恢复会触发错误。
-- 优先使用 `withCheckedContinuation` / `withCheckedThrowingContinuation`，确认性能瓶颈后才考虑 unsafe 版本。
-- 一次性 completion 适合 Continuation；多次事件流应改成 `AsyncStream` / `AsyncThrowingStream`。
+去掉等待后的库存检查，会允许以下顺序：
 
-### 5.9、[**Swift**](https://www.swift.org/) 与 Objective-C 极简对比
+| 步骤 | 调用 A | 调用 B | 库存 |
+| --- | --- | --- | ---: |
+| 1 | 检查通过，等待资格 | 尚未进入 | 1 |
+| 2 | 仍在等待 | 检查通过，等待资格 | 1 |
+| 3 | 仍在等待 | 恢复并扣减 | 0 |
+| 4 | 恢复后直接扣减 | 已完成 | -1 |
 
-- Objective-C + GCD：
+过期的是“已经确认有库存”的判断，不一定是读取了旧数字。任务恢复从等待后继续，不会自动重跑前面的 <font color="red"><b><code>guard</code></b></font>。这属于逻辑竞态，不需要两个隔离片段并行执行。
 
-  ```objc
-  - (void)loadDataWithCompletion:(void (^)(NSData * _Nullable data,
-                                            NSError * _Nullable error))completion {
-      dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-          NSData *data = [self readData];
-          dispatch_async(dispatch_get_main_queue(), ^{
-              completion(data, nil);
-          });
-      });
-  }
-  ```
+若业务要求先留名额，改为“检查并预留 → 等待 → 确认或补偿”；失败、取消、切账号时用请求 ID / 会话版本防止重复补偿。跨设备库存由服务端原子操作、事务和幂等控制；客户端 Actor 只管本进程内该实例。
 
-- [**Swift**](https://www.swift.org/) Concurrency：
+### 3、<font id="Actor去重">合并请求：先登记 <font color="red"><b>Task</b></font>，再等待结果</font>
 
-  ```swift
-  func readData() async throws -> Data {
-      try await storage.read()
-  }
-  
-  @MainActor
-  func reload() async {
-      do {
-          let data = try await readData()
-          apply(data)
-      } catch {
-          show(error)
-      }
-  }
-  ```
+仅保存最终缓存不足以阻止重复请求：第一次请求等待时，第二次仍可能读到空缓存。保存正在执行的任务，让同一 key 的调用共同等待。
 
-| 对比项 | Objective-C | [**Swift**](https://www.swift.org/) |
-| --- | --- | --- |
-| 语言模型 | 没有原生 `async` / `await`；主要使用 GCD、`NSOperation`、Block | 语言级 Task、结构化并发、Actor、隔离与 `Sendable` |
-| 错误传播 | 常用 `NSError **` 或 completion 中的 error | `async throws` + `try await` |
-| 返回值 | 通过 Block 回调 | 异步函数直接返回 |
-| 任务关系 | GCD Block 通常没有显式父子结构 | `async let` / Task Group 明确父子生命周期 |
-| 数据竞争 | 靠队列、锁、约定和测试 | 编译器能检查大量隔离与 `Sendable` 问题 |
-| UI 回主线程 | 手动 `dispatch_async(dispatch_get_main_queue(), ...)` | `@MainActor` / `MainActor.run` |
-| 取消 | GCD Block 难取消；`NSOperation` 是协作式取消 | Task 原生传播取消，但仍需任务协作 |
-| 共享状态 | 串行队列、锁、原子操作 | 优先 Actor；底层同步原语仍可用 |
-| 线程假设 | Queue 与线程也不是一一对应 | Task 更不承诺固定线程；围绕隔离域思考 |
+```swift
+actor NameRepository {
+    private var cache: [Int: String] = [:]
+    private var inFlight: [Int: Task<String, Error>] = [:]
+    private let loader: @Sendable (Int) async throws -> String
 
-### 5.10、GCD / `NSOperation` 到 [**Swift**](https://www.swift.org/) Concurrency 的迁移映射
+    init(loader: @escaping @Sendable (Int) async throws -> String) {
+        self.loader = loader
+    }
 
-| 旧写法 | 优先考虑 |
+    func name(id: Int) async throws -> String {
+        if let value = cache[id] { return value }
+        if let task = inFlight[id] {
+            return try await task.value       // 已有请求，复用其结果。
+        }
+
+        let loader = self.loader
+        let task = Task { try await loader(id) }
+        inFlight[id] = task                   // 先登记；这一行之前没有挂起。
+        defer { inFlight[id] = nil }          // 只有创建者负责成功 / 失败清理。
+        let value = try await task.value      // 等待时允许其他调用进来查表。
+        cache[id] = value
+        return value
+    }
+}
+
+func useRepository() async throws {
+    let repository = NameRepository { id in
+        try await Task.sleep(for: .milliseconds(10))
+        return "用户\(id)"                    // 模拟加载器。
+    }
+    async let first = repository.name(id: 1)
+    async let second = repository.name(id: 1)
+    print(try await [first, second])          // ["用户1", "用户1"]，共用一次加载。
+}
+```
+
+本例由仓库持有共享请求。单个等待者取消不会自动取消共享 <font color="red"><b>Task</b></font>，也不保证立即结束等待。生产接入需明确取消策略、缓存容量和失效策略；增加清空、强刷、登出功能时，加入请求 ID / 会话版本校验，防止旧请求写回缓存或清掉新任务。
+
+### 4、<font id="Sendable"><font color="red"><b>Sendable</b></font>：跨隔离域传值的安全契约</font>
+
+**<font color="red"><b>Sendable</b></font> 承诺安全传递，不自动加锁、深拷贝或切线程。** 值类型需检查成员；普通类通常需不可变且满足更严格限制；Actor 依靠隔离保护状态。
+
+```swift
+public struct Progress: Sendable { // 明确向使用者提供安全传递契约。
+    public let completed: Int
+    public let total: Int
+}
+
+func accept<T: Sendable>(_ value: T) {}
+
+func checkContract() {
+    accept(Progress(completed: 1, total: 3))
+}
+```
+
+在这个非 frozen 的公开结构体例子里，删掉 <font color="red"><b><code>: Sendable</code></b></font> 后不能满足 <font color="red"><b><code>T: Sendable</code></b></font>。某些内部结构体会自动推断遵循，删掉字面声明也可能仍通过。公开契约、隐式推断与某次跨域数据流检查要分开理解。
+
+<font color="red"><b><code>@Sendable</code></b></font> 用于函数 / 闭包类型，捕获也需满足并发安全。<font color="red"><b><code>@unchecked Sendable</code></b></font> 是由实现者承担安全证明的承诺，不能用于掩盖可变类的并发读写。现代隔离分析还允许某些非 <font color="red"><b>Sendable</b></font> 值被单向转移，不代表它们可任意共享。
+
+### 5、<font id="nonisolated"><font color="red"><b>nonisolated</b></font>：不进入所属 Actor 的隔离</font>
+
+适合固定标识、纯计算和不依赖隔离状态的同步协议实现；不能直接访问隔离可变属性。同步非隔离函数不会自动转到后台。
+
+```swift
+actor Meter {
+    nonisolated let name = "下载"
+    private var completed = 0
+
+    nonisolated func label() -> String {
+        "任务：\(name)"             // 只读取安全的非隔离数据。
+        // 不能在这里读取 completed；改成隔离方法并由外部 await。
+    }
+
+    func completedCount() -> Int { completed }
+}
+```
+
+Swift 6.2+ 开启 `NonisolatedNonsendingByDefault` 后，非隔离异步函数默认保留调用方 Actor；旧配置的执行规则不同。明确要求离开调用方 Actor 执行耗时异步函数时，使用支持版本中的 <font color="red"><b><code>@concurrent</code></b></font>。这仍不承诺专属线程。[**异步函数隔离规则**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0461-async-function-isolation.md)
+
+### 6、<font id="MainActor"><font color="red"><b>MainActor</b></font>：统一 UI 状态的隔离归属</font>
+
+```swift
+@MainActor
+final class ProgressModel {
+    private(set) var completed = 0
+
+    func apply(_ snapshot: DownloadSnapshot) {
+        completed = snapshot.completed // 页面状态只在 MainActor 修改。
+    }
+}
+
+func refresh(_ model: ProgressModel, from ledger: DownloadLedger) async {
+    let snapshot = await ledger.snapshot() // 先从业务 Actor 取快照。
+    await model.apply(snapshot)            // 再进入 UI 隔离域更新。
+}
+```
+
+接前面的 `DownloadSnapshot`、`DownloadLedger` 使用。<font color="red"><b><code>@MainActor</code></b></font> 在声明处规定归属；<font color="red"><b><code>MainActor.run</code></b></font> 在调用处进入该隔离域执行同步闭包，闭包内不能再写异步等待。已经在 <font color="red"><b>MainActor</b></font> 内时直接更新，不重复切换。
+
+<font color="red"><b><code>MainActor.assertIsolated()</code></b></font> 检查当前隔离，不切换执行器；调试断言不能替代正确的 API 隔离声明。
+
+### 7、<font id="Actor选型">Actor、类与锁的选型</font>
+
+| 状态与接口 | 选择 |
 | --- | --- |
-| 单次 completion | `async throws` |
-| 多个固定并发请求 + `dispatch_group` | `async let` |
-| 动态批量任务 + `dispatch_group` | `withTaskGroup` / `withThrowingTaskGroup` |
-| 私有串行队列保护可变属性 | `actor` |
-| 主队列刷新 UI | `@MainActor` |
-| 一次性初始化 + `dispatch_once` | `static let` |
-| delegate / Notification 多次回调 | `AsyncStream`，或保留 delegate |
-| `NSOperation` 依赖图、KVO 状态、复杂暂停恢复 | 评估后保留 `NSOperation`；[**Swift**](https://www.swift.org/) Concurrency 不要求机械替换 |
-| 信号量把异步强行改同步 | 删除阻塞桥接，沿调用链自上而下改为 `async` |
+| 不可变参数、独立快照 | 值类型 |
+| UI 状态、页面模型 | <font color="red"><b><code>@MainActor class</code></b></font> |
+| 多任务共用缓存、账本、刷新凭据、连接状态 | Actor，另外设计去重与状态机 |
+| 需要继承、Objective-C 互操作或共享身份 | 类，按需增加隔离 |
+| 极短同步临界区、调用链必须保持同步 | 完整加锁的类 |
 
-### 5.11、常见误区
+Actor 不保证先进先出，不代表一实例一线程，也不自动提高速度。频繁跨域调用或把无关业务放进同一 Actor，可能形成串行瓶颈。只转发网络、没有共享可变状态的服务不必强行改 Actor。
 
-- `async` 表示函数可以挂起，不保证自动并行，也不保证自动离开主 Actor。
-- `await` 是潜在挂起点，不是“切线程”关键字。
-- `@MainActor` 与主线程关系密切，但代码层应依赖 Actor 隔离语义，不依赖线程 ID。
-- 不要在持有 `NSLock`、`pthread_mutex` 或信号量的临界区中跨越 `await`。
-- `Task.detached` 不继承调用方 Actor、优先级和 Task Local，只有在确实需要断开上下文时使用。
-- `@unchecked Sendable` 是安全承诺，不是关闭警告的捷径。
-- [**Swift**](https://www.swift.org/) 仍可调用 GCD / `NSOperation`；迁移目标是让生命周期、错误、取消与共享状态更清晰，而不是追求语法替换率。
+<a href="#FAQ-Actor" style="color:red;font-weight:bold;">FAQ：Actor 与 <font color="red"><b>class</b></font></a> · <a href="#FAQ-重入" style="color:red;font-weight:bold;">FAQ：可重入</a> · <a href="#FAQ-去重" style="color:red;font-weight:bold;">FAQ：请求去重</a> · <a href="#FAQ-Sendable" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>Sendable</b></font></a> · <a href="#FAQ-隔离" style="color:red;font-weight:bold;">FAQ：隔离标记</a>
 
-## 六、在[**Swift**](https://www.swift.org/)中，一个结构体（struct），占据多大的内存？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+<a href="#FAQ-Actor边界" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-- 在[**Swift**](https://www.swift.org/)中，结构体（*struct*）的大小取决于成员本身所需的空间、成员之间的填充，以及[字节对齐](#字节对齐)要求；
+## 十、<font id="事件流">事件流：持续接收多个值</font>
 
-- [**Swift**](https://www.swift.org/)的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
-
-- [**Swift**](https://www.swift.org/) 中结构体是值类型，简单局部值可能被优化到栈或寄存器，也可能因为逃逸、泛型存在类型、闭包捕获、类持有或桥接而装箱；这些因素会影响实现，但任何单一条件都不能证明实例“一定在堆上”。
-
-### 6.1、什么是字节对齐 <a id="字节对齐"></a>
-
-**字节对齐（Byte Alignment）**是类型对数据起始地址的约束。若某个类型的对齐值是 `N`，它的起始地址通常需要是 `N` 的整数倍。例如，对齐值为 `4` 的值适合从 `0`、`4`、`8` 等地址开始存放。
-
-- CPU 通常按固定宽度读取内存。地址满足[字节对齐](#字节对齐)要求时，一次读取更容易完成；[未对齐访问](#字节对齐)在部分架构上可能需要多次读取，甚至不被允许；
-- 为了让后续成员和连续数组元素都从合适的地址开始，编译器会在成员之间或实例尾部加入[填充字节](#字节对齐)（Padding）；
-- [字节对齐](#字节对齐)不是“所有成员都占相同字节数”，也不是“结构体大小等于各成员大小直接相加”，而是对成员起始位置和相邻实例间距的约束。
-
-以下结构体可以直观看出 `size`、`alignment` 和 `stride` 的区别：
+### 1、<font id="AsyncStream">AsyncStream：把多次事件变成异步序列</font>
 
 ```swift
-struct ByteAlignmentDemo {
-    let count: UInt32 // 占 4 字节，对齐值通常为 4
-    let flag: UInt8   // 占 1 字节，对齐值为 1
-}
+func consumeEvents() async {
+    let stream = AsyncStream<Int>(bufferingPolicy: .bufferingNewest(2)) { continuation in
+        continuation.yield(1) // 发送一个值；这是方法调用，不是生成器关键字。
+        continuation.yield(2)
+        continuation.finish() // 明确结束；消费完缓冲后循环退出。
+    }
 
-print(MemoryLayout<ByteAlignmentDemo>.size)      // 当前常见结果：5
-print(MemoryLayout<ByteAlignmentDemo>.alignment) // 当前常见结果：4
-print(MemoryLayout<ByteAlignmentDemo>.stride)    // 当前常见结果：8
+    for await value in stream { // 等待下一次事件，无需阻塞线程。
+        print(value)            // 1、2
+    }
+}
 ```
 
-以这组常见结果为例：
+真实回调源要在 `onTermination` 取消订阅或释放资源；无限来源必须选择缓冲上限。`yield` 不会因消费者慢而自动等待，缓冲策略可能丢值，需按需检查返回结果。可能失败的流使用 `AsyncThrowingStream`。
 
-| 指标 | 值 | 含义 |
-| --- | ---: | --- |
-| `size` | `5` | 保存一个值实际需要的字节数，不包含实例末尾为下一个元素预留的补齐 |
-| `alignment` | `4` | 该类型实例起始地址需要满足的[字节对齐](#字节对齐)值 |
-| `stride` | `8` | 数组中相邻实例起始地址的间距；在 `size` 后补 `3` 字节，使下一个实例仍按[字节对齐](#字节对齐)值 `4` 对齐 |
+### 2、<font id="Combine"><font color="red"><b>Combine</b></font>：订阅、变换、接收事件</font>
 
-也就是：`size` 关注“一个值需要多少字节”，[`alignment`](#字节对齐) 关注“从什么地址开始”，`stride` 关注“连续存放时下一个值从哪里开始”。通常有 `stride >= size`，并且 `stride` 会补齐为 [`alignment`](#字节对齐) 的整数倍。
+[**Combine**](https://developer.apple.com/documentation/combine) 把事件源与处理链连接起来：Publisher 发出值或终止事件，Operator 转换，Subscriber 接收。它是 Apple 框架，不是 Swift 语言关键字，也不专属于 UI。
 
-> 上述数值用于解释概念，不应当作跨平台、跨编译器版本或跨模块的固定 ABI。需要真实结果时，应在目标构建环境中读取 `MemoryLayout<T>`。
+```swift
+import Combine
+import Foundation
 
-### 6.2、使用 `MemoryLayout` 查看真实布局
+func combineDemo() {
+    let input = PassthroughSubject<String, Never>() // 手动发事件；Never 表示不会失败。
+    var subscriptions = Set<AnyCancellable>()      // 保留订阅，避免提前释放取消。
 
-你可以使用[**Swift**](https://www.swift.org/) 的 `MemoryLayout` 获取结构体在当前构建环境中的大小。例如：
+    input
+        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } // 去首尾空白。
+        .filter { !$0.isEmpty }                    // 空内容不继续传。
+        .removeDuplicates()                       // 只去掉相邻重复值。
+        .map { "搜索词：\($0)" }                  // 转成展示文字。
+        .sink(receiveCompletion: { completion in
+            print(completion)                     // 本例只可能 finished。
+        }, receiveValue: { value in
+            print(value)                          // 接收每个最终值。
+        })
+        .store(in: &subscriptions)                 // AnyCancellable 放进持有集合。
 
-  ```swift
-  struct MyStruct {
-      var member1: Int
-      var member2: Double
-      var member3: Bool
-  }
-  
-  let size = MemoryLayout<MyStruct>.size
-  print("MyStruct 占用的内存大小为 \(size) 字节")
-  ```
+    input.send(" Swift ")                         // 输出：搜索词：Swift。
+    input.send("Swift")                           // 相邻重复，过滤。
+    input.send(" ")                               // 空字符串，过滤。
+    input.send("Actor")                           // 输出：搜索词：Actor。
+    input.send(completion: .finished)              // 终止后不再接收新值。
+    withExtendedLifetime(subscriptions) {}         // 本例同步发送，持有到演示结束。
+}
+combineDemo()
+```
 
-> 这将输出结构体 `MyStruct` 占用的字节数。实际大小可能因[字节对齐](#字节对齐)而不同；还可以使用 [`MemoryLayout<MyStruct>.alignment`](#字节对齐) 和 `MemoryLayout<MyStruct>.stride` 获取对齐值和步幅。
+页面里的订阅集合通常是属性，结束业务时 `removeAll()` 或调用 `cancel()`。对象持有订阅、闭包再强持有对象会形成环，按生命周期使用弱捕获。
 
-  ```swift
-  let alignment = MemoryLayout<MyStruct>.alignment
-  let stride = MemoryLayout<MyStruct>.stride
-  
-  print("MyStruct 对齐方式为 \(alignment) 字节")
-  print("MyStruct 步幅为 \(stride) 字节")
-  ```
+### 3、<font id="Combine操作符">常用操作符与调度</font>
 
-总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`。
-
-## 七、[**Swift**](https://www.swift.org/) 结构体、类与 Objective-C 结构体 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> [**Swift Structures and Classes**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/) 的核心分界不是“结构体一定在栈、类一定在堆”，而是值语义与引用语义。存储位置由编译器、逃逸分析、泛型装箱和运行时上下文共同决定，不能作为选型规则。
-
-### 7.1、[**Swift**](https://www.swift.org/) 结构体与类的共同能力
-
-[**Swift**](https://www.swift.org/) 的 `struct` 与 `class` 都可以：
-
-- 定义存储属性、计算属性和类型属性。
-- 定义实例方法、类型方法和下标。
-- 自定义初始化方法。
-- 通过 `extension` 扩展能力。
-- 遵守协议并使用泛型。
-- 使用访问控制、属性包装器和嵌套类型。
-
-### 7.2、[**Swift**](https://www.swift.org/) 结构体与类的核心区别
-
-| 对比项 | `struct` | `class` |
+| 操作 | 含义 | 使用边界 |
 | --- | --- | --- |
-| 语义 | 值类型 | 引用类型 |
-| 赋值 / 传参 | 逻辑上产生独立值；编译器可用 Copy-on-Write 等方式延迟物理复制 | 多个变量可引用同一实例 |
-| 身份判断 | 没有对象身份运算符 | 使用 `===` / `!==` 判断同一实例 |
-| 继承 | 不支持类型继承 | 支持单继承、重写与 `super` |
-| 反初始化 | 不提供 `deinit` | 支持 `deinit` |
-| ARC | 结构体本身不通过对象引用计数管理 | 类实例由 ARC 管理 |
-| 可变方法 | 修改自身的方法需要 `mutating` | 不需要 `mutating` |
-| `let` 实例 | 整个值不可变，变量存储属性不能修改 | 引用不可改指向，但实例的 `var` 属性仍可修改 |
-| 自动成员逐一初始化 | 未自定义冲突初始化器时可获得 | 不自动获得同等成员逐一初始化器 |
-| Objective-C Runtime | 任意 [**Swift**](https://www.swift.org/) 结构体不能直接作为 `@objc` 对象暴露 | `NSObject` 子类及兼容成员可暴露给 Objective-C |
-| 常见用途 | 纯数据、配置、值对象、不可变快照、SwiftUI View | 共享身份、UIKit 控件、控制器、继承体系、资源生命周期 |
+| `map` / `compactMap` / `filter` | 转换 / 去 <font color="red"><b>nil</b></font> / 筛选 | 每个事件单独处理 |
+| `debounce` | 安静一段时间再发最后一个值 | 搜索输入、防抖 |
+| `throttle` | 限制时间窗口内的发出频率 | 连续事件限频，不等于防抖 |
+| `removeDuplicates` | 去掉连续相同值 | 不对整条历史全局去重 |
+| `combineLatest` | 双方至少发过一次后，组合最新值 | 表单多字段联动 |
+| `zip` | 按次序成对组合 | 第一个配第一个，可能等待另一侧 |
+| `flatMap` | 每个输入展开成 Publisher，再合并输出 | 多个内层订阅可同时存在 |
+| `switchToLatest` | 输入是 Publisher 时，仅订阅最新一个 | 新搜索替换旧搜索 |
+| <font color="red"><b><code>catch</code></b></font> / `replaceError` | 用新流接续 / 用值代替错误并完成 | 放置位置决定局部失败还是全链结束 |
+| `subscribe(on:)` | 安排上游订阅、请求和取消 | 不等于所有下游都在该调度器 |
+| `receive(on:)` | 安排其后的值与完成事件 | 前面的重计算不会因此自动移走 |
+| `eraseToAnyPublisher` | 隐藏组合后的具体 Publisher 类型 | 保留 Output 与 Failure |
 
-### 7.3、值语义 Demo
-
-```swift
-struct Profile {
-    var name: String
-    var tags: [String]
-
-    mutating func append(tag: String) {
-        tags.append(tag)
-    }
-}
-
-var first = Profile(name: "Jobs", tags: ["Swift"])
-var second = first
-second.name = "Codex"
-second.append(tag: "Concurrency")
-
-print(first.name)  // Jobs
-print(first.tags)  // ["Swift"]
-print(second.name) // Codex
-```
-
-这里的“复制”是语义保证，不等于每次赋值都立即逐字节深拷贝：
-
-- `Array`、`Dictionary`、`String` 等标准库值类型通常使用 Copy-on-Write。
-- 如果结构体属性本身是类引用，复制结构体后两个值仍可能引用同一个对象。
-- 编译器可以消除无意义复制、把值装箱，或根据逃逸情况选择存储位置。
-
-### 7.4、引用语义 Demo
+以下定义可复用的搜索输入管线，订阅与取消由调用者管理：
 
 ```swift
-final class ProfileBox {
-    var name: String
+import Combine
+import Foundation
 
-    init(name: String) {
-        self.name = name
-    }
+func searchTerms(from input: AnyPublisher<String, Never>) -> AnyPublisher<String, Never> {
+    input
+        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main) // 停止输入后再发。
+        .removeDuplicates()
+        .receive(on: DispatchQueue.main) // 从这里起，在主队列交付下游事件。
+        .eraseToAnyPublisher()           // 隐藏长链类型，便于作为接口返回。
+}
+```
+
+空输入也要下传给搜索逻辑，以便清空结果或取消旧搜索。`receive(on: .main)` 是运行时调度，不等于给闭包建立 <font color="red"><b><code>@MainActor</code></b></font> 类型契约；严格并发下仍需显式设计 UI 隔离入口。将事件逐个包装进非结构化 <font color="red"><b>Task</b></font> 还可能改变处理顺序，状态提交应按请求版本校验。
+
+<a href="#FAQ-搜索流" style="color:red;font-weight:bold;">相关 FAQ</a>
+
+### 4、<font id="Published">Published：发布属性变化</font>
+
+```swift
+import Combine
+
+final class QueryModel: ObservableObject { // 本例只在同一同步调用中使用。
+    @Published var query = ""              // query 是值，$query 是 Publisher。
 }
 
-let first = ProfileBox(name: "Jobs")
-let second = first
-second.name = "Codex"
-
-print(first.name)   // Codex
-print(first === second) // true
+func observeQuery() {
+    let model = QueryModel()
+    let subscription = model.$query.sink { newValue in
+        print(newValue)                     // 初次收到 ""，然后收到 "Swift"。
+    }
+    model.query = "Swift"
+    withExtendedLifetime(subscription) {}
+}
+observeQuery()
 ```
 
-`let first` 只保证引用不再指向另一个 `ProfileBox`，不保证对象内部属性不可变。
+<font color="red"><b><code>@Published</code></b></font> 在 <font color="red"><b><code>willSet</code></b></font> 阶段发布；订阅闭包读取参数 `newValue`，不要假设此刻再读对象属性已是新值。`ObservableObject` 和发布属性不会自动提供线程安全，UI 模型按需声明 <font color="red"><b>MainActor</b></font>。
 
-### 7.5、什么时候优先用结构体
+### 5、<font id="事件流选型">异步接口选型</font>
 
-- 类型表达的是“一个值”，两个实例是否相同只看内容，不看身份。
-- 需要安全地复制快照、跨函数传递，避免无意共享可变状态。
-- 数据规模可控，属性本身也尽量具有值语义。
-- 需要自然遵守 `Equatable`、`Hashable`、`Codable`、`Sendable` 等协议。
-- 模型、坐标、尺寸、配置、请求参数、不可变状态等场景。
+一次请求返回一次结果，用 <font color="red"><b><code>async throws</code></b></font>；连续数据按顺序处理，用 `AsyncSequence`；既有项目需要多源组合、调度和操作符链，使用 <font color="red"><b>Combine</b></font>。不要只为语法统一，在三者之间反复包装。
 
-### 7.6、什么时候必须或更适合用类
+<a href="#FAQ-流" style="color:red;font-weight:bold;">FAQ：流与一次回调</a> · <a href="#FAQ-Combine" style="color:red;font-weight:bold;">FAQ：订阅生命周期</a> · <a href="#FAQ-调度" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>Combine</b></font> 调度</a> · <a href="#FAQ-Published" style="color:red;font-weight:bold;">FAQ：Published 的发送时机</a>
 
-- 需要稳定对象身份或多个持有方共同观察同一实例。
-- 需要继承、Objective-C Runtime、KVO 或 `NSObjectProtocol` 生态。
-- 必须继承 `UIView`、`UIViewController`、`NSOperation` 等系统类。
-- 需要 `deinit` 管理文件句柄、观察者、底层资源等生命周期。
-- 对象很大且频繁传递，同时业务语义本来就是共享实例。
+## 十一、<font id="属性标记">属性标记、版本与编译边界</font>
 
-> “优先结构体”不是“禁止类”。先选正确语义，再用基准测试判断性能；不要用“结构体一定更快”替代测量。
+### 1、<font id="标记分类">@ 是语法入口，不是统一机制</font>
 
-### 7.7、Objective-C 的 `struct` 本质
-
-[**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 的结构体本质上是 C 聚合值类型：
-
-```objc
-typedef struct {
-    double x;
-    double y;
-} JobsPoint;
-
-JobsPoint pointA = { .x = 10.0, .y = 20.0 };
-JobsPoint pointB = pointA;
-pointB.x = 99.0;
-```
-
-修改 `pointB.x` 不会改变 `pointA.x`，但 Objective-C `struct` 与 [**Swift**](https://www.swift.org/) `struct` 的表达能力完全不同。
-
-### 7.8、[**Swift**](https://www.swift.org/) `struct` 与 Objective-C `struct` 重点对比
-
-| 能力 | [**Swift**](https://www.swift.org/) `struct` | Objective-C / C `struct` |
+| 类别 | 例子 | 作用 |
 | --- | --- | --- |
-| 类型性质 | 完整命名类型、值语义 | C 聚合值类型 |
-| 属性 | 存储属性、计算属性、观察器、属性包装器 | 字段；没有 [**Swift**](https://www.swift.org/) 属性模型 |
-| 方法 | 实例方法、`mutating` 方法、类型方法 | 不能在结构体体内声明 Objective-C 方法 |
-| 初始化 | 自定义 `init`、可失败初始化、泛型初始化 | 聚合初始化、函数辅助初始化 |
-| 协议 | 可遵守任意适用 [**Swift**](https://www.swift.org/) 协议 | 不能遵守 Objective-C Protocol |
-| 扩展 | 可通过 `extension` 增加方法、计算属性、协议遵循 | 不能用 Category 扩展 C 结构体 |
-| 泛型 | 支持泛型结构体与条件遵循 | C `struct` 不支持 [**Swift**](https://www.swift.org/) 式泛型 |
-| 访问控制 | `private` 到 `public` / `package` | 依赖头文件可见性，没有同等成员级访问模型 |
-| 内存管理 | 字段可包含值或引用；引用字段仍由 ARC 管理 | 可包含对象指针，但所有权、复制和 C ABI 需要显式谨慎设计 |
-| 运行时 | 不是 Objective-C 对象，没有 `isa` | 不是 Objective-C 对象，没有 `isa` |
-| 消息发送 | 直接调用 [**Swift**](https://www.swift.org/) 方法 | 不能向结构体发送 Objective-C 消息 |
-| 桥接 | 任意 [**Swift**](https://www.swift.org/) 结构体不能直接暴露为 `@objc` 对象 | C 兼容结构体可被 [**Swift**](https://www.swift.org/) 导入，例如 `CGPoint` |
+| 声明属性 | <font color="red"><b><code>@available</code></b></font>、<font color="red"><b><code>@main</code></b></font> | 给声明补充编译语义 |
+| 函数类型属性 | <font color="red"><b><code>@escaping</code></b></font>、<font color="red"><b><code>@Sendable</code></b></font> | 约定生命周期或安全传递 |
+| 属性包装器 | <font color="red"><b><code>@Published</code></b></font>、<font color="red"><b><code>@TaskLocal</code></b></font>、自定义包装器 | 管理属性读写或投影 |
+| 全局 Actor | <font color="red"><b><code>@MainActor</code></b></font> | 规定隔离归属 |
+| 宏 | <font color="red"><b><code>@Observable</code></b></font>、<font color="red"><b><code>@Model</code></b></font>、<font color="red"><b><code>@Test</code></b></font> | 编译时生成或转换语法 |
+| 结果构建器声明 | <font color="red"><b><code>@resultBuilder</code></b></font> | 将多条表达式组合为结果 |
+| 分支属性 | <font color="red"><b><code>@unknown default</code></b></font> | 为未来未知枚举值提供处理路径 |
 
-### 7.9、[**Swift**](https://www.swift.org/) 结构体不等于“加强版 NSValue”
+识别标记时同时确认所属语言 / 框架、作用位置和最低工具链。以下保留常见与原有低频标记的用途，不把清单当作永久封闭的语法全集。
 
-- `CGPoint`、`CGSize`、`CGRect` 是 C 结构体，经模块导入后在 [**Swift**](https://www.swift.org/) 中获得更自然的 API。
-- 任意自定义 [**Swift**](https://www.swift.org/) `struct` 不能直接标记 `@objc` 并让 Objective-C 像对象一样使用。
-- [**Swift**](https://www.swift.org/) / Objective-C 公共边界需要值类型时，可使用双方都理解的 C 结构体；需要方法、协议、泛型或复杂所有权时，通常使用 `NSObject` 包装类。
-- `NSValue` 可装箱部分 C 结构体，但装箱后得到的是 Objective-C 对象语义，不会把 C 结构体变成 [**Swift**](https://www.swift.org/) 式结构体。
-
-### 7.10、内存布局与桥接风险
-
-- `MemoryLayout<T>.size`：实例实际字段占用的字节数，不含尾部补齐。
-- [`MemoryLayout<T>.alignment`](#字节对齐)：类型的[字节对齐](#字节对齐)要求。
-- `MemoryLayout<T>.stride`：数组中相邻元素的步幅，通常大于等于 `size`，并包含为满足[字节对齐](#字节对齐)而加入的尾部填充。
-- 不要把普通 [**Swift**](https://www.swift.org/) 结构体当前观察到的字段顺序和字节布局当成跨模块、跨编译器、跨语言 ABI 合同。
-- `@frozen` 服务 [**Swift**](https://www.swift.org/) Library Evolution，也不等于自动获得任意 C ABI 兼容布局。
-- 和 C / Objective-C 交互时，优先使用已导入的 C 结构体、明确的 C 接口或对象包装层。
-
-### 7.11、选型决策
-
-```mermaid
-flowchart TD
-    A["这个类型是否需要共享身份？"] -->|是| B["优先 class"]
-    A -->|否| C["是否必须继承系统类或依赖 Objective-C Runtime？"]
-    C -->|是| B
-    C -->|否| D["是否表达独立值、快照或配置？"]
-    D -->|是| E["优先 struct"]
-    D -->|否| F["评估生命周期、共享状态与互操作边界"]
-    F --> B
-    F --> E
-```
-
-## 八、Copy-On-Write <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- **C**opy-**O**n-**W**rite（COW）是一种内存管理技术，通常**用于优化复杂数据结构的拷贝操作**。
-- 它的基本思想是**延迟拷贝**，只有在**需要修改数据时才进行实际的拷贝操作**，这样可以节省内存和提高性能。
-- 具体来说，**当多个变量共享同一块内存时，如果其中一个变量需要修改数据，那么就会进行拷贝操作，而不是直接修改原始数据**
-  - 这样，在修改数据之前，所有的变量都指向同一块内存，称为*共享状态*；
-  - 而在修改数据后，修改发生的变量会拷贝一份数据到新的内存空间，然后修改新的内存空间中的数据，这样其他变量不受影响，仍然指向原来的内存空间。
-- **C**opy-**O**n-**W**rite 的优点是在**大部分情况下避免了不必要的数据拷贝**，节省了内存和运行时间。它通常用于处理复杂数据结构，如字符串、数组、字典等，这些数据结构在进行赋值操作时可能需要进行大量的数据拷贝，使用 **C**opy-**O**n-**W**rite技术可以显著提高性能。
-- 在实际应用中，**C**opy-**O**n-**W**rite 技术常见于编程语言的标准库中，如 [**Swift**](https://www.swift.org/) 中的<font color="red">***字符串和数组类型***</font>就采用了 **C**opy-**O**n-**W**rite。
-
-## 九、[**Swift**](https://www.swift.org/)、Java 与 C/C++ 中 `static` 和 `final` 的区别 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- **`static`**
-
-  - **C/C++**：函数内的 `static` 局部变量具有静态存储期；文件作用域的 `static` 名称具有内部链接，只在当前翻译单元可见。
-  - **Java**：`static` 成员属于类本身，由该类的实例共享，通过类名访问。
-  - [**Swift**](https://www.swift.org/)：`static` 声明类型属性或类型方法，适用于类、结构体和枚举；类成员若需要允许子类重写，应改用 `class`。
-
-- **`final`**
-
-  - **C++**：C++11 起可用 `final` 禁止类继续派生，或禁止虚函数继续重写；C 语言没有对应关键字。
-  - **Java**：可禁止类被继承、方法被重写，或让变量只能完成一次赋值。
-  - [**Swift**](https://www.swift.org/)：用于禁止类被继承，或禁止类中的方法、属性、下标继续重写。
-
-> `static` / `final` 描述的是语言语义，不能据此直接断定成员位于栈、堆或某个固定“常量池”；实际存储与优化由编译器和运行时决定。
-
-## 十、[**Swift**](https://www.swift.org/) 用变量保存函数 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-[**Swift**](https://www.swift.org/) 函数是一等值，可以赋给 `let` / `var`、作为参数传入，也可以作为返回值返回。用 `var` 保存函数后，还能重新赋入签名相同的函数或闭包。
+### 2、<font id="可用性">available：声明要求与运行时分支</font>
 
 ```swift
-func add(_ lhs: Int, _ rhs: Int) -> Int {
-    lhs + rhs
+@available(iOS 17.0, *)              // 声明最低平台要求。
+func useModernFeature() { print("现代路径") }
+
+func startFeature() {
+    if #available(iOS 17.0, *) {     // 运行设备满足条件才进入。
+        useModernFeature()
+    } else {
+        print("兼容路径")
+    }
+    if #unavailable(iOS 17.0) {      // 表达旧系统路径。
+        print("旧系统准备")
+    }
 }
-
-var operation: (Int, Int) -> Int = add
-print(operation(2, 3)) // 5
-
-operation = { $0 * $1 }
-print(operation(2, 3)) // 6
 ```
 
-## 十一、为什么 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的 `View` 通常使用 `struct` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+<font color="red"><b><code>#if</code></b></font> 是条件编译；<font color="red"><b><code>#available</code></b></font> / <font color="red"><b><code>#unavailable</code></b></font> 是可用性条件。可用性检查不能让编译器识别一个根本不认识的新语法。<font color="red"><b><code>@available</code></b></font> 还能描述弃用、移除、重命名与 `noasync` 等限制。
 
-> 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，视图（View）被建议使用结构体（struct）而不是类（class）。
-> 这是因为 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 采用了声明式的编程范式，而结构体更符合声明式编程的特性。
-
-*下面是一些原因：*
-
-- 不可变性：结构体是值类型，而类是引用类型。值类型在传递和复制时会产生副本，这有助于保持不可变性；
-  - [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的设计倾向于使用不可变的数据模型，以确保状态的一致性和可预测性；
-
-- 简单性和可预测性：结构体更简单，不涉及继承和引用计数等概念，使得代码更易于理解和维护。结构体通常更容易推导和预测其行为。
-- 值语义：结构体提供了值语义，这意味着它们的比较是基于值而不是引用的；
-  - 这有助于在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中更容易管理视图层次结构和状态。
-
-- 性能优势:结构体在一些情况下可能具有性能优势；
-  - 由于值语义和不可变性，[**Swift**](https://www.swift.org/) 编译器可以进行更多的优化，例如避免不必要的副本操作；
-
-*综上所述：*
-
-- 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，View 协议的实现通常要求是不可变的，因此使用结构体是一个自然的选择
-- 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中创建的视图是根据数据模型的变化而自动更新的，这与结构体的值语义非常契合
-- 尽管 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 偏向结构体，但在其他上下文中，仍然可能使用类，特别是在需要引用语义和共享可变状态的情况下
-- 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，这样的情况相对较少，因为 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 本身的设计目标是通过数据驱动界面
-
-## 十二、元组（Tuples）和结构体（Struct） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- 都可以包含不同的数据类型；
-- 元组与普通 [**Swift**](https://www.swift.org/) 结构体的具体内存布局都由编译器决定；不能把某次 `MemoryLayout` 结果当成跨编译器、跨模块或跨语言的固定布局承诺；
-- 结构体是一种自定义数据类型，你需要在代码中明确定义它的结构，并为其提供属性和方法。结构体的成员可以是不同类型的数据；
-- 元组则是一种轻量级的数据结构，它不需要在代码中显式声明，而是通过在使用时直接定义。元组的主要用途是在**临时情况下组合**多个值，而不需要为其定义专门的结构；
-- 元组的比较需要遵循的规则
-  - 两个元组的元素个数必须相同
-  - 对应位置的元素类型必须相同，并且支持比较操作
-  - 元组的元素个数实际上是没有硬性限制的。可以创建包含任意数量元素的元组
-
-## 十三、[**Swift**](https://www.swift.org/) 闭包（Closure） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-<font color="red">即，C语言中的***Block***</font>
-
-| 类型       | Objective-C Block      | [**Swift**](https://www.swift.org/)  Closure |
-| ---------- | ---------------------- | ---------------------------------------- |
-| 无参无返回 | `void (^)(void)`       | `() -> Void`                             |
-| 有参无返回 | `void (^)(NSString *)` | `(String) -> Void`                       |
-| 有参有返回 | `int (^)(int, int)`    | `(Int, Int) -> Int`                      |
-| 无参有返回 | `NSString * (^)(void)` | `() -> String`                           |
-
-| 类型       | [**Swift**](https://www.swift.org/)  关键字 | [**Swift**](https://www.swift.org/)  示例      | Objective-C 示例                      |
-| ---------- | --------------------------------------- | ------------------------------------------ | ------------------------------------- |
-| 匿名闭包   | `{}`                                    | `{ name in ... }`                          | `^NSString *(NSString *name) { ... }` |
-| 尾随闭包   | `func f { ... }`                        | `someFunc { ... }`                         | `someFunc:^{};`                       |
-| 逃逸闭包   | `@escaping`                             | `func f(@escaping ...)`                    | `block 保存为属性`                    |
-| 捕获值闭包 | `捕获变量`                              | `var x = 0; return { x += 1 }`             | `__block int x = 0;`                  |
-| 自动闭包   | `@autoclosure`                          | `func log(_ m: @autoclosure () -> String)` | 模拟实现，不能简写                    |
-| 泛型闭包   | `<T>`                                   | `func f<T>(_ x: T, using: (T) -> String)`  | `id + runtime 转换`                   |
-
-- 匿名闭包（Anonymous Closure）：是指没有名字的闭包表达式，直接赋值或传参使用
-
-  ```swift
-  let isEvenNumber = { (number: Int) -> Bool in
-      return number % 2 == 0
-  }
-  
-  let result = isEvenNumber(4)
-  print(result) // true
-  ```
-
-  ```objective-c
-  BOOL (^isEvenNumber)(int) = ^BOOL(int number) {
-      return number % 2 == 0;
-  };
-  
-  BOOL result = isEvenNumber(4);
-  NSLog(@"%d", result); // 输出 1（true）
-  ```
-
-- 尾随闭包（Trailing Closure）：是 [**Swift**](https://www.swift.org/) 语法糖，**适用于闭包是最后一个参数的情况**。
-
-  ```swift
-  func sendMessage(to name: String, completion: (String) -> Void) {
-      let message = "Hi, \(name)"
-      completion(message)
-  }
-  
-  // ✅ 尾随闭包写法
-  sendMessage(to: "Jobs") { message in
-      print("发送内容：\(message)")
-  }
-  ```
-
-  ```objective-c
-  typedef void (^CompletionBlock)(NSString *message);
-  
-  - (void)sendMessageTo:(NSString *)name completion:(CompletionBlock)block {
-      NSString *message = [NSString stringWithFormat:@"Hi, %@", name];
-      block(message);
-  }
-  
-  [self sendMessageTo:@"Jobs" completion:^(NSString *message) {
-      NSLog(@"发送内容：%@", message);
-  }];
-  ```
-
-- 逃逸闭包（Escaping Closure）：使用 `@escaping` 显式声明闭包可能在函数返回后才被调用，**类似于 OC 中将 block 保存为属性**。
-
-  - `completion`传进来以后被赋值给了`savedClosure`
-  - `savedClosure` 是函数外部的变量
-  - 所以这个闭包会**逃逸出函数作用域**
-  - 必须加 <font color=red>**`@escaping`**</font>，否则编译报错 ❌**Escaping closure captures non-escaping parameter 'completion'**（你不能把一个非逃逸闭包保存在函数外面！）
-    - 因为 [**Swift**](https://www.swift.org/) 默认函数参数中的闭包是 **non-escaping（非逃逸）**，也就是说：它必须在函数体内被调用完，不能带出去！
-
-  ```swift
-  /// 逃逸闭包
-  var savedClosure: (() -> Void)?
-  
-  func asyncTask(completion: @escaping () -> Void) {
-      savedClosure = completion
-  }
-  
-  asyncTask {
-      print("任务完成（逃逸）")
-  }
-  ```
-
-  ```swift
-  /// 非逃逸闭包
-  func runImmediately(completion: () -> Void) {
-      // 非逃逸闭包：只在函数内部立即调用
-      completion()
-  }
-  
-  runImmediately {
-      print("立即运行，无需 @escaping")
-  }
-  ```
-  
-  ```objective-c
-  /// 逃逸闭包
-  @property (nonatomic, copy) void (^savedBlock)(void);
-  
-  - (void)asyncTask:(void (^)(void))completion {
-      self.savedBlock = completion;
-  }
-  
-  [self asyncTask:^{
-      NSLog(@"任务完成（逃逸）");
-  }];
-  ```
-
-- 捕获值闭包（Captured Values） ：[**Swift**](https://www.swift.org/)   中没有 `__block` 修饰符（自动捕获）；***OC*** 则需要使用 `__block`（特有的）
-
-  ```swift
-  func makeCounter() -> () -> Int {
-      var count = 0
-      return {
-          count += 1
-          return count
-      }
-  }
-  
-  let counter = makeCounter()
-  print(counter()) // 1
-  print(counter()) // 2
-  ```
-
-  ```objective-c
-  typedef int (^CounterBlock)(void);
-  
-  - (CounterBlock)makeCounter {
-      __block int count = 0;
-      return ^{
-          count += 1;
-          return count;
-      };
-  }
-  
-  CounterBlock counter = [self makeCounter];
-  NSLog(@"%d", counter()); // 1
-  NSLog(@"%d", counter()); // 2
-  ```
-
-  ```objective-c
-  typedef int (^CounterBlock)(void);
-  
-  - (CounterBlock)makeCounter {
-      int count = 0; // ❌ 没有 __block
-      return ^{
-          count += 1; // ✅ 编译通过（因为只在 block 内部）
-          return count;
-      };
-  }
-  
-  CounterBlock counter = [self makeCounter];
-  NSLog(@"%d", counter()); // 输出：1
-  NSLog(@"%d", counter()); // 输出：1 ❗
-  ```
-
-- 自动闭包（Autoclosure）：<font color=red>**`@autoclosure`**</font> 可以让你传入表达式，[**Swift**](https://www.swift.org/) 自动包装成闭包。
-
-  ```swift
-  func log(_ message: @autoclosure () -> String) {
-      print("日志：\(message())")
-  }
-  
-  log("自动生成日志")
-  ```
-
-  `Objective-C `不支持自动闭包，但可以模拟调用时传 block：
-
-  ```objective-c
-  - (void)log:(NSString *(^)(void))block {
-      NSLog(@"日志：%@", block());
-  }
-  
-  [self log:^NSString *{
-      return @"自动生成日志";
-  }];
-  ```
-
-- 捕获值的逃逸闭包（Escaping + Capture）
-
-  ```swift
-  class Task {
-      var count = 0
-  
-      func perform(completion: @escaping () -> Void) {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-              self.count += 1
-              completion()
-          }
-      }
-  }
-  ```
-
-  ```objective-c
-  @interface Task : NSObject
-  @property (nonatomic, assign) int count;
-  @end
-  
-  @implementation Task
-  
-  - (void)perform:(void (^)(void))completion {
-      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-          self.count += 1;
-          completion();
-      });
-  }
-  
-  @end
-  ```
-
-- 泛型闭包（Generic Closure）
-
-  ```swift
-  func transform<T>(_ input: T, using closure: (T) -> String) {
-      print("结果：\(closure(input))")
-  }
-  
-  transform(123) { "\($0)" } // "123"
-  transform(true) { $0 ? "Yes" : "No" } // "Yes"
-  ```
-
-  `Objective-C ` 不支持泛型 block，但可以用 `id` 实现类似效果：
-
-  ```objective-c
-  - (void)transform:(id)input using:(NSString *(^)(id obj))closure {
-      NSLog(@"结果：%@", closure(input));
-  }
-  
-  [self transform:@123 using:^NSString *(id obj) {
-      return [obj description];
-  }];
-  ```
-
-## 十四、[**Swift**](https://www.swift.org/) 简写 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- 小口诀：闭包简写三步走
-  - 能推断，就省类型
-  - 只有一个参数，可用 `$0`
-  - 一行表达式，可以省 <font color=red>**return**</font>
-
-| 情况                                                         | 原因                                                  |
-| ------------------------------------------------------------ | ----------------------------------------------------- |
-| 闭包有多行语句且需要 <font color=red>**return**</font>       | 必须显式写 <font color=red>**return**</font> 和参数名 |
-| 参数类型不能推断（如泛型过深）                               | 必须显式写参数类型                                    |
-| 使用 <font color=red>**`@escaping`**</font> 闭包参数传递复杂闭包 | 建议完整写法更清晰                                    |
-
-- 最完整写法
-
-  ```swift
-  let closure = { (value: Int) -> String in
-      return "\(value)"
-  }
-  ```
-
-- 省略类型（类型由上下文推断）
-
-  ```swift
-  let closure: (Int) -> String = { value in
-      "\(value)"
-  }
-  ```
-
-- 使用 `$0` 匿名参数（更进一步省略）
-
-  ```swift
-  let closure: (Int) -> String = {
-      "\($0)"
-  }
-  ```
-
-## 十五、能看懂这个，[**Swift**](https://www.swift.org/) 闭包简写天下无敌 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 3、<font id="main">main：可执行目标的唯一入口</font>
 
 ```swift
-func transformAndSort<T>(_ input: [T], 
-                         using transformer: (T) -> String,
-                         sorter: (String, String) -> Bool) {
-    let transformed = input.map(transformer)
-    let sorted = transformed.sorted(by: sorter)
-    print("结果：\(sorted)")
+@main
+struct ExampleApp {
+    static func main() async {
+        print("程序开始") // 框架 App 也可通过协议扩展提供 main。
+    }
 }
-
-transformAndSort([true, false, true],
-                 using: { "\($0 ? "是" : "否")" },
-                 sorter: { $0 > $1 })
 ```
 
-## 十六、[**Swift**](https://www.swift.org/) 初始化方法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+可执行 Target 保留一个入口；不要同时使用 `main.swift` 顶层入口和另一个 <font color="red"><b><code>@main</code></b></font>。旧 <font color="red"><b><code>@UIApplicationMain</code></b></font> / <font color="red"><b><code>@NSApplicationMain</code></b></font> 在 Swift 6 模式下不再使用，改为 <font color="red"><b><code>@main</code></b></font>。
 
-初始化方法负责确保新创建的实例在使用之前完成所有必要的初始化工作。
+### 4、<font id="内联">内联：用函数体替代调用</font>
 
-- 类的初始化方法
+减少调用成本，也可能增加代码体积；实际是否内联由编译器决定。C 宏是预处理文本替换，函数内联是经过类型检查后的优化；宏展开后的代码同样可能被优化。
 
-  - 指定初始化方法（*Designated Initializers*）：用于初始化该类所定义的所有属性，并且调用父类的初始化方法确保整个类层次结构被正确初始化。
-    - 指定初始化方法可以有一个或多个，但只能有一个指定初始化方法在类的继承链中最终被调用来完成初始化；
-    - 其他的指定初始化方法可以提供额外的初始化路径，但它们***最终都要调用同一个指定初始化方法来保证对象完全初始化***；
-    - 如果一个类有多个指定初始化方法，它们之间必须保证参数列表不同，这样编译器才能够正确地区分它们；
-
-  ```swift
-  class MyClass {
-      var property: Int
-      
-      init(property: Int) {
-          self.property = property
-      }
-  }
-  ```
-
-  - 便捷初始化方法（*Convenience Initializers*）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<font color="red">***convenience***</font>
-
-    ```swift
-    class MyClass {
-        var property: Int
-        
-        init(property: Int) {
-            self.property = property
-        }
-        
-        convenience init() {
-            self.init(property: 0)
-        }
-    }
-    ```
-
-  - 必要初始化方法（*Required Initializers*）<font color="red">***required***</font>
-
-    ```swift
-    class MyClass {
-        var property: Int
-        
-        required init(property: Int) {
-            self.property = property
-        }
-    }
-    
-    class MySubclass: MyClass {
-        var additionalProperty: String
-        
-        init(property: Int, additionalProperty: String) {
-            self.additionalProperty = additionalProperty
-            super.init(property: property)
-        }
-        
-        required init(property: Int) {
-            self.additionalProperty = "default"
-            super.init(property: property)
-        }
-    }
-    ```
-
-- 结构体和枚举的初始化方法：因为没有继承的概念，因此无需考虑指定初始化方法和便捷初始化方法
-
-  ```swift
-  struct MyStruct {
-      var property: Int
-      init(property: Int) {
-          self.property = property
-      }
-  }
-  
-  enum MyEnum {
-      case case1, case2
-      init() {
-          self = .case1
-      }
-  }
-  ```
-
-## 十七、[**Swift**](https://www.swift.org/) 数组 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-| 特性                 | Objective-C                  | [**Swift**](https://www.swift.org/)         |
-| -------------------- | ---------------------------- | --------------------------------------- |
-| 数组是否能包含 `nil` | ❌ **不可以**，会崩溃或 crash | ✅ **可以**，前提是元素类型是 `Optional` |
-| 怎么解决             | 用 `NSNull` 占位（手动处理） | 用 `String?`、`Int?` 等可选类型直接放   |
-
-## 十八、[**Swift**](https://www.swift.org/) `map` 和 [**Swift**](https://www.swift.org/) `joined` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-在[**Swift**](https://www.swift.org/)中，`map` 和 `joined` 是两个不同的方法。
-- `map`方法： 它用于对集合中的每个元素应用一个转换，返回一个包含转换结果的新集合。例如：
-
-  ```swift
-  let numbers = [1, 2, 3, 4]
-  let squaredNumbers = numbers.map { $0 * $0 }
-  // squaredNumbers 现在是 [1, 4, 9, 16]
-  ```
-  
-- `joined`方法： **把嵌套数组（二维）拍平成一维**
-
-  <font color=red>**注意：`joined()` 返回的是 `FlattenSequence`，要 `Array(...)` 包一下才能用。**</font>
-
-  ```swift
-    let arr = [[1, 2], [3, 4], [5]]
-    let flat = arr.joined()
-    print(Array(flat)) // [1, 2, 3, 4, 5]
-  ```
-
-  - `joined` + `flatMap`
-
-    ```swift
-    /// 把二维数组扁平成一维
-    let nested = [[1, 2], [3, 4], [5]]
-    
-    // 方法1：map + joined
-    let mapped = nested.map { $0 }         // [[1, 2], [3, 4], [5]]
-    let flattened1 = mapped.joined()       // FlattenSequence
-    print(Array(flattened1))               // [1, 2, 3, 4, 5]
-    // 方法2：flatMap（推荐）
-    let flattened2 = nested.flatMap { $0 } // [1, 2, 3, 4, 5]
-    print(flattened2)
-    ```
-
-    ```swift
-    /// 字符串拆词 ➤ 扁平化字符数组
-    let words = ["hi", "hello"]
-    
-    // map 会保留结构：[[Character]]
-    let charsMapped = words.map { Array($0) }
-    print(charsMapped) // [["h", "i"], ["h", "e", "l", "l", "o"]]
-    // flatMap 会直接扁平为 [Character]
-    let charsFlatMapped = words.flatMap { Array($0) }
-    print(charsFlatMapped) // ["h", "i", "h", "e", "l", "l", "o"]
-    
-    📌 等价于 map + joined 
-    
-    let joinedChars = words.map { Array($0) }.joined()
-    print(Array(joinedChars)) // ["h", "i", "h", "e", "l", "l", "o"]
-    
-    /// 关于Array构造器:序列进，数组出；元素对齐不变处
-    /// 将任意遵守 Sequence 协议的对象，转换为一个数组，数组中的元素就是序列中的每一项（也叫最小单位）
-    let set: Set = [1, 2, 3]
-    let arr1 = Array(set) // [1, 2, 3]
-    
-    let str = "abc"
-    let arr2 = Array(str) // ["a", "b", "c"]
-    
-    let range = 1...5
-    let arr3 = Array(range) // [1, 2, 3, 4, 5]
-    ```
-  
-- 实用场景：<font color=red>嵌套结构（数组/字符串/可选） ➤ 想过滤/展开/压平 ➤ **`compactMap + flatMap + map` 是闭包链组合的王炸组合**</font>
-
-  - 有一个` [String?] `的数组
-  - 去掉为 `nil` 的项
-  - 把每个非空字符串按空格拆成单词
-  - 得到一个扁平的 `[String] `数组
-
-  `map` + `filter` + `joined`（传统做法）
-
-  ```swift
-  let inputs: [String?] = ["hello world", nil, "swift is fun", "", "  ", nil]
-  // compact:紧凑的；小型的
-  // split:分裂；分开
-  let words1 = inputs
-      .compactMap { $0 }                   // 去掉 nil
-      .map { $0.split(separator: " ") }    // 拆成 [Substring] 的数组
-      .map { $0.filter { !$0.isEmpty } }   // 去除空字符串项
-      .joined()                            // Flatten
-      .map { String($0) }                  // 转为 [String]
-  print(words1)
-  // 输出：["hello", "world", "swift", "is", "fun"]
-  ```
-  
-  `compactMap`+`flatMap`（<font color=red>**推荐，更优雅**</font>）
-  
-  ```swift
-  let words2 = inputs
-      .compactMap { $0 }                    // 去掉 nil
-      .flatMap { $0.split(separator: " ").filter { !$0.isEmpty } }
-      .map { String($0) }
-  
-  print(words2)
-  // 输出：["hello", "world", "swift", "is", "fun"]  
-  ```
-
-## 十九、[**Swift**](https://www.swift.org/) 的 `where` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- 在Swift中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
-
-- 它在泛型参数列表之后，可以用于指定一些条件，以限制泛型的类型。
-
-  - <font color="red">***where***</font> 子句通常在函数、结构体、类、枚举的定义中出现。例如，考虑以下泛型函数的声明：
-
-    ```swift
-    // 泛型类型 `T` 必须符合 `Equatable` 协议，这样函数就可以使用 `==` 运算符比较 `value` 的相等性。
-    func someFunction<T>(value: T) where T: Equatable {
-        // 函数体
-    }
-    ```
-
-  - <font color="red">***where***</font> 子句也可以在[***扩展（extension）***](# Swift .extension)中使用，例如：
-
-    ```swift
-    extension Array where Element: Equatable {
-        // 扩展适用于数组元素是 Equatable 的情况。这使得在特定条件下对类型进行泛型扩展成为可能。
-    }
-    ```
-
-  ```swift
-  /// for-in where 过滤循环
-  for i in 1...10 where i % 2 == 0 {
-      print(i) // 输出偶数：2, 4, 6, 8, 10
-  }
-  /// case let 中的条件匹配
-  let point = (2, -2)
-  switch point {
-  /// 横纵坐标相等
-  case let (x, y) where x == y:
-      print("x == y")
-  /// 横纵坐标互为相反数
-  case let (x, y) where x == -y:
-      print("x == -y") // ✅ 输出
-  /// 处理其它坐标关系
-  default:
-      print("其他")
-  }
-  /// 泛型约束中用 where
-  func compare<T: Equatable>(_ a: T, _ b: T) -> Bool where T: CustomStringConvertible {
-      print("比较：\(a) 和 \(b)")
-      return a == b
-  }
-  ```
-  
-
-## 二十、[**Swift**](https://www.swift.org/) `yield` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> **yield**：
-> 【v】产生（收益、效益等），产生（结果）；出产（天然产品，农产品，工业产品）；屈服，让步；放弃，让出；给（大路上的车辆）让路；（受压）活动，弯曲，折断；<正式>被……替代；请（某人）讲话；停止争论
-> 【n】产量；收益，利润，红利（或股息）率
-
-- **一边运行，一边产出值**，而不是一次性返回所有结果
-
-- 在Dart中，<font color="red">***yield***</font> 关键字通常与`Iterable`相关的函数一起使用，例如`Iterable`或`Stream`；
-
-- 目前不支持 `async yield`
-
-- <font color="red">***yield***</font>用于**在迭代中产生值，而不是一次性返回所有值**。这使得函数可以在需要时生成值，而不必一次性生成所有值，这在**处理大量数据或无限数据流**时非常有用。
-
-- `yield` 会**暂停函数执行，并把控制权交还给“调用者”，直到下一次需要值时再继续执行**。**暂停**并不是等个几秒钟，而是：函数自己不继续往下执行，只有当“外部请求下一个值”时，它才恢复。
-
-  ```swift
-  Iterable<String> makeTofu() sync* {
-    print("🔧 开始");
-    yield "第1块豆腐";
-    print("🛠️ 做第2块中...");
-    yield "第2块豆腐";
-    print("✅ 全部做完");
-  }
-  
-  for (var tofu in makeTofu()) {
-    print("🍽️ 收到：$tofu");
-  }
-  
-  🔧 开始
-  🍽️ 收到：第1块豆腐
-  🛠️ 做第2块中...
-  🍽️ 收到：第2块豆腐
-  ✅ 全部做完
-  ```
-
-- **OC**模拟[**Swift**](https://www.swift.org/).<font color="red">**yield**</font>
-
-  ```objective-c
-  @interface EvenGenerator : NSObject
-  @property (nonatomic, assign) NSInteger current;
-  @property (nonatomic, assign) NSInteger max;
-  - (instancetype)initWithMax:(NSInteger)max;
-  - (NSNumber *)next;
-  @end
-  
-  @implementation EvenGenerator
-  
-  - (instancetype)initWithMax:(NSInteger)max {
-      self = [super init];
-      if (self) {
-          _current = 0;
-          _max = max;
-      };return self;
-  }
-  
-  - (NSNumber *)next {
-      while (self.current < self.max) {
-          NSInteger val = self.current;
-          self.current += 1;
-          if (val % 2 == 0) {
-              return @(val);
-          }
-      };return nil; // 表示迭代结束
-  }
-  
-  @end
-  ```
-  
-  ```objective-c
-  EvenGenerator *gen = [[EvenGenerator alloc] initWithMax:10];
-  NSNumber *val;
-  while ((val = [gen next])) {
-      NSLog(@"Even: %@", val);
-  }
-  ```
-  
-- 例1：使用<font color="red">***yield***</font>在Dart中创建一个生成器函数：
-
-  ```swift
-  /// 默认情况下，Dart 中的生成器函数是同步的，即使不显式地使用 sync*（Dart的同步生成器） 关键字声明
-  /// 这意味着生成器函数会在需要时立即生成值，但不会涉及异步操作
-  Iterable<int> generateEvenNumbers(int n) sync* {
-    for (int i = 0; i < n; i++) {
-      if (i % 2 == 0) {
-        /// 在生成器函数中，yield 不会结束函数的执行，而只是暂停函数的执行，并返回生成的值。
-        yield i;
-      }
-    }
-  }
-  
-  void main() {
-    /// 生成前10个偶数
-    var evenNumbers = generateEvenNumbers(10);
-    /// 打印生成的偶数
-    for (var number in evenNumbers) {
-      print(number);
-    }
-  }
-  
-  /// generateEvenNumbers函数是一个生成器函数，它使用sync*关键字（显式）声明；
-  /// 如果i是偶数，则通过yield语句产生该值；
-  /// 在main函数中，我们使用generateEvenNumbers生成前10个偶数，并通过for-in循环逐个打印这些偶数；
-  /// 需要注意的是，生成器函数中的yield语句并不会立即执行，而是在调用生成器函数的迭代器时才执行；
-  ```
-  
-- 例2：自定义斐波那契数列生成器
-
-  <font color="red">***yield***</font> 是 [**Swift**](https://www.swift.org/)  5.9 的轻量级**生成器机制**，结合 `sequence` 使用，按需产出值，控制更精细，代码更优雅
-
-  ```swift
-  func fibonacci(upTo max: Int) -> some Sequence<Int> {
-      sequence {
-          var a = 0, b = 1
-          while a <= max {
-              yield(a)
-              (a, b) = (b, a + b)
-          }
-      }
-  }
-  
-  for num in fibonacci(upTo: 100) {
-      print(num) // 0 1 1 2 3 5 8 13 ...
-  }
-  ```
-
-## 二十一、[**Swift**](https://www.swift.org/) 的 `mutating` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> **mutating**：
->
-> 【vi.】突变，变异（mutate 的现在分词）
->
-> 【vt.】使突变（mutate 的现在分词）
-
-- 用于结构体（*struct*）和枚举（*enum*）中的**方法声明**中，*表示该方法可以修改该结构体或枚举的属性值*，即使该方法在实例被声明为常量（`let`）时调用也可以；
-- 对于类（*class*）中的方法，不需要使用<font color="red">**mutating**</font>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
-```swift
-struct Point {
-    var x = 0.0
-    var y = 0.0
-    // 如果不将该方法标记为mutating，试图在常量结构体实例上调用此方法时将会导致编译错误。
-    mutating func moveBy(x deltaX: Double, y deltaY: Double) {
-        x += deltaX
-        y += deltaY
-    }
-}
-
-var point = Point(x: 1.0, y: 1.0)
-print("Before moving: \(point)")
-
-point.moveBy(x: 2.0, y: 3.0)
-print("After moving: \(point)")
-```
-### 21.1、对比 [**Swift**](https://www.swift.org/) `mutating` 和 [**Swift**](https://www.swift.org/) `inout`
-
-- <font color="red">***inout***</font>
-  
-  - <font color="red">*inout*</font>是[**Swift**](https://www.swift.org/)中**用于函数参数**的关键字。它**允许函数修改参数**的值，并且这种修改是在函数内部生效并影响到函数外部传入的实际参数；
-  - 使用<font color="red">*inout*</font>时，传入函数的参数被当做可变的，因此函数可以对其进行修改。在函数内部对<font color="red">*inout*</font>参数的任何更改都会反映到调用该函数时传入的原始参数上；
-  - <font color="red">*inout*</font>参数本质上是**传递参数的引用**，因此对参数的任何更改都会影响调用者的原始数据；
-  - 定义函数的时候加<font color="red">*inout*</font>;
-  - <u>**使用的时候配合取地址符号`&`使用**</u>
-  ```swift
-  // 定义一个函数，接受一个 inout 参数
-  func increment(value: inout Int) {
-      value += 1
-  }
-  // 定义一个变量
-  var number = 5
-  
-  print("Before increment: \(number)")
-  
-  // 调用函数，并传递变量的引用作为参数
-  increment(value: &number)
-  
-  print("After increment: \(number)")
-  
-  // 输出结果将会是：
-  Before increment: 5
-  After increment: 6
-  ```
-  
-- <font color="red">***mutating***</font>（***专修结构体和枚举***）
-  
-  - <font color="red">*mutating*</font>是[**Swift**](https://www.swift.org/) 中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<font color="red">*mutating*</font>；
-  - <font color="red">*mutating*</font>关键字仅用于值类型（结构体和枚举）的方法声明。这样的方法可以修改调用该方法的实例的属性值；
-  
-  ```swift
-  struct Counter {
-      var value: Int = 0
-  
-      mutating func increment() {
-          value += 1
-      }
-  }
-  ```
-  
-  ```swift
-  var counter = Counter()
-  counter.increment()
-  print(counter.value) // 1
-  ```
-
-## 二十二、语法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- `\(表达式)`：运算完表达式，结果转成字符串，并插入字符串
-
-## 二十三、内联函数，内联这两个字，我怎么去理解？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> 理解内联（Inlining）涉及到编程语言的编译和执行的一些概念。
-> 简单来说，内联是一种编译器优化技术，它将调用函数的地方直接替换为被调用函数的实际代码，而不是通过在执行时跳转到函数的位置。
-> 这样可以减少函数调用的开销，提高代码的执行效率。
-
-✅ 宏定义（Macro） 🆚 内联函数（Inlining）
-
-| 特性             | 宏定义（C/C++ 的 `#define`）         | 内联函数（C/C++/[**Swift**](https://www.swift.org/)  的 inline 优化） |
-| ---------------- | ------------------------------------ | ------------------------------------------------------------ |
-| 是否在预处理阶段 | ✅ 是，编译前就展开                   | ❌ 不是，**在编译时由编译器决定是否内联**                     |
-| 是否类型安全     | ❌ 否，完全文本替换，无类型检查       | ✅ 是，正常函数，有类型检查和作用域规则                       |
-| 是否调试友好     | ❌ 不友好，调试时看不到真实调用关系   | ✅ 可调试，IDE 能识别函数调用                                 |
-| 是否支持复杂逻辑 | ❌ 复杂宏容易出错，不支持控制结构等   | ✅ 可写任意语法合法的逻辑                                     |
-| 编译器优化能力   | ❌ 宏仅文本展开，编译器无法做高级优化 | ✅ 可结合编译器做优化（如内联、死代码消除等）                 |
-| 常见语言支持     | C、C++（通过 `#define`）             | [**Swift**](https://www.swift.org/) 、C++（`inline` 关键字）等现代语言自动内联优化 |
-
-*具体来说，理解内联函数涉及以下几个概念：*
-
-- 函数调用开销
-  - 在程序执行期间，每次调用函数都会引入一些开销，如保存当前函数的上下文、跳转到被调用函数的位置、执行函数体等；
-  - 对于一些小而频繁调用的函数，这些开销可能在一定程度上影响性能；
-- 内联优化
-  - 内联是一种编译器优化策略，它试图减少函数调用的开销，将函数调用处直接替换为函数体的内容；
-  - 这样可以避免调用开销，减少了跳转和上下文保存的开销；
-  <font color="red">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</font>
-  ***但并不是所有函数都适合内联，因为内联会增加代码的体积，可能导致代码膨胀。***
-  ***@inlineable*** 和 ***@usableFromInline***
-- 在 [**Swift**](https://www.swift.org/)  中，可以使用***@inlineable*** 和 ***@usableFromInline*** 属性来影响编译器对函数的内联决策；
-- ***@inlineable*** 表示一个函数可以被内联，但具体是否内联取决于编译器的决策；
-- ***@usableFromInline*** 则用于指示一个函数可以在同一模块的其他地方内联使用；
-- 在 [**Swift**](https://www.swift.org/)  中，编译器会根据具体情况决定是否内联函数，而使用 ***@inlineable*** 和 ***@usableFromInline*** 可以影响这个决策；
-- 开发者通常无需过多关注内联，因为 [**Swift**](https://www.swift.org/)  的编译器会自动进行相应的优化；
-## 二十四、当前函数的上下文。这个上下文是什么意思？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-在计算机科学中，函数的上下文（***Context***）通常指的是<font color="red">***函数执行时的运行环境，包括函数调用时的一些信息和状态***</font>。
-- 这个上下文包括但不限于以下内容：
-  - 局部变量：
-    - 函数内部声明的局部变量和参数是函数上下文的一部分；
-    - 这些变量在函数调用时被创建，在函数返回时被销毁；
-  - 参数：函数的参数值是上下文的一部分，它们存储了调用函数时传递的实际参数；
-  - 函数的返回地址：在函数调用时，调用点的地址通常会被保存下来，以便在函数执行完成后返回到正确的位置；
-  - 调用[***栈***](# 栈(Stack))信息：函数调用时，系统会在调用栈上保留一些信息，包括返回地址、局部变量和其他与函数调用相关的信息；
-  - 寄存器状态：当函数被调用时，一些寄存器的状态也可能被保存，以便在函数返回时能够恢复调用前的寄存器状态；
-  - 异常处理信息：如果支持异常处理机制，相关信息也可能包含在函数的上下文中；
-- 值得注意：
-  - 这些信息组成了函数的上下文，它在函数调用期间用于保持函数的执行状态；
-  - 在函数执行完成后，这个上下文的信息通常被恢复或者销毁；
-  - 函数的上下文是为了支持函数调用的正确执行而存在的，它确保了在函数调用期间可以正确地传递参数、保存执行状态，以及函数返回时恢复执行环境；
-## 二十五、[**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的 `UIHostingController` 与普通控制器的区别（向下兼容） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图的承载：`UIHostingController` 的主要功能是将 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图嵌入 UIKit。<font color="red">**SwiftUI View 👉 UIKit**</font>
-
-  ```swift
-  let swiftUIView = MySwiftUIView()
-  let hostingController = UIHostingController(rootView: swiftUIView)
-  ```
-- 动态视图更新：由于 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的特性，*UIHostingController*能够自动响应 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图状态的变化，从而动态地更新其包含的 UIKit 视图。这使得在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中定义的视图能够自动保持同步，而无需手动刷新
-- 声明式 UI 编程： 使用*UIHostingController*时，你可以继续使用 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的声明式 UI 编程范式，而不是传统的命令式 UI 编程方式。这使得 UI 的构建和维护更加简单和直观。
-- 跨平台兼容性：*UIHostingController*的使用不仅限于 iOS 平台，你也可以在 macOS 上使用*NSHostingController*，在 watchOS 上使用*WKHostingController*，以实现在不同平台上的 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图承载。
-*总体而言*
-*UIHostingController*提供了一种方便的方式，将 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 和 UIKit 结合使用，使得你可以逐步采用 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/)，而无需立即完全迁移到 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 构建整个应用程序。这种渐进性迁移对于那些已有的 UIKit 项目而言是非常有帮助的。
-## 二十六、[**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的 `UIViewRepresentable`（向上兼容） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-`UIViewRepresentable` 是 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中的协议，用于将 UIKit 的 `UIView` 集成到 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图层次结构中。<font color="red">**UIKit UIView 👉 SwiftUI**</font>
-`UIViewRepresentable` 要求您实现两个必备的方法：
-
-1. `makeUIView(context:)`：该方法创建并返回一个*UIView*实例。您可以在这个方法中配置和初始化您的*UIView*。
-2. `updateUIView(_:context:)`：当视图需要更新时，系统调用此方法。您可以在这里更新您的*UIView*的状态或内容，以确保它与 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图同步。
-通过实现这两个方法，可以在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中使用自定义的*UIView*类型，使其成为 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 视图体系的一部分。这对于集成一些原生的 UIKit 控件、图形渲染或其他需要直接使用*UIView*的情况非常有用。
-```swift
-import SwiftUI
-
-struct TextFieldWrapper: UIViewRepresentable {
-    @Binding var text: String
-
-    func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField()
-        textField.delegate = context.coordinator
-        return textField
-    }
-
-    func updateUIView(_ uiView: UITextField, context: Context) {
-        uiView.text = text
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, UITextFieldDelegate {
-        var parent: TextFieldWrapper
-
-        init(_ parent: TextFieldWrapper) {
-            self.parent = parent
-        }
-
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            parent.text = textField.text ?? ""
-        }
-    }
-}
-
-struct ContentView: View {
-    @State private var text = ""
-
-    var body: some View {
-        TextFieldWrapper(text: $text)
-            .padding()
-    }
-}
-/**
-  在这个例子中，TextFieldWrapper 结构体实现了 UIViewRepresentable 协议，将 UITextField 集成到 Swift UI 中。
-  通过 @Binding 属性，它能够与 Swift UI 视图的数据进行双向绑定。
-*/
-```
-### 26.1、属性包装器
-
-- 属性包装器是一种用于包装属性的特性，通过在属性定义前使用包装器来***提供一些额外的行为***；
-- 属性包装器通常***用于简化属性的代码***、***提供额外逻辑***或***封装属性存储***；
-- 类似于***OC.AssociatedObjects***（关联对象）；
-
-```swift
-@propertyWrapper
-struct MyWrapper {
-    var value: Int
-    
-    init(initialValue: Int) {
-        self.value = initialValue
-    }
-    
-    var wrappedValue: Int {
-        get { return value }
-        set { value = newValue }
-    }
-}
-
-struct MyStruct {
-    @MyWrapper(initialValue: 10)
-    var wrappedProperty: Int
-}
-/**
-  在上述示例中，MyWrapper 是一个属性包装器，MyStruct 中的 wrappedProperty 使用了这个包装器。
-  属性包装器提供了一种可以自定义属性访问和修改的方式。
-*/
-```
-## 二十七、[**Swift**](https://www.swift.org/) 泛型约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> 在 [**Swift**](https://www.swift.org/)  中，**泛型约束（Generic Constraints）**允许你对泛型类型的使用施加限制，以确保类型满足某些协议或条件。这样可以在保留灵活性的同时增强类型安全性。
-
-| 写法形式              | 说明                      |
-| --------------------- | ------------------------- |
-| `T: SomeProtocol`     | 要求 T 遵守某协议         |
-| `T: SuperClass`       | 要求 T 是某个类或其子类   |
-| `T: A & B`            | T 同时满足多个协议        |
-| `where T: Equatable`  | 在 `where` 子句中添加约束 |
-| `T.Element: Hashable` | 用于泛型集合内元素的约束  |
-
-## 二十八、[**Swift**](https://www.swift.org/) 的 `@` 标记 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> 完整边界：以下先覆盖 [**Swift Language Reference：Attributes**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes/) 当前公开的语言属性，再补充标准库与 Apple 框架通过属性包装器、全局 Actor、宏暴露的常见 `@Xxx`。以下划线开头的编译器内部属性（例如 `@_exported`、`@_implementationOnly`、`@_cdecl`）不是稳定公开接口，不列入日常业务代码清单。
-
-### 28.1、`@` 到底表示什么
-
-`@` 只是统一的“附加语法入口”，并不代表所有标记都属于同一机制：
-
-| 类别 | 作用对象 | 典型写法 | 本质 |
-| --- | --- | --- | --- |
-| 声明属性 | 类型、函数、属性、导入等声明 | `@available`、`@main` | 给编译器补充声明语义 |
-| 类型属性 | 函数类型、闭包参数类型 | `@escaping`、`@Sendable` | 描述类型行为 |
-| `switch case` 属性 | `case` 分支 | `@unknown default` | 处理未来新增枚举值 |
-| 属性包装器 | 存储属性或局部存储变量 | `@State`、`@Published` | 由包装器管理读写与附加能力 |
-| 全局 Actor | 类型、函数、属性、闭包 | `@MainActor` | 声明隔离域 |
-| 宏 | 声明或表达式 | `@Observable`、`@Model` | 编译期生成或改写代码 |
-
-因此，看到一个 `@Xxx` 时先问三个问题：
-
-1. 它由 [**Swift**](https://www.swift.org/) 语言定义、标准库定义，还是某个框架定义？
-2. 它作用于声明、类型、属性，还是宏展开点？
-3. 它改变的是可用性、代码生成、并发隔离、桥接方式，还是数据存储？
-
-### 28.2、语言参考中的公开声明属性
-
-| 标记 | 作用与使用边界 |
+| 标记 | 承诺与代价 |
 | --- | --- |
-| `@attached(...)` | 声明附着宏的角色，例如 `peer`、`member`、`accessor`、`extension`、`body`；用于宏作者，不是普通业务调用标记 |
-| `@available(...)` | 声明 API 的平台 / [**Swift**](https://www.swift.org/) 版本生命周期，可表达 `introduced`、`deprecated`、`obsoleted`、`unavailable`、`noasync`、`message`、`renamed` |
-| `@backDeployed(before:)` | 把较新平台 API 的实现发射进客户端，使指定旧系统也能使用；主要面向系统 / SDK / 库作者 |
-| `@discardableResult` | 允许调用方忽略函数返回值而不产生警告；不会改变返回值和执行逻辑 |
-| `@dynamicCallable` | 让类型实例能像函数一样被调用；类型必须实现 `dynamicallyCall(...)` |
-| `@dynamicMemberLookup` | 把找不到的成员访问转交给 `subscript(dynamicMember:)`；常用于动态语言桥接或包装器 |
-| `@export(interface)` / `@export(implementation)` | 控制函数接口或实现向客户端模块的导出方式；属于较新工具链的库演进能力，使用前核对部署工具链 |
-| `@freestanding(...)` | 声明独立宏的角色；用于宏作者 |
-| `@frozen` | 冻结公开结构体的存储属性布局或公开枚举的 case 集合，换取库演进模式下的优化；意味着后续演进受 ABI 约束 |
-| `@GKInspectable` | 把 GameplayKit 组件属性暴露给 SpriteKit 编辑器，同时隐含 `@objc` |
-| `@globalActor` | 声明自定义全局 Actor；类型需提供 `static let shared` Actor 实例 |
-| `@inlinable` | 把函数实现暴露为模块公开接口的一部分，允许客户端跨模块内联；会扩大 ABI / 源码兼容约束 |
-| `@main` | 声明可执行程序唯一入口；类型需提供符合要求的 `static main()`，框架也可通过协议扩展提供入口实现 |
-| `@nonobjc` | 阻止本可自动暴露给 Objective-C 的成员进入 Objective-C 运行时 |
-| `@NSApplicationMain` | 旧 macOS App 入口；已废弃，[**Swift**](https://www.swift.org/) 6 中会产生编译错误，改用 `@main` |
-| `@NSCopying` | 对类的存储属性合成 copy 语义，效果接近 Objective-C 的 `copy` 属性 |
-| `@NSManaged` | 声明 Core Data 在运行时提供属性存储或方法实现，同时隐含 `@objc` |
-| `@objc` | 将可桥接声明暴露给 Objective-C，并可指定 Objective-C / Runtime 名称 |
-| `@objcMembers` | 将类及其兼容成员批量隐式标记为 `@objc`；可能增加二进制体积和动态派发开销，优先按需使用 `@objc` |
-| `@preconcurrency` | 迁移严格并发检查时降低旧模块或旧声明的检查强度；它是迁移工具，不是永久消除并发错误的开关 |
-| `@propertyWrapper` | 定义属性包装器类型；包装器至少提供 `wrappedValue`，可选提供 `projectedValue` |
-| `@resultBuilder` | 定义结果构建器，用静态 `buildXxx` 方法把声明式代码块构造成结果；SwiftUI 的 `ViewBuilder` 属于此类 |
-| `@requires_stored_property_inits` | 要求类的所有存储属性在声明处给出默认值；继承 `NSManagedObject` 的类会推断该属性 |
-| `@testable` | 以测试可见性导入模块；被导入模块必须开启 testing |
-| `@UIApplicationMain` | 旧 iOS App 入口；已废弃，[**Swift**](https://www.swift.org/) 6 中会产生编译错误，改用 `@main` |
-| `@unchecked Sendable` | 关闭编译器对 `Sendable` 的结构化验证，由开发者承担线程安全证明责任；不能当作“先让它编过” |
-| `@usableFromInline` | 允许同模块的 `@inlinable` 代码引用 `internal` 声明；声明仍不能在模块外按名字直接调用，但已进入模块 ABI |
-| `@warn_unqualified_access` | 未通过实例、类型或模块限定名调用时发出警告，用于避免同名 API 歧义 |
-
-### 28.3、Interface Builder 声明属性
-
-| 标记 | 使用位置 | 作用 |
-| --- | --- | --- |
-| `@IBAction` | 方法 | 暴露 Interface Builder 事件入口，同时隐含 `@objc` |
-| `@IBSegueAction` | 方法 | 让 Storyboard segue 通过代码创建目标控制器，同时隐含 `@objc` |
-| `@IBOutlet` | 属性 | 连接 Interface Builder 对象，同时隐含 `@objc` |
-| `@IBDesignable` | 类 | 允许 Interface Builder 设计时渲染，同时隐含 `@objc` |
-| `@IBInspectable` | 属性 | 在 Attributes Inspector 中编辑自定义属性，同时隐含 `@objc` |
-
-### 28.4、语言参考中的类型属性与分支属性
-
-| 标记 | 作用 |
-| --- | --- |
-| `@autoclosure` | 把实参表达式自动包成无参闭包，实现延迟求值；应谨慎使用，避免隐藏执行成本 |
-| `@convention(swift)` | [**Swift**](https://www.swift.org/) 默认函数调用约定 |
-| `@convention(block)` | Objective-C Block 调用约定 |
-| `@convention(c)` | C 函数指针调用约定；闭包不能捕获上下文 |
-| `@escaping` | 闭包参数可能在函数返回后继续存活，例如被保存或异步回调 |
-| `@Sendable` | 声明函数 / 闭包值可以安全跨并发隔离域传递；捕获值也必须满足并发安全要求 |
-| `@unknown default` | 处理当前 SDK 尚未知的未来枚举值，并让编译器继续提醒已知 case 未显式处理 |
-
-### 28.5、[**Swift**](https://www.swift.org/) 6 相关的补充标记
-
-这些能力与 [**Swift**](https://www.swift.org/) 版本、语言模式或构建设置关系更紧，接入项目前必须以目标 [**Xcode**](https://developer.apple.com/xcode) / [**Swift**](https://www.swift.org/) 工具链为准：
-
-| 标记 | 作用 |
-| --- | --- |
-| `@retroactive` | 显式确认“外部类型遵守外部协议”的追溯遵循，提醒所有权与未来冲突风险 |
-| `@isolated(any)` | 函数类型可以动态携带任意 Actor 隔离信息，调用方必须准备跨隔离域等待 |
-| `@concurrent` | 在支持的现代工具链中显式请求并发执行上下文；它不等于“新建一条固定线程” |
-| `@MainActor` | 标准库提供的全局 Actor 标记；隔离 UI 与主执行域，不是属性包装器 |
-| `@TaskLocal` | 标准库属性包装器，为任务及其子任务提供动态作用域值 |
-
-### 28.6、Apple 应用开发常见的自定义 `@Xxx`
-
-下表不是 [**Swift**](https://www.swift.org/) 语法关键字表，而是系统框架基于属性包装器或宏提供的常用标记。第三方库还可以继续定义自己的 `@Xxx`，所以框架层不存在永久封闭的“全世界所有标记”清单。
-
-| 所属框架 | 标记 | 典型用途 |
-| --- | --- | --- |
-| Observation | `@Observable` | 宏生成可观察类型所需代码 |
-| Observation | `@ObservationIgnored` | 排除不参与 Observation 追踪的属性 |
-| SwiftUI / Observation | `@Bindable` | 为传入的 Observable 模型生成可绑定投影 |
-| SwiftUI | `@State` | 当前视图拥有的轻量状态；现代系统也可持有 Observable 引用 |
-| SwiftUI | `@Binding` | 当前视图不拥有数据，只读写上游状态的绑定 |
-| SwiftUI | `@StateObject` | 旧 Observation 模型中，由当前视图创建并拥有 `ObservableObject` |
-| SwiftUI | `@ObservedObject` | 旧 Observation 模型中，观察由外部创建并传入的 `ObservableObject` |
-| SwiftUI | `@Environment` | 读取环境值或环境中的 Observable 对象 |
-| SwiftUI | `@EnvironmentObject` | 从环境读取旧式 `ObservableObject` |
-| SwiftUI | `@AppStorage` | 把属性与 `UserDefaults` 键绑定 |
-| SwiftUI | `@SceneStorage` | 保存与 Scene 恢复相关的轻量状态 |
-| SwiftUI | `@FocusState` | 管理输入焦点 |
-| SwiftUI | `@GestureState` | 保存手势进行期间的瞬时状态，手势结束后自动复位 |
-| SwiftUI | `@ScaledMetric` | 随 Dynamic Type 缩放数值 |
-| Combine | `@Published` | `ObservableObject` 内发布属性变化 |
-| Core Data / SwiftUI | `@FetchRequest`、`@SectionedFetchRequest` | 让 SwiftUI 订阅 Core Data 查询结果 |
-| SwiftData | `@Model` | 宏生成 SwiftData 持久化模型 |
-| SwiftData | `@Query` | 在 SwiftUI 中订阅 SwiftData 查询 |
-| SwiftData | `@Attribute`、`@Relationship`、`@Transient` | 配置模型字段、关系和非持久化属性 |
-| [**Swift**](https://www.swift.org/) Testing | `@Test`、`@Suite` | 宏声明测试函数与测试套件 |
-
-### 28.7、高频标记的极简 Demo
-
-- `@available` 声明“这个 API 从何时可用”，`#available` 在执行路径上判断当前运行系统：
-
-  ```swift
-  @available(iOS 17.0, *)
-  func useNewRenderer() {
-      print("new renderer")
-  }
-
-  if #available(iOS 17.0, *) {
-      useNewRenderer()
-  } else {
-      print("fallback")
-  }
-  ```
-
-- `@MainActor` 声明隔离域；从其它隔离域调用时通常需要 `await`：
-
-  ```swift
-  @MainActor
-  final class ScreenModel {
-      private(set) var title = ""
-
-      func apply(title: String) {
-          self.title = title
-      }
-  }
-
-  func loadTitle(into model: ScreenModel) async {
-      let title = "Swift Concurrency"
-      await model.apply(title: title)
-  }
-  ```
-
-- `@escaping` 只在闭包会逃出当前函数生命周期时使用：
-
-  ```swift
-  final class CallbackStore {
-      private var callback: (() -> Void)?
-
-      func save(_ callback: @escaping () -> Void) {
-          self.callback = callback
-      }
-  }
-  ```
-
-- `@autoclosure` 延迟表达式求值，不要用它隐藏网络、磁盘等昂贵操作：
-
-  ```swift
-  func logIfNeeded(
-      _ condition: Bool,
-      message: @autoclosure () -> String
-  ) {
-      guard condition else { return }
-      print(message())
-  }
-
-  logIfNeeded(true, message: "value = \(42)")
-  ```
-
-- 自定义属性包装器通过 `wrappedValue` 管理值，通过 `$属性名` 暴露 `projectedValue`：
-
-  ```swift
-  @propertyWrapper
-  struct Clamped {
-      private var value: Int
-      private let range: ClosedRange<Int>
-
-      var wrappedValue: Int {
-          get { value }
-          set { value = min(max(newValue, range.lowerBound), range.upperBound) }
-      }
-
-      var projectedValue: ClosedRange<Int> {
-          range
-      }
-
-      init(wrappedValue: Int, _ range: ClosedRange<Int>) {
-          self.range = range
-          self.value = min(max(wrappedValue, range.lowerBound), range.upperBound)
-      }
-  }
-
-  struct Volume {
-      @Clamped(0...100) var value = 50
-  }
-
-  var volume = Volume()
-  volume.value = 200
-  print(volume.value)  // 100
-  print(volume.$value) // 0...100
-  ```
-
-- `@objc` 只暴露 Objective-C 真正需要的入口，避免无差别 `@objcMembers`：
-
-  ```swift
-  final class JobsBridge: NSObject {
-      @objc(runWithValue:)
-      func run(value: Int) {
-          print(value)
-      }
-  
-      @nonobjc
-      func swiftOnly<T>(_ value: T) {
-          print(value)
-      }
-  }
-  ```
-
-### 28.8、`@frozen`、`@inlinable` 与 `@usableFromInline`
-
-三者主要服务“二进制库 + Library Evolution”，不能只理解成普通性能开关：
+| <font color="red"><b><code>@inlinable</code></b></font> | 向客户端编译器公开函数实现，允许跨模块优化，不强制内联 |
+| <font color="red"><b><code>@usableFromInline</code></b></font> | 让 <font color="red"><b>internal</b></font> 声明可被 inlinable 代码引用；源码仍非公开，但加入 ABI |
+| <font color="red"><b><code>@frozen</code></b></font> | 对库演进场景承诺公开布局 / 枚举 <font color="red"><b>case</b></font> 集合，限制后续变更 |
 
 ```swift
-@frozen
-public struct Packet {
-    public let id: Int
-
-    public init(id: Int) {
-        self.id = id
-    }
-}
-
 @usableFromInline
-internal func normalize(_ value: Int) -> Int {
-    max(value, 0)
-}
+internal func normalize(_ value: Int) -> Int { max(0, value) }
 
 @inlinable
 public func normalized(_ value: Int) -> Int {
-    normalize(value)
+    normalize(value) // 引用的内部声明必须满足跨模块实现公开的约束。
 }
 ```
 
-- `@frozen` 承诺公开结构体的存储属性或枚举 case 不再随意增删、重排。
-- `@inlinable` 把实现暴露给客户端编译器，内部引用只能指向 `public` 或 `@usableFromInline` 声明。
-- `@usableFromInline` 仍是 `internal` 源码可见性，但符号已经成为库 ABI 的一部分。
-- 业务 App 内部代码通常不需要这三者；只有在真实二进制分发与基准数据支持下才使用。
+正确拼写是 <font color="red"><b><code>@inlinable</code></b></font>。业务 App 内不要为了“可能更快”随意扩大 ABI 承诺；<font color="red"><b><code>@frozen</code></b></font> 不等于 C 布局兼容。
 
-### 28.9、属性包装器选择速查
+### 5、<font id="标记速查">其余标记速查</font>
 
-| 数据归属 | 推荐标记 |
+| 标记 | 用途与边界 |
 | --- | --- |
-| 当前 SwiftUI 视图拥有的简单值 | `@State` |
-| 子视图修改父视图状态 | `@Binding` |
-| 当前视图拥有旧式 `ObservableObject` | `@StateObject` |
-| 外部传入旧式 `ObservableObject` | `@ObservedObject` |
-| 跨视图树注入旧式 `ObservableObject` | `@EnvironmentObject` |
-| 现代 `@Observable` 模型需要绑定投影 | `@Bindable` |
-| 系统环境值或注入的现代 Observable 模型 | `@Environment` |
-| 用户偏好持久化 | `@AppStorage` |
-| Scene 恢复状态 | `@SceneStorage` |
+| <font color="red"><b><code>@discardableResult</code></b></font> | 允许忽略返回值，不改变调用行为 |
+| <font color="red"><b><code>@objc</code></b></font> / <font color="red"><b><code>@nonobjc</code></b></font> | 开放 / 阻止兼容声明进入 Objective-C Runtime |
+| <font color="red"><b><code>@objcMembers</code></b></font> | 批量推断兼容成员为 objc；优先只开放必要入口 |
+| <font color="red"><b><code>@NSManaged</code></b></font> | 由 Core Data 等运行时提供实现，不自行合成普通存储 |
+| <font color="red"><b><code>@NSCopying</code></b></font> | 为适用的类存储属性合成复制语义 |
+| <font color="red"><b><code>@IBAction</code></b></font> / <font color="red"><b><code>@IBOutlet</code></b></font> | Interface Builder 事件 / 连接 |
+| <font color="red"><b><code>@IBSegueAction</code></b></font> | 用代码参与 Storyboard 目标控制器创建 |
+| <font color="red"><b><code>@IBDesignable</code></b></font> / <font color="red"><b><code>@IBInspectable</code></b></font> | 设计时渲染 / 属性检查器编辑 |
+| <font color="red"><b><code>@GKInspectable</code></b></font> | GameplayKit 编辑器暴露属性 |
+| <font color="red"><b><code>@dynamicMemberLookup</code></b></font> | 未直接找到的成员交给 dynamicMember 下标 |
+| <font color="red"><b><code>@dynamicCallable</code></b></font> | 动态函数调用语法交给 dynamicallyCall；不同于普通 callAsFunction |
+| <font color="red"><b><code>@globalActor</code></b></font> | 定义提供 shared Actor 实例的全局隔离域 |
+| <font color="red"><b><code>@TaskLocal</code></b></font> | 任务动态作用域值；不是任意全局共享变量 |
+| <font color="red"><b><code>@preconcurrency</code></b></font> | 旧接口并发迁移工具，不提供线程安全 |
+| <font color="red"><b><code>@retroactive</code></b></font> | 明示外部类型遵守外部协议的冲突风险 |
+| <font color="red"><b><code>@isolated(any)</code></b></font> | 函数值携带动态隔离信息 |
+| <font color="red"><b><code>@concurrent</code></b></font> | 支持的工具链中显式离开调用方 Actor 执行异步函数 |
+| <font color="red"><b><code>@convention(swift/block/c)</code></b></font> | 指定函数调用约定；C 函数指针不携带捕获上下文 |
+| <font color="red"><b><code>@testable</code></b></font> | 测试访问内部声明，被导入模块需启用 testing |
+| <font color="red"><b><code>@Test</code></b></font> / <font color="red"><b><code>@Suite</code></b></font> | Swift Testing 测试与套件宏 |
+| <font color="red"><b><code>@attached</code></b></font> / <font color="red"><b><code>@freestanding</code></b></font> | 声明宏角色，主要用于宏作者 |
+| <font color="red"><b><code>@backDeployed</code></b></font> | 为指定旧平台发射实现，不是任意 API 降级开关 |
+| <font color="red"><b><code>@export(interface)</code></b></font> / <font color="red"><b><code>@export(implementation)</code></b></font> | 新工具链的接口 / 实现导出控制，按工具链支持使用 |
+| <font color="red"><b><code>@requires_stored_property_inits</code></b></font> | 要求类存储属性在声明处提供默认值 |
+| <font color="red"><b><code>@warn_unqualified_access</code></b></font> | 提醒使用限定名称，减少同名歧义 |
+| <font color="red"><b><code>@unknown default</code></b></font> | 处理未来新增 <font color="red"><b>case</b></font>；保留对已知遗漏 <font color="red"><b>case</b></font> 的诊断 |
 
-> 最容易混淆的一点：`@State`、`@Binding`、`@Published` 是属性包装器；`@Observable`、`@Model`、`@Test` 是宏；`@MainActor` 是全局 Actor 隔离；它们只是共享了 `@` 外观。
+以下划线开头的编译器内部属性不是稳定公共接口，不作为日常业务模板。
 
-## 二十九、`@main` 与旧 App 入口属性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+<a href="#FAQ-可用性" style="color:red;font-weight:bold;">FAQ：版本判断</a> · <a href="#FAQ-内联" style="color:red;font-weight:bold;">FAQ：内联与 ABI</a>
 
-| 对比项 | `@main` | `@UIApplicationMain` / `@NSApplicationMain` |
-| --- | --- | --- |
-| 状态 | 当前统一入口 | 已废弃；[**Swift**](https://www.swift.org/) 6 中编译报错 |
-| 平台 | [**Swift**](https://www.swift.org/) 可执行程序通用 | 分别绑定 UIKit / AppKit |
-| 作用类型 | 结构体、类或枚举 | AppDelegate 类 |
-| 入口要求 | 类型提供符合要求的 `static main()`；框架可通过协议扩展提供 | 编译器隐式调用 UIKit / AppKit 入口函数 |
-| 新项目选择 | 使用 | 不再使用 |
+## 十二、<font id="网络请求">网络与 JSON：请求、校验、解码分开</font>
 
-`@main` 不只属于 SwiftUI。下面两个方向都成立：
-
-- SwiftUI App 通常由 `App` 协议扩展提供 `main()`：
-
-  ```swift
-  import SwiftUI
-
-  @main
-  struct JobsApp: App {
-      var body: some Scene {
-          WindowGroup {
-              ContentView()
-          }
-      }
-  }
-  ```
-
-- UIKit App 可直接把 `@main` 标在 `AppDelegate`：
-
-  ```swift
-  import UIKit
-  
-  @main
-  final class AppDelegate: UIResponder, UIApplicationDelegate {
-      func application(
-          _ application: UIApplication,
-          didFinishLaunchingWithOptions launchOptions:
-              [UIApplication.LaunchOptionsKey: Any]? = nil
-      ) -> Bool {
-          true
-      }
-  }
-  ```
-
-可执行 Target 只能存在一个顶层入口。若使用 `main.swift` 顶层代码，就不要再声明另一个 `@main`。
-
-## 三十、[**Swift**](https://www.swift.org/) 中 `Any` 🆚 `AnyObject` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> [**Swift 官方类型转换文档**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/typecasting/#Type-Casting-for-Any-and-AnyObject) 的核心定义是：`Any` 能表示任意类型的值，`AnyObject` 能表示任意类类型的实例。
-
-| 对比项 | `Any` | `AnyObject` |
-| --- | --- | --- |
-| 可表示范围 | 值类型、引用类型、函数、元类型、元组等任意值 | 任意类实例 |
-| 是否保证引用语义 | 否 | 是；但值类型经过桥接或装箱后也能转换成对象 |
-| 常见用途 | 异构容器、反射、无法提前确定类型的运行时边界 | 类专属泛型约束、`weak delegate`、Objective-C 对象边界 |
-| 取回具体能力 | 使用 `is`、`as?`、`as!` 或模式匹配 | 同样需要先转换为具体类或类专属协议 |
-
-### 30.1、`Any`
-
-- `Any` 是 [**Swift**](https://www.swift.org/) 语言提供的特殊类型，不是“所有类型都遵守的普通协议”。
-- 放入 `Any` 的值仍保留自身动态类型；读取时通常需要使用 `as?` 或 `switch` 恢复具体类型。
-- Optional 也能放入 `Any`，但编译器会提醒这种写法可能并非本意；确认需要时应显式写成 `optionalValue as Any`。
-
-```swift
-let values: [Any] = [
-    42,
-    "Jobs",
-    (x: 10, y: 20),
-    { (name: String) in "Hello, \(name)" }
-]
-
-for value in values {
-    if let intValue = value as? Int {
-        print("Int：\(intValue)")
-    }
-}
-```
-
-### 30.2、`AnyObject`
-
-- `AnyObject` 表示任意类实例；所有类都隐式满足 `AnyObject`。
-- 它只保留“这是某个对象”这一约束，不会自动暴露具体类成员，调用成员前仍应安全向下转型。
-- 协议继承 `AnyObject` 后会成为类专属协议，结构体和枚举不能遵守，因此可用于 `weak` 引用。
-
-```swift
-protocol SessionDelegate: AnyObject {
-    func sessionDidFinish()
-}
-
-final class SessionCoordinator {
-    weak var delegate: (any SessionDelegate)?
-}
-```
-
-### 30.3、值类型桥接到 `AnyObject` 的边界
-
-`Int`、`String` 等值可以在 Foundation 桥接或 [**Swift**](https://www.swift.org/) 运行时装箱后转换为 `AnyObject`，但这不代表值类型本身变成了类，也不代表结构体能够遵守类专属协议。
+### 1、<font id="URLSession">URLSession：先检查 HTTP，再解码业务</font>
 
 ```swift
 import Foundation
 
-let numberObject: AnyObject = 42 as NSNumber
-let boxedValue: AnyObject = 42 as AnyObject
-```
-
-### 30.4、选型建议
-
-1. 已知数据类型时优先使用具体类型。
-2. 需要“调用方决定类型且保持静态关系”时优先使用泛型或协议约束。
-3. 只有异构存储、反射、桥接或运行时替换确实需要类型擦除时，才使用 `Any` / `AnyObject`。
-4. 需要类专属约束或 `weak delegate` 时使用 `AnyObject`，不要用 `Any` 代替。
-
-## 三十一、`var body: some View` 中的 `some` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- 这是 [**Swift**](https://www.swift.org/) 5.1 引入的一项功能，用于简化泛型代码中的类型表达；
-- 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，***some View*** 是一个不透明类型（*opaque type*）；
-- 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，***some View***  的主要作用是表示返回的视图类型是不透明的，即编译器知道它是一种 View 类型，但不需要具体指定是哪一种 View；
-- **不透明类型的优势在于它允许隐藏具体的实现细节，这在复杂的视图层次结构中非常有用**；
-- 在编写 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 代码时，通常不需要知道具体的视图类型，只需要知道它们是 View 协议的实现即可；
-- 这使得 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 的视图层次结构能够更加灵活，因为你可以在不暴露具体实现细节的情况下返回不同类型的视图；
-
-*在这个例子中，some View 表示 body 属性返回的视图类型是不透明的，并且编译器知道它遵循 View 协议。*
-
-```swift
-struct MyView: View {
-    var body: some View {
-        Text("Hello, Swift UI!")
-    }
-}
-```
-## 三十二、`#available`、`#unavailable` 与 `@available` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-| 写法 | 位置 | 判断时机 | 作用 |
-| --- | --- | --- | --- |
-| `@available(...)` | 声明前 | 编译器检查声明与调用关系 | 描述 API 生命周期和平台 / [**Swift**](https://www.swift.org/) 版本要求 |
-| `#available(...)` | `if` / `guard` 条件 | 运行时按当前系统版本选择分支 | 进入新 API 路径或回退路径 |
-| `#unavailable(...)` | `if` / `guard` 条件 | 运行时按当前系统版本选择分支 | 更直接表达“低于某版本”路径 |
-
-```swift
-@available(iOS 17.0, *)
-func startModernFlow() {
-    print("modern")
-}
-
-func startFlow() {
-    if #available(iOS 17.0, *) {
-        startModernFlow()
-    } else {
-        print("fallback")
-    }
-}
-
-func prepareLegacyState() {
-    if #unavailable(iOS 17.0) {
-        print("legacy preparation")
-    }
-}
-```
-
-关键纠偏：
-
-- `@available` 是声明属性，不是属性包装器，也不是“运行到这里才检查”。
-- `#available` / `#unavailable` 是可用性条件，不是删除代码的条件编译指令；`#if` 才是条件编译。
-- `@available(*, unavailable, renamed: "NewName")` 可明确给出迁移目标。
-- `@available(*, noasync)` 可禁止容易跨挂起点误用的同步原语直接出现在异步上下文。
-
-## 三十三、[**Swift**](https://www.swift.org/) 协议与 Objective-C 协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-> [**Swift Protocols**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/) 是类型系统的一部分，不只是 Delegate 接口。类、结构体、枚举和 Actor 都可以遵守 [**Swift**](https://www.swift.org/) 协议；Objective-C Protocol 主要描述 Objective-C 对象可响应的方法与属性。
-
-### 33.1、[**Swift**](https://www.swift.org/) 协议能表达什么
-
-- 属性要求：`get` 或 `get set`，但协议不规定实现是存储属性还是计算属性。
-- 实例方法、类型方法、`mutating` 方法与初始化方法要求。
-- 下标要求。
-- 协议继承与协议组合，例如 `A & B`。
-- `associatedtype` 与泛型约束。
-- `where` 条件约束与条件遵循。
-- 协议扩展中的默认实现和附加能力。
-- 类专属协议：继承 `AnyObject`，常用于 `weak delegate`。
-- `some Protocol` 不透明类型、`any Protocol` 存在类型和泛型约束三种抽象方式。
-
-### 33.2、[**Swift**](https://www.swift.org/) 极简 Demo
-
-```swift
-protocol Named {
-    var name: String { get }
-    mutating func rename(to newName: String)
-}
-
-extension Named {
-    var debugName: String {
-        "[\(name)]"
-    }
-}
-
-struct User: Named {
-    private(set) var name: String
-
-    mutating func rename(to newName: String) {
-        name = newName
-    }
-}
-
-var user = User(name: "Jobs")
-user.rename(to: "Codex")
-print(user.debugName)
-```
-
-结构体可以遵守协议，`mutating` 要求允许值类型修改自身；类实现同一要求时不写 `mutating`。
-
-### 33.3、`some`、`any` 与泛型
-
-| 写法 | 具体类型由谁选择 | 运行时装箱 | 典型用途 |
-| --- | --- | --- | --- |
-| `func use<T: P>(_ value: T)` | 调用方 | 通常不需要 | 性能敏感、保留具体类型信息 |
-| `func make() -> some P` | 实现方 | 通常不需要 | 隐藏返回类型但保持单一具体类型 |
-| `let value: any P` | 运行时可变化 | 必要时存在类型装箱 | 异构存储、运行时替换 |
-
-不要把 `any P` 当成泛型的机械简写。它换取运行时灵活性，也可能引入间接层和能力限制。
-
-### 33.4、`associatedtype`：由遵循者决定的关联类型
-
-> [**Swift 官方泛型文档**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/#Associated-Types) 将关联类型定义为协议中的类型占位名称；真正采用什么类型，要等具体类型遵守协议时才能确定。
-
-`associatedtype` 的重点不是“能放任意值”，而是把协议中多处出现的类型关系绑定到同一个名字。它与协议的 `Self` 关联：每个遵循者都可以选择自己的实际类型，但同一个遵循者必须在全部协议要求中保持一致。
-
-#### 33.4.1、声明与类型推断
-
-```swift
-protocol Store {
-    associatedtype Value: Equatable
-    func load() -> Value
-}
-
-struct NameStore: Store {
-    func load() -> String {
-        "Jobs"
-    }
-}
-```
-
-- `Store` 不预先规定 `Value` 是什么，只要求它遵守 `Equatable`。
-- `NameStore.load()` 返回 `String`，编译器因此推断 `NameStore.Value == String`。
-- 也可以在 `NameStore` 中显式写 `typealias Value = String`；类型关系已经足够明确时通常不必重复声明。
-
-#### 33.4.2、通过泛型与 `where` 保留类型关系
-
-```swift
-func valuesMatch<L: Store, R: Store>(
-    _ lhs: L,
-    _ rhs: R
-) -> Bool where L.Value == R.Value {
-    lhs.load() == rhs.load()
-}
-
-let isSame = valuesMatch(NameStore(), NameStore())
-```
-
-这里的 `where L.Value == R.Value` 保证两个不同的 `Store` 遵循者返回同一种值；如果关联类型不同，调用会在编译期失败，而不是等到运行时再转换。
-
-#### 33.4.3、主关联类型与 `any Protocol`
-
-当某个关联类型是调用方最关心的类型参数时，可以把它声明为主关联类型：
-
-```swift
-protocol Readable<Value> {
-    associatedtype Value
-    func read() -> Value
-}
-
-struct NameReader: Readable {
-    func read() -> String {
-        "Jobs"
-    }
-}
-
-let reader: any Readable<String> = NameReader()
-print(reader.read())
-```
-
-- `Readable<Value>` 中尖括号里的 `Value` 必须由协议内部的 `associatedtype Value` 声明；这不是把协议改成普通泛型类型。
-- `any Readable<String>` 是约束了主关联类型的存在类型，适合运行时替换不同的读取器，同时固定读取结果为 `String`。
-- 如果还要在多个参数和返回值之间保留具体遵循者及关联类型关系，优先使用泛型 `R: Readable` 或 `some Readable<String>`。
-
-#### 33.4.4、常见误区
-
-- `associatedtype` 不是 `Any`，也不是枚举的 Associated Value（关联值）。
-- 不要沿用“含有关联类型的协议完全不能作为类型”的旧说法；当前 [**Swift**](https://www.swift.org/) 可以使用 `any Protocol`，但类型擦除后可用能力仍取决于关联类型是否被约束。
-- Objective-C Protocol 没有 `associatedtype` 的等价能力；通常只能使用具体 Objective-C 类型、`id` 或轻量泛型容器表达较弱约束。
-
-### 33.5、Objective-C Protocol 极简 Demo
-
-```objc
-@protocol JobsLoaderDelegate <NSObject>
-
-@required
-- (void)loaderDidFinish:(id)loader;
-
-@optional
-- (void)loader:(id)loader didFailWithError:(NSError *)error;
-
-@end
-
-@interface JobsLoader : NSObject
-
-@property(nonatomic, weak, nullable) id<JobsLoaderDelegate> delegate;
-
-@end
-```
-
-- `@required` 是默认值，实现类应提供对应方法。
-- `@optional` 是 Objective-C Protocol 的运行时可选要求，调用前通常检查 `respondsToSelector:`。
-- Delegate 需要弱引用时，协议通常继承 `NSObject`，属性类型写成 `id<JobsLoaderDelegate>`。
-
-### 33.6、[**Swift**](https://www.swift.org/) 与 Objective-C 协议差异
-
-| 对比项 | [**Swift**](https://www.swift.org/) Protocol | Objective-C Protocol |
-| --- | --- | --- |
-| 可遵守类型 | 类、结构体、枚举、Actor | Objective-C 对象类型；C `struct` 不能遵守 |
-| 派发与检查 | 以静态类型系统为主，也可形成存在类型 | Objective-C Runtime 消息派发 |
-| 默认实现 | 协议扩展可提供默认实现 | Protocol 本身不能提供实现；通常用基类、Category 或辅助对象 |
-| 可选要求 | 纯 [**Swift**](https://www.swift.org/) 协议通常用默认实现、可选闭包等建模；`@objc optional` 仅限 Objective-C 兼容协议 | 原生支持 `@optional` |
-| 关联类型 | 支持 `associatedtype` | 不支持 |
-| 泛型约束 | 强，支持 `where`、条件遵循 | 较弱，常用 `id<Protocol>` |
-| 值语义抽象 | 原生支持 | 不支持 C 结构体遵循 |
-| 协议组合 | `any A & B` 或泛型约束 | `id<A, B>` |
-| 类专属 | `protocol P: AnyObject` | Protocol 的使用对象本身就是 Objective-C 对象 |
-| 属性要求 | `var value: T { get set }`，不限定存储方式 | `@property` 要求，运行时表现为访问器方法 |
-| 初始化要求 | 支持 `init` 要求及 `required` 配合 | 可声明初始化方法，但没有 [**Swift**](https://www.swift.org/) 同等的值类型 / `required` 规则 |
-| ABI / 互操作 | 可包含 [**Swift**](https://www.swift.org/)-only 类型系统能力 | 天然服务 Objective-C Runtime |
-
-### 33.7、`@objc` 协议的桥接边界
-
-[**Swift**](https://www.swift.org/) 协议要暴露给 Objective-C 时需要满足 Objective-C 可表示性：
-
-```swift
-@objc
-protocol JobsDownloadDelegate: AnyObject {
-    func downloadDidFinish()
-    @objc optional func downloadDidUpdate(progress: Double)
-}
-```
-
-- `@objc optional` 只用于需要 Objective-C Runtime 可选方法的协议。
-- `associatedtype`、泛型方法、元组、纯 [**Swift**](https://www.swift.org/) 枚举关联值等能力不能直接桥接为 Objective-C Protocol 要求。
-- 纯 [**Swift**](https://www.swift.org/) 新代码优先使用普通协议 + 协议扩展，不要为了“可选方法”无条件引入 `@objc`。
-- Delegate 若声明为 `weak`，协议必须是类专属协议，即继承 `AnyObject`。
-
-### 33.8、默认实现的静态与动态行为
-
-协议扩展有一个重要边界：
-
-- 如果成员是协议要求，具体类型的实现会通过协议见证被调用。
-- 如果成员只存在于协议扩展、没有写进协议要求，通过 `any Protocol` 调用时可能使用扩展实现，而不是具体类型的同名方法。
-
-因此，需要多态替换的能力必须写进协议要求；只作为工具方法的能力才仅放在扩展中。
-
-### 33.9、选型建议
-
-- 只需要 Delegate 回调且必须被 Objective-C 调用：使用 `@objc` 类专属协议。
-- 需要结构体 / 枚举遵循、关联类型、默认实现或条件遵循：使用纯 [**Swift**](https://www.swift.org/) 协议。
-- 只想复用代码：先判断是否真的需要协议；简单工具能力可能更适合泛型函数或 `extension`。
-- 协议不要过大。按职责拆成小协议，再通过组合表达能力。
-- 公共 API 中优先明确使用泛型、`some` 还是 `any`，不要让调用方猜测性能与类型擦除边界。
-
-## 三十四、[**Swift**](https://www.swift.org/) `extension` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-1、<font color="red">***类似于OC中的分类***</font>；
-2、***允许你在不修改原始类型定义的情况下，向已有的类（Class）、结构体（Struct）、枚举（enum）或协议（Protocol）添加新的功能。***；
-3、<font color="red">***`extension`***</font> 可以用于添加新的计算属性、方法、初始化方法、下标等；
-
-***扩展添加新方法***：
-
-```swift
-extension Double {
-    func square() -> Double {
-        return self * self
-    }
-}
-let number = 4.0
-let squared = number.square()  // 结果为 16.0
-```
-***扩展添加新计算属性***：
-
-```swift
-extension Int {
-    var squared: Int {
-        return self * self
-    }
-}
-let num = 5
-let squaredNum = num.squared  // 结果为 25
-```
-***扩展添加新初始化方法***：
-
-```swift
-extension String {
-    init(repeating: String, count: Int) {
-        self = String(repeating: repeating, count: count)
-    }
-}
-let repeatedString = String(repeating: "Hello", count: 3)
-// 结果为 "HelloHelloHello"
-```
-***扩展实现协议***：
-
-```swift
-protocol Describable {
-    var description: String { get }
-}
-
-extension Double: Describable {
-    var description: String {
-        return "Value: \(self)"
-    }
-}
-
-let value: Double = 3.14
-print(value.description)  // 输出 "Value: 3.14"
-```
-**请注意，<font color="red">*`extension`*</font> 中不能添加存储属性，只能添加计算属性。**
-
-## 三十五、[**Swift**](https://www.swift.org/) 中不允许定义存储属性的两类位置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- **协议（*Protocol*）：** 协议本身不能包含存储属性。协议可以定义计算属性，以及方法、下标等，但它不支持直接定义存储属性。**和OC一致**
-
-  ```swift
-  protocol MyProtocol {
-      // 不允许在协议中定义存储属性
-      // var myProperty: Int { get set } // 错误的示例
-  
-      // 可以定义计算属性
-      var myComputedProperty: Int { get }
-  }
-  ```
-- **扩展（*Extension*）中的存储属性：** 在使用扩展为现有类型添加新功能时，不允许添加存储属性。扩展只能添加计算属性，而不能添加存储属性。**和OC一致**
-
-  ```swift
-  extension String {
-      // 不允许在扩展中添加存储属性
-      // var myProperty: Int // 错误的示例
-  
-      // 可以添加计算属性
-      var length: Int {
-          return count
-      }
-  }
-  ```
-
-## 三十六、[**Swift**](https://www.swift.org/) `初始化方法` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-在 [**Swift**](https://www.swift.org/) 中，初始化方法是用于创建并初始化实例的特殊方法
-[**Swift**](https://www.swift.org/) 的初始化方法具有灵活性，可以包含多个参数、默认值、可选值，以及各种初始化阶段的操作
-以下是一些关于[**Swift**](https://www.swift.org/) 初始化方法的重要概念：
-
-- **指定初始化方法（*Designated Initializer*）**：是一个类中的主要初始化方法，用于初始化类的所有存储属性，并最终调用父类的初始化方法；
-
-  ```swift
-  class MyClass {
-      var property: Int
-      
-      init(property: Int) {
-          self.property = property
-      }
-  }
-  ```
-- **便利初始化方法（*Convenience Initializer*）**：是一个辅助方法，用于在指定初始化方法内部调用其他初始化方法，提供更多的初始化选项；
-
-  ```swift
-  class MyClass {
-      var property: Int
-      
-      init(property: Int) {
-          self.property = property
-      }
-      
-      convenience init() {
-          self.init(property: 0)
-      }
-  }
-  ```
-- **初始化参数的默认值**：初始化方法可以为参数提供默认值，使得在创建实例时可以选择性地省略某些参数；
-
-  ```swift
-  class Person {
-      var name: String
-      var age: Int
-      
-      init(name: String, age: Int = 25) {
-          self.name = name
-          self.age = age
-      }
-  }
-  ```
-- **可选初始化方法（*Failable Initializer*）**：允许初始化过程失败，返回一个可选值（初始化失败返回`nil`）；
-
-  ```swift
-  class MyObject {
-      var value: Int
-      
-      init?(value: Int) {
-          guard value >= 0 else {
-              return nil
-          }
-          self.value = value
-      }
-  }
-  ```
-
-## 三十七、[**Swift**](https://www.swift.org/) `单例` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-```swift
-class MySingleton {
-    // 静态常量，用于保存唯一实例
-    static let shared = MySingleton()
-
-    // 私有构造函数，确保只能通过.shared创建实例
-    private init() {
-        // 初始化代码
-    }
-
-    // 其他方法和属性
-    func doSomething() {
-        // 实现功能
-    }
-}
-// 这确保了在应用程序中只存在一个MySingleton实例，且可以在任何地方通过.shared访问它。
-let myInstance = MySingleton.shared
-myInstance.doSomething()
-```
-## 三十八、[**Swift**](https://www.swift.org/) `网络请求` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-### 38.1、`URLSession`（原生的工具）
-```swift
-import Foundation
-// 定义请求的 URL
-let url = URL(string: "https://example.com/api")!
-// 创建请求对象
-var request = URLRequest(url: url)
-request.httpMethod = "POST"
-// 添加自定义的 header 信息
-request.allHTTPHeaderFields = [
-    "Content-Type": "application/json",
-    "Authorization": "Bearer YourAccessToken"
-]
-// 添加需要发送的数据，例如 JSON 数据
-let jsonData = """
-{
-    "key1": "value1",
-    "key2": "value2"
-}
-""".data(using: .utf8)
-request.httpBody = jsonData
-// 创建 URLSession 对象
-let session = URLSession.shared
-// 发送请求
-let task = session.dataTask(with: request) { (data, response, error) in
-    // 处理响应
-    if let error = error {
-        print("Error: \(error)")
-    } else if let data = data {
-        // 处理返回的数据
-        let responseString = String(data: data, encoding: .utf8)
-        print("Response: \(responseString ?? "")")
-    }
-}
-// 启动任务
-task.resume()
-```
-**需要特别指出的：** 发送请求
-
-- **一般的请求**
-
-  ```swift
-  let url = "https://example.com/api"
-  // 这里的URL可以为String类型，框架可以接受URLRequest类型和String
-  let task = session.dataTask(with: url) { (data, response, error) in
-    // TODO
-  }
-  ```
-
-  ```swift
-  import Foundation
-  // 如果不配置httpMethod（不创建URLRequest），则默认为httpMethod.GET方法 
-  // 定义请求的 URL
-  let url = URL(string: "https://example.com/api")!
-  // 创建 URLSession 对象
-  let session = URLSession.shared
-  // 发送请求
-  let task = session.dataTask(with: url) { (data, response, error) in
-      // 处理响应
-      if let error = error {
-          print("Error: \(error)")
-      } else if let data = data {
-          // 处理返回的数据
-          let responseString = String(data: data, encoding: .utf8)
-          print("Response: \(responseString ?? "")")
-      }
-  }
-  // 启动任务
-  task.resume()
-  ```
-- **数据下载**
-
-  ```swift
-  let task = session.downloadTask(with: request) { (data, response, error) in
-  	// TODO
-  }
-  ```
-- **数据上载**
-
-  ```swift
-  let task = session.uploadTask(with: request) { (data, response, error) in
-  	// TODO
-  }
-  ```
-### 38.2、[**Alamofire**](https://github.com/alamofire/alamofire)
-```Ruby
-pod 'Alamofire'
-```
-```swift
-import Alamofire
-// 定义请求的 URL
-let url = "https://example.com/api"
-
-// 发送 GET 请求
-AF.request(url, method: .get).responseJSON { response in
-    switch respo`nse.result {
-    case .success(let data):
-        print("Response JSON: \(data)")
-    case .failure(let error):
-        print("Error: \(error)")
-    }
-}
-```
-### 38.3、[**Moya**](https://github.com/moya/moya)
-
-> 基于[**Alamofire**](https://github.com/alamofire/alamofire)的二次封装
-
-```ruby
-pod 'Moya'
-```
-```swift
-import Moya
-// 将你的 API 定义为一个枚举
-enum MyAPIService {
-    case getPosts
-}
-// 遵循 TargetType 协议以提供关于你的 API 的详细信息
-extension MyAPIService: TargetType {
-    var baseURL: URL {
-        return URL(string: "https://jsonplaceholder.typicode.com")!
-    }
-
-    var path: String {
-        switch self {
-        case .getPosts:
-            return "/posts"
-        }
-    }
-
-    var method: Method {
-        return .get
-    }
-
-    var sampleData: Data {
-        return Data()
-    }
-
-    var task: Task {
-        return .requestPlain
-    }
-
-    var headers: [String: String]? {
-        return ["Content-Type": "application/json"]
-    }
-}
-// 使用你的 API 服务创建一个 Moya 提供者
-let provider = MoyaProvider<MyAPIService>()
-// 发送网络请求
-provider.request(.getPosts) { result in
-    switch result {
-    case .success(let response):
-        do {
-            // 使用你喜欢的 JSON 解析方法解析响应数据
-            let posts = try JSONDecoder().decode([Post].self, from: response.data)
-            print(posts)
-        } catch {
-            print("解码响应数据时出错：\(error)")
-        }
-    case .failure(let error):
-        print("网络请求失败：\(error)")
-    }
-}
-```
-## 三十九、[**Swift**](https://www.swift.org/) `JSON` 数据解析 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-### 39.1、Codable 协议
-
-> <font color="red">**原生.简洁.官方推荐首选）**</font>
-
-定义你的数据模型➕遵循 `Codable` 协议➕ 使用***JSONDecoder*** = 解码***JSON***数据
-
-```swift
-struct Post: Codable {
-    let userId: Int
+struct Post: Decodable, Sendable {
     let id: Int
     let title: String
-    let body: String
 }
 
-do {
-    let jsonData = // Your JSON data
-    let post = try JSONDecoder().decode(Post.self, from: jsonData)
-    print(post)
-} catch {
-    print("Error decoding JSON: \(error)")
+enum APIError: Error {
+    case invalidResponse
+    case httpStatus(Int)
+}
+
+func fetchPost(from url: URL) async throws -> Post {
+    var request = URLRequest(url: url)       // URLSession 接收 URL / URLRequest，不接收 String。
+    request.httpMethod = "GET"
+    request.timeoutInterval = 15            // 请求超时策略，不等于整个业务的硬截止时间。
+
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let http = response as? HTTPURLResponse else {
+        throw APIError.invalidResponse
+    }
+    guard (200..<300).contains(http.statusCode) else {
+        throw APIError.httpStatus(http.statusCode) // HTTP 失败不一定是传输错误。
+    };return try JSONDecoder().decode(Post.self, from: data)
 }
 ```
-### 39.2、[**SwiftyJSON**](https://github.com/swiftyjson/swiftyjson)（第三方.流行）
 
-*更灵活➕链式语法*
+异步 API 返回结果，无需 `resume()`；completion 形式的 `dataTask` 需启动任务。分别处理传输失败、HTTP 状态失败、业务失败和解码失败；认证信息由安全凭据层注入，不在示例或日志中写真实密钥。
+
+### 2、<font id="上传下载">POST、下载与上传</font>
 
 ```swift
-import SwiftyJSON
+import Foundation
 
-let json = // Your JSON data
-let jsonObject = try? JSON(data: json)
-
-// Accessing values
-let title = jsonObject?["title"].stringValue
-let userId = jsonObject?["userId"].intValue
-```
-### 39.3、ObjectMapper（第三方.常用）
-
-***对象到 ==>JSON*** 和 ***JSON  ==>对象的映射功能***
-
-```swift
-import ObjectMapper
-
-class Post: Mappable {
-  var userId: Int?
-  var id: Int?
-  var title: String?
-  var body: String?
-
-  required init?(map: Map) {}
-
-  func mapping(map: Map) {
-      userId <- map["userId"]
-      id <- map["id"]
-      title <- map["title"]
-      body <- map["body"]
-  }
+struct CreatePost: Encodable {
+    let title: String
 }
 
-let post = Mapper<Post>().map(JSONString: jsonString)
-```
-## 四十、[**SwiftUI**](https://developer.apple.com/xcode/swiftui/) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- **文本标签 Text**（类似于`UIKit.UILabel`）
-
-  ```swift
-  import SwiftUI
-  
-  struct ContentView: View {
-    var body: some View {
-        VStack {
-            Text("Hello, World!")
-                .font(.title) // 设置文本的字体大小
-                .foregroundColor(.blue) // 设置文本的颜色
-                .padding() // 添加内边距
-        }
-    }
-  }
-  
-  struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-  }
-  ```
-- **输入控件TextField**（类似于`UIKit.UITextField`）
-
-  ```swift
-  import SwiftUI
-  
-  struct ContentView: View {
-  @State private var textInput: String = ""
-    var body: some View {
-        VStack {
-            TextField("Enter text", text: $textInput)
-                .padding()
-                .border(Color.gray, width: 1) // 添加边框
-                .textFieldStyle(RoundedBorderTextFieldStyle()) // 设置输入框样式
-                .padding() // 添加内边距
-  
-            Text("You entered: \(textInput)")
-                .padding()
-        }
-        .padding()
-    }
-  }
-  
-  struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-  }
-  ```
-- **列表控件List**（类似于`UIKit.UITableView`）
-
-  ```swift
-  import SwiftUI
-  
-  struct ContentView: View {
-    let items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
-    var body: some View {
-        List(items, id: \.self) { item in
-            Text(item)
-        }
-    }
-  }
-  
-  struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-  }
-  ```
-- **LazyVGrid 或者 LazyHGrid** （类似于`UIKit.UICollectionView`）
-  
-  - 在 [**SwiftUI**](https://developer.apple.com/xcode/swiftui/) 中，**LazyVGrid** 和 **LazyHGrid** 并没有像 **`UICollectionView`** 那样直接提供委托或协议方法
-  
-    ```swift
-    import SwiftUI
-    
-    struct ContentView: View {
-        let items = Array(1...20)
-    
-        var body: some View {
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2), spacing: 10) {
-                    ForEach(items, id: \.self) { item in
-                        Text("\(item)")
-                            .frame(width: 150, height: 150)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                }
-                .padding()
-            }
-        }
-    }
-    // 或者
-    struct ContentView: View {
-        let items = [
-            Item(name: "Item 1"),
-            Item(name: "Item 2"),
-            Item(name: "Item 3"),
-            Item(name: "Item 4"),
-            Item(name: "Item 5"),
-            Item(name: "Item 6"),
-            Item(name: "Item 7"),
-            Item(name: "Item 8"),
-            Item(name: "Item 9"),
-            Item(name: "Item 10")
-        ]
-    
-        var body: some View {
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                    ForEach(items) { item in
-                        Text(item.name)
-                            .frame(width: 100, height: 100)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                }
-                .padding()
-            }
-        }
-    }
-    
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
-    }
-    ```
-  
-- **按钮控件Button**（类似于`UIKit.UIButton`）
-
-  ```swift
-  import SwiftUI
-  
-  struct ContentView: View {
-      var body: some View {
-          Button(action: {
-              // 按钮点击时执行的操作
-              print("Button tapped")
-          }) {
-              Text("Tap Me")
-                  .font(.headline)
-                  .foregroundColor(.white)
-                  .padding()
-                  .background(Color.blue)
-                  .cornerRadius(10)
-          }
-          .padding()
-      }
-  }
-  
-  struct ContentView_Previews: PreviewProvider {
-      static var previews: some View {
-          ContentView()
-      }
-  }
-  ```
-## 四十一、其他 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- <font color="red">**可选项的本质是枚举类型**</font>
-- [**Swift**](https://www.swift.org/) 的泛型应用字协议上的时候，需要使用**关联类型**
-
-```swift
-protocol Container {
-    associatedtype Item // Item不是系统类型，可以命名为自定义的字符串（占位符类型）
-    mutating func addItem(_ item: Item)
-    var count: Int { get }
-    subscript(i: Int) -> Item { get }
+func makeCreateRequest(url: URL, title: String) throws -> URLRequest {
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try JSONEncoder().encode(CreatePost(title: title))
+    return request
 }
 ```
 
+下载 API 通常返回临时文件 URL，需按其生命周期要求移动到目标位置；completion 下载回调结束前应处理临时文件。上传使用 `uploadTask(with:from:)` / <font color="red"><b><code>upload(for:from:)</code></b></font> 等明确提供数据或文件的入口，不套用 dataTask 的签名。
+
+长后台传输使用适合的后台 URLSession 配置与系统回调恢复流程；普通 <font color="red"><b>Task</b></font> 或后台队列不授予 App 常驻后台权限。
+
+### 3、<font id="Codable">Codable：按模型编解码</font>
+
+`Codable = Encodable & Decodable`。只读响应用 `Decodable`，只发请求用 `Encodable`；需要双向转换再用组合协议。
+
 ```swift
-struct IntStack: Container {
-    // IntStack 的关联类型是 Int
-    typealias Item = Int
-    var items = [Int]()
-  
-    mutating func addItem(_ item: Int) {
-        items.append(item)
+import Foundation
+
+struct Article: Decodable {
+    let identifier: Int
+    let title: String
+    let subtitle: String?
+
+    enum CodingKeys: String, CodingKey {
+        case identifier = "id"       // 服务端键与本地属性名映射。
+        case title
+        case subtitle
     }
-    
-    var count: Int {
-        return items.count
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        identifier = try container.decode(Int.self, forKey: .identifier)
+        title = try container.decode(String.self, forKey: .title)
+        subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        // decodeIfPresent 接受缺失或 null；类型不匹配仍抛错。
     }
-    
-    subscript(i: Int) -> Int {
-        return items[i]
+}
+
+let data = Data(#"{"id":1,"title":"Swift"}"#.utf8)
+let article = try JSONDecoder().decode(Article.self, from: data)
+print(article.title)                 // Swift
+print(article.subtitle as Any)       // nil
+```
+
+自动合成解码器不会把普通存储属性的默认值一概当作缺字段兜底。需要默认值时在自定义解码中写明；日期、snake_case 和数字字符串按服务端契约显式配置，不用 <font color="red"><b><code>try?</code></b></font> 把协议错误全部吞成空值。
+
+### 4、<font id="网络库">第三方网络与映射库的职责</font>
+
+| 方案 | 负责什么 | 接入重点 |
+| --- | --- | --- |
+| URLSession + Codable | 系统传输与类型化编解码 | 依赖少，业务封装自行组织 |
+| [**Alamofire**](https://github.com/Alamofire/Alamofire) | 基于 URLSession 的请求、验证、编码与拦截 | 类型化响应使用 responseDecodable；按依赖版本核对接口 |
+| [**Moya**](https://github.com/Moya/Moya) | 基于 Alamofire，用 TargetType 描述端点 | 组织 baseURL、path、method、task、headers；单独配置状态校验 |
+| [**SwiftyJSON**](https://github.com/SwiftyJSON/SwiftyJSON) | 动态访问 JSON 节点 | 便利默认值可能掩盖缺失或类型错误 |
+| [**ObjectMapper**](https://github.com/tristanhimmelman/ObjectMapper) | Mappable 与字段映射 | 维护旧工程时按现有模型规则接入 |
+
+一个项目保持明确的网络层与错误模型，不为同类请求并排引入多套框架。Moya 的 <font color="red"><b>Task</b></font> 是请求任务描述，和 Swift Concurrency <font color="red"><b>Task</b></font> 不是同一类型，冲突时使用模块限定名。
+
+<a href="#FAQ-网络" style="color:red;font-weight:bold;">FAQ：网络成功与 HTTP 成功</a> · <a href="#FAQ-解码" style="color:red;font-weight:bold;">FAQ：解码默认值</a>
+
+## 十三、<font id="基础设施">基础设施：网络分层、数据结构与锁</font>
+
+### 1、<font id="网络分层">网络分层：定位故障所在范围</font>
+
+| OSI 层 | 职责 | 常见对象 |
+| --- | --- | --- |
+| 应用层 | 应用通信语义 | HTTP、DNS、SMTP |
+| 表示层 | 编码、序列化、加解密等表示问题 | 教学分层职责，不强行映射某个独立进程 |
+| 会话层 | 会话建立与管理 | 教学分层职责 |
+| 传输层 | 端到端传输 | TCP、UDP |
+| 网络层 | 寻址与路由 | IP |
+| 数据链路层 | 链路内帧传递 | Ethernet、Wi-Fi 链路 |
+| 物理层 | 信号传输 | 电、光、无线信号 |
+
+TCP/IP 常合并为应用、传输、网际、链路四层；OSI 是参考模型，不要求真实协议严格一层一个。HTTPS 包含 HTTP 与 TLS；HTTP/3 基于 QUIC / UDP，不能概括成所有 HTTP 都走 TCP。
+
+排查按“域名解析 → 建连 → TLS → HTTP 状态 → 业务响应 → 解码”逐步定位，避免把所有失败都记录成“网络错误”。
+
+### 2、<font id="数据结构">数据结构：按访问方式选</font>
+
+| 结构 | 核心特征 | 常见用途与边界 |
+| --- | --- | --- |
+| 数组 | 有序、按索引访问快 | 中部插删通常需移动元素 |
+| 栈 | 后进先出 | 回退、解析；数组 append / popLast 可模拟 |
+| 队列 | 先进先出 | 调度；高频出队使用合适的环形缓冲 / 双端队列 |
+| 单向链表 | 每节点指向 next | 已知前驱时插删快；查找位置仍需遍历 |
+| 双向链表 | 同时保存前后链接 | 已知节点便于拆接；强引用方向需避免 ARC 环 |
+| 哈希表 | 按键映射 | Dictionary / Set；平均访问快，非无条件最坏 O(1) |
+| 二叉搜索树 | 有序查找 | 未平衡时可退化 |
+| AVL / 红黑树 | 维护平衡的搜索树 | 有序集合与映射 |
+| 堆结构 | 维持最大 / 最小元素在顶端 | 优先队列；与堆内存不是同一概念 |
+| B 树 / B+ 树 | 多路搜索 | 外部存储与索引 |
+| Trie | 按前缀组织 | 前缀查询 |
+| 后缀树 | 组织字符串后缀 | 子串匹配；不是 Trie 的中文名称 |
+| 图 | 顶点与边 | 依赖、路由、关系网络 |
+
+链表头节点可以直接保存数据；哨兵节点是可选设计。单向、双向链表都可有意构成环。快慢指针可检测链表环，比较节点身份，不比较节点内容。
+
+### 3、<font id="锁">锁：保护完整临界区</font>
+
+| 机制 | 行为 | 注意点 |
+| --- | --- | --- |
+| 互斥锁 | 同时只允许一个持有者进入 | 检查与修改一起保护，所有读写入口一致 |
+| 自旋 | 忙等，不停重试 | 耗 CPU，业务层不自行写自旋等待 |
+| 读写锁 | 多读互斥写 | 写入公平性、饥饿与实际负载需评估 |
+| 条件变量 | 配合互斥锁等待条件 | 唤醒后用循环重查条件 |
+| 信号量 | 按计数控制资源许可 | 不是对象隔离，禁止阻塞等待 <font color="red"><b>async</b></font> 结果 |
+| GCD barrier | 自建并发队列上隔开前后工作 | 不对全局并发队列提供同样的独占保证 |
+
+```swift
+import Foundation
+
+final class LockedCounter: @unchecked Sendable {
+    private let mutex = NSLock()
+    private var value = 0
+
+    func increment() -> Int { // 同步接口，整个读改写都被同一把锁保护。
+        mutex.lock()
+        defer { mutex.unlock() }
+        value += 1
+        return value
+    }
+
+    func snapshot() -> Int {  // 读也加锁，不能只锁 setter。
+        mutex.lock()
+        defer { mutex.unlock() };return value
     }
 }
 ```
 
-- 访问控制：<font color="red">***open***</font> > <font color="red">***public***</font> ><font color="red">***internal***</font>（默认） > <font color="red">***fileprivate***</font>（**在本文件内可见**） > <font color="red">***private***</font>（**在最近的一个定义域区间内可见**）
-  - <font color="red">***open***</font>只针对模块化的文件（被打成二进制的`.a`、`.o`、`.framework`）。所以<font color="red">***对于源代码：open === public***</font>；
-  - <font color="red">***open***</font> - <font color="red">***public***</font> = 允许类及其成员在其他模块中被继承和被重写；
-- <font color=red>**protocol**</font>
-  - [**Swift**](https://www.swift.org/)中的<font color=red>**protocol**</font>还可以对接口进行抽象；
-  - [**Swift**](https://www.swift.org/)中的<font color=red>**protocol**</font>还可以实现面向协议；
-  - [**Swift**](https://www.swift.org/)中<font color=red>**protocol**</font>的还可以用于值类型、结构体（<font color=red>**Struct**</font>）、枚举（<font color=red>**enum**</font>）；
+这里的 unchecked 承诺依赖私有状态的全部入口都加锁。临界区保持短小，不调用未知外部回调，不在持锁期间跨 <font color="red"><b><code>await</code></b></font>。普通互斥锁不递归，同线程重入也可能死锁。
 
-## 四十二、iOS 系统计时机制与 `JobsSwiftTimer` 选型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+<a href="#FAQ-锁" style="color:red;font-weight:bold;">FAQ：Actor 与锁</a> · <a href="#FAQ-数据结构" style="color:red;font-weight:bold;">FAQ：结构选型</a> · <a href="#FAQ-网络分层" style="color:red;font-weight:bold;">FAQ：网络分层</a>
 
-### 42.1、先分清：它们不是同一种 Timer
+## 十四、<font id="计时">计时：唤醒刷新，不充当时间真值</font>
 
-日常所说的“UIKit Timer”是 iOS 业务语境下的统称，严格来说这些 API 分属不同框架：
+### 1、<font id="计时内核">四种内核</font>
 
-- [**Foundation.Timer**](https://developer.apple.com/documentation/foundation/timer)：Objective-C 名称是 `NSTimer`，依赖 RunLoop。
-- [**DispatchSourceTimer**](https://developer.apple.com/documentation/dispatch/dispatchsourcetimer)：由 GCD 在指定队列投递事件，不依赖 RunLoop。
-- [**CADisplayLink**](https://developer.apple.com/documentation/quartzcore/cadisplaylink)：跟随显示刷新节奏，用于视觉更新。
-- [**CFRunLoopTimer**](https://developer.apple.com/documentation/corefoundation/cfrunlooptimer)：Core Foundation 级 RunLoop Timer，与 `Timer/NSTimer` toll-free bridged。
+| 内核 | 调度方式 | 适合场景 | Jobs 映射 |
+| --- | --- | --- | --- |
+| [**Timer / NSTimer**](https://developer.apple.com/documentation/foundation/timer) | RunLoop + Mode | 低频 UI 更新、轮播 | `.foundation` |
+| [**DispatchSourceTimer**](https://developer.apple.com/documentation/dispatch/dispatchsourcetimer) | 指定 Dispatch Queue | 工作队列心跳、维护 | `.gcd` |
+| [**CADisplayLink**](https://developer.apple.com/documentation/quartzcore/cadisplaylink) | RunLoop，配合屏幕刷新 | 逐帧视觉更新 | `.displayLink` |
+| [**CFRunLoopTimer**](https://developer.apple.com/documentation/corefoundation/cfrunlooptimer) | 底层 RunLoop 接口 | C / CF 互操作、特殊 Mode | `.runLoop` |
 
-系统提供多种计时机制，是因为“UI 低频刷新、工作队列调度、逐帧渲染、RunLoop 基础设施”不是同一个问题。选择的第一依据是调度模型，不是 API 看起来短不短。
+Timer 不是实时机制。RunLoop 忙或 Mode 不匹配会延迟；重复 Timer 错过多个周期通常只补一次通知。需要滚动期间继续处理时评估 `.common`，并设置合理 `tolerance` 节省唤醒。
 
-### 42.2、核心对比
+GCD Timer 不依赖 RunLoop，但队列阻塞同样延迟；`deadline` 与 `wallDeadline` 分别面向单调时间和墙上时间语义，`leeway` 提供调度余量。正确配平激活、挂起、恢复和取消。
 
-| 机制 | 依赖与回调位置 | 优势 | 劣势 | 首选场景 | Jobs 映射 |
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| `Timer/NSTimer` | 注册到某个 RunLoop 的一个或多个 Mode；通常在主线程回调 | 简单；适合 UI；支持一次性/重复与 `tolerance` | RunLoop 忙、Mode 不匹配或主线程阻塞时会延后；不是实时机制；需正确 `invalidate` | 轮播、验证码、普通倒计时、UI 状态轮询 | `JobsTimerKind.foundation` |
-| `DispatchSourceTimer` | 在指定 Dispatch Queue 上投递；不依赖 RunLoop | 队列可控；适合非 UI；`leeway` 允许系统合并唤醒 | suspend/resume/cancel 状态容易失衡；队列阻塞照样延迟；不是硬实时 | 心跳、轮询、缓存维护、工作队列节拍 | `JobsTimerKind.gcd` |
-| `CADisplayLink` | 挂到 RunLoop，回调与显示刷新周期协调 | 视觉节奏最匹配；提供 `timestamp`、`targetTimestamp` 与首选帧率 | 实际帧率会受设备、低电量、温控、辅助功能和主线程负载影响；不适合业务计时 | 逐帧动画、进度绘制、交互视觉插值 | `JobsTimerKind.displayLink` |
-| `CFRunLoopTimer` | Core Foundation RunLoop + Mode | 可控制下一次触发时间、Mode、上下文和底层 RunLoop 互操作 | C API 冗长；所有权、线程亲和与上下文管理复杂；仍不是实时机制 | RunLoop 基础设施、C/CF 互操作、特殊 Mode 调度 | `JobsTimerKind.runLoop` |
+DisplayLink 首选帧率是请求，实际受设备和系统策略影响；根据 `timestamp` / `targetTimestamp` 或单调时钟计算进度，不按帧次数累加。CFRunLoopTimer 与 Timer 可桥接，不天然更精确。
 
-#### 42.2.1、`Timer/NSTimer`
+### 2、<font id="计时示例">低频刷新与异步等待</font>
 
-- Apple 明确说明它不是实时机制：RunLoop 无法及时处理时，实际回调可以明显晚于计划时间。
-- 重复 Timer 按“原计划触发时间”继续排期；错过多个周期时只回调一次，不会补发每个丢失 tick。
-- `tolerance` 只允许晚触发，不允许早触发。允许合理容差可以减少 CPU 唤醒并改善功耗。
-- `.default` Mode 下，滚动等 Mode 切换可能让回调暂时不被处理；需要滚动期间继续刷新时使用 `.common`。
-- target-selector 形态要注意 Timer、RunLoop、target 之间的持有关系；`JobsSwiftTimer` 已把 Foundation 内核收口为弱捕获回调。
+以下原生代码只说明机制；Jobs 应用层对接现有计时封装。
 
-#### 42.2.2、`DispatchSourceTimer`
+```swift
+import Foundation
 
-- `deadline` 使用单调的 `DispatchTime`，适合“经过多久”的间隔调度；`wallDeadline` 使用墙上时间，系统时间调整时语义不同。
-- `leeway` 是允许系统延后投递的窗口，用于功耗与及时性的折中。
-- 不依赖 RunLoop，不代表一定更准；目标队列被阻塞、QoS 较低、系统繁忙时仍会延后。
-- 原生 Dispatch Source 在激活、挂起、恢复、取消之间有严格状态要求；`JobsSwiftTimer` 负责配平并用 generation token 拦截旧回调。
+@MainActor
+final class Countdown {
+    private var timer: Timer?
+    private let endAt: Date
 
-#### 42.2.3、`CADisplayLink`
+    init(endAt: Date) { self.endAt = endAt }
 
-- 它表达“下一帧应该更新视觉状态”，而不是“每隔固定毫秒执行业务”。
-- 首选帧率只是请求。系统会结合最大刷新率、低电量模式、温度与用户设置选择实际帧率。
-- 动画进度应使用时间戳或单调时钟计算；按回调次数累加会在掉帧、高刷或刷新率变化时产生速度漂移。
-- 回调中只做轻量状态更新与绘制准备；重计算会直接制造卡顿。
+    func start() {
+        stop()
+        let deadline = endAt
+        let timer = Timer(timeInterval: 1, repeats: true) { timer in
+            let remaining = max(0, deadline.timeIntervalSinceNow) // 每次从截止时间重算。
+            print(remaining)
+            if remaining == 0 { timer.invalidate() }
+        }
+        timer.tolerance = 0.1
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
+    }
 
-#### 42.2.4、`CFRunLoopTimer`
+    func stop() {
+        timer?.invalidate() // 业务退出时主动停止，别只把引用设空。
+        timer = nil
+    }
+}
+```
 
-- 它和 `Timer/NSTimer` 共享 RunLoop 计时语义，不是一个“天然更精准”的替代品。
-- 价值在于更底层的 C 接口：明确指定 RunLoop、Mode、Context、Order 和下一次触发时间。
-- 普通业务没有 Core Foundation 互操作需求时，优先使用 `Timer` 或 Jobs 封装，避免无意义增加所有权复杂度。
+绝对业务截止时间使用 `Date`，需考虑系统时间调整或服务端时钟校准；测量实际经过时间使用单调时钟。App 返回前台后重算，不靠补 tick 恢复倒计时。
 
-### 42.3、非 Timer，但经常用于“等一会儿”
+一次等待使用 <font color="red"><b><code>Task.sleep</code></b></font> 或 `DispatchQueue.asyncAfter`；它们不是完整重复计时器管理方案。App 被挂起后，普通计时器不能保证继续每秒回调；后台任务与后台传输受系统资格和调度策略限制。
 
-| API | 特点 | 应该使用的场景 | 不应替代的能力 |
-| ---- | ---- | ---- | ---- |
-| `DispatchQueue.asyncAfter` | 一次性延迟向队列提交闭包 | 简单延迟、轻量防抖尾部动作 | 重复 tick、暂停、恢复、集中管理 |
-| [**Task.sleep / Clock.sleep**](https://developer.apple.com/documentation/swift/task/) | 挂起当前 Task，不阻塞底层线程；取消时抛出 `CancellationError` | Swift 并发流程里的超时、重试间隔、一次性等待 | OC 调用、页面多 Timer 注册表、天然重复调度 |
-| [**BGTaskScheduler**](https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler) | 系统根据资源与策略择机运行 | App 被挂起后的内容刷新、维护与长任务 | 秒级准点回调、常驻后台 Timer |
+### 3、<font id="Jobs计时管理">JobsSwiftTimer 与 Manager</font>
 
-没有任何普通 Timer 能保证 App 被系统挂起后继续每秒回调。`DispatchSourceTimer` 的“后台队列”只是非主队列，不等于 iOS 后台执行资格。
+- `JobsSwiftTimer` 统一四内核的启动、暂停、恢复、停止与回调边界，不改变底层精度。
+- `JobsSwiftTimerMgr` 管 identifier、去重、受管句柄、Scope 与批量清理。
+- 单对象私有计时使用独立 Timer；多个计时任务、复用列表和跨对象治理使用 Manager。
+- Cell 使用稳定 Model identifier，并通过 `expectedTimer` 精准移除；页面持有 Scope，避免只记住最后一个 Timer。
+- Timer 只唤醒刷新；Model 中的截止时间决定剩余时长。
 
-### 42.4、选型决策
+<a href="#FAQ-计时" style="color:red;font-weight:bold;">FAQ：计时精度与后台执行</a>
 
-1. 需要和屏幕逐帧同步：选 `CADisplayLink` / `.displayLink`。
-2. 需要脱离 RunLoop，在工作队列做心跳、轮询或维护：选 `DispatchSourceTimer` / `.gcd`。
-3. 只是在主线程低频更新普通 UI：选 `Timer` / `.foundation`，Mode 使用 `.common`。
-4. 需要直接控制 RunLoop Timer 的 Mode、Context 或下一次触发：选 `CFRunLoopTimer` / `.runLoop`。
-5. 只需要延迟一次：选 `Task.sleep` 或 `DispatchQueue.asyncAfter`。
-6. 需要系统挂起后执行：选符合业务资格的 Background Tasks、后台传输、定位或音频等机制，不选普通 Timer。
+## 十五、<font id="验证">示例使用与验证</font>
 
-### 42.5、原生最小代码：只用于理解系统差异
+1、每个代码块独立使用；合并“接上例”依赖。多个同名教学类型或多个 <font color="red"><b><code>@main</code></b></font> 不要直接放进同一 Target。
 
-Jobs 应用层生产代码优先使用 `JobsSwiftTimer` / `JobsSwiftTimerMgr`。下面的原生代码用于理解系统模型，不作为绕开 Jobs 封装的推荐写法。
+2、无入口且只声明类型的片段用 `-typecheck`；顶层调用示例作为独立脚本文件；<font color="red"><b><code>@main</code></b></font> 示例用 <font color="red"><b><code>-parse-as-library</code></b></font> 构建。
 
-- RunLoop Timer：
+3、并发示例保持 Swift 6 严格检查，不通过关闭诊断或无依据添加 unchecked 绕过错误。
 
-  ```swift
-  private var foundationTimer: Timer?
+```shell
+xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency=complete -warnings-as-errors -typecheck Example.swift
+```
 
-  func startFoundationTimer() {
-      let timer = Timer(timeInterval: 1, repeats: true) { _ in
-          // 主线程 UI 刷新
-      }
-      timer.tolerance = 0.1
-      RunLoop.main.add(timer, forMode: .common)
-      foundationTimer = timer
-  }
-  ```
+调用异步演示时，在唯一的异步入口中执行 <font color="red"><b><code>await useLedger()</code></b></font> 或 <font color="red"><b><code>try await useRepository()</code></b></font>，并合入对应定义。
 
-- GCD Timer：
+<font color="red"><b><code>-default-isolation</code></b></font> 需受支持的工具链。语言机制示例、网络声明与框架集成分别验证；编译通过不等于网络、UI 或设备行为已运行。
 
-  ```swift
-  private let timerQueue = DispatchQueue(label: "com.jobs.timer.example")
-  private var sourceTimer: DispatchSourceTimer?
+验证记录（2026-08-31）：Apple Swift 6.3.3，54 段 Swift 示例按各自依赖通过 Swift 6 严格类型检查；集合变换、协议派发、属性包装器、Actor 重入与请求去重、<font color="red"><b>Combine</b></font>、JSON 等 16 组运行检查通过。未执行真实网络请求、完整 App 构建、性能基准或设备测试。
 
-  func startSourceTimer() {
-      let timer = DispatchSource.makeTimerSource(queue: timerQueue)
-      timer.schedule(
-          deadline: .now() + .seconds(1),
-          repeating: .seconds(1),
-          leeway: .milliseconds(100)
-      )
-      timer.setEventHandler {
-          // 非 UI 工作；更新 UI 时再切回主线程
-      }
-      timer.activate()
-      sourceTimer = timer
-  }
-  ```
+## 十六、<font id="FAQ">FAQ：面试问答</font>
 
-- Swift 并发的一次性等待：
+正文用于开发查阅；本节集中短答与追问。每题附返回知识点链接。
 
-  ```swift
-  private var delayTask: Task<Void, Never>?
-  
-  func scheduleOnce() {
-      delayTask?.cancel()
-      delayTask = Task {
-          do {
-              try await Task.sleep(for: .seconds(1))
-              guard !Task.isCancelled else { return }
-              // 一次性后续动作
-          } catch {
-              // Task 被取消
-          }
-      }
-  }
-  ```
+### 1、<font id="FAQ-泛型">泛型解决什么问题？</font>
 
-### 42.6、为什么还需要 `JobsSwiftTimer` / `JobsSwiftTimerMgr`
+**答：**类型参数化。同一份逻辑处理多种类型，编译器同时保留输入、输出和关联成员的类型关系；约束决定函数体能使用哪些能力。
 
-- `JobsSwiftTimer` 用同一协议统一四个内核的 `start/pause/resume/fireOnce/stop`、回调队列、前后台策略、一次性完成顺序和回调防穿透。
-- `JobsSwiftTimerMgr` 在内核之上治理 identifier、去重、受管句柄、Scope、前后台状态机和批量清理。
-- 单个对象私有、生命周期清晰时用 `JobsTimer`；多个 Timer、列表复用或需要跨对象治理时用 Manager。
-- Cell 复用使用稳定 Model identifier，并通过 `expectedTimer` 精准移除；页面只持有 Scope，不持有“最后一个 Timer”。
-- 倒计时以绝对 `endAt` 为时间真值，每次 tick 根据当前时间重算剩余值。Timer 只负责唤醒刷新，不负责代表真实经过时间。
+**追问：为什么不用 <font color="red"><b>Any</b></font>？答：**<font color="red"><b>Any</b></font> 能装值，但会丢失可直接使用的静态类型关系，通常需要再转换。
 
-  ```swift
-  let remaining = max(0, model.endAt.timeIntervalSinceNow)
-  ```
+<a href="#类型参数化" style="color:red;font-weight:bold;">返回：泛型</a>
 
-<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
+### 2、<font id="FAQ-协议">协议有什么用？</font>
+
+**答：**约定能力，让使用者依赖接口而不是具体实现。编译器检查实现是否满足约定，适合服务替换、测试注入、容器算法和代理。
+
+**追问：<font color="red"><b>get</b></font> <font color="red"><b>set</b></font> 是存储属性吗？答：**它是读写要求，实现可以存储，也可以计算；协议本身不分配字段。
+
+<a href="#协议" style="color:red;font-weight:bold;">返回：协议</a>
+
+### 3、<font id="FAQ-some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型怎样区分？</font>
+
+**答：**命名泛型保留可重复引用的类型关系；参数 <font color="red"><b>some</b></font> 是泛型简写；返回 <font color="red"><b>some</b></font> 由实现方固定底层类型；<font color="red"><b>any</b></font> 用统一容器保存可能不同的遵循者。
+
+**追问：<font color="red"><b>any</b></font> 一定堆分配吗？答：**不一定。保存形式与值大小、约束和优化有关，不能凭语法断定分配成本。
+
+<a href="#some-any" style="color:red;font-weight:bold;">返回：<font color="red"><b>some</b></font> / <font color="red"><b>any</b></font></a>
+
+### 4、<font id="FAQ-关联类型"><font color="red"><b>associatedtype</b></font> 和枚举关联值有什么区别？</font>
+
+**答：**<font color="red"><b>associatedtype</b></font> 是协议中的类型占位，由遵循者确定；枚举关联值是某个 <font color="red"><b>case</b></font> 实例携带的实际数据。前者约定类型关系，后者保存值。
+
+<a href="#关联类型" style="color:red;font-weight:bold;">返回：关联类型</a>
+
+### 5、<font id="FAQ-协议派发">协议扩展的方法会被具体实现替换吗？</font>
+
+**答：**写在协议要求中的成员，通过协议入口调用其对应实现；仅写在扩展中的同名工具方法，不形成相同的多态入口。需要可替换的能力必须写进要求。
+
+<a href="#协议扩展" style="color:red;font-weight:bold;">返回：协议扩展</a>
+
+### 6、<font id="FAQ-值类型">结构体与类的核心区别是什么？</font>
+
+**答：**值语义与引用语义。结构体赋值得到独立外层值，类赋值复制同一实例的引用；需要内容用值类型，需要身份和共同生命周期用引用类型。
+
+**追问：结构体包含 <font color="red"><b>class</b></font> 呢？答：**复制外层值仍会复制该对象引用，内部对象可能继续共享。
+
+<a href="#值与引用" style="color:red;font-weight:bold;">返回：类型选择</a>
+
+### 7、<font id="FAQ-内存">结构体一定在栈上吗？size 与 stride 有什么区别？</font>
+
+**答：**不一定，存储位置由编译器、逃逸与上下文决定。size 是值的布局长度，stride 是连续存放的起点间距，包含必要的尾部补齐；alignment 约束起始地址。
+
+<a href="#字节对齐" style="color:red;font-weight:bold;">返回：字节对齐</a>
+
+### 8、<font id="FAQ-COW">COW 就是深拷贝和线程安全吗？</font>
+
+**答：**都不是。COW 通过写前分离共享存储保持值语义；集合中的对象仍可能共享，同一个变量的并发写入仍需隔离或同步。
+
+<a href="#COW" style="color:red;font-weight:bold;">返回：Copy-on-Write</a>
+
+### 9、<font id="FAQ-ARC">闭包为什么会形成循环引用？</font>
+
+**答：**对象强持有闭包，闭包又强捕获对象，双方无法释放。按持有关系使用弱捕获、一次性回调清理或取消订阅；不是所有闭包都必须 <font color="red"><b>weak</b></font>。
+
+**追问：<font color="red"><b>weak</b></font> 与 <font color="red"><b>unowned</b></font> 怎样选？答：**<font color="red"><b>weak</b></font> 允许对象先释放并变 <font color="red"><b>nil</b></font>；<font color="red"><b>unowned</b></font> 要证明每次访问时对象仍存活。
+
+<a href="#ARC" style="color:red;font-weight:bold;">返回：ARC</a>
+
+### 10、<font id="FAQ-闭包">escaping 表示异步吗？</font>
+
+**答：**只表示闭包可能在函数返回后继续存在。可以同步调用，也可以被保存后稍后调用；执行线程与并发安全由其他规则决定。
+
+**追问：多行闭包还能用 $0 吗？答：**可以。匿名参数与是否多行无关，复杂代码优先命名以便阅读。
+
+<a href="#逃逸与捕获" style="color:red;font-weight:bold;">返回：闭包</a>
+
+### 11、<font id="FAQ-mutating"><font color="red"><b>mutating</b></font> 和 <font color="red"><b>inout</b></font> 的区别是什么？</font>
+
+**答：**<font color="red"><b>mutating</b></font> 允许值类型方法修改自身，<font color="red"><b>inout</b></font> 允许函数修改调用方变量。<font color="red"><b>let</b></font> 结构体不能调用修改自身的方法；<font color="red"><b>inout</b></font> 还必须满足独占访问规则。
+
+<a href="#mutating-inout" style="color:red;font-weight:bold;">返回：<font color="red"><b>mutating</b></font> / <font color="red"><b>inout</b></font></a>
+
+### 12、<font id="FAQ-map">map、compactMap、flatMap 怎样选？</font>
+
+**答：**map 逐个转换；compactMap 转换后去掉 <font color="red"><b>nil</b></font>；序列 flatMap 转换后展开一层。filter 只筛选，不改变元素类型。
+
+**追问：空字符串会被 compactMap 删掉吗？答：**不会，除非转换明确返回 <font color="red"><b>nil</b></font>。
+
+<a href="#map" style="color:red;font-weight:bold;">返回：集合转换</a>
+
+### 13、<font id="FAQ-joined">joined 一定返回数组吗？</font>
+
+**答：**不一定。嵌套序列的 joined 返回扁平化序列，可直接遍历；字符串连接重载返回 String。接口确实需要数组时再用 Array 收集。
+
+<a href="#joined" style="color:red;font-weight:bold;">返回：joined</a>
+
+### 14、<font id="FAQ-初始化">指定、便捷和 <font color="red"><b>required</b></font> 初始化器怎样配合？</font>
+
+**答：**指定初始化器完成本类存储并向父类指定入口委托；便捷初始化器先向同类其他入口委托，最终进入本类指定入口；<font color="red"><b>required</b></font> 保持子类创建契约。
+
+**追问：多个指定入口最终必须汇入同一个吗？答：**不必，每条路径正确完成初始化即可。
+
+<a href="#初始化" style="color:red;font-weight:bold;">返回：初始化</a>
+
+### 15、<font id="FAQ-扩展"><font color="red"><b>extension</b></font> 能增加存储属性吗？</font>
+
+**答：**不能给已有类型增加实例存储属性；可添加计算属性、方法、下标和协议遵循。协议本体同样只声明能力，不分配字段。
+
+<a href="#extension" style="color:red;font-weight:bold;">返回：扩展</a>
+
+### 16、<font id="FAQ-包装器">所有 @ 标记都是属性包装器吗？</font>
+
+**答：**不是。propertyWrapper 定义包装器；<font color="red"><b>MainActor</b></font> 声明隔离；Observable 是宏；available 描述可用性。共同的符号不表示相同机制。
+
+**追问：$value 是什么？答：**包装器提供的 projectedValue，具体能力由包装器定义。
+
+<a href="#属性包装器" style="color:red;font-weight:bold;">返回：属性包装器</a>
+
+### 17、<font id="FAQ-单例"><font color="red"><b>static</b></font> <font color="red"><b>let</b></font> 单例线程安全吗？</font>
+
+**答：**初始化具有一次性保证，但实例后续可变状态不会自动获得保护。UI 单例可隔离到 <font color="red"><b>MainActor</b></font>，共享业务状态使用 Actor 或完整同步方案。
+
+<a href="#单例" style="color:red;font-weight:bold;">返回：单例</a>
+
+### 18、<font id="FAQ-访问控制"><font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font> 有什么区别？</font>
+
+**答：**<font color="red"><b>public</b></font> 开放模块外使用；<font color="red"><b>open</b></font> 进一步开放类的模块外继承与成员重写。区别取决于模块边界，和库是否以源码交付无关。
+
+<a href="#访问控制" style="color:red;font-weight:bold;">返回：访问控制</a>
+
+### 19、<font id="FAQ-Task"><font color="red"><b>async</b></font>、<font color="red"><b>await</b></font>、<font color="red"><b>Task</b></font> 都代表后台线程吗？</font>
+
+**答：**不代表。<font color="red"><b>async</b></font> 允许挂起，<font color="red"><b>await</b></font> 标记潜在挂起点，<font color="red"><b>Task</b></font> 承载异步工作；执行位置受隔离和调度规则约束。<font color="red"><b>MainActor</b></font> 中创建的普通 <font color="red"><b>Task</b></font> 可以继续在 <font color="red"><b>MainActor</b></font> 执行。
+
+<a href="#async-await" style="color:red;font-weight:bold;">返回：异步语义</a>
+
+### 20、<font id="FAQ-结构化"><font color="red"><b>Task</b></font> 创建在另一个 <font color="red"><b>Task</b></font> 内，就是结构化子任务吗？</font>
+
+**答：**不是。<font color="red"><b>Task</b></font> 初始化器仍创建非结构化任务。<font color="red"><b>async</b></font> <font color="red"><b>let</b></font> 与任务组建立结构化父子关系，子任务不能脱离作用域；普通 <font color="red"><b>Task</b></font> 的句柄、取消和结果由业务管理。
+
+<a href="#结构化并发" style="color:red;font-weight:bold;">返回：结构化并发</a>
+
+### 21、<font id="FAQ-取消">cancel 会立即停止任务吗？</font>
+
+**答：**不会强杀。取消是请求，任务或调用的 API 需要检查并退出；已经发生的外部副作用不会自动回滚。任务组超时也可能被不响应取消的工作拖住。
+
+<a href="#取消" style="color:red;font-weight:bold;">返回：取消与超时</a>
+
+### 22、<font id="FAQ-Continuation">Continuation 最重要的约束是什么？</font>
+
+**答：**每条路径恢复一次且仅一次。漏恢复会持续等待，重复恢复会触发错误；多次事件使用流。<font color="red"><b>Task</b></font> 取消与旧 API 取消需要另外连接。
+
+<a href="#Continuation" style="color:red;font-weight:bold;">返回：回调桥接</a>
+
+### 23、<font id="FAQ-Actor">Actor 比普通 <font color="red"><b>class</b></font> 多解决了什么？</font>
+
+**答：**为共享可变状态建立语言级隔离边界，编译器检查访问与传值。普通 <font color="red"><b>class</b></font> 也能用锁或队列保护，但全部入口的一致性由实现负责。
+
+**追问：Actor 是专属线程吗？答：**不是；Actor 管隔离，<font color="red"><b>Task</b></font> 管工作，线程是执行资源。
+
+<a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor</a>
+
+### 24、<font id="FAQ-重入">用了 Actor，为什么还可能超发名额？</font>
+
+**答：**等待期间其他调用可以进入同一 Actor 改状态。等待前的检查可能失效；恢复后复查，把最终检查与扣减放进同一无挂起片段，或使用有补偿的预留策略。
+
+**追问：这是数据竞争吗？答：**可以没有同时读写，仍发生业务上的逻辑竞态。
+
+<a href="#Actor重入" style="color:red;font-weight:bold;">返回：可重入</a>
+
+### 25、<font id="FAQ-去重">把 <font color="red"><b>class</b></font> 改成 <font color="red"><b>actor</b></font>，就不会重复请求了吗？</font>
+
+**答：**不会。等待网络时最终缓存还没写入，后来调用仍可能再请求。需要先登记正在执行的 <font color="red"><b>Task</b></font>，再让同 key 调用复用，并设计失败清理和失效策略。
+
+<a href="#Actor去重" style="color:red;font-weight:bold;">返回：请求去重</a>
+
+### 26、<font id="FAQ-Sendable"><font color="red"><b>Sendable</b></font> 加了锁吗？不写会怎样？</font>
+
+**答：**没有加锁。它声明可安全跨域传递，编译器检查相应条件；有些类型能隐式推断，有些必须显式声明。满足接口契约和偶然一次调用通过不是同一件事。
+
+**追问：unchecked 可以解决报错吗？答：**只有安全由锁等机制完整证明时才使用；它不是修复数据竞争的代码。
+
+<a href="#Sendable" style="color:red;font-weight:bold;">返回：<font color="red"><b>Sendable</b></font></a>
+
+### 27、<font id="FAQ-隔离"><font color="red"><b>nonisolated</b></font>、<font color="red"><b>MainActor</b></font>、<font color="red"><b>Sendable</b></font> 各管什么？</font>
+
+**答：**<font color="red"><b>nonisolated</b></font> 声明成员不归所属 Actor 隔离；<font color="red"><b>MainActor</b></font> 指定代码与状态的隔离域；<font color="red"><b>Sendable</b></font> 约定值的安全传递。三个维度不能互相替代。
+
+<a href="#nonisolated" style="color:red;font-weight:bold;">返回：<font color="red"><b>nonisolated</b></font></a> · <a href="#MainActor" style="color:red;font-weight:bold;">返回：<font color="red"><b>MainActor</b></font></a>
+
+### 28、<font id="FAQ-Actor-await">Actor 方法没写 <font color="red"><b>async</b></font>，为什么外部还要 <font color="red"><b>await</b></font>？</font>
+
+**答：**方法体可以同步，但外部调用需要进入它的隔离域，调用点可能等待。当前 Actor 内调用自己的同步方法则不需要跨域。
+
+<a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor 访问</a>
+
+### 29、<font id="FAQ-Actor边界">Actor 能继承、保证 FIFO 或自动加速吗？</font>
+
+**答：**不参与普通类继承，不保证请求按到达顺序执行，也不承诺更快。它可以遵循协议，通过组合复用；性能要测跨域次数与状态热点。
+
+<a href="#Actor选型" style="color:red;font-weight:bold;">返回：Actor 选型</a>
+
+### 30、<font id="FAQ-锁">Actor 与锁怎样选择？</font>
+
+**答：**异步调用链里的共享业务状态优先评估 Actor；短同步临界区或必须维持同步接口时可用锁。持锁区不跨 <font color="red"><b>await</b></font>，Actor 跨等待流程也不自动成为事务。
+
+<a href="#锁" style="color:red;font-weight:bold;">返回：锁</a>
+
+### 31、<font id="FAQ-流">AsyncStream 与 Continuation 怎样区分？</font>
+
+**答：**Continuation 接一次结果，AsyncStream 接多次事件。流要管理结束、缓冲和取消；yield 发值不等于自动等待慢消费者。
+
+<a href="#AsyncStream" style="color:red;font-weight:bold;">返回：AsyncStream</a>
+
+### 32、<font id="FAQ-Combine"><font color="red"><b>Combine</b></font> 的订阅为什么刚建立就没了？</font>
+
+**答：**常见原因是没有保留 AnyCancellable，释放后订阅被取消。把订阅保存到明确拥有者中，退出业务时再取消，并检查闭包是否与拥有者形成强引用环。
+
+<a href="#Combine" style="color:red;font-weight:bold;">返回：<font color="red"><b>Combine</b></font></a>
+
+### 33、<font id="FAQ-调度">subscribe(on:) 与 receive(on:) 有什么区别？</font>
+
+**答：**前者安排上游订阅、请求与取消；后者安排其后下游的值和完成事件。receive 放到重计算之后，不会把前面的计算自动搬走；主队列调度也不等于 <font color="red"><b>MainActor</b></font> 类型契约。
+
+<a href="#Combine操作符" style="color:red;font-weight:bold;">返回：操作符与调度</a>
+
+### 34、<font id="FAQ-Published">Published 发出新值时，属性已经改了吗？</font>
+
+**答：**发布发生在 <font color="red"><b>willSet</b></font>，闭包参数已经是新值，但重新读取属性可能仍是旧值。处理本次变化优先使用收到的参数。
+
+<a href="#Published" style="color:red;font-weight:bold;">返回：Published</a>
+
+### 35、<font id="FAQ-搜索流"><font color="red"><b>Combine</b></font> 搜索怎样避免旧结果覆盖新结果？</font>
+
+**答：**输入防抖后映射到请求 Publisher，用 switchToLatest 切到最新请求，并按业务需要加请求版本校验。取消旧订阅不代表服务端副作用已撤销。
+
+<a href="#Combine操作符" style="color:red;font-weight:bold;">返回：搜索管线</a>
+
+### 36、<font id="FAQ-可用性">available 与条件编译有什么区别？</font>
+
+**答：**@available 声明 API 要求；#available / #unavailable 按运行系统选择路径；#<font color="red"><b>if</b></font> 决定是否参与编译。运行时检查不能让旧编译器认识新语法。
+
+<a href="#可用性" style="color:red;font-weight:bold;">返回：版本边界</a>
+
+### 37、<font id="FAQ-内联">inlinable 会强制内联吗？</font>
+
+**答：**不会。它向客户端公开实现以允许跨模块优化；usableFromInline 让内部声明可被该实现引用；frozen 承诺公开布局。三者都有演进代价。
+
+<a href="#内联" style="color:red;font-weight:bold;">返回：内联</a>
+
+### 38、<font id="FAQ-网络">URLSession 没报错，就代表 HTTP 成功吗？</font>
+
+**答：**不代表。传输成功仍可能得到 404 或 500；先检查响应类型和 HTTP 状态，再处理业务状态与解码。取消、传输、HTTP、业务、解码应区分。
+
+<a href="#URLSession" style="color:red;font-weight:bold;">返回：网络校验</a>
+
+### 39、<font id="FAQ-解码">模型有默认值，JSON 缺字段就一定能解码吗？</font>
+
+**答：**不一定，自动合成不会统一把默认值作为缺字段兜底。需要明确策略时自定义解码；decodeIfPresent 接受缺失或 null，但类型错误仍会抛出。
+
+<a href="#Codable" style="color:red;font-weight:bold;">返回：Codable</a>
+
+### 40、<font id="FAQ-计时">哪个 Timer 最精确，能在后台一直跑吗？</font>
+
+**答：**先按调度模型选，没有普通 Timer 保证硬实时或 App 挂起后持续秒级回调。视觉用 DisplayLink，工作队列用 GCD Timer，普通 UI 用 RunLoop Timer；倒计时从截止时间重算。
+
+<a href="#计时" style="color:red;font-weight:bold;">返回：计时机制</a>
+
+### 41、<font id="FAQ-数据结构">链表插删一定比数组快吗？</font>
+
+**答：**需要已知节点或前驱等条件；寻找位置仍可能线性遍历。数组有局部性和索引优势，链表有指针与分配成本，按实际访问模式选择。
+
+<a href="#数据结构" style="color:red;font-weight:bold;">返回：数据结构</a>
+
+### 42、<font id="FAQ-网络分层">HTTP 一定基于 TCP 吗？</font>
+
+**答：**不是。HTTP/3 使用 QUIC / UDP；HTTP 语义与底层传输应分开。OSI 是参考分层，真实协议不要求严格一层一个实现。
+
+<a href="#网络分层" style="color:red;font-weight:bold;">返回：网络分层</a>
+
+<a id="🔚" href="#前言" style="color:red;font-weight:bold;">返回前言</a>

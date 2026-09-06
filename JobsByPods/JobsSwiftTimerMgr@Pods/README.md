@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -175,3 +177,51 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 - 页面或业务域有多条 Timer 时，用 `scopeIdentifier` 整组 pause/resume/remove。
 - 倒计时把绝对 `endAt` 作为时间真值，Timer 只触发重算；Manager 管物理 Timer，不承担业务时间真值。
 - “更准”不等于硬实时；选择 GCD 只能避开 RunLoop Mode 影响，仍需面对队列阻塞、QoS、系统负载和 `leeway`。
+
+<a id="jobs-architecture"></a>
+
+## 八、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 8.1、设计目的与职责划分
+
+在 JobsSwiftTimer 之上按 identifier 登记和治理物理计时器，提供保留、替换或报错的去重策略、Scope 分组控制与前后台暂停策略。受管包装层校验动作是否仍属于当前登记项。
+
+### 8.2、运行脉络
+
+按标识创建 → 应用去重策略 → 登记并返回受管计时器 → 按标识或 Scope 控制 → 精准停止移除
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+flowchart TD
+    A["按 identifier 创建"] --> B{"已有登记项？"}
+    B -->|否| C["登记新计时器"]
+    B -->|是| D{"去重策略"}
+    D -->|保留| E["返回已有项"]
+    D -->|替换| C
+    D -->|报错| F["交付冲突"]
+    C --> G["按标识或 Scope 管理"]
+    G --> H["清理时核对 expectedTimer"]
+    H --> I["停止并移除对应项"]
+```
+
+### 8.3、关键设计与边界
+
+- 旧持有者可能在同标识已替换后清理，expectedTimer 用于确认仍是原对象，避免误杀新计时器。
+- remove 不自动 stop，与 stopAndRemove 不同，重建时不能隐藏这一区别。
+- 手动、Scope 和前后台暂停原因需分开，恢复 Scope 不应恢复业务手动暂停项。
+- 锁保护登记与状态，实际生命周期动作还需遵循底层内核线程要求；不能在锁内执行任意回调。
+- Manager 管理物理计时器，不管理业务剩余时长；页面倒计时仍以 endAt 为准。
+
+### 8.4、阅读与重建顺序
+
+先读 Defs 的策略，再看 create 与 ManagedTimer 的当前项校验，最后看 expectedTimer、Scope 和应用状态治理。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsSwiftTimerMgr.swift](<./JobsSwiftTimerMgr.swift>)
+- [JobsSwiftTimerMgrDefs.swift](<./JobsSwiftTimerMgrDefs.swift>)
+
+依赖与编译入口：[JobsSwiftTimerMgr.podspec](<./JobsSwiftTimerMgr.podspec>)。其中显式依赖声明包括 `JobsSwiftTimer`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

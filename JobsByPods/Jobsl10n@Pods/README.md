@@ -2,6 +2,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ## 一、使用说明
 
 * 必要时，需要在启动时注册
@@ -275,3 +277,37 @@ TRBind.bind(self, translated: "KEY".tr) { vc, text in
 
 
 
+<a id="jobs-architecture"></a>
+
+## 三、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 3.1、设计目的与职责划分
+
+将语言选择、语言码归一化、Bundle 查词和已绑定 UI 自动刷新连接起来。LanguageManager 管理当前语言，Bundle 扩展改变本地化查找目标，TRAutoRefresh 与 UIKit 入口登记需要随语言变化重放的赋值。
+
+### 3.2、运行脉络
+
+设置或恢复语言 → 选择对应 lproj → 翻译键查词 → 登记 UI 文本绑定 → 语言切换通知触发刷新
+
+### 3.3、关键设计与边界
+
+- 只替换一次文字不会自动获得持续刷新，必须理解 tr_setText 等绑定入口与翻译键登记之间的关系。
+- 语言码到资源目录存在归一化规则，简繁中文和地区变体不能只截取前两个字符。
+- 普通文本、富文本与输入占位有不同赋值路径，UITextView 本身没有原生 placeholder 属性。
+- Bundle.main 的覆盖具有全局影响，业务应统一管理语言入口，避免多个库各自安装互相冲突的覆盖。
+
+### 3.4、阅读与重建顺序
+
+先读 LanguageManager、TRLang，再看 Bundle/String 扩展，最后追 TRAutoRefresh 与 UIKit 的登记、通知和释放。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Jobsl10n.swift](<./Jobsl10n.swift>)
+- [LanguageManager.swift](<./LanguageManager.swift>)
+- [TRAutoRefresh.swift](<./TRAutoRefresh.swift>)
+- [TRLang.swift](<./TRLang.swift>)
+- [Foundation&UIKit/Bundle+多语言国际化.swift](<./Foundation&UIKit/Bundle+多语言国际化.swift>)
+
+依赖与编译入口：[Jobsl10n.podspec](<./Jobsl10n.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

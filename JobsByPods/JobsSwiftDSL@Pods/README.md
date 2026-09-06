@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -125,5 +127,40 @@ return cell
 - `UITableViewCell` 子对象闭包：`byTextLabel`、`byDetailTextLabel`、`byImageView`、`byContentView`。
 - `UITableViewCell` 文本收口：`byTitleTextAlignment`、`byTitleNumberOfLines`、`byDetailTitleTextAlignment`、`byDetailTitleNumberOfLines`。
 - `UIDatePicker` / `UIPickerView` 的模式、日期范围、代理和数据源配置统一由本 Pod 承接；需要兼容旧系统的滚轮样式使用 `byWheelsStyleIfAvailable()` 保持主链不断开，`JobsByUIKit` 通过公开桥接继续兼容原 import。
+
+<a id="jobs-architecture"></a>
+
+## 五、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 5.1、设计目的与职责划分
+
+作为系统对象链式配置的集中层，按 Foundation、UIKit、QuartzCore、WebKit、PDFKit、PhotosUI、MetalKit 等框架划分扩展，统一 byXxx 与配置闭包表达，承接原先散落在多个 Pod 的 DSL。
+
+### 5.2、运行脉络
+
+创建目标对象 → 链式配置属性或子对象 → 执行明确的行为入口 → 返回当前对象继续配置
+
+### 5.3、关键设计与边界
+
+- 链式返回尽量保持 Self，不能在中途降为父类后丢失子类接口；值类型需要按复制返回规则处理。
+- 配置和 start/stop 等明确行为入口要区分，不能把有副作用的方法理解成普通属性设置。
+- 兼容 Pod 的桥接与本层实现要保持单一归属，防止重复扩展引发歧义。
+- 系统版本差异在相应扩展内部消化，例如日期选择器的可用样式；无条件调用新 API 会破坏旧系统支持。
+
+### 5.4、阅读与重建顺序
+
+先按目标框架找到扩展，再检查接收类型、返回类型和版本条件，最后沿 JobsByUIKit 等使用方看完整链条。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsSwiftBlockBridge.swift](<./JobsSwiftBlockBridge.swift>)
+- [UIKit/iOS.SDK/UIView/UIView+DSL.swift](<./UIKit/iOS.SDK/UIView/UIView+DSL.swift>)
+- [Foundation/JSONDecoder.swift](<./Foundation/JSONDecoder.swift>)
+- [MetalKit/MTKView.swift](<./MetalKit/MTKView.swift>)
+- [PDFKit/PDFThumbnailView.swift](<./PDFKit/PDFThumbnailView.swift>)
+
+依赖与编译入口：[JobsSwiftDSL.podspec](<./JobsSwiftDSL.podspec>)。其中显式依赖声明包括 `JobsSwiftBlock`、`JobsSwiftBaseDefines`、`JobsTextTools`、`RxSwift`、`RxCocoa`、`SnapKit`、`BMPlayer`、`GKNavigationBarSwift`、`YTKNetwork`、`AFNetworking`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -24,6 +24,8 @@ scrollView.byReplaceRefreshAnimator(
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ## 一、简介
 
 * 开发动机 ➤ 逐步舍弃[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)
@@ -178,3 +180,55 @@ private lazy var collectionView: UICollectionView = {
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 六、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 6.1、设计目的与职责划分
+
+通过 UIScrollView 扩展挂接代理，在上、下、左、右槽位追踪滚动距离与刷新状态。组件定义状态和表现接口，Proxy 管理阈值、占位 inset 和业务动作，动画容器只适配 JobsFuseAnimation。
+
+### 6.2、运行脉络
+
+挂载槽位 → 观察滚动 → 下拉进度到达就绪 → 释放触发刷新 → 宿主结束或报错 → 恢复 inset 与表现
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+flowchart TD
+    A["观察滚动距离"] --> B["下拉进度"]
+    B --> C{"达到阈值并释放？"}
+    C -->|否| A
+    C -->|是| D["刷新状态与 inset 占位"]
+    D --> E["业务回调发起加载"]
+    E --> F{"宿主交付结果"}
+    F -->|结束| G["收尾并恢复 inset"]
+    F -->|失败或无更多| H["对应终态与表现"]
+    G --> A
+    D -.-> I["动画插件消费当前阶段"]
+```
+
+### 6.3、关键设计与边界
+
+- idle、pulling、ready、refreshing、ending、failed、disabled、noMore、removed 是不同状态，不能只有开始和停止两个布尔值。
+- 刷新占用的 inset 必须在结束、禁用或移除时正确恢复，不能覆盖宿主原有边距。
+- 换动画插件应保留当前槽位、阈值和刷新状态，并同步当前阶段，不能重建整个状态机。
+- 动画结束不代表请求结束；业务需要显式回报结束、失败或没有更多数据。
+- Lottie、GIF 等扩展依赖可能来自可选 subspec，应按使用范围接入。
+
+### 6.4、阅读与重建顺序
+
+先读 Enums 与 UIScrollView 入口，再看 Proxy 的观察、状态和 inset，最后读 Component 与 AnimatorContainerView。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsRefreshAnimatorContainerView.swift](<./JobsRefreshAnimatorContainerView.swift>)
+- [UIScrollView+JobsSwiftRefresher.swift](<./UIScrollView+JobsSwiftRefresher.swift>)
+- [JobsRefreshComponent.swift](<./JobsRefreshComponent.swift>)
+- [JobsRefreshDefaultSkins.swift](<./JobsRefreshDefaultSkins.swift>)
+- [JobsRefreshEnums.swift](<./JobsRefreshEnums.swift>)
+
+依赖与编译入口：[JobsSwiftRefresher.podspec](<./JobsSwiftRefresher.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftBlock`、`JobsSwiftDSL`、`JobsFuseAnimation`、`lottie-ios`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

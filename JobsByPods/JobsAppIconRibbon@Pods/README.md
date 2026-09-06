@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -124,14 +126,7 @@ ASSETCATALOG_COMPILER_APPICON_NAME
 
 ## 六、工作流程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-```mermaid
-flowchart LR
-    A[读取当前 Configuration] --> B[读取项目配置]
-    B --> C[复制原始 AppIcon 结构]
-    C --> D[绘制右上角环境绶带]
-    D --> E[生成派生 appiconset]
-    E --> F[Xcode 编译派生 AppIcon]
-```
+流程图见[架构脉络与关键设计](#jobs-architecture-diagram-1)。
 
 生成目录与原始 `.appiconset` 位于同一个 `.xcassets` 中，名称为：
 
@@ -182,5 +177,49 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 - 不要把 `SOURCE_APPICONSET` 指向 `JobsAppIconRibbon-*` 派生目录，否则会重复叠加绶带。
 - App Store 包是否保留 `RELEASE` 绶带由项目自行决定；如正式包不需要文字，可使用独立 Configuration 和透明度配置，或将该 Configuration 切回原始 AppIcon 名称。
 - 修改图标、配置或脚本后应至少构建 Debug 与 Release 各一次，确认文字长度和图标编译结果。
+
+<a id="jobs-architecture"></a>
+
+## 十、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 10.1、设计目的与职责划分
+
+构建期读取原始 AppIcon 与构建环境参数，通过 [**Swift**](https://www.swift.org/) 生成器绘制环境绶带，输出派生 appiconset 供构建使用。它不是运行时页面，也不负责 App 内切换网络环境。
+
+### 10.2、运行脉络
+
+读取配置与原始图标 → 解析文案和绘制参数 → 生成带绶带图标集 → 构建使用派生资源名
+
+<a id="jobs-architecture-diagram-1"></a>
+
+原「六、工作流程」流程图集中于此，原章节的参数说明和示例仍保留。
+
+```mermaid
+flowchart LR
+    A[读取当前 Configuration] --> B[读取项目配置]
+    B --> C[复制原始 AppIcon 结构]
+    C --> D[绘制右上角环境绶带]
+    D --> E[生成派生 appiconset]
+    E --> F[Xcode 编译派生 AppIcon]
+```
+
+### 10.3、关键设计与边界
+
+- 源图标与派生图标分开，不能把 SOURCE_APPICONSET 指向上一次生成结果造成绶带重复叠加。
+- 构建参数改变后需重新构建；运行时修改变量不会改变已经安装的桌面图标。
+- 生成器使用 macOS 图形环境，重建应保留脚本调用、配置文件和输出资源的关系。
+- 字体回退和正式包是否展示绶带属于配置边界，不能在生成器里写死所有环境。
+
+### 10.4、阅读与重建顺序
+
+先读构建入口与参数说明，再看生成器的配置解析、render 和输出路径。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Scripts/JobsAppIconRibbonGenerator.swift](<./Scripts/JobsAppIconRibbonGenerator.swift>)
+
+依赖与编译入口：[JobsAppIconRibbon.podspec](<./JobsAppIconRibbon.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

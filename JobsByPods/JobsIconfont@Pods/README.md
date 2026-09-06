@@ -1,5 +1,7 @@
 # JobsIconfont
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 `JobsIconfont` 是面向 iOS 业务层的 iconfont 全功能门面。业务代码只引用框架提供的类型化资源 ID，不直接维护 iconfont URL、Unicode、字体文件名、缓存框架或失败兜底逻辑。
 
 ## 能力边界
@@ -66,3 +68,34 @@ JobsIconfont.shared.clearImageCache()
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 一、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 1.1、设计目的与职责划分
+
+通过图标语义枚举和远程资源枚举组织字体与图像资源。JobsIconfont 负责字体注册、字形转图片及远程加载，LoadToken 支持取消，UIKit 扩展提供使用入口。
+
+### 1.2、运行脉络
+
+选择字形或资源 → 注册字体或发起加载 → 交付图像及加载事件 → 更新控件 → 按需取消或清缓存
+
+### 1.3、关键设计与边界
+
+- 字形枚举、字符编码和字体文件必须配套，字体注册失败不能靠枚举名称弥补。
+- 远程加载可以选择不同加载器，应保留事件和取消令牌，防止复用控件收到旧资源。
+- 本地字体图标与远程图片的加载路径不同，不能全部按网络图片处理。
+- 资源清单中的官方来源和许可证需保留，文档重建不改变素材授权。
+
+### 1.4、阅读与重建顺序
+
+先看 Glyph/RemoteAsset 与资源对应，再看字体注册、load 和 Token，最后看 UILabel、UIImageView、UIButton 的入口。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsIconfont.swift](<./Core/JobsIconfont.swift>)
+
+依赖与编译入口：[JobsIconfont.podspec](<./JobsIconfont.podspec>)。其中显式依赖声明包括 `JobsImageTools`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

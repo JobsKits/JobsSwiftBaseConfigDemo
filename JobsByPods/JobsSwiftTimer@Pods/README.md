@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -157,3 +159,56 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 - 动画以 `timestamp` / `targetTimestamp` 或单调时钟计算进度；不要假设 DisplayLink 每帧必到。
 - 可接受少量延迟的重复任务应设置合理 `tolerance` / `leeway`，减少无意义唤醒。
 - 单个局部 Timer 使用 `JobsTimer`；需要 identifier 去重、列表复用、Scope、前后台策略或批量治理时使用 `JobsSwiftTimerMgr`。
+
+<a id="jobs-architecture"></a>
+
+## 八、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 8.1、设计目的与职责划分
+
+用同一协议和配置包裹 GCD、Foundation、RunLoop、DisplayLink 四种计时内核。JobsTimer 管理状态、回调和生命周期，倒计时便利层在其上组合时间计算。
+
+### 8.2、运行脉络
+
+配置内核与队列 → 启动 → 接收并按策略派发 tick → 暂停或恢复 → 停止并使旧回调失效
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+stateDiagram-v2
+    [*] --> 待启动
+    待启动 --> 运行: start
+    运行 --> 暂停: pause
+    暂停 --> 运行: resume
+    运行 --> 已停止: stop
+    暂停 --> 已停止: stop
+    已停止 --> [*]
+    note right of 已停止
+        旧代回调失效
+        底层资源清理
+    end note
+```
+
+### 8.3、关键设计与边界
+
+- 非 GCD 内核要求主线程及主 RunLoop，GCD 的队列行为不能直接套到其余内核。
+- generation token 防止停止后的残留事件穿透，GCD suspend/resume/cancel 必须保持配平。
+- 回调积压策略影响同一时刻是否允许多个回调、是否仅保留最新 tick，不能默认每次触发都无限排队。
+- 手动暂停与应用状态自动暂停分开，回到前台只能恢复由应用状态暂停的计时器。
+- 倒计时应以绝对结束时间重算，动画以时间戳算进度；tick 次数与硬实时保证都不能作为时间真值。
+
+### 8.4、阅读与重建顺序
+
+先读 Protocol、Config、Defs，再看 JobsTimer 的状态和线程约束，最后核对各内核清理及 Countdown。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsSwiftTimer.swift](<./JobsSwiftTimer.swift>)
+- [JobsSwiftTimerConfig.swift](<./JobsSwiftTimerConfig.swift>)
+- [JobsSwiftTimerDefs.swift](<./JobsSwiftTimerDefs.swift>)
+- [JobsSwiftTimerProtocol.swift](<./JobsSwiftTimerProtocol.swift>)
+- [JobsSwiftTimerCountdown.swift](<./JobsSwiftTimerCountdown.swift>)
+
+依赖与编译入口：[JobsSwiftTimer.podspec](<./JobsSwiftTimer.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

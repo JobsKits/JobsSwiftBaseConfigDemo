@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -72,5 +74,38 @@ pod install --no-repo-update
 
 - 改动 `Core`、podspec、依赖或公开 API 后，需要重新执行 [**CocoaPods**](https://cocoapods.org/) 集成验证。
 - `simplifiedChineseCharacters` 与 `traditionalChineseCharacters` 分别维护常用简体、繁体字符；兼容入口 `chineseCharacters` 和 `.chinese` 会合并两者。
+
+<a id="jobs-architecture"></a>
+
+## 六、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 6.1、设计目的与职责划分
+
+把字符集及比较策略、随机内容生成、图形绘制分开。Config 描述长度和字符单元，Generator 生成与校验，View 绘制验证码和干扰并提供刷新入口。
+
+### 6.2、运行脉络
+
+配置字符单元 → 生成随机文字 → 绘制内容与干扰 → 校验输入 → 刷新生成下一组
+
+### 6.3、关键设计与边界
+
+- 简体和繁体字符池分开，兼容中文入口将两者合并，不能误删其中一组。
+- 混合字符组需要保证生成策略与配置相符，不能简单拼接字符后就宣称各组都有覆盖。
+- 比较时大小写及输入归一化应与配置一致，View 不能另写一套不同校验规则。
+- 本地验证码组件不替代服务端验证或完整防滥用机制。
+
+### 6.4、阅读与重建顺序
+
+先读 CharacterUnit 与 Config，再读 Generator 的分组抽样和比较，最后读 View 的绘制与刷新。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsSwiftGraphicCaptchaConfig/JobsSwiftGraphicCaptchaConfig.swift](<./Core/JobsSwiftGraphicCaptchaConfig/JobsSwiftGraphicCaptchaConfig.swift>)
+- [Core/JobsSwiftGraphicCaptchaView/JobsSwiftGraphicCaptchaView.swift](<./Core/JobsSwiftGraphicCaptchaView/JobsSwiftGraphicCaptchaView.swift>)
+- [Core/JobsSwiftGraphicCaptchaGenerator/JobsSwiftGraphicCaptchaGenerator.swift](<./Core/JobsSwiftGraphicCaptchaGenerator/JobsSwiftGraphicCaptchaGenerator.swift>)
+
+依赖与编译入口：[JobsSwiftGraphicCaptcha.podspec](<./JobsSwiftGraphicCaptcha.podspec>)。其中显式依赖声明包括 `JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

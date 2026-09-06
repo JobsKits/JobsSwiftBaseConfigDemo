@@ -1,5 +1,7 @@
 # 倒计时按钮
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 * 并非继承，而是利用分类对`UIButton`能力的补充
 
 * 倒计时内核利用`JobsSwiftTimer`
@@ -145,3 +147,37 @@
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 一、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 1.1、设计目的与职责划分
+
+为 UIButton 挂接独立倒计时控制器，Config 描述增减方向、时间间隔、渲染方式和回调，Binder 提供便捷绑定，底层由 JobsSwiftTimer 驱动。
+
+### 1.2、运行脉络
+
+记录按钮原状态 → 按配置启动计时 → 渲染当前秒数 → 完成或停止 → 恢复按钮状态并通知
+
+### 1.3、关键设计与边界
+
+- 支持倒数和正向计数，回调中的秒数含义要随模式解释。
+- iOS 15 的 UIButton.Configuration 与旧系统标题、图片等状态采用不同渲染路径，恢复状态也需分别保存。
+- 计时中能否点击、是否立即渲染初始值、是否重置 UI 都是独立策略。
+- 按钮不负责验证码请求，也不保证后台精确流逝；业务有效期应有独立的时间依据。
+
+### 1.4、阅读与重建顺序
+
+先读 Config，再看 Ctrl 的快照、tick 与结束路径，最后看 UIButton 扩展和 Binder 的持有关系。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JobsCountdownBtnConfig.swift](<./JobsCountdownBtnConfig.swift>)
+- [JobsCountdownBinder.swift](<./JobsCountdownBinder.swift>)
+- [JobsCountdownBtnCtrl.swift](<./JobsCountdownBtnCtrl.swift>)
+- [UIButton+倒计时.swift](<./UIButton+倒计时.swift>)
+
+依赖与编译入口：[JobsCountdownButton.podspec](<./JobsCountdownButton.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftTimer`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

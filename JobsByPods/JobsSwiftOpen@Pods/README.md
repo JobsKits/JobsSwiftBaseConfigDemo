@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -39,5 +41,38 @@ JobsOpen.shared.open(
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 三、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 3.1、设计目的与职责划分
+
+用 JobsOpenConfiguration 收集 URL、打开模式、标题和完成回调，JobsOpen 分流到应用内网页控制器或系统默认浏览器；网页控制器管理加载及返回。
+
+### 3.2、运行脉络
+
+构造 URL 与模式 → 应用内展示或转交系统 → 回报打开动作 → 网页容器继续处理加载与返回
+
+### 3.3、关键设计与边界
+
+- 当前 [**Swift**](https://www.swift.org/) 入口围绕 URL 的应用内与外部浏览器分流，不能直接套用 OC 侧所有拨号、邮件便利分类。
+- 打开动作完成不等于网页内容加载完成，这两个阶段需要分别处理。
+- 应用内返回行为需区分网页历史和关闭控制器，不能无条件只做 pop。
+- 宿主需要提供可用展示控制器或导航环境，不能假定全局窗口一定适合展示。
+
+### 3.4、阅读与重建顺序
+
+先读 Configuration 和 JobsOpen 的分支，再看 JobsOpenWebViewController 的加载与 handleBack。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsOpenWebViewController.swift](<./Core/JobsOpenWebViewController.swift>)
+- [Core/JobsOpen.swift](<./Core/JobsOpen.swift>)
+- [Core/JobsOpenConfiguration.swift](<./Core/JobsOpenConfiguration.swift>)
+
+依赖与编译入口：[JobsSwiftOpen.podspec](<./JobsSwiftOpen.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsInheritance`、`JobsByUIKit`、`GKNavigationBarSwift`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

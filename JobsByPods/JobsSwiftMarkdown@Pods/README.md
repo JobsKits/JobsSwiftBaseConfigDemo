@@ -2,6 +2,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 一、能力
@@ -50,3 +52,49 @@ markdownView.load(document)
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 五、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 5.1、设计目的与职责划分
+
+Catalog 与 Document 管理清单和文件位置，Configuration 管理外观与渲染选项，MarkdownView 通过网页容器展示文档，资源包承载转换、代码高亮、图表、公式及净化运行库。
+
+### 5.2、运行脉络
+
+查找文档 → 读取文本及配置 → 加载网页渲染资源 → 完成展示 → 回调链接操作或错误
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+flowchart LR
+    A["Catalog 清单"] --> B["Document 文件"]
+    B --> C["读取文档与配置"]
+    D["离线渲染资源包"] --> E["网页渲染容器"]
+    C --> E
+    E --> F["展示完成或错误"]
+    E --> G["链接请求交给宿主"]
+```
+
+### 5.3、关键设计与边界
+
+- 文件定位、文本转换、网页加载分属不同阶段，应保留各自错误出口。
+- 离线显示依赖完整资源包与清单约定，仅复制 [**Swift**](https://www.swift.org/) 视图类不够。
+- 链接打开请求通过 delegate 交给宿主，不应默认任意 URL 都可直接执行。
+- 第三方浏览器发行文件和许可证保持原样，本库重建范围是 Jobs 的目录组织与原生适配。
+
+### 5.4、阅读与重建顺序
+
+先读 Catalog/Document，再看 Configuration 和 View 的加载、桥接与 delegate，最后核对资源及访问边界。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsMarkdownConfiguration.swift](<./Core/JobsMarkdownConfiguration.swift>)
+- [Core/JobsMarkdownView.swift](<./Core/JobsMarkdownView.swift>)
+- [Core/JobsMarkdownCatalog.swift](<./Core/JobsMarkdownCatalog.swift>)
+- [Core/JobsMarkdownDocument.swift](<./Core/JobsMarkdownDocument.swift>)
+
+依赖与编译入口：[JobsSwiftMarkdown.podspec](<./JobsSwiftMarkdown.podspec>)。其中显式依赖声明包括 `JobsSwiftDSL`、`JobsSwiftBaseDefines`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

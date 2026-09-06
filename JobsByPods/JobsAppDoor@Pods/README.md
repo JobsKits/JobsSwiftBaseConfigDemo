@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -88,5 +90,53 @@ JobsAppDoor@Pods
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 六、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 6.1、设计目的与职责划分
+
+将登录、注册、找回密码分成公共表单能力和两种页面样式。公共层维护字段、表单值、模式与资源；Style1 通过侧轨和面板切换，Style2 通过独立表单卡片切换，组合倒计时、图形验证码和国家区号组件。
+
+### 6.2、运行脉络
+
+选择页面样式 → 配置表单与事件 → 输入或切换模式 → 交付表单值 → 宿主完成认证并更新界面
+
+下图用于说明主要关系；异常、退出与线程边界结合下一节阅读。
+
+```mermaid
+flowchart LR
+    A["配置与公共表单"] --> B{"选择样式"}
+    B --> C["Style1 侧轨面板"]
+    B --> D["Style2 独立卡片"]
+    C --> E["登录、注册、找回密码模式"]
+    D --> E
+    E --> F["收集输入并分发动作"]
+    F --> G["宿主执行认证业务"]
+```
+
+### 6.3、关键设计与边界
+
+- 两种样式的布局和切换过程不同，不能仅以换色代替。
+- 键盘抬升、Logo 显隐和模式切换需要共同服从当前页面状态，不能让上一次动画结束回调覆盖新状态。
+- 组件负责输入与交互，账号校验接口、短信发送和会话保存由宿主接入。
+- 资源由公共 Resource 入口定位，复建时要连同字体、图片及文案接入关系一起理解。
+
+### 6.4、阅读与重建顺序
+
+先读 Mode、Field、FormValues 与 BaseVC，再分别看两个样式的 switchMode 和公共 FormView。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/登录注册模块公共件/View/JobsAppDoorBackgroundView/JobsAppDoorBackgroundView.swift](<./Core/登录注册模块公共件/View/JobsAppDoorBackgroundView/JobsAppDoorBackgroundView.swift>)
+- [Core/登录注册模块公共件/View/JobsAppDoorFormView/JobsAppDoorFormView.swift](<./Core/登录注册模块公共件/View/JobsAppDoorFormView/JobsAppDoorFormView.swift>)
+- [Core/登录注册模块公共件/View/JobsAppDoorInputView/JobsAppDoorInputView.swift](<./Core/登录注册模块公共件/View/JobsAppDoorInputView/JobsAppDoorInputView.swift>)
+- [Core/登录注册模块公共件/View/JobsAppDoorLogoView/JobsAppDoorLogoView.swift](<./Core/登录注册模块公共件/View/JobsAppDoorLogoView/JobsAppDoorLogoView.swift>)
+- [Core/登录注册模块公共件/配置文件/JobsAppDoorConfig/JobsAppDoorConfig.swift](<./Core/登录注册模块公共件/配置文件/JobsAppDoorConfig/JobsAppDoorConfig.swift>)
+
+依赖与编译入口：[JobsAppDoor.podspec](<./JobsAppDoor.podspec>)。其中显式依赖声明包括 `JobsInheritance`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`JobsCountdownButton`、`JobsSwiftGraphicCaptcha`、`JobsSwiftCountryCodeCtrl`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

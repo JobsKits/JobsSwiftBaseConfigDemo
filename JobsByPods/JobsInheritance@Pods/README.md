@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -25,5 +27,40 @@
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 二、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 2.1、设计目的与职责划分
+
+以继承方式提供常用 UIKit 组件和页面基类，覆盖按钮式图片视图、带内边距标签、表格 Cell、输入框、基础控制器及网页容器。公共基类承接复用行为，具体子类仍由业务配置。
+
+### 2.2、运行脉络
+
+选择适合的基类 → 配置子视图或页面能力 → 绑定事件与桥接 → 宿主管理展示及销毁
+
+### 2.3、关键设计与边界
+
+- JobsButton 实际继承 UIImageView，并非 UIButton；标题、副标题和前景图属于其自有子视图，不能直接套用 UIButton 的状态模型。
+- 前景图片加载期间的 nil 与显式隐藏图片区域是不同语义，重建时不能无条件清空预留布局。
+- 网页相关能力拆成配置、桥接、下载及导航栏宿主等文件，需要分别理解消息入口、网页导航和资源生命周期。
+- 不要让所有业务页面都强制承担不使用的网页、播放器或表格功能；先重建实际需要的基类边界。
+
+### 2.4、阅读与重建顺序
+
+先选具体基类阅读，再沿扩展文件看组合关系；网页部分从 BaseWebVC/BaseWebView 追到 Bridge、Download 和 NavBarHost。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [UIWebView/BaseWebView/BaseWebView+Bridge.swift](<./UIWebView/BaseWebView/BaseWebView+Bridge.swift>)
+- [UIWebView/BaseWebView/BaseWebView+MobileBridge.swift](<./UIWebView/BaseWebView/BaseWebView+MobileBridge.swift>)
+- [UIWebView/BaseWebView/BaseWebView.swift](<./UIWebView/BaseWebView/BaseWebView.swift>)
+- [UIViewController/BaseWebVC.swift](<./UIViewController/BaseWebVC.swift>)
+- [UITableViewCell/BaseTableViewCellByDefault.swift](<./UITableViewCell/BaseTableViewCellByDefault.swift>)
+
+依赖与编译入口：[JobsInheritance.podspec](<./JobsInheritance.podspec>)。其中显式依赖声明包括 `SnapKit`、`GKNavigationBarSwift`、`JobsToast`、`JobsNavBar`、`JobsByUIKit`、`JobsByWebKit`、`JobsSwiftBlock`、`JobsSwiftDebugTools`、`JobsSwiftFoundation`、`JobsSwiftBaseDefines`、`JobsSwiftStandardLibrary`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

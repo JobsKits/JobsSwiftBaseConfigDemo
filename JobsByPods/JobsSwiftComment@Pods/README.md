@@ -1,5 +1,7 @@
 # JobsSwiftComment
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 Swift 本地 Pod，用于在 Swift 侧承接 OC `JobsOCComment` 的评论列表能力。
 
 ## 能力
@@ -41,3 +43,38 @@ pod lib lint JobsSwiftComment.podspec --allow-warnings --verbose
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 一、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 1.1、设计目的与职责划分
+
+由评论模型、模式配置、Cell 和外层视图组成评论展示组件。模型表达主评论及回复关系，配置决定不同平台风格与可见信息，视图组织展示并回调用户动作。
+
+### 1.2、运行脉络
+
+提供评论数据和模式 → 展示主评论及可见回复 → 用户选择、回复或刷新 → 宿主处理业务 → 更新数据
+
+### 1.3、关键设计与边界
+
+- 数据层级和屏幕上展开的回复数量是不同概念，“更多回复”不等于模型中没有其余内容。
+- 选择评论、请求回复、刷新与加载更多需要区分，避免一次点击触发多次业务动作。
+- 组件不包含真实评论提交接口或分页后端，网络结果由宿主更新。
+- Model 是值类型，业务修改数据后需按视图接口重载，不能假设已展示 Cell 自动观察所有结构体变化。
+
+### 1.4、阅读与重建顺序
+
+先读 Model、Mode 和 Config，再看 View 的层级展开、回调与 Cell 的内容渲染。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsSwiftCommentConfig/JobsSwiftCommentConfig.swift](<./Core/JobsSwiftCommentConfig/JobsSwiftCommentConfig.swift>)
+- [Core/JobsSwiftCommentModel/JobsSwiftCommentModel.swift](<./Core/JobsSwiftCommentModel/JobsSwiftCommentModel.swift>)
+- [Core/JobsSwiftCommentView/JobsSwiftCommentView.swift](<./Core/JobsSwiftCommentView/JobsSwiftCommentView.swift>)
+- [Core/JobsSwiftCommentCell/JobsSwiftCommentCell.swift](<./Core/JobsSwiftCommentCell/JobsSwiftCommentCell.swift>)
+- [Core/JobsSwiftCommentMode/JobsSwiftCommentMode.swift](<./Core/JobsSwiftCommentMode/JobsSwiftCommentMode.swift>)
+
+依赖与编译入口：[JobsSwiftComment.podspec](<./JobsSwiftComment.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。

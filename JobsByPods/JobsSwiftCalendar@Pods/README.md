@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -83,5 +85,39 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftBaseC
 ## Jobs DSL 调用约定
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
+
+<a id="jobs-architecture"></a>
+
+## 六、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 6.1、设计目的与职责划分
+
+把日历日期组织、日期 Cell、样式和公共定义分开。容器根据 Calendar、当前页和显示范围生成日期，样式对象统一外观，数据与事件入口连接宿主。
+
+### 6.2、运行脉络
+
+确定当前月份或周 → 生成日期单元 → 应用选择与样式 → 用户切页或选择 → 更新日期与布局
+
+### 6.3、关键设计与边界
+
+- 当前页、今天与选中日期是不同状态，切换月份不应自动把页首当作用户选择。
+- 日期比较需按日历与日粒度处理，不能单纯比较时间戳是否相等。
+- 占位日期、可选范围和多选策略分别影响显示和交互，重建先确定这些规则。
+- bounds 变化会触发布局失效与安全重载，宿主仍应将控件限制在实际可用宽度内。
+
+### 6.4、阅读与重建顺序
+
+先读 Defines 与容器公开接口，再看日期生成、选择判定和高度通知，最后看 Appearance/DayCell。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [Core/JobsSwiftCalendar/JobsSwiftCalendar.swift](<./Core/JobsSwiftCalendar/JobsSwiftCalendar.swift>)
+- [Core/JobsSwiftCalendarAppearance/JobsSwiftCalendarAppearance.swift](<./Core/JobsSwiftCalendarAppearance/JobsSwiftCalendarAppearance.swift>)
+- [Core/JobsSwiftCalendarDayCell/JobsSwiftCalendarDayCell.swift](<./Core/JobsSwiftCalendarDayCell/JobsSwiftCalendarDayCell.swift>)
+- [Core/JobsSwiftCalendarDefines/JobsSwiftCalendarDefines.swift](<./Core/JobsSwiftCalendarDefines/JobsSwiftCalendarDefines.swift>)
+
+依赖与编译入口：[JobsSwiftCalendar.podspec](<./JobsSwiftCalendar.podspec>)。其中显式依赖声明包括 `JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -4,6 +4,8 @@
 
 [toc]
 
+> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
+
 ---
 
 ## 🔥 <font id=前言>前言</font>
@@ -25,5 +27,40 @@
 - [**GitHub Actions**](https://docs.github.com/en/actions) 工作流 `../../.github/workflows/build_simulator_app.yml` 在安装依赖之前执行 `../../.github/tests/JobsSwiftBlockRegression.swift`，验证跨模块调用、具体子类、动态元类型、配置闭包只执行一次，以及回调注册、替换、移除、返回值和实例隔离。
 - 同一检查使用当前 [**Xcode**](https://developer.apple.com/xcode) 为 `arm64`、`x86_64` 模拟器生成实际回调源码的 IR；完整 App 构建仍保持 `ONLY_ACTIVE_ARCH=NO`，不通过排除架构或忽略编译失败放行。
 - 完整构建失败时上传 `Simulator-Build-Diagnostics-运行ID-尝试次数`，包含 `simulator-build.log` 和 `SimulatorBuild.xcresult`。日志经过 `tee` 保存，但 `pipefail` 保留真实构建失败状态。
+
+<a id="jobs-architecture"></a>
+
+## 三、架构脉络与关键设计
+
+本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+
+### 3.1、设计目的与职责划分
+
+提供统一闭包类型、对象回调登记和轻量创建配置入口。JobsCallbackable 以稳定键保存闭包，调用方法按参数与返回类型取出执行；JSON 编解码器和 NSObject 的创建入口复用同一配置思想。
+
+### 3.2、运行脉络
+
+选择闭包类型与键 → 在对象上注册 → 事件发生时按键和签名调用 → 替换或清除绑定
+
+### 3.3、关键设计与边界
+
+- 回调容器以 String 到 Any 保存，注册和读取的签名必须对应；键正确但类型不一致仍无法正确调用。
+- 以 #function 推导键时有规范化规则，重建不能让注册端和调用端采用不同字符串。
+- 闭包可能捕获所属对象，宿主应明确弱引用与清理边界，避免对象和回调互相持有。
+- 基础闭包、第三方专用闭包和对象工厂是三类入口，不能把第三方类型依赖隐去后承诺完全独立。
+
+### 3.4、阅读与重建顺序
+
+先读 BaseBlock 与 Callbackable，再看键规范化和调用重载，最后看 ThirdPodsBlock 及 Make 扩展。
+
+源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+
+- [JSONCoder+Make.swift](<./JSONCoder+Make.swift>)
+- [JobsCallbackable.swift](<./JobsCallbackable.swift>)
+- [JobsSwift3rdPodsBlock.swift](<./JobsSwift3rdPodsBlock.swift>)
+- [JobsSwiftBaseBlock.swift](<./JobsSwiftBaseBlock.swift>)
+- [NSObject+Make.swift](<./NSObject+Make.swift>)
+
+依赖与编译入口：[JobsSwiftBlock.podspec](<./JobsSwiftBlock.podspec>)。其中显式依赖声明包括 `SnapKit`、`YTKNetwork`、`Kingfisher`、`Moya`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
