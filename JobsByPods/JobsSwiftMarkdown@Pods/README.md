@@ -28,6 +28,8 @@ pod 'JobsSwiftMarkdown', :path => 'JobsByPods/JobsSwiftMarkdown@Pods'
 
 宿主 App 还需要在构建阶段调用 `Support/JobsMarkdownPackager.rb`，把当前仓库的
 Markdown 和被引用的本地资源写入 App 内的 `JobsMarkdownDocuments.bundle`。
+打包器会主动把 Xcode 非交互 Shell 返回的文件系统路径规范为 UTF-8，中文目录
+不会因为构建进程缺少 `LANG` / `LC_ALL` 而导致清单 JSON 生成失败。
 脚本只允许把该固定名称 Bundle 写入构建产物目录，并默认跳过 `.git`、`Pods`、
 手工第三方、Unity、构建目录和生成报告。
 

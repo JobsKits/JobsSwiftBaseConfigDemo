@@ -90,13 +90,13 @@ func equal<T>(_ lhs: T, _ rhs: T) -> Bool where T: Equatable {
 }
 ```
 
-### 4、<font id="访问控制">访问控制：限制使用范围</font>
+### 4、<font id="访问控制">访问控制：限制使用范围</font>（6）
 
 | 关键字 | 范围 |
 | --- | --- |
 | <font color="red"><b><code>private</code></b></font> | 当前声明及同文件内该类型的扩展 |
 | <font color="red"><b><code>fileprivate</code></b></font> | 当前源文件 |
-| <font color="red"><b><code>internal</code></b></font> | 当前模块，默认级别 |
+| <font color="red"><b><code>internal</code></b></font> | 当前模块，**默认级别** |
 | <font color="red"><b><code>package</code></b></font> | 同一个 Swift Package 内的模块，需包身份配置 |
 | <font color="red"><b><code>public</code></b></font> | 模块外可使用；不开放模块外继承或重写 |
 | <font color="red"><b><code>open</code></b></font> | 类与类成员可在模块外继承或重写 |
@@ -1711,281 +1711,389 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 ## 十六、<font id="FAQ">FAQ：面试问答</font>
 
-正文用于开发查阅；本节集中短答与追问。每题附返回知识点链接。
+这一节不背书，也不堆定义。每道题先给一段**面试时能直接说出口的话**，再用**说人话**把它拆开。第一次看先理解“说人话”，面试前再记前面的短答。
 
 ### 1、<font id="FAQ-泛型">泛型解决什么问题？</font>
 
-**答：**类型参数化。同一份逻辑处理多种类型，编译器同时保留输入、输出和关联成员的类型关系；约束决定函数体能使用哪些能力。
+**面试时可以直接说：**泛型就是先把“具体类型”留个空，调用时再填进去。这样同一套逻辑能处理多种类型，又不用像 <font color="red"><b>Any</b></font> 那样丢掉类型检查。
 
-**追问：为什么不用 <font color="red"><b>Any</b></font>？答：**<font color="red"><b>Any</b></font> 能装值，但会丢失可直接使用的静态类型关系，通常需要再转换。
+**说人话：**比如交换两个值，不管是 `Int` 还是 `String`，动作都一样。泛型相当于先写一个“类型占位符”，编译器在使用时知道它最终是什么，所以输入、输出之间的类型关系还在。泛型约束则是在说：“这个类型虽然没定，但它至少得会比较、会打印，或者遵守某个协议。”
+
+**面试官继续追问：为什么不用 <font color="red"><b>Any</b></font>？**
+
+**你接着答：**<font color="red"><b>Any</b></font> 只是一个什么都能装的箱子，拿出来时通常还得自己判断和转换类型；泛型从编译阶段就知道类型关系，写错了能更早发现。
 
 <a href="#类型参数化" style="color:red;font-weight:bold;">返回：泛型</a>
 
 ### 2、<font id="FAQ-协议">协议有什么用？</font>
 
-**答：**约定能力，让使用者依赖接口而不是具体实现。编译器检查实现是否满足约定，适合服务替换、测试注入、容器算法和代理。
+**面试时可以直接说：**协议就是一份“能力合同”。我不关心你具体是哪一个类或结构体，只要你把合同里的能力实现了，我就能按这份合同使用你。
 
-**追问：<font color="red"><b>get</b></font> <font color="red"><b>set</b></font> 是存储属性吗？答：**它是读写要求，实现可以存储，也可以计算；协议本身不分配字段。
+**说人话：**例如支付页面只依赖“能发起支付”的协议，真实环境接支付宝，测试环境接一个假服务，页面都不用改。协议负责规定“必须会什么”，具体类型负责决定“到底怎么做”。
+
+**面试官继续追问：协议里的 <font color="red"><b>get</b></font> <font color="red"><b>set</b></font> 是存储属性吗？**
+
+**你接着答：**不是。它只要求这个值能读、能写，至于实现方用存储属性还是计算属性来完成，协议不管，也不会替它分配内存。
 
 <a href="#协议" style="color:red;font-weight:bold;">返回：协议</a>
 
 ### 3、<font id="FAQ-some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型怎样区分？</font>
 
-**答：**命名泛型保留可重复引用的类型关系；参数 <font color="red"><b>some</b></font> 是泛型简写；返回 <font color="red"><b>some</b></font> 由实现方固定底层类型；<font color="red"><b>any</b></font> 用统一容器保存可能不同的遵循者。
+**面试时可以直接说：**泛型和 <font color="red"><b>some</b></font> 都会保留具体类型关系；<font color="red"><b>any</b></font> 更像把不同实现装进同一种协议盒子里。参数位置的 <font color="red"><b>some</b></font> 可以看成没起名字的泛型，返回值的 <font color="red"><b>some</b></font> 则是“我不告诉你具体类型，但我每次返回的底层类型是固定的”。
 
-**追问：<font color="red"><b>any</b></font> 一定堆分配吗？答：**不一定。保存形式与值大小、约束和优化有关，不能凭语法断定分配成本。
+**说人话：**泛型像“这次订单里的商品类型先定成 `T`，后面都按同一个 `T` 走”；<font color="red"><b>some</b></font> 像“具体型号我藏起来，但其实一直是同一款”；<font color="red"><b>any</b></font> 像“只要是充电设备都能放进这个箱子”，箱子里的真实型号可以不同。
+
+**面试官继续追问：<font color="red"><b>any</b></font> 一定会在堆上分配吗？**
+
+**你接着答：**不一定。它怎么存跟值的大小、协议约束和编译器优化有关，不能只看到 <font color="red"><b>any</b></font> 就断定一定有堆分配。
 
 <a href="#some-any" style="color:red;font-weight:bold;">返回：<font color="red"><b>some</b></font> / <font color="red"><b>any</b></font></a>
 
 ### 4、<font id="FAQ-关联类型"><font color="red"><b>associatedtype</b></font> 和枚举关联值有什么区别？</font>
 
-**答：**<font color="red"><b>associatedtype</b></font> 是协议中的类型占位，由遵循者确定；枚举关联值是某个 <font color="red"><b>case</b></font> 实例携带的实际数据。前者约定类型关系，后者保存值。
+**面试时可以直接说：**<font color="red"><b>associatedtype</b></font> 占的是“类型的位置”，枚举关联值装的是“这一次的实际数据”。一个是在定义规则，一个是在保存值。
+
+**说人话：**协议说“我的元素类型先叫 `Element`，谁遵守我，谁来决定它到底是 `String` 还是 `Int`”，这就是 <font color="red"><b>associatedtype</b></font>。枚举的 `.success(data)` 里那个 `data`，则是某一次成功结果真正带回来的数据。
 
 <a href="#关联类型" style="color:red;font-weight:bold;">返回：关联类型</a>
 
 ### 5、<font id="FAQ-协议派发">协议扩展的方法会被具体实现替换吗？</font>
 
-**答：**写在协议要求中的成员，通过协议入口调用其对应实现；仅写在扩展中的同名工具方法，不形成相同的多态入口。需要可替换的能力必须写进要求。
+**面试时可以直接说：**要看这个方法有没有写进协议要求。写进协议的，具体类型可以提供自己的实现；只写在协议扩展里的同名方法，通过协议类型调用时，不会得到同样的动态替换效果。
+
+**说人话：**协议正文像正式合同，协议扩展像合同外附送的默认工具。你真想让不同类型各做各的，就必须先把这项能力写进“合同”里，不能只在扩展里放一个同名方法。
 
 <a href="#协议扩展" style="color:red;font-weight:bold;">返回：协议扩展</a>
 
 ### 6、<font id="FAQ-值类型">结构体与类的核心区别是什么？</font>
 
-**答：**值语义与引用语义。结构体赋值得到独立外层值，类赋值复制同一实例的引用；需要内容用值类型，需要身份和共同生命周期用引用类型。
+**面试时可以直接说：**结构体主要是值语义，赋值时得到一份新的外层值；类主要是引用语义，赋值时只是多了一个引用，大家仍指向同一个对象。只关心“内容是什么”时优先考虑结构体，需要“这是同一个对象”或共享生命周期时用类。
 
-**追问：结构体包含 <font color="red"><b>class</b></font> 呢？答：**复制外层值仍会复制该对象引用，内部对象可能继续共享。
+**说人话：**结构体像复制一张表格，副本改了通常不影响原表；类像把同一间房子的钥匙又配了一把，两把钥匙打开的还是同一间房。
+
+**面试官继续追问：结构体里面放了一个 <font color="red"><b>class</b></font> 呢？**
+
+**你接着答：**复制结构体时，外层结构体还是两份，但里面保存的对象引用会被复制，所以两个结构体里的那个属性仍可能指向同一个对象。
 
 <a href="#值与引用" style="color:red;font-weight:bold;">返回：类型选择</a>
 
 ### 7、<font id="FAQ-内存">结构体一定在栈上吗？size 与 stride 有什么区别？</font>
 
-**答：**不一定，存储位置由编译器、逃逸与上下文决定。size 是值的布局长度，stride 是连续存放的起点间距，包含必要的尾部补齐；alignment 约束起始地址。
+**面试时可以直接说：**结构体不等于一定放栈上，类也不等于一句话就能概括成只放堆上，具体位置要看编译器、是否逃逸和使用上下文。`size` 是这个值本身占到哪里，`stride` 是数组里下一个同类值从哪里开始，`alignment` 是它要求按多少字节对齐。
+
+**说人话：**把内存想成停车位：`size` 是车身长度，`alignment` 是车位必须从哪种刻度开始画，`stride` 是前后两辆同型号车的起点距离。为了让下一辆车停得整齐，`stride` 可能比 `size` 大。
 
 <a href="#字节对齐" style="color:red;font-weight:bold;">返回：字节对齐</a>
 
 ### 8、<font id="FAQ-COW">COW 就是深拷贝和线程安全吗？</font>
 
-**答：**都不是。COW 通过写前分离共享存储保持值语义；集合中的对象仍可能共享，同一个变量的并发写入仍需隔离或同步。
+**面试时可以直接说：**都不是。COW 是“只读时先共用，谁要改谁再复制”，目的是少做没必要的拷贝，同时保持值语义；它不会自动把内部引用对象深拷贝，也不会自动解决并发安全。
+
+**说人话：**两个人先共看同一份文件，谁都不改就不用复印；其中一个人要写字时，系统再给他复印一份。这叫写时复制。但文件里如果还夹着同一个对象的引用，那个对象仍可能共享；两条线程同时改同一份变量，也还是要自己做隔离或同步。
 
 <a href="#COW" style="color:red;font-weight:bold;">返回：Copy-on-Write</a>
 
 ### 9、<font id="FAQ-ARC">闭包为什么会形成循环引用？</font>
 
-**答：**对象强持有闭包，闭包又强捕获对象，双方无法释放。按持有关系使用弱捕获、一次性回调清理或取消订阅；不是所有闭包都必须 <font color="red"><b>weak</b></font>。
+**面试时可以直接说：**当对象强持有一个闭包，而闭包里又强引用这个对象时，两边互相拽住，引用计数都降不到零，就形成循环引用。解决方法要看真实持有关系，可以弱捕获，也可以在任务结束后清掉闭包或取消订阅。
 
-**追问：<font color="red"><b>weak</b></font> 与 <font color="red"><b>unowned</b></font> 怎样选？答：**<font color="red"><b>weak</b></font> 允许对象先释放并变 <font color="red"><b>nil</b></font>；<font color="red"><b>unowned</b></font> 要证明每次访问时对象仍存活。
+**说人话：**就像甲抓着乙，乙又抓着甲，外面的人都走了，他俩还是不松手。重点不是“见到闭包就写 <font color="red"><b>weak</b></font>”，而是先画清楚谁持有谁。
+
+**面试官继续追问：<font color="red"><b>weak</b></font> 和 <font color="red"><b>unowned</b></font> 怎么选？**
+
+**你接着答：**对象可能先释放，就用 <font color="red"><b>weak</b></font>，它释放后会变成 <font color="red"><b>nil</b></font>；只有能保证每次访问时对象一定还活着，才考虑 <font color="red"><b>unowned</b></font>，否则会出问题。
 
 <a href="#ARC" style="color:red;font-weight:bold;">返回：ARC</a>
 
 ### 10、<font id="FAQ-闭包">escaping 表示异步吗？</font>
 
-**答：**只表示闭包可能在函数返回后继续存在。可以同步调用，也可以被保存后稍后调用；执行线程与并发安全由其他规则决定。
+**面试时可以直接说：**不表示异步。<font color="red"><b>escaping</b></font> 只说明函数已经返回了，这个闭包仍可能被保存并在以后调用。它可以马上同步执行，也可以以后执行，至于在哪个线程跑是另一回事。
 
-**追问：多行闭包还能用 $0 吗？答：**可以。匿名参数与是否多行无关，复杂代码优先命名以便阅读。
+**说人话：**它描述的是“闭包能活多久”，不是“闭包在哪跑”。
+
+**面试官继续追问：多行闭包还能用 `$0` 吗？**
+
+**你接着答：**可以，匿名参数跟闭包是不是多行没有关系；只是逻辑复杂以后，给参数起名字通常更好读。
 
 <a href="#逃逸与捕获" style="color:red;font-weight:bold;">返回：闭包</a>
 
 ### 11、<font id="FAQ-mutating"><font color="red"><b>mutating</b></font> 和 <font color="red"><b>inout</b></font> 的区别是什么？</font>
 
-**答：**<font color="red"><b>mutating</b></font> 允许值类型方法修改自身，<font color="red"><b>inout</b></font> 允许函数修改调用方变量。<font color="red"><b>let</b></font> 结构体不能调用修改自身的方法；<font color="red"><b>inout</b></font> 还必须满足独占访问规则。
+**面试时可以直接说：**<font color="red"><b>mutating</b></font> 是写在值类型的方法上，表示这个方法会改 `self`；<font color="red"><b>inout</b></font> 是写在函数参数上，表示函数能改调用方传进来的那个变量。
+
+**说人话：**一个是在说“我这个结构体方法会改自己”，另一个是在说“把你的变量临时交给我，我会直接改它”。所以 <font color="red"><b>let</b></font> 定义的结构体不能调用 <font color="red"><b>mutating</b></font> 方法；<font color="red"><b>inout</b></font> 还要遵守独占访问，修改期间不能又从别处同时访问同一份存储。
 
 <a href="#mutating-inout" style="color:red;font-weight:bold;">返回：<font color="red"><b>mutating</b></font> / <font color="red"><b>inout</b></font></a>
 
 ### 12、<font id="FAQ-map">map、compactMap、flatMap 怎样选？</font>
 
-**答：**map 逐个转换；compactMap 转换后去掉 <font color="red"><b>nil</b></font>；序列 flatMap 转换后展开一层。filter 只筛选，不改变元素类型。
+**面试时可以直接说：**`map` 是逐个变换；`compactMap` 是逐个变换后顺便删掉 <font color="red"><b>nil</b></font>；序列的 `flatMap` 是逐个变换后再摊平一层。只想按条件保留原元素，就用 `filter`。
 
-**追问：空字符串会被 compactMap 删掉吗？答：**不会，除非转换明确返回 <font color="red"><b>nil</b></font>。
+**说人话：**`[1, 2]` 变成 `["1", "2"]` 用 `map`；`["1", "x"]` 转整数并扔掉失败项用 `compactMap`；`[[1, 2], [3]]` 变成 `[1, 2, 3]` 用 `flatMap`。
+
+**面试官继续追问：空字符串会被 `compactMap` 删掉吗？**
+
+**你接着答：**不会。空字符串还是一个真实的 `String`，只有转换闭包返回 <font color="red"><b>nil</b></font> 的元素才会被删掉。
 
 <a href="#map" style="color:red;font-weight:bold;">返回：集合转换</a>
 
 ### 13、<font id="FAQ-joined">joined 一定返回数组吗？</font>
 
-**答：**不一定。嵌套序列的 joined 返回扁平化序列，可直接遍历；字符串连接重载返回 String。接口确实需要数组时再用 Array 收集。
+**面试时可以直接说：**不一定。嵌套序列调用 `joined()` 得到的是一个可以按顺序遍历的扁平结果，不保证就是数组；字符串序列用分隔符连接时，结果才是 `String`。真需要数组，再显式包一层 `Array(...)`。
+
+**说人话：**`joined()` 重点表达的是“把多层接成一层”，不是“帮我创建一个新数组”。先看后续接口要什么类型，再决定要不要收集成数组。
 
 <a href="#joined" style="color:red;font-weight:bold;">返回：joined</a>
 
 ### 14、<font id="FAQ-初始化">指定、便捷和 <font color="red"><b>required</b></font> 初始化器怎样配合？</font>
 
-**答：**指定初始化器完成本类存储并向父类指定入口委托；便捷初始化器先向同类其他入口委托，最终进入本类指定入口；<font color="red"><b>required</b></font> 保持子类创建契约。
+**面试时可以直接说：**指定初始化器是真正把本类属性初始化完整的主入口；便捷初始化器只是提供方便写法，最后必须绕回本类的指定初始化器；<font color="red"><b>required</b></font> 表示子类也必须保留这条创建能力。
 
-**追问：多个指定入口最终必须汇入同一个吗？答：**不必，每条路径正确完成初始化即可。
+**说人话：**指定初始化器像后厨，真正把菜做完；便捷初始化器像不同套餐入口，最后都要把单子送进后厨；<font color="red"><b>required</b></font> 则是在说“以后开的每家分店都必须能做这道菜”。
+
+**面试官继续追问：多个指定初始化器最终必须汇入同一个吗？**
+
+**你接着答：**不用。只要每条初始化路径都正确完成本类属性初始化，并按规则调用父类指定初始化器就可以。
 
 <a href="#初始化" style="color:red;font-weight:bold;">返回：初始化</a>
 
 ### 15、<font id="FAQ-扩展"><font color="red"><b>extension</b></font> 能增加存储属性吗？</font>
 
-**答：**不能给已有类型增加实例存储属性；可添加计算属性、方法、下标和协议遵循。协议本体同样只声明能力，不分配字段。
+**面试时可以直接说：**不能给已有类型增加实例存储属性，因为这会改变类型原来的内存布局；但可以增加计算属性、方法、下标和协议遵循。
+
+**说人话：**扩展可以给现有房子增加“使用说明”和“操作入口”，但不能凭空在房子的实体结构里再塞一间需要占空间的新房间。计算属性不自己存值，所以可以加。
 
 <a href="#extension" style="color:red;font-weight:bold;">返回：扩展</a>
 
 ### 16、<font id="FAQ-包装器">所有 @ 标记都是属性包装器吗？</font>
 
-**答：**不是。propertyWrapper 定义包装器；<font color="red"><b>MainActor</b></font> 声明隔离；Observable 是宏；available 描述可用性。共同的符号不表示相同机制。
+**面试时可以直接说：**不是。`@` 只是多种 Swift 特性的共同写法：<font color="red"><b>propertyWrapper</b></font> 定义属性包装器，<font color="red"><b>MainActor</b></font> 管隔离，`Observable` 是宏，`available` 管版本可用性。长得像，不代表底层是一回事。
 
-**追问：$value 是什么？答：**包装器提供的 projectedValue，具体能力由包装器定义。
+**说人话：**看到 `@xxx`，不能直接说“这是属性包装器”，要先看 `xxx` 本身被声明成了什么。
+
+**面试官继续追问：`$value` 是什么？**
+
+**你接着答：**它是属性包装器提供的 `projectedValue`。至于里面放绑定、发布器还是别的能力，要看这个包装器自己怎么定义。
 
 <a href="#属性包装器" style="color:red;font-weight:bold;">返回：属性包装器</a>
 
 ### 17、<font id="FAQ-单例"><font color="red"><b>static</b></font> <font color="red"><b>let</b></font> 单例线程安全吗？</font>
 
-**答：**初始化具有一次性保证，但实例后续可变状态不会自动获得保护。UI 单例可隔离到 <font color="red"><b>MainActor</b></font>，共享业务状态使用 Actor 或完整同步方案。
+**面试时可以直接说：**它只保证这个单例的初始化是一次性的、并发下不会创建出好几份；不保证单例里面的可变属性以后被多线程同时读写时也安全。
+
+**说人话：**“店只开一家”是安全的，不等于“店里所有人同时改账本”也是安全的。UI 状态可以放到 <font color="red"><b>MainActor</b></font>，跨线程共享的业务状态则需要 Actor、锁或其它完整同步方案。
 
 <a href="#单例" style="color:red;font-weight:bold;">返回：单例</a>
 
 ### 18、<font id="FAQ-访问控制"><font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font> 有什么区别？</font>
 
-**答：**<font color="red"><b>public</b></font> 开放模块外使用；<font color="red"><b>open</b></font> 进一步开放类的模块外继承与成员重写。区别取决于模块边界，和库是否以源码交付无关。
+**面试时可以直接说：**<font color="red"><b>public</b></font> 允许模块外使用；<font color="red"><b>open</b></font> 在能使用的基础上，还允许模块外继承这个类、重写它的可重写成员。<font color="red"><b>open</b></font> 的权限更大。
+
+**说人话：**<font color="red"><b>public</b></font> 像“外部顾客可以进店买东西”，<font color="red"><b>open</b></font> 像“外部的人还能按你的店型开分店、改经营方式”。这里看的是模块边界，不是源码能不能看到。
 
 <a href="#访问控制" style="color:red;font-weight:bold;">返回：访问控制</a>
 
 ### 19、<font id="FAQ-Task"><font color="red"><b>async</b></font>、<font color="red"><b>await</b></font>、<font color="red"><b>Task</b></font> 都代表后台线程吗？</font>
 
-**答：**不代表。<font color="red"><b>async</b></font> 允许挂起，<font color="red"><b>await</b></font> 标记潜在挂起点，<font color="red"><b>Task</b></font> 承载异步工作；执行位置受隔离和调度规则约束。<font color="red"><b>MainActor</b></font> 中创建的普通 <font color="red"><b>Task</b></font> 可以继续在 <font color="red"><b>MainActor</b></font> 执行。
+**面试时可以直接说：**都不等于后台线程。<font color="red"><b>async</b></font> 表示函数允许暂停，<font color="red"><b>await</b></font> 标出可能暂停的位置，<font color="red"><b>Task</b></font> 是一份异步工作的载体；它最终在哪执行，要看 Actor 隔离和系统调度。
+
+**说人话：**异步的重点是“等结果时先让出执行权”，不是“自动换一条后台线程”。例如在 <font color="red"><b>MainActor</b></font> 里创建普通 <font color="red"><b>Task</b></font>，任务仍可能继承这个隔离环境，在主 Actor 上执行。
 
 <a href="#async-await" style="color:red;font-weight:bold;">返回：异步语义</a>
 
 ### 20、<font id="FAQ-结构化"><font color="red"><b>Task</b></font> 创建在另一个 <font color="red"><b>Task</b></font> 内，就是结构化子任务吗？</font>
 
-**答：**不是。<font color="red"><b>Task</b></font> 初始化器仍创建非结构化任务。<font color="red"><b>async</b></font> <font color="red"><b>let</b></font> 与任务组建立结构化父子关系，子任务不能脱离作用域；普通 <font color="red"><b>Task</b></font> 的句柄、取消和结果由业务管理。
+**面试时可以直接说：**不是。哪怕把 <font color="red"><b>Task</b></font> 写在另一个 <font color="red"><b>Task</b></font> 里面，它仍是非结构化任务。真正的结构化子任务通常来自 <font color="red"><b>async let</b></font> 或任务组，它们的生命周期被父作用域管住。
+
+**说人话：**代码缩进在里面，不代表生命周期就自动属于外层。结构化并发像“孩子必须在全家离开前回来”；普通 <font color="red"><b>Task</b></font> 更像单独派出去的人，句柄谁保存、何时取消、结果谁收，都要业务自己管。
 
 <a href="#结构化并发" style="color:red;font-weight:bold;">返回：结构化并发</a>
 
 ### 21、<font id="FAQ-取消">cancel 会立即停止任务吗？</font>
 
-**答：**不会强杀。取消是请求，任务或调用的 API 需要检查并退出；已经发生的外部副作用不会自动回滚。任务组超时也可能被不响应取消的工作拖住。
+**面试时可以直接说：**不会。Swift 的取消是合作式的：外面发出“请停止”的信号，任务自己或它调用的 API 要检查这个信号并及时退出，不是系统直接把任务强杀。
+
+**说人话：**取消像按下停车铃，不是瞬间把车从路上抹掉。如果任务从来不看取消状态，它可能继续跑；已经发出去的请求、已经写入的数据，也不会因为 `cancel()` 自动回滚。
 
 <a href="#取消" style="color:red;font-weight:bold;">返回：取消与超时</a>
 
 ### 22、<font id="FAQ-Continuation">Continuation 最重要的约束是什么？</font>
 
-**答：**每条路径恢复一次且仅一次。漏恢复会持续等待，重复恢复会触发错误；多次事件使用流。<font color="red"><b>Task</b></font> 取消与旧 API 取消需要另外连接。
+**面试时可以直接说：**每条执行路径都必须恢复一次，而且只能恢复一次。漏掉一次，等待方可能永远等下去；恢复两次，会触发错误。它只适合桥接一次性结果，多次回调应该用流。
+
+**说人话：**Continuation 像一张只能交一次的取货单：不交，对方一直等；交两次，账就乱了。另外，Swift <font color="red"><b>Task</b></font> 被取消时，旧回调 API 不会自动跟着取消，两边要自己接起来。
 
 <a href="#Continuation" style="color:red;font-weight:bold;">返回：回调桥接</a>
 
 ### 23、<font id="FAQ-Actor">Actor 比普通 <font color="red"><b>class</b></font> 多解决了什么？</font>
 
-**答：**为共享可变状态建立语言级隔离边界，编译器检查访问与传值。普通 <font color="red"><b>class</b></font> 也能用锁或队列保护，但全部入口的一致性由实现负责。
+**面试时可以直接说：**Actor 给共享可变状态加了一道语言级隔离边界，编译器会帮我检查哪些访问需要跨域等待、哪些值能安全传过去。普通 <font color="red"><b>class</b></font> 也能用锁保护，但是否每个入口都锁对了，只能靠开发者自己保证。
 
-**追问：Actor 是专属线程吗？答：**不是；Actor 管隔离，<font color="red"><b>Task</b></font> 管工作，线程是执行资源。
+**说人话：**Actor 更像“同一个账本一次只让一个人按规则进来处理”，重点是保护账本，不是给账本永久配一条线程。
+
+**面试官继续追问：Actor 是不是一条专属线程？**
+
+**你接着答：**不是。Actor 管的是隔离，<font color="red"><b>Task</b></font> 管的是一份工作，线程只是系统拿来执行工作的资源，这三个概念不能画等号。
 
 <a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor</a>
 
 ### 24、<font id="FAQ-重入">用了 Actor，为什么还可能超发名额？</font>
 
-**答：**等待期间其他调用可以进入同一 Actor 改状态。等待前的检查可能失效；恢复后复查，把最终检查与扣减放进同一无挂起片段，或使用有补偿的预留策略。
+**面试时可以直接说：**因为 Actor 方法执行到 <font color="red"><b>await</b></font> 时会让出隔离域，等待期间别的调用可以进来改状态。所以等待前查到“还有一个名额”，恢复后这个结论可能已经过期。
 
-**追问：这是数据竞争吗？答：**可以没有同时读写，仍发生业务上的逻辑竞态。
+**说人话：**你查库存时还有一件，中途去等网络；这段时间另一个请求把最后一件买走了。你回来还拿着旧结论继续扣，就会超卖。通常要在恢复后重新检查，并把最终检查和扣减放在同一段没有 <font color="red"><b>await</b></font> 的代码里。
+
+**面试官继续追问：这算数据竞争吗？**
+
+**你接着答：**不一定有两条线程同时读写同一块内存，所以可以没有底层数据竞争；但业务步骤交错后结果错了，这属于逻辑竞态。
 
 <a href="#Actor重入" style="color:red;font-weight:bold;">返回：可重入</a>
 
 ### 25、<font id="FAQ-去重">把 <font color="red"><b>class</b></font> 改成 <font color="red"><b>actor</b></font>，就不会重复请求了吗？</font>
 
-**答：**不会。等待网络时最终缓存还没写入，后来调用仍可能再请求。需要先登记正在执行的 <font color="red"><b>Task</b></font>，再让同 key 调用复用，并设计失败清理和失效策略。
+**面试时可以直接说：**不会。Actor 只能保证访问隔离，不能自动理解“相同参数的网络请求应该合并”。第一个请求在等待网络时，缓存还没有结果，第二个调用照样可能再发一次。
+
+**说人话：**Actor 只是把进门秩序管好了，不会替你制定“同一桌只下一次单”的业务规则。要去重，应该在发请求前按 key 记录正在执行的 <font color="red"><b>Task</b></font>，后来的调用复用它，并处理失败清理、缓存过期和主动失效。
 
 <a href="#Actor去重" style="color:red;font-weight:bold;">返回：请求去重</a>
 
 ### 26、<font id="FAQ-Sendable"><font color="red"><b>Sendable</b></font> 加了锁吗？不写会怎样？</font>
 
-**答：**没有加锁。它声明可安全跨域传递，编译器检查相应条件；有些类型能隐式推断，有些必须显式声明。满足接口契约和偶然一次调用通过不是同一件事。
+**面试时可以直接说：**没有。<font color="red"><b>Sendable</b></font> 是一份“这个值可以安全跨并发隔离域传递”的类型承诺，编译器会检查这份承诺是否站得住，但它不会偷偷给对象加锁。
 
-**追问：unchecked 可以解决报错吗？答：**只有安全由锁等机制完整证明时才使用；它不是修复数据竞争的代码。
+**说人话：**它像货物上的“可以安全运输”标签。标签本身不会给箱子加钢板；你得先把里面的东西设计安全，标签才有意义。有些值类型编译器能自动判断，有些场景需要显式声明。
+
+**面试官继续追问：<font color="red"><b>@unchecked Sendable</b></font> 能解决报错吗？**
+
+**你接着答：**它只能让编译器相信我，不能让不安全的代码变安全。只有我已经用锁、不可变设计等方式完整证明安全，只是编译器看不出来时才用。
 
 <a href="#Sendable" style="color:red;font-weight:bold;">返回：<font color="red"><b>Sendable</b></font></a>
 
 ### 27、<font id="FAQ-隔离"><font color="red"><b>nonisolated</b></font>、<font color="red"><b>MainActor</b></font>、<font color="red"><b>Sendable</b></font> 各管什么？</font>
 
-**答：**<font color="red"><b>nonisolated</b></font> 声明成员不归所属 Actor 隔离；<font color="red"><b>MainActor</b></font> 指定代码与状态的隔离域；<font color="red"><b>Sendable</b></font> 约定值的安全传递。三个维度不能互相替代。
+**面试时可以直接说：**<font color="red"><b>nonisolated</b></font> 管“这个成员不需要进入所属 Actor”；<font color="red"><b>MainActor</b></font> 管“这段代码和状态归主 Actor 隔离”；<font color="red"><b>Sendable</b></font> 管“这个值能不能安全跨隔离域传递”。三者解决的不是同一个问题。
+
+**说人话：**一个在决定“进不进这扇门”，一个在决定“归哪间房管理”，一个在检查“东西能不能安全从一间房搬到另一间房”。不能拿其中一个替代另外两个。
 
 <a href="#nonisolated" style="color:red;font-weight:bold;">返回：<font color="red"><b>nonisolated</b></font></a> · <a href="#MainActor" style="color:red;font-weight:bold;">返回：<font color="red"><b>MainActor</b></font></a>
 
 ### 28、<font id="FAQ-Actor-await">Actor 方法没写 <font color="red"><b>async</b></font>，为什么外部还要 <font color="red"><b>await</b></font>？</font>
 
-**答：**方法体可以同步，但外部调用需要进入它的隔离域，调用点可能等待。当前 Actor 内调用自己的同步方法则不需要跨域。
+**面试时可以直接说：**因为方法体虽然没有主动挂起，但外部调用者要跨进这个 Actor 的隔离域；如果 Actor 正在处理别的工作，调用点就可能需要等，所以外部仍要写 <font color="red"><b>await</b></font>。
+
+**说人话：**屋里的办事流程可能只要一分钟，但你从屋外进去之前仍可能要排队。已经在同一个 Actor 里面调用自己的同步方法，就不需要再跨这道门。
 
 <a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor 访问</a>
 
 ### 29、<font id="FAQ-Actor边界">Actor 能继承、保证 FIFO 或自动加速吗？</font>
 
-**答：**不参与普通类继承，不保证请求按到达顺序执行，也不承诺更快。它可以遵循协议，通过组合复用；性能要测跨域次数与状态热点。
+**面试时可以直接说：**都不能这么保证。Actor 不走普通类继承，不承诺任务严格按到达顺序执行，也不是性能加速器。它主要解决隔离正确性，可以遵循协议，复用通常靠组合。
+
+**说人话：**Actor 像一个有门禁的办事窗口：门禁能避免大家同时冲进去改同一份资料，但不代表永远严格按你心里的顺序叫号，更不代表办事一定更快。跨 Actor 太频繁，反而可能有成本。
 
 <a href="#Actor选型" style="color:red;font-weight:bold;">返回：Actor 选型</a>
 
 ### 30、<font id="FAQ-锁">Actor 与锁怎样选择？</font>
 
-**答：**异步调用链里的共享业务状态优先评估 Actor；短同步临界区或必须维持同步接口时可用锁。持锁区不跨 <font color="red"><b>await</b></font>，Actor 跨等待流程也不自动成为事务。
+**面试时可以直接说：**异步业务里的一组共享状态，我会优先评估 Actor；只是保护一小段同步临界区，或者接口必须保持同步时，可以用锁。两者不是谁绝对高级，要看调用模型。
+
+**说人话：**Actor 适合管理“一整个异步状态对象”，锁适合守住“一小段同步代码”。锁住以后不要跨 <font color="red"><b>await</b></font>；Actor 方法跨过 <font color="red"><b>await</b></font> 也会发生重入，所以整个方法并不会自动变成一笔不可插队的事务。
 
 <a href="#锁" style="color:red;font-weight:bold;">返回：锁</a>
 
 ### 31、<font id="FAQ-流">AsyncStream 与 Continuation 怎样区分？</font>
 
-**答：**Continuation 接一次结果，AsyncStream 接多次事件。流要管理结束、缓冲和取消；yield 发值不等于自动等待慢消费者。
+**面试时可以直接说：**Continuation 用来把一次回调桥接成一次异步结果；AsyncStream 用来接一连串事件。一个像“等这一次结果”，一个像“持续订阅消息”。
+
+**说人话：**拍一次照片拿结果，用 Continuation；持续监听定位、通知或进度，用 AsyncStream。使用流还要考虑什么时候结束、缓冲多少、消费者取消后怎么清理；`yield` 发出一个值，也不代表生产者会自动停下来等慢消费者。
 
 <a href="#AsyncStream" style="color:red;font-weight:bold;">返回：AsyncStream</a>
 
 ### 32、<font id="FAQ-Combine"><font color="red"><b>Combine</b></font> 的订阅为什么刚建立就没了？</font>
 
-**答：**常见原因是没有保留 AnyCancellable，释放后订阅被取消。把订阅保存到明确拥有者中，退出业务时再取消，并检查闭包是否与拥有者形成强引用环。
+**面试时可以直接说：**最常见的原因是没有把 `AnyCancellable` 保存下来。它一释放，订阅就跟着取消，所以看起来像刚订阅就没反应了。
+
+**说人话：**`sink` 返回的 `AnyCancellable` 就像订阅凭证，凭证被扔掉，相当于退订。应该把它存在明确的拥有者里，业务结束时再取消；同时还要检查订阅闭包有没有反过来强持有这个拥有者，形成循环引用。
 
 <a href="#Combine" style="color:red;font-weight:bold;">返回：<font color="red"><b>Combine</b></font></a>
 
 ### 33、<font id="FAQ-调度">subscribe(on:) 与 receive(on:) 有什么区别？</font>
 
-**答：**前者安排上游订阅、请求与取消；后者安排其后下游的值和完成事件。receive 放到重计算之后，不会把前面的计算自动搬走；主队列调度也不等于 <font color="red"><b>MainActor</b></font> 类型契约。
+**面试时可以直接说：**`subscribe(on:)` 主要影响上游从哪里开始订阅、发起请求和取消；`receive(on:)` 影响它后面的下游从哪里接收值和完成事件。它们作用的方向不一样。
+
+**说人话：**一个管“生产线从哪里开工”，一个管“成品从哪条传送带送到后面”。如果重计算写在 `receive(on:)` 前面，把 `receive` 放到主队列并不会把前面的计算自动搬到别处；而调度到主队列，也不等于声明了 <font color="red"><b>MainActor</b></font> 的类型隔离契约。
 
 <a href="#Combine操作符" style="color:red;font-weight:bold;">返回：操作符与调度</a>
 
 ### 34、<font id="FAQ-Published">Published 发出新值时，属性已经改了吗？</font>
 
-**答：**发布发生在 <font color="red"><b>willSet</b></font>，闭包参数已经是新值，但重新读取属性可能仍是旧值。处理本次变化优先使用收到的参数。
+**面试时可以直接说：**不一定。<font color="red"><b>@Published</b></font> 会在属性真正写入前发出新值，所以订阅闭包拿到的参数已经是新值，但此时重新读取原属性，仍可能读到旧值。
+
+**说人话：**它像先广播“马上要改成 10 了”，再真正把牌子换成 10。处理这一次变化时，优先使用订阅收到的那个新值，不要马上回头读属性再猜。
 
 <a href="#Published" style="color:red;font-weight:bold;">返回：Published</a>
 
 ### 35、<font id="FAQ-搜索流"><font color="red"><b>Combine</b></font> 搜索怎样避免旧结果覆盖新结果？</font>
 
-**答：**输入防抖后映射到请求 Publisher，用 switchToLatest 切到最新请求，并按业务需要加请求版本校验。取消旧订阅不代表服务端副作用已撤销。
+**面试时可以直接说：**先对输入做防抖，再把每个关键词映射成一个请求 Publisher，然后用 `switchToLatest` 只接收最新请求的结果。要求更严时，再给请求加版本号或关键词校验。
+
+**说人话：**用户先搜 `a`，马上又搜 `apple`，我们真正想展示的是 `apple` 的结果。`switchToLatest` 会切到最新那条请求链，避免旧结果晚回来盖住新结果；但取消本地订阅不代表服务器上已经发生的操作会自动撤销。
 
 <a href="#Combine操作符" style="color:red;font-weight:bold;">返回：搜索管线</a>
 
 ### 36、<font id="FAQ-可用性">available 与条件编译有什么区别？</font>
 
-**答：**@available 声明 API 要求；#available / #unavailable 按运行系统选择路径；#<font color="red"><b>if</b></font> 决定是否参与编译。运行时检查不能让旧编译器认识新语法。
+**面试时可以直接说：**`@available` 是声明这个 API 需要什么系统版本；`#available` 和 `#unavailable` 是 App 运行时根据系统版本走不同分支；`#if` 是编译阶段就决定这段代码要不要参与编译。
+
+**说人话：**一个是在 API 门口贴“最低版本”，一个是在运行时查“这台设备能不能走这条路”，一个是在打包前就决定“这段代码根本放不放进去”。所以运行时版本判断救不了旧编译器不认识的新语法。
 
 <a href="#可用性" style="color:red;font-weight:bold;">返回：版本边界</a>
 
 ### 37、<font id="FAQ-内联">inlinable 会强制内联吗？</font>
 
-**答：**不会。它向客户端公开实现以允许跨模块优化；usableFromInline 让内部声明可被该实现引用；frozen 承诺公开布局。三者都有演进代价。
+**面试时可以直接说：**不会。<font color="red"><b>inlinable</b></font> 只是把函数实现暴露给客户端编译器，让它有机会做跨模块优化，最后内不内联仍由优化器决定。
+
+**说人话：**它相当于把菜谱交给客户端，客户端可以决定要不要把步骤直接展开。`usableFromInline` 是允许这份公开菜谱引用某些内部工具；`frozen` 则是承诺公开类型布局以后不能随便变。这些能力都会压缩库后续演进空间，不能为了“可能更快”就到处加。
 
 <a href="#内联" style="color:red;font-weight:bold;">返回：内联</a>
 
 ### 38、<font id="FAQ-网络">URLSession 没报错，就代表 HTTP 成功吗？</font>
 
-**答：**不代表。传输成功仍可能得到 404 或 500；先检查响应类型和 HTTP 状态，再处理业务状态与解码。取消、传输、HTTP、业务、解码应区分。
+**面试时可以直接说：**不代表。`URLSession` 没有传输错误，只能说明请求成功到达并收到了响应；服务器返回 `404`、`500` 时，网络层照样可能没有 `error`。还要继续检查 `HTTPURLResponse` 和状态码。
+
+**说人话：**快递员把包裹送到了，不代表包裹里的业务结果一定正确。工程里最好把取消错误、传输错误、HTTP 状态错误、业务错误和解码错误分开，不然最后只剩一句“请求失败”，很难排查。
 
 <a href="#URLSession" style="color:red;font-weight:bold;">返回：网络校验</a>
 
 ### 39、<font id="FAQ-解码">模型有默认值，JSON 缺字段就一定能解码吗？</font>
 
-**答：**不一定，自动合成不会统一把默认值作为缺字段兜底。需要明确策略时自定义解码；decodeIfPresent 接受缺失或 null，但类型错误仍会抛出。
+**面试时可以直接说：**不一定。属性写了默认值，不代表自动合成的 <font color="red"><b>Decodable</b></font> 会在字段缺失时统一使用它。需要稳定兜底，就要明确写自己的解码策略。
+
+**说人话：**模型里的 `var name = ""` 只是 Swift 初始化时的默认值，JSON 解码有自己的一套规则。`decodeIfPresent` 可以接受字段不存在或值为 `null`，但如果服务端把本该是整数的字段传成了对象，类型不对仍然会报错。
 
 <a href="#Codable" style="color:red;font-weight:bold;">返回：Codable</a>
 
 ### 40、<font id="FAQ-计时">哪个 Timer 最精确，能在后台一直跑吗？</font>
 
-**答：**先按调度模型选，没有普通 Timer 保证硬实时或 App 挂起后持续秒级回调。视觉用 DisplayLink，工作队列用 GCD Timer，普通 UI 用 RunLoop Timer；倒计时从截止时间重算。
+**面试时可以直接说：**没有一种普通 Timer 能保证硬实时，也不能保证 App 被系统挂起后还每秒回调。选择重点不是单纯比谁“最准”，而是看它跟屏幕刷新、RunLoop 还是工作队列配合。
+
+**说人话：**做动画跟屏幕帧走，用 `CADisplayLink`；工作队列定时任务可以看 `DispatchSourceTimer`；普通 UI 计时可以用 RunLoop Timer。真正的倒计时不要把 tick 次数当真相，而要保存截止时间，App 回到前台后重新计算还剩多少。
 
 <a href="#计时" style="color:red;font-weight:bold;">返回：计时机制</a>
 
 ### 41、<font id="FAQ-数据结构">链表插删一定比数组快吗？</font>
 
-**答：**需要已知节点或前驱等条件；寻找位置仍可能线性遍历。数组有局部性和索引优势，链表有指针与分配成本，按实际访问模式选择。
+**面试时可以直接说：**不一定。链表插删快的前提是我已经拿到了目标节点或前驱；如果还要从头找位置，查找本身仍可能是线性的。数组虽然中间搬移有成本，但连续内存和随机访问通常更友好。
+
+**说人话：**链表像一列用绳子串起来的人：你已经站在目标旁边，插一个人很方便；但如果先要从队头数到第十万个人，照样慢。数组还享有更好的内存局部性，所以不能只背复杂度表，要按真实访问方式选。
 
 <a href="#数据结构" style="color:red;font-weight:bold;">返回：数据结构</a>
 
 ### 42、<font id="FAQ-网络分层">HTTP 一定基于 TCP 吗？</font>
 
-**答：**不是。HTTP/3 使用 QUIC / UDP；HTTP 语义与底层传输应分开。OSI 是参考分层，真实协议不要求严格一层一个实现。
+**面试时可以直接说：**不一定。HTTP/1.1 和 HTTP/2 常见于 TCP 之上，HTTP/3 使用的是基于 UDP 的 QUIC。HTTP 规定的是请求、响应这些应用层语义，不应该和某一种传输协议绑死。
+
+**说人话：**HTTP 像货物交接规则，TCP 或 QUIC 像运输方式。规则可以延续，但底下的运输工具能换。OSI 更像帮助理解网络职责的参考模型，真实协议实现不一定严格一层只对应一个东西。
 
 <a href="#网络分层" style="color:red;font-weight:bold;">返回：网络分层</a>
 
