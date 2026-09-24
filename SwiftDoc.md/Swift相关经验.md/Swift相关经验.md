@@ -204,7 +204,7 @@ final class CSVFormatter: Formatter {  // 禁止继续继承这个类。
 
 ```swift
 import Foundation
-
+/// Swift 的 Array 本质上是泛型：Array<Element>，正常情况下，一个数组只能放同一种 Element 类型
 let values: [Any] = [42, "Jobs", (x: 1, y: 2)]
 for value in values {
     if let number = value as? Int { // 转换成功才使用 Int 的能力。
@@ -1242,7 +1242,54 @@ func consumeEvents() async {
 
 ### 2、<font id="Combine"><font color="red"><b>Combine</b></font>：订阅、变换、接收事件</font>
 
-[**Combine**](https://developer.apple.com/documentation/combine) 把事件源与处理链连接起来：Publisher 发出值或终止事件，Operator 转换，Subscriber 接收。它是 Apple 框架，不是 Swift 语言关键字，也不专属于 UI。
+* [**Combine**](https://developer.apple.com/documentation/combine) 把事件源与处理链连接起来：Publisher 发出值或终止事件，Operator 转换，Subscriber 接收。
+
+* **它是 Apple 框架，不是 Swift 语言关键字，也不专属于 UI。**
+
+* 可以理解为系统级别的[**RxSwift**](https://github.com/reactivex/rxswift)
+
+* 冷信号：订阅者来了以后，数据源才开始工作，而且通常每个订阅者都有自己的一份数据流。
+
+  热信号：数据源本来就在工作，订阅者只是中途接入，共享同一个数据源。
+
+* 核心差异化
+
+    | 能力                                                       | Combine                         | RxSwift                                       |
+| ---------------------------------------------------------- | ------------------------------- | --------------------------------------------- |
+    | **背压**（**下游在控制上游“水龙头开多大、一次放多少水”**） | ✅ 原生支持 `Subscribers.Demand` | ❌ Observable 本身没有真正的背压机制           |
+| **强类型错误**                                             | ✅ `Publisher<Output, Failure>`  | ❌ `Observable<Element>`，Error 不作为泛型参数 |
+    | **`@Published` / `ObservableObject` 集成**                 | ✅ 原生                          | ❌ 没有                                        |
+| **SwiftUI 原生配合**                                       | ✅ 很自然                        | ⚠️ 需要桥接                                    |
+    | **Single / Maybe / Completable**                           | ❌ 没有对应独立类型              | ✅ 有                                          |
+| **Driver / Signal**                                        | ❌ 没有直接对应物                | ✅ RxCocoa 有                                  |
+    | **操作符丰富度**                                           | 相对少                          | ✅ 更多、更成熟                                |
+| `withLatestFrom`                                           | ❌ 原生没有                      | ✅ 有                                          |
+    | `retryWhen` 等复杂操作符                                   | 能力相对有限                    | ✅ 很丰富                                      |
+| 跨平台                                                     | 主要 Apple 生态                 | ✅ 更广泛，Rx 家族跨语言                       |
+    | 自定义 Subscriber / Subscription                           | ✅ 很正式、完整                  | 相对少见                                      |
+
+* 使用场景
+
+    | iOS 场景                     | 通常是   | 原因                               |
+| ---------------------------- | -------- | ---------------------------------- |
+    | 按钮点击                     | 🔥 热     | 用户点击本来就在发生，订阅只是监听 |
+| TextField 输入               | 🔥 热     | 输入事件来自 UI                    |
+    | ScrollView 滚动              | 🔥 热     | 用户行为事件                       |
+| 手势 Gesture                 | 🔥 热     | 外部事件源                         |
+    | NotificationCenter           | 🔥 热     | 系统广播已经存在                   |
+| KVO / 属性变化监听           | 🔥 热     | 监听对象状态变化                   |
+    | Subject / Relay              | 🔥 热     | 多人共享一个事件源                 |
+| ViewModel 状态               | 🔥 热     | 一个状态被多个地方观察             |
+    | 网络请求                     | ❄️ 冷     | 每订阅一次通常发一次请求           |
+| 数据库查询                   | ❄️ 冷     | 每订阅一次执行一次查询             |
+    | 文件读取                     | ❄️ 冷     | 每订阅一次重新读取                 |
+| JSON 解析                    | ❄️ 冷     | 每订阅一次重新计算                 |
+    | `Observable.just/from`       | ❄️ 冷     | 每个订阅者独立收到完整序列         |
+| 定时器 `Observable.interval` | ❄️ 通常冷 | 每个订阅创建自己的 Timer           |
+    | 数据库变化监听               | 🔥 热     | DB 发生变化后广播                  |
+| WebSocket 消息               | 🔥 热     | 一个长连接持续产生消息             |
+    | 推送消息                     | 🔥 热     | 系统产生消息，App 监听             |
+| BLE Delegate 事件            | 🔥 热     | 蓝牙硬件/系统持续产生事件          |
 
 ```swift
 import Combine
@@ -1554,7 +1601,7 @@ print(article.subtitle as Any)       // nil
 
 ## 十三、<font id="基础设施">基础设施：网络分层、数据结构与锁</font>
 
-### 1、<font id="网络分层">网络分层：定位故障所在范围</font>
+### 1、<font id="网络分层">网络分层（7）：定位故障所在范围</font>
 
 | OSI 层 | 职责 | 常见对象 |
 | --- | --- | --- |
@@ -1570,7 +1617,7 @@ TCP/IP 常合并为应用、传输、网际、链路四层；OSI 是参考模型
 
 排查按“域名解析 → 建连 → TLS → HTTP 状态 → 业务响应 → 解码”逐步定位，避免把所有失败都记录成“网络错误”。
 
-### 2、<font id="数据结构">数据结构：按访问方式选</font>
+### 2、<font id="数据结构">数据结构（13）：按访问方式选</font>
 
 | 结构 | 核心特征 | 常见用途与边界 |
 | --- | --- | --- |
@@ -1590,7 +1637,7 @@ TCP/IP 常合并为应用、传输、网际、链路四层；OSI 是参考模型
 
 链表头节点可以直接保存数据；哨兵节点是可选设计。单向、双向链表都可有意构成环。快慢指针可检测链表环，比较节点身份，不比较节点内容。
 
-### 3、<font id="锁">锁：保护完整临界区</font>
+### 3、<font id="锁">锁（6）：保护完整临界区</font>
 
 | 机制 | 行为 | 注意点 |
 | --- | --- | --- |

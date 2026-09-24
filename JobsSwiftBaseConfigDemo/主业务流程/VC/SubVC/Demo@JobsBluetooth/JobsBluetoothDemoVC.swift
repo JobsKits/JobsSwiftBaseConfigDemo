@@ -35,6 +35,7 @@ final class JobsBluetoothDemoVC: BaseVC {
             .byDelegate(self)
             .byRowHeight(76)
             .byRegisterCell(UITableViewCell.self)
+            .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() { make.top.equalTo(gk_navigationBar.snp.bottom) }
                 else { make.top.equalTo(view.safeAreaLayoutGuide.snp.top) }
@@ -67,7 +68,10 @@ extension JobsBluetoothDemoVC: UITableViewDataSource, UITableViewDelegate {
                     .bySecondaryLines(1)
                     .byPrimarySecondaryVerticalPadding(3)
             }
+            .byTitleCor(JobsCor.label)
+            .byDetailTitleCor(JobsCor.secondaryLabel)
             .byAccessoryType(.disclosureIndicator)
+            .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
