@@ -1670,7 +1670,67 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
     ![image-20251114135325330](./assets/image-20251114135325330.png)
 
-### 10、其他 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 10、<font color=red>安装与构建自动挂载脚本</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+本工程通过 [**CocoaPods**](https://cocoapods.org/) 钩子、[**Xcode**](https://developer.apple.com/xcode) Build Phases 和共享 Scheme 挂载脚本。安装前置任务、安装收尾、目标构建阶段与整个 Scheme 的构建后动作分别触发，不能统一视为“编译成功后执行”。
+
+**安装前后：入口与行为**
+
+[Podfile](./Podfile) 顶部加载 `./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/jobs_pod_install_offline_guard.rb`；统一调度入口是同目录的 `【MacOS】📦Pod Install离线保护.command`。详见[本地脚本保护说明](<./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/README.md>)。
+
+| 时机                                      | 挂载脚本 / 入口                                              | 实际行为与产物                                               |
+| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；下面的报告与索引任务独立运行，不阻塞安装主流程 |
+| 前置任务                                  | [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 扫描本地 podspec，生成 `./PodspecDependencyReport/` 下的依赖报告与关系图 |
+| 前置任务                                  | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 本机工具可用时后台建立 / 更新 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引并导出 Markdown；通过 PID 避免重复启动 |
+| 工程集成完成后，`post_integrate`          | 统一入口 `--post-integrate` → [恢复 PIF 构建会话](<./ScriptsByPods/【MacOS】🧹恢复Xcode PIF构建会话.command/README.md>) | 有活动构建则跳过；无活动构建时结束当前用户的空闲构建服务，再通过工作空间列表命令重建会话 |
+
+前置任务强制离线，只复用已有工具，不自动安装工具链；失败不覆盖 CocoaPods 自身结果。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
+
+`post_install` 还会执行 Podfile 内的构建配置与兼容性修补；`post_integrate` 同时维护 Pods 工程中的 `Podfile` / `Podfile.deps` 引用。这些是 Podfile 内联逻辑，外置收尾脚本的实际调用点是 `post_integrate`。
+
+**Swift 额外安装准备**
+
+以下动作发生在安装准备或 `pre_install`，不属于安装完成后的收尾：
+
+| 入口                                                         | 行为 / 条件                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `./ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh`      | 准备 Homebrew、FVM、Flutter SDK 与模块依赖；可能安装工具或访问网络 |
+| `./ScriptsByPods/拉取Flutter侧三方资源.sh/拉取Flutter侧三方资源.sh` | Flutter podhelper 未就绪时执行，补齐模块生成配置             |
+| `./JobsBySwiftPackageManager/【MacOS】🧠编译通过方可集成进SPM.command` | `pre_install` 中可选执行本地 Package 编译、测试与 Client 验证；选择执行后验证失败会中止集成 |
+| `./ScriptsByPods/清理Unity缓存.sh/清理Unity缓存.sh`、`./ScriptsByPods/解压Unity大资源.sh/解压Unity大资源.sh` | 检测到 Unity 集成时清缓存、还原大资源；Podfile 另会清理 Unity 中间构建目录 |
+
+通用外置准备脚本在交互终端统一询问一次：直接回车执行，输入任意字符后回车跳过；SPM 验证单独询问，规则相同。非交互环境默认执行。Flutter / Unity 外置脚本配置为可选，失败告警；SPM 验证一旦执行则是必过门禁。上述准备动作不受本地前置任务的“强制离线”约束。
+
+**构建阶段与构建后动作**
+
+挂载位置可直接查看[主工程 Build Phases](./JobsSwiftBaseConfigDemo.xcodeproj/project.pbxproj)和[共享 Scheme](./JobsSwiftBaseConfigDemo.xcodeproj/xcshareddata/xcschemes/JobsSwiftBaseConfigDemo.xcscheme)。
+
+| 时机 / 阶段                                              | 脚本 / 配置入口                                              | 实际行为与产物                                               |
+| -------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 构建中：`Package Markdown Documents`                     | [JobsMarkdownPackager.rb](./JobsByPods/JobsSwiftMarkdown@Pods/Support/JobsMarkdownPackager.rb) | 将项目文档与相对资源打入 App 内的 `JobsMarkdownDocuments.bundle`，供 Markdown Demo 离线阅读 |
+| 本地 Pod 编译前：`Generate AppIcon Environment Ribbon`   | [JobsAppIconRibbon.podspec](./JobsByPods/JobsAppIconRibbon@Pods/JobsAppIconRibbon.podspec) → `Scripts/JobsAppIconRibbon.sh` | 由 podspec 的 `script_phase` 挂载图标环境绶带生成器          |
+| 构建中：Flutter Build / Embed                            | `my_flutter/.ios/Flutter/flutter_export_environment.sh` → Flutter SDK 的 `xcode_backend.sh` | 分别执行 `build`、`embed_and_thin`，构建并嵌入 Flutter 产物  |
+| 编译前：`[OBX] Update Sourcery Generated Files`          | Pods 内 ObjectBox 的 Sourcery 工具                           | 生成 `./generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 并维护模型 JSON |
+| 构建中：Unity Build / Embed                              | `project.pbxproj` 内联脚本                                   | 仅真机构建 UnityFramework，再嵌入 framework 与 Data；模拟器跳过 |
+| Pods 资源复制后：`Recompile Assets with Alternate Icons` | `project.pbxproj` 内联脚本调用 `actool`                      | 合并主工程、Pod 图集与备用 App 图标，重新生成完整 `Assets.car` |
+| 主 App 最后一个 Build Phase：`Save Device IPA`           | [save_device_ipa_after_build.sh](./ScriptsByDevTools/save_device_ipa_after_build.sh) | 仅处理 `iphoneos` 且非 `clean` 的 App，生成 `./build/<App产品名>.ipa`，同名覆盖；模拟器跳过，Tests / Widget 没有挂载此阶段 |
+| Scheme Build 开始 / 结束                                 | `XBT Build Timer Start / End` → 外部 `xbt-build-hook.sh start / end` | 记录开始、结束时间和耗时；写入用户目录下的 `.xcode-build-timer/state/` 状态及历史日志 |
+
+IPA 留存属于主 App 的构建阶段，发生在 Scheme 后置动作之前，不代表整个工作空间已成功完成。脚本要求有效签名身份，在临时 `Payload/<App>.app` 快照上校验签名：已有有效签名则保留原元数据，否则尝试补签并再次严格校验；失败会使该构建阶段报错。留存目录 `./build/` 已由 Git 忽略。该阶段每次构建执行，输入只声明脚本文件，不把整个 `$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)` 目录列为输入，避免 App 签名、扩展或测试包反向依赖此阶段而形成构建循环。
+
+XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对路径调用，并未检测脚本是否存在；迁移机器时需在 Scheme 的 Build Pre-actions / Post-actions 中核对路径。状态目录中的 `latest.env`、`builds/*.env` 与 `history.log` 用于计时；`finished` 仅表示结束钩子执行，不是编译成功判据。
+
+CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
+
+**日志与定位**
+
+- 安装前置总日志：系统临时目录中的 `jobs-pod-install-preflight-<工程摘要>.log`。
+- 调度汇总与索引日志：系统临时目录中的 `【MacOS】📦Pod Install离线保护.<工程摘要>.log`、`codegraph_init.<工程摘要>.async.log`；PIF 与依赖报告脚本另有各自日志。
+- IPA 留存：Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。
+- 排查时先确认触发入口，再检查对应日志；目录中存在脚本，不代表它已被当前 Podfile、target 或 Scheme 挂载。
+
+### 11、其他 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * ➤ [**Swift**](https://developer.apple.com/swift/) 的<u>API 展望（提前声明未来能力）</u>这种机制，**在Objc世界几乎不存在**
 
@@ -1739,7 +1799,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
     location: /
     install-time: 1758341956
     ```
-  
+
 ## 三、💻代码讲解 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ### 1、平台区分引用库 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -12289,10 +12349,10 @@ flowchart TD
     ```text
     纯 Objective-C → 首次加入 Swift：
     可能支付一次 Swift 基础成本，增量相对明显。
-
+    
     纯 Swift → 加入 Objective-C：
     通常只增加 Objective-C 代码、元数据和资源，增量相对较小。
-
+    
     已经混编 → 继续增加任一语言：
     主要看新增代码、链接方式、第三方依赖和资源，不再有明显的首次混编成本。
     ```

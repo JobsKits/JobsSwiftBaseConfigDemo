@@ -540,7 +540,6 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)",
 				"$(SRCROOT)/ScriptsByDevTools/save_device_ipa_after_build.sh",
 			);
 			name = "Save Device IPA";

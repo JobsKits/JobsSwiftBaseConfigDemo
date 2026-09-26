@@ -173,6 +173,9 @@ final class RootListVC: BaseVC {
                 ("📋 系统剪贴板及粘贴提示", JobsClipboardCueDemoVC.self),
                 ("📱 iOS Widget", JobsWidgetDemoVC.self)
             ]),
+            (title: "语言学习".tr, items: [
+                ("俄语点读", JobsRussianReadingDemoVC.self)
+            ]),
             (title: "JobsSwiftTimer系列衍生产品".tr, items: [
                 ("🐯 节流防抖", JobsWorkerDemoVC.self),
                 ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),

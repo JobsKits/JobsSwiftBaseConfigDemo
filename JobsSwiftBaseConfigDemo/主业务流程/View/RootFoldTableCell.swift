@@ -720,7 +720,9 @@ extension RootFoldTableCell{
 
     private static func demoIconImage(for item: DemoItem) -> UIImage {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
-        if vcName == "JobsIconfontDemoListVC" {
+        if vcName == "JobsRussianReadingDemoVC" {
+            return "JobsRussianReadingIcon".img.withRenderingMode(.alwaysTemplate)
+        } else if vcName == "JobsIconfontDemoListVC" {
             return JobsIconfont.shared.iconImage(
                 .component,
                 size: CGSize(width: 30, height: 30),

@@ -36,7 +36,7 @@ extension CombineLab {
                 let source = PassthroughSubject<Int, CombineLabError>()
                 let subscriber = CombineDemandSubscriberOf<CombineLabError> { [weak lab] in lab?.log("\(fails ? "error" : "newest") \($0)") }
                 lab.retained.append(subscriber)
-                let policy: Publishers.Buffer<PassthroughSubject<Int, CombineLabError>>.BufferingStrategy = fails ? .customError { .invalid } : .dropNewest
+                let policy: Publishers.BufferingStrategy<CombineLabError> = fails ? .customError { .invalid } : .dropNewest
                 source.buffer(size: 2, prefetch: .byRequest, whenFull: policy).subscribe(subscriber)
                 (1...4).forEach { source.send($0) }
                 subscriber.request(.max(3))
