@@ -276,7 +276,7 @@ copiedList[0].count = 9  // 修改的是共享 Item 对象，不是替换数组�
 print(list[0].count)    // 9；数组复制不等于元素对象深拷贝。
 ```
 
-COW 不保护多个任务对同一个数组变量的并发写入。跨域传递仍按 <a href="#Sendable" style="color:red;font-weight:bold;"><font color="red"><b>Sendable</b></font></a> 与隔离规则处理。
+**COW** 不保护多个任务对同一个数组变量的并发写入。跨域传递仍按 <a href="#Sendable" style="color:red;font-weight:bold;"><font color="red"><b>Sendable</b></font></a> 与隔离规则处理。
 
 ### 4、<font id="ARC">ARC：管理强引用，不自动打破环</font>
 
