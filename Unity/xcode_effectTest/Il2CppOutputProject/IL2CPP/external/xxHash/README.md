@@ -55,13 +55,13 @@ This project also includes a command line utility, named `xxhsum`, offering simi
 thanks to [Takayuki Matsuoka](https://github.com/t-mat) contributions.
 
 
-### License
+### <span id="前言">License <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span>
 
 The library files `xxhash.c` and `xxhash.h` are BSD licensed.
 The utility `xxhsum` is GPL licensed.
 
 
-### Build modifiers
+### Build modifiers <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The following macros can be set at compilation time,
 they modify xxhash behavior. They are all disabled by default.
@@ -95,7 +95,7 @@ they modify xxhash behavior. They are all disabled by default.
 - `XXH_IMPORT` : should only be defined for dynamic linking, it prevents linkage errors with MSVC.
 
 
-### Example
+### Example <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Calling xxhash 64-bit variant from a C program :
 
@@ -152,7 +152,7 @@ unsigned long long calcul_hash_streaming(someCustomType handler)
 }
 ```
 
-### New experimental hash algorithm
+### New experimental hash algorithm <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Starting with `v0.7.0`, the library includes a new algorithm, named `XXH3`,
 able to generate 64 and 128-bits hashes.
@@ -172,7 +172,7 @@ It can be used for ephemeral data, and for tests, but avoid storing long-term ha
 This period will be used to collect users' feedback.
 
 
-### Other programming languages
+### Other programming languages <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Beyond the C reference version,
 xxHash is also available on many programming languages,
@@ -180,7 +180,7 @@ thanks to great contributors.
 They are [listed here](http://www.xxhash.com/#other-languages).
 
 
-### Branch Policy
+### Branch Policy <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > - The "master" branch is considered stable, at all times.
 > - The "dev" branch is the one where all contributions must be merged
@@ -188,3 +188,5 @@ They are [listed here](http://www.xxhash.com/#other-languages).
 >   + If you plan to propose a patch, please commit into the "dev" branch,
       or its own feature branch.
       Direct commit to "master" are not permitted.
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

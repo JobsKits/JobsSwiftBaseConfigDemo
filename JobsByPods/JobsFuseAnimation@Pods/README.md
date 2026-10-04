@@ -1,4 +1,4 @@
-# JobsFuseAnimation
+# <span id="前言">JobsFuseAnimation</span>
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -6,7 +6,7 @@
 
 组件内所有 Auto Layout 约束统一使用 `SnapKit`，不直接创建或激活系统 `NSLayoutConstraint`。
 
-## 刷新动画插件协议
+## 刷新动画插件协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsRefreshAnimatorProtocol` 统一消费下拉进度和刷新阶段，动画框架不依赖具体刷新状态机。
 - `JobsSystemRefreshView` 把系统菊花也纳入同一插件协议。
@@ -36,7 +36,7 @@ let lottie = JobsLottieRefreshView(animationNamed: "LottieLogo1")
 let system = JobsSystemRefreshView()
 ```
 
-## 抖音风格双球刷新动画
+## 抖音风格双球刷新动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsDouyinRefreshView` 使用红、绿双球交叉换位、上下错峰跳跃和尺度切换表达刷新状态。
 - `JobsDouyinRefreshConfig` 可配置颜色、球径、水平行程、跳跃高度和单轮时长。
@@ -57,7 +57,7 @@ refreshView.byResume()
 refreshView.byStop()
 ```
 
-## 分格充电动画
+## 分格充电动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 默认 3 格，已充格使用 `JobsCor.systemGreen`，未充格使用 `JobsCor.systemGray3`。
 - 每次 Timer tick 只前进 1 格，满格后的下一次 tick 回到 0 格。
@@ -79,7 +79,7 @@ cell.byChargingAnimationResume()
 cell.byChargingAnimationStop()
 ```
 
-## 冒泡动画
+## 冒泡动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsFuseBubbleConfig` 管理发射间隔、上浮距离、水平漂移、缩放和并发上限。
 - `byFuseBubbleStart` 只管动画，`bubbleProvider` 由外层提供任意 `UIView`。
@@ -96,7 +96,7 @@ sourceView.byFuseBubbleStart(in: hostView) {
 sourceView.byFuseBubbleStop()
 ```
 
-## v3 关键修复
+## v3 关键修复 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 外圈 `CAShapeLayer` 画在按钮自身 `bounds` 内侧。
 - 即使按钮设置了 `byMasksToBounds(true)`，导火索外圈也不会被裁剪。
@@ -107,7 +107,7 @@ sourceView.byFuseBubbleStop()
 - 引火索路径通过 `JobsByUIKit.UIBezierPath.make(...)` 创建。
 - UIKit 基础色通过 `JobsSwiftBaseDefines.JobsCor` 统一提供。
 
-## 用法
+## 用法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 btn.byFusePressStart(
@@ -128,36 +128,36 @@ btn.byFusePlaySound("Sound.wav")
 ```
 
 
-## v4
+## v4 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 松手时不再直接淡出，而是用 JobsSwiftTimer 驱动 `strokeEnd` 从当前进度倒退到 0，形成“退潮”效果。可通过 `retreatDuration` 控制回退时间，`fadeOutDuration` 仅作为回退完成后的短暂清理淡出。
 
-## Jobs DSL 调用约定
+## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计
+## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分
+### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 将刷新动画和视图表现抽成可替换的动画组件：配置描述颜色、尺寸与节奏，具体视图实现系统、双球、图片、GIF、Lottie 等效果，协议接收外部刷新阶段和进度。
 
-### 1.2、运行脉络
+### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 选择动画与配置 → 挂载表现视图 → 接收阶段和进度 → 播放或暂停 → 结束、替换并清理
 
-### 1.3、关键设计与边界
+### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 刷新状态机由 Refresher 管理，本库只映射表现，不决定业务刷新是否完成。
 - 重复开始不能叠加动画，暂停需保留可恢复状态，停止则恢复静态初始表现。
 - 回退收尾与最后淡出是不同时间段；不能用一个淡出替代既有回退动作。
 - Lottie、GIF 等资源型效果还依赖资源文件与对应运行库，几何图层效果则以路径和时间参数重建。
 
-### 1.4、阅读与重建顺序
+### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 JobsRefreshAnimatorProtocol，再选一个配置和对应视图追踪阶段映射，最后看 UIView 的气泡动画扩展。
 
@@ -170,3 +170,5 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [Core/JobsFuseBubbleConfig/JobsFuseBubbleConfig.swift](<./Core/JobsFuseBubbleConfig/JobsFuseBubbleConfig.swift>)
 
 依赖与编译入口：[JobsFuseAnimation.podspec](<./JobsFuseAnimation.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsSwiftTimer`、`JobsByUIKit`、`JobsSwiftDSL`、`JobsSwiftBaseDefines`、`lottie-ios`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -10,7 +10,7 @@
 
 这里保存 `JobsSwiftBaseConfigDemo` 的本地 [**Swift Package Manager**](https://www.swift.org/package-manager/) 综合演示与验证脚本。
 
-## 一、目录
+## 一、目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 路径 | 职责 |
 | --- | --- |
@@ -20,7 +20,7 @@
 | `【MacOS】🧠编译通过方可集成进SPM.command` | 依次执行解析、构建、测试和 Client 演示。 |
 | `【MacOS】⏬双击下载swift-syntax.command` | 只为独立 Macro Demo 预解析官方 `swift-syntax`。 |
 
-## 二、验证入口
+## 二、验证入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 独立运行：双击脚本，或在项目根目录执行：
 

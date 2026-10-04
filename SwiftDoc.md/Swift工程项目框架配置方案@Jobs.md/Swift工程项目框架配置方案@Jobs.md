@@ -28,9 +28,9 @@
   - 宿主部署目标为 iOS 15，使用 Swift 5 和 CocoaPods 静态 framework 链接。
   - 自建 Pod 可以按自身能力保留更低部署目标；新旧系统兼容必须在封装层消化，不能把 `#available` 和已废弃系统 API 泄漏到业务调用方。
 
-## 一、<font id=一些基本的原则>一些基本的原则</font>
+## 一、<font id=一些基本的原则>一些基本的原则</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1.1、Swift 优先，但不把语言纯度当成架构目标
+### 1.1、Swift 优先，但不把语言纯度当成架构目标 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Jobs 新写的宿主和自建组件优先使用 [**Swift**](https://www.swift.org/)，让类型系统、并发能力、模块化和 Apple 新 API 成为默认路径。
 - 依赖选择看维护状态、源码可审计性、许可证、二进制体积、最低系统版本、能力完整度和替换成本，不按“Swift / Objective-C”单一条件决策。
@@ -38,14 +38,14 @@
 - 第三方依赖通过 [**CocoaPods**](https://cocoapods.org/) 或 [**Swift Package Manager**](https://www.swift.org/package-manager/) 固定版本和依赖图。不要因为库较旧就把源码复制进主工程，更不能直接修改根目录 `Pods/` 或手工第三方目录。
 - 评估体积时以链接结果、最终 App 包和 `Assets.car` 为证据；“调用旧 API 就一定额外打入旧 framework”不是通用结论。
 
-### 1.2、播放器与音视频能力按边界选型
+### 1.2、播放器与音视频能力按边界选型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 播放器选型至少检查：协议和封装格式、硬解支持、直播 / 点播、缓存、首帧、Seek、倍速、字幕、后台音频、AirPlay、日志、许可证和维护频率。
 - 当前工程用 `BMPlayer` 展示播放器能力，用 `HaishinKit` 承接采集编码类能力；业务层仍应通过 Jobs 包装层或独立功能 Pod 接入，避免页面直接绑定某一家实现。
 - 自研适合强定制协议、端到端加密、专有缓存或多端统一内核；普通播放场景优先复用成熟内核，把精力放在稳定性、观测和替换边界上。
 - 闭源 SDK 不是绝对禁用，但必须记录隐私、合规、符号可见性、二进制架构、离线能力和退出方案。无法审计或无法替换的能力不能下沉成全局基础层。
 
-## 二、我对iOS开发的认知
+## 二、我对iOS开发的认知 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - iOS 是客户端工程，不只是“画 UI”。完整交付至少包含视图、状态、数据、生命周期、权限、错误恢复、缓存、日志、可测试性和发布配置。
 - 数据可以来自网络、数据库、App Group、Keychain、文件缓存和系统框架；轻重由业务决定，不预设“客户端只存轻量数据”。
@@ -59,9 +59,9 @@
 
 - 数据模型生成工具只能减少样板代码；字段语义、可选性、日期格式、兼容策略和业务校验仍需人工确认。
 
-## 三、我的构架方案
+## 三、我的构架方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 3.1、外部依赖分层
+### 3.1、外部依赖分层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > 下面只列工程中具有代表性的依赖类别，不复制完整 `Podfile.deps`。依赖是否真实接入、版本和 subspec 选择始终以 `Podfile.deps` 与 `Podfile.lock` 为准。
 
@@ -74,7 +74,7 @@
 | 数据与安全 | [**WCDB**](https://github.com/Tencent/wcdb)、[**ObjectBox**](https://github.com/objectbox/objectbox-swift)、[**Cache**](https://github.com/hyperoslo/Cache)、[**KeychainAccess**](https://github.com/kishikawakatsumi/KeychainAccess) | 数据所有权、迁移、线程模型、加密和清理策略由具体模块声明。 |
 | 工程工具 | [**CocoaLumberjack**](https://github.com/CocoaLumberjack/CocoaLumberjack)、[**DeviceKit**](https://github.com/devicekit/DeviceKit)、[**PhoneNumberKit**](https://github.com/marmelroy/PhoneNumberKit) | 基础能力只暴露稳定门面，第三方类型不向业务模型扩散。 |
 
-#### 3.1.1、ObjectBox Swift 集成基线
+#### 3.1.1、ObjectBox Swift 集成基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - ObjectBox Apple SDK 按其 Swift 语言边界接入；当前只在 Swift 工程提供 CRUD Demo，OC 新/旧工程无需创建无官方语言基础的占位实现。
 - `Podfile.deps` 负责声明 `ObjectBox`，`Podfile.lock` 负责记录实际版本；首次或依赖结构变化后按官方 `Pods/ObjectBox/setup.rb` 结果维护 `[OBX] Update Sourcery Generated Files` 构建阶段。
@@ -86,18 +86,18 @@
 - 页面已经有 Jobs 封装时，不直接导入第三方实现。确实需要第三方类型作为公开参数时，由功能 Pod 明确承担耦合。
 - `inhibit_all_warnings!` 只隐藏第三方告警，不是忽略 Jobs 自维护源码问题的理由。
 
-### 3.2、我的封装（重点）
+### 3.2、我的封装（重点） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 下列片段默认已在所属 target 引入 `JobsByUIKit`、`JobsSwiftDSL`、`JobsSwiftBaseDefines` 与 `SnapKit`；为突出调用方式，不在每段代码里重复书写 import。
 
-#### 3.2.0、系统类创建与实例 DSL
+#### 3.2.0、系统类创建与实例 DSL <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `NSObject` 子类的无参构造统一使用 `Type.jobsMake { object in ... }`；带参初始化由真实类型提供 `Type.make(arguments, configure:)`，例如 `NSUserActivity.make(activityType:configure:)`。
 - 原生系统构造器只存在于创建工厂底层；实例生成后，属性、无参实例方法和单参实例方法统一使用返回 `Self` 的 `byXxx(...)`，查询与明确终止动作除外。
 - `JobsSwiftBlock` 提供最低层通用创建 Block，`JobsSwiftDSL` 公开转出，`JobsByUIKit` 提供具体 UIKit / Foundation 工厂；低层 Pod 不反向依赖高层 UI Pod。
 - `NSObject.jobsMake` 由 `JobsNSObjectMaking where Self: NSObject` 的协议扩展承载，保留配置参数与返回对象的具体类型，避免类扩展动态 `Self` 在旧 Swift 编译器的协议调用方中触发 IRGen 崩溃。调用方写法不变；CI 同时验证回调行为和 arm64 / x86_64 模拟器代码生成。
 
-#### 3.2.1、对`UIViewController`的封装
+#### 3.2.1、对`UIViewController`的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <img src="./assets/image-20260221233907415.png" alt="image-20260221233907415" style="zoom:50%;" />
 
@@ -128,7 +128,7 @@
       }
   ```
 
-#### 3.2.2、对`UIView`层的封装格式
+#### 3.2.2、对`UIView`层的封装格式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <img src="./assets/image-20260221233840263.png" alt="image-20260221233840263" style="zoom:50%;" />
 
@@ -269,9 +269,9 @@
         }
     ```
 
-#### 3.2.3、对`UIButton`按钮的封装
+#### 3.2.3、对`UIButton`按钮的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-##### 3.2.3.1、利用分类作用于`UIButton`
+##### 3.2.3.1、利用分类作用于`UIButton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <img src="./assets/image-20260221233801095.png" alt="image-20260221233801095" style="zoom:50%;" />
 
@@ -666,7 +666,7 @@ private lazy var exampleButton: UIButton = {
     }()
     ```
 
-##### 3.2.3.2、利用继承作用于`JobsButton`
+##### 3.2.3.2、利用继承作用于`JobsButton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > 解决在某些iOS版本向下兼容的情况下，无法把握`UIButton`内部控件的生命周期，导致UI错版的问题
 
@@ -728,7 +728,7 @@ private lazy var btn1: JobsButton = {
 }()
 ```
 
-#### 3.2.4、对`UIGestureRecognizer`手势的封装
+#### 3.2.4、对`UIGestureRecognizer`手势的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <p align="center">
   <img src="./assets/image-20251206153407706.png" width="45%">
@@ -1697,7 +1697,7 @@ self.valueLabel
   }()
   ```
 
-#### 3.2.13、对`WebView`的封装
+#### 3.2.13、对`WebView`的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * `registerMobileAction`后的名字即为和前端联调对准的方法名
 
@@ -1814,7 +1814,7 @@ self.valueLabel
   }()
   ```
 
-#### 3.2.14、带箭头的对话框
+#### 3.2.14、带箭头的对话框 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 UIView().byDialogBoxContent { dialogBoxView in
@@ -1836,7 +1836,7 @@ UIView().byDialogBoxContent { dialogBoxView in
 }
 ```
 
-#### 3.2.15、对计时器的封装`JobsSwiftTimer`
+#### 3.2.15、对计时器的封装`JobsSwiftTimer` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <img src="./assets/image-20260221234215242.png" alt="image-20260221234215242" style="zoom:50%;" />
 
@@ -1914,7 +1914,7 @@ UIView().byDialogBoxContent { dialogBoxView in
     * 是否是正计时/是否是倒计时
     * 。。。
 
-##### 3.2.15.1、倒计时按钮
+##### 3.2.15.1、倒计时按钮 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 创建方案一
 
@@ -2015,7 +2015,7 @@ UIView().byDialogBoxContent { dialogBoxView in
   }()
   ```
 
-##### 3.2.15.2、跑马灯（实际展现的控件是按钮）
+##### 3.2.15.2、跑马灯（实际展现的控件是按钮） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 // MARK: - 1. 向上连续滚动
@@ -2111,7 +2111,7 @@ private lazy var upContinuousMarquee: JobsMarqueeView = { [unowned self] in
     }()
 ```
 
-##### 3.2.15.3、轮播图（实际展现的控件是按钮）
+##### 3.2.15.3、轮播图（实际展现的控件是按钮） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 // MARK: - 13. Kingfisher@背景图
@@ -2213,7 +2213,7 @@ private lazy var kingfisherImageButtonsMarquee: JobsMarqueeView = { [unowned sel
 }()
 ```
 
-##### 3.2.15.4、计划任务（内核基于`JobsSwiftTimer`）
+##### 3.2.15.4、计划任务（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import JobsSwiftTaskCenter
@@ -2223,7 +2223,7 @@ let task = JobsPlan.after(.second * 2).do {
 }
 ```
 
-##### 3.2.15.5、动态时钟图标（内核基于`JobsSwiftTimer`）
+##### 3.2.15.5、动态时钟图标（内核基于`JobsSwiftTimer`） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `JobsClockIconView` 只输出无数字、无刻度的时钟图形：时针固定，分针按固定步频绕圆心旋转；默认顺时针，外界可主动传入逆时针和 Timer tick 间隔。
 
@@ -2245,7 +2245,7 @@ private lazy var clockIcon: JobsClockIconView = {
 clockIcon.start()
 ```
 
-##### 3.2.15.6、红包雨
+##### 3.2.15.6、红包雨 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var rainView: RedPacketRainView = {
@@ -2274,7 +2274,7 @@ private lazy var rainView: RedPacketRainView = {
   }()
 ```
 
-##### 3.2.15.7、网络数据的监听
+##### 3.2.15.7、网络数据的监听 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ![image-20260315180854842](./assets/image-20260315180854842.png)
 
@@ -2313,7 +2313,7 @@ private lazy var rainView: RedPacketRainView = {
   }
   ```
 
-##### 3.2.15.7、旋转的抽奖轮盘
+##### 3.2.15.7、旋转的抽奖轮盘 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * ```swift
   private lazy var wheelView: LuckyWheelView = {
@@ -2368,9 +2368,9 @@ private lazy var rainView: RedPacketRainView = {
   wheelView.stopSpin() // 停止
   ```
 
-#### 3.2.16、进度条
+#### 3.2.16、进度条 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-##### 3.2.16.1、系统进度条
+##### 3.2.16.1、系统进度条 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 进度条（显示剩余/已完成比例，取决于 progressMode）
@@ -2385,7 +2385,7 @@ private lazy var progressView: UIProgressView = {
 }()
 ```
 
-##### 3.2.16.2、自定义进度条（内核基于`JobsSwiftTimer`）  ➤ `JobsProgressBar`
+##### 3.2.16.2、自定义进度条（内核基于`JobsSwiftTimer`）  ➤ `JobsProgressBar` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 自定义进度条
@@ -2410,21 +2410,21 @@ private lazy var progressView: JobsProgressBar = {
 }()
 ```
 
-#### 3.2.17、雪花算法的[**Swift**](https://www.swift.org/)实践
+#### 3.2.17、雪花算法的[**Swift**](https://www.swift.org/)实践 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 SnowflakeSwift(IDCID: 4, machineID: 30).nextID() 
 ```
 
-#### 3.2.18、对字符串的封装
+#### 3.2.18、对字符串的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-##### 3.2.18.1、多语言化
+##### 3.2.18.1、多语言化 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 "🔑 注册登录".tr
 ```
 
-##### 3.2.18.2、通用格式的转换
+##### 3.2.18.2、通用格式的转换 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
  "123".toInt()   
@@ -2472,7 +2472,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
  // 📘 说明：附加字体与颜色属性
 ```
 
-##### 3.2.18.3、字符串加载图片资源
+##### 3.2.18.3、字符串加载图片资源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 取本地图片
 
@@ -2523,7 +2523,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   }()
   ```
 
-##### 3.2.18.4、字符串打开
+##### 3.2.18.4、字符串打开 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 打开网站 / **`Scheme`**（带参）
 
@@ -3187,7 +3187,7 @@ SnowflakeSwift(IDCID: 4, machineID: 30).nextID()
   }()
   ```
 
-##### 3.2.19.2、**封装在`UIButton` 层的点击事件**
+##### 3.2.19.2、**封装在`UIButton` 层的点击事件** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let button = UIButton.sys()
@@ -3197,7 +3197,7 @@ let button = UIButton.sys()
     }
 ```
 
-#### 3.2.20、对弹出框的封装
+#### 3.2.20、对弹出框的封装 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**UIAlertController**](#UIAlertController)
 
@@ -3236,7 +3236,7 @@ let button = UIButton.sys()
     )
     ```
 
-#### 3.2.21、安全取Cell
+#### 3.2.21、安全取Cell <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > 通过数组下标安全取**Cell**，即使越界也不会奔溃（只是去不到**Cell**值返回nil）
 
@@ -3245,9 +3245,9 @@ let cell = collectionView[section: 0, item: 3]
 let cell = tableView[section: 0, row: 3]
 ```
 
-#### 3.2.22、（全局）协议传参（支持不定参数）
+#### 3.2.22、（全局）协议传参（支持不定参数） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-##### 3.2.22.1、正向传参数：<font size=5>**`byData`**</font>
+##### 3.2.22.1、正向传参数：<font size=5>**`byData`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **VC / View**
 
@@ -3337,7 +3337,7 @@ let cell = tableView[section: 0, row: 3]
   }
   ```
 
-##### 3.2.22.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font>
+##### 3.2.22.2、逆向传参数：<font size=5>**`sendResult`**</font> ➤ <font size=5>**`onResult`**</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 /// 逆向传入
@@ -3348,7 +3348,7 @@ DemoDetailVC().onResult { name in
 }
 ```
 
-#### 3.2.23、Debug模式下弹窗检测是否释放`UIViewController`
+#### 3.2.23、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 引入框架 **`JobsSwiftDebugTools`**
 
@@ -3366,21 +3366,21 @@ DemoDetailVC().onResult { name in
   #endif
   ```
 
-### 3.3、对抗记忆衰弱
+### 3.3、对抗记忆衰弱 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 使用 [**Xcode**](https://developer.apple.com/xcode) CodeSnippets 固化高频模板；代码块只记录使用方式，真实 API 仍以自建 Pod 当前实现为准。
 - 调整 `JobsSwiftDSL`、`JobsByUIKit`、导航、事件闭包或固定写法后，要同步检查 CodeSnippets，避免片段继续传播旧 API。
 
   ![image-20251206164503864](./assets/image-20251206164503864.png)
 
-### 3.4、工程脚本与 JobsGenesis
+### 3.4、工程脚本与 JobsGenesis <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `ScriptsByDevTools/`：面向开发机环境、Xcode 配件、打包和效率工具。
 - `ScriptsByPods/`：由 `Podfile` 可选调用的 Flutter、Unity、SPM、依赖图和 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 工程脚本。
 - 简单系统编排优先使用 zsh；结构化解析、跨平台数据处理或现有工具链更适合 [**Python**](https://www.python.org) 时可以使用 Python，不把语言偏好凌驾于可维护性和验证性。
 - 每个双击脚本需要配套 README、内置自述、防误触、日志和语法检查。
 
-### 3.5、将组件库 Pod 化
+### 3.5、将组件库 Pod 化 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `Podfile.deps` 只维护依赖声明；完整清单直接读取 `swiftAppCommon`、`debugPods`、`testPods` 和 `byJobs`，不要在文档里复制一份很快过期的全量列表。
 - `Podfile` 负责安装策略、静态 framework、统一部署目标、Build Settings、Flutter/Unity/SPM 可选脚本和安装后的依赖报告。
@@ -3406,7 +3406,7 @@ DemoDetailVC().onResult { name in
 - 新建 Pod 时，代码放 `Core/`，资源放平级 `Resource/`，必要的兼容文件放 `Support/`；禁止出现磁盘 `Core/Core/`。
 - Pod 的直接依赖写进自己的 `*.podspec`，调用方显式导入直接消费的模块，不依赖偶然的转导出。
 
-## 四、网络环境与 BaseURL 架构
+## 四、网络环境与 BaseURL 架构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsNetworking/Core` 承担请求模型、RequestConfig、Agent、上传、下载、缓存和统一错误；`AF5` 是兼容适配，`Async` 提供 iOS 13+ async/await，`PromiseKit` 按需接入。
 - 当前宿主同时选择 `JobsNetworking/Async` 与 `JobsNetworking/AF5`。业务页只描述接口和展示状态，不自行拼接 BaseURL、请求头、Token、重试和缓存键。
@@ -3422,9 +3422,9 @@ DemoDetailVC().onResult { name in
 - 动态域名不能代替安全设计。TLS、证书策略、请求签名、Token 生命周期、重放保护和敏感日志脱敏仍需独立完成。
 - 完整调用示例以 `JobsNetworking@Pods/README.md` 和宿主 `Demo@JobsNetworking共用网络接口/` 为准。
 
-## 五、快速 UI DSL 全配置
+## 五、快速 UI DSL 全配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 5.1、书写约定
+### 5.1、书写约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 所有 UI 配置优先使用 `JobsSwiftDSL` 点语法链式写法。
 - 同一配置语义必须“一镜到底”：主对象只作为链起点出现一次，后续属性、子对象和终止动作继续从当前链点出；缺 API 时先补返回 `Self` 的底层 DSL。
@@ -3455,7 +3455,7 @@ DemoDetailVC().onResult { name in
       .byContentView { $0.byBackgroundColor(JobsCor.systemBackground) }
   ```
 
-### 5.2、`UILabel`
+### 5.2、`UILabel` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var titleLab: UILabel = { [unowned self] in
@@ -3477,7 +3477,7 @@ private lazy var titleLab: UILabel = { [unowned self] in
 }()
 ```
 
-### 5.3、`UIButton`
+### 5.3、`UIButton` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var submitBtn: UIButton = { [unowned self] in
@@ -3508,7 +3508,7 @@ private lazy var submitBtn: UIButton = { [unowned self] in
 }()
 ```
 
-### 5.4、`UITextField`
+### 5.4、`UITextField` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var nameTextField: UITextField = { [unowned self] in
@@ -3533,7 +3533,7 @@ private lazy var nameTextField: UITextField = { [unowned self] in
 }()
 ```
 
-### 5.5、`UITextView`
+### 5.5、`UITextView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var remarkTextView: UITextView = { [unowned self] in
@@ -3558,7 +3558,7 @@ private lazy var remarkTextView: UITextView = { [unowned self] in
 }()
 ```
 
-### 5.6、`UIImageView`
+### 5.6、`UIImageView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var avatarImgView: UIImageView = { [unowned self] in
@@ -3578,7 +3578,7 @@ private lazy var avatarImgView: UIImageView = { [unowned self] in
 }()
 ```
 
-### 5.7、`UITableView`
+### 5.7、`UITableView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var tableView: UITableView = { [unowned self] in
@@ -3598,7 +3598,7 @@ private lazy var tableView: UITableView = { [unowned self] in
 }()
 ```
 
-### 5.8、`UICollectionView`
+### 5.8、`UICollectionView` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var collectionView: UICollectionView = { [unowned self] in
@@ -3618,7 +3618,7 @@ private lazy var collectionView: UICollectionView = { [unowned self] in
 
 ## 六、成熟工程总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 6.1、工程基线
+### 6.1、工程基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 维度 | 当前方案 | 维护边界 |
 | --- | --- | --- |
@@ -3631,7 +3631,7 @@ private lazy var collectionView: UICollectionView = { [unowned self] in
 | 可选跨栈 | Flutter、Unity、本地 SPM | 通过安全脚本和明确入口接入，缺失时默认不阻塞主流程。 |
 | 自动化 | GitHub Actions Simulator Build | 安装 Pods、构建 workspace、打包模拟器 `.app` 产物。 |
 
-### 6.2、目录职责
+### 6.2、目录职责 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 以下路径均以仓库根目录为基准：
 
@@ -3655,7 +3655,7 @@ private lazy var collectionView: UICollectionView = { [unowned self] in
 - 主业务按 `VC`、`View` 与功能 Demo 组织；可复用能力达到稳定边界后下沉本地 Pod，不在多个页面复制。
 - 一个类型或一组成套文件用同名目录包裹；控制器不顺手塞入独立 Model、Cell、View 或 Helper。
 
-### 6.3、分层关系
+### 6.3、分层关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```mermaid
 flowchart TD
@@ -3682,7 +3682,7 @@ flowchart TD
 - `JobsInheritance`：`BaseVC`、通用控制器 / View 基座和统一生命周期。
 - 功能 Pod：只组合完成本功能所需的直接依赖，不反向污染基础层。
 
-### 6.4、权威源与所有权
+### 6.4、权威源与所有权 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 自建 API 的唯一权威源是 `JobsByUIKit`、`JobsSwiftDSL` 等当前实现；README、本文和 CodeSnippets 都是消费说明。
 - 文件位于 `JobsByPods/` 不代表一定属于 Jobs。文件头、版权、上游路径或仓库历史显示为第三方时仍然排除。
@@ -3691,7 +3691,7 @@ flowchart TD
 
 ## 七、启动、根容器与全局 UI <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 7.1、启动链路
+### 7.1、启动链路 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```mermaid
 sequenceDiagram
@@ -3717,7 +3717,7 @@ sequenceDiagram
 - `SceneDelegate` 只做窗口级配置：创建 `UIWindow`、装配根控制器、恢复开屏缓存、展示开屏覆盖层和记录 Scene 前后台安全点。
 - 新业务初始化不要继续堆进 `SA()`；能模块化的能力放到对应 Pod 或独立启动任务，再由入口编排。
 
-### 7.2、根容器
+### 7.2、根容器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `RootListPreferences.makeAppRootViewController(in:)` 是根页面权威入口。
 - 默认结构是 `RootListVC → Jobs Navigation Container → JobsSideDrawerVC`。
@@ -3725,7 +3725,7 @@ sequenceDiagram
 - 修改根入口、抽屉模式或 TabBar 形态时，通过 `connectedScenes` 更新全部有效 Window，不只处理第一个 Scene。
 - 根列表新增、删除或重命名 Demo 时，同时对账 section、路由、图标映射、资源和独立 DemoVC；同一能力不因 Table / Collection 两种表现重复占用根入口。
 
-### 7.3、`BaseVC` 与导航
+### 7.3、`BaseVC` 与导航 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Jobs 自维护页面默认继承 `BaseVC`，不要直接继承 `UIViewController`。
 - `BaseVC.viewWillAppear` / `viewDidAppear` 统一补齐导航默认项、返回按钮和侧滑返回能力，不覆盖页面在 `viewDidLoad` 中声明的背景色。
@@ -3737,14 +3737,14 @@ sequenceDiagram
   - 有业务动作时，入口展开主题与页面动作菜单。
   - 原有业务按钮先配置，再由公共导航层收纳，不能被主题按钮覆盖。
 
-### 7.4、全局主题
+### 7.4、全局主题 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsThemeCenter` 位于 `JobsSwiftBaseDefines`，负责读取主工程 `JobsThemeResources.json`、持久化主题状态、维护弱引用绑定并发布 `.JobsThemeDidChange`。
 - `JobsSwiftDSL` 在 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等入口识别 `JobsCor` 主题 Key；切换时只重放这些已标记资源，不遍历 Scene、Window 或控制器树，不写入 `overrideUserInterfaceStyle`。
 - 数据包属于 App 业务资源，不下沉到 Pod；框架只定义可扩展 Key、解析器和绑定机制。默认主题范围是背景色与文字色，图片只有显式使用 `byThemeImage(...)` 时才参与。
 - 自定义绘制、`CGColor`、`CALayer`、CoreText 和第三方容器使用 `JobsThemeCenter.bind(...)` 显式登记背景 / 文字资源，不以整页刷新代替资源绑定。
 
-### 7.5、页面标准骨架
+### 7.5、页面标准骨架 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 #if os(OSX)
@@ -3783,7 +3783,7 @@ final class FeatureDemoVC: BaseVC {
 
 ## 八、本地 Pod 与依赖治理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 8.1、标准目录
+### 8.1、标准目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 JobsByPods/FeatureName@Pods/
@@ -3800,7 +3800,7 @@ JobsByPods/FeatureName@Pods/
 - 聚合入口、README、podspec、Package 清单和发布脚本可以留在根部。
 - Pod 内一个主类型及其 extension、资源适配文件用同名目录成组，避免大量源码平铺在功能根目录。
 
-### 8.2、Podspec 职责
+### 8.2、Podspec 职责 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 配置 | 规则 |
 | --- | --- |
@@ -3816,7 +3816,7 @@ JobsByPods/FeatureName@Pods/
 - `JobsSwiftRefresher` 使用 `Core / Lottie / SDWebImage` 让动画素材能力按需安装。
 - `JobsBluetooth` 将 `PrivacyInfo.xcprivacy` 通过资源 Bundle 交付。
 
-### 8.3、依赖方向
+### 8.3、依赖方向 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 基础定义层不能依赖 UI 业务层；功能 Pod 可以依赖基础层，基础层不能反向依赖功能 Pod。
 - 链式 DSL 默认返回当前具体对象类型；子类专属能力不能接在会把静态类型降为父类的 DSL 后面。
@@ -3824,7 +3824,7 @@ JobsByPods/FeatureName@Pods/
 - Apple API 的版本差异和 deprecated 回退在封装内部处理；业务调用方不重复写新旧分支。
 - 使用 `JobsCor`、`JobsFont`、`YES` / `NO` 的文件显式导入 `JobsSwiftBaseDefines`，使用纯 DSL 的 Pod 显式依赖并导入 `JobsSwiftDSL`。
 
-### 8.4、`Podfile` 与脚本边界
+### 8.4、`Podfile` 与脚本边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `Podfile.deps` 不执行外部脚本，只声明 Pods。
 - `Podfile` 中脚本统一经 `jobs_run_external_script(...)`，调用前检查文件、解释器、权限和执行条件。
@@ -3832,7 +3832,7 @@ JobsByPods/FeatureName@Pods/
 - 用户明确选择执行 SPM 门禁后，构建或测试失败可以停止集成，因为这是已选择的验证动作。
 - `post_install` 统一宿主与 Pods Build Settings，`post_integrate` 再处理安装完成后的 CodeGraph。
 
-### 8.5、修改本地 Pod 后的同步扫描
+### 8.5、修改本地 Pod 后的同步扫描 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 同步检查宿主 import、类型 / 方法调用、Demo 入口、其它 Pod 的依赖、`Podfile.deps`、README、SwiftDoc 和 CodeSnippets。
 - 删除或重命名时同时处理目录、文件、公开类型、菜单文案、资源名和依赖声明。
@@ -3841,14 +3841,14 @@ JobsByPods/FeatureName@Pods/
 
 ## 九、资源、多语言、隐私与系统扩展 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 9.1、宿主资源
+### 9.1、宿主资源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - App 通用资源放 `JobsSwiftBaseConfigDemo/Resources/`，按类型分目录；不要把图片、JSON、字体和视频散落在控制器目录。
 - 颜色优先使用语义 Asset 或 `JobsCor`；系统字体使用 `JobsFont`，不拿某个语言字体替代系统 fallback 语义。
 - 本地图、网络图、SVG、Icon Font 和 Unicode 图标优先通过 `JobsImageTools` / `JobsIconfont` 等统一门面访问。
 - 新增入口图标先从 [**iconfont**](https://www.iconfont.cn/) 选择语义匹配资源，落入实际使用的 Assets 或 Pod Resource Bundle；业务代码不散落远程 URL 和 codepoint。
 
-### 9.2、Pod 资源
+### 9.2、Pod 资源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 功能资源跟随功能 Pod，通过 `resource_bundles` 交付。
 - Bundle 名是公开契约，重命名时同步修改 podspec、访问 helper、README、Demo 和测试。
@@ -3856,21 +3856,21 @@ JobsByPods/FeatureName@Pods/
 - 动图、视频和大 JSON 需要评估首屏解码、内存峰值、后台行为和缓存清理。
 - Markdown 文档浏览功能由 `JobsSwiftMarkdown` 提供运行时资源；宿主 Build Phase 扫描仓库内 Jobs 自有 `*.md`，保留相对目录并复制本地引用资源到 `JobsMarkdownDocuments.bundle`。设备端只读取该构建产物，不依赖开发机文件路径。
 
-### 9.3、多语言
+### 9.3、多语言 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - App 文案使用 `Localizable.strings` 与 `.tr`；`Info.plist` 展示名和权限文案使用各语言 `InfoPlist.strings`。
 - 当前宿主声明 `en`、`zh-Hans` 等本地化资源；新增语言时同步 target membership、`CFBundleLocalizations` 和缺失 key 检查。
 - `jobsSetupGKNav` 支持翻译绑定，切换语言后导航标题也要刷新。
 - 不把服务端原始错误、硬编码 Toast 或按钮下一步行为留在单一语言。
 
-### 9.4、权限、Entitlements 与 Privacy Manifest
+### 9.4、权限、Entitlements 与 Privacy Manifest <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 权限 key 只在真实能力需要时启用，文案说明“为什么需要”和“用户会得到什么”，不写空泛占位。
 - `Info.plist`、`InfoPlist.strings`、target capabilities 和调用代码必须成套存在。
 - App Group、后台音频、本地网络、Bonjour、相册、相机、麦克风、蓝牙等能力分别核对系统版本和审核边界。
 - 使用 Required Reason API 的自建 Pod，在自己的 `Resource/PrivacyInfo.xcprivacy` 中声明并由 podspec 打包；第三方清单不手工改写。
 
-### 9.5、Widget Extension 与 App Group
+### 9.5、Widget Extension 与 App Group <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsWidgetExtension/` 承载 WidgetKit target；`JobsWidgetShared/JobsWidgetSharedStore.swift` 是宿主与 Widget 的共享状态入口。
 - App 与 Widget 的 Entitlements 必须使用完全相同的 App Group。
@@ -3878,7 +3878,7 @@ JobsByPods/FeatureName@Pods/
 - Widget target 保持 `APPLICATION_EXTENSION_API_ONLY = YES`，不能引用仅 App 可用的 API 或把宿主 Pod 全量拖入扩展。
 - 验证需要真机 / 模拟器桌面添加 Widget，不以宿主页预览卡片代替系统 Widget 运行证据。
 
-### 9.6、AppIcon 与最终资源
+### 9.6、AppIcon 与最终资源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 备用 AppIcon 是编译期资源，名称必须与 Build Settings 和 Info 配置一致。
 - 当前工程在 CocoaPods 资源阶段后重新合并主工程、Pods Assets 和 Icon Composer `*.icon`，生成最终 `Assets.car`。
@@ -3887,7 +3887,7 @@ JobsByPods/FeatureName@Pods/
 
 ## 十、跨栈能力、工具链与 CI <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 10.1、网络、数据、日志与崩溃
+### 10.1、网络、数据、日志与崩溃 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 网络统一经 `JobsNetworking`；页面状态至少区分加载、成功、空、可重试失败、不可恢复失败和取消。
 - 数据层按业务选择 WCDB、ObjectBox、文件 Cache、UserDefaults 或 Keychain，不把所有状态塞进单例。
@@ -3895,28 +3895,28 @@ JobsByPods/FeatureName@Pods/
 - `CrashLogCenter` 在 App / Scene 生命周期标记启动、安全退出与后台点，避免把正常后台误报为上次崩溃。
 - 定时器、录音录像、网络帧队列、WebView、通知和观察者都要有停止、清理和后台策略。
 
-### 10.2、Flutter Module
+### 10.2、Flutter Module <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `my_flutter/` 是可选 Flutter module；`Podfile` 先检查生成的 `podhelper.rb` 与 `Generated.xcconfig`。
 - 环境或生成文件缺失时，通过 `ScriptsByPods/配置Flutter环境.sh/` 和 `拉取Flutter侧三方资源.sh/` 尝试准备；失败默认降级为占位 helper，不阻塞原生主流程。
 - `FlutterEngine` 由 `AppDelegate` 长期持有并注册 `FlutterBridge`，避免页面每次进入重复冷启动。
 - Flutter 生成目录不作为手工维护源码；业务桥接协议放在 Jobs 自维护边界。
 
-### 10.3、Unity
+### 10.3、Unity <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Unity 导出和 `.DerivedDataUnity` 是可选集成，不属于普通 Swift 页面源码。
 - `pre_install` 仅在检测到 Unity 痕迹时清理 Bee / Tundra 中间缓存并解压大资源。
 - 清理脚本要有范围保护，不对仓库根目录、用户目录或未知路径做递归删除。
 - Unity 生成源码和缓存不做 Jobs Swift 风格批改；桥接层与宿主装配才进入维护范围。
 
-### 10.4、本地 Swift Package Manager
+### 10.4、本地 Swift Package Manager <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsSPMDemoPackage/` 是宿主可引用的零远程依赖 Library。
 - `MacroDemo/` 独立承载 `swift-syntax`、Macro、Client 与宏测试，不进入 App 的默认依赖图。
 - 验证脚本依次执行解析、构建、测试和 Client；`pod install` 只提供一次可选门禁，不强制所有环境下载宏依赖。
 - Pod 和 SPM 不重复维护同一模块；选择一种分发形态后明确权威源。
 
-### 10.5、依赖图、CodeGraph 与 CI
+### 10.5、依赖图、CodeGraph 与 CI <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `PodspecDependencyReport` 在安装后生成 Markdown、Mermaid、DOT、PNG 和交互 HTML，并检查 Pod 间循环依赖。
 - 仓库存在 `.codegraph/` 时，理解符号和调用路径优先使用 CodeGraph；索引是辅助证据，编译器和测试仍是正确性门禁。
@@ -3925,7 +3925,7 @@ JobsByPods/FeatureName@Pods/
 
 ## 十一、新项目落地清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 11.1、先复制骨架，再做减法
+### 11.1、先复制骨架，再做减法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [ ] 修改 App、Tests、UITests、Extension target 名称和 Scheme。
 - [ ] 修改 Bundle ID、Display Name、Development Team、版本号和 AppIcon。
@@ -3934,7 +3934,7 @@ JobsByPods/FeatureName@Pods/
 - [ ] 保留 `JobsSwiftBaseDefines → JobsSwiftDSL → JobsByUIKit → JobsInheritance` 的基础依赖方向。
 - [ ] 按真实需求决定 Flutter、Unity、SPM、Widget 和 App Group，不把演示能力全部带进生产项目。
 
-### 11.2、启动与根页面
+### 11.2、启动与根页面 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [ ] `AppDelegate` 只保留生产需要的全局初始化，Demo 数据解析和测试打印迁出。
 - [ ] `SceneDelegate` 创建 Window，并通过唯一工厂返回根容器。
@@ -3942,7 +3942,7 @@ JobsByPods/FeatureName@Pods/
 - [ ] 开屏、深链、推送和登录态跳转都通过可测试的路由 / 配置入口编排。
 - [ ] 多 Scene 场景下，主题、语言、根切换和全局浮层覆盖全部 Window。
 
-### 11.3、资源与系统能力
+### 11.3、资源与系统能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [ ] 整理 `Resources/`，删除靶场无关大资源和未引用字体 / 视频。
 - [ ] 对账 `Info.plist`、`InfoPlist.strings`、`Localizable.strings` 与权限调用。
@@ -3950,7 +3950,7 @@ JobsByPods/FeatureName@Pods/
 - [ ] 自建 Pod 资源使用独立 Bundle；Privacy Manifest 跟随真实使用 API 的模块。
 - [ ] AppIcon、备用图标和最终 `Assets.car` 在 Debug / Release 都能生成。
 
-### 11.4、组件与业务
+### 11.4、组件与业务 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [ ] 页面继承 `BaseVC`，导航统一 `jobsSetupGKNav`。
 - [ ] UI 使用属性 + 懒加载 + Jobs DSL + SnapKit。
@@ -3959,7 +3959,7 @@ JobsByPods/FeatureName@Pods/
 - [ ] 网络、缓存、日志、计时器、权限和通知分别通过稳定门面接入。
 - [ ] 每个独立功能有独立 Demo / Feature 页面，空壳和聚合 Workbench 不作为完成标准。
 
-### 11.5、测试与交付
+### 11.5、测试与交付 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [ ] Unit Tests 覆盖纯逻辑、解析、缓存键和状态机。
 - [ ] UI Tests 覆盖启动、根入口、关键导航、主题和语言切换。
@@ -3969,7 +3969,7 @@ JobsByPods/FeatureName@Pods/
 
 ## 十二、验证与持续维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 12.1、低副作用静态检查
+### 12.1、低副作用静态检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 git diff --check -- \
@@ -3989,7 +3989,7 @@ ruby -c Podfile.deps
 - 改动 Swift 文件时，对变更文件执行 `xcrun swiftc -frontend -parse`；这只能证明语法可解析，不能替代模块编译。
 - 改动 podspec 时先做语法 / spec 解析，再生成依赖报告；不把旧报告当当前证据。
 
-### 12.2、按风险升级验证
+### 12.2、按风险升级验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 变更类型 | 最低验证 | 完整验证 |
 | --- | --- | --- |
@@ -4005,7 +4005,7 @@ ruby -c Podfile.deps
 - workspace 构建失败时区分本轮改动、项目格式 / 缓存、第三方依赖和既有环境错误，不把所有失败都归因于当前文档或组件。
 - 静态通过、模块编译通过、App 编译通过、模拟器表现和真机表现是五种不同证据，交付时分别说明。
 
-### 12.3、文档防漂移
+### 12.3、文档防漂移 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 新增或修改 Swift 底层自建 API：同步 Swift 对应实现、公开入口、相关 Pod / 根 README、宿主示例、本文相关章节以及公共 Xcode 代码块目录 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets`；没有对应项也要完成检索并在交付中说明。
 - OC 底层自建 API 按相同流程同步 OC 新老工程对应实现、相关 README / Demo、两份《OC工程项目框架配置方案@Jobs.md》和同一个公共 Xcode CodeSnippets 目录。

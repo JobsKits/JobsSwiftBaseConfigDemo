@@ -18,7 +18,7 @@
 - 附带代码是独立教学材料，不是已经交付认证的设备 SDK。原生 Apple API 保留在教学 Transport 内核中，用于看清系统回调；接入 Jobs 业务工程仍通过真实已有的 Jobs 封装，不借此绕开 DSL。
 - 未提供设备型号、固件或厂商协议。因此文中自定义 UUID、LED 命令、帧格式均为教学协议，不能直接发给未知设备；不包含真实设备的开锁、擦除、复位或升级操作。
 
-### 阅读路线
+### 阅读路线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 当前目标 | 建议顺序 | 完成标志 |
 | --- | --- | --- |
@@ -30,7 +30,7 @@
 
 ## 一、先理解你真正要开发什么 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
 
-### 1.1、不要把“蓝牙开发”理解成“写一个扫描按钮”
+### 1.1、不要把“蓝牙开发”理解成“写一个扫描按钮” <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 以运动手环为例：传感器测得心率，固件把结果编码成字节，蓝牙把字节交给 iPhone，App 解析、存储并展示；需要时再同步云端。反方向，App 发送“修改采样周期”，固件校验权限、执行设置，再返回结果。
 
@@ -42,7 +42,7 @@
 
 你通常不用自己写无线驱动。你的核心工作是“把不稳定的设备连接，变成有清晰状态、有明确结果的业务接口”。
 
-### 1.2、几种常见需求，其实是不同项目
+### 1.2、几种常见需求，其实是不同项目 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 场景 | 常见技术路线 | 开始前最该问什么 |
 | --- | --- | --- |
@@ -53,7 +53,7 @@
 | 智能灯组、多跳组网 | Bluetooth Mesh 或 Matter/Thread 等 | 到底选择哪个生态，手机扮演什么角色 |
 | 工业设备“蓝牙串口” | 可能是 BLE 私有服务，也可能是 Classic SPP | “串口”说的是模块内 UART 还是空口 SPP |
 
-### 1.3、项目分工：谁应该给你什么
+### 1.3、项目分工：谁应该给你什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 角色 | 主要交付 |
 | --- | --- |
@@ -65,9 +65,9 @@
 
 这些是常见分工，不是语言的硬边界。固件可以用 C++；纯 Swift 也能完成 App 的业务编解码。选择共享 C/C++，应该因为跨端复用或已有算法，而不是“蓝牙必须用 C”。
 
-## 二、BLE、经典蓝牙与 iOS 能力边界
+## 二、BLE、经典蓝牙与 iOS 能力边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 2.1、BLE 与 Classic：不是“新蓝牙和旧蓝牙”
+### 2.1、BLE 与 Classic：不是“新蓝牙和旧蓝牙” <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 维度 | BLE | BR/EDR（经典蓝牙） |
 | --- | --- | --- |
@@ -78,19 +78,19 @@
 
 BLE 低功耗主要来自“需要时短暂通信，大量时间休眠”，不代表任何高频 BLE 业务都省电。持续扫描、持续唤醒 CPU、频繁小包，照样消耗电池。
 
-### 2.2、Core Bluetooth 并非“所有蓝牙协议的万能入口”
+### 2.2、Core Bluetooth 并非“所有蓝牙协议的万能入口” <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 普通 BLE GATT 数据交互用 Core Bluetooth。Apple 从 iOS 13 起还支持特定的 **GATT over BR/EDR** 场景；这不等于向 App 开放任意 RFCOMM/SPP，也不等于能用它直接控制任意耳机音频链路。[Apple WWDC19：What's New in Core Bluetooth](https://developer.apple.com/videos/play/wwdc2019/901/)
 
 对使用 Apple 授权技术的经典蓝牙配件，应核实 [**External Accessory**](https://developer.apple.com/documentation/externalaccessory)、iAP2、支持的协议字符串与厂商授权。不能看到一个 SPP 模块就保证 iPhone App 能像桌面串口那样打开它。[Apple 配件开发入口](https://developer.apple.com/accessories/)
 
-### 2.3、BLE 一定需要 MFi 吗？
+### 2.3、BLE 一定需要 MFi 吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **普通只使用 BLE 的配件，不因使用 BLE 本身就必须加入 MFi。** 如果还使用 HomeKit、Find My、MFi Hearing Aid、iAP2 等 Apple 授权技术，就要另行核对对应要求。不要把“BLE 不需要 MFi”扩写成“这款产品不需要任何认证”。[Apple MFi FAQ](https://mfi.apple.com/en/faqs)
 
 Bluetooth 资格认证、商标使用、各地射频法规与行业合规是另外的工作；由硬件团队、产品和合规人员根据产品确认，不用 App 能连通代替合规结论。
 
-### 2.4、常见能力误判
+### 2.4、常见能力误判 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `CBPeripheral.identifier` 是系统提供的标识，不是 MAC 地址，不适合直接当跨手机、跨安装的设备业务主键。
 - Core Bluetooth 不提供通用“读取任意设备 MAC”“强制打开系统蓝牙”“强制选择任意 PHY/连接间隔”的 App 控制接口。
@@ -98,9 +98,9 @@ Bluetooth 资格认证、商标使用、各地射频法规与行业合规是另�
 - Simulator 适合纯协议、Mock 和 UI 测试；本文真实无线实验要求真机。不要用模拟器编译成功宣称射频链路已验证。
 - App 的 BLE 扫描列表不等于系统设置中的配对设备列表。BLE 外设不必先在设置里配对才能被 App 发现或连接。
 
-## 三、协议栈：每一层到底负责什么
+## 三、协议栈：每一层到底负责什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 3.1、先用“快递系统”理解分层
+### 3.1、先用“快递系统”理解分层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - PHY 是道路与车辆：怎样把比特通过无线电传出去。
 - Link Layer 是相邻站点的运输规则：什么时候发、在哪个信道发、如何保持连接。
@@ -111,7 +111,7 @@ Bluetooth 资格认证、商标使用、各地射频法规与行业合规是另�
 
 类比帮助入门，但不是严格的一对一 OSI 映射。GAP、GATT 属于 Profile；HCI 是 Host/Controller 接口，不应都画成连续套娃的网络报文头。[Bluetooth Core Architecture](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/architecture%2C-change-history%2C-and-conventions/architecture.html)
 
-### 3.2、协议分工速查
+### 3.2、协议分工速查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 名称 | 全称或含义 | 负责什么 | iOS App 的主要接触面 |
 | --- | --- | --- | --- |
@@ -127,7 +127,7 @@ Bluetooth 资格认证、商标使用、各地射频法规与行业合规是另�
 
 L2CAP 的职责是协议复用与通道传输；**L2CAP 做了分段重组，不代表任意大的业务对象已经能自动变成多次 GATT 写入**。[Bluetooth L2CAP Specification](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host/logical-link-control-and-adaptation-protocol-specification.html)
 
-### 3.3、无线原理：理解这些就够开始做 App
+### 3.3、无线原理：理解这些就够开始做 App <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 BLE 工作在 2.4 GHz ISM 频段，LE 信道规划为 40 个射频信道。传统主广播使用其中 3 个主广播信道，连接中的数据传输使用其余数据通道；扩展广播还会使用辅助广播机制，不能把“所有广播永远只用 3 个信道”当完整结论。
 
@@ -135,7 +135,7 @@ BLE 工作在 2.4 GHz ISM 频段，LE 信道规划为 40 个射频信道。传�
 
 RSSI 是收到信号的强度指标，不是距离传感器。人体遮挡、天线方向、墙体、发射功率都可能改变它；用 RSSI 做粗略排序可以，拿它保证厘米级距离不行。
 
-### 3.4、四种角色不要混淆
+### 3.4、四种角色不要混淆 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 角色轴 | 常见手机 | 常见手环 | 描述的是什么 |
 | --- | --- | --- | --- |
@@ -144,9 +144,9 @@ RSSI 是收到信号的强度指标，不是距离传感器。人体遮挡、天
 
 两组角色是不同维度，不能规定“Central 永远是 GATT Client”。例如配件访问 iPhone 的 ANCS 时，iPhone 提供通知相关 GATT 服务，配件作为 GATT Client。单台设备也可以承担不止一种角色。[Bluetooth GAP](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host/generic-access-profile.html)、[Apple ANCS](https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleNotificationCenterServiceSpecification/Introduction/Introduction.html)
 
-## 四、GATT：把设备看成一个带权限的数据目录
+## 四、GATT：把设备看成一个带权限的数据目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 4.1、Service、Characteristic、Descriptor、UUID、Handle
+### 4.1、Service、Characteristic、Descriptor、UUID、Handle <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 外设
@@ -172,7 +172,7 @@ RSSI 是收到信号的强度指标，不是距离传感器。人体遮挡、天
 
 标准短 UUID 由 Bluetooth SIG 分配，常见完整形式为 `0000180D-0000-1000-8000-00805F9B34FB`。厂商自定义服务一般使用自己的 128-bit UUID，不随意占用未获分配的 16-bit 标识。[Bluetooth Assigned Numbers](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/index-en.html)
 
-### 4.2、Read、Write、Notify、Indicate 对比
+### 4.2、Read、Write、Notify、Indicate 对比 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 操作 | 方向 | ATT 层确认 | 适合什么 | 不保证什么 |
 | --- | --- | --- | --- | --- |
@@ -184,21 +184,21 @@ RSSI 是收到信号的强度指标，不是距离传感器。人体遮挡、天
 
 “有确认”要问清楚在哪一层：无线 Link Layer、ATT、你的命令 ACK、数据库提交，是四个不同层面的事实。
 
-### 4.3、CCCD 的作用与正确订阅姿势
+### 4.3、CCCD 的作用与正确订阅姿势 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 CCCD 的 UUID 为 `0x2902`，用于客户端配置通知/指示。Core Bluetooth 中调用 `setNotifyValue(true, for:)`，系统负责相关操作；不要照抄 Android 示例去手写 CCCD。
 
 调用返回不代表订阅成功，要等 `didUpdateNotificationStateFor`，检查 `error` 和 `isNotifying`。之后的数据由 `didUpdateValueFor` 交付。若特征同时支持 Notify 和 Indicate，Apple 文档说明此 API 会启用 Notify；App 不能靠一个自造参数自由切换。[Apple setNotifyValue](https://developer.apple.com/documentation/corebluetooth/cbperipheral/setnotifyvalue(_:for:))
 
-### 4.4、Properties 与安全权限是两回事
+### 4.4、Properties 与安全权限是两回事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Properties 描述特征支持 Read、Write、Notify 等操作；固件还可要求加密、认证或更高安全级别。看到 `.write` 只能说明该特征具备这种操作性质，不保证当前会话已经获准写入。
 
 生产顺序应是：发现目标服务 → 发现必要特征 → 检查 Properties → 满足安全/认证要求 → 订阅并确认 → 握手 → 进入业务 ready。
 
-## 五、从广播到一条命令成功的完整过程
+## 五、从广播到一条命令成功的完整过程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 5.1、扫描究竟看到了什么
+### 5.1、扫描究竟看到了什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 广告数据可能包括服务 UUID、Local Name、Manufacturer Data、Service Data 等；这些字段不保证每次都出现。`peripheral.name` 也可能为空或与广播名不同。过滤设备时优先使用厂商确认的服务与广播格式，名字只用于展示和辅助识别。
 
@@ -206,7 +206,7 @@ Properties 描述特征支持 Read、Write、Notify 等操作；固件还可要�
 
 Manufacturer Data 的格式也不是任意把品牌名转字节：正式产品要遵循公司标识及相关数据格式。教学双机实验仅广播自定义 Service UUID，不冒用厂商 Company ID。
 
-### 5.2、连接成功与业务 ready 之间还有很多事
+### 5.2、连接成功与业务 ready 之间还有很多事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 等待授权/蓝牙可用
@@ -224,7 +224,7 @@ Manufacturer Data 的格式也不是任意把品牌名转字节：正式产品�
 
 实验 Demo 为了减少 UI 依赖，会连接发现的第一个教学 UUID 外设；**生产必须增加用户选择与设备身份验证**，不能把同 UUID 当同一台设备。
 
-### 5.3、写入成功的四级含义
+### 5.3、写入成功的四级含义 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1、`writeValue` 被调用：只代表 App 提交了请求。
 
@@ -236,15 +236,15 @@ Manufacturer Data 的格式也不是任意把品牌名转字节：正式产品�
 
 例子：App 请求“升级固件”，ATT 写入成功当然不等于固件已校验、已写 Flash、已重启并切换成功。
 
-### 5.4、为什么连接对象必须由会话层持有
+### 5.4、为什么连接对象必须由会话层持有 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `CBCentralManager`、当前 `CBPeripheral`、必要特征、未完成命令都需要明确生命周期。页面消失不一定应断开整个业务连接；但业务结束后必须能取消扫描、清理订阅和命令。不要依靠一个临时局部变量维持蓝牙，也不要把无限生命周期全塞进一个全局单例。
 
 手机与外设重连时，要清理旧 Characteristic、接收缓冲、超时任务和未完成命令。避免上一轮迟到的回调把新设备误标成成功。
 
-## 六、iOS 工程配置与系统回调地图
+## 六、iOS 工程配置与系统回调地图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 6.1、最小权限配置
+### 6.1、最小权限配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本文原生 Core Bluetooth Demo 以 iOS 17+ 为最低验证目标。在宿主 App 的 `Info.plist` 配置真实用途说明：
 
@@ -266,7 +266,7 @@ Manufacturer Data 的格式也不是任意把品牌名转字节：正式产品�
 
 App 自己扮演外设并有对应后台业务时才考虑 `bluetooth-peripheral`。本实验第二台 iPhone 保持前台即可。蓝牙权限、HealthKit 权限、定位权限、局域网权限是不同权限，按实际功能分别申请，不要照搬 Android 扫描权限模型。[Apple 后台蓝牙指南](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html)
 
-### 6.2、对象地图
+### 6.2、对象地图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 类型 | 职责 |
 | --- | --- |
@@ -281,7 +281,7 @@ App 自己扮演外设并有对应后台业务时才考虑 `bluetooth-peripheral
 
 不要继承 Core Bluetooth 的框架类；使用组合和代理。本文的 `JobsBLECentralLab` 继承 `NSObject`，不是继承 `CBCentralManager`。[Apple Core Bluetooth](https://developer.apple.com/documentation/corebluetooth)
 
-### 6.3、Swift 与 OC 回调是同一套系统模型
+### 6.3、Swift 与 OC 回调是同一套系统模型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 阶段 | Swift | Objective-C |
 | --- | --- | --- |
@@ -296,7 +296,7 @@ App 自己扮演外设并有对应后台业务时才考虑 `bluetooth-peripheral
 
 Read 和 Notify 都可能进入数据更新回调。解析时要根据当前外设、特征、操作与业务字段分发，不能认为“这个回调只会收到刚才那条命令的响应”。
 
-### 6.4、并发：先选一种隔离策略
+### 6.4、并发：先选一种隔离策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本文 Swift 实验对象使用 `@MainActor`，Central/Peripheral 的 delegate queue 明确指定 `.main`；少量报文在同一个串行执行域处理，方便教学。`@preconcurrency` 代理一致性标注是对系统旧式协议导入的适配，**不是任何线程都可以安全调用的许可**。
 
@@ -304,9 +304,9 @@ Read 和 Notify 都可能进入数据更新回调。解析时要根据当前外�
 
 Actor 保证隔离，不自动保证“跨多个 await 的事务顺序”。例如写命令后 `await` 等 ACK，这时别的任务仍可能修改状态；必须保留请求 ID、会话 ID 和状态机约束。
 
-## 七、业务协议：从十六进制变回业务含义
+## 七、业务协议：从十六进制变回业务含义 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 7.1、字节、文本、编码，不是一回事
+### 7.1、字节、文本、编码，不是一回事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 十六进制显示：01 02 FF          实际是 3 个字节
@@ -315,7 +315,7 @@ Actor 保证隔离，不自动保证“跨多个 await 的事务顺序”。例�
 
 设备要求二进制 `0x01`，你发字符串 `"01"` 就是错报文。`Data` / `NSData` 是字节容器，不保证内容是 UTF-8，更不保证是 JSON。
 
-### 7.2、大小端、符号与单位
+### 7.2、大小端、符号与单位 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `uint16` 数值 `300` 等于 `0x012C`。Little Endian（小端）在线路上是 `2C 01`，Big Endian 是 `01 2C`。不能因为 ARM 常用小端，就把 C 结构体直接发出去。
 
@@ -325,13 +325,13 @@ uint16_t value = (uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8);
 
 这句的前提是已经确认至少有两个字节。另一常见错误是把 `int16` 温度、缩放系数、单位或无效值哨兵弄错：`2500` 可能代表 `25.00°C`，也可能不是温度。协议必须明确字段含义。
 
-### 7.3、为什么不能把 struct 内存原样发给另一端
+### 7.3、为什么不能把 struct 内存原样发给另一端 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 因为内存布局受 padding、对齐、字节序、字段宽度、编译器和 ABI 影响。`#pragma pack(1)` 最多改变部分布局，不能解决跨端全部问题，还可能引入非对齐访问风险。
 
 C 中也不要把任意 `uint8_t *` 强转成 `uint16_t *` 直接读；Swift 不要对不保证对齐的网络数据随意 `load(as:)`。逐字节读取，或者在检查范围后用适当的复制/非对齐读取方式，再明确处理端序。
 
-### 7.4、本文统一的教学协议
+### 7.4、本文统一的教学协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 这个协议由本文定义，**不是 Bluetooth SIG 标准协议，也不对应任何商业设备**。
 
@@ -359,7 +359,7 @@ A5 5A 01 10 01 00 01 00 01 6B DE
 
 CRC 只检测部分意外错误，**不是身份认证、不是加密，也不防恶意篡改**。本实验服务未要求配对/加密，只能用于可控实验环境。
 
-### 7.5、帧格式之外，协议还必须定义哪些东西
+### 7.5、帧格式之外，协议还必须定义哪些东西 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 命令幂等性：`setLED(1)` 与 `toggleLED()` 重试语义不同。
 - 成功点：收到命令、执行完成、写入非易失存储，分别用什么 ACK。
@@ -372,15 +372,15 @@ CRC 只检测部分意外错误，**不是身份认证、不是加密，也不�
 
 没有这份契约，“App 与固件各自写完”不代表能互相理解。
 
-## 八、Demo A：C 编解码、C++ 重组与 Objective-C++ 桥接
+## 八、Demo A：C 编解码、C++ 重组与 Objective-C++ 桥接 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 8.1、为什么这个 Demo 不需要蓝牙硬件
+### 8.1、为什么这个 Demo 不需要蓝牙硬件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 协议编解码是“字节输入 → 确定性输出”，应先在普通进程里验证。把所有问题都放到真机无线环境里调，会分不清是帧格式错、线程错，还是设备没响应。
 
 源码：`Demo/Common/JobsBLECodec.h/.c`、`Demo/CPP/JobsFrameStream.hpp`、`Demo/OC/JobsCodecBridge.h/.mm`。测试：`Demo/Tests/main.cpp`、`BridgeTests.mm`。
 
-### 8.2、C：小而稳定的共享边界
+### 8.2、C：小而稳定的共享边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```c
 uint8_t payload[] = {1};
@@ -397,7 +397,7 @@ if (status == JOBS_CODEC_OK) {
 
 `jobs_crc16` 要求 `length > 0` 时输入指针有效；`jobs_encode` 要求 payload 与 output 不重叠。把这些契约写在接口文档里，比只写“线程安全、高性能”更有用。
 
-### 8.3、C++：管理重组状态与内存所有权
+### 8.3、C++：管理重组状态与内存所有权 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```cpp
 jobs::FrameStream decoder;
@@ -410,13 +410,13 @@ decoder.feed(fragment.data(), fragment.size(), [](const jobs::Frame &frame) {
 
 限制也要看到：它没有时钟，不自动判断半帧过期；合法长度但永远不补齐的头部，需要上层超时清理。示例使用固定小容量和移动数组来换可读性，高吞吐产品应评估环形缓冲。Sink 不可重入解析器或抛异常，调用方需串行使用。
 
-### 8.4、重要纠偏：GATT 不是 TCP 字节流
+### 8.4、重要纠偏：GATT 不是 TCP 字节流 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 标准特征的 Notify 是一次属性值更新，应用通常得到该次更新的值；不能机械宣称“BLE 每次回调天然随机粘包”。
 
 只有当**业务协议主动把一个逻辑帧拆成多个特征值，或把多个逻辑帧合到一个值**，接收侧才要按其定义重组。L2CAP CoC 在 iOS 暴露为 Stream 时，也要处理读写边界与业务边界不一致。本文 C++ 重组器服务于这种“双方已约定字节流”的场景；后面的双机短命令 Demo 则约定一帧一次特征写入，不自动拆分。
 
-### 8.5、Objective-C++：把 C++ 内核包装给 OC/Swift
+### 8.5、Objective-C++：把 C++ 内核包装给 OC/Swift <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `.m` 按 Objective-C 编译，`.mm` 按 Objective-C++ 编译。桥接头只公开 Foundation 类型，STL 隐藏在 `.mm` 中：
 
@@ -431,7 +431,7 @@ if (error) {
 
 `JobsCodecBridge` 将输出 payload 复制成 `NSData`，不把 C++ 容器内部指针交给异步业务。C++ 异常在 `.mm` 边界转成 `NSError`；Foundation 编程异常不伪装成普通通信失败。非法帧被重组器丢弃并尝试重同步，所以空数组可能意味着“还没收全”或“输入无有效帧”，并非每个坏帧都有 NSError。
 
-### 8.6、Swift 调用 C/C++ 的三种办法
+### 8.6、Swift 调用 C/C++ 的三种办法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 方式 | 适合什么 | 要注意什么 |
 | --- | --- | --- |
@@ -454,9 +454,9 @@ let result: (JobsCodecStatus, Data?) = incomingData.withUnsafeBytes { raw in
 // result.1 独立拥有 payload；闭包结束后继续使用也不依赖借用指针。
 ```
 
-## 九、Demo B：Swift 双机蓝牙完整往返
+## 九、Demo B：Swift 双机蓝牙完整往返 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 9.1、这个实验验证什么
+### 9.1、这个实验验证什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 第一台 iPhone 跑 `JobsBLECentralLab`；第二台跑 `JobsBLEPeripheralLab`。设备 B 发布服务，设备 A 连接并订阅后发送设置 LED 命令，设备 B 修改内存变量并返回业务 ACK。**第二台手机只模拟 LED，不会控制闪光灯，也不产生真实传感器数据。**
 
@@ -467,7 +467,7 @@ let result: (JobsCodecStatus, Data?) = incomingData.withUnsafeBytes { raw in
 | `Demo/Swift/JobsBLEPeripheralLab.swift` | 服务发布、广播、收命令、通知背压 |
 | `Demo/Swift/JobsHeartRate.swift` | 标准心率数据解析，独立练习 |
 
-### 9.2、运行前检查与操作步骤
+### 9.2、运行前检查与操作步骤 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1、在 [**Xcode**](https://developer.apple.com/xcode) 建两个临时 iOS App，或在一个临时 App 中做两个明确模式。最低部署版本设为 iOS 17；设置签名并使用两台真机。
 
@@ -510,7 +510,7 @@ A: ATT write response 收到；不等于设备业务执行成功
 A: 业务 ACK 成功：LED=1，seq=1
 ```
 
-### 9.3、实现里最重要的几个设计点
+### 9.3、实现里最重要的几个设计点 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 必须等 `.poweredOn` 才扫描，不能初始化 manager 后马上假设可用。
 - 强持有 `CBPeripheral`，只发现指定 Service 和两条必要特征。
@@ -522,15 +522,15 @@ A: 业务 ACK 成功：LED=1，seq=1
 - 断连和服务失效后清理旧会话；超时结果明确写为“未知”，不盲目重试。
 - 外设的 `updateValue` 返回 false 时保留队首，等待 `peripheralManagerIsReady` 再继续，不忙等。
 
-### 9.4、Demo 没有承诺什么
+### 9.4、Demo 没有承诺什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 没有实现设备认证、加密业务协议、用户绑定、状态恢复、自动重连、多设备调度、OTA、跨会话防重放、持久化命令、完整 App UI 或商业固件。Peripheral 的 `stop()` 停止广播并拒绝后续写入，不等于驱逐所有已连接 Central；实验时由 Central 主动断开。
 
 它是一条可读、可编译的教学路径，不是把所有生产难题藏进一个“全能蓝牙管理器”。
 
-## 十、Demo C：Objective-C 链路与标准心率解析
+## 十、Demo C：Objective-C 链路与标准心率解析 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 10.1、用 OC Central 连接同一个 Swift 外设
+### 10.1、用 OC Central 连接同一个 Swift 外设 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 临时 OC App 加入 `JobsOCCentralLab.h/.m`、`JobsBLECodec.h/.c`。Header Search Paths 指向 `Demo/Common`；无需引入 C++。第二台继续运行上一章 Swift Peripheral。
 
@@ -545,7 +545,7 @@ A: 业务 ACK 成功：LED=1，seq=1
 
 这个独立 Transport 内核展示原生 API；Jobs 业务层的 manager 创建与配置应复用已存在的真实 Jobs 入口，不能因为实验里出现原生写法而改回生产调用方。
 
-### 10.2、标准心率为何不能永远取第二个字节
+### 10.2、标准心率为何不能永远取第二个字节 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Heart Rate Measurement 首字节是 Flags，决定后面的字段布局：
 
@@ -559,7 +559,7 @@ Heart Rate Measurement 首字节是 Flags，决定后面的字段布局：
 
 RR 单位为 `1/1024 s`，不是毫秒。可有多个 RR 值；应按实际可用长度循环读取，处理字段缺失与截断，不将固定长度当普遍保证。[Bluetooth Heart Rate Service](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/HRS_v1.0/out/en/index-en.html)
 
-### 10.3、可直接运行的解析练习
+### 10.3、可直接运行的解析练习 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let sample = try JobsHeartRate.decode(Data([0x00, 0x48]))
@@ -577,9 +577,9 @@ print(full.rrSeconds) // [1.0, 0.5]
 
 传感器值成功解析不等于健康结论可信；产品仍需处理信号质量、佩戴状态、设备声明、用户授权与数据用途。本文只讲数据通信，不作医学诊断。
 
-## 十一、MTU、分包、流控与吞吐量
+## 十一、MTU、分包、流控与吞吐量 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 11.1、三个长度不要混为一谈
+### 11.1、三个长度不要混为一谈 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 概念 | 指的是什么 | 不能怎样理解 |
 | --- | --- | --- |
@@ -591,7 +591,7 @@ print(full.rrSeconds) // [1.0, 0.5]
 
 iOS 不采用 Android 的 `requestMtu()` 调用方式；App 查询当前 `maximumWriteValueLength(for:)`，并结合固件支持的写入方式与业务分包策略。不要拿一次 `.withoutResponse` 的上限去替代 `.withResponse` 的上限。[Apple 写入长度 API](https://developer.apple.com/documentation/corebluetooth/cbperipheral/maximumwritevaluelength(for:))
 
-### 11.2、该由谁分包
+### 11.2、该由谁分包 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1、系统协议栈处理其负责的下层分段与重组，不需要 App 拼造链路层包。
 
@@ -601,7 +601,7 @@ iOS 不采用 Android 的 `requestMtu()` 调用方式；App 查询当前 `maximu
 
 4、文件/历史数据分片应包含传输 ID、offset/片号、有效长度和校验策略；重传时可从明确确认的位置恢复。
 
-### 11.3、Without Response 不是无限发送许可
+### 11.3、Without Response 不是无限发送许可 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 发送前检查 `canSendWriteWithoutResponse`。为 false 时停止出队，等 `peripheralIsReady(toSendWriteWithoutResponse:)` 再继续；不能 while 忙等，也不能固定 sleep 10 ms 作为通用流控。这个属性表示系统发送能力，不表示固件业务消费速度，设备自己的接收窗口/积分流控可能仍然需要。[Apple 发送能力](https://developer.apple.com/documentation/corebluetooth/cbperipheral/cansendwritewithoutresponse)、[Apple ready 回调](https://developer.apple.com/documentation/corebluetooth/cbperipheraldelegate/peripheralisready(tosendwritewithoutresponse:))
 
@@ -615,13 +615,13 @@ iOS 不采用 Android 的 `requestMtu()` 调用方式；App 查询当前 `maximu
 
 这是生产设计示意，不是声称现有 `JobsBluetooth` 已实现此发送泵。
 
-### 11.4、外设通知同样有背压
+### 11.4、外设通知同样有背压 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 App 作为 Peripheral 时，`updateValue` 返回 false 表示暂时不能再提交。保留数据，等 `peripheralManagerIsReady(toUpdateSubscribers:)`。发送前还应检查订阅 Central 的 `maximumUpdateValueLength`，不能让大通知被截断。[Apple updateValue](https://developer.apple.com/documentation/corebluetooth/cbperipheralmanager/updatevalue(_:for:onsubscribedcentrals:))
 
 本文 Peripheral 限制队列为 16 条，满时拒绝新写入。这比“永远把数据 append 到数组”更明确；生产中应按业务选择拒绝、覆盖旧遥测或降采样。
 
-### 11.5、吞吐量该怎样测
+### 11.5、吞吐量该怎样测 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 有效吞吐 = 设备确认接收的业务有效字节数 / 实际耗时
@@ -630,9 +630,9 @@ App 作为 Peripheral 时，`updateValue` 返回 false 表示暂时不能再提�
 
 记录手机型号、系统、固件、写入方式、payload 大小、前后台、RSSI、并发设备数。不要把 1M/2M PHY 的物理速率当应用有效吞吐；也不要把调用 `writeValue` 的速度当设备收到的速度。
 
-## 十二、把 Demo 变成生产系统：状态机与命令调度
+## 十二、把 Demo 变成生产系统：状态机与命令调度 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 12.1、建议的职责分层
+### 12.1、建议的职责分层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 页面 / ViewModel
@@ -645,7 +645,7 @@ App 作为 Peripheral 时，`updateValue` 返回 false 表示暂时不能再提�
 
 页面不应关心某条 Characteristic 的 UUID；Codec 不应依赖 UIViewController；Transport 不应知道“今日步数上传到哪一个账号”。这也让 C/C++ 共享内核与 OC/Swift 平台层自然分开。
 
-### 12.2、状态、事件和动作分开表达
+### 12.2、状态、事件和动作分开表达 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 当前状态 | 事件 | 动作与下一状态 |
 | --- | --- | --- |
@@ -661,7 +661,7 @@ App 作为 Peripheral 时，`updateValue` 返回 false 表示暂时不能再提�
 
 每个事件都带 session ID 或与当前对象身份对应的验证。**旧超时、旧 ACK、旧断连回调不能修改新会话。**
 
-### 12.3、命令最少需要记录哪些字段
+### 12.3、命令最少需要记录哪些字段 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 sessionID / requestID / sequence
@@ -673,7 +673,7 @@ state / completion / cancellation
 
 匹配条件至少考虑“当前会话 + 外设 + 特征 + 响应类型 + 请求序号”，不能只判断 `data.count > 0`。主动遥测、旧请求 ACK、设备事件都可能与命令响应交错。
 
-### 12.4、超时不等于执行失败
+### 12.4、超时不等于执行失败 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 假设 App 发“扣减一次额度”，设备已经执行，但 ACK 在断连时未送达。App 超时后自动重发，会造成重复执行。
 
@@ -686,7 +686,7 @@ state / completion / cancellation
 
 对于 `setLED(1)`，重复设置往往是幂等；对于 `toggleLED()`，重复执行会反向改变状态。幂等性来自设备执行协议，不来自 App 在内存里保存一个 UUID。
 
-### 12.5、重连不是失败后立即循环 connect
+### 12.5、重连不是失败后立即循环 connect <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 区分用户主动断开与异常断开。主动断开通常不自动重连；权限拒绝、型号不兼容、认证失败也不应无限重试。
 
@@ -694,7 +694,7 @@ state / completion / cancellation
 
 `retrievePeripherals(withIdentifiers:)` 返回已知对象，不表示对象当前已连接；`retrieveConnectedPeripherals(withServices:)` 也不是“我的全部绑定设备”。恢复对象身份后仍需按平台和业务要求连接及校验。
 
-### 12.6、多设备与高频数据
+### 12.6、多设备与高频数据 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 每台设备拥有独立 Session、decoder、命令队列与超时，不能用一个全局 `writeCharacteristic` 接收所有连接。
 - 不承诺所有 iPhone 都能同时连接固定数量设备。数量、吞吐和功耗一起做目标机型测试。
@@ -702,19 +702,19 @@ state / completion / cancellation
 - 队列、历史缓存、日志都设置容量与淘汰策略。实时遥测可以降采样，交易/控制响应通常不能静默丢弃。
 - 封装 `async/await` 时，continuation 要在成功、失败、取消、断连、超时之间 **exactly once** 完成；登记请求与发送动作应处于同一串行执行域，避免先回调后登记。
 
-## 十三、前后台、锁屏、状态恢复与 iOS 26
+## 十三、前后台、锁屏、状态恢复与 iOS 26 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 13.1、后台模式不是永久后台线程
+### 13.1、后台模式不是永久后台线程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 声明蓝牙后台模式后，系统可为相关蓝牙事件唤醒 App；不等于 App 可以不受限制运行定时器、维持任意循环或高频刷新 UI。传统后台扫描限制包括服务过滤、重复发现合并、扫描节奏变化；不能要求后台和前台的每次广播回调完全相同。[Apple 后台处理指南](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html)
 
-### 13.2、状态恢复恢复的是系统蓝牙工作，不是你的全部内存
+### 13.2、状态恢复恢复的是系统蓝牙工作，不是你的全部内存 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 使用稳定的 `CBCentralManagerOptionRestoreIdentifierKey`，实现 `centralManager(_:willRestoreState:)`，在合适启动路径重建同标识的 manager；恢复外设引用、代理、必要服务状态，并与 App 自己持久化的任务对账。
 
 不应把恢复逻辑挂在“用户进入蓝牙页面以后”才初始化；系统后台恢复时可能根本没有页面。恢复不等于重新发送所有未完成命令，也不保证你的旧闭包、decoder 缓冲和 UI 对象还在。
 
-### 13.3、iOS 26 的两个新边界必须单独记
+### 13.3、iOS 26 的两个新边界必须单独记 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **Live Activity：** Apple 当前 Core Bluetooth 文档说明，iOS 26+ 在已经实例化 `CBManager` 并于进入后台前启动 Live Activity 等条件下，可继续部分前台式蓝牙能力，例如不指定服务的扫描和重复发现。但 Apple 工程师也明确说明，锁屏并熄屏后扫描行为仍会受限制，不能把 Live Activity 当作永不受限扫描的方案。[Apple Core Bluetooth](https://developer.apple.com/documentation/corebluetooth)、[Apple 工程师关于熄屏的说明](https://developer.apple.com/forums/thread/815189)
 
@@ -722,11 +722,11 @@ state / completion / cancellation
 
 准确工程做法：记录系统版本、是否 ASK 设置配件、待完成蓝牙事件、锁屏/熄屏状态，并按 TN3115 表格与脚注实测。状态恢复以等待特定事件且该事件发生为前提，不是通用定时唤醒服务。
 
-### 13.4、AccessorySetupKit 是什么，不是什么
+### 13.4、AccessorySetupKit 是什么，不是什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 [**AccessorySetupKit**](https://developer.apple.com/documentation/accessorysetupkit) 在支持的系统上提供配件发现、选择和授权体验；它不替你实现设备业务协议，也不自动补齐 ACK、OTA 与云端绑定。采用 ASK 的授权模型与本文直接请求通用蓝牙权限的教学 Demo 不同，应按官方示例配置，而不是混抄两套 plist。[Apple ASK 双设备示例](https://developer.apple.com/documentation/accessorysetupkit/setting-up-and-authorizing-a-bluetooth-accessory)
 
-### 13.5、后台验收矩阵
+### 13.5、后台验收矩阵 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 操作 | 要观察的事实 |
 | --- | --- |
@@ -738,9 +738,9 @@ state / completion / cancellation
 | 重启后首次解锁前后 | 恢复、持久化数据与 Keychain 可访问性 |
 | 设备离开再回来 | 退避、重连、重订阅、补传是否正确 |
 
-## 十四、配对、绑定、安全与隐私
+## 十四、配对、绑定、安全与隐私 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 14.1、连接、配对、Bonding、业务绑定是四件事
+### 14.1、连接、配对、Bonding、业务绑定是四件事 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 名称 | 含义 |
 | --- | --- |
@@ -751,13 +751,13 @@ state / completion / cancellation
 
 能连接不等于已配对，已配对不等于属于当前账号。App 退出登录也不等于系统自动删除蓝牙配对；设备解绑流程要协调 App、后端、固件与系统能提供的能力。
 
-### 14.2、加密不自动等于身份安全
+### 14.2、加密不自动等于身份安全 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 LE Secure Connections 与 Legacy Pairing 的安全机制不同；Just Works、Passkey、Numeric Comparison、OOB 的适用条件及身份保证也不同。特别是 Just Works 不能提供与经过认证配对方式相同的 MITM 防护，不能只看到“链路已加密”就宣布设备身份可信。[Bluetooth Security Manager](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host/security-manager-specification.html)
 
 产品应在设备 I/O 能力、配对方式、唯一设备密钥、初始绑定流程和用户操作之间做完整设计。设备无屏幕时，可以评估带设备身份信息的二维码或合适的 OOB 流程，不让 App 自己随意发明密码协议。[Bluetooth 安全与隐私建议](https://www.bluetooth.com/download/bluetooth-security-and-privacy-best-practices-guide/)
 
-### 14.3、业务协议的安全最低线
+### 14.3、业务协议的安全最低线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 用经过评审的认证与加密方案；CRC、简单异或、固定共享密码都不能替代认证。
 - 重要操作验证设备身份与调用者权限，不能只看广播名或 UUID。
@@ -768,9 +768,9 @@ LE Secure Connections 与 Legacy Pairing 的安全机制不同；Just Works、Pa
 
 本文实验没有业务认证，因此 `seq` 只用于关联，不提供跨会话防重放安全性。不能把这个协议直接用于真实门锁、医疗指令或支付相关操作。
 
-## 十五、可穿戴与物联网的协议生态
+## 十五、可穿戴与物联网的协议生态 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 15.1、可穿戴常见协议与数据
+### 15.1、可穿戴常见协议与数据 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 名称 | 用途 | 注意边界 |
 | --- | --- | --- |
@@ -783,7 +783,7 @@ LE Secure Connections 与 Legacy Pairing 的安全机制不同；Just Works、Pa
 
 ANCS 中要区分“系统通知内容”与“GATT notification”；AMS 则面向媒体控制与状态。[Apple ANCS](https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleNotificationCenterServiceSpecification/Introduction/Introduction.html)、[Apple AMS](https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleMediaService_Reference/Introduction/Introduction.html)
 
-### 15.2、历史数据同步比实时心率更难在哪里
+### 15.2、历史数据同步比实时心率更难在哪里 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 实时值可以允许少量过期后丢弃；历史数据通常需要完整性和去重。例如手环离线记录三天运动数据，App 再连接时需要确认：
 
@@ -799,7 +799,7 @@ ANCS 中要区分“系统通知内容”与“GATT notification”；AMS 则面
 
 这是一种数据同步事务，不是把 Notify 连上就完成了。
 
-### 15.3、BLE、Wi-Fi、MQTT、HTTP 分别站在哪一层
+### 15.3、BLE、Wi-Fi、MQTT、HTTP 分别站在哪一层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 近距离控制：App ← BLE GATT → 设备
@@ -812,7 +812,7 @@ MQTT 是发布/订阅消息协议，常见部署承载于 TCP/TLS；不是 Bluet
 
 CoAP 常用于受限设备的应用层通信，常见基础规范基于 UDP；与 HTTP、MQTT 一样，应先确认它处于设备到网关、设备到云，还是产品自定义隧道中。[IETF CoAP RFC 7252](https://www.rfc-editor.org/rfc/rfc7252)
 
-### 15.4、Matter、Thread、Bluetooth Mesh 不是同一东西
+### 15.4、Matter、Thread、Bluetooth Mesh 不是同一东西 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 技术 | 大致定位 | 与 BLE 的关系 |
 | --- | --- | --- |
@@ -824,13 +824,13 @@ Matter 常用 Wi-Fi、Thread、Ethernet；不能把“配网用了 BLE”写成�
 
 手机接入 Bluetooth Mesh 常通过支持 GATT Proxy 的节点，由代理衔接 Mesh 消息；Core Bluetooth 只提供相关通信基础，App 还需要正确的 Mesh 协议实现和配置流程，不是连接很多 Peripheral 就叫 Mesh。[Bluetooth Mesh Proxy 说明](https://www.bluetooth.com/mesh-private-beacons/)
 
-### 15.5、音频与大数据：什么时候不能只盯着 GATT
+### 15.5、音频与大数据：什么时候不能只盯着 GATT <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Classic 音频常见 A2DP、HFP，AVRCP 负责媒体控制相关功能；LE Audio 则使用 LE 等时通道及相关音频协议体系，LC3 是其重要编解码器。**“BLE 不能有音频”不准确；“会写 GATT 就能自制完整 LE Audio 通道”也不准确。** 普通 iOS 音频业务应从系统音频框架和平台支持能力出发。[Bluetooth LE Audio Specifications](https://www.bluetooth.com/learn-about-bluetooth/feature-enhancements/le-audio/le-audio-specifications/)
 
 需要持续较大数据时，可评估设备支持的 L2CAP Credit-Based Connection-Oriented Channel（CoC）。Core Bluetooth 有 `openL2CAPChannel(_:)`，外设端也有发布通道接口；PSM、加密要求和服务发现方式必须由双方约定。它不是任意打开 Classic SPP 的后门，也不会自动解决文件校验、断点和业务 ACK。[Apple L2CAP API](https://developer.apple.com/documentation/corebluetooth/cbperipheral/openl2capchannel(_:))
 
-### 15.6、C/C++ 在固件侧具体做什么
+### 15.6、C/C++ 在固件侧具体做什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 固件中的常见数据路径：传感器经 I²C/SPI 接到 MCU → 驱动采样 → 任务/中断传递数据 → 业务编码 → BLE 栈 GATT 通知。UART 可能是 MCU 与蓝牙模块之间的内部串口，不说明空口一定是 SPP。
 
@@ -838,9 +838,9 @@ Classic 音频常见 A2DP、HFP，AVRCP 负责媒体控制相关功能；LE Audi
 
 可用 [**Zephyr Heart-rate Peripheral**](https://docs.zephyrproject.org/latest/samples/bluetooth/peripheral_hr/README.html) 学习 C 固件发布标准服务的结构。它需要支持的开发板/环境；本文没有编译某块开发板固件，也没有把生成的假心率当真实传感器测量。
 
-## 十六、OTA / DFU：最容易低估风险的功能
+## 十六、OTA / DFU：最容易低估风险的功能 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 16.1、OTA 不是“循环把 bin 文件 writeValue”
+### 16.1、OTA 不是“循环把 bin 文件 writeValue” <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 OTA 是 Over-The-Air 更新，DFU 是 Device Firmware Update。厂商升级协议、Bootloader、镜像布局、签名方案可能完全不同，不存在能升级所有 BLE 设备的通用 iOS Opcode。
 
@@ -855,7 +855,7 @@ OTA 是 Over-The-Air 更新，DFU 是 Device Firmware Update。厂商升级协�
   → 重连并核实实际版本与启动状态
 ```
 
-### 16.2、必须向固件团队确认的契约
+### 16.2、必须向固件团队确认的契约 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 包是否适配硬件版本与分区布局；签名由谁验证，是否有 anti-rollback 策略。
 - 断电时能否回到旧版本；是否有双分区或其它可靠恢复方案。
@@ -865,15 +865,15 @@ OTA 是 Over-The-Air 更新，DFU 是 Device Firmware Update。厂商升级协�
 - 电量、充电状态、温度、存储不足、取消与用户离开页面如何处理。
 - 升级失败后的售后恢复方式是否可操作。
 
-### 16.3、App 能保证什么，不能替硬件保证什么
+### 16.3、App 能保证什么，不能替硬件保证什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 App 可以验证下载包、控制节奏、记进度、处理错误、展示阶段、重连核实。App 无法用一个进度条替 Bootloader 提供掉电安全；同样不能只用 CRC 代替固件签名。
 
 应先在可恢复开发板或厂商授权设备上测试。本文不执行升级，不提供未知设备的刷机命令；生产前采用芯片/厂商实际 SDK 和明确版本的升级协议。
 
-## 十七、日常生产：接需求、联调、日志与排障
+## 十七、日常生产：接需求、联调、日志与排障 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 17.1、接到需求当天，先向厂商索取这份清单
+### 17.1、接到需求当天，先向厂商索取这份清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 材料 | 至少包含 |
 | --- | --- |
@@ -890,13 +890,13 @@ App 可以验证下载包、控制节奏、记进度、处理错误、展示阶�
 
 如果只拿到“某个 UUID 和一张截图”，应明确缺少协议材料与交付风险。不要先写几千行连接代码，再发现设备实际上只提供 iAP2 或私有认证 SDK。
 
-### 17.2、先用通用工具缩小问题范围
+### 17.2、先用通用工具缩小问题范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 用 [**nRF Connect for Mobile**](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) 等厂商调试工具确认：设备是否广播、能否连接、有哪些服务、订阅后是否真有数据、指定安全写入是否得到预期结果。选择工具以其当前平台功能为准；不要假设 iOS 版具有 Android 版全部能力。
 
 工具能连而 App 不能，优先检查权限、过滤、对象生命周期、UUID、属性和订阅；工具也不能连，则优先确认设备模式、固件、距离、占用和射频环境。但这只是定位方向，不是充分证明“固件一定没问题”。
 
-### 17.3、日志应当能重建事件顺序
+### 17.3、日志应当能重建事件顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 t=123.456 session=S7 device=hash:8af2 state=subscribing event=notify_ready
@@ -909,7 +909,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 `NSLog("连接失败")` 不够；完整保存 `CBError` 与 `CBATTError` 相关 domain/code，以及发生于扫描、连接还是写入阶段，才方便判断重试策略。
 
-### 17.4、排障决策表
+### 17.4、排障决策表 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 现象 | 第一批检查 | 进一步证据 |
 | --- | --- | --- |
@@ -924,7 +924,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 | 电量消耗快 | 无限扫描、重复发现、频繁 UI、太多小包 | 真机能耗测试、固件电流测量 |
 | OTA 卡在 100% | 100% 只是传输完成，尚未校验/切换 | Bootloader 阶段、重启后版本 |
 
-### 17.5、测试金字塔
+### 17.5、测试金字塔 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 层次 | 重点 | 本文状态 |
 | --- | --- | --- |
@@ -938,115 +938,115 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 先有可重复的测试数据，再有真机联调，再有跨机型长稳。三者互相补充，不能互相替代。
 
-## 十八、FAQ：开发时最常遇到的问题
+## 十八、FAQ：开发时最常遇到的问题 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 18.1、设备写“支持蓝牙 5.x”，我就能连接吗？
+### 18.1、设备写“支持蓝牙 5.x”，我就能连接吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能据此保证。还要确认 BLE/Classic、Profile、广播模式、GATT 服务、安全要求和手机公开 API。版本号只是部分信息，不是接入文档。
 
-### 18.2、是不是必须先去系统设置里配对？
+### 18.2、是不是必须先去系统设置里配对？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 普通 BLE 场景通常直接从 App 扫描连接；访问要求安全的特征时，系统可能启动配对过程。按厂商协议和系统提示操作，不把系统列表当所有 BLE 设备的入口。
 
-### 18.3、蓝牙权限被拒绝，是不是多扫描几次就好了？
+### 18.3、蓝牙权限被拒绝，是不是多扫描几次就好了？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不会。权限拒绝与没扫描到设备是不同错误。停止重试，解释功能为什么需要权限，提供合法的设置引导；不要无限弹提示或循环创建 manager。
 
-### 18.4、设备名为空，可以把它过滤掉吗？
+### 18.4、设备名为空，可以把它过滤掉吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不建议仅凭名字过滤。名字可能不在当前广播内，也可能由系统缓存；优先按服务和厂商协议识别。生产设备身份还需要进一步认证。
 
-### 18.5、iOS 拿不到 MAC，怎么记住设备？
+### 18.5、iOS 拿不到 MAC，怎么记住设备？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本机重连可保留 `CBPeripheral.identifier`，业务身份则使用厂商协议提供且经过验证的稳定设备 ID。两者分开存；不要期待本机 UUID 在另一台手机上相同。
 
-### 18.6、为什么 `didConnect` 后立刻写会失败？
+### 18.6、为什么 `didConnect` 后立刻写会失败？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 连接只是链路建立。特征对象可能还没发现、权限未满足、通知未订阅、设备握手未完成。使用完整 ready 条件，而不是靠延迟两秒碰运气。
 
-### 18.7、为什么调用 setNotifyValue 后没有数据？
+### 18.7、为什么调用 setNotifyValue 后没有数据？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先看订阅结果，再看设备是否需要启动采样、认证、佩戴或运动模式。订阅成功只表示更新通道准备好，不保证设备一定在生成新值。
 
-### 18.8、能不能手工给 2902 写 `01 00`？
+### 18.8、能不能手工给 2902 写 `01 00`？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 在 iOS Core Bluetooth 场景使用 `setNotifyValue` 让系统管理；不要照搬其它平台的 CCCD 写法。结果以订阅代理回调为准。
 
-### 18.9、Notify 不可靠，换成 Indicate 就保证零丢失吗？
+### 18.9、Notify 不可靠，换成 Indicate 就保证零丢失吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能。Indicate 增加 ATT 层确认，不等于 App 数据已落盘；Notify 也不是无线层没有重传。历史完整性仍需要记录 ID、游标、补传和存储确认。
 
-### 18.10、`didWriteValueFor` 成功了，为什么设备没执行？
+### 18.10、`didWriteValueFor` 成功了，为什么设备没执行？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 可能写入的只是属性值，业务还在异步执行；也可能报文语义不对。需要按协议等待业务响应或查询状态。不能把 ATT 成功直接显示为“升级完成”。
 
-### 18.11、Without Response 没回调，怎么判断失败？
+### 18.11、Without Response 没回调，怎么判断失败？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 它没有逐次 ATT 写入完成回调。先用系统可发送状态和设备流控约束发送，再用应用 ACK、累计 offset、总长度/hash 或最终查询判断业务完成情况。
 
-### 18.12、每包 20 字节是不是最保险？
+### 18.12、每包 20 字节是不是最保险？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不是通用答案。浪费吞吐只是一个问题，更重要的是设备可能不支持你自行切片。先查询 API 上限，再按固件协议约定分包。
 
-### 18.13、为什么所有 HEX 看起来对，数值却离谱？
+### 18.13、为什么所有 HEX 看起来对，数值却离谱？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 检查十六进制字符串与真实字节、端序、UInt16/Int16、缩放单位、字段存在位、offset 和 CRC 范围。用逐字节注释的黄金报文对照。
 
-### 18.14、蓝牙回调是不是每次对应一整条业务消息？
+### 18.14、蓝牙回调是不是每次对应一整条业务消息？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不一定，要看业务协议。标准特征通常有明确属性值格式；私有协议可能把逻辑消息分片或合并。不要把 TCP 的“字节流”结论强套到所有 GATT 特征。
 
-### 18.15、可以同时向两台设备发命令吗？
+### 18.15、可以同时向两台设备发命令吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 可以设计多设备会话，但每台设备的队列、状态、特征引用、decoder 和超时必须隔离。目标并发量要实测，不能只依赖单设备 Demo 的经验。
 
-### 18.16、断开后重新连接，旧的 Characteristic 还能用吗？
+### 18.16、断开后重新连接，旧的 Characteristic 还能用吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不要把旧对象当永远有效。按当前会话重新确认服务与特征，处理 `didModifyServices`；固件升级后尤其要防数据库改变。
 
-### 18.17、后台模式开了，为何锁屏后行为还不同？
+### 18.17、后台模式开了，为何锁屏后行为还不同？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 后台模式不是无限执行授权。系统版本、亮屏/熄屏、Live Activity、ASK、等待的蓝牙事件都影响行为。使用第十三章矩阵验证，不能用一个开关解释全部现象。
 
-### 18.18、能不能定时发一个心跳让 App 永远不被挂起？
+### 18.18、能不能定时发一个心跳让 App 永远不被挂起？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能把心跳当绕过系统生命周期的保证。心跳应解决设备协议的存活判断，并评估功耗；后台执行与恢复遵循系统机制。
 
-### 18.19、用户强退后，蓝牙一定不能再拉起 App 吗？
+### 18.19、用户强退后，蓝牙一定不能再拉起 App 吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 旧系统的限制不能直接推广到所有新版本。TN3115 对 iOS 26 与 ASK 条件有专门脚注；按对应版本的官方条件验证，不向产品承诺无条件恢复。[Apple TN3115](https://developer.apple.com/documentation/technotes/tn3115-bluetooth-state-restoration-app-relaunch-rules)
 
-### 18.20、CRC 能防止别人伪造控制命令吗？
+### 18.20、CRC 能防止别人伪造控制命令吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能，CRC 没有秘密密钥，任何人都可以为修改后的内容重新计算。需要正确的身份认证、消息认证/加密、防重放与授权策略。
 
-### 18.21、蓝牙连接加密了，还需要账号绑定吗？
+### 18.21、蓝牙连接加密了，还需要账号绑定吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 通常需要。链路加密保护通信，业务绑定确定谁能控制哪台设备。设备转让、共享授权、退出登录与撤销权限都不由一次配对自动解决。
 
-### 18.22、Swift Actor 能替代整个蓝牙状态机吗？
+### 18.22、Swift Actor 能替代整个蓝牙状态机吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能。Actor 管状态访问隔离，状态机管“当前事件在这个阶段是否允许”。Actor 的 await 点还可能让别的任务进入，业务顺序仍要显式管理。
 
-### 18.23、为什么不直接使用厂商 SDK？
+### 18.23、为什么不直接使用厂商 SDK？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 可以，而且有私有认证、算法或 OTA 时经常更合适。先核对许可证、支持平台、线程模型、最低系统、固件兼容、错误信息与维护质量，再用自有门面隔离 SDK；不要盲目重写，也不要完全失去诊断能力。
 
-### 18.24、扫描工具能连，是不是代表已经可以上线？
+### 18.24、扫描工具能连，是不是代表已经可以上线？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 只能证明特定环境下的一部分连通性。生产还要验证绑定、异常恢复、完整性、安全、长稳、功耗、升级和跨版本兼容。
 
-### 18.25、没有硬件还能做哪些事？
+### 18.25、没有硬件还能做哪些事？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 可以做 Codec 单测、Mock 事务、录制回放、错误状态、UI、数据库去重与取消竞态。不能由此证明射频连接、真实设备行为和后台恢复已经成立。
 
-### 18.26、现有 Demo 菜单写了“自动重连/OTA”，能直接对外承诺吗？
+### 18.26、现有 Demo 菜单写了“自动重连/OTA”，能直接对外承诺吗？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 不能。要追到实际实现、调用路径与测试证据；配置字段、菜单标题和 Mock 输出都不等于能力实现。下一章面试时也应按这个原则描述个人经验。
 
-## 十九、面试题：可直接说出口的回答与追问
+## 十九、面试题：可直接说出口的回答与追问 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 19.1、你怎么理解 iOS 蓝牙开发？
+### 19.1、你怎么理解 iOS 蓝牙开发？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1058,7 +1058,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：具体设备和固件、标准还是私有协议、是否有 SDK、安全/绑定方式、数据量、后台目标、OTA 与验收机型。没有这些，不能承诺排期与兼容范围。
 
-### 19.2、BLE 与经典蓝牙的区别是什么？
+### 19.2、BLE 与经典蓝牙的区别是什么？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1070,7 +1070,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：不因仅使用 BLE 就必须 MFi；是否使用 HomeKit、iAP2、Find My 等授权技术要另外核对。Bluetooth 和射频合规是另一条线。
 
-### 19.3、GAP、GATT、ATT 有什么区别？
+### 19.3、GAP、GATT、ATT 有什么区别？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1082,7 +1082,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：不是，它们属于不同角色轴。常见手机读手环时恰好如此，但配件读取 iPhone ANCS 服务时，iPhone 是相应 GATT Server。
 
-### 19.4、描述一次完整 BLE 通信流程。
+### 19.4、描述一次完整 BLE 通信流程。 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1094,7 +1094,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：时间过去不代表必要步骤完成。慢设备可能没准备好，快设备又被人为延迟；应以系统与协议事件推进状态机。
 
-### 19.5、Notify、Indicate、业务 ACK 有什么不同？
+### 19.5、Notify、Indicate、业务 ACK 有什么不同？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1106,7 +1106,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：协议规定持久化完成应答，或者写入后查询验证；关键场景再做重启恢复测试，而不是只依赖 ATT Write Response。
 
-### 19.6、为什么很多示例每包 20 字节？怎么优化？
+### 19.6、为什么很多示例每包 20 字节？怎么优化？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1118,7 +1118,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：它减少 ATT 响应往返，但仍受系统与设备流控约束，还要补业务完整性。短控制命令与大量文件传输的取舍不同。
 
-### 19.7、你怎么设计命令队列和超时重试？
+### 19.7、你怎么设计命令队列和超时重试？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1130,7 +1130,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：设备按幂等键记录并返回原结果，或提供可靠查询/对账。只在 App 里去重不能防止设备重复执行。
 
-### 19.8、后台蓝牙如何保证？
+### 19.8、后台蓝牙如何保证？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1142,7 +1142,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：不能跨版本下绝对结论。旧版限制与 iOS 26 的 ASK 条件需区分，按官方表格脚注和目标版本实测；不能承诺普通 Demo 无条件被拉起。
 
-### 19.9、配对成功是否就安全了？
+### 19.9、配对成功是否就安全了？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1154,7 +1154,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：根据硬件条件采用经过评审的 OOB、设备二维码/身份材料或厂商认证流程，明确用户在物理设备上的确认动作与密钥生命周期，不自创简易加密算法。
 
-### 19.10、C/C++、OC、Swift 如何分工？
+### 19.10、C/C++、OC、Swift 如何分工？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1166,7 +1166,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：只有明确维持原对象和缓冲有效期、且访问符合并发约定时才可能成立。默认应复制或转移到自己拥有的缓冲，不保存短期借用指针。
 
-### 19.11、如何保证三天历史数据同步不重不漏？
+### 19.11、如何保证三天历史数据同步不重不漏？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1178,7 +1178,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：设备可重发；手机依靠稳定去重键重复确认已存记录。协议设计要允许重复传输，最终做到业务层不重复落账。
 
-### 19.12、OTA 怎么设计才可靠？
+### 19.12、OTA 怎么设计才可靠？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1190,7 +1190,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：如果 100% 只代表字节传完，就不能。至少要完成设备校验/切换，并重连核对实际运行版本或协议定义的最终结果。
 
-### 19.13、Actor 与串行队列怎么选？
+### 19.13、Actor 与串行队列怎么选？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1202,7 +1202,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：只对所有相关读写都走该队列的状态成立。旁路访问、取消/超时回调和跨队列引用都可能打破保证。
 
-### 19.14、现场发现设备偶发连不上，你怎么排查？
+### 19.14、现场发现设备偶发连不上，你怎么排查？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1214,7 +1214,7 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 答：不会，那会掩盖永久错误、耗电并拖慢用户退出。先分类错误，再设置退避、上限和用户可见的恢复入口。
 
-### 19.15、没有正式蓝牙项目经验，面试怎么诚实表达？
+### 19.15、没有正式蓝牙项目经验，面试怎么诚实表达？ <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **核心回答：**
 
@@ -1233,16 +1233,16 @@ t=123.601 session=S7 request=R42 dir=rx opcode=90 bytes=12 result=business_ok
 
 </details>
 
-## 二十、与 Jobs 现有工程衔接，以及学习计划
+## 二十、与 Jobs 现有工程衔接，以及学习计划 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 20.1、参照过的现有文档
+### 20.1、参照过的现有文档 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Swift：`JobsBaseConfig@JobsSwiftBaseConfigDemo/SwiftDoc.md/Swift相关经验.md/Swift相关经验.md`。
 - OC：`JobsBaseConfig@JobsOCBaseConfigDemo/OCDoc.md/OC相关经验.md/OC相关经验.md`。
 
 以上路径以用户提供的 `JobsBaseConfig` 目录为基准。参照重点是概念对比、原理、代码、边界说明，不改动原文。尤其沿用已有“原生最小代码用于理解系统差异，生产仍走 Jobs 封装”的教学分界。
 
-### 20.2、现有 JobsBluetooth 能直接帮你学习什么
+### 20.2、现有 JobsBluetooth 能直接帮你学习什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Swift 工程已有 `JobsByPods/JobsBluetooth@Pods`，其中 `JobsBluetoothProfile`、`JobsBluetoothCommand`、`JobsBluetoothManager`、`JobsBluetoothMockTransport` 分别体现设备配置、命令描述、平台连接与模拟输入。OC 老工程在 `OCBaseConfig/JobsMixFunc/JobsBluetooth` 中有对应能力；两侧都有 `Demo@JobsBluetooth`。
 
@@ -1271,7 +1271,7 @@ let manager = JobsBluetoothManager(profile: profile, mockTransport: mock)
 
 OC 侧已核对 `byServiceUUIDStrings`、`byWriteUUIDString`、`byNotifyUUIDString`、`startScan()`、`connectIdentifier(uuid)`、`setNotifyEnabled(YES)` 等入口。实际接入按工程聚合头、工厂与 Block 体系，不臆造 Swift 和 OC 完全相同的构造器。
 
-### 20.3、不要把已有声明当作生产实现
+### 20.3、不要把已有声明当作生产实现 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 2026-08-30 对 **Swift 版当前源码** 的核对结果：
 
@@ -1286,7 +1286,7 @@ OC 侧已核对 `byServiceUUIDStrings`、`byWriteUUIDString`、`byNotifyUUIDStri
 
 这些是用于学习与规划生产改造的边界说明，**本手册没有修改现有组件，也没有把 Swift 的实现细节未经检查套到 OC 实现上**。生产加固应作为单独任务，在实际协议明确后同步处理源码、公开入口、Demo、README 和受影响工程。
 
-### 20.4、五阶段学习练习
+### 20.4、五阶段学习练习 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 阶段 | 动手任务 | 你应该能解释 |
 | --- | --- | --- |
@@ -1298,9 +1298,9 @@ OC 侧已核对 `byServiceUUIDStrings`、`byWriteUUIDString`、`byNotifyUUIDStri
 
 不要强行承诺“五天精通”。每阶段以能解释、能运行、能复现故障为完成标准。
 
-## 二十一、Demo 目录、运行命令与验证声明
+## 二十一、Demo 目录、运行命令与验证声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 21.1、交付目录
+### 21.1、交付目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 README.md
@@ -1325,7 +1325,7 @@ Demo/
 
 没有额外下载依赖，没有修改 Podfile，没有新建宿主 `.xcodeproj`。真机实验需要按第九、十章把对应文件加入临时 App。源码文件彼此用途明确，不要把测试程序与 App 混入同一个 target。
 
-### 21.2、在 macOS 上重跑自动验证
+### 21.2、在 macOS 上重跑自动验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先在终端进入本 `README.md` 所在目录。需要已安装并选中完整 Xcode；只运行本地编译和测试，不触发设备蓝牙，不申请签名，不下载固件：
 
@@ -1335,7 +1335,7 @@ make -C ./Demo test typecheck BUILD_DIR="$(mktemp -d /tmp/jobs-bluetooth-learnin
 
 测试产物写入新建的系统临时目录，Makefile 不提供删除用户文件的清理目标。需要保留结果时记下终端打印的目录路径。
 
-### 21.3、已验证与未验证
+### 21.3、已验证与未验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 验证环境：Apple Swift 6.3.3、iPhoneOS 26.5 SDK、arm64 macOS。iOS 源码以 `arm64-apple-ios17.0` 做类型/语法检查；这是最低目标设置，不等于已在 iOS 17 真机执行。
 
@@ -1349,13 +1349,13 @@ make -C ./Demo test typecheck BUILD_DIR="$(mktemp -d /tmp/jobs-bluetooth-learnin
 
 **未执行：** 两台真机无线联调、实际穿戴设备测试、运行时线程检查、后台恢复、射频/功耗、OTA、厂商认证、完整 App 构建与上架。没有把这些项目写成“已通过”。
 
-### 21.4、面向真实产品的完成定义
+### 21.4、面向真实产品的完成定义 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 至少同时满足：协议经双方确认、测试数据可复现、真实设备最小往返成立、异常与取消可控、权限/后台行为明确、数据完整性和安全方案经过验证、机型/固件兼容清单齐全。否则只能称为阶段性 Demo 或技术验证。
 
-## 二十二、官方资料与继续阅读
+## 二十二、官方资料与继续阅读 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 22.1、Apple 平台
+### 22.1、Apple 平台 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [Core Bluetooth 总览及当前平台说明](https://developer.apple.com/documentation/corebluetooth)：公开对象模型与新系统说明。
 - [Central 常见任务](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/PerformingCommonCentralRoleTasks/PerformingCommonCentralRoleTasks.html)：扫描、连接、发现、读写；旧指南配合当前 SDK 使用。
@@ -1368,7 +1368,7 @@ make -C ./Demo test typecheck BUILD_DIR="$(mktemp -d /tmp/jobs-bluetooth-learnin
 - [Apple 配件开发](https://developer.apple.com/accessories/) 与 [MFi FAQ](https://mfi.apple.com/en/faqs)：技术与项目边界。
 - [ANCS 规范](https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleNotificationCenterServiceSpecification/Introduction/Introduction.html) 与 [AMS 规范](https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleMediaService_Reference/Introduction/Introduction.html)：通知、媒体控制相关服务。
 
-### 22.2、协议与跨语言
+### 22.2、协议与跨语言 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [Bluetooth LE Primer](https://www.bluetooth.com/bluetooth-resources/the-bluetooth-low-energy-primer/)：第一遍理解协议栈。
 - [Bluetooth Core Specification 6.2](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/index-en.html)：本文基础层次引用入口，不代表声称它是最新版本。
@@ -1378,7 +1378,7 @@ make -C ./Demo test typecheck BUILD_DIR="$(mktemp -d /tmp/jobs-bluetooth-learnin
 - [Swift 与 C++ 混编](https://www.swift.org/documentation/cxx-interop/)：避免沿用过时的跨语言结论。
 - [Swift C/C++ 安全互操作](https://www.swift.org/documentation/cxx-interop/safe-interop/)：指针、所有权与安全边界。
 
-### 22.3、设备与物联网生态
+### 22.3、设备与物联网生态 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - [nRF Connect for Mobile](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile)：设备观察与联调工具。
 - [Zephyr 标准心率外设](https://docs.zephyrproject.org/latest/samples/bluetooth/peripheral_hr/README.html)：固件端服务示例。

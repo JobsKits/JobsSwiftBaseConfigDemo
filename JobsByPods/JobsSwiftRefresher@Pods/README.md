@@ -1,6 +1,6 @@
-# `JobsSwiftRefresher`
+# <span id="前言">`JobsSwiftRefresher`</span>
 
-## JobsFuseAnimation 插件热插拔
+## JobsFuseAnimation 插件热插拔 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `JobsSwiftRefresher` 只持有状态机和动画槽位；具体表现由 `JobsFuseAnimation` 的 `JobsRefreshAnimatorProtocol` 提供。系统菊花、单图、多图定时轮播、GIF、Lottie、今日头条和抖音都是同级插件。配置阶段可以直接注入，挂载后也可以原位替换，不会重建或打断当前刷新状态。
 
@@ -26,7 +26,7 @@ scrollView.byReplaceRefreshAnimator(
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
-## 一、简介
+## 一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 开发动机 ➤ 逐步舍弃[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)
   * 年久失修，不更新维护
@@ -45,9 +45,9 @@ scrollView.byReplaceRefreshAnimator(
     * 播放声音 ➤ 支持**文件全名**和**主文件名**
     * 支持 ScrollView 全局配置，也支持 Header / Footer / Left / Right 独立配置
 
-## 二、使用方式
+## 二、使用方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、`UITableView`（演示垂直）
+### 1、`UITableView`（演示垂直） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var tableView: UITableView = {
@@ -102,7 +102,7 @@ private lazy var tableView: UITableView = {
 }()
 ```
 
-### 2、`UICollectionView`（演示水平）collectionView
+### 2、`UICollectionView`（演示水平）collectionView <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 private lazy var collectionView: UICollectionView = {
@@ -158,18 +158,18 @@ private lazy var collectionView: UICollectionView = {
 }()
 ```
 
-## 三、未尽事宜
+## 三、未尽事宜 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 需要支持阿拉伯方式，即：
   * 从左到右拉 ➤ 拉新
   * 从右往左拉 ➤ 刷新
 
-## 四、其他
+## 四、其他 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 附：[⏬ **Lottie** 动画文件下载](https://lottiefiles.com/)
 * [演示**Demo**](https://github.com/JobsKits/JobsSwiftBaseConfigDemo)
 
-## 五、特别鸣谢
+## 五、特别鸣谢 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**MJRefresh**](https://github.com/CoderMJLee/MJRefresh) ➤ 关键词：纵向刷新、**Objc**
 * [**XZMRefresh**](https://github.com/xiezhongmin/XZMRefresh) ➤ 关键词：横向刷新、参考[**MJRefresh**](https://github.com/CoderMJLee/MJRefresh)、**Objc**
@@ -177,21 +177,21 @@ private lazy var collectionView: UICollectionView = {
 * [**DGElasticPullToRefresh**](https://github.com/gontovnik/DGElasticPullToRefresh) ➤ **Swift**
 * [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) ➤ **Swift**
 
-## Jobs DSL 调用约定
+## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 六、架构脉络与关键设计
+## 六、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 6.1、设计目的与职责划分
+### 6.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 通过 UIScrollView 扩展挂接代理，在上、下、左、右槽位追踪滚动距离与刷新状态。组件定义状态和表现接口，Proxy 管理阈值、占位 inset 和业务动作，动画容器只适配 JobsFuseAnimation。
 
-### 6.2、运行脉络
+### 6.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 挂载槽位 → 观察滚动 → 下拉进度到达就绪 → 释放触发刷新 → 宿主结束或报错 → 恢复 inset 与表现
 
@@ -211,7 +211,7 @@ flowchart TD
     D -.-> I["动画插件消费当前阶段"]
 ```
 
-### 6.3、关键设计与边界
+### 6.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - idle、pulling、ready、refreshing、ending、failed、disabled、noMore、removed 是不同状态，不能只有开始和停止两个布尔值。
 - 刷新占用的 inset 必须在结束、禁用或移除时正确恢复，不能覆盖宿主原有边距。
@@ -219,7 +219,7 @@ flowchart TD
 - 动画结束不代表请求结束；业务需要显式回报结束、失败或没有更多数据。
 - Lottie、GIF 等扩展依赖可能来自可选 subspec，应按使用范围接入。
 
-### 6.4、阅读与重建顺序
+### 6.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 Enums 与 UIScrollView 入口，再看 Proxy 的观察、状态和 inset，最后读 Component 与 AnimatorContainerView。
 
@@ -232,3 +232,5 @@ flowchart TD
 - [JobsRefreshEnums.swift](<./JobsRefreshEnums.swift>)
 
 依赖与编译入口：[JobsSwiftRefresher.podspec](<./JobsSwiftRefresher.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftBlock`、`JobsSwiftDSL`、`JobsFuseAnimation`、`lottie-ios`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

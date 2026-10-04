@@ -23,9 +23,9 @@
 | 处理异步与共享状态 | <a href="#Task" style="color:red;font-weight:bold;"><font color="red"><b>Task</b></font></a>、<a href="#Actor" style="color:red;font-weight:bold;">Actor</a>、<a href="#Combine" style="color:red;font-weight:bold;"><font color="red"><b>Combine</b></font></a> |
 | 排查生产问题 | <a href="#内存" style="color:red;font-weight:bold;">内存</a>、<a href="#网络请求" style="color:red;font-weight:bold;">网络与 JSON</a>、<a href="#计时" style="color:red;font-weight:bold;">计时</a> |
 
-## 一、<font id="语法">语法：先读懂声明</font>
+## 一、<font id="语法">语法：先读懂声明</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="关键字">关键字与符号速查</font>
+### 1、<font id="关键字">关键字与符号速查</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 写法 | 含义 |
 | --- | --- |
@@ -45,7 +45,7 @@
 
 代码围栏保持原生语法高亮；正文中的关键字使用红色加粗，跨章节概念通过固定 ID 跳转。
 
-### 2、<font id="可选值">可选值：有值或无值</font>
+### 2、<font id="可选值">可选值：有值或无值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `Int?` 是 `Optional<Int>` 的简写；本质是枚举，包含 <font color="red"><b><code>.some(值)</code></b></font> 和 `.none`。<font color="red"><b><code>nil</code></b></font> 表示无值，不等于 `0`、空字符串或 `NSNull`。
 
@@ -66,7 +66,7 @@ if let number {                     // 只在这个分支内使用解包后的�
 
 可选链 `object?.method()` 在对象为空时跳过调用；强制解包 `value!` 要有可证明的不为空前提。外部输入、网络字段和用户数据使用安全解包。
 
-### 3、<font id="where"><font color="red"><b>where</b></font>：追加条件</font>
+### 3、<font id="where"><font color="red"><b>where</b></font>：追加条件</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 运行时用在循环或模式匹配；编译期用在泛型约束。两者不能混为一类检查。
 
@@ -90,7 +90,7 @@ func equal<T>(_ lhs: T, _ rhs: T) -> Bool where T: Equatable {
 }
 ```
 
-### 4、<font id="访问控制">访问控制：限制使用范围</font>（6）
+### 4、<font id="访问控制">访问控制：限制使用范围</font>（6） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 关键字 | 范围 |
 | --- | --- |
@@ -105,9 +105,9 @@ func equal<T>(_ lhs: T, _ rhs: T) -> Bool where T: Equatable {
 
 <a href="#FAQ-访问控制" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font></a>
 
-## 二、<font id="类型">类型：先选值还是引用</font>
+## 二、<font id="类型">类型：先选值还是引用</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="值与引用">结构体、类与枚举</font>
+### 1、<font id="值与引用">结构体、类与枚举</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **值类型表达内容；引用类型表达共同持有的实例。** 选择语义，再测性能。
 
@@ -160,7 +160,7 @@ enum HTTPMethod: String {
 
 模型、参数、快照优先使用结构体；需要身份、继承、共享生命周期时使用类；需要共享可变状态隔离时评估 <a href="#Actor" style="color:red;font-weight:bold;">Actor</a>。非可复制类型 `~Copyable` 有单独的所有权与析构规则，不套用普通结构体的复制结论。
 
-### 2、<font id="元组">元组：临时组合多个值</font>
+### 2、<font id="元组">元组：临时组合多个值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func measure(_ text: String) -> (count: Int, isEmpty: Bool) {
@@ -174,7 +174,7 @@ print(result.isEmpty) // false
 
 一次性返回多个值使用元组；跨多处复用、需要方法或协议遵循时定义结构体。元组比较受元素能力与工具链支持约束；不能仅因两个元组形状相同就认定支持所有比较协议。
 
-### 3、<font id="static-final"><font color="red"><b>static</b></font> 与 <font color="red"><b>final</b></font></font>
+### 3、<font id="static-final"><font color="red"><b>static</b></font> 与 <font color="red"><b>final</b></font></font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <font color="red"><b><code>static</code></b></font> 表示成员属于类型；<font color="red"><b><code>final</code></b></font> 禁止类继承或类成员重写；类中可重写的类型方法使用 <font color="red"><b><code>class func</code></b></font>。
 
@@ -198,7 +198,7 @@ final class CSVFormatter: Formatter {  // 禁止继续继承这个类。
 
 这些声明不等于指定栈、堆或常量池位置。
 
-### 4、<font id="Any-AnyObject"><font color="red"><b>Any</b></font> 与 <font color="red"><b>AnyObject</b></font></font>
+### 4、<font id="Any-AnyObject"><font color="red"><b>Any</b></font> 与 <font color="red"><b>AnyObject</b></font></font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <font color="red"><b><code>Any</code></b></font> 可保存任意类型的值；<font color="red"><b><code>AnyObject</code></b></font> 限定类实例。两者都不承诺具体成员，需要已知能力时优先使用具体类型、泛型或协议。
 
@@ -219,7 +219,7 @@ let stored: Any = optional as Any    // 明确保存 Optional，而非先解包�
 
 所有类满足 <font color="red"><b>AnyObject</b></font>；协议继承 <font color="red"><b>AnyObject</b></font> 后可用于弱引用。值类型桥接或装箱后成为对象表示，不代表原类型能遵循类专属协议。
 
-### 5、<font id="OC互操作">Objective-C 互操作</font>
+### 5、<font id="OC互操作">Objective-C 互操作</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 中的结构体是 C 聚合值；不能像 Swift 结构体一样声明方法、泛型或协议遵循。`CGPoint` 等 C 结构体可被 Swift 导入；任意自定义 Swift 结构体不能直接变成 <font color="red"><b><code>@objc</code></b></font> 对象。
 
@@ -227,9 +227,9 @@ let stored: Any = optional as Any    // 明确保存 Optional，而非先解包�
 
 <a href="#FAQ-值类型" style="color:red;font-weight:bold;">FAQ：值类型与引用类型</a>
 
-## 三、<font id="内存">内存：区分语义、布局与生命周期</font>
+## 三、<font id="内存">内存：区分语义、布局与生命周期</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="内存区域">内存区域与执行上下文</font>
+### 1、<font id="内存区域">内存区域与执行上下文</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 区域 | 用途 |
 | --- | --- |
@@ -242,7 +242,7 @@ let stored: Any = optional as Any    // 明确保存 Optional，而非先解包�
 
 **上下文＝继续执行所需的信息。** 同步调用可能涉及参数、局部状态、返回地址和寄存器；闭包捕获的数据可比原函数活得更久；异步任务在挂起后仍需保存恢复位置与局部状态。
 
-### 2、<font id="字节对齐">字节对齐：起始地址满足倍数要求</font>
+### 2、<font id="字节对齐">字节对齐：起始地址满足倍数要求</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 对齐值为 `4`，起始地址需满足 `4` 的倍数。编译器为此可能在成员之间或末尾填充字节。
 
@@ -259,7 +259,7 @@ print(MemoryLayout<Packet>.stride)    // 常见结果 8：连续存放时相邻�
 
 `size` 不含末尾为了下一个元素补齐的字节；`stride` 包含尾部补齐。以上数值只代表对应构建的结果。`MemoryLayout` 不递归统计字符串缓冲区或引用指向对象的总内存，普通 Swift 布局也不自动成为 C ABI 合同。
 
-### 3、<font id="COW">Copy-on-Write：共享到写入前</font>
+### 3、<font id="COW">Copy-on-Write：共享到写入前</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 标准库 `Array`、`Dictionary`、`String` 等值类型可共享底层存储；写入时若需要保持其他值不变，再分离存储。自定义结构体不会仅因使用了 <font color="red"><b><code>struct</code></b></font> 就自动实现所有引用字段的深拷贝。
 
@@ -278,7 +278,7 @@ print(list[0].count)    // 9；数组复制不等于元素对象深拷贝。
 
 **COW** 不保护多个任务对同一个数组变量的并发写入。跨域传递仍按 <a href="#Sendable" style="color:red;font-weight:bold;"><font color="red"><b>Sendable</b></font></a> 与隔离规则处理。
 
-### 4、<font id="ARC">ARC：管理强引用，不自动打破环</font>
+### 4、<font id="ARC">ARC：管理强引用，不自动打破环</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 强引用保留对象；<font color="red"><b><code>weak</code></b></font> 不保留对象，对象释放后变成 <font color="red"><b><code>nil</code></b></font>；<font color="red"><b><code>unowned</code></b></font> 不保留对象，访问时要求对象仍存活，否则可能崩溃。
 
@@ -299,9 +299,9 @@ final class EventOwner {
 
 <a href="#FAQ-内存" style="color:red;font-weight:bold;">FAQ：布局与存储位置</a> · <a href="#FAQ-COW" style="color:red;font-weight:bold;">FAQ：COW 与深拷贝</a> · <a href="#FAQ-ARC" style="color:red;font-weight:bold;">FAQ：闭包循环引用</a>
 
-## 四、<font id="闭包">函数与闭包：把行为作为值传递</font>
+## 四、<font id="闭包">函数与闭包：把行为作为值传递</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="函数类型">函数类型与闭包简写</font>
+### 1、<font id="函数类型">函数类型与闭包简写</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **闭包＝可携带上下文的代码块。** 可以保存、传参或返回；和 Objective-C Block 用途相近，不是标准 C 的普通函数指针。
 
@@ -328,7 +328,7 @@ let short: (Int) -> String = { "值：\($0)" }
 | `void (^)(NSString *)` | `(String) -> Void` |
 | `int (^)(int, int)` | `(Int, Int) -> Int` |
 
-### 2、<font id="尾随闭包">尾随闭包：把末尾闭包放到括号外</font>
+### 2、<font id="尾随闭包">尾随闭包：把末尾闭包放到括号外</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func transformAndSort<T>(
@@ -351,7 +351,7 @@ let doubled = [1, 2].map { $0 * 2 } // 最后一个闭包参数的尾随写法�
 
 多个尾随闭包中，第一个可省标签，后续闭包保留标签。可读性优先于省字符数量。
 
-### 3、<font id="逃逸与捕获">逃逸与捕获</font>
+### 3、<font id="逃逸与捕获">逃逸与捕获</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <font color="red"><b><code>@escaping</code></b></font> 表示闭包参数可能在函数返回后继续存在；不等于异步、后台执行或一定发生循环引用。普通非可选闭包参数默认非逃逸。
 
@@ -384,7 +384,7 @@ print(counter()) // 2
 
 `[value]` 显式按捕获时的值建立绑定；捕获的值若是类引用，仍指向同一对象。Swift 修改捕获变量不需要 Objective-C 的 `__block`；OC Block 修改外部局部标量时通常需要 `__block`。
 
-### 4、<font id="自动闭包">autoclosure：把表达式延后求值</font>
+### 4、<font id="自动闭包">autoclosure：把表达式延后求值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func log(_ enabled: Bool, message: @autoclosure () -> String) {
@@ -397,7 +397,7 @@ log(false, message: "结果：\(Array(1...3))") // 不生成 message 字符串�
 
 用于短路、断言、轻量日志；不隐藏网络和磁盘副作用。<font color="red"><b><code>@autoclosure</code></b></font> 与 <font color="red"><b><code>@escaping</code></b></font> 是不同维度。
 
-### 5、<font id="mutating-inout"><font color="red"><b>mutating</b></font> 改自身，<font color="red"><b>inout</b></font> 改传入变量</font>
+### 5、<font id="mutating-inout"><font color="red"><b>mutating</b></font> 改自身，<font color="red"><b>inout</b></font> 改传入变量</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 struct Counter {
@@ -422,9 +422,9 @@ print(counter.value)           // 2
 
 <a href="#FAQ-闭包" style="color:red;font-weight:bold;">FAQ：逃逸、捕获与简写</a> · <a href="#FAQ-mutating" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>mutating</b></font> 与 <font color="red"><b>inout</b></font></a>
 
-## 五、<font id="集合">集合：变换、筛选与展开</font>
+## 五、<font id="集合">集合：变换、筛选与展开</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="数组">数组、集合与字符串</font>
+### 1、<font id="数组">数组、集合与字符串</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `Array` 有序且可重复；`Set` 去重但不保证遍历顺序；`Dictionary` 按键取值。`[Int?]` 可以保存 <font color="red"><b><code>nil</code></b></font>，Objective-C 数组需使用 `NSNull` 等对象占位。
 
@@ -442,7 +442,7 @@ let characters = Array(text)      // [Character]，不是 UTF-8 字节数组。
 
 数组下标越界会崩溃；优先用 `first`、`last` 或验证索引。`ArraySlice` 保留原索引并可能持有原缓冲区；长期保存小切片时评估转换为独立数组。大量先进先出操作不要反复 `removeFirst()` 搬移元素。
 
-### 2、<font id="map">map：逐个转换，保留数量</font>
+### 2、<font id="map">map：逐个转换，保留数量</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let numbers = [1, 2, 3]
@@ -459,7 +459,7 @@ let selected = numbers.filter { $0 > 1 }   // [2, 3]；筛选，元素类型不�
 
 `compactMap` 只去掉转换得到的 <font color="red"><b><code>nil</code></b></font>，不会自动删掉 `0` 或空字符串。
 
-### 3、<font id="joined">joined：连接字符串，或展开一层序列</font>
+### 3、<font id="joined">joined：连接字符串，或展开一层序列</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let names = ["Jobs", "Swift"]
@@ -479,7 +479,7 @@ print(expanded)                           // [10, 20, 30, 40, 50]
 
 嵌套序列的 `joined()` 返回扁平化序列视图；字符串序列的连接重载返回字符串。`flatMap` 是“转换后展开一层”，不是递归展开所有层级。
 
-### 4、<font id="集合链">组合处理：保留每一步的类型</font>
+### 4、<font id="集合链">组合处理：保留每一步的类型</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let inputs: [String?] = ["hello world", nil, "swift is fun", "", "  "]
@@ -502,7 +502,7 @@ print(counts["swift", default: 0])         // 1
 
 只执行副作用时用循环或 `forEach`；需要结果才用 `map`。`forEach` 内的 <font color="red"><b><code>return</code></b></font> 只结束当前闭包调用；需要 <font color="red"><b><code>break</code></b></font>、<font color="red"><b><code>continue</code></b></font> 或跨步骤控制时用 <font color="red"><b><code>for</code></b></font>。惰性链用 <font color="red"><b><code>.lazy</code></b></font> 可推迟计算，但最终收益需测量。
 
-### 5、<font id="同步序列">同步序列：每次计算下一个值</font>
+### 5、<font id="同步序列">同步序列：每次计算下一个值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Swift 普通函数没有 Dart 风格的 `sync**` / <font color="red"><b><code>async**</code></b></font> 生成器语法。用 `Sequence` / `IteratorProtocol` 或 `sequence(state:next:)` 逐项产生值。
 
@@ -519,9 +519,9 @@ print(Array(evens))                        // [0, 2, 4, 6]
 
 <a href="#FAQ-map" style="color:red;font-weight:bold;">FAQ：map / compactMap / flatMap</a> · <a href="#FAQ-joined" style="color:red;font-weight:bold;">FAQ：joined 返回类型</a>
 
-## 六、<font id="泛型">泛型与协议：表达类型关系</font>
+## 六、<font id="泛型">泛型与协议：表达类型关系</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="类型参数化">泛型：类型参数化</font>
+### 1、<font id="类型参数化">泛型：类型参数化</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 把具体类型换成参数 `T`，同一份逻辑便能处理多种类型；重复出现的 `T` 表示同一个类型关系。
 
@@ -549,7 +549,7 @@ print(same(1, 1)) // true；Int 与 String 不能在这里同时充当同一个 
 
 泛型函数体只使用约束保证的能力；调用方知道 T 是具体类型，不表示函数体能无条件访问该类型独有的属性。
 
-### 2、<font id="协议">协议：能力清单</font>
+### 2、<font id="协议">协议：能力清单</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 <font color="red"><b><code>protocol</code></b></font> 列出必须提供的入口；具体类型实现入口；调用方只依赖清单。编译器检查声明的遵循关系，不根据“碰巧有同名方法”自动认定遵循。
 
@@ -590,7 +590,7 @@ notify(using: SMSChannel())             // 模拟发送，只打印，不联网�
 
 协议本体不分配存储，也不实现计算属性；它声明 getter / setter 要求。实现体写在具体类型或协议扩展中。
 
-### 3、<font id="关联类型"><font color="red"><b>associatedtype</b></font>：协议中的类型占位</font>
+### 3、<font id="关联类型"><font color="red"><b>associatedtype</b></font>：协议中的类型占位</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 泛型由使用处确定类型参数；关联类型由遵循者确定。**同一个遵循关系里的同名关联类型必须一致。**
 
@@ -623,7 +623,7 @@ print(store.load())                                // Jobs
 
 <a href="#FAQ-关联类型" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-### 4、<font id="some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型</font>
+### 4、<font id="some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 写法 | 类型由谁确定 | 适用场景 |
 | --- | --- | --- |
@@ -665,7 +665,7 @@ if let sms = current as? SMSChannel {
 
 存在类型容器可能内联保存小值，也可能间接存储大值；不保证每次都分配堆对象。泛型也不保证永远静态派发或零分配，性能依据真实热点测量。
 
-### 5、<font id="协议扩展">协议扩展、组合与条件遵循</font>
+### 5、<font id="协议扩展">协议扩展、组合与条件遵循</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 protocol Describable {
@@ -695,7 +695,7 @@ print(Box(value: 1) == Box(value: 1))               // true
 
 <font color="red"><b><code>protocol Downloadable: Named, Cancellable</code></b></font> 声明继承多份能力清单；`T: Named & Cancellable` 在当前使用处组合约束。协议继承不继承存储。
 
-### 6、<font id="代理协议">代理与隔离边界</font>
+### 6、<font id="代理协议">代理与隔离边界</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 protocol DownloadDelegate: AnyObject {  // 限制为引用类型，才能使用 weak。
@@ -722,9 +722,9 @@ Actor 的可变状态不能随意满足同步非隔离读取要求；应设计�
 
 <a href="#FAQ-泛型" style="color:red;font-weight:bold;">FAQ：泛型</a> · <a href="#FAQ-协议" style="color:red;font-weight:bold;">FAQ：协议</a> · <a href="#FAQ-some-any" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>some</b></font> 与 <font color="red"><b>any</b></font></a> · <a href="#FAQ-协议派发" style="color:red;font-weight:bold;">FAQ：默认实现派发</a>
 
-## 七、<font id="属性与初始化">属性、初始化与扩展</font>
+## 七、<font id="属性与初始化">属性、初始化与扩展</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="属性">属性：存储、计算与观察</font>
+### 1、<font id="属性">属性：存储、计算与观察</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 形式 | 职责 | 边界 |
 | --- | --- | --- |
@@ -742,7 +742,7 @@ struct Rectangle {
 }
 ```
 
-### 2、<font id="属性包装器">属性包装器：复用属性读写逻辑</font>
+### 2、<font id="属性包装器">属性包装器：复用属性读写逻辑</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `wrappedValue` 是外部读写的值；`projectedValue` 是包装器额外提供的能力，通过 `$属性名` 访问；`_属性名` 是合成的底层包装器存储，通常只在类型内部使用。
 
@@ -776,7 +776,7 @@ print(volume.$value)               // 0...100：读取 projectedValue。
 
 属性包装器不等于 Objective-C 关联对象；它使用编译器合成的存储与访问入口。<font color="red"><b><code>@MainActor</code></b></font> 是隔离标记，<font color="red"><b><code>@Observable</code></b></font> 是宏，不能把所有 `@` 都叫包装器。
 
-### 3、<font id="初始化">初始化：建立可用实例</font>
+### 3、<font id="初始化">初始化：建立可用实例</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 类可以有多个指定初始化器；每条路径都必须完成自身存储属性初始化，并在需要时调用父类指定初始化器，不要求所有路径最终汇入同一个指定初始化器。
 
@@ -819,7 +819,7 @@ print(PositiveNumber(-1) == nil)      // true
 
 非可选存储必须先有值，实例才能进入正常使用阶段。<font color="red"><b><code>convenience</code></b></font> 仅用于类；结构体与枚举没有父类初始化链。结构体在主声明中新增自定义初始化器可能失去自动成员初始化器；放到扩展中可保留符合条件的自动入口。
 
-### 4、<font id="extension"><font color="red"><b>extension</b></font>：补能力，不补实例存储</font>
+### 4、<font id="extension"><font color="red"><b>extension</b></font>：补能力，不补实例存储</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 struct Score { let value: Int }
@@ -838,7 +838,7 @@ print(Score(value: 60).passed)    // true；原自动成员初始化器仍在。
 
 扩展可添加方法、计算属性、下标、嵌套类型和协议遵循；不能增加实例存储属性或随意重写已有实现。类扩展可添加便捷初始化器，不添加指定初始化器。不要重声明标准库已有签名，再从内部调用同名初始化器造成递归。
 
-### 5、<font id="单例">单例：统一入口，另管状态安全</font>
+### 5、<font id="单例">单例：统一入口，另管状态安全</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 @MainActor
@@ -853,9 +853,9 @@ final class AppSession {
 
 <a href="#FAQ-初始化" style="color:red;font-weight:bold;">FAQ：初始化委托</a> · <a href="#FAQ-包装器" style="color:red;font-weight:bold;">FAQ：包装器与宏</a> · <a href="#FAQ-扩展" style="color:red;font-weight:bold;">FAQ：扩展存储</a> · <a href="#FAQ-单例" style="color:red;font-weight:bold;">FAQ：单例线程安全</a>
 
-## 八、<font id="Task">异步与 <font color="red"><b>Task</b></font>：管理工作及生命周期</font>
+## 八、<font id="Task">异步与 <font color="red"><b>Task</b></font>：管理工作及生命周期</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="async-await"><font color="red"><b>async</b></font> 可挂起，<font color="red"><b>await</b></font> 标出等待位置</font>
+### 1、<font id="async-await"><font color="red"><b>async</b></font> 可挂起，<font color="red"><b>await</b></font> 标出等待位置</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 同步调用执行完才返回；异步调用允许中途挂起。并发是交错推进，并行是同时执行；线程是执行资源，<font color="red"><b>Task</b></font> 是运行时调度的工作单元。
 
@@ -877,7 +877,7 @@ func printName() async {
 
 <font color="red"><b><code>await</code></b></font> 不保证每次都挂起，也不保证切线程；<font color="red"><b><code>async</code></b></font> 不会自动把耗时同步代码搬离主 Actor。[**Swift 并发语义**](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) 中的挂起恢复由运行时调度，代码应依赖隔离保证。
 
-### 2、<font id="Task生命周期"><font color="red"><b>Task</b></font>：从同步入口启动异步流程</font>
+### 2、<font id="Task生命周期"><font color="red"><b>Task</b></font>：从同步入口启动异步流程</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 接上例的 `loadName()`：
 
@@ -921,7 +921,7 @@ final class NameModel {
 
 <font color="red"><b><code>Task {}</code></b></font> 是非结构化任务，通常继承创建点的 Actor、优先级和 <font color="red"><b>Task</b></font> Local；它不是父任务自动管理的结构化子任务。<font color="red"><b><code>Task.detached</code></b></font> 不继承这些上下文，只有确需独立边界时使用，并自行管理取消与结果。
 
-### 3、<font id="结构化并发">结构化并发：子任务不离开作用域</font>
+### 3、<font id="结构化并发">结构化并发：子任务不离开作用域</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 固定数量使用 <font color="red"><b><code>async let</code></b></font>；动态数量使用任务组。退出作用域前等待子任务结束；取消是请求，仍需子任务响应。
 
@@ -975,14 +975,14 @@ func loadTitles(_ ids: [Int], limit: Int = 4) async throws -> [String] {
 
 子任务抛错后，错误要经过 `next()`、异步遍历等被观察；不能概括为“任一子任务抛错就立刻停止所有任务”。错误传播出任务组作用域时会取消剩余子任务并等待退出。
 
-### 4、<font id="取消">取消与超时：主动检查，明确退出</font>
+### 4、<font id="取消">取消与超时：主动检查，明确退出</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `cancel()` 设置取消请求；<font color="red"><b><code>Task.isCancelled</code></b></font> 读取状态，<font color="red"><b><code>Task.checkCancellation()</code></b></font> 抛出取消错误。
 - 长 CPU 循环在合适粒度检查取消；使用 <font color="red"><b><code>Task.sleep</code></b></font> 等可取消等待，不用 `Thread.sleep` 阻塞并发线程。
 - 以任务组竞速实现超时时，即使超时任务先完成，组退出仍需等待另一任务；不响应取消的工作无法保证立即停止。
 - 网络超时、总业务截止时间与任务取消分开设计；处理重试时核对幂等性。
 
-### 5、<font id="Continuation">Continuation：把一次回调接成异步返回</font>
+### 5、<font id="Continuation">Continuation：把一次回调接成异步返回</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func legacyLoad(_ completion: @escaping (Result<String, Error>) -> Void) {
@@ -1000,7 +1000,7 @@ func loadWithAsync() async throws -> String {
 
 每条路径必须且只能恢复一次；遗漏会一直等待，重复恢复会触发错误。Continuation 不自动把 <font color="red"><b>Task</b></font> 取消传给旧 API；需要专门接线。多次回调用 <a href="#AsyncStream" style="color:red;font-weight:bold;">AsyncStream</a>，不反复恢复同一个 Continuation。
 
-### 6、<font id="并发迁移">旧并发 API 的迁移方向</font>
+### 6、<font id="并发迁移">旧并发 API 的迁移方向</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 旧能力 | 对应方向 |
 | --- | --- |
@@ -1015,9 +1015,9 @@ func loadWithAsync() async throws -> String {
 
 <a href="#FAQ-Task" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>Task</b></font> 与线程</a> · <a href="#FAQ-结构化" style="color:red;font-weight:bold;">FAQ：结构化任务</a> · <a href="#FAQ-取消" style="color:red;font-weight:bold;">FAQ：取消与超时</a> · <a href="#FAQ-Continuation" style="color:red;font-weight:bold;">FAQ：回调桥接</a>
 
-## 九、<font id="Actor">Actor：隔离共享可变状态</font>
+## 九、<font id="Actor">Actor：隔离共享可变状态</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="Actor入门">声明、访问与返回快照</font>
+### 1、<font id="Actor入门">声明、访问与返回快照</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **Actor＝自带隔离边界的引用类型。** 多个任务可以持有同一个 Actor；同一实例的隔离代码不会同时读写其状态。它有属性、方法、初始化器、协议和 ARC 生命周期，但不参与普通类继承。
 
@@ -1064,7 +1064,7 @@ func useLedger() async {
 
 <a href="#FAQ-Actor-await" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-### 2、<font id="Actor重入">可重入：等待期间，共享状态仍可变化</font>
+### 2、<font id="Actor重入">可重入：等待期间，共享状态仍可变化</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **Actor 保护一次连续的隔离执行片段，不自动把跨等待的完整流程变成事务。**
 
@@ -1098,7 +1098,7 @@ actor CouponStore {
 
 若业务要求先留名额，改为“检查并预留 → 等待 → 确认或补偿”；失败、取消、切账号时用请求 ID / 会话版本防止重复补偿。跨设备库存由服务端原子操作、事务和幂等控制；客户端 Actor 只管本进程内该实例。
 
-### 3、<font id="Actor去重">合并请求：先登记 <font color="red"><b>Task</b></font>，再等待结果</font>
+### 3、<font id="Actor去重">合并请求：先登记 <font color="red"><b>Task</b></font>，再等待结果</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 仅保存最终缓存不足以阻止重复请求：第一次请求等待时，第二次仍可能读到空缓存。保存正在执行的任务，让同一 key 的调用共同等待。
 
@@ -1141,7 +1141,7 @@ func useRepository() async throws {
 
 本例由仓库持有共享请求。单个等待者取消不会自动取消共享 <font color="red"><b>Task</b></font>，也不保证立即结束等待。生产接入需明确取消策略、缓存容量和失效策略；增加清空、强刷、登出功能时，加入请求 ID / 会话版本校验，防止旧请求写回缓存或清掉新任务。
 
-### 4、<font id="Sendable"><font color="red"><b>Sendable</b></font>：跨隔离域传值的安全契约</font>
+### 4、<font id="Sendable"><font color="red"><b>Sendable</b></font>：跨隔离域传值的安全契约</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **<font color="red"><b>Sendable</b></font> 承诺安全传递，不自动加锁、深拷贝或切线程。** 值类型需检查成员；普通类通常需不可变且满足更严格限制；Actor 依靠隔离保护状态。
 
@@ -1162,7 +1162,7 @@ func checkContract() {
 
 <font color="red"><b><code>@Sendable</code></b></font> 用于函数 / 闭包类型，捕获也需满足并发安全。<font color="red"><b><code>@unchecked Sendable</code></b></font> 是由实现者承担安全证明的承诺，不能用于掩盖可变类的并发读写。现代隔离分析还允许某些非 <font color="red"><b>Sendable</b></font> 值被单向转移，不代表它们可任意共享。
 
-### 5、<font id="nonisolated"><font color="red"><b>nonisolated</b></font>：不进入所属 Actor 的隔离</font>
+### 5、<font id="nonisolated"><font color="red"><b>nonisolated</b></font>：不进入所属 Actor 的隔离</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 适合固定标识、纯计算和不依赖隔离状态的同步协议实现；不能直接访问隔离可变属性。同步非隔离函数不会自动转到后台。
 
@@ -1182,7 +1182,7 @@ actor Meter {
 
 Swift 6.2+ 开启 `NonisolatedNonsendingByDefault` 后，非隔离异步函数默认保留调用方 Actor；旧配置的执行规则不同。明确要求离开调用方 Actor 执行耗时异步函数时，使用支持版本中的 <font color="red"><b><code>@concurrent</code></b></font>。这仍不承诺专属线程。[**异步函数隔离规则**](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0461-async-function-isolation.md)
 
-### 6、<font id="MainActor"><font color="red"><b>MainActor</b></font>：统一 UI 状态的隔离归属</font>
+### 6、<font id="MainActor"><font color="red"><b>MainActor</b></font>：统一 UI 状态的隔离归属</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 @MainActor
@@ -1204,7 +1204,7 @@ func refresh(_ model: ProgressModel, from ledger: DownloadLedger) async {
 
 <font color="red"><b><code>MainActor.assertIsolated()</code></b></font> 检查当前隔离，不切换执行器；调试断言不能替代正确的 API 隔离声明。
 
-### 7、<font id="Actor选型">Actor、类与锁的选型</font>
+### 7、<font id="Actor选型">Actor、类与锁的选型</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 状态与接口 | 选择 |
 | --- | --- |
@@ -1220,9 +1220,9 @@ Actor 不保证先进先出，不代表一实例一线程，也不自动提高�
 
 <a href="#FAQ-Actor边界" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-## 十、<font id="事件流">事件流：持续接收多个值</font>
+## 十、<font id="事件流">事件流：持续接收多个值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="AsyncStream">AsyncStream：把多次事件变成异步序列</font>
+### 1、<font id="AsyncStream">AsyncStream：把多次事件变成异步序列</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func consumeEvents() async {
@@ -1240,7 +1240,7 @@ func consumeEvents() async {
 
 真实回调源要在 `onTermination` 取消订阅或释放资源；无限来源必须选择缓冲上限。`yield` 不会因消费者慢而自动等待，缓冲策略可能丢值，需按需检查返回结果。可能失败的流使用 `AsyncThrowingStream`。
 
-### 2、<font id="Combine"><font color="red"><b>Combine</b></font>：订阅、变换、接收事件</font>
+### 2、<font id="Combine"><font color="red"><b>Combine</b></font>：订阅、变换、接收事件</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**Combine**](https://developer.apple.com/documentation/combine) 把事件源与处理链连接起来：Publisher 发出值或终止事件，Operator 转换，Subscriber 接收。
 
@@ -1323,7 +1323,7 @@ combineDemo()
 
 页面里的订阅集合通常是属性，结束业务时 `removeAll()` 或调用 `cancel()`。对象持有订阅、闭包再强持有对象会形成环，按生命周期使用弱捕获。
 
-### 3、<font id="Combine操作符">常用操作符与调度</font>
+### 3、<font id="Combine操作符">常用操作符与调度</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 操作 | 含义 | 使用边界 |
 | --- | --- | --- |
@@ -1360,7 +1360,7 @@ func searchTerms(from input: AnyPublisher<String, Never>) -> AnyPublisher<String
 
 <a href="#FAQ-搜索流" style="color:red;font-weight:bold;">相关 FAQ</a>
 
-### 4、<font id="Published">Published：发布属性变化</font>
+### 4、<font id="Published">Published：发布属性变化</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import Combine
@@ -1382,15 +1382,15 @@ observeQuery()
 
 <font color="red"><b><code>@Published</code></b></font> 在 <font color="red"><b><code>willSet</code></b></font> 阶段发布；订阅闭包读取参数 `newValue`，不要假设此刻再读对象属性已是新值。`ObservableObject` 和发布属性不会自动提供线程安全，UI 模型按需声明 <font color="red"><b>MainActor</b></font>。
 
-### 5、<font id="事件流选型">异步接口选型</font>
+### 5、<font id="事件流选型">异步接口选型</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 一次请求返回一次结果，用 <font color="red"><b><code>async throws</code></b></font>；连续数据按顺序处理，用 `AsyncSequence`；既有项目需要多源组合、调度和操作符链，使用 <font color="red"><b>Combine</b></font>。不要只为语法统一，在三者之间反复包装。
 
 <a href="#FAQ-流" style="color:red;font-weight:bold;">FAQ：流与一次回调</a> · <a href="#FAQ-Combine" style="color:red;font-weight:bold;">FAQ：订阅生命周期</a> · <a href="#FAQ-调度" style="color:red;font-weight:bold;">FAQ：<font color="red"><b>Combine</b></font> 调度</a> · <a href="#FAQ-Published" style="color:red;font-weight:bold;">FAQ：Published 的发送时机</a>
 
-## 十一、<font id="属性标记">属性标记、版本与编译边界</font>
+## 十一、<font id="属性标记">属性标记、版本与编译边界</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="标记分类">@ 是语法入口，不是统一机制</font>
+### 1、<font id="标记分类">@ 是语法入口，不是统一机制</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 类别 | 例子 | 作用 |
 | --- | --- | --- |
@@ -1404,7 +1404,7 @@ observeQuery()
 
 识别标记时同时确认所属语言 / 框架、作用位置和最低工具链。以下保留常见与原有低频标记的用途，不把清单当作永久封闭的语法全集。
 
-### 2、<font id="可用性">available：声明要求与运行时分支</font>
+### 2、<font id="可用性">available：声明要求与运行时分支</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 @available(iOS 17.0, *)              // 声明最低平台要求。
@@ -1424,7 +1424,7 @@ func startFeature() {
 
 <font color="red"><b><code>#if</code></b></font> 是条件编译；<font color="red"><b><code>#available</code></b></font> / <font color="red"><b><code>#unavailable</code></b></font> 是可用性条件。可用性检查不能让编译器识别一个根本不认识的新语法。<font color="red"><b><code>@available</code></b></font> 还能描述弃用、移除、重命名与 `noasync` 等限制。
 
-### 3、<font id="main">main：可执行目标的唯一入口</font>
+### 3、<font id="main">main：可执行目标的唯一入口</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 @main
@@ -1437,7 +1437,7 @@ struct ExampleApp {
 
 可执行 Target 保留一个入口；不要同时使用 `main.swift` 顶层入口和另一个 <font color="red"><b><code>@main</code></b></font>。旧 <font color="red"><b><code>@UIApplicationMain</code></b></font> / <font color="red"><b><code>@NSApplicationMain</code></b></font> 在 Swift 6 模式下不再使用，改为 <font color="red"><b><code>@main</code></b></font>。
 
-### 4、<font id="内联">内联：用函数体替代调用</font>
+### 4、<font id="内联">内联：用函数体替代调用</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 减少调用成本，也可能增加代码体积；实际是否内联由编译器决定。C 宏是预处理文本替换，函数内联是经过类型检查后的优化；宏展开后的代码同样可能被优化。
 
@@ -1459,7 +1459,7 @@ public func normalized(_ value: Int) -> Int {
 
 正确拼写是 <font color="red"><b><code>@inlinable</code></b></font>。业务 App 内不要为了“可能更快”随意扩大 ABI 承诺；<font color="red"><b><code>@frozen</code></b></font> 不等于 C 布局兼容。
 
-### 5、<font id="标记速查">其余标记速查</font>
+### 5、<font id="标记速查">其余标记速查</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 标记 | 用途与边界 |
 | --- | --- |
@@ -1494,9 +1494,9 @@ public func normalized(_ value: Int) -> Int {
 
 <a href="#FAQ-可用性" style="color:red;font-weight:bold;">FAQ：版本判断</a> · <a href="#FAQ-内联" style="color:red;font-weight:bold;">FAQ：内联与 ABI</a>
 
-## 十二、<font id="网络请求">网络与 JSON：请求、校验、解码分开</font>
+## 十二、<font id="网络请求">网络与 JSON：请求、校验、解码分开</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="URLSession">URLSession：先检查 HTTP，再解码业务</font>
+### 1、<font id="URLSession">URLSession：先检查 HTTP，再解码业务</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import Foundation
@@ -1528,7 +1528,7 @@ func fetchPost(from url: URL) async throws -> Post {
 
 异步 API 返回结果，无需 `resume()`；completion 形式的 `dataTask` 需启动任务。分别处理传输失败、HTTP 状态失败、业务失败和解码失败；认证信息由安全凭据层注入，不在示例或日志中写真实密钥。
 
-### 2、<font id="上传下载">POST、下载与上传</font>
+### 2、<font id="上传下载">POST、下载与上传</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import Foundation
@@ -1550,7 +1550,7 @@ func makeCreateRequest(url: URL, title: String) throws -> URLRequest {
 
 长后台传输使用适合的后台 URLSession 配置与系统回调恢复流程；普通 <font color="red"><b>Task</b></font> 或后台队列不授予 App 常驻后台权限。
 
-### 3、<font id="Codable">Codable：按模型编解码</font>
+### 3、<font id="Codable">Codable：按模型编解码</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `Codable = Encodable & Decodable`。只读响应用 `Decodable`，只发请求用 `Encodable`；需要双向转换再用组合协议。
 
@@ -1585,7 +1585,7 @@ print(article.subtitle as Any)       // nil
 
 自动合成解码器不会把普通存储属性的默认值一概当作缺字段兜底。需要默认值时在自定义解码中写明；日期、snake_case 和数字字符串按服务端契约显式配置，不用 <font color="red"><b><code>try?</code></b></font> 把协议错误全部吞成空值。
 
-### 4、<font id="网络库">第三方网络与映射库的职责</font>
+### 4、<font id="网络库">第三方网络与映射库的职责</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 方案 | 负责什么 | 接入重点 |
 | --- | --- | --- |
@@ -1599,9 +1599,9 @@ print(article.subtitle as Any)       // nil
 
 <a href="#FAQ-网络" style="color:red;font-weight:bold;">FAQ：网络成功与 HTTP 成功</a> · <a href="#FAQ-解码" style="color:red;font-weight:bold;">FAQ：解码默认值</a>
 
-## 十三、<font id="基础设施">基础设施：网络分层、数据结构与锁</font>
+## 十三、<font id="基础设施">基础设施：网络分层、数据结构与锁</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="网络分层">网络分层（7）：定位故障所在范围</font>
+### 1、<font id="网络分层">网络分层（7）：定位故障所在范围</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | OSI 层 | 职责 | 常见对象 |
 | --- | --- | --- |
@@ -1617,7 +1617,7 @@ TCP/IP 常合并为应用、传输、网际、链路四层；OSI 是参考模型
 
 排查按“域名解析 → 建连 → TLS → HTTP 状态 → 业务响应 → 解码”逐步定位，避免把所有失败都记录成“网络错误”。
 
-### 2、<font id="数据结构">数据结构（13）：按访问方式选</font>
+### 2、<font id="数据结构">数据结构（13）：按访问方式选</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 结构 | 核心特征 | 常见用途与边界 |
 | --- | --- | --- |
@@ -1637,7 +1637,7 @@ TCP/IP 常合并为应用、传输、网际、链路四层；OSI 是参考模型
 
 链表头节点可以直接保存数据；哨兵节点是可选设计。单向、双向链表都可有意构成环。快慢指针可检测链表环，比较节点身份，不比较节点内容。
 
-### 3、<font id="锁">锁（6）：保护完整临界区</font>
+### 3、<font id="锁">锁（6）：保护完整临界区</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 机制 | 行为 | 注意点 |
 | --- | --- | --- |
@@ -1673,9 +1673,9 @@ final class LockedCounter: @unchecked Sendable {
 
 <a href="#FAQ-锁" style="color:red;font-weight:bold;">FAQ：Actor 与锁</a> · <a href="#FAQ-数据结构" style="color:red;font-weight:bold;">FAQ：结构选型</a> · <a href="#FAQ-网络分层" style="color:red;font-weight:bold;">FAQ：网络分层</a>
 
-## 十四、<font id="计时">计时：唤醒刷新，不充当时间真值</font>
+## 十四、<font id="计时">计时：唤醒刷新，不充当时间真值</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、<font id="计时内核">四种内核</font>
+### 1、<font id="计时内核">四种内核</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 内核 | 调度方式 | 适合场景 | Jobs 映射 |
 | --- | --- | --- | --- |
@@ -1690,7 +1690,7 @@ GCD Timer 不依赖 RunLoop，但队列阻塞同样延迟；`deadline` 与 `wall
 
 DisplayLink 首选帧率是请求，实际受设备和系统策略影响；根据 `timestamp` / `targetTimestamp` 或单调时钟计算进度，不按帧次数累加。CFRunLoopTimer 与 Timer 可桥接，不天然更精确。
 
-### 2、<font id="计时示例">低频刷新与异步等待</font>
+### 2、<font id="计时示例">低频刷新与异步等待</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 以下原生代码只说明机制；Jobs 应用层对接现有计时封装。
 
@@ -1728,7 +1728,7 @@ final class Countdown {
 
 一次等待使用 <font color="red"><b><code>Task.sleep</code></b></font> 或 `DispatchQueue.asyncAfter`；它们不是完整重复计时器管理方案。App 被挂起后，普通计时器不能保证继续每秒回调；后台任务与后台传输受系统资格和调度策略限制。
 
-### 3、<font id="Jobs计时管理">JobsSwiftTimer 与 Manager</font>
+### 3、<font id="Jobs计时管理">JobsSwiftTimer 与 Manager</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsSwiftTimer` 统一四内核的启动、暂停、恢复、停止与回调边界，不改变底层精度。
 - `JobsSwiftTimerMgr` 管 identifier、去重、受管句柄、Scope 与批量清理。
@@ -1738,7 +1738,7 @@ final class Countdown {
 
 <a href="#FAQ-计时" style="color:red;font-weight:bold;">FAQ：计时精度与后台执行</a>
 
-## 十五、<font id="验证">示例使用与验证</font>
+## 十五、<font id="验证">示例使用与验证</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1、每个代码块独立使用；合并“接上例”依赖。多个同名教学类型或多个 <font color="red"><b><code>@main</code></b></font> 不要直接放进同一 Target。
 
@@ -1756,11 +1756,11 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 验证记录（2026-08-31）：Apple Swift 6.3.3，54 段 Swift 示例按各自依赖通过 Swift 6 严格类型检查；集合变换、协议派发、属性包装器、Actor 重入与请求去重、<font color="red"><b>Combine</b></font>、JSON 等 16 组运行检查通过。未执行真实网络请求、完整 App 构建、性能基准或设备测试。
 
-## 十六、<font id="FAQ">FAQ：面试问答</font>
+## 十六、<font id="FAQ">FAQ：面试问答</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 这一节不背书，也不堆定义。每道题先给一段**面试时能直接说出口的话**，再用**说人话**把它拆开。第一次看先理解“说人话”，面试前再记前面的短答。
 
-### 1、<font id="FAQ-泛型">泛型解决什么问题？</font>
+### 1、<font id="FAQ-泛型">泛型解决什么问题？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**泛型就是先把“具体类型”留个空，调用时再填进去。这样同一套逻辑能处理多种类型，又不用像 <font color="red"><b>Any</b></font> 那样丢掉类型检查。
 
@@ -1772,7 +1772,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#类型参数化" style="color:red;font-weight:bold;">返回：泛型</a>
 
-### 2、<font id="FAQ-协议">协议有什么用？</font>
+### 2、<font id="FAQ-协议">协议有什么用？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**协议就是一份“能力合同”。我不关心你具体是哪一个类或结构体，只要你把合同里的能力实现了，我就能按这份合同使用你。
 
@@ -1784,7 +1784,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#协议" style="color:red;font-weight:bold;">返回：协议</a>
 
-### 3、<font id="FAQ-some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型怎样区分？</font>
+### 3、<font id="FAQ-some-any"><font color="red"><b>some</b></font>、<font color="red"><b>any</b></font> 与泛型怎样区分？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**泛型和 <font color="red"><b>some</b></font> 都会保留具体类型关系；<font color="red"><b>any</b></font> 更像把不同实现装进同一种协议盒子里。参数位置的 <font color="red"><b>some</b></font> 可以看成没起名字的泛型，返回值的 <font color="red"><b>some</b></font> 则是“我不告诉你具体类型，但我每次返回的底层类型是固定的”。
 
@@ -1796,7 +1796,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#some-any" style="color:red;font-weight:bold;">返回：<font color="red"><b>some</b></font> / <font color="red"><b>any</b></font></a>
 
-### 4、<font id="FAQ-关联类型"><font color="red"><b>associatedtype</b></font> 和枚举关联值有什么区别？</font>
+### 4、<font id="FAQ-关联类型"><font color="red"><b>associatedtype</b></font> 和枚举关联值有什么区别？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**<font color="red"><b>associatedtype</b></font> 占的是“类型的位置”，枚举关联值装的是“这一次的实际数据”。一个是在定义规则，一个是在保存值。
 
@@ -1804,7 +1804,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#关联类型" style="color:red;font-weight:bold;">返回：关联类型</a>
 
-### 5、<font id="FAQ-协议派发">协议扩展的方法会被具体实现替换吗？</font>
+### 5、<font id="FAQ-协议派发">协议扩展的方法会被具体实现替换吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**要看这个方法有没有写进协议要求。写进协议的，具体类型可以提供自己的实现；只写在协议扩展里的同名方法，通过协议类型调用时，不会得到同样的动态替换效果。
 
@@ -1812,7 +1812,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#协议扩展" style="color:red;font-weight:bold;">返回：协议扩展</a>
 
-### 6、<font id="FAQ-值类型">结构体与类的核心区别是什么？</font>
+### 6、<font id="FAQ-值类型">结构体与类的核心区别是什么？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**结构体主要是值语义，赋值时得到一份新的外层值；类主要是引用语义，赋值时只是多了一个引用，大家仍指向同一个对象。只关心“内容是什么”时优先考虑结构体，需要“这是同一个对象”或共享生命周期时用类。
 
@@ -1824,7 +1824,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#值与引用" style="color:red;font-weight:bold;">返回：类型选择</a>
 
-### 7、<font id="FAQ-内存">结构体一定在栈上吗？size 与 stride 有什么区别？</font>
+### 7、<font id="FAQ-内存">结构体一定在栈上吗？size 与 stride 有什么区别？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**结构体不等于一定放栈上，类也不等于一句话就能概括成只放堆上，具体位置要看编译器、是否逃逸和使用上下文。`size` 是这个值本身占到哪里，`stride` 是数组里下一个同类值从哪里开始，`alignment` 是它要求按多少字节对齐。
 
@@ -1832,7 +1832,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#字节对齐" style="color:red;font-weight:bold;">返回：字节对齐</a>
 
-### 8、<font id="FAQ-COW">COW 就是深拷贝和线程安全吗？</font>
+### 8、<font id="FAQ-COW">COW 就是深拷贝和线程安全吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**都不是。COW 是“只读时先共用，谁要改谁再复制”，目的是少做没必要的拷贝，同时保持值语义；它不会自动把内部引用对象深拷贝，也不会自动解决并发安全。
 
@@ -1840,7 +1840,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#COW" style="color:red;font-weight:bold;">返回：Copy-on-Write</a>
 
-### 9、<font id="FAQ-ARC">闭包为什么会形成循环引用？</font>
+### 9、<font id="FAQ-ARC">闭包为什么会形成循环引用？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**当对象强持有一个闭包，而闭包里又强引用这个对象时，两边互相拽住，引用计数都降不到零，就形成循环引用。解决方法要看真实持有关系，可以弱捕获，也可以在任务结束后清掉闭包或取消订阅。
 
@@ -1852,7 +1852,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#ARC" style="color:red;font-weight:bold;">返回：ARC</a>
 
-### 10、<font id="FAQ-闭包">escaping 表示异步吗？</font>
+### 10、<font id="FAQ-闭包">escaping 表示异步吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不表示异步。<font color="red"><b>escaping</b></font> 只说明函数已经返回了，这个闭包仍可能被保存并在以后调用。它可以马上同步执行，也可以以后执行，至于在哪个线程跑是另一回事。
 
@@ -1864,7 +1864,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#逃逸与捕获" style="color:red;font-weight:bold;">返回：闭包</a>
 
-### 11、<font id="FAQ-mutating"><font color="red"><b>mutating</b></font> 和 <font color="red"><b>inout</b></font> 的区别是什么？</font>
+### 11、<font id="FAQ-mutating"><font color="red"><b>mutating</b></font> 和 <font color="red"><b>inout</b></font> 的区别是什么？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**<font color="red"><b>mutating</b></font> 是写在值类型的方法上，表示这个方法会改 `self`；<font color="red"><b>inout</b></font> 是写在函数参数上，表示函数能改调用方传进来的那个变量。
 
@@ -1872,7 +1872,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#mutating-inout" style="color:red;font-weight:bold;">返回：<font color="red"><b>mutating</b></font> / <font color="red"><b>inout</b></font></a>
 
-### 12、<font id="FAQ-map">map、compactMap、flatMap 怎样选？</font>
+### 12、<font id="FAQ-map">map、compactMap、flatMap 怎样选？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**`map` 是逐个变换；`compactMap` 是逐个变换后顺便删掉 <font color="red"><b>nil</b></font>；序列的 `flatMap` 是逐个变换后再摊平一层。只想按条件保留原元素，就用 `filter`。
 
@@ -1884,7 +1884,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#map" style="color:red;font-weight:bold;">返回：集合转换</a>
 
-### 13、<font id="FAQ-joined">joined 一定返回数组吗？</font>
+### 13、<font id="FAQ-joined">joined 一定返回数组吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不一定。嵌套序列调用 `joined()` 得到的是一个可以按顺序遍历的扁平结果，不保证就是数组；字符串序列用分隔符连接时，结果才是 `String`。真需要数组，再显式包一层 `Array(...)`。
 
@@ -1892,7 +1892,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#joined" style="color:red;font-weight:bold;">返回：joined</a>
 
-### 14、<font id="FAQ-初始化">指定、便捷和 <font color="red"><b>required</b></font> 初始化器怎样配合？</font>
+### 14、<font id="FAQ-初始化">指定、便捷和 <font color="red"><b>required</b></font> 初始化器怎样配合？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**指定初始化器是真正把本类属性初始化完整的主入口；便捷初始化器只是提供方便写法，最后必须绕回本类的指定初始化器；<font color="red"><b>required</b></font> 表示子类也必须保留这条创建能力。
 
@@ -1904,7 +1904,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#初始化" style="color:red;font-weight:bold;">返回：初始化</a>
 
-### 15、<font id="FAQ-扩展"><font color="red"><b>extension</b></font> 能增加存储属性吗？</font>
+### 15、<font id="FAQ-扩展"><font color="red"><b>extension</b></font> 能增加存储属性吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不能给已有类型增加实例存储属性，因为这会改变类型原来的内存布局；但可以增加计算属性、方法、下标和协议遵循。
 
@@ -1912,7 +1912,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#extension" style="color:red;font-weight:bold;">返回：扩展</a>
 
-### 16、<font id="FAQ-包装器">所有 @ 标记都是属性包装器吗？</font>
+### 16、<font id="FAQ-包装器">所有 @ 标记都是属性包装器吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不是。`@` 只是多种 Swift 特性的共同写法：<font color="red"><b>propertyWrapper</b></font> 定义属性包装器，<font color="red"><b>MainActor</b></font> 管隔离，`Observable` 是宏，`available` 管版本可用性。长得像，不代表底层是一回事。
 
@@ -1924,7 +1924,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#属性包装器" style="color:red;font-weight:bold;">返回：属性包装器</a>
 
-### 17、<font id="FAQ-单例"><font color="red"><b>static</b></font> <font color="red"><b>let</b></font> 单例线程安全吗？</font>
+### 17、<font id="FAQ-单例"><font color="red"><b>static</b></font> <font color="red"><b>let</b></font> 单例线程安全吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**它只保证这个单例的初始化是一次性的、并发下不会创建出好几份；不保证单例里面的可变属性以后被多线程同时读写时也安全。
 
@@ -1932,7 +1932,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#单例" style="color:red;font-weight:bold;">返回：单例</a>
 
-### 18、<font id="FAQ-访问控制"><font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font> 有什么区别？</font>
+### 18、<font id="FAQ-访问控制"><font color="red"><b>public</b></font> 与 <font color="red"><b>open</b></font> 有什么区别？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**<font color="red"><b>public</b></font> 允许模块外使用；<font color="red"><b>open</b></font> 在能使用的基础上，还允许模块外继承这个类、重写它的可重写成员。<font color="red"><b>open</b></font> 的权限更大。
 
@@ -1940,7 +1940,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#访问控制" style="color:red;font-weight:bold;">返回：访问控制</a>
 
-### 19、<font id="FAQ-Task"><font color="red"><b>async</b></font>、<font color="red"><b>await</b></font>、<font color="red"><b>Task</b></font> 都代表后台线程吗？</font>
+### 19、<font id="FAQ-Task"><font color="red"><b>async</b></font>、<font color="red"><b>await</b></font>、<font color="red"><b>Task</b></font> 都代表后台线程吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**都不等于后台线程。<font color="red"><b>async</b></font> 表示函数允许暂停，<font color="red"><b>await</b></font> 标出可能暂停的位置，<font color="red"><b>Task</b></font> 是一份异步工作的载体；它最终在哪执行，要看 Actor 隔离和系统调度。
 
@@ -1948,7 +1948,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#async-await" style="color:red;font-weight:bold;">返回：异步语义</a>
 
-### 20、<font id="FAQ-结构化"><font color="red"><b>Task</b></font> 创建在另一个 <font color="red"><b>Task</b></font> 内，就是结构化子任务吗？</font>
+### 20、<font id="FAQ-结构化"><font color="red"><b>Task</b></font> 创建在另一个 <font color="red"><b>Task</b></font> 内，就是结构化子任务吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不是。哪怕把 <font color="red"><b>Task</b></font> 写在另一个 <font color="red"><b>Task</b></font> 里面，它仍是非结构化任务。真正的结构化子任务通常来自 <font color="red"><b>async let</b></font> 或任务组，它们的生命周期被父作用域管住。
 
@@ -1956,7 +1956,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#结构化并发" style="color:red;font-weight:bold;">返回：结构化并发</a>
 
-### 21、<font id="FAQ-取消">cancel 会立即停止任务吗？</font>
+### 21、<font id="FAQ-取消">cancel 会立即停止任务吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不会。Swift 的取消是合作式的：外面发出“请停止”的信号，任务自己或它调用的 API 要检查这个信号并及时退出，不是系统直接把任务强杀。
 
@@ -1964,7 +1964,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#取消" style="color:red;font-weight:bold;">返回：取消与超时</a>
 
-### 22、<font id="FAQ-Continuation">Continuation 最重要的约束是什么？</font>
+### 22、<font id="FAQ-Continuation">Continuation 最重要的约束是什么？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**每条执行路径都必须恢复一次，而且只能恢复一次。漏掉一次，等待方可能永远等下去；恢复两次，会触发错误。它只适合桥接一次性结果，多次回调应该用流。
 
@@ -1972,7 +1972,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Continuation" style="color:red;font-weight:bold;">返回：回调桥接</a>
 
-### 23、<font id="FAQ-Actor">Actor 比普通 <font color="red"><b>class</b></font> 多解决了什么？</font>
+### 23、<font id="FAQ-Actor">Actor 比普通 <font color="red"><b>class</b></font> 多解决了什么？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**Actor 给共享可变状态加了一道语言级隔离边界，编译器会帮我检查哪些访问需要跨域等待、哪些值能安全传过去。普通 <font color="red"><b>class</b></font> 也能用锁保护，但是否每个入口都锁对了，只能靠开发者自己保证。
 
@@ -1984,7 +1984,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor</a>
 
-### 24、<font id="FAQ-重入">用了 Actor，为什么还可能超发名额？</font>
+### 24、<font id="FAQ-重入">用了 Actor，为什么还可能超发名额？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**因为 Actor 方法执行到 <font color="red"><b>await</b></font> 时会让出隔离域，等待期间别的调用可以进来改状态。所以等待前查到“还有一个名额”，恢复后这个结论可能已经过期。
 
@@ -1996,7 +1996,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Actor重入" style="color:red;font-weight:bold;">返回：可重入</a>
 
-### 25、<font id="FAQ-去重">把 <font color="red"><b>class</b></font> 改成 <font color="red"><b>actor</b></font>，就不会重复请求了吗？</font>
+### 25、<font id="FAQ-去重">把 <font color="red"><b>class</b></font> 改成 <font color="red"><b>actor</b></font>，就不会重复请求了吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不会。Actor 只能保证访问隔离，不能自动理解“相同参数的网络请求应该合并”。第一个请求在等待网络时，缓存还没有结果，第二个调用照样可能再发一次。
 
@@ -2004,7 +2004,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Actor去重" style="color:red;font-weight:bold;">返回：请求去重</a>
 
-### 26、<font id="FAQ-Sendable"><font color="red"><b>Sendable</b></font> 加了锁吗？不写会怎样？</font>
+### 26、<font id="FAQ-Sendable"><font color="red"><b>Sendable</b></font> 加了锁吗？不写会怎样？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**没有。<font color="red"><b>Sendable</b></font> 是一份“这个值可以安全跨并发隔离域传递”的类型承诺，编译器会检查这份承诺是否站得住，但它不会偷偷给对象加锁。
 
@@ -2016,7 +2016,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Sendable" style="color:red;font-weight:bold;">返回：<font color="red"><b>Sendable</b></font></a>
 
-### 27、<font id="FAQ-隔离"><font color="red"><b>nonisolated</b></font>、<font color="red"><b>MainActor</b></font>、<font color="red"><b>Sendable</b></font> 各管什么？</font>
+### 27、<font id="FAQ-隔离"><font color="red"><b>nonisolated</b></font>、<font color="red"><b>MainActor</b></font>、<font color="red"><b>Sendable</b></font> 各管什么？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**<font color="red"><b>nonisolated</b></font> 管“这个成员不需要进入所属 Actor”；<font color="red"><b>MainActor</b></font> 管“这段代码和状态归主 Actor 隔离”；<font color="red"><b>Sendable</b></font> 管“这个值能不能安全跨隔离域传递”。三者解决的不是同一个问题。
 
@@ -2024,7 +2024,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#nonisolated" style="color:red;font-weight:bold;">返回：<font color="red"><b>nonisolated</b></font></a> · <a href="#MainActor" style="color:red;font-weight:bold;">返回：<font color="red"><b>MainActor</b></font></a>
 
-### 28、<font id="FAQ-Actor-await">Actor 方法没写 <font color="red"><b>async</b></font>，为什么外部还要 <font color="red"><b>await</b></font>？</font>
+### 28、<font id="FAQ-Actor-await">Actor 方法没写 <font color="red"><b>async</b></font>，为什么外部还要 <font color="red"><b>await</b></font>？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**因为方法体虽然没有主动挂起，但外部调用者要跨进这个 Actor 的隔离域；如果 Actor 正在处理别的工作，调用点就可能需要等，所以外部仍要写 <font color="red"><b>await</b></font>。
 
@@ -2032,7 +2032,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Actor入门" style="color:red;font-weight:bold;">返回：Actor 访问</a>
 
-### 29、<font id="FAQ-Actor边界">Actor 能继承、保证 FIFO 或自动加速吗？</font>
+### 29、<font id="FAQ-Actor边界">Actor 能继承、保证 FIFO 或自动加速吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**都不能这么保证。Actor 不走普通类继承，不承诺任务严格按到达顺序执行，也不是性能加速器。它主要解决隔离正确性，可以遵循协议，复用通常靠组合。
 
@@ -2040,7 +2040,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Actor选型" style="color:red;font-weight:bold;">返回：Actor 选型</a>
 
-### 30、<font id="FAQ-锁">Actor 与锁怎样选择？</font>
+### 30、<font id="FAQ-锁">Actor 与锁怎样选择？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**异步业务里的一组共享状态，我会优先评估 Actor；只是保护一小段同步临界区，或者接口必须保持同步时，可以用锁。两者不是谁绝对高级，要看调用模型。
 
@@ -2048,7 +2048,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#锁" style="color:red;font-weight:bold;">返回：锁</a>
 
-### 31、<font id="FAQ-流">AsyncStream 与 Continuation 怎样区分？</font>
+### 31、<font id="FAQ-流">AsyncStream 与 Continuation 怎样区分？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**Continuation 用来把一次回调桥接成一次异步结果；AsyncStream 用来接一连串事件。一个像“等这一次结果”，一个像“持续订阅消息”。
 
@@ -2056,7 +2056,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#AsyncStream" style="color:red;font-weight:bold;">返回：AsyncStream</a>
 
-### 32、<font id="FAQ-Combine"><font color="red"><b>Combine</b></font> 的订阅为什么刚建立就没了？</font>
+### 32、<font id="FAQ-Combine"><font color="red"><b>Combine</b></font> 的订阅为什么刚建立就没了？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**最常见的原因是没有把 `AnyCancellable` 保存下来。它一释放，订阅就跟着取消，所以看起来像刚订阅就没反应了。
 
@@ -2064,7 +2064,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Combine" style="color:red;font-weight:bold;">返回：<font color="red"><b>Combine</b></font></a>
 
-### 33、<font id="FAQ-调度">subscribe(on:) 与 receive(on:) 有什么区别？</font>
+### 33、<font id="FAQ-调度">subscribe(on:) 与 receive(on:) 有什么区别？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**`subscribe(on:)` 主要影响上游从哪里开始订阅、发起请求和取消；`receive(on:)` 影响它后面的下游从哪里接收值和完成事件。它们作用的方向不一样。
 
@@ -2072,7 +2072,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Combine操作符" style="color:red;font-weight:bold;">返回：操作符与调度</a>
 
-### 34、<font id="FAQ-Published">Published 发出新值时，属性已经改了吗？</font>
+### 34、<font id="FAQ-Published">Published 发出新值时，属性已经改了吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不一定。<font color="red"><b>@Published</b></font> 会在属性真正写入前发出新值，所以订阅闭包拿到的参数已经是新值，但此时重新读取原属性，仍可能读到旧值。
 
@@ -2080,7 +2080,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Published" style="color:red;font-weight:bold;">返回：Published</a>
 
-### 35、<font id="FAQ-搜索流"><font color="red"><b>Combine</b></font> 搜索怎样避免旧结果覆盖新结果？</font>
+### 35、<font id="FAQ-搜索流"><font color="red"><b>Combine</b></font> 搜索怎样避免旧结果覆盖新结果？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**先对输入做防抖，再把每个关键词映射成一个请求 Publisher，然后用 `switchToLatest` 只接收最新请求的结果。要求更严时，再给请求加版本号或关键词校验。
 
@@ -2088,7 +2088,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Combine操作符" style="color:red;font-weight:bold;">返回：搜索管线</a>
 
-### 36、<font id="FAQ-可用性">available 与条件编译有什么区别？</font>
+### 36、<font id="FAQ-可用性">available 与条件编译有什么区别？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**`@available` 是声明这个 API 需要什么系统版本；`#available` 和 `#unavailable` 是 App 运行时根据系统版本走不同分支；`#if` 是编译阶段就决定这段代码要不要参与编译。
 
@@ -2096,7 +2096,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#可用性" style="color:red;font-weight:bold;">返回：版本边界</a>
 
-### 37、<font id="FAQ-内联">inlinable 会强制内联吗？</font>
+### 37、<font id="FAQ-内联">inlinable 会强制内联吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不会。<font color="red"><b>inlinable</b></font> 只是把函数实现暴露给客户端编译器，让它有机会做跨模块优化，最后内不内联仍由优化器决定。
 
@@ -2104,7 +2104,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#内联" style="color:red;font-weight:bold;">返回：内联</a>
 
-### 38、<font id="FAQ-网络">URLSession 没报错，就代表 HTTP 成功吗？</font>
+### 38、<font id="FAQ-网络">URLSession 没报错，就代表 HTTP 成功吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不代表。`URLSession` 没有传输错误，只能说明请求成功到达并收到了响应；服务器返回 `404`、`500` 时，网络层照样可能没有 `error`。还要继续检查 `HTTPURLResponse` 和状态码。
 
@@ -2112,7 +2112,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#URLSession" style="color:red;font-weight:bold;">返回：网络校验</a>
 
-### 39、<font id="FAQ-解码">模型有默认值，JSON 缺字段就一定能解码吗？</font>
+### 39、<font id="FAQ-解码">模型有默认值，JSON 缺字段就一定能解码吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不一定。属性写了默认值，不代表自动合成的 <font color="red"><b>Decodable</b></font> 会在字段缺失时统一使用它。需要稳定兜底，就要明确写自己的解码策略。
 
@@ -2120,7 +2120,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#Codable" style="color:red;font-weight:bold;">返回：Codable</a>
 
-### 40、<font id="FAQ-计时">哪个 Timer 最精确，能在后台一直跑吗？</font>
+### 40、<font id="FAQ-计时">哪个 Timer 最精确，能在后台一直跑吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**没有一种普通 Timer 能保证硬实时，也不能保证 App 被系统挂起后还每秒回调。选择重点不是单纯比谁“最准”，而是看它跟屏幕刷新、RunLoop 还是工作队列配合。
 
@@ -2128,7 +2128,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#计时" style="color:red;font-weight:bold;">返回：计时机制</a>
 
-### 41、<font id="FAQ-数据结构">链表插删一定比数组快吗？</font>
+### 41、<font id="FAQ-数据结构">链表插删一定比数组快吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不一定。链表插删快的前提是我已经拿到了目标节点或前驱；如果还要从头找位置，查找本身仍可能是线性的。数组虽然中间搬移有成本，但连续内存和随机访问通常更友好。
 
@@ -2136,7 +2136,7 @@ xcrun swiftc -swift-version 6 -default-isolation nonisolated -strict-concurrency
 
 <a href="#数据结构" style="color:red;font-weight:bold;">返回：数据结构</a>
 
-### 42、<font id="FAQ-网络分层">HTTP 一定基于 TCP 吗？</font>
+### 42、<font id="FAQ-网络分层">HTTP 一定基于 TCP 吗？</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 **面试时可以直接说：**不一定。HTTP/1.1 和 HTTP/2 常见于 TCP 之上，HTTP/3 使用的是基于 UDP 的 QUIC。HTTP 规定的是请求、响应这些应用层语义，不应该和某一种传输协议绑死。
 

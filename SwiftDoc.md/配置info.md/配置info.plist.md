@@ -1,10 +1,10 @@
-#  配置`info.plist`
+#  <span id="前言">配置`info.plist`</span>
 
 [toc]
 
-## Open As Source Code，添加以下信息
+## Open As Source Code，添加以下信息 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 开权限：
+### 开权限： <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 *多语言化*
 
 ```xml
@@ -79,7 +79,7 @@
 "NSVideoSubscriberAccountUsageDescription" = "我们需要获取你的TV权限";
 ```
 
-### 添加外部字体：
+### 添加外部字体： <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 ```xml
 <key>UIAppFonts</key>
 <array>
@@ -88,7 +88,7 @@
 </array>
 ```
 
-### 苹果公司iOS 9系统策略更新，限制了http协议的访问，此外应用需要在`Info.plist`中将要使用的URL Schemes列为白名单，才可正常检查其他应用是否安装。
+### 苹果公司iOS 9系统策略更新，限制了http协议的访问，此外应用需要在`Info.plist`中将要使用的URL Schemes列为白名单，才可正常检查其他应用是否安装。 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 当你的应用在iOS 9中需要使用 QQ/QQ空间/支付宝/微信SDK的相关能力（分享、收藏、支付、登录等）时，需要在`Info.plist`里增加如下代码：
 
 ```xml
@@ -133,7 +133,7 @@
 </array>
 ```
 
-### 屏幕旋转
+### 屏幕旋转 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```xml
 <key>UISupportedInterfaceOrientations</key>
@@ -145,7 +145,7 @@
 </array>
 ```
 
-### 添加Appicon
+### 添加Appicon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```xml
 <key>CFBundleIcons</key>
@@ -211,3 +211,5 @@
     </dict>
 </dict>
 ```
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

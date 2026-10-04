@@ -12,11 +12,11 @@
 
 > `JobsSwiftTimerMgr` 负责 identifier 注册、受管生命周期句柄、去重和应用状态策略。
 
-## 一、定位
+## 一、定位 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `JobsSwiftTimerMgr` 是 `JobsSwiftTimer` 之上的 identifier 管理层，负责原子注册、去重、生命周期派发、批量清理和前后台策略。单个 timer 的内核行为留在 `JobsSwiftTimer`，页面或列表内多个 timer 的编排放在 Manager。
 
-## 二、创建与控制
+## 二、创建与控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 import JobsSwiftTimer
@@ -52,9 +52,9 @@ try JobsSwiftTimerMgr.shared.act(.cancel, identifier: identifier)
 
 `create` 返回的是受管句柄：直接调用它的 `start`、`pause`、`resume`、`stop`，Manager 仍会同步 Entry 的手动 / 自动暂停状态。旧句柄在同 identifier 被替换后只能作用于自己的旧内核，不会误控制新注册项。
 
-## 三、治理策略
+## 三、治理策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 3.1、同 identifier 去重
+### 3.1、同 identifier 去重 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 策略 | 行为 |
 | ---- | ---- |
@@ -64,7 +64,7 @@ try JobsSwiftTimerMgr.shared.act(.cancel, identifier: identifier)
 
 原子替换保证并发 `create` 时字典不会短暂缺失；停止旧 timer 不占用 Manager 锁，避免回调重入造成死锁。
 
-### 3.2、前后台策略
+### 3.2、前后台策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 策略 | 行为 |
 | ---- | ---- |
@@ -74,7 +74,7 @@ try JobsSwiftTimerMgr.shared.act(.cancel, identifier: identifier)
 
 Manager 接管应用状态治理后，会关闭具体 `JobsTimer` 自己的监听，避免双重暂停或恢复。每次 `start` / `resume` 后还会读取当前应用状态：即使 Timer 在应用已经 inactive / background 时才启动，策略也会立即生效；`.cancel` 仍只在真实 background 时停止并移除。
 
-## 四、并发与线程保证
+## 四、并发与线程保证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `defaultDedupPolicy` 与注册字典均在锁内访问。
 - `.cancel` 移除前会核对 Entry 身份，不会误删同 identifier 的并发替换项。
@@ -85,7 +85,7 @@ Manager 接管应用状态治理后，会关闭具体 `JobsTimer` 自己的监�
 - Manager、受管句柄和具体 Timer 都声明了受锁保护的并发边界，便于 Swift 6 严格并发检查继续收口。
 - `removeAll(stopAll: true)` 先取快照并清空注册表，再在锁外逐个停止。
 
-## 五、复用场景
+## 五、复用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let identifier = "cell.\(model.id)"
@@ -118,7 +118,7 @@ JobsSwiftTimerMgr.shared.stopAndRemove(scopeIdentifier: scopeIdentifier)
 
 iOS 13 以上也保留同名 `async` 入口；当前内部仍按同步生命周期语义执行。
 
-## 六、验证
+## 六、验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 xcrun swiftc -frontend -parse JobsSwiftTimerMgr.swift JobsSwiftTimerMgrDefs.swift
@@ -130,9 +130,9 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 
 应用测试 target 还覆盖受管句柄的手动暂停保护、并发替换后的旧句柄隔离、实例安全取消与 Scope 暂停恢复。
 
-## 七、系统计时机制对比与 Manager 选型
+## 七、系统计时机制对比与 Manager 选型 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 7.1、Manager 不替代内核选择
+### 7.1、Manager 不替代内核选择 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `JobsSwiftTimerMgr` 解决的是“谁拥有 Timer、如何查找、去重、暂停、恢复和清理”，不是把所有系统计时机制抹成同一种行为。日常所说的“iOS 系统 Timer”实际分属多个框架：
 
@@ -143,7 +143,7 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 
 它们都不是硬实时机制，也都不会赋予 App 后台保活能力。Manager 创建 Timer 时仍要先按场景选择 `kind`。
 
-### 7.2、四种内核怎么选
+### 7.2、四种内核怎么选 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 系统机制 | 调度模型 | 优势 | 代价与风险 | 推荐场景 | `JobsTimerKind` |
 | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -152,7 +152,7 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 | `CADisplayLink` | 跟随显示刷新周期回调 | 与屏幕刷新协调；提供 `timestamp` / `targetTimestamp`；适配高刷屏 | 实际帧率会受硬件、低电量、温控和主线程负载影响；不适合业务倒计时 | 逐帧动画、进度绘制、视觉插值 | `.displayLink` |
 | `CFRunLoopTimer` | Core Foundation 级 RunLoop Timer | 可显式控制 RunLoop、Mode、下一次触发时间与上下文 | C API 更冗长；所有权与线程亲和更容易出错；仍受 RunLoop 延迟 | 基础设施、需要精细 RunLoop 集成或 C/CF 互操作 | `.runLoop` |
 
-### 7.3、经常被误当成 Timer 的 API
+### 7.3、经常被误当成 Timer 的 API <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | API | 适合 | 不适合 |
 | ---- | ---- | ---- |
@@ -160,7 +160,7 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 | `Task.sleep` / `Clock.sleep` | Swift 并发流程中的一次性、可取消等待；等待时不阻塞线程 | 页面多 Timer 注册表、OC 调用、天然重复调度 |
 | `BGTaskScheduler` | 由系统择机执行后台刷新或维护任务 | 秒级准点触发、常驻后台 Timer |
 
-### 7.4、场景决策顺序
+### 7.4、场景决策顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1. 屏幕逐帧刷新选择 `.displayLink`。
 2. 非 UI 工作队列、心跳或轮询选择 `.gcd`。
@@ -169,7 +169,7 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 5. 只有一次延迟等待时使用 `Task.sleep` 或 `DispatchQueue.asyncAfter`，不创建受管重复 Timer。
 6. App 被系统挂起后需要执行工作时，改用匹配业务资格的后台系统机制；任何 `kind` 都不是后台保活方案。
 
-### 7.5、什么时候必须上 Manager
+### 7.5、什么时候必须上 Manager <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 单个对象私有、生命周期清楚、无需跨对象查找时，直接使用 `JobsTimer`。
 - 同一业务可能重复创建 Timer 时，用 identifier + `dedupPolicy`。
@@ -180,15 +180,15 @@ xcodebuild -workspace JobsSwiftBaseConfigDemo.xcworkspace -scheme JobsSwiftTimer
 
 <a id="jobs-architecture"></a>
 
-## 八、架构脉络与关键设计
+## 八、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 8.1、设计目的与职责划分
+### 8.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 在 JobsSwiftTimer 之上按 identifier 登记和治理物理计时器，提供保留、替换或报错的去重策略、Scope 分组控制与前后台暂停策略。受管包装层校验动作是否仍属于当前登记项。
 
-### 8.2、运行脉络
+### 8.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 按标识创建 → 应用去重策略 → 登记并返回受管计时器 → 按标识或 Scope 控制 → 精准停止移除
 
@@ -207,7 +207,7 @@ flowchart TD
     H --> I["停止并移除对应项"]
 ```
 
-### 8.3、关键设计与边界
+### 8.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 旧持有者可能在同标识已替换后清理，expectedTimer 用于确认仍是原对象，避免误杀新计时器。
 - remove 不自动 stop，与 stopAndRemove 不同，重建时不能隐藏这一区别。
@@ -215,7 +215,7 @@ flowchart TD
 - 锁保护登记与状态，实际生命周期动作还需遵循底层内核线程要求；不能在锁内执行任意回调。
 - Manager 管理物理计时器，不管理业务剩余时长；页面倒计时仍以 endAt 为准。
 
-### 8.4、阅读与重建顺序
+### 8.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 Defs 的策略，再看 create 与 ManagedTimer 的当前项校验，最后看 expectedTimer、Scope 和应用状态治理。
 
@@ -225,3 +225,5 @@ flowchart TD
 - [JobsSwiftTimerMgrDefs.swift](<./JobsSwiftTimerMgrDefs.swift>)
 
 依赖与编译入口：[JobsSwiftTimerMgr.podspec](<./JobsSwiftTimerMgr.podspec>)。其中显式依赖声明包括 `JobsSwiftTimer`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

@@ -67,7 +67,7 @@ JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 
 业务设置页应使用 `JobsSplashContentType.allCases` 完整展示五种内容类型，并把用户选择写入 `JobsSplashPreferences.contentTypeForNextLaunch`；启动入口读取该设置后，再为所选类型提供实际资源名或 URL。Swift Demo 会复用“米老鼠 / 唐老鸭 / 迪斯尼”图片生成本地 GIF 文件，再通过 `.localGIF(fileURL:)` 展示，不依赖额外占位素材。
 
-## 明暗主题契约
+## 明暗主题契约 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 页面、列表和弹框的普通承载面使用 `JobsCor.systemBackground` / `JobsCor.secondarySystemBackground`，正文、说明和占位文字使用 `JobsCor.label` / `JobsCor.secondaryLabel` / `JobsCor.placeholderText`，确保白天浅底深字、黑夜深底浅字。
 - 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要在主题 Trait 变化后重新解析和绘制。
@@ -75,15 +75,15 @@ JobsSplashPresenter.show(over: homeViewController, configuration: configuration)
 
 <a id="jobs-architecture"></a>
 
-## 四、架构脉络与关键设计
+## 四、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 4.1、设计目的与职责划分
+### 4.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 用 Configuration 描述开屏媒体和跳过、点击、摇动等动作，Presenter 负责挂载展示，VC 组织播放及退出，MediaCache 管理远程资源和视频预加载，Preferences 与 Localization 管理独立状态。
 
-### 4.2、运行脉络
+### 4.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 配置开屏 → 选择本地资源或缓存 → 挂载展示并计时 → 响应跳过或动作 → 退出展示；预加载任务独立推进
 
@@ -102,7 +102,7 @@ flowchart TD
     G -.-> B
 ```
 
-### 4.3、关键设计与边界
+### 4.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 展示生命周期与媒体缓存生命周期分离，页面退出不应被理解成所有预加载任务都结束。
 - 远程视频使用缓存及预加载策略，下载失败保留待办并退避重试；不能重建成每次进入都直接强制在线播放。
@@ -110,7 +110,7 @@ flowchart TD
 - resumePendingVideoPreloads 当前是空入口，实际恢复逻辑在缓存对象初始化及内部处理，不能按方法名虚构额外恢复行为。
 - GIF 帧时长、视频画面模式、跳过按钮布局与语言资源都有独立配置，不应只用一张静态图替代全部类型。
 
-### 4.4、阅读与重建顺序
+### 4.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 Configuration 和 Presenter，再看 VC 的展示与关闭，最后追 MediaCache 的持久待办、缓存与重试。
 

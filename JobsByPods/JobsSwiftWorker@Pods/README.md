@@ -1,12 +1,12 @@
-# JobsSwiftWorker
+# <span id="前言">JobsSwiftWorker</span>
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 `JobsSwiftWorker` 不是单点的 debounce 封装，而是站在 `JobsSwiftTaskCenter` / `JobsSwiftTimer` 之上，补一层平行 Flutter GetX Worker 的本地响应式能力。
 
-## 当前能力
+## 当前能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### Worker
+### Worker <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 - `ever`
 - `once`
 - `debounce`
@@ -15,25 +15,25 @@
 - `skip`
 - `take`
 
-### Observable 变换
+### Observable 变换 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 - `map`
 - `filter`
 - `distinctUntilChanged`
 - `combineLatest`
 
-### UI Binder
+### UI Binder <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 - `UILabel` 文本绑定
 - `UITextField` 输入绑定
 - UI 写入与事件绑定统一经由 `JobsByUIKit` / `JobsSwiftDSL`，不在 Binder 中裸调系统 API。
 
-## 设计目标
+## 设计目标 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1. **不只封 debounce**：直接提供 Worker 抽象层。
 2. **兼容 Jobs 架构**：延时与窗口控制统一落到 `JobsSwiftTaskCenter`。
 3. **页面级可治理**：通过 `JobsWorkerBag` / `JobsWorkerCenter` 统一释放。
 4. **后续可继续长大**：可以继续补 `throttleLatest`、`zip`、`merge`、`flatMapLatest`、UI State Binder。
 
-## 快速使用
+## 快速使用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 let count = JobsObservable<Int>(0, name: "count")
@@ -48,7 +48,7 @@ count
 count.accept(1)
 ```
 
-## 推荐发展方向
+## 推荐发展方向 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 下一步建议补：
 
@@ -61,15 +61,15 @@ count.accept(1)
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计
+## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分
+### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 建立轻量可观察值和可释放监听。JobsObservable 保存值并通知变化，WorkerFactory 生成 ever、once、debounce、interval、skip、take 等监听策略，Bag/Center 管理释放，Binder 对接文本控件。
 
-### 1.2、运行脉络
+### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 建立可观察值 → 选择监听策略并登记 Worker → 值变化 → 经调度与过滤触发回调 → dispose 解除观察和计时
 
@@ -84,7 +84,7 @@ flowchart LR
     F -.-> B
 ```
 
-### 1.3、关键设计与边界
+### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - accept、acceptSilently 和 notifyCurrentValue 的通知语义不同，静默更新不能被重建为普通更新。
 - debounce 等待稳定输入，interval 限制触发频率，两者不能用同一个延时逻辑替代。
@@ -92,7 +92,7 @@ flowchart LR
 - Worker 的 dispose 应幂等，页面退出时 Bag/Center 统一解除；仅停止 UI 更新而保留定时观察会泄漏。
 - 原文中列作未来计划的 merge、zip 等不能直接当成当前已完成能力。
 
-### 1.4、阅读与重建顺序
+### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 Observable 和 Worker，再看 Factory 的各策略与 Scheduler，最后看 Bag/Center、Transform、Combine 和 Binder。
 
@@ -105,3 +105,5 @@ flowchart LR
 - [JobsPeriod+Worker.swift](<./JobsPeriod+Worker.swift>)
 
 依赖与编译入口：[JobsSwiftWorker.podspec](<./JobsSwiftWorker.podspec>)。其中显式依赖声明包括 `SnapKit`、`Jobsl10n`、`JobsByUIKit`、`JobsSwiftRefresher`、`JobsSwiftTimer`、`JobsSwiftTaskCenter`、`JobsSwiftBaseDefines`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

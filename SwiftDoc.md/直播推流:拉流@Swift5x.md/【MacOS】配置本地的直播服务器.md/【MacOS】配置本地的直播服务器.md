@@ -1,4 +1,4 @@
-# 【MacOS】配置本地的直播服务器
+# <span id="前言">【MacOS】配置本地的直播服务器</span>
 
 <iframe
   src="https://dragonir.github.io/3d/#/earth"
@@ -11,7 +11,7 @@
 
 [toc]
 
-## 一、实践目的
+## 一、实践目的 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 服务器（本地）：以**MacOS**和本地局域网为基础，辅以[**Homebrew**](https://brew.sh/) ➤ [**node**](https://nodejs.org/en) ➤ [**node-media-server@2.3.8**](https://github.com/codivoire/node-media-server)
 
@@ -68,9 +68,9 @@
   
     ![image-20251209102646523](./assets/image-20251209102646523.png)
 
-## 二、相关环境配置
+## 二、相关环境配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、安装[**node-media-server**](https://github.com/codivoire/node-media-server)
+### 1、安装[**node-media-server**](https://github.com/codivoire/node-media-server) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**Homebrew**](https://brew.sh/) ➤ [**node**](https://nodejs.org/en) ➤ [**node-media-server@2.3.8**](https://github.com/codivoire/node-media-server)
 
@@ -94,13 +94,13 @@
   node server.js
   ```
 
-### 2、安装[`ffmpeg`](https://www.ffmpeg.org/)➤用于HLS技术将视频流切片成`*.ts`
+### 2、安装[`ffmpeg`](https://www.ffmpeg.org/)➤用于HLS技术将视频流切片成`*.ts` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 brew install ffmpeg
 ```
 
-## 三、新建一个本地直播服务器项目
+## 三、新建一个本地直播服务器项目 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 这个包就是一个用 **Node.js** 写的 **RTMP**/**HLS**/**HTTP-FLV** 服务器
 
@@ -169,7 +169,7 @@ brew install ffmpeg
   console.log('✅ Node-Media-Server 启动完成');
   ```
 
-## 四、查询本地局域网IP（非公网IP）
+## 四、查询本地局域网IP（非公网IP） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 最常用（Wi-Fi）
 
@@ -189,9 +189,9 @@ brew install ffmpeg
   ifconfig | grep "inet " | grep -v 127.0.0.1   # 排除 127.0.0.1
   ```
 
-## 五、双端代码配置
+## 五、双端代码配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、直播推流端（iOS@Swift5.x）
+### 1、直播推流端（iOS@Swift5.x） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 💥重点💥`Node-Media-Server`默认的 **RTMP** 路径形式是➤ <font size=5>`rtmp://服务器IP:1935/live/<streamName>`</font>
 
@@ -470,7 +470,7 @@ brew install ffmpeg
   ```
   
 
-### 2、直播拉流端（只简单的面对一个URL）
+### 2、直播拉流端（只简单的面对一个URL） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 重点
 
@@ -560,7 +560,7 @@ brew install ffmpeg
   }
   ```
 
-## 六、启动<font size=5>`Node-Media-Server`</font>
+## 六、启动<font size=5>`Node-Media-Server`</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**启动**](#杀进程和启动)以后<font size=5>`Node-Media-Server`</font>会维持一个长链接服务（此运行窗口不能关闭）
 
@@ -616,3 +616,5 @@ brew install ffmpeg
   </body>
   </html>
   ```
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

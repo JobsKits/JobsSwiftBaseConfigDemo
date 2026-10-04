@@ -16,7 +16,7 @@
 
 ## 一、先把几个概念说清楚 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1.1、`.framework` 是一个平台变体
+### 1.1、`.framework` 是一个平台变体 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 一个 `.framework` 是代码、模块描述、公开接口与可选资源组成的 Bundle。它通常只对应一个平台变体，例如：
 
@@ -25,7 +25,7 @@
 
 同名 Framework 的真机二进制和模拟器二进制不能因为都叫 `JobsTextTools.framework` 就互相替换。
 
-### 1.2、`.xcframework` 是多个变体的容器
+### 1.2、`.xcframework` 是多个变体的容器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `.xcframework` 不等于一种新的链接方式，它只是把 iOS、iOS Simulator、macOS、Mac Catalyst 等不同变体放在一个有清晰索引的容器中，由 [**Xcode**](https://developer.apple.com/xcode) 在构建时自动选对切片。
 
@@ -38,7 +38,7 @@ flowchart LR
     XCFramework --> App["消费者 App"]
 ```
 
-### 1.3、静态与动态是链接方式，不是文件后缀
+### 1.3、静态与动态是链接方式，不是文件后缀 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 当前 Swift 工程使用 `use_frameworks! :linkage => :static`，所以 CocoaPods 生成的是“Framework 目录包裹的静态库”：
 
@@ -71,7 +71,7 @@ flowchart LR
 
 ## 三、最小 Demo 的真实基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 3.1、样板模块
+### 3.1、样板模块 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 项目 | 内容 |
 | --- | --- |
@@ -83,7 +83,7 @@ flowchart LR
 | 系统 Framework | `UIKit` |
 | 链接形态 | 静态 Framework |
 
-### 3.2、Demo 目录
+### 3.2、Demo 目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 iOS Framework 与 XCFramework 打包指南.md/
@@ -98,7 +98,7 @@ iOS Framework 与 XCFramework 打包指南.md/
 
 ## 四、一条命令打包 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 4.1、执行前检查
+### 4.1、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 cd "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo"
@@ -113,7 +113,7 @@ zsh "SwiftDoc.md/iOS Framework 与 XCFramework 打包指南.md/Demo/【MacOS】�
 
 脚本会先展示自述并等待回车。确认后才开始写入被 `.gitignore` 排除的 `build/XCFrameworkDemo`。
 
-### 4.2、输出结构
+### 4.2、输出结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 build/XCFrameworkDemo/JobsTextTools/时间戳/
@@ -134,7 +134,7 @@ zsh "SwiftDoc.md/iOS Framework 与 XCFramework 打包指南.md/Demo/【MacOS】�
 
 ## 五、脚本实际执行了什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 5.1、归档 iOS 真机变体
+### 5.1、归档 iOS 真机变体 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 xcodebuild archive \
@@ -149,7 +149,7 @@ xcodebuild archive \
   ONLY_ACTIVE_ARCH=NO
 ```
 
-### 5.2、归档 iOS Simulator 变体
+### 5.2、归档 iOS Simulator 变体 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 xcodebuild archive \
@@ -164,7 +164,7 @@ xcodebuild archive \
   ONLY_ACTIVE_ARCH=NO
 ```
 
-### 5.3、组合为 XCFramework
+### 5.3、组合为 XCFramework <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 xcodebuild -create-xcframework \
@@ -187,7 +187,7 @@ xcodebuild -create-xcframework \
 
 ## 六、消费者怎么接入 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 6.1、手工拖入 Xcode
+### 6.1、手工拖入 Xcode <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 1. 把 `JobsTextTools.xcframework` 拖入消费者工程。
 2. 在 App target 的 `Frameworks, Libraries, and Embedded Content` 中确认已链接。
@@ -201,7 +201,7 @@ let text: JobsText = "JobsTextTools XCFramework 可用"
 print(text.asString)
 ```
 
-### 6.2、通过 CocoaPods 二进制 Pod 接入
+### 6.2、通过 CocoaPods 二进制 Pod 接入 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 二进制 Pod 的 `podspec` 不再声明源码，而是声明：
 
@@ -219,7 +219,7 @@ end
 
 不要让源码 Pod 和二进制 Pod 同时向同一个 target 提供 `JobsTextTools` 模块，否则会出现重复模块、重复符号或不确定链接来源。
 
-### 6.3、通过 Swift Package Manager 接入
+### 6.3、通过 Swift Package Manager 接入 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Apple 的[**二进制 Framework Swift Package 分发文档**](https://developer.apple.com/documentation/xcode/distributing-binary-frameworks-as-swift-packages)要求 ZIP 根目录直接包含 `.xcframework`，远程二进制还要提供校验和：
 
@@ -256,20 +256,20 @@ readonly PRODUCT_NAME="目标Product"
 
 ## 八、资源、依赖和公开 API 边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 8.1、资源
+### 8.1、资源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `JobsTextTools` 当前没有运行时资源，所以最小示范只打代码。
 - 有图片、JSON、字体、音视频、本地化或 `xcassets` 时，继续使用独立 `Resource Bundle`，由二进制 Pod / Package 同步交付。
 - Framework 内部取资源时使用模块 Bundle 或明确的资源 Bundle，不使用 `Bundle.main` 猜宿主路径。
 
-### 8.2、依赖
+### 8.2、依赖 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 系统 Framework 可以通过 target 的 Link Binary 配置解决。
 - 自建 Pod 与第三方 Pod 必须形成可发布的二进制依赖图。
 - 公开 API 一旦出现依赖模块的公开类型，消费者也必须能导入那个模块。
 - 静态 Framework 不会因为放进 XCFramework 就自动把所有依赖代码安全吞进去。
 
-### 8.3、Swift ABI 与模块稳定性
+### 8.3、Swift ABI 与模块稳定性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - `BUILD_LIBRARY_FOR_DISTRIBUTION=YES` 会生成 `.swiftinterface`，解决不同 Swift 编译器之间的模块接口读取问题。
 - 这不代表任意未来 Swift / Xcode 都永久兼容；每次升级 Xcode、最低系统版本或公开 API 后仍要重新归档并做消费者构建。
@@ -277,7 +277,7 @@ readonly PRODUCT_NAME="目标Product"
 
 ## 九、验证与交付清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 9.1、结构验证
+### 9.1、结构验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```shell
 plutil -lint JobsTextTools.xcframework/Info.plist
@@ -285,7 +285,7 @@ find JobsTextTools.xcframework -type f -name JobsTextTools -exec file {} \;
 find JobsTextTools.xcframework -type f -name "*.swiftinterface" -print
 ```
 
-### 9.2、消费者验证
+### 9.2、消费者验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 最低要求不是“脚本最后显示成功”，而是另一个编译单元确实可以导入模块。Demo 脚本会自动对 `JobsTextToolsConsumerDemo.swift` 执行 `swiftc -typecheck`。
 

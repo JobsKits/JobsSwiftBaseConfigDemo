@@ -45,15 +45,15 @@ webSocketClient.send(text: "Hello WebSocket") { result in
 
 <a id="jobs-architecture"></a>
 
-## 三、架构脉络与关键设计
+## 三、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 3.1、设计目的与职责划分
+### 3.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 基于 URLSessionWebSocketTask 封装连接、持续接收、心跳、退避重连与状态回调。业务消息模型、认证和协议解释留给宿主，客户端只管理传输生命周期。
 
-### 3.2、运行脉络
+### 3.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 发起连接 → 握手成功 → 接收消息并继续下一次接收 → 心跳检查 → 失败退避重连或主动断开
 
@@ -72,7 +72,7 @@ flowchart TD
     H["主动 disconnect"] --> I["停止心跳并取消重连"]
 ```
 
-### 3.3、关键设计与边界
+### 3.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 接收 API 每次返回一条消息，需要继续安排下一轮，不能收到一条后就停止监听。
 - 主动 disconnect 会停止心跳并取消待重连任务，与异常断线后的自动恢复不同。
@@ -80,7 +80,7 @@ flowchart TD
 - 状态、消息与发送完成回调统一回到主线程，业务不应在这些回调里执行耗时解析。
 - 旧 task 的回调与新连接要区分，避免旧连接失败误触发新连接重连。
 
-### 3.4、阅读与重建顺序
+### 3.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 State 和 connect/disconnect，再看 receiveNextMessage、心跳、scheduleReconnect 与 delegate。
 

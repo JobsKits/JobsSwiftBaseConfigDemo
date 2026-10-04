@@ -41,7 +41,7 @@ JobsAppIconRibbon@Pods/
 
 ## 三、接入方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 3.1、引入本地 Pod
+### 3.1、引入本地 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 在项目的 `Podfile` 或依赖拆分文件中加入：
 
@@ -55,7 +55,7 @@ pod 'JobsAppIconRibbon', :path => './JobsByPods/JobsAppIconRibbon@Pods'
 pod install --no-repo-update
 ```
 
-### 3.2、创建项目配置
+### 3.2、创建项目配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 在项目根目录创建 `JobsAppIconRibbon.config`：
 
@@ -75,7 +75,7 @@ FONT_SIZE_RATIO=0.105
 
 `SOURCE_APPICONSET` 必须相对于项目根目录，且必须指向包含 `Contents.json` 的原始 `.appiconset`。
 
-### 3.3、切换 AppIcon 名称
+### 3.3、切换 AppIcon 名称 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 在 App Target 的 Build Settings 中配置 `Asset Catalog App Icon Set Name`：
 
@@ -155,19 +155,19 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 
 ## 八、常见问题 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 8.1、提示找不到配置文件
+### 8.1、提示找不到配置文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 确认 `JobsAppIconRibbon.config` 位于项目根目录；多工程目录还要确认 `PODS_PODFILE_DIR_PATH` 指向正确项目。
 
-### 8.2、提示找不到源 AppIcon
+### 8.2、提示找不到源 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 确认 `SOURCE_APPICONSET` 是项目根目录下的相对路径，并检查目录名大小写及 `Contents.json` 是否存在。
 
-### 8.3、构建后仍显示原始 AppIcon
+### 8.3、构建后仍显示原始 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 确认当前 Configuration 的 `ASSETCATALOG_COMPILER_APPICON_NAME` 已切换到派生名称，并重新构建 App。
 
-### 8.4、字体没有生效
+### 8.4、字体没有生效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 `FONT_NAME` 使用 macOS PostScript 字体名称。找不到指定字体时会自动使用系统粗体，构建不会因此中断。
 
@@ -180,15 +180,15 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 
 <a id="jobs-architecture"></a>
 
-## 十、架构脉络与关键设计
+## 十、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 10.1、设计目的与职责划分
+### 10.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 构建期读取原始 AppIcon 与构建环境参数，通过 [**Swift**](https://www.swift.org/) 生成器绘制环境绶带，输出派生 appiconset 供构建使用。它不是运行时页面，也不负责 App 内切换网络环境。
 
-### 10.2、运行脉络
+### 10.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 读取配置与原始图标 → 解析文案和绘制参数 → 生成带绶带图标集 → 构建使用派生资源名
 
@@ -205,14 +205,14 @@ flowchart LR
     E --> F[Xcode 编译派生 AppIcon]
 ```
 
-### 10.3、关键设计与边界
+### 10.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 源图标与派生图标分开，不能把 SOURCE_APPICONSET 指向上一次生成结果造成绶带重复叠加。
 - 构建参数改变后需重新构建；运行时修改变量不会改变已经安装的桌面图标。
 - 生成器使用 macOS 图形环境，重建应保留脚本调用、配置文件和输出资源的关系。
 - 字体回退和正式包是否展示绶带属于配置边界，不能在生成器里写死所有环境。
 
-### 10.4、阅读与重建顺序
+### 10.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读构建入口与参数说明，再看生成器的配置解析、render 和输出路径。
 

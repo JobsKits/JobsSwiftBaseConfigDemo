@@ -1,4 +1,4 @@
-# `JobsMarqueeView`
+# <span id="前言">`JobsMarqueeView`</span>
 
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
 
@@ -6,7 +6,7 @@
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
-## 一、简介
+## 一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 定时器核心依托于 [<font size=5>**`JobsSwiftTimer`**</font>](https://github.com/JobsKits/JobsSwiftTimer)
 * 显示的UI为**UIButton** ➤ 充分利用**UIButton**自带的：
@@ -21,9 +21,9 @@
   * 【当前 / 其他】背景图支持2种获取模式 ➤ 本地图片 / 网络图片（[**Kingfisher**](https://github.com/onevcat/Kingfisher) / [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)）
   * 支持定义**`UIPageControl`**与**`JobsMarqueeView`**的位置 ➤ 左下/底部/右下
 
-## 二、相关配置属性
+## 二、相关配置属性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、滚动方向
+### 1、滚动方向 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 .byDirection(.bottom)
@@ -51,7 +51,7 @@ public enum JobsDirection: UInt {
 }
 ```
 
-### 2、滚动模式
+### 2、滚动模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 .byScrollMode(.frequency(interval: 1.0))
@@ -67,7 +67,7 @@ public enum ScrollMode {
 }
 ```
 
-### 3、**item** 尺寸模式
+### 3、**item** 尺寸模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 .byItemSizeMode(.fillBounds)
@@ -83,20 +83,20 @@ public enum ItemSizeMode {
 }
 ```
 
-### 4、数据源配置
+### 4、数据源配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 .byDataSourceButtons([ 
   UIButton.sys()...]
 ```
 
-### 5、<font color=red>内容可视化区域配置</font>
+### 5、<font color=red>内容可视化区域配置</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 执行**`UIButton`**方面的配置即可
 
-## 三、初始化方案
+## 三、初始化方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 1、跑马灯
+### 1、跑马灯 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 连续滚动（**向上**）
 
@@ -296,7 +296,7 @@ public enum ItemSizeMode {
       }()
   ```
 
-### 2、轮播图
+### 2、轮播图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 本地@背景图
 
@@ -646,3 +646,5 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [JobsMarqueeView.swift](<./JobsMarqueeView.swift>)
 
 依赖与编译入口：[JobsMarqueeView.podspec](<./JobsMarqueeView.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftTimer`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`Kingfisher`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

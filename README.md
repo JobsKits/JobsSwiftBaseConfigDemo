@@ -6714,7 +6714,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-#### 39.1、SceneDelegate 多场景与窗口会话 Demo
+#### 39.1、SceneDelegate 多场景与窗口会话 Demo <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 根列表“系统能力与硬件通信”提供独立入口 `JobsSceneDelegateDemoVC`，不是静态说明页：
   * 新建 Scene 窗口，并通过 `NSUserActivity` 直接路由到 Demo
@@ -10510,7 +10510,7 @@ let b = v as! UIButton                  // 若不是 UIButton 会崩溃
 > <font color=red>**`defer`**</font> = **作用域退出时必执行的收尾代码（栈式执行）**  
 > 类似 `finally`，但更严格、与作用域强绑定
 
-#### 30.1、核心语义（必须掌握）
+#### 30.1、核心语义（必须掌握） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * **触发时机**：离开“当前作用域”时执行
 
@@ -10537,7 +10537,7 @@ defer { print("C") }
 // 输出：C → B → A
 ```
 
-#### 30.2、作用域绑定（非常关键）
+#### 30.2、作用域绑定（非常关键） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > <font color=red>**`defer`**</font> 绑定的是“最近的作用域”，不是整个函数
 
@@ -10556,7 +10556,7 @@ func f() {
 // 输出：B → A（内层先退出）
 ```
 
-#### 30.3、变量捕获（容易误解）
+#### 30.3、变量捕获（容易误解） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > <font color=red>**`defer`**</font> 中变量是“执行时取值”，不是注册时
 
@@ -10576,7 +10576,7 @@ let snapshot = x
 defer { print(snapshot) }
 ```
 
-#### 30.4、async 场景（现代 Swift 必会）
+#### 30.4、async 场景（现代 Swift 必会） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```swift
 func work() async {
@@ -10605,7 +10605,7 @@ defer {
 }
 ```
 
-#### 30.5、不会执行的情况
+#### 30.5、不会执行的情况 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 以下情况 <font color=red>**`defer`**</font> **不会执行**：
 
@@ -10621,7 +10621,7 @@ func crash() {
 }
 ```
 
-#### 30.6、⚠️ 最大坑：作用域错位（异步 / 逃逸闭包）
+#### 30.6、⚠️ 最大坑：作用域错位（异步 / 逃逸闭包） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > <font color=red>**`defer`**</font> 只跟“当前作用域”绑定，不会等待异步
 
@@ -10667,7 +10667,7 @@ URLSession.shared.dataTask(with: url) { _,_,_ in
 }.resume()
 ```
 
-#### 30.7、锁 & 并发（经典误用）
+#### 30.7、锁 & 并发（经典误用） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ❌ 错误：锁提前释放
 
@@ -10707,7 +10707,7 @@ DispatchQueue.global().async {
 * 串行队列
 * actor（彻底避免锁）
 
-#### 30.8、性能注意（热路径）
+#### 30.8、性能注意（热路径） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > <font color=red>**`defer`**</font> 很轻，但不是 0 成本
 
@@ -10731,7 +10731,7 @@ for x in xs {
 }
 ```
 
-#### 30.9、使用建议（工程实践）
+#### 30.9、使用建议（工程实践） <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 优先使用在：
 
@@ -10741,7 +10741,7 @@ for x in xs {
 
 * **对称操作**：lock / unlock
 
-#### 30.10、一句话总结
+#### 30.10、一句话总结 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 > <font color=red>**`defer`**</font> = **作用域级 finally + 栈式收尾机制**
 

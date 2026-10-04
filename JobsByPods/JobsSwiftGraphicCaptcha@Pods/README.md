@@ -8,7 +8,7 @@
 
 ---
 
-## 🔥 <font id=前言>前言</font> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 🔥 <font id=前言>前言</font>
 
 > `JobsSwiftGraphicCaptcha` 是 Jobs Swift 侧本地图形验证码 Pod，负责字符池、随机验证码文本、大小写校验策略和验证码绘制视图。
 
@@ -77,26 +77,26 @@ pod install --no-repo-update
 
 <a id="jobs-architecture"></a>
 
-## 六、架构脉络与关键设计
+## 六、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 6.1、设计目的与职责划分
+### 6.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 把字符集及比较策略、随机内容生成、图形绘制分开。Config 描述长度和字符单元，Generator 生成与校验，View 绘制验证码和干扰并提供刷新入口。
 
-### 6.2、运行脉络
+### 6.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 配置字符单元 → 生成随机文字 → 绘制内容与干扰 → 校验输入 → 刷新生成下一组
 
-### 6.3、关键设计与边界
+### 6.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 简体和繁体字符池分开，兼容中文入口将两者合并，不能误删其中一组。
 - 混合字符组需要保证生成策略与配置相符，不能简单拼接字符后就宣称各组都有覆盖。
 - 比较时大小写及输入归一化应与配置一致，View 不能另写一套不同校验规则。
 - 本地验证码组件不替代服务端验证或完整防滥用机制。
 
-### 6.4、阅读与重建顺序
+### 6.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 先读 CharacterUnit 与 Config，再读 Generator 的分组抽样和比较，最后读 View 的绘制与刷新。
 

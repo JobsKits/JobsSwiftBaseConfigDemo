@@ -1,4 +1,4 @@
-# Boehm-Demers-Weiser Garbage Collector
+# <span id="前言">Boehm-Demers-Weiser Garbage Collector</span>
 
 [![Travis-CI build status](https://travis-ci.org/ivmai/bdwgc.svg?branch=master)](https://travis-ci.org/ivmai/bdwgc)
 [![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/ivmai/bdwgc?branch=master&svg=true)](https://ci.appveyor.com/project/ivmai/bdwgc)
@@ -9,7 +9,7 @@ This is version 7.7.0 (next release development) of a conservative garbage
 collector for C and C++.
 
 
-## Download
+## Download <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 You might find a more recent/stable version on the
 [Download](https://github.com/ivmai/bdwgc/wiki/Download) page, or
@@ -19,7 +19,7 @@ Also, the latest bug fixes and new features are available in the
 [development repository](https://github.com/ivmai/bdwgc).
 
 
-## Overview
+## Overview <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 This is intended to be a general purpose, garbage collecting storage
 allocator.  The algorithms used are described in:
@@ -77,7 +77,7 @@ Further collector documentation can be found in the
 [overview](doc/overview.md).
 
 
-## General Description
+## General Description <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 This is a garbage collecting storage allocator that is intended to be
 used as a plug-in replacement for C's malloc.
@@ -161,7 +161,7 @@ stored on the thread's stack for the duration of their lifetime.
 (This is arguably a longstanding bug, but it hasn't been fixed yet.)
 
 
-## Installation and Portability
+## Installation and Portability <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 As distributed, the collector operates silently
 In the event of problems, this can usually be changed by defining the
@@ -266,7 +266,7 @@ For machines not already mentioned, or for nonstandard compilers,
 some porting suggestions are provided [here](doc/porting.md).
 
 
-## The C Interface to the Allocator
+## The C Interface to the Allocator <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The following routines are intended to be directly called by the user.
 Note that usually only `GC_malloc` is necessary.  `GC_clear_roots` and
@@ -380,7 +380,7 @@ There are provisions for allocation with explicit type information.
 This is rarely necessary.  Details can be found in gc_typed.h.
 
 
-## The C++ Interface to the Allocator
+## The C++ Interface to the Allocator <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The Ellis-Hull C++ interface to the collector is included in
 the collector distribution.  If you intend to use this, type
@@ -395,7 +395,7 @@ subobjects of STL data structures will be allocated using a system
 allocator, and objects they refer to may be prematurely collected.
 
 
-## Use as Leak Detector
+## Use as Leak Detector <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The collector may be used to track down leaks in C programs that are
 intended to run with malloc/free (e.g. code with extreme real-time or
@@ -422,7 +422,7 @@ program is not designed to run meaningfully in `FIND_LEAK` mode.
 Use "make gc.a" to build the collector.
 
 
-## Debugging Facilities
+## Debugging Facilities <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The routines `GC_debug_malloc`, `GC_debug_malloc_atomic`, `GC_debug_realloc`,
 and `GC_debug_free` provide an alternate interface to the collector, which
@@ -472,7 +472,7 @@ when finalization routines are invoked.  For details, about what's stored
 in the header, see the definition of the type oh in dbg_mlc.c file.)
 
 
-## Incremental/Generational Collection
+## Incremental/Generational Collection <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 The collector normally interrupts client code for the duration of
 a garbage collection mark phase.  This may be unacceptable if interactive
@@ -506,7 +506,7 @@ of information:
    likely to be observed very infrequently and hard to trace.
 
 
-## Bugs
+## Bugs <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Any memory that does not have a recognizable pointer to it will be
 reclaimed.  Exclusive-or'ing forward and backward links in a list
@@ -528,7 +528,7 @@ Your mileage may vary.)  The incremental/generational collection facility
 may help in some cases.
 
 
-## Feedback, Contribution, Questions and Notifications
+## Feedback, Contribution, Questions and Notifications <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 Please address bug reports and new feature ideas to
 [GitHub issues](https://github.com/ivmai/bdwgc/issues).  Before the
@@ -553,7 +553,7 @@ To be notified on all issues, please
 GitHub.
 
 
-## Copyright & Warranty
+## Copyright & Warranty <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
  * Copyright (c) 1988, 1989 Hans-J. Boehm, Alan J. Demers
  * Copyright (c) 1991-1996 by Xerox Corporation.  All rights reserved.
@@ -594,3 +594,5 @@ The atomic_ops library contains some code that is covered by the GNU General
 Public License, but is not needed by, nor linked into the collector library.
 It is included here only because the atomic_ops distribution is, for
 simplicity, included in its entirety.
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
