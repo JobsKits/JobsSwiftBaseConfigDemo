@@ -44,8 +44,8 @@ enum JobsEncodingRule {
             break
         /// 处理 .rawData 分支
         case .rawData:
-            if let query = request.query, !query.isEmpty {
-                throw JobsError.invalidRequest(reason: "Raw data request should not mix query payload in body channel")
+            if let body = request.body, !body.isEmpty {
+                throw JobsError.invalidRequest(reason: "Raw data encoding does not allow a second body payload")
             }
         /// 合并处理 .jsonBody、.formURLEncoded 分支
         case .jsonBody, .formURLEncoded:

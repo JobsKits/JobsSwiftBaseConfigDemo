@@ -15,10 +15,13 @@ private enum RibbonGeneratorError: LocalizedError {
     case missingSource(String)
     case invalidColor(String)
     case invalidImage(String)
+    case unsafeOutput(String)
 
     var errorDescription: String? {
         switch self {
         /// 处理 .invalidArguments 分支
+        case .unsafeOutput(let path):
+            return "输出路径必须与源目录分离，且文件名不能越出图标集：\(path)"
         case .invalidArguments:
             return "参数错误：需要 --project-root、--config 和 --configuration。"
         /// 处理 .missingConfiguration 分支
@@ -88,6 +91,11 @@ private struct RibbonConfiguration {
         outputAppIconSet = sourceAppIconSet.deletingLastPathComponent()
             .appendingPathComponent("\(outputPrefix)-\(safeConfiguration).appiconset")
 
+        guard !outputPrefix.contains("/"), !outputPrefix.contains("\\"),
+              outputAppIconSet.resolvingSymlinksInPath() != sourceAppIconSet.resolvingSymlinksInPath() else {
+            throw RibbonGeneratorError.unsafeOutput(outputAppIconSet.path)
+        }
+
         let uppercasedConfiguration = options.buildConfiguration.uppercased()
         if let customText = values["RIBBON_TEXT"], !customText.isEmpty {
             text = customText
@@ -104,7 +112,8 @@ private struct RibbonConfiguration {
         backgroundColor = try Self.color(from: values["BACKGROUND_COLOR"] ?? "#8B4513")
         textColor = try Self.color(from: values["TEXT_COLOR"] ?? "#FFFFFF")
         fontName = values["FONT_NAME"].flatMap { $0.isEmpty ? nil : $0 } ?? "HelveticaNeue-Bold"
-        fontSizeRatio = CGFloat(Double(values["FONT_SIZE_RATIO"] ?? "0.105") ?? 0.105)
+        let ratio = Double(values["FONT_SIZE_RATIO"] ?? "0.105") ?? 0.105
+        fontSizeRatio = CGFloat(ratio.isFinite && ratio > 0 ? min(1, ratio) : 0.105)
     }
 
     private static func parseConfiguration(at url: URL) throws -> [String: String] {
@@ -140,6 +149,7 @@ private struct RibbonConfiguration {
 private final class JobsAppIconRibbonGenerator {
     private let configuration: RibbonConfiguration
     private let fileManager = FileManager.default
+    private var stagingDirectory: URL?
 
     init(configuration: RibbonConfiguration) {
         self.configuration = configuration
@@ -153,27 +163,39 @@ private final class JobsAppIconRibbonGenerator {
             throw RibbonGeneratorError.missingSource(contentsURL.path)
         }
 
-        if fileManager.fileExists(atPath: configuration.outputAppIconSet.path) {
-            try fileManager.removeItem(at: configuration.outputAppIconSet)
+        let staging = configuration.outputAppIconSet.deletingLastPathComponent()
+            .appendingPathComponent(".JobsAppIconRibbon-\(UUID().uuidString).appiconset")
+        stagingDirectory = staging
+        defer {
+            try? fileManager.removeItem(at: staging)
+            stagingDirectory = nil
         }
-        try fileManager.createDirectory(at: configuration.outputAppIconSet, withIntermediateDirectories: true)
-        try fileManager.copyItem(
-            at: contentsURL,
-            to: configuration.outputAppIconSet.appendingPathComponent("Contents.json")
-        )
+        try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
+        try fileManager.copyItem(at: contentsURL, to: staging.appendingPathComponent("Contents.json"))
 
         var renderedFiles = Set<String>()
         for image in images {
             guard let filename = image["filename"] as? String, renderedFiles.insert(filename).inserted else { continue }
             try render(filename: filename)
         }
+        guard !renderedFiles.isEmpty else { throw RibbonGeneratorError.missingSource(contentsURL.path) }
+        if fileManager.fileExists(atPath: configuration.outputAppIconSet.path) {
+            _ = try fileManager.replaceItemAt(configuration.outputAppIconSet, withItemAt: staging)
+        } else {
+            try fileManager.moveItem(at: staging, to: configuration.outputAppIconSet)
+        }
         print("✔ AppIcon 绶带已生成：\(configuration.outputAppIconSet.path)")
         print("  文案：\(configuration.text)｜背景：\(configuration.backgroundColor)｜字体：\(configuration.fontName)")
     }
 
     private func render(filename: String) throws {
+        guard filename == (filename as NSString).lastPathComponent, filename != "..", !filename.isEmpty,
+              let stagingDirectory else { throw RibbonGeneratorError.unsafeOutput(filename) }
         let sourceURL = configuration.sourceAppIconSet.appendingPathComponent(filename)
-        let outputURL = configuration.outputAppIconSet.appendingPathComponent(filename)
+        guard sourceURL.resolvingSymlinksInPath().deletingLastPathComponent() == configuration.sourceAppIconSet.resolvingSymlinksInPath() else {
+            throw RibbonGeneratorError.unsafeOutput(filename)
+        }
+        let outputURL = stagingDirectory.appendingPathComponent(filename)
         guard let imageSource = CGImageSourceCreateWithURL(sourceURL as CFURL, nil),
               let sourceCGImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
             throw RibbonGeneratorError.invalidImage(sourceURL.path)

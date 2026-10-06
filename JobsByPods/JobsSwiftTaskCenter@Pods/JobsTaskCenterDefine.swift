@@ -37,7 +37,7 @@ public struct JobsPeriod: Sendable, Equatable, Comparable {
     /// 使用给定的秒数初始化 `JobsPeriod`。
     /// 会将负数钳制为 0，确保时间段不为负值。
     public init(_ timeInterval: TimeInterval) {
-        self.timeInterval = max(0, timeInterval)
+        self.timeInterval = timeInterval.isFinite ? min(max(0, timeInterval), 1_000_000_000) : 0
     }
 }
 // MARK: - JobsPeriod 便利扩展
@@ -137,8 +137,8 @@ extension JobsPlan {
 
     public func concat(_ other: JobsPlan) -> JobsPlan {
         JobsPlan.make {
-            var lhs = self.makeIterator()
-            var rhs = other.makeIterator()
+            let lhs = self.makeIterator()
+            let rhs = other.makeIterator()
             var useRHS = false
             return AnyIterator {
                 if !useRHS, let next = lhs.next() { return next }
@@ -175,7 +175,7 @@ extension JobsPlan {
         action: @escaping @Sendable () async -> Void
     ) -> JobsTask {
         JobsTask(plan: self, queue: queue) { task in
-            Task(priority: priority) {
+            task.launchAsync(priority: priority) {
                 await action()
             }
         }
@@ -190,7 +190,7 @@ extension JobsPlan {
         action: @escaping @Sendable (JobsTask) async -> Void
     ) -> JobsTask {
         JobsTask(plan: self, queue: queue) { task in
-            Task(priority: priority) {
+            task.launchAsync(priority: priority) {
                 await action(task)
             }
         }
@@ -208,7 +208,7 @@ extension JobsPlan {
         action: @escaping @Sendable () async -> Void
     ) -> JobsTask {
         JobsTask(plan: self, queue: .main, runLoopMode: mode) { task in
-            Task(priority: priority) {
+            task.launchAsync(priority: priority) {
                 await action()
             }
         }

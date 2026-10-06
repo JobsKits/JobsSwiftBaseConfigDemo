@@ -152,6 +152,7 @@ PODS:
     - SnapKit
   - JobsAppIconRibbon (1.0.0)
   - JobsAudioRecorder (0.1.0):
+    - JobsByUIKit
     - JobsFuseAnimation
     - JobsSwiftBaseDefines
     - JobsSwiftDSL
@@ -189,6 +190,7 @@ PODS:
     - ESPullToRefresh
     - GKNavigationBarSwift
     - JobsByQuartzCore
+    - JobsGetWindow
     - JobsImageTools
     - Jobsl10n
     - JobsNavBar
@@ -217,6 +219,12 @@ PODS:
     - JobsSwiftDSL
     - JobsSwiftTimer
   - JobsCryptoKit (0.0.1)
+  - JobsDebugPanel (1.0.0):
+    - JobsByUIKit
+    - JobsInheritance
+    - JobsSwiftBaseDefines
+    - JobsSwiftDSL
+    - SnapKit
   - JobsEmptyView (0.0.1):
     - JobsByUIKit
     - JobsSwiftBaseDefines
@@ -322,6 +330,7 @@ PODS:
   - JobsSwiftBaseTools (0.1.14):
     - Alamofire
     - JobsByUIKit
+    - JobsGetWindow
     - JobsSwiftBaseDefines
     - JobsSwiftBaseTools/JobsSwiftTimer (= 0.1.14)
     - "JobsSwiftBaseTools/🛜网络流量监控 (= 0.1.14)"
@@ -334,6 +343,7 @@ PODS:
   - JobsSwiftBaseTools/JobsSwiftTimer (0.1.14):
     - Alamofire
     - JobsByUIKit
+    - JobsGetWindow
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsSwiftDSL
@@ -344,6 +354,7 @@ PODS:
   - "JobsSwiftBaseTools/🛜网络流量监控 (0.1.14)":
     - Alamofire
     - JobsByUIKit
+    - JobsGetWindow
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsSwiftDSL
@@ -378,6 +389,7 @@ PODS:
     - AFNetworking
     - BMPlayer
     - GKNavigationBarSwift
+    - JobsGetWindow
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsTextTools
@@ -398,6 +410,7 @@ PODS:
     - JobsSwiftBaseDefines
     - JobsSwiftDSL
   - JobsSwiftLinkageMenuView (0.0.1):
+    - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsSwiftDSL
   - JobsSwiftMarkdown (1.0.0):
@@ -454,6 +467,22 @@ PODS:
   - JobsSwiftTimerMgr (0.1.0):
     - JobsSwiftTimer
   - JobsSwiftTools (0.1.1):
+    - JobsByPhotosUI
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsSwiftDSL
+    - JobsSwiftTools/Core (= 0.1.1)
+    - JobsSwiftTools/Flutter (= 0.1.1)
+    - JobsToast
+  - JobsSwiftTools/Core (0.1.1):
+    - JobsByPhotosUI
+    - JobsByUIKit
+    - JobsSwiftBaseDefines
+    - JobsSwiftBlock
+    - JobsSwiftDSL
+    - JobsToast
+  - JobsSwiftTools/Flutter (0.1.1):
     - Flutter
     - FlutterPluginRegistrant
     - JobsByPhotosUI
@@ -461,6 +490,7 @@ PODS:
     - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsSwiftDSL
+    - JobsSwiftTools/Core
     - JobsToast
   - JobsSwiftUILabelScrolling (1.0.0):
     - JobsSwiftDSL
@@ -672,6 +702,7 @@ DEPENDENCIES:
   - "JobsByWebKit (from `JobsByPods/JobsByWebKit@Pods`)"
   - "JobsCountdownButton (from `JobsByPods/JobsCountdownButton@Pods`)"
   - "JobsCryptoKit (from `JobsByPods/JobsCryptoKit@Pods`)"
+  - "JobsDebugPanel (from `JobsByPods/JobsDebugPanel@Pods`)"
   - "JobsEmptyView (from `JobsByPods/JobsEmptyView@Pods`)"
   - "JobsFuseAnimation (from `JobsByPods/JobsFuseAnimation@Pods`)"
   - "JobsGestureUnlock (from `JobsByPods/JobsGestureUnlock@Pods`)"
@@ -869,6 +900,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsCountdownButton@Pods"
   JobsCryptoKit:
     :path: "JobsByPods/JobsCryptoKit@Pods"
+  JobsDebugPanel:
+    :path: "JobsByPods/JobsDebugPanel@Pods"
   JobsEmptyView:
     :path: "JobsByPods/JobsEmptyView@Pods"
   JobsFuseAnimation:
@@ -984,7 +1017,7 @@ SPEC CHECKSUMS:
   Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
   AMPopTip: cf89d8690aa6e59ddc86bf46c0ccabb3e7d148a1
   BMPlayer: e4b241bd088644d7b89d991a1a65d1b1615d19b3
-  BRPickerViewSwift: 754a1043e981aaeff302fcba986ce76c5c8b99fb
+  BRPickerViewSwift: 9fe004340fc02d6af162339b7f5e7199bde9b369
   Cache: 11fe825910b467bf12931fc12624a2f380b3e09b
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   CoreXLSX: f9a7a70b509150ceb675b05877b7ac041a587030
@@ -1011,68 +1044,69 @@ SPEC CHECKSUMS:
   IQKeyboardToolbarManager: d449479b5843d4a3fb902d03bf62d6ca031ac20e
   IQTextInputViewNotification: 3b9fb27a16e7ee8958cc9092cfb07a1a9e1fd559
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
-  JobsAppDoor: 4a68b05d38061f96d28dc0568dca1a4b44e97579
-  JobsAppIconRibbon: ffa1614f80e480efc6d1f76749a1c938b0f638c9
-  JobsAudioRecorder: 2ada8d1f8fe3e0944905ea5c3e8cc0c4e590ba90
-  JobsBluetooth: c4a3493d91388d005f41994441fbe42228bee202
-  JobsBy3rdTools: 6ec5c901d29cc06770a1a733e4ff3e8d1ab39893
-  JobsByPDFKit: 26daf711a18d487431bd2f9ca5cbf8cc38195ca4
-  JobsByPhotosUI: 0719a40d8a729999e856d845df0013c4222c968f
-  JobsByQuartzCore: 983447f27427f3db5c757d3138be9ec3a880512a
-  JobsByUIKit: 07b4700e0d290d8bc190c56283fcf7a074407849
-  JobsByWebKit: b6fec1f5591c5255a3af8a87414af8a28e4f0b57
-  JobsCountdownButton: bdaa0a35d4fc729506bc61f4f1063c545a713054
-  JobsCryptoKit: d43e6e44d8868a9f3b2b5f299377452afc4b8459
-  JobsEmptyView: b791272f6fdb650c86a04070390851ba9507b110
-  JobsFuseAnimation: 1aea1eec9433f1a203a7986cdcde5147f44fa11b
-  JobsGestureUnlock: c802b9b099a49d81b8d854f73aa93ac93976ebe2
-  JobsGetWindow: fb0bbe8603081fb4645ea5d03317ce36c0f31c65
-  JobsIconfont: 80dbe75751366c5a50dc106c29433588a7e3d784
-  JobsImageRotation: 017fac15e5b8171bd6cfba0e5aae46ed10eb516f
-  JobsImageTools: 5442c54a3ae113aad76fd39a1f5ae3ae5b8fea28
-  JobsInheritance: 2a48bc8e2d7dae3643ad2668803c8a1b773dbba0
-  Jobsl10n: 7dcc6eee8ebefe092b65bd16350bbb9a29460aa6
-  JobsLocalNotification: 18d38925f61b8e4cff4dc5fad504bf84a827a484
-  JobsLuckyEnvelopeRain: 72c3d5a23c159413e0a4e57083937a7dcc62f790
-  JobsMarqueeView: 1e721d87ad15b0ec12bcab3ee3c65acb5e6ab4dc
-  JobsNavBar: 8e2d20df7de3e739edb457278920c44e72507047
-  JobsNetworking: 2dd25981e2c61d3cc8cba9e0ff3906fce80a81b0
-  JobsProgressBar: 18efb6cdb4d0f77739f12eed45ec6cc5d454f2c9
-  JobsScale: 0455fa25096eae822c98ecb443122e6125053231
-  JobsScreenCapture: a2bd935eb70e864cf101c75c0db56221dba5526f
-  JobsSwiftAppTools: e2d672d26bde70330c836809395058c76d9b28dc
-  JobsSwiftBaseDefines: f75d5587dfe99fb44479aa4b23294d9484313884
-  JobsSwiftBaseTools: 3f54c8cb79c9d84902deb474265d1c462a990dba
-  JobsSwiftBlock: ad1994f4adf1832dc6c526d7e870bb38a3945da2
-  JobsSwiftCalendar: 26b6c9b3765f3b1af1e44b45e3f481a5727ce4e7
-  JobsSwiftComment: aa3fe9e735bf633a7c397f6e4290562c0592e57d
-  JobsSwiftCountryCodeCtrl: e20c6062017e46ce73d010a3f319eaff0c056c50
-  JobsSwiftDebugTools: 0b091cc71765ad995323dde20f5017f42ee34819
-  JobsSwiftDSL: 750a34ada5131052ca81d584c2e6b10a981a871c
-  JobsSwiftExcel: ea26249b6a6cf7c19812e5ae584d9c49b88213dd
-  JobsSwiftFoundation: 7850038734cf7f5b2154ca9ced57ae7d8bb6f618
-  JobsSwiftGraphicCaptcha: bb851a79e6d850a79f34f564aa372f2a837e1a4e
-  JobsSwiftLinkageMenuView: 62044cd7a4b49fec3b3795ad9f2c01f0acddd0a3
-  JobsSwiftMarkdown: 8ee0a89a34baa6ab19afa5bd0ffa2a4d28ec0741
-  JobsSwiftMetalKit: e406ede5c7672e570e16a8dfb22d629c37bd2bb8
-  JobsSwiftNumberStepper: e2f6664fc3f0f378437e7d65b53864a58d4528fb
-  JobsSwiftOpen: 72f2fff9bd6df984246f66f53d7a8a8253e2d9f1
-  JobsSwiftPatch: 99e4abe4866100b972356fe9d4a428bf5721345f
-  JobsSwiftRefresher: 95ff85070e2f4c55f54d299b6bd63506298c8507
-  JobsSwiftSearcher: 05724a14d29aa67139af55ce4b07354a414fd7eb
-  JobsSwiftSplash: 03869bdf6cde350f61b7f9263883cc065084512e
-  JobsSwiftStandardLibrary: 0fde927b7b6f8d83daf3818cbe5094ddd35bbe8b
-  JobsSwiftTaskCenter: ecc03d5d502b9e64eb6ced127e8a95c25cb196b7
-  JobsSwiftTimer: ac6dd48743dfa856639f05f312e1e5a5f2b251fa
-  JobsSwiftTimerMgr: fc7acf4184f9d73f5ce4d564b5800e9c9f3321f0
-  JobsSwiftTools: c2f4c873f7baf90b02cdd34a06f7c79e22a401de
-  JobsSwiftUILabelScrolling: 5b8c6d6dd30e65d2be507605f193114b2ad78847
-  JobsSwiftWebSocket: 45267277f9bb480b25aedc31c88631ab485afd5e
-  JobsSwiftWorker: e918b2fa5d6beb6f3bb1d587a40fd19b567eabdf
-  JobsTextTools: 492006e86820df999a4b6e450c27148c829b4239
-  JobsToast: 950f1562ce5c058bca1415c76f090371883c5b14
-  JobsViewPush: 6cbe93cc9ddf1b749e8a7b97f4ddf7addb89d304
-  JobsWalletCard: 49d918f838755ddc4f50c5a02b541ea38c04a081
+  JobsAppDoor: d2076f88e308326b81baab224f9027cf3c20c805
+  JobsAppIconRibbon: 6257fba2d598029f029e0eeade93702b3f7bc419
+  JobsAudioRecorder: f8e429f6417e8fc52b1c64db81405c068e9f2a73
+  JobsBluetooth: 2e2f1a8e732bd6dc4e267d7a8f0ed99f7829211c
+  JobsBy3rdTools: 390623568f0078063fbadebfdf425f67f55559f1
+  JobsByPDFKit: 59400c257b584584fecd0d725598ef4d8eb18cae
+  JobsByPhotosUI: af7813a32f19516f0b09377c4ab0fc5e044d0a0f
+  JobsByQuartzCore: b6651ef81f7d713ac850e7358f0e711a8efaea56
+  JobsByUIKit: 8f3e1ec2856a66c5c3d4d74b6d411a643aa114e2
+  JobsByWebKit: a6e89cb4bbca7914a02f411a9ed2658a36266ba8
+  JobsCountdownButton: d7a67e77d6e1cb2cec89c2efc9d905e7cfc9d8c6
+  JobsCryptoKit: 2c39abe1891f94ede4882c7aca9454842ad9a870
+  JobsDebugPanel: f79d02509266c4afe3e4d296258f82e074fcb4ff
+  JobsEmptyView: 9bc50f77073bfdb9bcca8260a025eb81563f7d6c
+  JobsFuseAnimation: 38bf8c7eaf62cb5180eee7cc9d6d5c7c3512e514
+  JobsGestureUnlock: 7f9826c79f695ae4bc183a53f54e123ef9c6c901
+  JobsGetWindow: 1731e6ca6f8b1d1fee0cff29b5c922f125addb82
+  JobsIconfont: f3ede5abc5ed5bd1860a7d81a6b828f85fc82f7e
+  JobsImageRotation: 4c5adb5414305a7b4eed682883019b14c98f2fc7
+  JobsImageTools: a5a65ce4138d8e911f2f007bb1d94ebfa947f18a
+  JobsInheritance: bf4aae5b559fcc952625acc874fa42826204429a
+  Jobsl10n: 0956bac994d4a5bd5bd003e0893224a15cc0dffe
+  JobsLocalNotification: e1d06f0723d7e0f3dabfb020c9eeb3fa1381f4b0
+  JobsLuckyEnvelopeRain: 7c1b85915709519e4c2ea597ac83ee352c57d34f
+  JobsMarqueeView: e7fe4fb25cbbe8374fd6d76aa37fb2c16f30d924
+  JobsNavBar: 9cf93eb676b9b173251b83563bf7ea58c39f3dee
+  JobsNetworking: 146e38e7d1449993d93d13d9dd91d3af364e1fe1
+  JobsProgressBar: a35cd904db35adec174ec5a285e3f869c0281972
+  JobsScale: 0aad4091381bc35b5f4643c289dda09a23aa800f
+  JobsScreenCapture: 45d77c34a83b472413992c7a80f675738c75a78f
+  JobsSwiftAppTools: 2eab6f7edf53e4e21597d6260dd451406593709c
+  JobsSwiftBaseDefines: 4c3fbbe8b8b468cee7619bcae719c00b61d595b3
+  JobsSwiftBaseTools: c1cb345562edc02a602af8061ab763c95c47f410
+  JobsSwiftBlock: 80c0b89988e2ac768ab5fe70bc9a8fdcc486807b
+  JobsSwiftCalendar: 0f73ab3102b3c58fd1f3bce6851de4e3296aec66
+  JobsSwiftComment: ed69d684be79acfa072488335364940c013e7264
+  JobsSwiftCountryCodeCtrl: 0d34b167e1181565a0004999bc5e2e9bc4f7a2a2
+  JobsSwiftDebugTools: 204f308cb46215369dee8c3f723a27583748596e
+  JobsSwiftDSL: 156a872bea237ac50bf020f25e58e00cfb9203d0
+  JobsSwiftExcel: c6be794ec8296da968a379cce7265cab2544e156
+  JobsSwiftFoundation: e338ddb8128bec50c2e48999c2b0e89ed42cefb6
+  JobsSwiftGraphicCaptcha: 262cf5129fc0cfeb1a8a4dd950254220021ee770
+  JobsSwiftLinkageMenuView: bf71adb3c84cddf34bb2b940ef5edf1d847fe2ed
+  JobsSwiftMarkdown: c202330cb229b0cb31ffc198ecd920b9e13e4e99
+  JobsSwiftMetalKit: ca169ab9f51249a871ee05b7e3c94e4cebb37fa5
+  JobsSwiftNumberStepper: aad4d219da8d08e51d85f581734038f1d88c8d55
+  JobsSwiftOpen: db9a22f4ffbddad45b57fc8c67e3f74313f65280
+  JobsSwiftPatch: ce581e6d1aa5b327de14c7b4ef4053e136364b1a
+  JobsSwiftRefresher: 453566015d63abad8f0266c8622e9f4c3875f37a
+  JobsSwiftSearcher: 5cf9171c4a3e2d2b3fcc7199d31a81d79b1a47fe
+  JobsSwiftSplash: 3d27a389a5106c2d8b82ff11e3b0dd825bda52c1
+  JobsSwiftStandardLibrary: dd503b40bad6d980efa1946518605f3ef0d6e43d
+  JobsSwiftTaskCenter: c3057a1e20519771e7c97a95ad3c65315b87d26d
+  JobsSwiftTimer: 94aa559611a1d16b4077fa6ded2b8a03d49a9f33
+  JobsSwiftTimerMgr: 72cea8695b770eb8036962f006b61ab80913d88d
+  JobsSwiftTools: fc160e692ac5cb4e5458ff04d176443b2c198a39
+  JobsSwiftUILabelScrolling: 8985d494a4088fd051634db1856e760fcaa80066
+  JobsSwiftWebSocket: 084b764c0e4943ce25590d979d36fa087b73a8d0
+  JobsSwiftWorker: d8cf516b71542117de33aad7715d912943ec3f21
+  JobsTextTools: b87f430497a790ee10d567015a056e5bcd6e25ea
+  JobsToast: 72e621226afed65a6683e2194196c180e43b4d52
+  JobsViewPush: e5c657a18076d28a751d854fedfbc3cddce0a3f3
+  JobsWalletCard: c7ef5825ba9281c3cf446ac35704df00cd614f55
   JXBanner: 348dbef856e786494cbf30fb45d6b84826f2d3c5
   JXPageControl: e9487b39e2e58fc17790833214f3b8e935bef98b
   JXSegmentedView: cd73555ce2134d1656db2cb383ba9c2f36fb5078
@@ -1119,6 +1153,6 @@ SPEC CHECKSUMS:
   YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: daa57249afc1de4d69d989b1459ff3dc75d69482
+PODFILE CHECKSUM: b6b016867822b372f1857224ef1aac5ee8fb61c8
 
 COCOAPODS: 1.17.0

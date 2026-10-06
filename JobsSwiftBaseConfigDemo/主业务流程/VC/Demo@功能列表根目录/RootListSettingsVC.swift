@@ -141,6 +141,7 @@ enum RootListPreferences {
             .compactMap { $0 as? UIWindowScene }
             .filter { $0.activationState != .unattached }
             .flatMap(\.windows)
+            .filter { $0.windowLevel == .normal }
             .forEach {
                 $0.byRootViewController(makeAppRootViewController())
                     .byMakeKeyAndVisible()

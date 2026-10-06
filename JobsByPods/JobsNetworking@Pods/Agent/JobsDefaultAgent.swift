@@ -59,10 +59,20 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         completion: @escaping (Result<T, JobsError>) -> Void
     ) -> JobsRequestToken {
         let token = JobsRequestToken()
-        token.setCancel { [weak self] in
-            self?.client.cancel(requestId: request.trace.requestId)
+        let client = self.client
+        token.setCancel { [weak token] in
+            guard let token else { return }
+            client.cancel(requestId: token.operationID)
+            token.finish { completion(.failure(.cancelled)) }
         }
-        perform(request, as: type, token: token, onEvent: onEvent, completion: completion)
+        let finish: (Result<T, JobsError>) -> Void = { result in
+            token.finish { completion(token.isCancelled ? .failure(.cancelled) : result) }
+        }
+        let event: (Result<(T, JobsResponseSource), JobsError>) -> Void = { value in
+            guard !token.isCancelled, !token.isFinished else { return }
+            onEvent(value)
+        }
+        perform(request, as: type, token: token, onEvent: event, completion: finish)
         return token
     }
 
@@ -83,7 +93,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
             /// 处理 .cacheOnly 分支
             case .cacheOnly:
-                if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
+                if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, url: prepared.url, as: type) {
                     onEvent(.success((decoded, .cache)))
                     completion(.success(decoded))
                 } else {
@@ -91,7 +101,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 }
             /// 处理 .cacheElseLoad 分支
             case let .cacheElseLoad(ttl):
-                if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
+                if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, url: prepared.url, as: type) {
                     onEvent(.success((decoded, .cache)))
                     completion(.success(decoded))
                 } else {
@@ -99,7 +109,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 }
             /// 处理 .staleWhileRevalidate 分支
             case let .staleWhileRevalidate(ttl):
-                if let cached = loadCache(key: cacheKey), let decoded: T = decodeCache(cached, request: request, as: type) {
+                if let cached = loadCache(key: cacheKey, allowExpired: true), let decoded: T = decodeCache(cached, request: request, url: prepared.url, as: type) {
                     onEvent(.success((decoded, .cache)))
                 }
                 fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: ttl, as: type, token: token, attempt: 0, onEvent: onEvent, completion: completion)
@@ -122,10 +132,10 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         onEvent: @escaping (Result<(T, JobsResponseSource), JobsError>) -> Void,
         completion: @escaping (Result<T, JobsError>) -> Void
     ) {
+        guard !token.isCancelled, !token.isFinished else { return }
         logStart(request, attempt: attempt)
         config.observer.willSend(request)
-        client.perform(prepared) { [weak self] result in
-            guard let self else { return }
+        client.perform(prepared, token: token) { [self] result in
             if token.isCancelled {
                 completion(.failure(.cancelled))
                 return
@@ -168,6 +178,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         onEvent: @escaping (Result<(T, JobsResponseSource), JobsError>) -> Void,
         completion: @escaping (Result<T, JobsError>) -> Void
     ) {
+        guard !token.isCancelled, !token.isFinished else { return }
         let policy = request.retryPolicy ?? config.defaultRetryPolicy
         let context = JobsRetryContext(request: request, attempt: attempt, error: error)
         let decision = policy.decision(for: context)
@@ -178,10 +189,10 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
                 "delay": String(format: "%.3f", decision.delay),
                 "error": error.localizedDescription
             ])
-            DispatchQueue.global().asyncAfter(deadline: .now() + decision.delay) { [weak self] in
-                guard let self else { return }
+            token.scheduleRetry(after: decision.delay) { [self] in
                 self.fetchNetwork(request, prepared: prepared, cacheKey: cacheKey, cacheTTL: cacheTTL, as: type, token: token, attempt: attempt + 1, onEvent: onEvent, completion: completion)
-            };return
+            }
+            return
         }
         config.observer.didFail(request: request, error: error)
         config.logger.log(.error, "Request failed", meta: [
@@ -194,9 +205,24 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
     }
 
     private func prepareRequest(_ request: JobsRequest) throws -> JobsPreparedRequest {
-        let absoluteURL = URL(string: request.path, relativeTo: config.baseURL)?.absoluteURL ?? config.baseURL.appendingPathComponent(request.path)
+        let baseURL = effectiveBaseURL
+        guard var absoluteURL = URL(string: request.path, relativeTo: baseURL)?.absoluteURL,
+              ["http", "https"].contains(absoluteURL.scheme?.lowercased() ?? ""), absoluteURL.host != nil else {
+            throw JobsError.invalidRequest(reason: "Request URL must contain an http/https host")
+        }
+        let timeout = request.timeout ?? config.timeout
+        guard timeout.isFinite, timeout > 0 else { throw JobsError.invalidRequest(reason: "Timeout must be finite and positive") }
+        for value in Array(request.query?.values ?? [:].values) + Array(request.body?.values ?? [:].values) {
+            if let reason = value.validationError { throw JobsError.invalidRequest(reason: reason) }
+        }
         let rule = JobsEncodingRule.encoding(for: request)
         try JobsEncodingRule.validate(request, encoding: rule)
+        if case .urlQuery = rule { } else if let query = request.query, !query.isEmpty {
+            var urlRequest = URLRequest(url: absoluteURL)
+            urlRequest = try URLEncoding(destination: .queryString).encode(urlRequest, with: query.normalizedJSONObject())
+            guard let encodedURL = urlRequest.url else { throw JobsError.invalidRequest(reason: "Query URL encoding failed") }
+            absoluteURL = encodedURL
+        }
         var headers: [String: String] = ["Accept": "application/json"]
         headers.merge(request.headers) { _, new in new }
         headers.merge(headerHook.headers(for: request)) { _, new in new }
@@ -269,18 +295,21 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             query: request.query,
             body: request.body,
             version: config.version,
-            userScope: config.userScope
+            userScope: config.userScope,
+            rawBody: prepared.rawBody,
+            encoding: String(describing: JobsEncodingRule.encoding(for: request)),
+            headers: prepared.headers.dictionary.filter { !Set([config.traceHeaderKeys.requestId, config.traceHeaderKeys.traceId, config.traceHeaderKeys.spanId]).contains($0.key) }
         )
     }
 
-    private func loadCache(key: JobsCacheKey) -> JobsCachedValue? {
-        memoryCache.get(key: key) ?? diskCache.get(key: key)
+    private func loadCache(key: JobsCacheKey, allowExpired: Bool = false) -> JobsCachedValue? {
+        memoryCache.get(key: key, allowExpired: allowExpired) ?? diskCache.get(key: key, allowExpired: allowExpired)
     }
 
-    private func decodeCache<T: Decodable>(_ cached: JobsCachedValue, request: JobsRequest, as type: T.Type) -> T? {
+    private func decodeCache<T: Decodable>(_ cached: JobsCachedValue, request: JobsRequest, url: URL, as type: T.Type) -> T? {
         let headers = cached.responseHeaders
         guard let response = HTTPURLResponse(
-            url: URL(string: request.path, relativeTo: config.baseURL)?.absoluteURL ?? config.baseURL,
+            url: url,
             statusCode: 200,
             httpVersion: nil,
             headerFields: headers
@@ -300,8 +329,17 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
         }
     }
 
+    var effectiveBaseURL: URL {
+        #if DEBUG
+        return JobsNetworkingDebugEnvironment.shared.resolvedBaseURL(fallback: config.baseURL)
+        #else
+        return config.baseURL
+        #endif
+    }
+
     private func storeCache(data: Data, response: HTTPURLResponse, key: JobsCacheKey, ttl: TimeInterval) {
-        let expiry = Date().addingTimeInterval(ttl)
+        guard ttl.isFinite, ttl > 0 else { return }
+        let expiry = Date().addingTimeInterval(min(ttl, 31_536_000))
         let headers = response.allHeaderFields.reduce(into: [String: String]()) { partialResult, item in
             if let key = item.key as? String, let value = item.value as? String {
                 partialResult[key] = value
@@ -358,7 +396,8 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             }
             guard let payload = envelope.data else {
                 throw JobsError.emptyResponse
-            };return payload
+            }
+            return payload
         } catch let error as JobsError {
             throw error
         } catch {
@@ -372,7 +411,7 @@ public final class JobsDefaultAgent: JobsAgent, @unchecked Sendable {
             "traceId": request.trace.traceId,
             "spanId": request.trace.spanId,
             "method": request.method.rawValue,
-            "path": request.path,
+            "path": URLComponents(string: request.path)?.path ?? "<invalid>",
             "attempt": String(attempt)
         ])
     }

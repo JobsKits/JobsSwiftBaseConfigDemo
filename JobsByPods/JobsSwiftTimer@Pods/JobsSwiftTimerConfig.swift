@@ -37,7 +37,7 @@ public struct JobsSwiftTimerConfig {
         pauseInBackground: Bool = true,
         autoManageAppState: Bool = true
     ) {
-        let normalizedInterval = interval.isFinite ? max(0.000_001, interval) : 1.0
+        let normalizedInterval = Self.normalizedInterval(interval)
         self.interval = normalizedInterval
         self.repeats = repeats
         self.tolerance = tolerance.isFinite ? min(max(0, tolerance), normalizedInterval) : 0
@@ -48,4 +48,27 @@ public struct JobsSwiftTimerConfig {
         self.pauseInBackground = pauseInBackground
         self.autoManageAppState = autoManageAppState
     }
+    /// 内核消费前再次规范化，兼容初始化后修改配置的旧调用。
+    public var normalized: JobsSwiftTimerConfig {
+        JobsSwiftTimerConfig(
+            interval: interval,
+            repeats: repeats,
+            tolerance: tolerance,
+            queue: queue,
+            callbackDeliveryPolicy: callbackDeliveryPolicy,
+            runLoop: runLoop,
+            runLoopMode: runLoopMode,
+            pauseInBackground: pauseInBackground,
+            autoManageAppState: autoManageAppState
+        )
+    }
+
+    private static func normalizedInterval(_ value: TimeInterval) -> TimeInterval {
+        guard value.isFinite else {
+            return 1
+        }
+        // 保证 DispatchTime 的纳秒换算与 now + interval 均处于可表示区间。
+        return min(max(0.000_001, value), 1_000_000_000)
+    }
+
 }

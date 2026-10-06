@@ -50,6 +50,7 @@ public enum JobsSplashAction {
 
 public final class JobsSplashConfiguration {
     public var content: JobsSplashContent
+    public var fallbackImage: UIImage?
     public var countdownSeconds: Int?
     public var language: JobsSplashLanguage
     public var isSkipButtonVisible: Bool
@@ -83,6 +84,12 @@ public final class JobsSplashConfiguration {
     @discardableResult
     public func byLanguage(_ language: JobsSplashLanguage) -> Self {
         self.language = language
+        return self
+    }
+
+    @discardableResult
+    public func byFallbackImage(_ image: UIImage?) -> Self {
+        fallbackImage = image
         return self
     }
 

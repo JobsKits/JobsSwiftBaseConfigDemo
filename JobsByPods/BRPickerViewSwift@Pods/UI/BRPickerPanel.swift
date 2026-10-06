@@ -17,6 +17,9 @@ import JobsSwiftDSL
 
 public final class BRPickerPanel: UIView {
     public var strongOwner: AnyObject?
+    var onDismiss: (() -> Void)?
+    private var isDismissing = false
+    private var hasEnteredWindow = false
     public var theme: BRPickerTheme = BRPickerTheme()
     public var animator: BRPanelAnimatable = BRSlideAnimation()
 
@@ -85,7 +88,12 @@ public final class BRPickerPanel: UIView {
 
     public func present(in containerView: UIView?) {
         let host = containerView ?? BRPickerPanel.defaultHostView()
-        guard let host else { return }
+        guard let host else {
+            onDismiss?()
+            strongOwner = nil
+            return
+        }
+        isDismissing = false
         hostView = host
         host.addSubview(self)
         frame = host.bounds
@@ -107,6 +115,10 @@ public final class BRPickerPanel: UIView {
     }
 
     public func dismiss() {
+        guard !isDismissing else { return }
+        isDismissing = true
+        onDismiss?()
+        onDismiss = nil
         guard let host = hostView else {
             strongOwner = nil
             removeFromSuperview()
@@ -129,6 +141,37 @@ public final class BRPickerPanel: UIView {
         }
     }
 
+    public override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        if superview == nil, hostView != nil {
+            if isDismissing {
+                strongOwner = nil
+                hostView = nil
+            } else {
+                checkDepartureAfterReparenting()
+            }
+        }
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            hasEnteredWindow = true
+            return
+        }
+        guard hasEnteredWindow, !isDismissing else { return }
+        checkDepartureAfterReparenting()
+    }
+
+    private func checkDepartureAfterReparenting() {
+        // 同步重挂载先离窗再入窗；下一轮仍离窗才结束这次展示。
+        DispatchQueue.main.async { [self] in
+            guard !isDismissing,
+                  superview == nil || hasEnteredWindow && window == nil else { return }
+            dismiss()
+        }
+    }
+
     private func layoutPanelSubviews() {
         toolbar.byFrame(CGRect(x: 0, y: 0, width: panelView.bounds.width, height: theme.toolBarHeight))
         contentContainer.frame = CGRect(
@@ -143,7 +186,7 @@ public final class BRPickerPanel: UIView {
         super.layoutSubviews()
         dimmingControl.byFrame(bounds)
         // Keep panel pinned to bottom on rotations
-        if panelView.superview != nil, panelView.frame.width != bounds.width {
+        if !isDismissing, panelView.superview != nil, panelView.frame.width != bounds.width {
             // recompute
             present(in: hostView)
         }

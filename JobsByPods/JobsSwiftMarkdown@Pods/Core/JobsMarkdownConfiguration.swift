@@ -37,7 +37,7 @@ public struct JobsMarkdownConfiguration {
         customCSS: String = ""
     ) {
         self.appearance = appearance
-        self.fontScale = min(max(fontScale, 0.75), 2)
+        self.fontScale = fontScale.isFinite ? min(max(fontScale, 0.75), 2) : 1
         self.showsTableOfContents = showsTableOfContents
         self.showsCodeCopyButton = showsCodeCopyButton
         self.rendersMermaid = rendersMermaid

@@ -69,6 +69,7 @@ public enum AppLaunchManager {
 }
 // MARK: - App 启动检查
 public enum LaunchChecker {
+    private static let stateLock = NSLock.jobsMake { _ in }
     // 存储键（全部用 UInt8）
     static let kFirstLaunchFlag = "com.jobs.launch.first"   // 0/1
     static let kY = "com.jobs.launch.y"     // 年(偏移量)
@@ -80,6 +81,8 @@ public enum LaunchChecker {
     /// 核心：执行一次检查并返回这次启动的类型
     @discardableResult
     public static func markAndClassifyThisLaunch(now: Date = Date()) -> LaunchKind {
+        stateLock.lock()
+        defer { stateLock.unlock() }
         // 1) 是否首次安装启动
         let firstFlag = UD.uint8(forKey: kFirstLaunchFlag) ?? 0
         if firstFlag == 0 {
@@ -111,10 +114,14 @@ public enum LaunchChecker {
     }
     /// 是否为安装后的第一次启动（不产生副作用，纯读）
     public static var isFirstInstallLaunch: Bool {
-        (UD.uint8(forKey: kFirstLaunchFlag) ?? 0) == 0
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return (UD.uint8(forKey: kFirstLaunchFlag) ?? 0) == 0
     }
     /// 是否为今天的第一次启动（不产生副作用，纯读）
     public static func isFirstLaunchToday(now: Date = Date()) -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
         guard
             let y  = UD.uint8(forKey: kY),
             let m  = UD.uint8(forKey: kM),
@@ -128,6 +135,8 @@ public enum LaunchChecker {
     }
     /// 调试/测试用：清空标记
     public static func reset() {
+        stateLock.lock()
+        defer { stateLock.unlock() }
         UD.removeBy(kFirstLaunchFlag)
             .removeBy(kY)
             .removeBy(kM)
@@ -337,7 +346,10 @@ public extension UIView {
 
 public func networkNormalListenerBy(_ view:UIView){
     JobsNetworkTrafficMonitor.shared
-        .byOnUpdate {source, up, down in
+        .byOnUpdate { [weak view] source, up, down in
+            guard let view else {
+                return
+            }
             let upStr   = jobs_formatSpeed(up)
             let downStr = jobs_formatSpeed(down)
             let text = """
@@ -351,7 +363,10 @@ public func networkNormalListenerBy(_ view:UIView){
 
 public func networkRichListenerBy(_ view:UIView){
     JobsNetworkTrafficMonitor.shared
-        .byOnUpdate {source, up, down in
+        .byOnUpdate { [weak view] source, up, down in
+            guard let view else {
+                return
+            }
             let upStr   = jobs_formatSpeed(up)
             let downStr = jobs_formatSpeed(down)
             // 段落样式：居中 + 行距
@@ -394,7 +409,11 @@ public func networkRichListenerBy(_ view:UIView){
 /// d: UIScrollView.DecelerationRate.normal.rawValue 之类
 public func projectDistance(v0: CGFloat,
                      decelerationRate d: CGFloat) -> CGFloat {
-    return (v0 / 1000.0) * d / (1.0 - d)
+    guard v0.isFinite, d.isFinite, d >= 0, d < 1 else {
+        return 0
+    }
+    let distance = (v0 / 1000.0) * d / (1.0 - d)
+    return distance.isFinite ? distance : 0
 }
 /// 旋转180
 public func transform180ByBOOL(_ expanded : Bool) -> CGAffineTransform{

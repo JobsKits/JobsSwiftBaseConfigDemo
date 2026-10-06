@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct JobsMarkdownDocument: Hashable, Identifiable {
+public struct JobsMarkdownDocument: Hashable, Identifiable, Sendable {
     public let id: String
     public let title: String
     public let relativePath: String

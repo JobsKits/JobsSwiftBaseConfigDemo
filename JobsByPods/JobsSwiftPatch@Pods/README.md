@@ -37,7 +37,7 @@
 
 - 当前能力属于高风险 Runtime 演示能力，不建议提交 App Store。
 - 第一版只支持 payload provider，不支持任意 Swift/ObjC 消息派发或 JS 脚本执行。
-- 被替换方法必须暴露给 Objective-C runtime，且返回类型应与 payload block 一致。
+- 被替换方法必须通过无参数对象返回的 ABI 校验，并遵守上述 payload 和方法族限制。
 
 <a id="jobs-architecture"></a>
 
@@ -69,5 +69,28 @@
 - [JobsSwiftPatch.swift](<./JobsSwiftPatch.swift>)
 
 依赖与编译入口：[JobsSwiftPatch.podspec](<./JobsSwiftPatch.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 仅接受无业务参数、Objective-C runtime 可见、对象返回编码为 `@` 或 NSDictionary 的 payload provider。调用方须保证对象返回在业务上可由 NSDictionary 替代，`@` 编码本身不提供具体对象类型证明。标量、额外参数、Block 返回以及 ARC retained-return 方法族 `alloc/new/copy/mutableCopy/init` 拒绝安装。
+- payload 必须能转换为不可变 Foundation 快照：字符串键的字典、数组、字符串、有限 NSNumber、NSNull、Data 和有限 Date；任意自定义可变对象与过深结构拒绝安装。安装期间不得并发修改输入 payload；安装成功后外部修改原容器不改变补丁快照。
+- 同一 Class + Selector 只有一个当前 patch；替换会撤销旧 identifier 的回滚资格，新的 identifier 才能回滚当前实现。子类继承方法先落成本类方法，不修改父类或兄弟类。
+- 安装与回滚串行事务化，外部 swizzle 发生冲突时返回失败，不覆盖其它组件的实现。每个目标槽保留可复用 trampoline 直到管理器生命周期结束，避免释放正在执行的 IMP。
+- 此模块仍是受限 Runtime 演示能力；不会因为加锁和 ABI 校验而扩展成任意生产热更新承诺。
+
+
+## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftPatch --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

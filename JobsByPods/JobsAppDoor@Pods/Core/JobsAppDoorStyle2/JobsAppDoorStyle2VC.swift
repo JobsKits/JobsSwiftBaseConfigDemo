@@ -22,6 +22,12 @@ public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
     private lazy var registerForm = makeForm(mode: .register)
     private lazy var forgotPasswordForm = makeForm(mode: .forgotPassword)
 
+    public override func submissionStateDidChange(_ state: JobsAppDoorSubmissionState) {
+        loginForm.applySubmissionState(state)
+        registerForm.applySubmissionState(state)
+        forgotPasswordForm.applySubmissionState(state)
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
@@ -85,6 +91,7 @@ private extension JobsAppDoorStyle2VC {
             configuration: configuration,
             showsModeSwitcher: true
         )
+        form.configureGraphicCaptcha = configureGraphicCaptcha
         form.onModeRequest = { [weak self] mode in
             self?.switchMode(to: mode)
         }
@@ -105,6 +112,7 @@ private extension JobsAppDoorStyle2VC {
 
     func switchMode(to mode: JobsAppDoorMode) {
         guard mode != currentMode else { return }
+        cancelSubmission()
         view.endEditing(true)
         keyboardVisible = false
         view.layoutIfNeeded()

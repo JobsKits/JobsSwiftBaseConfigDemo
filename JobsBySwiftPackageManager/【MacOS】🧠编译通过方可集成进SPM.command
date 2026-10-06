@@ -5,6 +5,29 @@
 # - 影响范围：更新 SwiftPM 构建缓存；只有显式设置 DO_RESET=1 才重置缓存。
 # - 运行提示：运行后先展示内置自述；按回车继续，按 Ctrl+C 取消。
 
+# 仅渲染自述：标题红色加粗，编号正文蓝色常规字重；非彩色终端输出纯文本。
+jobs_intro_style() {
+  local intro_color=0
+  if [ -t 1 ] && [ -n "${TERM:-}" ] && [ "${TERM:-}" != dumb ] &&
+     [ -z "${NO_COLOR+x}" ] && [ "${PLAIN_OUTPUT:-0}" != 1 ] &&
+     [ "${IS_SOURCETREE_RUNTIME:-0}" != 1 ]; then
+    intro_color=1
+  fi
+  /usr/bin/awk -v color="$intro_color" -v role="${1:-body}" '
+    BEGIN { esc = sprintf("%c", 27) }
+    {
+      gsub(esc "\\[[0-9;]*m", "")
+      gsub(/\\(033|e|x1[bB])\[[0-9;]*m/, "")
+      if (!color || $0 ~ /^[[:space:]]*$/) { print; next }
+      numbered = ($0 ~ /^[[:space:]➤ℹ🔹✔⚠]*([0-9]+[、.)）]|[0-9]+️⃣|[-•])/)
+      heading = ($0 ~ /^[[:space:]]*#{1,6}[[:space:]]/ || $0 ~ /[：:][[:space:]]*$/ || $0 ~ /^[[:space:]]*[=━─-]{3}/)
+      title = (!numbered && (role == "title" || heading))
+      if (role == "auto" && !seen && !numbered) title = 1
+      if ($0 !~ /^[[:space:]]*[=━─-]+[[:space:]]*$/) seen = 1
+      printf "%s%s%s\n", esc (title ? "[1;31m" : "[0;34m"), $0, esc "[0m"
+    }
+  '
+}
 setopt NO_NOMATCH
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")" && pwd)"
@@ -26,17 +49,17 @@ highlight_echo() { log "\033[1;36m🔹 $1\033[0m"; }
 
 # 展示脚本职责；Podfile 等非交互入口可用 JOBS_SKIP_README=1 跳过等待。
 show_script_intro_and_wait() {
-  highlight_echo "============================== SPM 编译门禁 =============================="
-  info_echo "用途：依次执行 package resolve、build、test，并运行演示 Client。"
-  info_echo "范围：${SCRIPT_DIR} 下的本地 Package，包括嵌套的独立 Macro Demo。"
-  warn_echo "默认不执行 swift package reset；如需清缓存，请显式设置 DO_RESET=1。"
-  info_echo "日志：${LOG_FILE}"
-  highlight_echo "============================================================================"
+  highlight_echo "============================== SPM 编译门禁 ==============================" | jobs_intro_style title
+  info_echo "用途：依次执行 package resolve、build、test，并运行演示 Client。" | jobs_intro_style body
+  info_echo "范围：${SCRIPT_DIR} 下的本地 Package，包括嵌套的独立 Macro Demo。" | jobs_intro_style body
+  warn_echo "默认不执行 swift package reset；如需清缓存，请显式设置 DO_RESET=1。" | jobs_intro_style body
+  info_echo "日志：${LOG_FILE}" | jobs_intro_style body
+  highlight_echo "============================================================================" | jobs_intro_style title
 
   if [[ "${JOBS_SKIP_README:-0}" != "1" && -t 0 ]]; then
     read -r "?👉 已了解执行内容，按回车继续；按 Ctrl+C 取消：" _
   else
-    info_echo "当前为非交互模式，已跳过回车等待。"
+    info_echo "当前为非交互模式，已跳过回车等待。" | jobs_intro_style body
   fi
 }
 

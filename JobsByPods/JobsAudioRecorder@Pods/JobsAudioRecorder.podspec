@@ -13,5 +13,22 @@ Pod::Spec.new do |s|
   s.dependency 'JobsFuseAnimation'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftDSL'
+  s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftTimer'
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+  s.resource_bundles = (s.attributes_hash['resource_bundles'] || {}).merge('JobsAudioRecorderPrivacy' => ['Resource/PrivacyInfo.xcprivacy'])
+
 end

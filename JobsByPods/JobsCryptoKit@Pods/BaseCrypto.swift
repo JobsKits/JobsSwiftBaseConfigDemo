@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Security
 /// Hex/Base64、Data 转换
 
 public enum CryptoError: Error {
@@ -43,11 +44,15 @@ public extension Data {
     }
 
     static func randomBytes(count: Int) throws -> Data {
+        guard (0...1_048_576).contains(count) else { throw CryptoError.invalidData }
+        guard count > 0 else { return Data() }
         var data = Data(count: count)
         let result = data.withUnsafeMutableBytes { ptr in
-            SecRandomCopyBytes(kSecRandomDefault, count, ptr.baseAddress!)
+            guard let address = ptr.baseAddress else { return errSecParam }
+            return SecRandomCopyBytes(kSecRandomDefault, count, address)
         }
-        guard result == errSecSuccess else { throw CryptoError.keyGenerationFailed };return data
+        guard result == errSecSuccess else { throw CryptoError.keyGenerationFailed }
+        return data
     }
 }
 
@@ -56,6 +61,8 @@ public extension String {
 
     func base64Encoded() -> String { utf8Data.base64EncodedString() }
     func base64DecodedString() throws -> String {
-        guard let data = Data(base64Encoded: self) else { throw CryptoError.invalidBase64 };return String(data: data, encoding: .utf8) ?? ""
+        guard let data = Data(base64Encoded: self) else { throw CryptoError.invalidBase64 }
+        guard let string = String(data: data, encoding: .utf8) else { throw CryptoError.invalidData }
+        return string
     }
 }

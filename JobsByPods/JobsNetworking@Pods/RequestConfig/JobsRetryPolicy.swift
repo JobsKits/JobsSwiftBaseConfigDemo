@@ -63,8 +63,14 @@ public struct JobsRetryPolicy: Sendable {
     }
 
     public func decision(for context: JobsRetryContext) -> JobsRetryDecision {
+        guard !context.error.isCancelled, context.attempt >= 0,
+              context.attempt < min(100, max(0, maxRetries)) else {
+            return .init(shouldRetry: false)
+        }
         if let customDecider {
-            return customDecider(context)
+            let decision = customDecider(context)
+            return .init(shouldRetry: decision.shouldRetry,
+                         delay: decision.delay.isFinite ? min(86_400, max(0, decision.delay)) : 0)
         }
         guard context.attempt < maxRetries else {
             return .init(shouldRetry: false)
@@ -87,9 +93,13 @@ public struct JobsRetryPolicy: Sendable {
                 return .init(shouldRetry: false)
             }
         }
-        let factor = pow(multiplier, Double(context.attempt))
-        let jitterValue = Double.random(in: jitter)
-        return .init(shouldRetry: true, delay: initialDelay * factor * jitterValue)
+        let base = initialDelay.isFinite ? max(0, min(initialDelay, 86_400)) : 0.25
+        let growth = multiplier.isFinite ? min(100, max(1, multiplier)) : 2
+        let lower = jitter.lowerBound.isFinite ? max(0, min(100, jitter.lowerBound)) : 0.8
+        let upper = jitter.upperBound.isFinite ? max(lower, min(100, jitter.upperBound)) : max(lower, 1.2)
+        let factor = pow(growth, Double(context.attempt))
+        let jitterValue = Double.random(in: lower...upper)
+        return .init(shouldRetry: true, delay: min(86_400, base * factor * jitterValue))
     }
 
     public static let `default` = JobsRetryPolicy(maxRetries: 2, initialDelay: 0.25, multiplier: 2.0)

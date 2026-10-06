@@ -38,10 +38,39 @@ public protocol SafeCodableReporting: AnyObject {
 }
 
 public final class SafeCodableReportCenter {
-    public static var shared: SafeCodableReporting?
+    private static let lock = NSLock()
+    private static var reporter: SafeCodableReporting?
+    public static var shared: SafeCodableReporting? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return reporter
+        }
+        set {
+            lock.lock()
+            let previous = reporter
+            reporter = newValue
+            lock.unlock()
+            withExtendedLifetime(previous) {}
+        }
+    }
     private init() {}
 }
 // ================================== 配置（全局 + 轻覆写） ==================================
+/// decoderStrategy 保留 JSONDecoder 原生策略；宽松回退统一按 automatic。
+public enum SafeCodableTimestampUnit: Sendable, Equatable {
+    case decoderStrategy
+    case seconds
+    case milliseconds
+    case automatic
+}
+
+public extension CodingUserInfoKey {
+    static let safeCodableConfig = CodingUserInfoKey(rawValue: "jobs.safeCodable.config")!
+    /// [String: SafeCodableTimestampUnit]，字段路径以点拼接，例如 user.createdAt。
+    static let safeCodableTimestampUnits = CodingUserInfoKey(rawValue: "jobs.safeCodable.timestampUnits")!
+}
+
 public struct SafeCodableConfig {
     // 字符串处理
     public var trimStrings: Bool = true
@@ -59,6 +88,7 @@ public struct SafeCodableConfig {
     public var allowUnixTimestampSeconds: Bool = true
     public var allowUnixTimestampMilliseconds: Bool = true
     public var allowStringifiedTimestamp: Bool = true
+    public var timestampUnit: SafeCodableTimestampUnit = .decoderStrategy
     // URL 解析
     public var allowURLFromString: Bool = true
     /// 空字符串当作“无值”（非 Optional 时会落默认值）
@@ -73,7 +103,32 @@ public struct SafeCodableConfig {
     }
     public init() {}
     /// 全局共享配置（解码时读取）
-    public static var shared = SafeCodableConfig()
+    private static let lock = NSLock()
+    private static var storage = SafeCodableConfig()
+    public static var shared: SafeCodableConfig {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return storage
+        }
+        set {
+            lock.lock()
+            let previous = storage
+            storage = newValue
+            lock.unlock()
+            withExtendedLifetime(previous) {}
+        }
+    }
+
+    fileprivate static func resolved(for decoder: Decoder) -> SafeCodableConfig {
+        var config = decoder.userInfo[.safeCodableConfig] as? SafeCodableConfig ?? shared
+        let units = decoder.userInfo[.safeCodableTimestampUnits] as? [String: SafeCodableTimestampUnit]
+        let path = decoder.codingPath.map { $0.stringValue }.joined(separator: ".")
+        if let unit = units?[path] {
+            config.timestampUnit = unit
+        }
+        return config
+    }
 }
 // ================================== 工具：编码路径 & 报告 ==================================
 @inline(__always)
@@ -87,6 +142,7 @@ private func report(_ event: SafeCodableEvent) {
 }
 // 小工具：共享 ISO8601 格式器（减少分配）
 private enum _DateParsers {
+    static let lock = NSLock()
     static let iso8601: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter.jobsMake { _ in }
         // 默认行为已够用，如需要微调（.withFractionalSeconds）可在这里配置
@@ -108,7 +164,7 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let cfg = SafeCodableConfig.shared
+        let cfg = SafeCodableConfig.resolved(for: decoder)
         let codingPath = codingPathStrings(decoder)
         let container = try decoder.singleValueContainer()
         // 用局部变量承接结果，最后统一赋值，避免“提前 return 未初始化所有存储属性”
@@ -116,7 +172,8 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
         if container.decodeNil() {
             value = T.defaultValue
             report(.defaulted(expected: "\(T.self)", codingPath: codingPath, reason: "null"))
-        } else if let v = try? container.decode(T.self) {
+        } else if (T.self != Date.self || cfg.timestampUnit == .decoderStrategy),
+                  let v = try? container.decode(T.self) {
             value = v
         } else if let v: T = coerce(
             T.self,
@@ -154,14 +211,15 @@ public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let cfg = SafeCodableConfig.shared
+        let cfg = SafeCodableConfig.resolved(for: decoder)
         let codingPath = codingPathStrings(decoder)
         let container = try decoder.singleValueContainer()
         // 收敛到局部变量
         let value: T?
         if container.decodeNil() {
             value = nil    // Optional 碰到 null → nil，不上报以减少噪音
-        } else if let v = try? container.decode(T.self) {
+        } else if (T.self != Date.self || cfg.timestampUnit == .decoderStrategy),
+                  let v = try? container.decode(T.self) {
             value = v
         } else if let v: T = coerce(
             T.self,
@@ -235,13 +293,13 @@ private func fromString<T: SafeDefault & Codable>(
         }
     /// 处理 Double.Type 类型分支
     case is Double.Type where cfg.allowStringToNumber:
-        if let v = Double(s) {
+        if let v = Double(s), v.isFinite {
             report(.coerced(from: "String", to: "Double", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
     /// 处理 Float.Type 类型分支
     case is Float.Type where cfg.allowStringToNumber:
-        if let v = Float(s) {
+        if let v = Float(s), v.isFinite {
             report(.coerced(from: "String", to: "Float", codingPath: codingPath, rawSample: s))
             return (v as! T)
         }
@@ -267,7 +325,7 @@ private func fromString<T: SafeDefault & Codable>(
             report(.coerced(from: "String(number)", to: "Bool(\(i != 0))", codingPath: codingPath, rawSample: s))
             return ((i != 0) as! T)
         }
-        if let d = Double(s) {
+        if let d = Double(s), d.isFinite {
             report(.coerced(from: "String(number)", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: s))
             return ((d != 0) as! T)
         }
@@ -275,7 +333,10 @@ private func fromString<T: SafeDefault & Codable>(
     case is Date.Type:
         // 1) ISO8601
         if cfg.allowISO8601Date {
-            if let v = _DateParsers.iso8601.date(from: s) {
+            _DateParsers.lock.lock()
+            let parsed = _DateParsers.iso8601.date(from: s)
+            _DateParsers.lock.unlock()
+            if let v = parsed {
                 report(.coerced(from: "String(ISO8601)", to: "Date", codingPath: codingPath, rawSample: s))
                 return (v as! T)
             }
@@ -337,10 +398,9 @@ private func fromInt<T: SafeDefault & Codable>(
         return ((i != 0) as! T)
     /// 处理 Date.Type 类型分支
     case is Date.Type:
-        if cfg.allowUnixTimestampSeconds {
-            let v = Date(timeIntervalSince1970: TimeInterval(i))
-            report(.coerced(from: "Int(timestamp_sec)", to: "Date", codingPath: codingPath, rawSample: "\(i)"))
-            return (v as! T)
+        if let date = timestampDate(Double(i), cfg: cfg) {
+            report(.coerced(from: "Int(timestamp)", to: "Date", codingPath: codingPath, rawSample: "\(i)"))
+            return (date as! T)
         }
     /// 未匹配已知分支时执行兜底处理
     default:
@@ -353,6 +413,9 @@ private func fromDouble<T: SafeDefault & Codable>(
     cfg: SafeCodableConfig,
     codingPath: [String]
 ) -> T? {
+    guard d.isFinite else {
+        return nil
+    }
     switch T.self {
     /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowNumberToString:
@@ -360,37 +423,77 @@ private func fromDouble<T: SafeDefault & Codable>(
         return (String(d) as! T)
     /// 处理 Int.Type 类型分支
     case is Int.Type:
-        return (Int(d) as! T)
+        // 下界附近的超范围 JSON 数值可能被 Double 舍入为 Int.min，保守拒绝回退边界。
+        // 合法原生 Int.min 在 decode(Int.self) 快路径仍然保留。
+        guard d > Double(Int.min), let value = Int(exactly: d.rounded(.towardZero)) else {
+            return nil
+        }
+        return (value as! T)
     /// 处理 Double.Type 类型分支
     case is Double.Type:
         return (d as! T)
     /// 处理 Float.Type 类型分支
     case is Float.Type:
-        return (Float(d) as! T)
+        let value = Float(d)
+        guard value.isFinite else {
+            return nil
+        }
+        return (value as! T)
     /// 处理 Decimal.Type 类型分支
     case is Decimal.Type:
-        return (Decimal(d) as! T)
+        guard let value = Decimal(string: String(d)), !value.isNaN else {
+            return nil
+        }
+        return (value as! T)
     /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowNumberToBool:
         report(.coerced(from: "Double", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: "\(d)"))
         return ((d != 0) as! T)
     /// 处理 Date.Type 类型分支
     case is Date.Type:
-        // 识别秒/毫秒
-        if cfg.allowUnixTimestampMilliseconds, d >= 1_000_000_000_000 {
-            let v = Date(timeIntervalSince1970: d / 1000.0)
-            report(.coerced(from: "Double(timestamp_ms)", to: "Date", codingPath: codingPath, rawSample: "\(d)"))
-            return (v as! T)
-        }
-        if cfg.allowUnixTimestampSeconds {
-            let v = Date(timeIntervalSince1970: d)
-            report(.coerced(from: "Double(timestamp_sec)", to: "Date", codingPath: codingPath, rawSample: "\(d)"))
-            return (v as! T)
+        if let date = timestampDate(d, cfg: cfg) {
+            report(.coerced(from: "Double(timestamp)", to: "Date", codingPath: codingPath, rawSample: "\(d)"))
+            return (date as! T)
         }
     /// 未匹配已知分支时执行兜底处理
     default:
         break
     };return nil
+}
+
+private func timestampDate(_ value: Double, cfg: SafeCodableConfig) -> Date? {
+    guard value.isFinite else {
+        return nil
+    }
+    let seconds: Double
+    switch cfg.timestampUnit {
+    /// 明确秒单位，不使用数值大小猜测。
+    case .seconds:
+        guard cfg.allowUnixTimestampSeconds else {
+            return nil
+        }
+        seconds = value
+    /// 明确毫秒单位，整数与数字字符串使用同一单位。
+    case .milliseconds:
+        guard cfg.allowUnixTimestampMilliseconds else {
+            return nil
+        }
+        seconds = value / 1000
+    /// 兼容启发式只在宽松回退或显式 automatic 时使用。
+    case .automatic, .decoderStrategy:
+        if cfg.allowUnixTimestampMilliseconds && (abs(value) >= 1_000_000_000_000 || !cfg.allowUnixTimestampSeconds) {
+            seconds = value / 1000
+        } else if cfg.allowUnixTimestampSeconds {
+            seconds = value
+        } else {
+            return nil
+        }
+    }
+    // Date 可存储极大 Double，但日期格式化/日历无法可靠消费超出 1…9999 年的数据。
+    guard (-62_135_596_800...253_402_300_799).contains(seconds) else {
+        return nil
+    }
+    return Date(timeIntervalSince1970: seconds)
 }
 
 private func fromBool<T: SafeDefault & Codable>(

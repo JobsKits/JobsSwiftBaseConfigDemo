@@ -1,4 +1,27 @@
 #!/usr/bin/env bash
+# 仅渲染自述：标题红色加粗，编号正文蓝色常规字重；非彩色终端输出纯文本。
+jobs_intro_style() {
+  local intro_color=0
+  if [ -t 1 ] && [ -n "${TERM:-}" ] && [ "${TERM:-}" != dumb ] &&
+     [ -z "${NO_COLOR+x}" ] && [ "${PLAIN_OUTPUT:-0}" != 1 ] &&
+     [ "${IS_SOURCETREE_RUNTIME:-0}" != 1 ]; then
+    intro_color=1
+  fi
+  /usr/bin/awk -v color="$intro_color" -v role="${1:-body}" '
+    BEGIN { esc = sprintf("%c", 27) }
+    {
+      gsub(esc "\\[[0-9;]*m", "")
+      gsub(/\\(033|e|x1[bB])\[[0-9;]*m/, "")
+      if (!color || $0 ~ /^[[:space:]]*$/) { print; next }
+      numbered = ($0 ~ /^[[:space:]➤ℹ🔹✔⚠]*([0-9]+[、.)）]|[0-9]+️⃣|[-•])/)
+      heading = ($0 ~ /^[[:space:]]*#{1,6}[[:space:]]/ || $0 ~ /[：:][[:space:]]*$/ || $0 ~ /^[[:space:]]*[=━─-]{3}/)
+      title = (!numbered && (role == "title" || heading))
+      if (role == "auto" && !seen && !numbered) title = 1
+      if ($0 !~ /^[[:space:]]*[=━─-]+[[:space:]]*$/) seen = 1
+      printf "%s%s%s\n", esc (title ? "[1;31m" : "[0;34m"), $0, esc "[0m"
+    }
+  '
+}
 set -euo pipefail
 
 SCRIPT_BASENAME=$(basename "$0" | sed 's/\.[^.]*$//')
@@ -137,15 +160,15 @@ SELECTED_DIRS=()
 NON_INTERACTIVE="${JOBS_AUTO_MERGE:-${JOBS_SKIP_README:-0}}"
 
 print_intro() {
-  bold_echo "======== 子卷合并脚本（${SCRIPT_BASENAME}）========"
-  note_echo "功能概要："
-  echo "  1. 选择一个“目标目录”；"
-  echo "  2. 扫描其一级子目录，识别其中的子卷目录（包含类似 原文件@1of4 的文件）；"
-  echo "  3. 使用 fzf 选择需要合并的子卷目录（或对全部目录执行）；"
-  echo "  4. 按顺序合并子卷为一个完整文件输出到目标目录；"
-  echo "  5. 合并成功后，询问是否删除对应的子卷目录。"
-  echo ""
-  note_echo "按 [Enter] 继续，或 Ctrl+C 退出..."
+  bold_echo "======== 子卷合并脚本（${SCRIPT_BASENAME}）========" | jobs_intro_style title
+  note_echo "功能概要：" | jobs_intro_style title
+  echo "  1. 选择一个“目标目录”；" | jobs_intro_style body
+  echo "  2. 扫描其一级子目录，识别其中的子卷目录（包含类似 原文件@1of4 的文件）；" | jobs_intro_style body
+  echo "  3. 使用 fzf 选择需要合并的子卷目录（或对全部目录执行）；" | jobs_intro_style body
+  echo "  4. 按顺序合并子卷为一个完整文件输出到目标目录；" | jobs_intro_style body
+  echo "  5. 合并成功后，询问是否删除对应的子卷目录。" | jobs_intro_style body
+  echo "" | jobs_intro_style body
+  note_echo "按 [Enter] 继续，或 Ctrl+C 退出..." | jobs_intro_style body
   IFS= read -r _
 }
 

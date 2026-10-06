@@ -13,7 +13,22 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
     public let task: JobsTask
     public let configuration: Configuration
 
-    public var tag: String?
+    private let lock = NSLock()
+    private var storedTag: String?
+    public var tag: String? {
+        get {
+            lock.lock()
+            defer {
+                lock.unlock()
+            }
+            return storedTag
+        }
+        set {
+            lock.lock()
+            storedTag = newValue
+            lock.unlock()
+        }
+    }
     public var executionCount: Int {
         task.executionCount
     }
@@ -29,17 +44,22 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
     private init(task: JobsTask, configuration: Configuration, tag: String? = nil) {
         self.task = task
         self.configuration = configuration
-        self.tag = tag
+        self.storedTag = tag
     }
     /// 便利初始化器
     public init(task: JobsTask, configuration: Configuration) {
         self.task = task
         self.configuration = configuration
-        self.tag = nil
+        self.storedTag = nil
     }
 }
 
 extension JobsTaskCenterComponent {
+    private static func millisecondsClamped(from seconds: Int) -> Int {
+        let (value, overflow) = seconds.multipliedReportingOverflow(by: 1000)
+        return overflow ? (seconds > 0 ? Int.max : 0) : max(0, value)
+    }
+
     public struct Configuration: Sendable {
         public var interval: JobsPeriod
         public var initialDelay: JobsPeriod
@@ -115,7 +135,7 @@ extension JobsTaskCenterComponent {
         taskBlock: @escaping () -> Void
     ) -> JobsTaskCenterComponent {
         createOneShotTask(
-            milliseconds: seconds * 1000,
+            milliseconds: millisecondsClamped(from: seconds),
             queue: queue,
             runLoopMode: runLoopMode,
             taskBlock: taskBlock
@@ -150,8 +170,8 @@ extension JobsTaskCenterComponent {
     ) -> JobsTaskCenterComponent {
         createRunLoopTask(
             runloop: mode,
-            milliseconds: seconds * 1000,
-            initialDelay: initialDelay * 1000,
+            milliseconds: millisecondsClamped(from: seconds),
+            initialDelay: millisecondsClamped(from: initialDelay),
             repeatCount: repeatCount,
             fireImmediately: fireImmediately,
             taskBlock: taskBlock
@@ -186,9 +206,9 @@ extension JobsTaskCenterComponent {
         taskBlock: @escaping () -> Void
     ) -> JobsTaskCenterComponent {
         createTimerTask(
-            milliseconds: seconds * 1000,
+            milliseconds: millisecondsClamped(from: seconds),
             queue: queue,
-            initialDelay: initialDelay * 1000,
+            initialDelay: millisecondsClamped(from: initialDelay),
             repeatCount: repeatCount,
             fireImmediately: fireImmediately,
             taskBlock: taskBlock

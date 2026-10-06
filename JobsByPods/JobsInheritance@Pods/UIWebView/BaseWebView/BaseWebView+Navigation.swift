@@ -18,6 +18,7 @@ import JobsSwiftDSL
 extension BaseWebView: WKNavigationDelegate {
     @MainActor
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        bridgePageGeneration &+= 1
         progressView.byHidden(false)
     }
 
@@ -61,6 +62,12 @@ extension BaseWebView: WKNavigationDelegate {
             }
             decisionHandler(.cancel)
             return
+        }
+        if !allowedHosts.isEmpty {
+            if let h = url.host?.lowercased(), !allowedHosts.contains(h) {
+                decisionHandler(.cancel)
+                return
+            }
         }
         // 0.5) 主文档一律强制无缓存（若未带标记头则重载为无缓存请求）
         if alwaysFreshMainDocument,
@@ -113,12 +120,6 @@ extension BaseWebView: WKNavigationDelegate {
             return
         }
         // 5) Host 白名单
-        if !allowedHosts.isEmpty {
-            if let h = url.host?.lowercased(), !allowedHosts.contains(h) {
-                decisionHandler(.cancel)
-                return
-            }
-        }
         decisionHandler(.allow)
     }
 

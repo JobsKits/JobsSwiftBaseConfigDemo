@@ -13,6 +13,7 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
     private let lock = NSLock()
     private var observers: [UUID: Observer] = [:]
     private var storage: Value
+    private var upstreamDisposers: [() -> Void] = []
 
     public let sourceID: UUID = UUID()
     public let sourceName: String?
@@ -21,6 +22,17 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
                 name: String? = nil) {
         storage = value
         sourceName = name
+    }
+
+    /// 派生值单向持有上游订阅，释放下游即解除订阅。
+    func retainUpstream(_ disposer: @escaping () -> Void) {
+        lock.lock()
+        upstreamDisposers.append(disposer)
+        lock.unlock()
+    }
+
+    deinit {
+        upstreamDisposers.forEach { $0() }
     }
 
     public var value: Value {

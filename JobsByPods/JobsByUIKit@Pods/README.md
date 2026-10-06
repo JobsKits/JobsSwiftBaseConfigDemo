@@ -1,3 +1,9 @@
+# `JobsByUIKit`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
+[toc]
+
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 
@@ -5,6 +11,7 @@
 
 - 本 Pod 原有的链式 DSL / 点语法封装已经抽离到 `JobsSwiftDSL`。
 - 本 Pod 提供 UIKit 创建工厂、事件和功能封装；`JobsByUIKitDSLBridge` 使用 `@_exported import JobsSwiftDSL`，因此引入 `JobsByUIKit` 后可直接使用 `byXxx(...)`。
+- 圆形调试按钮由 [JobsDebugPanel](../JobsDebugPanel@Pods/README.md) 使用 `UIButton.custom().byBgImage(...).byAccessibilityLabel(...).onTap(...).onLongPress(...)` 组合，背景来自本地资源，无障碍 DSL 由 `JobsSwiftDSL` 的 UIView 层提供。
 - 仅使用 DSL、未引入 `JobsByUIKit` 的消费方，要显式 `import JobsSwiftDSL`。
 - `JobsByUIKit` / `JobsSwiftDSL` 实现是权威源；Xcode CodeSnippets 与实现冲突时，以实现为准并反哺更新代码块。
 - `UIView.tintColor` 这类公共属性在父类 DSL 统一封装，子类不重复声明同名 API。
@@ -15,6 +22,7 @@
 - `UIBezierPath` 创建统一使用 `make()` / `make(rect:)` / `make(ovalIn:)` / `make(roundedRect:cornerRadius:)` / `make(arcCenter:...)`。
 - `UIAction` / `UIMenu` 创建统一使用 `make(...)`；`UIBarButtonItem` 的标题、图片、系统项和自定义视图均使用对应 `make(...)` 工厂。
 - 空 `UIImage` 使用 `UIImage.make { image in ... }`，调用侧不直接写 `UIImage()`；`DateFormatter.make { ... }` 和 `NSUserActivity.make(activityType:configure:)` 分别承接无参格式器与带参 Activity 创建。
+- 明确 Bundle 的本地图片使用 `UIImage.make(named:in:compatibleWith:configure:)`；返回 `UIImage?`，资源不存在时保留 `nil`，不强制替换成未知占位图。
 - SDWebImage / Kingfisher 的按钮图片回调会避开 `UIButton.Configuration` 内部视图替换期间的过渡动画，不在回调中强制布局；前景 shimmer 直接作用于当前 `imageView.layer`，不再向 `UIButton` 插入 overlay 或启用 UIButton overlay 的 `layoutSubviews` swizzle。
 - `UIViewController.jobsSetupGKNav(...)` 在写入标题和左右按钮后，会强制显示并置顶 GK 导航栏、恢复真实透明度，同时隐藏系统导航栏，避免导航容器残留状态导致 Demo 子页面无导航栏。
 - 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，右上角最多只显示一个透明背景的主题入口；没有页面业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案表达下一次点击会切换到的主题；存在业务动作时使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作统一收纳。`JobsNavigationDemoVC` 使用同一规则写入系统导航栏。
@@ -67,6 +75,38 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [iOS.SDK/Others@SDK/UIListContentConfiguration.swift](<./iOS.SDK/Others@SDK/UIListContentConfiguration.swift>)
 - [iOS.SDK/Others@SDK/UIPageViewController.swift](<./iOS.SDK/Others@SDK/UIPageViewController.swift>)
 
-依赖与编译入口：[JobsByUIKit.podspec](<./JobsByUIKit.podspec>)。其中显式依赖声明包括 `Kingfisher`、`GKNavigationBarSwift`、`SnapKit`、`SVGKit`、`ESPullToRefresh`、`RxSwift`、`RxCocoa`、`RxRelay`、`NSObject+Rx`、`SkeletonView`、`lottie-ios`、`Jobsl10n`、`JobsScale`、`JobsNavBar`、`JobsTextTools`、`JobsSwiftTimer`、`JobsSwiftBlock`、`JobsImageTools`、`JobsByQuartzCore`、`JobsSwiftBaseDefines`、`JobsViewPush`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+依赖与编译入口：[JobsByUIKit.podspec](<./JobsByUIKit.podspec>)。其中显式依赖声明包括 `Kingfisher`、`GKNavigationBarSwift`、`SnapKit`、`SVGKit`、`ESPullToRefresh`、`RxSwift`、`RxCocoa`、`RxRelay`、`NSObject+Rx`、`SkeletonView`、`lottie-ios`、`Jobsl10n`、`JobsScale`、`JobsNavBar`、`JobsTextTools`、`JobsSwiftTimer`、`JobsSwiftBlock`、`JobsImageTools`、`JobsByQuartzCore`、`JobsSwiftBaseDefines`、`JobsViewPush`、`JobsSwiftDSL`、`JobsGetWindow`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+
+## 二、稳定性与编译验收 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+`UIKitAttributes.byTextItemTag` / `byAdaptiveImageGlyph` 新增真实系统 Value 类型入口，保留 `Any?` 兼容重载。nil 清除属性，错误类型保留原容器，不再强制转换崩溃。对应类型仍受原来的系统可用性约束。
+
+`UIWindowScene.keyWindowCompat` 与已弃用的 `legacyKeyWindowPreiOS13` 统一定义于 [JobsGetWindow](<../JobsGetWindow@Pods/README.md>)，本模块直接依赖并再导出，避免与窗口库同时导入时发生歧义。重编后的源码调用继续可用；符号模块迁移不承诺预编译 ABI，使用这些窗口查询的二进制客户端需要重编。
+
+生产源码显式排除测试、Demo 和临时文件。使用 UserDefaults 的刷新适配随 `JobsByUIKitPrivacy.bundle` 交付原因清单；业务数据收集声明仍由宿主按实际用途填写。
+
+从宿主工程根目录执行单模块编译：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsByUIKit --skip-host
+```
+
+完整入口按 Pod → 宿主顺序构建，日志和 DerivedData 位于临时目录，不能把 Parse 成功视为模块编译成功。最低系统与集成形式以 Podspec / 消费工程为准；当前宿主按 iOS 15.6 构建。
+
+
+## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+隐私清单通过独立资源 bundle 交付。当前所需理由 API：`UserDefaults`（CA92.1）。理由对应本库实际用途；宿主仍需核对业务数据收集、App Group / 用户授权文件等实际使用场景，资源声明与最终 App 内 bundle 都应验收。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsByUIKit --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

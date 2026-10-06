@@ -11,6 +11,7 @@ import Alamofire
 protocol HTTPClient: Sendable {
     func perform(
         _ request: JobsPreparedRequest,
+        token: JobsRequestToken,
         completion: @escaping (Result<(Data, HTTPURLResponse), JobsError>) -> Void
     )
 
@@ -20,6 +21,7 @@ protocol HTTPClient: Sendable {
         destinationURL: URL,
         trace: JobsTrace,
         timeout: TimeInterval?,
+        token: JobsRequestToken,
         completion: @escaping (Result<(URL, HTTPURLResponse), JobsError>) -> Void
     )
 
@@ -31,6 +33,7 @@ protocol HTTPClient: Sendable {
         parts: [JobsMultipartPart],
         trace: JobsTrace,
         timeout: TimeInterval?,
+        token: JobsRequestToken,
         completion: @escaping (Result<(Data, HTTPURLResponse), JobsError>) -> Void
     )
 
@@ -75,8 +78,13 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
 
     func perform(
         _ request: JobsPreparedRequest,
+        token: JobsRequestToken,
         completion: @escaping (Result<(Data, HTTPURLResponse), JobsError>) -> Void
     ) {
+        guard !token.isCancelled, !token.isFinished else {
+            completion(.failure(.cancelled))
+            return
+        }
         let method = Alamofire.HTTPMethod(rawValue: request.method.rawValue)
         let afRequest: DataRequest
         if let rawBody = request.rawBody {
@@ -102,9 +110,9 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
                 }
             )
         }
-        remember(afRequest, id: request.trace.requestId)
-        afRequest.responseData { [weak self] response in
-            self?.forget(id: request.trace.requestId)
+        remember(afRequest, token: token)
+        afRequest.responseData { [weak self, weak afRequest] response in
+            self?.forget(id: token.operationID, request: afRequest)
             switch response.result {
             /// 处理 .success 分支
             case .success(let data):
@@ -130,10 +138,17 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         destinationURL: URL,
         trace: JobsTrace,
         timeout: TimeInterval?,
+        token: JobsRequestToken,
         completion: @escaping (Result<(URL, HTTPURLResponse), JobsError>) -> Void
     ) {
+        guard !token.isCancelled, !token.isFinished else {
+            completion(.failure(.cancelled))
+            return
+        }
+        let temporaryURL = destinationURL.deletingLastPathComponent()
+            .appendingPathComponent(".jobs-download-\(UUID().uuidString).tmp")
         let destination: DownloadRequest.Destination = { _, _ in
-            (destinationURL, [.removePreviousFile, .createIntermediateDirectories])
+            (temporaryURL, [.createIntermediateDirectories])
         }
         let request = session.download(
             absoluteURL,
@@ -145,9 +160,9 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
             },
             to: destination
         )
-        remember(request, id: trace.requestId)
-        request.response { [weak self] response in
-            self?.forget(id: trace.requestId)
+        remember(request, token: token)
+        request.response { [weak self, weak request] response in
+            self?.forget(id: token.operationID, request: request)
             switch response.result {
             /// 处理 .success 分支
             case .success:
@@ -155,9 +170,15 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
                     completion(.failure(.emptyResponse))
                     return
                 }
+                guard (200...299).contains(http.statusCode) else {
+                    try? FileManager.default.removeItem(at: url)
+                    completion(.failure(.http(statusCode: http.statusCode, data: nil)))
+                    return
+                }
                 completion(.success((url, http)))
             /// 处理 .failure 分支
             case .failure(let error):
+                try? FileManager.default.removeItem(at: temporaryURL)
                 if error.isExplicitlyCancelledError {
                     completion(.failure(.cancelled))
                 } else {
@@ -175,18 +196,33 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         parts: [JobsMultipartPart],
         trace: JobsTrace,
         timeout: TimeInterval?,
+        token: JobsRequestToken,
         completion: @escaping (Result<(Data, HTTPURLResponse), JobsError>) -> Void
     ) {
+        guard !token.isCancelled, !token.isFinished else {
+            completion(.failure(.cancelled))
+            return
+        }
         let request = session.upload(
             multipartFormData: { multipart in
                 for (key, value) in form {
-                    let string = String(describing: JobsValueNormalizer.normalize(value.raw))
-                    if let data = string.data(using: .utf8) {
-                        multipart.append(data, withName: key)
+                    let normalized = JobsValueNormalizer.normalize(value.raw)
+                    let data: Data
+                    if let string = normalized as? String {
+                        data = Data(string.utf8)
+                    } else if let encoded = try? JSONSerialization.data(withJSONObject: normalized, options: [.fragmentsAllowed, .sortedKeys]) {
+                        data = encoded
+                    } else {
+                        data = Data()
                     }
+                    multipart.append(data, withName: key)
                 }
                 for part in parts {
-                    multipart.append(part.data, withName: part.name, fileName: part.fileName, mimeType: part.mimeType)
+                    if let fileURL = part.fileURL {
+                        multipart.append(fileURL, withName: part.name, fileName: part.fileName, mimeType: part.mimeType)
+                    } else {
+                        multipart.append(part.data, withName: part.name, fileName: part.fileName, mimeType: part.mimeType)
+                    }
                 }
             },
             to: url,
@@ -198,9 +234,9 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
                 }
             }
         )
-        remember(request, id: trace.requestId)
-        request.responseData { [weak self] response in
-            self?.forget(id: trace.requestId)
+        remember(request, token: token)
+        request.responseData { [weak self, weak request] response in
+            self?.forget(id: token.operationID, request: request)
             switch response.result {
             /// 处理 .success 分支
             case .success(let data):
@@ -227,15 +263,17 @@ final class AlamofireClient: HTTPClient, @unchecked Sendable {
         request?.cancel()
     }
 
-    private func remember(_ request: Request, id: String) {
+    private func remember(_ request: Request, token: JobsRequestToken) {
         lock.lock()
-        requests[id] = request
+        requests[token.operationID] = request
         lock.unlock()
+        // 取消可以先于 transport 注册；注册后再核对，避免漏掉底层取消。
+        if token.isCancelled || token.isFinished { request.cancel() }
     }
 
-    private func forget(id: String) {
+    private func forget(id: String, request: Request?) {
         lock.lock()
-        requests[id] = nil
+        if requests[id] === request { requests[id] = nil }
         lock.unlock()
     }
 }

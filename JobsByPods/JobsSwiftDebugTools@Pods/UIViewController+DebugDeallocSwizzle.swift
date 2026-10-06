@@ -37,7 +37,13 @@ public enum VCDebugDeallocDebug {
     /// 建议在 App 启动时调用一次（AppDelegate / SceneDelegate）。
     public static func install() {
         #if DEBUG
-        UIViewController._vcDebug_swizzleViewDidLoadOnce()
+        if Thread.isMainThread {
+            UIViewController._vcDebug_swizzleViewDidLoadOnce()
+        } else {
+            DispatchQueue.main.async {
+                UIViewController._vcDebug_swizzleViewDidLoadOnce()
+            }
+        }
         #endif
     }
 }
@@ -75,8 +81,12 @@ extension UIViewController {
             text = "🧹 \(clsName) [\(tag)] deinit"
         }
         let observer = _VCDebugDeinitObserver {
-            guard VCDebugDeallocDebug.showsDeinitTips else { return }
-            text.toast
+            DispatchQueue.main.async {
+                guard VCDebugDeallocDebug.showsDeinitTips else {
+                    return
+                }
+                text.toast
+            }
         }
         objc_setAssociatedObject(
             self,
@@ -88,19 +98,21 @@ extension UIViewController {
     // MARK: Swizzle
     /// swizzle viewDidLoad：在 VC 生命周期早期绑定 deinit 监听器（不碰 dealloc，更安全）
     fileprivate static func _vcDebug_swizzleViewDidLoadOnce() {
-        struct _Once { static var done = false }
-        guard !_Once.done else { return }
-        _Once.done = true
-        let cls: AnyClass = UIViewController.self
-        let originalSel = #selector(UIViewController.viewDidLoad)
-        let swizzledSel = #selector(UIViewController._vcDebug_viewDidLoad)
-        guard
-            let originalMethod = class_getInstanceMethod(cls, originalSel),
-            let swizzledMethod = class_getInstanceMethod(cls, swizzledSel)
-        else {
-            return
+        struct Once {
+            static let install: Void = {
+                let cls: AnyClass = UIViewController.self
+                let originalSel = #selector(UIViewController.viewDidLoad)
+                let swizzledSel = #selector(UIViewController._vcDebug_viewDidLoad)
+                guard
+                    let originalMethod = class_getInstanceMethod(cls, originalSel),
+                    let swizzledMethod = class_getInstanceMethod(cls, swizzledSel)
+                else {
+                    return
+                }
+                method_exchangeImplementations(originalMethod, swizzledMethod)
+            }()
         }
-        method_exchangeImplementations(originalMethod, swizzledMethod)
+        _ = Once.install
     }
 
     @objc fileprivate func _vcDebug_viewDidLoad() {

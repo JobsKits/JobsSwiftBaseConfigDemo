@@ -27,6 +27,8 @@ public final class JobsSwiftSearcherView: UIView {
     private var searchButtonLeftConstraint: Constraint?
     private var searchButtonWidthConstraint: Constraint?
     private var recommendSectionHeightConstraint: Constraint?
+    private var lastHistoryContextKey: String?
+    private var lastHistoryPersists: Bool?
     private var recommendSearches: [String] = []
     private var recommendButtons: [UIButton] = []
 
@@ -59,7 +61,8 @@ public final class JobsSwiftSearcherView: UIView {
     }
 
     public func reloadWithConfig(_ config: JobsSwiftSearcherConfig?) {
-        self.config = config ?? .defaultConfig
+        let next = config ?? .defaultConfig
+        self.config = next
         updateByConfig()
         reloadHistorySearches()
     }
@@ -81,7 +84,7 @@ public final class JobsSwiftSearcherView: UIView {
         guard !historyText.isEmpty else { return }
         var history = readHistorySearches().filter { $0 != historyText }
         history.insert(historyText, at: 0)
-        let maxCount = max(config.maxHistoryCount, 1)
+        let maxCount = max(1, min(config.maxHistoryCount, 1_000))
         if history.count > maxCount {
             history = Array(history.prefix(maxCount))
         }
@@ -251,7 +254,12 @@ private extension JobsSwiftSearcherView {
         tableView
             .byDelegate(self)
             .byDataSource(self)
-        tableView.jobs_emptyAutoDisabled = true
+        tableView.jobs_emptyAutoDisabled = false
+        tableView.byEmptyButtonProvider { [weak self] in
+            JobsEmptyAuto.Config.defaultProvider().onTap { [weak self] _ in
+                self?.reloadHistorySearches()
+            }
+        }
         tableView
             .bySeparatorStyle(.singleLine)
             .byBackgroundColor(JobsCor.clear)
@@ -333,17 +341,34 @@ private extension JobsSwiftSearcherView {
             .byAlpha(enabled || textField.isFirstResponder ? 1 : 0.55)
     }
 
+    func ensureHistoryContext() {
+        let key = config.effectiveHistoryStorageKey
+        if lastHistoryContextKey != key || lastHistoryPersists != config.persistsHistory {
+            historySearches.removeAll()
+            lastHistoryContextKey = key
+            lastHistoryPersists = config.persistsHistory
+        }
+    }
+
     func readHistorySearches() -> [String] {
-        let data = UserDefaults.standard.array(forKey: config.historyStorageKey) as? [String]
+        ensureHistoryContext()
+        guard config.persistsHistory else { return historySearches }
+        let data = UserDefaults.standard.array(forKey: config.effectiveHistoryStorageKey) as? [String]
         return normalizedTexts(by: data)
     }
 
     func writeHistorySearches(_ historySearches: [String]) {
+        ensureHistoryContext()
+        guard config.persistsHistory else {
+            self.historySearches = historySearches
+            return
+        }
         if historySearches.isEmpty {
-            UserDefaults.standard.removeObject(forKey: config.historyStorageKey)
+            UserDefaults.standard.removeObject(forKey: config.effectiveHistoryStorageKey)
         } else {
-            UserDefaults.standard.set(historySearches, forKey: config.historyStorageKey)
-        };UserDefaults.standard.synchronize()
+            UserDefaults.standard.set(historySearches, forKey: config.effectiveHistoryStorageKey)
+        }
+
     }
 
     func normalizedTexts(by array: [String]?) -> [String] {

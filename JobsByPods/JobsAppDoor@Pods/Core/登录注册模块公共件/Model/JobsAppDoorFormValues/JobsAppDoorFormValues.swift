@@ -15,6 +15,7 @@ public struct JobsAppDoorFormValues {
     public var phone: String
     public var smsCode: String
     public var graphicCaptcha: String
+    public var graphicCaptchaChallengeID: String?
     public var remembersPassword: Bool
 
     public init(
@@ -25,6 +26,7 @@ public struct JobsAppDoorFormValues {
         phone: String = "",
         smsCode: String = "",
         graphicCaptcha: String = "",
+        graphicCaptchaChallengeID: String? = nil,
         remembersPassword: Bool = true
     ) {
         self.username = username
@@ -34,6 +36,7 @@ public struct JobsAppDoorFormValues {
         self.phone = phone
         self.smsCode = smsCode
         self.graphicCaptcha = graphicCaptcha
+        self.graphicCaptchaChallengeID = graphicCaptchaChallengeID
         self.remembersPassword = remembersPassword
     }
 }

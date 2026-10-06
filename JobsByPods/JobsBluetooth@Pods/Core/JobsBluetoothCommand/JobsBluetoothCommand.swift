@@ -14,14 +14,50 @@ public final class JobsBluetoothCommand {
     public var timeout: TimeInterval = 5
     public var retryCount = 0
     public var priority = 0
+    public var allowsChunking = false
     public var responseMatcher: ((Data) -> Bool)?
 
     public init() {}
 
-    @discardableResult public func byIdentifier(_ value: String) -> Self { identifier = value;return self }
-    @discardableResult public func byPayload(_ value: Data) -> Self { payload = value;return self }
-    @discardableResult public func byTimeout(_ value: TimeInterval) -> Self { timeout = max(0, value);return self }
-    @discardableResult public func byRetryCount(_ value: Int) -> Self { retryCount = max(0, value);return self }
-    @discardableResult public func byPriority(_ value: Int) -> Self { priority = value;return self }
-    @discardableResult public func byResponseMatcher(_ value: @escaping (Data) -> Bool) -> Self { responseMatcher = value;return self }
+    @discardableResult
+    public func byIdentifier(_ value: String) -> Self {
+        identifier = value
+        return self
+    }
+
+    @discardableResult
+    public func byPayload(_ value: Data) -> Self {
+        payload = value
+        return self
+    }
+
+    @discardableResult
+    public func byTimeout(_ value: TimeInterval) -> Self {
+        timeout = max(0, value)
+        return self
+    }
+
+    @discardableResult
+    public func byRetryCount(_ value: Int) -> Self {
+        retryCount = max(0, value)
+        return self
+    }
+
+    @discardableResult
+    public func byPriority(_ value: Int) -> Self {
+        priority = value
+        return self
+    }
+
+    @discardableResult
+    public func byAllowsChunking(_ value: Bool) -> Self {
+        allowsChunking = value
+        return self
+    }
+
+    @discardableResult
+    public func byResponseMatcher(_ value: @escaping (Data) -> Bool) -> Self {
+        responseMatcher = value
+        return self
+    }
 }

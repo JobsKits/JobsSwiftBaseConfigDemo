@@ -17,11 +17,12 @@ source 'https://github.com/CocoaPods/Specs.git'
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
   :deterministic_uuids => false,
-  :disable_input_output_paths => true
+  :disable_input_output_paths => true,
+  :warn_for_unused_master_specs_repo => false
 #  ,:generate_multiple_pod_projects => true # Flutter 和它不兼容，但是又是全局性的，必须注释
 # ================================== Jobs Pods Script Runner ==================================
 # 统一的构建设置（一次改全工程 & Pods）
-JOBS_DEPLOYMENT_TARGET = '15.0'
+JOBS_DEPLOYMENT_TARGET = '15.6'
 JOBS_DISABLE_SCRIPT_SANDBOXING = 'NO'
 # ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
 platform :ios, "#{JOBS_DEPLOYMENT_TARGET}"
@@ -53,6 +54,8 @@ end
 # - 典型报错：tundra.log.json 找不到 / build.db malformed
 # - 解决：删掉 .DerivedDataUnity/Build/Intermediates 让它重新生成
 def jobs_clean_unity_build_artifacts!(ios_dir)
+  return if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+
   ios_dir = File.expand_path(ios_dir)
   derived = File.join(ios_dir, '.DerivedDataUnity')
   intermediates = File.join(derived, 'Build', 'Intermediates')
@@ -133,6 +136,8 @@ def jobs_external_script_command(script_path)
 end
 
 def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil, confirm: true)
+  return false if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+
   # === [MOD] 在脚本真正执行前统一拦截：回车执行 / 任意字符跳过 ==========
   if confirm && !jobs_confirm_pod_install_scripts?
     puts "⏭️  [Podfile] Skip script: #{desc}"
@@ -288,6 +293,8 @@ end
 
 # 按用户选择执行 SPM 编译门禁；脚本缺失或主动跳过时不阻塞 pod install。
 def run_spm_validation_script
+  return false if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+
   relative_path = File.join(
     'JobsBySwiftPackageManager',
     '【MacOS】🧠编译通过方可集成进SPM.command'
@@ -328,6 +335,8 @@ end
 
 # 统一执行 pod install 后置脚本；子脚本失败只警告，不改变安装结果。
 def run_pod_install_post_scripts
+  return if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+
   script_path = jobs_resolve_external_script_path(
     File.join('ScriptsByPods', '【MacOS】📦Pod Install离线保护.command'),
     base_dir: __dir__
@@ -456,6 +465,8 @@ end
 
 # Xcode 26+ 会把 netinet6/in6.h 视作私有头，部分第三方库仍保留旧引用。
 def patch_private_netinet6_header_imports
+  return if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+
   patch_targets = {
     'AFNetworking' => File.join(__dir__, 'Pods', 'AFNetworking', 'AFNetworking'),
   }

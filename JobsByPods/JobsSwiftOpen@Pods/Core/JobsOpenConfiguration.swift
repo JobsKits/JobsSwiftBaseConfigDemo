@@ -17,7 +17,9 @@ public final class JobsOpenConfiguration {
     public var mode: JobsOpenMode
     public var title: String?
     public var animated: Bool
+    /// 表示页面已打开/交给系统，不表示网页内容已经加载。
     public var completion: ((Bool) -> Void)?
+    public var pageLoadCompletion: ((Result<URL, Error>) -> Void)?
 
     public init(
         url: URL = URL(string: "http://www.baidu.com")!,
@@ -31,6 +33,19 @@ public final class JobsOpenConfiguration {
         self.title = title
         self.animated = animated
         self.completion = completion
+        self.pageLoadCompletion = nil
+    }
+
+    public convenience init(
+        url: URL = URL(string: "http://www.baidu.com")!,
+        mode: JobsOpenMode = .inApp,
+        title: String? = nil,
+        animated: Bool = true,
+        pageLoadCompletion: ((Result<URL, Error>) -> Void)?,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        self.init(url: url, mode: mode, title: title, animated: animated, completion: completion)
+        self.pageLoadCompletion = pageLoadCompletion
     }
 
     @discardableResult
@@ -62,4 +77,10 @@ public final class JobsOpenConfiguration {
         self.completion = completion
         return self
     }
+    @discardableResult
+    public func byPageLoadCompletion(_ completion: ((Result<URL, Error>) -> Void)?) -> Self {
+        pageLoadCompletion = completion
+        return self
+    }
+
 }

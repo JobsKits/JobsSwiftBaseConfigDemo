@@ -12,10 +12,34 @@ import JobsSwiftBaseDefines
 import JobsSwiftCountryCodeCtrl
 import JobsSwiftDSL
 import SnapKit
+import JobsSwiftGraphicCaptcha
+
+public enum JobsAppDoorSubmissionState {
+    case idle
+    case submitting
+    case succeeded
+    case failed(Error)
+}
 
 open class JobsAppDoorBaseVC: BaseVC {
     public let configuration: JobsAppDoorConfig
     public var submitHandler: ((JobsAppDoorMode, JobsAppDoorFormValues) -> Void)?
+    /// Inject the host's API call and return its cancellation action.
+    public var submitOperation: ((JobsAppDoorMode, JobsAppDoorFormValues,
+                                  @escaping (Result<Void, Error>) -> Void) -> (() -> Void)?)?
+    public var configureGraphicCaptcha: ((JobsSwiftGraphicCaptchaView) -> Void)?
+    public var submissionTimeout: TimeInterval = 15
+    public var onSubmissionStateChanged: ((JobsAppDoorSubmissionState) -> Void)?
+    public private(set) var submissionState: JobsAppDoorSubmissionState = .idle
+    public var isSubmitting: Bool {
+        if case .submitting = submissionState {
+            return true
+        }
+        return false
+    }
+    private var submissionGeneration: UInt64 = 0
+    private var cancelSubmissionOperation: (() -> Void)?
+    private var submissionTimeoutWork: DispatchWorkItem?
     public var homeHandler: (() -> Void)?
     public var customerServiceHandler: (() -> Void)?
     public var verificationCodeHandler: ((JobsAppDoorFormValues) -> Void)?
@@ -145,6 +169,8 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     deinit {
         keyboardObservers.forEach(NotificationCenter.default.removeObserver)
+        submissionTimeoutWork?.cancel()
+        cancelSubmissionOperation?()
     }
 
     open override func viewDidLoad() {
@@ -171,6 +197,7 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        cancelSubmission()
         view.endEditing(true)
         jobsForceHideSystemNavBar(false)
         setVolumePanelVisible(false, animated: false)
@@ -196,8 +223,70 @@ open class JobsAppDoorBaseVC: BaseVC {
         }
     }
 
+    public final func cancelSubmission() {
+        guard isSubmitting else { return }
+        submissionGeneration &+= 1
+        let cancel = cancelSubmissionOperation
+        cancelSubmissionOperation = nil
+        submissionTimeoutWork?.cancel()
+        submissionTimeoutWork = nil
+        setSubmissionState(.idle)
+        cancel?()
+    }
+
+    open func submissionStateDidChange(_ state: JobsAppDoorSubmissionState) { }
+
+    private func setSubmissionState(_ state: JobsAppDoorSubmissionState) {
+        submissionState = state
+        submissionStateDidChange(state)
+        onSubmissionStateChanged?(state)
+    }
+
+    private func finishSubmission(_ result: Result<Void, Error>, generation: UInt64) {
+        guard submissionGeneration == generation, isSubmitting else { return }
+        submissionTimeoutWork?.cancel()
+        submissionTimeoutWork = nil
+        cancelSubmissionOperation = nil
+        switch result {
+        case .success:
+            setSubmissionState(.succeeded)
+        case .failure(let error):
+            setSubmissionState(.failed(error))
+        }
+    }
+
     final func dispatchSubmit(mode: JobsAppDoorMode, values: JobsAppDoorFormValues) {
-        submitHandler?(mode, values)
+        guard !isSubmitting else { return }
+        guard let operation = submitOperation else {
+            submitHandler?(mode, values)
+            return
+        }
+        submissionGeneration &+= 1
+        let generation = submissionGeneration
+        setSubmissionState(.submitting)
+        guard submissionGeneration == generation, isSubmitting else { return }
+        let timeout = submissionTimeout.isFinite && submissionTimeout > 0
+            ? min(submissionTimeout, 300) : 15
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, self.submissionGeneration == generation, self.isSubmitting else { return }
+            let cancel = self.cancelSubmissionOperation
+            self.finishSubmission(.failure(NSError(domain: "JobsAppDoor", code: -1001,
+                                                   userInfo: [NSLocalizedDescriptionKey: "请求超时，请重试"])),
+                                  generation: generation)
+            cancel?()
+        }
+        submissionTimeoutWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: work)
+        let cancel = operation(mode, values) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.finishSubmission(result, generation: generation)
+            }
+        }
+        if submissionGeneration == generation, isSubmitting {
+            cancelSubmissionOperation = cancel
+        } else {
+            cancel?()
+        }
     }
 
     final func runEntrancePop(views: [UIView]) {

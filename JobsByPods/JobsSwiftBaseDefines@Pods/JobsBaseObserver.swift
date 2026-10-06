@@ -27,6 +27,8 @@ public final class JobsTextInputObserver: NSObject,
     // 原 delegate（如果你外面自己设过 delegate，这里尽量转发）
     public weak var originalTextFieldDelegate: UITextFieldDelegate?
     public weak var originalTextViewDelegate: UITextViewDelegate?
+    private weak var composingField: UITextField?
+    private weak var composingView: UITextView?
     // MARK: - UITextFieldDelegate
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         let allow = originalTextFieldDelegate?.textFieldShouldBeginEditing?(textField) ?? true
@@ -57,36 +59,35 @@ public final class JobsTextInputObserver: NSObject,
                           shouldChangeCharactersIn range: NSRange,
                           replacementString string: String) -> Bool {
         let old = textField.text ?? ""
-        let new = (old as NSString).replacingCharacters(in: range, with: string)
-        // 输入模式判定
-        let mode: JobsTextInputMode = {
-            if string == " " { return .space }
-            if string == "\n" { return .return }
-            if string.isEmpty, range.length > 0 { return .delete };return .normal
-        }()
-        // char 规则：删除/回车 -> ""
-        let char: String = (mode == .delete || mode == .return) ? "" : string
-        // isLimited 语义：只有当“达到限制(==limit)”时才 true；未设置 limit 恒 false
-        func limitedFlag(_ text: String) -> Bool {
-            guard let limit else { return false };return text.count >= limit
-        }
-        // 1) 彻底禁用“空格按键”输入（空格不会进入文本）
-        if mode == .space {
-            onInput?(char, old, .space, limitedFlag(old))
-            _ = originalTextFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string)
+        guard validRange(range, in: old) else {
             return false
         }
-        // 2) 限制长度：超限直接拦截
-        if let limit, new.count > limit {
-            onInput?(char, old, mode, limitedFlag(old))
-            _ = originalTextFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string)
-            return false
-        }
-        // 3) 允许输入：回调 new
-        onInput?(char, new, mode, limitedFlag(new))
-        // 4) 转发原 delegate 结果
         let originalAllow = originalTextFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
-        return originalAllow
+        if textField.markedTextRange != nil {
+            composingField = textField
+            return originalAllow
+        }
+        let proposed = (old as NSString).replacingCharacters(in: range, with: string)
+        let mode = inputMode(string, range: range)
+        let lengthAllowed = limit.map { proposed.count <= max(0, $0) } ?? true
+        let allow = originalAllow && lengthAllowed && mode != .space
+        let value = allow ? proposed : old
+        onInput?(mode == .delete || mode == .return ? "" : string, value, mode, limited(value))
+        return allow
+    }
+
+    public func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.markedTextRange != nil {
+            composingField = textField
+        } else if composingField === textField {
+            composingField = nil
+            let committed = constrained(textField.text ?? "")
+            if textField.text != committed {
+                textField.text = committed
+            }
+            onInput?("", committed, .normal, limited(committed))
+        }
+        originalTextFieldDelegate?.textFieldDidChangeSelection?(textField)
     }
     // MARK: - UITextViewDelegate
     public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -108,31 +109,66 @@ public final class JobsTextInputObserver: NSObject,
                          shouldChangeTextIn range: NSRange,
                          replacementText text: String) -> Bool {
         let old = textView.text ?? ""
-        let new = (old as NSString).replacingCharacters(in: range, with: text)
-        let mode: JobsTextInputMode = {
-            if text == " " { return .space }
-            if text == "\n" { return .return }
-            if text.isEmpty, range.length > 0 { return .delete };return .normal
-        }()
-        if let limit, new.count > limit {
-            // 变更被拦截：看当前真实文本 old 是否已达到 limit
-            let isLimited = (old.count >= limit) // 你要“达到限制才 true”
-            let char = (mode == .delete || mode == .return) ? "" : text
-            onInput?(char, old, mode, isLimited)
-            _ = originalTextViewDelegate?.textView?(textView,
-                                                    shouldChangeTextIn: range,
-                                                    replacementText: text)
+        guard validRange(range, in: old) else {
             return false
         }
-        // 允许变更：看 new 是否已达到 limit
-        let isLimited = (limit != nil) ? (new.count >= (limit ?? Int.max)) : false
-        let char = (mode == .delete || mode == .return) ? "" : text
-        onInput?(char, new, mode, isLimited)
-        let originalAllow = originalTextViewDelegate?.textView?(textView,
-                                                                shouldChangeTextIn: range,
-                                                                replacementText: text) ?? true
-        return originalAllow
+        let originalAllow = originalTextViewDelegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) ?? true
+        if textView.markedTextRange != nil {
+            composingView = textView
+            return originalAllow
+        }
+        let proposed = (old as NSString).replacingCharacters(in: range, with: text)
+        let mode = inputMode(text, range: range)
+        let lengthAllowed = limit.map { proposed.count <= max(0, $0) } ?? true
+        let allow = originalAllow && lengthAllowed
+        let value = allow ? proposed : old
+        onInput?(mode == .delete || mode == .return ? "" : text, value, mode, limited(value))
+        return allow
     }
+
+    public func textViewDidChange(_ textView: UITextView) {
+        if textView.markedTextRange != nil {
+            composingView = textView
+        } else if composingView === textView {
+            composingView = nil
+            let committed = constrained(textView.text ?? "")
+            if textView.text != committed {
+                textView.text = committed
+            }
+            onInput?("", committed, .normal, limited(committed))
+        }
+        originalTextViewDelegate?.textViewDidChange?(textView)
+    }
+
+    private func validRange(_ range: NSRange, in string: String) -> Bool {
+        let length = (string as NSString).length
+        return range.location >= 0 && range.location <= length && range.length >= 0 && range.length <= length - range.location
+    }
+
+    private func inputMode(_ text: String, range: NSRange) -> JobsTextInputMode {
+        if text == " " {
+            return .space
+        }
+        if text == "\n" {
+            return .return
+        }
+        if text.isEmpty && range.length > 0 {
+            return .delete
+        }
+        return .normal
+    }
+
+    private func limited(_ text: String) -> Bool {
+        limit.map { text.count >= max(0, $0) } ?? false
+    }
+
+    private func constrained(_ text: String) -> String {
+        guard let limit else {
+            return text
+        }
+        return String(text.prefix(max(0, limit)))
+    }
+
 }
 // MARK: - Associated Keys
 private enum JobsTextInputAssociatedKeys {

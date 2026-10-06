@@ -41,7 +41,8 @@ public final class JobsOpen: NSObject {
         }
         let webViewController = JobsOpenWebViewController(
             url: configuration.url,
-            pageTitle: configuration.title
+            pageTitle: configuration.title,
+            pageLoadCompletion: configuration.pageLoadCompletion
         )
         if let navigationController = source.navigationController {
             navigationController.pushViewController(webViewController, animated: configuration.animated)

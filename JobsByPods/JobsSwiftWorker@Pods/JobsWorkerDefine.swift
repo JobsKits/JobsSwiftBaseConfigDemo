@@ -51,7 +51,8 @@ public struct JobsAnyWorkerChange: Sendable {
 public struct AnySendableBox: @unchecked Sendable, CustomStringConvertible {
     public let value: Any
 
-    public init(_ value: Any) {
+    /// 类型擦除仅接收已满足 Sendable 的值，不接受任意可变 Any。
+    public init<Value: Sendable>(_ value: Value) {
         self.value = value
     }
 

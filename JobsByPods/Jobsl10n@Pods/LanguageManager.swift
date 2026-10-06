@@ -9,46 +9,82 @@ import Foundation
 
 public final class LanguageManager {
     public static let shared = LanguageManager()
-    public private(set) var currentLanguageCode: String
-    private let userDefaultsKey = "Jobs.LanguageCode"
-    /// 动态 Bundle：每次按当前 code 解析路径
+    private let lock = NSLock()
+    private var languageCode: String
+    private let defaults: UserDefaults
+    private let preferredLanguages: () -> [String]
+    private let resourceBundle: Bundle
+
+    public var currentLanguageCode: String {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return languageCode
+    }
+
+    /// 地区语言先找完整码，再找基础码；缺失资源回退主 Bundle，override 会清除关联。
     public var localizedBundle: Bundle {
-        guard
-            let path = Bundle.main.path(forResource: currentLanguageCode, ofType: "lproj"),
-            let b = Bundle(path: path)
-        else {
-            return .main
-        };return b
+        Self.bundle(for: currentLanguageCode, in: resourceBundle)
     }
 
-    public init() {
-        currentLanguageCode = resolveLanguageCode()
+    public init(
+        userDefaults: UserDefaults = .standard,
+        resourceBundle: Bundle = .main,
+        preferredLanguages: @escaping () -> [String] = { Locale.preferredLanguages }
+    ) {
+        self.defaults = userDefaults
+        self.resourceBundle = resourceBundle
+        self.preferredLanguages = preferredLanguages
+        if userDefaults.string(forKey: languageModeKey) == "custom",
+           let code = userDefaults.string(forKey: languageCodeKey), !code.isEmpty {
+            languageCode = code.normalizedLanguageCode
+        } else {
+            languageCode = (preferredLanguages().first ?? "en").normalizedLanguageCode
+        }
     }
-}
 
-extension LanguageManager {
-    /// 切换语言：更新 code → 持久化 → 发通知
+    private static func bundle(for code: String, in resourceBundle: Bundle) -> Bundle {
+        let base = code.split(separator: "-").first.map(String.init) ?? code
+        for candidate in [code, base] {
+            if let path = resourceBundle.path(forResource: candidate, ofType: "lproj"),
+               let bundle = Bundle(path: path) {
+                return bundle
+            }
+        }
+        return resourceBundle
+    }
+
     public func switchTo(_ code: String) {
-        // 1) 内存态必须立刻生效（不做 guard return，避免 “已是当前值” 但 bundle 没刷新）
-        currentLanguageCode = code.normalizedLanguageCode
-        // 2) UserDefaults 必须写入（最高优先级覆盖旧值）
-        let ud = UserDefaults.standard
-        ud.set("custom", forKey: languageModeKey)   // 你现有的 mode key
-        ud.set(currentLanguageCode, forKey: languageCodeKey) // 你现有的 code key
-        ud.synchronize()
-        // 3) 如果有 Bundle.main override（Storyboard/nib 需要），这里也要同步
-        Bundle.setLanguageBundle(localizedBundle)
-        // 4) 通知 UI 刷新
-        NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
+        lock.lock()
+        languageCode = code.normalizedLanguageCode
+        defaults.set("custom", forKey: languageModeKey)
+        defaults.set(languageCode, forKey: languageCodeKey)
+        Bundle.setLanguageBundle(Self.bundle(for: languageCode, in: resourceBundle))
+        lock.unlock()
+        notifyLanguageChanged()
     }
-    /// 跟随系统语言（清除用户手动选择）
+
     public func followSystemLanguage() {
-        let ud = UserDefaults.standard
-        ud.set("system", forKey: languageModeKey)
-        ud.removeObject(forKey: languageCodeKey)
-        let normalized = (Locale.preferredLanguages.first ?? "en").normalizedLanguageCode
-        guard normalized != currentLanguageCode else { return }
-        currentLanguageCode = normalized
-        NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
+        // 注入的 provider 可读取当前状态，调用时不持有状态锁。
+        let systemCode = (preferredLanguages().first ?? "en").normalizedLanguageCode
+        lock.lock()
+        defaults.set("system", forKey: languageModeKey)
+        defaults.removeObject(forKey: languageCodeKey)
+        languageCode = systemCode
+        // 系统模式始终清除定制 Bundle，即使当前语言码相同也执行。
+        Bundle.clearLanguageBundle()
+        lock.unlock()
+        notifyLanguageChanged()
+    }
+
+    private func notifyLanguageChanged() {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .JobsLanguageDidChange, object: nil)
+            }
+        }
     }
 }

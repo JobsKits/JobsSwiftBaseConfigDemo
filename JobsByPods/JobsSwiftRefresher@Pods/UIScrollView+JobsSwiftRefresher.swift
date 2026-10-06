@@ -192,6 +192,7 @@ extension UIScrollView {
                             container: container,
                             action: action)
         slot.showsInfo = mrk_proxy.showsHeaderInfo
+        mrk_proxy.header?.detach()
         mrk_proxy.header = slot
         slot.attach(to: self)
         return self
@@ -256,6 +257,7 @@ extension UIScrollView {
                             container: container,
                             action: action)
         slot.showsInfo = mrk_proxy.showsFooterInfo
+        mrk_proxy.footer?.detach()
         mrk_proxy.footer = slot
         slot.attach(to: self)
         return self
@@ -325,7 +327,13 @@ extension UIScrollView {
                             container: container,
                             action: action)
         slot.showsInfo = (position == .left) ? mrk_proxy.showsHeaderInfo : mrk_proxy.showsFooterInfo
-        if position == .left { mrk_proxy.left = slot } else { mrk_proxy.right = slot }
+        if position == .left {
+            mrk_proxy.left?.detach()
+            mrk_proxy.left = slot
+        } else {
+            mrk_proxy.right?.detach()
+            mrk_proxy.right = slot
+        }
         slot.attach(to: self)
         return self
     }

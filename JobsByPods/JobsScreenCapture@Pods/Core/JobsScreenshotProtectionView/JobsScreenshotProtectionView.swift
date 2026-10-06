@@ -16,7 +16,13 @@ import JobsSwiftDSL
 public final class JobsScreenshotProtectionView: UIView {
     public let contentView = UIView.jobsMake { _ in }
 
+    /// 仅表示当前系统找到候选安全容器，不代表 Apple 保证截图防护。
     public private(set) var isProtectionAvailable = false
+    public private(set) var isProtectionVerified = false
+    public var hidesContentWhileCaptured = true {
+        didSet { updateCaptureVisibility() }
+    }
+    private var captureObserver: NSObjectProtocol?
 
     public var isProtectionEnabled: Bool {
         secureTextField.isSecureTextEntry && isProtectionAvailable
@@ -27,6 +33,35 @@ public final class JobsScreenshotProtectionView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         configureSecureContainer()
+        if #available(iOS 11.0, tvOS 11.0, *) {
+            captureObserver = NotificationCenter.default.addObserver(forName: UIScreen.capturedDidChangeNotification,
+                                                                     object: nil, queue: .main) { [weak self] _ in
+                self?.updateCaptureVisibility()
+            }
+        }
+    }
+
+    deinit {
+        if let captureObserver { NotificationCenter.default.removeObserver(captureObserver) }
+    }
+
+    /// 只有宿主在当前 OS/设备上做过截图、录屏及镜像验证，才显式标记为 verified。
+    @discardableResult
+    public func byProtectionVerified(_ verified: Bool) -> Self {
+        isProtectionVerified = verified && isProtectionAvailable && isProtectionEnabled
+        return self
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        isProtectionVerified = false
+        updateCaptureVisibility()
+    }
+
+    private func updateCaptureVisibility() {
+        if #available(iOS 11.0, tvOS 11.0, *) {
+            contentView.byHidden(hidesContentWhileCaptured && window?.screen.isCaptured == true)
+        }
     }
 
     @available(*, unavailable)
@@ -37,6 +72,7 @@ public final class JobsScreenshotProtectionView: UIView {
     @discardableResult
     public func setProtectionEnabled(_ enabled: Bool) -> Self {
         secureTextField.bySecureTextEntry(enabled && isProtectionAvailable)
+        if !enabled { isProtectionVerified = false }
         return self
     }
 
@@ -60,7 +96,7 @@ public final class JobsScreenshotProtectionView: UIView {
 
         let secureCanvasView = secureTextField.subviews.first { view in
             String(describing: type(of: view)).contains("CanvasView")
-        } ?? secureTextField.subviews.first
+        }
 
         if let secureCanvasView {
             secureCanvasView.backgroundColor = .clear
@@ -77,6 +113,7 @@ public final class JobsScreenshotProtectionView: UIView {
             }
             secureTextField.bySecureTextEntry(false)
             isProtectionAvailable = false
+            isProtectionVerified = false
         }
     }
 }

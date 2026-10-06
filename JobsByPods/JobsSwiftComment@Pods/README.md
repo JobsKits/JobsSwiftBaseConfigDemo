@@ -1,3 +1,9 @@
+# `JobsSwiftComment`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
+[toc]
+
 # <span id="前言">JobsSwiftComment</span>
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
@@ -78,5 +84,26 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [Core/JobsSwiftCommentMode/JobsSwiftCommentMode.swift](<./Core/JobsSwiftCommentMode/JobsSwiftCommentMode.swift>)
 
 依赖与编译入口：[JobsSwiftComment.podspec](<./JobsSwiftComment.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+评论展开使用迭代帧遍历，不依赖递归调用栈。`maxReplyDepth` 默认 32（允许 0～128），`maxRenderedRows` 默认 1000（允许 1～10000）；超出预算截断渲染并设置 `isRenderTruncated`，不修改原 comments。展开更多仍遵守总预算；服务端分页应配合预算，避免一次下发无限树。
+
+`reloadWithComments` 表示整页替换，结束下拉、清除 loadMore/noMore 状态并移除已不存在根节点的展开状态；`appendComments` 用于追加页，宿主随后调用 `endLoadMore(noMoreData:)`。空列表自动显示 JobsEmptyAuto，点击复用 pullRefreshBlock；失败仍应结束刷新并保留重试入口。所有 UI 数据交付在主线程。
+
+
+## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftComment --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

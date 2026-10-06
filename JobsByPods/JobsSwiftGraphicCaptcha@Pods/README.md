@@ -108,4 +108,25 @@ pod install --no-repo-update
 
 依赖与编译入口：[JobsSwiftGraphicCaptcha.podspec](<./JobsSwiftGraphicCaptcha.podspec>)。其中显式依赖声明包括 `JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
+## 七、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+默认是本地生成与同步比较，用于演示。生产接入先配置 `serverChallengeProvider` 和 `serverVerifier`，再设置 `usesServerValidation = true`；provider 返回不含答案的 `JobsGraphicCaptchaChallenge(identifier:image:expiresAt:)`，verifier 将 challenge id 和输入交给真实服务端。server 模式下 `validateInput` 始终返回 false，调用 `verifyInput(_:completion:)` 获取服务端判定；本地字符不能作为生产放行凭据。
+
+默认请求超时 15 秒，非法值回退，最大 300 秒；刷新取消旧挑战及校验，代次拒绝旧回调，重复完成只处理一次。缺少服务、挑战失效、取消和超时都有明确 Error；服务端成功验证后清除当前挑战，避免本地复用。`onChallengeChanged` 交付挑战更新或清空，宿主可据此更新提交状态；验证终态先保存再通知挑战消费，因此通知内刷新下一题不会把已接受的成功改成取消。取消回调中重入发起的更新请求优先，旧调用不会覆盖新请求。provider / verifier 返回可选取消动作，`cancelPendingRequests()` 用于页面结束；回调交付在主线程。接口失败不会回退成“本地验证通过”，离线演示需明确切回本地模式。
+
+
+## 八、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftGraphicCaptcha --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

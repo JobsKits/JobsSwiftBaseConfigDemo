@@ -26,7 +26,18 @@ Pod::Spec.new do |s|
   ]
   
   # 递归匹配当前目录下所有子目录里的 .swift 文件
-  s.source_files = '**/*.{swift,h,m,mm}'
+  s.default_subspecs = 'Core', 'Flutter'
+  s.subspec 'Core' do |core|
+    core.source_files = '**/*.{swift,h,m,mm}'
+    core.exclude_files = 'FlutterBridge.swift', 'UnityManager.swift'
+    core.resource_bundles = { 'JobsSwiftToolsPrivacy' => ['Resource/PrivacyInfo.xcprivacy'] }
+  end
+  s.subspec 'Flutter' do |flutter|
+    flutter.source_files = 'FlutterBridge.swift'
+    flutter.dependency 'JobsSwiftTools/Core'
+    flutter.dependency 'Flutter'
+    flutter.dependency 'FlutterPluginRegistrant'
+  end
   s.ios.frameworks = 'UIKit',
                      'Photos',
                      'PhotosUI',
@@ -36,13 +47,31 @@ Pod::Spec.new do |s|
                      'CoreBluetooth',
                      'CoreText'
   
-  s.dependency 'Flutter'
-  s.dependency 'FlutterPluginRegistrant'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsByPhotosUI'
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsToast'
     s.dependency 'JobsSwiftDSL'
+
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
+  # Explicit subspec consumers do not inherit the root's file exclusions.
+  s.recursive_subspecs.each do |subspec|
+    subspec.exclude_files = Array(subspec.attributes_hash['exclude_files']) + Array(s.attributes_hash['exclude_files'])
+  end
 
 end

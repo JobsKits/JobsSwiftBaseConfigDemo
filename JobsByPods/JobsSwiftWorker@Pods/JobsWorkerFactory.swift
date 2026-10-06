@@ -17,7 +17,10 @@ public enum JobsWorkerFactory {
         onChange: @escaping @Sendable (JobsWorkerChange<Source.Value>) -> Void
     ) -> JobsWorker {
         let worker = JobsWorker(mode: .ever, label: label)
-        let token = source.observe { change in
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed else {
+                return
+            }
             if let condition, !condition(change) { return }
             onChange(change)
         }
@@ -34,20 +37,24 @@ public enum JobsWorkerFactory {
         onChange: @escaping @Sendable (JobsWorkerChange<Source.Value>) -> Void
     ) -> JobsWorker {
         let worker = JobsWorker(mode: .once, label: label)
-        var token: UUID?
-        token = source.observe { change in
-            if let condition, !condition(change) { return }
-            onChange(change)
-            if let token {
-                source.removeObserver(token)
+        let gate = JobsWorkerInvocationGate(limit: 1)
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed else {
+                return
+            }
+            if let condition, !condition(change) {
+                return
+            }
+            guard gate.claim() != nil else {
+                return
             }
             worker.dispose()
+            onChange(change)
         }
         worker.setDisposer {
-            if let token {
-                source.removeObserver(token)
-            }
-        };return worker
+            source.removeObserver(token)
+        }
+        return worker
     }
 
     @discardableResult
@@ -62,9 +69,15 @@ public enum JobsWorkerFactory {
         let worker = JobsWorker(mode: .debounce(delay: time), label: label)
         let key = "debounce.\(source.sourceID.uuidString).\(worker.id.uuidString)"
         let scheduler = JobsWorkerScheduler.default
-        let token = source.observe { change in
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed else {
+                return
+            }
             if let condition, !condition(change) { return }
-            scheduler.schedule(after: time, key: key, queue: queue) {
+            scheduler.schedule(after: time, key: key, queue: queue) { [weak worker] in
+                guard worker?.isDisposed == false else {
+                    return
+                }
                 onChange(change)
             }
         }
@@ -83,14 +96,16 @@ public enum JobsWorkerFactory {
         onChange: @escaping @Sendable (JobsWorkerChange<Source.Value>) -> Void
     ) -> JobsWorker {
         let worker = JobsWorker(mode: .interval(window: time), label: label)
-        let lock = NSLock()
-        var nextAllowedDate: Date = .distantPast
-        let token = source.observe { change in
+        let nextAllowedDate = JobsWorkerState<Date>(.distantPast)
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed else {
+                return
+            }
             if let condition, !condition(change) { return }
-            let shouldFire: Bool = lock.jobs_sync {
+            let shouldFire: Bool = nextAllowedDate.withValue { date in
                 let now = Date()
-                guard now >= nextAllowedDate else { return false }
-                nextAllowedDate = now.addingTimeInterval(time.timeInterval)
+                guard now >= date else { return false }
+                date = now.addingTimeInterval(time.timeInterval)
                 return true
             }
             guard shouldFire else { return }
@@ -110,12 +125,14 @@ public enum JobsWorkerFactory {
     ) -> JobsWorker {
         let safeCount = max(0, count)
         let worker = JobsWorker(mode: .skip(safeCount), label: label)
-        let lock = NSLock()
-        var skipped = 0
-        let token = source.observe { change in
-            let shouldForward: Bool = lock.jobs_sync {
-                guard skipped < safeCount else { return true }
-                skipped += 1
+        let skipped = JobsWorkerState<Int>(0)
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed else {
+                return
+            }
+            let shouldForward: Bool = skipped.withValue { value in
+                guard value < safeCount else { return true }
+                value += 1
                 return false
             }
             guard shouldForward else { return }
@@ -139,29 +156,20 @@ public enum JobsWorkerFactory {
             worker.dispose()
             return worker
         }
-        let lock = NSLock()
-        var fired = 0
-        var token: UUID?
-        token = source.observe { change in
-            let shouldForward: Bool = lock.jobs_sync {
-                guard fired < safeCount else { return false }
-                fired += 1
-                return true
+        let gate = JobsWorkerInvocationGate(limit: safeCount)
+        let token = source.observe { [weak worker] change in
+            guard let worker, !worker.isDisposed, let isLast = gate.claim() else {
+                return
             }
-            guard shouldForward else { return }
+            if isLast {
+                worker.dispose()
+            }
             onChange(change)
-            let isCompleted: Bool = lock.jobs_sync { fired >= safeCount }
-            guard isCompleted else { return }
-            if let token {
-                source.removeObserver(token)
-            }
-            worker.dispose()
         }
         worker.setDisposer {
-            if let token {
-                source.removeObserver(token)
-            }
-        };return worker
+            source.removeObserver(token)
+        }
+        return worker
     }
 
     @discardableResult
@@ -172,7 +180,10 @@ public enum JobsWorkerFactory {
     ) -> JobsWorker {
         let worker = JobsWorker(mode: .everAll, label: label)
         let tokens: [(JobsAnyValueListenable, UUID)] = sources.map { source in
-            let token = source.observeAny { change in
+            let token = source.observeAny { [weak worker] change in
+                guard worker?.isDisposed == false else {
+                    return
+                }
                 onChange(change)
             };return (source, token)
         }
@@ -184,9 +195,40 @@ public enum JobsWorkerFactory {
     }
 }
 
-private extension NSLock {
-    func jobs_sync<T>(_ action: () -> T) -> T {
-        lock()
-        defer { unlock() };return action()
+/// 此盒只接收 Sendable 值，所有读写由同一锁保护，引用不会暴露可变状态。
+private final class JobsWorkerState<Value: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: Value
+
+    init(_ value: Value) {
+        self.value = value
+    }
+
+    func withValue<Result>(_ body: (inout Value) -> Result) -> Result {
+        lock.lock()
+        defer { lock.unlock() }
+        return body(&value)
+    }
+}
+
+/// 限次回调在进入用户代码前抢占，允许业务回调重入 accept/dispose。
+private final class JobsWorkerInvocationGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var remaining: Int
+
+    init(limit: Int) {
+        remaining = limit
+    }
+
+    func claim() -> Bool? {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        guard remaining > 0 else {
+            return nil
+        }
+        remaining -= 1
+        return remaining == 0
     }
 }

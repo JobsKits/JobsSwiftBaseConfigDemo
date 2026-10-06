@@ -21,26 +21,26 @@ import JobsInheritance
 import JobsSwiftMetalKit
 import JobsSwiftBaseDefines
 import SnapKit
+import JobsToast
 
 class PNPlayerDemoVC: BaseVC {
-    private lazy var renderer: MetalRenderer = {
-        guard let device = MTLCreateSystemDefaultDevice() else {
-            fatalError("Metal is not supported on this device")
+    private lazy var device = MTLCreateSystemDefaultDevice()
+    private lazy var renderer: MetalRenderer? = {
+        guard let device else {
+            return nil
         }
-        // [FIX] 1/2：拆开链式调用，避免 `MetalRenderer(...).byVideoTextureManagerDelegate(self)`
-        //        在 Swift 6.2.x 上触发协议 witness/类型推断路径的编译器崩溃（ICE）。
-        let r = MetalRenderer(device: device)
-        // [FIX] 2/2：显式把 self 转成协议类型，降低编译器推断压力（也更明确）。
-        //        如果你的 byVideoTextureManagerDelegate 接受的就是具体协议类型，这里能稳定绕开 ICE。
         let delegate: any VideoTextureManagerDelegate = self
-        _ = r.byVideoTextureManagerDelegate(delegate)
-        return r
+        return MetalRenderer(device: device)
+            .byVideoTextureManagerDelegate(delegate)
+            .byOnRenderingFailure { [weak self] error in
+                DispatchQueue.main.async {
+                    self?.showPlaybackFailure(error)
+                }
+            }
     }()
 
     private lazy var metalView: MTKView = {
-        guard let device = MTLCreateSystemDefaultDevice() else {
-            fatalError("Metal is not supported on this device")
-        };return MTKView(frame: .zero, device: device)
+        MTKView.jobsMake(frame: .zero, device: device)
             .byClearColor(MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1))
             .byDepthStencilPixelFormat(.depth32Float)
             .byColorPixelFormat(.bgra8Unorm)
@@ -49,19 +49,21 @@ class PNPlayerDemoVC: BaseVC {
             .byDelegate(renderer)
             .addPanAction { [weak self] gr in
                 guard let self else { return }
-                let pan = gr as! UIPanGestureRecognizer
+                guard let pan = gr as? UIPanGestureRecognizer else {
+                    return
+                }
                 let p = pan.translation(in: gr.view)
                 print("拖拽中: \(p)")
                 // [FIX] 不再在初始化闭包里捕获 `metalView` 变量本身，
                 //       改为使用 `gr.view`（实际发生手势的 view），减少初始化表达式复杂度与捕获关系。
                 if let view = gr.view as? MTKView {
-                    renderer.handlePan(pan, in: view)
+                    renderer?.handlePan(pan, in: view)
                 }
                 showControlsTemporarily()
             }
             .addTapAction { [weak self] gr in
                 guard let self else { return }
-                print("点击 \(gr.view!)")
+                print("点击 \(String(describing: gr.view))")
                 toggleControlsVisibility()
             }
             .byAddTo(view) { [unowned self] make in
@@ -85,16 +87,23 @@ class PNPlayerDemoVC: BaseVC {
         super.viewDidLoad()
         metalView.byVisible(YES)
         controlsView.byVisible(YES)
+        guard let renderer else {
+            showPlaybackFailure(NSError(domain: "PNPlayerDemo", code: 1,
+                                        userInfo: [NSLocalizedDescriptionKey: "当前设备不支持 Metal 播放。"] ))
+            return
+        }
+        renderer.byAttach(metalView)
         loadSampleVideo()
         configureAudioSession()
     }
     // MARK: - 加载示例视频
     private func loadSampleVideo() {
         guard let videoURL = Bundle.main.url(forResource: "pano_360", withExtension: "mp4") else {
-            print("Sample video not found")
+            showPlaybackFailure(NSError(domain: "PNPlayerDemo", code: 2,
+                                        userInfo: [NSLocalizedDescriptionKey: "未找到本地 pano_360.mp4 示例视频。"]))
             return
         }
-        renderer.loadVideo(url: videoURL)
+        renderer?.loadVideo(url: videoURL)
     }
     // MARK: - 音频会话
     private func configureAudioSession() {
@@ -107,7 +116,7 @@ class PNPlayerDemoVC: BaseVC {
     }
     // MARK: - 交互
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
-        renderer.handlePan(gesture, in: metalView)
+        renderer?.handlePan(gesture, in: metalView)
         showControlsTemporarily()
     }
 
@@ -136,6 +145,18 @@ class PNPlayerDemoVC: BaseVC {
         }
     }
 
+    private func showPlaybackFailure(_ error: Error) {
+        controlsHideTimer?.invalidate()
+        controlsView.updatePlayPauseButton(isPlaying: false)
+        error.localizedDescription.toast
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        controlsHideTimer?.invalidate()
+        renderer?.pauseVideo()
+    }
+
     override var prefersStatusBarHidden: Bool {
         true
     }
@@ -143,12 +164,12 @@ class PNPlayerDemoVC: BaseVC {
 // MARK: - PlayerControlsDelegate
 extension PNPlayerDemoVC: PlayerControlsDelegate {
     func didTapPlayPause() {
-        renderer.togglePlayPause()
+        renderer?.togglePlayPause()
         resetHideTimer()
     }
 
     func didSeekToTime(_ time: TimeInterval) {
-        renderer.bySeekToTime(time)
+        renderer?.bySeekToTime(time)
         resetHideTimer()
     }
 }
@@ -156,6 +177,10 @@ extension PNPlayerDemoVC: PlayerControlsDelegate {
 extension PNPlayerDemoVC: VideoTextureManagerDelegate {
     func videoDidUpdateTime(currentTime: TimeInterval, duration: TimeInterval) {
         controlsView.updateProgress(currentTime: currentTime, duration: duration)
+    }
+
+    func videoPlaybackDidFail(error: Error) {
+        showPlaybackFailure(error)
     }
 
     func videoPlaybackStateChanged(isPlaying: Bool) {

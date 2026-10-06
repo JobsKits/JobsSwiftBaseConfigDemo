@@ -1,0 +1,4548 @@
+{
+  "spec_count": 65,
+  "readme_count": 65,
+  "privacy_manifest_count": 17,
+  "issues": [],
+  "readmes": [
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/BRPickerViewSwift@Pods/README.md",
+      "pod": "BRPickerViewSwift",
+      "gate_sections": 1,
+      "gate_line": 174,
+      "fences": 12,
+      "sha256": "494599f91c369dd0cb941c6615ce31359adba031556efa2116b9b7c57117789e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 159,
+          "target": "./Core/BRBasePicker.swift",
+          "exists": true
+        },
+        {
+          "line": 160,
+          "target": "./UI/BRPickerPanel.swift",
+          "exists": true
+        },
+        {
+          "line": 161,
+          "target": "./Models/BRAreaModels.swift",
+          "exists": true
+        },
+        {
+          "line": 162,
+          "target": "./Animation/BRPanelAnimation.swift",
+          "exists": true
+        },
+        {
+          "line": 163,
+          "target": "./Core/BRPickerHaptics.swift",
+          "exists": true
+        },
+        {
+          "line": 165,
+          "target": "./BRPickerViewSwift.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppDoor@Pods/README.md",
+      "pod": "JobsAppDoor",
+      "gate_sections": 1,
+      "gate_line": 149,
+      "fences": 14,
+      "sha256": "2a66087a6e8ed8dddcfb0ced813021869626a37df82c4dab02c68cf7f94d5a3e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 134,
+          "target": "./Core/登录注册模块公共件/View/JobsAppDoorBackgroundView/JobsAppDoorBackgroundView.swift",
+          "exists": true
+        },
+        {
+          "line": 135,
+          "target": "./Core/登录注册模块公共件/View/JobsAppDoorFormView/JobsAppDoorFormView.swift",
+          "exists": true
+        },
+        {
+          "line": 136,
+          "target": "./Core/登录注册模块公共件/View/JobsAppDoorInputView/JobsAppDoorInputView.swift",
+          "exists": true
+        },
+        {
+          "line": 137,
+          "target": "./Core/登录注册模块公共件/View/JobsAppDoorLogoView/JobsAppDoorLogoView.swift",
+          "exists": true
+        },
+        {
+          "line": 138,
+          "target": "./Core/登录注册模块公共件/配置文件/JobsAppDoorConfig/JobsAppDoorConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 140,
+          "target": "./JobsAppDoor.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppIconRibbon@Pods/README.md",
+      "pod": "JobsAppIconRibbon",
+      "gate_sections": 1,
+      "gate_line": 232,
+      "fences": 24,
+      "sha256": "519ebb2f9a4fe5f35dbc6f710113df7308edcd8993a99d9d87745b2ba68a5c49",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 221,
+          "target": "./Scripts/JobsAppIconRibbonGenerator.swift",
+          "exists": true
+        },
+        {
+          "line": 223,
+          "target": "./JobsAppIconRibbon.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAudioRecorder@Pods/README.md",
+      "pod": "JobsAudioRecorder",
+      "gate_sections": 1,
+      "gate_line": 84,
+      "fences": 4,
+      "sha256": "ce75988fbee88d143c5f4253a6c3d388e06810dcb06e120715e6883d771aea36",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 59,
+          "target": "./Core/JobsAudioPlayerEngine.swift",
+          "exists": true
+        },
+        {
+          "line": 60,
+          "target": "./Core/JobsAudioRecorderEngine.swift",
+          "exists": true
+        },
+        {
+          "line": 61,
+          "target": "./Core/JobsAudioRecordButton.swift",
+          "exists": true
+        },
+        {
+          "line": 62,
+          "target": "./Core/JobsAudioRecording.swift",
+          "exists": true
+        },
+        {
+          "line": 63,
+          "target": "./Core/JobsAudioRecordingStore.swift",
+          "exists": true
+        },
+        {
+          "line": 65,
+          "target": "./JobsAudioRecorder.podspec",
+          "exists": true
+        },
+        {
+          "line": 71,
+          "target": "./Core/JobsAudioSessionCoordinator.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBluetooth@Pods/README.md",
+      "pod": "JobsBluetooth",
+      "gate_sections": 1,
+      "gate_line": 131,
+      "fences": 6,
+      "sha256": "9d98c7d85a2ec0c89d442d6dc0eb2d28236ceeb49b2cfb513ac909aa33ba5884",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 8,
+      "local_links": [
+        {
+          "line": 116,
+          "target": "./Core/JobsBluetoothManager/JobsBluetoothManager.swift",
+          "exists": true
+        },
+        {
+          "line": 117,
+          "target": "./Core/JobsBluetoothCommand/JobsBluetoothCommand.swift",
+          "exists": true
+        },
+        {
+          "line": 118,
+          "target": "./Core/JobsBluetoothMockTransport/JobsBluetoothMockTransport.swift",
+          "exists": true
+        },
+        {
+          "line": 119,
+          "target": "./Core/JobsBluetoothPeripheral/JobsBluetoothPeripheral.swift",
+          "exists": true
+        },
+        {
+          "line": 120,
+          "target": "./Core/JobsBluetoothProfile/JobsBluetoothProfile.swift",
+          "exists": true
+        },
+        {
+          "line": 122,
+          "target": "./JobsBluetooth.podspec",
+          "exists": true
+        },
+        {
+          "line": 128,
+          "target": "./Core/JobsBluetoothCommand/JobsBluetoothCommandReceipt.swift",
+          "exists": true
+        },
+        {
+          "line": 128,
+          "target": "./Core/JobsBluetoothCommand/JobsBluetoothPendingCommand.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBy3rdTools@Pods/README.md",
+      "pod": "JobsBy3rdTools",
+      "gate_sections": 1,
+      "gate_line": 77,
+      "fences": 4,
+      "sha256": "c26eea3b19bcb5801197802fe86d33fd3aba12958513ae5e1f1a4635116e70e8",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 53,
+          "target": "./JobsBy3rdToolsDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 54,
+          "target": "./JobsInstrumentPanelView.swift",
+          "exists": true
+        },
+        {
+          "line": 55,
+          "target": "./SphereTagCloudView.swift",
+          "exists": true
+        },
+        {
+          "line": 56,
+          "target": "./JXSegmentedView/JXSegmentedListContainerView.swift",
+          "exists": true
+        },
+        {
+          "line": 57,
+          "target": "./JXSegmentedView/JXSegmentedView.swift",
+          "exists": true
+        },
+        {
+          "line": 59,
+          "target": "./JobsBy3rdTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByPDFKit@Pods/README.md",
+      "pod": "JobsByPDFKit",
+      "gate_sections": 1,
+      "gate_line": 60,
+      "fences": 4,
+      "sha256": "5fe5dc5379d8964fb6212f6194ac5d8fd32a9fa804bd050ee3a79229ad701a07",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsByPDFKitDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsByPDFKit.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByPhotosUI@Pods/README.md",
+      "pod": "JobsByPhotosUI",
+      "gate_sections": 1,
+      "gate_line": 64,
+      "fences": 4,
+      "sha256": "16074ec0a0540811edf08a31db01eba73c5e0edd3620f61b0326808208d424bd",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsByPhotosUIDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./PHPickerFilter.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./PHPickerResult.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./PhotosPickerStyle.swift",
+          "exists": true
+        },
+        {
+          "line": 46,
+          "target": "./PHPickerCapabilities.swift",
+          "exists": true
+        },
+        {
+          "line": 48,
+          "target": "./JobsByPhotosUI.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByQuartzCore@Pods/README.md",
+      "pod": "JobsByQuartzCore",
+      "gate_sections": 1,
+      "gate_line": 60,
+      "fences": 4,
+      "sha256": "450b9a92d4e210469b6aaf9209fd8a375fbad8277f79694ea3432fa226ff238d",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsByQuartzCore.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsByQuartzCore.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByUIKit@Pods/README.md",
+      "pod": "JobsByUIKit",
+      "gate_sections": 1,
+      "gate_line": 98,
+      "fences": 4,
+      "sha256": "e216cfc377cdb16fd06978af699162f115b164b483f91d09c65cb3cf3475331e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 8,
+      "local_links": [
+        {
+          "line": 14,
+          "target": "../JobsDebugPanel@Pods/README.md",
+          "exists": true
+        },
+        {
+          "line": 72,
+          "target": "./JobsByUIKitDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 73,
+          "target": "./iOS.SDK/Others@SDK/UIAlertController.swift",
+          "exists": true
+        },
+        {
+          "line": 74,
+          "target": "./iOS.SDK/Others@SDK/UICollectionViewFlowLayout.swift",
+          "exists": true
+        },
+        {
+          "line": 75,
+          "target": "./iOS.SDK/Others@SDK/UIListContentConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 76,
+          "target": "./iOS.SDK/Others@SDK/UIPageViewController.swift",
+          "exists": true
+        },
+        {
+          "line": 78,
+          "target": "./JobsByUIKit.podspec",
+          "exists": true
+        },
+        {
+          "line": 85,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByWebKit@Pods/README.md",
+      "pod": "JobsByWebKit",
+      "gate_sections": 1,
+      "gate_line": 53,
+      "fences": 2,
+      "sha256": "bfd78e99c2853a4533f9e94af081b87f72e68c7136607edc4c44ec87ac66f219",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsByWebKitDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsByWebKit.podspec",
+          "exists": true
+        },
+        {
+          "line": 48,
+          "target": "./JobsByWebKitDSLBridge.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCountdownButton@Pods/README.md",
+      "pod": "JobsCountdownButton",
+      "gate_sections": 1,
+      "gate_line": 200,
+      "fences": 8,
+      "sha256": "4c9e2c88becb9a53222378d4d183715c4165d332afc786f99abcb08339548e6c",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 5,
+      "local_links": [
+        {
+          "line": 186,
+          "target": "./JobsCountdownBtnConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 187,
+          "target": "./JobsCountdownBinder.swift",
+          "exists": true
+        },
+        {
+          "line": 188,
+          "target": "./JobsCountdownBtnCtrl.swift",
+          "exists": true
+        },
+        {
+          "line": 189,
+          "target": "./UIButton+倒计时.swift",
+          "exists": true
+        },
+        {
+          "line": 191,
+          "target": "./JobsCountdownButton.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCryptoKit@Pods/README.md",
+      "pod": "JobsCryptoKit",
+      "gate_sections": 1,
+      "gate_line": 44,
+      "fences": 4,
+      "sha256": "3783b7699c2902b2672a0842724bf1da4b5b1e441ab180c26544cb27fb41e09e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 5,
+      "local_links": [
+        {
+          "line": 37,
+          "target": "./BaseCrypto.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./PBKDF2.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./JobsCryptoKit@对称加解密/AESGCM.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./JobsCryptoKit@对称加解密/ChaChaPoly.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./AESCBC.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsDebugPanel@Pods/README.md",
+      "pod": "JobsDebugPanel",
+      "gate_sections": 1,
+      "gate_line": 85,
+      "fences": 6,
+      "sha256": "18c91bd939634bff7af935579e11dea95f0d7cbda6c87da83928adac6b1f92fe",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 0,
+      "local_links": [],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsEmptyView@Pods/README.md",
+      "pod": "JobsEmptyView",
+      "gate_sections": 1,
+      "gate_line": 52,
+      "fences": 2,
+      "sha256": "d33888096c0d612888f4c5682887567936322c9768a737e133a1da30a0a86b1d",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 43,
+          "target": "./JobsEmptyView.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./JobsEmptyView.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsFuseAnimation@Pods/README.md",
+      "pod": "JobsFuseAnimation",
+      "gate_sections": 1,
+      "gate_line": 185,
+      "fences": 14,
+      "sha256": "2c428fd67df37c1f7fa7adf860e17561d03f46805134ff3616fe44bc37081266",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 172,
+          "target": "./JobsFuseAnimation.swift",
+          "exists": true
+        },
+        {
+          "line": 173,
+          "target": "./Core/JobsRefreshAnimatorProtocol/JobsRefreshAnimatorProtocol.swift",
+          "exists": true
+        },
+        {
+          "line": 174,
+          "target": "./Core/JobsDouyinRefreshConfig/JobsDouyinRefreshConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 175,
+          "target": "./Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift",
+          "exists": true
+        },
+        {
+          "line": 176,
+          "target": "./Core/JobsFuseBubbleConfig/JobsFuseBubbleConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 178,
+          "target": "./JobsFuseAnimation.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGestureUnlock@Pods/README.md",
+      "pod": "JobsGestureUnlock",
+      "gate_sections": 1,
+      "gate_line": 67,
+      "fences": 2,
+      "sha256": "05d28d61b2a863074b60ae862e03ac9296726a06287c1d82afc69be9578efbd4",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 48,
+          "target": "./高仿Android手势开锁🔒/GestureUnlockView.swift",
+          "exists": true
+        },
+        {
+          "line": 49,
+          "target": "./高仿Android手势开锁🔒/GesturePattern.swift",
+          "exists": true
+        },
+        {
+          "line": 50,
+          "target": "./高仿Android手势开锁🔒/GestureNodeView.swift",
+          "exists": true
+        },
+        {
+          "line": 51,
+          "target": "./高仿Android手势开锁🔒/GestureUnlockConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 52,
+          "target": "./Apple滑动开锁🔒.swift",
+          "exists": true
+        },
+        {
+          "line": 54,
+          "target": "./JobsGestureUnlock.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/README.md",
+      "pod": "JobsGetWindow",
+      "gate_sections": 1,
+      "gate_line": 60,
+      "fences": 2,
+      "sha256": "bacb681d7ed9ac9c723c238ed17e5b5c7f5daa3a9da6e1281683f79f00e36b9f",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 41,
+          "target": "./Inlines.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./UIApplication.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./UIWindowScene.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./JobsGetWindow.podspec",
+          "exists": true
+        },
+        {
+          "line": 51,
+          "target": "../JobsSwiftDSL@Pods/README.md",
+          "exists": true
+        },
+        {
+          "line": 55,
+          "target": "../JobsSwiftBaseTools@Pods/README.md",
+          "exists": true
+        },
+        {
+          "line": 57,
+          "target": "../JobsByUIKit@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsIconfont@Pods/README.md",
+      "pod": "JobsIconfont",
+      "gate_sections": 1,
+      "gate_line": 116,
+      "fences": 6,
+      "sha256": "67147e7434bcb09255ec2f7b5bf1613c150b4069327fae9b047fb71e3304e291",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 105,
+          "target": "./Core/JobsIconfont.swift",
+          "exists": true
+        },
+        {
+          "line": 107,
+          "target": "./JobsIconfont.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageRotation@Pods/README.md",
+      "pod": "JobsImageRotation",
+      "gate_sections": 1,
+      "gate_line": 116,
+      "fences": 10,
+      "sha256": "c818f5814cb0cb912d91beb1723f47fbf094484b9dccb5ed343341069e27bf90",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 105,
+          "target": "./Core/JobsClockIconView/JobsClockIconView.swift",
+          "exists": true
+        },
+        {
+          "line": 106,
+          "target": "./Core/JobsImageRotationDirection/JobsImageRotationDirection.swift",
+          "exists": true
+        },
+        {
+          "line": 107,
+          "target": "./Core/JobsImageRotator/JobsImageRotator.swift",
+          "exists": true
+        },
+        {
+          "line": 109,
+          "target": "./JobsImageRotation.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageTools@Pods/README.md",
+      "pod": "JobsImageTools",
+      "gate_sections": 1,
+      "gate_line": 53,
+      "fences": 2,
+      "sha256": "75d05d7c7617399a1056d5414a86e855498bb166a4a0e051d68aae7acb9f9485",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 40,
+          "target": "./JobsImageCacheCleaner.swift",
+          "exists": true
+        },
+        {
+          "line": 41,
+          "target": "./JobsSimpleImageLoader.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./JobsImageCacheCleanerByUIKit.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsImageTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsInheritance@Pods/README.md",
+      "pod": "JobsInheritance",
+      "gate_sections": 1,
+      "gate_line": 75,
+      "fences": 2,
+      "sha256": "13a240513e5e4afc47121860e045dfa3883f6a59ff1f3ad238bffea23d0e74c6",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 58,
+          "target": "./UIWebView/BaseWebView/BaseWebView+Bridge.swift",
+          "exists": true
+        },
+        {
+          "line": 59,
+          "target": "./UIWebView/BaseWebView/BaseWebView+MobileBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 60,
+          "target": "./UIWebView/BaseWebView/BaseWebView.swift",
+          "exists": true
+        },
+        {
+          "line": 61,
+          "target": "./UIViewController/BaseWebVC.swift",
+          "exists": true
+        },
+        {
+          "line": 62,
+          "target": "./UITableViewCell/BaseTableViewCellByDefault.swift",
+          "exists": true
+        },
+        {
+          "line": 64,
+          "target": "./JobsInheritance.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLocalNotification@Pods/README.md",
+      "pod": "JobsLocalNotification",
+      "gate_sections": 1,
+      "gate_line": 40,
+      "fences": 4,
+      "sha256": "a5ea7b32ce99e7fc947e068100b796862de1b69c3625662e9f691939ccaf916e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 37,
+          "target": "./JobsLocalNotificationModel.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./JobsMakeLocalNotification.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./JobsLocalNotificationError.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLuckyEnvelopeRain@Pods/README.md",
+      "pod": "JobsLuckyEnvelopeRain",
+      "gate_sections": 1,
+      "gate_line": 53,
+      "fences": 2,
+      "sha256": "a66a90d4fe6f2f9c63858b12e759e77d2f1339f384df879a6c6eab6296121665",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 41,
+          "target": "./红包雨视图.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./红包雨配置.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsLuckyEnvelopeRain.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsMarqueeView@Pods/README.md",
+      "pod": "JobsMarqueeView",
+      "gate_sections": 1,
+      "gate_line": 657,
+      "fences": 26,
+      "sha256": "21e779ac4f99a37fdc4ad390835dff208bf42bb73cf4ab11f3df94e2fe00d3c1",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 648,
+          "target": "./JobsMarqueeView.swift",
+          "exists": true
+        },
+        {
+          "line": 650,
+          "target": "./JobsMarqueeView.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNavBar@Pods/README.md",
+      "pod": "JobsNavBar",
+      "gate_sections": 1,
+      "gate_line": 54,
+      "fences": 2,
+      "sha256": "099f4525d3ef5a0375419c1429bd4013da5ca25e5bbc6ab4c0e44ceef3a2b7d6",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 5,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsNavBar.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./JobsNavBarByUIKit.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsNavBarDef.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./JobsNavBarTools.swift",
+          "exists": true
+        },
+        {
+          "line": 47,
+          "target": "./JobsNavBar.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/README.md",
+      "pod": "JobsNetworking",
+      "gate_sections": 1,
+      "gate_line": 133,
+      "fences": 8,
+      "sha256": "52220d02e40aebb95ccda69b00c6089e7a9082668d143cab8a36c2c52ccabd20",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 15,
+          "target": "../JobsDebugPanel@Pods/README.md",
+          "exists": true
+        },
+        {
+          "line": 63,
+          "target": "./Request/JobsRequest.swift",
+          "exists": true
+        },
+        {
+          "line": 64,
+          "target": "./Agent/JobsAgent.swift",
+          "exists": true
+        },
+        {
+          "line": 65,
+          "target": "./Agent/JobsDefaultAgent.swift",
+          "exists": true
+        },
+        {
+          "line": 66,
+          "target": "./Agent/HTTPClient.swift",
+          "exists": true
+        },
+        {
+          "line": 67,
+          "target": "./Cache/JobsCachePolicy.swift",
+          "exists": true
+        },
+        {
+          "line": 69,
+          "target": "./JobsNetworking.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCDSL@Pods/README.md",
+      "pod": "JobsOCDSL",
+      "gate_sections": 1,
+      "gate_line": 57,
+      "fences": 8,
+      "sha256": "40504b7b84c2c0e87afbd169fa4f688dd1933c474265c81d08378c3c2dd23dc2",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 0,
+      "local_links": [],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsProgressBar@Pods/README.md",
+      "pod": "JobsProgressBar",
+      "gate_sections": 1,
+      "gate_line": 97,
+      "fences": 6,
+      "sha256": "1042915451ce4c4149450462ad9a4eaa4a7dfa6c1bba4eb4f6d00ae4d79ff28a",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 87,
+          "target": "./JobsProgressBar.swift",
+          "exists": true
+        },
+        {
+          "line": 88,
+          "target": "./JobsProgressBarByUIKit.swift",
+          "exists": true
+        },
+        {
+          "line": 90,
+          "target": "./JobsProgressBar.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScale@Pods/README.md",
+      "pod": "JobsScale",
+      "gate_sections": 1,
+      "gate_line": 69,
+      "fences": 2,
+      "sha256": "24562cb555757eff7db318f6d1759f6b9603f7c36d6bfbd05e0abeac764d02fb",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 58,
+          "target": "./JobsScale.swift",
+          "exists": true
+        },
+        {
+          "line": 60,
+          "target": "./JobsScale.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScreenCapture@Pods/README.md",
+      "pod": "JobsScreenCapture",
+      "gate_sections": 1,
+      "gate_line": 110,
+      "fences": 8,
+      "sha256": "cba2625242363df80b0d1b3ee51aa9e851a9261fcce417903f01fd360fbd12d1",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 97,
+          "target": "./Core/JobsScreenshotProtectionView/JobsScreenshotProtectionView.swift",
+          "exists": true
+        },
+        {
+          "line": 98,
+          "target": "./Core/JobsScreenshotCapturer/JobsScreenshotCapturer.swift",
+          "exists": true
+        },
+        {
+          "line": 99,
+          "target": "./Core/JobsScreenshotObserver/JobsScreenshotObserver.swift",
+          "exists": true
+        },
+        {
+          "line": 101,
+          "target": "./JobsScreenCapture.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftAppTools@Pods/README.md",
+      "pod": "JobsSwiftAppTools",
+      "gate_sections": 1,
+      "gate_line": 62,
+      "fences": 4,
+      "sha256": "1d8d036fd03e64608d15a59d6c60b52f878205cdf9cfbe2804fcb6632d0df630",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsSwiftAppTools.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsSwiftAppTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseDefines@Pods/README.md",
+      "pod": "JobsSwiftBaseDefines",
+      "gate_sections": 1,
+      "gate_line": 55,
+      "fences": 2,
+      "sha256": "2c2823d57edd29b88263f66f55a56c7cc21b01fea2ef163d39e6e0070d726cd7",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 38,
+          "target": "./JobsBaseProtocolDefs.swift",
+          "exists": true
+        },
+        {
+          "line": 39,
+          "target": "./JobsBaseCor.swift",
+          "exists": true
+        },
+        {
+          "line": 40,
+          "target": "./JobsTheme.swift",
+          "exists": true
+        },
+        {
+          "line": 41,
+          "target": "./JobsSwiftBlockBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./JobsBaseCellConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsSwiftBaseDefines.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/README.md",
+      "pod": "JobsSwiftBaseTools",
+      "gate_sections": 1,
+      "gate_line": 63,
+      "fences": 2,
+      "sha256": "a65369670038bd6b7f649524000dd2056583d323a6ce258497414ccbd884bf78",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./Inlines.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./JobsSafeTransitions.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsStructTools.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./KeyboardObserver.swift",
+          "exists": true
+        },
+        {
+          "line": 46,
+          "target": "./SafeCodable.swift",
+          "exists": true
+        },
+        {
+          "line": 48,
+          "target": "./JobsSwiftBaseTools.podspec",
+          "exists": true
+        },
+        {
+          "line": 52,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBlock@Pods/README.md",
+      "pod": "JobsSwiftBlock",
+      "gate_sections": 1,
+      "gate_line": 73,
+      "fences": 2,
+      "sha256": "458ed25f5ebdc78a5cc87109d1d16a0b858cc47a9dfc70f997538920d40e36a8",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 58,
+          "target": "./JSONCoder+Make.swift",
+          "exists": true
+        },
+        {
+          "line": 59,
+          "target": "./JobsCallbackable.swift",
+          "exists": true
+        },
+        {
+          "line": 60,
+          "target": "./JobsSwift3rdPodsBlock.swift",
+          "exists": true
+        },
+        {
+          "line": 61,
+          "target": "./JobsSwiftBaseBlock.swift",
+          "exists": true
+        },
+        {
+          "line": 62,
+          "target": "./NSObject+Make.swift",
+          "exists": true
+        },
+        {
+          "line": 64,
+          "target": "./JobsSwiftBlock.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCalendar@Pods/README.md",
+      "pod": "JobsSwiftCalendar",
+      "gate_sections": 1,
+      "gate_line": 130,
+      "fences": 10,
+      "sha256": "cda93383be4ffa9ddd2d1f0e706dd06261c6d734ee2f4f3d86fa758d28d54819",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 5,
+      "local_links": [
+        {
+          "line": 116,
+          "target": "./Core/JobsSwiftCalendar/JobsSwiftCalendar.swift",
+          "exists": true
+        },
+        {
+          "line": 117,
+          "target": "./Core/JobsSwiftCalendarAppearance/JobsSwiftCalendarAppearance.swift",
+          "exists": true
+        },
+        {
+          "line": 118,
+          "target": "./Core/JobsSwiftCalendarDayCell/JobsSwiftCalendarDayCell.swift",
+          "exists": true
+        },
+        {
+          "line": 119,
+          "target": "./Core/JobsSwiftCalendarDefines/JobsSwiftCalendarDefines.swift",
+          "exists": true
+        },
+        {
+          "line": 121,
+          "target": "./JobsSwiftCalendar.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftComment@Pods/README.md",
+      "pod": "JobsSwiftComment",
+      "gate_sections": 1,
+      "gate_line": 95,
+      "fences": 4,
+      "sha256": "b5b859aacba1cd82aabb7719a517d69b457c361be0496be2e97948d27902b3e1",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 80,
+          "target": "./Core/JobsSwiftCommentConfig/JobsSwiftCommentConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 81,
+          "target": "./Core/JobsSwiftCommentModel/JobsSwiftCommentModel.swift",
+          "exists": true
+        },
+        {
+          "line": 82,
+          "target": "./Core/JobsSwiftCommentView/JobsSwiftCommentView.swift",
+          "exists": true
+        },
+        {
+          "line": 83,
+          "target": "./Core/JobsSwiftCommentCell/JobsSwiftCommentCell.swift",
+          "exists": true
+        },
+        {
+          "line": 84,
+          "target": "./Core/JobsSwiftCommentMode/JobsSwiftCommentMode.swift",
+          "exists": true
+        },
+        {
+          "line": 86,
+          "target": "./JobsSwiftComment.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCountryCodeCtrl@Pods/README.md",
+      "pod": "JobsSwiftCountryCodeCtrl",
+      "gate_sections": 1,
+      "gate_line": 83,
+      "fences": 6,
+      "sha256": "4a54e6a500891e7d8d8181b85171b5df2e248f18a43d5078f7b937ccab9b560d",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 74,
+          "target": "./JobsSwiftCountryCodeCtrl.swift",
+          "exists": true
+        },
+        {
+          "line": 76,
+          "target": "./JobsSwiftCountryCodeCtrl.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDSL@Pods/README.md",
+      "pod": "JobsSwiftDSL",
+      "gate_sections": 1,
+      "gate_line": 178,
+      "fences": 6,
+      "sha256": "6b0da013dc8bae3a288bdd98b68b18c84d20abfc6d23e3d18ff098fc5dc5e11a",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 159,
+          "target": "./JobsSwiftBlockBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 160,
+          "target": "./UIKit/iOS.SDK/UIView/UIView+DSL.swift",
+          "exists": true
+        },
+        {
+          "line": 161,
+          "target": "./Foundation/JSONDecoder.swift",
+          "exists": true
+        },
+        {
+          "line": 162,
+          "target": "./MetalKit/MTKView.swift",
+          "exists": true
+        },
+        {
+          "line": 163,
+          "target": "./PDFKit/PDFThumbnailView.swift",
+          "exists": true
+        },
+        {
+          "line": 165,
+          "target": "./JobsSwiftDSL.podspec",
+          "exists": true
+        },
+        {
+          "line": 173,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDebugTools@Pods/README.md",
+      "pod": "JobsSwiftDebugTools",
+      "gate_sections": 1,
+      "gate_line": 101,
+      "fences": 12,
+      "sha256": "971d93fadceb03aa9568cab74594e611104d07274316e0a0215ff250e626c12b",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 81,
+          "target": "./UIViewController+DebugDeallocSwizzle.swift",
+          "exists": true
+        },
+        {
+          "line": 82,
+          "target": "./JobsDebugDeinitAutoLoad.m",
+          "exists": true
+        },
+        {
+          "line": 83,
+          "target": "./JobsDebugLog.swift",
+          "exists": true
+        },
+        {
+          "line": 85,
+          "target": "./JobsSwiftDebugTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftExcel@Pods/README.md",
+      "pod": "JobsSwiftExcel",
+      "gate_sections": 1,
+      "gate_line": 92,
+      "fences": 4,
+      "sha256": "efc400ede585feb9b69f455768bb95b0b71aefc1708a528e10effea38a37a60e",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 76,
+          "target": "./Core/JobsSwiftExcelView/JobsSwiftExcelView.swift",
+          "exists": true
+        },
+        {
+          "line": 77,
+          "target": "./Core/JobsSwiftExcelCell/JobsSwiftExcelCell.swift",
+          "exists": true
+        },
+        {
+          "line": 78,
+          "target": "./Core/JobsSwiftExcelCellContext/JobsSwiftExcelCellContext.swift",
+          "exists": true
+        },
+        {
+          "line": 79,
+          "target": "./Core/JobsSwiftExcelColumn/JobsSwiftExcelColumn.swift",
+          "exists": true
+        },
+        {
+          "line": 80,
+          "target": "./Core/JobsSwiftExcelRow/JobsSwiftExcelRow.swift",
+          "exists": true
+        },
+        {
+          "line": 82,
+          "target": "./JobsSwiftExcel.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftFoundation@Pods/README.md",
+      "pod": "JobsSwiftFoundation",
+      "gate_sections": 1,
+      "gate_line": 54,
+      "fences": 2,
+      "sha256": "1cf53536e6f182e9f84abdad05ae59c2f63c0b9afef9e041be877b27882867b1",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 39,
+          "target": "./Decimal.swift",
+          "exists": true
+        },
+        {
+          "line": 40,
+          "target": "./NSAttributedString.swift",
+          "exists": true
+        },
+        {
+          "line": 41,
+          "target": "./UserDefaults.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./JobsSwiftFoundationDSLBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./BinaryFloatingPoint.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./JobsSwiftFoundation.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftGraphicCaptcha@Pods/README.md",
+      "pod": "JobsSwiftGraphicCaptcha",
+      "gate_sections": 1,
+      "gate_line": 118,
+      "fences": 10,
+      "sha256": "494714bd096c2e51ed6be3a9760ae70eae6c1e3570ad6c05d2d828bf09d582c6",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 105,
+          "target": "./Core/JobsSwiftGraphicCaptchaConfig/JobsSwiftGraphicCaptchaConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 106,
+          "target": "./Core/JobsSwiftGraphicCaptchaView/JobsSwiftGraphicCaptchaView.swift",
+          "exists": true
+        },
+        {
+          "line": 107,
+          "target": "./Core/JobsSwiftGraphicCaptchaGenerator/JobsSwiftGraphicCaptchaGenerator.swift",
+          "exists": true
+        },
+        {
+          "line": 109,
+          "target": "./JobsSwiftGraphicCaptcha.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftLinkageMenuView@Pods/README.md",
+      "pod": "JobsSwiftLinkageMenuView",
+      "gate_sections": 1,
+      "gate_line": 71,
+      "fences": 4,
+      "sha256": "e013f7818a23dcdcabce6ecbf46eeae0a0e0fdcf0b1b04d0a073afe435f77a37",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 60,
+          "target": "./JobsSwiftLinkageMenuView.swift",
+          "exists": true
+        },
+        {
+          "line": 62,
+          "target": "./JobsSwiftLinkageMenuView.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftMarkdown@Pods/README.md",
+      "pod": "JobsSwiftMarkdown",
+      "gate_sections": 1,
+      "gate_line": 116,
+      "fences": 8,
+      "sha256": "1dab1ed54b1ba7788cd81a5f1b425d4913915f61ba63b3802267b231a2a2e5df",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 5,
+      "local_links": [
+        {
+          "line": 99,
+          "target": "./Core/JobsMarkdownConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 100,
+          "target": "./Core/JobsMarkdownView.swift",
+          "exists": true
+        },
+        {
+          "line": 101,
+          "target": "./Core/JobsMarkdownCatalog.swift",
+          "exists": true
+        },
+        {
+          "line": 102,
+          "target": "./Core/JobsMarkdownDocument.swift",
+          "exists": true
+        },
+        {
+          "line": 104,
+          "target": "./JobsSwiftMarkdown.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftNumberStepper@Pods/README.md",
+      "pod": "JobsSwiftNumberStepper",
+      "gate_sections": 1,
+      "gate_line": 100,
+      "fences": 8,
+      "sha256": "36a12a558beb45c857b5504fb0505b11f152531e295f303995eb78f6ef4cd335",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 91,
+          "target": "./Core/JobsSwiftNumberStepper/JobsSwiftNumberStepper.swift",
+          "exists": true
+        },
+        {
+          "line": 93,
+          "target": "./JobsSwiftNumberStepper.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftOpen@Pods/README.md",
+      "pod": "JobsSwiftOpen",
+      "gate_sections": 1,
+      "gate_line": 85,
+      "fences": 4,
+      "sha256": "835c177dc47d5328272a07d993f25dfbdc5bafba9c3b7fd08953379857496df6",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 4,
+      "local_links": [
+        {
+          "line": 72,
+          "target": "./Core/JobsOpenWebViewController.swift",
+          "exists": true
+        },
+        {
+          "line": 73,
+          "target": "./Core/JobsOpen.swift",
+          "exists": true
+        },
+        {
+          "line": 74,
+          "target": "./Core/JobsOpenConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 76,
+          "target": "./JobsSwiftOpen.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftPatch@Pods/README.md",
+      "pod": "JobsSwiftPatch",
+      "gate_sections": 1,
+      "gate_line": 82,
+      "fences": 2,
+      "sha256": "8bfcbfc6e00616927bc77b2626abe471a56e3655888496bbdb9fa97ca5de49fe",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 69,
+          "target": "./JobsSwiftPatch.swift",
+          "exists": true
+        },
+        {
+          "line": 71,
+          "target": "./JobsSwiftPatch.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/README.md",
+      "pod": "JobsSwiftRefresher",
+      "gate_sections": 1,
+      "gate_line": 243,
+      "fences": 10,
+      "sha256": "8779b80d014d82ada9a29806a048a4ddaeb97313e68314b3d5fbdd7b7dcb9897",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 228,
+          "target": "./JobsRefreshAnimatorContainerView.swift",
+          "exists": true
+        },
+        {
+          "line": 229,
+          "target": "./UIScrollView+JobsSwiftRefresher.swift",
+          "exists": true
+        },
+        {
+          "line": 230,
+          "target": "./JobsRefreshComponent.swift",
+          "exists": true
+        },
+        {
+          "line": 231,
+          "target": "./JobsRefreshDefaultSkins.swift",
+          "exists": true
+        },
+        {
+          "line": 232,
+          "target": "./JobsRefreshEnums.swift",
+          "exists": true
+        },
+        {
+          "line": 234,
+          "target": "./JobsSwiftRefresher.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSearcher@Pods/README.md",
+      "pod": "JobsSwiftSearcher",
+      "gate_sections": 1,
+      "gate_line": 83,
+      "fences": 4,
+      "sha256": "3f5fc319c69b195b7f91d7e9895765892c28c539c9453345978960cf51fb99e2",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 71,
+          "target": "./Core/JobsSwiftSearcherConfig/JobsSwiftSearcherConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 72,
+          "target": "./Core/JobsSwiftSearcherView/JobsSwiftSearcherView.swift",
+          "exists": true
+        },
+        {
+          "line": 74,
+          "target": "./JobsSwiftSearcher.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSplash@Pods/README.md",
+      "pod": "JobsSwiftSplash",
+      "gate_sections": 1,
+      "gate_line": 136,
+      "fences": 8,
+      "sha256": "54caa26d7aca137ada61b77b6cc16bbabbe12b995ab45170789637265da14bed",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 119,
+          "target": "./Core/JobsSplashConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 120,
+          "target": "./Core/JobsSplashGIFDecoder.swift",
+          "exists": true
+        },
+        {
+          "line": 121,
+          "target": "./Core/JobsSplashLocalization.swift",
+          "exists": true
+        },
+        {
+          "line": 122,
+          "target": "./Core/JobsSplashMediaCache.swift",
+          "exists": true
+        },
+        {
+          "line": 123,
+          "target": "./Core/JobsSplashPreferences.swift",
+          "exists": true
+        },
+        {
+          "line": 125,
+          "target": "./JobsSwiftSplash.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftStandardLibrary@Pods/README.md",
+      "pod": "JobsSwiftStandardLibrary",
+      "gate_sections": 1,
+      "gate_line": 51,
+      "fences": 2,
+      "sha256": "12351868240a9de5dbee5b16c9fb5702aaec8b71746cb4fcefd450309d548411",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 36,
+          "target": "./Optional.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./容器/Array.swift",
+          "exists": true
+        },
+        {
+          "line": 38,
+          "target": "./容器/Collection.swift",
+          "exists": true
+        },
+        {
+          "line": 39,
+          "target": "./容器/Dictionary.swift",
+          "exists": true
+        },
+        {
+          "line": 40,
+          "target": "./容器/Sequence.swift",
+          "exists": true
+        },
+        {
+          "line": 42,
+          "target": "./JobsSwiftStandardLibrary.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTaskCenter@Pods/README.md",
+      "pod": "JobsSwiftTaskCenter",
+      "gate_sections": 1,
+      "gate_line": 146,
+      "fences": 8,
+      "sha256": "8af80eb9fc65ad7341e45b47e3fb76f3c7f361e7470f2a418e281150b3f054dc",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 126,
+          "target": "./JobsTask.swift",
+          "exists": true
+        },
+        {
+          "line": 127,
+          "target": "./JobsTaskManager.swift",
+          "exists": true
+        },
+        {
+          "line": 128,
+          "target": "./JobsTaskManagerExecutionStream.swift",
+          "exists": true
+        },
+        {
+          "line": 129,
+          "target": "./JobsTaskManagerStatusStream.swift",
+          "exists": true
+        },
+        {
+          "line": 130,
+          "target": "./JobsDropFirstTaskExecutionSequence.swift",
+          "exists": true
+        },
+        {
+          "line": 132,
+          "target": "./JobsSwiftTaskCenter.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimer@Pods/README.md",
+      "pod": "JobsSwiftTimer",
+      "gate_sections": 1,
+      "gate_line": 225,
+      "fences": 14,
+      "sha256": "5e076dbcea3f532b3c4d25aeb1f206ff448460eb99fc04c5b05515171308ac5b",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 7,
+      "local_links": [
+        {
+          "line": 102,
+          "target": "../JobsSwiftTimerMgr@Pods/README.md",
+          "exists": true
+        },
+        {
+          "line": 210,
+          "target": "./JobsSwiftTimer.swift",
+          "exists": true
+        },
+        {
+          "line": 211,
+          "target": "./JobsSwiftTimerConfig.swift",
+          "exists": true
+        },
+        {
+          "line": 212,
+          "target": "./JobsSwiftTimerDefs.swift",
+          "exists": true
+        },
+        {
+          "line": 213,
+          "target": "./JobsSwiftTimerProtocol.swift",
+          "exists": true
+        },
+        {
+          "line": 214,
+          "target": "./JobsSwiftTimerCountdown.swift",
+          "exists": true
+        },
+        {
+          "line": 216,
+          "target": "./JobsSwiftTimer.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimerMgr@Pods/README.md",
+      "pod": "JobsSwiftTimerMgr",
+      "gate_sections": 1,
+      "gate_line": 237,
+      "fences": 12,
+      "sha256": "29aca59080e78ba736eefb5ed28ec03bde272c2179937c918a662db98ae60da6",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 224,
+          "target": "./JobsSwiftTimerMgr.swift",
+          "exists": true
+        },
+        {
+          "line": 225,
+          "target": "./JobsSwiftTimerMgrDefs.swift",
+          "exists": true
+        },
+        {
+          "line": 227,
+          "target": "./JobsSwiftTimerMgr.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/README.md",
+      "pod": "JobsSwiftTools",
+      "gate_sections": 1,
+      "gate_line": 67,
+      "fences": 4,
+      "sha256": "d6e1bf703ac0a905268617057561a59544008105328be9e3757bfdca8b275229",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./FlutterBridge.swift",
+          "exists": true
+        },
+        {
+          "line": 43,
+          "target": "./JobsSwiftTools.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./UnityManager.swift",
+          "exists": true
+        },
+        {
+          "line": 45,
+          "target": "./CrashLogCenter.swift",
+          "exists": true
+        },
+        {
+          "line": 46,
+          "target": "./MediaPickerService.swift",
+          "exists": true
+        },
+        {
+          "line": 48,
+          "target": "./JobsSwiftTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftUILabelScrolling@Pods/README.md",
+      "pod": "JobsSwiftUILabelScrolling",
+      "gate_sections": 1,
+      "gate_line": 108,
+      "fences": 6,
+      "sha256": "7a2452cc237008578d4112f0d86689c3bc0fb3788c7fb3228f1da8665134ef97",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 95,
+          "target": "./Core/JobsLabelScrollConfiguration/JobsLabelScrollConfiguration.swift",
+          "exists": true
+        },
+        {
+          "line": 96,
+          "target": "./Core/JobsLabelScrollController/JobsLabelScrollController.swift",
+          "exists": true
+        },
+        {
+          "line": 97,
+          "target": "./Core/JobsCoreTextScrollLayer/JobsCoreTextScrollLayer.swift",
+          "exists": true
+        },
+        {
+          "line": 98,
+          "target": "./Core/JobsLabelScrollMode/JobsLabelScrollMode.swift",
+          "exists": true
+        },
+        {
+          "line": 99,
+          "target": "./Core/UILabel+Scrolling/UILabel+Scrolling.swift",
+          "exists": true
+        },
+        {
+          "line": 101,
+          "target": "./JobsSwiftUILabelScrolling.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWebSocket@Pods/README.md",
+      "pod": "JobsSwiftWebSocket",
+      "gate_sections": 1,
+      "gate_line": 102,
+      "fences": 6,
+      "sha256": "ed8830d0461ba8c37414857978b96c53276cd4364d1dbf6fadcb89f90e1ec9c9",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 89,
+          "target": "./Core/JobsSwiftWebSocketClient/JobsSwiftWebSocketClient.swift",
+          "exists": true
+        },
+        {
+          "line": 91,
+          "target": "./JobsSwiftWebSocket.podspec",
+          "exists": true
+        },
+        {
+          "line": 99,
+          "target": "./Core/JobsSwiftWebSocketClient/JobsWebSocketDelegateProxy.swift",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWorker@Pods/README.md",
+      "pod": "JobsSwiftWorker",
+      "gate_sections": 1,
+      "gate_line": 121,
+      "fences": 6,
+      "sha256": "f3ec28e552eb2ed669d2540df23cdb963c46e34debb127469960ee92638df6af",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 103,
+          "target": "./JobsObservable+Combine.swift",
+          "exists": true
+        },
+        {
+          "line": 104,
+          "target": "./JobsObservable+Transform.swift",
+          "exists": true
+        },
+        {
+          "line": 105,
+          "target": "./JobsObservable+Workers.swift",
+          "exists": true
+        },
+        {
+          "line": 106,
+          "target": "./JobsObservable.swift",
+          "exists": true
+        },
+        {
+          "line": 107,
+          "target": "./JobsPeriod+Worker.swift",
+          "exists": true
+        },
+        {
+          "line": 109,
+          "target": "./JobsSwiftWorker.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsTextTools@Pods/README.md",
+      "pod": "JobsTextTools",
+      "gate_sections": 1,
+      "gate_line": 48,
+      "fences": 2,
+      "sha256": "2a7caf3f2402b96b8afb4bfd9891799b98f82af98996377d0510ffa81a8eb56c",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 36,
+          "target": "./JobsRichText.swift",
+          "exists": true
+        },
+        {
+          "line": 37,
+          "target": "./JobsText.swift",
+          "exists": true
+        },
+        {
+          "line": 39,
+          "target": "./JobsTextTools.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsToast@Pods/README.md",
+      "pod": "JobsToast",
+      "gate_sections": 1,
+      "gate_line": 51,
+      "fences": 2,
+      "sha256": "2c98e6f751710096681f0d8023cce2bd10a675c8fd5678c296cae6c9867f10d8",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsToast.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsToast.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsViewPush@Pods/README.md",
+      "pod": "JobsViewPush",
+      "gate_sections": 1,
+      "gate_line": 116,
+      "fences": 4,
+      "sha256": "00af318262b410c27f53ce9eefb9f8852cf356826dc81fed1958f025937e8cb0",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 3,
+      "local_links": [
+        {
+          "line": 106,
+          "target": "./JobsViewPush.swift",
+          "exists": true
+        },
+        {
+          "line": 107,
+          "target": "./Core/JobsSideDrawer/JobsSideDrawer.swift",
+          "exists": true
+        },
+        {
+          "line": 109,
+          "target": "./JobsViewPush.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsWalletCard@Pods/README.md",
+      "pod": "JobsWalletCard",
+      "gate_sections": 1,
+      "gate_line": 111,
+      "fences": 10,
+      "sha256": "384346db0c36ad7cdeb41beab6cc17469f63aceb3803356047ed1611f8035974",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 98,
+          "target": "./Core/JobsWalletCardModel/JobsWalletCardModel.swift",
+          "exists": true
+        },
+        {
+          "line": 99,
+          "target": "./Core/JobsWalletCardView/JobsWalletCardView.swift",
+          "exists": true
+        },
+        {
+          "line": 100,
+          "target": "./Core/JobsWalletSectionHeaderView/JobsWalletSectionHeaderView.swift",
+          "exists": true
+        },
+        {
+          "line": 101,
+          "target": "./Core/JobsWalletAddCardCell/JobsWalletAddCardCell.swift",
+          "exists": true
+        },
+        {
+          "line": 102,
+          "target": "./Core/JobsWalletCardCell/JobsWalletCardCell.swift",
+          "exists": true
+        },
+        {
+          "line": 104,
+          "target": "./JobsWalletCard.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/Jobsl10n@Pods/README.md",
+      "pod": "Jobsl10n",
+      "gate_sections": 1,
+      "gate_line": 327,
+      "fences": 36,
+      "sha256": "b1f8ee919075a79221fd4a13a5f85119d3e99a359bdbede3d3f3aac5dbc8fcde",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 6,
+      "local_links": [
+        {
+          "line": 309,
+          "target": "./Jobsl10n.swift",
+          "exists": true
+        },
+        {
+          "line": 310,
+          "target": "./LanguageManager.swift",
+          "exists": true
+        },
+        {
+          "line": 311,
+          "target": "./TRAutoRefresh.swift",
+          "exists": true
+        },
+        {
+          "line": 312,
+          "target": "./TRLang.swift",
+          "exists": true
+        },
+        {
+          "line": 313,
+          "target": "./Foundation&UIKit/Bundle+多语言国际化.swift",
+          "exists": true
+        },
+        {
+          "line": 315,
+          "target": "./Jobsl10n.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/MetalKit@Pods/README.md",
+      "pod": "JobsSwiftMetalKit",
+      "gate_sections": 1,
+      "gate_line": 60,
+      "fences": 4,
+      "sha256": "46ed6a6762e19c0d89fa21ad8e109e921f8d89d7462b4d738521e4913c72d3b9",
+      "checks": {
+        "single_gate_section": true,
+        "own_pod_unit_command": true,
+        "full_build_command": true,
+        "minimum_deployment_15_6": true,
+        "production_source_exclusions": true,
+        "real_compile_boundary": true,
+        "fences_closed": true,
+        "local_link_targets_exist": true
+      },
+      "local_link_count": 2,
+      "local_links": [
+        {
+          "line": 42,
+          "target": "./JobsSwiftMetalKit.swift",
+          "exists": true
+        },
+        {
+          "line": 44,
+          "target": "./JobsSwiftMetalKit.podspec",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "privacy": [
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAudioRecorder@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "35F9.1"
+          ]
+        },
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "C617.1"
+          ]
+        }
+      ],
+      "sha256": "7a653ce2c772417db7c9295cc1c7cf8d74ce82b8c18f61344a7745beff99e505",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsAudioRecorder",
+          "bundle": "JobsAudioRecorderPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBluetooth@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [],
+      "sha256": "44142edd81097b5ba428674561555869fad85514121fc20fcc8335f9c78161b4",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": null,
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsBluetooth",
+          "bundle": "JobsBluetoothPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByUIKit@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsByUIKit",
+          "bundle": "JobsByUIKitPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsDebugPanel@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsDebugPanel",
+          "bundle": "JobsDebugPanelPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageRotation@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "35F9.1"
+          ]
+        }
+      ],
+      "sha256": "08d90e6946dbfea0d0b5b17fb659d77eed23e443b745d8e7b5b9fa378cb74477",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsImageRotation",
+          "bundle": "JobsImageRotationPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLuckyEnvelopeRain@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "35F9.1"
+          ]
+        }
+      ],
+      "sha256": "08d90e6946dbfea0d0b5b17fb659d77eed23e443b745d8e7b5b9fa378cb74477",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsLuckyEnvelopeRain",
+          "bundle": "JobsLuckyEnvelopeRainPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "C617.1"
+          ]
+        }
+      ],
+      "sha256": "10da67f217824f019288ec328ababc290ab0399c52e9be77a24d494339137da2",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsNetworking/Core",
+          "bundle": "JobsNetworkingPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftAppTools@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftAppTools",
+          "bundle": "JobsSwiftAppToolsPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseDefines@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftBaseDefines",
+          "bundle": "JobsSwiftBaseDefinesPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCountryCodeCtrl@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftCountryCodeCtrl",
+          "bundle": "JobsSwiftCountryCodeCtrlPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDebugTools@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftDebugTools",
+          "bundle": "JobsSwiftDebugToolsPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftFoundation@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftFoundation",
+          "bundle": "JobsSwiftFoundationPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSearcher@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftSearcher",
+          "bundle": "JobsSwiftSearcherPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSplash@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        },
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "C617.1"
+          ]
+        }
+      ],
+      "sha256": "10e30c3a228307f4cf0eecf35997a7551e74924f326189391168e6142ff6a9f6",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftSplash",
+          "bundle": "JobsSwiftSplashPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimer@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "35F9.1"
+          ]
+        }
+      ],
+      "sha256": "08d90e6946dbfea0d0b5b17fb659d77eed23e443b745d8e7b5b9fa378cb74477",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftTimer",
+          "bundle": "JobsSwiftTimerPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        },
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "C617.1"
+          ]
+        }
+      ],
+      "sha256": "10e30c3a228307f4cf0eecf35997a7551e74924f326189391168e6142ff6a9f6",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "JobsSwiftTools/Core",
+          "bundle": "JobsSwiftToolsPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    },
+    {
+      "path": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/Jobsl10n@Pods/Resource/PrivacyInfo.xcprivacy",
+      "apis": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": [
+            "CA92.1"
+          ]
+        }
+      ],
+      "sha256": "a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12",
+      "plist_schema_valid": true,
+      "reason_codes_match_current_project_contract": true,
+      "tracking": false,
+      "tracking_domains": [],
+      "collected_data_types": [],
+      "resource_bundle_consumers": [
+        {
+          "consumer": "Jobsl10n",
+          "bundle": "Jobsl10nPrivacy"
+        }
+      ],
+      "resource_declared": true,
+      "status": "PASS"
+    }
+  ],
+  "explicit_subspec_count": 15,
+  "checked_at": "2026-10-05T14:23:44.410708+08:00",
+  "status": "PASS",
+  "source_subspec_count": 12,
+  "resource_only_subspec_count": 1,
+  "subspec_pod_count": 6,
+  "explicit_subspecs": [
+    {
+      "name": "JobsAppDoor/Core",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppDoor@Pods/JobsAppDoor.podspec",
+      "exclude_files": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Core/**/*.swift"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsInheritance",
+        "JobsByUIKit",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftDSL",
+        "JobsCountdownButton",
+        "JobsSwiftGraphicCaptcha",
+        "JobsSwiftCountryCodeCtrl",
+        "SnapKit"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsAppDoor/Resource",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppDoor@Pods/JobsAppDoor.podspec",
+      "exclude_files": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [],
+      "resource_bundles": {
+        "JobsAppDoorResources": [
+          "Resource/**/*.{png,jpg,jpeg,gif,webp,svg,pdf,json,plist,bundle,xib,nib,storyboard,xcassets,strings,stringsdict,ttf,otf,mp3,mp4,wav,caf,aiff,xcprivacy}"
+        ]
+      },
+      "dependencies": [
+        "JobsInheritance",
+        "JobsByUIKit",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftDSL",
+        "JobsCountdownButton",
+        "JobsSwiftGraphicCaptcha",
+        "JobsSwiftCountryCodeCtrl",
+        "SnapKit"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsNetworking/Core",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec",
+      "exclude_files": [
+        "Async/**/*",
+        "Adapters/**/*",
+        "Examples/**/*",
+        "Docs/**/*",
+        "Resource/icon.png",
+        "Examples/**/*",
+        "Docs/**/*",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Core/**/*.{swift,h,m,mm}",
+        "Support/**/*.{swift,h,m,mm}",
+        "Request/**/*.{swift,h,m,mm}",
+        "RequestConfig/**/*.{swift,h,m,mm}",
+        "Cache/**/*.{swift,h,m,mm}",
+        "Agent/**/*.{swift,h,m,mm}",
+        "Download/**/*.{swift,h,m,mm}",
+        "Upload/**/*.{swift,h,m,mm}",
+        "Types/**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {
+        "JobsNetworkingPrivacy": [
+          "Resource/PrivacyInfo.xcprivacy"
+        ]
+      },
+      "dependencies": [
+        "Alamofire",
+        "JobsSwiftDSL"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsNetworking/AF5",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec",
+      "exclude_files": [
+        "Resource/icon.png",
+        "Examples/**/*",
+        "Docs/**/*",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Adapters/AF5.x/**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsNetworking/Core"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsNetworking/AF4",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec",
+      "exclude_files": [
+        "Resource/icon.png",
+        "Examples/**/*",
+        "Docs/**/*",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Adapters/AF4.x/**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsNetworking/Core"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsNetworking/Async",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec",
+      "exclude_files": [
+        "Resource/icon.png",
+        "Examples/**/*",
+        "Docs/**/*",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Async/**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsNetworking/Core"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsNetworking/PromiseKit",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec",
+      "exclude_files": [
+        "Resource/icon.png",
+        "Examples/**/*",
+        "Docs/**/*",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "Adapters/PromiseKit/**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsNetworking/Core",
+        "PromiseKit"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsOCDSL/Core",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCDSL@Pods/JobsOCDSL.podspec",
+      "exclude_files": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "JobsOCDSL.{h,m}",
+        "Core/**/*.{h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftBaseTools/🛜网络流量监控",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "🛜网络流量监控/**/*.swift"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "RxSwift",
+        "RxCocoa",
+        "NSObject+Rx",
+        "SnapKit",
+        "Alamofire",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsByUIKit",
+        "JobsSwiftDSL",
+        "JobsGetWindow"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftBaseTools/JobsSwiftTimer",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "JobsSwiftTimer/**/*.swift"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "RxSwift",
+        "RxCocoa",
+        "NSObject+Rx",
+        "SnapKit",
+        "Alamofire",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsByUIKit",
+        "JobsSwiftDSL",
+        "JobsGetWindow"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftRefresher/Core",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "SnapKit",
+        "JobsByUIKit",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsSwiftDSL",
+        "JobsFuseAnimation"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftRefresher/Lottie",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsSwiftRefresher/Core",
+        "lottie-ios"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftRefresher/SDWebImage",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsSwiftRefresher/Core",
+        "SDWebImage"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftTools/Core",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec",
+      "exclude_files": [
+        "FlutterBridge.swift",
+        "UnityManager.swift",
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "UnityManager.swift",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "**/*.{swift,h,m,mm}"
+      ],
+      "resource_bundles": {
+        "JobsSwiftToolsPrivacy": [
+          "Resource/PrivacyInfo.xcprivacy"
+        ]
+      },
+      "dependencies": [
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsByPhotosUI",
+        "JobsByUIKit",
+        "JobsToast",
+        "JobsSwiftDSL"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    },
+    {
+      "name": "JobsSwiftTools/Flutter",
+      "podspec": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec",
+      "exclude_files": [
+        "【MacOS】🫘JobsPublishPods.command",
+        "Resource/icon.png",
+        "LICENSE",
+        "UnityManager.swift",
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "source_files": [
+        "FlutterBridge.swift"
+      ],
+      "resource_bundles": {},
+      "dependencies": [
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsByPhotosUI",
+        "JobsByUIKit",
+        "JobsToast",
+        "JobsSwiftDSL",
+        "JobsSwiftTools/Core",
+        "Flutter",
+        "FlutterPluginRegistrant"
+      ],
+      "required_patterns": [
+        "**/Tests/**/*",
+        "**/Test/**/*",
+        "**/Example/**/*",
+        "**/Examples/**/*",
+        "**/Demo/**/*",
+        "**/Demos/**/*",
+        "**/build/**/*",
+        "**/DerivedData/**/*",
+        "**/*Tests.swift",
+        "**/*UITests.swift",
+        "**/*.tmp.*"
+      ],
+      "missing_patterns": [],
+      "probe_paths": [
+        "Tests/Fixture.swift",
+        "Core/Tests/Fixture.swift",
+        "Test/Fixture.swift",
+        "Example/Fixture.swift",
+        "Examples/Fixture.swift",
+        "Demo/Fixture.swift",
+        "Demos/Fixture.swift",
+        "build/Fixture.swift",
+        "DerivedData/Fixture.swift",
+        "Core/FixtureTests.swift",
+        "Core/FixtureUITests.swift",
+        "Core/Fixture.tmp.swift"
+      ],
+      "unexcluded_probe_paths": [],
+      "status": "PASS"
+    }
+  ],
+  "privacy_consumer_closures": [
+    {
+      "consumer": "JobsNetworking/Core",
+      "owned_dependency_closure": [
+        "JobsNetworking/Core"
+      ],
+      "expected_bundle": "JobsNetworkingPrivacy",
+      "available_bundles": [
+        "JobsNetworkingPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsNetworking/AF5",
+      "owned_dependency_closure": [
+        "JobsNetworking/AF5",
+        "JobsNetworking/Core"
+      ],
+      "expected_bundle": "JobsNetworkingPrivacy",
+      "available_bundles": [
+        "JobsNetworkingPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsNetworking/AF4",
+      "owned_dependency_closure": [
+        "JobsNetworking/AF4",
+        "JobsNetworking/Core"
+      ],
+      "expected_bundle": "JobsNetworkingPrivacy",
+      "available_bundles": [
+        "JobsNetworkingPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsNetworking/Async",
+      "owned_dependency_closure": [
+        "JobsNetworking/Async",
+        "JobsNetworking/Core"
+      ],
+      "expected_bundle": "JobsNetworkingPrivacy",
+      "available_bundles": [
+        "JobsNetworkingPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsNetworking/PromiseKit",
+      "owned_dependency_closure": [
+        "JobsNetworking/PromiseKit",
+        "JobsNetworking/Core"
+      ],
+      "expected_bundle": "JobsNetworkingPrivacy",
+      "available_bundles": [
+        "JobsNetworkingPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsSwiftTools/Core",
+      "owned_dependency_closure": [
+        "JobsSwiftTools/Core"
+      ],
+      "expected_bundle": "JobsSwiftToolsPrivacy",
+      "available_bundles": [
+        "JobsSwiftToolsPrivacy"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsSwiftTools/Flutter",
+      "owned_dependency_closure": [
+        "JobsSwiftTools/Flutter",
+        "JobsSwiftTools/Core"
+      ],
+      "expected_bundle": "JobsSwiftToolsPrivacy",
+      "available_bundles": [
+        "JobsSwiftToolsPrivacy"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "cocoapods_version": "1.17.0",
+  "excluded_empty_directories": [
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppEnvironmentRibbon@Pods",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCSkeletonView@Pods"
+  ],
+  "new_window_readme_links": [
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDSL@Pods/README.md",
+      "target": "../JobsGetWindow@Pods/README.md",
+      "matches": [
+        {
+          "line": 173,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/README.md",
+      "target": "../JobsSwiftDSL@Pods/README.md",
+      "matches": [
+        {
+          "line": 51,
+          "target": "../JobsSwiftDSL@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/README.md",
+      "target": "../JobsGetWindow@Pods/README.md",
+      "matches": [
+        {
+          "line": 52,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/README.md",
+      "target": "../JobsSwiftBaseTools@Pods/README.md",
+      "matches": [
+        {
+          "line": 55,
+          "target": "../JobsSwiftBaseTools@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByUIKit@Pods/README.md",
+      "target": "../JobsGetWindow@Pods/README.md",
+      "matches": [
+        {
+          "line": 85,
+          "target": "../JobsGetWindow@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "readme": "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/README.md",
+      "target": "../JobsByUIKit@Pods/README.md",
+      "matches": [
+        {
+          "line": 57,
+          "target": "../JobsByUIKit@Pods/README.md",
+          "exists": true
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "total_local_link_targets_checked": 288,
+  "spec_sha256": {
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec": "8ee0a99ac033068760c69af424f8f05f3fcc8bdd81045e5528eac20fe97f8ded",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppDoor@Pods/JobsAppDoor.podspec": "38246a107b18077eabff8b7df0cf2e8b764ea168b5f9791d4b45df092ccec962",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAppIconRibbon@Pods/JobsAppIconRibbon.podspec": "e08bc1672b25ba49a3785923d6840c776c7e22e276e84aabf8b3f0da0138e604",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAudioRecorder@Pods/JobsAudioRecorder.podspec": "eb6e265d0227805bf78894dc05f5c1225c1fe92782abb67bc2c7a6a94530966c",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBluetooth@Pods/JobsBluetooth.podspec": "babeaacfd94c34dd7a0198f9d1463cf5e7b4f631c861e609706c5f5432656563",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec": "dc053be628a7654b1bc7d9a1d31a0f97430049da43aef20bfccfc33afa8b10a8",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec": "ece525d1c340e53ff525cc4a517ef61ce32a9f01bfc3807d94c4d95d7191bd9d",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec": "4a57a01cc53a4ef5559dc4466cfac2711a8d730ab104b3872b1ef46ab92ebb53",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec": "4ebb6f85f659f6453e011547be5f78b7bda3fdf4fd266e3704e203ce7277f9d3",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec": "82447c8b0a4942057410be27142962e536472bab4b79dfa3df045f438c178239",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec": "c65f331a280d068bf36a705d82b6d561df55799924debdf99aaa7a26b40ad49d",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec": "fcb3e41e9bcc8f27211d8dc894d21aa287a236f7f7c1347b5487aa8a550f7a01",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit.podspec": "6b95184eae1ba234ecc6a8ea0221b7de481d3312540e16fed6a13bd2aac9cbcd",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsDebugPanel@Pods/JobsDebugPanel.podspec": "0894e2e99bbe20e42143b8bbbd9867367ff80046d60034f31de650fa4a583748",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec": "add0336563261cddbda34c4bee190c834ebccf4615100a6aee4d725a224e35cc",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.podspec": "49d528d2380624d50c9087e3f81fd7e5488fc4297e5e5f366281c1da78558cef",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec": "180eb459a7034c309e10b92ba7a935ea5fe67e60b5ad34b65b6a5ea6b7cecf48",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec": "fcd4c1440f4a6032642d0abb46e7b6bc6ed578b6d8965264b18b1dffe661a456",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsIconfont@Pods/JobsIconfont.podspec": "2095307c332f14ae60698664a683a1fda95c1bcd45e13610a594ee9692f928f9",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageRotation@Pods/JobsImageRotation.podspec": "2d4606866d1f250f838d2ccd3a5f2eabe3aa465f29f8ca35f3d5af756fbce529",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec": "f05cae79804f94e6fe1e49fb5ec57e6356d09f101f1f401f8239120d460a2c14",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec": "e1cc0d5656dbd5ddc0aec7f5011f9cf91165f0a7b5e66c84e96fc38beff5ff22",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec": "c6f20cea3c5cb520db2e7618e89cb15e8339df1e58083c6fb5ce48d5554ef945",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec": "98eee03592f20ba53eba14982870bc35c055e94e5de4eb47d303370b93d28e21",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec": "e676224e9aaf2608ca67a6f117e8dafc1a4365532a5f77f7506f15c974edadc8",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec": "46524124650e3cc1651f94dc5cdefb09f4b07e3048826b420c04948453f586a6",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec": "a5237705c05469c2a62aeaf2cf760549eaf2da670cb0606260404e460d73d134",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCDSL@Pods/JobsOCDSL.podspec": "cb56c6bd5fc3176e56e03ad00d9f7d33844d49f38409cf4c21ad14327b08e0ca",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec": "4aae70e950a4fe128cfdfa4a953ed42850a022e6514305ddea3abd7cc0b74215",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScale@Pods/JobsScale.podspec": "9df50b8305b5caf15c59397426aeaad4778b5dbff58de0caef8756e95b239359",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScreenCapture@Pods/JobsScreenCapture.podspec": "3addc2108b18fb5490d216fec15f0fbe9fddfc0efe927c190c25d44910c2c1f5",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec": "bbab537dd5a668d7cd39120c572d08ddc1b2f7c19675027003e24ccb7499076b",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec": "7c0d54d4883a6fc0ba08725e0805aeb277f70199cc3fa9e528124a5228c9ece1",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec": "3da213b4e512da57bc9df332ef12851a7b5413f6baca9242d776a52a3c36af53",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec": "fd133737f1aa50d78a5dcdce1f580a202899c6a7dfa7e205180f9369f0982417",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCalendar@Pods/JobsSwiftCalendar.podspec": "7500cc8343a55a071f32fb3519a9322b596bc4aba0356c0066c47a3ebddc83c1",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftComment@Pods/JobsSwiftComment.podspec": "d8681335bf07efe2db3784484c1bba24f0a32925f7f2134f187a676b4d4b5b88",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCountryCodeCtrl@Pods/JobsSwiftCountryCodeCtrl.podspec": "d69ff555dd56af14a843c5c78ef71418834e24e822138374f4512ec1c1c31aec",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec": "3c025a42327713f7f0d3b845170fe33822952999c4702f5c68790d465ed0aa46",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec": "33cc3c9052e5680779695bb6c3f60ec17b9be89961538e035579d65d882bc748",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftExcel@Pods/JobsSwiftExcel.podspec": "b8bbee0f4ae0be718b9d99f29d6822b133135f60d0749461db3d712efabb2a64",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec": "8317101e662c1dc30b942b5a66f78c1d4847da7831f02e12b869b0b4d69b1664",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftGraphicCaptcha@Pods/JobsSwiftGraphicCaptcha.podspec": "a6f79b45e100fb0b9828cc56a68e62b4ade96bdf7ac3c1bc5e6e721614721371",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftLinkageMenuView@Pods/JobsSwiftLinkageMenuView.podspec": "c732ed2cfa2a78721802e09c744e378bf2f25e809b5c30b46689652080c9eff0",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftMarkdown@Pods/JobsSwiftMarkdown.podspec": "b8c309ec9ba0674924ffa61264e8b1ffcf9641d0e899d93dc680acd63e6ebbf1",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec": "4ad691127fa113bea89e4ce223d8d353dd688d8d38d55a6f8051b7151a0e5caf",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec": "d06e4b29bc2016a7e7f74f63e9c9478d35807fbe321d7789df528bac994ba03e",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftPatch@Pods/JobsSwiftPatch.podspec": "95526554935bd2a0e776b9c62d57089af4b9050396383a430d6705fb47f6943b",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec": "a6cba01c0d369d3e7edeec13bd2265c7d95d532818f8973b24bf45432a7c4b1d",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSearcher@Pods/JobsSwiftSearcher.podspec": "cf17ede1341304a700e21510cd227ecb0f04dac9392436dea102a1ef9a18e3d8",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftSplash@Pods/JobsSwiftSplash.podspec": "013e9004f5f60acf64a61cf910387c1f1a1ea3b7c89de33b79607f4f88adddbf",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec": "ba6c665819f85262671c1bbc84516761a65bf82c41898ac1b9e7f63feb0badd9",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec": "a9acebd5f7b02c8cc8aeac512552ce64dba9d67917914c6d3654adf7b7a1430d",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec": "944d43b5d548d9e67601845144cd94920422c268208875561025b4472c1ba623",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimerMgr@Pods/JobsSwiftTimerMgr.podspec": "8ba82217553edc40d6a1bfdb9a891b391b92b917dd1827555ce9c1d4d644f36e",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec": "74f0f8f0f6f8a0ddf94b6438d344b7ad5085c3bcb7a21e705025c0da4f643670",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftUILabelScrolling@Pods/JobsSwiftUILabelScrolling.podspec": "6aea3a9096266b06586462be5ec22c852834566f8171c6c0e4e0297278956f89",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWebSocket@Pods/JobsSwiftWebSocket.podspec": "e6c7de2e2f8f03a759c38dc3c743589ced5227b5ec0a75780577c11a79dc3124",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec": "4cce151a8e38cb03ac057eb4118541261e67dcf16afacffe5f27cf5e0705ddb6",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec": "007db354ac2349941e60c8fe106c84bbe778899a2a60e072692f75e650a56d5c",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsToast@Pods/JobsToast.podspec": "f1b32c2356bbd09547f1e1a17b2dff613cb55a305b4e1915995b849395c095b7",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsViewPush@Pods/JobsViewPush.podspec": "4c0a1119b3c486365ef2a597f09b76b401284a7bec113c5d039094d6978937ba",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec": "86d81463b91c12e1a88ec4932a90d7304de2580dffae43bc898df7603bbeb909",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec": "c2a290ca0952fac746d4f16874ae7d1145ca98309ca397c0597b07c13702b54d",
+    "/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec": "a9b99088e0a363f82e070a09b72fc4bd0833d73dd736e0720eb9ceb6b317a971"
+  },
+  "validation_scope": "65 actual owned Pod READMEs, 17 owned privacy manifests, 15 explicit CocoaPods iOS subspec consumers (12 source-declaring, 1 resource-only, 2 dependency-only). Manual/Vendor/generated code excluded. Current local README link targets checked; historical root/SwiftDoc external-link remediation excluded.",
+  "limits": [
+    "Static plist/reason/declaration verification does not certify App Store approval or business data-collection compliance.",
+    "CocoaPods dependency-consumer resource availability does not by itself prove final App bundle delivery.",
+    "No pod install, xcodebuild, device run or hosted XCTest was executed by this validation."
+  ],
+  "dependency_only_subspec_count": 2,
+  "privacy_schema_reference": "https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacytracking",
+  "direct_window_dependencies": [
+    {
+      "consumer": "JobsSwiftDSL",
+      "dependencies": [
+        "JobsGetWindow",
+        "JobsSwiftBlock",
+        "JobsSwiftBaseDefines",
+        "JobsTextTools",
+        "RxSwift",
+        "RxCocoa",
+        "SnapKit",
+        "BMPlayer",
+        "GKNavigationBarSwift",
+        "YTKNetwork",
+        "AFNetworking"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsSwiftBaseTools",
+      "dependencies": [
+        "RxSwift",
+        "RxCocoa",
+        "NSObject+Rx",
+        "SnapKit",
+        "Alamofire",
+        "JobsSwiftBaseDefines",
+        "JobsSwiftBlock",
+        "JobsByUIKit",
+        "JobsSwiftDSL",
+        "JobsGetWindow"
+      ],
+      "status": "PASS"
+    },
+    {
+      "consumer": "JobsByUIKit",
+      "dependencies": [
+        "Kingfisher",
+        "GKNavigationBarSwift",
+        "SnapKit",
+        "SVGKit",
+        "ESPullToRefresh",
+        "RxSwift",
+        "RxCocoa",
+        "RxRelay",
+        "NSObject+Rx",
+        "SkeletonView",
+        "lottie-ios",
+        "Jobsl10n",
+        "JobsScale",
+        "JobsNavBar",
+        "JobsTextTools",
+        "JobsSwiftTimer",
+        "JobsSwiftBlock",
+        "JobsImageTools",
+        "JobsByQuartzCore",
+        "JobsSwiftBaseDefines",
+        "JobsViewPush",
+        "JobsSwiftDSL",
+        "JobsGetWindow"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "hashes_reconfirmed_at": "2026-10-05T07:11:54.321308+00:00",
+  "hashes_reconfirmed": true
+}

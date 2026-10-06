@@ -60,6 +60,12 @@
 
 ## 二、👥 项目配置支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- 自建 Pod 使用 [.github/tests/JobsPodsUpgrade/validate_builds.rb](<./.github/tests/JobsPodsUpgrade/validate_builds.rb>) 顺序验证小工程，再验证 workspace 主工程。按模块保存 JSON / 编译日志；失败时阻止宿主验收。最低宿主系统已对齐 iOS 15.6。验证入口与行为迁移见本文“自建 Pod 稳定性与编译门禁”。
+- [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：前台可拖动圆形按钮、push 功能列表与 URL 环境二级列表、自定义功能 Model DSL、长按隐藏至下次启动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
+- 本工程已有 [**Flutter**](https://docs.flutter.dev/testing/build-modes) 内嵌模块，其 Release / Profile 不支持 iOS 模拟器。验证 Swift 宿主的 Release 宏、符号与资源隔离时，`xcodebuild -configuration Release` 可额外传 `FLUTTER_BUILD_MODE=debug`：仅内嵌 Flutter 使用 Debug，原生宿主仍为 Release；该产物不是完整 Flutter Release 包。完整真机 Release 还需现有 Unity 真机依赖及有效代码签名，工程最后的 IPA 保存阶段会拒绝无签名真机包。
+
+- 需要只刷新依赖时，可执行 `JOBS_POD_INSTALL_PURE=1 JOBS_POD_INSTALL_POST_SCRIPTS_CHECK_ONLY=1 pod install --no-repo-update`。`Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。前置辅助脚本仅作只读检查，无后台索引和报告写入；日志保留 CocoaPods 输出与系统临时目录中的前置检查日志。默认安装行为保持现有挂载顺序。
+
 ### 1、开发周边支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * [**Jobs的个人技术博客**](https://jobsdocs.ccwu.cc/)
@@ -442,12 +448,12 @@
     pods_project.targets.each do |t|
       t.build_configurations.each do |config|
         config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.6'
       end
     end
     ```
   
-  * 或者，[**脚本处理**](./【MacOS】⚙️双击禁用沙盒保证Cocoapods构建流程.command)
+  * 或者，[**脚本处理**](./ScriptsByDevTools/【MacOS】⚙️双击禁用沙盒保证Cocoapods构建流程.command/【MacOS】⚙️双击禁用沙盒保证Cocoapods构建流程.command)
   
     ```shell
     # shell: zsh
@@ -1460,7 +1466,7 @@ tableView.es.addInfiniteScrolling {
 - CocoaPods 依赖声明位于 `Podfile.deps`，实际锁定版本以 `Podfile.lock` 为准。
 - 工程已包含 `[OBX] Update Sourcery Generated Files` 构建阶段，并对 App Target 关闭 `ENABLE_USER_SCRIPT_SANDBOXING`，保证 ObjectBox 代码生成器可以更新实体信息。
 - CRUD Demo 位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`，入口为功能列表中的“🗃️ ObjectBox”，覆盖新增、查询、修改和删除。
-- `model-JobsSwiftBaseConfigDemo.json` 与 `generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，必须随实体变更一起提交，不能作为普通缓存删除。
+- `model-JobsSwiftBaseConfigDemo.json` 与 `Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，必须随实体变更一起提交，不能作为普通缓存删除。
 
 #### 4.9、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -1670,9 +1676,21 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
     ![image-20251114135325330](./assets/image-20251114135325330.png)
 
-### 10、<font color=red>安装与构建自动挂载脚本</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### 10、<font color=red>依赖安装与构建挂载脚本</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 本工程通过 [**CocoaPods**](https://cocoapods.org/) 钩子、[**Xcode**](https://developer.apple.com/xcode) Build Phases 和共享 Scheme 挂载脚本。安装前置任务、安装收尾、目标构建阶段与整个 Scheme 的构建后动作分别触发，不能统一视为“编译成功后执行”。
+
+**Xcode 随时手动安装依赖**
+
+入口为 [打开终端运行 Pod Install](<./ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/【MacOS@Xcode】🫘打开终端运行Pod Install.command>)，完整说明见 [脚本 README](<./ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/README.md>)。工程 File Navigator 的 `ScriptsByPods → 【MacOS@Xcode】🫘打开终端运行Pod Install.command` 分组已挂载脚本与说明；它们仅作为文件引用展示，没有 App target 成员关系、Build Phase 或 Scheme 自动动作。
+
+1、在 `Xcode → Behaviors → Edit Behaviors… → Custom` 创建 `🫘Swift 基础工程 · Pod Install`，添加 `Run Script` 动作并选取上述脚本；可按个人习惯设置快捷键。
+
+2、任意时刻选择 `Xcode → Behaviors → 🫘Swift 基础工程 · Pod Install`，终端会展示用途及本工程路径；按回车执行，按 `Ctrl+C` 取消。也可以双击脚本进入相同流程。
+
+脚本以自身目录的 `../..` 定位工程根目录，不依赖 Xcode 启动目录或 Sourcetree 参数。无交互终端的入口通过系统 `open` 打开同一 `.command`，启动完成后不等待安装结束；终端确认后依次校验 `Podfile`、当前 `pod` 及 `pod --version`，同步执行 `pod install` 并保留真实退出码。输出完整记录在系统临时目录的 `jobs-swift-base-config-pod-install.log`，每次确认后覆盖，取消前不写日志。
+
+`pod install` 会更新依赖、锁文件和工作空间，并执行下文已有 Podfile 钩子；手动入口本身不安装或升级工具链、不执行构建。安装失败只报告在终端和日志中，不作为自动构建门禁。Behaviors 属于 Xcode 当前用户设置；迁移机器或项目路径后需重新选择脚本，迁移项目时保留本脚本包的目录层级。
 
 **安装前后：入口与行为**
 
@@ -1711,13 +1729,13 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 | 构建中：`Package Markdown Documents`                     | [JobsMarkdownPackager.rb](./JobsByPods/JobsSwiftMarkdown@Pods/Support/JobsMarkdownPackager.rb) | 将项目文档与相对资源打入 App 内的 `JobsMarkdownDocuments.bundle`，供 Markdown Demo 离线阅读 |
 | 本地 Pod 编译前：`Generate AppIcon Environment Ribbon`   | [JobsAppIconRibbon.podspec](./JobsByPods/JobsAppIconRibbon@Pods/JobsAppIconRibbon.podspec) → `Scripts/JobsAppIconRibbon.sh` | 由 podspec 的 `script_phase` 挂载图标环境绶带生成器          |
 | 构建中：Flutter Build / Embed                            | `my_flutter/.ios/Flutter/flutter_export_environment.sh` → Flutter SDK 的 `xcode_backend.sh` | 分别执行 `build`、`embed_and_thin`，构建并嵌入 Flutter 产物  |
-| 编译前：`[OBX] Update Sourcery Generated Files`          | Pods 内 ObjectBox 的 Sourcery 工具                           | 生成 `./generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 并维护模型 JSON |
+| 编译前：`[OBX] Update Sourcery Generated Files`          | Pods 内 ObjectBox 的 Sourcery 工具                           | 生成 `./Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 并维护模型 JSON |
 | 构建中：Unity Build / Embed                              | `project.pbxproj` 内联脚本                                   | 仅真机构建 UnityFramework，再嵌入 framework 与 Data；模拟器跳过 |
 | Pods 资源复制后：`Recompile Assets with Alternate Icons` | `project.pbxproj` 内联脚本调用 `actool`                      | 合并主工程、Pod 图集与备用 App 图标，重新生成完整 `Assets.car` |
-| 主 App 最后一个 Build Phase：`Save Build IPA`           | [save_device_ipa_after_build.sh](./ScriptsByDevTools/save_device_ipa_after_build.sh) | 真机生成 `./build/真机.ipa`，模拟器生成 `./build/模拟器.ipa`；打包成功后先清空 build 全部内容，只保留本次包 |
+| 主 App 最后一个 Build Phase：`Save Build IPA`           | [save_device_ipa_after_build.command](./ScriptsByDevTools/save_device_ipa_after_build.command/save_device_ipa_after_build.command)（[说明](./ScriptsByDevTools/save_device_ipa_after_build.command/README.md)） | 真机生成 `./build/真机.ipa`，模拟器生成 `./build/模拟器.ipa`；打包成功后先清空 build 全部内容，只保留本次包 |
 | Scheme Build 开始 / 结束                                 | `XBT Build Timer Start / End` → 外部 `xbt-build-hook.sh start / end` | 记录开始、结束时间和耗时；写入用户目录下的 `.xcode-build-timer/state/` 状态及历史日志 |
 
-主 App 最后一个 Build Phase `Save Build IPA` 调用 [save_device_ipa_after_build.sh](./ScriptsByDevTools/save_device_ipa_after_build.sh)，每次 iOS App 构建都会执行，Xcode 内无须手动确认。按设备平台保存以下产物：
+主 App 最后一个 Build Phase `Save Build IPA` 调用 [save_device_ipa_after_build.command](./ScriptsByDevTools/save_device_ipa_after_build.command/save_device_ipa_after_build.command)，每次 iOS App 构建都会执行，Xcode 内无须手动确认。脚本与 [README](./ScriptsByDevTools/save_device_ipa_after_build.command/README.md) 放在完整同名 `.command` 目录中。按设备平台保存以下产物：
 
 | 构建平台 | 本次唯一产物 |
 | --- | --- |
@@ -1738,7 +1756,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 `clean`、非 iOS 平台、Tests / Widget 构建不独立输出 IPA；该阶段只挂在主 App，测试触发主 App 重建时仍会更新产物。Build Phase 发生在 Scheme 后置动作之前，产物存在不代表整个 workspace 或测试已成功完成。输入只声明脚本文件，不把整个 App 目录列为输入，避免签名、扩展和测试包造成依赖循环；输出声明 `./build/` 目录，以覆盖平台切换及全部内容清理。
 
-日志同步输出到 Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。终端手动运行会先展示内置自述并等待回车，仍需提供 Xcode 构建环境变量。
+日志同步输出到 Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。终端手动运行会先展示内置自述并等待回车，再要求输入 `YES` 授权打包成功后清空 build；其它输入取消，仍需提供本次 App 的构建环境变量。非 Xcode 环境且没有可交互输入时直接退出。
 
 XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对路径调用，并未检测脚本是否存在；迁移机器时需在 Scheme 的 Build Pre-actions / Post-actions 中核对路径。状态目录中的 `latest.env`、`builds/*.env` 与 `history.log` 用于计时；`finished` 仅表示结束钩子执行，不是编译成功判据。
 
@@ -12604,5 +12622,40 @@ static let demoHTML = """
 </html>
 """
 ```
+
+
+## 七、自建 Pod 稳定性与编译门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+当前宿主最低系统为 iOS 15.6，与已集成 LiveChat 的要求一致；独立 Pod 的最低系统仍以各自 Podspec 和独立消费验证为准。生产 source glob 排除测试、示例和临时文件，实际使用 UserDefaults、文件时间或系统运行时间的模块随独立资源 bundle 交付隐私原因清单。
+
+### 稳定性接口与迁移 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+| 能力 | 当前合同与调用调整 |
+| --- | --- |
+| 网络 | query 与 JSON / form body 独立编码；请求每次执行有身份；取消撤销退避任务；下载通过状态和内容校验后才替换目标文件。 |
+| Crypto | 默认格式验证完整性。旧 `0x02` CBC 仅由显式 legacy 入口迁移，默认解密拒绝；已有存量需按 JobsCryptoKit README 处理。 |
+| BRPicker | `awaitResult()` 为 `async throws`，调用使用 `try await`；Task / 面板取消进入一次性终态；需要 nil 时用 `awaitResultOrNil()`。 |
+| WebView | 配置在首文档前重建；文档加载后修改通过 `lastConfigurationError` 报告；默认桥接只允许本地 file 文档的主 frame，远程完整 origin必须显式加入 `bridgeAllowedOrigins`。 |
+| 本地化 | 同一对象不同属性使用不同 `slot`，相同 slot 替换而不是累积；`unbind(target, slot:)` 精确解除。 |
+| Sendable | `AnySendableBox` 仅接收 Sendable 值；JobsText 不再声明任意属性字典可安全跨 actor，跨边界用 `asString` 或业务不可变快照。 |
+| PNPlayer | 主线程隔离；`byAttach` 同步实际 MTKView 配置；Metal 错误及视频错误走公开回调，宿主 Demo 展示失败。 |
+| SwiftTools | 默认 Core + Flutter 保持宿主兼容；`JobsSwiftTools/Core` 不包含 FlutterBridge，不硬引 Flutter engine / registrant。 |
+| JobsOCDSL | 当前 Swift 检出只交付可编译的能力感知兼容入口；能力数组为空，不把完整 OC 分类当作已移入。 |
+
+### 编译与回归入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+在仓库根目录运行：
+
+```shell
+JOBS_POD_INSTALL_PURE=1 pod install --no-repo-update
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuration Release
+```
+
+全量验证器先逐个编译自建 Pod；JobsOCDSL 使用独立临时消费工程；全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
+
+核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<./.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
+
+升级结果与本轮实际编译状态见工程根目录《JobsByPods升级与编译验收报告.md》。既有审阅报告保留为修复前证据。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

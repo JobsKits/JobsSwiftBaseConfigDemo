@@ -15,13 +15,23 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 public var _jobsCfgBgImageKey: UInt8 = 0
+private var _jobsBGGenerationKey: UInt8 = 0
 private var _jobsBGURLKey:   UInt8 = 0   // URL?
 private var _jobsBGStateKey: UInt8 = 0   // UIControl.State.RawValue
+extension UIButton {
+    var jobs_bgBindingGeneration: UUID? {
+        objc_getAssociatedObject(self, &_jobsBGGenerationKey) as? UUID
+    }
+}
+
 public extension UIButton {
     /// 最近一次设置“背景图”的 URL（供克隆或复用）
     var jobs_bgURL: URL? {
         get { objc_getAssociatedObject(self, &_jobsBGURLKey) as? URL }
-        set { objc_setAssociatedObject(self, &_jobsBGURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(self, &_jobsBGURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &_jobsBGGenerationKey, UUID(), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     /// 最近一次设置背景图时使用的 state
     var jobs_bgState: UIControl.State {

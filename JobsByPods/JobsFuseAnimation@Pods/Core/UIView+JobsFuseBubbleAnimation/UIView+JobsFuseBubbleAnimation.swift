@@ -38,11 +38,20 @@ private final class JobsFuseBubbleRunner {
         self.emitBlock = emitBlock
     }
 
+    deinit {
+        timer?.invalidate()
+    }
+
     func start() {
         stop()
         emit()
-        let timer = Timer(timeInterval: config.emissionInterval, repeats: true) { [weak self] _ in
-            self?.emit()
+        let interval = config.emissionInterval.isFinite ? max(0.016, config.emissionInterval) : 0.16
+        let timer = Timer(timeInterval: interval, repeats: true) { [weak self] timer in
+            guard let self, self.sourceView != nil, self.hostView != nil else {
+                timer.invalidate()
+                return
+            }
+            self.emit()
         }
         self.timer = timer
         RunLoop.main.add(timer, forMode: .common)

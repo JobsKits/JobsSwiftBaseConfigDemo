@@ -31,5 +31,21 @@ Pod::Spec.new do |s|
   s.dependency 'JobsByUIKit'
   s.dependency 'JobsSwiftDSL'
   s.dependency 'JobsSwiftBaseDefines'
+  s.resource_bundles = { 'JobsLuckyEnvelopeRainPrivacy' => ['Resource/PrivacyInfo.xcprivacy'] }
+
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
 
 end

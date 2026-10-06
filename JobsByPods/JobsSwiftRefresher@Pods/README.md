@@ -233,4 +233,27 @@ flowchart TD
 
 依赖与编译入口：[JobsSwiftRefresher.podspec](<./JobsSwiftRefresher.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftBlock`、`JobsSwiftDSL`、`JobsFuseAnimation`、`lottie-ios`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
+## 七、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+每个刷新槽位单独记录自己对 contentInset 的实际贡献。替换整个槽位会先 detach 旧代理并恢复该贡献；原位替换 animator 保留槽位状态。刷新中修改组件高度不会改变应恢复的旧贡献，也不会覆盖宿主后续独立增加的边距。负 inset 保留原值，不强制裁剪成零。
+
+结束动画使用代次校验：重启、重置、禁用、移除后的旧完成回调不能覆盖新状态。`byNoMore` 在刷新中会先结束并恢复 inset，再落到 noMore。trigger 必须为有限正数，否则按 60 处理。业务在请求成功、失败、空页或取消时显式结束刷新；动画本身不代替请求状态。
+
+
+## 八、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+每个显式 subspec 同步继承生产排除集合，避免只消费子模块时带入测试/示例源码。
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftRefresher --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

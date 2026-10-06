@@ -16,7 +16,6 @@ digraph PodspecDependencies {
   "JobsAppDoor";
   "JobsAppIconRibbon";
   "JobsAudioRecorder";
-  "JobsBlock";
   "JobsBluetooth";
   "JobsBy3rdTools";
   "JobsByPDFKit";
@@ -26,6 +25,7 @@ digraph PodspecDependencies {
   "JobsByWebKit";
   "JobsCountdownButton";
   "JobsCryptoKit";
+  "JobsDebugPanel";
   "JobsEmptyView";
   "JobsFuseAnimation";
   "JobsGestureUnlock";
@@ -40,8 +40,6 @@ digraph PodspecDependencies {
   "JobsNavBar";
   "JobsNetworking";
   "JobsOCDSL";
-  "JobsOCDefs";
-  "JobsOCProtocols";
   "JobsProgressBar";
   "JobsScale";
   "JobsScreenCapture";
@@ -111,6 +109,7 @@ digraph PodspecDependencies {
   "JobsAppDoor" -> "JobsSwiftDSL";
   "JobsAppDoor" -> "JobsSwiftGraphicCaptcha";
   "JobsAppDoor" -> "SnapKit";
+  "JobsAudioRecorder" -> "JobsByUIKit";
   "JobsAudioRecorder" -> "JobsFuseAnimation";
   "JobsAudioRecorder" -> "JobsSwiftBaseDefines";
   "JobsAudioRecorder" -> "JobsSwiftDSL";
@@ -142,6 +141,7 @@ digraph PodspecDependencies {
   "JobsByUIKit" -> "ESPullToRefresh";
   "JobsByUIKit" -> "GKNavigationBarSwift";
   "JobsByUIKit" -> "JobsByQuartzCore";
+  "JobsByUIKit" -> "JobsGetWindow";
   "JobsByUIKit" -> "JobsImageTools";
   "JobsByUIKit" -> "JobsNavBar";
   "JobsByUIKit" -> "JobsScale";
@@ -167,6 +167,11 @@ digraph PodspecDependencies {
   "JobsCountdownButton" -> "JobsSwiftBaseDefines";
   "JobsCountdownButton" -> "JobsSwiftDSL";
   "JobsCountdownButton" -> "JobsSwiftTimer";
+  "JobsDebugPanel" -> "JobsByUIKit";
+  "JobsDebugPanel" -> "JobsInheritance";
+  "JobsDebugPanel" -> "JobsSwiftBaseDefines";
+  "JobsDebugPanel" -> "JobsSwiftDSL";
+  "JobsDebugPanel" -> "SnapKit";
   "JobsEmptyView" -> "JobsByUIKit";
   "JobsEmptyView" -> "JobsSwiftBaseDefines";
   "JobsEmptyView" -> "JobsSwiftBlock";
@@ -225,11 +230,6 @@ digraph PodspecDependencies {
   "JobsNetworking" -> "Alamofire";
   "JobsNetworking" -> "JobsSwiftDSL";
   "JobsNetworking" -> "PromiseKit";
-  "JobsOCDSL" -> "JobsBlock";
-  "JobsOCDSL" -> "JobsOCDefs";
-  "JobsOCDSL" -> "JobsOCProtocols";
-  "JobsOCDSL" -> "MJRefresh";
-  "JobsOCDSL" -> "Texture";
   "JobsProgressBar" -> "JobsByUIKit";
   "JobsProgressBar" -> "JobsSwiftBaseDefines";
   "JobsProgressBar" -> "JobsSwiftDSL";
@@ -254,6 +254,7 @@ digraph PodspecDependencies {
   "JobsSwiftBaseDefines" -> "JobsTextTools";
   "JobsSwiftBaseTools" -> "Alamofire";
   "JobsSwiftBaseTools" -> "JobsByUIKit";
+  "JobsSwiftBaseTools" -> "JobsGetWindow";
   "JobsSwiftBaseTools" -> "JobsSwiftBaseDefines";
   "JobsSwiftBaseTools" -> "JobsSwiftBlock";
   "JobsSwiftBaseTools" -> "JobsSwiftDSL";
@@ -279,6 +280,7 @@ digraph PodspecDependencies {
   "JobsSwiftDSL" -> "AFNetworking";
   "JobsSwiftDSL" -> "BMPlayer";
   "JobsSwiftDSL" -> "GKNavigationBarSwift";
+  "JobsSwiftDSL" -> "JobsGetWindow";
   "JobsSwiftDSL" -> "JobsSwiftBaseDefines";
   "JobsSwiftDSL" -> "JobsSwiftBlock";
   "JobsSwiftDSL" -> "JobsTextTools";
@@ -298,6 +300,7 @@ digraph PodspecDependencies {
   "JobsSwiftFoundation" -> "JobsSwiftDSL";
   "JobsSwiftGraphicCaptcha" -> "JobsSwiftBaseDefines";
   "JobsSwiftGraphicCaptcha" -> "JobsSwiftDSL";
+  "JobsSwiftLinkageMenuView" -> "JobsByUIKit";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
   "JobsSwiftMarkdown" -> "JobsSwiftBaseDefines";

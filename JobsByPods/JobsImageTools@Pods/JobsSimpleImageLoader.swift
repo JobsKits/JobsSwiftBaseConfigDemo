@@ -43,6 +43,7 @@ public enum JobsImageSource {
 }
 
 public enum JobsImageLoadError: Error {
+    case cancelled
     case invalidSource
     case localImageMissing(String)
     case badData(URL)
@@ -78,14 +79,20 @@ public struct JobsImageLoadResult {
 public final class JobsImageLoadToken {
     private let onCancel: () -> Void
     private var isCancelled = false
+    private let lock = NSLock()
 
     public init(_ onCancel: @escaping () -> Void = {}) {
         self.onCancel = onCancel
     }
 
     public func cancel() {
-        guard isCancelled == false else { return }
+        lock.lock()
+        guard !isCancelled else {
+            lock.unlock()
+            return
+        }
         isCancelled = true
+        lock.unlock()
         onCancel()
     }
 }
@@ -102,7 +109,7 @@ public final class JobsImageLoader {
         #endif
     }
 
-    private let fallbackCache = NSCache<NSURL, UIImage>()
+    private let fallbackCache = NSCache<NSString, UIImage>()
     private let fallbackSession: URLSession
 
     public init(session: URLSession = .shared) {
@@ -123,7 +130,7 @@ public final class JobsImageLoader {
             return image
         }
         #endif
-        return fallbackCache.object(forKey: url as NSURL)
+        return fallbackCache.object(forKey: fallbackKey(url, options: .init()))
     }
 
     @discardableResult
@@ -132,16 +139,26 @@ public final class JobsImageLoader {
         options: JobsImageLoadOptions = .init(),
         completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void
     ) -> JobsImageLoadToken {
-        guard let source else {
-            DispatchQueue.main.async { completion(.failure(.invalidSource)) };return JobsImageLoadToken()
+        var options = options
+        options.scale = options.scale.isFinite && options.scale > 0 ? min(options.scale, 8) : 1
+        if let size = options.targetSize {
+            options.targetSize = size.width.isFinite && size.height.isFinite && size.width > 0 && size.height > 0
+                ? CGSize(width: min(size.width, 4_096 / options.scale), height: min(size.height, 4_096 / options.scale)) : nil
         }
+        let delivery = JobsImageLoadDelivery(completion)
+        let token: JobsImageLoadToken
         switch source {
-        /// 处理 .local 分支
+        case nil:
+            delivery.finish(.failure(.invalidSource))
+            token = JobsImageLoadToken()
         case .local(let name):
-            return loadLocalImage(name, completion: completion)
-        /// 处理 .remote 分支
+            token = loadLocalImage(name, completion: delivery.finish)
         case .remote(let url):
-            return loadRemoteImage(url, options: options, completion: completion)
+            token = loadRemoteImage(url, options: options, completion: delivery.finish)
+        }
+        return JobsImageLoadToken {
+            delivery.finish(.failure(.cancelled))
+            token.cancel()
         }
     }
 
@@ -309,23 +326,39 @@ private extension JobsImageLoader {
         options: JobsImageLoadOptions,
         completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void
     ) -> JobsImageLoadToken {
-        if options.forceRefresh == false, let image = fallbackCache.object(forKey: url as NSURL) {
+        let key = fallbackKey(url, options: options)
+        if !options.forceRefresh, let image = fallbackCache.object(forKey: key) {
             DispatchQueue.main.async {
                 completion(.success(.init(image: image, url: url, loaderKind: .urlSession, isCacheHit: true)))
             };return JobsImageLoadToken()
         }
-        let task = fallbackSession.dataTask(with: url) { [weak self] data, _, error in
+        let request = URLRequest(url: url,
+                                 cachePolicy: options.forceRefresh ? .reloadIgnoringLocalCacheData : .useProtocolCachePolicy,
+                                 timeoutInterval: 15)
+        let task = fallbackSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self else { return }
             if let error {
                 DispatchQueue.main.async { completion(.failure(.failed(url, error))) };return
             }
-            guard let data else {
-                DispatchQueue.main.async { completion(.failure(.badData(url))) };return
+            if let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) {
+                DispatchQueue.main.async { completion(.failure(.badData(url))) }
+                return
+            }
+            guard let data, data.count <= 32 * 1024 * 1024 else {
+                DispatchQueue.main.async { completion(.failure(.badData(url))) }
+                return
             }
             guard let image = self.image(from: data, targetSize: options.targetSize, scale: options.scale) else {
                 DispatchQueue.main.async { completion(.failure(.badData(url))) };return
             }
-            self.fallbackCache.setObject(image, forKey: url as NSURL, cost: data.count)
+            let cost: Int
+            if let cgImage = image.cgImage {
+                let bytes = cgImage.bytesPerRow.multipliedReportingOverflow(by: cgImage.height)
+                cost = bytes.overflow ? Int.max : bytes.partialValue
+            } else {
+                cost = data.count
+            }
+            self.fallbackCache.setObject(image, forKey: key, cost: cost)
             DispatchQueue.main.async {
                 completion(.success(.init(image: image, url: url, loaderKind: .urlSession, isCacheHit: false)))
             }
@@ -334,21 +367,47 @@ private extension JobsImageLoader {
         return JobsImageLoadToken { task.cancel() }
     }
 
+    func fallbackKey(_ url: URL, options: JobsImageLoadOptions) -> NSString {
+        let scale = options.scale.isFinite && options.scale > 0 ? options.scale : 1
+        let size = options.targetSize
+        let width = size?.width.isFinite == true ? max(0, size?.width ?? 0) : 0
+        let height = size?.height.isFinite == true ? max(0, size?.height ?? 0) : 0
+        return "\(url.absoluteString)|thumbnail:\(width)x\(height)|scale:\(scale)" as NSString
+    }
+
     func image(from data: Data, targetSize: CGSize?, scale: CGFloat) -> UIImage? {
-        guard let targetSize, targetSize.width > 1, targetSize.height > 1 else {
-            return UIImage(data: data)
-        }
         let options = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let source = CGImageSourceCreateWithData(data as CFData, options) else { return UIImage(data: data) }
-        let maxPixel = max(targetSize.width, targetSize.height) * scale
+        guard let source = CGImageSourceCreateWithData(data as CFData, options) else { return nil }
+        let safeScale = scale.isFinite && scale > 0 ? min(scale, 8) : 1
+        let rawPixel = targetSize.map { max($0.width, $0.height) * safeScale } ?? 4_096
+        guard rawPixel.isFinite, rawPixel > 0 else { return nil }
         let downsampleOptions = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: max(1, Int(maxPixel))
+            kCGImageSourceThumbnailMaxPixelSize: max(1, Int(min(4_096, rawPixel)))
         ] as CFDictionary
-        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else {
-            return UIImage(data: data)
-        };return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions) else { return nil }
+        let cost = cgImage.bytesPerRow.multipliedReportingOverflow(by: cgImage.height)
+        guard !cost.overflow, cost.partialValue <= 64 * 1024 * 1024 else { return nil }
+        return UIImage(cgImage: cgImage, scale: safeScale, orientation: .up)
+    }
+}
+
+private final class JobsImageLoadDelivery: @unchecked Sendable {
+    private let lock = NSLock()
+    private var completion: ((Result<JobsImageLoadResult, JobsImageLoadError>) -> Void)?
+
+    init(_ completion: @escaping (Result<JobsImageLoadResult, JobsImageLoadError>) -> Void) {
+        self.completion = completion
+    }
+
+    func finish(_ result: Result<JobsImageLoadResult, JobsImageLoadError>) {
+        lock.lock()
+        let completion = self.completion
+        self.completion = nil
+        lock.unlock()
+        guard let completion else { return }
+        DispatchQueue.main.async { completion(result) }
     }
 }

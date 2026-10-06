@@ -23,68 +23,90 @@ public struct SnowflakeConfig {
 }
 
 public final class SnowflakeSwift {
-    private var machine: UInt32
-    private var IDC: UInt32
-    private var sequence: UInt32
-    private var publishMillisecond: UInt64    //发布的时间
-    private var lastGeneralMillisecond: UInt64     //单位毫秒
+    private let lock = NSLock()
+    private let machine: UInt32
+    private let IDC: UInt32
+    private let publishMillisecond: UInt64
+    private let clock: () -> UInt64?
+    private var sequence: UInt32 = 0
+    private var lastGeneralMillisecond: UInt64?
+    public let isValid: Bool
 
-    //WARN: publishMillisecond推荐使用固定值，如果使用Date().timeIntervalSince1970 * 1000 自动获取，会导致时间差重复
-    public init(publishMillisecond: UInt64 = 1662278876498, IDCID: UInt32, machineID: UInt32) {
-        assert(publishMillisecond <= (1 << SnowflakeConfig.timeBits), "time is too big")
-        assert(IDCID <= (1 << SnowflakeConfig.IDCBits), "idc id is too big")
-        assert(machineID <= (1 << SnowflakeConfig.machineBits), "machine id is too big")
+    /// 兼容构造：非法节点不会别名，nextID 返回 nil。epoch 应为所有生成器共享固定值。
+    public init(
+        publishMillisecond: UInt64 = 1662278876498,
+        IDCID: UInt32,
+        machineID: UInt32,
+        clock: @escaping () -> UInt64? = SnowflakeSwift.systemMilliseconds
+    ) {
         self.publishMillisecond = publishMillisecond
-        self.lastGeneralMillisecond = publishMillisecond
-        self.IDC = IDCID & UInt32(1 << SnowflakeConfig.IDCBits - 1)
-        self.machine = machineID & UInt32(1 << SnowflakeConfig.machineBits - 1)
-        self.sequence = 0
+        self.IDC = IDCID
+        self.machine = machineID
+        self.clock = clock
+        self.isValid = IDCID < 32 && machineID < 32 && publishMillisecond <= UInt64.max - ((1 << 41) - 1)
+    }
+
+    /// 新调用使用可失败构造，在创建处处理非法节点或 epoch。
+    public convenience init?(
+        validatingPublishMillisecond publishMillisecond: UInt64 = 1662278876498,
+        IDCID: UInt32,
+        machineID: UInt32,
+        clock: @escaping () -> UInt64? = SnowflakeSwift.systemMilliseconds
+    ) {
+        self.init(publishMillisecond: publishMillisecond, IDCID: IDCID, machineID: machineID, clock: clock)
+        guard isValid else {
+            return nil
+        }
+    }
+
+    public static func systemMilliseconds() -> UInt64? {
+        let milliseconds = Date().timeIntervalSince1970 * 1000
+        return UInt64(exactly: milliseconds.rounded(.down))
     }
 }
 
 public extension SnowflakeSwift {
-    func nextID() -> UInt64? {
-        var currentTime = UInt64(Date().timeIntervalSince1970 * 1000)
-        if lastGeneralMillisecond < currentTime {
-            lastGeneralMillisecond = currentTime
-            sequence = 0
-        } else if lastGeneralMillisecond == currentTime {
-            //增加序列
-            sequence = ((sequence) + 1) & UInt32(1 << SnowflakeConfig.sequenceBits - 1)
-            if sequence == 0 {
-                //睡眠1毫秒
-                usleep(1000)
-                currentTime = UInt64(Date().timeIntervalSince1970 * 1000)
-                lastGeneralMillisecond = currentTime
-            }
-        } else {
-            //时钟回拨，交给业务处理
+    /// 同实例线程安全。回拨、序列耗尽或时间越界时返回 nil，交由调用方稍后重试。
+    func nextID() -> SnowflakeID? {
+        guard isValid, let now = clock(), now >= publishMillisecond else {
             return nil
         }
-        //组装ID
-        let timeParameter = UInt64(lastGeneralMillisecond - publishMillisecond)
-        let timeOffset = UInt64(SnowflakeConfig.IDCBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
-        //
-        let idcParameter = UInt64(self.IDC)
-        let idcOffset = UInt64(SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
-        let machineParameter = UInt64(self.machine)
-        let machineOffset = UInt64(SnowflakeConfig.sequenceBits)
-        let result = UInt64(timeParameter << timeOffset) | UInt64(idcParameter << idcOffset) | UInt64(machineParameter << machineOffset) | UInt64(self.sequence)
-        return result
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        let elapsed = now - publishMillisecond
+        guard elapsed < (1 << 41) else {
+            return nil
+        }
+        if let last = lastGeneralMillisecond {
+            guard now >= last else {
+                return nil
+            }
+            if now == last {
+                guard sequence < 4095 else {
+                    return nil
+                }
+                sequence += 1
+            } else {
+                sequence = 0
+            }
+        } else {
+            sequence = 0
+        }
+        lastGeneralMillisecond = now
+        return (elapsed << 22) | (UInt64(IDC) << 17) | (UInt64(machine) << 12) | UInt64(sequence)
     }
 
     func time(id: SnowflakeID) -> UInt64 {
-        let timeOffset = UInt64(SnowflakeConfig.IDCBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits)
-        return UInt64(id >> timeOffset) + publishMillisecond
+        (id >> 22) + publishMillisecond
     }
 
     func IDC(id: SnowflakeID) -> UInt32 {
-        let step1 = UInt64(id << UInt64(SnowflakeConfig.timeBits + SnowflakeConfig.symbolBits))
-        return UInt32(step1 >> UInt64(SnowflakeConfig.timeBits + SnowflakeConfig.machineBits + SnowflakeConfig.sequenceBits + SnowflakeConfig.symbolBits))
+        UInt32((id >> 17) & 31)
     }
 
     func machine(id: SnowflakeID) -> UInt32 {
-        let step1 = UInt64(id << UInt64(SnowflakeConfig.timeBits + SnowflakeConfig.IDCBits + SnowflakeConfig.symbolBits))
-        return UInt32(step1 >> UInt64(SnowflakeConfig.IDCBits + SnowflakeConfig.timeBits + SnowflakeConfig.sequenceBits + SnowflakeConfig.symbolBits))
+        UInt32((id >> 12) & 31)
     }
 }

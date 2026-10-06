@@ -249,6 +249,7 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private func renderContent() {
+        imageView.byImage(configuration.fallbackImage)
         switch configuration.content {
         /// 处理 .localImage 分支
         case let .localImage(name, bundle):
@@ -279,11 +280,14 @@ public final class JobsSplashVC: BaseVC {
     private func loadRemoteImage(_ url: URL) {
         if let cachedURL = JobsSplashMediaCache.shared.cachedFileURL(for: url),
            let data = try? Data(contentsOf: cachedURL) {
-            imageView.byImage(image(from: data, url: url))
-            return
+            if let image = image(from: data, url: url) {
+                imageView.byImage(image)
+                return
+            }
+            JobsSplashMediaCache.shared.invalidateCachedFile(for: url)
         }
         mediaTask = JobsSplashMediaCache.shared.download(url) { [weak self] result in
-            guard let self, case let .success(localURL) = result,
+            guard let self, !self.hasFinished, case let .success(localURL) = result,
                   let data = try? Data(contentsOf: localURL) else { return }
             self.imageView.byImage(self.image(from: data, url: url))
         }
@@ -295,7 +299,7 @@ public final class JobsSplashVC: BaseVC {
         fallbackFileExtension: String?,
         fallbackBundle: Bundle
     ) {
-        if let cachedURL = JobsSplashMediaCache.shared.cachedFileURL(for: url) {
+        if let cachedURL = JobsSplashMediaCache.shared.cachedVideoFileURL(for: url) {
             remoteVideoDownloadNoticeLabel.byVisible(false)
             playVideo(cachedURL)
             return

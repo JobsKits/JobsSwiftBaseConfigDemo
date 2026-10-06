@@ -1,3 +1,9 @@
+# `JobsImageRotation`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
+[toc]
+
 # <span id="前言">JobsImageRotation</span>
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
@@ -25,7 +31,7 @@ JobsImageRotation@Pods/
 - `JobsImageRotationDirection`：`.clockwise` 与 `.counterclockwise`，默认顺时针。
 - `JobsImageRotator.defaultInterval`：默认 `1.0 / 60.0` 秒。
 - `direction`：运行中可切换方向。
-- `interval`：Timer tick 间隔；修改后在下一次 `start()` 时生效。
+- `interval`：Timer tick 间隔；运行中修改会重建驱动并保留暂停状态。
 - `start()` / `pause()` / `resume()` / `stop(reset:)`：统一生命周期。
 - `JobsClockIconView`：无数字、无刻度，时针固定，仅分针每 tick 前进 `6°`；默认顺时针，方向和间隔由外界传入。
 
@@ -101,5 +107,24 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [Core/JobsImageRotator/JobsImageRotator.swift](<./Core/JobsImageRotator/JobsImageRotator.swift>)
 
 依赖与编译入口：[JobsImageRotation.podspec](<./JobsImageRotation.podspec>)。其中显式依赖声明包括 `JobsSwiftTimer`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+`JobsImageRotator` 在主线程创建、配置和控制；`radiansPerSecond` 默认 `2π`，按单调时间的实际 tick 间隔计算角度。`interval` 只控制采样频率，非法值归一化；运行中修改 interval 会替换定时器并保留暂停状态。pause / resume 不把手动暂停时长补进旋转角度。目标视图释放后驱动停止。`JobsClockIconView` 的分针仍采用每 tick 6° 的时钟演示语义，与连续旋转器分开。
+
+
+## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+隐私清单通过独立资源 bundle 交付。当前所需理由 API：`SystemBootTime`（35F9.1）。理由对应本库实际用途；宿主仍需核对业务数据收集、App Group / 用户授权文件等实际使用场景，资源声明与最终 App 内 bundle 都应验收。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsImageRotation --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

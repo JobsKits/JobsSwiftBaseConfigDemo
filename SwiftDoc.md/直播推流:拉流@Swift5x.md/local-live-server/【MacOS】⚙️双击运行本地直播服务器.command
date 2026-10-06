@@ -2,6 +2,29 @@
 # NodeMediaServer 本地推流服务器一键启动脚本
 
 # 不开 set -u，避免 .command 场景因为未定义变量直接挂掉
+# 仅渲染自述：标题红色加粗，编号正文蓝色常规字重；非彩色终端输出纯文本。
+jobs_intro_style() {
+  local intro_color=0
+  if [ -t 1 ] && [ -n "${TERM:-}" ] && [ "${TERM:-}" != dumb ] &&
+     [ -z "${NO_COLOR+x}" ] && [ "${PLAIN_OUTPUT:-0}" != 1 ] &&
+     [ "${IS_SOURCETREE_RUNTIME:-0}" != 1 ]; then
+    intro_color=1
+  fi
+  /usr/bin/awk -v color="$intro_color" -v role="${1:-body}" '
+    BEGIN { esc = sprintf("%c", 27) }
+    {
+      gsub(esc "\\[[0-9;]*m", "")
+      gsub(/\\(033|e|x1[bB])\[[0-9;]*m/, "")
+      if (!color || $0 ~ /^[[:space:]]*$/) { print; next }
+      numbered = ($0 ~ /^[[:space:]➤ℹ🔹✔⚠]*([0-9]+[、.)）]|[0-9]+️⃣|[-•])/)
+      heading = ($0 ~ /^[[:space:]]*#{1,6}[[:space:]]/ || $0 ~ /[：:][[:space:]]*$/ || $0 ~ /^[[:space:]]*[=━─-]{3}/)
+      title = (!numbered && (role == "title" || heading))
+      if (role == "auto" && !seen && !numbered) title = 1
+      if ($0 !~ /^[[:space:]]*[=━─-]+[[:space:]]*$/) seen = 1
+      printf "%s%s%s\n", esc (title ? "[1;31m" : "[0;34m"), $0, esc "[0m"
+    }
+  '
+}
 set -eo pipefail
 
 # ================================== 日志与基础变量 ==================================
@@ -28,14 +51,14 @@ underline_echo() { log "\033[4m$1\033[0m"; }
 # ================================== 自述信息 ==================================
 print_intro() {
     clear
-    echo ""
-    info_echo "🎥 本脚本用于在当前目录启动本地 NodeMediaServer（HaishinKit 本机推流用）"
-    echo "👉 流程概览："
-    echo "1️⃣ 自检 Homebrew / Node / npm 环境，必要时自动安装"
-    echo "2️⃣ 在当前目录安装 node-media-server@2.3.8（如未安装）"
-    echo "3️⃣ 检查是否已有 node server.js 在运行，有就先安全杀掉"
-    echo "4️⃣ 使用 node server.js 启动本地推流服务器（日志同步写入 ${LOG_FILE})"
-    echo "======================================="
+    echo "" | jobs_intro_style body
+    info_echo "🎥 本脚本用于在当前目录启动本地 NodeMediaServer（HaishinKit 本机推流用）" | jobs_intro_style body
+    echo "👉 流程概览：" | jobs_intro_style title
+    echo "1️⃣ 自检 Homebrew / Node / npm 环境，必要时自动安装" | jobs_intro_style body
+    echo "2️⃣ 在当前目录安装 node-media-server@2.3.8（如未安装）" | jobs_intro_style body
+    echo "3️⃣ 检查是否已有 node server.js 在运行，有就先安全杀掉" | jobs_intro_style body
+    echo "4️⃣ 使用 node server.js 启动本地推流服务器（日志同步写入 ${LOG_FILE})" | jobs_intro_style body
+    echo "=======================================" | jobs_intro_style title
     read -r -p "📎 确认在『local-live-server』目录中运行，按回车继续..." _
 }
 

@@ -35,7 +35,6 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage'
   s.dependency 'MJRefresh'
   s.dependency 'JXSegmentedView'
-  s.dependency 'SDWebImage'
   s.dependency 'GKNavigationBarSwift'
   s.dependency 'SnapKit'
   s.dependency 'JobsInheritance'
@@ -48,5 +47,20 @@ Pod::Spec.new do |s|
   s.dependency 'JobsSwiftStandardLibrary'
   s.dependency 'JobsSwiftMetalKit'
   s.dependency 'JobsSwiftDSL'
+
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
 
 end

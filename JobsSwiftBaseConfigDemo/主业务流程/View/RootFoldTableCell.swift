@@ -22,6 +22,10 @@ import JobsSwiftCountryCodeCtrl
 import JobsSwiftUILabelScrolling
 import SnapKit
 
+#if DEBUG
+import JobsDebugPanel
+#endif
+
 // ================================== RootFoldTableCell（折叠 + 内嵌Table） ==================================
 final class RootFoldTableCell: UITableViewCell,
                                UITableViewCellInsetProtocol,
@@ -720,6 +724,11 @@ extension RootFoldTableCell{
 
     private static func demoIconImage(for item: DemoItem) -> UIImage {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
+        #if DEBUG
+        if vcName == "JobsDebugPanelDemoVC", let image = JobsDebugPanel.buttonImage {
+            return image.withRenderingMode(.alwaysOriginal)
+        }
+        #endif
         if vcName == "JobsIconfontDemoListVC" {
             return JobsIconfont.shared.iconImage(
                 .component,

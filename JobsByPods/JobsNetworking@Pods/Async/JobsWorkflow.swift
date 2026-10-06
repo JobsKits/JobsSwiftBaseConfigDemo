@@ -41,8 +41,10 @@ public enum JobsWorkflow {
                 var output = Array<Value?>(repeating: nil, count: tasks.count)
                 for try await (index, value) in group {
                     output[index] = value
-                };return output.compactMap { $0 }
-            };return .init(values: values, errors: [])
+                }
+                return output.compactMap { $0 }
+            }
+                return .init(values: values, errors: [])
         /// 处理 .collect 分支
         case .collect:
             return await withTaskGroup(of: Result<(Int, Value), JobsError>.self) { group in
@@ -68,7 +70,8 @@ public enum JobsWorkflow {
                     case .failure(let error):
                         errors.append(error)
                     }
-                };return .init(values: values.compactMap { $0 }, errors: errors)
+                }
+                return .init(values: values.compactMap { $0 }, errors: errors)
             }
         }
     }
@@ -79,8 +82,10 @@ public enum JobsWorkflow {
     ) async throws -> State {
         var state = initial
         for step in steps {
+            try Task.checkCancellation()
             state = try await step(state)
-        };return state
+        }
+                return state
     }
 
     public static func chain<State: Sendable>(

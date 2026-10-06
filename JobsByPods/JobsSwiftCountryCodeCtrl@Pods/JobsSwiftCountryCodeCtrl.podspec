@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.swift_version = '5.0'
   spec.source        = { :path => '.' }
   spec.source_files  = '*.swift'
-  spec.resources     = 'Resources/**/*.{plist,strings,stringsdict}'
+  spec.resources     = 'Resource/**/*.{plist,strings,stringsdict}'
   spec.frameworks    = ['Foundation', 'UIKit']
 
   spec.dependency 'JobsSwiftBaseDefines'
@@ -20,4 +20,20 @@ Pod::Spec.new do |spec|
   spec.dependency 'JobsByUIKit'
   spec.dependency 'Jobsl10n'
   spec.dependency 'SnapKit'
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  spec.exclude_files = Array(spec.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+  spec.resource_bundles = (spec.attributes_hash['resource_bundles'] || {}).merge('JobsSwiftCountryCodeCtrlPrivacy' => ['Resource/PrivacyInfo.xcprivacy'])
+
 end

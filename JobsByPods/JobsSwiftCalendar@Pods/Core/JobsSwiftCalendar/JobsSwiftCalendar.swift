@@ -39,6 +39,8 @@ public final class JobsSwiftCalendar: UIView {
     public var scope = JobsSwiftCalendarScope.month {
         didSet {
             guard oldValue != scope else { return }
+            let anchor = selectedDates.last ?? jobsCurrentPage
+            jobsCurrentPage = scope == .week ? jobsStartOfWeek(anchor) : jobsStartOfMonth(anchor)
             reloadData()
             jobsNotifyBoundingRectIfNeeded(animated: true)
         }
@@ -126,8 +128,8 @@ public final class JobsSwiftCalendar: UIView {
     }
 
     public func setCurrentPage(_ currentPage: Date, animated: Bool) {
-        let date = jobsStartOfMonth(currentPage)
-        guard !jobsDate(date, isSameMonthAs: jobsCurrentPage) else { return }
+        let date = scope == .week ? jobsStartOfWeek(currentPage) : jobsStartOfMonth(currentPage)
+        guard !jobsDate(date, isSameDayAs: jobsCurrentPage) else { return }
         jobsCurrentPage = date
         let updates: () -> Void = { [weak self] in
             self?.reloadData()
@@ -309,15 +311,14 @@ private extension JobsSwiftCalendar {
     }
 
     func jobsReloadDayCells() {
-        let firstDayOfMonth = jobsStartOfMonth(currentPage)
-        let firstWeekday = gregorian.component(.weekday, from: firstDayOfMonth)
-        let offset = (firstWeekday - gregorian.firstWeekday + 7) % 7
-        let firstVisibleDate = jobsDate(byAdding: .day, value: -offset, to: firstDayOfMonth)
+        let firstVisibleDate = scope == .week
+            ? jobsStartOfWeek(currentPage)
+            : jobsStartOfWeek(jobsStartOfMonth(currentPage))
         jobsVisibleDates = (0..<42).map { jobsDate(byAdding: .day, value: $0, to: firstVisibleDate) }
         dayCells.enumerated().forEach { index, cell in
             let date = jobsVisibleDates[index]
             let position = jobsMonthPosition(for: date)
-            let placeholder = position != .current
+            let placeholder = scope == .month && position != .current
             let hiddenByPlaceholder = placeholderType == .none && placeholder
             let title = hiddenByPlaceholder ? nil : (dataSource?.calendar(self, titleFor: date) ?? jobsDayFormatter.string(from: date))
             let subtitle = hiddenByPlaceholder ? nil : dataSource?.calendar(self, subtitleFor: date)
@@ -348,7 +349,8 @@ private extension JobsSwiftCalendar {
     }
 
     func jobsMoveCurrentPage(byMonthOffset monthOffset: Int) {
-        setCurrentPage(jobsDate(byAdding: .month, value: monthOffset, to: currentPage), animated: true)
+        let component: Foundation.Calendar.Component = scope == .week ? .weekOfYear : .month
+        setCurrentPage(jobsDate(byAdding: component, value: monthOffset, to: currentPage), animated: true)
     }
 
     @objc func jobsCellClickEvent(_ cell: JobsSwiftCalendarDayCell) {
@@ -372,6 +374,13 @@ private extension JobsSwiftCalendar {
 
     func jobsStartOfDay(_ date: Date) -> Date {
         gregorian.startOfDay(for: date)
+    }
+
+    func jobsStartOfWeek(_ date: Date) -> Date {
+        let day = jobsStartOfDay(date)
+        let weekday = gregorian.component(.weekday, from: day)
+        let offset = (weekday - gregorian.firstWeekday + 7) % 7
+        return jobsDate(byAdding: .day, value: -offset, to: day)
     }
 
     func jobsStartOfMonth(_ date: Date) -> Date {

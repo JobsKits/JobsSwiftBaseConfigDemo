@@ -63,6 +63,10 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
             .byAddTo(panelView)
     }()
 
+    public override func submissionStateDidChange(_ state: JobsAppDoorSubmissionState) {
+        formView.applySubmissionState(state)
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
@@ -121,6 +125,7 @@ private extension JobsAppDoorVC {
     }
 
     func bindForm() {
+        formView.configureGraphicCaptcha = configureGraphicCaptcha
         formView.onModeRequest = { [weak self] mode in
             self?.switchMode(to: mode)
         }
@@ -173,6 +178,7 @@ private extension JobsAppDoorVC {
 
     func switchMode(to mode: JobsAppDoorMode) {
         guard mode != currentMode else { return }
+        cancelSubmission()
         view.endEditing(true)
         view.layoutIfNeeded()
         currentMode = mode

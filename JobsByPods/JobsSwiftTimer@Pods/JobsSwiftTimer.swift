@@ -101,7 +101,7 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
         handler: @escaping JobsTimerCallback
     ) {
         self.kind = kind
-        self.config = config
+        self.config = config.normalized
         self.tickBlock = handler
         if kind != .gcd {
             requireMainRunLoopForNonGCD()
@@ -255,32 +255,34 @@ public final class JobsTimer: JobsSwiftTimerProtocol, @unchecked Sendable {
             startRunLoopTimer(token: token)
         };return self
     }
-    /// 停止计时器（销毁@有回调）
+    /// 停止计时器并提交一次 tick，随后执行 finish。
     @discardableResult
     public func fireOnce() -> Self {
         lifecycleLock.lock()
         defer { lifecycleLock.unlock() }
         // 非 GCD：RunLoop/DisplayLink/Foundation 的 invalidate 必须主线程做
         if kind != .gcd, !Thread.isMainThread {
-            DispatchQueue.main.async { [weak self] in
-                _ = self?.fireOnce()
+            DispatchQueue.main.async { [self] in
+                _ = fireOnce()
             };return self
         }
-        let (shouldStop, finish) = stateLock.jobs_withLock { () -> (Bool, JobsTimerCallback?) in
-            guard state != .stopped else { return (false, nil) }
+        let callbacks = stateLock.jobs_withLock { () -> (tick: JobsTimerCallback, finish: JobsTimerCallback?)? in
+            guard state != .stopped else { return nil }
             state = .stopped
             generation &+= 1
             autoPausedByAppState = false
             pendingCallbackToken = nil
-            return (true, finishBlock)
+            return (tickBlock, finishBlock)
         }
-        guard shouldStop else { return self }
+        guard let callbacks else { return self }
         // 真正销毁底层 timer
         stopInternal()
-        // “有回调”：补一次 finish
-        if let finish {
-            config.queue.async { finish() }
-        };return self
+        // 终态投递持有回调快照，不依赖 Manager 登记或 timer 后续生命周期。
+        config.queue.async {
+            callbacks.tick()
+            callbacks.finish?()
+        }
+        return self
     }
     /// 停止计时器（销毁@无回调）
     @discardableResult

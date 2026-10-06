@@ -4,40 +4,23 @@
 
 [toc]
 
-> 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
-
----
-
 ## 🔥 <font id=前言>前言</font>
 
-`JobsOCDSL` 用于集中管理 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 链式 DSL 分类，避免各个本地 Pod 重复携带同一批 `+DSL` 文件。
+当前 Swift 检出里的 `JobsOCDSL` 是 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) DSL **兼容聚合入口**。此前仅有总头和指向缺失 Core / Support / JobsPodspecKit 的 Podspec；现已按本目录真实交付形态修正，能够独立编译。完整 OC 分类仍归 OC 工程同名 Pod 管理，本目录没有复制那套实现。
 
-## 一、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-- 系统类或三方基础类的点语法链式配置。
-- 需要依赖 `JobsBlock` 全局 Block typedef 的 OC DSL。
-- 从业务 Pod 中剥离 DSL，让使用者可以按需依赖。
-
-## 二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 一、目录与依赖 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```text
 JobsOCDSL@Pods/
-├── Core/
-│   ├── UIKit/
-│   └── ThirdParty/Texture/
 ├── JobsOCDSL.h
+├── JobsOCDSL.m
 ├── JobsOCDSL.podspec
 └── README.md
 ```
 
-## 三、依赖关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+默认 `Core` 子规格交付总头与能力函数，仅依赖系统 Foundation / UIKit。不存在的 JobsBlock、JobsOCDefs、JobsOCProtocols、MJRefresh、Texture 和辅助脚本不再被声明为已交付分类的必要依赖。未来真正移入分类时，必须同时补公开头、唯一实现和直接依赖，不能只把能力宏设为 1。
 
-- `JobsBlock`：提供 DSL 需要的 Block 类型。
-- `JobsOCDefs`：提供宏、枚举和通用定义。
-- `JobsOCProtocols`：提供部分 UIKit DSL 协议声明。
-- `MJRefresh` / `Texture`：只服务当前已迁入的对应 DSL 分类。
-
-## 四、引用方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 二、调用与能力检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 ```objc
 #if __has_include(<JobsOCDSL/JobsOCDSL.h>)
@@ -45,41 +28,46 @@ JobsOCDSL@Pods/
 #else
 #import "JobsOCDSL.h"
 #endif
+
+NSArray<NSString *> *delivered = JobsOCDSLAvailableCategoryNames();
+NSLog(@"JobsOCDSL %@: %@", JobsOCDSLDeliveryVersion, delivered);
 ```
 
-## 五、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
-
-后续迁移其它 `+DSL` 文件时，要先确认它是否只负责 DSL。若文件同时依赖业务 Support 能力，应先拆出纯 DSL 部分，避免把非 DSL 支撑代码塞进本 Pod。
+当前 `delivered` 为**空数组**，`JOBS_OCDSL_HAS_*` 全部为 0，表示没有分类实现。引入总头不再编译失败，也不等于 `UIView.byXxx` 等 OC DSL 已恢复。原来本就无法编译的分类调用方应依赖完整 OC 工程库，或在 Swift 工程使用 JobsSwiftDSL；不要在业务层凭宏猜测 selector。
 
 <a id="jobs-architecture"></a>
 
-## 六、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 三、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
+总头逐个核对分类公开头是否存在 → 编译期生成能力宏 → 实现函数列出真实可用分类 → 消费者按能力选择功能。每个分类单独判断，避免仅发现 Texture 框架便引用缺失的 AS 分类头。
 
-### 6.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+本库保留 `Core` 名称与聚合头路径，生产 source glob 明确排除测试、示例和临时目录。没有 `Core` 分类文件时仍可编译入口；将来新增同名分类需检查全进程唯一实现及 ARC / Block 返回合同。
 
-当前 [**Swift**](https://www.swift.org/) 仓库里的这个目录保留 OC DSL 的总头文件和 Podspec 定义，设计上用于收口 Foundation、UIKit 及可选 Texture 的链式分类。核对当前目录后，未发现总头文件引用的 Core 分类实现。
+## 四、独立编译验收 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### 6.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+从 Swift 宿主工程根目录执行：
 
-Podspec 声明 Core 源码路径 → 总头文件引用分类 → 实际接入前核对对应实现是否存在
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsOCDSL --skip-host
+```
 
-### 6.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+该 Pod 未加入当前宿主依赖。验证器为它创建临时消费工程，执行 CocoaPods 安装，再以真实 JobsOCDSL Scheme 编译与链接；产物和日志均放在临时目录。全量验收也包含此步骤，但不把兼容入口编译成功写成完整分类功能通过。
 
-- 这是当前检出的不完整入口，不能仅凭总头文件列出的 import 宣称这些分类在本目录都已实现。
-- 重建时可参照 OC 新项目中同名库的职责，但必须明确移入哪些自维护分类，不能把另一仓库的实现视为本目录已有内容。
-- Texture 分类通过头文件可用性条件引用；仍需同时检查 podspec 的实际依赖声明。
-- 文档仅解释当前入口和缺失边界，不以总头文件或依赖声明保证这个目录可独立编译。
 
-### 6.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 五、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-先对照 JobsOCDSL.h 的引用和 podspec 的 Core glob，再确认是否具备实际分类文件，最后才设计补齐顺序。
+每个显式 subspec 同步继承生产排除集合，避免只消费子模块时带入测试/示例源码。
 
-源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 
-- [JobsOCDSL.h](<./JobsOCDSL.h>)
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
 
-依赖与编译入口：[JobsOCDSL.podspec](<./JobsOCDSL.podspec>)。其中显式依赖声明包括 `JobsBlock`、`JobsOCDefs`、`JobsOCProtocols`、`MJRefresh`、`Texture`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsOCDSL --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

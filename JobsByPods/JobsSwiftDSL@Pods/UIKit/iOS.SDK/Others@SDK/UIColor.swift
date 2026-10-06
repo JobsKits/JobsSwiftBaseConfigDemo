@@ -108,32 +108,19 @@ extension UIColor {
     ///   - alpha: 透明度（0~1）
     /// - Returns: 可选 UIColor，解析失败返回 nil
     public convenience init?(hex: String, alpha: CGFloat = 1.0) {
-        // 例：0xff0000 / #FF0000 / FF0000
-        // 1）长度校验：至少需要 6 位（RGB）
-        guard hex.count >= 6 else { return nil }
-        // 2）统一转大写，便于后续解析
-        var tempHex = hex.uppercased()
-        // 3）去掉前缀：支持 "0x" / "##" / "#"
-        if tempHex.hasPrefix("0x") || tempHex.hasPrefix("##") {
-            tempHex = (tempHex as NSString).substring(from: 2)
+        var value = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if value.hasPrefix("0X") || value.hasPrefix("##") {
+            value.removeFirst(2)
+        } else if value.hasPrefix("#") {
+            value.removeFirst()
         }
-        if tempHex.hasPrefix("#") {
-            tempHex = (tempHex as NSString).substring(from: 1)
-        }
-        // 4）按 2 位一组截取 R/G/B（例如 "FF" -> 255）
-        var range = NSRange(location: 0, length: 2)
-        let rHex = (tempHex as NSString).substring(with: range)
-        range.location = 2
-        let gHex = (tempHex as NSString).substring(with: range)
-        range.location = 4
-        let bHex = (tempHex as NSString).substring(with: range)
-        // 5）将十六进制字符串转换为数值
-        var r: UInt32 = 0, g: UInt32 = 0, b: UInt32 = 0
-        Scanner(string: rHex).scanHexInt32(&r)
-        Scanner(string: gHex).scanHexInt32(&g)
-        Scanner(string: bHex).scanHexInt32(&b)
-        // 6）使用 RGB 数值初始化颜色（alpha 参数如需生效，应在 init 内部或此处带入）
-        self.init(r: CGFloat(r), g: CGFloat(g), b: CGFloat(b))
+        guard value.utf8.count == 6,
+              value.utf8.allSatisfy({ (48...57).contains($0) || (65...70).contains($0) }),
+              let rgb = UInt32(value, radix: 16) else { return nil }
+        self.init(r: CGFloat((rgb >> 16) & 255),
+                  g: CGFloat((rgb >> 8) & 255),
+                  b: CGFloat(rgb & 255),
+                  a: alpha)
     }
 
     public convenience init(hex: UInt32) {
@@ -264,9 +251,23 @@ extension UIColor {
     }
     /// 获取RGB值
     public func getRGB() -> (CGFloat, CGFloat, CGFloat) {
-        guard let cmps = cgColor.components else {
-            fatalError("保证普通颜色是RGB方式传入")
-        };return (cmps[0] * 255, cmps[1] * 255, cmps[2] * 255)
+        // 兼容入口：无法转换的 pattern 色返回零；需要区分失败时使用 jobsRGBComponents。
+        return jobsRGBComponents() ?? (0, 0, 0)
+    }
+    /// 解析动态色后转换为 RGB；不可转换的颜色返回 nil。
+    public func jobsRGBComponents(resolvingWith traits: UITraitCollection? = nil) -> (CGFloat, CGFloat, CGFloat)? {
+        let color: UIColor
+        if #available(iOS 13.0, tvOS 13.0, *), let traits {
+            color = resolvedColor(with: traits)
+        } else {
+            color = self
+        }
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else { return nil }
+        return (red * 255, green * 255, blue * 255)
     }
     /// 计算两个 UIColor 在 RGB 三个通道上的差值（Delta）
     ///

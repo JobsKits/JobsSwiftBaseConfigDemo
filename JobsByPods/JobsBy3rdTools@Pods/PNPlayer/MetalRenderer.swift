@@ -17,10 +17,14 @@ import JobsSwiftMetalKit
 import JobsSwiftDSL
 import simd
 
-struct Uniforms { var modelViewProjectionMatrix: float4x4 }
+struct Uniforms {
+    var modelViewProjectionMatrix: float4x4
+}
+
+@MainActor
 public class MetalRenderer: NSObject {
     private let device: MTLDevice
-    private let commandQueue: MTLCommandQueue
+    private let commandQueue: MTLCommandQueue?
     private var pipelineState: MTLRenderPipelineState?
     private var depthStencilState: MTLDepthStencilState?
     private var samplerState: MTLSamplerState?
@@ -30,10 +34,12 @@ public class MetalRenderer: NSObject {
     private let videoTextureManager: VideoTextureManager
     // 可选：持有 view，用于像素格式/采样同步
     private weak var boundView: MTKView?
+    public private(set) var renderingError: Error?
+    private var renderingFailureHandler: ((Error) -> Void)?
 
     public init(device: MTLDevice) {
         self.device = device
-        self.commandQueue = device.makeCommandQueue()!
+        self.commandQueue = device.makeCommandQueue()
         self.sphere = SphereGeometry(device: device, radius: 1.0, segments: 128)
         self.videoTextureManager = VideoTextureManager(device: device)
         super.init()
@@ -46,10 +52,23 @@ public class MetalRenderer: NSObject {
         self.boundView = view
         // 若 pipeline 已存在但像素格式不匹配，可在此重建（简单处理：直接重建）
         setupMetal()
+        setupBuffers()
         return self
     }
 
+    @discardableResult
+    public func byAttach(_ view: MTKView) -> Self {
+        attach(view: view)
+    }
+
     private func setupMetal() {
+        pipelineState = nil
+        renderingError = nil
+        guard commandQueue != nil else {
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 1,
+                                           userInfo: [NSLocalizedDescriptionKey: "Metal command queue is unavailable."]))
+            return
+        }
         // ✅ 重点：MetalRenderer 在 JobsBy3rdTools（Pod/Framework）里时，默认库通常在 framework bundle
         let rendererBundle = Bundle(for: MetalRenderer.self)
         var library: MTLLibrary?
@@ -67,21 +86,16 @@ public class MetalRenderer: NSObject {
             library = device.makeDefaultLibrary()
         }
         guard let library else {
-            let hasMetallib = (rendererBundle.url(forResource: "default", withExtension: "metallib") != nil)
-            fatalError(
-                """
-                ❌ Could not create Metal library
-                Bundle(for: MetalRenderer.self) = \(rendererBundle.bundlePath)
-                Has default.metallib in rendererBundle = \(hasMetallib)
-
-                Fix checklist:
-                1) Ensure Shaders.metal is included by podspec: s.source_files includes *.metal
-                2) Re-run: pod deintegrate && pod install, then Clean Build Folder
-                """
-            )
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 2,
+                                           userInfo: [NSLocalizedDescriptionKey: "Metal shader library is unavailable in the renderer or app bundle."]))
+            return
         }
-        let vertexFunction   = library.makeFunction(name: "vertex_main")
-        let fragmentFunction = library.makeFunction(name: "fragment_main")
+        guard let vertexFunction = library.makeFunction(name: "vertex_main"),
+              let fragmentFunction = library.makeFunction(name: "fragment_main") else {
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 3,
+                                           userInfo: [NSLocalizedDescriptionKey: "Required Metal shader functions are missing."]))
+            return
+        }
         // 顶点描述（⚠️ 避免 “Vertex function has input attributes but no vertex descriptor was set.”）
         let vDesc = MTLVertexDescriptor()
         vDesc.attributes[0].format = .float3
@@ -104,7 +118,8 @@ public class MetalRenderer: NSObject {
         do {
             pipelineState = try device.makeRenderPipelineState(descriptor: rpDesc)
         } catch {
-            fatalError("Could not create render pipeline state: \(error)")
+            reportRenderingFailure(error)
+            return
         }
         // Depth/Stencil（内球只渲染天空，可禁写深度减少闪烁）
         let dsDesc = MTLDepthStencilDescriptor()
@@ -123,23 +138,66 @@ public class MetalRenderer: NSObject {
                 .byTAddressMode(.clampToEdge)
                 .byMaxAnisotropy(16)
         )
+        guard depthStencilState != nil, samplerState != nil,
+              sphere.vertexBuffer != nil, sphere.indexBuffer != nil else {
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 5,
+                                           userInfo: [NSLocalizedDescriptionKey: "Metal render resource allocation failed."]))
+            return
+        }
     }
 
     private func setupBuffers() {
         uniformBuffer = device.makeBuffer(length: MemoryLayout<Uniforms>.stride, options: [])
+        if uniformBuffer == nil {
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 4,
+                                           userInfo: [NSLocalizedDescriptionKey: "Metal uniform buffer allocation failed."]))
+        }
     }
-    // MARK: - Video
-    public func loadVideo(url: URL) { videoTextureManager.loadVideo(url: url) }
-    public func playVideo() { videoTextureManager.play() }
-    public func pauseVideo() { videoTextureManager.pause() }
-    public func togglePlayPause() { videoTextureManager.togglePlayPause() }
+
+    private func reportRenderingFailure(_ error: Error) {
+        renderingError = error
+        pipelineState = nil
+        renderingFailureHandler?(error)
+    }
 
     @discardableResult
-    public func bySeekToTime(_ time: TimeInterval) -> Self { videoTextureManager.seek(to: time); return self }
+    public func byOnRenderingFailure(_ handler: ((Error) -> Void)?) -> Self {
+        renderingFailureHandler = handler
+        if let renderingError {
+            handler?(renderingError)
+        }
+        return self
+    }
+    // MARK: - Video
+    public func loadVideo(url: URL) {
+        videoTextureManager.loadVideo(url: url)
+    }
+
+    public func playVideo() {
+        videoTextureManager.play()
+    }
+
+    public func pauseVideo() {
+        videoTextureManager.pause()
+    }
+
+    public func togglePlayPause() {
+        videoTextureManager.togglePlayPause()
+    }
+
+    @discardableResult
+    public func bySeekToTime(_ time: TimeInterval) -> Self {
+        videoTextureManager.seek(to: time)
+        return self
+    }
 
     @discardableResult
     public func byVideoTextureManagerDelegate(_ delegate: VideoTextureManagerDelegate) -> Self {
-        videoTextureManager.delegate = delegate; return self
+        videoTextureManager.delegate = delegate
+        if let error = videoTextureManager.playbackError {
+            delegate.videoPlaybackDidFail(error: error)
+        }
+        return self
     }
     // MARK: - Interaction
     public func handlePan(_ gesture: UIPanGestureRecognizer, in view: UIView) {
@@ -153,10 +211,15 @@ extension MetalRenderer: MTKViewDelegate {
     }
 
     public func draw(in view: MTKView) {
-        guard let drawable = view.currentDrawable,
+        guard renderingError == nil,
+              view.drawableSize.width.isFinite, view.drawableSize.height.isFinite,
+              view.drawableSize.width > 0, view.drawableSize.height > 0,
+              let uniformBuffer,
+              let texture = videoTextureManager.currentTexture,
+              let drawable = view.currentDrawable,
               let rpd = view.currentRenderPassDescriptor,
               let pso = pipelineState,
-              let cmd = commandQueue.makeCommandBuffer(),
+              let cmd = commandQueue?.makeCommandBuffer(),
               let enc = cmd.makeRenderCommandEncoder(descriptor: rpd) else { return }
         updateUniforms(viewSize: view.drawableSize)
         enc.setRenderPipelineState(pso)
@@ -167,9 +230,7 @@ extension MetalRenderer: MTKViewDelegate {
         enc.setVertexBuffer(sphere.vertexBuffer, offset: 0, index: 0)
         enc.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
         enc.setFragmentSamplerState(samplerState, index: 0)
-        if let tex = videoTextureManager.currentTexture {
-            enc.setFragmentTexture(tex, index: 0)
-        }
+        enc.setFragmentTexture(texture, index: 0)
         if let ib = sphere.indexBuffer {
             enc.drawIndexedPrimitives(type: .triangle,
                                       indexCount: sphere.indexCount,
@@ -183,13 +244,16 @@ extension MetalRenderer: MTKViewDelegate {
     }
 
     private func updateUniforms(viewSize: CGSize) {
+        guard let uniformBuffer else {
+            return
+        }
         let aspect = Float(viewSize.width / viewSize.height)
         let proj = float4x4(perspectiveProjectionFov: Float.pi / 3, aspectRatio: aspect, nearZ: 0.1, farZ: 100.0)
         let viewM = cameraController.viewMatrix
         let model = float4x4(1.0)
         let mvp = proj * viewM * model
         var u = Uniforms(modelViewProjectionMatrix: mvp)
-        memcpy(uniformBuffer?.contents(), &u, MemoryLayout<Uniforms>.stride)
+        memcpy(uniformBuffer.contents(), &u, MemoryLayout<Uniforms>.stride)
     }
 }
 // MARK: - Helpers

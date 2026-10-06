@@ -31,10 +31,21 @@ public final class GestureUnlockView: UIView {
     public var onComplete: ((GesturePattern) -> Void)?
 
     public var configuration: GestureUnlockConfiguration = .init() {
-        didSet { rebuildNodes() }
+        didSet {
+            configuration = configuration.normalized
+            rebuildNodes()
+        }
     }
 
-    public var isInputEnabled: Bool = true
+    public var isInputEnabled: Bool = true {
+        didSet {
+            if !isInputEnabled { reset() }
+        }
+    }
+
+    /// 兼容 onComplete 的全部输入回调；短图案另行通知，校验策略由业务决定。
+    public var onInvalidPattern: ((GesturePattern) -> Void)?
+    private var inputIsActive = false
 
     private var nodes: [GestureNodeView] = []
     private var selected: [Int] = []
@@ -75,6 +86,7 @@ public final class GestureUnlockView: UIView {
     // MARK: - Public API
 
     public func reset(animated: Bool = false) {
+        inputIsActive = false
         selected.removeAll()
         currentTouchPoint = nil
         setVisualState(.normal)
@@ -83,6 +95,12 @@ public final class GestureUnlockView: UIView {
         if animated {
             UIView.jobsAnimate(0.18) { self.byAlpha(1.0) }
         }
+    }
+
+    public func isValidPattern(_ pattern: GesturePattern) -> Bool {
+        pattern.indices.count >= configuration.minimumPatternLength &&
+            pattern.indices.allSatisfy { nodes.indices.contains($0) } &&
+            Set(pattern.indices).count == pattern.indices.count
     }
 
     public func showError() {
@@ -96,9 +114,10 @@ public final class GestureUnlockView: UIView {
     // MARK: - Build / Layout
 
     private func rebuildNodes() {
+        reset()
         nodes.forEach { $0.removeFromSuperview() }
         nodes.removeAll()
-        let n = max(2, configuration.gridDimension)
+        let n = configuration.normalized.gridDimension
         for idx in 0..<(n * n) {
             let node = GestureNodeView(index: idx)
             node.configuration = configuration
@@ -110,7 +129,7 @@ public final class GestureUnlockView: UIView {
     }
 
     private func layoutNodes() {
-        let n = max(2, configuration.gridDimension)
+        let n = configuration.normalized.gridDimension
         let spacingX = bounds.width / CGFloat(n + 1)
         let spacingY = bounds.height / CGFloat(n + 1)
         let diameter = min(configuration.nodeDiameter, min(spacingX, spacingY) * 0.65)
@@ -135,30 +154,36 @@ public final class GestureUnlockView: UIView {
         delegate?.gestureUnlockViewDidBeginInput(self)
         if configuration.hapticsEnabled { impact.prepare() }
         reset(animated: false)
+        inputIsActive = true
         currentTouchPoint = p
         trySelectNode(at: p)
         updateLinePath()
     }
 
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isInputEnabled, let p = touches.first?.location(in: self) else { return }
+        guard isInputEnabled, inputIsActive, let p = touches.first?.location(in: self) else { return }
         currentTouchPoint = p
         trySelectNode(at: p)
         updateLinePath()
     }
 
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isInputEnabled else { return }
+        guard isInputEnabled, inputIsActive else { return }
+        inputIsActive = false
         currentTouchPoint = nil
         updateLinePath()
         let pattern = GesturePattern(indices: selected)
+        let patternIsValid = isValidPattern(pattern)
+        let invalidHandler = onInvalidPattern
         delegate?.gestureUnlockView(self, didComplete: pattern)
         onComplete?(pattern)
+        if !patternIsValid {
+            invalidHandler?(pattern)
+        }
     }
 
     public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        currentTouchPoint = nil
-        updateLinePath()
+        reset()
     }
 
     // MARK: - Selection
@@ -175,7 +200,8 @@ public final class GestureUnlockView: UIView {
             if bigger.contains(point) {
                 return node.index
             }
-        };return nil
+        }
+        return nil
     }
 
     private func appendNodeIndexWithInterpolation(_ newIndex: Int) {
@@ -190,6 +216,7 @@ public final class GestureUnlockView: UIView {
     }
 
     private func selectIndex(_ idx: Int) {
+        guard nodes.indices.contains(idx) else { return }
         selected.append(idx)
         nodes[idx].apply(state: visualState == .error ? .error : .selected)
         if configuration.hapticsEnabled {
@@ -204,7 +231,7 @@ public final class GestureUnlockView: UIView {
 
     /// 处理“跨点自动补点”，例如 0->2 自动补 1；0->8 自动补 4 等
     private func interpolatedIndices(from: Int, to: Int) -> [Int] {
-        let n = max(2, configuration.gridDimension)
+        let n = configuration.normalized.gridDimension
         let (r1, c1) = (from / n, from % n)
         let (r2, c2) = (to / n, to % n)
         let dr = r2 - r1
@@ -220,7 +247,8 @@ public final class GestureUnlockView: UIView {
             if rr >= 0, rr < n, cc >= 0, cc < n {
                 result.append(rr * n + cc)
             }
-        };return result
+        }
+        return result
     }
 
     private func gcd(_ a: Int, _ b: Int) -> Int {
@@ -229,7 +257,8 @@ public final class GestureUnlockView: UIView {
             let t = x % y
             x = y
             y = t
-        };return max(1, x)
+        }
+        return max(1, x)
     }
 
     // MARK: - Line
@@ -237,7 +266,8 @@ public final class GestureUnlockView: UIView {
     private func updateLinePath() {
         let path = UIBezierPath.make()
         let points = selected.compactMap { idx -> CGPoint? in
-            guard idx >= 0, idx < nodes.count else { return nil };return nodes[idx].center
+            guard idx >= 0, idx < nodes.count else { return nil }
+        return nodes[idx].center
         }
         if let first = points.first {
             path.byMove(to: first)

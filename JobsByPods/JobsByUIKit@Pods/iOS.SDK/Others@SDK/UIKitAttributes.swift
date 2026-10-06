@@ -169,26 +169,52 @@ extension AttributeContainer {
         return c
     }
     // MARK: - TextItemTag (iOS17+, tvOS unavailable)
-    /// 注意：这个类型在你的 SDK 里可能不是 String，按补全改（常见是 `UITextItemTag` 或类似）
+    @available(iOS 17.0, *)
+    @available(tvOS, unavailable)
+    @discardableResult
+    @inlinable
+    public func byTextItemTag(_ tag: AttributeScopes.UIKitAttributes.TextItemTagAttribute.Value?) -> Self {
+        var c = self
+        c.uiKit.textItemTag = tag
+        return c
+    }
+
+    /// 动态兼容入口拒绝错误类型，保留原有容器。
     @available(iOS 17.0, *)
     @available(tvOS, unavailable)
     @discardableResult
     @inlinable
     public func byTextItemTag(_ tag: Any?) -> Self {
-        var c = self
-        // 如果你的 SDK 类型不是 Any?，把 Any? 改成真实类型即可
-        c.uiKit.textItemTag = tag as! AttributeScopes.UIKitAttributes.TextItemTagAttribute.Value
-        return c
+        guard let tag else {
+            return byTextItemTag(Optional<AttributeScopes.UIKitAttributes.TextItemTagAttribute.Value>.none)
+        }
+        guard let value = tag as? AttributeScopes.UIKitAttributes.TextItemTagAttribute.Value else {
+            return self
+        }
+        return byTextItemTag(value)
     }
     // MARK: - AdaptiveImageGlyph (iOS18+ 等)
-    /// 注意：这个类型在你的 SDK 里也可能不是 Any?，按补全改成真实类型即可
     @available(macOS 15.0, iOS 18.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
     @discardableResult
     @inlinable
-    public func byAdaptiveImageGlyph(_ v: Any?) -> Self {
+    public func byAdaptiveImageGlyph(_ v: AttributeScopes.UIKitAttributes.AdaptiveImageGlyphAttribute.Value?) -> Self {
         var c = self
-        c.uiKit.adaptiveImageGlyph = v as! AttributeScopes.UIKitAttributes.AdaptiveImageGlyphAttribute.Value
+        c.uiKit.adaptiveImageGlyph = v
         return c
+    }
+
+    /// 动态兼容入口拒绝错误类型；nil 清除对应属性。
+    @available(macOS 15.0, iOS 18.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+    @discardableResult
+    @inlinable
+    public func byAdaptiveImageGlyph(_ value: Any?) -> Self {
+        guard let value else {
+            return byAdaptiveImageGlyph(Optional<AttributeScopes.UIKitAttributes.AdaptiveImageGlyphAttribute.Value>.none)
+        }
+        guard let glyph = value as? AttributeScopes.UIKitAttributes.AdaptiveImageGlyphAttribute.Value else {
+            return self
+        }
+        return byAdaptiveImageGlyph(glyph)
     }
     // MARK: - Generic patch
     @discardableResult

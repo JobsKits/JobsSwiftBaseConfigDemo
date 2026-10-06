@@ -98,6 +98,15 @@ jobs:
         run: |
           pod install --no-repo-update || pod install --repo-update
 
+      - name: Verify owned Pod behavior regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby .github/tests/JobsPodsUpgrade/Core/run_regressions.rb \
+            --output "${RUNNER_TEMP}/JobsPodsCoreRegression"
+          ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
+            --output-dir "${RUNNER_TEMP}/JobsPodsNetworkRegression"
+
       - name: Skip Jobs local Xcode build timer hook in CI
         run: |
           sudo mkdir -p /Users/jobs/.xcode-build-timer
@@ -115,13 +124,21 @@ jobs:
           set -euo pipefail
           derived_data_path="${RUNNER_TEMP}/DerivedData"
 
+          ruby .github/tests/JobsPodsUpgrade/validate_builds.rb \
+            --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
+            --derived-data "${derived_data_path}"
+
           xcodebuild \
             -workspace "${WORKSPACE}" \
             -scheme "${SCHEME}" \
             -configuration "${CONFIGURATION}" \
             -sdk "${SDK}" \
             -destination "${DESTINATION}" \
+            -jobs 2 \
             -derivedDataPath "${derived_data_path}" \
+            SYMROOT="${derived_data_path}/Build/Products" \
+            OBJROOT="${derived_data_path}/Build/Intermediates.noindex" \
+            OTHER_SWIFT_FLAGS='$(inherited) -j1' \
             -resultBundlePath "${RUNNER_TEMP}/SimulatorBuild.xcresult" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
@@ -129,14 +146,38 @@ jobs:
             ONLY_ACTIVE_ARCH=NO \
             build 2>&1 | tee "${RUNNER_TEMP}/simulator-build.log"
 
+      - name: Run hosted UIKit and timer regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          simulator_id="$(xcrun simctl list devices available -j | ruby -rjson -e \
+            'puts JSON.parse(STDIN.read).fetch("devices").values.flatten.find { |d| d["name"].start_with?("iPhone") }.fetch("udid")')"
+          xcodebuild -workspace "${WORKSPACE}" -scheme "${SCHEME}" \
+            -configuration Debug -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=${simulator_id}" \
+            -jobs 2 \
+            -derivedDataPath "${RUNNER_TEMP}/DerivedData" \
+            SYMROOT="${RUNNER_TEMP}/DerivedData/Build/Products" \
+            OBJROOT="${RUNNER_TEMP}/DerivedData/Build/Intermediates.noindex" \
+            OTHER_SWIFT_FLAGS='$(inherited) -j1' \
+            -resultBundlePath "${RUNNER_TEMP}/JobsPodsTests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES \
+            -only-testing:JobsSwiftBaseConfigDemoTests test \
+            2>&1 | tee "${RUNNER_TEMP}/jobs-pods-tests.log"
+
       - name: Upload failed build diagnostics
-        if: ${{ failure() && steps.build.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v7.0.1
         with:
           name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/simulator-build.log
             ${{ runner.temp }}/SimulatorBuild.xcresult
+            ${{ runner.temp }}/JobsPodsUnitBuilds
+            ${{ runner.temp }}/JobsPodsCoreRegression
+            ${{ runner.temp }}/JobsPodsNetworkRegression
+            ${{ runner.temp }}/JobsPodsTests.xcresult
+            ${{ runner.temp }}/jobs-pods-tests.log
           if-no-files-found: warn
           retention-days: 7
 

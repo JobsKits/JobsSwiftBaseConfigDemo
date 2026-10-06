@@ -7,6 +7,7 @@
 
 import UIKit
 
+import JobsByUIKit
 import JobsFuseAnimation
 import JobsSwiftBaseDefines
 import JobsSwiftTimer
@@ -25,10 +26,20 @@ public final class JobsAudioRecordButton: UIButton {
     private let innerLayer = CAShapeLayer.jobsMake { _ in }
     private var countdown: JobsSwiftTimerCountdown?
     private var active = false
+    private var activeMinimumDuration: TimeInterval = 3
     private var recordingStartedAt: TimeInterval = 0
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        commonInit()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+
+    private func commonInit() {
         backgroundColor = JobsCor.clear
         accessibilityLabel = "按住录音"
         layer.insertSublayer(innerLayer, at: 0)
@@ -44,26 +55,30 @@ public final class JobsAudioRecordButton: UIButton {
         addTarget(self, action: #selector(touchCancelled), for: [.touchDragExit, .touchCancel, .touchUpOutside])
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
         outerRingLayer.byFrame(bounds)
         innerLayer.byFrame(bounds)
-        outerRingLayer.byPath(UIBezierPath(ovalIn: bounds.insetBy(dx: 4, dy: 4)).cgPath)
-        innerLayer.byPath(UIBezierPath(ovalIn: bounds.insetBy(dx: 14, dy: 14)).cgPath)
+        outerRingLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 4, dy: 4)).cgPath)
+        innerLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 14, dy: 14)).cgPath)
         byFuseOuterRingLayoutIfNeeded()
     }
 
     @objc private func touchDown() {
-        guard onBegin?() ?? true else { return }
+        guard !active, duration.isFinite, duration > 0, minimumValidDuration.isFinite, minimumValidDuration >= 0 else { return }
         active = true
+        guard onBegin?() ?? true else {
+            active = false
+            return
+        }
+        activeMinimumDuration = minimumValidDuration
         recordingStartedAt = ProcessInfo.processInfo.systemUptime
         accessibilityLabel = "松开保存"
         let normalizedDuration = max(1, duration)
         let thresholdProgress = max(
             0,
-            min(1, minimumValidDuration / normalizedDuration)
+            min(1, activeMinimumDuration / normalizedDuration)
         )
         byFusePressStart(
             ringConfig: JobsFuseOuterRingConfig(
@@ -89,6 +104,16 @@ public final class JobsAudioRecordButton: UIButton {
 
     @objc private func touchUpInside() { finish(automatically: false) }
 
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window == nil { cancelRecording() }
+    }
+
+    /// 页面复用或退出时终止当前按住录音。
+    public func cancelRecording() {
+        touchCancelled()
+    }
+
     @objc private func touchCancelled() {
         guard active else { return }
         active = false
@@ -98,10 +123,8 @@ public final class JobsAudioRecordButton: UIButton {
 
     private func finish(automatically: Bool) {
         guard active else { return }
-        let recordedDuration = automatically
-            ? max(0, duration)
-            : max(0, ProcessInfo.processInfo.systemUptime - recordingStartedAt)
-        let tooShort = recordedDuration < max(0, minimumValidDuration)
+        let recordedDuration = max(0, ProcessInfo.processInfo.systemUptime - recordingStartedAt)
+        let tooShort = recordedDuration < activeMinimumDuration
         active = false
         resetVisuals()
         if tooShort {
@@ -110,6 +133,10 @@ public final class JobsAudioRecordButton: UIButton {
         } else {
             onFinish?()
         }
+    }
+
+    deinit {
+        countdown?.cancel()
     }
 
     private func resetVisuals() {

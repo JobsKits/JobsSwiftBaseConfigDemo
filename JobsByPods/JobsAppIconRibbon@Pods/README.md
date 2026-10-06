@@ -173,7 +173,7 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 
 ## 九、风险边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 模块只删除并重建当前环境对应的派生 `.appiconset`，不会删除或覆盖 `SOURCE_APPICONSET`。
+- 模块只替换当前环境对应的完整派生 `.appiconset`，不会删除或覆盖 `SOURCE_APPICONSET`；生成失败保留上一次成品。
 - 不要把 `SOURCE_APPICONSET` 指向 `JobsAppIconRibbon-*` 派生目录，否则会重复叠加绶带。
 - App Store 包是否保留 `RELEASE` 绶带由项目自行决定；如正式包不需要文字，可使用独立 Configuration 和透明度配置，或将该 Configuration 切回原始 AppIcon 名称。
 - 修改图标、配置或脚本后应至少构建 Debug 与 Release 各一次，确认文字长度和图标编译结果。
@@ -221,5 +221,26 @@ flowchart LR
 - [Scripts/JobsAppIconRibbonGenerator.swift](<./Scripts/JobsAppIconRibbonGenerator.swift>)
 
 依赖与编译入口：[JobsAppIconRibbon.podspec](<./JobsAppIconRibbon.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 十一、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生成器先在与源图标集同目录的独立临时 appiconset 中完成所有文件，校验后才替换当前环境的派生产物；任何读取或渲染失败均保留上一次完整产物。输出前缀不能含路径分隔符，输出解析后的路径不得等于源目录；Contents 中 filename 必须是图标集内的单一文件名，不能越出源目录或经符号链接引用外部文件。
+
+`FONT_SIZE_RATIO` 必须有限且大于零，非法值使用 0.105，最大 1。多构建任务应使用各自 Configuration 的派生名称；源目录仍只读。
+
+
+## 十二、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsAppIconRibbon --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

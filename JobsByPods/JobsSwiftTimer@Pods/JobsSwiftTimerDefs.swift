@@ -5,6 +5,10 @@
 //  Created by Jobs on 2026年5月13日，星期三.
 //
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 public enum JobsOpenResult {
     case opened                 // 成功触发了系统打开
     case cannotOpen             // 系统认为不能打开（未安装/被限制）
@@ -46,9 +50,11 @@ public enum JobsTimerCallbackDeliveryPolicy: Sendable, Equatable {
 /// JobsTimer 专用回调类型：可跨并发域安全传递
 public typealias JobsTimerCallback = @Sendable () -> Void
 public typealias jobsByOpenResultBlock = (JobsOpenResult) -> Void
+#if canImport(UIKit)
 public typealias TimerStateChangeHandler = (_ button: UIButton,
                                             _ old: TimerState,
                                             _ new: TimerState) -> Void
+#endif
 
 public extension JobsTimerKind {
     var displayName: String {

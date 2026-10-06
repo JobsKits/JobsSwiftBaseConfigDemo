@@ -8,19 +8,6 @@
 import Foundation
 import JobsSwiftTimer
 
-private final class JobsTaskContinuationBox: @unchecked Sendable {
-    private let lock = NSLock()
-    private var resumed = false
-    var token: UUID?
-
-    func markResumed() -> Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        guard !resumed else { return false }
-        resumed = true
-        return true
-    }
-}
 /// JobsTask - Jobs 系列任务管理核心类
 /// 提供基于计划（Plan）的可取消、可暂停/恢复的定时任务执行能力
 /// 线程安全：使用 NSLock 保护内部状态，标记为 @unchecked Sendable
@@ -42,6 +29,18 @@ public final class JobsTask: @unchecked Sendable {
     private var generation: UInt64 = 0
     private var _executionCount: Int = 0
     private var _estimatedNextExecutionDate: Date?
+    private struct Waiter {
+        let target: Int?
+        let continuation: CheckedContinuation<Int, Never>
+    }
+    private var waiters: [UUID: Waiter] = [:]
+    private var asyncExecutions: [UUID: Task<Void, Never>] = [:]
+    private var activeAsyncIDs: Set<UUID> = []
+    private var activeSynchronousExecutions = 0
+    private var pendingExecutionRequests = 0
+    private var isDrainingExecutions = false
+    private var planExhausted = false
+    private var suspendedNextInterval: JobsPeriod?
 
     // 性能指标追踪
     private let creationDate: Date = Date()
@@ -169,49 +168,56 @@ extension JobsTask {
     public func resume() {
         lock.lock()
         let current = state
-        let timer = self.timer
-        lock.unlock()
-        switch current {
-        /// 处理 .suspended 分支
-        case .suspended:
-            _ = updateState(to: .running, allowed: { $0 == .suspended })
-            // 恢复时重新计算预估执行时间
-            lock.lock()
-            if let timer = self.timer {
-                // 如果定时器存在，保持原有的预估时间逻辑
-                // （因为 pause/resume 不改变定时器的剩余时间）
+        if current == .suspended {
+            state = .running
+            let next = suspendedNextInterval
+            suspendedNextInterval = nil
+            let currentTimer = timer
+            let token = generation
+            let observers = Array(lifecycleObservers.values)
+            if let next {
+                _estimatedNextExecutionDate = Date().adding(next)
             }
             lock.unlock()
-            timer?.resume()
-        /// 处理 .idle 分支
-        case .idle:
-            scheduleInitialIfNeeded()
-        /// 未匹配已知分支时执行兜底处理
-        default:
-            break
+            observers.forEach { $0(.running) }
+            if let next {
+                installTimer(after: next, generation: token)
+            } else {
+                currentTimer?.resume()
+            }
+        } else {
+            lock.unlock()
+            if current == .idle {
+                scheduleInitialIfNeeded()
+            }
         }
     }
 
     public func cancel() {
-        let timerToStop: JobsSwiftTimerProtocol?
-        let didChange: Bool
         lock.lock()
-        if state == .cancelled {
+        guard !state.isTerminated else {
             lock.unlock()
             return
         }
         state = .cancelled
         generation &+= 1
-        timerToStop = timer
+        let timerToStop = timer
         timer = nil
         _estimatedNextExecutionDate = nil
-        didChange = true
         let observers = Array(lifecycleObservers.values)
+        let pending = Array(waiters.values)
+        waiters.removeAll()
+        let count = _executionCount
+        let handles = Array(asyncExecutions.values)
+        asyncExecutions.removeAll()
+        activeAsyncIDs.removeAll()
+        pendingExecutionRequests = 0
+        suspendedNextInterval = nil
         lock.unlock()
         timerToStop?.stop()
-        if didChange {
-            observers.forEach { $0(.cancelled) }
-        }
+        handles.forEach { $0.cancel() }
+        pending.forEach { $0.continuation.resume(returning: count) }
+        observers.forEach { $0(.cancelled) }
     }
 
     /// 立即执行所有已注册的 action
@@ -222,22 +228,52 @@ extension JobsTask {
     /// - 即使 action 中调用 addAction/removeAction 也是安全的
     /// - 如果任务已取消，此方法会静默返回
     public func executeNow() {
-        let snapshot: [Action]
-        let now = Date()
         lock.lock()
-        guard state != .cancelled else {
+        guard !state.isTerminated else {
             lock.unlock()
             return
         }
-        _executionCount += 1
-        // 更新性能指标
-        if firstExecutionDate == nil {
-            firstExecutionDate = now
+        pendingExecutionRequests += 1
+        guard !isDrainingExecutions else {
+            lock.unlock()
+            return
         }
-        lastExecutionDate = now
-        snapshot = Array(actions.values)
+        isDrainingExecutions = true
         lock.unlock()
-        snapshot.forEach { $0(self) }
+        drainExecutionRequests()
+    }
+
+    /// 正在执行时只登记请求，避免跨任务同步调用互相等待；业务代码始终在锁外。
+    private func drainExecutionRequests() {
+        while true {
+            lock.lock()
+            guard pendingExecutionRequests > 0, !state.isTerminated else {
+                pendingExecutionRequests = 0
+                isDrainingExecutions = false
+                lock.unlock()
+                finishIfDrained()
+                return
+            }
+            pendingExecutionRequests -= 1
+            _executionCount += 1
+            activeSynchronousExecutions += 1
+            let now = Date()
+            if firstExecutionDate == nil {
+                firstExecutionDate = now
+            }
+            lastExecutionDate = now
+            let snapshot = Array(actions.values)
+            lock.unlock()
+            snapshot.forEach { $0(self) }
+            lock.lock()
+            activeSynchronousExecutions -= 1
+            let count = _executionCount
+            let reached = waiters.filter { $0.value.target.map { count >= $0 } ?? false }
+            reached.keys.forEach { waiters.removeValue(forKey: $0) }
+            lock.unlock()
+            reached.values.forEach { $0.continuation.resume(returning: count) }
+            finishIfDrained()
+        }
     }
 
     private func scheduleInitialIfNeeded() {
@@ -250,7 +286,8 @@ extension JobsTask {
             state = .finished
             let observers = Array(lifecycleObservers.values)
             lock.unlock()
-            observers.forEach { $0(.finished) };return
+            observers.forEach { $0(.finished) }
+            return
         }
         state = .running
         generation &+= 1
@@ -264,32 +301,42 @@ extension JobsTask {
 
     private func scheduleNextExecution() {
         lock.lock()
-        guard state == .running else {
+        guard state == .running || state == .suspended else {
             lock.unlock()
             return
         }
         guard let next = iterator.next() else {
-            state = .finished
+            planExhausted = true
             generation &+= 1
             let oldTimer = timer
             timer = nil
             _estimatedNextExecutionDate = nil
-            let observers = Array(lifecycleObservers.values)
             lock.unlock()
             oldTimer?.stop()
-            observers.forEach { $0(.finished) };return
+            finishIfDrained()
+            return
         }
         generation &+= 1
         let generation = self.generation
-        _estimatedNextExecutionDate = Date().adding(next)
+        let suspended = state == .suspended
+        suspendedNextInterval = suspended ? next : nil
+        _estimatedNextExecutionDate = suspended ? nil : Date().adding(next)
         let oldTimer = timer
         timer = nil
         lock.unlock()
         oldTimer?.stop()
-        installTimer(after: next, generation: generation)
+        if !suspended {
+            installTimer(after: next, generation: generation)
+        }
     }
 
     private func installTimer(after interval: JobsPeriod, generation: UInt64) {
+        if runLoopMode != nil && !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.installTimer(after: interval, generation: generation)
+            }
+            return
+        }
         let config = JobsSwiftTimerConfig(
             interval: interval.timeInterval,
             repeats: false,
@@ -304,7 +351,12 @@ extension JobsTask {
             self?.handleTimerFired(generation: generation)
         }
         lock.lock()
-        guard state != .cancelled else {
+        if state == .suspended, self.generation == generation {
+            suspendedNextInterval = interval
+            lock.unlock()
+            return
+        }
+        guard state == .running, self.generation == generation else {
             lock.unlock()
             return
         }
@@ -327,8 +379,65 @@ extension JobsTask {
         shouldContinue = state == .running && self.generation == generation
         lock.unlock()
         guard shouldContinue else { return }
-        scheduleNextExecution()
         executeNow()
+        scheduleNextExecution()
+    }
+
+    /// 将异步业务句柄纳入任务生命周期；自然 finished 直到所有业务结束才发布。
+    func launchAsync(
+        priority: TaskPriority,
+        action: @escaping @Sendable () async -> Void
+    ) {
+        let id = UUID()
+        lock.lock()
+        guard !state.isTerminated else {
+            lock.unlock()
+            return
+        }
+        activeAsyncIDs.insert(id)
+        lock.unlock()
+        let handle = Task(priority: priority) { [weak self] in
+            guard !Task.isCancelled else {
+                self?.completeAsync(id)
+                return
+            }
+            await action()
+            self?.completeAsync(id)
+        }
+        lock.lock()
+        let shouldKeep = activeAsyncIDs.contains(id) && state != .cancelled
+        if shouldKeep {
+            asyncExecutions[id] = handle
+        }
+        lock.unlock()
+        if !shouldKeep {
+            handle.cancel()
+        }
+    }
+
+    private func completeAsync(_ id: UUID) {
+        lock.lock()
+        activeAsyncIDs.remove(id)
+        asyncExecutions.removeValue(forKey: id)
+        lock.unlock()
+        finishIfDrained()
+    }
+
+    private func finishIfDrained() {
+        lock.lock()
+        guard planExhausted, !state.isTerminated, activeAsyncIDs.isEmpty,
+              activeSynchronousExecutions == 0, pendingExecutionRequests == 0 else {
+            lock.unlock()
+            return
+        }
+        state = .finished
+        let observers = Array(lifecycleObservers.values)
+        let pending = Array(waiters.values)
+        waiters.removeAll()
+        let count = _executionCount
+        lock.unlock()
+        pending.forEach { $0.continuation.resume(returning: count) }
+        observers.forEach { $0(.finished) }
     }
 
     @discardableResult
@@ -355,70 +464,38 @@ extension JobsTask {
 
 // MARK: - JobsTask Async/Await/AsyncSequence Support
 extension JobsTask {
+    /// 达到次数、任务终止或 waiter 自身取消时返回实际新增次数。取消 waiter 不取消任务。
     @discardableResult
     public func wait(forExecutions count: Int) async -> Int {
-        guard count > 0 else { return 0 }
-        let initial = executionCount
-        if lifecycle.isTerminated {
+        guard count > 0 else {
             return 0
         }
-        let target = initial + count
-        return await withCheckedContinuation { continuation in
-            let box = JobsTaskContinuationBox()
-            let token = self.addAction { task in
-                let current = task.executionCount
-                guard current >= target else { return }
-                if let token = box.token { self.removeAction(token) }
-                if box.markResumed() { continuation.resume(returning: current - initial) }
-            }
-            box.token = token
-            if self.lifecycle.isTerminated {
-                self.removeAction(token)
-                if box.markResumed() { continuation.resume(returning: max(0, self.executionCount - initial)) }
-            }
-        }
+        let initial = executionCount
+        let (sum, overflow) = initial.addingReportingOverflow(count)
+        let current = await waitForCount(target: overflow ? Int.max : sum)
+        return max(0, current - initial)
     }
 
     @discardableResult
     public func waitForNextExecution() async -> Int {
-        await withCheckedContinuation { continuation in
-            let box = JobsTaskContinuationBox()
-            let token = self.addAction { task in
-                let current = task.executionCount
-                if let token = box.token { self.removeAction(token) }
-                if box.markResumed() { continuation.resume(returning: current) }
-            }
-            box.token = token
-            if self.lifecycle.isTerminated {
-                self.removeAction(token)
-                if box.markResumed() { continuation.resume(returning: self.executionCount) }
-            }
-        }
+        let initial = executionCount
+        let (target, overflow) = initial.addingReportingOverflow(1)
+        return await waitForCount(target: overflow ? Int.max : target)
     }
 
     public func waitUntilFinished() async {
-        guard !lifecycle.isTerminated else { return }
-        await withCheckedContinuation { continuation in
-            let box = JobsTaskContinuationBox()
-            let token = self.addLifecycleObserver { lifecycle in
-                guard lifecycle.isTerminated else { return }
-                if let token = box.token { self.removeLifecycleObserver(token) }
-                if box.markResumed() { continuation.resume() }
-            }
-            box.token = token
-            if self.lifecycle.isTerminated {
-                self.removeLifecycleObserver(token)
-                if box.markResumed() { continuation.resume() }
-            }
-        }
+        _ = await waitForCount(target: nil)
     }
 
     @discardableResult
     public func executeAndWait() async -> Bool {
-        guard !lifecycle.isTerminated else { return false }
+        guard !lifecycle.isTerminated, !Task.isCancelled else {
+            return false
+        }
         let initialCount = executionCount
         executeNow()
-        let observedCount = await waitForExecutionCount(greaterThan: initialCount)
+        let (target, overflow) = initialCount.addingReportingOverflow(1)
+        let observedCount = await waitForCount(target: overflow ? Int.max : target)
         return observedCount > initialCount
     }
 
@@ -426,22 +503,26 @@ extension JobsTask {
         JobsTaskExecutionSequence(task: self)
     }
 
-    private func waitForExecutionCount(greaterThan initialCount: Int) async -> Int {
-        if executionCount > initialCount {
-            return executionCount
-        };return await withCheckedContinuation { continuation in
-            let box = JobsTaskContinuationBox()
-            let token = self.addAction { task in
-                let current = task.executionCount
-                guard current > initialCount else { return }
-                if let token = box.token { self.removeAction(token) }
-                if box.markResumed() { continuation.resume(returning: current) }
+    private func waitForCount(target: Int?) async -> Int {
+        let id = UUID()
+        return await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                lock.lock()
+                let count = _executionCount
+                if Task.isCancelled || state.isTerminated || target.map({ count >= $0 }) == true {
+                    lock.unlock()
+                    continuation.resume(returning: count)
+                    return
+                }
+                waiters[id] = Waiter(target: target, continuation: continuation)
+                lock.unlock()
             }
-            box.token = token
-            if self.executionCount > initialCount || self.lifecycle.isTerminated {
-                self.removeAction(token)
-                if box.markResumed() { continuation.resume(returning: self.executionCount) }
-            }
+        } onCancel: {
+            self.lock.lock()
+            let pending = self.waiters.removeValue(forKey: id)
+            let count = self._executionCount
+            self.lock.unlock()
+            pending?.continuation.resume(returning: count)
         }
     }
 }
@@ -467,18 +548,21 @@ extension JobsTask {
     /// - Parameter tasks: 要等待的任务数组
     /// - Returns: 第一个完成的任务
     public static func waitAny(_ tasks: [JobsTask]) async -> JobsTask? {
-        await withTaskGroup(of: JobsTask.self) { group in
+        await withTaskGroup(of: JobsTask?.self) { group in
             for task in tasks {
                 group.addTask {
                     await task.waitUntilFinished()
-                    return task
+                    return Task.isCancelled ? nil : task
                 }
             }
             // 返回第一个完成的任务
-            if let first = await group.next() {
-                group.cancelAll()
-                return first
-            };return nil
+            while let result = await group.next() {
+                if let first = result {
+                    group.cancelAll()
+                    return first
+                }
+            }
+            return nil
         }
     }
 
@@ -500,4 +584,3 @@ extension JobsTask {
         tasks.forEach { $0.resume() }
     }
 }
-

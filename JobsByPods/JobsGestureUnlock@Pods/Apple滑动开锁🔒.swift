@@ -24,9 +24,9 @@ public class SlideToUnlockView: UIView {
         case rightToLeft   // 可选：从右往左
     }
     /// 滑到终点时回调（只在成功解锁时调用）
-    var onUnlock: (jobsByVoidBlock)?
+    public var onUnlock: (jobsByVoidBlock)?
     /// 解锁方向（默认从左往右）
-    var direction: Direction = .leftToRight {
+    public var direction: Direction = .leftToRight {
         didSet {
             updateDirectionUI()
             setNeedsLayout()
@@ -34,7 +34,7 @@ public class SlideToUnlockView: UIView {
         }
     }
     /// 是否开启“轨道骨架屏闪动效果”（用 JobsShimmerBarView 模拟）
-    var isSkeletonEnabled: Bool = false {
+    public var isSkeletonEnabled: Bool = false {
         didSet {
             updateSkeletonState()
         }
@@ -42,6 +42,8 @@ public class SlideToUnlockView: UIView {
     // MARK: - 配置
     private let thumbInset: CGFloat = 4          // 滑块距离左右的内边距
     private let thumbSize = CGSize(width: 52, height: 52)
+    private var resetWorkItem: DispatchWorkItem?
+    private var hasCompleted = false
     private var panStartProgress: CGFloat = 0    // 手势开始时的进度备份
 
     /// 0 ~ 1 的进度，表示从“起点侧”到“终点侧”的完成度
@@ -110,6 +112,7 @@ public class SlideToUnlockView: UIView {
                               let pan = gr as? UIPanGestureRecognizer,
                               let container = gr.view?.superview
                         else { return }
+                        guard !self.hasCompleted else { return }
                         let translation = pan.translation(in: container)
                         let dragWidth = max(
                             container.bounds.width - self.thumbInset * 2 - self.thumbSize.width,
@@ -134,13 +137,14 @@ public class SlideToUnlockView: UIView {
                             self.progress = self.panStartProgress + delta
                             self.layoutIfNeeded()
                             self.updateShimmerMask()
-                        /// 合并处理 .ended、.cancelled、.failed 分支
-                        case .ended, .cancelled, .failed:
+                        case .ended:
                             if self.progress > 0.85 {
                                 self.completeUnlock()
                             } else {
                                 self.reset(animated: true)
                             }
+                        case .cancelled, .failed:
+                            self.reset(animated: true)
                         /// 未匹配已知分支时执行兜底处理
                         default:
                             break
@@ -167,12 +171,12 @@ public class SlideToUnlockView: UIView {
             }
     }()
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
@@ -268,7 +272,8 @@ public class SlideToUnlockView: UIView {
             guard width > 0 else {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
-            };maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
+            }
+            maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
         /// 处理 .rightToLeft 分支
         case .rightToLeft:
             // 右->左：分界线在圆心位置，左侧保留呼吸屏
@@ -278,7 +283,8 @@ public class SlideToUnlockView: UIView {
             guard width > 0 else {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
-            };maskRect = CGRect(x: 0, y: 0, width: width, height: trackBounds.height)
+            }
+            maskRect = CGRect(x: 0, y: 0, width: width, height: trackBounds.height)
         }
         // 纯矩形遮罩，靠近滑块是笔直的直角边
         let path = UIBezierPath.make(rect: maskRect)
@@ -290,15 +296,24 @@ public class SlideToUnlockView: UIView {
     }
 
     private func completeUnlock() {
+        guard !hasCompleted else { return }
+        hasCompleted = true
         progress = 1
         updateLayoutForProgress(animated: true)
         onUnlock?()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            self.reset(animated: true)
+        resetWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            self?.reset(animated: true)
         }
+        resetWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: item)
     }
 
-    func reset(animated: Bool) {
+    public func reset(animated: Bool = false) {
+        resetWorkItem?.cancel()
+        resetWorkItem = nil
+        hasCompleted = false
+        panStartProgress = 0
         progress = 0
         updateLayoutForProgress(animated: animated)
     }

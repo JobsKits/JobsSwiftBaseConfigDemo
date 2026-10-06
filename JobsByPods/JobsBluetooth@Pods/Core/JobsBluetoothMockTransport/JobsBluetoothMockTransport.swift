@@ -11,11 +11,23 @@ import Foundation
 public final class JobsBluetoothMockTransport {
     public var latency: TimeInterval = 0.15
     public var enabled = true
+    public var dropsResponses = false
+    public var responseTransform: ((Data) -> Data)?
+    public var injectedError: Error?
 
     public init() {}
 
-    @discardableResult public func byLatency(_ value: TimeInterval) -> Self { latency = max(0, value);return self }
-    @discardableResult public func byEnabled(_ value: Bool) -> Self { enabled = value;return self }
+    @discardableResult
+    public func byLatency(_ value: TimeInterval) -> Self {
+        latency = max(0, value)
+        return self
+    }
+
+    @discardableResult
+    public func byEnabled(_ value: Bool) -> Self {
+        enabled = value
+        return self
+    }
 
     public func advertisements() -> [JobsBluetoothPeripheral] {
         [
@@ -26,6 +38,8 @@ public final class JobsBluetoothMockTransport {
     }
 
     public func echo(_ data: Data, completion: @escaping (Data) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + latency) { completion(data) }
+        let delay = latency.isFinite ? max(0, min(60, latency)) : 0.15
+        let response = responseTransform?(data) ?? data
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { completion(response) }
     }
 }

@@ -80,11 +80,13 @@ private struct JobsLegacyButtonState {
 #endif
 
 // MARK: - 内部控制器
+@MainActor
 public final class JobsCountdownBtnCtrl {
     weak var button: UIButton?
     public var config: JobsCountdownBtnConfig
     private var timer: JobsSwiftTimerProtocol?
     public private(set) var isRunning: Bool = false
+    private var generation: UInt64 = 0
     private var current: Int = 0       // up 模式下：已走步数；down 模式下：剩余秒数
 
     // iOS 15+ 才有 UIButton.Configuration；为了向下兼容，这里用 Any 做存储
@@ -106,7 +108,7 @@ public final class JobsCountdownBtnCtrl {
             current = initialValue()
             onMainAsync { [weak self] in
                 guard let self else { return }
-                self.applyRender(sec: self.current ?? 0)
+                self.applyRender(sec: self.current)
             }
         }
     }
@@ -124,9 +126,11 @@ extension JobsCountdownBtnCtrl {
         // 先停掉旧的
         stop(resetUI: false)
         current = initialValue()
+        let session = generation
+        isRunning = true
         if config.renderOnInit {
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self, self.isRunning, self.generation == session else { return }
                 self.applyRender(sec: self.current)
             }
         }
@@ -148,7 +152,7 @@ extension JobsCountdownBtnCtrl {
         let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
             // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
             onMainAsync(self) { vc in
-                self?.onTickMainActor()
+                self?.onTickMainActor(generation: session)
             }
         }
         timer = t
@@ -157,11 +161,12 @@ extension JobsCountdownBtnCtrl {
     }
 
     public func stop(resetUI: Bool = true) {
+        generation &+= 1
         isRunning = false
         timer?.stop()
         timer = nil
         guard let btn = button else { return }
-        btn.byEnabled(true)
+        btn.byEnabled(baseLegacyState.isEnabled)
         if resetUI {
             if #available(iOS 15.0, *) {
                 if let base = baseConfiguration_iOS15 as? UIButton.Configuration {
@@ -177,7 +182,7 @@ extension JobsCountdownBtnCtrl {
     private func initialValue() -> Int {
         switch config.mode {
         /// 处理 .down 分支
-        case .down(let from): return from
+        case .down(let from): return max(0, from)
         /// 处理 .up 分支
         case .up:             return 0
         }
@@ -185,7 +190,8 @@ extension JobsCountdownBtnCtrl {
 
     /// ✅ 所有 UI 更新统一在 MainActor
     @MainActor
-    private func onTickMainActor() {
+    private func onTickMainActor(generation session: UInt64) {
+        guard isRunning, generation == session else { return }
         guard let btn = button else {
             stop(resetUI: false)
             return
@@ -197,15 +203,17 @@ extension JobsCountdownBtnCtrl {
             let sec = max(0, current)
             applyRender(sec: sec)
             config.onTick?(btn, config, sec)
+            guard isRunning, generation == session else { return }
             if sec <= 0 {
                 finishMainActor()
             }
         /// 处理 .up 分支
         case .up(let to):
-            current += 1
-            let sec = min(to, current)
+            if current < Int.max { current += 1 }
+            let sec = min(max(0, to), current)
             applyRender(sec: sec)
             config.onTick?(btn, config, sec)
+            guard isRunning, generation == session else { return }
             if sec >= to {
                 finishMainActor()
             }

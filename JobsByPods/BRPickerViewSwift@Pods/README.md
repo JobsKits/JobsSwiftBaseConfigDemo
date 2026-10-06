@@ -1,3 +1,9 @@
+# `BRPickerViewSwift`
+
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
+[toc]
+
 # <span id="前言">BRPickerViewSwift</span>
 
 > 一个面向 iOS 12+ 的 **Picker** 弹层框架。
@@ -97,8 +103,9 @@ BRDatePicker()
 
 ```swift
 @available(iOS 13.0, *)
-func pick() async {
-    let result = await BRSystemDatePicker()
+@MainActor
+func pick() async throws {
+    let result = try await BRSystemDatePicker()
         .bySelectDate(Date())
         .byPresent(in: self.view)
         .awaitResult()
@@ -156,5 +163,26 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - [Core/BRPickerHaptics.swift](<./Core/BRPickerHaptics.swift>)
 
 依赖与编译入口：[BRPickerViewSwift.podspec](<./BRPickerViewSwift.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 十、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+同步 `byResult` 保留。异步入口 `awaitResult()` 为 `async throws`：确认返回选择值，用户取消、遮罩关闭、panel 从宿主移除，或曾入窗的 panel 在下一轮主线程检查时仍已离窗，均抛 `BRPickerAwaitError.cancelled`，任务取消抛 CancellationError；同时等待同一 picker 抛 alreadyAwaiting。`awaitResultOrNil()` 也是 async throws，仅用户或任务取消返回 nil，其它错误继续抛出。旧异步调用需在 await 前加入 try，并处理取消和错误。
+
+呈现失败或已关闭的 panel 不会留下无终态的等待；展示先于 await，或使用并发任务先等待再展示。首次尚未入窗不触发离窗取消，同一轮同步移窗也不会误取消；宿主页面结束时仍应显式取消它持有的 await Task。一次确认仍可同时通知既有 byResult。不要对同一实例同时创建多个 await 任务，也不要把取消视为成功选中。
+
+
+## 十一、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods BRPickerViewSwift --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

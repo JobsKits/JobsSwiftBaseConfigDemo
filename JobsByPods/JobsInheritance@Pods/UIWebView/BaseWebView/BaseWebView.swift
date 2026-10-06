@@ -33,7 +33,16 @@ public final class BaseWebView: UIView {
     public var openBlankInPlace: Bool = true
     public var disableSelectionAndCallout: Bool = false
     public var injectDarkStylePatch: Bool = false
-    public var isInspectableEnabled: Bool = true
+    public var isInspectableEnabled: Bool = true {
+        didSet { webView.byInspectable(isInspectableEnabled) }
+    }
+    /// 远程原生 Bridge 必须显式授权 origin，例如 https://example.com:443。
+    public var bridgeReplyTimeout: TimeInterval = 15
+    public var bridgeAllowedOrigins: Set<String> = []
+    public var allowsLocalFileBridge = true
+    public private(set) var lastConfigurationError: Error?
+    public var onConfigurationError: ((Error) -> Void)?
+    var bridgePageGeneration: UInt64 = 0
     /// URL 重写器：返回新的 URL 表示重写；返回 nil 表示不重写（默认 nil）
     public var urlRewriter: ((URL) -> URL?)?
     /// Safari 兜底规则：返回 true 时交给 Safari 打开（默认 nil）
@@ -107,35 +116,66 @@ public final class BaseWebView: UIView {
 
     // MARK: - UI
 
-    lazy var configuration: WKWebViewConfiguration = {
-        WKWebViewConfiguration()
-            // 内部默认：非持久数据仓库（每个 BaseWebView 实例都是全新 session，零共享 Cookie/缓存）
+    lazy var configuration: WKWebViewConfiguration = makeConfiguration()
+    public private(set) lazy var webView: WKWebView = makeWebView(configuration: configuration)
+
+    @MainActor
+    private func makeConfiguration() -> WKWebViewConfiguration {
+        let config = WKWebViewConfiguration()
             .byWebsiteDataStore(overrideWebsiteDataStore ?? .nonPersistent())
             .byAllowsInlineMediaPlayback(YES)
-            .byWebsiteDataStore(overrideWebsiteDataStore)
-            .byUserContentController(
-                WKUserContentController().byAddUserScript(Self.makeBridgeUserScript())
-            )
-    }()
-    /// 注意：必须用 configuration init，在 WKWebView 创建前注入 config。
-    lazy var webView: WKWebView = { [unowned self] in
+        webViewConfigurationHook?(config)
+        if let overrideWebsiteDataStore {
+            config.byWebsiteDataStore(overrideWebsiteDataStore)
+        }
+        config.userContentController.byAddUserScript(Self.makeBridgeUserScript())
+        return config
+    }
+
+    @MainActor
+    private func makeWebView(configuration: WKWebViewConfiguration) -> WKWebView {
         WKWebView(frame: .zero, configuration: configuration)
             .byNavigationDelegate(self)
             .byUIDelegate(self)
-            .byInspectable(true)
-            .byCustomUserAgent(nil)
-            .byConfiguration({ configuration in
-                configuration.byApplicationNameForUserAgent(nil)
-            })
-            .byScrollView({ scrollView in
-                scrollView.byAlwaysBounceVertical(true)
-                    .byRefreshControl(refresher)
-            })
+            .byInspectable(isInspectableEnabled)
+            .byScrollView { scrollView in
+                scrollView.byAlwaysBounceVertical(true).byRefreshControl(refresher)
+            }
             .byAddTo(self) { [unowned self] make in
                 make.top.equalTo(self.progressView.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
             }
-    }()
+    }
+
+    /// 初始化后的链式配置仅允许在首个文档加载之前重建 WebView。
+    @MainActor
+    func updateCreationConfiguration(_ update: () -> Void) {
+        guard webView.url == nil, !webView.isLoading else {
+            let error = NSError(domain: "BaseWebView", code: -11,
+                                userInfo: [NSLocalizedDescriptionKey: "Configure WKWebView before loading its first document"])
+            lastConfigurationError = error
+            onConfigurationError?(error)
+            return
+        }
+        update()
+        kvoEstimatedProgress?.invalidate()
+        kvoTitle?.invalidate()
+        webView.stopLoading()
+        let ucc = webView.configuration.userContentController
+        for name in [bridgeName, consoleName, mobileBridgeName] {
+            ucc.removeScriptMessageHandler(forName: name)
+        }
+        webView.byNavigationDelegate(nil).byUIDelegate(nil)
+        webView.removeFromSuperview()
+        configuration = makeConfiguration()
+        webView = makeWebView(configuration: configuration)
+        bridgePageGeneration &+= 1
+        lastConfigurationError = nil
+        registerMessageHandlers()
+        setupKVO()
+        applyRuntimeToggles()
+        injectMinimalMobileShimIfNeeded()
+    }
 
     lazy var refresher: UIRefreshControl = {
         UIRefreshControl.jobsMake { _ in }
@@ -334,36 +374,34 @@ public extension BaseWebView {
 // MARK: - JS eval（Raw + Decodable）
 public extension BaseWebView {
     @available(iOS 13.0, *)
+    @MainActor
     func evalAsyncRaw(_ js: String, timeout: TimeInterval = 8) async throws -> Any? {
-        try await withThrowingTaskGroup(of: Any?.self) { group in
-            group.addTask { [weak webView] in
-                guard let webView else {
-                    throw NSError(domain: "BaseWebView", code: -10, userInfo: [NSLocalizedDescriptionKey: "deallocated"])
-                }
-                if #available(iOS 15.0, *) {
-                    return try await webView.evaluateJavaScript(js)
-                } else {
-                    return try await withCheckedThrowingContinuation { cont in
-                        onMainAsync {
-                            webView.jobsEval(js) { res, err in
-                                if let err {
-                                    cont.resume(throwing: err)
-                                } else {
-                                    cont.resume(returning: res)
-                                }
-                            }
-                        }
+        guard timeout.isFinite, timeout > 0, timeout <= 86_400 else {
+            throw NSError(domain: "BaseWebView", code: -2,
+                          userInfo: [NSLocalizedDescriptionKey: "JS timeout must be finite and in (0, 86400]"])
+        }
+        let state = JobsWebEvaluationState()
+        let timeoutWork = DispatchWorkItem {
+            state.finish(.failure(NSError(domain: "BaseWebView", code: -1,
+                                         userInfo: [NSLocalizedDescriptionKey: "JS eval timeout"])))
+        }
+        defer { timeoutWork.cancel() }
+        return try await withTaskCancellationHandler(operation: {
+            try Task.checkCancellation()
+            return try await withCheckedThrowingContinuation { continuation in
+                state.install(continuation)
+                DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: timeoutWork)
+                webView.jobsEval(js) { value, error in
+                    if let error {
+                        state.finish(.failure(error))
+                    } else {
+                        state.finish(.success(value))
                     }
                 }
             }
-            group.addTask {
-                try await Task.sleep(nanoseconds: UInt64(timeout * 1e9))
-                throw NSError(domain: "BaseWebView", code: -1, userInfo: [NSLocalizedDescriptionKey: "JS eval timeout"])
-            }
-            let v = try await group.next()!!
-            group.cancelAll()
-            return v
-        }
+        }, onCancel: {
+            state.finish(.failure(CancellationError()))
+        })
     }
 
     @available(iOS 13.0, *)
@@ -423,5 +461,35 @@ public extension BaseWebView {
     func unregisterMobileAction(_ name: String) -> Self {
         mobileActionHandlers.removeValue(forKey: name)
         return self
+    }
+}
+
+private final class JobsWebEvaluationState: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Any?, Error>?
+    private var result: Result<Any?, Error>?
+
+    func install(_ continuation: CheckedContinuation<Any?, Error>) {
+        lock.lock()
+        if let result {
+            lock.unlock()
+            continuation.resume(with: result)
+        } else {
+            self.continuation = continuation
+            lock.unlock()
+        }
+    }
+
+    func finish(_ result: Result<Any?, Error>) {
+        lock.lock()
+        guard self.result == nil else {
+            lock.unlock()
+            return
+        }
+        self.result = result
+        let continuation = self.continuation
+        self.continuation = nil
+        lock.unlock()
+        continuation?.resume(with: result)
     }
 }

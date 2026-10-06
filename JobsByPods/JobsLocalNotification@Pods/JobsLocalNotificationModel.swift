@@ -11,16 +11,53 @@ import JobsByUIKit
 
 public final class JobsLocalNotificationModel: NSObject {
     /// identifier
-    @objc dynamic var identifier: String = "DemoNotification"
+    @objc public dynamic var identifier: String = "DemoNotification"
     /// title
-    @objc dynamic var title: String = "本地通知".tr
+    @objc public dynamic var title: String = "本地通知".tr
     /// body
-    @objc dynamic var body: String = "这是一个示例本地通知".tr
-    /// 时间间隔必须 > 0（<=0 会崩）
-    @objc dynamic var triggerWithTimeInterval: TimeInterval = 1
+    @objc public dynamic var body: String = "这是一个示例本地通知".tr
+    /// 有限正数；重复通知至少 60 秒，提交入口返回参数错误。
+    @objc public dynamic var triggerWithTimeInterval: TimeInterval = 1
     /// repeats
-    @objc dynamic var repeats: Bool = false
+    @objc public dynamic var repeats: Bool = false
     /// sound (tvOS unavailable)
     @available(tvOS, unavailable)
-    @objc dynamic var sound: UNNotificationSound = .default
+    @objc public dynamic var sound: UNNotificationSound = .default
+
+    @discardableResult
+    public func byIdentifier(_ value: String) -> Self {
+        identifier = value
+        return self
+    }
+
+    @discardableResult
+    public func byTitle(_ value: String) -> Self {
+        title = value
+        return self
+    }
+
+    @discardableResult
+    public func byBody(_ value: String) -> Self {
+        body = value
+        return self
+    }
+
+    @discardableResult
+    public func byTriggerWithTimeInterval(_ value: TimeInterval) -> Self {
+        triggerWithTimeInterval = value
+        return self
+    }
+
+    @discardableResult
+    public func byRepeats(_ value: Bool) -> Self {
+        repeats = value
+        return self
+    }
+
+    @available(tvOS, unavailable)
+    @discardableResult
+    public func bySound(_ value: UNNotificationSound) -> Self {
+        sound = value
+        return self
+    }
 }

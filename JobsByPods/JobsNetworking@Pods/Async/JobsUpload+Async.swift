@@ -14,24 +14,17 @@ public extension JobsUploadCapable {
         _ request: JobsUploadRequest,
         as type: T.Type
     ) async throws -> T {
-        var token: JobsRequestToken?
+        let box = JobsAsyncResultBox<T>()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                token = upload(request, as: type) { result in
-                    switch result {
-                    /// 处理 .success 分支
-                    case .success(let value):
-                        continuation.resume(returning: value)
-                    /// 处理 .failure 分支
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                    token = nil
+                guard box.install(continuation) else { return }
+                let token = upload(request, as: type) { result in
+                    box.complete(result)
                 }
+                box.install(token)
             }
         } onCancel: {
-            token?.cancel()
-            token = nil
+            box.cancel()
         }
     }
 }

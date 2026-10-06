@@ -30,6 +30,7 @@ public final class JobsWalletCardView: UIView {
     public private(set) var addCardTitle = "添加新的银行卡"
     private var selectCardBlock: ((JobsWalletCardModel, Int) -> Void)?
     private var addCardBlock: (() -> Void)?
+    public var onReload: (() -> Void)?
     private lazy var walletLayout: JobsWalletCardLayout = {
         JobsWalletCardLayout()
             .byPadding(20)
@@ -43,6 +44,11 @@ public final class JobsWalletCardView: UIView {
     private lazy var collectionView: UICollectionView = {
         UICollectionView(frame: .zero, collectionViewLayout: walletLayout)
             .byBackgroundColor(JobsCor.clear)
+            .byEmptyButtonProvider { [weak self] in
+                JobsEmptyAuto.Config.defaultProvider().onTap { [weak self] _ in
+                    self?.onReload?()
+                }
+            }
             .byShowsVerticalScrollIndicator(false)
             .byContentInset(UIEdgeInsets(top: 16, left: 0, bottom: 24, right: 0))
             .byRegisterCell(JobsWalletCardCell.self)

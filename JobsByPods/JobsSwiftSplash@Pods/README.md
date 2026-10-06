@@ -107,7 +107,7 @@ flowchart TD
 - 展示生命周期与媒体缓存生命周期分离，页面退出不应被理解成所有预加载任务都结束。
 - 远程视频使用缓存及预加载策略，下载失败保留待办并退避重试；不能重建成每次进入都直接强制在线播放。
 - 倒计时、手势动作和媒体结束可能同时到达，退出路径应保持一次性收尾与宿主状态恢复。
-- resumePendingVideoPreloads 当前是空入口，实际恢复逻辑在缓存对象初始化及内部处理，不能按方法名虚构额外恢复行为。
+- resumePendingVideoPreloads 会读取持久待办并恢复尚未活动的下载；初始化也会恢复待办，两条路径均去重。
 - GIF 帧时长、视频画面模式、跳过按钮布局与语言资源都有独立配置，不应只用一张静态图替代全部类型。
 
 ### 4.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -123,5 +123,28 @@ flowchart TD
 - [Core/JobsSplashPreferences.swift](<./Core/JobsSplashPreferences.swift>)
 
 依赖与编译入口：[JobsSwiftSplash.podspec](<./JobsSwiftSplash.podspec>)。其中显式依赖声明包括 `JobsInheritance`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsCountdownButton`、`JobsSwiftDSL`、`JobsSwiftOpen`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 五、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+远程图片可通过 `configuration.byFallbackImage(...)` 先显示随 App 打包的本地 Logo；请求失败继续保留该图。图片请求默认 15 秒，HTTP 非 2xx、空文件或不可解码文件返回失败，坏缓存会重新下载。GIF 默认最多取 120 帧、最长边 1024 像素、解码预算 64 MiB；过大动画抽帧，超出预算时停止增加帧。
+
+`JobsSplashMediaCache.shared.configureCache(maxDiskBytes:maximumRetryDelay:onPreloadFailure:)` 默认磁盘预算 512 MiB、最大退避间隔 300 秒；缓存先写同目录临时文件，再替换成品并清理较旧资源。单个下载文件超过预算会失败。远程视频必须可播放；HTML 错误页不会作为成功视频缓存。
+
+远程视频待办在失败后保留，通过 Wi-Fi 恢复和后续启动持续重试，直到下载成功。`resumePendingVideoPreloads()` 会读取并恢复持久待办，重复调用不会创建相同活动任务。`onPreloadFailure` 在主线程报告 URL、错误和下一次等待时间；它用于观测，不表示任务被放弃。开屏页面退出只取消页面图片请求和播放，绝不取消共享视频预加载。视频预加载成功用于后续展示，不把当前倒计时页面强行延长。
+
+
+## 六、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+隐私清单通过独立资源 bundle 交付。当前所需理由 API：`UserDefaults`（CA92.1）、`FileTimestamp`（C617.1）。理由对应本库实际用途；宿主仍需核对业务数据收集、App Group / 用户授权文件等实际使用场景，资源声明与最终 App 内 bundle 都应验收。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftSplash --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

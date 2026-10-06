@@ -159,6 +159,14 @@ final class RootListVC: BaseVC {
     /// ✅ 懒加载，数组配置写在这里
     private var allDemo2D: [DemoGroup] = []
     private var demo2D: [DemoGroup] = []
+    private var debugPanelDemoItems: [DemoItem] {
+        #if DEBUG
+        return [("🪲 JobsDebugPanel 调试面板与环境切换", JobsDebugPanelDemoVC.self)]
+        #else
+        return []
+        #endif
+    }
+
     private func makeDemo2D() -> [DemoGroup] {
         return [
             (title: "系统能力与硬件通信".tr, items: [
@@ -250,7 +258,7 @@ final class RootListVC: BaseVC {
                 ("😂 按钮完全覆盖在 Cell 上", JobsButtonCoverCellDemoListVC.self),
                 ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
             ]),
-            (title: "实用工具集".tr, items: [
+            (title: "实用工具集".tr, items: debugPanelDemoItems + [
                 ("📢 本地通知", LocalNotificationDemoVC.self),
                 ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
                 ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),

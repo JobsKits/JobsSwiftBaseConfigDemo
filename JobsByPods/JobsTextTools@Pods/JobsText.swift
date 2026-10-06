@@ -14,9 +14,9 @@ import UIKit
 /// 统一载体：既可承载纯文本，也可承载富文本（不依赖 UIKit）
 /// Swift 并发里，跨 actor / 跨任务传递的数据，如果是 Sendable，编译器才认为这么用是安全的。
 
-public struct JobsText: Sendable {
-    // ⚠️ 注意：NSAttributedString 非 Sendable
-    // 这里的 Storage 不再声明 Sendable，而是在下面用 @unchecked Sendable 明确“我保证只读与拷贝”。
+/// 富文本可包含调用方自定义的可变属性或附件，因此不承诺 Sendable。
+/// 跨 actor 传递纯文本使用 asString；富文本在所属 UI/调用执行域内消费。
+public struct JobsText {
     public enum Storage {
         case plain(String)
         case attributed(NSAttributedString)
@@ -29,7 +29,7 @@ public struct JobsText: Sendable {
     }
 
     public init(_ attributed: NSAttributedString) {
-        // 存储不可变副本，防止跨线程共享可变对象
+        // 固定字符与属性字典；自定义属性值及附件仍遵守调用方所有权合同。
         self.storage = .attributed(attributed.copy() as! NSAttributedString)
     }
 
@@ -42,15 +42,6 @@ public struct JobsText: Sendable {
         self.storage = .plain(value)
     }
 }
-// MARK: - 并发声明
-// Storage 持有 NSAttributedString（非 Sendable）。
-// 我们确保：
-// 1) 只在 init 时存入不可变 copy；
-// 2) 一切变换都返回新实例，不做原地修改；
-// 3) asAttributedString() 返回 copy。
-// 因此这里使用 @unchecked Sendable。
-extension JobsText.Storage: @unchecked Sendable {}
-
 // MARK: - 字面量协议 & 描述
 extension JobsText: ExpressibleByStringLiteral {}
 extension JobsText: CustomStringConvertible {
@@ -104,7 +95,7 @@ public extension JobsText {
             }
         /// 处理 .attributed 分支
         case .attributed(let a):
-            // 返回不可变副本，保持跨线程只读语义
+            // 返回不可变容器副本；属性对象不承诺深拷贝。
             return a.copy() as! NSAttributedString
         }
     }

@@ -17,7 +17,8 @@ public struct AESCBC {
 
     public static func decrypt(ciphertext: Data, key: Data, iv: Data) throws -> String {
         let data = try crypt(data: ciphertext, key: key, iv: iv, operation: CCOperation(kCCDecrypt))
-        return String(data: data, encoding: .utf8) ?? ""
+        guard let string = String(data: data, encoding: .utf8) else { throw CryptoError.invalidData }
+        return string
     }
 
     private static func crypt(data: Data, key: Data, iv: Data, operation: CCOperation) throws -> Data {
@@ -25,6 +26,9 @@ public struct AESCBC {
             throw CryptoError.invalidKey
         }
         guard iv.count == kCCBlockSizeAES128 else { throw CryptoError.invalidNonce }
+        if operation == CCOperation(kCCDecrypt) {
+            guard !data.isEmpty, data.count % kCCBlockSizeAES128 == 0 else { throw CryptoError.invalidData }
+        }
         var out = Data(count: data.count + kCCBlockSizeAES128)
         var outLength: size_t = 0
         let status: CCCryptorStatus = out.withUnsafeMutableBytes { outBytes in
@@ -45,7 +49,9 @@ public struct AESCBC {
                 }
             }
         }
-        guard status == kCCSuccess else { throw CryptoError.encryptionFailed }
+        guard status == kCCSuccess else {
+            throw operation == CCOperation(kCCDecrypt) ? CryptoError.decryptionFailed : CryptoError.encryptionFailed
+        }
         out.removeSubrange(outLength..<out.count)
         return out
     }

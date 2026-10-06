@@ -22,11 +22,13 @@ public enum JobsError: Error, Sendable {
 
 public extension JobsError {
     var isCancelled: Bool {
-        if case .cancelled = self { return true };return false
+        if case .cancelled = self { return true }
+        return false
     }
 
     var isBusiness: Bool {
-        if case .business = self { return true };return false
+        if case .business = self { return true }
+        return false
     }
 
     var retryCategory: JobsRetryCategory {
@@ -84,6 +86,7 @@ extension JobsError: LocalizedError {
     }
 
     private static func describe(_ data: Data?) -> String {
-        guard let data, !data.isEmpty else { return "<empty>" };return String(data: data, encoding: .utf8) ?? "<binary \(data.count) bytes>"
+        guard let data, !data.isEmpty else { return "<empty>" }
+        return "<response \(data.count) bytes>"
     }
 }

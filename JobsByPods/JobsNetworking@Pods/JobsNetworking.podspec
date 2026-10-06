@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |sp|
     sp.ios.deployment_target = '12.0'
+    sp.resource_bundles = { 'JobsNetworkingPrivacy' => ['Resource/PrivacyInfo.xcprivacy'] }
     sp.dependency 'Alamofire', '~> 5.9'
     sp.dependency 'JobsSwiftDSL'
     sp.source_files = [
@@ -72,4 +73,24 @@ Pod::Spec.new do |s|
     sp.dependency 'PromiseKit', '~> 8.2'
     sp.source_files = 'Adapters/PromiseKit/**/*.{swift,h,m,mm}'
   end
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
+  # Explicit subspec consumers do not inherit the root's file exclusions.
+  s.recursive_subspecs.each do |subspec|
+    subspec.exclude_files = Array(subspec.attributes_hash['exclude_files']) + Array(s.attributes_hash['exclude_files'])
+  end
+
 end

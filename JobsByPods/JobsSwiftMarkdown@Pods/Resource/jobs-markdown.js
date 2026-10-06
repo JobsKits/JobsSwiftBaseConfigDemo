@@ -5,6 +5,8 @@
   const baseElement = document.getElementById("jobs-markdown-base");
   const customStyleElement = document.getElementById("jobs-markdown-custom-style");
   let lastPayload = null;
+  let renderQueue = Promise.resolve();
+  let newestRenderID = null;
   const languageAliases = {
     "c++": "cpp",
     "c#": "csharp",
@@ -20,7 +22,7 @@
   };
 
   function post(type, payload = {}) {
-    const message = { type, ...payload };
+    const message = { type, renderID: lastPayload?.renderID, ...payload };
     const handler = window.webkit?.messageHandlers?.jobsMarkdown;
     if (handler) {
       handler.postMessage(message);
@@ -163,7 +165,7 @@
         "referrerpolicy",
         "target"
       ],
-      ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel|file):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i
+      ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel|file):|data:image\/(?:png|jpe?g|gif|webp|bmp);|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i
     });
   }
 
@@ -294,14 +296,33 @@
     });
   }
 
-  function installResourceDiagnostics(allowsRemoteContent) {
+  function prepareHTML(html, payload) {
+    const template = document.createElement("template");
+    template.innerHTML = sanitizedHTML(html, payload.sanitizesHTML);
+    if (!payload.allowsRemoteContent) {
+      template.content.querySelectorAll("*").forEach((element) => {
+        if (element.tagName === "IFRAME") element.removeAttribute("srcdoc");
+        // srcset 可含带逗号的 data URL；保留本地候选，由 native/CSP 在请求前拦远程候选。
+        for (const attribute of ["src", "poster", "data", "xlink:href"]) {
+          const raw = element.getAttribute(attribute);
+          if (!raw) continue;
+          const remote = (() => {
+            try { return !["file:", "data:", "blob:"].includes(new URL(raw, baseElement.href || location.href).protocol); }
+            catch (_) { return true; }
+          })();
+          if (remote) {
+            element.removeAttribute(attribute);
+            element.classList.add("jobs-remote-blocked");
+            element.setAttribute("aria-label", "远程资源已禁用");
+          }
+        }
+      });
+    }
+    return template.content;
+  }
+
+  function installResourceDiagnostics() {
     contentElement.querySelectorAll("img,video,audio,source,iframe").forEach((element) => {
-      const source = element.getAttribute("src") || "";
-      if (!allowsRemoteContent && /^https?:/i.test(source)) {
-        element.removeAttribute("src");
-        element.classList.add("jobs-remote-blocked");
-        element.setAttribute("aria-label", "远程资源已禁用");
-      }
       element.addEventListener("error", () => {
         element.classList.add("jobs-resource-error");
         if (element instanceof HTMLImageElement && element.alt) {
@@ -309,6 +330,15 @@
         }
       }, { once: true });
     });
+  }
+
+  function installOfflineCSP() {
+    if (document.getElementById("jobs-offline-csp")) return;
+    const policy = document.createElement("meta");
+    policy.id = "jobs-offline-csp";
+    policy.httpEquiv = "Content-Security-Policy";
+    policy.content = "default-src 'none'; script-src file: 'unsafe-eval'; style-src file: 'unsafe-inline'; img-src file: data: blob:; media-src file: data: blob:; font-src file: data:; frame-src 'none'; connect-src 'none'; object-src 'none'; base-uri file:; form-action 'none'";
+    document.head.appendChild(policy);
   }
 
   function renderMath(enabled) {
@@ -374,33 +404,40 @@
         "--jobs-font-scale",
         String(Math.min(Math.max(Number(payload.fontScale) || 1, 0.75), 2))
       );
+      if (!payload.allowsRemoteContent) installOfflineCSP();
       customStyleElement.textContent = payload.customCSS || "";
       applyAppearance(payload.appearance);
 
       const markdownIt = createMarkdownIt(payload);
-      contentElement.innerHTML = sanitizedHTML(
-        markdownIt.render(source),
-        payload.sanitizesHTML
-      );
+      contentElement.replaceChildren(prepareHTML(markdownIt.render(source), payload));
       installHeadingAnchors();
       installTableOfContents(payload.showsTableOfContents);
       installTaskLists();
       installCallouts();
       installCodeBlocks(payload.showsCodeCopyButton);
-      installResourceDiagnostics(payload.allowsRemoteContent);
+      installResourceDiagnostics();
       renderMath(payload.rendersMath);
       installLinkHandling();
       await renderMermaid(payload.rendersMermaid, payload.appearance);
-      post("rendered", { title: document.title });
+      post("rendered", { title: document.title, renderID: payload.renderID });
     } catch (error) {
       post("error", {
+        renderID: payload.renderID,
         message: error?.stack || error?.message || String(error)
       });
     }
   }
 
+  function enqueueRender(payload) {
+    newestRenderID = payload.renderID;
+    renderQueue = renderQueue.catch(() => {}).then(() => {
+      if (payload.renderID !== newestRenderID) return;
+      return render(payload);
+    });
+  }
+
   function renderJSON(json) {
-    render(JSON.parse(json));
+    enqueueRender(JSON.parse(json));
   }
 
   function decodeBase64UTF8(base64) {
@@ -421,13 +458,14 @@
       applyAppearance(appearance);
       return;
     }
-    render({ ...lastPayload, appearance });
+    enqueueRender({ ...lastPayload, appearance });
   }
 
   function scrollToAnchor(anchor, animated = true) {
     const value = String(anchor || "").replace(/^#/, "");
-    const target = document.getElementById(value)
-      || document.getElementById(decodeURIComponent(value));
+    let decoded = value;
+    try { decoded = decodeURIComponent(value); } catch (_) {}
+    const target = document.getElementById(value) || document.getElementById(decoded);
     target?.scrollIntoView({ behavior: animated ? "smooth" : "auto", block: "start" });
   }
 

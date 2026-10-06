@@ -13,9 +13,11 @@ import JobsSwiftDSL
 public final class JobsAudioRecordingStore {
     public static let shared = JobsAudioRecordingStore()
     public let directoryURL: URL
+    private let fileManager: FileManager
 
     public init(fileManager: FileManager = .default) {
-        let root = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        self.fileManager = fileManager
+        let root = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first ?? fileManager.temporaryDirectory
         directoryURL = root.appendingPathComponent("JobsAudioRecordings", isDirectory: true)
         try? fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
     }
@@ -23,14 +25,24 @@ public final class JobsAudioRecordingStore {
     public func makeURL(mode: JobsAudioRecordingMode) -> URL {
         let formatter = DateFormatter.jobsMake { _ in }
         formatter.byDateFormat("yyyyMMdd_HHmmss_SSS")
-        return directoryURL.appendingPathComponent("\(mode.rawValue)_\(formatter.string(from: Date())).m4a")
+        return directoryURL.appendingPathComponent("\(mode.rawValue)_\(formatter.string(from: Date()))_\(UUID().uuidString).m4a")
     }
 
+    public func preparedURL(mode: JobsAudioRecordingMode) throws -> URL {
+        try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        return makeURL(mode: mode)
+    }
+
+    /// 兼容空列表回退；需要区分空目录与读取失败时使用 recordingsThrowing。
     public func recordings() -> [JobsAudioRecording] {
+        (try? recordingsThrowing()) ?? []
+    }
+
+    public func recordingsThrowing() throws -> [JobsAudioRecording] {
         let keys: Set<URLResourceKey> = [.creationDateKey, .fileSizeKey]
-        let urls = (try? FileManager.default.contentsOfDirectory(at: directoryURL,
-                                                                 includingPropertiesForKeys: Array(keys),
-                                                                 options: [.skipsHiddenFiles])) ?? []
+        let urls = try fileManager.contentsOfDirectory(at: directoryURL,
+                                                      includingPropertiesForKeys: Array(keys),
+                                                      options: [.skipsHiddenFiles])
         return urls.filter { $0.pathExtension.lowercased() == "m4a" }.compactMap { url in
             let values = try? url.resourceValues(forKeys: keys)
             let player = try? AVAudioPlayer(contentsOf: url)
@@ -44,6 +56,10 @@ public final class JobsAudioRecordingStore {
     }
 
     public func delete(_ recording: JobsAudioRecording) throws {
-        try FileManager.default.removeItem(at: recording.url)
+        guard recording.url.standardizedFileURL.deletingLastPathComponent() == directoryURL.standardizedFileURL else {
+            throw NSError(domain: "JobsAudioRecorder", code: 9,
+                          userInfo: [NSLocalizedDescriptionKey: "只允许删除本录音目录中的文件"])
+        }
+        try fileManager.removeItem(at: recording.url)
     }
 }

@@ -34,7 +34,7 @@ public protocol JobsSwiftTimerProtocol: AnyObject {
     /// 恢复计时器
     @discardableResult
     func resume() -> Self
-    /// 停止计时器（销毁@有回调）
+    /// 停止计时器并异步提交一次 tick，随后执行 finish；已停止时不重复投递。
     @discardableResult
     func fireOnce() -> Self
     /// 停止计时器（销毁@无回调）

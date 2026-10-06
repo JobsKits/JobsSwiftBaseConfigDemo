@@ -1,5 +1,7 @@
 # <span id="前言">多语言国际化</span>
 
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
 [toc]
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
@@ -311,5 +313,29 @@ TRBind.bind(self, translated: "KEY".tr) { vc, text in
 - [Foundation&UIKit/Bundle+多语言国际化.swift](<./Foundation&UIKit/Bundle+多语言国际化.swift>)
 
 依赖与编译入口：[Jobsl10n.podspec](<./Jobsl10n.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 四、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 语言状态、provider 和绑定表的内部读写受锁保护，语言变化通知与控件 apply 在主线程执行。注入 provider 的求值及旧 provider / 绑定捕获对象的释放在锁外，支持读取状态与析构重入；provider 自身捕获的可变状态由调用方隔离。
+- `followSystemLanguage()` 同时恢复系统模式并清除 Bundle 覆盖；完整语言码找不到资源时再查基础语言码，最终回退原资源 Bundle。把 `Bundle.main` 设为覆盖 Bundle 会自动清除覆盖，避免自调用递归。
+- 每个目标以 `slot` 区分独立属性，重复绑定同一 slot 替换旧 key；注册表弱持有目标并清理失效项。UIKit 入口已为文本、placeholder、按钮 state 和分段索引分别设置 slot。
+- 推荐 `TRBind.bind(target, key: "KEY", table: nil, slot: "title") { target, text in ... }` 显式绑定。旧 `translated:` API 和默认 `"default"` slot 继续兼容，线程 marker 只接受匹配的翻译值；普通字符串、nil 与富文本替换会解除对应旧 slot。
+- 同一对象自定义多个属性绑定时必须传不同 slot；直接给 UIKit 属性赋值不会自动解除注册，应使用本库设置入口或 `TRAutoRefresh.unbind(target, slot:)`。
+- apply 闭包应使用传入 target，不再强捕获目标本身。后台 bind 的初次 UI 写入异步投递主队列；依赖完成顺序的界面配置在主线程串行调用。
+
+
+## 五、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+隐私清单通过独立资源 bundle 交付。当前所需理由 API：`UserDefaults`（CA92.1）。理由对应本库实际用途；宿主仍需核对业务数据收集、App Group / 用户授权文件等实际使用场景，资源声明与最终 App 内 bundle 都应验收。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods Jobsl10n --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

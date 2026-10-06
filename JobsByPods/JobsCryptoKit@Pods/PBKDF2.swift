@@ -16,20 +16,26 @@ public struct PBKDF2 {
         keyByteCount: Int = 32,
         rounds: Int = 100_000
     ) throws -> Data {
+        guard (1...1_024).contains(keyByteCount), rounds > 0, rounds <= Int(UInt32.max), !salt.isEmpty else {
+            throw CryptoError.invalidData
+        }
         var derived = Data(count: keyByteCount)
-        let passwordData = password.data(using: .utf8)!
+        let passwordData = Data(password.utf8)
         let status = derived.withUnsafeMutableBytes { derivedBytes in
             salt.withUnsafeBytes { saltBytes in
-                CCKeyDerivationPBKDF(
+                passwordData.withUnsafeBytes { passwordBytes in
+                    CCKeyDerivationPBKDF(
                     CCPBKDFAlgorithm(kCCPBKDF2),
-                    password, passwordData.count,
+                    passwordBytes.bindMemory(to: Int8.self).baseAddress, passwordData.count,
                     saltBytes.bindMemory(to: UInt8.self).baseAddress!, salt.count,
                     CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256),
                     UInt32(rounds),
                     derivedBytes.bindMemory(to: UInt8.self).baseAddress!, keyByteCount
-                )
+                    )
+                }
             }
         }
-        guard status == kCCSuccess else { throw CryptoError.encryptionFailed };return derived
+        guard status == kCCSuccess else { throw CryptoError.keyGenerationFailed }
+        return derived
     }
 }

@@ -84,26 +84,25 @@ public extension UIApplication {
         ignoreAlert: Bool
     ) -> UIViewController? {
         guard let vc else { return nil }
+        if let presented = vc.presentedViewController,
+           !presented.isBeingDismissed,
+           !(ignoreAlert && presented is UIAlertController) {
+            return _jobsVisibleVC(from: presented, ignoreAlert: ignoreAlert)
+        }
+        let child: UIViewController?
         if let nav = vc as? UINavigationController {
-            return _jobsVisibleVC(from: nav.visibleViewController ?? nav.topViewController ?? nav,
-                                  ignoreAlert: ignoreAlert)
+            child = nav.visibleViewController ?? nav.topViewController
+        } else if let tab = vc as? UITabBarController {
+            child = tab.selectedViewController
+        } else if let split = vc as? UISplitViewController {
+            child = split.viewControllers.last
+        } else if let page = vc as? UIPageViewController {
+            child = page.viewControllers?.first
+        } else {
+            child = nil
         }
-        if let tab = vc as? UITabBarController {
-            return _jobsVisibleVC(from: tab.selectedViewController ?? tab,
-                                  ignoreAlert: ignoreAlert)
-        }
-        if let split = vc as? UISplitViewController {
-            return _jobsVisibleVC(from: split.viewControllers.last ?? split,
-                                  ignoreAlert: ignoreAlert)
-        }
-        if let page = vc as? UIPageViewController, let cur = page.viewControllers?.first {
-            return _jobsVisibleVC(from: cur, ignoreAlert: ignoreAlert)
-        }
-        if let presented = vc.presentedViewController {
-            if !(ignoreAlert && presented is UIAlertController) {
-                return _jobsVisibleVC(from: presented, ignoreAlert: ignoreAlert)
-            }
-        };return vc
+        guard let child, child !== vc else { return vc }
+        return _jobsVisibleVC(from: child, ignoreAlert: ignoreAlert)
     }
     /// ③ 全局安全区 Insets（不依赖当前 VC）
     static var jobsSafeAreaInsets: UIEdgeInsets {

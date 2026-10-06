@@ -16,6 +16,7 @@ digraph PodspecDependencies {
   "JobsByWebKit";
   "JobsCountdownButton";
   "JobsCryptoKit";
+  "JobsDebugPanel";
   "JobsEmptyView";
   "JobsFuseAnimation";
   "JobsGestureUnlock";
@@ -79,6 +80,7 @@ digraph PodspecDependencies {
   "JobsAppDoor" -> "JobsSwiftCountryCodeCtrl";
   "JobsAppDoor" -> "JobsSwiftDSL";
   "JobsAppDoor" -> "JobsSwiftGraphicCaptcha";
+  "JobsAudioRecorder" -> "JobsByUIKit";
   "JobsAudioRecorder" -> "JobsFuseAnimation";
   "JobsAudioRecorder" -> "JobsSwiftBaseDefines";
   "JobsAudioRecorder" -> "JobsSwiftDSL";
@@ -99,6 +101,7 @@ digraph PodspecDependencies {
   "JobsByQuartzCore" -> "JobsSwiftBlock";
   "JobsByQuartzCore" -> "JobsSwiftDSL";
   "JobsByUIKit" -> "JobsByQuartzCore";
+  "JobsByUIKit" -> "JobsGetWindow";
   "JobsByUIKit" -> "JobsImageTools";
   "JobsByUIKit" -> "JobsNavBar";
   "JobsByUIKit" -> "JobsScale";
@@ -115,6 +118,10 @@ digraph PodspecDependencies {
   "JobsCountdownButton" -> "JobsSwiftBaseDefines";
   "JobsCountdownButton" -> "JobsSwiftDSL";
   "JobsCountdownButton" -> "JobsSwiftTimer";
+  "JobsDebugPanel" -> "JobsByUIKit";
+  "JobsDebugPanel" -> "JobsInheritance";
+  "JobsDebugPanel" -> "JobsSwiftBaseDefines";
+  "JobsDebugPanel" -> "JobsSwiftDSL";
   "JobsEmptyView" -> "JobsByUIKit";
   "JobsEmptyView" -> "JobsSwiftBaseDefines";
   "JobsEmptyView" -> "JobsSwiftBlock";
@@ -158,7 +165,6 @@ digraph PodspecDependencies {
   "JobsNavBar" -> "JobsSwiftBlock";
   "JobsNavBar" -> "JobsSwiftDSL";
   "JobsNetworking" -> "JobsSwiftDSL";
-  "JobsOCDSL" -> "Texture";
   "JobsProgressBar" -> "JobsByUIKit";
   "JobsProgressBar" -> "JobsSwiftBaseDefines";
   "JobsProgressBar" -> "JobsSwiftDSL";
@@ -178,6 +184,7 @@ digraph PodspecDependencies {
   "JobsSwiftBaseDefines" -> "JobsSwiftBlock";
   "JobsSwiftBaseDefines" -> "JobsTextTools";
   "JobsSwiftBaseTools" -> "JobsByUIKit";
+  "JobsSwiftBaseTools" -> "JobsGetWindow";
   "JobsSwiftBaseTools" -> "JobsSwiftBaseDefines";
   "JobsSwiftBaseTools" -> "JobsSwiftBlock";
   "JobsSwiftBaseTools" -> "JobsSwiftDSL";
@@ -190,6 +197,7 @@ digraph PodspecDependencies {
   "JobsSwiftCountryCodeCtrl" -> "JobsSwiftBaseDefines";
   "JobsSwiftCountryCodeCtrl" -> "JobsSwiftDSL";
   "JobsSwiftCountryCodeCtrl" -> "Jobsl10n";
+  "JobsSwiftDSL" -> "JobsGetWindow";
   "JobsSwiftDSL" -> "JobsSwiftBaseDefines";
   "JobsSwiftDSL" -> "JobsSwiftBlock";
   "JobsSwiftDSL" -> "JobsTextTools";
@@ -204,6 +212,7 @@ digraph PodspecDependencies {
   "JobsSwiftFoundation" -> "JobsSwiftDSL";
   "JobsSwiftGraphicCaptcha" -> "JobsSwiftBaseDefines";
   "JobsSwiftGraphicCaptcha" -> "JobsSwiftDSL";
+  "JobsSwiftLinkageMenuView" -> "JobsByUIKit";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftBaseDefines";
   "JobsSwiftLinkageMenuView" -> "JobsSwiftDSL";
   "JobsSwiftMarkdown" -> "JobsSwiftBaseDefines";

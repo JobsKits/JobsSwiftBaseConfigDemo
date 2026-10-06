@@ -28,6 +28,7 @@ Pod::Spec.new do |s|
                       'CoreMotion',
                       'MediaPlayer'
 
+  s.dependency 'JobsGetWindow'
   s.dependency 'JobsSwiftBlock'
   s.dependency 'JobsSwiftBaseDefines'
   s.dependency 'JobsTextTools'
@@ -38,4 +39,19 @@ Pod::Spec.new do |s|
   s.dependency 'GKNavigationBarSwift'
   s.dependency 'YTKNetwork'
   s.dependency 'AFNetworking'
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
 end

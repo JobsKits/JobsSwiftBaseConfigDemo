@@ -1,5 +1,7 @@
 # <span id="前言">JobsSwiftMarkdown</span>
 
+![Jobs出品，必属精品](https://picsum.photos/1500/400)
+
 [toc]
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
@@ -100,5 +102,29 @@ flowchart LR
 - [Core/JobsMarkdownDocument.swift](<./Core/JobsMarkdownDocument.swift>)
 
 依赖与编译入口：[JobsSwiftMarkdown.podspec](<./JobsSwiftMarkdown.podspec>)。其中显式依赖声明包括 `JobsSwiftDSL`、`JobsSwiftBaseDefines`、`SnapKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 文档读取在后台执行，以 renderID 识别最新请求；旧文件读取、导航、JavaScript 完成和桥接消息不会覆盖新文档。网页加载失败和内容进程终止都有 delegate 错误出口。
+- `allowsRemoteContent = false` 同时使用 WebKit 内容规则、离线 CSP 与插入前清理，覆盖 HTTP(S) 图片、协议相对 URL、srcset、iframe、CSS import / url 和自定义 CSS。允许网络时仍保留脚本、连接、对象与表单的默认 CSP 限制。
+- 第三方解析器、高亮、Mermaid、KaTeX 和净化内核均从资源包本地加载，远程脚本不获得执行权限。原始 HTML 与自定义 CSS 仍需按业务信任范围选择配置。
+- 只接受主框架 file URL 页面的桥接消息，除初始化信号外都携带当前 renderID。锚点通过 JSON 字符串字面量传入 JavaScript，引号、反斜杠、换行和非法百分号不会破坏脚本。
+- `fontScale` 使用有限的 `0.75...2` 范围，非法值回退到 1；同样会在实际 render 时复核被修改的配置。
+- `load(document)` 的文件读取与展示为异步过程，使用 delegate 接收最终渲染与错误，不能在调用返回时假定内容已显示。
+
+
+## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftMarkdown --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

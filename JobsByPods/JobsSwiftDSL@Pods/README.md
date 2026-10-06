@@ -16,6 +16,7 @@
 
 - 从 `JobsByPods` 内各个本地管理 Pod 抽出的系统 SDK / 第三方 SDK 二次封装。
 - Jobs 自维护的 Swift 主工程和本地 Pods 显式 `import JobsSwiftDSL` 后使用点语法，不在调用方回退到已有 DSL 覆盖的系统 API。
+- `UIView.byAccessibilityLabel(_:) -> Self` 在真实 UIView 层配置无障碍文案，按钮等子类保持原返回类型继续链；`JobsDebugPanel` 的圆按钮使用它说明点按与长按行为。
 - `JobsCor` 语义背景色、文字色经 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等 DSL 自动登记到 `JobsThemeCenter`；也可使用 `byThemeBackground(...)`、`byThemeTextColor(...)` 和 `byThemeImage(...)` 显式绑定主题 Key。
 - `UIButton.byClearConfigurationBackground()` 会持续清除普通、选中、高亮等状态下的配置背景，并在旧系统同步移除背景图，适合只保留前景图标 / 文字的导航按钮。
 - 发现封装缺口时先在本 Pod 的正确类型层补齐，再同步业务代码与 Xcode CodeSnippets。
@@ -161,6 +162,31 @@ return cell
 - [MetalKit/MTKView.swift](<./MetalKit/MTKView.swift>)
 - [PDFKit/PDFThumbnailView.swift](<./PDFKit/PDFThumbnailView.swift>)
 
-依赖与编译入口：[JobsSwiftDSL.podspec](<./JobsSwiftDSL.podspec>)。其中显式依赖声明包括 `JobsSwiftBlock`、`JobsSwiftBaseDefines`、`JobsTextTools`、`RxSwift`、`RxCocoa`、`SnapKit`、`BMPlayer`、`GKNavigationBarSwift`、`YTKNetwork`、`AFNetworking`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+依赖与编译入口：[JobsSwiftDSL.podspec](<./JobsSwiftDSL.podspec>)。其中显式依赖声明包括 `JobsGetWindow`、`JobsSwiftBlock`、`JobsSwiftBaseDefines`、`JobsTextTools`、`RxSwift`、`RxCocoa`、`SnapKit`、`BMPlayer`、`GKNavigationBarSwift`、`YTKNetwork`、`AFNetworking`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
+
+## 六、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+`UIColor(hex:alpha:)` 仅接受去除兼容前缀后的 6 位 ASCII 十六进制字符；尾部垃圾、长度不符或非 HEX 返回 nil，alpha 原样传入颜色构造。`jobsRGBComponents(resolvingWith:)` 通过 getRed 转换灰度/RGB，可选 Trait 用于动态色解析；RGB 分量延续旧 `getRGB` 的 255 标度（系统归一化分量乘以 255），保留浮点精度、不取整，例如系统灰度 0.4 返回 `(102, 102, 102)`。pattern 等不可转换颜色返回 nil。旧 `getRGB` 保持同一标度与元组返回兼容，不可转换时返回零，需要区分失败时改用 optional 入口。
+
+UIKit DSL 服从主线程及具体 API 的生命周期限制；链式调用保持 Self，创建配置与运行时动作仍是不同契约。国际化属性绑定由 Jobsl10n/UIKit 的独立 slot 管理，多属性/多按钮 state 不共用一个默认槽位。
+
+`UIApplication.jobsKeyWindow`、`jobsTopMostVC`、安全区和刘海查询统一由 [JobsGetWindow](<../JobsGetWindow@Pods/README.md>) 声明和实现，本 Pod 直接依赖并通过 `@_exported import JobsGetWindow` 再导出。重新编译的源码客户端继续只写 `import JobsSwiftDSL` 即可沿用原查询方式，同时导入两个 Pod 也只有一套查询声明；`jobsSupportsAlternateIcons`、`jobsAlternateIconName` 与 `byAlternateIconName` 仍由本 Pod 承接。
+
+查询符号的定义模块归属发生变化，再导出提供源码兼容，不保证预编译客户端的 ABI / 链接兼容。升级时应重新解析依赖，并重新编译调用这些查询的 App、库和测试；单独替换已编译的 SwiftDSL 二进制不能作为兼容方案。手动集成源码时也须提供 `JobsGetWindow` 模块。
+
+
+## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
+
+本次没有为未使用所需理由 API 的模块机械添加空隐私清单；业务用途变化后再按实际调用核对。
+
+从宿主根目录执行当前 Pod 单元验证：
+
+```shell
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --pods JobsSwiftDSL --skip-host
+```
+
+全量命令为 `ruby .github/tests/JobsPodsUpgrade/validate_builds.rb`：逐个自建 Pod 编译成功后才构建宿主 workspace。当前集成验证使用最低部署目标 iOS 15.6 / arm64 Simulator / Swift 5 语言模式；独立 Pod 更低部署目标、动态集成和真机行为需相应消费配置验证。编译日志、JSON 结果及行为回归边界见宿主根目录《JobsByPods升级与编译验收报告.md》，不能用 Parse 或 fixture 的成功替代真实模块 / App 编译。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

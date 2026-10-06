@@ -44,6 +44,11 @@ struct NetworkBytes {
         self.upload = upload
     }
 }
+private func saturatedByteSum(_ lhs: UInt64, _ rhs: UInt64) -> UInt64 {
+    let (value, overflow) = lhs.addingReportingOverflow(rhs)
+    return overflow ? UInt64.max : value
+}
+
 /// 按来源拆分的字节统计
 struct NetworkSplitBytes {
     let wifi: NetworkBytes
@@ -52,8 +57,8 @@ struct NetworkSplitBytes {
     /// 所有来源合计
     var total: NetworkBytes {
         NetworkBytes(
-            download: wifi.download &+ cellular.download &+ other.download,
-            upload:   wifi.upload   &+ cellular.upload   &+ other.upload
+            download: saturatedByteSum(saturatedByteSum(wifi.download, cellular.download), other.download),
+            upload: saturatedByteSum(saturatedByteSum(wifi.upload, cellular.upload), other.upload)
         )
     }
 }
@@ -75,12 +80,15 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
         )
     }
 
+    defer {
+        freeifaddrs(addrs)
+    }
     var ptr: UnsafeMutablePointer<ifaddrs>? = firstAddr
 
     while let ifa = ptr?.pointee {
         let flags = Int32(ifa.ifa_flags)
         // 只算 UP 的接口
-        guard (flags & IFF_UP) == IFF_UP else {
+        guard (flags & IFF_UP) == IFF_UP, ifa.ifa_addr?.pointee.sa_family == UInt8(AF_LINK) else {
             ptr = ifa.ifa_next
             continue
         }
@@ -90,18 +98,18 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
             let outBytes = UInt64(data.ifi_obytes)
             // en0 / en1... 一般是 Wi-Fi（也可能有有线），pdp_ip0... 一般是蜂窝
             if name.hasPrefix("en") {
-                wifiIn  &+= inBytes
-                wifiOut &+= outBytes
+                wifiIn = saturatedByteSum(wifiIn, inBytes)
+                wifiOut = saturatedByteSum(wifiOut, outBytes)
             } else if name.hasPrefix("pdp_ip") {
-                cellIn  &+= inBytes
-                cellOut &+= outBytes
+                cellIn = saturatedByteSum(cellIn, inBytes)
+                cellOut = saturatedByteSum(cellOut, outBytes)
             } else {
-                otherIn  &+= inBytes
-                otherOut &+= outBytes
+                otherIn = saturatedByteSum(otherIn, inBytes)
+                otherOut = saturatedByteSum(otherOut, outBytes)
             }
         }
         ptr = ifa.ifa_next
-    };freeifaddrs(addrs)
+    }
     return NetworkSplitBytes(
         wifi: NetworkBytes(download: wifiIn, upload: wifiOut),
         cellular: NetworkBytes(download: cellIn, upload: cellOut),
@@ -118,23 +126,49 @@ func currentNetworkBytes() -> NetworkBytes {
 /// - 内部用 NWPathMonitor + getifaddrs 统计总字节差值
 public final class JobsNetworkTrafficMonitor {
     public static let shared = JobsNetworkTrafficMonitor()
-    /// 回调：当前来源 + 上/下行速度（Bytes/s）
-    /// - source: 当前网络来源（Wi-Fi / 蜂窝 / 其他 / 无）
-    /// - up: 上行速度（Bytes/s）
-    /// - down: 下行速度（Bytes/s）
-    var onUpdate: ((JobsNetworkSource, Double, Double) -> Void)?
-
+    private let lock = NSLock()
+    private var updateHandler: ((JobsNetworkSource, Double, Double) -> Void)?
+    var onUpdate: ((JobsNetworkSource, Double, Double) -> Void)? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return updateHandler
+        }
+        set {
+            lock.lock()
+            let previous = updateHandler
+            updateHandler = newValue
+            lock.unlock()
+            withExtendedLifetime(previous) {}
+        }
+    }
     private let pathMonitor = NWPathMonitor()
     private let pathQueue = DispatchQueue(label: "jobs.network.path")
+    private let sampleQueue = DispatchQueue(label: "jobs.network.traffic.sample")
     private var timer: DispatchSourceTimer?
-
     private var lastBytes: NetworkBytes?
-    public var currentSource: JobsNetworkSource = .none
+    private var lastSampleUptime: UInt64?
+    private var generation: UInt64 = 0
+    private var source: JobsNetworkSource = .none
+
+    public var currentSource: JobsNetworkSource {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return source
+        }
+        set {
+            lock.lock()
+            source = newValue
+            lock.unlock()
+        }
+    }
 
     private init() {
-        // 监听当前网络类型
         pathMonitor.pathUpdateHandler = { [weak self] path in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             let source: JobsNetworkSource
             if path.status != .satisfied {
                 source = .none
@@ -145,43 +179,71 @@ public final class JobsNetworkTrafficMonitor {
             } else {
                 source = .other
             }
-            DispatchQueue.main.async {
-                self.currentSource = source
-            }
+            self.currentSource = source
         }
         pathMonitor.start(queue: pathQueue)
     }
-    /// 开始定时统计网速，默认 1s 一次
-    func start(interval: TimeInterval = 1.0) {
-        stop()
+
+    func start(interval: TimeInterval = 1) {
+        let interval = interval.isFinite && interval > 0 ? min(max(0.05, interval), 86_400) : 1
+        lock.lock()
+        generation &+= 1
+        let token = generation
+        let previous = timer
         lastBytes = currentNetworkBytes()
-        let t = DispatchSource.makeTimerSource(queue: DispatchQueue.global())
-        t.schedule(deadline: .now() + interval, repeating: interval)
-        t.setEventHandler { [weak self] in
-            guard let self else { return }
-            guard let last = self.lastBytes else {
-                self.lastBytes = currentNetworkBytes()
+        lastSampleUptime = DispatchTime.now().uptimeNanoseconds
+        let timer = DispatchSource.makeTimerSource(queue: sampleQueue)
+        timer.schedule(deadline: .now() + interval, repeating: interval)
+        timer.setEventHandler { [weak self] in
+            self?.sample(generation: token)
+        }
+        self.timer = timer
+        timer.resume()
+        lock.unlock()
+        previous?.cancel()
+    }
+
+    private func sample(generation token: UInt64) {
+        let bytes = currentNetworkBytes()
+        let uptime = DispatchTime.now().uptimeNanoseconds
+        lock.lock()
+        guard generation == token, timer != nil, let last = lastBytes,
+              let lastUptime = lastSampleUptime, uptime > lastUptime else {
+            lock.unlock()
+            return
+        }
+        let elapsed = Double(uptime - lastUptime) / 1_000_000_000
+        let down = Double(bytes.download >= last.download ? bytes.download - last.download : 0) / elapsed
+        let up = Double(bytes.upload >= last.upload ? bytes.upload - last.upload : 0) / elapsed
+        let currentSource = source
+        lastBytes = bytes
+        lastSampleUptime = uptime
+        lock.unlock()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else {
                 return
             }
-            let now = currentNetworkBytes()
-            let deltaIn  = Double(now.download &- last.download)
-            let deltaOut = Double(now.upload   &- last.upload)
-            let downSpeed = deltaIn / interval   // Bytes/s
-            let upSpeed   = deltaOut / interval  // Bytes/s
-            let source    = self.currentSource
-            self.lastBytes = now
-            DispatchQueue.main.async {
-                self.onUpdate?(source, upSpeed, downSpeed)
-            }
+            self.lock.lock()
+            let callback = self.generation == token && self.timer != nil ? self.updateHandler : nil
+            self.lock.unlock()
+            callback?(currentSource, up, down)
         }
-        t.resume()
-        timer = t
     }
-    /// 停止流量监控
+
     func stop() {
-        timer?.cancel()
+        lock.lock()
+        generation &+= 1
+        let previous = timer
         timer = nil
         lastBytes = nil
+        lastSampleUptime = nil
+        lock.unlock()
+        previous?.cancel()
+    }
+
+    deinit {
+        timer?.cancel()
+        pathMonitor.cancel()
     }
 }
 // MARK: - DSL 风格链式封装
@@ -229,8 +291,10 @@ func currentCellularCarrierDescription() -> String? {
             }
             if carrier.isoCountryCode != nil {
                 // 可以扩展更多字段
-            };return parts.isEmpty ? nil : parts.joined(separator: "，")
-        };return descs.isEmpty ? nil : descs.joined(separator: " | ")
+            }
+        return parts.isEmpty ? nil : parts.joined(separator: "，")
+        }
+        return descs.isEmpty ? nil : descs.joined(separator: " | ")
     } else {
         guard let carrier = networkInfo.subscriberCellularProvider else { return nil }
         var parts: [String] = []
@@ -239,20 +303,14 @@ func currentCellularCarrierDescription() -> String? {
         }
         if let mcc = carrier.mobileCountryCode, let mnc = carrier.mobileNetworkCode {
             parts.append("MCC/MNC: \(mcc)/\(mnc)")
-        };return parts.isEmpty ? nil : parts.joined(separator: "，")
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: "，")
     }
 }
 // MARK: - 当前网络类型描述（Wi-Fi / 蜂窝 / 其他）
 /// 使用 NWPathMonitor 获取当前网络类型
 func currentNetworkSource() -> JobsNetworkSource {
-    // 这里简单挪用 JobsNetworkTrafficMonitor 的 currentSource
-    JobsNetworkTrafficMonitor.shared.byStart(interval: 10) // 轻启一个定时器，防止完全没初始化
-    return JobsNetworkTrafficMonitor.shared.onUpdate.map { _ in
-        // 如果 onUpdate 有人监听，就用监听时更新过的 currentSource
-        // 否则临时起一个 NWPathMonitor 也行，这里为简单起见用已有对象
-        // 但要注意：第一次拿到值可能有一点延迟。
-        JobsNetworkTrafficMonitor.shared.currentSource
-    } ?? .none
+    JobsNetworkTrafficMonitor.shared.currentSource
 }
 // MARK: - 等待“有真实流量”的监控（基于字节差值）
 /// 等待 Wi-Fi / 蜂窝“有真实数据传输”
@@ -282,6 +340,23 @@ final class JobsNetworkDataReadyMonitor {
     private var wifiDone: Bool = false
     private var cellularDone: Bool = false
     private var deadline: CFAbsoluteTime?
+    private var hasReportedTraffic = false
+    private let deliveryLock = NSLock()
+    private var generation: UInt64 = 0
+
+    private func nextGeneration() -> UInt64 {
+        deliveryLock.lock()
+        generation &+= 1
+        let token = generation
+        deliveryLock.unlock()
+        return token
+    }
+
+    private func isCurrent(_ token: UInt64) -> Bool {
+        deliveryLock.lock()
+        defer { deliveryLock.unlock() }
+        return token == generation
+    }
 
     private init() {}
     /// 等到“有数据流动”之后仅回调一次（Wi-Fi / 蜂窝 分别触发）。
@@ -299,29 +374,39 @@ final class JobsNetworkDataReadyMonitor {
         onCellularReady: (jobsByVoidBlock)? = nil,
         onTimeout: (jobsByVoidBlock)? = nil
     ) {
+        let token = nextGeneration()
+        let interval = interval.isFinite && interval > 0 ? min(max(0.05, interval), 86_400) : 0.5
         queue.async { [weak self] in
-            guard let self else { return }
+            guard let self, self.isCurrent(token) else {
+                return
+            }
             // 清理旧的
             self.stopLocked()
             // 如果两个回调都没传，其实就没必要等
             self.wifiDone = (onWiFiReady == nil)
             self.cellularDone = (onCellularReady == nil)
             self.waiting = !(self.wifiDone && self.cellularDone)
-            guard self.waiting else { return }
+            guard self.waiting else {
+                return
+            }
             // 记录起始字节
             let split = currentNetworkBytesSplit()
             self.lastWiFi = split.wifi
             self.lastCellular = split.cellular
             if let timeout = timeout {
-                self.deadline = CFAbsoluteTimeGetCurrent() + timeout
+                self.deadline = CFAbsoluteTimeGetCurrent() + (timeout.isFinite ? min(max(0, timeout), 1_000_000_000) : 10)
             } else {
                 self.deadline = nil
             }
             let t = DispatchSource.makeTimerSource(queue: self.queue)
             t.schedule(deadline: .now() + interval, repeating: interval)
             t.setEventHandler { [weak self] in
-                guard let self else { return }
-                guard self.waiting else { return }
+                guard let self else {
+                    return
+                }
+                guard self.waiting, self.isCurrent(token) else {
+                    return
+                }
                 // 使用 NWPathMonitor 的主线路信息做“互斥判断”：
                 // - 如果同时传了 Wi-Fi / 蜂窝两个回调，就只触发当前主线路对应的那个；
                 // - 如果只传了其中一个，则保持原本“只要有对应流量就触发”的行为。
@@ -332,28 +417,40 @@ final class JobsNetworkDataReadyMonitor {
                 let nowCell = nowSplit.cellular
                 // Wi-Fi 首包
                 if !self.wifiDone, let last = self.lastWiFi {
-                    let deltaDown = nowWiFi.download &- last.download
-                    let deltaUp   = nowWiFi.upload   &- last.upload
+                    let deltaDown = nowWiFi.download >= last.download ? nowWiFi.download - last.download : 0
+                    let deltaUp = nowWiFi.upload >= last.upload ? nowWiFi.upload - last.upload : 0
                     if deltaDown > 0 || deltaUp > 0 {
                         // exclusive 模式下，如果系统当前主线路是蜂窝，则忽略 Wi-Fi 抖动
                         if !exclusive || primary != .cellular {
                             self.wifiDone = true
+                            self.hasReportedTraffic = true
                             if let onWiFiReady = onWiFiReady {
-                                DispatchQueue.main.async { onWiFiReady() }
+                                DispatchQueue.main.async { [weak self] in
+                                    guard self?.isCurrent(token) == true else {
+                                        return
+                                    }
+                                    onWiFiReady()
+                                }
                             }
                         }
                     }
                 }
                 // 蜂窝首包
                 if !self.cellularDone, let last = self.lastCellular {
-                    let deltaDown = nowCell.download &- last.download
-                    let deltaUp   = nowCell.upload   &- last.upload
+                    let deltaDown = nowCell.download >= last.download ? nowCell.download - last.download : 0
+                    let deltaUp = nowCell.upload >= last.upload ? nowCell.upload - last.upload : 0
                     if deltaDown > 0 || deltaUp > 0 {
                         // exclusive 模式下，如果系统当前主线路是 Wi-Fi，则忽略蜂窝抖动
                         if !exclusive || primary != .wifi {
                             self.cellularDone = true
+                            self.hasReportedTraffic = true
                             if let onCellularReady = onCellularReady {
-                                DispatchQueue.main.async { onCellularReady() }
+                                DispatchQueue.main.async { [weak self] in
+                                    guard self?.isCurrent(token) == true else {
+                                        return
+                                    }
+                                    onCellularReady()
+                                }
                             }
                         }
                     }
@@ -368,10 +465,15 @@ final class JobsNetworkDataReadyMonitor {
                 // 超时兜底（只在完全没有任何流量时才触发）
                 if let deadline = self.deadline,
                    CFAbsoluteTimeGetCurrent() >= deadline {
-                    let firedAny = self.wifiDone || self.cellularDone
+                    let firedAny = self.hasReportedTraffic
                     self.stopLocked()
                     if !firedAny, let onTimeout = onTimeout {
-                        DispatchQueue.main.async { onTimeout() }
+                        DispatchQueue.main.async { [weak self] in
+                            guard self?.isCurrent(token) == true else {
+                                        return
+                                    }
+                            onTimeout()
+                        }
                     }
                 }
             }
@@ -381,8 +483,12 @@ final class JobsNetworkDataReadyMonitor {
     }
     /// 主动取消等待（比如 VC 要销毁了）
     func cancel() {
+        let token = nextGeneration()
         queue.async { [weak self] in
-            self?.stopLocked()
+            guard let self, self.isCurrent(token) else {
+                return
+            }
+            self.stopLocked()
         }
     }
     // MARK: - 内部清理（在 queue 上调用）
@@ -395,6 +501,7 @@ final class JobsNetworkDataReadyMonitor {
         wifiDone = false
         cellularDone = false
         deadline = nil
+        hasReportedTraffic = false
     }
 }
 /// 取消当前这一次网络数据就绪的等待
@@ -421,7 +528,8 @@ extension JobsNetworkDataReadyMonitor {
             onWiFiReady: onWiFiReady,
             onCellularReady: onCellularReady,
             onTimeout: onTimeout
-        );return self
+        )
+        return self
     }
 }
 /// 统一入口：等待 Wi-Fi / 蜂窝“真的有流量”

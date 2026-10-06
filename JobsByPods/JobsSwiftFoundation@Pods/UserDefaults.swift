@@ -65,7 +65,10 @@ extension UserDefaults {
         set(Int(value), forKey: key)
     }
     public func uint32(forKey key: String) -> UInt32? {
-        guard let i = object(forKey: key) as? Int, i >= 0 else { return nil };return UInt32(i)
+        guard let i = object(forKey: key) as? Int else {
+            return nil
+        }
+        return UInt32(exactly: i)
     }
 
     public func setUInt64(_ value: UInt64, forKey key: String) {

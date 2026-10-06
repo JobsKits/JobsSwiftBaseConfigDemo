@@ -68,6 +68,7 @@ def testPods
 end
 # ============================== 调试框架（仅 Debug） ==============================
 def debugPods
+  pod 'JobsDebugPanel', :path => 'JobsByPods/JobsDebugPanel@Pods', :configurations => ['Debug']
   # pod 'Bugly'
   # pod 'DoraemonKit'
   # pod 'CocoaDebug'
@@ -169,5 +170,9 @@ target 'JobsSwiftBaseConfigDemo' do
     testPods
     swiftAppCommon
     byJobs
+
+    target 'JobsSwiftBaseConfigDemoTests' do
+        inherit! :search_paths
+    end
 #    cocoPodsConfig
 end

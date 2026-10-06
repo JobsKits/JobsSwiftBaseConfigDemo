@@ -39,18 +39,20 @@ extension Array {
 public extension Array {
     /// 链式构建器：在闭包里支持 .addBy(...).addBy(...)
     struct Builder {
-        fileprivate var arr: UnsafeMutablePointer<[Element]>
+        fileprivate final class Storage {
+            var elements: [Element] = []
+        }
+        fileprivate let storage: Storage
         @discardableResult
         public func addBy(_ element: Element) -> Builder {
-            arr.pointee.append(element)
+            storage.elements.append(element)
             return self
         }
     }
     /// 使用方式：lazy var titles: [String] = .build { $0.addBy(...).addBy(...) }
-    public static func build(_ block: (Builder) -> Void) -> [Element] {
-        var array: [Element] = []
-        withUnsafeMutablePointer(to: &array) { ptr in
-            block(Builder(arr: ptr))
-        };return array
+    static func build(_ block: (Builder) -> Void) -> [Element] {
+        let storage = Builder.Storage()
+        block(Builder(storage: storage))
+        return storage.elements
     }
 }

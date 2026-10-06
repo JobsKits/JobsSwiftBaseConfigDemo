@@ -15,7 +15,11 @@ import JobsSwiftDSL
 
 open class BRBasePicker<Result>: NSObject {
     private(set) weak var panel: BRPickerPanel?
+    private var lastPanelWasDismissed = false
     private var resultHandler: ((Result) -> Void)?
+    #if canImport(_Concurrency)
+    private var pendingAwait: BRPickerAwaitState<Result>?
+    #endif
 
     internal var theme: BRPickerTheme = BRPickerTheme()
     internal var animator: BRPanelAnimatable = BRSlideAnimation()
@@ -98,28 +102,71 @@ open class BRBasePicker<Result>: NSObject {
     // MARK: - Internal
     internal func bind(panel: BRPickerPanel) {
         self.panel = panel
+        lastPanelWasDismissed = false
         panel.strongOwner = self
+        panel.onDismiss = { [weak self] in
+            self?.lastPanelWasDismissed = true
+            self?.cancelPendingAwait()
+        }
         panel.theme = theme
         panel.animator = animator
         panel.applyTheme()
     }
 
     internal func send(_ value: Result) {
+        #if canImport(_Concurrency)
+        pendingAwait?.finish(.success(value))
+        #endif
         resultHandler?(value)
     }
 
     internal func dismissPanel() {
+        cancelPendingAwait()
         panel?.dismiss()
     }
 
-    // MARK: - Hidden async capability
+    private func cancelPendingAwait() {
+        #if canImport(_Concurrency)
+        pendingAwait?.finish(.failure(BRPickerAwaitError.cancelled))
+        #endif
+    }
+
+    // MARK: - Async capability
     #if canImport(_Concurrency)
     @available(iOS 13.0, *)
-    public func awaitResult() async -> Result {
-        await withCheckedContinuation { continuation in
-            self.byResult { value in
-                continuation.resume(returning: value)
+    @MainActor
+    public func awaitResult() async throws -> Result {
+        guard !lastPanelWasDismissed else { throw BRPickerAwaitError.cancelled }
+        guard pendingAwait == nil else { throw BRPickerAwaitError.alreadyAwaiting }
+        let state = BRPickerAwaitState<Result>()
+        pendingAwait = state
+        defer {
+            if pendingAwait === state { pendingAwait = nil }
+        }
+        return try await withTaskCancellationHandler(operation: {
+            try Task.checkCancellation()
+            return try await withCheckedThrowingContinuation { continuation in
+                state.install(continuation)
             }
+        }, onCancel: { [weak self] in
+            state.finish(.failure(CancellationError()))
+            Task { @MainActor [weak self] in
+                guard let self, self.pendingAwait === state else { return }
+                self.panel?.dismiss()
+            }
+        })
+    }
+
+    /// nil 只表示用户或任务取消；并发等待等失败仍向调用方抛出。
+    @available(iOS 13.0, *)
+    @MainActor
+    public func awaitResultOrNil() async throws -> Result? {
+        do {
+            return try await awaitResult()
+        } catch BRPickerAwaitError.cancelled {
+            return nil
+        } catch is CancellationError {
+            return nil
         }
     }
     #endif
@@ -131,6 +178,7 @@ open class BRBasePicker<Result>: NSObject {
 
     @discardableResult
     public func byPresent(in container: UIView? = nil) -> Self {
+        self.panel?.dismiss()
         let panel = BRPickerPanel()
         bind(panel: panel)
         let content = buildContentView()
@@ -155,3 +203,40 @@ open class BRBasePicker<Result>: NSObject {
         return self
     }
 }
+
+public enum BRPickerAwaitError: Error {
+    case cancelled
+    case alreadyAwaiting
+}
+
+#if canImport(_Concurrency)
+private final class BRPickerAwaitState<Value>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Value, Error>?
+    private var result: Swift.Result<Value, Error>?
+
+    func install(_ continuation: CheckedContinuation<Value, Error>) {
+        lock.lock()
+        if let result {
+            lock.unlock()
+            continuation.resume(with: result)
+        } else {
+            self.continuation = continuation
+            lock.unlock()
+        }
+    }
+
+    func finish(_ result: Swift.Result<Value, Error>) {
+        lock.lock()
+        guard self.result == nil else {
+            lock.unlock()
+            return
+        }
+        self.result = result
+        let continuation = self.continuation
+        self.continuation = nil
+        lock.unlock()
+        continuation?.resume(with: result)
+    }
+}
+#endif

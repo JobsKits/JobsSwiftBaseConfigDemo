@@ -48,11 +48,21 @@ public struct JobsMultipartPart: Sendable {
     public let fileName: String
     public let mimeType: String
     public let data: Data
+    public let fileURL: URL?
 
     public init(name: String, fileName: String, mimeType: String, data: Data) {
         self.name = name
         self.fileName = fileName
         self.mimeType = mimeType
         self.data = data
+        self.fileURL = nil
+    }
+
+    public init(name: String, fileName: String, mimeType: String, fileURL: URL) {
+        self.name = name
+        self.fileName = fileName
+        self.mimeType = mimeType
+        self.data = Data()
+        self.fileURL = fileURL
     }
 }

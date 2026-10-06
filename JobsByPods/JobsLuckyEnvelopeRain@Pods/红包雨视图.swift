@@ -25,7 +25,15 @@ public class RedPacketRainView: UIView {
     }
     // 对外配置 & 回调
     public var config: RedPacketRainConfig {
-        didSet { /* 需要的话可以在这里做重置 */ }
+        didSet {
+            config = config.normalized
+            spawnTimer?.stop()
+            spawnTimer = nil
+            if isRunning {
+                buildTimerIfNeeded()
+                spawnTimer?.start()
+            }
+        }
     }
     /// 点中红包的回调（参数：红包雨视图，总共点中的数量）
     public var tapCallback: ((RedPacketRainView, Int) -> Void)?
@@ -48,6 +56,7 @@ public class RedPacketRainView: UIView {
         let startCenter: CGPoint
         let endCenter: CGPoint
     }
+    private var pausedAt: TimeInterval?
     private var packetMotions: [ObjectIdentifier: PacketMotion] = [:]
     // MARK: - Init
     public init(
@@ -55,7 +64,7 @@ public class RedPacketRainView: UIView {
         config: RedPacketRainConfig = .default,
         timerKind: JobsTimerKind = .gcd
     ) {
-        self.config = config
+        self.config = config.normalized
         self.timerKind = timerKind
         super.init(frame: frame)
         commonInit()
@@ -75,6 +84,7 @@ public class RedPacketRainView: UIView {
     // MARK: - 对外控制
     public func start() {
         guard !isRunning else { return }
+        adjustPausedMotionsIfNeeded()
         buildTimerIfNeeded()
         isRunning = true
         spawnTimer?.start()
@@ -84,12 +94,18 @@ public class RedPacketRainView: UIView {
     public func pause() {
         guard isRunning else { return }
         isRunning = false
+        pausedAt = ProcessInfo.processInfo.systemUptime
         spawnTimer?.pause()
         fallTimer?.pause()
     }
 
     public func resume() {
         guard !isRunning else { return }
+        guard spawnTimer != nil, fallTimer != nil else {
+            start()
+            return
+        }
+        adjustPausedMotionsIfNeeded()
         isRunning = true
         spawnTimer?.resume()
         fallTimer?.resume()
@@ -97,6 +113,7 @@ public class RedPacketRainView: UIView {
     /// 停止红包雨
     /// - Parameter clear: 是否把屏幕上现有红包也移除
     public func stop(clear: Bool = true) {
+        adjustPausedMotionsIfNeeded()
         isRunning = false
         spawnTimer?.stop()
         spawnTimer = nil
@@ -210,7 +227,9 @@ public class RedPacketRainView: UIView {
                 guard let self = self else { return }
                 sender.playTapBounce(haptic: .light)  // 👈 临时放大→回弹（不注册任何手势/事件）
                 self.removePacket(sender)
-                self.tappedCount += 1
+                if self.tappedCount < Int.max {
+                    self.tappedCount += 1
+                }
                 self.tapCallback?(self, self.tappedCount)
                 let feedback = UIImpactFeedbackGenerator(style: .light)
                 feedback.impactOccurred()
@@ -238,7 +257,7 @@ public class RedPacketRainView: UIView {
         let startCenter = packet.center
         let endCenter = CGPoint(x: endFrame.midX, y: endFrame.midY)
         let motion = PacketMotion(
-            spawnTime: Date().timeIntervalSinceReferenceDate,
+            spawnTime: ProcessInfo.processInfo.systemUptime,
             duration: duration,
             startCenter: startCenter,
             endCenter: endCenter
@@ -254,7 +273,8 @@ public class RedPacketRainView: UIView {
                 fallTimer = nil
             };return
         }
-        let now = Date().timeIntervalSinceReferenceDate
+        guard pausedAt == nil else { return }
+        let now = ProcessInfo.processInfo.systemUptime
         var finished: [UIButton] = []
         for packet in activePackets {
             let key = ObjectIdentifier(packet)
@@ -281,6 +301,18 @@ public class RedPacketRainView: UIView {
         if activePackets.isEmpty && !isRunning {
             fallTimer?.stop()
             fallTimer = nil
+        }
+    }
+
+    private func adjustPausedMotionsIfNeeded() {
+        guard let pausedAt else { return }
+        let delay = max(0, ProcessInfo.processInfo.systemUptime - pausedAt)
+        self.pausedAt = nil
+        for (id, motion) in packetMotions {
+            packetMotions[id] = PacketMotion(spawnTime: motion.spawnTime + delay,
+                                             duration: motion.duration,
+                                             startCenter: motion.startCenter,
+                                             endCenter: motion.endCenter)
         }
     }
 

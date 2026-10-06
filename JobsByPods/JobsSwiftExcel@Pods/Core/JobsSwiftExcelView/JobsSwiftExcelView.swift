@@ -12,6 +12,7 @@ import JobsSwiftDSL
 import JobsSwiftUILabelScrolling
 import SnapKit
 
+@MainActor
 public final class JobsSwiftExcelView: UIView {
     public private(set) var columns: [JobsSwiftExcelColumn] = []
     public private(set) var rows: [JobsSwiftExcelRow] = []
@@ -69,7 +70,7 @@ public final class JobsSwiftExcelView: UIView {
         self.columns = columns
         self.rows = rows
         self.freezeThroughColumn = freezeThroughColumn
-        self.style = style
+        self.style = style.normalized
         reloadData()
     }
 
@@ -88,7 +89,12 @@ public final class JobsSwiftExcelView: UIView {
     }
 
     public func setHorizontalContentOffset(_ offset: CGFloat, animated: Bool) {
-        layoutIfNeeded()
+        guard offset.isFinite else {
+            return
+        }
+        if window != nil {
+            layoutIfNeeded()
+        }
         let maximumOffset = max(0, horizontalScrollView.contentSize.width - horizontalScrollView.bounds.width)
         horizontalScrollView.setContentOffset(
             CGPoint(x: min(max(0, offset), maximumOffset), y: 0),
@@ -99,11 +105,14 @@ public final class JobsSwiftExcelView: UIView {
 
 private extension JobsSwiftExcelView {
     var resolvedColumnWidths: [CGFloat] {
-        columns.map { $0.width > 0 ? $0.width : style.defaultColumnWidth }
+        columns.map { $0.width.isFinite && $0.width > 0 ? min($0.width, 100_000) : style.defaultColumnWidth }
     }
 
     var frozenColumnCount: Int {
-        guard let freezeThroughColumn, !columns.isEmpty else { return 0 };return min(max(0, freezeThroughColumn + 1), columns.count)
+        guard let freezeThroughColumn, !columns.isEmpty, freezeThroughColumn >= 0 else {
+            return 0
+        }
+        return min(freezeThroughColumn, columns.count - 1) + 1
     }
 
     func jobsCommonInit() {

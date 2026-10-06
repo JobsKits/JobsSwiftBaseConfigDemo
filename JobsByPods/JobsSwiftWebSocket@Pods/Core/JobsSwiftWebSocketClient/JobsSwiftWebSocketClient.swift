@@ -9,7 +9,7 @@
 import Foundation
 
 /// 轻量 WebSocket 客户端：统一连接生命周期、收包循环、心跳、退避重连和主线程回调。
-public final class JobsSwiftWebSocketClient: NSObject {
+public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
     public enum State: Equatable {
         /// 尚未发起连接
         case idle
@@ -25,15 +25,147 @@ public final class JobsSwiftWebSocketClient: NSObject {
         case failed(String)
     }
 
-    public var reconnectEnabled = true
-    public var heartbeatInterval: TimeInterval = 30
-    public var reconnectBaseDelay: TimeInterval = 1
-    public var maximumReconnectDelay: TimeInterval = 16
-    public var maximumReconnectAttempts = 5
-    public var onStateChange: ((State) -> Void)?
-    public var onTextMessage: ((String) -> Void)?
-    public var onDataMessage: ((Data) -> Void)?
-    public private(set) var state: State = .idle
+    private let propertyLock = NSLock()
+    private var stored_reconnectEnabled: Bool = true
+    public var reconnectEnabled: Bool {
+        get {
+            withPropertyLock {
+                stored_reconnectEnabled
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_reconnectEnabled = newValue
+            }
+        }
+    }
+    private var stored_heartbeatInterval: TimeInterval = 30
+    public var heartbeatInterval: TimeInterval {
+        get {
+            withPropertyLock {
+                stored_heartbeatInterval
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_heartbeatInterval = newValue
+            }
+        }
+    }
+    private var stored_pongTimeout: TimeInterval = 10
+    public var pongTimeout: TimeInterval {
+        get {
+            withPropertyLock {
+                stored_pongTimeout
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_pongTimeout = newValue
+            }
+        }
+    }
+    private var stored_reconnectBaseDelay: TimeInterval = 1
+    public var reconnectBaseDelay: TimeInterval {
+        get {
+            withPropertyLock {
+                stored_reconnectBaseDelay
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_reconnectBaseDelay = newValue
+            }
+        }
+    }
+    private var stored_maximumReconnectDelay: TimeInterval = 16
+    public var maximumReconnectDelay: TimeInterval {
+        get {
+            withPropertyLock {
+                stored_maximumReconnectDelay
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_maximumReconnectDelay = newValue
+            }
+        }
+    }
+    private var stored_maximumReconnectAttempts: Int = 5
+    public var maximumReconnectAttempts: Int {
+        get {
+            withPropertyLock {
+                stored_maximumReconnectAttempts
+            }
+        }
+        set {
+            withPropertyLock {
+                stored_maximumReconnectAttempts = newValue
+            }
+        }
+    }
+    private var stored_onStateChange: ((State) -> Void)? = nil
+    public var onStateChange: ((State) -> Void)? {
+        get {
+            withPropertyLock {
+                stored_onStateChange
+            }
+        }
+        set {
+            let retired = withPropertyLock {
+                let previous = stored_onStateChange
+                stored_onStateChange = newValue
+                return previous
+            }
+            withExtendedLifetime(retired) {}
+        }
+    }
+    private var stored_onTextMessage: ((String) -> Void)? = nil
+    public var onTextMessage: ((String) -> Void)? {
+        get {
+            withPropertyLock {
+                stored_onTextMessage
+            }
+        }
+        set {
+            let retired = withPropertyLock {
+                let previous = stored_onTextMessage
+                stored_onTextMessage = newValue
+                return previous
+            }
+            withExtendedLifetime(retired) {}
+        }
+    }
+    private var stored_onDataMessage: ((Data) -> Void)? = nil
+    public var onDataMessage: ((Data) -> Void)? {
+        get {
+            withPropertyLock {
+                stored_onDataMessage
+            }
+        }
+        set {
+            let retired = withPropertyLock {
+                let previous = stored_onDataMessage
+                stored_onDataMessage = newValue
+                return previous
+            }
+            withExtendedLifetime(retired) {}
+        }
+    }
+    private var publishedState: State = .idle
+    public var state: State {
+        withPropertyLock {
+            publishedState
+        }
+    }
+
+    private func withPropertyLock<T>(_ body: () -> T) -> T {
+        propertyLock.lock()
+        defer {
+            propertyLock.unlock()
+        }
+        return body()
+    }
 
     private let workQueue = DispatchQueue(
         label: "com.jobs.swift-websocket.client"
@@ -42,6 +174,9 @@ public final class JobsSwiftWebSocketClient: NSObject {
     private var endpoint: URL?
     private var session: URLSession?
     private var task: URLSessionWebSocketTask?
+    private var pongWorkItem: DispatchWorkItem?
+    private var pingInFlight = false
+    private lazy var delegateProxy = JobsWebSocketDelegateProxy(owner: self)
     private var heartbeatTimer: DispatchSourceTimer?
     private var reconnectWorkItem: DispatchWorkItem?
     private var reconnectAttempt = 0
@@ -54,6 +189,13 @@ public final class JobsSwiftWebSocketClient: NSObject {
     public func connect(to url: URL) {
         workQueue.async { [weak self] in
             guard let self else { return }
+            guard ["ws", "wss"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else {
+                manuallyDisconnected = true
+                cancelReconnect()
+                invalidateCurrentConnection()
+                publish(.failed("WebSocket URL 必须使用 ws/wss 并包含主机"))
+                return
+            }
             endpoint = url
             manuallyDisconnected = false
             reconnectAttempt = 0
@@ -134,7 +276,7 @@ public final class JobsSwiftWebSocketClient: NSObject {
         publish(.connecting)
         let session = URLSession(
             configuration: .default,
-            delegate: self,
+            delegate: delegateProxy,
             delegateQueue: nil
         )
         let task = session.webSocketTask(with: url)
@@ -198,7 +340,7 @@ public final class JobsSwiftWebSocketClient: NSObject {
 
     private func scheduleReconnect(lastError: Error?) {
         guard
-            reconnectAttempt < maximumReconnectAttempts,
+            reconnectAttempt < min(100, max(0, maximumReconnectAttempts)),
             let endpoint
         else {
             let message = lastError?.localizedDescription ?? "WebSocket 重连次数已耗尽"
@@ -206,10 +348,9 @@ public final class JobsSwiftWebSocketClient: NSObject {
             return
         }
         reconnectAttempt += 1
-        let delay = min(
-            reconnectBaseDelay * pow(2, Double(reconnectAttempt - 1)),
-            maximumReconnectDelay
-        )
+        let base = reconnectBaseDelay.isFinite ? min(3_600, max(0.1, reconnectBaseDelay)) : 1
+        let maximum = maximumReconnectDelay.isFinite ? min(3_600, max(base, maximumReconnectDelay)) : 16
+        let delay = min(base * pow(2, Double(min(20, reconnectAttempt - 1))), maximum)
         publish(.reconnecting(attempt: reconnectAttempt, delay: delay))
         let workItem = DispatchWorkItem { [weak self] in
             guard
@@ -228,27 +369,43 @@ public final class JobsSwiftWebSocketClient: NSObject {
 
     private func startHeartbeat() {
         stopHeartbeat()
-        guard heartbeatInterval > 0 else { return }
+        let interval = heartbeatInterval
+        guard interval.isFinite, interval > 0 else {
+            return
+        }
         let timer = DispatchSource.makeTimerSource(queue: workQueue)
-        timer.schedule(
-            deadline: .now() + heartbeatInterval,
-            repeating: heartbeatInterval
-        )
+        timer.schedule(deadline: .now() + min(interval, 86_400), repeating: min(interval, 86_400))
         timer.setEventHandler { [weak self] in
-            guard
-                let self,
-                let task,
-                activeState == .connected
-            else { return }
+            guard let self, let task = self.task,
+                self.activeState == .connected, !self.pingInFlight
+            else {
+                return
+            }
+            self.pingInFlight = true
+            let configuredTimeout = self.pongTimeout
+            let timeout = configuredTimeout.isFinite ? min(3_600, max(0.1, configuredTimeout)) : 10
+            let deadline = DispatchWorkItem { [weak self, weak task] in
+                guard let self, let task, self.task === task, self.pingInFlight else {
+                    return
+                }
+                self.handleConnectionEnd(
+                    error: NSError(
+                        domain: "JobsSwiftWebSocket", code: -2,
+                        userInfo: [NSLocalizedDescriptionKey: "WebSocket pong 超时"]))
+            }
+            self.pongWorkItem = deadline
+            self.workQueue.asyncAfter(deadline: .now() + timeout, execute: deadline)
             task.sendPing { [weak self, weak task] error in
-                guard let error else { return }
                 self?.workQueue.async {
-                    guard
-                        let self,
-                        let task,
-                        self.task === task
-                    else { return }
-                    self.handleConnectionEnd(error: error)
+                    guard let self, let task, self.task === task else {
+                        return
+                    }
+                    self.pongWorkItem?.cancel()
+                    self.pongWorkItem = nil
+                    self.pingInFlight = false
+                    if let error {
+                        self.handleConnectionEnd(error: error)
+                    }
                 }
             }
         }
@@ -257,6 +414,9 @@ public final class JobsSwiftWebSocketClient: NSObject {
     }
 
     private func stopHeartbeat() {
+        pongWorkItem?.cancel()
+        pongWorkItem = nil
+        pingInFlight = false
         heartbeatTimer?.setEventHandler {}
         heartbeatTimer?.cancel()
         heartbeatTimer = nil
@@ -279,15 +439,16 @@ public final class JobsSwiftWebSocketClient: NSObject {
     private func publish(_ state: State) {
         guard activeState != state else { return }
         activeState = state
+        withPropertyLock { publishedState = state }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.state = state
             self.onStateChange?(state)
         }
     }
 
     deinit {
         reconnectWorkItem?.cancel()
+        pongWorkItem?.cancel()
         heartbeatTimer?.cancel()
         task?.cancel(with: .goingAway, reason: nil)
         session?.invalidateAndCancel()

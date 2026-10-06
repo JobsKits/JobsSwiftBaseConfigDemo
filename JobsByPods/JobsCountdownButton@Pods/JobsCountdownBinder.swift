@@ -20,6 +20,7 @@ import JobsSwiftBaseDefines
 public final class JobsCountdownBinder {
     private weak var button: UIButton?
     private var timer: JobsSwiftTimerProtocol?
+    private var generation: UInt64 = 0
 
     private var total: Int = 0
     private var remain: Int = 0
@@ -40,7 +41,8 @@ public final class JobsCountdownBinder {
         self.button = button
         self.total = max(1, total)
         self.remain = self.total
-        self.interval = max(0.000_001, interval)
+        self.interval = interval.isFinite ? max(0.000_001, interval) : 1
+        let session = generation
         self.kind = kind
         // 先把 UI 初始化成 “还剩 xxxs”
         applyUI(remain: self.remain, total: self.total, kind: kind)
@@ -58,6 +60,7 @@ public final class JobsCountdownBinder {
             // ✅ Swift 6 / Sendable 同等待遇：先冻结 self，再切 MainActor
             guard let strongSelf = self else { return }
             onMainAsync(self) { vc in
+                guard strongSelf.generation == session, strongSelf.timer != nil else { return }
                 guard let btn = strongSelf.button else {
                     strongSelf.stop()
                     return
@@ -87,6 +90,7 @@ public final class JobsCountdownBinder {
 
     @MainActor
     public func stop() {
+        generation &+= 1
         timer?.stop()
         timer = nil
     }

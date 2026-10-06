@@ -60,6 +60,9 @@ public final class JobsMarkdownView: UIView {
     }()
     private var pendingPayload: JobsMarkdownRenderPayload?
     private var isRuntimeReady = false
+    private var renderID = UUID().uuidString
+    private var activeNavigation: WKNavigation?
+    private var remoteBlockingRule: WKContentRuleList?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,20 +94,30 @@ public final class JobsMarkdownView: UIView {
         if let configuration {
             self.configuration = configuration
         }
-        let markdownData: Data
-        do {
-            markdownData = try Data(contentsOf: document.fileURL)
-        } catch {
-            jobsFail(error)
-            return
+        let requestID = UUID().uuidString
+        renderID = requestID
+        loadingView.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let result = Result { try Data(contentsOf: document.fileURL) }
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.renderID == requestID else {
+                    return
+                }
+                switch result {
+                /// 文件读取成功后在 UI 执行域启动对应渲染。
+                case .success(let data):
+                    self.render(
+                        markdown: String(decoding: data, as: UTF8.self),
+                        title: document.title,
+                        baseURL: document.fileURL.deletingLastPathComponent(),
+                        readAccessURL: document.contentRootURL
+                    )
+                /// 旧请求已在上方按身份排除，只上报当前读取失败。
+                case .failure(let error):
+                    self.jobsFail(error)
+                }
+            }
         }
-        let markdown = String(decoding: markdownData, as: UTF8.self)
-        render(
-            markdown: markdown,
-            title: document.title,
-            baseURL: document.fileURL.deletingLastPathComponent(),
-            readAccessURL: document.contentRootURL
-        )
     }
 
     public func render(
@@ -121,12 +134,17 @@ public final class JobsMarkdownView: UIView {
             jobsFail(JobsMarkdownViewError.runtimeResourcesNotFound)
             return
         }
+        renderID = UUID().uuidString
+        let expectedID = renderID
+        webView.stopLoading()
+        activeNavigation = nil
         pendingPayload = JobsMarkdownRenderPayload(
+            renderID: renderID,
             markdown: markdown,
             title: title,
             baseURL: baseURL?.absoluteString ?? "",
             appearance: self.configuration.appearance.rawValue,
-            fontScale: self.configuration.fontScale,
+            fontScale: self.configuration.fontScale.isFinite ? min(max(self.configuration.fontScale, 0.75), 2) : 1,
             showsTableOfContents: self.configuration.showsTableOfContents,
             showsCodeCopyButton: self.configuration.showsCodeCopyButton,
             rendersMermaid: self.configuration.rendersMermaid,
@@ -142,7 +160,16 @@ public final class JobsMarkdownView: UIView {
             templateURL.deletingLastPathComponent(),
             preferredReadAccessURL
         )
-        webView.loadFileURL(templateURL, allowingReadAccessTo: readAccessRootURL)
+        jobsPrepareResourcePolicy(allowsRemote: self.configuration.allowsRemoteContent) { [weak self] error in
+            guard let self, self.renderID == expectedID else {
+                return
+            }
+            if let error {
+                self.jobsFail(error)
+                return
+            }
+            self.activeNavigation = self.webView.loadFileURL(templateURL, allowingReadAccessTo: readAccessRootURL)
+        }
     }
 
     public func reloadDocument() {
@@ -151,7 +178,7 @@ public final class JobsMarkdownView: UIView {
     }
 
     public func scrollToAnchor(_ anchor: String, animated: Bool = true) {
-        let data = try? JSONSerialization.data(withJSONObject: anchor)
+        let data = try? JSONEncoder.make { _ in }.encode(anchor)
         guard let data, let value = String(data: data, encoding: .utf8) else { return }
         webView.jobsEval("window.JobsMarkdownRuntime.scrollToAnchor(\(value), \(animated));")
     }
@@ -212,15 +239,54 @@ private extension JobsMarkdownView {
         );return view
     }
 
+    /// 内容规则在首个 DOM/样式被加载前安装，覆盖 srcset、CSS 与 iframe 等网络资源。
+    func jobsPrepareResourcePolicy(allowsRemote: Bool, completion: @escaping (Error?) -> Void) {
+        if allowsRemote {
+            if let remoteBlockingRule {
+                webView.configuration.userContentController.remove(remoteBlockingRule)
+            }
+            completion(nil)
+            return
+        }
+        if let remoteBlockingRule {
+            webView.configuration.userContentController.add(remoteBlockingRule)
+            completion(nil)
+            return
+        }
+        let policyID = renderID
+        let rules = #"[{"trigger":{"url-filter":"^https?://","url-filter-is-case-sensitive":false},"action":{"type":"block"}}]"#
+        WKContentRuleListStore.default().compileContentRuleList(
+            forIdentifier: "JobsMarkdown.BlockRemote.v1",
+            encodedContentRuleList: rules
+        ) { [weak self] rule, error in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {
+                    return
+                }
+                guard let rule else {
+                    completion(error ?? JobsMarkdownViewError.renderFailed("远程资源阻断规则不可用"))
+                    return
+                }
+                self.remoteBlockingRule = rule
+                guard self.renderID == policyID else {
+                    return
+                }
+                self.webView.configuration.userContentController.add(rule)
+                completion(nil)
+            }
+        }
+    }
+
     func jobsRenderPendingPayload() {
         guard isRuntimeReady, let pendingPayload else { return }
+        let expectedID = pendingPayload.renderID
         do {
             let data = try JSONEncoder.make { _ in }.encode(pendingPayload)
             let base64 = data.base64EncodedString()
             webView.evaluateJavaScript(
                 "window.JobsMarkdownRuntime.renderBase64('\(base64)');"
             ) { [weak self] _, error in
-                guard let self, let error else { return }
+                guard let self, self.renderID == expectedID, let error else { return }
                 self.jobsFail(error)
             }
         } catch {
@@ -234,10 +300,12 @@ private extension JobsMarkdownView {
             jobsFail(JobsMarkdownViewError.invalidMessage)
             return
         }
+        guard type == "ready" || message["renderID"] as? String == renderID else {
+            return
+        }
         switch type {
         case "ready":
-            isRuntimeReady = true
-            jobsRenderPendingPayload()
+            break
         case "rendered":
             loadingView.stopAnimating()
             delegate?.markdownViewDidFinishRendering(self)
@@ -282,6 +350,35 @@ private extension JobsMarkdownView {
 }
 
 extension JobsMarkdownView: WKNavigationDelegate, WKUIDelegate {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard navigation === activeNavigation else {
+            return
+        }
+        isRuntimeReady = true
+        jobsRenderPendingPayload()
+    }
+
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        guard navigation === activeNavigation else {
+            return
+        }
+        isRuntimeReady = false
+        jobsFail(error)
+    }
+
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        guard navigation === activeNavigation else {
+            return
+        }
+        isRuntimeReady = false
+        jobsFail(error)
+    }
+
+    public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        isRuntimeReady = false
+        jobsFail(JobsMarkdownViewError.renderFailed("网页渲染进程已终止，可重新加载"))
+    }
+
     public func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
@@ -302,6 +399,9 @@ extension JobsMarkdownView: WKScriptMessageHandler {
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
+        guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true else {
+            return
+        }
         jobsHandleMessage(message.body)
     }
 }
@@ -322,6 +422,7 @@ private final class JobsMarkdownWeakScriptMessageHandler: NSObject, WKScriptMess
 }
 
 private struct JobsMarkdownRenderPayload: Encodable {
+    let renderID: String
     let markdown: String
     let title: String
     let baseURL: String

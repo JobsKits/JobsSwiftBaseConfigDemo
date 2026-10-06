@@ -55,4 +55,24 @@ Pod::Spec.new do |s|
     ss.dependency 'SDWebImage'
   end
 
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
+  # Explicit subspec consumers do not inherit the root's file exclusions.
+  s.recursive_subspecs.each do |subspec|
+    subspec.exclude_files = Array(subspec.attributes_hash['exclude_files']) + Array(s.attributes_hash['exclude_files'])
+  end
+
 end

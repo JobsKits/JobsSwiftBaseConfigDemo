@@ -17,6 +17,8 @@ public final class JobsSwiftCommentConfig {
     public var showsLocation = true
     public var showsReplyEntrance = true
     public var maxVisibleChildReplyCount = 3
+    public var maxReplyDepth = 32
+    public var maxRenderedRows = 1_000
     public var enablesPullRefresh = true
     public var enablesLoadMore = true
     public var commentSelectedBlock: JobsSwiftCommentSelectionBlock?

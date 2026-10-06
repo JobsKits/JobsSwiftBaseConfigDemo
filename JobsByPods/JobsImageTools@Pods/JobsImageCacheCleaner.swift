@@ -122,6 +122,7 @@ public enum JobsImageCacheCleaner {
         }
         func _reloadWithKingfisher(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonForegroundTargetSize(btn)
+            let generation = btn.jobs_remoteBindingGeneration
             group.enter()
             let opts: KingfisherOptionsInfo = [
                 .forceRefresh,
@@ -134,6 +135,10 @@ public enum JobsImageCacheCleaner {
                             options: opts,
                             completionHandler:  { result in
                 onMainAsync {
+                    guard btn.jobs_remoteURL == url, btn.jobs_remoteBindingGeneration == generation else {
+                        group.leave()
+                        return
+                    }
                     switch result {
                     /// 处理 .success 分支
                     case .success(let r): btn.jobsResetBtnImage(r.image, for: state)
@@ -146,6 +151,7 @@ public enum JobsImageCacheCleaner {
         }
         func _reloadWithKingfisherBackground(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonBackgroundTargetSize(btn)
+            let generation = btn.jobs_bgBindingGeneration
             group.enter()
             let opts: KingfisherOptionsInfo = [
                 .forceRefresh,
@@ -158,6 +164,10 @@ public enum JobsImageCacheCleaner {
                                       options: opts,
                                       completionHandler:  { result in
                 onMainAsync {
+                    guard btn.jobs_bgURL == url, btn.jobs_bgBindingGeneration == generation else {
+                        group.leave()
+                        return
+                    }
                     switch result {
                     /// 处理 .success 分支
                     case .success(let r): btn.jobsResetBtnBgImage(r.image, for: state)
@@ -187,6 +197,7 @@ public enum JobsImageCacheCleaner {
         }
         func _reloadWithSDWebImage(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonForegroundTargetSize(btn)
+            let generation = btn.jobs_remoteBindingGeneration
             group.enter()
             var ctx: [SDWebImageContextOption: Any] = [:]
             ctx[.imageScaleFactor] = UIScreen.main.scale
@@ -199,6 +210,10 @@ public enum JobsImageCacheCleaner {
                             context: ctx,
                             progress: nil) { img, err, _, _ in
                 onMainAsync {
+                    guard btn.jobs_remoteURL == url, btn.jobs_remoteBindingGeneration == generation else {
+                        group.leave()
+                        return
+                    }
                     btn.jobsResetBtnImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }
@@ -206,6 +221,7 @@ public enum JobsImageCacheCleaner {
         }
         func _reloadWithSDWebImageBackground(button btn: UIButton, url: URL, state: UIControl.State) {
             let target = _guessButtonBackgroundTargetSize(btn)
+            let generation = btn.jobs_bgBindingGeneration
             group.enter()
             var ctx: [SDWebImageContextOption: Any] = [:]
             ctx[.imageScaleFactor] = UIScreen.main.scale
@@ -218,6 +234,10 @@ public enum JobsImageCacheCleaner {
                                       context: ctx,
                                       progress: nil) { img, err, _, _ in
                 onMainAsync {
+                    guard btn.jobs_bgURL == url, btn.jobs_bgBindingGeneration == generation else {
+                        group.leave()
+                        return
+                    }
                     btn.jobsResetBtnBgImage((err == nil ? img : nil) ?? placeholder, for: state)
                     group.leave()
                 }
@@ -226,6 +246,7 @@ public enum JobsImageCacheCleaner {
         #endif
         func _reloadWithJobsImageLoader(imageView iv: UIImageView, url: URL) {
             let target = _guessImageViewTargetSize(iv)
+            let generation = iv.jobs_remoteBindingGeneration
             group.enter()
             JobsImageLoader.shared.load(
                 .remote(url),
@@ -233,6 +254,10 @@ public enum JobsImageCacheCleaner {
                                targetSize: target,
                                forceRefresh: true)
             ) { result in
+                guard iv.jobs_remoteURL == url, iv.jobs_remoteBindingGeneration == generation else {
+                    group.leave()
+                    return
+                }
                 switch result {
                 /// 处理 .success 分支
                 case .success(let value):
@@ -375,17 +400,27 @@ public enum JobsImageCacheCleaner {
 // MARK: - URL bridge（统一字段：jobs_remoteURL / jobs_bgURL）
 #if canImport(UIKit)
 private var jobs_remoteURLKey: UInt8 = 0
+private var jobs_remoteGenerationKey: UInt8 = 0
 private var jobs_remoteStateKey: UInt8 = 0
 private var jobs_imageLoaderKindKey: UInt8 = 0
 private var jobs_remoteImageTargetSizeKey: UInt8 = 0
 private var jobs_bgImageTargetSizeKey: UInt8 = 0
 private var jobs_imageViewTargetSizeKey: UInt8 = 0
+extension UIView {
+    var jobs_remoteBindingGeneration: UUID? {
+        objc_getAssociatedObject(self, &jobs_remoteGenerationKey) as? UUID
+    }
+}
+
 public extension UIView {
     /// 统一“前景图 URL 记忆位”
     /// - Note: UIImageView / UIButton 只要是远端图，都建议写入它，便于 JobsImageCacheCleaner 遍历强制重下。
     var jobs_remoteURL: URL? {
         get { objc_getAssociatedObject(self, &jobs_remoteURLKey) as? URL }
-        set { objc_setAssociatedObject(self, &jobs_remoteURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        set {
+            objc_setAssociatedObject(self, &jobs_remoteURLKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &jobs_remoteGenerationKey, UUID(), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     /// 记录当前控件“实际使用哪个图片框架加载”（用于 forceRedownloadImages 精准选择框架）

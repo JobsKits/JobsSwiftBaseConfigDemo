@@ -10,32 +10,56 @@ import ObjectiveC
 
 public protocol JobsCallbackable: AnyObject {}
 private var storeKey: UInt8 = 0
-extension JobsCallbackable {
-    // MARK: 存储容器（String -> Any closure）
-    private var jobs_callbackStore: NSMutableDictionary {
-        if let dict = objc_getAssociatedObject(self, &storeKey) as? NSMutableDictionary {
-            return dict
+private final class JobsCallbackStore {
+    private let lock = NSLock()
+    private var callbacks: [String: Any] = [:]
+
+    func set<T>(_ value: T?, for key: String) {
+        let previous: Any?
+        lock.lock()
+        if let value {
+            previous = callbacks.updateValue(value, forKey: key)
+        } else {
+            previous = callbacks.removeValue(forKey: key)
         }
-        let dict = NSMutableDictionary.jobsMake { _ in }
-        objc_setAssociatedObject(
-            self,
-            &storeKey,
-            dict,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return dict
+        lock.unlock()
+        // 被替换捕获的 deinit 可能重入注册，延迟其释放到锁外。
+        withExtendedLifetime(previous) {}
     }
-    // MARK: 注册/获取（key 用 String）
+
+    func value<T>(for key: String) -> T? {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return callbacks[key] as? T
+    }
+}
+private let jobsCallbackStoreCreationLock = NSLock()
+
+extension JobsCallbackable {
+    private var jobs_callbackStore: JobsCallbackStore {
+        jobsCallbackStoreCreationLock.lock()
+        defer {
+            jobsCallbackStoreCreationLock.unlock()
+        }
+        if let store = objc_getAssociatedObject(self, &storeKey) as? JobsCallbackStore {
+            return store
+        }
+        let store = JobsCallbackStore()
+        objc_setAssociatedObject(self, &storeKey, store, .OBJC_ASSOCIATION_RETAIN)
+        return store
+    }
+
+    /// 存取同步，业务 closure 在锁外调用；closure 自身跨线程安全由注册方负责。
     @discardableResult
     public func jobsBy<T>(_ key: String, _ block: T?) -> Self {
-        if let block {
-            jobs_callbackStore[key] = block
-        } else {
-            jobs_callbackStore.removeObject(forKey: key)
-        };return self
+        jobs_callbackStore.set(block, for: key)
+        return self
     }
 
     public func jobs_callback<T>(_ key: String) -> T? {
-        jobs_callbackStore[key] as? T
+        jobs_callbackStore.value(for: key)
     }
     // MARK: byXXX 省 key：默认用 #function 作为 key
     // 用法：func byTap(_ b: jobsByVoidBlock?) -> Self { jobsBySelfKey(b) }

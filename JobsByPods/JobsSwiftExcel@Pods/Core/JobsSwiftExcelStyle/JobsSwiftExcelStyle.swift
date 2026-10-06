@@ -65,4 +65,13 @@ public struct JobsSwiftExcelStyle {
         self.showsHorizontalScrollIndicator = showsHorizontalScrollIndicator
         self.bouncesHorizontally = bouncesHorizontally
     }
+    public var normalized: JobsSwiftExcelStyle {
+        var result = self
+        result.defaultColumnWidth = defaultColumnWidth.isFinite ? min(max(1, defaultColumnWidth), 100_000) : 112
+        result.headerHeight = headerHeight.isFinite ? min(max(1, headerHeight), 100_000) : 46
+        result.rowHeight = rowHeight.isFinite ? min(max(1, rowHeight), 100_000) : 44
+        result.gridLineWidth = gridLineWidth.isFinite ? min(max(0, gridLineWidth), 100) : 0.5
+        return result
+    }
+
 }

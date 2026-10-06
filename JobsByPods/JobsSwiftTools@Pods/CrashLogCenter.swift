@@ -14,11 +14,11 @@ import UIKit
 /// 目标：
 /// 1) 真机脱离 Xcode 也能保留日志（同步落盘）
 /// 2) UI 可读取展示（CrashLogDemoVC）
-/// 3) 尽量避免在 signal/terminate handler 里做“复杂事”（只做最小写入）
+/// 3) POSIX 信号保留系统行为；普通日志在正常执行上下文落盘
 ///
 /// ⚠️ 注意：严格来说，signal handler 里调用 Swift/ObjC/IO 都不安全。
 /// 本文件做的是“工程可用、尽量稳”的折中：
-/// - signal/terminate 里只做一次“同步追加写入 + fsync”
+/// - signal 交给系统，普通诊断日志在正常执行上下文同步追加
 /// - 不在 handler 里拿堆栈/创建大对象/做网络请求
 public final class CrashLogCenter {
     public static let shared = CrashLogCenter()
@@ -437,12 +437,10 @@ public final class CrashLogCenter {
     }
 }
 // ================================== CrashCatcher ==================================
-/// 崩溃捕获：Exception + signal + terminate
+/// 退出诊断：NSException、正常上下文日志与 macOS terminate hook
 /// 重点：脱机/脱离 Xcode 也尽量能写到 jobs_crash.log
 ///
-/// ✅ 修复你截图里的两个报错：
-/// 1) terminate handler / signal handler 必须是 @convention(c) 且不能捕获上下文
-/// 2) 不要用参数名 signal 覆盖 C 的 signal() 函数（用 signo / sig）
+/// iOS 不安装 Swift POSIX signal handler，避免在异步信号上下文调用 Foundation。
 final class CrashCatcher {
     private static var installed = false
     // ================================== Install ==================================
@@ -463,14 +461,14 @@ final class CrashCatcher {
             """
             CrashLogCenter.shared.writeCrashSync(msg)
         }
-        // 2) signals
-        jobs_installSignalHandlers()
+        // signal 默认交给系统；Swift/Foundation 不提供异步信号安全保证。
+        // 诊断使用信号发生前已落盘的会话快照和系统 crash report。
         // 3) terminate
         // Swift runtime 的 terminate hook（_stdlib_get_terminate/_stdlib_set_terminate）在 iOS
         // 的部分环境/版本里可能不存在，直接链接会导致 Undefined symbols（你现在遇到的情况）。
         // 这里做平台隔离：
         // - macOS：安装 terminate handler
-        // - iOS/tvOS：不安装（依赖 signal + NSException）
+        // - iOS/tvOS：不安装；保留系统信号行为及 NSException 诊断
         #if os(macOS)
         jobs_installTerminateHandler()
         #endif
@@ -479,20 +477,6 @@ final class CrashCatcher {
     }
 
     // ================================== Handlers ==================================
-    fileprivate static func handleSignal(_ signo: Int32) {
-        let name = jobs_signalName(signo)
-        let msg = """
-        \n==================== ❌ Signal Crash ====================
-        time: \(Date())
-        signal: \(signo) (\(name))
-        ===============================================================
-        """
-        CrashLogCenter.shared.writeCrashSync(msg)
-        // 还原默认处理并重新触发，让系统生成标准 crash（方便系统日志/三方平台抓）
-        Darwin.signal(signo, SIG_DFL)
-        raise(signo)
-    }
-
     fileprivate static func handleTerminate() {
         let msg = """
         \n==================== ❌ terminate() ====================
@@ -518,38 +502,6 @@ private func jobs_installTerminateHandler() {
     _stdlib_set_terminate(jobs_terminate_handler)
 }
 #endif
-/// signal handler：必须 @convention(c)，不能捕获上下文
-private func jobs_signal_handler(_ signo: Int32) -> Void {
-    CrashCatcher.handleSignal(signo)
-}
-/// 安装 signal handlers
-private func jobs_installSignalHandlers() {
-    let signals: [Int32] = [
-        SIGABRT, SIGILL, SIGSEGV, SIGFPE, SIGBUS, SIGPIPE
-    ]
-    for s in signals {
-        Darwin.signal(s, jobs_signal_handler)
-    }
-}
-/// 信号名（用于日志）
-private func jobs_signalName(_ signo: Int32) -> String {
-    switch signo {
-    /// 处理 SIGABRT 分支
-    case SIGABRT: return "SIGABRT"
-    /// 处理 SIGILL 分支
-    case SIGILL:  return "SIGILL"
-    /// 处理 SIGSEGV 分支
-    case SIGSEGV: return "SIGSEGV"
-    /// 处理 SIGFPE 分支
-    case SIGFPE:  return "SIGFPE"
-    /// 处理 SIGBUS 分支
-    case SIGBUS:  return "SIGBUS"
-    /// 处理 SIGPIPE 分支
-    case SIGPIPE: return "SIGPIPE"
-    /// 未匹配已知分支时执行兜底处理
-    default:      return "SIG(\(signo))"
-    }
-}
 // ================================== Terminate Hook Helpers ==================================
 #if os(macOS)
 /// 这两个函数是 Swift runtime 的 terminate hook（为了让 terminate handler 可用）

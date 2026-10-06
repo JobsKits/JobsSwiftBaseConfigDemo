@@ -19,7 +19,7 @@
 - 扫描和修改边界：
 
   - 可以维护：`JobsSwiftBaseConfigDemo/` 与 `JobsByPods/` 下 Jobs 自建、已明确接管的源码和文档。
-  - 默认排除：根目录 `Pods/`、`JobsByPods/ManualBySwiftPods@Pods/`、`generated/`、Flutter 生成目录、Unity 导出产物、构建缓存和所有权不明源码。
+  - 默认排除：根目录 `Pods/`、`JobsByPods/ManualBySwiftPods@Pods/`、`Generated/`、Flutter 生成目录、Unity 导出产物、构建缓存和所有权不明源码。
   - 生成物只由对应流程刷新，不手工改 `Podfile.lock`、Pods 工程、依赖报告或最终构建产物。
 
 - 当前宿主基线：
@@ -79,7 +79,7 @@
 - ObjectBox Apple SDK 按其 Swift 语言边界接入；当前只在 Swift 工程提供 CRUD Demo，OC 新/旧工程无需创建无官方语言基础的占位实现。
 - `Podfile.deps` 负责声明 `ObjectBox`，`Podfile.lock` 负责记录实际版本；首次或依赖结构变化后按官方 `Pods/ObjectBox/setup.rb` 结果维护 `[OBX] Update Sourcery Generated Files` 构建阶段。
 - App Target 必须保持 `ENABLE_USER_SCRIPT_SANDBOXING = NO`，否则构建阶段无法更新生成文件。
-- `Human.swift` 的 `// objectbox: entity` 是代码生成标记；`model-JobsSwiftBaseConfigDemo.json` 和 `generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 是稳定实体 ID 的工程基线，实体变更时三者一起复核并提交。
+- `Human.swift` 的 `// objectbox: entity` 是代码生成标记；`model-JobsSwiftBaseConfigDemo.json` 和 `Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 是稳定实体 ID 的工程基线，实体变更时三者一起复核并提交。
 - Demo 代码统一位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`；数据库初始化以 `Result` 暴露失败，不用 `try!` 把存储目录或 Store 初始化错误升级为启动崩溃。
 
 - `swiftAppCommon` 管理通用外部依赖，`byJobs` 管理 Jobs 自建 Pod；新依赖先判断归属，再加入对应函数。
@@ -3350,6 +3350,13 @@ DemoDetailVC().onResult { name in
 
 #### 3.2.23、Debug模式下弹窗检测是否释放`UIViewController` <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- [JobsDebugPanel](../../JobsByPods/JobsDebugPanel@Pods/README.md) 承担 Debug 悬浮按钮、功能列表与环境切换；在 `AppDelegate+JobsDebugPanel.swift` 通过 `byEnvironments`、`byEnvironmentDidChange`、`byAddAction`、`byStart` 初始化。环境 Model 的 `byIdentifier` / `byTitle` / `byBaseURL` 与 OC 的模型语义对齐；自定义 Model 通过 `byTitle` / `byImage` / `byAction` 包装一行 Cell 及其行为，先注册先展示。
+- 悬浮按钮再次点击会退出本次菜单、环境页和自定义工具页面，返回打开前的宿主页面；显式 `open(from:)` 保持单向打开。Demo 的原生单元格背景、文字、选中态、附件和分隔线跟随宿主有效主题，避免 App 与系统外观不一致时颜色错配。
+- `JobsNetworkingDebugEnvironment.shared.byBaseURL(URL?)` 仅在 Debug 编译，作用于保留 agent 的下一次相对路径请求。Release 使用原 `JobsRequestConfig.baseURL`，已发出的请求和绝对 URL 不改目标。环境改变通知用于刷新展示，不能替代网络配置更新。
+- 调试按钮仅使用打包的 `JobsDebugPanelButton.png` 圆形背景，[**iconfont**](https://www.iconfont.cn/) 检索无法核查匹配资源许可后采用官方 [**Ant Design Icons**](https://github.com/ant-design/ant-design-icons) MIT bug 图；源 SVG 与许可证保存在 Pod 的 `Resource/`，Demo 入口放在宿主 `Assets.xcassets/JobsDebugPanelIcon.imageset`。
+- `UIView.byAccessibilityLabel(_:) -> Self` 补齐无障碍标签链式配置，位于 `JobsSwiftDSL` 的 UIView 层；控制器、窗口、按钮、Cell 与 SnapKit 均延用真实类型的既有 Jobs DSL。公共 CodeSnippets 的 `JobsDebugPanel` 模板与 AppDelegate 示例保持同签名。
+- `UIImage.make(named:in:compatibleWith:configure:) -> UIImage?` 在 `JobsByUIKit` 的真实 UIImage 工厂层承接资源 Bundle 加载，保留资源不存在的 `nil`，调试框架资源适配层只调用该工厂。
+
 * 引入框架 **`JobsSwiftDebugTools`**
 
   ```swift
@@ -3434,7 +3441,7 @@ DemoDetailVC().onResult { name in
 - 颗粒度要细：标题、颜色、字体、图片、状态、事件、装配、约束分别独立成行，不合并表达。
 - 同一 DSL 同时存在单参数和二参数写法时，默认首选单参数写法；二参数写法只用于 `.selected`、`.disabled`、`.highlighted` 等非默认状态差异。
 - 调用顺序固定为：当前 UI 类型本层 DSL、父类公共 DSL、事件 DSL、`byAddTo` + SnapKit 约束。
-- 示例默认运行在当前 iOS 15 宿主。若同一封装要下沉到更低部署目标，兼容分支写进 `JobsSwiftDSL` / `JobsByUIKit`，调用方保持同一套 Jobs API。
+- 示例默认运行在当前 iOS 15.6 宿主。若同一封装要下沉到更低部署目标，兼容分支写进 `JobsSwiftDSL` / `JobsByUIKit`，调用方保持同一套 Jobs API。
 - 使用 `JobsCor`、`JobsFont`、`YES` / `NO` 时显式导入 `JobsSwiftBaseDefines`：
 
   ```swift
@@ -3624,7 +3631,7 @@ private lazy var collectionView: UICollectionView = { [unowned self] in
 | --- | --- | --- |
 | 宿主 | `JobsSwiftBaseConfigDemo` | 业务装配、Demo 入口、宿主资源与启动配置。 |
 | 工程入口 | `JobsSwiftBaseConfigDemo.xcworkspace` | 集成 Pods 后统一从 workspace 打开和构建。 |
-| 部署与语言 | iOS 15、Swift 5 | 自建 Pod 可保留更低部署目标，兼容由 Pod 内部承担。 |
+| 部署与语言 | iOS 15.6、Swift 5 | 自建 Pod 可保留更低部署目标，兼容由 Pod 内部承担。 |
 | 链接方式 | CocoaPods 静态 framework | `use_frameworks! :linkage => :static`，避免业务自行切换。 |
 | Targets | App、Unit Tests、UI Tests、Widget Extension | 新 target 同步检查 Bundle ID、Info、Entitlements、资源与依赖。 |
 | 本地组件 | `JobsByPods/*@Pods` | Jobs 自建 Pod；`Pods/` 与 `ManualBySwiftPods@Pods/` 不属于维护源。 |
@@ -4013,5 +4020,40 @@ ruby -c Podfile.deps
 - 修改启动、根容器、导航、主题、语言或 Widget：同步更新调用流程与全生命周期验证项。
 - 生成报告只记录生成器真实输出；人工结论放在非生成文档中，避免下次生成被覆盖。
 - 文档示例应能直接复制，但仍需按使用模块保留最小必要 import、依赖和系统版本边界。
+
+
+## 十三、自建 Pod 稳定性与编译门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+当前宿主最低系统为 iOS 15.6，与已集成 LiveChat 的要求一致；独立 Pod 的最低系统仍以各自 Podspec 和独立消费验证为准。生产 source glob 排除测试、示例和临时文件，实际使用 UserDefaults、文件时间或系统运行时间的模块随独立资源 bundle 交付隐私原因清单。
+
+### 稳定性接口与迁移 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+| 能力 | 当前合同与调用调整 |
+| --- | --- |
+| 网络 | query 与 JSON / form body 独立编码；请求每次执行有身份；取消撤销退避任务；下载通过状态和内容校验后才替换目标文件。 |
+| Crypto | 默认格式验证完整性。旧 `0x02` CBC 仅由显式 legacy 入口迁移，默认解密拒绝；已有存量需按 JobsCryptoKit README 处理。 |
+| BRPicker | `awaitResult()` 为 `async throws`，调用使用 `try await`；Task / 面板取消进入一次性终态；需要 nil 时用 `awaitResultOrNil()`。 |
+| WebView | 配置在首文档前重建；文档加载后修改通过 `lastConfigurationError` 报告；默认桥接只允许本地 file 文档的主 frame，远程完整 origin必须显式加入 `bridgeAllowedOrigins`。 |
+| 本地化 | 同一对象不同属性使用不同 `slot`，相同 slot 替换而不是累积；`unbind(target, slot:)` 精确解除。 |
+| Sendable | `AnySendableBox` 仅接收 Sendable 值；JobsText 不再声明任意属性字典可安全跨 actor，跨边界用 `asString` 或业务不可变快照。 |
+| PNPlayer | 主线程隔离；`byAttach` 同步实际 MTKView 配置；Metal 错误及视频错误走公开回调，宿主 Demo 展示失败。 |
+| SwiftTools | 默认 Core + Flutter 保持宿主兼容；`JobsSwiftTools/Core` 不包含 FlutterBridge，不硬引 Flutter engine / registrant。 |
+| JobsOCDSL | 当前 Swift 检出只交付可编译的能力感知兼容入口；能力数组为空，不把完整 OC 分类当作已移入。 |
+
+### 编译与回归入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+在仓库根目录运行：
+
+```shell
+JOBS_POD_INSTALL_PURE=1 pod install --no-repo-update
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuration Release
+```
+
+全量验证器先逐个编译自建 Pod；JobsOCDSL 使用独立临时消费工程；全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
+
+核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<../../.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
+
+升级结果与本轮实际编译状态见工程根目录《JobsByPods升级与编译验收报告.md》。既有审阅报告保留为修复前证据。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

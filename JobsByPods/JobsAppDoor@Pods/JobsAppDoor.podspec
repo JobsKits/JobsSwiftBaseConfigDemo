@@ -36,4 +36,24 @@ Pod::Spec.new do |spec|
   spec.dependency 'JobsSwiftGraphicCaptcha'
   spec.dependency 'JobsSwiftCountryCodeCtrl'
   spec.dependency 'SnapKit'
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  spec.exclude_files = Array(spec.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
+  # Explicit subspec consumers do not inherit the root's file exclusions.
+  spec.recursive_subspecs.each do |subspec|
+    subspec.exclude_files = Array(subspec.attributes_hash['exclude_files']) + Array(spec.attributes_hash['exclude_files'])
+  end
+
 end

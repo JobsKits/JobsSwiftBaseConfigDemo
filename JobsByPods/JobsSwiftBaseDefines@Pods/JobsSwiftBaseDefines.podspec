@@ -26,4 +26,20 @@ Pod::Spec.new do |s|
     'LICENSE',
   ]
 
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  s.exclude_files = Array(s.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+  s.resource_bundles = (s.attributes_hash['resource_bundles'] || {}).merge('JobsSwiftBaseDefinesPrivacy' => ['Resource/PrivacyInfo.xcprivacy'])
+
 end

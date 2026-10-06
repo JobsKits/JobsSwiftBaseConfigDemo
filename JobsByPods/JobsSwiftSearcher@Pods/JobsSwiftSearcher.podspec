@@ -18,4 +18,20 @@ Pod::Spec.new do |spec|
   spec.dependency 'JobsSwiftBaseDefines'
   spec.dependency 'JobsSwiftDSL'
   spec.dependency 'Jobsl10n'
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  spec.exclude_files = Array(spec.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+  spec.resource_bundles = (spec.attributes_hash['resource_bundles'] || {}).merge('JobsSwiftSearcherPrivacy' => ['Resource/PrivacyInfo.xcprivacy'])
+
 end

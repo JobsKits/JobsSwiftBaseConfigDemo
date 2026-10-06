@@ -14,7 +14,14 @@ public final class JobsWorker: JobsWorkerDisposable, @unchecked Sendable {
 
     private let lock = NSLock()
     private var disposer: (() -> Void)?
-    public private(set) var isDisposed: Bool = false
+    private var disposed = false
+    public var isDisposed: Bool {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return disposed
+    }
 
     public init(mode: JobsWorkerMode,
                 label: String? = nil,
@@ -26,22 +33,26 @@ public final class JobsWorker: JobsWorkerDisposable, @unchecked Sendable {
 
     public func setDisposer(_ disposer: @escaping () -> Void) {
         lock.lock()
-        defer { lock.unlock() }
-        guard !isDisposed else {
-            disposer()
-            return
+        let shouldDispose = disposed
+        let previous = shouldDispose ? nil : self.disposer
+        if !shouldDispose {
+            self.disposer = disposer
         }
-        self.disposer = disposer
+        lock.unlock()
+        withExtendedLifetime(previous) {}
+        if shouldDispose {
+            disposer()
+        }
     }
 
     public func dispose() {
         let action: (() -> Void)?
         lock.lock()
-        guard !isDisposed else {
+        guard !disposed else {
             lock.unlock()
             return
         }
-        isDisposed = true
+        disposed = true
         action = disposer
         disposer = nil
         lock.unlock()

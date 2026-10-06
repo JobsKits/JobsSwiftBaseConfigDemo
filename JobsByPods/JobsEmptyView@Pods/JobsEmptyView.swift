@@ -36,18 +36,27 @@ public class JobsEmptyView: UIView {
             .byText("暂无数据，点击重试".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byFont(UIFont.preferredFont(forTextStyle: .body))
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview().inset(12)
             }
     }()
 
-    required init?(coder: NSCoder) { fatalError() }
-    override init(frame: CGRect) {
+    public required init?(coder: NSCoder) { fatalError("Use init(frame:)") }
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
         label.byVisible(YES)
+        label.adjustsFontForContentSizeCategory = true
+        isAccessibilityElement = true
+        accessibilityLabel = label.text
+        accessibilityTraits = .button
+        label.isAccessibilityElement = false
         jobs_addGesture(tapGR)
+    }
+    public override func accessibilityActivate() -> Bool {
+        jobsValueVoidCallback()
+        return true
     }
 }
 /// DSL

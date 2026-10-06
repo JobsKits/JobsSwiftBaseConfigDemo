@@ -26,7 +26,7 @@ public final class JobsAppDoorInputView: UIView {
     private let verificationCodeDuration: Int
     private var countryCodeButton: UIButton?
     private var verificationButton: UIButton?
-    private var captchaView: JobsSwiftGraphicCaptchaView?
+    public private(set) var captchaView: JobsSwiftGraphicCaptchaView?
 
     private lazy var iconView: UIImageView = {
         UIImageView.jobsMake { _ in }
@@ -63,7 +63,12 @@ public final class JobsAppDoorInputView: UIView {
     }
 
     public func validateGraphicCaptcha() -> Bool {
-        guard field == .graphicCaptcha else { return true };return captchaView?.validateInput(text) ?? false
+        guard field == .graphicCaptcha else { return true }
+        if captchaView?.usesServerValidation == true {
+            guard let challenge = captchaView?.serverChallenge else { return false }
+            return !text.isEmpty && (challenge.expiresAt.map { $0 > Date() } ?? true)
+        }
+        return captchaView?.validateInput(text) ?? false
     }
 
     public func startVerificationCountdown() {

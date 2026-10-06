@@ -23,6 +23,20 @@ extension UIImage {
         return image
     }
 
+    /// 从明确的资源 Bundle 创建图片，保留找不到资源时的 nil 语义。
+    public static func make(
+        named name: String,
+        in bundle: Bundle = .main,
+        compatibleWith traits: UITraitCollection? = nil,
+        configure: (UIImage) -> Void = { _ in }
+    ) -> UIImage? {
+        guard let image = UIImage(named: name, in: bundle, compatibleWith: traits) else {
+            return nil
+        }
+        configure(image)
+        return image
+    }
+
     // MARK: - 绘制渐变色图片：任意方向线性渐变
     public convenience init?(gradientColors: [UIColor],
                              size: CGSize,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct JobsEnvelope<Payload: Decodable>: Decodable, Sendable {
+public struct JobsEnvelope<Payload: Decodable>: Decodable {
     public let code: Int
     public let message: String?
     public let data: Payload?
@@ -31,3 +31,5 @@ extension JobsEnvelope: JobsEnvelopeDecodable {
     public var jobsMessage: String? { message }
     public var jobsPayload: Payload? { data }
 }
+
+extension JobsEnvelope: Sendable where Payload: Sendable {}

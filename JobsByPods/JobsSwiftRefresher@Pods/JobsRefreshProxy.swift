@@ -109,6 +109,9 @@ final class JobsSlot {
 
     var restoreInsetDuration: TimeInterval = 0.25
     private var isEndingAnimation = false
+    private weak var attachedScrollView: UIScrollView?
+    private var contributedInset: CGFloat = 0
+    private var generation: UInt64 = 0
     private(set) var state: JobsState = .idle {
         didSet { view.apply(state: state) }
     }
@@ -122,12 +125,13 @@ final class JobsSlot {
         self.position = position
         self.role = role
         self.view = view
-        self.trigger = trigger
+        self.trigger = trigger.isFinite && trigger > 0 ? trigger : 60
         self.container = container
         self.action = action
     }
 
     func attach(to sv: UIScrollView) {
+        attachedScrollView = sv
         if view.superview !== sv { view.byAddTo(sv) }
         if state != .removed { view.byHidden(!showsInfo) }
         layout(in: sv)
@@ -135,6 +139,13 @@ final class JobsSlot {
     }
 
     func detach() {
+        generation &+= 1
+        isEndingAnimation = false
+        if let sv = attachedScrollView {
+            sv.byContentInset(resetInset(from: sv.contentInset))
+        }
+        contributedInset = 0
+        attachedScrollView = nil
         view.removeFromSuperview()
         view.byHidden(true)
         state = .removed
@@ -156,20 +167,8 @@ final class JobsSlot {
     }
 
     func layout(in sv: UIScrollView) {
-        let h = view.heightOrWidth
-        var baseInset = sv.contentInset
-        if state == .refreshing || state == .ending {
-            switch position {
-            /// 处理 .header 分支
-            case .header: baseInset.top    = max(0, baseInset.top - h)
-            /// 处理 .footer 分支
-            case .footer: baseInset.bottom = max(0, baseInset.bottom - h)
-            /// 处理 .left 分支
-            case .left:   baseInset.left   = max(0, baseInset.left - h)
-            /// 处理 .right 分支
-            case .right:  baseInset.right  = max(0, baseInset.right - h)
-            }
-        }
+        let h = view.heightOrWidth.isFinite ? max(0, view.heightOrWidth) : 60
+        let baseInset = resetInset(from: sv.contentInset)
         switch position {
         /// 处理 .header 分支
         case .header:
@@ -250,9 +249,12 @@ final class JobsSlot {
               state != .noMore else { return }
         // Human interaction feedback: haptic + sound (configured via DSL on UIScrollView)
         sv.byRefreshFeedback(for: position)
+        generation &+= 1
+        attachedScrollView = sv
         state = .refreshing
         view.byHidden(!showsInfo)
-        let h = view.heightOrWidth
+        let h = view.heightOrWidth.isFinite ? max(0, view.heightOrWidth) : 60
+        contributedInset = h
         let oldAdjusted = sv.adjustedContentInset
         var inset = sv.contentInset
         switch position {
@@ -305,6 +307,9 @@ final class JobsSlot {
         }
         view.byHidden(!showsInfo)
         let targetInset = targetInsetOpt ?? resetInset(from: sv.contentInset)
+        contributedInset = 0
+        generation &+= 1
+        let endingGeneration = generation
         isEndingAnimation = true
         state = .ending
         UIView.jobsAnimateWithOptions(
@@ -315,7 +320,8 @@ final class JobsSlot {
                 sv.byContentInset(targetInset)
                 self.layout(in: sv)
             },
-            completion: { _ in
+            completion: { [weak self, weak sv] _ in
+                guard let self, let sv, self.generation == endingGeneration else { return }
                 self.layout(in: sv)
                 self.state = finalState
                 self.isEndingAnimation = false
@@ -328,6 +334,7 @@ final class JobsSlot {
             endRefreshing(on: sv)
             return
         }
+        generation &+= 1
         isEndingAnimation = false
         state = .idle
         view.byHidden(!showsInfo)
@@ -339,6 +346,8 @@ final class JobsSlot {
             endRefreshing(on: sv, finalState: .failed)
             return
         }
+        generation &+= 1
+        isEndingAnimation = false
         state = .failed
         view.byHidden(!showsInfo)
         layout(in: sv)
@@ -349,6 +358,8 @@ final class JobsSlot {
             endRefreshing(on: sv, finalState: .disabled)
             return
         }
+        generation &+= 1
+        isEndingAnimation = false
         state = .disabled
         view.byHidden(!showsInfo)
         layout(in: sv)
@@ -356,6 +367,12 @@ final class JobsSlot {
 
     func noticeNoMoreData(on sv: UIScrollView) {
         guard role == .loadMore else { return }
+        if case .refreshing = state {
+            endRefreshing(on: sv, finalState: .noMore)
+            return
+        }
+        generation &+= 1
+        isEndingAnimation = false
         state = .noMore
         view.byHidden(!showsInfo)
         layout(in: sv)
@@ -365,13 +382,13 @@ final class JobsSlot {
         var inset = current
         switch position {
         /// 处理 .header 分支
-        case .header: inset.top    -= view.heightOrWidth
+        case .header: inset.top    -= contributedInset
         /// 处理 .footer 分支
-        case .footer: inset.bottom -= view.heightOrWidth
+        case .footer: inset.bottom -= contributedInset
         /// 处理 .left 分支
-        case .left:   inset.left   -= view.heightOrWidth
+        case .left:   inset.left   -= contributedInset
         /// 处理 .right 分支
-        case .right:  inset.right  -= view.heightOrWidth
+        case .right:  inset.right  -= contributedInset
         };return inset
     }
 }

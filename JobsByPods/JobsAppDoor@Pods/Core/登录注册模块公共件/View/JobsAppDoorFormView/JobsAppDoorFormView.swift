@@ -10,11 +10,25 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import SnapKit
+import JobsSwiftGraphicCaptcha
 
 public final class JobsAppDoorFormView: UIView {
     public let configuration: JobsAppDoorConfig
     public private(set) var mode: JobsAppDoorMode
     public var onModeRequest: ((JobsAppDoorMode) -> Void)?
+    public var configureGraphicCaptcha: ((JobsSwiftGraphicCaptchaView) -> Void)? {
+        didSet {
+            if let captcha = inputViews[.graphicCaptcha]?.captchaView {
+                configureGraphicCaptcha?(captcha)
+                let previous = captcha.onChallengeChanged
+                captcha.onChallengeChanged = { [weak self] challenge in
+                    previous?(challenge)
+                    self?.refreshSubmitState()
+                }
+                refreshSubmitState()
+            }
+        }
+    }
     public var onSubmit: ((JobsAppDoorMode, JobsAppDoorFormValues) -> Void)?
     public var onHome: (() -> Void)?
     public var onCountryCodeRequest: ((JobsAppDoorInputView) -> Void)?
@@ -24,6 +38,7 @@ public final class JobsAppDoorFormView: UIView {
     private var orderedFields: [JobsAppDoorField] = []
     private var inputViews: [JobsAppDoorField: JobsAppDoorInputView] = [:]
     private var remembersPassword = true
+    public private(set) var isSubmitting = false
 
     private lazy var contentView: UIView = {
         UIView.jobsMake { _ in }
@@ -203,8 +218,21 @@ public final class JobsAppDoorFormView: UIView {
             phone: inputViews[.phone]?.text ?? "",
             smsCode: inputViews[.smsCode]?.text ?? "",
             graphicCaptcha: inputViews[.graphicCaptcha]?.text ?? "",
+            graphicCaptchaChallengeID: inputViews[.graphicCaptcha]?.captchaView?.serverChallenge?.identifier,
             remembersPassword: remembersPassword
         )
+    }
+
+    public func applySubmissionState(_ state: JobsAppDoorSubmissionState) {
+        if case .submitting = state {
+            isSubmitting = true
+        } else {
+            isSubmitting = false
+        }
+        if case .failed(let error) = state {
+            validationLabel.byText(error.localizedDescription)
+        }
+        refreshSubmitState()
     }
 
     public func apply(mode: JobsAppDoorMode) {
@@ -341,6 +369,14 @@ private extension JobsAppDoorFormView {
             captchaConfig: configuration.registerConfig.graphicCaptchaConfig,
             verificationCodeDuration: configuration.verificationCodeDuration
         )
+        if let captcha = inputView.captchaView {
+            configureGraphicCaptcha?(captcha)
+            let previous = captcha.onChallengeChanged
+            captcha.onChallengeChanged = { [weak self] challenge in
+                previous?(challenge)
+                self?.refreshSubmitState()
+            }
+        }
         inputView.onTextChanged = { [weak self] in
             self?.validationLabel.byText("")
             self?.refreshSubmitState()
@@ -394,7 +430,7 @@ private extension JobsAppDoorFormView {
     }
 
     func refreshSubmitState() {
-        let valid = validationMessage(includeEmptyMessage: false) == nil
+        let valid = !isSubmitting && validationMessage(includeEmptyMessage: false) == nil
         submitButton
             .jobsAppDoorAppearance(
                 title: submitTitle(),
@@ -408,6 +444,7 @@ private extension JobsAppDoorFormView {
     }
 
     func submitTapped() {
+        guard !isSubmitting else { return }
         if let message = validationMessage(includeEmptyMessage: true) {
             validationLabel.byText(message)
             return

@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
 import JobsSwiftDSL
+import JobsByUIKit
 #endif
 
 import JobsSwiftBaseDefines
@@ -53,13 +54,19 @@ public final class JobsSwiftLinkageMenuViewConfig {
     public var selectedTintColor: UIColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
     public var selectedBackgroundColor: UIColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
     public var noContentClickBlock: ((JobsSwiftLinkageMenuPayload) -> Void)?
+    public var reloadBlock: (() -> Void)?
     public var menuClickBlock: ((JobsSwiftLinkageMenuPayload) -> Void)?
 
     public init() {}
 
     public func itemHeight(at index: Int) -> CGFloat {
-        if let value = menuItemHeightMap[index], value > 0 { return value }
-        if menuItemHeights.indices.contains(index), menuItemHeights[index] > 0 { return menuItemHeights[index] };return defaultMenuItemHeight > 0 ? defaultMenuItemHeight : 56
+        if let value = menuItemHeightMap[index], value.isFinite, value > 0 {
+            return min(value, 10_000)
+        }
+        if menuItemHeights.indices.contains(index), menuItemHeights[index].isFinite, menuItemHeights[index] > 0 {
+            return min(menuItemHeights[index], 10_000)
+        }
+        return defaultMenuItemHeight.isFinite && defaultMenuItemHeight > 0 ? min(defaultMenuItemHeight, 10_000) : 56
     }
 }
 
@@ -197,7 +204,13 @@ public final class JobsSwiftLinkageMenuView: UIView {
     }
 
     public func selectMenu(at index: Int, animated: Bool) {
-        guard menuItems.indices.contains(index) else { return }
+        guard menuItems.indices.contains(index) else {
+            contentContainerView.subviews.forEach { $0.removeFromSuperview() }
+            indicatorView.byHidden(true)
+            showEmptyContent()
+            return
+        }
+        indicatorView.byHidden(false)
         selectedIndex = index
         let contentView = contentViews.indices.contains(index) ? contentViews[index] : nil
         let payload = JobsSwiftLinkageMenuPayload(index: index,
@@ -212,6 +225,7 @@ public final class JobsSwiftLinkageMenuView: UIView {
         } else {
             if config.clearsContentWhenMissing {
                 contentContainerView.subviews.forEach { $0.removeFromSuperview() }
+                showEmptyContent()
             }
             config.noContentClickBlock?(payload)
         }
@@ -280,6 +294,14 @@ public final class JobsSwiftLinkageMenuView: UIView {
         let changes: () -> Void = { _ = self.indicatorView.byFrame(frame) }
         animated ? UIView.jobsAnimate(config.animationDuration, animations: changes) : changes()
         menuScrollView.scrollRectToVisible(button.frame.insetBy(dx: 0, dy: -12), animated: animated)
+    }
+
+    private func showEmptyContent() {
+        JobsEmptyAuto.Config.defaultProvider()
+            .onTap { [weak self] _ in self?.config.reloadBlock?() }
+            .byFrame(contentContainerView.bounds)
+            .byAutoresizingMask([.flexibleWidth, .flexibleHeight])
+            .byAddTo(contentContainerView)
     }
 
     private func showContentView(_ contentView: UIView) {

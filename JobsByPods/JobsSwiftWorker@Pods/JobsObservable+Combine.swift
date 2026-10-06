@@ -12,11 +12,22 @@ public extension JobsObservable {
                                     _ rhs: JobsObservable<B>,
                                     name: String? = nil) -> JobsObservable<(A, B)> where A: Sendable, B: Sendable, Value == (A, B) {
         let combined = JobsObservable<(A, B)>((lhs.currentValue, rhs.currentValue), name: name)
-        _ = lhs.observe { change in
-            combined.accept((change.newValue, rhs.currentValue))
+        let leftToken = lhs.observe { [weak combined, weak rhs] change in
+            guard let rhs else {
+                return
+            }
+            combined?.accept((change.newValue, rhs.currentValue))
         }
-        _ = rhs.observe { change in
-            combined.accept((lhs.currentValue, change.newValue))
-        };return combined
+        let rightToken = rhs.observe { [weak combined, weak lhs] change in
+            guard let lhs else {
+                return
+            }
+            combined?.accept((lhs.currentValue, change.newValue))
+        }
+        combined.retainUpstream {
+            lhs.removeObserver(leftToken)
+            rhs.removeObserver(rightToken)
+        }
+        return combined
     }
 }

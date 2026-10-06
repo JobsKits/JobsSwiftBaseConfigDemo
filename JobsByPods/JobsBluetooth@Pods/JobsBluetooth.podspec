@@ -13,4 +13,19 @@ Pod::Spec.new do |spec|
   spec.frameworks = ['Foundation', 'CoreBluetooth']
   spec.resource_bundles = { 'JobsBluetoothPrivacy' => ['Resource/*.xcprivacy'] }
   spec.exclude_files = ['README.md']
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  spec.exclude_files = Array(spec.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
+  ]
+
 end

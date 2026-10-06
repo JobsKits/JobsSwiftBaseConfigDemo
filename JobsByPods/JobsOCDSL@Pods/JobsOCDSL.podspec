@@ -1,68 +1,40 @@
-require_relative 'JobsPodspecKit'
-
 Pod::Spec.new do |spec|
-
-  support_context = JobsPodspecKitForJobsOCDSL.build_support_context(
-    podspec_dir: File.expand_path(File.dirname(__FILE__)),
-    support_dir: 'Support',
-    support_dependencies: []
-  )
-
-  spec.name             = 'JobsOCDSL'
-  spec.version          = '1.0.0'
-  spec.summary          = 'Objective-C chainable DSL categories for Jobs projects.'
-  spec.description      = <<-DESC
-JobsOCDSL collects Objective-C chainable DSL categories extracted from local Jobs pods.
-It keeps DSL syntax independent from the feature pods that consume it.
-  DESC
-
-  spec.homepage         = 'https://example.local/JobsOCDSL'
-  spec.license          = { :type => 'MIT' }
-  spec.author           = { 'Jobs' => 'lg295060456@gmail.com' }
-
-  spec.platform         = :ios, '12.0'
-  spec.requires_arc     = true
-  spec.source           = { :path => '.' }
-
+  spec.name = 'JobsOCDSL'
+  spec.version = '1.0.1'
+  spec.summary = 'Capability-aware Objective-C DSL compatibility entry for the Swift checkout.'
+  spec.description = 'Buildable compatibility entry. Optional categories are exported only when their source is present in this Pod.'
+  spec.homepage = 'https://github.com/JobsKits/JobsBaseConfig'
+  spec.license = { :type => 'MIT' }
+  spec.author = { 'Jobs' => 'lg295060456@gmail.com' }
+  spec.platform = :ios, '12.0'
+  spec.requires_arc = true
+  spec.source = { :path => '.' }
   spec.default_subspecs = 'Core'
-
-  spec.source_files        = 'JobsOCDSL.h'
-  spec.public_header_files = 'JobsOCDSL.h'
-  spec.header_dir          = 'JobsOCDSL'
-
-  JobsPodspecKitForJobsOCDSL.add_support_subspec(spec, support_context)
-
-  spec.subspec 'Core' do |ss|
-    JobsPodspecKitForJobsOCDSL.add_dynamic_support_dependencies(ss, spec, support_context)
-
-    ss.source_files        = 'Core/**/*.{h,m,mm}'
-    ss.public_header_files = 'Core/**/*.h'
-    ss.header_dir          = 'JobsOCDSL'
+  spec.subspec 'Core' do |core|
+    core.source_files = 'JobsOCDSL.{h,m}', 'Core/**/*.{h,m,mm}'
+    core.public_header_files = 'JobsOCDSL.h', 'Core/**/*.h'
+    core.header_dir = 'JobsOCDSL'
   end
-
-  spec.frameworks = [
-    'Foundation',
-    'UIKit',
-    'QuartzCore'
+  spec.frameworks = 'Foundation', 'UIKit'
+  spec.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  # Jobs production boundary: keep validation and temporary sources out of release targets.
+  spec.exclude_files = Array(spec.attributes_hash['exclude_files']) + [
+    '**/Tests/**/*',
+    '**/Test/**/*',
+    '**/Example/**/*',
+    '**/Examples/**/*',
+    '**/Demo/**/*',
+    '**/Demos/**/*',
+    '**/build/**/*',
+    '**/DerivedData/**/*',
+    '**/*Tests.swift',
+    '**/*UITests.swift',
+    '**/*.tmp.*',
   ]
 
-  spec.dependency 'JobsBlock'
-  spec.dependency 'JobsOCDefs'
-  spec.dependency 'JobsOCProtocols'
-  spec.dependency 'MJRefresh'
-  spec.dependency 'Texture'
-
-  JobsPodspecKitForJobsOCDSL.apply_standard_exclude_files(spec)
-
-  JobsPodspecKitForJobsOCDSL.apply_standard_xcconfig(
-    spec,
-    pod_target_xcconfig: {
-      'DEFINES_MODULE' => 'YES',
-      'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
-    },
-    user_target_xcconfig: {
-      'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
-    }
-  )
+  # Explicit subspec consumers do not inherit the root's file exclusions.
+  spec.recursive_subspecs.each do |subspec|
+    subspec.exclude_files = Array(subspec.attributes_hash['exclude_files']) + Array(spec.attributes_hash['exclude_files'])
+  end
 
 end

@@ -15,6 +15,7 @@ public final class JobsSwiftCommentView: UIView {
     public private(set) var tableView = UITableView(frame: .zero, style: .plain)
     public private(set) var config: JobsSwiftCommentConfig
     public private(set) var comments: [JobsSwiftCommentModel] = []
+    public private(set) var isRenderTruncated = false
 
     private var renderRows: [RenderRow] = []
     private var expandedRootIDs = Set<String>()
@@ -64,6 +65,17 @@ public final class JobsSwiftCommentView: UIView {
 
     public func reloadWithComments(_ comments: [JobsSwiftCommentModel]?) {
         self.comments = comments ?? []
+        expandedRootIDs.formIntersection(Set(self.comments.map(\.messageID)))
+        isLoadingMore = false
+        noMoreData = false
+        endPullRefresh()
+        updateLoadMoreTitle()
+        rebuildRenderData()
+        tableView.reloadData()
+    }
+
+    public func appendComments(_ comments: [JobsSwiftCommentModel]) {
+        self.comments.append(contentsOf: comments)
         rebuildRenderData()
         tableView.reloadData()
     }
@@ -100,7 +112,8 @@ extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
             cell.updateWithMoreText("展开更多回复", depth: row.depth)
         } else {
             cell.update(with: row.comment, config: config, depth: row.depth, parentComment: row.parentComment)
-        };return cell
+        }
+        return cell
     }
 
     public func tableView(_ tableView: UITableView,
@@ -149,6 +162,11 @@ private extension JobsSwiftCommentView {
             .byRowHeight(UITableView.automaticDimension)
             .byKeyboardDismissMode(.onDrag)
             .byContentInset(UIEdgeInsets(top: 6, left: 0, bottom: 10, right: 0))
+            .byEmptyButtonProvider { [weak self] in
+                JobsEmptyAuto.Config.defaultProvider().onTap { [weak self] _ in
+                    self?.pullRefreshTriggered()
+                }
+            }
             .byRegisterCellOnID(CellCls: JobsSwiftCommentCell.self,
                                 ID: JobsSwiftCommentCell.reuseIdentifier)
         if #available(iOS 15.0, *) {
@@ -170,81 +188,62 @@ private extension JobsSwiftCommentView {
     }
 
     func rebuildRenderData() {
-        renderRows.removeAll()
+        renderRows.removeAll(keepingCapacity: true)
+        isRenderTruncated = false
+        let rowLimit = max(1, min(config.maxRenderedRows, 10_000))
+        let depthLimit = max(0, min(config.maxReplyDepth, 128))
         let shouldShowChildren = config.mode != .toutiao || comments.count == 1
         for comment in comments {
-            appendRenderComment(comment, depth: 0, parentComment: nil, isMoreRow: false, rootID: comment.messageID)
+            guard renderRows.count < rowLimit else {
+                isRenderTruncated = true
+                break
+            }
+            renderRows.append(RenderRow(comment: comment, depth: 0, parentComment: nil,
+                                        isMoreRow: false, rootID: comment.messageID))
             guard shouldShowChildren else { continue }
-            let childReplyCount = descendantCount(by: comment)
-            let maxVisibleCount = effectiveMaxVisibleChildReplyCount()
-            let shouldLimit = childReplyCount > maxVisibleCount && !expandedRootIDs.contains(comment.messageID)
-            if shouldLimit {
-                var remainingCount = maxVisibleCount
-                for child in comment.children {
-                    appendLimitedChildComment(child, depth: 1, parentComment: comment, remainingCount: &remainingCount, rootID: comment.messageID)
-                    if remainingCount == 0 { break }
+            let visibleLimit = effectiveMaxVisibleChildReplyCount()
+            let isExpanded = expandedRootIDs.contains(comment.messageID)
+            var visibleCount = 0
+            // Frames retain a child index, so very wide trees do not allocate a second full stack.
+            var stack: [(parent: JobsSwiftCommentModel, index: Int, depth: Int)] = [(comment, 0, 1)]
+            while let frame = stack.last {
+                if frame.index >= frame.parent.children.count {
+                    stack.removeLast()
+                    continue
                 }
-                appendRenderComment(comment, depth: 1, parentComment: nil, isMoreRow: true, rootID: comment.messageID)
-            } else {
-                for child in comment.children {
-                    appendComment(child, depth: 1, parentComment: comment, shouldShowChildren: true, rootID: comment.messageID)
+                stack[stack.count - 1].index += 1
+                guard frame.depth <= depthLimit else {
+                    isRenderTruncated = true
+                    stack.removeLast()
+                    continue
+                }
+                if !isExpanded, visibleCount >= visibleLimit {
+                    if renderRows.count < rowLimit {
+                        renderRows.append(RenderRow(comment: comment, depth: 1, parentComment: nil,
+                                                    isMoreRow: true, rootID: comment.messageID))
+                    } else {
+                        isRenderTruncated = true
+                    }
+                    break
+                }
+                guard renderRows.count < rowLimit else {
+                    isRenderTruncated = true
+                    break
+                }
+                let child = frame.parent.children[frame.index]
+                renderRows.append(RenderRow(comment: child, depth: frame.depth,
+                                            parentComment: frame.parent, isMoreRow: false,
+                                            rootID: comment.messageID))
+                visibleCount += 1
+                if !child.children.isEmpty {
+                    stack.append((child, 0, frame.depth + 1))
                 }
             }
         }
     }
 
-    func appendRenderComment(_ comment: JobsSwiftCommentModel,
-                             depth: Int,
-                             parentComment: JobsSwiftCommentModel?,
-                             isMoreRow: Bool,
-                             rootID: String) {
-        renderRows.append(
-            RenderRow(
-                comment: comment,
-                depth: depth,
-                parentComment: parentComment,
-                isMoreRow: isMoreRow,
-                rootID: rootID
-            )
-        )
-    }
-
-    func appendComment(_ comment: JobsSwiftCommentModel,
-                       depth: Int,
-                       parentComment: JobsSwiftCommentModel?,
-                       shouldShowChildren: Bool,
-                       rootID: String) {
-        appendRenderComment(comment, depth: depth, parentComment: parentComment, isMoreRow: false, rootID: rootID)
-        guard shouldShowChildren else { return }
-        for child in comment.children {
-            appendComment(child, depth: depth + 1, parentComment: comment, shouldShowChildren: shouldShowChildren, rootID: rootID)
-        }
-    }
-
-    func appendLimitedChildComment(_ comment: JobsSwiftCommentModel,
-                                   depth: Int,
-                                   parentComment: JobsSwiftCommentModel?,
-                                   remainingCount: inout Int,
-                                   rootID: String) {
-        guard remainingCount > 0 else { return }
-        appendRenderComment(comment, depth: depth, parentComment: parentComment, isMoreRow: false, rootID: rootID)
-        remainingCount -= 1
-        guard remainingCount > 0 else { return }
-        for child in comment.children {
-            appendLimitedChildComment(child, depth: depth + 1, parentComment: comment, remainingCount: &remainingCount, rootID: rootID)
-            if remainingCount == 0 { break }
-        }
-    }
-
-    func descendantCount(by comment: JobsSwiftCommentModel) -> Int {
-        var count = 0
-        for child in comment.children {
-            count += 1 + descendantCount(by: child)
-        };return count
-    }
-
     func effectiveMaxVisibleChildReplyCount() -> Int {
-        max(config.maxVisibleChildReplyCount, 1)
+        max(1, min(config.maxVisibleChildReplyCount, 10_000))
     }
 
     func shouldEnableRefreshByMode() -> Bool {

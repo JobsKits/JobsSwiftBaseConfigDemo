@@ -252,6 +252,7 @@ extension AppDelegate {
         日志框架接入()
         #if DEBUG
         VCDebugDeallocDebug.install()
+        setupDebugPanel()
 //        循环打印当前的时间()
         #endif
         udSave()

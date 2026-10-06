@@ -42,6 +42,9 @@ public final class JobsToast: UIView {
     }()
 
     private var completion: jobsByVoidBlock?
+    private weak var hostWindow: UIWindow?
+    private var dismissalWork: DispatchWorkItem?
+    private var isDismissing = false
     // MARK: - 配置：支持时长、边距、偏移、圆角、背景色等链式
     public struct Config {
         public var duration: TimeInterval = 1.0
@@ -153,21 +156,28 @@ public extension JobsToast {
             }
         )
         // 记录引用：每窗只保留一个
-        objc_setAssociatedObject(targetWindow, &currentToastKey, toast, .OBJC_ASSOCIATION_ASSIGN)
-        // 定时消失（仍用 config.duration 控制停留时长）
-        DispatchQueue.main.asyncAfter(deadline: .now() + max(0.15, config.duration)) { [weak toast, weak targetWindow] in
+        objc_setAssociatedObject(targetWindow, &currentToastKey, toast, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        toast.hostWindow = targetWindow
+        let work = DispatchWorkItem { [weak toast, weak targetWindow] in
             guard let toast, let targetWindow else { return }
             toast.dismiss(from: targetWindow)
-        };return toast
+        }
+        toast.dismissalWork = work
+        let duration = config.duration.isFinite ? max(0.15, config.duration) : 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: work)
+        return toast
     }
     // 主动消失 —— 无参便捷版（MainActor 内部安全取 wd）
     func dismiss() {
-        let targetWindow = UIWindow.wd
+        guard let targetWindow = hostWindow ?? (superview as? UIWindow) else { return }
         dismiss(from: targetWindow)
     }
     // 主动消失 —— 需要明确传入 window（不提供默认值）
     func dismiss(from window: UIWindow) {
-        guard superview != nil else { return }
+        guard superview != nil, !isDismissing else { return }
+        isDismissing = true
+        dismissalWork?.cancel()
+        dismissalWork = nil
         UIView.jobsAnimateWithOptions(
             0.18,
             delay: 0,
@@ -177,9 +187,15 @@ public extension JobsToast {
                 self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97).translatedBy(x: 0, y: 6)
             },
             completion: { [weak self, weak window] _ in
-                self?.removeFromSuperview()
-                if let window { Self.clearAssociatedToast(from: window) }
-                self?.completion?()
+                guard let self else { return }
+                self.removeFromSuperview()
+                if let window,
+                   objc_getAssociatedObject(window, &Self.currentToastKey) as? JobsToast === self {
+                    Self.clearAssociatedToast(from: window)
+                }
+                let completion = self.completion
+                self.completion = nil
+                completion?()
             }
         )
     }
@@ -188,12 +204,16 @@ public extension JobsToast {
 private extension JobsToast {
     static func removeExistingToast(from window: UIWindow) {
         if let existing = objc_getAssociatedObject(window, &currentToastKey) as? JobsToast {
+            existing.dismissalWork?.cancel()
+            existing.dismissalWork = nil
+            existing.layer.removeAllAnimations()
             existing.removeFromSuperview()
+            existing.completion = nil
             clearAssociatedToast(from: window)
         }
     }
     static func clearAssociatedToast(from window: UIWindow) {
-        objc_setAssociatedObject(window, &currentToastKey, nil, .OBJC_ASSOCIATION_ASSIGN)
+        objc_setAssociatedObject(window, &currentToastKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }
 // MARK: - Tips

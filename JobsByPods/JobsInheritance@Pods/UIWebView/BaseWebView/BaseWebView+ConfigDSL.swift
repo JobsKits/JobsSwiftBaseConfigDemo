@@ -63,25 +63,34 @@ extension BaseWebView {
     // ===== WKWebViewConfiguration 点语法注入（外部优先）=====
     /// 外部显式设置 dataStore（优先级高于内部默认）
     @discardableResult
+    @MainActor
     public func byWebsiteDataStore(_ store: WKWebsiteDataStore) -> Self {
-        // ⚠️ 必须在 webView 创建前调用；创建后修改不会影响现有 webView
-        overrideWebsiteDataStore = store
+        updateCreationConfiguration { overrideWebsiteDataStore = store }
         return self
     }
     /// 使用持久化数据仓库（共享 Cookie/缓存）
     @discardableResult
+    @MainActor
     public func byPersistentStore() -> Self {
         byWebsiteDataStore(.default())
     }
     /// 使用非持久数据仓库（每次全新 session）
     @discardableResult
+    @MainActor
     public func byEphemeralStore() -> Self {
         byWebsiteDataStore(.nonPersistent())
     }
     /// 外部注入 WKWebViewConfiguration：在 webView 初始化前回调（外部优先于内部）
     @discardableResult
+    @MainActor
     public func byWebViewConfiguration(_ hook: @escaping (WKWebViewConfiguration) -> Void) -> Self {
-        webViewConfigurationHook = hook
+        updateCreationConfiguration { webViewConfigurationHook = hook }
+        return self
+    }
+
+    @discardableResult
+    public func byBridgeAllowedOrigins(_ origins: [String]) -> Self {
+        bridgeAllowedOrigins = Set(origins.map { $0.lowercased() })
         return self
     }
 

@@ -25,6 +25,10 @@ class SphereGeometry {
     }
 
     private func generateSphere(radius: Float, segments: Int) {
+        // UInt16 索引最多容纳 65,536 个顶点，拒绝无效或超预算网格。
+        guard radius.isFinite, radius > 0, (3...254).contains(segments) else {
+            return
+        }
         var vertices: [Vertex] = []
         var indices: [UInt16] = []
         for i in 0...segments {

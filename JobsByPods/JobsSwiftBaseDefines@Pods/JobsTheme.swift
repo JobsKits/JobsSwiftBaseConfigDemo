@@ -122,6 +122,7 @@ public extension UIImage {
 public final class JobsThemeCenter {
     public static let shared = JobsThemeCenter()
 
+    private let stateLock = NSLock()
     private let defaultsKey = "JobsTheme.currentStyle"
     private let bindings = NSMapTable<AnyObject, JobsThemeBindingStore>(
         keyOptions: .weakMemory,
@@ -134,11 +135,15 @@ public final class JobsThemeCenter {
     private init() {}
 
     public var currentStyle: JobsThemeStyle {
-        style
+        stateLock.lock()
+        defer {
+            stateLock.unlock()
+        }
+        return style
     }
 
     public var isDarkMode: Bool {
-        style == .dark
+        currentStyle == .dark
     }
 
     @discardableResult
@@ -154,14 +159,20 @@ public final class JobsThemeCenter {
               decoded.themes[decoded.defaultTheme] != nil else {
             throw JobsThemeError.invalidPacket
         }
-        packet = decoded
-        resourceBundle = bundle
         let savedStyle = UserDefaults.standard.string(forKey: defaultsKey)
         let initialStyle = savedStyle.flatMap { decoded.themes[$0] == nil ? nil : $0 }
             ?? decoded.defaultTheme
-        style = JobsThemeStyle(rawValue: initialStyle)
+        let configuredStyle = JobsThemeStyle(rawValue: initialStyle)
+        stateLock.lock()
+        let previous = (packet, resourceBundle)
+        packet = decoded
+        resourceBundle = bundle
+        style = configuredStyle
+        stateLock.unlock()
+        // 注入 Bundle 的关联捕获或子类析构可能重入主题读取。
+        withExtendedLifetime(previous) {}
         applyBindings()
-        return style
+        return configuredStyle
     }
 
     @discardableResult
@@ -170,19 +181,24 @@ public final class JobsThemeCenter {
             DispatchQueue.main.async { [weak self] in
                 self?.setStyle(newStyle)
             }
-            return style
+            return currentStyle
         }
-        guard packet?.themes[newStyle.rawValue] != nil else { return style }
-        guard style != newStyle else { return style }
+        stateLock.lock()
+        guard packet?.themes[newStyle.rawValue] != nil, style != newStyle else {
+            let current = style
+            stateLock.unlock()
+            return current
+        }
         style = newStyle
         UserDefaults.standard.set(newStyle.rawValue, forKey: defaultsKey)
+        stateLock.unlock()
         applyBindings()
         NotificationCenter.default.post(
             name: .JobsThemeDidChange,
             object: self,
             userInfo: ["style": newStyle.rawValue]
         )
-        return style
+        return newStyle
     }
 
     @discardableResult
@@ -196,16 +212,21 @@ public final class JobsThemeCenter {
             color,
             &jobsThemeColorKeyAssociatedKey,
             key,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            .OBJC_ASSOCIATION_RETAIN
         )
         return color
     }
 
     public func resolvedColor(_ key: JobsThemeColorKey) -> UIColor {
-        if let value = packet?.themes[style.rawValue]?.colors[key.rawValue],
+        stateLock.lock()
+        let current = style
+        let value = packet?.themes[current.rawValue]?.colors[key.rawValue]
+        stateLock.unlock()
+        if let value,
            let color = Self.color(from: value) {
             return color
-        };return Self.fallbackColor(for: key, style: style)
+        }
+        return Self.fallbackColor(for: key, style: current)
     }
 
     public func image(_ key: JobsThemeImageKey) -> UIImage? {
@@ -214,14 +235,18 @@ public final class JobsThemeCenter {
             image,
             &jobsThemeImageKeyAssociatedKey,
             key,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            .OBJC_ASSOCIATION_RETAIN
         )
         return image
     }
 
     public func resolvedImage(_ key: JobsThemeImageKey) -> UIImage? {
+        stateLock.lock()
+        let current = style
         let value = packet?.themes[style.rawValue]?.images[key.rawValue]
-            ?? Self.fallbackImageName(for: key, style: style)
+            ?? Self.fallbackImageName(for: key, style: current)
+        let bundle = resourceBundle
+        stateLock.unlock()
         guard let value else { return nil }
         if value.hasPrefix("sf:") {
             if #available(iOS 13.0, tvOS 13.0, *) {
@@ -231,7 +256,7 @@ public final class JobsThemeCenter {
         let assetName = value.hasPrefix("asset:")
             ? String(value.dropFirst(6))
             : value
-        return UIImage(named: assetName, in: resourceBundle, compatibleWith: nil)
+        return UIImage(named: assetName, in: bundle, compatibleWith: nil)
     }
 
     public func bind(_ object: AnyObject,
@@ -272,11 +297,18 @@ public final class JobsThemeCenter {
             }
             return
         }
-        let enumerator = bindings.keyEnumerator()
-        while let value = enumerator.nextObject() {
-            let object = value as AnyObject
-            bindings.object(forKey: object)?.boxes.values.forEach {
-                $0.apply(object, self)
+        let objects = bindings.keyEnumerator().allObjects
+        let snapshot = objects.map { object -> (AnyObject, [(String, JobsThemeBindingBox)]) in
+            let target = object as AnyObject
+            let boxes = bindings.object(forKey: target)?.boxes.map { ($0.key, $0.value) } ?? []
+            return (target, boxes)
+        }
+        for (object, boxes) in snapshot {
+            for (slot, box) in boxes {
+                guard bindings.object(forKey: object)?.boxes[slot] === box else {
+                    continue
+                }
+                box.apply(object, self)
             }
         }
     }

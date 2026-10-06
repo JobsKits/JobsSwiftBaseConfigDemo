@@ -72,14 +72,20 @@ public enum JobsIconfontLoadEvent {
 public final class JobsIconfontLoadToken {
     private let onCancel: () -> Void
     private var cancelled = false
+    private let lock = NSLock()
 
     public init(_ onCancel: @escaping () -> Void = {}) {
         self.onCancel = onCancel
     }
 
     public func cancel() {
-        guard cancelled == false else { return }
+        lock.lock()
+        guard !cancelled else {
+            lock.unlock()
+            return
+        }
         cancelled = true
+        lock.unlock()
         onCancel()
     }
 
@@ -118,6 +124,8 @@ public final class JobsIconfont {
         color: UIColor,
         backgroundColor: UIColor = .clear
     ) -> UIImage {
+        let size = CGSize(width: size.width.isFinite && size.width > 0 ? min(size.width, 1_024) : 96,
+                          height: size.height.isFinite && size.height > 0 ? min(size.height, 1_024) : 96)
         let format = UIGraphicsImageRendererFormat.default()
         format.opaque = backgroundColor.cgColor.alpha >= 1
         format.scale = UIScreen.main.scale
@@ -163,9 +171,10 @@ public final class JobsIconfont {
         forceRefresh: Bool = false,
         event: ((JobsIconfontLoadEvent) -> Void)? = nil
     ) -> JobsIconfontLoadToken {
-        let representedAsset = asset.identifier
+        let representedAsset = asset.identifier + "#" + UUID().uuidString
         let resolvedSize = targetSize.flatMap {
-            $0.width > 1 && $0.height > 1 ? $0 : nil
+            $0.width.isFinite && $0.height.isFinite && $0.width > 1 && $0.height > 1
+                ? CGSize(width: min($0.width, 1_024), height: min($0.height, 1_024)) : nil
         } ?? CGSize(width: 96, height: 96)
         let placeholder = placeholderImage(for: asset, size: resolvedSize)
 

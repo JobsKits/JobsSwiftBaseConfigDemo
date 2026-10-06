@@ -12,20 +12,31 @@ import UIKit
 import ImageIO
 
 enum JobsSplashGIFDecoder {
-    static func image(data: Data) -> UIImage? {
-        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
-        let frameCount = CGImageSourceGetCount(source)
-        guard frameCount > 1 else {
-            guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil };return UIImage(cgImage: image)
-        }
+    static func image(data: Data, maxPixelSize: Int = 1024,
+                      maxFrames: Int = 120, maxDecodedBytes: Int = 64 * 1024 * 1024) -> UIImage? {
+        guard data.count <= 32 * 1024 * 1024,
+              let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+        let count = CGImageSourceGetCount(source)
+        guard count > 0, count <= 10_000 else { return nil }
+        let frameLimit = max(1, min(120, maxFrames))
+        let step = max(1, Int(ceil(Double(count) / Double(frameLimit))))
+        let options = [kCGImageSourceCreateThumbnailFromImageAlways: true,
+                       kCGImageSourceCreateThumbnailWithTransform: true,
+                       kCGImageSourceThumbnailMaxPixelSize: max(1, min(4096, maxPixelSize))] as CFDictionary
         var frames: [UIImage] = []
         var duration: TimeInterval = 0
-        for index in 0..<frameCount {
-            guard let cgImage = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
-            frames.append(UIImage(cgImage: cgImage))
+        var bytes = 0
+        for index in 0..<count {
             duration += frameDuration(source: source, index: index)
+            guard index % step == 0 else { continue }
+            guard let image = CGImageSourceCreateThumbnailAtIndex(source, index, options) else { return nil }
+            let cost = image.bytesPerRow.multipliedReportingOverflow(by: image.height)
+            guard !cost.overflow, cost.partialValue <= max(0, maxDecodedBytes) - bytes else { break }
+            bytes += cost.partialValue
+            frames.append(UIImage(cgImage: image))
         }
-        guard !frames.isEmpty else { return nil };return UIImage.animatedImage(with: frames, duration: max(duration, 0.1))
+        guard let first = frames.first else { return nil }
+        return frames.count == 1 ? first : UIImage.animatedImage(with: frames, duration: max(0.1, duration))
     }
 
     private static func frameDuration(source: CGImageSource, index: Int) -> TimeInterval {
@@ -35,6 +46,7 @@ enum JobsSplashGIFDecoder {
         }
         let unclamped = gif[kCGImagePropertyGIFUnclampedDelayTime] as? Double
         let clamped = gif[kCGImagePropertyGIFDelayTime] as? Double
-        return max(unclamped ?? clamped ?? 0.1, 0.02)
+        let value = unclamped ?? clamped ?? 0.1
+        return value.isFinite ? max(0.02, min(60, value)) : 0.1
     }
 }

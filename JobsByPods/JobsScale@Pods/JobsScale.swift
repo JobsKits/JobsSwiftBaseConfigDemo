@@ -63,14 +63,18 @@ public enum JobsScale {
         fontMaxScale: CGFloat = 1.15,
         fontBreakpoints: [(maxWidth: CGFloat, scale: CGFloat)]? = nil
     ) {
-        self.designW = designWidth
-        self.designH = designHeight
+        self.designW = designWidth.isFinite && designWidth > 0 ? designWidth : 375
+        self.designH = designHeight.isFinite && designHeight > 0 ? designHeight : 812
         self.useSafeArea = useSafeArea
         self.fontMode = fontMode
-        self.fontMinScale = fontMinScale
-        self.fontMaxScale = fontMaxScale
+        let minimum = fontMinScale.isFinite && fontMinScale > 0 ? fontMinScale : 1
+        let maximum = fontMaxScale.isFinite && fontMaxScale > 0 ? fontMaxScale : 1.15
+        self.fontMinScale = min(minimum, maximum)
+        self.fontMaxScale = max(minimum, maximum)
         if let bps = fontBreakpoints, !bps.isEmpty {
-            self.fontBreakpoints = bps
+            let normalized = bps.filter { $0.maxWidth.isFinite && $0.maxWidth > 0 && $0.scale.isFinite && $0.scale > 0 }
+                .sorted { $0.maxWidth < $1.maxWidth }
+            if !normalized.isEmpty { self.fontBreakpoints = normalized }
         }
     }
     // MARK: Screen Size（用于比例输入）
@@ -114,8 +118,27 @@ public enum JobsScale {
     private static func scaleFromBreakpoints(_ width: CGFloat) -> CGFloat {
         for item in fontBreakpoints {
             if width <= item.maxWidth { return item.scale }
-        };return 1.0
+        }
+        return fontBreakpoints.last?.scale ?? 1
     }
+
+    /// 多窗口调用传入实际 window，避免改变全局比例上下文。
+    public static func screenSize(in window: UIWindow) -> CGSize {
+        let bounds = window.bounds.size
+        guard useSafeArea else { return bounds }
+        let inset = window.safeAreaInsets
+        return CGSize(width: max(1, bounds.width - inset.left - inset.right),
+                      height: max(1, bounds.height - inset.top - inset.bottom))
+    }
+
+    public static func widthScale(in window: UIWindow) -> CGFloat {
+        screenSize(in: window).width / designW
+    }
+
+    public static func heightScale(in window: UIWindow) -> CGFloat {
+        screenSize(in: window).height / designH
+    }
+
     // MARK: Pixel Align（像素对齐）
     public static func pixelAlign(_ value: CGFloat) -> CGFloat {
         #if os(iOS) || os(tvOS)
