@@ -1460,7 +1460,47 @@ tableView.es.addInfiniteScrolling {
     ```
   
 
-#### 4.8、[**ObjectBox Swift**](https://github.com/objectbox/objectbox-swift) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 4.8、<font id=数据库高频IO对比>数据库抽象层与高频 I/O 对比</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+下面的方案大多可以完成普通增删改查，真正拉开差异的是连接 / Context 模型、事务边界、锁等待、对象物化、通知和迁移。表中的“高频 I/O”指消息、事件、缓存索引或同步任务持续读写同一份本地数据；没有统一设备、数据量、索引、事务大小和 Release 配置时，不把任何方案写成绝对速度冠军。
+
+| 方案 | 本质与语言 | 高频读取 | 高频写入 | 并发与事务 | 检索与模型 | 维护边界 |
+| --- | --- | --- | --- | --- | --- | --- |
+| [**SQLite**](https://sqlite.org/wal.html) | 关系型 C 引擎；iOS 系统自带，直接面向 SQL / 文件 | 建好索引、预编译语句和合理分页后开销可控；WAL 允许读者不阻塞普通写入 | 必须复用连接、分批提交事务；WAL 仍只有一个写者，长事务会放大锁等待 | WAL 支持并发读，但写入仍串行；显式设置 busy timeout、事务和同步级别 | 原生 JOIN、索引、FTS5、聚合和排序最完整 | 表结构、索引、迁移和线程调度由业务负责，文件格式便携 |
+| [**GRDB.swift**](https://github.com/groue/GRDB.swift) | Swift 的 SQLite 访问、Record、Query Interface 和迁移层，不是新引擎 | DatabasePool 以一个写连接配多个读连接；适合前台列表读与后台同步并行 | 用 writer 的 write 事务批量提交；DatabaseQueue 会把读写都串行化 | Pool 依赖 SQLite WAL，读者数量可配置；Queue 简单但长事务会挡住读 | SQL、类型安全查询、Record、FTS 和观察均可组合 | 迁移、SQL 和 schema 仍需维护；Swift 版本、Xcode 和 GRDB 版本要一起锁定 |
+| [**WCDB**](https://github.com/Tencent/wcdb) | 腾讯基于 SQLite / SQLCipher 的跨语言框架，提供 Swift / Objective-C ORM 与 WINQ | 连接池支持并发读，适合消息列表、索引表和后台同步同时工作 | 批量写入、事务和 SQLite 配置已做移动端封装；仍需控制事务大小 | 官方提供 read-read / read-write 并发连接池，并处理常见锁与性能场景 | ORM、WINQ、全文检索、多语言分词、索引和关系查询 | 依赖体积和学习成本较高；加密、修复、迁移能力强但要持续跟踪 SDK 版本 |
+| [**FMDB**](https://github.com/ccgus/FMDB) | Objective-C 对 SQLite 的薄封装，仍以 SQL 为中心 | FMDatabase 不能跨线程共享；FMDatabaseQueue 线程安全但用一个串行队列执行 | 通过 inTransaction 批量提交；每行一次 executeUpdate 会放大队列与提交开销 | FMDatabaseQueue 会阻塞并串行化读写，长查询会影响等待中的 UI 读取 | SQL、JOIN、FTS 等 SQLite 能力都在；没有对象图和自动迁移 | 连接、队列、迁移、映射和错误处理由业务维护 |
+| [**JQFMDB**](https://github.com/gaojunquan/JQFMDB) | FMDB 之上的 Objective-C model / dictionary 便捷层 | 方便但不要把“线程安全”当成并发读性能；实际仍取决于底层 FMDB queue 和版本实现 | 必须确认当前版本是否把多行操作包进同一事务；否则逐条封装会隐藏 I/O 成本 | 继承 FMDB 的单连接 / 串行队列约束，不能据包装 API 推断连接池能力 | 适合简单模型映射；复杂 JOIN、FTS 和索引仍回到 SQLite / FMDB | 仓库维护节奏较慢，必须锁定源码版本并审查迁移、事务和异常语义 |
+| [**Realm**](https://github.com/realm/realm-swift) | 面向对象的移动数据库；Swift / Objective-C 模型、托管结果和变更通知 | 查询结果可懒加载并持续观察，适合本地对象列表；跨线程不能直接传递托管对象 | 将一批对象放入同一个 write transaction；单写者和通知合并仍需考虑 | 对象、Results 和 Realm 实例有线程 / actor 隔离；用冻结对象或安全引用跨边界 | 对象查询、链接和通知方便；不以 SQL JOIN / FTS 为主要编程模型 | schema version、migration、文件加密和线程交接由应用负责 |
+| [**Core Data**](https://developer.apple.com/documentation/coredata) | Apple 对象图与持久化栈；SQLite 只是可选 persistent store | Context 的 fault、fetchBatchSize 和后台 Context 可降低内存与主线程压力 | NSBatchInsertRequest / NSBatchUpdateRequest / NSBatchDeleteRequest 适合大批量；普通逐对象 save 要分批 | 每个 NSManagedObjectContext 遵守自己的 queue；用 perform / performAndWait，不跨 Context 直接传对象 | NSPredicate、关系和对象图强；SQL 不是公开稳定接口 | model version、轻量迁移、合并策略、冲突和 context 生命周期复杂 |
+| [**SwiftData**](https://developer.apple.com/documentation/swiftdata) | Swift 原生 @Model、ModelContainer 和 ModelContext；iOS 17+ | FetchDescriptor、batchSize 和 Query 适合分批读取；SwiftUI 环境 Context 默认绑定 MainActor | 用后台 Context / actor 分批 insert、delete、save；避免把高频导入塞进 UI Context | ModelContext 受其 actor / queue 约束；模型实例不能随意跨隔离域传递 | 类型安全 predicate、关系和观察方便；不能依赖 raw SQL 或底层 SQLite 表结构 | schema migration、autosave、CloudKit 配置和系统版本门槛需要一起验证 |
+| [**ObjectBox Swift**](https://github.com/objectbox/objectbox-swift) | 生成代码的对象数据库；Swift 实体、Box、Query 和 observer | Query / relation / observer 面向对象，适合按实体和索引读取 | 批量 put 或显式异步事务明显优于每个对象一次隐式事务；导入任务应离开主线程 | 事务保证 ACID；Store、Box、Query 和 observer 的线程使用遵循当前 SDK API | 条件查询、关系和变更观察方便；不提供 SQLite 风格的任意 JOIN | 实体 ID、生成文件、模型 JSON 和 SDK 版本必须一起维护；本工程只落 Swift 生成链 |
+
+#### 4.8.1、<font id=数据库具体场景矩阵>具体高频 I/O 场景选型矩阵</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+| 具体场景 | 首选方案 | 可选方案 | 必须落实的 I/O 边界 |
+| --- | --- | --- | --- |
+| 后台同步持续写入，前台消息列表同时滚动读取 | GRDB DatabasePool、WCDB、原生 SQLite WAL | Core Data 后台 Context、Realm | 读写都放后台；写入合并成短事务；记录 busy / lock 等待；FMDatabaseQueue 不要包住长查询 |
+| 首次导入 1 万条以上消息、日志或缓存索引 | SQLite / GRDB / WCDB；Swift 项目也可评估 ObjectBox 批量写 | Realm、Core Data batch insert | 预编译、分块和单次事务；不要逐条 commit；导入期间关闭不必要的逐条 UI 通知 |
+| 多表 JOIN、全文搜索、排序统计、分页 | SQLite、GRDB、WCDB | FMDB / JQFMDB 直接使用 SQLite SQL | 先设计联合索引 / FTS；限制列和分页窗口；对象型方案不要强行模拟复杂 JOIN |
+| 需要对象图和列表自动感知增删改 | Realm、Core Data、SwiftData | ObjectBox observer | 观察回调做去抖和批量刷新；托管对象只在所属线程 / actor 使用 |
+| Objective-C 老业务只想快速接入本地 SQL | FMDB；已有 model 封装可用 JQFMDB | WCDB Objective-C、原生 SQLite | 统一 FMDatabaseQueue 或等价队列；所有批量写走 inTransaction；补齐 schema migration |
+| Swift model-first，尽量少写 SQL | ObjectBox、Realm | SwiftData、Core Data | 先确认最低 iOS、代码生成、实体 ID、线程 / actor 和观察语义；高频导入使用批量 API |
+| 需要本地加密、全文检索和损坏修复工具 | WCDB | Realm 文件加密；SQLite 自行组合 SQLCipher | 分开验证密钥生命周期、备份恢复、迁移耗时和灾备；不能只看 CRUD Demo |
+| Swift 与 Objective-C 共享同一份表结构 | SQLite、WCDB、Realm、Core Data | FMDB / GRDB 分别封装同一 SQLite 文件 | 固定 schema、迁移顺序和文件访问策略；SwiftData 与本工程 ObjectBox 生成链按 Swift 边界使用 |
+| 只有少量设置项、低频读写 | UserDefaults 或 Keychain | 任一数据库仅在已有数据层统一时使用 | 不要为低频键值读写引入对象图、连接池和迁移成本 |
+
+#### 4.8.2、<font id=数据库高频IO落地规则>高频 I/O 落地规则与实测口径</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- SQLite 系列先决定 WAL、synchronous、busy timeout、连接数、事务大小和索引，再谈性能；GRDB 的 DatabasePool、WCDB 的连接池和 Core Data / SwiftData 的 Context / actor 都不能在主线程承载持续导入。
+- 每一类数据库都要把“单条写入”和“批量事务”分开测；至少记录写入吞吐、读取吞吐、p50 / p95 延迟、锁等待或 SQLITE_BUSY、峰值内存、数据库文件大小和耗电。
+- 基准固定同一设备、同一 Release 配置、同一数据集、同一索引、同一 payload、同一事务批量大小和同一查询结果数量；通知、日志和 UI 刷新必须单独计入或单独排除。
+- 任何托管对象、NSManagedObject、ModelContext 模型或 ObjectBox Query 都不能跨线程 / actor 直接传递；跨隔离域传主键、不可变快照或框架规定的安全引用。
+- 迁移、恢复、加密打开、首次建索引和冷启动都要单独记录；不能只用热缓存 CRUD 的结果代表真实 App 行为。
+
+官方资料： [**SQLite WAL**](https://sqlite.org/wal.html)、[**GRDB 并发与 DatabasePool**](https://github.com/groue/GRDB.swift/blob/master/Documentation/WhyAdoptGRDB.md)、[**WCDB 特性与连接池**](https://github.com/Tencent/wcdb)、[**FMDB 队列与线程安全**](https://github.com/ccgus/FMDB#using-fmdatabasequeue-and-thread-safety)、[**Realm Swift**](https://github.com/realm/realm-swift)、[**Core Data**](https://developer.apple.com/documentation/coredata)、[**SwiftData ModelContext**](https://developer.apple.com/documentation/swiftdata/modelcontext)、[**ObjectBox 事务**](https://docs.objectbox.io/transactions)。
+
+#### 4.9、[**ObjectBox Swift**](https://github.com/objectbox/objectbox-swift) <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - ObjectBox 的 Apple SDK 是 Swift 实现，本工程只维护 Swift Demo，不在 OC 新/旧工程伪造 Objective-C Demo。
 - CocoaPods 依赖声明位于 `Podfile.deps`，实际锁定版本以 `Podfile.lock` 为准。
@@ -1468,7 +1508,7 @@ tableView.es.addInfiniteScrolling {
 - CRUD Demo 位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`，入口为功能列表中的“🗃️ ObjectBox”，覆盖新增、查询、修改和删除。
 - `model-JobsSwiftBaseConfigDemo.json` 与 `Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，必须随实体变更一起提交，不能作为普通缓存删除。
 
-#### 4.9、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+#### 4.10、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 * 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++ **的代码热重载工具！
   * [**InjectionIII**](https://github.com/johnno1962/InjectionIII)
