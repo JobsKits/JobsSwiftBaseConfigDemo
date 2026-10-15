@@ -71,37 +71,12 @@ class AppDelegate: FlutterAppDelegate {
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
-    override func applicationDidBecomeActive(_ application: UIApplication) {
-        super.applicationDidBecomeActive(application)
-        // 回到前台，重新标记“正在运行中”
-        CrashLogCenter.shared.markAppLaunched()
-    }
-
-    override func applicationDidEnterBackground(_ application: UIApplication) {
-        super.applicationDidEnterBackground(application)
-        // 进入后台算到达安全点（避免误判“上次崩溃”）
-        CrashLogCenter.shared.markSafeExitPoint()
-    }
-
     override func applicationWillTerminate(_ application: UIApplication) {
         // terminate 不是每次都会走到，但能走到就写安全点
         CrashLogCenter.shared.markSafeExitPoint()
         super.applicationWillTerminate(application)
     }
     // MARK: UISceneSession Lifecycle
-    override func application(
-        _ application: UIApplication,
-        configurationForConnecting connectingSceneSession: UISceneSession,
-        options: UIScene.ConnectionOptions
-    ) -> UISceneConfiguration {
-        let config = UISceneConfiguration(
-            name: "Default Configuration",
-            sessionRole: connectingSceneSession.role
-        )
-        config.delegateClass = SceneDelegate.self
-        return config
-    }
-
     override func application(
         _ application: UIApplication,
         didDiscardSceneSessions sceneSessions: Set<UISceneSession>
@@ -116,9 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// ✅ 持有 timer，避免被释放
     private var appTickerTimer: JobsSwiftTimerProtocol?
 
-    lazy var flutterEngine = FlutterEngine(name: "my flutter engine")
-
-    override func application(
+    func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
@@ -127,19 +100,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     // MARK: UISceneSession Lifecycle
-    override func application(
-        _ application: UIApplication,
-        configurationForConnecting connectingSceneSession: UISceneSession,
-        options: UIScene.ConnectionOptions
-    ) -> UISceneConfiguration {
-        let config = UISceneConfiguration(
-            name: "Default Configuration",
-            sessionRole: connectingSceneSession.role
-        )
-        config.delegateClass = SceneDelegate.self
-        return config
-    }
-
     func application(
         _ application: UIApplication,
         didDiscardSceneSessions sceneSessions: Set<UISceneSession>
@@ -147,22 +107,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         JobsSceneCoordinator.discard(sceneSessions)
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
-    override func applicationDidBecomeActive(_ application: UIApplication) {
-        super.applicationDidBecomeActive(application)
-        // 回到前台，重新标记“正在运行中”
-        CrashLogCenter.shared.markAppLaunched()
-    }
-
-    override func applicationDidEnterBackground(_ application: UIApplication) {
-        super.applicationDidEnterBackground(application)
-        // 进入后台算到达安全点（避免误判“上次崩溃”）
-        CrashLogCenter.shared.markSafeExitPoint()
-    }
-
-    override func applicationWillTerminate(_ application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // terminate 不是每次都会走到，但能走到就写安全点
         CrashLogCenter.shared.markSafeExitPoint()
-        super.applicationWillTerminate(application)
     }
 }
 #endif
@@ -244,7 +191,9 @@ extension AppDelegate {
             NSLog("JobsTheme 数据包加载失败：%@", error.localizedDescription)
         }
         setupLocalNotificationsIfNeeded()
+        #if canImport(Flutter)
         _ = flutterEngine
+        #endif
         if let (minV, maxV) = [3, 1, 9, 7].minMax() {
             print(minV, maxV)   // 1 9
         }

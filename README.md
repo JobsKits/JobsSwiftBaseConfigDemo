@@ -4269,14 +4269,7 @@ let h = ScreenHeight()
           return true
       }
   
-      // MARK: UISceneSession Lifecycle
-      func application(
-          _ application: UIApplication,
-          configurationForConnecting connectingSceneSession: UISceneSession,
-          options: UIScene.ConnectionOptions
-      ) -> UISceneConfiguration {
-          return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-      }
+      /// 窗口配置由 Info.plist 的 UIApplicationSceneManifest 声明，交给 SceneDelegate 创建。
   }
   ```
 
@@ -6764,10 +6757,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        self.window = UIWindow(windowScene: windowScene)
-            .byRootViewController(RootListVC().jobsNav.jobsNavContainer)
-            .byMakeKeyAndVisible()
+        guard let windowScene = scene as? UIWindowScene else {
+            return
+        }
+        window = UIWindow.jobsMake(
+            scene: windowScene,
+            root: RootListPreferences.makeAppRootViewController()
+        )
     }
 }
 ```
@@ -6786,6 +6782,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 * `UIApplicationSupportsMultipleScenes` 只是声明；运行时还要以 `UIApplication.shared.supportsMultipleScenes` 为准。建议在支持多窗口的 iPad 环境验证完整流程。
 * 场景操作按钮始终保留点击能力；当前设备不支持多窗口、没有可激活的其它 Scene、只剩最后一个 Scene，或页面尚未绑定当前 Scene 时，会立即通过 Toast 说明原因，不再静默禁用。
 * 深入研究入口：[Supporting multiple windows on iPad](https://developer.apple.com/documentation/uikit/supporting-multiple-windows-on-ipad)、[Managing your app's life cycle](https://developer.apple.com/documentation/uikit/managing-your-app-s-life-cycle)、[UISceneSession](https://developer.apple.com/documentation/uikit/uiscenesession)。
+
+#### 39.2、[**Xcode**](https://developer.apple.com/xcode) 27 / iOS 27 SDK 生命周期配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+* 宿主使用纯代码窗口：`Info.plist` 的 `UIApplicationSceneManifest` 是唯一场景配置源，指定 `UIWindowScene` 和 `$(PRODUCT_MODULE_NAME).SceneDelegate`；不再声明 `UISceneStoryboardFile`，避免系统先加载 `Main.storyboard` 后又手动创建窗口。`UIApplicationSupportsMultipleScenes` 继续为 `true`，迁移不要求关闭多窗口。
+* `AppDelegate` 保留进程初始化、会话丢弃和终止处理；前台 / 后台行为进入 `SceneDelegate`。每个 Scene 使用回调传入的 `UIWindowScene` 创建自己的 Window，断开时释放 Window；崩溃诊断在 `willEnterForeground` 即标记运行，覆盖通知授权框导致的前台 inactive 阶段，只在其它窗口均不处于前台时记录后台安全点。
+* 现有 Scene Demo 的 `NSUserActivity` 同时覆盖冷连接、热继续活动和状态恢复。宿主当前没有注册 URL scheme 或原生深链业务；`openURLContexts` 与快捷操作回调只转发给已有 Flutter 插件，不能据此宣称原生深链已实现。
+* 内嵌 [**Flutter**](https://flutter.dev/) 使用 `FlutterSceneLifeCycleProvider`：每个 Scene 独立持有 `FlutterPluginSceneLifeCycleDelegate`，转发连接、前后台、URL、活动和快捷操作。转发器保留连接参数，Flutter 页面进入该 Scene 后自动关联引擎并补发连接信息；共享预热引擎不手工注册到所有 Scene。需要 Flutter 3.38 或更高版本；原生多窗口不代表 Flutter 已完整支持并发多场景。参考 [Flutter UIScene adoption](https://docs.flutter.dev/release/breaking-changes/uiscenedelegate)。
+* 第三方 `LiveChat.windowScene` 仍是单一窗口入口，宿主在 Scene 激活时更新，断开时清理相同引用；未修改外援源码，也不将其视为完整多窗口聊天能力。
+* 验证时检查最终 `.app/Info.plist` 的 manifest 和展开后的代理类名，再验证冷启动、前后台、iPad 多窗口独立计数、活动恢复与 Flutter 页面。模拟器可验证原生启动；Flutter 插件、推送和真机跳转仍需各自业务路径验收。
 
 ### 40、**`NavigationBar`**的显隐控制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -7101,10 +7106,10 @@ override func viewWillDisappear(_ animated: Bool) {
                   <dict>
                       <key>UISceneConfigurationName</key>
                       <string>Default Configuration</string>
+                      <key>UISceneClassName</key>
+                      <string>UIWindowScene</string>
                       <key>UISceneDelegateClassName</key>
                       <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-                      <key>UISceneStoryboardFile</key>
-                      <string>Main</string>
                   </dict>
               </array>
           </dict>

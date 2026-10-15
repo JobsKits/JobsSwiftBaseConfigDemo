@@ -3702,6 +3702,7 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
+    participant System as UIKit
     participant App as AppDelegate
     participant Scene as SceneDelegate
     participant Root as RootListPreferences
@@ -3709,8 +3710,8 @@ sequenceDiagram
     participant Splash as JobsSwiftSplash
 
     App->>App: CrashLog 监控与 SA() 全局配置
-    App->>Scene: 返回 UISceneConfiguration
-    Scene->>Root: makeAppRootViewController(in:)
+    System->>Scene: 按 Info.plist manifest 连接窗口会话
+    Scene->>Root: makeAppRootViewController()
     Root-->>Scene: 侧滑抽屉 + 导航容器 / 可选 TabBar
     Scene->>Window: byRootViewController + byMakeKeyAndVisible
     Scene->>Splash: 恢复远程视频预加载
@@ -3721,7 +3722,11 @@ sequenceDiagram
 
 - Flutter 可用时，`AppDelegate` 继承 `FlutterAppDelegate` 并持有长生命周期 `FlutterEngine`；Flutter 不可用时走普通 `UIApplicationDelegate` 分支。
 - `AppDelegate` 只做进程级配置：崩溃监控、本地通知、日志、多语言、导航、比例尺、键盘、Flutter 引擎和第三方全局初始化。
-- `SceneDelegate` 只做窗口级配置：创建 `UIWindow`、装配根控制器、恢复开屏缓存、展示开屏覆盖层和记录 Scene 前后台安全点。
+- `SceneDelegate` 只做窗口级配置：通过 `UIWindow.jobsMake(scene:root:)` 创建归属当前 `UIWindowScene` 的窗口、装配根控制器、恢复开屏缓存、展示开屏覆盖层和记录 Scene 前后台事件。
+- `Info.plist` 的 `UIApplicationSceneManifest` 是场景配置的唯一来源：`UIWindowScene` + `$(PRODUCT_MODULE_NAME).SceneDelegate`，保留多窗口 `true`；纯代码窗口不声明 `UISceneStoryboardFile`，`AppDelegate` 不再重复提供 `configurationForConnecting`。
+- 生命周期迁移保持宿主最低 iOS 15.6，不通过提高最低系统规避旧路径；普通 `UIApplicationDelegate` 分支没有 Flutter 类型引用和无效的 `override` / `super.application` 调用。
+- 每个 Scene 持有 `FlutterPluginSceneLifeCycleDelegate` 并遵循 `FlutterSceneLifeCycleProvider`，转发真实连接、前后台、URL、活动和快捷操作。Flutter 页面入窗后自动关联引擎，转发器补发缓存的连接参数；不把共享预热引擎手工注册到全部 Scene。API 要求 Flutter 3.38+，Flutter 的并发多场景支持仍有边界，见 [UIScene adoption](https://docs.flutter.dev/release/breaking-changes/uiscenedelegate)。
+- Scene Demo 覆盖冷连接、热继续 `NSUserActivity` 与独立状态恢复。宿主未实现原生 URL scheme / 深链路由；Flutter 回调转发不等于新增原生业务支持。第三方 `LiveChat.windowScene` 仍是单一窗口入口，激活时更新、断开时清理，不承诺并发多窗口聊天。
 - 新业务初始化不要继续堆进 `SA()`；能模块化的能力放到对应 Pod 或独立启动任务，再由入口编排。
 
 ### 7.2、根容器 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -3899,7 +3904,7 @@ JobsByPods/FeatureName@Pods/
 - 网络统一经 `JobsNetworking`；页面状态至少区分加载、成功、空、可重试失败、不可恢复失败和取消。
 - 数据层按业务选择 WCDB、ObjectBox、文件 Cache、UserDefaults 或 Keychain，不把所有状态塞进单例。
 - `CocoaLumberjack` 承担结构化日志，敏感字段必须脱敏；Debug 打印不能成为 Release 唯一观测手段。
-- `CrashLogCenter` 在 App / Scene 生命周期标记启动、安全退出与后台点，避免把正常后台误报为上次崩溃。
+- `CrashLogCenter` 在 Scene 即将进入前台时标记运行，激活时再次幂等标记，覆盖系统权限框造成的前台 inactive 阶段；只有其它 Scene 均已离开前台时才记录后台 / 断开安全点。进程终止时由 `AppDelegate` 补记，避免某个窗口后台覆盖仍在前台窗口的运行标记。
 - 定时器、录音录像、网络帧队列、WebView、通知和观察者都要有停止、清理和后台策略。
 
 ### 10.2、Flutter Module <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

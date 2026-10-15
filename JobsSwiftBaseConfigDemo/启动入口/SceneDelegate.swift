@@ -23,38 +23,50 @@ import JobsSwiftOpen
 import LiveChat
 import JobsViewPush
 
+#if canImport(Flutter)
+import Flutter
+#endif
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+
+    #if canImport(Flutter)
+    /// 每个 Scene 独立持有转发器，FlutterViewController 入窗后自动关联其引擎。
+    let sceneLifeCycleDelegate = FlutterPluginSceneLifeCycleDelegate()
+    #endif
+
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
         print("✅ SceneDelegate willConnect")
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        LiveChat.windowScene = windowScene
+        guard let windowScene = scene as? UIWindowScene else {
+            return
+        }
         let restorationActivity = JobsSceneCoordinator.demoActivity(
             from: connectionOptions,
             session: session
         )
         let opensSceneDemo = restorationActivity != nil
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
         let homeViewController: UIViewController
         if let restorationActivity {
-            homeViewController = UINavigationController(
-                rootViewController: JobsSceneDelegateDemoVC(
-                    restorationActivity: restorationActivity
-                )
-            )
+            homeViewController = JobsSceneDelegateDemoVC(restorationActivity: restorationActivity)
+                .jobsNav
+                .jobsNavContainer
         } else {
             homeViewController = RootListPreferences.makeAppRootViewController()
         }
-        window
-            .byRootViewController(homeViewController)
-            .byMakeKeyAndVisible()
+        window = UIWindow.jobsMake(scene: windowScene, root: homeViewController)
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.scene(scene, willConnectTo: session, options: connectionOptions)
+        #endif
         JobsSceneCoordinator.record("willConnect：创建独立 UIWindow", for: session)
-        guard !opensSceneDemo else { return }
+        guard !opensSceneDemo else {
+            return
+        }
         JobsSplashMediaCache.shared.resumePendingVideoPreloads()
-        guard JobsSplashPreferences.isEnabledForNextLaunch else { return }
+        guard JobsSplashPreferences.isEnabledForNextLaunch else {
+            return
+        }
         let openConfiguration = JobsOpenConfiguration()
             .byURL(URL(string: "http://www.baidu.com")!)
             .byMode(.inApp)
@@ -98,12 +110,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             guard let fileURL = generatedLocalSplashGIFURL() else {
                 print("⚠️ 本地 GIF 生成失败，开屏回退到本地图片")
                 return .localImage(name: "米老鼠")
-            };return .localGIF(fileURL: fileURL)
+            }
+            return .localGIF(fileURL: fileURL)
         /// 使用远程图片开屏
         case .remoteImage:
             guard let url = URL(string: "https://picsum.photos/1242/2688.jpg") else {
                 return .localImage(name: "米老鼠")
-            };return .remoteImage(url)
+            }
+            return .remoteImage(url)
         /// 使用 App Bundle 内的视频开屏
         case .localVideo:
             return .localVideo(name: "welcome_video", fileExtension: "mp4")
@@ -113,7 +127,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 string: "https://raw.githubusercontent.com/JobsKits/JobsSwiftBaseConfigDemo/main/JobsSwiftBaseConfigDemo/Resources/%E8%A7%86%E9%A2%91/welcome_video.mp4"
             ) else {
                 return .localVideo(name: "welcome_video", fileExtension: "mp4")
-            };return .remoteVideo(
+            }
+            return .remoteVideo(
                 url,
                 fallbackName: "welcome_video",
                 fallbackFileExtension: "mp4"
@@ -123,7 +138,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func generatedLocalSplashGIFURL() -> URL? {
         let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent("JobsSplashLocalGIF.gif")
-        if FileManager.default.fileExists(atPath: fileURL.path) { return fileURL }
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            return fileURL
+        }
         let frames = ["米老鼠".img, "唐老鸭".img, "迪斯尼".img].compactMap(\.cgImage)
         guard frames.count > 1,
               let destination = CGImageDestinationCreateWithURL(
@@ -131,7 +148,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 "com.compuserve.gif" as CFString,
                 frames.count,
                 nil
-              ) else { return nil }
+              ) else {
+            return nil
+        }
         let gifProperties = [
             kCGImagePropertyGIFDictionary: [
                 kCGImagePropertyGIFLoopCount: 0
@@ -149,30 +168,101 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard CGImageDestinationFinalize(destination) else {
             try? FileManager.default.removeItem(at: fileURL)
             return nil
-        };return fileURL
+        }
+        return fileURL
     }
     // ================================== CrashLog: Safe Exit Marker ==================================
     func sceneDidDisconnect(_ scene: UIScene) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.sceneDidDisconnect(scene)
+        #endif
         JobsSceneCoordinator.record("didDisconnect：Scene 与会话暂时断开", for: scene.session)
+        if LiveChat.windowScene === scene {
+            LiveChat.windowScene = nil
+        }
+        markSafeExitIfAllScenesAreBackground(excluding: scene)
+        window = nil
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.sceneDidBecomeActive(scene)
+        #endif
+        LiveChat.windowScene = scene as? UIWindowScene
         JobsSceneCoordinator.record("didBecomeActive：开始接收用户事件", for: scene.session)
         // 回到前台，标记“正在运行中”
         CrashLogCenter.shared.markAppLaunched()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.sceneWillResignActive(scene)
+        #endif
         JobsSceneCoordinator.record("willResignActive：即将暂停交互", for: scene.session)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.sceneWillEnterForeground(scene)
+        #endif
+        CrashLogCenter.shared.markAppLaunched()
         JobsSceneCoordinator.record("willEnterForeground：即将进入前台", for: scene.session)
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        JobsSceneCoordinator.record("didEnterBackground：进入后台安全点", for: scene.session)
-        // 进入后台算安全点
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.sceneDidEnterBackground(scene)
+        #endif
+        JobsSceneCoordinator.record("didEnterBackground：当前 Scene 进入后台", for: scene.session)
+        markSafeExitIfAllScenesAreBackground(excluding: scene)
+    }
+
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.scene(scene, openURLContexts: URLContexts)
+        #endif
+    }
+
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        if JobsSceneCoordinator.isDemoActivity(userActivity) {
+            if let demoViewController = sceneDemoViewController() {
+                demoViewController.restoreSceneInteractionState(with: userActivity)
+            } else {
+                window?.byRootViewController(
+                    JobsSceneDelegateDemoVC(restorationActivity: userActivity)
+                        .jobsNav
+                        .jobsNavContainer
+                )
+            }
+            JobsSceneCoordinator.record("continueUserActivity：接收 Scene Demo 活动", for: scene.session)
+            return
+        }
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.scene(scene, continue: userActivity)
+        #endif
+    }
+
+    func windowScene(_ windowScene: UIWindowScene,
+                     performActionFor shortcutItem: UIApplicationShortcutItem,
+                     completionHandler: @escaping (Bool) -> Void) {
+        #if canImport(Flutter)
+        sceneLifeCycleDelegate.windowScene(
+            windowScene,
+            performActionFor: shortcutItem,
+            completionHandler: completionHandler
+        )
+        #else
+        completionHandler(false)
+        #endif
+    }
+
+    private func markSafeExitIfAllScenesAreBackground(excluding scene: UIScene) {
+        let hasForegroundScene = UIApplication.shared.connectedScenes.contains {
+            $0 !== scene && ($0.activationState == .foregroundActive || $0.activationState == .foregroundInactive)
+        }
+        guard !hasForegroundScene else {
+            return
+        }
         CrashLogCenter.shared.markSafeExitPoint()
     }
 
@@ -181,11 +271,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return scene.userActivity.flatMap {
                 JobsSceneCoordinator.isDemoActivity($0) ? $0 : nil
             }
-        };return demoViewController.sceneRestorationActivity()
+        }
+        return demoViewController.sceneRestorationActivity()
     }
 
     func scene(_ scene: UIScene, restoreInteractionStateWith stateRestorationActivity: NSUserActivity) {
-        guard JobsSceneCoordinator.isDemoActivity(stateRestorationActivity) else { return }
+        guard JobsSceneCoordinator.isDemoActivity(stateRestorationActivity) else {
+            return
+        }
         sceneDemoViewController()?.restoreSceneInteractionState(with: stateRestorationActivity)
         JobsSceneCoordinator.record("restoreInteractionState：恢复 Scene 独立计数", for: scene.session)
     }
@@ -207,3 +300,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return currentViewController as? JobsSceneDelegateDemoVC
     }
 }
+
+#if canImport(Flutter)
+extension SceneDelegate: FlutterSceneLifeCycleProvider {}
+#endif

@@ -15,7 +15,7 @@
 	<dict>
         <!--【UIApplicationSupportsMultipleScenes】指示应用程序是否支持多场景（多窗口）。设置为 YES 表示支持多场景 -->
 		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
+		<true/>
         <!-- 【UISceneConfigurations】定义不同场景的配置，包括每种场景的生命周期管理类和初始场景配置 -->
 		<key>UISceneConfigurations</key>
 		<dict>
@@ -26,12 +26,11 @@
                     <!--【UISceneConfigurationName】指定了一个场景配置的名称，iOS 会使用这个名称来查找和加载相应的场景配置 -->
 					<key>UISceneConfigurationName</key>
 					<string>Default Configuration</string>
-                    <!--【UISceneDelegateClassName】用于指明哪个类将处理特定场景的生命周期事件 -->
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+                    <!--【UISceneDelegateClassName】Swift 类型必须带模块名，由系统创建各会话的代理 -->
 					<key>UISceneDelegateClassName</key>
-					<string>SceneDelegate</string>
-                    <!--【UISceneStoryboardFile】用来定义应用启动时应该加载的特定 Storyboard 文件 -->
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 				</dict>
 			</array>
 		</dict>
