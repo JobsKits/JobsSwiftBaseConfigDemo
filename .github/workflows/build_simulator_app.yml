@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build-simulator-app:
     runs-on: macos-15
-    timeout-minutes: 90
+    timeout-minutes: 180
     permissions:
       actions: write
       contents: read
@@ -26,32 +26,34 @@ jobs:
       SCHEME: JobsSwiftBaseConfigDemo
       CONFIGURATION: Debug
       SDK: iphonesimulator
-      DESTINATION: generic/platform=iOS Simulator
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Select Xcode 26 SDK when available
+      - name: Select Xcode 26 SDK
         run: |
           selected_developer_dir=""
 
           if [[ -n "${XCODE_26_DEVELOPER_DIR:-}" && -d "${XCODE_26_DEVELOPER_DIR}" ]]; then
             selected_developer_dir="${XCODE_26_DEVELOPER_DIR}"
           else
-            latest_xcode="$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort | tail -n 1 || true)"
+            latest_xcode="$(ruby -e 'puts Dir.glob("/Applications/Xcode_26*.app").max_by { |path| Gem::Version.new(File.basename(path)[/\d+(?:\.\d+)*/, 0]) }')"
             if [[ -n "${latest_xcode}" ]]; then
               selected_developer_dir="${latest_xcode}/Contents/Developer"
             fi
           fi
 
           if [[ -n "${selected_developer_dir}" ]]; then
-            sudo xcode-select -s "${selected_developer_dir}"
+            export DEVELOPER_DIR="${selected_developer_dir}"
+            echo "DEVELOPER_DIR=${DEVELOPER_DIR}" >> "${GITHUB_ENV}"
           else
-            echo "Xcode 26 is not available; using the runner default Xcode."
+            echo "::error::Xcode 26 is required but is not installed on this runner."
+            exit 1
           fi
 
           xcodebuild -version
+          xcodebuild -version | grep -Eq '^Xcode 26([.]|$)'
           xcode-select -p
 
       - name: Show build environment
@@ -62,6 +64,7 @@ jobs:
           pod --version
 
       - name: Verify JobsSwiftBlock factory and callback regressions
+        timeout-minutes: 5
         shell: bash
         run: |
           set -euo pipefail
@@ -93,12 +96,16 @@ jobs:
           done
 
       - name: Install CocoaPods dependencies
+        timeout-minutes: 20
         env:
           JOBS_FLUTTER_AUTO_SETUP: "1"
         run: |
-          pod install --no-repo-update || pod install --repo-update
+          set -euo pipefail
+          (pod install --no-repo-update || pod install --repo-update) \
+            2>&1 | tee "${RUNNER_TEMP}/pod-install.log"
 
       - name: Verify owned Pod behavior regressions
+        timeout-minutes: 5
         shell: bash
         run: |
           set -euo pipefail
@@ -117,23 +124,41 @@ jobs:
           SCRIPT
           sudo chmod +x /Users/jobs/.xcode-build-timer/xbt-build-hook.sh
 
-      - name: Build Simulator app
+      - name: Build every owned Pod
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby .github/tests/JobsPodsUpgrade/validate_builds.rb \
+            --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
+            --derived-data "${RUNNER_TEMP}/DerivedData"
+
+      - name: Prepare test Simulator
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available -j > "${RUNNER_TEMP}/simulator-devices.json"
+          simulator_id="$(ruby -rjson -e \
+            'devices = JSON.parse(File.read(ARGV.fetch(0))).fetch("devices").select { |runtime, _| runtime.include?(".iOS-") }.values.flatten.select { |d| d["isAvailable"] && d.fetch("name").start_with?("iPhone") }; device = devices.find { |d| d.fetch("state") == "Booted" } || devices.first; abort "No available iPhone Simulator" unless device; puts device.fetch("udid")' \
+            "${RUNNER_TEMP}/simulator-devices.json")"
+          echo "SIMULATOR_ID=${simulator_id}" >> "${GITHUB_ENV}"
+          xcrun simctl bootstatus "${simulator_id}" -b
+
+      - name: Build Simulator app and test bundle
         id: build
+        timeout-minutes: 45
         shell: bash
         run: |
           set -euo pipefail
           derived_data_path="${RUNNER_TEMP}/DerivedData"
-
-          ruby .github/tests/JobsPodsUpgrade/validate_builds.rb \
-            --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
-            --derived-data "${derived_data_path}"
 
           xcodebuild \
             -workspace "${WORKSPACE}" \
             -scheme "${SCHEME}" \
             -configuration "${CONFIGURATION}" \
             -sdk "${SDK}" \
-            -destination "${DESTINATION}" \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
             -jobs 2 \
             -derivedDataPath "${derived_data_path}" \
             SYMROOT="${derived_data_path}/Build/Products" \
@@ -143,34 +168,40 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            ONLY_ACTIVE_ARCH=NO \
-            build 2>&1 | tee "${RUNNER_TEMP}/simulator-build.log"
+            IPHONEOS_DEPLOYMENT_TARGET=15.6 \
+            ONLY_ACTIVE_ARCH=YES ARCHS=arm64 \
+            -only-testing:JobsSwiftBaseConfigDemoTests \
+            build-for-testing 2>&1 | tee "${RUNNER_TEMP}/simulator-build.log"
 
       - name: Run hosted UIKit and timer regressions
+        timeout-minutes: 20
         shell: bash
         run: |
           set -euo pipefail
-          simulator_id="$(xcrun simctl list devices available -j | ruby -rjson -e \
-            'puts JSON.parse(STDIN.read).fetch("devices").values.flatten.find { |d| d["name"].start_with?("iPhone") }.fetch("udid")')"
           xcodebuild -workspace "${WORKSPACE}" -scheme "${SCHEME}" \
             -configuration Debug -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,id=${simulator_id}" \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
             -jobs 2 \
             -derivedDataPath "${RUNNER_TEMP}/DerivedData" \
             SYMROOT="${RUNNER_TEMP}/DerivedData/Build/Products" \
             OBJROOT="${RUNNER_TEMP}/DerivedData/Build/Intermediates.noindex" \
             OTHER_SWIFT_FLAGS='$(inherited) -j1' \
             -resultBundlePath "${RUNNER_TEMP}/JobsPodsTests.xcresult" \
-            CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES \
-            -only-testing:JobsSwiftBaseConfigDemoTests test \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            IPHONEOS_DEPLOYMENT_TARGET=15.6 ONLY_ACTIVE_ARCH=YES ARCHS=arm64 \
+            -parallel-testing-enabled NO \
+            -only-testing:JobsSwiftBaseConfigDemoTests test-without-building \
             2>&1 | tee "${RUNNER_TEMP}/jobs-pods-tests.log"
 
       - name: Upload failed build diagnostics
-        if: ${{ failure() }}
+        if: ${{ failure() || cancelled() }}
+        timeout-minutes: 5
         uses: actions/upload-artifact@v7.0.1
         with:
           name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
+            ${{ runner.temp }}/pod-install.log
+            ${{ runner.temp }}/simulator-devices.json
             ${{ runner.temp }}/simulator-build.log
             ${{ runner.temp }}/SimulatorBuild.xcresult
             ${{ runner.temp }}/JobsPodsUnitBuilds

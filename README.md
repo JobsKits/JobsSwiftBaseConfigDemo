@@ -6,7 +6,7 @@
   <a><img src="https://img.shields.io/badge/Xcode-15.4-blue" alt="Xcode"/></a>
   <a><img src="https://img.shields.io/badge/iOS-17.5+-critical" alt="iOS"/></a>
   <a><img src="https://img.shields.io/badge/pod-1.15.2-brightgreen" alt="CocoaPods"/></a>
-  <a><img src="https://img.shields.io/github/actions/workflow/status/JobsKits/JobsSwiftBaseConfigDemo/ci.yml?branch=main" alt="Build Status"/></a>
+  <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/workflows/build_simulator_app.yml?query=branch%3Amain"><img src="https://img.shields.io/github/actions/workflow/status/JobsKits/JobsSwiftBaseConfigDemo/build_simulator_app.yml?branch=main" alt="Build Status"/></a>
   <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo"><img src="https://img.shields.io/github/license/JobsKits/JobsSwiftBaseConfigDemo?style=flat&color=success" alt="License"/></a>
   <a><img src="https://img.shields.io/github/languages/top/JobsKits/JobsSwiftBaseConfigDemo?color=blueviolet" alt="Top Language"/></a>
   <a href="https://github.com/JobsKits/JobsSwiftBaseConfigDemo/stargazers"><img src="https://img.shields.io/github/stars/JobsKits/JobsSwiftBaseConfigDemo?style=flat-square&color=yellow" alt="Stars"/></a>
@@ -1819,6 +1819,14 @@ Podfile 通过 `JOBS_SKIP_README=1` 跳过子脚本重复回车等待，子脚�
 日志同步输出到 Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。终端手动运行会先展示内置自述并等待回车，再要求输入 `YES` 授权打包成功后清空 build；其它输入取消，仍需提供本次 App 的构建环境变量。非 Xcode 环境且没有可交互输入时直接退出。
 
 XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对路径调用，并未检测脚本是否存在；迁移机器时需在 Scheme 的 Build Pre-actions / Post-actions 中核对路径。状态目录中的 `latest.env`、`builds/*.env` 与 `history.log` 用于计时；`finished` 仅表示结束钩子执行，不是编译成功判据。
+
+**GitHub Actions 模拟器构建**
+
+[模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用 `macos-15` 的 arm64 runner，按版本选择已安装的 Xcode 26；缺少该版本时明确失败。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、核心 / 网络回归和逐个自建 Pod 编译。
+
+逐 Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedData。宿主通过 `build-for-testing` 一次生成 App 与测试包，随后对同一台已启动的 iPhone 模拟器执行 `test-without-building`，运行 UIKit / Timer 宿主测试。测试全部通过后才打包并上传模拟器 App；纯 SwiftBlock 的双架构检查继续覆盖 arm64 / x86_64，上传的 App 供 Apple Silicon 模拟器使用。
+
+任务总时限 180 分钟，依赖安装、逐 Pod 编译、宿主编译与测试分别限时 20 / 60 / 45 / 20 分钟，预留失败诊断时间。失败或取消时上传安装日志、模拟器设备清单、逐 Pod / 回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
 
 CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
 
