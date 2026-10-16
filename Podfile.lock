@@ -332,19 +332,7 @@ PODS:
     - JobsByUIKit
     - JobsGetWindow
     - JobsSwiftBaseDefines
-    - JobsSwiftBaseTools/JobsSwiftTimer (= 0.1.14)
     - "JobsSwiftBaseTools/🛜网络流量监控 (= 0.1.14)"
-    - JobsSwiftBlock
-    - JobsSwiftDSL
-    - "NSObject+Rx"
-    - RxCocoa
-    - RxSwift
-    - SnapKit
-  - JobsSwiftBaseTools/JobsSwiftTimer (0.1.14):
-    - Alamofire
-    - JobsByUIKit
-    - JobsGetWindow
-    - JobsSwiftBaseDefines
     - JobsSwiftBlock
     - JobsSwiftDSL
     - "NSObject+Rx"
@@ -1076,7 +1064,7 @@ SPEC CHECKSUMS:
   JobsScreenCapture: 45d77c34a83b472413992c7a80f675738c75a78f
   JobsSwiftAppTools: 2eab6f7edf53e4e21597d6260dd451406593709c
   JobsSwiftBaseDefines: 4c3fbbe8b8b468cee7619bcae719c00b61d595b3
-  JobsSwiftBaseTools: c1cb345562edc02a602af8061ab763c95c47f410
+  JobsSwiftBaseTools: c07e3c30c71dfe7c4c5fa3cd9ab67493bbb7aa0c
   JobsSwiftBlock: 80c0b89988e2ac768ab5fe70bc9a8fdcc486807b
   JobsSwiftCalendar: 0f73ab3102b3c58fd1f3bce6851de4e3296aec66
   JobsSwiftComment: ed69d684be79acfa072488335364940c013e7264
@@ -1153,6 +1141,6 @@ SPEC CHECKSUMS:
   YTKNetwork: c16be90b06be003de9e9cd0d3b187cc8eaf35c04
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: b6b016867822b372f1857224ef1aac5ee8fb61c8
+PODFILE CHECKSUM: fc250ff29a750bc5f5a836a3fe9d35978f271cbd
 
 COCOAPODS: 1.17.0

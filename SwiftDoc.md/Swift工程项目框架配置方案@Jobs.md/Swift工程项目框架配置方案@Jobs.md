@@ -4043,7 +4043,6 @@ ruby -c Podfile.deps
 | Sendable | `AnySendableBox` 仅接收 Sendable 值；JobsText 不再声明任意属性字典可安全跨 actor，跨边界用 `asString` 或业务不可变快照。 |
 | PNPlayer | 主线程隔离；`byAttach` 同步实际 MTKView 配置；Metal 错误及视频错误走公开回调，宿主 Demo 展示失败。 |
 | SwiftTools | 默认 Core + Flutter 保持宿主兼容；`JobsSwiftTools/Core` 不包含 FlutterBridge，不硬引 Flutter engine / registrant。 |
-| JobsOCDSL | 当前 Swift 检出只交付可编译的能力感知兼容入口；能力数组为空，不把完整 OC 分类当作已移入。 |
 
 ### 编译与回归入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -4055,10 +4054,10 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb
 ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuration Release
 ```
 
-全量验证器先逐个编译自建 Pod；JobsOCDSL 使用独立临时消费工程；全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
+全量验证器先逐个编译自建 Pod；每个 Pod 必须存在对应的集成 scheme，全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
 
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<../../.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 
-升级结果与本轮实际编译状态见工程根目录《JobsByPods升级与编译验收报告.md》。既有审阅报告保留为修复前证据。
+升级与编译的历史证据见工程根目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](../../OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

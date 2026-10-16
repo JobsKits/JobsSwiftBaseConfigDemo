@@ -13,7 +13,25 @@ jobs_pod_install_guard_path = File.join(
 require jobs_pod_install_guard_path
 JobsPodInstallOfflineGuard.guard!(__dir__)
 
-source 'https://github.com/CocoaPods/Specs.git'
+# 源选择必须同步完成，才能影响本次依赖解析。
+jobs_specs_source_path = File.join(
+  __dir__,
+  'ScriptsByPods',
+  '【MacOS】🌐CocoaPods源自动选择.command',
+  'jobs_cocoapods_source.rb'
+)
+begin
+  if File.file?(jobs_specs_source_path)
+    require jobs_specs_source_path
+    JobsCocoaPodsSource.apply!(self, project_root: __dir__)
+  else
+    warn '[SpecsSource] 选源模块缺失，使用官方 CDN。请迁移完整脚本包。'
+    source 'https://cdn.cocoapods.org/'
+  end
+rescue LoadError, SyntaxError, StandardError => error
+  warn "[SpecsSource] 选源模块异常，使用官方 CDN：#{error.message}"
+  source 'https://cdn.cocoapods.org/'
+end
 # 关键：恢复这段，避免 Assets.car 重复产物冲突
 install! 'cocoapods',
   :deterministic_uuids => false,
@@ -27,11 +45,11 @@ JOBS_DISABLE_SCRIPT_SANDBOXING = 'NO'
 # ⚠️ 与 post_install 保持一致（平台声明用稍高版本没问题，但 post_install 会强制 target 版本）
 platform :ios, "#{JOBS_DEPLOYMENT_TARGET}"
 
-# ScriptsByPods 下脚本已升级为“脚本完整文件名/脚本本体”结构；Podfile 统一走解析器兼容新旧路径。
+# ScriptsByPods 下脚本已升级为"脚本完整文件名/脚本本体"结构；Podfile 统一走解析器兼容新旧路径。
 JOBS_SCRIPTS_BY_PODS_DIR = File.expand_path('ScriptsByPods', __dir__)
 # 判断当前 iOS 工程是否集成了 Unity（或存在 Unity 导出的工程痕迹）
 #
-# 命中任一条件即可认为“有 Unity”：
+# 命中任一条件即可认为"有 Unity"：
 # - ios/.DerivedDataUnity 存在
 # - ios 目录下存在 Unity-iPhone.xcodeproj（Unity 导出工程常见）
 # - ios 的上级目录（或更深层）存在 Unity 的 ProjectSettings/ProjectVersion.txt
@@ -499,10 +517,10 @@ inhibit_all_warnings!
 # 有些工程在首次 checkout 或清缓存后会缺这个文件，需要先进入 Flutter module 执行 flutter pub get。
 FLUTTER_APPLICATION_PATH = File.expand_path('./my_flutter', __dir__)
 
-# 每次 pod install 都先确保 Flutter 环境（Homebrew + FVM + Flutter SDK + flutter pub get）
+# 每次 pod install 都先检查 Flutter 环境（FVM 安装支持 Homebrew → 官方回退）
 jobs_run_external_script(
   'ScriptsByPods/配置Flutter环境.sh',
-  desc: 'Prepare Flutter environment (brew + fvm + flutter pub get)',
+  desc: 'Prepare Flutter environment (FVM with official fallback + flutter pub get)',
   base_dir: __dir__,
   log_path: '/tmp/配置Flutter环境.log',
   required: false

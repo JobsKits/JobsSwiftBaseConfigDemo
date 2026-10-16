@@ -20,7 +20,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     private var minDate: Date?
     private var maxDate: Date?
     private var selectDate: Date = Date()
-    private var allowToNow: Bool = false
 
     private var years: [Int] = []
     private var months: [Int] = Array(1...12)
@@ -36,7 +35,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     @discardableResult public func byMinDate(_ d: Date?) -> Self { minDate = d; return self }
     @discardableResult public func byMaxDate(_ d: Date?) -> Self { maxDate = d; return self }
     @discardableResult public func bySelectDate(_ d: Date) -> Self { selectDate = d; return self }
-    @discardableResult public func byAllowToNow(_ v: Bool) -> Self { allowToNow = v; return self }
 
     // MARK: - Core overrides
     public override func buildContentView() -> UIView {
@@ -53,9 +51,6 @@ public final class BRDatePicker: BRBasePicker<Date>, UIPickerViewDelegate, UIPic
     }
 
     public override func confirmSelection() {
-        if allowToNow {
-            // Enterprise hook: if user selects "to now" in future extensions; currently unused
-        }
         if let date = makeDate() {
             // enforce bounds
             if let minDate, date < minDate { send(minDate) }

@@ -92,6 +92,7 @@ let motionManager = CMMotionManager.make()
 - `CMMotionManager.byStopAllUpdates()` 只负责统一停止当前 manager 的四类更新；页面仍需持有 manager，并在离开或销毁时主动调用。
 - 后续新增 DSL 时，优先放在这里，不再散落到各个功能 Pod。
 - `UIView.tintColor` 这类父类公共属性只在 `UIView` DSL 中封装，子类不重复声明同名 API。
+- `UIGestureRecognizer.modifierFlags` 与 `buttonMask` 是系统只读状态，直接查询；不提供忽略参数的链式 setter。
 - `UILabel.byLabelShadowColor` / `byLabelShadowOffset` 配置文字阴影；`UIView.byShadowColor` / `byShadowOffset` 配置 CALayer 阴影，两套语义不得混用。
 - 不带约束的视图装配统一使用 `UIView.byAddTo(_:)`；带 SnapKit 约束的重载由 `JobsByUIKit` 承接。
 - Swift 侧布局统一使用 `SnapKit`；本 Pod 不提供创建或激活系统 `NSLayoutConstraint` 的桥接入口。

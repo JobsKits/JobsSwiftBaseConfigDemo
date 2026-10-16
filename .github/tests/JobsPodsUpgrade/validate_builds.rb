@@ -92,31 +92,7 @@ if options[:units]
   schemes = JSON.parse(listing).fetch('project').fetch('schemes')
   names.each do |name|
     project_path = File.join(root, 'Pods', 'Pods.xcodeproj')
-    unless schemes.include?(name)
-      # JobsOCDSL is intentionally not a host dependency: validate its real Pod delivery in a fresh consumer.
-      abort "Missing integrated scheme for #{name}" unless name == 'JobsOCDSL'
-      require 'xcodeproj'
-      consumer = File.join(output, 'JobsOCDSLConsumer')
-      FileUtils.mkdir_p(consumer)
-      project = Xcodeproj::Project.new(File.join(consumer, 'JobsOCDSLConsumer.xcodeproj'))
-      project.new_target(:application, 'JobsOCDSLConsumer', :ios, '15.6')
-      project.save
-      File.write(File.join(consumer, 'Podfile'), <<~PODFILE)
-        platform :ios, '15.6'
-        use_frameworks! :linkage => :static
-        target 'JobsOCDSLConsumer' do
-          pod 'JobsOCDSL', :path => #{File.join(root, 'JobsByPods/JobsOCDSL@Pods').inspect}
-        end
-      PODFILE
-      install = run.call('JobsOCDSL-pod-install', ['pod', 'install', '--no-repo-update'], consumer)
-      result[:isolated_install] = install
-      unless install[:success]
-        result[:units] << install
-        save.call
-        next
-      end
-      project_path = File.join(consumer, 'Pods', 'Pods.xcodeproj')
-    end
+    abort "Missing integrated scheme for #{name}" unless schemes.include?(name)
     entry = build.call(name, ['-project', project_path])
     if name == 'JobsAppIconRibbon' && entry[:success]
       # This Pod delivers a macOS build tool rather than an iOS framework.

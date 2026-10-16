@@ -14,7 +14,7 @@
 
 ### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-按容器、整数、浮点和 Optional 等类型组织标准库扩展。当前已有数组构建与部分便利操作、默认初始化协议适配，同时也存在仅有文件头的类型占位，目录数量不代表能力数量。
+按容器、整数、浮点和 Optional 等类型组织标准库扩展，提供数组构建、整数时长格式化、浮点便利操作和默认初始化协议适配。整数共同行为位于 `BinaryInteger.swift`，不再为每个具体整数类型保留纯文件头占位。
 
 ### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -25,7 +25,7 @@
 - Array.add 返回新数组，addBy 原地修改；Builder 提供闭包内链式构建，两种 addBy 的接收类型不同。
 - Builder 持有临时数组指针，使用范围应限制在 build 闭包中，不应逃逸后继续调用。
 - Optional 的默认初始化适配不等于业务数据一定有效，空字符串、零值与缺失值仍有不同含义。
-- 例如 Int.swift 当前只含文件头，重建时不能给所有预留类型凭空补一套不存在的方法。
+- 整数扩展以 `BinaryInteger` 的实际实现为准，各具体整数类型共用协议能力。
 
 ### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -34,6 +34,7 @@
 源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
 
 - [Optional.swift](<./Optional.swift>)
+- [整形/BinaryInteger.swift](<./整形/BinaryInteger.swift>)
 - [容器/Array.swift](<./容器/Array.swift>)
 - [容器/Collection.swift](<./容器/Collection.swift>)
 - [容器/Dictionary.swift](<./容器/Dictionary.swift>)

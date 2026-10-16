@@ -61,6 +61,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04F18521264F05298682B3DA /* 【MacOS】🌐CocoaPods源自动选择.command */ = {isa = PBXFileReference; includeInIndex = 1; path = "【MacOS】🌐CocoaPods源自动选择.command"; sourceTree = "<group>"; };
 		0B62B8D777CD2849905E248F /* Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemoTests/Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0DD861BAFBC3689CC1E7C538 /* JobsUIKitRegression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JobsUIKitRegression.swift; path = .github/tests/JobsPodsUpgrade/UI/JobsUIKitRegression.swift; sourceTree = "<group>"; };
 		10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -70,12 +71,15 @@
 		3D439BB9819CE6026B00D7AD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7E74FE1001061F1EAC8CBE5B /* Pods-JobsSwiftBaseConfigDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		847A218358097FE8D1EB9932 /* Pods_JobsSwiftBaseConfigDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JobsSwiftBaseConfigDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		88BBAE4F90B766EF1FCF99DD /* run_regression.rb */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = run_regression.rb; sourceTree = "<group>"; };
 		A1D492FC5F191D4F827A864B /* 【MacOS@Xcode】🫘打开终端运行Pod Install.command */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "【MacOS@Xcode】🫘打开终端运行Pod Install.command"; sourceTree = "<group>"; };
 		A20C00022F21000100C0DE01 /* UnityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JobsByPods/JobsSwiftTools@Pods/UnityManager.swift"; sourceTree = SOURCE_ROOT; };
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65732F1BFC1C0060EEAD /* 未尽事宜.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "未尽事宜.md"; sourceTree = "<group>"; };
+		D366928565BC1831AE8811F1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		F09D19105A925ED1F132E7C3 /* jobs_cocoapods_source.rb */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = jobs_cocoapods_source.rb; sourceTree = "<group>"; };
 		F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JobsWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10000142F22000100C0DE01 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		F10000152F22000100C0DE01 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -199,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				7D920995C25CF851A32C9C4F /* 【MacOS@Xcode】🫘打开终端运行Pod Install.command */,
+				CE88521A0389AF9506BB569E /* 【MacOS】🌐CocoaPods源自动选择.command */,
 			);
 			path = ScriptsByPods;
 			sourceTree = "<group>";
@@ -210,6 +215,15 @@
 				3D439BB9819CE6026B00D7AD /* README.md */,
 			);
 			path = "【MacOS@Xcode】🫘打开终端运行Pod Install.command";
+			sourceTree = "<group>";
+		};
+		91A08D354B10264F3F374A0F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				88BBAE4F90B766EF1FCF99DD /* run_regression.rb */,
+			);
+			name = Tests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		A015FC91762D3615F9A4CAC5 /* Pods */ = {
@@ -268,6 +282,18 @@
 				F10000042F22000100C0DE01 /* JobsWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CE88521A0389AF9506BB569E /* 【MacOS】🌐CocoaPods源自动选择.command */ = {
+			isa = PBXGroup;
+			children = (
+				04F18521264F05298682B3DA /* 【MacOS】🌐CocoaPods源自动选择.command */,
+				F09D19105A925ED1F132E7C3 /* jobs_cocoapods_source.rb */,
+				D366928565BC1831AE8811F1 /* README.md */,
+				91A08D354B10264F3F374A0F /* Tests */,
+			);
+			name = "【MacOS】🌐CocoaPods源自动选择.command";
+			path = "【MacOS】🌐CocoaPods源自动选择.command";
 			sourceTree = "<group>";
 		};
 		F20000202F23000100C0DE01 /* Alternate App Icons */ = {

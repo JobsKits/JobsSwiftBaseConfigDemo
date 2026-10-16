@@ -87,21 +87,6 @@ extension UIGestureRecognizer {
         self.name = name
         return self
     }
-    /// iOS13.4+ 键盘修饰符 / 鼠标按钮
-    @available(iOS 13.4, *)
-    @discardableResult
-    public func byModifierFlags(_ flags: UIKeyModifierFlags) -> Self {
-        // modifierFlags 是只读属性，仅供获取，无可写入 setter
-        // 所以这里只能做空实现以保持风格统一
-        return self
-    }
-
-    @available(iOS 13.4, *)
-    @discardableResult
-    public func byButtonMask(_ mask: UIEvent.ButtonMask) -> Self {
-        // 同上，buttonMask 也是只读
-        return self
-    }
     /// 公共辅助方法
     @discardableResult
     public func byRequireToFail(_ other: UIGestureRecognizer) -> Self {

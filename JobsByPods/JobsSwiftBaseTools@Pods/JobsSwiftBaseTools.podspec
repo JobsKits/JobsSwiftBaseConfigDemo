@@ -54,11 +54,6 @@ Pod::Spec.new do |s|
     # 目录：🛜网络流量监控/JobsNetWorkTools.swift
     ss.source_files = '🛜网络流量监控/**/*.swift'
   end
-  
-  # ====================== ⏰ JobsSwiftTimer ======================
-  s.subspec 'JobsSwiftTimer' do |ss|
-    ss.source_files = 'JobsSwiftTimer/**/*.swift'
-  end
 
   s.dependency 'JobsSwiftDSL'
   s.dependency 'JobsGetWindow'

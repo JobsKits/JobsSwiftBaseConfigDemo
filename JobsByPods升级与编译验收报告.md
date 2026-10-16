@@ -8,6 +8,8 @@
 
 ## 🔥 <span id="前言">前言</span>
 
+> 历史快照：以下数量、源码路径和编译结果对应 2026-10-05。2026-10-16 已移除 Swift 侧未集成、无分类实现的 `JobsOCDSL` 兼容入口；原验收 JSON 与散列保留，不代表删除后的重新构建。当前状态见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)。
+
 实施日期：**2026-10-05，Asia/Shanghai**。本报告承接 [审阅与升级建议报告](./JobsByPods自建Pod审阅与升级建议报告.md)，记录本次实际落地、兼容变化和构建证据。当前验收状态：**已通过：65 个 Pod 单元、完整 Debug / 原生 Release 模拟器工程和全部 27 个 hosted 测试**。
 
 范围是 `JobsByPods/` 中 Jobs 维护的 **65 个实际 Pod**，另有 **2 个空目录**。`ManualBySwiftPods@Pods`、供应商、生成代码和他人作者源码保持维护边界；CocoaPods 工程通过正常安装重新生成。工作区原有修改保留，没有创建提交或推送。
@@ -141,7 +143,7 @@ JobsOCDSL 原交付缺少 helper 和引用的实现目录，本次规范为可�
 | `JobsMarqueeView` | 保留 elapsed 与空源处理，明确生命周期回归 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsMarqueeView@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDebug/JobsMarqueeView.log>) |
 | `JobsNavBar` | 保留 provider/KVO 分层，明确快速重绑和多窗使用 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNavBar@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDebug/JobsNavBar.log>) |
 | `JobsNetworking` | 下载原子验证、取消/重试、query/上传、摘要缓存和预算 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDeliveryVerified/JobsNetworking.log>) |
-| `JobsOCDSL` | 规范真实兼容入口；category 当前为空；独立消费者编译 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCDSL@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDeliveryVerified/JobsOCDSL.log>) |
+| `JobsOCDSL` | 当时规范兼容入口；category 为空；独立消费者编译；2026-10-16 已清理 | 已移除，见[当前报告](./OC新工程与Swift空壳排查报告.md) | [历史通过](</private/tmp/jobs-pods-upgrade-build/FinalDeliveryVerified/JobsOCDSL.log>) |
 | `JobsOCSkeletonView@Pods` | 空目录，无源码/spec，不虚构实现 | N/A | N/A |
 | `JobsProgressBar` | 保留 clamp/自动停止与清理，明确拖动/更新边界 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsProgressBar@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDebug/JobsProgressBar.log>) |
 | `JobsScale` | 有限设计尺寸/字体边界、断点归一、显式 window | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScale@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDebug/JobsScale.log>) |

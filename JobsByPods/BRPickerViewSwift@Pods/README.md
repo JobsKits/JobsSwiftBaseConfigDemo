@@ -166,6 +166,8 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 ## 十、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+`BRDatePicker` 返回实际日历日期，范围由 `byMinDate` / `byMaxDate` 限定；未实现的“至今”选项已移除。`BRSystemCountDownPicker` 用 `byCountDownDuration(_:)` 设置秒数，或用 `byCountDown(hours:minutes:)` 设置时分，默认时长为 0 秒；不再接受无效果的 `bySelectDate(_:)`。其它日期选择器保留真实的 `bySelectDate(_:)`。
+
 同步 `byResult` 保留。异步入口 `awaitResult()` 为 `async throws`：确认返回选择值，用户取消、遮罩关闭、panel 从宿主移除，或曾入窗的 panel 在下一轮主线程检查时仍已离窗，均抛 `BRPickerAwaitError.cancelled`，任务取消抛 CancellationError；同时等待同一 picker 抛 alreadyAwaiting。`awaitResultOrNil()` 也是 async throws，仅用户或任务取消返回 nil，其它错误继续抛出。旧异步调用需在 await 前加入 try，并处理取消和错误。
 
 呈现失败或已关闭的 panel 不会留下无终态的等待；展示先于 await，或使用并发任务先等待再展示。首次尚未入窗不触发离窗取消，同一轮同步移窗也不会误取消；宿主页面结束时仍应显式取消它持有的 await Task。一次确认仍可同时通知既有 byResult。不要对同一实例同时创建多个 await 任务，也不要把取消视为成功选中。

@@ -39,7 +39,6 @@ digraph PodspecDependencies {
   "JobsMarqueeView";
   "JobsNavBar";
   "JobsNetworking";
-  "JobsOCDSL";
   "JobsProgressBar";
   "JobsScale";
   "JobsScreenCapture";

@@ -110,9 +110,6 @@ public final class BRSystemCountDownPicker: BRBasePicker<Date> {
     private var countDownDuration: TimeInterval = 0 // seconds
     private var minuteInterval: Int = 1
 
-    /// Convenience: allow old callsites that pass Date() to keep working.
-    @discardableResult public func bySelectDate(_ _: Date) -> Self { return self }
-
     /// Recommended: set duration explicitly (seconds)
     @discardableResult public func byCountDownDuration(_ seconds: TimeInterval) -> Self {
         countDownDuration = max(0, seconds)

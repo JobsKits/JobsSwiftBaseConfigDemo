@@ -138,7 +138,6 @@ final class LunarDemoVC: BaseVC {
         buildExampleRows()
         buildTodayRows()
         buildInteractiveRows(for: datePicker.date)
-        updateFooterAvailability()
     }
 
     override func viewDidLayoutSubviews() {
@@ -217,10 +216,6 @@ final class LunarDemoVC: BaseVC {
             .init(title: "公历".tr, value: solarStr),
             .init(title: "农历".tr, value: lunarStr)
         ]
-    }
-    // MARK: - Helpers
-    private func updateFooterAvailability() {
-        // 若有“无更多数据”开关逻辑，可在此根据 items.count 决定 footer 状态
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate

@@ -49,6 +49,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 ## 二、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- 定时器能力由独立的 [JobsSwiftTimer](<../JobsSwiftTimer@Pods/README.md>) 提供；本 Pod 仅保留真实存在的 `🛜网络流量监控` 子规格。原 `JobsSwiftBaseTools/JobsSwiftTimer` 无源码子规格已移除，显式依赖它的消费方改为独立 `JobsSwiftTimer`，并重新解析依赖。
 - 全局 `jobsGetMainWindow`、`jobsGetMainWindowBefore13`、`jobsGetMainWindowAfter13` 统一定义于 [JobsGetWindow](<../JobsGetWindow@Pods/README.md>)，本模块直接依赖并再导出，手势创建函数继续由本模块承接。重编后的源码调用保持；符号定义模块迁移不承诺预编译 ABI，使用窗口函数的二进制客户端需要重新编译。
 - `SafeCodable` 的数值回退拒绝非有限值和越界窄化；合法小数转整数按向零截断处理，非法值走既有默认值与报告出口。
 - Date 默认 `.decoderStrategy` 保留 `JSONDecoder.dateDecodingStrategy` 原生快速路径；只有回退时采用自动秒/毫秒判断。需要确定单位时，在 decoder 的 `userInfo[.safeCodableConfig]` 指定配置，或使用 `userInfo[.safeCodableTimestampUnits] = ["user.createdAt": .milliseconds]` 按点分字段路径覆盖；根值路径为 `""`。显式单位对数字和数字字符串一致生效，绕过原生 Date 快速路径。

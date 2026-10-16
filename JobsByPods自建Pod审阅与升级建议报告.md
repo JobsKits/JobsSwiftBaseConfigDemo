@@ -8,7 +8,7 @@
 
 ## 🔥 <font id=前言>前言</font>
 
-> 本报告保留升级前审阅快照，原行号对应当时源码。后续实际实施和构建结论见 [升级与编译验收报告](./JobsByPods升级与编译验收报告.md)。
+> 本报告保留升级前审阅快照，原行号对应当时源码。后续实际实施和构建结论见[升级与编译验收报告](./JobsByPods升级与编译验收报告.md)。2026-10-16 的模块清理和当前空壳情况见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)。
 
 审阅日期：**2026-10-05，Asia/Shanghai**。对象为本工程 `JobsByPods/` 下除 `ManualBySwiftPods@Pods/` 外的自建目录，以审阅时的**当前工作区源码，包括已有未提交修改**为基准。
 
@@ -382,7 +382,7 @@
 | [JobsSwiftTools / CrashLogCenter.swift L482](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/CrashLogCenter.swift:482>) | P2，源码确认 | 信号 handler 构造 Date/String 并走 FileManager/URL/Data，非信号安全；源码和 README 已坦承。 | 正常启动预开 fd，极简 C 层写固定字节；完整格式化下次启动。独立故障进程验系统 crash 与最小记录。 |
 | [JobsSwiftTools / FlutterBridge.swift L39](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/FlutterBridge.swift:39>) | P2，源码确认，引擎待跑 | 强 callback/pending 会话只在 channel 出口清理；原生返回/展示拒绝没有统一清理。setup 第二 engine 时 channel 不重绑，run 失败也先标 started。 | 会话取消/销毁/拒绝共用终态，run 成功才登记；引擎重置明确支持或拒绝。验原生 back/busy/失败重试/换 engine。 |
 | [JobsByUIKit / UIKitAttributes.swift L177](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIKitAttributes.swift:177>) | P2，源码确认 | 公开 Any? 参数内部 as! 系统 Attribute.Value，错误类型从编译期问题变运行时崩溃。 | 公开真实类型，动态兼容入口可失败转换；验正确值、清除值和错误值，移除未落地的模板注释。 |
-| [JobsOCDSL / JobsOCDSL.podspec L1](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsOCDSL@Pods/JobsOCDSL.podspec:1>) | P2，物理存在性确认 | require_relative 的 JobsPodspecKit.rb 不存在；Core/Support 未交付，仅头/spec/README。该 Pod 当前未集成，不能推断宿主因此构建失败。 | 明确兼容残留或独立交付目标；恢复自有实现/helper或规范实际形态，语义加载/最小消费者验收；不自动删除。 |
+| `JobsOCDSL / JobsOCDSL.podspec L1`（历史路径，已移除） | P2，物理存在性确认 | 审阅时 require_relative 的 JobsPodspecKit.rb 不存在；Core/Support 未交付，仅头/spec/README。当时未集成，不能推断宿主因此构建失败。 | 历史建议保留；2026-10-16 已按用户要求清理兼容入口，见[当前报告](./OC新工程与Swift空壳排查报告.md)。 |
 | [JobsSwiftTimer / JobsSwiftTimerConfig.swift L17](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimerConfig.swift:17>) | P2，源码确认，非法运行待验 | public var 可在 init normalize 后改 NaN/Inf；引擎转换 Int(tolerance*1000) 未再校验。 | 执行入口再验证或受约束配置；覆盖 init 后突变和超大有限值。保留现有状态机。 |
 | [JobsSwiftExcel / JobsSwiftExcelView.swift L106](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftExcel@Pods/Core/JobsSwiftExcelView/JobsSwiftExcelView.swift:106>) | P2/P3，源码确认 | freezeThroughColumn+1 在 clamp 前，Int.max 可溢出；全量创建 UILabel/约束不适合大表。 | 先夹取再加。小表只补边界，大表需求确定后做复用/虚拟化；记录行列规模与性能基线。 |
 | [JobsSwiftBaseDefines / JobsBaseObserver.swift L79](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseObserver.swift:79>) | P2，源码确认，IME待跑 | 先通知业务新文本再问原 delegate；delegate veto 后模型已收到未接受的值。 | 按真实接受/提交文本组织事件，定义 markedText；验 veto、中文候选、粘贴、emoji。 |

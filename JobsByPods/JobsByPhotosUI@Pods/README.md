@@ -21,7 +21,7 @@
 
 ### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-当前以 PhotosUI DSL 的兼容桥接为主，相关配置已迁往 JobsSwiftDSL。目录中还保留 PHPicker 与 PhotosPicker 若干类型的扩展占位文件；它们不等于已完成的相册选择业务流程。
+当前以 PhotosUI DSL 的兼容桥接为主，相关配置已迁往 JobsSwiftDSL。目录保留 PHPicker 与 PhotosPicker 类型的已有扩展，宿主负责相册选择业务流程。
 
 ### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -29,13 +29,13 @@
 
 ### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 必须区分桥接文件、已有扩展和 TODO 占位，不能将占位描述为可调用能力。
+- 桥接文件只重新导出已有 DSL，不额外提供相册业务能力。
 - 选择器配置、选择结果加载与相册权限属于不同环节；本目录不能被重建成自动完成这些环节的统一引擎。
 - PHPicker 与 SwiftUI PhotosPicker 的类型及系统可用性不同，不能仅凭名称互相替换。
 
 ### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-先读桥接文件，再核对各扩展正文和 JobsSwiftDSL 中的实际实现；没有实现的部分维持明确边界。
+先读桥接文件，再核对各扩展正文和 JobsSwiftDSL 中的实际实现。
 
 源码定位（路径以本 README 所在目录为基准；只带走 README 时，可把文件名作为职责定位线索）：
 
@@ -43,7 +43,6 @@
 - [PHPickerFilter.swift](<./PHPickerFilter.swift>)
 - [PHPickerResult.swift](<./PHPickerResult.swift>)
 - [PhotosPickerStyle.swift](<./PhotosPickerStyle.swift>)
-- [PHPickerCapabilities.swift](<./PHPickerCapabilities.swift>)
 
 依赖与编译入口：[JobsByPhotosUI.podspec](<./JobsByPhotosUI.podspec>)。其中显式依赖声明包括 `JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 

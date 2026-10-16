@@ -64,7 +64,18 @@
 - [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：前台可拖动圆形按钮、push 功能列表与 URL 环境二级列表、自定义功能 Model DSL、长按隐藏至下次启动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
 - 本工程已有 [**Flutter**](https://docs.flutter.dev/testing/build-modes) 内嵌模块，其 Release / Profile 不支持 iOS 模拟器。验证 Swift 宿主的 Release 宏、符号与资源隔离时，`xcodebuild -configuration Release` 可额外传 `FLUTTER_BUILD_MODE=debug`：仅内嵌 Flutter 使用 Debug，原生宿主仍为 Release；该产物不是完整 Flutter Release 包。完整真机 Release 还需现有 Unity 真机依赖及有效代码签名，工程最后的 IPA 保存阶段会拒绝无签名真机包。
 
-- 需要只刷新依赖时，可执行 `JOBS_POD_INSTALL_PURE=1 JOBS_POD_INSTALL_POST_SCRIPTS_CHECK_ONLY=1 pod install --no-repo-update`。`Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。前置辅助脚本仅作只读检查，无后台索引和报告写入；日志保留 CocoaPods 输出与系统临时目录中的前置检查日志。默认安装行为保持现有挂载顺序。
+- [Podfile](./Podfile) 使用独立的 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)，在 `pod install` / `pod update` 解析依赖前同步测试官方 CDN 与 GitHub Specs，按真实 podspec 请求结果、耗时与 Git 仓库连接决定公共源；两条线路接近时优先 CDN。模块与其它安装脚本统一放在 `ScriptsByPods`，失败时告警并保留缓存或默认源使用机会。迁移时携带完整脚本包与 Podfile 加载代码，保留 `Podfile.lock`；Specs 测试通过仍不保证后续源码下载成功。
+
+- Flutter 已配置成功、需要只安装原生依赖时，在工程根目录执行：
+
+  ```shell
+  JOBS_POD_INSTALL_PURE=1 \
+    JOBS_POD_INSTALL_POST_SCRIPTS_CHECK_ONLY=1 \
+    pod install \
+      --no-repo-update
+  ```
+
+  `Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。报告与索引前置辅助脚本仅作只读检查，无后台索引和报告写入；公共 Specs 选源仍同步测速。日志保留 CocoaPods 输出与系统临时目录中的前置检查、选源日志。`--no-repo-update` 跳过安装前的源更新，仍可能创建缺失的源并获取需要的规格，不保证完全离线。
 
 ### 1、开发周边支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -555,8 +566,8 @@
   #plugin 'cocoapods-repo-update'
   
   ## 指明依赖库的来源地址
-  #source 'https://cdn.cocoapods.org/'
-  #source 'https://github.com/CocoaPods/Specs.git'# 使用官方默认地址（默认）
+  #source 'https://cdn.cocoapods.org/'# 自动选源候选：官方 CDN
+  #source 'https://github.com/CocoaPods/Specs.git'# 自动选源候选：Git Specs，首次使用需要克隆完整 Specs 仓库
   #source 'https://github.com/Artsy/Specs.git'# 使用其他来源地址
   
   # 需要特别说明的：在 post_install 时，为了一些版本的兼容，需要遍历所有 target，调整一部分库的版本；但是如果开启了 generate_multiple_pod_projects 的话，由于项目结构的变化，installer.pod_targets 就没办法获得所有 pods 引入的 target 了
@@ -1734,16 +1745,21 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 **安装前后：入口与行为**
 
+公共 Specs 由 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)单独管理。Podfile 顶部同步加载 `jobs_cocoapods_source.rb` 并在 `source` 声明前完成真实 podspec GET 与 Git 连接测试；`pod install` / `pod update` 均按当前网络选源。可用 `JOBS_SPECS_SOURCE=cdn` / `git` 固定本次来源，默认 `auto`；每条候选线路完整测试默认最多 8 秒，可用 `JOBS_SPECS_PROBE_TIMEOUT` 调整。
+
+适配器只在当前进程映射锁文件公共源，保留锁定版本、校验和及私有源；不删除 Pods / 锁文件，不自动升级或二次安装。两条线路均失败时尝试锁文件源、已有缓存或默认 CDN，脚本异常时告警并继续 CocoaPods 自身流程，不能保证离线安装成功。迁移时保留 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/` 整包与 Podfile 的加载代码。
+
 [Podfile](./Podfile) 顶部加载 `./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/jobs_pod_install_offline_guard.rb`；统一调度入口是同目录的 `【MacOS】📦Pod Install离线保护.command`。详见[本地脚本保护说明](<./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/README.md>)。
 
 | 时机                                      | 挂载脚本 / 入口                                              | 实际行为与产物                                               |
 | ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `pod install` / `pod update` 读取 Podfile 时，`source` 声明前 | [CocoaPods 源自动选择](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)同步测速 | 测试当前网络并决定本次公共 Specs 源；结果与理由写入系统临时日志 |
 | `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；下面的报告与索引任务独立运行，不阻塞安装主流程 |
 | 前置任务                                  | [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 扫描本地 podspec，生成 `./PodspecDependencyReport/` 下的依赖报告与关系图 |
 | 前置任务                                  | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 本机工具可用时后台建立 / 更新 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引并导出 Markdown；通过 PID 避免重复启动 |
 | 工程集成完成后，`post_integrate`          | 统一入口 `--post-integrate` → [恢复 PIF 构建会话](<./ScriptsByPods/【MacOS】🧹恢复Xcode PIF构建会话.command/README.md>) | 有活动构建则跳过；无活动构建时结束当前用户的空闲构建服务，再通过工作空间列表命令重建会话 |
 
-前置任务强制离线，只复用已有工具，不自动安装工具链；失败不覆盖 CocoaPods 自身结果。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
+报告与索引前置任务强制离线，只复用已有工具，不自动安装工具链；失败不覆盖 CocoaPods 自身结果。公共 Specs 选源单独同步执行网络测试，不加入这些异步任务。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
 
 `post_install` 还会执行 Podfile 内的构建配置与兼容性修补；`post_integrate` 同时维护 Pods 工程中的 `Podfile` / `Podfile.deps` 引用。这些是 Podfile 内联逻辑，外置收尾脚本的实际调用点是 `post_integrate`。
 
@@ -1753,12 +1769,16 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 | 入口                                                         | 行为 / 条件                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `./ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh`      | 准备 Homebrew、FVM、Flutter SDK 与模块依赖；可能安装工具或访问网络 |
-| `./ScriptsByPods/拉取Flutter侧三方资源.sh/拉取Flutter侧三方资源.sh` | Flutter podhelper 未就绪时执行，补齐模块生成配置             |
+| [配置 Flutter 环境](./ScriptsByPods/配置Flutter环境.sh/README.md) | 复用健康 [**fvm**](https://fvm.app)，缺失时先尝试已有健康 Homebrew；Homebrew 不可用、安装失败或 FVM 复检失败则自动运行官方 `install.sh`，再按需准备 Flutter SDK、iOS 缓存与模块依赖 |
+| [拉取 Flutter 侧三方资源](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md) | Flutter podhelper 未就绪时执行；独立探测官方、Pub、Homebrew 安装的 FVM 与已有 Flutter SDK，补齐模块生成配置 |
 | `./JobsBySwiftPackageManager/【MacOS】🧠编译通过方可集成进SPM.command` | `pre_install` 中可选执行本地 Package 编译、测试与 Client 验证；选择执行后验证失败会中止集成 |
 | `./ScriptsByPods/清理Unity缓存.sh/清理Unity缓存.sh`、`./ScriptsByPods/解压Unity大资源.sh/解压Unity大资源.sh` | 检测到 Unity 集成时清缓存、还原大资源；Podfile 另会清理 Unity 中间构建目录 |
 
 通用外置准备脚本在交互终端统一询问一次：直接回车执行，输入任意字符后回车跳过；SPM 验证单独询问，规则相同。非交互环境默认执行。Flutter / Unity 外置脚本配置为可选，失败告警；SPM 验证一旦执行则是必过门禁。上述准备动作不受本地前置任务的“强制离线”约束。
+
+Flutter 配置脚本不再为 FVM 强制安装或更新 Homebrew。FVM 官方默认安装到用户主目录下的 `fvm/bin`，支持 `FVM_INSTALL_DIR`；安装后检查实际二进制并立即刷新当前子进程 `PATH`，不写 shell profile。官方安装器可能迁移旧 FVM 安装，Flutter `versions` 缓存继续保留；已有官方 FVM 的可选升级直接走官方安装器。详见 [FVM 官方安装文档](https://fvm.app/documentation/getting-started/installation)。
+
+Podfile 通过 `JOBS_SKIP_README=1` 跳过子脚本重复回车等待，子脚本仍打印固定内置自述；设置 `JOBS_FLUTTER_AUTO_SETUP=1` 后，非交互环境可自动补齐缺失项，已有 FVM / Flutter 的可选升级仍默认跳过。FVM 安装或复检失败会停止该脚本后续 Flutter 操作，由 Podfile 记录警告并继续；日志在系统临时目录中的 `配置Flutter环境.log`、`拉取Flutter侧三方资源.log`，配置脚本的终端输出也保留在 CocoaPods 输出中。
 
 **构建阶段与构建后动作**
 
@@ -1804,6 +1824,7 @@ CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Framework
 
 **日志与定位**
 
+- 公共 Specs 选源：系统临时目录中的 `jobs-cocoapods-source-<工程路径摘要>.log`，具体路径随安装输出展示；记录网络测试结果、耗时与选择理由。
 - 安装前置总日志：系统临时目录中的 `jobs-pod-install-preflight-<工程摘要>.log`。
 - 调度汇总与索引日志：系统临时目录中的 `【MacOS】📦Pod Install离线保护.<工程摘要>.log`、`codegraph_init.<工程摘要>.async.log`；PIF 与依赖报告脚本另有各自日志。
 - IPA 留存：Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。
@@ -12685,7 +12706,6 @@ static let demoHTML = """
 | Sendable | `AnySendableBox` 仅接收 Sendable 值；JobsText 不再声明任意属性字典可安全跨 actor，跨边界用 `asString` 或业务不可变快照。 |
 | PNPlayer | 主线程隔离；`byAttach` 同步实际 MTKView 配置；Metal 错误及视频错误走公开回调，宿主 Demo 展示失败。 |
 | SwiftTools | 默认 Core + Flutter 保持宿主兼容；`JobsSwiftTools/Core` 不包含 FlutterBridge，不硬引 Flutter engine / registrant。 |
-| JobsOCDSL | 当前 Swift 检出只交付可编译的能力感知兼容入口；能力数组为空，不把完整 OC 分类当作已移入。 |
 
 ### 编译与回归入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -12697,10 +12717,10 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb
 ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuration Release
 ```
 
-全量验证器先逐个编译自建 Pod；JobsOCDSL 使用独立临时消费工程；全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
+全量验证器先逐个编译自建 Pod；每个 Pod 必须存在对应的集成 scheme，全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
 
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<./.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 
-升级结果与本轮实际编译状态见工程根目录《JobsByPods升级与编译验收报告.md》。既有审阅报告保留为修复前证据。
+升级与编译的历史证据见工程根目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

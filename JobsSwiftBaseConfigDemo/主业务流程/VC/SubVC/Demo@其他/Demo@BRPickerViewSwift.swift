@@ -174,7 +174,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var dateSysCountPicker: BRSystemCountDownPicker = { [unowned self] in
         BRSystemCountDownPicker()
             .byTitle("倒计时".tr)
-            .bySelectDate(Date())
+            .byCountDownDuration(0)
             .byTheme { theme in
                 Self.applyAdaptiveTheme(theme, accentColor: JobsCor.systemIndigo)
             }
