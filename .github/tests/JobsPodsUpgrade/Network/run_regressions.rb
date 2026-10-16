@@ -42,7 +42,12 @@ run = lambda do |name, arguments, timeout = options[:timeout]|
       Process.wait(pid) rescue nil
       raise "#{name} exceeded #{timeout} seconds; inspect #{log}"
     end
-    raise "#{name} failed (#{status.exitstatus}); inspect #{log}" unless status.success?
+    unless status.success?
+      reason = status.signaled? ? "signal #{status.termsig}" : "exit #{status.exitstatus}"
+      results << { name: name, status: 'failed', termination: reason, log: log }
+      warn IO.popen(['tail', '-n', '40', log], &:read)
+      raise "#{name} failed (#{reason}); inspect #{log}"
+    end
   end
   elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
   results << { name: name, status: 'passed', seconds: elapsed.round(3), log: log }

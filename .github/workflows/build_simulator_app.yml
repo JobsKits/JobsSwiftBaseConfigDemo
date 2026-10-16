@@ -52,8 +52,9 @@ jobs:
             exit 1
           fi
 
-          xcodebuild -version
-          xcodebuild -version | grep -Eq '^Xcode 26([.]|$)'
+          xcode_version="$(xcodebuild -version)"
+          echo "${xcode_version}"
+          grep -Eq '^Xcode 26([.]|$)' <<< "${xcode_version}"
           xcode-select -p
 
       - name: Show build environment

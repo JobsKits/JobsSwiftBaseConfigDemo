@@ -15,7 +15,7 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
 
 需要项目已经安装的 Alamofire 源码。runner 不执行 pod install、不访问外网、不申请蓝牙、录音或通知权限。`--repo-root` 可指定工程，`SWIFTC` 可选择编译器；Swift 编译默认单任务，可用 `--swift-jobs` 调整；`--timeout-seconds` 指定单条命令上限，默认 600 秒。析构重入子进程最多 10 秒，卡死直接失败。系统并行构建造成资源压力时，应先降低并发并重试，不能把超时记为通过。
 
-每一步保留独立日志，最终写入 `results.json`。普通 Core / 网络回归不替代真实 iOS Pod target 和宿主构建。
+每一步保留独立日志，最终写入 `results.json`。子进程失败时同时记录退出码或终止信号，并在 CI 控制台展示末尾 40 行日志，方便直接定位断言。普通 Core / 网络回归不替代真实 iOS Pod target 和宿主构建。
 
 ## 二、真实源码与覆盖边界 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
 
@@ -28,6 +28,10 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
 | Network controlled | 实际生产 Agent、Token、请求/缓存/上传下载代码，可控 HTTPClient | 精确控制完成/取消/安装顺序；真实网络另有对照 |
 | HTTP | 实际 Alamofire 与 localhost HTTP，query/body、状态/短响应、摘要、原文件保护、fileURL multipart | 本机协议与文件测试，外网 TLS/服务端部署另验 |
 | WebSocket | 实际 URLSessionWebSocketTask 与 localhost 握手、回显、pong/缺失 pong、释放/重连 | 复杂 TLS/后台/旧任务竞争仍需对应集成 |
+
+蓝牙扫描回归在主队列依次启动、停止并重启：新扫描禁用自动停止，越过旧期限后仍须保持扫描；随后另开有超时的扫描，等待实际 `idle` 回调。取消与释放同样等待生产回调，以 5 秒 watchdog 拒绝挂死，不用 `Task.sleep` 的恢复时刻判断扫描或回调是否正确；迟到回包在主队列越过其投递期限后再检查。
+
+可控下载测试为每次响应创建独立临时文件，与真实 HTTP 客户端的下载文件所有权一致；上次失败响应的收尾清理不能与下一次响应共用输入路径。状态码、下载长度、摘要及原目标文件保护仍分别验证。
 
 `NativeDSLFactoryFixture.swift` 只承接两个 Foundation 工厂（JSONDecoder、URLSessionConfiguration）的 CLI 环境。iOS 工程使用实际 JobsSwiftDSL；网络传输与密码算法不使用 fixture 替代。
 

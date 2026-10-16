@@ -8,20 +8,13 @@
 import Foundation
 
 @main
+@MainActor
 struct BluetoothRegression {
     static func main() async throws {
-        let profile = JobsBluetoothProfile().byScanTimeout(0.12)
+        let profile = JobsBluetoothProfile()
         let mock = JobsBluetoothMockTransport().byLatency(0.02)
         let manager = JobsBluetoothManager(profile: profile, mockTransport: mock)
-        manager.startScan()
-        precondition(manager.discoveredPeripherals.count == 3)
-        try await Task.sleep(nanoseconds: 40_000_000)
-        manager.stopScan()
-        manager.startScan()
-        try await Task.sleep(nanoseconds: 90_000_000)
-        precondition(manager.state == .scanning)
-        try await Task.sleep(nanoseconds: 50_000_000)
-        precondition(manager.state == .idle)
+        await verifyScanRestart(manager)
         let identifier = mock.advertisements()[0].identifier
         manager.connect(identifier: identifier)
         precondition(manager.state == .ready)
@@ -50,30 +43,100 @@ struct BluetoothRegression {
             }
         }
         precondition(order == [1, 3, 2])
-        var cancelled = 0
         mock.latency = 0.08
-        manager.send(JobsBluetoothCommand().byPayload(Data([4]))) { result in
-            if case .failure(let error) = result, let error = error as? JobsBluetoothError,
-               case .cancelled = error { cancelled += 1 }
+        var cancelled = 0
+        await waitForCallback("disconnect cancellation") { done in
+            manager.send(JobsBluetoothCommand().byPayload(Data([4]))) { result in
+                guard case .failure(let error) = result,
+                      let error = error as? JobsBluetoothError,
+                      case .cancelled = error else {
+                    preconditionFailure("Disconnect must cancel the pending command")
+                }
+                cancelled += 1
+                done()
+            }
+            manager.disconnect()
+            manager.connect(identifier: identifier)
         }
-        manager.disconnect()
-        manager.connect(identifier: identifier)
-        try await Task.sleep(nanoseconds: 100_000_000)
-        precondition(cancelled == 1 && manager.state == .ready)
+        await waitForCallback("late echo checkpoint") { done in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                precondition(cancelled == 1 && manager.state == .ready)
+                done()
+            }
+        }
         try await verifyReentrantResponse(manager, mock: mock, identifier: identifier, usesDecoder: false)
         try await verifyReentrantResponse(manager, mock: mock, identifier: identifier, usesDecoder: true)
-        let releaseMock = JobsBluetoothMockTransport().byLatency(0.08)
-        var releasable: JobsBluetoothManager? = JobsBluetoothManager(mockTransport: releaseMock)
-        weak var weakManager = releasable
-        releasable?.connect(identifier: identifier)
         var releasedCancellation = 0
-        releasable?.send(JobsBluetoothCommand().byPayload(Data([5]))) { result in
-            if case .failure = result { releasedCancellation += 1 }
+        await waitForCallback("owner release cancellation") { done in
+            let releaseMock = JobsBluetoothMockTransport().byLatency(0.08)
+            var releasable: JobsBluetoothManager? = JobsBluetoothManager(mockTransport: releaseMock)
+            weak var weakManager = releasable
+            releasable?.connect(identifier: identifier)
+            releasable?.send(JobsBluetoothCommand().byPayload(Data([5]))) { result in
+                precondition(weakManager == nil)
+                guard case .failure(let error) = result,
+                      let error = error as? JobsBluetoothError,
+                      case .cancelled = error else {
+                    preconditionFailure("Owner release must cancel the pending command")
+                }
+                releasedCancellation += 1
+                done()
+            }
+            releasable = nil
         }
-        releasable = nil
-        try await Task.sleep(nanoseconds: 100_000_000)
-        precondition(weakManager == nil && releasedCancellation == 1)
+        await waitForCallback("released owner late echo checkpoint") { done in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                precondition(releasedCancellation == 1)
+                done()
+            }
+        }
         print("BluetoothRegression: scan restart, Mock matcher/timeout/retry, priority ordering, disconnect/late echo, decoder/matcher reentrancy, owner release passed")
+    }
+
+    // 在主队列观察生产回调；watchdog 仅拒绝挂死，不把任务唤醒时刻当作业务时序。
+    static func waitForCallback(_ label: String,
+                                perform: @escaping (@escaping () -> Void) -> Void) async {
+        await withCheckedContinuation { continuation in
+            let gate = BluetoothCallbackGate()
+            DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                precondition(gate.isCompleted, "Timed out waiting for \(label)")
+            }
+            DispatchQueue.main.async {
+                perform {
+                    precondition(gate.complete(), "Duplicate callback for \(label)")
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    // 新扫描不设超时，旧期限之后仍应扫描；再单独等待当前扫描的真实超时事件。
+    static func verifyScanRestart(_ manager: JobsBluetoothManager) async {
+        await waitForCallback("restarted scan") { done in
+            manager.profile.byScanTimeout(0.05)
+            manager.startScan()
+            precondition(manager.discoveredPeripherals.count == 3)
+            manager.stopScan()
+            manager.profile.byScanTimeout(0)
+            manager.startScan()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                precondition(manager.state == .scanning, "Old scan timeout stopped the new scan")
+                manager.stopScan()
+                done()
+            }
+        }
+        await waitForCallback("current scan timeout") { done in
+            manager.profile.byScanTimeout(0.03)
+            manager.onStateChanged { state in
+                guard state == .idle else {
+                    return
+                }
+                manager.stateChanged = nil
+                done()
+            }
+            manager.startScan()
+        }
+        precondition(manager.state == .idle)
     }
 
     static func verifyReentrantResponse(_ manager: JobsBluetoothManager,
@@ -132,5 +195,31 @@ struct BluetoothRegression {
         try await withCheckedThrowingContinuation { continuation in
             manager.sendReliably(command) { continuation.resume(with: $0) }
         }
+    }
+}
+
+// watchdog 与主队列回调共用有锁状态，不会因主队列阻塞而一起失效。
+private final class BluetoothCallbackGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var completed = false
+
+    var isCompleted: Bool {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return completed
+    }
+
+    func complete() -> Bool {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        guard !completed else {
+            return false
+        }
+        completed = true
+        return true
     }
 }

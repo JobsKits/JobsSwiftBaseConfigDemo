@@ -94,20 +94,28 @@ struct NetworkRegression {
     static func retryReplacement() async throws {
         let token = JobsRequestToken()
         let events = LockedEvents()
-        token.scheduleRetry(after: 0.06) { events.append("old") }
-        token.scheduleRetry(after: 0.02) { events.append("replacement") }
-        try await Task.sleep(nanoseconds: 100_000_000)
-        precondition(events.values == ["replacement"])
+        await waitForCallback("replacement retry") { done in
+            token.scheduleRetry(after: 0.06) { preconditionFailure("Replaced retry must not run") }
+            token.scheduleRetry(after: 0.02) {
+                events.append("replacement")
+                done()
+            }
+        }
+        await checkpoint("retired retry deadline", after: 0.1) {
+            precondition(!token.isCancelled && events.values == ["replacement"])
+        }
         let cancelled = JobsRequestToken()
-        cancelled.scheduleRetry(after: 0.02) { events.append("cancelled") }
+        cancelled.scheduleRetry(after: 0.02) { preconditionFailure("Cancelled retry must not run") }
         cancelled.cancel()
-        try await Task.sleep(nanoseconds: 40_000_000)
-        precondition(events.values == ["replacement"])
+        await checkpoint("cancelled retry deadline", after: 0.1) {
+            precondition(cancelled.isCancelled && events.values == ["replacement"])
+        }
         let completed = JobsRequestToken()
-        completed.scheduleRetry(after: 0.02) { events.append("finished") }
+        completed.scheduleRetry(after: 0.02) { preconditionFailure("Finished retry must not run") }
         completed.finish { }
-        try await Task.sleep(nanoseconds: 40_000_000)
-        precondition(events.values == ["replacement"])
+        await checkpoint("finished retry deadline", after: 0.1) {
+            precondition(completed.isFinished && events.values == ["replacement"])
+        }
     }
 
     static func agent(_ client: ControlledClient, retry: JobsRetryPolicy = .default) -> JobsDefaultAgent {
@@ -144,13 +152,20 @@ struct NetworkRegression {
         failing.failImmediately = true
         let retryAgent = self.agent(failing, retry: JobsRetryPolicy(maxRetries: 2, initialDelay: 0.15, multiplier: 1, jitter: 1...1))
         var cancellations = 0
-        let token = retryAgent.send(request, as: Data.self) { result in
-            cancellations += 1
-            if case .failure(let error) = result { precondition(error.isCancelled) }
+        var cancellationToken: JobsRequestToken?
+        await waitForCallback("request cancellation") { done in
+            let token = retryAgent.send(request, as: Data.self) { result in
+                cancellations += 1
+                if case .failure(let error) = result { precondition(error.isCancelled) }
+                else { preconditionFailure("Cancelled request must fail") }
+                done()
+            }
+            cancellationToken = token
+            token.cancel()
         }
-        token.cancel()
-        try await Task.sleep(nanoseconds: 300_000_000)
-        precondition(failing.performCount == 1 && cancellations == 1)
+        await checkpoint("cancelled request retry deadline", after: 0.3) {
+            precondition(cancellationToken?.isCancelled == true && failing.performCount == 1 && cancellations == 1)
+        }
 
         let early = ControlledClient()
         let earlyAgent = self.agent(early)
@@ -192,24 +207,98 @@ struct NetworkRegression {
         defer { try? FileManager.default.removeItem(at: directory) }
         let destination = directory.appendingPathComponent("result")
         try Data("original".utf8).write(to: destination)
-        let temporary = directory.appendingPathComponent("temporary")
-        try Data("error".utf8).write(to: temporary)
-        client.downloadResponse = (temporary, 500)
+        // Transport 临时文件由各自下载清理，不能在前次 completion 后复用同一路径。
+        let failedTemporary = directory.appendingPathComponent("failed-response")
+        try Data("error".utf8).write(to: failedTemporary)
+        client.downloadResponse = (failedTemporary, 500)
         let failedDownload: Result<URL, JobsError> = await withCheckedContinuation { continuation in
             agent.download(JobsDownloadRequest(absoluteURL: URL(string: "https://example.test/file")!, destinationURL: destination)) {
                 continuation.resume(returning: $0)
             }
         }
-        if case .failure = failedDownload { } else { preconditionFailure("500 must fail") }
+        if case .failure(.http(let statusCode, _)) = failedDownload {
+            precondition(statusCode == 500)
+        } else {
+            preconditionFailure("500 must preserve its HTTP failure: \(failedDownload)")
+        }
         try check(try Data(contentsOf: destination) == Data("original".utf8))
-        try Data("replacement".utf8).write(to: temporary)
-        client.downloadResponse = (temporary, 200)
+        let invalidTemporary = directory.appendingPathComponent("invalid-digest")
+        try Data("replacement".utf8).write(to: invalidTemporary)
+        client.downloadResponse = (invalidTemporary, 200)
+        let invalidDownload: Result<URL, JobsError> = await withCheckedContinuation { continuation in
+            agent.download(JobsDownloadRequest(absoluteURL: URL(string: "https://example.test/file")!, destinationURL: destination,
+                expectedByteCount: 11, expectedSHA256: String(repeating: "0", count: 64))) {
+                continuation.resume(returning: $0)
+            }
+        }
+        if case .failure(.invalidRequest(let reason)) = invalidDownload {
+            precondition(reason.contains("SHA256"))
+        } else {
+            preconditionFailure("Mismatched digest must fail: \(invalidDownload)")
+        }
+        try check(try Data(contentsOf: destination) == Data("original".utf8))
+        let validTemporary = directory.appendingPathComponent("valid-response")
+        try Data("replacement".utf8).write(to: validTemporary)
+        client.downloadResponse = (validTemporary, 200)
         let goodDownload: Result<URL, JobsError> = await withCheckedContinuation { continuation in
             agent.download(JobsDownloadRequest(absoluteURL: URL(string: "https://example.test/file")!, destinationURL: destination,
-                expectedByteCount: 11)) { continuation.resume(returning: $0) }
+                expectedByteCount: 11, expectedSHA256: "95713e9cbdd1dfcb2d4080c2537f418d43ca0da25f0d7d6631f4f7c97b89dc47")) {
+                continuation.resume(returning: $0)
+            }
         }
-        if case .success = goodDownload { } else { preconditionFailure("200 must install") }
+        if case .success(let installedURL) = goodDownload {
+            precondition(installedURL == destination)
+        } else {
+            preconditionFailure("200 must install: \(goodDownload)")
+        }
         try check(try Data(contentsOf: destination) == Data("replacement".utf8))
+    }
+
+    // 正向结果等待真实回调，watchdog 仅拒绝挂死；锁保护跨队列的单次恢复。
+    static func waitForCallback(_ label: String,
+                                perform: (@escaping () -> Void) -> Void) async {
+        await withCheckedContinuation { continuation in
+            let gate = NetworkCallbackGate()
+            DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                precondition(gate.isCompleted, "Timed out waiting for \(label)")
+            }
+            perform {
+                precondition(gate.complete(), "Duplicate callback for \(label)")
+                continuation.resume()
+            }
+        }
+    }
+
+    // 取消后的负向断言跨过原投递期限；不依赖 Swift Task 恢复的快慢。
+    static func checkpoint(_ label: String, after delay: TimeInterval,
+                           check: @escaping () -> Void) async {
+        await waitForCallback(label) { done in
+            DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+                check()
+                done()
+            }
+        }
+    }
+}
+
+final class NetworkCallbackGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var completed = false
+
+    var isCompleted: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return completed
+    }
+
+    func complete() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard !completed else {
+            return false
+        }
+        completed = true
+        return true
     }
 }
 
