@@ -65,7 +65,7 @@ jobs:
           pod --version
 
       - name: Prepare test Simulator
-        timeout-minutes: 5
+        timeout-minutes: 10
         shell: bash
         run: |
           set -euo pipefail

@@ -1842,7 +1842,7 @@ XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对�
 
 逐 Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedData。宿主通过 `build-for-testing` 一次生成 App 与测试包，随后对同一台已启动的 iPhone 模拟器执行 `test-without-building`，运行 UIKit / Timer 宿主测试。测试全部通过后才打包并上传模拟器 App；纯 SwiftBlock 的双架构检查继续覆盖 arm64 / x86_64，上传的 App 供 Apple Silicon 模拟器使用。
 
-任务总时限 180 分钟，依赖安装、逐 Pod 编译、宿主编译与测试分别限时 20 / 60 / 45 / 20 分钟，预留失败诊断时间。失败或取消时上传安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、逐 Pod / 回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
+任务总时限 180 分钟，模拟器准备、依赖安装、逐 Pod 编译、宿主编译与测试分别限时 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、逐 Pod / 回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
 
 CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
 
