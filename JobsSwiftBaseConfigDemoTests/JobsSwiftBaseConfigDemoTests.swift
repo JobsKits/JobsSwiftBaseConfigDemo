@@ -54,6 +54,21 @@ private final class JobsTimerTestClock: @unchecked Sendable {
 }
 
 final class JobsSwiftBaseConfigDemoTests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        continueAfterFailure = false
+        // 通知只能模拟计时器事件，不能把 UIKit 宿主的真实状态改成 active。
+        let hostIsActive = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "applicationState == %ld", UIApplication.State.active.rawValue),
+            object: UIApplication.shared
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [hostIsActive], timeout: 10),
+            .completed,
+            "测试宿主未进入 active，请检查启动时的系统权限弹窗与模拟器前台状态。"
+        )
+    }
+
     func testGestureUnlockDemoLoadsWithoutException() throws {
         let className = "JobsSwiftBaseConfigDemo.GestureUnlockDemoVC"
         guard let controllerClass = NSClassFromString(className) as? NSObject.Type else {

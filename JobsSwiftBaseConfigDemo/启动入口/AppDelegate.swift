@@ -123,6 +123,10 @@ extension AppDelegate {
         #else
         center.delegate = self
         #endif
+        // 首次授权弹窗会使测试宿主 inactive，阻塞真实的前后台计时器回归。
+        guard ProcessInfo.processInfo.environment["JOBS_HOSTED_TESTS"] != "1" else {
+            return
+        }
         var options: UNAuthorizationOptions = [.alert, .badge]
         #if !os(tvOS)
         options.insert(.sound)
